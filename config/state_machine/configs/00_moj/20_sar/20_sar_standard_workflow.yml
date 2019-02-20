@@ -47,7 +47,7 @@
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
-                  if: Workflows::Predicates#can_extend_sar_deadline?
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
@@ -131,4 +131,4 @@
                 flag_for_clearance:
                   switch_workflow: trigger
                 remove_sar_deadline_extension:
-                  if: Workflows::Predicates#approver_can_remove_sar_deadline?
+                  if: Workflows::Predicates#case_extended_and_user_assigned_disclosure_specialist?

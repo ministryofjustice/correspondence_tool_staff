@@ -121,11 +121,11 @@ class Workflows::Predicates
     @kase.try(:deadline_extended?)
   end
 
-  def can_extend_sar_deadline?
+  def deadline_does_not_exceed_max_deadline?
     @kase.try(:deadline_extendable?)
   end
 
-  def approver_can_remove_sar_deadline?
+  def case_extended_and_user_assigned_disclosure_specialist?
     has_sar_deadline_extension? && user_is_assigned_disclosure_specialist?
   end
 
