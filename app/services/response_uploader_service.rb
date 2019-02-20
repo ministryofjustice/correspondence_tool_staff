@@ -55,7 +55,7 @@ class ResponseUploaderService
     ActiveRecord::Base.transaction do
       @case.upload_comment = @upload_comment
       filenames = response_attachments.map(&:filename)
-      # Maybe this should be different controller actions?
+
       case @action
       when 'upload', 'upload-flagged'
         @case.state_machine.add_responses!(acting_user: @current_user,

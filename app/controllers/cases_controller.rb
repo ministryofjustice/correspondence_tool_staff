@@ -298,13 +298,13 @@ class CasesController < ApplicationController
   def approve_action
     authorize @case, :approve?
 
-    bypass_params_manager = BypassParamsManager.new(params)
     case_approval_service = CaseApprovalService.new(
       user: current_user,
       kase: @case,
-      bypass_params: bypass_params_manager
+      bypass_params: BypassParamsManager.new(params)
     )
     case_approval_service.call
+
     if case_approval_service.result == :ok
       current_team = CurrentTeamAndUserService.new(@case).team
       if @case.ico?
@@ -339,6 +339,7 @@ class CasesController < ApplicationController
       upload_comment: params[:upload_comment],
     )
     rus.upload!
+
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
 
     case rus.result
@@ -357,6 +358,7 @@ class CasesController < ApplicationController
 
   def upload_response_and_approve
     authorize @case
+
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     @approval_action = 'approve'
     @case = @case.decorate
@@ -441,7 +443,6 @@ class CasesController < ApplicationController
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     @approval_action = 'redraft'
     @case = @case.decorate
-    render 'response_upload_for_redraft'
   end
 
   def update
@@ -694,10 +695,11 @@ class CasesController < ApplicationController
 
   def execute_request_amends
     authorize @case
-    CaseRequestAmendsService.new(user: current_user,
-                                kase: @case,
-                                message: params[:case][:request_amends_comment],
-                                compliance: params[:case][:draft_compliant]).call
+    CaseRequestAmendsService.new(
+        user: current_user,
+        kase: @case,
+        message: params[:case][:request_amends_comment],
+        is_compliant: params[:case][:draft_compliant] == 'yes').call
     if @case.sar?
       flash[:notice] = 'Information Officer has been notified a redraft is needed.'
     else
@@ -1104,7 +1106,7 @@ class CasesController < ApplicationController
   # Catch exceptions as a result of a user not being authorised to perform an
   # action on a case. The default behaviour is to redirect them to '/' but here
   # we change that for certain actions where it makes sense (i.e. ones that
-  # operateon a case) so that they redirect to the case show page (e.g.
+  # operate on a case) so that they redirect to the case show page (e.g.
   # approve, upload_responses).
   def user_not_authorized(exception)
     case exception.query

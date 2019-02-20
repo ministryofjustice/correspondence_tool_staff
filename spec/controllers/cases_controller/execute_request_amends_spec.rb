@@ -28,7 +28,7 @@ RSpec.describe CasesController, type: :controller do
           .to have_received(:new).with(user: private_officer,
                                        kase: pending_private_clearance_case,
                                        message: "Oh my!",
-                                       compliance: "no")
+                                       is_compliant: false)
         expect(service).to have_received(:call)
       end
 
@@ -63,7 +63,7 @@ RSpec.describe CasesController, type: :controller do
           .to have_received(:new).with(user: disclosure_specialist,
                                        kase: trigger_sar,
                                        message: "Sneaky puppies",
-                                       compliance: "yes")
+                                       is_compliant: true)
         expect(service).to have_received(:call)
       end
 
