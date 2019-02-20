@@ -114,7 +114,7 @@ class Workflows::Predicates
   end
 
   def has_pit_extension?
-    @kase.pit_deadline_extended?
+    @kase.has_pit_extension?
   end
 
   def has_sar_deadline_extension?

@@ -4,16 +4,23 @@ describe CaseRemovePITExtensionService do
   before do
     Timecop.freeze(Time.local(2018, 10, 3))
   end
-  let(:received_date)         { Date.new 2018, 9, 27 }
-  let(:case_being_drafted)    { create :case_being_drafted,
-                                       :extended_for_pit,
-                                       received_date: received_date }
-  let(:team_dacu)             { find_or_create :team_disclosure_bmt }
-  let(:manager)               { find_or_create :disclosure_bmt_user }
-  let(:service)               { CaseRemovePITExtensionService.new(
-                                                            manager,
-                                                            case_being_drafted
-                                                          ) }
+
+  let(:received_date) { Date.new 2018, 9, 27 }
+  let(:team_dacu)     { find_or_create :team_disclosure_bmt }
+  let(:manager)       { find_or_create :disclosure_bmt_user }
+
+  let(:case_being_drafted) {
+    create :case_being_drafted,
+      :extended_for_pit,
+      received_date: received_date
+  }
+
+  let(:service) {
+    CaseRemovePITExtensionService.new(
+      manager,
+      case_being_drafted
+    )
+  }
 
   describe '#call' do
     before do

@@ -1014,15 +1014,18 @@ FactoryBot.define do
 
   trait :extended_for_pit do
     after(:create) do |kase|
-      kase.has_pit_extension = true
-      kase.save!
+      create :case_transition_extend_for_pit, case: kase
+      kase.extend_pit_deadline!(10.business_days.from_now)
     end
   end
 
   trait :pit_extension_removed do
     after(:create) do |kase|
-      kase.has_pit_extension = false
-      kase.save!
+      create :case_transition_extend_for_pit, case: kase
+      kase.extend_pit_deadline!(13.business_days.from_now)
+
+      create :case_transition_remove_pit_extension, case: kase
+      kase.remove_pit_deadline!(13.business_days.before)
     end
   end
 
