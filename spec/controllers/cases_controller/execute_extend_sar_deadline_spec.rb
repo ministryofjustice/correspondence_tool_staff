@@ -4,7 +4,7 @@ describe CasesController, type: :controller do
   describe 'PATCH execute_extend_sar_deadline' do
     let(:sar_case)      { create :approved_sar }
     let(:manager)       { find_or_create :disclosure_bmt_user }
-    let(:service)       { double(CaseExtendSARDeadlineService, call: :ok) }
+    let(:service)       { double(CaseExtendSARDeadlineService, call: :ok, result: :ok) }
 
     let(:patch_params)  {
       {
@@ -45,7 +45,7 @@ describe CasesController, type: :controller do
     end
 
     context 'validation error' do
-      let(:service) { double(CaseExtendSARDeadlineService, call: :validation_error) }
+      let(:service) { double(CaseExtendSARDeadlineService, call: :validation_error, result: :validation_error) }
 
       it 'renders the extend_sar_deadline page' do
         patch :execute_extend_sar_deadline, params: patch_params
@@ -54,7 +54,7 @@ describe CasesController, type: :controller do
     end
 
     context 'failed request' do
-      let(:service) { double(CaseExtendSARDeadlineService, call: :error) }
+      let(:service) { double(CaseExtendSARDeadlineService, call: :error, result: :error) }
 
       it 'notifies the user of the failure' do
         patch :execute_extend_sar_deadline, params: patch_params
