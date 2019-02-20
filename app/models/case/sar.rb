@@ -122,8 +122,8 @@ class Case::SAR < Case::Base
 
   def initial_deadline
     sar_extensions = self.transitions
-                            .where(event: 'extend_sar_deadline')
-                            .order(:id)
+      .where(event: 'extend_sar_deadline')
+      .order(:id)
 
     if sar_extensions.any?
       sar_extensions.first.original_final_deadline
