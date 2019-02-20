@@ -125,8 +125,8 @@ class Workflows::Predicates
     @kase.try(:deadline_extendable?)
   end
 
-  def case_extended_and_user_assigned_disclosure_specialist?
-    has_sar_deadline_extension? && user_is_assigned_disclosure_specialist?
+  def case_extended_and_user_in_approving_team?
+    has_sar_deadline_extension? && user_is_in_approving_team_for_case?
   end
 
   def assigned_team_member_and_case_outside_escalation_period?

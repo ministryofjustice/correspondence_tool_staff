@@ -127,8 +127,8 @@
 
               drafting:
                 extend_sar_deadline:
-                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 flag_for_clearance:
                   switch_workflow: trigger
                 remove_sar_deadline_extension:
-                  if: Workflows::Predicates#case_extended_and_user_assigned_disclosure_specialist?
+                  if: Workflows::Predicates#case_extended_and_user_in_approving_team?
