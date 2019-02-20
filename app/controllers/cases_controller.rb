@@ -660,23 +660,20 @@ class CasesController < ApplicationController
   def execute_extend_sar_deadline
     authorize @case, :extend_sar_deadline?
 
-    extension_reason = params[:case][:reason_for_extending]
-
     service = CaseExtendSARDeadlineService.new(
-                current_user,
-                @case,
-                params[:case][:extension_period],
-                extension_reason
-              )
+      current_user,
+      @case,
+      params[:case][:extension_period],
+      params[:case][:reason_for_extending]
+    )
+    service.call
 
-    result = service.call
-
-    if result == :ok
+    if service.result == :ok
       flash[:notice] = t('.success')
       redirect_to case_path(@case.id)
-    elsif result == :validation_error
+    elsif service.result == :validation_error
       @case = CaseExtendSARDeadlineDecorator.decorate @case
-      @case.reason_for_extending = extension_reason
+      @case.reason_for_extending = params[:case][:reason_for_extending]
       render :extend_sar_deadline
     else
       flash[:alert] = t('.error', case_number: @case.number)
@@ -687,10 +684,13 @@ class CasesController < ApplicationController
   def remove_sar_deadline_extension
     authorize @case, :remove_sar_deadline_extension?
 
-    service = CaseRemoveSARDeadlineExtensionService.new(current_user, @case)
-    result = service.call
+    service = CaseRemoveSARDeadlineExtensionService.new(
+      current_user,
+      @case
+    )
+    service.call
 
-    if result == :ok
+    if service.result == :ok
       flash[:notice] = t('.success')
       redirect_to case_path(@case.id)
     else
