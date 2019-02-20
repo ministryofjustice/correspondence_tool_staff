@@ -192,6 +192,7 @@ en:
     case/sar_policy:
       <<: *case_policy
       extend_sar_deadline?: 'SAR deadline cannot be extended'
+      remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
