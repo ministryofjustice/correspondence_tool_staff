@@ -111,6 +111,7 @@ class User < ApplicationRecord
     self.teams_for_case(kase).first
   end
 
+  # Note: Role Weightings can be very different depending on the event
   def self.sort_teams_by_roles(teams, role_weightings = ROLE_WEIGHTINGS)
     teams.sort do |a, b|
       role_weightings[a.role] <=> role_weightings[b.role]
