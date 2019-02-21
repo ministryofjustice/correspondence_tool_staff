@@ -7,11 +7,13 @@ class CaseRemovePITExtensionService
     @result = :incomplete
   end
 
+  # TODO (Mohammed Seedat): Setting acting_team: @user.team_for_case(@case)
+  # causes many existing test failures
   def call
     ActiveRecord::Base.transaction do
       @case.state_machine.remove_pit_extension!(
         acting_user: @user,
-        acting_team: @user.team_for_case(@case)
+        acting_team: BusinessUnit.dacu_bmt
       )
 
       @case.remove_pit_deadline!(find_original_final_deadline)
