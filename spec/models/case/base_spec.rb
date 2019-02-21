@@ -1047,7 +1047,7 @@ RSpec.describe Case::Base, type: :model do
               received_date: Date.today,
               created_at: DateTime.now
 
-            puts CaseExtendForPITService.new(
+            CaseExtendForPITService.new(
               approver,
               kase,
               kase.external_deadline + 15.days,
