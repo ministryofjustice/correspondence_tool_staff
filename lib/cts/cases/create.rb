@@ -270,11 +270,11 @@ module CTS::Cases
       if kase.approver_assignments.for_user(CTS::dacu_disclosure_approver).any?
         call_case_approval_service(CTS::dacu_disclosure_approver, kase)
       else
-        ResponseUploaderService.new(
+        ResponseUploaderService.seed!(
           kase: kase,
           current_user: responder,
-          action: 'upload',
-        ).seed!('spec/fixtures/eon.pdf')
+          filepath: 'spec/fixtures/eon.pdf',
+        )
         kase.state_machine.add_responses!(acting_user: responder,
                                           acting_team: kase.responding_team,
                                           filenames: kase.attachments)
@@ -299,11 +299,11 @@ module CTS::Cases
                                                    acting_team: kase.responding_team,
                                                    target_team: dts.approving_team)
       else
-        ResponseUploaderService.new(
+        ResponseUploaderService.seed!(
           kase: kase,
           current_user: responder,
-          action: 'upload',
-        ).seed!('spec/fixtures/eon.pdf')
+          filepath: 'spec/fixtures/eon.pdf',
+        )
         kase.state_machine.add_responses!(acting_user: responder,
                                           acting_team:responding_team,
                                           filenames: kase.attachments)

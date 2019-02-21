@@ -23,9 +23,13 @@ class ResponseUploaderService
     @uploader = S3Uploader.new(@case, @current_user)
   end
 
-  def seed!(filepath)
-    @uploader.add_file_to_case(filepath, RESPONSE_TYPE)
-    PdfMakerJob.perform_now(@case.attachments.first.id)
+  class << self
+    # TODO - this appears to be only used in tests
+    def seed!(kase:, current_user:, filepath:)
+      uploader = S3Uploader.new(kase, current_user)
+      uploader.add_file_to_case(filepath, RESPONSE_TYPE)
+      PdfMakerJob.perform_now(kase.attachments.first.id)
+    end
   end
 
   def upload!
