@@ -382,6 +382,9 @@ class CasesController < ApplicationController
       service_params[:bypass_message] = params[:bypass_approval][:bypass_message]
       service_params[:bypass_further_approval] =
         !params[:bypass_approval][:press_office_approval_required] == 'true'
+    else
+      service_params[:bypass_message] = nil
+      service_params[:bypass_further_approval] = false
     end
 
     service = ResponseUploaderService.new(service_params)
