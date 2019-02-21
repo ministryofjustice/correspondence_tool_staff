@@ -9,15 +9,16 @@ class ResponseUploaderService
   # * 'upload-approve' - approver uploads a response and approves
   # * 'upload-redraft' - approver uploads a response for redrafting to kilo for amendments
   #
-  def initialize(options = {})
-    @case                    = options[:kase]
-    @current_user            = options[:current_user]
-    @action                  = options[:action]
-    @uploaded_files          = options[:uploaded_files]
-    @is_compliant            = options[:is_compliant]
-    @upload_comment          = options[:upload_comment]
-    @bypass_message          = options[:bypass_message]
-    @bypass_further_approval = options[:bypass_further_approval]
+  def initialize(kase:, current_user:, action:, uploaded_files:, is_compliant:,
+                 upload_comment:, bypass_message:, bypass_further_approval:)
+    @case                    = kase
+    @current_user            = current_user
+    @action                  = action
+    @uploaded_files          = uploaded_files
+    @is_compliant            = is_compliant
+    @upload_comment          = upload_comment
+    @bypass_message          = bypass_message
+    @bypass_further_approval = bypass_further_approval
 
     @result = nil
     @uploader = S3Uploader.new(@case, @current_user)
