@@ -1,6 +1,8 @@
 class ResponseUploaderService
   attr_reader :kase, :current_user, :attachment_type, :result
 
+  RESPONSE_TYPE = :response
+
   # action_params is passed through from the flash on the upload page and can be:
   # * 'upload' - upload response but don't change state
   # * 'upload-flagged' - upload response to flagged case and transition to pending_dacu_clearance
@@ -18,12 +20,11 @@ class ResponseUploaderService
     @bypass_further_approval = options[:bypass_further_approval]
 
     @result = nil
-    @type = :response
     @uploader = S3Uploader.new(@case, @current_user)
   end
 
   def seed!(filepath)
-    @uploader.add_file_to_case(filepath, @type)
+    @uploader.add_file_to_case(filepath, RESPONSE_TYPE)
     PdfMakerJob.perform_now(@case.attachments.first.id)
   end
 
@@ -33,7 +34,7 @@ class ResponseUploaderService
         @result = :blank
         @attachments = []
       else
-        @attachments = @uploader.process_files(@uploaded_files, @type)
+        @attachments = @uploader.process_files(@uploaded_files, RESPONSE_TYPE)
         transition_state(@attachments)
         @result = :ok
       end
@@ -51,6 +52,10 @@ class ResponseUploaderService
 
   private
 
+  #  when approving, always log compliance date because it must be
+  # when asking for a re-draft, log compliance date if it is compliant
+  # other cases are the responder uploading so it's obvious that compliance isn't yet decided.
+  # so the date cannot be recorded (yet)
   def transition_state(response_attachments)
     ActiveRecord::Base.transaction do
       @case.upload_comment = @upload_comment
@@ -65,7 +70,6 @@ class ResponseUploaderService
       when 'upload-approve'
         upload_approve(filenames)
         @case.log_compliance_date
-
       when 'upload-redraft'
         @case.state_machine.upload_response_and_return_for_redraft!(
                              acting_user: @current_user,

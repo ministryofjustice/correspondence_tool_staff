@@ -61,7 +61,11 @@ describe CasesController do
                                              current_user: responder,
                                              action: 'upload',
                                              uploaded_files: [uploads_key],
-                                             upload_comment: nil
+                                             upload_comment: nil,
+                                             bypass_message: nil,
+                                             bypass_further_approval: false,
+                                             # action 'upload' ignores the is_compliant flag
+                                             is_compliant: false
                                            )
         expect(response_uploader).to have_received(:upload!)
       end

@@ -241,6 +241,8 @@ module Features
         upload_comment: "I've uploaded it",
         action: action,
         is_compliant: is_compliant,
+        bypass_further_approval: false,
+        bypass_message: nil
       )
       uploader = rus.instance_variable_get :@uploader
       allow(uploader).to receive(:move_uploaded_file)

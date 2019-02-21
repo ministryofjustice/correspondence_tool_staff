@@ -337,6 +337,9 @@ class CasesController < ApplicationController
       action: 'upload',
       uploaded_files: params[:uploaded_files],
       upload_comment: params[:upload_comment],
+      is_compliant: false,
+      bypass_further_approval: false,
+      bypass_message: nil
     )
     rus.upload!
 
@@ -373,6 +376,7 @@ class CasesController < ApplicationController
       action: 'upload-approve',
       uploaded_files: params[:uploaded_files],
       upload_comment: params[:upload_comment],
+      is_compliant: true
     }
     if params.key?(:bypass_approval)
       service_params[:bypass_message] = params[:bypass_approval][:bypass_message]
@@ -417,6 +421,8 @@ class CasesController < ApplicationController
       uploaded_files: params[:uploaded_files],
       upload_comment: params[:upload_comment],
       is_compliant: params[:draft_compliant] == 'yes',
+      bypass_message: nil,
+      bypass_further_approval: false
     )
     rus.upload!
 
@@ -958,22 +964,6 @@ class CasesController < ApplicationController
       filter_status: [],
       filter_timeliness: [],
     )
-  end
-
-  def search_and_filter(full_list_of_cases = nil)
-    service = CaseSearchService.new(current_user,
-                                    params.slice(:search_query, :page))
-    service.call(full_list_of_cases)
-    @query = service.query
-    if service.error?
-      flash.now[:alert] = service.error_message
-    else
-      kases = service.result_set
-      @parent_id = @query.id
-      flash[:query_id] = @query.id
-      @page = params[:page] || '1'
-    end
-    kases
   end
 
   def prepare_select_type
