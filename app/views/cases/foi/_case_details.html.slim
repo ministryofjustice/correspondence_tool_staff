@@ -24,7 +24,7 @@
       - if case_details.responding_team.present?
         = render partial: 'cases/shared/responding_team', locals: { case_details: case_details }
 
-      - if case_details.date_draft_compliant.present?
+      - if case_details.has_date_draft_compliant?
         = render partial: 'cases/shared/draft_compliance_details', locals: { case_details: case_details }
 
       - if case_details.closed?

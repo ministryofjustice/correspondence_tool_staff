@@ -82,24 +82,37 @@ describe CasesController, type: :controller do
         }
       end
 
-      it 'sets the bypass_further_approval param to true' do
+      it 'sets the bypass_message and bypass_further_approval param to false' do
         patch :upload_response_and_approve_action, params: params
         expect(ResponseUploaderService).to have_received(:new).with(
                                              hash_including(
+                                               bypass_message: 'Response does not need approval',
                                                bypass_further_approval: false
                                              )
                                            )
       end
+    end
 
+    context 'response requires press office approval' do
+      let(:params) do
+        {
+          id: responded_trigger_case.id,
+          type: 'response',
+          uploaded_files: [uploads_key],
+          bypass_approval: {
+            bypass_message: 'Response needs approval',
+            press_office_approval_required: 'true',
+          }
+        }
+      end
 
-      it 'sets the bypass_message param' do
+      it 'sets the bypass_further_approval param to false' do
         patch :upload_response_and_approve_action, params: params
-        expect(ResponseUploaderService)
-          .to have_received(:new).with(
-                hash_including(
-                  bypass_message: 'Response does not need approval'
-                )
-              )
+        expect(ResponseUploaderService).to have_received(:new).with(
+          hash_including(
+            bypass_further_approval: false
+          )
+        )
       end
     end
 

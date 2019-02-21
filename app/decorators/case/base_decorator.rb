@@ -72,11 +72,11 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def date_draft_compliant
-    if object.date_draft_compliant.present?
-      I18n.l(object.date_draft_compliant, format: :default)
-    else
-      nil
-    end
+    I18n.l(object.date_draft_compliant, format: :default)
+  end
+
+  def has_date_draft_compliant?
+    object.date_draft_compliant.present?
   end
 
   def error_summary_message

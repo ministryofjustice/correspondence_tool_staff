@@ -372,10 +372,17 @@ describe Case::BaseDecorator, type: :model do
       allow(closed_case.object).to receive(:date_draft_compliant).and_return(Date.new(2017, 8, 14))
       expect(closed_case.date_draft_compliant).to eq '14 Aug 2017'
     end
+  end
 
-    it 'returns nil before the draft upload date is populated' do
+  describe '#has_date_draft_compliant?' do
+    it 'returns true when there is an underlying date_draft_compliant' do
+      allow(closed_case.object).to receive(:date_draft_compliant).and_return(Date.new(2017, 8, 14))
+      expect(closed_case.has_date_draft_compliant?).to eq true
+    end
+
+    it 'returns false when there is not an underlying date_draft_compliant' do
       allow(closed_case.object).to receive(:date_draft_compliant).and_return(nil)
-      expect(closed_case.date_draft_compliant).to eq nil
+      expect(closed_case.has_date_draft_compliant?).to eq false
     end
   end
 
