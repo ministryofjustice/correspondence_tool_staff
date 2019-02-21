@@ -1,5 +1,5 @@
 class SetDraftTimelinessService
-attr_reader :result
+  attr_reader :result
 
   def initialize(kase:)
     @kase = kase
