@@ -23,7 +23,7 @@ describe ResponseUploaderService do
                                uploaded_files: uploaded_files,
                                upload_comment: upload_comment,
                                bypass_message: '',
-                               draft_compliant: is_draft_compliant,
+                               is_compliant: is_draft_compliant,
                              ) }
   let(:rus_with_message)   { ResponseUploaderService.new(
                                kase: kase,
@@ -33,7 +33,7 @@ describe ResponseUploaderService do
                                uploaded_files: [uploads_key],
                                upload_comment: 'This is my upload message',
                                bypass_message: '',
-                               draft_compliant: is_draft_compliant,
+                               is_compliant: is_draft_compliant,
                              ) }
   let(:attachments)        { [instance_double(CaseAttachment,
                                               filename: filename)] }
