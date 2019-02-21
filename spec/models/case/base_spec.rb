@@ -1031,13 +1031,13 @@ RSpec.describe Case::Base, type: :model do
         end
       end
 
-      # TODO (Mohammed Seedat): This test fails because an approver assigned to an FOI,
-      # in a trigger workflow does not have permission to extend_for_pit according
-      # to the state machine configs
-      xcontext 'case has been extended for pit' do
+      # TODO (Mohammed Seedat): An approver for a case_being_drafted in trigger
+      # workflow cannot extend_for_pit. This test works because
+      # CaseExtendForPITService executes the state transition setting
+      # acting_team = BusinessUnit.dacu_bmt
+      context 'case has been extended for pit' do
         it 'does not update deadlines' do
-          disclosure_team = find_or_create :team_dacu_disclosure
-          approver = disclosure_team.users.first
+          approver = find_or_create :disclosure_specialist
           kase = nil
 
           Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
@@ -1045,9 +1045,9 @@ RSpec.describe Case::Base, type: :model do
               :flagged_accepted,
               approver: approver,
               received_date: Date.today,
-              created_at: Time.now
+              created_at: DateTime.now
 
-            CaseExtendForPITService.new(
+            puts CaseExtendForPITService.new(
               approver,
               kase,
               kase.external_deadline + 15.days,

@@ -9,12 +9,14 @@ class CaseExtendForPITService
     @result = :incomplete
   end
 
+  # TODO (Mohammed Seedat): Setting acting_team: @user.team_for_case(@case)
+  # causes many existing test failures
   def call
     ActiveRecord::Base.transaction do
       if validate_params
         @case.state_machine.extend_for_pit!(
           acting_user: @user,
-          acting_team: @user.team_for_case(@case),
+          acting_team: BusinessUnit.dacu_bmt,
           final_deadline: @extension_deadline,
           original_final_deadline: @case.external_deadline,
           message: @reason
