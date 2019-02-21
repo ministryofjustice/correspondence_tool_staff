@@ -31,14 +31,14 @@ describe 'users/show.html.slim', type: :view do
   it 'has correct data in case rows' do
     users_show_page.load(rendered)
 
-    row = users_show_page.case_list.first
+    row = users_show_page.case_list.last
     expect(row.number).to have_text(kase_1.number)
     expect(row.type).to have_text 'FOI'
     expect(row.request_detail).to have_text kase_1.subject
     expect(row.external_deadline).to have_text I18n.l(kase_1.external_deadline)
     expect(row.status).to have_text 'Draft in progress'
 
-    row = users_show_page.case_list.last
+    row = users_show_page.case_list.first
     expect(row.number).to have_text(kase_2.number)
     expect(row.type).to have_text 'FOI'
     expect(row.request_detail).to have_text kase_2.subject
