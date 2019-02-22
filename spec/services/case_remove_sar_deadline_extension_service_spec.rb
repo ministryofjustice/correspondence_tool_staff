@@ -57,8 +57,12 @@ describe CaseRemoveSARDeadlineExtensionService do
       end
     end
 
-    # Force #call transaction block to fail, can be any kind of StandardError
     context 'on any transaction exception' do
+      before do
+        # Force #call transaction block to fail, can be any kind of StandardError
+        allow(sar_case).to receive(:reset_deadline!).and_throw(ArgumentError)
+      end
+
       let(:service) {
         remove_sar_extension_service(
           manager,
@@ -67,15 +71,12 @@ describe CaseRemoveSARDeadlineExtensionService do
       }
 
       it 'does not transition SAR state' do
-        allow(sar_case).to receive(:reset_deadline!).and_throw(ArgumentError)
-
-        expect { service.call }.to raise_error(ArgumentError)
-        expect(service.result).to eq :error
-
+        result = service.call
         transitions = sar_case.transitions.where(
           event: 'remove_sar_deadline_extension'
         )
 
+        expect(result).to eq :error
         expect(transitions.any?).to be false
       end
     end
