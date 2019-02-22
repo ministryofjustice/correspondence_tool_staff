@@ -1,32 +1,33 @@
 require "rails_helper"
 
 describe CaseRemoveSARDeadlineExtensionService do
-  let(:team_dacu)           { find_or_create :team_disclosure_bmt }
-  let(:manager)             { find_or_create :disclosure_bmt_user }
-  let!(:sar_case)           { create(:extended_deadline_sar) }
-  let!(:initial_deadline)   { sar_case.initial_deadline }
-  let!(:max_extension)      { Settings.sar_extension_limit.to_i }
+  let(:team_dacu)         { find_or_create :team_disclosure_bmt }
+  let(:manager)           { find_or_create :disclosure_bmt_user }
+  let(:sar_case)          { create(:extended_deadline_sar) }
+  let(:initial_deadline)  { sar_case.initial_deadline }
+  let(:max_extension)     { Settings.sar_extension_limit.to_i }
 
   before do
     allow(sar_case.state_machine).to receive(:remove_sar_deadline_extension!)
   end
 
   describe '#initialize' do
-    subject(:sar_extension_remove_service) {
+    let(:sar_extension_remove_service) {
       remove_sar_extension_service(manager, sar_case)
     }
 
     it { expect(sar_case.external_deadline).not_to eq initial_deadline }
-    it { expect(subject.result).to eq :incomplete }
+    it { expect(sar_extension_remove_service.result).to eq :incomplete }
   end
 
   describe '#call' do
     context 'with expected params' do
-      subject!(:sar_extension_remove_service) {
+      let!(:sar_extension_remove_service_result) {
         remove_sar_extension_service(manager, sar_case).call
       }
 
-      it { is_expected.to eq :ok }
+      it { expect(sar_extension_remove_service_result).to eq :ok }
+
       it 'creates new SAR extension removal transition' do
         expect(sar_case.state_machine)
           .to have_received(:remove_sar_deadline_extension!)
@@ -58,7 +59,7 @@ describe CaseRemoveSARDeadlineExtensionService do
 
     # Force #call transaction block to fail, can be any kind of StandardError
     context 'on any transaction exception' do
-      let!(:service) {
+      let(:service) {
         remove_sar_extension_service(
           manager,
           sar_case

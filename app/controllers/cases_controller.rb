@@ -661,10 +661,10 @@ class CasesController < ApplicationController
     authorize @case, :extend_sar_deadline?
 
     service = CaseExtendSARDeadlineService.new(
-      current_user,
-      @case,
-      params[:case][:extension_period],
-      params[:case][:reason_for_extending]
+      user: current_user,
+      kase: @case,
+      extension_days: params[:case][:extension_period],
+      reason: params[:case][:reason_for_extending]
     )
     service.call
 

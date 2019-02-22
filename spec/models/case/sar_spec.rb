@@ -310,40 +310,40 @@ describe Case::SAR do
     end
 
     describe '#extend_deadline!' do
-      subject!                { create :approved_sar }
-      let!(:initial_deadline) { subject.initial_deadline }
-      let!(:new_deadline)     { DateTime.new(2019, 01, 01) }
+      let(:approved_sar)      { create :approved_sar }
+      let(:initial_deadline)  { approved_sar.initial_deadline }
+      let(:new_deadline)      { DateTime.new(2019, 01, 01) }
 
       it 'sets #deadline_extended to true' do
-        expect { subject.extend_deadline!(new_deadline) }.to \
-          change(subject, :deadline_extended)
+        expect { approved_sar.extend_deadline!(new_deadline) }.to \
+          change(approved_sar, :deadline_extended)
           .from(false)
           .to(true)
       end
 
       it 'sets new external_deadline' do
-        expect { subject.extend_deadline!(new_deadline) }.to \
-          change(subject, :external_deadline)
+        expect { approved_sar.extend_deadline!(new_deadline) }.to \
+          change(approved_sar, :external_deadline)
           .from(initial_deadline)
           .to(new_deadline)
       end
     end
 
     describe '#reset_deadline!' do
-      subject!                  { create :extended_deadline_sar }
-      let!(:initial_deadline)   { subject.initial_deadline }
-      let!(:extended_deadline)  { subject.external_deadline }
+      let(:extended_sar)      { create :extended_deadline_sar }
+      let(:initial_deadline)  { extended_sar.initial_deadline }
+      let(:extended_deadline) { extended_sar.external_deadline }
 
       it 'sets #deadline_extended to false' do
-        expect { subject.reset_deadline! }.to \
-          change(subject, :deadline_extended)
+        expect { extended_sar.reset_deadline! }.to \
+          change(extended_sar, :deadline_extended)
           .from(true)
           .to(false)
       end
 
       it 'resets external_deadline' do
-        expect { subject.reset_deadline! }.to \
-          change(subject, :external_deadline)
+        expect { extended_sar.reset_deadline! }.to \
+          change(extended_sar, :external_deadline)
           .from(extended_deadline)
           .to(initial_deadline)
       end

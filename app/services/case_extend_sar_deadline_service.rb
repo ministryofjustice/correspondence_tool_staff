@@ -1,7 +1,7 @@
 class CaseExtendSARDeadlineService
   attr_reader :result, :error
 
-  def initialize(user, kase, extension_days, reason)
+  def initialize(user:, kase:, extension_days:, reason:)
     @user = user
     @case = kase
     @extension_days = extension_days
