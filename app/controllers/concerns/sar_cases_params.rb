@@ -29,6 +29,7 @@ module SARCasesParams
       :third_party_relationship,
       :name,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :date_draft_compliant_dd, :date_draft_compliant_mm, :date_draft_compliant_yyyy,
       :subject,
       :message,
       :flag_for_disclosure_specialists,

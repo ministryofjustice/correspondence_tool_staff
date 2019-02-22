@@ -32,6 +32,9 @@ describe CasesController, type: :controller do
                   'received_date_dd' => '26',
                   'received_date_mm' => '5',
                   'received_date_yyyy' => '2018',
+                  'date_draft_compliant_dd' => '28',
+                  'date_draft_compliant_mm' => '5',
+                  'date_draft_compliant_yyyy' => '2018',
                   'subject' => 'modified subject',
                   'message' => 'modified full request'
               },
@@ -53,6 +56,7 @@ describe CasesController, type: :controller do
             expect(kase.postal_address).to eq 'modified address'
             expect(kase.subject).to eq 'modified subject'
             expect(kase.requester_type).to eq 'what_do_they_know'
+            expect(kase.date_draft_compliant).to eq Date.new(2018, 5, 28)
           end
         end
 
@@ -113,6 +117,9 @@ describe CasesController, type: :controller do
                 'received_date_dd' => '22',
                 'received_date_mm' => '5',
                 'received_date_yyyy' => '2018',
+                'date_draft_compliant_dd' => '28',
+                'date_draft_compliant_mm' => '5',
+                'date_draft_compliant_yyyy' => '2018',
                 'subject' => 'modified summary',
                 'message' => 'moidified full case',
                 'flag_for_disclosure_specialists' => 'no',
@@ -142,6 +149,7 @@ describe CasesController, type: :controller do
             expect(kase.reply_method).to eq 'send_by_post'
             expect(kase.subject_type).to eq 'member_of_the_public'
             expect(kase.subject_full_name).to eq 'modified subject'
+            expect(kase.date_draft_compliant).to eq Date.new(2018, 5, 28)
           end
         end
 
@@ -188,6 +196,9 @@ describe CasesController, type: :controller do
                 'received_date_dd' => '1',
                 'received_date_mm' => '5',
                 'received_date_yyyy' => '2018',
+                'date_draft_compliant_dd' => '13',
+                'date_draft_compliant_mm' => '5',
+                'date_draft_compliant_yyyy' => '2018',
                 'internal_deadline_dd' => '15',
                 'internal_deadline_mm' => '5',
                 'internal_deadline_yyyy' => '2018',
@@ -212,6 +223,7 @@ describe CasesController, type: :controller do
           expect(kase.received_date).to eq Date.new(2018, 5, 1)
           expect(kase.internal_deadline).to eq Date.new(2018, 5, 15)
           expect(kase.external_deadline).to eq Date.new(2018, 5, 26)
+          expect(kase.date_draft_compliant).to eq Date.new(2018, 5, 13)
         end
 
         it 'redirects to show page' do
@@ -221,5 +233,4 @@ describe CasesController, type: :controller do
       end
     end
   end
-
 end
