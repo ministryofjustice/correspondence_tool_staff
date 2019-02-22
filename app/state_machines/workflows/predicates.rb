@@ -117,10 +117,16 @@ class Workflows::Predicates
     @kase.has_pit_extension?
   end
 
+  # Use of try rather than direct method call because
+  # deadline_extended? is only available for
+  # Case::SAR and should be false for non-SAR cases
   def has_sar_deadline_extension?
     @kase.try(:deadline_extended?)
   end
 
+  # Use of try rather than direct method call because
+  # deadline_extendable? is only available for
+  # Case::SAR and should be false for non-SAR cases
   def deadline_does_not_exceed_max_deadline?
     @kase.try(:deadline_extendable?)
   end
