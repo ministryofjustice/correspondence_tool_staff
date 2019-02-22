@@ -250,7 +250,7 @@ module Features
       rus.upload!
     end
 
-    def extend_sar_deadline_for(kase, num_days, reason: 'The reason for extending')
+    def extend_sar_deadline_for(kase:, num_days:, reason: 'The reason for extending')
       cases_show_page.load(id: kase.id)
       cases_show_page.actions.extend_sar_deadline.click
 

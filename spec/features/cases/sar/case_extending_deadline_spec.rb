@@ -22,14 +22,14 @@ feature 'when extending a SAR case deadline' do
       expect(cases_show_page.actions).not_to have_remove_sar_deadline_extension
 
       # 2. Extend by 30 days for the first time
-      extend_sar_deadline_for(kase, 30) do |page|
+      extend_sar_deadline_for(kase: kase, num_days: 30) do |page|
         page.extension_period_30_days.click
       end
 
       case_deadline_text_to_be(expected_initial_extension_date)
 
       # 3. Extending again does not give you any extension periods for selection
-      extend_sar_deadline_for(kase, 30, reason: 'Need even more time') do |page|
+      extend_sar_deadline_for(kase: kase, num_days: 30, reason: 'Need even more time') do |page|
         expect(page).not_to have_extension_period_30_days
         expect(page).to have_text('The deadline for this case will be extended by a further 30 days.')
       end
@@ -55,7 +55,7 @@ feature 'when extending a SAR case deadline' do
       login_as manager
 
       # 1. Extend by 60 days
-      extend_sar_deadline_for(kase, 60) do |page|
+      extend_sar_deadline_for(kase: kase, num_days: 60) do |page|
         page.extension_period_60_days.click
       end
 
@@ -86,7 +86,7 @@ feature 'when extending a SAR case deadline' do
       cases_show_page.load(id: kase.id)
 
       # 1. Extend by 30 days for the first time
-      extend_sar_deadline_for(kase, 30) do |page|
+      extend_sar_deadline_for(kase: kase, num_days: 30) do |page|
         page.extension_period_30_days.click
       end
 
