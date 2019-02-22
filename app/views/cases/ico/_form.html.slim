@@ -33,3 +33,11 @@
         = render partial: 'shared/dropzone_form',
                  locals: { s3_direct_post: @s3_direct_post,
                            file_input_name: 'case_ico[uploaded_request_files][]' }
+
+
+- if kase.date_draft_compliant.present?
+ #date-draft-compliant
+   = f.gov_uk_date_field :date_draft_compliant,
+           {legend_text: t('cases.edit.date_draft_compliant'),
+                   form_hint_text: t('cases.edit.date_draft_compliant'),
+                   today_button: {class: ''} }
