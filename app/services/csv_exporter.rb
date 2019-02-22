@@ -3,6 +3,7 @@ require 'csv'
 class CSVExporterError < RuntimeError; end
 
 class CSVExporter
+  include CasesHelper
 
   CSV_COLUMN_HEADINGS = [
       'Number',
@@ -28,7 +29,8 @@ class CSVExporter
       'Third party',
       'Reply method',
       'SAR Subject type',
-      'SAR Subject full name'
+      'SAR Subject full name',
+      'Business unit responsible for late response'
   ]
 
   def initialize(kase)
@@ -37,7 +39,7 @@ class CSVExporter
 
   #rubocop:disable Metrics/CyclomaticComplexity
   def to_csv
-    begin
+    # begin
       [
           @kase.number,
           @kase.decorate.pretty_type,
@@ -62,11 +64,12 @@ class CSVExporter
           @kase.respond_to?(:third_party) ? @kase.third_party : nil,
           @kase.respond_to?(:reply_method) ? @kase.reply_method : nil,
           @kase.respond_to?(:subject_type) ? @kase.subject_type : nil,
-          @kase.respond_to?(:subject_full_name) ? @kase.subject_full_name : nil
+          @kase.respond_to?(:subject_full_name) ? @kase.subject_full_name : nil,
+          case_late_team_name(@kase)
       ]
-    rescue => err
-      raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
-    end
+    # rescue => err
+    #   raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
+    # end
   end
   #rubocop:ensable Metrics/CyclomaticComplexity
 
