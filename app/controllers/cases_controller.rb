@@ -12,7 +12,7 @@ class CasesController < ApplicationController
                 only: [
                   :closure_outcomes,
                   :approve,
-                  :approve_action,
+                  :execute_approve,
                   :edit,
                   :edit_closure,
                   :extend_for_pit,
@@ -32,7 +32,7 @@ class CasesController < ApplicationController
                   :upload_responses,
                   :upload_responses_action,
                   :upload_response_and_approve,
-                  :upload_response_and_approve_action,
+                  :execute_upload_response_and_approve,
                   :upload_response_and_return_for_redraft,
                   :upload_response_and_return_for_redraft_action,
                 ]
@@ -295,7 +295,7 @@ class CasesController < ApplicationController
     @case = @case.decorate
   end
 
-  def approve_action
+  def execute_approve
     authorize @case, :approve?
 
     case_approval_service = CaseApprovalService.new(
@@ -367,7 +367,7 @@ class CasesController < ApplicationController
     @case = @case.decorate
   end
 
-  def upload_response_and_approve_action
+  def execute_upload_response_and_approve
     authorize @case, :upload_response_and_approve?
 
     service_params = {

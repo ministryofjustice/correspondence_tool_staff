@@ -63,7 +63,7 @@ describe 'cases routes', type: :routing do
   end
 
   describe patch: '/cases/1/approve' do
-    it { should route_to 'cases#approve_action', id: '1' }
+    it { should route_to 'cases#execute_approve', id: '1' }
   end
 
   describe get: '/cases/1/upload_responses' do
@@ -79,7 +79,7 @@ describe 'cases routes', type: :routing do
   end
 
   describe patch: '/cases/1/upload_response_and_approve' do
-    it { should route_to 'cases#upload_response_and_approve_action', id: '1' }
+    it { should route_to 'cases#execute_upload_response_and_approve', id: '1' }
   end
 
   describe get: '/cases/1/upload_response_and_return_for_redraft' do

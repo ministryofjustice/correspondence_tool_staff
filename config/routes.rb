@@ -288,7 +288,7 @@ Rails.application.routes.draw do
 
     get 'approve', on: :member
     patch 'approve',
-          action: :approve_action,
+          action: :execute_approve,
           on: :member
     get 'upload_responses', on: :member
     patch 'upload_responses',
@@ -296,7 +296,7 @@ Rails.application.routes.draw do
           on: :member
     get 'upload_response_and_approve', on: :member
     patch 'upload_response_and_approve',
-          action: :upload_response_and_approve_action,
+          action: :execute_upload_response_and_approve,
           on: :member
     get 'upload_response_and_return_for_redraft', on: :member
     patch 'upload_response_and_return_for_redraft',
