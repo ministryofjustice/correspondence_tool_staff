@@ -194,7 +194,7 @@ describe CaseExtendSARDeadlineService do
 
   private
 
-  def sar_extension_service(user: user, kase: kase, extension_days:, reason: 'Testing')
+  def sar_extension_service(user:, kase:, extension_days:, reason: 'Testing')
     CaseExtendSARDeadlineService.new(
       user: user,
       kase: kase,
