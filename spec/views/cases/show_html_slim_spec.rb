@@ -343,7 +343,7 @@ describe 'cases/show.html.slim', type: :view do
 
     context 'after it is extended' do
       let(:sar) {
-        extended_sar = create(:extended_deadline_sar)
+        extended_sar = create(:sar_case, :extended_deadline_sar)
         extended_sar.external_deadline += 60.days
         extended_sar.decorate
       }

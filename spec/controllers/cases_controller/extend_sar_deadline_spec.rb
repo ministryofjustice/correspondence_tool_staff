@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CasesController, type: :controller do
   let(:sar_case)          { create :sar_case }
-  let(:extended_sar_case) { create :extended_deadline_sar }
+  let(:extended_sar_case) { create :approved_sar, :extended_deadline_sar }
   let(:manager)           { find_or_create :disclosure_bmt_user }
 
   before do

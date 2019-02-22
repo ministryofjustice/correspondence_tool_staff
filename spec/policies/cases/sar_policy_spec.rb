@@ -48,11 +48,13 @@ describe Case::SARPolicy do
                                         managing_team: managing_team,
                                         responding_team: responding_team }
 
-  let(:extended_sar_case)      { create :extended_deadline_sar,
+  let(:extended_sar_case)      { create :approved_sar,
+                                        :extended_deadline_sar,
                                         :flagged_accepted,
                                         :dacu_disclosure,
-                                        managing_team: managing_team,
-                                        responding_team: responding_team }
+                                        manager: manager,
+                                        approver: disclosure_specialist,
+                                        managing_team: managing_team }
 
   after(:each) do |example|
     if example.exception

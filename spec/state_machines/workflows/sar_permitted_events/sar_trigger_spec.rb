@@ -36,7 +36,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'drafting' do
         it 'should show permitted events' do
-          k = create :extended_deadline_sar, :flagged_accepted
+          k = create :accepted_sar, :extended_deadline_sar, :flagged_accepted
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
@@ -307,7 +307,7 @@ describe ConfigurableStateMachine::Machine do
 
       context 'drafting state' do
         it 'shows events' do
-          k = create :extended_deadline_sar, :flagged_accepted
+          k = create :accepted_sar, :extended_deadline_sar, :flagged_accepted
           approver = approver_in_assigned_team(k)
 
           expect(k.current_state).to eq 'drafting'

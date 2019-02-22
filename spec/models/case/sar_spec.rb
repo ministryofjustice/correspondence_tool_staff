@@ -289,7 +289,8 @@ describe Case::SAR do
       end
 
       it 'checks transitions for initial deadline' do
-        extended_sar = create :extended_deadline_sar
+        extended_sar = create(:sar_case, :extended_deadline_sar)
+
         original_deadline = extended_sar
           .transitions
           .where(event: 'extend_sar_deadline')
@@ -330,7 +331,7 @@ describe Case::SAR do
     end
 
     describe '#reset_deadline!' do
-      let(:extended_sar)      { create :extended_deadline_sar }
+      let(:extended_sar)      { create(:sar_case, :extended_deadline_sar) }
       let(:initial_deadline)  { extended_sar.initial_deadline }
       let(:extended_deadline) { extended_sar.external_deadline }
 

@@ -3,7 +3,7 @@ require "rails_helper"
 describe CaseRemoveSARDeadlineExtensionService do
   let(:team_dacu)         { find_or_create :team_disclosure_bmt }
   let(:manager)           { find_or_create :disclosure_bmt_user }
-  let(:sar_case)          { create(:extended_deadline_sar) }
+  let(:sar_case)          { create(:sar_case, :extended_deadline_sar) }
   let(:initial_deadline)  { sar_case.initial_deadline }
   let(:max_extension)     { Settings.sar_extension_limit.to_i }
 

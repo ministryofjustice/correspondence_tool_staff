@@ -23,6 +23,5 @@ class CaseRemoveSARDeadlineExtensionService
     Rails.logger.error err.backtrace.join("\n\t")
     @error = err
     @result = :error
-    raise err
   end
 end

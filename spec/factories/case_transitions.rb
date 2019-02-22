@@ -307,16 +307,4 @@ FactoryBot.define do
     final_deadline          { self.case.external_deadline + 30.days }
     original_final_deadline { self.case.external_deadline }
   end
-
-  factory :case_transition_remove_sar_deadline_extension, parent: :case_transition do
-    transient do
-      manager        { create :manager }
-      managing_team  { manager.managing_teams.first }
-    end
-
-    event          { 'remove_sar_deadline_extension' }
-    to_state       { self.case.current_state }
-    acting_user_id { manager.id }
-    acting_team_id { managing_team.id }
-  end
 end
