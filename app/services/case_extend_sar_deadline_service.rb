@@ -12,7 +12,7 @@ class CaseExtendSARDeadlineService
 
   def call
     ActiveRecord::Base.transaction do
-      if validate_params
+      if valid?
         @case.state_machine.extend_sar_deadline!(
           acting_user: @user,
           acting_team: @user.team_for_case(@case),
@@ -23,6 +23,8 @@ class CaseExtendSARDeadlineService
 
         @case.extend_deadline!(@extension_deadline)
         @result = :ok
+      else
+        @result = :validation_error
       end
     end
     @result
@@ -47,25 +49,17 @@ class CaseExtendSARDeadlineService
     "#{@reason}\nDeadline extended by #{@extension_days} days"
   end
 
-  def validate_params
-    unless @reason.present?
-      @case.errors.add(:reason_for_extending, "can't be blank")
-      @result = :validation_error
-    end
+  def valid?
+    validate_extension_reason
+    validate_extension_deadline
 
-    unless extension_date_valid?
-      @result = :validation_error
-    end
-
-    @result = :ok if @case.errors.empty?
+    @case.errors.empty?
   end
 
-  def extension_date_valid?
+  def validate_extension_deadline
     extension_limit = @case.max_allowed_deadline_date
 
-    valid = false
-
-    if @extension_days.blank? || @extension_deadline.blank?
+    if @extension_days.blank?
       @case.errors.add(
         :extension_period,
         "can't be blank"
@@ -80,10 +74,15 @@ class CaseExtendSARDeadlineService
         :extension_period,
         "can't be before the final deadline"
       )
-    else
-      valid = true
     end
+  end
 
-    valid
+  def validate_extension_reason
+    if @reason.blank?
+      @case.errors.add(
+        :reason_for_extending,
+        "can't be blank"
+      )
+    end
   end
 end
