@@ -1,4 +1,4 @@
-class AddPitDeadlineExtendedPropertyToCases < ActiveRecord::Migration[5.0]
+class AddHasPitExtensionPropertyToCases < ActiveRecord::DataMigration
   def up
     Case::Base.unscoped.all.each do |kase|
       pit_transitions = kase.transitions
@@ -10,8 +10,5 @@ class AddPitDeadlineExtendedPropertyToCases < ActiveRecord::Migration[5.0]
         kase.save!
       end
     end
-  end
-
-  def down
   end
 end
