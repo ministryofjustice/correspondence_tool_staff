@@ -27,4 +27,12 @@ feature 'creating ICO with invalid params' do
     expect(cases_new_ico_page.errors.details.first)
       .to have_content('Draft deadline cannot be after final deadline')
   end
+
+  scenario 'creating case with no data entry', js: true do
+    cases_new_ico_page.load
+
+    click_button 'Create case'
+    # TODO - this behaviour is ingrained due to the design. No easy fix
+    expect(cases_new_ico_page.errors.details.count).to eq 1
+  end
 end
