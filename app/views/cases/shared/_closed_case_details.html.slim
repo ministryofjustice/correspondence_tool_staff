@@ -12,7 +12,7 @@ tbody.response-details
     - if case_details.responded_late?
       tr.late-team
         th = t('common.case.late_team')
-        td = case_late_team_name(case_details)
+        td = case_details.late_team_name
 
     tr.time-taken
       th = t('common.case.time_taken')

@@ -66,7 +66,7 @@ class CSVExporter
           @kase.respond_to?(:reply_method) ? @kase.reply_method : nil,
           @kase.respond_to?(:subject_type) ? @kase.subject_type : nil,
           @kase.respond_to?(:subject_full_name) ? @kase.subject_full_name : nil,
-          case_late_team_name(@kase)
+          @kase.decorate.late_team_name,
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")

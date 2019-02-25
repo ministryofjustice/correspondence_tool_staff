@@ -263,18 +263,6 @@ module CasesHelper
     end
   end
 
-  def case_late_team_name(kase)
-    if kase.responded_late?
-      if kase.late_team.nil?
-        'Unspecified'
-      else
-        kase.late_team.name
-      end
-    else
-      'N/A'
-    end
-  end
-
   def manager_updating_close_details_on_old_case?(user, kase)
     # the only reason a manager can't the closure details of a closed case is because
     # it is an "old style" closure, i.e. it was closed before we implemented the new
