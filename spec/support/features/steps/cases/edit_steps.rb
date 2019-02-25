@@ -45,6 +45,7 @@ def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Me
                                info_held_status: 'not_confirmed',
                                refusal_reason: 'tmm',
                                outcome: nil,
+                               late_team_id: nil,
                                exemptions: [],
                                preselected_exemptions: [])
   expect(cases_show_page).to be_displayed(id: kase.id)
@@ -60,6 +61,13 @@ def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Me
     .to eq kase.date_responded.month.to_s
   expect(cases_edit_closure_page.date_responded_year.value)
     .to eq kase.date_responded.year.to_s
+  if kase.responded_late?
+    expect(cases_edit_closure_page.get_late_team(kase.late_team_id)).to be_checked
+    expect(kase.late_team_id).not_to eq(late_team_id)
+    if late_team_id
+      cases_edit_closure_page.get_late_team(late_team_id).click
+    end
+  end
   preselected_exemptions.each do |abbreviation|
     expect(cases_close_page.get_exemption(abbreviation: abbreviation)).to be_checked
   end
@@ -107,6 +115,10 @@ def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Me
     exemption = CaseClosure::Exemption.find_by(abbreviation: abbreviation)
     expect(cases_show_page.case_details.response_details.exemptions)
       .to have_text exemption.name
+  end
+
+  if late_team_id
+    expect(kase.late_team_id).to eq(late_team_id)
   end
 end
 

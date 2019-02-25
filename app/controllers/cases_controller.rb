@@ -263,6 +263,7 @@ class CasesController < ApplicationController
     authorize @case, :update_closure?
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     @case = @case.decorate
+    @team_collection = CaseTeamCollection.new(@case)
   end
 
   def confirm_destroy

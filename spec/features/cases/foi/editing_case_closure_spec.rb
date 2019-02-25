@@ -13,6 +13,16 @@ feature 'editing case closure information' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
+  scenario 'editing a late closed case', js: true do
+    kase = create :closed_case, :late
+
+    login_as manager
+    cases_show_page.load(id: kase.id)
+    edit_foi_case_closure_step(kase: kase,
+                               date_responded: 10.business_days.ago,
+                               late_team_id: (kase.transitions.map(&:acting_team_id).uniq - [kase.late_team_id]).first)
+  end
+
   scenario 'bmt changes case from held/granted to other/tmm', js: true do
     kase = create :closed_case
 

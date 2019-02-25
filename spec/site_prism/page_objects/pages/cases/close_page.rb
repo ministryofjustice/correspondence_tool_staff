@@ -21,6 +21,9 @@ module PageObjects
         element :date_responded_year_ico, :case_form_element, 'date_ico_decision_received_yyyy'
 
         element :uploaded_request_file_input, '#uploadedRequestFileInput'
+        section :late_team_name, '.late_team_id' do
+
+        end
 
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="case_foi_appeal_outcome_name_upheld"]'
@@ -98,6 +101,10 @@ module PageObjects
           exemption = CaseClosure::Exemption.find_by(abbreviation: abbreviation)
           exemptions.find("input#case_foi_exemption_ids_#{exemption.id}",
                           visible: false)
+        end
+
+        def get_late_team(team_id)
+          find("#case_foi_late_team_id_#{team_id}", visible: false)
         end
 
         def drop_in_dropzone(file_path)
