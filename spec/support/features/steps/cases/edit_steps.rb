@@ -40,7 +40,8 @@ def edit_ico_case_step(kase:, **params)
   end
 end
 
-def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists
+# rubocop:disable Metrics/MethodLength, Metrics/ParameterLists, Metrics/CyclomaticComplexity
+def edit_foi_case_closure_step(kase:,
                                date_responded: Date.today,
                                info_held_status: 'not_confirmed',
                                refusal_reason: 'tmm',
@@ -121,6 +122,7 @@ def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Me
     expect(kase.reload.late_team_id).to eq(late_team_id)
   end
 end
+# rubocop:enable Metrics/MethodLength, Metrics/ParameterLists, Metrics/CyclomaticComplexity
 
 def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false) # rubocop:disable Metrics/MethodLength
   expect(cases_show_page).to be_displayed(id: kase.id)
