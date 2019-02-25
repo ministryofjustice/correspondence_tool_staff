@@ -36,6 +36,7 @@ class CaseTransitionDecorator < Draper::Decorator
          'add_response_to_flagged_case',
          'approve_and_bypass',
          'extend_for_pit',
+         'extend_sar_deadline',
          'reject_responder_assignment',
          'request_amends',
          'upload_response_and_return_for_redraft',

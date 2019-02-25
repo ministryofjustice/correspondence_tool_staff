@@ -30,6 +30,8 @@ module PageObjects
           element :reassign_user, '#action--reassign-case'
           element :mark_as_sent_and_close, '#action--mark-response-as-sent-and-close'
           element :progress_to_disclosure, '#action--progress-for-clearance'
+          element :extend_sar_deadline, '#action--extend-deadline-for-sar'
+          element :remove_sar_deadline_extension, '#action--remove-extended-deadline-for-sar'
         end
         element :extend_for_pit_action, '#action--extend-for-pit'
         element :remove_pit_extension_action, '#action--remove-pit-extension'

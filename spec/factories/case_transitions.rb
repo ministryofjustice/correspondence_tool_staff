@@ -271,7 +271,6 @@ FactoryBot.define do
     acting_team_id { managing_team.id }
   end
 
-
   factory :case_transition_request_further_clearance, parent: :case_transition do
     event    { 'request_further_clearance' }
     to_state { self.case.current_state }
@@ -296,5 +295,16 @@ FactoryBot.define do
 
     acting_team { self.case.managing_team }
     acting_user { acting_team.managers.first }
+  end
+
+  factory :case_transition_extend_sar_deadline_by_30_days, parent: :case_transition do
+    event                   { 'extend_sar_deadline' }
+    to_state                { self.case.current_state }
+
+    acting_team             { self.case.managing_team }
+    acting_user             { acting_team.managers.first }
+    message                 { 'Test SAR extension - 30 day'}
+    final_deadline          { self.case.external_deadline + 30.days }
+    original_final_deadline { self.case.external_deadline }
   end
 end

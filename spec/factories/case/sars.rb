@@ -30,8 +30,7 @@
 
 FactoryBot.define do
 
-  factory :sar_case,
-          class: Case::SAR do
+  factory :sar_case, class: Case::SAR do
     transient do
       creation_time       { 4.business_days.ago }
       identifier          { "new sar case" }
@@ -97,6 +96,17 @@ FactoryBot.define do
     trait :flagged_accepted do
       transient do
         flag_for_disclosure { :accepted }
+      end
+    end
+
+    trait :extended_deadline_sar do
+      after(:create) do |kase, evaluator|
+        create :case_transition_extend_sar_deadline_by_30_days,
+         case: kase,
+         acting_team: evaluator.managing_team,
+         acting_user: evaluator.manager
+
+        kase.extend_deadline!(kase.external_deadline + 30.days)
       end
     end
   end
@@ -216,5 +226,4 @@ FactoryBot.define do
     missing_info                { true }
     message                     { 'info held other, clarification required' }
   end
-
 end

@@ -114,7 +114,25 @@ class Workflows::Predicates
   end
 
   def has_pit_extension?
-    @kase.extended_for_pit?
+    @kase.has_pit_extension?
+  end
+
+  # Use of try rather than direct method call because
+  # deadline_extended? is only available for
+  # Case::SAR and should be false for non-SAR cases
+  def has_sar_deadline_extension?
+    @kase.try(:deadline_extended?)
+  end
+
+  # Use of try rather than direct method call because
+  # deadline_extendable? is only available for
+  # Case::SAR and should be false for non-SAR cases
+  def deadline_does_not_exceed_max_deadline?
+    @kase.try(:deadline_extendable?)
+  end
+
+  def case_extended_and_user_in_approving_team?
+    has_sar_deadline_extension? && user_is_in_approving_team_for_case?
   end
 
   def assigned_team_member_and_case_outside_escalation_period?

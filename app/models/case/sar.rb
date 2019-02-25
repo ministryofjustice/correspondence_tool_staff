@@ -59,7 +59,8 @@ class Case::SAR < Case::Base
                  third_party: :boolean,
                  third_party_relationship: :string,
                  reply_method: :string,
-                 late_team_id: :integer
+                 late_team_id: :integer,
+                 deadline_extended: [:boolean, default: false]
 
   attr_accessor :missing_info
 
@@ -115,6 +116,41 @@ class Case::SAR < Case::Base
     true
   end
 
+  def deadline_extendable?
+    max_allowed_deadline_date > external_deadline
+  end
+
+  def initial_deadline
+    sar_extensions = self.transitions
+      .where(event: 'extend_sar_deadline')
+      .order(:id)
+
+    if sar_extensions.any?
+      sar_extensions.first.original_final_deadline
+    else
+      external_deadline
+    end
+  end
+
+  def extend_deadline!(new_deadline)
+    self.update!(
+      external_deadline: new_deadline,
+      deadline_extended: true
+    )
+  end
+
+  def reset_deadline!
+    self.update!(
+      external_deadline: initial_deadline,
+      deadline_extended: false
+    )
+  end
+
+  # SARs extensions are based on calendar days not working days
+  def max_allowed_deadline_date
+    initial_deadline + Settings.sar_extension_limit.to_i.days
+  end
+
   private
 
   def use_subject_as_requester
@@ -139,5 +175,4 @@ class Case::SAR < Case::Base
                  message: "can't be blank if no request files attached")
     end
   end
-
 end

@@ -1031,27 +1031,42 @@ RSpec.describe Case::Base, type: :model do
         end
       end
 
+      # TODO (Mohammed Seedat): An approver for a case_being_drafted in trigger
+      # workflow cannot extend_for_pit. This test works because
+      # CaseExtendForPITService executes the state transition setting
+      # acting_team = BusinessUnit.dacu_bmt
       context 'case has been extended for pit' do
         it 'does not update deadlines' do
-          disclosure_team = find_or_create :team_dacu_disclosure
-          approver = disclosure_team.users.first
+          approver = find_or_create :disclosure_specialist
           kase = nil
+
           Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
-            kase = create :case_being_drafted, :flagged_accepted, approver: approver, received_date: Date.today, created_at: Time.now
-            service = CaseExtendForPITService.new(approver, kase, kase.external_deadline + 15.days, 'testing updates')
-            service.call
+            kase = create :case_being_drafted,
+              :flagged_accepted,
+              approver: approver,
+              received_date: Date.today,
+              created_at: DateTime.now
+
+            CaseExtendForPITService.new(
+              approver,
+              kase,
+              kase.external_deadline + 15.days,
+              'Testing updates'
+            ).call
           end
-          expect(kase.received_date).to eq Date.new(2017, 12, 1)
-          expect(kase.external_deadline).to eq Date.new(2018, 1, 18)
-          expect(kase.internal_deadline).to eq Date.new(2017, 12, 15)
+
+          expect(kase.received_date).to       eq Date.new(2017, 12, 1)
+          expect(kase.external_deadline).to   eq Date.new(2018, 1, 18)
+          expect(kase.internal_deadline).to   eq Date.new(2017, 12, 15)
           expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
 
           Timecop.freeze(Time.local(2017, 11, 23, 13, 13, 56)) do
             kase.update!(received_date: Date.today)
           end
-          expect(kase.received_date).to eq Date.new(2017, 11, 23)
-          expect(kase.external_deadline).to eq Date.new(2018, 1, 18)
-          expect(kase.internal_deadline).to eq Date.new(2017, 12, 15)
+
+          expect(kase.received_date).to       eq Date.new(2017, 11, 23)
+          expect(kase.external_deadline).to   eq Date.new(2018, 1, 18)
+          expect(kase.internal_deadline).to   eq Date.new(2017, 12, 15)
           expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
         end
       end
@@ -1412,26 +1427,25 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe '#extended_for_pit?' do
-
-    context 'case with no pit extension' do
-      it 'returns false' do
+  describe '#has_pit_extension?' do
+    context 'any case' do
+      it 'returns false by default' do
         kase = create :case_being_drafted
-        expect(kase.extended_for_pit?).to be false
+        expect(kase.has_pit_extension?).to be false
       end
     end
 
     context 'case with pit extenstion' do
       it 'returns true' do
         kase = create :case_being_drafted, :extended_for_pit
-        expect(kase.extended_for_pit?).to be true
+        expect(kase.has_pit_extension?).to be true
       end
     end
 
     context 'case with removed pit extension' do
       it 'returns false' do
         kase = create :case_being_drafted, :pit_extension_removed
-        expect(kase.extended_for_pit?).to be false
+        expect(kase.has_pit_extension?).to be false
       end
     end
   end

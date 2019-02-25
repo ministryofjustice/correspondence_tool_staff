@@ -46,7 +46,7 @@ feature 'cases requiring clearance by disclosure specialist' do
       kase: kase,
       expected_team: team_dacu_disclosure,
       expected_history: [
-        "#{disclosure_specialist.full_name} #{team_dacu_disclosure.name} Response cleared"
+        "#{disclosure_specialist.full_name} #{team_dacu_disclosure.name}\nResponse cleared"
       ]
     )
   end

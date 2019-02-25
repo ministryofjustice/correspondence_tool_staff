@@ -46,10 +46,14 @@
                 destroy_case:
                 edit_case:
                   if: Workflows::Predicates#overturned_editing_enabled?
+                extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
                 flag_for_clearance:
                   switch_workflow: trigger
                 link_a_case:
                 remove_linked_case:
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
                 request_further_clearance:
                   if: Case::SARPolicy#can_request_further_clearance?
                   switch_workflow: trigger
@@ -122,5 +126,9 @@
                   switch_workflow: trigger
 
               drafting:
+                extend_sar_deadline:
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
                 flag_for_clearance:
                   switch_workflow: trigger
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#case_extended_and_user_in_approving_team?

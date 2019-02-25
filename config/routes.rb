@@ -24,6 +24,7 @@
 #                                   new_case GET    /cases/new/:correspondence_type(.:format)                            cases#new {:correspondence_type=>""}
 #                 new_linked_cases_for_cases GET    /cases/new_linked_cases_for(.:format)                                cases#new_linked_cases_for
 #                                 close_case GET    /cases/:id/close(.:format)                                           cases#close
+#                      closure_outcomes_case GET    /cases/:id/closure_outcomes(.:format)                                cases#closure_outcomes
 #                     respond_and_close_case GET    /cases/:id/respond_and_close(.:format)                               cases#respond_and_close
 #                               closed_cases GET    /cases/closed(.:format)                                              cases#closed_cases
 #                       confirm_destroy_case GET    /cases/:id/confirm_destroy(.:format)                                 cases#confirm_destroy
@@ -35,8 +36,10 @@
 #                          case_open_in_time GET    /cases/:case_id/open/in_time(.:format)                               redirect(301, /cases/open)
 #                             case_open_late GET    /cases/:case_id/open/late(.:format)                                  redirect(301, /cases/open)
 #                       process_closure_case PATCH  /cases/:id/process_closure(.:format)                                 cases#process_closure
+#                process_date_responded_case PATCH  /cases/:id/process_date_responded(.:format)                          cases#process_date_responded
 #             process_respond_and_close_case PATCH  /cases/:id/process_respond_and_close(.:format)                       cases#process_respond_and_close
 #                        update_closure_case PATCH  /cases/:id/update_closure(.:format)                                  cases#update_closure
+#                      record_late_team_case PATCH  /cases/:id/record_late_team(.:format)                                cases#record_late_team
 #                               respond_case GET    /cases/:id/respond(.:format)                                         cases#respond
 #                       confirm_respond_case PATCH  /cases/:id/confirm_respond(.:format)                                 cases#confirm_respond
 #              case_assign_to_responder_team GET    /cases/:case_id/assignments/assign_to_team(.:format)                 assignments#assign_to_team
@@ -53,10 +56,15 @@
 #                        extend_for_pit_case GET    /cases/:id/extend_for_pit(.:format)                                  cases#extend_for_pit
 #                execute_extend_for_pit_case PATCH  /cases/:id/execute_extend_for_pit(.:format)                          cases#execute_extend_for_pit
 #             request_further_clearance_case PATCH  /cases/:id/request_further_clearance(.:format)                       cases#request_further_clearance
+#                  remove_pit_extension_case PATCH  /cases/:id/remove_pit_extension(.:format)                            cases#remove_pit_extension
 #                         new_case_link_case GET    /cases/:id/new_case_link(.:format)                                   cases#new_case_link
 #                 execute_new_case_link_case POST   /cases/:id/execute_new_case_link(.:format)                           cases#execute_new_case_link
 #                       destroy_link_on_case DELETE /cases/:id/destroy_link/:linked_case_number(.:format)                cases#destroy_case_link
 #                progress_for_clearance_case PATCH  /cases/:id/progress_for_clearance(.:format)                          cases#progress_for_clearance
+#                    new_overturned_ico_case GET    /cases/:id/new_overturned_ico(.:format)                              cases#new_overturned_ico
+#                   extend_sar_deadline_case GET    /cases/:id/extend_sar_deadline(.:format)                             cases#extend_sar_deadline
+#           execute_extend_sar_deadline_case PATCH  /cases/:id/execute_extend_sar_deadline(.:format)                     cases#execute_extend_sar_deadline
+#         remove_sar_deadline_extension_case PATCH  /cases/:id/remove_sar_deadline_extension(.:format)                   cases#remove_sar_deadline_extension
 #           accept_or_reject_case_assignment PATCH  /cases/:case_id/assignments/:id/accept_or_reject(.:format)           assignments#accept_or_reject
 #                     accept_case_assignment PATCH  /cases/:case_id/assignments/:id/accept(.:format)                     assignments#accept
 #                   unaccept_case_assignment PATCH  /cases/:case_id/assignments/:id/unaccept(.:format)                   assignments#unaccept
@@ -94,7 +102,7 @@
 #                                            PATCH  /cases/:id(.:format)                                                 cases#update
 #                                            PUT    /cases/:id(.:format)                                                 cases#update
 #                                            DELETE /cases/:id(.:format)                                                 cases#destroy
-#                                 admin_root GET    /admin(.:format)                                                     admin#index
+#                                 admin_root GET    /admin(.:format)                                                     redirect(301, /admin/cases)
 #                             new_admin_case GET    /admin/cases/new/:correspondence_type(.:format)                      admin/cases#new {:correspondence_type=>""}
 #                                admin_cases GET    /admin/cases(.:format)                                               admin/cases#index
 #                                            POST   /admin/cases(.:format)                                               admin/cases#create
@@ -104,6 +112,13 @@
 #                                            PATCH  /admin/cases/:id(.:format)                                           admin/cases#update
 #                                            PUT    /admin/cases/:id(.:format)                                           admin/cases#update
 #                                            DELETE /admin/cases/:id(.:format)                                           admin/cases#destroy
+#                                admin_users GET    /admin/users(.:format)                                               admin/users#index
+#                      admin_dashboard_cases GET    /admin/dashboard/cases(.:format)                                     admin/dashboard#cases
+#                   admin_dashboard_feedback GET    /admin/dashboard/feedback(.:format)                                  admin/dashboard#feedback
+#                  admin_dashboard_exception GET    /admin/dashboard/exception(.:format)                                 admin/dashboard#exception
+#             admin_dashboard_search_queries GET    /admin/dashboard/search_queries(.:format)                            admin/dashboard#search_queries
+#               admin_dashboard_list_queries GET    /admin/dashboard/list_queries(.:format)                              admin/dashboard#list_queries
+#                  confirm_destroy_team_user GET    /teams/:team_id/users/:id/confirm_destroy(.:format)                  users#confirm_destroy
 #                                 team_users GET    /teams/:team_id/users(.:format)                                      users#index
 #                                            POST   /teams/:team_id/users(.:format)                                      users#create
 #                              new_team_user GET    /teams/:team_id/users/new(.:format)                                  users#new
@@ -125,8 +140,15 @@
 #                                            PATCH  /teams/:id(.:format)                                                 teams#update
 #                                            PUT    /teams/:id(.:format)                                                 teams#update
 #                                            DELETE /teams/:id(.:format)                                                 teams#destroy
+#                                  new_users GET    /users/new(.:format)                                                 users#new
+#                                 edit_users GET    /users/edit(.:format)                                                users#edit
+#                                      users GET    /users(.:format)                                                     users#show
+#                                            PATCH  /users(.:format)                                                     users#update
+#                                            PUT    /users(.:format)                                                     users#update
+#                                            DELETE /users(.:format)                                                     users#destroy
+#                                            POST   /users(.:format)                                                     users#create
 #                                 user_teams GET    /users/:user_id/teams(.:format)                                      teams#index
-#                                      users GET    /users(.:format)                                                     users#index
+#                                            GET    /users(.:format)                                                     users#index
 #                                            POST   /users(.:format)                                                     users#create
 #                                   new_user GET    /users/new(.:format)                                                 users#new
 #                                  edit_user GET    /users/:id/edit(.:format)                                            users#edit
@@ -143,15 +165,9 @@
 #                                     search GET    /search(.:format)                                                    cases#search
 #                                       ping GET    /ping(.:format)                                                      heartbeat#ping
 #                                healthcheck GET    /healthcheck(.:format)                                               heartbeat#healthcheck
-#                                  dashboard GET    /dashboard(.:format)                                                 dashboard#index
-#                            dashboard_cases GET    /dashboard/cases(.:format)                                           dashboard#cases
-#                         dashboard_feedback GET    /dashboard/feedback(.:format)                                        dashboard#feedback
-#                        dashboard_exception GET    /dashboard/exception(.:format)                                       dashboard#exception
-#                   dashboard_search_queries GET    /dashboard/search_queries(.:format)                                  dashboard#search_queries
-#                     dashboard_list_queries GET    /dashboard/list_queries(.:format)                                    dashboard#list_queries
 #                                       root GET    /                                                                    redirect(301, /users/sign_in)
 #
-
+#
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
 require 'sidekiq/web'
@@ -249,6 +265,10 @@ Rails.application.routes.draw do
     delete 'destroy_link/:linked_case_number' => 'cases#destroy_case_link' , on: :member, as: 'destroy_link_on'
     patch 'progress_for_clearance' => 'cases#progress_for_clearance', on: :member
     get 'new_overturned_ico' => 'cases#new_overturned_ico', on: :member
+    get :extend_sar_deadline, on: :member
+    patch :execute_extend_sar_deadline, on: :member
+    patch :remove_sar_deadline_extension, on: :member
+
 
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member

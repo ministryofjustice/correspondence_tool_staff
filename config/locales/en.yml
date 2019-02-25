@@ -157,9 +157,6 @@ en:
               <<: *report_dates
               before_start_date: "can't be after Date to"
 
-  page_title:
-    marking_response_as_sent: Mark response as sent
-
   pundit:
     assignment_policy:
       can_assign_to_new_team?: You are not authorised to assign this case to another team
@@ -194,6 +191,8 @@ en:
       <<: *case_policy
     case/sar_policy:
       <<: *case_policy
+      extend_sar_deadline?: 'SAR deadline cannot be extended'
+      remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
@@ -475,6 +474,7 @@ en:
       email: "Requester’s email"
       exemptions_heading: Exemptions
       extend_for_pit: Extend for Public Interest Test
+      extend_sar_deadline: Extend deadline
       external_deadline: Final deadline
       internal_deadline: Draft deadline
       ico_case_number: ICO case reference number
@@ -489,6 +489,7 @@ en:
       received_date: Date request received at MOJ
       reason_for_refusal: Outcome
       reassign_case: "Change team member"
+      remove_sar_deadline_extension: Remove deadline extension
       remove_link_html: |
         Remove <span class="visuallyhidden">file %{filename}</span>
       remove_linked_case_html: |
@@ -637,6 +638,12 @@ en:
       extend_for_pit: Extend for Public Interest Test (PIT)
       extension_date: Date of extension deadline
       extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
+    extend_sar_deadline:
+      extension_period: How long would you like to extend by?
+      extend_further: The deadline for this case will be extended by a further %{num_days} days.
+    execute_extend_sar_deadline:
+      success: Case extended for SAR
+      error: Unable to perform SAR extension on case %{case_number}
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ
@@ -701,6 +708,9 @@ en:
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
+    remove_sar_deadline_extension:
+      success: Deadline extension removed
+      error: Unable to remove SAR deadline extension
     respond:
       date_example: For example, 30 1 2017
       case/ico:

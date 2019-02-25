@@ -254,4 +254,100 @@ describe Case::SAR do
     end
   end
 
+  describe 'deadline' do
+    subject             { create :sar_case }
+    let(:max_extension) { Settings.sar_extension_limit.to_i }
+
+    describe '#deadline_extended' do
+      it 'is false by default' do
+        expect(subject.deadline_extended?).to be false
+      end
+    end
+
+    describe '#deadline_extendable?' do
+      it 'is true if external_deadline is less than max possible deadline' do
+        max_statutory_deadline = subject.initial_deadline + max_extension.days
+
+        expect(subject.deadline_extendable?).to eq true
+        expect(subject.external_deadline).to be < max_statutory_deadline
+      end
+
+      it 'is false when already extended equal or beyond satutory limit' do
+        sar = create :approved_sar
+        initial_deadline = DateTime.new(2019, 01, 01)
+        allow(sar).to receive(:initial_deadline) { initial_deadline }
+
+        sar.external_deadline = initial_deadline + max_extension.days
+
+        expect(sar.deadline_extendable?).to eq false
+      end
+    end
+
+    describe '#initial_deadline' do
+      it 'uses current external_deadline if not yet extended' do
+        expect(subject.initial_deadline).to eq subject.external_deadline
+      end
+
+      it 'checks transitions for initial deadline' do
+        extended_sar = create(:sar_case, :extended_deadline_sar)
+
+        original_deadline = extended_sar
+          .transitions
+          .where(event: 'extend_sar_deadline')
+          .order(:id)
+          .first
+          .original_final_deadline
+
+        expect(extended_sar.initial_deadline).to eq original_deadline
+      end
+    end
+
+    describe '#max_allowed_deadline_date' do
+      it 'is 60 calendar days after the initial_deadline' do
+        max_statutory_deadline = subject.initial_deadline + 60.days
+
+        expect(subject.max_allowed_deadline_date).to eq max_statutory_deadline
+      end
+    end
+
+    describe '#extend_deadline!' do
+      let(:approved_sar)      { create :approved_sar }
+      let(:initial_deadline)  { approved_sar.initial_deadline }
+      let(:new_deadline)      { DateTime.new(2019, 01, 01) }
+
+      it 'sets #deadline_extended to true' do
+        expect { approved_sar.extend_deadline!(new_deadline) }.to \
+          change(approved_sar, :deadline_extended)
+          .from(false)
+          .to(true)
+      end
+
+      it 'sets new external_deadline' do
+        expect { approved_sar.extend_deadline!(new_deadline) }.to \
+          change(approved_sar, :external_deadline)
+          .from(initial_deadline)
+          .to(new_deadline)
+      end
+    end
+
+    describe '#reset_deadline!' do
+      let(:extended_sar)      { create(:sar_case, :extended_deadline_sar) }
+      let(:initial_deadline)  { extended_sar.initial_deadline }
+      let(:extended_deadline) { extended_sar.external_deadline }
+
+      it 'sets #deadline_extended to false' do
+        expect { extended_sar.reset_deadline! }.to \
+          change(extended_sar, :deadline_extended)
+          .from(true)
+          .to(false)
+      end
+
+      it 'resets external_deadline' do
+        expect { extended_sar.reset_deadline! }.to \
+          change(extended_sar, :external_deadline)
+          .from(extended_deadline)
+          .to(initial_deadline)
+      end
+    end
+  end
 end

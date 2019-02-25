@@ -1,0 +1,53 @@
+- content_for :page_title do
+  = t('page_title.extend_sar_deadline', case_number: @case.number)
+
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
+- content_for :heading
+  = t('common.case.extend_sar_deadline')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+br
+
+div.action-copy
+  p
+    = "You are extending the time on:"
+    strong.strong-block
+      = @case.subject
+br
+
+= form_for @case, as: :case, url: execute_extend_sar_deadline_case_path(@case) do |f|
+  - if @case.allow_extension_period_selection?
+    fieldset.form-group
+      legend
+        span.form-label-bold
+          = t('.extension_period')
+        .multiple-choice
+          input type="radio" value="30" checked="checked" name="case[extension_period]" id="case_extension_period_30"
+          label for="case_extension_period_30"
+            | 30 days
+        .multiple-choice
+          input type="radio" value="60" name="case[extension_period]" id="case_extension_period_60"
+          label for="case_extension_period_60"
+            | 60 days
+  - else
+    input type="hidden" value="30" name="case[extension_period]"
+    p
+      = t('.extend_further', num_days: 30)
+
+  .form-group
+    = f.text_area :reason_for_extending
+
+  .button-holder
+    = submit_tag 'Extend deadline', class: 'button'
+    = link_to('Cancel',
+        case_path(@case),
+        class: 'acts-like-button button-left-spacing')

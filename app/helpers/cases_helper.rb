@@ -96,6 +96,16 @@ module CasesHelper
               progress_for_clearance_case_path(@case),
               id: 'action--progress-for-clearance',
               class: 'button', method: :patch
+    when :extend_sar_deadline
+      link_to I18n.t('common.case.extend_sar_deadline'),
+              extend_sar_deadline_case_path(@case),
+              id: 'action--extend-deadline-for-sar',
+              class: 'button-secondary'
+    when :remove_sar_deadline_extension
+      link_to I18n.t('common.case.remove_sar_deadline_extension'),
+              remove_sar_deadline_extension_case_path(@case),
+              id: 'action--remove-extended-deadline-for-sar',
+              class: 'button-secondary', method: :patch
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength

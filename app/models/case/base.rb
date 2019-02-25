@@ -61,6 +61,9 @@ class Case::Base < ApplicationRecord
 
   attr_accessor :message_text
 
+  jsonb_accessor  :properties,
+                  has_pit_extension: [:boolean, default: false]
+
   acts_as_gov_uk_date :received_date, :date_responded, :external_deadline,
                       validate_if: :received_in_acceptable_range?
 
@@ -281,6 +284,7 @@ class Case::Base < ApplicationRecord
       raise ActiveRecord::ActiveRecordError.new("association is readonly")
     end
   end
+
   has_many :linked_cases,
            through: :case_links,
            class_name: 'Case::Base',
@@ -667,14 +671,21 @@ class Case::Base < ApplicationRecord
   end
 
   def extended_for_pit?
-    pit_related_transitions = transitions.where(event: ['extend_for_pit',
-                                                        'remove_pit_extension'])
-                                          .order(:id)
-    if pit_related_transitions.present?
-      pit_related_transitions.last.event == 'extend_for_pit'
-    else
-      false
-    end
+    self.has_pit_extension?
+  end
+
+  def extend_pit_deadline!(new_deadline)
+    self.update!(
+      external_deadline: new_deadline,
+      has_pit_extension: true
+    )
+  end
+
+  def remove_pit_deadline!(initial_deadline)
+    self.update!(
+      external_deadline: initial_deadline,
+      has_pit_extension: false
+    )
   end
 
   # predicate methods

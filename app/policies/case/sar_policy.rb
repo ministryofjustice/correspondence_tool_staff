@@ -89,6 +89,16 @@ class Case::SARPolicy < Case::BasePolicy
     !self.case.flagged?
   end
 
+  def extend_sar_deadline?
+    clear_failed_checks
+    check_can_trigger_event(:extend_sar_deadline)
+  end
+
+  def remove_sar_deadline_extension?
+    clear_failed_checks
+    check_can_trigger_event(:remove_sar_deadline_extension)
+  end
+
   check :responding_team_is_linked_to_case do
     self.case.linked_cases.detect do |kase|
       kase.responding_team.in? user.responding_teams

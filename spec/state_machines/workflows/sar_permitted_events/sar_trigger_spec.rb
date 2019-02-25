@@ -36,15 +36,17 @@ describe ConfigurableStateMachine::Machine do
 
       context 'drafting' do
         it 'should show permitted events' do
-          k = create :accepted_sar, :flagged_accepted
+          k = create :accepted_sar, :extended_deadline_sar, :flagged_accepted
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :extend_sar_deadline,
                                                                       :flag_for_clearance,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
+                                                                      :remove_sar_deadline_extension,
                                                                       :unassign_from_user]
         end
       end
@@ -57,6 +59,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :extend_sar_deadline,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
                                                                       :unassign_from_user]
@@ -70,6 +73,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
                                                                       :destroy_case,
                                                                       :edit_case,
+                                                                      :extend_sar_deadline,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
                                                                       :unassign_from_user]
@@ -303,14 +307,16 @@ describe ConfigurableStateMachine::Machine do
 
       context 'drafting state' do
         it 'shows events' do
-          k = create :accepted_sar, :flagged_accepted
+          k = create :accepted_sar, :extended_deadline_sar, :flagged_accepted
           approver = approver_in_assigned_team(k)
 
           expect(k.current_state).to eq 'drafting'
           expect(k.state_machine.permitted_events(approver.id))
             .to eq [
                   :add_message_to_case,
+                  :extend_sar_deadline,
                   :reassign_user,
+                  :remove_sar_deadline_extension,
                   :unaccept_approver_assignment,
                   :unflag_for_clearance,
                 ]
@@ -327,6 +333,7 @@ describe ConfigurableStateMachine::Machine do
             .to eq [
                   :add_message_to_case,
                   :approve,
+                  :extend_sar_deadline,
                   :reassign_user,
                   :request_amends,
                   :unaccept_approver_assignment,
@@ -342,6 +349,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.workflow).to eq 'trigger'
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                        :extend_sar_deadline,
                                                                         :reassign_user]
         end
       end

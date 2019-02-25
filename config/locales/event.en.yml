@@ -14,6 +14,7 @@ en:
     destroy_case: Case deleted
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
+    extend_sar_deadline: Extended SAR deadline
     flag_for_clearance: Clearance level added
     link_a_case: Case linked
     progress_for_clearance: Progress for clearance
@@ -23,6 +24,7 @@ en:
     remove_linked_case: Linked case removed
     remove_pit_extension: Public Interest Test extensions removed
     remove_response: File removed
+    remove_sar_deadline_extension: Deadline extension removed
     request_amends: Request amends
     request_further_clearance: Request further clearance
     respond: Response sent to requester
