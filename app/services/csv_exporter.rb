@@ -39,7 +39,7 @@ class CSVExporter
 
   #rubocop:disable Metrics/CyclomaticComplexity
   def to_csv
-    # begin
+    begin
       [
           @kase.number,
           @kase.decorate.pretty_type,
@@ -67,11 +67,11 @@ class CSVExporter
           @kase.respond_to?(:subject_full_name) ? @kase.subject_full_name : nil,
           case_late_team_name(@kase)
       ]
-    # rescue => err
-    #   raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
-    # end
+    rescue => err
+      raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
+    end
   end
-  #rubocop:ensable Metrics/CyclomaticComplexity
+  #rubocop:enable Metrics/CyclomaticComplexity
 
   private
   def dequote_and_truncate(text)
