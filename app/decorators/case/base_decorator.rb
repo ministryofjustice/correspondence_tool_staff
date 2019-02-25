@@ -91,18 +91,6 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
-  def late_team_name
-    if object.responded_late?
-      if object.late_team.nil?
-        'Unspecified'
-      else
-        object.late_team.name
-      end
-    else
-      'N/A'
-    end
-  end
-
   def shortened_message
     (part1,part2) = self.message_extract
 
@@ -168,6 +156,18 @@ class Case::BaseDecorator < Draper::Decorator
 
   def pretty_type
     object.class.type_abbreviation
+  end
+
+  def late_team_name
+    if object.responded_late?
+      if object.late_team.nil?
+        'Unspecified'
+      else
+        object.late_team.name
+      end
+    else
+      'N/A'
+    end
   end
 
   private
