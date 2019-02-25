@@ -9,6 +9,8 @@ class ResponseUploaderService
   # * 'upload-approve' - approver uploads a response and approves
   # * 'upload-redraft' - approver uploads a response for redrafting to kilo for amendments
   #
+  # This method already had 8 parameters - it was done with a params hash thus hiding it from rubocop
+  #rubocop:disable Metrics/ParameterLists
   def initialize(kase:, current_user:, action:, uploaded_files:, is_compliant:,
                  upload_comment:, bypass_message:, bypass_further_approval:)
     @case                    = kase
@@ -23,6 +25,7 @@ class ResponseUploaderService
     @result = nil
     @uploader = S3Uploader.new(@case, @current_user)
   end
+  #rubocop:enable Metrics/ParameterLists
 
   class << self
     # TODO - this appears to be only used in tests

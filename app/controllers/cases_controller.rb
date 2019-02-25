@@ -367,6 +367,7 @@ class CasesController < ApplicationController
     @case = @case.decorate
   end
 
+  #rubocop:disable Metrics/MethodLength
   def execute_upload_response_and_approve
     authorize @case, :upload_response_and_approve?
 
@@ -376,15 +377,15 @@ class CasesController < ApplicationController
       action: 'upload-approve',
       uploaded_files: params[:uploaded_files],
       upload_comment: params[:upload_comment],
-      is_compliant: true
+      is_compliant: true,
+      bypass_message: nil,
+      bypass_further_approval: false
     }
     if params.key?(:bypass_approval)
-      service_params[:bypass_message] = params[:bypass_approval][:bypass_message]
-      service_params[:bypass_further_approval] =
-        !params[:bypass_approval][:press_office_approval_required] == 'true'
-    else
-      service_params[:bypass_message] = nil
-      service_params[:bypass_further_approval] = false
+      service_params.merge!(
+        bypass_message: params[:bypass_approval][:bypass_message],
+        bypass_further_approval: !params[:bypass_approval][:press_office_approval_required] == 'true'
+      )
     end
 
     service = ResponseUploaderService.new(service_params)
@@ -406,6 +407,7 @@ class CasesController < ApplicationController
       redirect_to case_path @case
     end
   end
+  #rubocop:enable Metrics/MethodLength
 
   def upload_response_and_return_for_redraft
     authorize @case
