@@ -38,6 +38,7 @@ class CSVExporter
   end
 
   #rubocop:disable Metrics/CyclomaticComplexity
+  #rubocop:disable Metrics/MethodLength
   def to_csv
     begin
       [
@@ -71,6 +72,7 @@ class CSVExporter
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
     end
   end
+  #rubocop:enable Metrics/MethodLength
   #rubocop:enable Metrics/CyclomaticComplexity
 
   private
