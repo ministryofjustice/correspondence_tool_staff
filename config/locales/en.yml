@@ -671,6 +671,8 @@ en:
       actions: Actions
     edit:
       heading: Edit case details
+      date_draft_compliant: Date compliant draft was uploaded
+      date_draft_compliant_example: "For example, 01 02 2018"
     update:
       case_updated: Case updated
     fixed_details:

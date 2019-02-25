@@ -16,7 +16,7 @@ describe 'cases/edit.html.slim', type: :view do
 
 
       assign(:correspondence_type_key, 'sar')
-      assign(:kase, kase.decorate)
+      assign(:case, kase.decorate)
 
       render
 
