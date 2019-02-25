@@ -118,7 +118,7 @@ def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Me
   end
 
   if late_team_id
-    expect(kase.late_team_id).to eq(late_team_id)
+    expect(kase.reload.late_team_id).to eq(late_team_id)
   end
 end
 
