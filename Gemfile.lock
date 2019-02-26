@@ -343,7 +343,7 @@ GEM
     paper_trail (10.2.0)
       activerecord (>= 4.2, < 6.1)
       request_store (~> 1.1)
-    parallel (1.13.0)
+    parallel (1.14.0)
     parallel_tests (2.28.0)
       parallel
     parser (2.6.0.0)
@@ -362,6 +362,7 @@ GEM
       pry (~> 0.10)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
+    psych (3.1.0)
     public_suffix (3.0.3)
     puma (3.12.0)
     pundit (2.0.1)
@@ -439,11 +440,12 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.64.0)
+    rubocop (0.65.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
       parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
+      psych (>= 3.1.0)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.4.0)
@@ -629,7 +631,7 @@ DEPENDENCIES
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails (~> 3.8)
-  rubocop (~> 0.64.0)
+  rubocop (~> 0.65.0)
   rubocop-rspec
   ruby-progressbar
   sass-rails (~> 5.0)
