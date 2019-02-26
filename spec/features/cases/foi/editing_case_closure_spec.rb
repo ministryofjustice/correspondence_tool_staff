@@ -18,9 +18,11 @@ feature 'editing case closure information' do
 
     login_as manager
     cases_show_page.load(id: kase.id)
+    # find some (non-current) late team ids so the test can change it to another valid one
+    possible_late_team_ids = kase.transitions.map(&:acting_team_id).uniq - [kase.late_team_id]
     edit_foi_case_closure_step(kase: kase,
                                date_responded: 10.business_days.ago,
-                               late_team_id: (kase.transitions.map(&:acting_team_id).uniq - [kase.late_team_id]).first)
+                               late_team_id: possible_late_team_ids.first)
   end
 
   scenario 'bmt changes case from held/granted to other/tmm', js: true do
