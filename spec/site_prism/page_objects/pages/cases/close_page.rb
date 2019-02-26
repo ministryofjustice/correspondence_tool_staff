@@ -21,7 +21,6 @@ module PageObjects
         element :date_responded_year_ico, :case_form_element, 'date_ico_decision_received_yyyy'
 
         element :uploaded_request_file_input, '#uploadedRequestFileInput'
-        element :late_team_name, '.late_team_id'
 
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="case_foi_appeal_outcome_name_upheld"]'
