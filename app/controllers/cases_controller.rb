@@ -10,31 +10,31 @@ class CasesController < ApplicationController
 
   before_action :set_case,
                 only: [
-                  :closure_outcomes,
                   :approve,
-                  :execute_approve,
+                  :closure_outcomes,
+                  :destroy_case_link,
                   :edit,
                   :edit_closure,
+                  :execute_approve,
                   :extend_for_pit,
                   :extend_sar_deadline,
                   :execute_extend_for_pit,
                   :execute_extend_sar_deadline,
                   :execute_new_case_link,
+                  :execute_upload_response_and_approve,
+                  :execute_upload_response_and_return_for_redraft,
                   :new_case_link,
-                  :destroy_case_link,
                   :process_date_responded,
                   :record_late_team,
                   :remove_pit_extension,
                   :remove_sar_deadline_extension,
                   :update_closure,
-                  :response_upload_and_approve,
                   :response_upload_for_redraft,
+                  :update_closure,
                   :upload_responses,
                   :upload_responses_action,
                   :upload_response_and_approve,
-                  :execute_upload_response_and_approve,
                   :upload_response_and_return_for_redraft,
-                  :upload_response_and_return_for_redraft_action,
                 ]
   before_action :set_url, only: [:search, :open_cases]
 
@@ -411,12 +411,13 @@ class CasesController < ApplicationController
 
   def upload_response_and_return_for_redraft
     authorize @case
+
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     @approval_action = 'approve'
     @case = @case.decorate
   end
 
-  def upload_response_and_return_for_redraft_action
+  def execute_upload_response_and_return_for_redraft
     authorize @case, :upload_response_and_return_for_redraft?
 
     rus = ResponseUploaderService.new(

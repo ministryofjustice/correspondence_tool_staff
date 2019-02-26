@@ -32,7 +32,7 @@ describe CasesController, type: :controller do
     end
   end
 
-  describe 'upload_response_and_return_for_redraft_action' do
+  describe 'execute_upload_response_and_return_for_redraft' do
     let(:uploads_key) { "uploads/#{responded_trigger_case.id}/responses/#{Faker::Internet.slug}.jpg" }
     let(:params) do
       {
@@ -53,13 +53,13 @@ describe CasesController, type: :controller do
 
     it 'authorizes' do
       expect {
-        patch :upload_response_and_return_for_redraft_action, params: params
+        patch :execute_upload_response_and_return_for_redraft, params: params
       } .to require_permission(:upload_response_and_return_for_redraft?)
               .with_args(approver, responded_trigger_case)
     end
 
     it 'calls the response upload service' do
-      patch :upload_response_and_return_for_redraft_action, params: params
+      patch :execute_upload_response_and_return_for_redraft, params: params
       expect(ResponseUploaderService).to have_received(:new).with(
                                            hash_including(
                                              current_user: approver,
@@ -76,18 +76,18 @@ describe CasesController, type: :controller do
 
     context 'successful action' do
       it 'flashes a notification' do
-        patch :upload_response_and_return_for_redraft_action, params: params
+        patch :execute_upload_response_and_return_for_redraft, params: params
         expect(flash[:notice])
           .to eq "You have uploaded the response for this case."
       end
 
       it 'redirects to case detail page' do
-        patch :upload_response_and_return_for_redraft_action, params: params
+        patch :execute_upload_response_and_return_for_redraft, params: params
         expect(response).to redirect_to(case_path(responded_trigger_case))
       end
 
       it 'sets permitted events' do
-        patch :upload_response_and_return_for_redraft_action, params: params
+        patch :execute_upload_response_and_return_for_redraft, params: params
         expect(assigns[:permitted_events]).not_to be_nil
       end
     end
@@ -98,13 +98,13 @@ describe CasesController, type: :controller do
       end
 
       it 'flashes an error' do
-        patch :upload_response_and_return_for_redraft_action, params: params
+        patch :execute_upload_response_and_return_for_redraft, params: params
         expect(flash[:alert])
           .to eq 'Please select the file(s) you used in your response.'
       end
 
       it 'renders the upload_response_and_return_for_redraft page' do
-        patch :upload_response_and_return_for_redraft_action, params: params
+        patch :execute_upload_response_and_return_for_redraft, params: params
         expect(response).to have_rendered('cases/upload_response_and_return_for_redraft')
       end
     end
@@ -115,12 +115,12 @@ describe CasesController, type: :controller do
       end
 
       it 'flashes an error' do
-        patch :upload_response_and_return_for_redraft_action, params: params
+        patch :execute_upload_response_and_return_for_redraft, params: params
         expect(flash[:alert]).to eq 'Errors detected with uploaded files.'
       end
 
       it 'renders the upload_response_and_return_for_redraft page' do
-        patch :upload_response_and_return_for_redraft_action, params: params
+        patch :execute_upload_response_and_return_for_redraft, params: params
         expect(response).to have_rendered('cases/upload_response_and_return_for_redraft')
       end
     end

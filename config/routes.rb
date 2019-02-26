@@ -300,7 +300,7 @@ Rails.application.routes.draw do
           on: :member
     get 'upload_response_and_return_for_redraft', on: :member
     patch 'upload_response_and_return_for_redraft',
-          action: :upload_response_and_return_for_redraft_action,
+          action: :execute_upload_response_and_return_for_redraft,
           on: :member
 
     resources :case_attachments, path: 'attachments', only: [:destroy] do
