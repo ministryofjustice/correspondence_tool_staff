@@ -57,6 +57,7 @@ describe CSVExporter do
                              nil,
                              late_team.name,
                              'No',
+                             0
                           ]
       end
     end
@@ -66,7 +67,7 @@ describe CSVExporter do
     it 'marks an extended case as extended' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         csv = CSVExporter.new(extended_case).to_csv
-        expect(csv.last).to eq 'Yes'
+        expect(csv[24]).to eq 'Yes'
       end
     end
   end
@@ -102,6 +103,7 @@ describe CSVExporter do
                               'Theresa Cant',
                               'N/A',
                               'No',
+                              0
                           ]
       end
     end
