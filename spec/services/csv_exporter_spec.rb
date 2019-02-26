@@ -67,7 +67,7 @@ describe CSVExporter do
     it 'marks an extended case as extended' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         csv = CSVExporter.new(extended_case).to_csv
-        expect(csv[24]).to eq 'Yes'
+        expect(csv[24..25]).to eq ['Yes', 18]
       end
     end
   end
