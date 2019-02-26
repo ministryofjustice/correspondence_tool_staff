@@ -1,3 +1,4 @@
+# TODO - this doesn't run any tests as kase.correspondence_type is not a string
 def edit_case_step(kase:, **args)
   case kase.correspondence_type
   when 'foi' then edit_foi_case_step(kase, args)
@@ -40,8 +41,8 @@ def edit_ico_case_step(kase:, **params)
   end
 end
 
-# rubocop:disable Metrics/MethodLength, Metrics/ParameterLists, Metrics/CyclomaticComplexity
-def edit_foi_case_closure_step(kase:,
+def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists, Metrics/CyclomaticComplexity
+
                                date_responded: Date.today,
                                info_held_status: 'not_confirmed',
                                refusal_reason: 'tmm',
@@ -122,7 +123,6 @@ def edit_foi_case_closure_step(kase:,
     expect(kase.reload.late_team_id).to eq(late_team_id)
   end
 end
-# rubocop:enable Metrics/MethodLength, Metrics/ParameterLists, Metrics/CyclomaticComplexity
 
 def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false) # rubocop:disable Metrics/MethodLength
   expect(cases_show_page).to be_displayed(id: kase.id)
