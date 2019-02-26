@@ -3,8 +3,6 @@ require 'csv'
 class CSVExporterError < RuntimeError; end
 
 class CSVExporter
-  include CasesHelper
-
   CSV_COLUMN_HEADINGS = [
       'Number',
       'Case type',
@@ -37,9 +35,7 @@ class CSVExporter
     @kase = kase
   end
 
-  #rubocop:disable Metrics/CyclomaticComplexity
-  #rubocop:disable Metrics/MethodLength
-  def to_csv
+  def to_csv #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     begin
       [
           @kase.number,
@@ -72,8 +68,6 @@ class CSVExporter
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
     end
   end
-  #rubocop:enable Metrics/MethodLength
-  #rubocop:enable Metrics/CyclomaticComplexity
 
   private
   def dequote_and_truncate(text)
