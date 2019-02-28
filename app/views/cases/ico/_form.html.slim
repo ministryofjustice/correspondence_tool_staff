@@ -35,7 +35,7 @@
                            file_input_name: 'case_ico[uploaded_request_files][]' }
 
 
-- if kase.date_draft_compliant.present?
+- if @case.has_date_draft_compliant?
  #date-draft-compliant
    = f.gov_uk_date_field :date_draft_compliant,
            {legend_text: t('cases.edit.date_draft_compliant'),
