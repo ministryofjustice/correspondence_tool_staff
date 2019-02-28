@@ -249,7 +249,7 @@ FactoryBot.define do
     end
 
     received_date    { 4.business_days.ago }
-    date_responded   { 3.business_days.ago }
+    date_responded   { 2.business_days.ago }
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
 
@@ -271,7 +271,7 @@ FactoryBot.define do
     end
 
     received_date    { 4.business_days.ago }
-    date_responded   { 3.business_days.ago }
+    date_responded   { 2.business_days.ago }
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
 

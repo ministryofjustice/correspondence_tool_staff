@@ -3,7 +3,7 @@ require "rails_helper"
 describe CasesController, type: :controller do
   describe '#update' do
     let(:manager) { find_or_create :disclosure_bmt_user }
-    let(:now) { Time.local(2018, 5, 30, 10, 23, 33) }
+    let(:now)     { Time.local(2018, 5, 30, 10, 23, 33) }
 
     before do
       sign_in manager
@@ -70,23 +70,52 @@ describe CasesController, type: :controller do
 
 
       context 'invalid params' do
+        context 'received_date too far int past' do
+          before(:each) { params['case_foi']['received_date_yyyy'] = '2017' }
 
-        before(:each) { params['case_foi']['received_date_yyyy'] = '2017' }
+          it 'does not update the record' do
+            original_kase = kase.clone
+            patch :update, params: params
+            expect(kase.reload).to eq original_kase
+          end
 
-        it 'does not update the record' do
-          original_kase = kase.clone
-          patch :update, params: params
-          expect(kase.reload).to eq original_kase
+          it 'has error details on the record' do
+            patch :update, params: params
+            expect(assigns(:case).errors.full_messages).to eq ['Received date too far in past.']
+          end
+
+          it 'redisplays the edit page' do
+            patch :update, params: params
+            expect(response).to render_template :edit
+          end
         end
 
-        it 'has error details on the record' do
-          patch :update, params: params
-          expect(assigns(:case).errors.full_messages).to eq ['Received date too far in past.']
+        context 'date draft compliant before received date' do
+          it 'has error details on the record' do
+            # binding.pry
+            kase.date_responded = 3.business_days.after(kase.received_date)
+            kase.save!
+            kase.reload
+            params['case_foi']['date_draft_compliant_yyyy'] = '2016'
+            patch :update, params: params
+            expect(assigns(:case).errors.full_messages).to eq ["Date compliant draft uploaded can't be before date received"]
+          end
         end
 
-        it 'redisplays the edit page' do
-          patch :update, params: params
-          expect(response).to render_template :edit
+        context 'date draft compliant in future' do
+          it 'has error details on the record' do
+            params['case_foi']['date_draft_compliant_yyyy'] = '2020'
+            patch :update, params: params
+            expect(assigns(:case).errors.full_messages).to eq ['Date compliant draft uploaded can\'t be in the future.']
+          end
+        end
+
+        context 'date draft compliant before received date' do
+          it 'has error details on the record' do
+            params['case_foi']['date_draft_compliant_yyyy'] = '2016'
+            patch :update, params: params
+            expect(assigns(:case).errors.full_messages).to eq ["Date compliant draft uploaded can't be before date received"]
+          end
         end
       end
     end
