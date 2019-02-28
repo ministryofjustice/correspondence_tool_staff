@@ -1,6 +1,13 @@
 if ENV['COVERAGE'].present?
   require 'simplecov'
-  SimpleCov.start 'rails'
+  SimpleCov.start 'rails' do
+    add_group "Services", "app/services"
+    add_group "Policies", "app/policies"
+    add_group "Decorators", "app/decorators"
+    add_group "Validators", "app/validators"
+    # application doesn't use action cable
+    add_filter '/app/channels/'
+  end
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
