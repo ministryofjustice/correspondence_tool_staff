@@ -324,11 +324,13 @@ FactoryBot.define do
   factory :approved_case, parent: :ready_to_send_case do
     taken_on_by_disclosure
 
-    after(:create) do |kase, _evaluator|
-      kase.update!(date_draft_compliant: kase.transitions
-                     .where(event: 'add_responses')
-                     .last
-                     .created_at)
+    transient do
+      date_draft_compliant { received_date + 2.days }
+    end
+
+    after(:create) do |kase, evaluator|
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
+      kase.reload
     end
   end
 

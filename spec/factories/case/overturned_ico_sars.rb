@@ -158,9 +158,10 @@ FactoryBot.define do
   factory :awaiting_dispatch_ot_ico_sar, parent: :pending_dacu_clearance_ot_ico_sar do
     transient do
       identifier { 'awaiting dispatch ICO SAR case' }
+      date_draft_compliant { received_date + 2.days }
     end
+    
     workflow { 'trigger' }
-    date_draft_compliant { received_date + 2.days }
 
     after(:create) do |kase, evaluator|
 
@@ -168,6 +169,7 @@ FactoryBot.define do
              case: kase,
              acting_team: evaluator.approving_team,
              acting_user: evaluator.approver
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
       kase.current_state = 'awaiting_dispatch'
     end
   end

@@ -10,10 +10,8 @@ describe 'cases/edit.html.slim', type: :view do
                     requester_type: :journalist,
                     subject: 'Ferrets',
                     message: 'Can I keep a ferret in jail',
-                    received_date: Date.new(2016,8,13)
-  # TODO setting the date_draft compliant needs to be added into the factories
-                    # date_draft_compliant: Date.new(2016,8,18)
-
+                    received_date: Date.new(2016,8,10),
+                    date_draft_compliant: Date.new(2016,8,12)
 
       assign(:correspondence_type_key, 'foi')
       assign(:case, kase.decorate)
@@ -27,7 +25,7 @@ describe 'cases/edit.html.slim', type: :view do
       expect(page.page_heading.heading.text).to eq "Edit case details"
       expect(page.page_heading.sub_heading.text.strip).to eq "#{kase.number} - FOI"
 
-      expect(page.foi_detail.date_received_day.value).to eq '13'
+      expect(page.foi_detail.date_received_day.value).to eq '10'
       expect(page.foi_detail.date_received_month.value).to eq '8'
       expect(page.foi_detail.date_received_year.value).to eq '2016'
 
@@ -38,7 +36,7 @@ describe 'cases/edit.html.slim', type: :view do
       expect(page.foi_detail.full_name.value).to eq 'John Doe'
       expect(page.foi_detail.email.value).to eq 'jd@moj.com'
       expect(page.foi_detail).to have_address
-      expect(page.foi_detail.date_draft_compliant_day.value).to eq '13'
+      expect(page.foi_detail.date_draft_compliant_day.value).to eq '12'
       expect(page.foi_detail.date_draft_compliant_month.value).to eq '8'
       expect(page.foi_detail.date_draft_compliant_year.value).to eq '2016'
 

@@ -98,9 +98,9 @@ FactoryBot.define do
           parent: :pending_dacu_clearance_ot_ico_foi do
     transient do
       identifier { 'approved by disclosure overturned ico foi case'}
+      date_draft_compliant { received_date + 2.days }
     end
 
-    date_draft_compliant { received_date + 2.days }
 
     after(:create) do |kase, evaluator|
 
@@ -114,6 +114,8 @@ FactoryBot.define do
 
       kase.assignments.approving.for_team(evaluator.approving_team)
         .update(approved: true)
+
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
 
       kase.reload
     end

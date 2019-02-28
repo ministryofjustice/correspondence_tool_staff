@@ -4,9 +4,11 @@ module PageObjects
       class SarEditDetailsSection < SitePrism::Section
         element :form, '.edit_case_sar'
         element :subject_name, '#case_sar_subject_full_name'
-#  3rd third_party
-# element :type_of_requester, :xpath,
-#         '//fieldset[contains(.,"Type of requester")]'
+
+        section :third_party, '#third-party' do
+          element :yes, 'input#case_sar_third_party_true'
+          element :no, 'input#case_sar_third_party_false'
+        end
 
         element :date_received_day, '#case_sar_received_date_dd'
         element :date_received_month, '#case_sar_received_date_mm'
@@ -15,12 +17,12 @@ module PageObjects
         element :case_summary, '#case_sar_subject'
         element :full_request, '#case_sar_message'
 
-# reply method
-# element :email, '#case_sar_email'
+        element :send_by_email, '#case_sar_reply_method_send_by_email'
+        element :email, '#case_sar_email'
+
         element :date_draft_compliant_day, '#case_sar_date_draft_compliant_dd'
         element :date_draft_compliant_month, '#case_sar_date_draft_compliant_mm'
         element :date_draft_compliant_year, '#case_sar_date_draft_compliant_yyyy'
-
       end
     end
   end

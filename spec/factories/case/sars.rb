@@ -175,7 +175,9 @@ FactoryBot.define do
   end
 
   factory :approved_sar, parent: :pending_dacu_clearance_sar do
-    date_draft_compliant { received_date + 2.days }
+    transient do
+      date_draft_compliant { received_date + 2.days }
+    end
 
     after(:create) do |kase, evaluator|
       create :case_transition_approve,
@@ -184,6 +186,7 @@ FactoryBot.define do
              acting_user: evaluator.approver
 
       kase.approver_assignments.each { |a| a.update approved: true }
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
       kase.reload
     end
   end
