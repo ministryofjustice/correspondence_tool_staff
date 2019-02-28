@@ -390,7 +390,10 @@ examples of how to reify a previous version, or get a hash of field values for t
 #### Testing in Parallel
 
 This project includes the `parallel_tests` gem which enables multiple CPUs to be used during testing
-in order to speed up execution.  
+in order to speed up execution.
+
+The default parallelism is 8 (override by setting PARALLEL_TEST_PROCESSORS) which seems to be about right for a 
+typical Macbook Pro (10,1 single processor with 4 cores)   
 
 ##### To set up parallel testing
 
