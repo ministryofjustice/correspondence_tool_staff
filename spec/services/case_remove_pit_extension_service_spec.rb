@@ -4,6 +4,9 @@ describe CaseRemovePITExtensionService do
   before do
     Timecop.freeze(Time.local(2018, 10, 3))
   end
+  after do
+    Timecop.return
+  end
 
   let(:received_date) { Date.new 2018, 9, 27 }
   let(:team_dacu)     { find_or_create :team_disclosure_bmt }
