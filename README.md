@@ -100,6 +100,14 @@ There are two options for installing postgres:
 	```
 	$ brew install postgresql@9.5
 	```
+	
+	Having done this, make sure all the post-install variables have been put in .bash_profile e.g.
+	export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
+    export CPPFLAGS="-I/usr/local/opt/postgresql@9.5/include"
+    export LDFLAGS="-L/usr/local/opt/postgresql@9.5/lib"
+    export PATH=$PATH:/usr/local/opt/postgresql@9.5/bin
+    
+    The PKG_CONFIG_PATH and PATH are useful to help install the PG gem 
 
 </details>
 
@@ -135,6 +143,16 @@ Nokogiri can have problems with `libiconv` and `libxml`.
 
 ```
 $ xcode-select --install
+```
+</details>
+
+<details>
+<summary>Installing redis</summary>
+
+Redis is needed to run the 'db:reseed' task below (although after that it isn't needed)
+
+```
+brew install redis
 ```
 </details>
 
@@ -190,7 +208,7 @@ To create 200 cases in various states with various responders for search testing
 ```
 rake seed:search:data
 ```
-
+It appears that redis needs to be running to attempt this task - but it doesn't currently work for unknown reasons.
 
 ### Additional Setup
 
