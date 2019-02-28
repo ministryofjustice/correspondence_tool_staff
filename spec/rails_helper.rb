@@ -1,6 +1,6 @@
 if ENV['COVERAGE'].present?
   require 'simplecov'
-  SimpleCov.start
+  SimpleCov.start 'rails'
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
