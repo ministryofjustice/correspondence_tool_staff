@@ -24,10 +24,10 @@ module PageObjects
         # only shows up when using drop_in_dropzone
         element :uploaded_request_file_input, '#uploadedRequestFileInput'
 
-        section :bypass_press_and_private_approvals,
+        section :bypass_press_option,
                 PageObjects::Sections::Cases::BypassPressOfficeOptionSection,
                 :xpath,
-                '//fieldset[contains(.,"Does Press office need to clear this response?")]//..'
+                '//fieldset[contains(.,"Does Press office need to clear this response?")]/../..'
 
         element :upload_response_button, '.button'
         elements :uploaded_request_file_inputs, 'input.case-uploaded-files',

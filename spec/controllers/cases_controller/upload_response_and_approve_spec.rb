@@ -82,12 +82,12 @@ describe CasesController, type: :controller do
         }
       end
 
-      it 'sets the bypass_message and bypass_further_approval param to false' do
+      it 'sets the bypass_message and bypass_further_approval param to true' do
         patch :execute_upload_response_and_approve, params: params
         expect(ResponseUploaderService).to have_received(:new).with(
                                              hash_including(
                                                bypass_message: 'Response does not need approval',
-                                               bypass_further_approval: false
+                                               bypass_further_approval: true
                                              )
                                            )
       end

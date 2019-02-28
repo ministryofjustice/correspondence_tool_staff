@@ -315,7 +315,7 @@ class CasesController < ApplicationController
       end
       redirect_to case_path(@case)
     else
-      flash[:alert] = case_approval_service.error_message
+      flash.now[:alert] = case_approval_service.error_message
       @case = @case.decorate
       render :approve
     end
@@ -378,7 +378,7 @@ class CasesController < ApplicationController
       upload_comment: params[:upload_comment],
       is_compliant: true,
       bypass_message: params.dig(:bypass_approval, :bypass_message),
-      bypass_further_approval: params.dig(:bypass_approval, :press_office_approval_required) != 'true'
+      bypass_further_approval: params.dig(:bypass_approval, :press_office_approval_required) == 'false'
     )
     service.upload!
 

@@ -39,7 +39,7 @@ describe 'cases/upload_response_and_approve.html.slim', type: :view do
     it 'does not display the bypass options' do
       page = render_page
 
-      expect(page).not_to have_bypass_press_and_private_approvals
+      expect(page).not_to have_bypass_press_option
       expect(response).not_to have_rendered('cases/_bypass_approvals_form')
     end
   end
@@ -50,7 +50,7 @@ describe 'cases/upload_response_and_approve.html.slim', type: :view do
     it 'displays the bypass options' do
       page = render_page
 
-      expect(page).to have_bypass_press_and_private_approvals
+      expect(page).to have_bypass_press_option
       expect(response).to have_rendered('cases/_bypass_approvals_form')
     end
   end

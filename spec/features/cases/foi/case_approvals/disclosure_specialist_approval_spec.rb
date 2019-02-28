@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 feature 'cases requiring clearance by disclosure specialist' do
   include CaseDateManipulation
   include Features::Interactions
@@ -119,5 +118,14 @@ feature 'cases requiring clearance by disclosure specialist' do
 
     cases_show_page.load(id: kase.id)
     approve_case_with_bypass(kase: kase, expected_team: responding_team, expected_status: 'Ready to send')
+  end
+
+  scenario 'approving a case and bypassing clearance with upload', js: true do
+    kase = create :pending_dacu_clearance_case_flagged_for_press_and_private, approver: disclosure_specialist
+    responding_team = kase.responding_team
+    login_as disclosure_specialist
+
+    cases_show_page.load(id: kase.id)
+    approve_upload_case_with_bypass(kase: kase, expected_team: responding_team, expected_status: 'Ready to send')
   end
 end
