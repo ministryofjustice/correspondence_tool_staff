@@ -155,6 +155,51 @@ Redis is needed to run the 'db:reseed' task below (although after that it isn't 
 brew install redis
 ```
 </details>
+<details>
+<summary>Testing</summary>
+
+This project can produce code coverage data (w/o JS or views) using the `simplecov` gem
+set COVERAGE=1 (or any value) to generate a coverage report. 
+Parallel tests are supposed to be supported, but YMMV.
+
+This project includes the `parallel_tests` gem which enables multiple CPUs to be used during testing
+in order to speed up execution. Otherwise running the tests takes an unacceptably long amount of time.
+
+The default parallelism is 8 (override by setting PARALLEL_TEST_PROCESSORS) which seems to be about 
+right for a typical Macbook Pro (10,1 single processor with 4 cores)   
+
+##### To set up parallel testing
+
+1. Create the required number of extra test databases:
+
+```
+rails parallel:create
+```
+
+2. Load the schema into all of the extra test databases:
+
+```
+rails parallel:load_structure
+```
+
+###### To run all the tests in parallel
+
+```
+rails parallel:spec
+```
+
+###### To run only feature tests in parallel
+
+```
+rails parallel:spec:features
+```
+
+###### To run only the non-feature tests in parallel
+
+```
+rails parallel:spec:non_features
+```
+</details>
 
 <details>
 <summary>Browser testing</summary>
@@ -384,49 +429,6 @@ The default serializer does not de-serialize the properties column correctly bec
 held as JSON, and papertrail serializes the object in YAML.  The custom serializer ```CtsPapertrailSerializer```
 takes care of this and reconstitutes the JSON fields correctly.  See ```/spec/lib/papertrail_spec.rb``` for
 examples of how to reify a previous version, or get a hash of field values for the previous version.
-
-### Testing
-
-#### Testing in Parallel
-
-This project includes the `parallel_tests` gem which enables multiple CPUs to be used during testing
-in order to speed up execution.
-
-The default parallelism is 8 (override by setting PARALLEL_TEST_PROCESSORS) which seems to be about right for a 
-typical Macbook Pro (10,1 single processor with 4 cores)   
-
-##### To set up parallel testing
-
-1. Create the required number of extra test databases:
-
-```
-rails parallel:create
-```
-
-2. Load the schema into all of the extra test databases:
-
-```
-rails parallel:load_structure
-```
-
-###### To run all the tests in parallel
-
-```
-rails parallel:spec
-```
-
-###### To run only feature tests in parallel
-
-```
-rails parallel:spec:features
-```
-
-###### To run only the non-feature tests in parallel
-
-```
-rails parallel:spec:non_features
-```
-
 
 ### Continuous Integration
 
