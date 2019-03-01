@@ -168,6 +168,8 @@ class Case::Base < ApplicationRecord
   validates_with ::RespondedCaseValidator
   validates_with ::ClosedCaseValidator
 
+  validates_presence_of :reason_for_deletion, if: -> { deleted }
+
   has_many :assignments, dependent: :destroy, foreign_key: :case_id
 
   has_many :teams, through: :assignments
