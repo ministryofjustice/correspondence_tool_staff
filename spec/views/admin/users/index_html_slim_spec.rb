@@ -5,6 +5,7 @@ describe 'admin/users/index.html.slim', type: :view do
     responder = find_or_create :foi_responder
     approver = create :approver
     assign(:users, User.where(id: [responder.id, approver.id]).page(1).decorate)
+    assign(:active_users, User.where(id: [responder.id, approver.id]).page(1).decorate)
 
     render
     users_index_page.load(rendered)

@@ -7,6 +7,8 @@ class Admin::UsersController < AdminController
                    .order(:full_name)
                    .page(params[:page]).per(100)
                    .decorate
+
+      @active_users = User.active_users
     end
   end
 end
