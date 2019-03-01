@@ -122,12 +122,11 @@ describe CSVExporter do
                               "2 High Street\nAnytown\nAY2 4FF",
                               'theresa@moj.com',
                               nil,
-                              false,
-                              'send_by_email',
-                              'offender',
-                              'Theresa Cant',
-                              'N/A'
-                          ]
+                              nil,
+                              'Send by email',
+                              'Offender',
+                              'Theresa Cant'
+        ]
       end
     end
   end
