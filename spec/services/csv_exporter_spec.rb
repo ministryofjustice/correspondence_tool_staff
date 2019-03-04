@@ -2,35 +2,38 @@ require 'rails_helper'
 
 describe CSVExporter do
 
-  # let(:responding_team)   { create :responding_team, name: 'Transport for London' }
-  # let(:responder)         { create :responder, full_name: 'Joe Smith', responding_teams: [ responding_team] }
-  let(:foi_case)          { create :closed_case, :fully_refused_exempt_s40,
-                                   name: 'FOI Case name',
-                                   email: 'dave@moj.com',
-                                   message: 'foi message',
-                                   postal_address: nil }
-  let(:sar_case)          { create :closed_sar,
-                                   name: 'SAR case name',
-                                   postal_address: "2 High Street\nAnytown\nAY2 4FF",
-                                   subject: 'Full details required',
-                                   email: 'theresa@moj.com',
-                                   message: 'my SAR message',
-                                   subject_full_name: 'Theresa Cant' }
+  let(:late_team) { create :responding_team, name: 'Transport for London' }
+  let(:late_foi_case) { create :closed_case, :fully_refused_exempt_s40,
+                          :late,
+                          name: 'FOI Case name',
+                          email: 'dave@moj.com',
+                          message: 'foi message',
+                          postal_address: nil,
+                          late_team_id: late_team.id
+  }
+  let(:sar_case) { create :closed_sar,
+                          name: 'SAR case name',
+                          postal_address: "2 High Street\nAnytown\nAY2 4FF",
+                          subject: 'Full details required',
+                          email: 'theresa@moj.com',
+                          message: 'my SAR message',
+                          subject_full_name: 'Theresa Cant'
+  }
 
-  context 'FOI' do
+  context 'late FOI' do
     it 'returns an array of fields' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
-        csv = CSVExporter.new(foi_case).to_csv
+        csv = CSVExporter.new(late_foi_case).to_csv
         expect(csv).to eq [
-                             '180830001',
+                             '180817001',
                              'FOI',
                              'closed',
                              'FOI Responding Team',
                              'foi responding user',
-                             '2018-08-30',
-                             '2018-09-13',
-                             '2018-09-27',
-                             '2018-09-25',
+                             '2018-08-17',
+                             '2018-09-03',
+                             '2018-09-17',
+                             '2018-09-28',
                              'standard',
                              'FOI Case name',
                              'member_of_the_public',
@@ -45,7 +48,8 @@ describe CSVExporter do
                              nil,
                              nil,
                              nil,
-                             nil
+                             nil,
+                             late_team.name
                          ]
       end
     end
@@ -79,7 +83,8 @@ describe CSVExporter do
                               false,
                               'send_by_email',
                               'offender',
-                              'Theresa Cant'
+                              'Theresa Cant',
+                              'N/A'
                           ]
       end
 
