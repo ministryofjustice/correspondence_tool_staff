@@ -30,7 +30,7 @@ class CSVExporter
       'SAR Subject full name',
       'Business unit responsible for late response',
       'Extended',
-      'Extension Days',
+      'Extension Count',
   ]
 
   def initialize(kase)
@@ -65,8 +65,8 @@ class CSVExporter
           @kase.respond_to?(:subject_type) ? @kase.subject_type : nil,
           @kase.respond_to?(:subject_full_name) ? @kase.subject_full_name : nil,
           @kase.decorate.late_team_name,
-          (@kase.external_deadline != @kase.initial_deadline) ? 'Yes' : 'No',
-          (@kase.external_deadline - @kase.initial_deadline).to_i
+          kase_extended?(@kase) ? 'Yes' : 'No',
+          extension_count(@kase),
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
@@ -74,6 +74,32 @@ class CSVExporter
   end
 
   private
+
+  def kase_extended?(kase)
+    kase.external_deadline != kase.initial_deadline
+  end
+
+  def extension_count(kase)
+    if kase_extended?(kase)
+      pit_count, sar_count = 0, 0
+      kase.transitions.map(&:event).each do |event|
+        case event
+        when 'extend_for_pit'
+          pit_count += 1
+        when 'remove_pit_extension'
+          pit_count = 0
+        when 'extend_sar_deadline'
+          sar_count += 1
+        when 'remove_sar_deadline'
+          sar_count = 0
+        end
+      end
+      pit_count + sar_count
+    else
+      0
+    end
+  end
+
   def dequote_and_truncate(text)
     text.tr('"', '').tr("'", '')[0..4000]
   end

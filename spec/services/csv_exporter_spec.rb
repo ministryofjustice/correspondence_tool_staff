@@ -64,10 +64,28 @@ describe CSVExporter do
   end
 
   context 'extended' do
-    it 'marks an extended case as extended' do
+    let(:extended_case)          { create :closed_case, :fully_refused_exempt_s40,
+                                          :pit_extension_removed,
+                                          :extended_for_pit,
+                                          name: 'FOI Case name',
+                                          email: 'dave@moj.com',
+                                          message: 'foi message',
+                                          postal_address: nil }
+    let(:extended_sar_case)          { create :closed_sar, :extended_deadline_sar,
+                                              message: 'my SAR message',
+                                              subject_full_name: 'Theresa Cant' }
+
+    it 'marks an PIT extended case as extended' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         csv = CSVExporter.new(extended_case).to_csv
-        expect(csv[24..25]).to eq ['Yes', 18]
+        expect(csv[24..25]).to eq ['Yes', 1]
+      end
+    end
+
+    it 'marks an extended SAR as extended' do
+      Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
+        csv = CSVExporter.new(extended_sar_case).to_csv
+        expect(csv[24..25]).to eq ['Yes', 1]
       end
     end
   end
