@@ -358,7 +358,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'retrieves only deleted cases I am supposed to see' do
         get :deleted_cases, format: :csv
-        expect(assigns(:cases)).to eq([deleted_kase])
+        expect(assigns(:cases)).to eq([deleted_kase, old_deleted_kase])
       end
     end
   end
