@@ -109,6 +109,15 @@ class CasesController < ApplicationController
     end
   end
 
+  def deleted_cases
+    @cases = Pundit.policy_scope(current_user, Case::Base.unscoped.soft_deleted)
+    respond_to do |format|
+      format.csv do
+        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('deleted')
+      end
+    end
+  end
+
   def incoming_cases
     @cases = @global_nav_manager
                .current_page_or_tab

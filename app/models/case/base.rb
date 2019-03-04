@@ -156,6 +156,9 @@ class Case::Base < ApplicationRecord
   scope :internal_review_compliance, -> { where(type: 'Case::FOI::ComplianceReview')}
   scope :internal_review_timeliness, -> { where(type: 'Case::FOI::TimelinessReview')}
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
+
+  scope :soft_deleted, -> { where(deleted: true) }
+
   validates :current_state, presence: true, on: :update
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates_presence_of :received_date

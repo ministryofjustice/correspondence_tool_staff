@@ -323,6 +323,38 @@ RSpec.describe CasesController, type: :controller do
   # how that action/functionality behaves becomes hard. The tests below seek to
   # remedy this by modelling how they could be grouped by functionality
   # primarily, with sub-grouping for different contexts.
+  #
+  describe 'GET deleted_cases' do
+    let!(:active_kase) { create(:case) }
+    let!(:deleted_kase) do
+      create(:case).tap do |kase|
+        CaseDeletionService.new(manager, kase, reason_for_deletion: 'Just because').call
+      end
+    end
+    let!(:deleted_sar_kase) do
+      create(:sar_case).tap do |kase|
+        CaseDeletionService.new(manager, kase, reason_for_deletion: 'Just because').call
+      end
+    end
+
+    context 'as an manager' do
+      before { sign_in manager }
+
+      it 'retrieves only deleted cases' do
+        get :deleted_cases, format: :csv
+        expect(assigns(:cases)).to match_array([deleted_kase, deleted_sar_kase])
+      end
+    end
+
+    context 'as a lesser user' do
+      before { sign_in responder }
+
+      it 'retrieves only deleted cases I am supposed to see' do
+        get :deleted_cases, format: :csv
+        expect(assigns(:cases)).to eq([deleted_kase])
+      end
+    end
+  end
 
   describe 'GET index' do
     let(:decorate_result) { double 'decorated_result' }

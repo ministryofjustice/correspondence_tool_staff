@@ -60,6 +60,14 @@ describe Case::BasePolicy::Scope do
 
     after(:all)  { DbHousekeeping.clean }
 
+    # This is checked with a test because using Case::Base.descendants on every call might be a little
+    # slow, and resolving it using a constant results in an empty array due to class loading issues
+    describe 'CASE_TYPES' do
+      it 'contains all concrete case types' do
+        expect(Case::BasePolicy::Scope::CASE_TYPES)
+          .to match_array(Case::Base.descendants.reject { |klass| klass.name.ends_with?('Base') })
+      end
+    end
 
     describe '#resolve' do
       context 'managers' do
