@@ -23,6 +23,7 @@ class CasesController < ApplicationController
                   :execute_new_case_link,
                   :execute_upload_response_and_approve,
                   :execute_upload_response_and_return_for_redraft,
+                  :execute_upload_responses,
                   :new_case_link,
                   :process_date_responded,
                   :record_late_team,
@@ -31,10 +32,9 @@ class CasesController < ApplicationController
                   :update_closure,
                   :response_upload_for_redraft,
                   :update_closure,
-                  :upload_responses,
-                  :upload_responses_action,
                   :upload_response_and_approve,
                   :upload_response_and_return_for_redraft,
+                  :upload_responses,
                 ]
   before_action :set_url, only: [:search, :open_cases]
 
@@ -328,7 +328,7 @@ class CasesController < ApplicationController
     @case = @case.decorate
   end
 
-  def upload_responses_action
+  def execute_upload_responses
     authorize @case, :upload_responses?
 
     rus = ResponseUploaderService.new(

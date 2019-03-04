@@ -292,7 +292,7 @@ Rails.application.routes.draw do
           on: :member
     get 'upload_responses', on: :member
     patch 'upload_responses',
-          action: :upload_responses_action,
+          action: :execute_upload_responses,
           on: :member
     get 'upload_response_and_approve', on: :member
     patch 'upload_response_and_approve',

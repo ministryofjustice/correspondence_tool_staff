@@ -24,7 +24,7 @@ describe CasesController do
     end
   end
 
-  describe 'upload_responses_action' do
+  describe 'execute_upload_responses' do
     let(:uploads_key) { "uploads/#{accepted_case.id}/responses/#{Faker::Internet.slug}.jpg" }
     let(:params) do
       {
@@ -36,7 +36,7 @@ describe CasesController do
 
     it 'authorises' do
       expect {
-        patch :upload_responses_action, params: params
+        patch :execute_upload_responses, params: params
       }.to require_permission(:upload_responses?)
              .with_args(responder, accepted_case)
 
@@ -54,7 +54,7 @@ describe CasesController do
       end
 
       it 'calls ResponseUploaderService' do
-        patch :upload_responses_action, params: params
+        patch :execute_upload_responses, params: params
 
         expect(ResponseUploaderService).to have_received(:new).with(
                                              kase: accepted_case,
@@ -71,13 +71,13 @@ describe CasesController do
       end
 
       it 'redirects to the case detail page' do
-        patch :upload_responses_action, params: params
+        patch :execute_upload_responses, params: params
 
         expect(response).to redirect_to(case_path(accepted_case))
       end
 
       it 'sets a flash message' do
-        patch :upload_responses_action, params: params
+        patch :execute_upload_responses, params: params
 
         expect(flash[:notice])
           .to eq "You have uploaded the response for this case."
@@ -93,13 +93,13 @@ describe CasesController do
       end
 
       it 're-renders the page' do
-        patch :upload_responses_action, params: params
+        patch :execute_upload_responses, params: params
 
         expect(response).to have_rendered(:upload_responses)
       end
 
       it 'sets the flash alert' do
-        patch :upload_responses_action, params: params
+        patch :execute_upload_responses, params: params
 
         expect(flash[:alert])
           .to eq 'Please select the file(s) you used in your response.'
@@ -114,13 +114,13 @@ describe CasesController do
       end
 
       it 're-renders the page if there is an upload error' do
-        patch :upload_responses_action, params: params
+        patch :execute_upload_responses, params: params
 
         expect(response).to have_rendered(:upload_responses)
       end
 
       it 'sets the flash alert' do
-        patch :upload_responses_action, params: params
+        patch :execute_upload_responses, params: params
 
         expect(flash[:alert])
           .to eq 'Errors detected with uploaded files.'
