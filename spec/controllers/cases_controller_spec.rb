@@ -326,6 +326,13 @@ RSpec.describe CasesController, type: :controller do
   #
   describe 'GET deleted_cases' do
     let!(:active_kase) { create(:case) }
+    let!(:old_deleted_kase) do
+      create(:case).tap do |kase|
+        Timecop.travel(-1.days) do
+          CaseDeletionService.new(manager, kase, reason_for_deletion: 'Just because').call
+        end
+      end
+    end
     let!(:deleted_kase) do
       create(:case).tap do |kase|
         CaseDeletionService.new(manager, kase, reason_for_deletion: 'Just because').call
@@ -342,7 +349,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'retrieves only deleted cases' do
         get :deleted_cases, format: :csv
-        expect(assigns(:cases)).to match_array([deleted_kase, deleted_sar_kase])
+        expect(assigns(:cases)).to eq([deleted_sar_kase, deleted_kase, old_deleted_kase])
       end
     end
 

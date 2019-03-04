@@ -110,7 +110,9 @@ class CasesController < ApplicationController
   end
 
   def deleted_cases
-    @cases = Pundit.policy_scope(current_user, Case::Base.unscoped.soft_deleted)
+    cases = Case::Base.unscoped.soft_deleted.by_last_transitioned_date
+    @cases = Pundit.policy_scope(current_user, cases)
+
     respond_to do |format|
       format.csv do
         send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('deleted')
