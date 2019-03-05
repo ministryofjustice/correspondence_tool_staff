@@ -9,6 +9,8 @@
             form_hint_text: t('.date_example'),
             today_button: {class: ''} }
 
+  - if @case.responded_late?
+    = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
 
   - if @case.is_internal_review?
     .appeal-outcome-group

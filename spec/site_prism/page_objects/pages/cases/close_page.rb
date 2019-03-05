@@ -100,6 +100,10 @@ module PageObjects
                           visible: false)
         end
 
+        def get_late_team(team_id)
+          find("#case_foi_late_team_id_#{team_id}", visible: false)
+        end
+
         def drop_in_dropzone(file_path)
           super file_path: file_path,
                 input_name: 'case_ico[uploaded_ico_decision_files][]',
