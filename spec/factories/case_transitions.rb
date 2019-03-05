@@ -189,6 +189,14 @@ FactoryBot.define do
     acting_user { acting_team.approvers.first }
   end
 
+  factory :case_transition_request_amends, parent: :case_transition do
+    to_state    { 'drafting' }
+    event       { 'request_amends' }
+
+    acting_team { find_or_create :team_disclosure }
+    acting_user { acting_team.approvers.first }
+  end
+
   factory :case_transition_upload_response_and_return_for_redraft,
           parent: :case_transition do
     to_state    { 'drafting' }

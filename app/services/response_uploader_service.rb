@@ -1,27 +1,39 @@
 class ResponseUploaderService
   attr_reader :kase, :current_user, :attachment_type, :result
 
+  RESPONSE_TYPE = :response
+
   # action_params is passed through from the flash on the upload page and can be:
   # * 'upload' - upload response but don't change state
   # * 'upload-flagged' - upload response to flagged case and transition to pending_dacu_clearance
   # * 'upload-approve' - approver uploads a response and approves
   # * 'upload-redraft' - approver uploads a response for redrafting to kilo for amendments
   #
-  def initialize(kase, current_user, bypass_params_manager, action_params)
-    @case = kase
-    @current_user = current_user
-    @bypass_params_manager = bypass_params_manager
-    @uploaded_files = @bypass_params_manager.params[:uploaded_files]
+  # This method already had 8 parameters - it was done with a params hash thus hiding it from rubocop
+  #rubocop:disable Metrics/ParameterLists
+  def initialize(kase:, current_user:, action:, uploaded_files:, is_compliant:,
+                 upload_comment:, bypass_message:, bypass_further_approval:)
+    @case                    = kase
+    @current_user            = current_user
+    @action                  = action
+    @uploaded_files          = uploaded_files
+    @is_compliant            = is_compliant
+    @upload_comment          = upload_comment
+    @bypass_message          = bypass_message
+    @bypass_further_approval = bypass_further_approval
+
     @result = nil
-    @attachments = nil
-    @action = action_params
-    @type = :response
     @uploader = S3Uploader.new(@case, @current_user)
   end
+  #rubocop:enable Metrics/ParameterLists
 
-  def seed!(filepath)
-    @uploader.add_file_to_case(filepath, @type)
-    PdfMakerJob.perform_now(@case.attachments.first.id)
+  class << self
+    # TODO - this appears to be only used in tests
+    def seed!(kase:, current_user:, filepath:)
+      uploader = S3Uploader.new(kase, current_user)
+      uploader.add_file_to_case(filepath, RESPONSE_TYPE)
+      PdfMakerJob.perform_now(kase.attachments.first.id)
+    end
   end
 
   def upload!
@@ -30,7 +42,7 @@ class ResponseUploaderService
         @result = :blank
         @attachments = []
       else
-        @attachments = @uploader.process_files(@uploaded_files, @type)
+        @attachments = @uploader.process_files(@uploaded_files, RESPONSE_TYPE)
         transition_state(@attachments)
         @result = :ok
       end
@@ -48,10 +60,15 @@ class ResponseUploaderService
 
   private
 
+  #  when approving, always log compliance date because it must be
+  # when asking for a re-draft, log compliance date if it is compliant
+  # other cases are the responder uploading so it's obvious that compliance isn't yet decided.
+  # so the date cannot be recorded (yet)
   def transition_state(response_attachments)
     ActiveRecord::Base.transaction do
-      @case.upload_comment = @bypass_params_manager.params[:upload_comment]
+      @case.upload_comment = @upload_comment
       filenames = response_attachments.map(&:filename)
+
       case @action
       when 'upload', 'upload-flagged'
         @case.state_machine.add_responses!(acting_user: @current_user,
@@ -60,6 +77,7 @@ class ResponseUploaderService
                                            message: @case.upload_comment)
       when 'upload-approve'
         upload_approve(filenames)
+        @case.log_compliance_date!
       when 'upload-redraft'
         @case.state_machine.upload_response_and_return_for_redraft!(
                              acting_user: @current_user,
@@ -67,6 +85,7 @@ class ResponseUploaderService
                              message: @case.upload_comment,
                              filenames: filenames
         )
+        @case.log_compliance_date! if @is_compliant
       else
         raise "Unexpected action parameter: '#{@action}'"
       end
@@ -74,7 +93,7 @@ class ResponseUploaderService
   end
 
   def upload_approve(filenames)
-    if @bypass_params_manager.present? && @bypass_params_manager.bypass_requested?
+    if @bypass_further_approval
       bypass_further_approvals(filenames)
     else
       approve_and_progress_as_normal(filenames)
@@ -95,7 +114,7 @@ class ResponseUploaderService
   end
 
   def combined_message
-    msg = "Bypass Reason: #{@bypass_params_manager.message}"
+    msg = "Bypass Reason: #{@bypass_message}"
     if @case.upload_comment.present?
       msg += "<br/><br/>File upload comment: #{@case.upload_comment}"
     end

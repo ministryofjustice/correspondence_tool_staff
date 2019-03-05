@@ -100,6 +100,8 @@ FactoryBot.define do
       identifier { 'approved by disclosure overturned ico foi case'}
     end
 
+    date_draft_compliant { received_date + 2.days }
+
     after(:create) do |kase, evaluator|
 
       kase.approver_assignments.for_team(evaluator.approving_team)
@@ -143,6 +145,8 @@ FactoryBot.define do
     transient do
       identifier { 'approved press private overturned ico foi case'}
     end
+
+    date_draft_compliant { received_date + 2.days }
 
     after(:create) do |kase, evaluator|
 

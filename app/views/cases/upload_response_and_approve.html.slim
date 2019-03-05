@@ -1,0 +1,26 @@
+// TODO: Move this into a partial, or even better, layouts/application
+- content_for :page_title do
+  = t('page_title.upload_responses_page', case_number: @case.number)
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = "#{@case.number} - #{@case.pretty_type}"
+
+= render partial: 'layouts/header'
+
+= form_tag upload_response_and_approve_case_path(@case), method: :patch do
+  = render partial: 'response_upload_form',
+           locals: { kase: @case,
+                     s3_direct_post: @s3_direct_post }
+
+  - if @case.allow_event?(current_user, :upload_response_approve_and_bypass)
+    .grid-row
+      .column-two-thirds
+        = render partial: 'bypass_approvals_form'
+
+  .actions
+    = submit_tag t('.upload_response'), class: 'button'

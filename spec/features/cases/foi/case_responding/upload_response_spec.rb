@@ -18,7 +18,7 @@ feature 'Upload response' do
 
       cases_show_page.actions.upload_response.click
 
-      expect(cases_new_response_upload_page).to be_displayed
+      expect(cases_upload_responses_page).to be_displayed
     end
 
     scenario 'restrict upload more responses to an approved case' do
@@ -39,7 +39,7 @@ feature 'Upload response' do
 
       cases_show_page.actions.upload_response.click
 
-      expect(cases_new_response_upload_page).to be_displayed
+      expect(cases_upload_responses_page).to be_displayed
     end
   end
 

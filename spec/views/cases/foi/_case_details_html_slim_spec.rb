@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'cases/foi/case_details.html.slim', type: :view do
   let(:unassigned_case)         { create(:case).decorate }
   let(:accepted_case)           { create(:accepted_case).decorate }
-  let(:responded_case)          { create(:responded_case).decorate }
+  let(:approved_case)          { create(:approved_case).decorate }
   let(:trigger_case)            { create(:case, :flagged_accepted).decorate }
 
   let(:closed_case)             { create(:closed_case).decorate }
@@ -111,6 +111,20 @@ describe 'cases/foi/case_details.html.slim', type: :view do
       expect(partial).to be_all_there
       expect(partial.team.data.text).to eq accepted_case.responding_team.name
       expect(partial.name.data.text).to eq accepted_case.responder.full_name
+    end
+  end
+
+  describe 'draft compliance details' do
+    it 'displays the date compliant' do
+      assign(:case, approved_case)
+      render partial: 'cases/foi/case_details.html.slim',
+             locals:{ case_details: approved_case,
+                      link_type: nil }
+
+      partial = case_details_section(rendered).compliance_details
+
+      expect(partial.compliance_date.data.text).to eq approved_case.date_draft_compliant
+      expect(partial.compliant_timeliness.data.text).to eq approved_case.draft_timeliness
     end
   end
 

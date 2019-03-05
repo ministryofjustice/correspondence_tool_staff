@@ -1,9 +1,9 @@
+// Move this into a partial, or even better, layouts/application
 - content_for :page_title do
-  = t('page_title.clear_response_page', case_number: @case.number)
+  = t('page_title.approve_page', case_number: @case.number)
 
 - content_for :heading
-  = t('.clear')
-
+  = t('.heading')
 
 - content_for :sub_heading
   span.visually-hidden
@@ -21,10 +21,9 @@
   p
     = t(".approve_message.#{@case.type_abbreviation.downcase}", managing_team: @case.managing_team.name)
 
-= form_tag execute_response_approval_case_path(@case)
+= form_tag approve_case_path(@case), method: :patch
   - if @case.allow_event?(current_user, :approve_and_bypass)
     = render partial: 'bypass_approvals_form'
 
   .actions
-  = submit_tag 'Clear response', class: 'button'
-
+    = submit_tag 'Clear response', class: 'button'

@@ -119,7 +119,7 @@ FactoryBot.define do
       kase.approver_assignments.for_team(evaluator.approving_team).singular
         .update_attributes(user: evaluator.approver,
                            state: 'accepted')
-      create :case_transition_progress_for_clearance,
+      create :case_transition_pending_dacu_clearance,
              case: kase,
              acting_team: evaluator.responding_team,
              acting_user: evaluator.responder,
@@ -132,6 +132,8 @@ FactoryBot.define do
     transient do
       identifier { 'approved ICO FOI case' }
     end
+
+    date_draft_compliant { received_date + 2.days }
 
     after(:create) do |kase, evaluator|
       create :case_transition_approve,
@@ -150,6 +152,7 @@ FactoryBot.define do
     end
 
     date_responded { Date.today }
+    date_draft_compliant { received_date + 2.days }
 
     after(:create) do |kase, _evaluator|
       create :case_transition_respond_to_ico,

@@ -57,14 +57,19 @@ class Case::Base < ApplicationRecord
                 :uploaded_request_files,
                 :request_amends_comment,
                 :upload_comment,
-                :uploading_user # Used when creating case sent by post.
+                :uploading_user, # Used when creating case sent by post.
+                :draft_compliant
+
+  jsonb_accessor :properties,
+                 date_draft_compliant: :date,
+                 has_pit_extension: [:boolean, default: false]
 
   attr_accessor :message_text
 
-  jsonb_accessor  :properties,
-                  has_pit_extension: [:boolean, default: false]
-
-  acts_as_gov_uk_date :received_date, :date_responded, :external_deadline,
+  acts_as_gov_uk_date :date_responded,
+                      :date_draft_compliant,
+                      :external_deadline,
+                      :received_date,
                       validate_if: :received_in_acceptable_range?
 
   scope :by_deadline, -> {
@@ -395,6 +400,10 @@ class Case::Base < ApplicationRecord
 
   def within_external_deadline?
     date_responded <= external_deadline
+  end
+
+  def within_draft_deadline?
+    date_draft_compliant <= internal_deadline
   end
 
   def attachments_dir(attachment_type, upload_group)

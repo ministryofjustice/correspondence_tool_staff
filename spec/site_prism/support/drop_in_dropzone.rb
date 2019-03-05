@@ -29,6 +29,20 @@ module SitePrism
           $('.dropzone')[0].dropzone.listeners[0].events.drop(e);
           JS
       end
+
+      def upload_file(kase:, file_path:, container_selector: '.dropzone')
+        file_name = File.basename(file_path)
+        execute_script <<~JS
+           var fileInfo = { name: "#{file_name}",
+                            size: 50000,
+                            key: "uploads/#{kase.id}/#{file_name}" };
+           $('#{container_selector}')[0].dropzone.emit("addedfile", fileInfo);
+           $('#{container_selector}')[0].dropzone.emit("complete", fileInfo);
+           var response = '<?xml version="1.0" encoding="UTF-8"?><PostResponse><Bucket>correspondence-staff-case-uploads-testing</Bucket><Key>uploads/#{kase.id}/#{file_name}</Key><ETag>"76af04e357d4d752427ca41a8fb7f0ad"</ETag></PostResponse>';
+           $('#{container_selector}')[0].dropzone.emit("success", fileInfo, response);
+         JS
+        uploaded_request_file_inputs count: 1
+      end
     end
   end
 end

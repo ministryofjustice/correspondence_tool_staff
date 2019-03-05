@@ -1,8 +1,8 @@
 module PageObjects
   module Pages
     module Cases
-      class ApproveResponsePage < SitePrism::Page
-        set_url '/cases/{id}/approve_response'
+      class ApprovePage < SitePrism::Page
+        set_url '/cases/{id}/approve'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -12,9 +12,12 @@ module PageObjects
 
         section :clearance,
                 PageObjects::Sections::Cases::ClearanceCopySection, '.clearance-copy'
+        section :bypass_press_option,
+                PageObjects::Sections::Cases::BypassPressOfficeOptionSection,
+                :xpath,
+                '//fieldset[contains(.,"Does Press office need to clear this response?")]/../..'
 
-
-        element :submit_button, '.button'
+        element :clear_response_button, '.button'
 
       end
     end

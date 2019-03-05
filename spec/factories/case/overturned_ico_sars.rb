@@ -160,6 +160,7 @@ FactoryBot.define do
       identifier { 'awaiting dispatch ICO SAR case' }
     end
     workflow { 'trigger' }
+    date_draft_compliant { received_date + 2.days }
 
     after(:create) do |kase, evaluator|
 

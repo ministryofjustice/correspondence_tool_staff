@@ -164,21 +164,43 @@ FactoryBot.define do
     end
 
     after(:create) do |kase, evaluator|
-      create :case_transition_pending_dacu_clearance,
+      create :case_transition_progress_for_clearance,
              case: kase,
              acting_team: evaluator.responding_team,
-             acting_user: evaluator.responder
+             acting_user: evaluator.responder,
+             target_team: evaluator.approving_team
       kase.reload
+
     end
   end
 
   factory :approved_sar, parent: :pending_dacu_clearance_sar do
+    date_draft_compliant { received_date + 2.days }
+
     after(:create) do |kase, evaluator|
       create :case_transition_approve,
              case: kase,
              acting_team: evaluator.approving_team,
              acting_user: evaluator.approver
 
+      kase.approver_assignments.each { |a| a.update approved: true }
+      kase.reload
+    end
+  end
+
+  factory :amends_requested_sar, parent: :pending_dacu_clearance_sar do
+    transient do
+      is_draft_compliant? { true }
+    end
+
+    after(:create) do |kase, evaluator|
+      transition = create :case_transition_request_amends,
+                          case: kase,
+                          acting_team: evaluator.approving_team,
+                          acting_user: evaluator.approver
+      if evaluator.is_draft_compliant?
+        kase.update!(date_draft_compliant: transition.created_at)
+      end
       kase.approver_assignments.each { |a| a.update approved: true }
       kase.reload
     end
@@ -196,10 +218,12 @@ FactoryBot.define do
 
     after(:create) do |kase, evaluator|
       if evaluator.flag_for_disclosure
-        create :case_transition_pending_dacu_clearance,
+        create :case_transition_progress_for_clearance,
                case: kase,
                acting_team: evaluator.responding_team,
-               acting_user: evaluator.responder
+               acting_user: evaluator.responder,
+               target_team: evaluator.approving_team
+
         create :case_transition_approve,
                case: kase,
                acting_team: evaluator.approving_team,

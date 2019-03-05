@@ -21,7 +21,7 @@ describe CaseApprovalService do
 
       context 'case not in pending_dacu_clearance state' do
 
-        let(:kase) { create :accepted_case, :flagged_accepted }
+        let(:kase) { create :redrafting_case, :flagged_accepted }
         let(:user) { kase.approvers.first }
 
         it 'raises state machine guard error' do
@@ -141,7 +141,7 @@ describe CaseApprovalService do
 
       context 'case not in pending_dacu_clearance state' do
 
-        let(:kase) { create :accepted_case, :flagged_accepted }
+        let(:kase) { create :redrafting_case, :flagged_accepted }
 
         it 'raises state machine guard error' do
           expect(kase.current_state).to eq 'drafting'

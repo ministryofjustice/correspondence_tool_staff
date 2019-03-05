@@ -134,6 +134,18 @@ describe Case::BaseDecorator, type: :model do
     end
   end
 
+  describe '#draft_timeliness' do
+    it 'returns correct string for answered in time' do
+      approved_case = create(:approved_case).decorate
+      expect(approved_case.draft_timeliness).to eq 'Uploaded in time'
+    end
+
+    it 'returns correct string for answered late' do
+      closed_late_case = create(:closed_case, :late).decorate
+      expect(closed_late_case.draft_timeliness).to eq 'Uploaded late'
+    end
+  end
+
   describe '#internal_deadline' do
     context 'unflagged case' do
       it 'returns space' do
@@ -352,6 +364,25 @@ describe Case::BaseDecorator, type: :model do
     it 'returns the escalation date in the default format' do
       expect(unassigned_case.object).to receive(:escalation_deadline).and_return(Date.new(2017, 8, 13))
       expect(unassigned_case.escalation_deadline).to eq '13 Aug 2017'
+    end
+  end
+
+  describe '#date_draft_compliant' do
+    it 'returns the the draft upload date in the default format' do
+      allow(closed_case.object).to receive(:date_draft_compliant).and_return(Date.new(2017, 8, 14))
+      expect(closed_case.date_draft_compliant).to eq '14 Aug 2017'
+    end
+  end
+
+  describe '#has_date_draft_compliant?' do
+    it 'returns true when there is an underlying date_draft_compliant' do
+      allow(closed_case.object).to receive(:date_draft_compliant).and_return(Date.new(2017, 8, 14))
+      expect(closed_case.has_date_draft_compliant?).to eq true
+    end
+
+    it 'returns false when there is not an underlying date_draft_compliant' do
+      allow(closed_case.object).to receive(:date_draft_compliant).and_return(nil)
+      expect(closed_case.has_date_draft_compliant?).to eq false
     end
   end
 

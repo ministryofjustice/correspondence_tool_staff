@@ -247,7 +247,7 @@ class Case::BasePolicy < ApplicationPolicy
     check_can_trigger_event(:add_message_to_case)
   end
 
-  def execute_response_approval?
+  def approve?
     clear_failed_checks
     check_user_is_an_approver_for_case &&
         check_can_trigger_event(:approve)
@@ -259,13 +259,13 @@ class Case::BasePolicy < ApplicationPolicy
         check_can_trigger_event(:add_responses)
   end
 
-  def upload_responses_for_approve?
+  def upload_response_and_approve?
     clear_failed_checks
     check_user_is_in_current_team &&
         check_can_trigger_event(:upload_response_and_approve)
   end
 
-  def upload_responses_for_redraft?
+  def upload_response_and_return_for_redraft?
     clear_failed_checks
     check_user_is_in_current_team &&
         check_can_trigger_event(:upload_response_and_return_for_redraft)

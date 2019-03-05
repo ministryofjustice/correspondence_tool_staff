@@ -124,9 +124,8 @@ href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision</a>"
       context 'case does not require clearance' do
         it 'generates HTML that links to the upload response page' do
           @case = create(:accepted_case)
-          expect(@case).to receive(:requires_clearance?).and_return(false)
           expect(action_button_for(:add_responses)).to eq(
-             "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/new_response_upload?mode=upload\">Upload response</a>"
+             "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/upload_responses\">Upload response</a>"
             )
         end
       end
@@ -134,13 +133,11 @@ href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision</a>"
       context 'case requires clearance' do
         it 'generates HTML that links to the upload response page' do
           @case = create(:accepted_case)
-          expect(@case).to receive(:requires_clearance?).and_return(true)
           expect(action_button_for(:add_responses)).to eq(
-           "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/new_response_upload?mode=upload-flagged\">Upload response</a>"
+           "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/upload_responses\">Upload response</a>"
          )
         end
       end
-
     end
 
     context 'when event = :respond' do
@@ -198,6 +195,16 @@ href="/cases/#{@case.id}/assignments/#{@assignments.first.id}/reassign_user">Cha
 href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.first.id}%2B#{@assignments.last.id}">Change team member</a>]
                )
         end
+      end
+    end
+
+    context 'when event == :upload_response_and_approve' do
+      it 'generates HTML that links to the ' do
+        @case = create(:pending_dacu_clearance_case)
+        expect(action_button_for(:upload_response_and_approve))
+          .to eq(
+                "<a id=\"action--upload-approve\" class=\"button\" href=\"/cases/#{@case.id}/upload_response_and_approve\">Upload response and clear</a>"
+              )
       end
     end
   end
