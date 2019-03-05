@@ -101,13 +101,15 @@ There are two options for installing postgres:
 	$ brew install postgresql@9.5
 	```
 
-	Having done this, make sure all the post-install variables have been put in .bash_profile e.g.
-	export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
-    export CPPFLAGS="-I/usr/local/opt/postgresql@9.5/include"
-    export LDFLAGS="-L/usr/local/opt/postgresql@9.5/lib"
-    export PATH=$PATH:/usr/local/opt/postgresql@9.5/bin
+	Having done this, make sure all the post-install variables have been put in
+  `.bash_profile` or similar e.g.
 
-    The PKG_CONFIG_PATH and PATH are useful to help install the PG gem
+  export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
+  export CPPFLAGS="-I/usr/local/opt/postgresql@9.5/include"
+  export LDFLAGS="-L/usr/local/opt/postgresql@9.5/lib"
+  export PATH=$PATH:/usr/local/opt/postgresql@9.5/bin
+
+  The PKG_CONFIG_PATH and PATH are useful to help install the PG gem
 </details>
 
 <details>
@@ -356,24 +358,6 @@ And ensure you add the following to `.bash_profile` or similar to prevent TCP co
 
 ```
 export PGHOST=localhost
-```
-
-If the `pg` gem is still failing to build, ensure:
-
-```
-If you need to have postgresql@9.5 first in your PATH run:
-  echo 'export PATH="/usr/local/opt/postgresql@9.5/bin:$PATH"' >> ~/.bash_profile
-
-For compilers to find postgresql@9.5 you may need to set:
-  export LDFLAGS="-L/usr/local/opt/postgresql@9.5/lib"
-  export CPPFLAGS="-I/usr/local/opt/postgresql@9.5/include"
-
-For pkg-config to find postgresql@9.5 you may need to set:
-  export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
-
-To have launchd start postgresql@9.5 now and restart at login:
-  brew services start postgresql@9.5
-
 ```
 
 #### Emails
