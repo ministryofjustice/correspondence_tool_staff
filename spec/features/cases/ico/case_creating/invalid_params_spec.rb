@@ -32,7 +32,7 @@ feature 'creating ICO with invalid params' do
     cases_new_ico_page.load
 
     click_button 'Create case'
-    # TODO - this behaviour is ingrained due to the design. No easy fix
-    expect(cases_new_ico_page.errors.details.count).to eq 1
+
+    expect(cases_new_ico_page.errors.details.count).to eq 7
   end
 end

@@ -5,9 +5,7 @@ class CaseCreateService
   include SARCasesParams
   include OverturnedICOParams
 
-
   attr_reader :case, :result, :params, :flash_notice, :case_class
-
 
   def initialize(user, correspondence_type_key, params)
     @user                     = user
@@ -22,9 +20,7 @@ class CaseCreateService
   end
 
   def call
-    unless @result == :error
-      create_case
-    end
+    create_case
   end
 
   private
@@ -33,7 +29,6 @@ class CaseCreateService
     default_subclass = @correspondence_type.sub_classes.first
     @case = default_subclass.new
   end
-
 
   def create_params(correspondence_type)
     # Call case-specific create params, which we should be defined in concerns files.
@@ -49,13 +44,15 @@ class CaseCreateService
   def create_case
     @case = @case_class.new(@permitted_params.merge(uploading_user: @user))
 
-    if @case.invalid?
+    if @case.invalid? || @result == :error
       @result = :error
     elsif flagged_for_disclosure_specialists_mismatch?
       set_flagged_for_disclosure_errors
+      @result = :error
     else
       flag_for_disclosure_if_required
       overturned_ico_post_creation_processing if @case.overturned_ico?
+      @result = :assign_responder
     end
     @result != :error
   end
@@ -71,7 +68,6 @@ class CaseCreateService
   def set_flagged_for_disclosure_errors
     @case.valid?
     @case.errors.add(:flag_for_disclosure_specialists, :blank)
-    @result = :error
   end
 
   def flag_for_disclosure_if_required
@@ -86,9 +82,7 @@ class CaseCreateService
       ).call
     end
     flag_for_disclosure if @case.is_a?(Case::ICO::Base)
-    @result = :assign_responder
   end
-
 
   def flag_for_disclosure
     service = CaseFlagForClearanceService.new(user: @user,
@@ -104,12 +98,12 @@ class CaseCreateService
         type: @correspondence_type,
         params: @params["case_#{@correspondence_type_key}"]
       )
-    case_class_service.call()
+    case_class_service.call
 
+    # TODO - no point setting the error on a case that we're just about to overwrite
     if case_class_service.error?
       @result = :error
-      case_class_service.set_error_on_case(@case)
-      Case::FOI::Standard
+      case_class_service.case_class
     else
       case_class_service.case_class
     end

@@ -203,7 +203,7 @@ class CasesController < ApplicationController
         render :new
       end
     rescue ActiveRecord::RecordNotUnique
-      flash[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
+      flash.now[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
       render :new
     end
   end
