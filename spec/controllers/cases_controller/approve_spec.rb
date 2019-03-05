@@ -10,7 +10,6 @@ RSpec.describe CasesController, type: :controller do
   describe 'approve' do
     before do
       sign_in approver
-      # allow(CaseApprovalService).to receive(:new).and_return(service)
     end
 
     it 'authorizes' do

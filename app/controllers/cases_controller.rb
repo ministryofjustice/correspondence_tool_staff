@@ -29,7 +29,6 @@ class CasesController < ApplicationController
                   :record_late_team,
                   :remove_pit_extension,
                   :remove_sar_deadline_extension,
-                  :update_closure,
                   :response_upload_for_redraft,
                   :update_closure,
                   :upload_response_and_approve,
@@ -54,7 +53,6 @@ class CasesController < ApplicationController
   # or, this could be done in a new after_action block.
   before_action :set_decorated_case,
                 only: [
-                  :assign_to_new_team,
                   :close,
                   :confirm_respond,
                   :confirm_destroy,
@@ -64,7 +62,6 @@ class CasesController < ApplicationController
                   :process_closure,
                   :process_respond_and_close,
                   :progress_for_clearance,
-                  :reassign_approver,
                   :remove_clearance,
                   :request_amends,
                   :request_further_clearance,

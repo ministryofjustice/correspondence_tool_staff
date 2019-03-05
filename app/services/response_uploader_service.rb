@@ -77,7 +77,7 @@ class ResponseUploaderService
                                            message: @case.upload_comment)
       when 'upload-approve'
         upload_approve(filenames)
-        @case.log_compliance_date
+        @case.log_compliance_date!
       when 'upload-redraft'
         @case.state_machine.upload_response_and_return_for_redraft!(
                              acting_user: @current_user,
@@ -85,7 +85,7 @@ class ResponseUploaderService
                              message: @case.upload_comment,
                              filenames: filenames
         )
-        @case.log_compliance_date if @is_compliant
+        @case.log_compliance_date! if @is_compliant
       else
         raise "Unexpected action parameter: '#{@action}'"
       end

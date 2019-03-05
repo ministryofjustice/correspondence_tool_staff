@@ -17,7 +17,7 @@ class CaseRequestAmendsService
                      .first
       @kase.state_machine.request_amends!(acting_user: @user, acting_team: assignment.team, message: @message)
       if @is_compliant
-        @kase.log_compliance_date
+        @kase.log_compliance_date!
       end
     end
 

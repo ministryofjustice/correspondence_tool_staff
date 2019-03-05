@@ -19,7 +19,7 @@ describe DraftTimeliness::ResponseAdded do
 
     expect(kase.date_draft_compliant).to be_nil
 
-    kase.log_compliance_date
+    kase.log_compliance_date!
 
     expect(kase.date_draft_compliant)
       .to eq new_transition.created_at.to_datetime.to_date
@@ -34,7 +34,7 @@ describe DraftTimeliness::ResponseAdded do
 
     expect(kase.date_draft_compliant).to be_nil
 
-    kase.log_compliance_date
+    kase.log_compliance_date!
 
     expect(kase.date_draft_compliant)
       .to eq new_transition.created_at.to_datetime.to_date
@@ -47,7 +47,7 @@ describe DraftTimeliness::ResponseAdded do
       expect(kase.date_draft_compliant).to be_present
 
       expect {
-        kase.log_compliance_date
+        kase.log_compliance_date!
       }.not_to change {
         kase.date_draft_compliant
       }
@@ -64,7 +64,7 @@ describe DraftTimeliness::ProgressedForClearance do
 
     expect(kase.date_draft_compliant).to be_nil
 
-    kase.log_compliance_date
+    kase.log_compliance_date!
 
     expect(kase.date_draft_compliant)
       .to eq new_transition.created_at.to_datetime.to_date
@@ -77,7 +77,7 @@ describe DraftTimeliness::ProgressedForClearance do
       expect(kase.date_draft_compliant).to be_present
 
       expect {
-        kase.log_compliance_date
+        kase.log_compliance_date!
       }.not_to change {
         kase.date_draft_compliant
       }
