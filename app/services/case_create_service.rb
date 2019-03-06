@@ -93,19 +93,14 @@ class CaseCreateService
   end
 
   def determine_case_class
-
     case_class_service = GetCaseClassFromParamsService.new(
         type: @correspondence_type,
         params: @params["case_#{@correspondence_type_key}"]
       )
     case_class_service.call
 
-    # TODO - no point setting the error on a case that we're just about to overwrite
-    if case_class_service.error?
-      @result = :error
-      case_class_service.case_class
-    else
-      case_class_service.case_class
-    end
+    @result = :error if case_class_service.error?
+
+    case_class_service.case_class
   end
 end
