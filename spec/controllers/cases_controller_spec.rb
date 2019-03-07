@@ -333,16 +333,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
-    let!(:deleted_kase) do
-      create(:case).tap do |kase|
-        CaseDeletionService.new(manager, kase, reason_for_deletion: 'Just because').call
-      end
-    end
-    let!(:deleted_sar_kase) do
-      create(:sar_case).tap do |kase|
-        CaseDeletionService.new(manager, kase, reason_for_deletion: 'Just because').call
-      end
-    end
+    let!(:deleted_kase) { create(:case, :deleted_case) }
+    let!(:deleted_sar_kase) { create(:sar_case, :deleted_case) }
 
     context 'as an manager' do
       before { sign_in manager }

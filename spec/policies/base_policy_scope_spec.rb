@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 describe Case::BasePolicy::Scope do
 
   describe 'case scope policy' do
