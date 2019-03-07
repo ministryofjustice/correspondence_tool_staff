@@ -18,16 +18,11 @@ describe 'CSVGenerator' do
     end
   end
 
-  describe '.options' do
-    it 'returns send_data_options' do
+  describe '#filename' do
+    it 'returns a filename based on time and action' do
       Timecop.freeze Time.local(2018, 11, 7, 13, 44, 55) do
-        expect(CSVGenerator.options('closed')).to eq(
-          {
-            filename: 'closed-cases-18-11-07-134455.csv',
-            type: 'text/csv; charset=utf-8'
-          })
+        expect(CSVGenerator.filename('closed')).to eq('closed-cases-18-11-07-134455.csv')
       end
     end
   end
-
 end

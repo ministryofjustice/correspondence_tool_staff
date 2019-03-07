@@ -1,5 +1,6 @@
 require 'csv'
 
+# Lazy generation of CSV data so that we don't fill up memory when downloading
 class CSVGenerator
   include Enumerable
 
@@ -17,17 +18,6 @@ class CSVGenerator
   class << self
     def filename(action_string)
       "#{action_string}-cases-#{Time.now.strftime('%y-%m-%d-%H%M%S')}.csv"
-    end
-
-    def type
-      'text/csv; charset=utf-8'
-    end
-
-    def options(action_string)
-      {
-        filename: self.filename(action_string),
-        type: self.type
-      }
     end
   end
 end

@@ -908,13 +908,6 @@ class CasesController < ApplicationController
 
   private
 
-  def send_csv_cases(action_string)
-    headers["Content-Type"] = CSVGenerator.type
-    headers["Content-Disposition"] =
-      %(attachment; filename="#{CSVGenerator.filename(action_string)}")
-    self.response_body = CSVGenerator.new(@cases)
-  end
-
   def prepare_open_cases_collection(service)
     @parent_id = @query.id
     @page = params[:page] || '1'

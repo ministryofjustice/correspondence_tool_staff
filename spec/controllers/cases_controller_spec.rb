@@ -149,7 +149,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'csv format' do
-        it 'generates a file and downloads it' do
+        it 'redirects' do
           expect(CSVGenerator).not_to receive(:new)
 
           get :closed_cases, format: 'csv'
