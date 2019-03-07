@@ -1,7 +1,6 @@
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
-
 def stub_current_case_finder_cases_with(result)
   pager = double 'Kaminari Pager', decorate: result
   cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
@@ -349,7 +348,6 @@ RSpec.describe CasesController, type: :controller do
 
     before do
       allow(CaseFinderService).to receive(:new).and_return(finder)
-      allow(finder).to receive(:for_user).and_return(finder)
       allow(finder).to receive(:for_params).and_return(finder)
     end
 

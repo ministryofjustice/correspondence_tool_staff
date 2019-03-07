@@ -78,7 +78,6 @@ class CasesController < ApplicationController
 
   def index
     @cases = CaseFinderService.new(current_user)
-               .for_user
                .for_params(request.params)
                .scope
                .page(params[:page])
