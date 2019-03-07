@@ -6,8 +6,8 @@
 .grid-row
   .search-results-summary.column-half
     strong
-      = @active_users.count
-    = " #{ 'active user'.pluralize(@active_users.count)}"
+      = @active_users_count
+    = " #{ 'active user'.pluralize(@active_users_count)}"
 
 .grid-row
   .column-full.table-container.container

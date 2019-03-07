@@ -8,7 +8,7 @@ class Admin::UsersController < AdminController
                    .page(params[:page]).per(100)
                    .decorate
 
-      @active_users = User.active_users
+      @active_users_count = User.active_users.count
     end
   end
 end
