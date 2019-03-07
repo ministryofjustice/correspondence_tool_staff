@@ -125,7 +125,10 @@ describe CSVExporter do
                               nil,
                               'Send by email',
                               'Offender',
-                              'Theresa Cant'
+                              'Theresa Cant',
+                              'No',
+                              0,
+                              'N/A'
         ]
       end
     end
