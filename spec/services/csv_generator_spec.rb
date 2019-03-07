@@ -11,8 +11,10 @@ describe 'CSVGenerator' do
       kase2 = double Case::Base, to_csv: k2_fields
 
       generator = CSVGenerator.new([kase1, kase2])
-      expected = "#{CSVExporter::CSV_COLUMN_HEADINGS.join(',')}\n#{k1_fields.join(',')}\n#{k2_fields.join(',')}\n"
-      expect(generator.to_csv).to eq expected
+      expected = ["#{CSVExporter::CSV_COLUMN_HEADINGS.join(',')}\n",
+                  "#{k1_fields.join(',')}\n",
+                  "#{k2_fields.join(',')}\n"]
+      expect(generator.to_a).to eq expected
     end
   end
 

@@ -189,20 +189,16 @@ RSpec.describe CasesController, type: :controller do
 
       context 'csv format' do
         it 'generates a file and downloads it' do
-          generator = double CSVGenerator
-          expect(CSVGenerator).to receive(:new).and_return(generator)
-          expect(CSVGenerator).to receive(:options).with('closed').and_return({filename: 'abc.csv', type: 'text/csv; charset=utf-8'})
-          expect(generator).to receive(:to_csv).and_return('csv data')
+          expect(CSVGenerator).to receive(:filename).with('closed').and_return('abc.csv')
 
           get :closed_cases, format: 'csv'
           expect(response.status).to eq 200
           expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
-          expect(response.body).to eq 'csv data'
+          expect(response.body).to eq CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)
         end
 
         it 'does not paginate the result set' do
           gnm = stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
-          allow_any_instance_of(CSVGenerator).to receive(:to_csv).and_return ''
           get :closed_cases, format: 'csv', params: { page: 'our_page' }
 
           expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
@@ -467,15 +463,12 @@ RSpec.describe CasesController, type: :controller do
 
       context 'csv request' do
         it 'downloads a csv file' do
-          generator = double CSVGenerator
-          expect(CSVGenerator).to receive(:new).and_return(generator)
-          expect(CSVGenerator).to receive(:options).with('my-open').and_return({filename: 'abc.csv', type: 'text/csv; charset=utf-8'})
-          expect(generator).to receive(:to_csv).and_return('csv data')
+          expect(CSVGenerator).to receive(:filename).with('my-open').and_return('abc.csv')
 
           get :my_open_cases, params: { tab: 'in_time' }, format: 'csv'
           expect(response.status).to eq 200
           expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
-          expect(response.body).to eq 'csv data'
+          expect(response.body).to eq CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)
         end
       end
     end
