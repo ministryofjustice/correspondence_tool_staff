@@ -92,10 +92,7 @@ describe CasesController, type: :controller do
 
         context 'date draft compliant before received date' do
           it 'has error details on the record' do
-            # binding.pry
             kase.date_responded = 3.business_days.after(kase.received_date)
-            kase.save!
-            kase.reload
             params['case_foi']['date_draft_compliant_yyyy'] = '2016'
             patch :update, params: params
             expect(assigns(:case).errors.full_messages).to eq ["Date compliant draft uploaded can't be before date received"]
