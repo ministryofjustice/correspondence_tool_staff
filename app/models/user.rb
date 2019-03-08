@@ -30,6 +30,8 @@ class User < ApplicationRecord
 
   has_paper_trail only: [:email, :encrypted_password, :full_name, :deleted_at]
 
+  default_scope { includes(:team_roles, :teams) }
+
   has_many :cases, through: :assignments
   has_many :assignments
   has_many :team_roles, class_name: 'TeamsUsersRole'
