@@ -1,28 +1,6 @@
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
-def stub_current_case_finder_cases_with(result)
-  pager = double 'Kaminari Pager', decorate: result
-  cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
-  cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
-  page = instance_double GlobalNavManager::Page, cases: cases
-  gnm = instance_double GlobalNavManager, current_page_or_tab: page
-  allow(GlobalNavManager).to receive(:new).and_return gnm
-  gnm
-end
-
-def stub_current_case_finder_for_closed_cases_with(result)
-  pager = double 'Kaminari Pager', decorate: result
-  cases_by_last_transitioned_date = double 'ActiveRecord Cases by last transitioned', page: pager
-  cases = double 'ActiveRecord Cases', by_last_transitioned_date: cases_by_last_transitioned_date
-  page = instance_double GlobalNavManager::Page, cases: cases
-  gnm = instance_double GlobalNavManager, current_page_or_tab: page
-  allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
-  allow(cases).to receive(:includes).and_return(cases)
-  allow(GlobalNavManager).to receive(:new).and_return gnm
-  gnm
-end
-
 RSpec.describe CasesController, type: :controller do
 
   let(:all_cases)             { create_list(:case, 5)   }
@@ -1275,6 +1253,28 @@ RSpec.describe CasesController, type: :controller do
     #   before { sign_in responder }
     # end
 
+  end
+
+  def stub_current_case_finder_cases_with(result)
+    pager = double 'Kaminari Pager', decorate: result
+    cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
+    cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
+    page = instance_double GlobalNavManager::Page, cases: cases
+    gnm = instance_double GlobalNavManager, current_page_or_tab: page
+    allow(GlobalNavManager).to receive(:new).and_return gnm
+    gnm
+  end
+
+  def stub_current_case_finder_for_closed_cases_with(result)
+    pager = double 'Kaminari Pager', decorate: result
+    cases_by_last_transitioned_date = double 'ActiveRecord Cases by last transitioned', page: pager
+    cases = double 'ActiveRecord Cases', by_last_transitioned_date: cases_by_last_transitioned_date
+    page = instance_double GlobalNavManager::Page, cases: cases
+    gnm = instance_double GlobalNavManager, current_page_or_tab: page
+    allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
+    allow(cases).to receive(:includes).and_return(cases)
+    allow(GlobalNavManager).to receive(:new).and_return gnm
+    gnm
   end
 
 end
