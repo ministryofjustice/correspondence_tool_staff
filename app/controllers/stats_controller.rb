@@ -57,21 +57,58 @@ class StatsController < ApplicationController
     end
   end
 
+  # RAG (Red, Amber, Green) thresholds for the different types
+  # Columns E, K and Q are percentages (non-trigger, trigger and overall)
+  # These are row items 4, 11 and 16. Data starts at row 4 (3 zero indexed)
+  RAG_THRESHOLDS_FOI = {red: 85, amber: 90}
+  RAG_THRESHOLDS_SAR = {red: 80, amber: 85}
+
+  def cell_colour(value, thresholds)
+    if value < thresholds[:red]
+               'FF0000'
+             elsif value < thresholds[:amber]
+               'FF0000'
+             else
+               '00FF00'
+             end
+  end
+
   def download_custom_report
     report= Report.find(params[:id])
     filename = report.report_type.filename
 
-    if report.report_type == 'R003'
+    # This is a Spike - so just hack the report about to show that an Excel report is possible
+    if report.report_type.abbr == 'R003'
       # split report data into pieces - convert "" into empty string
       excel_data = report.report_data.split("\n").map { |j| j.split(',') }
+      is_foi_report = excel_data[0][0].include?('FOI')
+      thresholds = is_foi_report ? RAG_THRESHOLDS_FOI : RAG_THRESHOLDS_SAR
       axlsx = Axlsx::Package.new
       workbook = axlsx.workbook
       workbook.add_worksheet do |sheet|
-        excel_data.each do |row|
+        cell_colours = {}
+        excel_data.each_with_index do |row, row_index|
           excel_row = row.map { |i| i == '""' ? '' : i }
           sheet.add_row excel_row
+          # data rows start at index 3
+          if row_index >= 3
+            # Following the percentages values is the case count.
+            # If that number is zero then we display a 0 percentage even though is technically
+            # NaN (0/0) - so check so that we don't report that as a Red RAG rating
+            if row[5].to_i > 0
+              cell_colours["E#{row_index+1}"] = cell_colour(row[4].to_f, thresholds)
+            end
+            if row[12].to_i > 0
+              cell_colours["K#{row_index+1}"] = cell_colour(row[11].to_f, thresholds)
+            end
+            if row[17].to_i > 0
+              cell_colours["Q#{row_index+1}"] = cell_colour(row[16].to_f, thresholds)
+            end
+          end
         end
-        sheet.add_style 'E4:E6', bg_color: '95AFBA'
+        cell_colours.each do |cell, colour|
+          sheet.add_style(cell, bg_color: colour)
+        end
       end
 
       send_data axlsx.to_stream.read,
