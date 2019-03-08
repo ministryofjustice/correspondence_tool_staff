@@ -254,7 +254,46 @@ To create 200 cases in various states with various responders for search testing
 ```
 rake seed:search:data
 ```
-It appears that redis needs to be running to attempt this task - but it doesn't currently work for unknown reasons.
+In order for this task to run sucessfully, redis needs to be running
+```
+redis-server
+```
+and AWS access needs to have been setup, as creating cases (even on development) uploads file to S3
+
+#### Uploads
+
+Responses and other case attachments are uploaded directly to S3 before being
+submitted to the application to be added to the case. Each deployed environment
+has the permissions is needs to access the uploads bucket for that environment.
+In local development, uploads are place in the
+[correspondence-staff-case-uploads-testing](https://s3-eu-west-1.amazonaws.com/correspondence-staff-case-uploads-testing/)
+bucket.
+
+You'll need to provide access credentials to the aws-sdk gems to access
+it, there are two ways of doing this:
+
+#### Using credentials attached to your IAM account
+
+If you have an MoJ account in AWS IAM, you can configure the aws-sdk with your
+access and secret key by placing them in the `[default]` section in
+`.aws/credentials`:
+
+1. [Retrieve you keys from your IAM account](http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html)<sup>[1](#user-content-footnote-aws-access-key)</sup> if you don't have them already.
+2. [Place them in `~/.aws/credentals`](http://docs.aws.amazon.com/sdk-for-ruby/v2/developer-guide/setup-config.html)
+
+When using Docker Compose your `~/.aws` will be mounted onto the containers so
+that they can use your local credentials transparently.
+
+#### Using shared credentials
+
+Alternatively, if you don't have an AWS account with access to that bucket, you
+can get access by using an access and secret key specifically generated for
+testing:
+
+1. Retrieve the 'Case Testing Uploads S3 Bucket' key from the Correspondence
+   group in Rattic.
+2. [Use environment variables to configure the AWS SDK](http://docs.aws.amazon.com/sdk-for-ruby/v2/developer-guide/setup-config.html#aws-ruby-sdk-credentials-environment)
+   locally.
 
 ### Additional Setup
 
@@ -379,41 +418,6 @@ setting the appropriate environment variables, e.g.
 $ export SETTINGS__CTS_EMAIL_HOST=localhost
 $ export SETTINGS__CTS_EMAIL_PORT=5000
 ```
-
-#### Uploads
-
-Responses and other case attachments are uploaded directly to S3 before being
-submitted to the application to be added to the case. Each deployed environment
-has the permissions is needs to access the uploads bucket for that environment.
-In local development, uploads are place in the
-[correspondence-staff-case-uploads-testing](https://s3-eu-west-1.amazonaws.com/correspondence-staff-case-uploads-testing/)
-bucket.
-
-You'll need to provide access credentials to the aws-sdk gems to access
-it, there are two ways of doing this:
-
-#### Using credentials attached to your IAM account
-
-If you have an MoJ account in AWS IAM, you can configure the aws-sdk with your
-access and secret key by placing them in the `[default]` section in
-`.aws/credentials`:
-
-1. [Retrieve you keys from your IAM account](http://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html)<sup>[1](#user-content-footnote-aws-access-key)</sup> if you don't have them already.
-2. [Place them in `~/.aws/credentals`](http://docs.aws.amazon.com/sdk-for-ruby/v2/developer-guide/setup-config.html)
-
-When using Docker Compose your `~/.aws` will be mounted onto the containers so
-that they can use your local credentials transparently.
-
-#### Using shared credentials
-
-Alternatively, if you don't have an AWS account with access to that bucket, you
-can get access by using an access and secret key specifically generated for
-testing:
-
-1. Retrieve the 'Case Testing Uploads S3 Bucket' key from the Correspondence
-   group in Rattic.
-2. [Use environment variables to configure the AWS SDK](http://docs.aws.amazon.com/sdk-for-ruby/v2/developer-guide/setup-config.html#aws-ruby-sdk-credentials-environment)
-   locally.
 
 #### Footnotes
 
