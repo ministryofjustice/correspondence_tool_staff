@@ -88,9 +88,14 @@ class CasesController < ApplicationController
 
   def closed_cases
     unpaginated_cases =  @global_nav_manager
-                             .current_page_or_tab
-                             .cases
-                             .by_last_transitioned_date
+                           .current_page_or_tab
+                           .cases
+                           .includes(:outcome,
+                                     :info_held_status,
+                                     :assignments,
+                                     :cases_exemptions,
+                                     :exemptions)
+                           .by_last_transitioned_date
     if download_csv_request?
       @cases = unpaginated_cases
     else

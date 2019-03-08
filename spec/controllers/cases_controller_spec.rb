@@ -18,6 +18,7 @@ def stub_current_case_finder_for_closed_cases_with(result)
   page = instance_double GlobalNavManager::Page, cases: cases
   gnm = instance_double GlobalNavManager, current_page_or_tab: page
   allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
+  allow(cases).to receive(:includes).and_return(cases)
   allow(GlobalNavManager).to receive(:new).and_return gnm
   gnm
 end
