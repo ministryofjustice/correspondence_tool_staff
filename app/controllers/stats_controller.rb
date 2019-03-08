@@ -65,15 +65,15 @@ class StatsController < ApplicationController
 
   def cell_colour(value, thresholds)
     if value < thresholds[:red]
-               'FF0000'
-             elsif value < thresholds[:amber]
-               'FF0000'
-             else
-               '00FF00'
-             end
+      'FF0000'
+    elsif value < thresholds[:amber]
+      'FF0000'
+    else
+      '00FF00'
+    end
   end
 
-  def download_custom_report
+  def download_custom_report #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     report= Report.find(params[:id])
     filename = report.report_type.filename
 

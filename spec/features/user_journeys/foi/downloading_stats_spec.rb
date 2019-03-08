@@ -22,9 +22,7 @@ require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
 
-
 # ReportTypeSeeder.new.seed!
-
 
 feature "Downloading stats(csv) from the system" do
   given(:manager)   { find_or_create :disclosure_bmt_user }
@@ -156,7 +154,7 @@ feature "Downloading stats(csv) from the system" do
   def download_custom_r003_report
     stats_custom_page.success_message.download_link.click
     expect(page.response_headers['Content-Disposition'])
-        .to match(/filename="r003_business_unit_performance_report\.csv"/)
+        .to match(/filename="r003_business_unit_performance_report\.xlsx"/)
 
     stats_custom_page.load
   end
