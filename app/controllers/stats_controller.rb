@@ -61,7 +61,26 @@ class StatsController < ApplicationController
     report= Report.find(params[:id])
     filename = report.report_type.filename
 
-    send_data report.report_data, {filename: filename, disposition: :attachment}
+    if report.report_type == 'R003'
+      # split report data into pieces - convert "" into empty string
+      excel_data = report.report_data.split("\n").map { |j| j.split(',') }
+      axlsx = Axlsx::Package.new
+      workbook = axlsx.workbook
+      workbook.add_worksheet do |sheet|
+        excel_data.each do |row|
+          excel_row = row.map { |i| i == '""' ? '' : i }
+          sheet.add_row excel_row
+        end
+        sheet.add_style 'E4:E6', bg_color: '95AFBA'
+      end
+
+      send_data axlsx.to_stream.read,
+                filename: filename.gsub('.csv', '.xlsx'),
+                disposition: :attachment,
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    else
+      send_data report.report_data, {filename: filename, disposition: :attachment}
+    end
   end
 
   private

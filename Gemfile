@@ -2,6 +2,13 @@ source 'https://rubygems.org'
 
 gem 'activerecord-session_store'
 gem 'acts_as_tree', '~> 2.8'
+# Gems to help generating with Excel spreadsheets
+# undeclared dependency on rubyzip
+gem 'rubyzip', '>= 1.2.1'
+gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
+gem 'axlsx_rails'
+gem 'axlsx_styler'
+
 gem 'awesome_print'
 gem 'aws-sdk'
 gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git', branch: 'bundler-fix'
