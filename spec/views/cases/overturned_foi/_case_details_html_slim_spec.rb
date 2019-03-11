@@ -88,17 +88,6 @@ describe 'cases/overturned_foi/case_details.html.slim', type: :view do
         expect(partial.timeliness.text).to eq 'Answered in time'
       end
     end
-
-    it 'displays the time taken to send the response' do
-      Timecop.freeze(Time.local(2018, 9, 23, 10, 0, 0)) do
-        closed_case.update(
-          date_responded: 1.business_day.after(closed_case.external_deadline)
-        )
-        partial = render_partial(closed_case)
-
-        expect(partial.time_taken.text).to eq '22 working days'
-      end
-    end
   end
 
   describe 'draft compliance details' do
