@@ -26,10 +26,6 @@ class ApplicationController < ActionController::Base
     @user = current_user
   end
 
-  def current_user
-    super
-  end
-
   private
 
   def download_csv_request?
