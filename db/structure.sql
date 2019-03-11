@@ -353,7 +353,6 @@ CREATE TABLE public.cases (
     appeal_outcome_id integer,
     dirty boolean DEFAULT false,
     document_tsvector tsvector,
-    deletion_reason character varying,
     reason_for_deletion character varying
 );
 

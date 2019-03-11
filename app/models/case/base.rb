@@ -159,6 +159,8 @@ class Case::Base < ApplicationRecord
 
   scope :soft_deleted, -> { where(deleted: true) }
 
+  scope :updated_since, ->(date) { where('updated_at >= ?', date) }
+
   validates :current_state, presence: true, on: :update
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates_presence_of :received_date
