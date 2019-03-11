@@ -104,7 +104,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :closed_cases }
       format.csv do
-        send_csv_cases('closed')
+        send_csv_cases'closed'
       end
     end
   end
@@ -132,7 +132,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :index }
       format.csv do
-        send_csv_cases('my-open')
+        send_csv_cases'my-open'
       end
     end
   end
