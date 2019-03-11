@@ -104,11 +104,12 @@ There are two options for installing postgres:
 	Having done this, make sure all the post-install variables have been put in
   `.bash_profile` or similar e.g.
 
-  export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
+  ```
+	export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
   export CPPFLAGS="-I/usr/local/opt/postgresql@9.5/include"
   export LDFLAGS="-L/usr/local/opt/postgresql@9.5/lib"
   export PATH=$PATH:/usr/local/opt/postgresql@9.5/bin
-
+```
   The PKG_CONFIG_PATH and PATH are useful to help install the PG gem
 </details>
 
