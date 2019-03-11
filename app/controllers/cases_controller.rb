@@ -111,7 +111,10 @@ class CasesController < ApplicationController
 
   # users only want to see cases deleted in the last 6 months
   def deleted_cases
-    cases = Case::Base.unscoped.soft_deleted.updated_since(6.months.ago).by_last_transitioned_date
+    cases = Case::Base.unscoped
+              .soft_deleted
+              .updated_since(6.months.ago)
+              .by_last_transitioned_date
     @cases = Pundit.policy_scope(current_user, cases)
 
     respond_to do |format|
