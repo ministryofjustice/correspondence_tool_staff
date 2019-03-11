@@ -75,7 +75,7 @@ class StatsController < ApplicationController
     end
   end
 
-  def download_custom_report #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+  def download_custom_report #rubocop:disable Metrics/MethodLength
     report = Report.find(params[:id])
     filename = report.report_type.filename
 
