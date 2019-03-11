@@ -30,6 +30,8 @@ class User < ApplicationRecord
 
   has_paper_trail only: [:email, :encrypted_password, :full_name, :deleted_at]
 
+  # Most uses of User are in authentication - so preload team_roles and teams
+  # so that we don't issue lots of DB queries when constantly asking what a user can do.
   default_scope { includes(:team_roles, :teams) }
 
   has_many :cases, through: :assignments

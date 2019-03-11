@@ -127,7 +127,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'csv format' do
-        it 'redirects' do
+        it 'prevents the user from downloading' do
           expect(CSVGenerator).not_to receive(:new)
 
           get :closed_cases, format: 'csv'
@@ -166,19 +166,24 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'csv format' do
-        it 'generates a file and downloads it' do
-          expect(CSVGenerator).to receive(:filename).with('closed').and_return('abc.csv')
+        let!(:gnm) {stub_current_case_finder_for_closed_cases_with(:closed_cases_result) }
+        let(:record) { double }
 
+        before do
+          expect(CSVGenerator).to receive(:filename).with('closed').and_return('abc.csv')
           get :closed_cases, format: 'csv'
           expect(response.status).to eq 200
+        end
+
+        it 'generates a file and downloads it' do
+          expect(gnm.current_page_or_tab.cases.by_last_transitioned_date).to receive(:each).and_yield(record)
+          expect(record).to receive(:to_csv).and_return(['a', 'csv', 'line'])
+
           expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
-          expect(response.body).to eq CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)
+          expect(response.body).to eq "#{CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)}a,csv,line\n"
         end
 
         it 'does not paginate the result set' do
-          gnm = stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
-          get :closed_cases, format: 'csv', params: { page: 'our_page' }
-
           expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
               .not_to have_received(:page).with('our_page')
         end
