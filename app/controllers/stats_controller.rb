@@ -59,9 +59,11 @@ class StatsController < ApplicationController
 
   # RAG (Red, Amber, Green) thresholds for the different types
   # Columns E, K and Q are percentages (non-trigger, trigger and overall)
-  # These are row items 4, 11 and 16. Data starts at row 4 (3 zero indexed)
+  # These are row items 4, 11 and 16.
   RAG_THRESHOLDS_FOI = {red: 85, amber: 90}
   RAG_THRESHOLDS_SAR = {red: 80, amber: 85}
+
+  COLOURED_ROWS = {'E' => 4, 'K' => 11, 'Q' => 16}
 
   def cell_colour(value, thresholds)
     if value < thresholds[:red]
@@ -74,13 +76,14 @@ class StatsController < ApplicationController
   end
 
   def download_custom_report #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
-    report= Report.find(params[:id])
+    report = Report.find(params[:id])
     filename = report.report_type.filename
 
     # This is a Spike - so just hack the report about to show that an Excel report is possible
     if report.report_type.abbr == 'R003'
       # split report data into pieces - convert "" into empty string
       excel_data = report.report_data.split("\n").map { |j| j.split(',') }
+      # Hack alert - SAR/FOI have different thresholds. This isn't really a good way of telling them apart
       is_foi_report = excel_data[0][0].include?('FOI')
       thresholds = is_foi_report ? RAG_THRESHOLDS_FOI : RAG_THRESHOLDS_SAR
       axlsx = Axlsx::Package.new
@@ -88,6 +91,7 @@ class StatsController < ApplicationController
       workbook.add_worksheet do |sheet|
         cell_colours = {}
         excel_data.each_with_index do |row, row_index|
+          # The row data includes '""' for blank cells - so lose those.
           excel_row = row.map { |i| i == '""' ? '' : i }
           sheet.add_row excel_row
           # data rows start at index 3
@@ -95,14 +99,10 @@ class StatsController < ApplicationController
             # Following the percentages values is the case count.
             # If that number is zero then we display a 0 percentage even though is technically
             # NaN (0/0) - so check so that we don't report that as a Red RAG rating
-            if row[5].to_i > 0
-              cell_colours["E#{row_index+1}"] = cell_colour(row[4].to_f, thresholds)
-            end
-            if row[12].to_i > 0
-              cell_colours["K#{row_index+1}"] = cell_colour(row[11].to_f, thresholds)
-            end
-            if row[17].to_i > 0
-              cell_colours["Q#{row_index+1}"] = cell_colour(row[16].to_f, thresholds)
+            COLOURED_ROWS.each do |cell, cell_index|
+              if row[cell_index+1] != "0" #This is the case count - don't mark 0/0 as Red RAG rating...
+                cell_colours["#{cell}#{row_index+1}"] = cell_colour(row[cell_index].to_f, thresholds)
+              end
             end
           end
         end
