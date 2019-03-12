@@ -85,6 +85,8 @@ def close_sar_case_step(timeliness: 'in time', tmm: false, editable: true)
     .to eq Date.today.strftime(Settings.default_date_format)
   expect(show_page.response_details.timeliness.data.text)
     .to eq "Answered #{timeliness}"
+
+  # Regex required to handle both cases of 1 or more days to respond
   expect(show_page.response_details.time_taken.data.text).to match(/\d+ working day[s{1}]?/)
 
   if tmm
@@ -121,8 +123,6 @@ def close_ico_appeal_case_step(timeliness: 'in time', decision: 'upheld')
     .to eq Date.today.strftime(Settings.default_date_format)
   expect(show_page.response_details.timeliness.data.text)
     .to eq "Answered #{timeliness}"
-
-  # Regex required to handle both cases of 1 or more days to respond
   expect(show_page.response_details.time_taken.data.text).to match(/\d+ working days?/)
     expect(show_page.response_details).to have_no_refusal_reason
 end
