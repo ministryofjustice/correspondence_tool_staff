@@ -97,19 +97,19 @@ There are two options for installing postgres:
 * **The Homebrew postgres 9.5 package**
 	Install the specific 9.5 version with homebrew
 
-	```
-	$ brew install postgresql@9.5
-	```
+```
+$ brew install postgresql@9.5
+```
 
-	Having done this, make sure all the post-install variables have been put in
-  `.bash_profile` or similar e.g.
+Having done this, make sure all the post-install variables have been put in
+`.bash_profile` or similar e.g.
 
-  export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
-  export CPPFLAGS="-I/usr/local/opt/postgresql@9.5/include"
-  export LDFLAGS="-L/usr/local/opt/postgresql@9.5/lib"
-  export PATH=$PATH:/usr/local/opt/postgresql@9.5/bin
+export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
+export CPPFLAGS="-I/usr/local/opt/postgresql@9.5/include"
+export LDFLAGS="-L/usr/local/opt/postgresql@9.5/lib"
+export PATH=$PATH:/usr/local/opt/postgresql@9.5/bin
 
-  The PKG_CONFIG_PATH and PATH are useful to help install the PG gem
+The PKG_CONFIG_PATH and PATH are useful to help install the PG gem
 </details>
 
 <details>
@@ -148,14 +148,16 @@ $ xcode-select --install
 </details>
 
 <details>
-<summary>Installing redis</summary>
+<summary>Installing Redis</summary>
 
-Redis is needed to run the 'db:reseed' task below (although after that it isn't needed)
+Redis is needed to run the 'db:reseed' task. Redis is used as the adapted for
+delayed jobs in the system.
 
 ```
 brew install redis
 ```
 </details>
+
 <details>
 <summary>Testing</summary>
 
