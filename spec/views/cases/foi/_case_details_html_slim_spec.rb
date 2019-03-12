@@ -140,7 +140,6 @@ describe 'cases/foi/case_details.html.slim', type: :view do
       partial = case_details_section(rendered).response_details
       expect(partial.date_responded.data.text).to eq closed_case.date_sent_to_requester
       expect(partial.timeliness.data.text).to eq closed_case.timeliness
-      expect(partial.time_taken.data.text).to eq closed_case.time_taken
       expect(partial.outcome.data.text).to eq closed_case.outcome.name
     end
 
