@@ -131,6 +131,9 @@ FactoryBot.define do
   factory :approved_ico_foi_case, parent: :pending_dacu_clearance_ico_foi_case do
     transient do
       identifier { 'approved ICO FOI case' }
+# date draft compliant is passed in in a transient blocked so it can is be
+# changed in the tests. It is added to the the case in the after create block
+# to match the order the code updates the case.
       date_draft_compliant { received_date + 2.days }
     end
 
@@ -149,6 +152,9 @@ FactoryBot.define do
   factory :responded_ico_foi_case, parent: :approved_ico_foi_case do
     transient do
       identifier { 'responded ICO FOI case' }
+  # date draft compliant is passed in in a transient blocked so it can is be
+  # changed in the tests. It is added to the the case in the after create block
+  # to match the order the code updates the case.
       date_draft_compliant { received_date + 2.days }
     end
 
