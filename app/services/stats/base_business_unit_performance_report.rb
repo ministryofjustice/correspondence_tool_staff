@@ -71,23 +71,10 @@ module Stats
       raise RuntimeError.new('#case_scope method must be defined in derived class')
     end
 
-    def self.title
-      raise RuntimeError.new('title() class  method must be defined in derived class')
-    end
-
-    def self.description
-      raise RuntimeError.new('description() class method must be defined in derived class')
-    end
-
-    def self.reporting_period
-      "#{@period_start} - #{@period_end}"
-    end
-
     def run
-      case_ids = CaseSelector.new(case_scope).ids_for_period(@period_start, @period_end)
-      case_ids.each do |case_id|
-        kase = Case::Base.find(case_id)
-        next if kase.unassigned?
+      CaseSelector.new(case_scope)
+        .cases_for_period(@period_start, @period_end)
+        .reject { |kase| kase.unassigned? }.each do |kase|
         analyse_case(kase)
       end
       @stats.finalise
@@ -103,7 +90,7 @@ module Stats
     # @stats variable  inside the stats collector to sum totals for directorates and business groups
     def roll_up_stats_callback
       overall_total_results = @stats.stats[:total]
-      BusinessUnit.all.each do |bu|
+      BusinessUnit.includes(:directorate, :business_group).all.each do |bu|
         bu_results = @stats.stats[bu.id]
         directorate_results = @stats.stats[bu.directorate.id]
         business_group_results = @stats.stats[bu.business_group.id]

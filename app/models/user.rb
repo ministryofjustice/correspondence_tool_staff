@@ -32,7 +32,16 @@ class User < ApplicationRecord
 
   # Most uses of User are in authentication - so preload team_roles and teams
   # so that we don't issue lots of DB queries when constantly asking what a user can do.
-  default_scope { includes(:team_roles, :teams) }
+  default_scope do  includes(:team_roles,
+                             :responding_team_roles,
+                             :responding_teams,
+                             :approving_team_roles,
+                             :approving_team,
+                             :managing_team_roles,
+                             :managing_teams,
+                             :teams,
+  )
+  end
 
   has_many :cases, through: :assignments
   has_many :assignments

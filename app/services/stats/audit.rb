@@ -74,7 +74,7 @@ module Stats
     end
 
     def date_responded(kase)
-      transition = kase.transitions.where(event: 'respond').last
+      transition = kase.responded_transitions.last
       if transition
         transition.created_at.strftime('%Y-%m-%d')
       else

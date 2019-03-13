@@ -175,7 +175,7 @@ class Case::Base < ApplicationRecord
 
   validates_presence_of :reason_for_deletion, if: -> { deleted }
 
-  has_many :assignments, dependent: :destroy, foreign_key: :case_id
+  has_many :assignments, inverse_of: :case, dependent: :destroy, foreign_key: :case_id
 
   has_many :teams, through: :assignments
 
@@ -236,6 +236,7 @@ class Case::Base < ApplicationRecord
   has_many :transitions,
            class_name: 'CaseTransition',
            foreign_key: :case_id,
+           inverse_of: :case,
            autosave: false,
            dependent: :destroy do
               def most_recent
@@ -244,6 +245,16 @@ class Case::Base < ApplicationRecord
            end
   has_many :message_transitions,
            -> { messages },
+           class_name: 'CaseTransition',
+           foreign_key: :case_id
+
+  has_many :responded_transitions,
+           -> { responded },
+           class_name: 'CaseTransition',
+           foreign_key: :case_id
+
+  has_many :assign_responder_transitions,
+           -> { where(event: 'assign_responder') },
            class_name: 'CaseTransition',
            foreign_key: :case_id
 
@@ -258,6 +269,7 @@ class Case::Base < ApplicationRecord
   has_many :attachments, -> { order(id: :desc) },
            class_name: 'CaseAttachment',
            foreign_key: :case_id,
+           inverse_of: :case,
            dependent: :destroy
 
   belongs_to :late_team, class_name: 'BusinessUnit'
@@ -494,7 +506,7 @@ class Case::Base < ApplicationRecord
   end
 
   def responded?
-    transitions.where(event: 'respond').any?
+    responded_transitions.any?
   end
 
   def responded_late?
@@ -512,11 +524,9 @@ class Case::Base < ApplicationRecord
   # (the external time limit)
   #
   def business_unit_responded_in_time?
-    responding_transitions = transitions.where(event: 'respond')
-    if responding_transitions.any?
-      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
-      responding_transition = responding_transitions.last
-      responding_date = responding_transition.created_at.to_date
+    if responded_transitions.any?
+      responding_team_assignment_date = assign_responder_transitions.last.created_at.to_date
+      responding_date = responded_transitions.last.created_at.to_date
       internal_deadline = deadline_calculator
                               .internal_deadline_for_date(correspondence_type, responding_team_assignment_date)
       internal_deadline >= responding_date
@@ -526,10 +536,10 @@ class Case::Base < ApplicationRecord
   end
 
   def business_unit_already_late?
-    if transitions.where(event: 'respond').any?
+    if responded_transitions.any?
       raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
     else
-      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
+      responding_team_assignment_date = assign_responder_transitions.last.created_at.to_date
       internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
       internal_deadline < Date.today
     end

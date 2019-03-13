@@ -2,9 +2,50 @@ Rails.application.configure do
 
   config.after_initialize do
     Bullet.enable        = true
+    # Just looking for N+1 queries at the moment - so turn off counter cache and unused eager loads
+    Bullet.counter_cache_enable        = false
+    Bullet.unused_eager_loading_enable = false
     Bullet.bullet_logger = true
+
+    # These are hard to remove as they are in the admin controller who doesn't know
+    # how to eager load the original case just for ICO cases
+    ['Case::OverturnedICO::FOI', 'Case::ICO::FOI', 'Case::ICO::SAR', 'Case::OverturnedICO::SAR'].each do |klass|
+      Bullet.add_whitelist :type => :n_plus_one_query,
+                           :class_name => klass,
+                           :association => :original_case
+    end
+    Bullet.add_whitelist :type => :n_plus_one_query,
+                         :class_name => 'LinkedCase',
+                         :association => :linked_case
+    Bullet.add_whitelist :type => :n_plus_one_query,
+                         :class_name => 'LinkedCase',
+                         :association => :case
+    Bullet.add_whitelist :type => :n_plus_one_query,
+                         :class_name => 'Assignment',
+                         :association => :case
+
+    # searches are also a challenge...
+    [:responder, :message_transitions, :responding_team, :approver_assignments, :managing_team].each do |assoc|
+      ['Case::FOI::TimelinessReview', 'Case::FOI::ComplianceReview', 'Case::ICO::FOI',
+       'Case::FOI::Standard', 'Case::SAR'].each do |klass|
+        Bullet.add_whitelist :type => :n_plus_one_query,
+                             :class_name => klass,
+                             :association => assoc
+      end
+    end
+
+    # These 2 are a consequence of app/models/user.rb:176
+    # users are related to teams (apparently), but only BusinessUnits have correspondence_types
+    # so its hard to eager load without changing the code significantly
+    Bullet.add_whitelist :type => :n_plus_one_query,
+                         :class_name => 'BusinessUnit',
+                         :association => :correspondence_type_roles
+    Bullet.add_whitelist :type => :n_plus_one_query,
+                         :class_name => 'BusinessUnit',
+                         :association => :correspondence_types
+
     # Enable this to track down most of the N+1 query issues
-    Bullet.raise         = false # raise an error if n+1 query occurs
+    Bullet.raise         = true # raise an error if n+1 query occurs
   end
   # Settings specified here will take precedence over those in config/application.rb.
 

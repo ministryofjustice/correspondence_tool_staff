@@ -1299,6 +1299,7 @@ RSpec.describe CasesController, type: :controller do
     pager = double 'Kaminari Pager', decorate: result
     cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
     cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
+    allow(cases).to receive(:includes).and_return(cases)
     page = instance_double GlobalNavManager::Page, cases: cases
     gnm = instance_double GlobalNavManager, current_page_or_tab: page
     allow(GlobalNavManager).to receive(:new).and_return gnm
