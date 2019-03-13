@@ -11,7 +11,12 @@ module Stats
 
     def case_scope
       Case::Base.includes(:assign_responder_transitions,
-                          :responded_transitions).standard_foi
+                          :responded_transitions,
+                          # TODO - adding eager load of these 2 associations results in a crash...
+                          # test in spec/models/scope_spec.rb
+                          # :responder_assignment,
+                          # :responding_team,
+                          ).standard_foi
     end
 
     def report_type

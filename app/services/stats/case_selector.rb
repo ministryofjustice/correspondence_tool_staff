@@ -44,8 +44,8 @@ module Stats
       @scope.where('received_date < ? and date_responded >= ?', period_start, period_start)
     end
 
-    def ids_for_cases_open_during_period_still_not_closed(_period_start, period_end)
-      cases_open_during_period_still_not_closed(_period_start, period_end).pluck(:id)
+    def ids_for_cases_open_during_period_still_not_closed(period_start, period_end)
+      cases_open_during_period_still_not_closed(period_start, period_end).pluck(:id)
     end
 
     def cases_open_during_period_still_not_closed(_period_start, period_end)

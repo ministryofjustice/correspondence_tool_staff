@@ -320,4 +320,50 @@ RSpec.describe Case::Base, type: :model do
     end
 
   end
+
+  context 'related teams' do
+    let(:responding_team)    { create :responding_team                      }
+    let(:responder)          { responding_team.responders.first             }
+
+    let!(:assigned_case)      { create :assigned_case,
+                                       responding_team: responding_team }
+    let!(:accepted_case)      { create :accepted_case,
+                                       responder: responder }
+
+    let!(:team1) { accepted_case.responding_team }
+    let!(:team2) { assigned_case.responding_team }
+    let!(:team3) { accepted_case.managing_team }
+    let!(:team4) { assigned_case.managing_team }
+
+    let(:responding_teams) { cases.map(&:responding_team) }
+    let(:managing_teams) { cases.map(&:managing_team) }
+
+    context 'non preloaded' do
+      let(:cases) { Case::Base.all }
+
+      it 'returns responding teams' do
+        expect(responding_teams).to match_array [team1, team2]
+      end
+      it 'returns managing teams' do
+        expect(managing_teams).to match_array [team3, team4]
+      end
+    end
+
+    context 'preloaded' do
+      let(:cases) do
+        Case::Base.includes(:responder_assignment,
+                            :responding_team,
+                            :managing_assignment,
+                            :managing_team).all
+      end
+
+      it 'returns teams for all cases' do
+        expect(responding_teams).to match_array [team1, team2]
+      end
+      it 'returns managing teams' do
+        expect(managing_teams).to match_array [team3, team4]
+      end
+    end
+  end
+
 end
