@@ -13,6 +13,7 @@ class CSVExporter
       'Internal deadline',
       'External_deadline',
       'Date responded',
+      'Date compliant draft uploaded',
       'Workflow',
       'Name',
       'Requester type',

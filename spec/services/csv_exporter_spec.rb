@@ -57,7 +57,7 @@ describe CSVExporter do
   end
 
   context 'SAR' do
-    it 'returns sar fiels' do
+    it 'returns sar fields' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         csv = CSVExporter.new(sar_case).to_csv
         expect(csv).to eq [
@@ -89,7 +89,6 @@ describe CSVExporter do
                               'N/A'
                           ]
       end
-
     end
   end
 end
