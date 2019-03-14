@@ -2,5 +2,5 @@ nav.global-nav
   ul
     - @global_nav_manager.each do |page|
       li class="global-nav-item"
-        = link_to t("nav.pages.#{page.name}", count: current_user.teams.count), page.fullpath, {class: active_link_class(page.fullpath)}
+        = link_to t("nav.pages.#{page.name}", count: current_user.teams.size), page.fullpath, {class: active_link_class(page.fullpath)}
 
