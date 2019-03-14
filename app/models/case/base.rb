@@ -619,19 +619,21 @@ class Case::Base < ApplicationRecord
   # default_press_officer to be defined on the CorrespondenceType for this case.
   def correspondence_type
     # This method used to do a find_by! in all circumstances - pretty much guaranteeing an N+1 query
-    # problem as this field is not eager-loadable. There are only 6 (ish) distinct types, so simply
-    # loading all of them once and doing a linear search seems a much better plan.
-    # We fall back to the old find_by! code just to be defensive - possibly just for tests
+    # problem as this field is not eager-loadable.
+    # Annoyingly this code doesn't work in tests - correspondence types get updated a lot, causing this
+    # code to fail in arbitrary circumstances - basically feature tests become flakey but run fine
+    # on their own.
     abbreviation = type_abbreviation.parameterize.underscore.upcase
-    correspondence_type = self.class.all_correspondence_types.detect do |ct|
-      ct.abbreviation == abbreviation
-    end
-    @correspondence_type ||= correspondence_type || CorrespondenceType.find_by!(abbreviation: abbreviation)
+    # correspondence_type = self.class.all_correspondence_types.detect do |ct|
+    #   ct.abbreviation == abbreviation
+    # end
+    # @correspondence_type ||= correspondence_type || CorrespondenceType.find_by!(abbreviation: abbreviation)
+    @correspondence_type ||= CorrespondenceType.find_by!(abbreviation: abbreviation)
   end
 
-  def self.all_correspondence_types
-    @@correspondence_types ||= CorrespondenceType.all
-  end
+  # def self.all_correspondence_types
+  #   @@correspondence_types ||= CorrespondenceType.all
+  # end
 
   # Override this method if you want to make this correspondence type
   # assignable by the same business units as another correspondence type. e.x.
