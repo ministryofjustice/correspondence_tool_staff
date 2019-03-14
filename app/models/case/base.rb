@@ -197,7 +197,8 @@ class Case::Base < ApplicationRecord
           source: :user
 
   has_one :responder_assignment,
-          -> { last_responding },
+          -> { last_responding_scope },
+          # -> { last_responding },
           class_name: 'Assignment',
           foreign_key: :case_id
 
@@ -208,6 +209,7 @@ class Case::Base < ApplicationRecord
   has_one :responding_team,
           through: :responder_assignment,
           source: :team
+
   accepts_nested_attributes_for :responding_team
 
   has_many :responding_team_users,
@@ -224,8 +226,6 @@ class Case::Base < ApplicationRecord
            source: :user
 
   has_many :approving_teams,
-           -> { where("state != 'rejected'") },
-           class_name: BusinessUnit,
            through: :approver_assignments,
            source: :team
 
@@ -617,9 +617,14 @@ class Case::Base < ApplicationRecord
   # CorrespondenceType object can change you may need to reload this object to
   # ensure you have the latest. For example in tests, when expecting a
   # default_press_officer to be defined on the CorrespondenceType for this case.
+  def self.all_correspondence_types
+    @@correspondence_types ||= CorrespondenceType.all
+  end
+
   def correspondence_type
-    @correspondence_type ||=
-      CorrespondenceType.find_by!(abbreviation: type_abbreviation.parameterize.underscore.upcase)
+    # @correspondence_type ||=
+    #   CorrespondenceType.find_by!(abbreviation: type_abbreviation.parameterize.underscore.upcase)
+    @correspondence_type ||= self.class.all_correspondence_types.detect { |ct| ct.abbreviation == type_abbreviation.parameterize.underscore.upcase }
   end
 
   # Override this method if you want to make this correspondence type

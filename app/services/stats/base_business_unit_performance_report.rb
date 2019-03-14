@@ -104,8 +104,12 @@ module Stats
 
     # another callback method to populate the team names from the team id column
     def populate_team_details_callback
-      @stats.stats.except(:total).each do | team_id, result_set|
-        team = Team.find(team_id)
+      # This is a hash (indexed by team id) containing a hash of team stats columns
+      stats_by_team = @stats.stats.except(:total)
+      # teams = Team.includes(:team_leader, parent: :parent).find(stats_by_team.keys)
+      teams = Team.includes(parent: :parent).find(stats_by_team.keys)
+      stats_by_team.each do |team_id, result_set|
+        team = teams.detect { |team| team.id == team_id }
         case team.class.to_s
         when 'BusinessUnit'
           result_set[:business_unit] = team.name
@@ -120,8 +124,9 @@ module Stats
           result_set[:directorate] = ''
           result_set[:business_group] = team.name
         else
-          raise "Invalid team type"
+          raise "Invalid team type #{team.class}"
         end
+        # result_set[:responsible] = team.team_leader&.value || ''
         result_set[:responsible] = team.team_lead
       end
 

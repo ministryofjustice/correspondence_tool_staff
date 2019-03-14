@@ -1235,21 +1235,13 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#correspondence_type' do
     it 'retrieves a correspondence_type object' do
-      expect(kase.correspondence_type).to eq CorrespondenceType.foi
-    end
-
-    it 'only finds the correspondence_type once' do
-      foi = CorrespondenceType.foi
-      allow(CorrespondenceType).to receive(:find_by!).and_return(foi)
-      kase.correspondence_type
-      kase.correspondence_type
-      expect(CorrespondenceType).to have_received(:find_by!).at_least(1)
+      expect(kase.correspondence_type.abbreviation).to eq CorrespondenceType.foi.abbreviation
     end
   end
 
   describe '#correspondence_type_for_business_unit_assignment' do
     it 'returns the correspondence_type' do
-      expect(kase.correspondence_type).to eq CorrespondenceType.foi
+      expect(kase.correspondence_type.abbreviation).to eq CorrespondenceType.foi.abbreviation
     end
   end
 

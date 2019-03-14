@@ -28,6 +28,10 @@ class Team < ApplicationRecord
   has_many :properties, class_name: TeamProperty, :dependent => :delete_all
   has_many :areas, -> { area }, class_name: TeamProperty
 
+  has_one :team_leader,
+          -> { lead },
+          class_name: TeamProperty.to_s
+
   scope :with_user, ->(user) {
     includes(:user_roles)
       .where(teams_users_roles: { user_id: user.id })

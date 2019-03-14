@@ -51,8 +51,12 @@ class Assignment < ApplicationRecord
 
   scope :pending_accepted, -> { where(state: %w[pending accepted]) }
 
+  scope :last_responding_scope, -> {
+    responding.where.not(state: 'rejected').order(id: :desc)
+  }
+
   scope :last_responding, -> {
-    responding.where.not(state: 'rejected').order(id: :desc).limit(1)
+    last_responding_scope.limit(1)
   }
 
   attr_accessor :reasons_for_rejection
