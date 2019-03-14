@@ -31,7 +31,7 @@ class GlobalNavManager
   end
 
   def finder
-    CaseFinderService.new(user).for_user.for_params(request.params)
+    CaseFinderService.new(user).for_params(request.params)
   end
 
   private

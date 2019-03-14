@@ -88,6 +88,9 @@ GEM
     browser_sync_rails (0.1.1)
       rails
     builder (3.2.3)
+    bullet (5.9.0)
+      activesupport (>= 3.0.0)
+      uniform_notifier (~> 1.11)
     business_time (0.9.3)
       activesupport (>= 3.2.0)
       tzinfo
@@ -551,6 +554,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.4)
     unicode-display_width (1.4.1)
+    uniform_notifier (1.12.1)
     warden (1.2.7)
       rack (>= 1.0)
     web-console (3.7.0)
@@ -579,6 +583,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   browser_sync_rails
+  bullet
   business_time
   byebug
   capybara
