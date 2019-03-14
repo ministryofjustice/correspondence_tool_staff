@@ -36,7 +36,7 @@ class CSVExporter
     @kase = kase
   end
 
-  def to_csv #rubocop:disable Metrics/MethodLength
+  def to_csv #rubocop:disable Metrics/MethodLength Metrics/CyclomaticComplexity
     begin
       [
           @kase.number,
