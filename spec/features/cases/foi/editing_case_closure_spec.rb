@@ -14,7 +14,9 @@ feature 'editing case closure information' do
   end
 
   scenario 'editing a late closed case', js: true do
-    kase = create :closed_case, :late
+    kase = create :closed_case,
+                  :late,
+                  date_draft_compliant: 11.business_days.ago
 
     login_as manager
     cases_show_page.load(id: kase.id)

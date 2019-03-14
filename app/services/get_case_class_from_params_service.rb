@@ -2,14 +2,13 @@ class GetCaseClassFromParamsService
   attr_accessor :case_class
 
   def initialize(type:, params:)
-    @type = type
-    @type_key = @type.abbreviation.downcase
+    @type_key = type.abbreviation.downcase
     @params = params
     @error_field = nil
     @error_message = nil
   end
 
-  def call()
+  def call
     @case_class = case @type_key
                   when 'foi' then get_foi_case_class_from_params
                   when 'ico' then get_ico_case_class_from_params
@@ -43,13 +42,13 @@ class GetCaseClassFromParamsService
     if @params[:type].blank?
       @error_field = :type
       @error_message = :blank
-      nil
+      Case::FOI::Standard
     elsif @params[:type].in? %w{ Standard TimelinessReview ComplianceReview }
-      "Case::FOI::#{@params.fetch(:type)}".safe_constantize
+      "Case::FOI::#{@params.fetch(:type)}".constantize
     else
       @error_field = :type
       @error_message = :invalid
-      nil
+      Case::FOI::Standard
     end
   end
 
@@ -57,7 +56,7 @@ class GetCaseClassFromParamsService
     if !@params.key?(:original_case_id)
       @error_field = :original_case_id
       @error_message = :blank
-      nil
+      Case::ICO::FOI
     else
       original_case_id = @params.fetch(:original_case_id)
       original_case = Case::Base.find(original_case_id)
@@ -67,11 +66,12 @@ class GetCaseClassFromParamsService
         else
           @error_field = :original_case_number
           @error_message = :invalid
+          Case::ICO::FOI
       end
     end
   end
 
-  def get_sar_case_class_from_params()
+  def get_sar_case_class_from_params
     Case::SAR
   end
 

@@ -78,7 +78,6 @@ class CasesController < ApplicationController
 
   def index
     @cases = CaseFinderService.new(current_user)
-               .for_user
                .for_params(request.params)
                .scope
                .page(params[:page])
@@ -89,18 +88,23 @@ class CasesController < ApplicationController
 
   def closed_cases
     unpaginated_cases =  @global_nav_manager
-                             .current_page_or_tab
-                             .cases
-                             .by_last_transitioned_date
+                           .current_page_or_tab
+                           .cases
+                           .includes(:outcome,
+                                     :info_held_status,
+                                     :assignments,
+                                     :cases_exemptions,
+                                     :exemptions)
+                           .by_last_transitioned_date
     if download_csv_request?
-      @cases = unpaginated_cases.limit(1000)
+      @cases = unpaginated_cases
     else
       @cases = unpaginated_cases.page(params[:page]).decorate
     end
     respond_to do |format|
       format.html     { render :closed_cases }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('closed')
+        send_csv_cases'closed'
       end
     end
   end
@@ -128,7 +132,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :index }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('my-open')
+        send_csv_cases'my-open'
       end
     end
   end
@@ -155,7 +159,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :index }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('open')
+        send_csv_cases 'open'
       end
     end
   end
@@ -203,7 +207,7 @@ class CasesController < ApplicationController
         render :new
       end
     rescue ActiveRecord::RecordNotUnique
-      flash[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
+      flash.now[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
       render :new
     end
   end
@@ -631,7 +635,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :search }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('search')
+        send_csv_cases 'search'
       end
     end
   end

@@ -323,12 +323,16 @@ FactoryBot.define do
 
   factory :approved_case, parent: :ready_to_send_case do
     taken_on_by_disclosure
+# date draft compliant is passed in in a transient blocked so it can is be
+# changed in the tests. It is added to the the case in the after create block
+# to match the order the code updates the case.
+    transient do
+      date_draft_compliant { received_date + 2.days }
+    end
 
-    after(:create) do |kase, _evaluator|
-      kase.update!(date_draft_compliant: kase.transitions
-                     .where(event: 'add_responses')
-                     .last
-                     .created_at)
+    after(:create) do |kase, evaluator|
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
+      kase.reload
     end
   end
 
