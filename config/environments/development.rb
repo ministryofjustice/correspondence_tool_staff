@@ -1,4 +1,21 @@
 Rails.application.configure do
+  config.after_initialize do
+    Bullet.enable        = true
+    Bullet.alert         = false
+    Bullet.bullet_logger = true
+    Bullet.console       = true
+  # Bullet.growl         = true
+    Bullet.rails_logger  = false
+    Bullet.add_footer    = false
+    # Closed cases action - for some reason the CSV download needs the eager loading, but
+    # the main display is less interested.
+    [:outcome, :info_held_status, :assignments, :cases_exemptions, :exemptions].each do |foi_assoc|
+      Bullet.add_whitelist :type => :unused_eager_loading,
+                           :class_name => "Case::FOI::Standard",
+                           :association => foi_assoc
+    end
+    Bullet.raise         = false # raise an error if n+1 query occurs
+  end
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
