@@ -727,6 +727,9 @@ class Case::Base < ApplicationRecord
     if self.new_record? || received_date_changed?
       validate_received_date
     end
+    if self.date_draft_compliant.present?
+      validate_date_draft_compliant
+    end
   end
 
   def validate_received_date
@@ -742,6 +745,26 @@ class Case::Base < ApplicationRecord
       )
     end
     errors[:received_date].any?
+  end
+
+  def validate_date_draft_compliant
+    if self.date_draft_compliant < self.received_date
+      errors.add(
+        :date_draft_compliant,
+        I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.before_received')
+      )
+    elsif self.date_draft_compliant > Date.today
+      errors.add(
+        :date_draft_compliant,
+        I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.not_in_future')
+      )
+    elsif self.date_responded.present? && self.date_draft_compliant > self.date_responded
+      errors.add(
+        :date_draft_compliant,
+        I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.after_date_responded')
+      )
+    end
+    errors[:date_draft_compliant].any?
   end
 
   def received_date_changed?

@@ -42,7 +42,7 @@ feature 'Closing a case' do
         expect(show_page.response_details.timeliness.data.text)
           .to eq 'Answered in time'
         expect(show_page.response_details.time_taken.data.text)
-          .to eq '10 working days'
+          .to eq '11 working days'
         expect(show_page.response_details.outcome.data.text)
           .to eq 'Granted in full'
         expect(show_page.response_details).to have_no_refusal_reason
@@ -73,7 +73,7 @@ feature 'Closing a case' do
         expect(show_page.response_details.timeliness.data.text)
           .to eq 'Answered late'
         expect(show_page.response_details.time_taken.data.text)
-          .to eq '22 working days'
+          .to eq '23 working days'
       end
     end
   end
@@ -118,7 +118,7 @@ feature 'Closing a case' do
       expect(show_page.timeliness.data.text)
           .to eq 'Answered in time'
       expect(show_page.time_taken.data.text)
-          .to eq '8 working days'
+          .to eq '9 working days'
       expect(show_page.info_held.data.text)
           .to eq 'Yes'
       expect(show_page.outcome.data.text)
@@ -150,7 +150,7 @@ feature 'Closing a case' do
       expect(show_page.timeliness.data.text)
           .to eq 'Answered in time'
       expect(show_page.time_taken.data.text)
-          .to eq '8 working days'
+          .to eq '9 working days'
       expect(show_page.info_held.data.text)
           .to eq 'Yes'
       expect(show_page.outcome.data.text)
@@ -184,7 +184,7 @@ feature 'Closing a case' do
       expect(show_page.timeliness.data.text)
           .to eq 'Answered in time'
       expect(show_page.time_taken.data.text)
-          .to eq '8 working days'
+          .to eq '9 working days'
       expect(show_page.info_held.data.text)
           .to eq 'Yes'
       expect(show_page.outcome.data.text)
@@ -223,7 +223,7 @@ feature 'Closing a case' do
       expect(show_page.timeliness.data.text)
           .to eq 'Answered in time'
       expect(show_page.time_taken.data.text)
-          .to eq '8 working days'
+          .to eq '9 working days'
       expect(show_page.info_held.data.text)
           .to eq 'No'
       expect(show_page).to have_no_outcome
@@ -265,7 +265,7 @@ feature 'Closing a case' do
       expect(show_page.timeliness.data.text)
         .to eq 'Answered in time'
       expect(show_page.time_taken.data.text)
-        .to eq '8 working days'
+        .to eq '9 working days'
       expect(show_page.refusal_reason.data.text)
         .to eq 'Neither confirm nor deny (NCND)'
       expect(show_page.exemptions.list.map(&:text))
@@ -291,7 +291,7 @@ feature 'Closing a case' do
       expect(show_page.timeliness.data.text)
         .to eq 'Answered in time'
       expect(show_page.time_taken.data.text)
-        .to eq '8 working days'
+        .to eq '9 working days'
       expect(show_page.refusal_reason.data.text)
         .to eq selected_reason
       expect(show_page).to have_no_exemptions

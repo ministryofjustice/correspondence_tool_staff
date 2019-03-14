@@ -1,14 +1,10 @@
 class CaseFinderService
   attr_reader :user, :scope
 
+  # Initialize with Pundit.policy_scope so scope always limited by what user is allowed to see
   def initialize(user)
     @user = user
-    @scope = Case::Base.all
-  end
-
-  def for_user
-    @scope = Pundit.policy_scope(user, @scope)
-    self
+    @scope = Pundit.policy_scope(@user, Case::Base.all)
   end
 
   def for_scopes scope_names
@@ -22,7 +18,7 @@ class CaseFinderService
     #
     # This will work with any number of *_scope methods that return an AREL.
     if scope_names.any?
-      (initial_scope, *remaining_scopes) = scope_names.map do |scope_name|
+      scopes = scope_names.map do |scope_name|
         scope_method = "#{scope_name}_scope"
         if respond_to? scope_method, true
           __send__ scope_method
@@ -31,9 +27,7 @@ class CaseFinderService
         end
       end
 
-      @scope = remaining_scopes.reduce(initial_scope) do |merged_scopes, scope|
-        merged_scopes.or(scope)
-      end
+      @scope = scopes.reduce { |merged_scopes, scope| merged_scopes.or(scope) }
     end
 
     self

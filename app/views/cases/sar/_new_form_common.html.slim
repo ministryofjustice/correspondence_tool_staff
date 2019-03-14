@@ -52,3 +52,10 @@ section
 
     - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
       - panel.text_area :postal_address, {rows: 4}
+
+  - if @case.has_date_draft_compliant?
+   #date-draft-compliant
+     = f.gov_uk_date_field :date_draft_compliant,
+             {legend_text: t('cases.edit.date_draft_compliant'),
+                     form_hint_text: t('cases.edit.date_draft_compliant_example'),
+                     today_button: {class: ''} }
