@@ -75,6 +75,8 @@ group :development, :test do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
+  # Used to try and track down N+1 query problems
+  gem 'bullet'
   gem 'byebug', platform: :mri
   gem 'chromedriver-helper'
   gem 'colorize'

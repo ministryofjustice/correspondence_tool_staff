@@ -1,23 +1,23 @@
 require 'csv'
 
+# Lazy generation of CSV data so that we don't fill up memory when downloading
 class CSVGenerator
+  include Enumerable
 
   def initialize(kases)
     @kases = kases
   end
 
-  def to_csv
-    CSV.generate do |csv|
-      csv << CSVExporter::CSV_COLUMN_HEADINGS
-      @kases.each { |kase| csv << kase.to_csv }
+  def each
+    yield CSV.generate_line CSVExporter::CSV_COLUMN_HEADINGS
+    @kases.each do |kase|
+      yield CSV.generate_line kase.to_csv
     end
   end
 
-  def self.options(action_string)
-    {
-        filename: "#{action_string}-cases-#{Time.now.strftime('%y-%m-%d-%H%M%S')}.csv",
-        type: 'text/csv; charset=utf-8'
-    }
+  class << self
+    def filename(action_string)
+      "#{action_string}-cases-#{Time.now.strftime('%y-%m-%d-%H%M%S')}.csv"
+    end
   end
-
 end
