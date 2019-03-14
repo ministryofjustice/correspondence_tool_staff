@@ -109,7 +109,7 @@ module Stats
       # teams = Team.includes(:team_leader, parent: :parent).find(stats_by_team.keys)
       teams = Team.includes(parent: :parent).find(stats_by_team.keys)
       stats_by_team.each do |team_id, result_set|
-        team = teams.detect { |team| team.id == team_id }
+        team = teams.detect { |t| t.id == team_id }
         case team.class.to_s
         when 'BusinessUnit'
           result_set[:business_unit] = team.name

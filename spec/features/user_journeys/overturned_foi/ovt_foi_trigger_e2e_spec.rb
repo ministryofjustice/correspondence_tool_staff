@@ -27,7 +27,7 @@ feature 'FOI case that requires clearance' do
   given!(:press_officer)        { create :press_officer }
   given(:press_office)          { press_officer.approving_team }
   given(:foi)                   { create :foi_correspondence_type }
-  given!(:private_officer)      { create :default_private_officer }
+  given!(:private_officer)      { find_or_create :default_private_officer }
   given(:private_office)        { private_officer.approving_team }
   given!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   given(:team_dacu)             { find_or_create :team_dacu }

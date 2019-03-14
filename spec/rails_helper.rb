@@ -23,7 +23,7 @@ require 'selenium-webdriver'
 require 'rails-controller-testing'
 require 'paper_trail/frameworks/rspec'
 
-Capybara.default_max_wait_time = 4
+Capybara.default_max_wait_time = 10
 
 Capybara.asset_host = 'http://localhost:3000'
 
@@ -171,14 +171,6 @@ RSpec.configure do |config|
 end
 
 def seed_database_for_tests
-  # Seed correspondence types (just like production) as we now statically load all (6!) of them
-  # into RAM once rather than peforming an expensive SQL query every time we want to look them up.
-  [:correspondence_type, :sar_correspondence_type,
-   :gq_correspondence_type, :ico_correspondence_type,
-   :overturned_sar_correspondence_type, :overturned_foi_correspondence_type].each do |ct|
-    FactoryBot.find_or_create ct
-  end
-
   FactoryBot.find_or_create :foi_correspondence_type
   FactoryBot.find_or_create :sar_correspondence_type
   FactoryBot.find_or_create :team_dacu

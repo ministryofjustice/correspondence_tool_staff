@@ -9,9 +9,9 @@ Rails.application.configure do
 
     # These are hard to remove as they are in the admin controller who doesn't know
     # how to eager load the original case just for ICO cases
-    ['Case::OverturnedICO::FOI', 'Case::ICO::FOI', 'Case::ICO::SAR', 'Case::OverturnedICO::SAR'].each do |klass|
+    [Case::OverturnedICO::FOI, Case::ICO::FOI, Case::ICO::SAR, Case::OverturnedICO::SAR].each do |klass|
       Bullet.add_whitelist :type => :n_plus_one_query,
-                           :class_name => klass,
+                           :class_name => klass.name,
                            :association => :original_case
     end
     Bullet.add_whitelist :type => :n_plus_one_query,
@@ -26,10 +26,10 @@ Rails.application.configure do
 
     # searches are also a challenge...
     [:responder, :message_transitions, :responding_team, :approver_assignments, :managing_team].each do |assoc|
-      ['Case::FOI::TimelinessReview', 'Case::FOI::ComplianceReview', 'Case::ICO::FOI',
-       'Case::FOI::Standard', 'Case::SAR'].each do |klass|
+      [Case::FOI::TimelinessReview, Case::FOI::ComplianceReview,
+       Case::ICO::FOI, Case::FOI::Standard, Case::SAR].each do |klass|
         Bullet.add_whitelist :type => :n_plus_one_query,
-                             :class_name => klass,
+                             :class_name => klass.name,
                              :association => assoc
       end
     end
