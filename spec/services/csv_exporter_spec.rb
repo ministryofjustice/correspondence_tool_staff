@@ -24,6 +24,7 @@ describe CSVExporter do
     it 'returns an array of fields' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         csv = CSVExporter.new(late_foi_case).to_csv
+        expect(csv.size).to eq(CSVExporter::CSV_COLUMN_HEADINGS.size)
         expect(csv).to eq [
                              '180817001',
                              'FOI',
@@ -60,6 +61,7 @@ describe CSVExporter do
     it 'returns sar fields' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         csv = CSVExporter.new(sar_case).to_csv
+        expect(csv.size).to eq(CSVExporter::CSV_COLUMN_HEADINGS.size)
         expect(csv).to eq [
                               '180830001',
                               'SAR',
