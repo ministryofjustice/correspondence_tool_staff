@@ -19,6 +19,12 @@ describe CSVExporter do
                           message: 'my SAR message',
                           subject_full_name: 'Theresa Cant'
   }
+  let(:extended_case)          { create :closed_case, :fully_refused_exempt_s40,
+                                        :extended_for_pit,
+                                   name: 'FOI Case name',
+                                   email: 'dave@moj.com',
+                                   message: 'foi message',
+                                   postal_address: nil }
 
   context 'late FOI' do
     it 'returns an array of fields' do
@@ -49,14 +55,45 @@ describe CSVExporter do
                              nil,
                              nil,
                              nil,
-                             late_team.name
-                         ]
+                             late_team.name,
+                             'No',
+                             0
+                          ]
+      end
+    end
+  end
+
+  context 'extended' do
+    let(:csv_data) do
+      Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
+        CSVExporter.new(kase).to_csv[25..26]
+      end
+    end
+
+    context 'FOI' do
+      let(:kase) { create :closed_case, :fully_refused_exempt_s40,
+                          :pit_extension_removed,
+                          :extended_for_pit,
+                          message: 'foi message',
+                          postal_address: nil }
+      it 'marks case as extended' do
+        expect(csv_data).to eq ['Yes', 1]
+      end
+    end
+
+    context 'SAR' do
+      let(:kase) { create :closed_sar, :extended_deadline_sar,
+                          message: 'my SAR message',
+                          subject_full_name: 'Theresa Cant' }
+
+      it 'marks an extended SAR as extended' do
+        expect(csv_data).to eq ['Yes', 1]
       end
     end
   end
 
   context 'SAR' do
-    it 'returns sar fiels' do
+    it 'returns sar fields' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         csv = CSVExporter.new(sar_case).to_csv
         expect(csv).to eq [
@@ -84,10 +121,11 @@ describe CSVExporter do
                               'send_by_email',
                               'offender',
                               'Theresa Cant',
-                              'N/A'
+                              'N/A',
+                              'No',
+                              0
                           ]
       end
-
     end
   end
 end
