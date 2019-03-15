@@ -67,11 +67,11 @@ class StatsController < ApplicationController
 
   def cell_colour(value, thresholds)
     if value < thresholds[:red]
-      'FF0000'
+      'FF0000' #Red - bright
     elsif value < thresholds[:amber]
-      'FF0000'
+      'FFFF00' #Yellow - again very bright
     else
-      '00FF00'
+      '00FF00' #Green - quite bright (Lime)
     end
   end
 
