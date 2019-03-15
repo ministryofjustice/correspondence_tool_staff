@@ -2,10 +2,9 @@ class StatsController < ApplicationController
 
   before_action :authorize_user
 
-  before_action :set_reports,
-                only: :index
-
   def index
+    @foi_reports = ReportType.standard.foi.order(:full_name)
+    @sar_reports = ReportType.standard.sar.order(:full_name)
   end
 
   def download
@@ -62,11 +61,6 @@ class StatsController < ApplicationController
 
   def authorize_user
     authorize Case::Base, :can_download_stats?
-  end
-
-  def set_reports
-    @foi_reports = ReportType.standard.foi.order(:full_name)
-    @sar_reports = ReportType.standard.sar.order(:full_name)
   end
 
   def create_custom_params
