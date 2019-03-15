@@ -80,7 +80,6 @@ describe CSVExporter do
                           message: 'foi message',
                           postal_address: nil }
       it 'marks case as having an extended count of 1' do
-        # noinspection RubyResolve
         expect(csv_data).to include(
                               { 'Extended' => 'Yes',
                                 'Extension Count' => 1
@@ -94,7 +93,6 @@ describe CSVExporter do
                           subject_full_name: 'Theresa Cant' }
 
       it 'marks an extended SAR having an extended count of 1' do
-        # noinspection RubyResolve
         expect(csv_data).to include({
                                       'Extended' => 'Yes',
                                       'Extension Count' => 1
