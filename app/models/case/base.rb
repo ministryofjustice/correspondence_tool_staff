@@ -253,16 +253,12 @@ class Case::Base < ApplicationRecord
            foreign_key: :case_id
 
   has_many :assign_responder_transitions,
-           -> { where(event: 'assign_responder') },
+           -> { where(event: CaseTransition::ASSIGN_RESPONDER_EVENT) },
            class_name: 'CaseTransition',
            foreign_key: :case_id
 
   has_many :users_transitions_trackers,
            class_name: 'CasesUsersTransitionsTracker',
-           foreign_key: :case_id
-
-  has_many :responded_transitions, -> { responded },
-           class_name: 'CaseTransition',
            foreign_key: :case_id
 
   has_many :attachments, -> { order(id: :desc) },

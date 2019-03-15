@@ -28,6 +28,7 @@ class Team < ApplicationRecord
   has_many :properties, class_name: TeamProperty, :dependent => :delete_all
   has_many :areas, -> { area }, class_name: TeamProperty
 
+  # This can be eager loaded using includes
   has_one :team_leader,
           -> { lead },
           class_name: TeamProperty.to_s
