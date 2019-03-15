@@ -169,8 +169,6 @@ GEM
       dry-types (~> 0.13.1)
     erubi (1.8.0)
     erubis (2.7.0)
-    et-orbi (1.1.1)
-      tzinfo
     execjs (2.7.0)
     factory_bot (5.0.0)
       activesupport (>= 4.2.0)
@@ -457,8 +455,6 @@ GEM
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
-    rufus-scheduler (3.4.2)
-      et-orbi (~> 1.0)
     sass (3.7.3)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -498,11 +494,6 @@ GEM
       redis (>= 3.3.5, < 5)
     sidekiq-logging-json (0.0.18)
       sidekiq (>= 3)
-    sidekiq-scheduler (2.2.1)
-      redis (>= 3, < 5)
-      rufus-scheduler (~> 3.2)
-      sidekiq (>= 3)
-      tilt (>= 1.4.0)
     simplecov (0.13.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -647,7 +638,6 @@ DEPENDENCIES
   shoulda-matchers (~> 4.0)
   sidekiq (~> 5.2)
   sidekiq-logging-json (~> 0.0.18)
-  sidekiq-scheduler
   site_prism
   slim-rails (~> 3.2)
   spring
