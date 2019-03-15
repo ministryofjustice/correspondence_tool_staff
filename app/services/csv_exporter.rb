@@ -13,6 +13,7 @@ class CSVExporter
       'Internal deadline',
       'External_deadline',
       'Date responded',
+      'Date compliant draft uploaded',
       'Workflow',
       'Name',
       'Requester type',
@@ -37,7 +38,7 @@ class CSVExporter
     @kase = kase
   end
 
-  def to_csv #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+  def to_csv #rubocop:disable Metrics/MethodLength,Metrics/CyclomaticComplexity
     begin
       [
           @kase.number,
@@ -45,10 +46,11 @@ class CSVExporter
           @kase.current_state,
           @kase.responding_team&.name,
           @kase.responder&.full_name,
-          @kase.received_date&.strftime('%F'),
-          @kase.internal_deadline&.strftime('%F'),
-          @kase.external_deadline&.strftime('%F'),
-          @kase.date_responded.present? ? @kase.date_responded.strftime('%F') : nil,
+          @kase.received_date&.to_s,
+          @kase.internal_deadline&.to_s,
+          @kase.external_deadline&.to_s,
+          @kase.date_responded&.to_s,
+          @kase.date_draft_compliant&.to_s,
           @kase.workflow,
           @kase.name,
           @kase.requester_type,
