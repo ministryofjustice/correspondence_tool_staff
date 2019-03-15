@@ -25,7 +25,6 @@ module PageObjects
         end
 
         def fill_in_delete_reason
-          # reason_for_deletion.set 'I want this case deleted'
           fill_in('Reason for deletion', with: 'I want this case deleted')
         end
       end
