@@ -197,8 +197,7 @@ class Case::Base < ApplicationRecord
           source: :user
 
   has_one :responder_assignment,
-          -> { last_responding_scope },
-          # -> { last_responding },
+          -> { last_responding },
           class_name: 'Assignment',
           foreign_key: :case_id
 
@@ -618,22 +617,10 @@ class Case::Base < ApplicationRecord
   # ensure you have the latest. For example in tests, when expecting a
   # default_press_officer to be defined on the CorrespondenceType for this case.
   def correspondence_type
-    # This method used to do a find_by! in all circumstances - pretty much guaranteeing an N+1 query
-    # problem as this field is not eager-loadable.
-    # Annoyingly this code doesn't work in tests - correspondence types get updated a lot, causing this
-    # code to fail in arbitrary circumstances - basically feature tests become flakey but run fine
-    # on their own.
-    abbreviation = type_abbreviation.parameterize.underscore.upcase
-    # correspondence_type = self.class.all_correspondence_types.detect do |ct|
-    #   ct.abbreviation == abbreviation
-    # end
-    # @correspondence_type ||= correspondence_type || CorrespondenceType.find_by!(abbreviation: abbreviation)
-    @correspondence_type ||= CorrespondenceType.find_by!(abbreviation: abbreviation)
+    # CorrespondenceType.find_by_abbreviation! is overloaded to look in a
+    # global cache of all (probably 6) correspondence types
+    @correspondence_type ||= CorrespondenceType.find_by_abbreviation! type_abbreviation.parameterize.underscore.upcase
   end
-
-  # def self.all_correspondence_types
-  #   @@correspondence_types ||= CorrespondenceType.all
-  # end
 
   # Override this method if you want to make this correspondence type
   # assignable by the same business units as another correspondence type. e.x.

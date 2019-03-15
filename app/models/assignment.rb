@@ -51,12 +51,10 @@ class Assignment < ApplicationRecord
 
   scope :pending_accepted, -> { where(state: %w[pending accepted]) }
 
-  scope :last_responding_scope, -> {
-    responding.where.not(state: 'rejected').order(id: :desc)
-  }
-
+  # Putting a 'limit 1' here breaks the caching of Case::Base#responder_assignment
+  # please treat this as a 'private' method i.e. don't use it in application code
   scope :last_responding, -> {
-    last_responding_scope.limit(1)
+    responding.where.not(state: 'rejected').order(id: :desc)
   }
 
   attr_accessor :reasons_for_rejection
