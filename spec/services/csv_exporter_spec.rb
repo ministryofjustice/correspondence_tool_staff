@@ -68,7 +68,7 @@ describe CSVExporter do
   context 'extended' do
     let(:csv_data) do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
-        CSVExporter.new(kase).to_csv[25..26]
+        CSVExporter.new(kase).to_csv[26..27]
       end
     end
 
@@ -78,7 +78,7 @@ describe CSVExporter do
                           :extended_for_pit,
                           message: 'foi message',
                           postal_address: nil }
-      it 'marks case as extended' do
+      it 'marks case as having an extended count of 1' do
         expect(csv_data).to eq ['Yes', 1]
       end
     end
@@ -88,7 +88,7 @@ describe CSVExporter do
                           message: 'my SAR message',
                           subject_full_name: 'Theresa Cant' }
 
-      it 'marks an extended SAR as extended' do
+      it 'marks an extended SAR having an extended count of 1' do
         expect(csv_data).to eq ['Yes', 1]
       end
     end
