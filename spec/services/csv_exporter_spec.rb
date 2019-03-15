@@ -41,12 +41,8 @@ describe CSVExporter do
                              '2018-09-03',
                              '2018-09-17',
                              '2018-09-28',
-                             'standard',
-                             '2018-08-30',
-                             nil,
-                             '2018-09-27',
-                             '2018-09-25',
-                             nil,
+                             '2018-09-28',
+                             'Yes',
                              'FOI Case name',
                              'Member of the public',
                              'foi message',
@@ -61,7 +57,9 @@ describe CSVExporter do
                              nil,
                              nil,
                              nil,
-                             late_team.name
+                             late_team.name,
+                             'No',
+                             0
                          ]
       end
     end
@@ -112,6 +110,7 @@ describe CSVExporter do
                               '2018-09-29',
                               '2018-09-25',
                               nil,
+                              nil,
                               'SAR case name',
                               nil,
                               'my SAR message',
@@ -126,9 +125,9 @@ describe CSVExporter do
                               'Send by email',
                               'Offender',
                               'Theresa Cant',
+                              'N/A',
                               'No',
                               0,
-                              'N/A'
         ]
       end
     end
