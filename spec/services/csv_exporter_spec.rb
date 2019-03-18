@@ -25,7 +25,26 @@ describe CSVExporter do
                                    email: 'dave@moj.com',
                                    message: 'foi message',
                                    postal_address: nil }
+  context 'ICO' do
+    context 'FOI' do
+      let(:ico_case) { create(:overturned_ico_foi) }
 
+      it 'returns an array of fields' do
+        csv = CSVExporter.new(ico_case).to_csv
+        expect(csv.size).to eq(CSVExporter::CSV_COLUMN_HEADINGS.size)
+      end
+    end
+
+    context 'SAR' do
+      let(:ico_case) { create(:overturned_ico_sar) }
+
+      it 'returns an array of fields' do
+        csv = CSVExporter.new(ico_case).to_csv
+        expect(csv.size).to eq(CSVExporter::CSV_COLUMN_HEADINGS.size)
+      end
+
+    end
+  end
   context 'late FOI' do
     it 'returns an array of fields' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
@@ -136,7 +155,6 @@ describe CSVExporter do
                    'Business unit responsible for late response' => 'N/A',
                    'Extended' => 'No',
                    'Extension Count' => 0})
-
       end
     end
   end
