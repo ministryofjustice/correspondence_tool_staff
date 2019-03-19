@@ -26,6 +26,7 @@
 #  type                 :string
 #  appeal_outcome_id    :integer
 #  dirty                :boolean          default(FALSE)
+#  user_id              :integer          not null, default(-100), foreign key
 #
 
 #rubocop:disable Metrics/ClassLength
@@ -57,7 +58,6 @@ class Case::Base < ApplicationRecord
                 :uploaded_request_files,
                 :request_amends_comment,
                 :upload_comment,
-                :uploading_user, # Used when creating case sent by post.
                 :draft_compliant
 
   jsonb_accessor :properties,
@@ -156,6 +156,8 @@ class Case::Base < ApplicationRecord
   scope :internal_review_compliance, -> { where(type: 'Case::FOI::ComplianceReview')}
   scope :internal_review_timeliness, -> { where(type: 'Case::FOI::TimelinessReview')}
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
+
+  validates :creator, presence: true
   validates :current_state, presence: true, on: :update
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates_presence_of :received_date
@@ -262,6 +264,10 @@ class Case::Base < ApplicationRecord
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
 
   belongs_to :info_held_status, class_name: 'CaseClosure::InfoHeldStatus'
+
+  # A Case creator has no bearing on what the user can do with a Case.
+  # Abilities are defined via config/state_machine/* and related predicates
+  belongs_to :creator, class_name: 'User', foreign_key: :user_id
 
   has_many :cases_exemptions,
            class_name: 'CaseExemption',
@@ -812,14 +818,15 @@ class Case::Base < ApplicationRecord
     ]
   end
 
+  # Note: When creating a case Delivery Method: Post
+  # allows the user to upload documents (presumably letters)
+  # which are converted to PDF files via a delayed job
   def process_uploaded_request_files
-    if uploading_user.nil?
-      # I really don't feel comfortable with having this special snowflake of a
-      # attribute that only ever needs to be populated when creating a new case
-      # that was sent by post.
-      raise "Uploading user required for processing uploaded request files"
+    if creator.nil?
+      raise "Creator user required for processing uploaded request files"
     end
-    uploader = S3Uploader.new(self, uploading_user)
+
+    uploader = S3Uploader.new(self, creator)
     uploader.process_files(uploaded_request_files, :request)
   end
 

@@ -26,6 +26,7 @@
 #  type                 :string
 #  appeal_outcome_id    :integer
 #  dirty                :boolean          default(FALSE)
+#  user_id              :integer          not null, default(-100), foreign key
 #
 
 require 'rails_helper'

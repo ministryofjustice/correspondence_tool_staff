@@ -20,7 +20,7 @@ module DbHousekeeping
       search_queries
     )
     tables.each do |table|
-      ActiveRecord::Base.connection.execute("TRUNCATE #{table}")
+      ActiveRecord::Base.connection.execute("TRUNCATE #{table} CASCADE")
     end
     seed_database_for_tests if seed
   end

@@ -126,6 +126,7 @@ describe 'papertrail', versioning: true do
         reply_method: 'email',
         num_clicks: 0,
     }
+    creation_params[:creator] = create(:user, :orphan)
     DummyCase.create!(creation_params.merge(options))
   end
 

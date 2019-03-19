@@ -51,7 +51,7 @@ class User < ApplicationRecord
   has_many :responding_teams, through: :responding_team_roles, source: :team
   has_one  :approving_team, through: :approving_team_roles, source: :team
 
-  validates :full_name, presence: true
+  validates :full_name, presence: true, unless: :skip_full_name_check?
   validate :password_blacklist
 
   scope :managers, -> {
@@ -181,7 +181,14 @@ class User < ApplicationRecord
     self.teams.map(&:name).to_sentence
   end
 
+  protected
+
+  def skip_full_name_check?
+    false
+  end
+
   private
+
   def bad_passwords
     %w{
         1234567890
