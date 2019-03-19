@@ -47,7 +47,7 @@ class Admin::CasesController < AdminController
   def new
     if params[:correspondence_type].present?
       @correspondence_type_key = params[:correspondence_type]
-      prepare_new_case
+      prepare_new_case(creator: current_user)
     else
       select_type
     end
@@ -65,9 +65,13 @@ class Admin::CasesController < AdminController
     render :select_type
   end
 
-  def prepare_new_case
-    case_creator = CTS::Cases::Create.new(Rails.logger,
-                                          type: class_for_case )
+  def prepare_new_case(creator:)
+    case_creator = CTS::Cases::Create.new(
+      Rails.logger,
+      type: class_for_case,
+      creator: creator
+    )
+
     @case = case_creator.new_case
     @case.responding_team = BusinessUnit
                               .responding
