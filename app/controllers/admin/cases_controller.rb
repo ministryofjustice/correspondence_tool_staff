@@ -13,6 +13,7 @@ class Admin::CasesController < AdminController
   def create
     @correspondence_type_key = params.fetch(:correspondence_type).downcase
     case_params = params[case_and_type]
+    case_params[:creator] = current_user
 
     prepare_flagged_options_for_creation(params)
     case_creator = CTS::Cases::Create.new(Rails.logger, case_params)

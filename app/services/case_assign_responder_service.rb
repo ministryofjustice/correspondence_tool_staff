@@ -10,6 +10,7 @@ class CaseAssignResponderService
   end
 
   def call
+    byebug
     Assignment.connection.transaction do
       @assignment = @case.assignments.new(team: @team, role: @role)
       if @assignment.valid?

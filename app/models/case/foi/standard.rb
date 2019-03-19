@@ -95,6 +95,7 @@ class Case::FOI::Standard < Case::Base
             on: :create,
             if: -> { sent_by_post? }
 
+  # TODO (Mohammed Seedat): why upload files if user wishes postal contact?
   after_create :process_uploaded_request_files, if: :sent_by_post?
 
   # determines whether or not the BU responded to flagged cases in time (NOT

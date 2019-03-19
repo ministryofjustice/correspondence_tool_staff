@@ -54,6 +54,7 @@ module CTS::Cases
         dirty:                options.fetch(:dirty, true),
         ico_officer_name:     options.fetch(:ico_officer_name, Faker::Name.name),
         ico_reference_number: options.fetch(:ico_reference_number, SecureRandom.hex),
+        creator:              options.fetch(:creator)
       )
     end
 
@@ -71,7 +72,8 @@ module CTS::Cases
                                        Case::FOI::Standard.requester_types.keys.sample),
         received_date:   get_foi_received_date,
         created_at:      get_created_at_date,
-        dirty:           options.fetch(:dirty, true)
+        dirty:           options.fetch(:dirty, true),
+        creator:         options.fetch(:creator)
       )
     end
 
@@ -89,7 +91,8 @@ module CTS::Cases
           received_date:     get_sar_received_date,
           created_at:        get_created_at_date,
           reply_method:      options.fetch(:reply_method, 'send_by_email'),
-          dirty:             options.fetch(:dirty, true)
+          dirty:             options.fetch(:dirty, true),
+          creator:           options.fetch(:creator)
         )
     end
 
@@ -102,6 +105,7 @@ module CTS::Cases
         internal_deadline: get_overturned_internal_deadline,
         received_date:     get_overturned_received_date,
         reply_method:      options.fetch(:reply_method, 'send_by_email'),
+        creator:           options.fetch(:creator)
       )
     end
 

@@ -51,7 +51,7 @@ class User < ApplicationRecord
   has_many :responding_teams, through: :responding_team_roles, source: :team
   has_one  :approving_team, through: :approving_team_roles, source: :team
 
-  validates :full_name, presence: true
+  validates :full_name, presence: true, unless: :skip_full_name_check?
   validate :password_blacklist
 
   scope :managers, -> {
@@ -179,6 +179,12 @@ class User < ApplicationRecord
   def other_teams_names(current_team)
     self.teams.delete(current_team)
     self.teams.map(&:name).to_sentence
+  end
+
+  protected
+
+  def skip_full_name_check?
+    false
   end
 
   private
