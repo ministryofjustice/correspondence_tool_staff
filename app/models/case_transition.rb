@@ -24,9 +24,15 @@ class CaseTransition < ActiveRecord::Base
              class_name: 'Case::Base',
              foreign_key: :case_id
 
+  EXTEND_FOR_PIT_EVENT = 'extend_for_pit'
+  REMOVE_PIT_EXTENSION_EVENT = 'remove_pit_extension'
+  EXTEND_SAR_DEADLINE_EVENT = 'extend_sar_deadline'
+  REMOVE_SAR_EXTENSION_EVENT = 'remove_sar_deadline_extension'
+  ADD_MESSAGE_TO_CASE_EVENT = 'add_message_to_case'
+
   after_destroy :update_most_recent, if: :most_recent?
 
-  validates :message, presence: true, if: -> { event == 'add_message_to_case' }
+  validates :message, presence: true, if: -> { event == ADD_MESSAGE_TO_CASE_EVENT }
 
   jsonb_accessor :metadata,
                  message:                    :text,
@@ -42,11 +48,11 @@ class CaseTransition < ActiveRecord::Base
 
   scope :accepted,          -> { where to_state: 'drafting'  }
   scope :drafting,          -> { where to_state: 'drafting'  }
-  scope :messages,          -> { where(event: 'add_message_to_case').order(:id) }
+  scope :messages,          -> { where(event: ADD_MESSAGE_TO_CASE_EVENT).order(:id) }
   scope :responded,         -> { where event: 'respond' }
   scope :further_clearance, -> { where event: 'request_further_clearance' }
 
-  scope :case_history, -> { where.not(event: 'add_message_to_case')}
+  scope :case_history, -> { where.not(event: ADD_MESSAGE_TO_CASE_EVENT)}
 
   def record_state_change(kase)
     kase.update!(current_state: self.to_state, last_transitioned_at: self.created_at)
