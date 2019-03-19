@@ -55,36 +55,50 @@ module Stats
       raise ArgumentError.new("No such column name: '#{col.inspect}'") unless @stats[row].key?(col)
     end
 
-    def to_csv(first_column_header: '', superheadings: [], row_names_as_first_column: true)
-      cols = column_names
-      cols.unshift first_column_header if row_names_as_first_column
-      CSV.generate(headers: true) do |csv|
-        superheadings.each { |superheading| csv << superheading }
-        csv << cols
+    class StatsEnumerator
+      include Enumerable
+
+      def initialize(stats, column_hash, first_column_header, superheadings, row_names_as_first_column)
+        @stats = stats
+        @column_hash = column_hash
+        @first_column_header = first_column_header
+        @superheadings = superheadings
+        @row_names_as_first_column = row_names_as_first_column
+      end
+
+      def each
+        cols = column_names
+        cols.unshift @first_column_header if @row_names_as_first_column
+        @superheadings.each { |superheading| yield superheading }
+        yield cols
         row_names.each do |row_name|
           if row_name =~ /^_SPACER/
             row = ['']
           elsif row_name =~ /^_/
             row = [row_name.sub(/^_/, '')]
           else
-            row = row_names_as_first_column ? [row_name] : []
+            row = @row_names_as_first_column ? [row_name] : []
             @column_hash.keys.each { |col_key| row << value(row_name, col_key) }
           end
-          csv << row
+          yield row
         end
+      end
+
+      def column_names
+        @column_hash.values
+      end
+
+      def row_names
+        @stats.keys
+      end
+
+      def value(row, col)
+        @stats[row][col]
       end
     end
 
-    def row_names
-      @stats.keys
-    end
-
-    def column_names
-      @column_hash.values
-    end
-
-    def value(row, col)
-      @stats[row][col]
+    def to_csv(first_column_header: '', superheadings: [], row_names_as_first_column: true)
+      StatsEnumerator.new(@stats, @column_hash, first_column_header, superheadings, row_names_as_first_column)
     end
 
     private
@@ -102,6 +116,5 @@ module Stats
         @stats[row][col_key] = 0
       end
     end
-
   end
 end

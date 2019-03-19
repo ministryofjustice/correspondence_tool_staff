@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe StatsController, type: :controller do
   let!(:kase)             { create :case }
-  let!(:r003_report_type) { create :report_type, :r003 }
+  let!(:r005_report_type) { create :report_type, :r005 }
   let(:manager)           { find_or_create :disclosure_bmt_user }
 
   describe '#download' do
@@ -17,30 +17,45 @@ RSpec.describe StatsController, type: :controller do
     end
 
     context 'there is no already-generated report' do
-      let(:report_type) { find_or_create :report_type, :r003 }
+      let(:report_type) { find_or_create :report_type, :r005 }
 
       it 'generates a new report' do
-        existing_count = Report.count
-        get :download, params: { id: report_type.id }
-        expect(Report.count).to eq existing_count + 1
+        expect {
+          get :download, params: { id: report_type.id }
+        }.to change(Report, :count).by(1)
         new_report = Report.last
         expect(new_report.report_type).to eq report_type
       end
 
       it 'sends the generated report as an attachment' do
-        get :download, params: { id: report_type.id }
-        new_report = Report.last
-        expect(response.body).to eq new_report.report_data
-        expect(response.headers['Content-Disposition'])
-          .to eq 'attachment; filename="r003_business_unit_performance_report.csv"'
+        Timecop.freeze(Date.new(2019, 3, 22)) do
+          get :download, params: { id: report_type.id }
+
+          expect(response.body)
+            .to eq [
+                     ['Monthly report - 1 Jan 2019 to 22 Mar 2019'],
+                     [''] + ['Non-trigger cases'] * 6 + ['Trigger cases'] * 6 + ["Overall"] * 6,
+                     ['Month','Performance %','Total received','Responded - in time',
+                      'Responded - late','Open - in time','Open - late','Performance %',
+                      'Total received','Responded - in time','Responded - late','Open - in time',
+                      'Open - late','Performance %','Total received','Responded - in time',
+                      'Responded - late','Open - in time','Open - late'],
+                     ['January', 0.0,0,0,0,0,0,0.0,0,0,0,0,0,0.0,0,0,0,0,0],
+                     ['February', 0.0,0,0,0,0,0,0.0,0,0,0,0,0,0.0,0,0,0,0,0],
+                     ['March', 0.0,0,0,0,0,0,0.0,0,0,0,0,0,0.0,0,0,0,0,0],
+                     ['Total', 0.0,0,0,0,0,0,0.0,0,0,0,0,0,0.0,0,0,0,0,0],
+                   ].map { |h| CSV.generate_line(h) }.join
+          expect(response.headers['Content-Disposition'])
+            .to eq 'attachment; filename="r005_monthly_performance_report.csv"'
+        end
       end
     end
 
     context 'there is an old already-generated report' do
-      let(:report_type) { find_or_create :report_type, :r003 }
+      let(:report_type) { find_or_create :report_type, :r005 }
 
       before do
-        create :r003_report, created_at: 1.days.ago
+        create :r005_report, created_at: 1.days.ago
       end
 
       it 'generates a new report' do
@@ -57,7 +72,7 @@ RSpec.describe StatsController, type: :controller do
         new_report = Report.last
         expect(response.body).to eq new_report.report_data
         expect(response.headers['Content-Disposition'])
-          .to eq 'attachment; filename="r003_business_unit_performance_report.csv"'
+          .to eq 'attachment; filename="r005_monthly_performance_report.csv"'
       end
     end
 

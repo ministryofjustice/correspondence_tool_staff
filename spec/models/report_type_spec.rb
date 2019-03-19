@@ -18,7 +18,6 @@ require 'rails_helper'
 
 RSpec.describe ReportType, type: :model do
 
-
   it { should have_many(:reports) }
 
   describe 'custom scope' do
@@ -48,7 +47,6 @@ RSpec.describe ReportType, type: :model do
       expect(ReportType.standard).to match_array [ custom_report_1, custom_report_2 ]
     end
   end
-
 
   describe 'foi scope' do
 
@@ -93,7 +91,7 @@ RSpec.describe ReportType, type: :model do
   describe '#filename' do
     it 'formats the class name into a filename' do
       r003 = find_or_create :report_type, :r003
-      expect(r003.filename).to eq 'r003_business_unit_performance_report.csv'
+      expect(r003.filename('csv')).to eq 'r003_business_unit_performance_report.csv'
     end
   end
 

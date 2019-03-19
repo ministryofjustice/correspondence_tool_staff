@@ -7,6 +7,14 @@ module Stats
       value:  "Value"
     }
 
+    # The Cabinet Office report is one of the few to remain purely
+    # in CSV format
+    class << self
+      def xlsx?
+        false
+      end
+    end
+
     def initialize(period_start = nil, period_end = nil)
       super
       # @today = Time.now

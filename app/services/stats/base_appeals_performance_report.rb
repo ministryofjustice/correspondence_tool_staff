@@ -15,10 +15,14 @@ module Stats
         responsible:                     ''
     }
 
+    class << self
+      def xlsx?
+        true
+      end
+    end
+
     def initialize(period_start = nil, period_end = nil)
       super
-      # @period_start = period_start
-      # @period_end = period_end
       @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], column_headings)
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
@@ -33,7 +37,22 @@ module Stats
     end
 
     def to_csv
-      @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+      csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+
+      csv.map.with_index do |row, row_index|
+        row.map.with_index do |item, item_index|
+          # data rows start at index 3 as there are 2 superheadings + 1 heading
+          if row_index <= superheadings.size
+            OpenStruct.new value: item
+            # item at index+1 is the case count - don't mark 0/0 as Red RAG rating
+            # These are the positions of the items which need a RAG rating
+          elsif [4, 11].include?(item_index) && row[item_index+1] != 0
+            OpenStruct.new value: item, rag_rating: rag_rating(item)
+          else
+            OpenStruct.new value: item
+          end
+        end
+      end
     end
 
     private
@@ -47,9 +66,9 @@ module Stats
         directorate_results = @stats.stats[bu.directorate.id]
         business_group_results = @stats.stats[bu.business_group.id]
         bu_results.each do |key, value|
-          directorate_results   [key] += value
+          directorate_results[key] += value
           business_group_results[key] += value
-          overall_total_results [key] += value
+          overall_total_results[key] += value
         end
       end
     end

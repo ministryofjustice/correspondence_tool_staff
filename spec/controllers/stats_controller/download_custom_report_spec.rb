@@ -27,7 +27,6 @@ RSpec.describe StatsController, type: :controller do
       file_options = { filename: "#{report.report_type.class_name.to_s.underscore.sub('stats/', '')}.csv",
                        disposition: :attachment }
 
-
       expect(@controller).to receive(:send_data)
                                  .with(report.report_data, file_options) { | _csv, _options|
                                    @controller.render body: :nil

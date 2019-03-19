@@ -187,10 +187,10 @@ module Stats
           EOCSV
           report = R102SarAppealsPerformanceReport.new
           report.run
-          actual_lines = report.to_csv.split("\n")
+          actual_lines = report.to_csv.map { |row| row.map(&:value) }
           expected_lines = expected_text.split("\n")
-          (0...actual_lines.size).each do |i|
-            expect(actual_lines[i]).to eq expected_lines[i]
+          actual_lines.zip(expected_lines).each do |actual, expected|
+            expect(CSV.generate_line(actual).chomp).to eq(expected)
           end
         end
       end

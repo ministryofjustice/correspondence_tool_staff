@@ -100,59 +100,59 @@ module Stats
       end
     end
 
-
     describe '#row_names' do
       it 'returns an array of all the categories' do
-        expect(collector.row_names).to eq rows
+        expect(collector.to_csv.row_names).to eq rows
       end
     end
-
 
     describe '#column_names' do
       it 'returns all the subcategories for the named category' do
-        expect(collector.column_names).to eq cols.values
+        expect(collector.to_csv.column_names).to eq cols.values
       end
     end
-
 
     describe '#value' do
       it 'returns the value for the named row and column' do
         collector.record_stats('Dogs', :black, 2)
         collector.record_stats('Dogs', :black)
-        expect(collector.value('Dogs', :black)).to eq 3
+        expect(collector.to_csv.value('Dogs', :black)).to eq 3
       end
     end
-
 
     describe '#to_csv' do
       it 'returns CSV string with column header for first column' do
         collector.record_stats('Cats', :brown, 4)
         collector.record_stats('Dogs', :white, 1)
         collector.record_stats('Dogs', :black, 2)
-        expect(collector.to_csv(first_column_header: 'Animal')).to eq(
-            "Animal,White,Brown,Black\n" +
-            "DOMESTIC\n" +
-            "Cats,0,4,0\n" +
-            "Dogs,1,0,2\n" +
-            "\"\"\n" +
-            "FARMYARD\n" +
-            "Horses,0,0,0\n" +
-            "Ducks,0,0,0\n")
+        expect(collector.to_csv(first_column_header: 'Animal')
+                 .map { |x| CSV.generate_line(x) })
+          .to eq(
+                ["Animal,White,Brown,Black\n",
+                 "DOMESTIC\n",
+                 "Cats,0,4,0\n",
+                 "Dogs,1,0,2\n",
+                 "\"\"\n",
+                 "FARMYARD\n",
+                 "Horses,0,0,0\n",
+                 "Ducks,0,0,0\n"])
       end
 
       it 'returns CSV string without column header for first column' do
         collector.record_stats('Cats', :brown, 4)
         collector.record_stats('Dogs', :white, 1)
         collector.record_stats('Dogs', :black, 2)
-        expect(collector.to_csv).to eq(
-            "\"\",White,Brown,Black\n" +
-            "DOMESTIC\n" +
-            "Cats,0,4,0\n" +
-            "Dogs,1,0,2\n" +
-            "\"\"\n" +
-            "FARMYARD\n" +
-            "Horses,0,0,0\n" +
-            "Ducks,0,0,0\n")
+        expect(collector.to_csv.map { |x| CSV.generate_line(x) })
+          .to eq [
+                   "\"\",White,Brown,Black\n",
+                   "DOMESTIC\n",
+                   "Cats,0,4,0\n",
+                   "Dogs,1,0,2\n",
+                   "\"\"\n",
+                   "FARMYARD\n",
+                   "Horses,0,0,0\n",
+                   "Ducks,0,0,0\n"
+                 ]
       end
     end
 

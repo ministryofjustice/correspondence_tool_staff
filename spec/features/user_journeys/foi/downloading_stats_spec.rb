@@ -22,9 +22,7 @@ require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
 
-
 # ReportTypeSeeder.new.seed!
-
 
 feature "Downloading stats(csv) from the system" do
   given(:manager)   { find_or_create :disclosure_bmt_user }
@@ -69,10 +67,8 @@ feature "Downloading stats(csv) from the system" do
       views_stats_home_page
       view_custom_report_creation_page
       create_custom_r003_report
-      download_custom_r003_report
       create_custom_r004_report
       download_custom_r004_report
-
     end
   end
   context 'as a responder' do
@@ -90,7 +86,6 @@ feature "Downloading stats(csv) from the system" do
       views_stats_home_page
       view_custom_report_creation_page
       create_custom_r003_report
-      download_custom_r003_report
       create_custom_r004_report
       download_custom_r004_report
 
@@ -150,13 +145,8 @@ feature "Downloading stats(csv) from the system" do
     r003 = ReportType.where(abbr:'R003').first
     stats_custom_page.fill_in_form('foi', r003.id, Date.yesterday, Date.today)
     stats_custom_page.submit_button.click
-    expect(stats_custom_page.success_message).to have_download_link
-  end
-
-  def download_custom_r003_report
-    stats_custom_page.success_message.download_link.click
     expect(page.response_headers['Content-Disposition'])
-        .to match(/filename="r003_business_unit_performance_report\.csv"/)
+        .to match(/filename="r003_business_unit_performance_report\.xlsx"/)
 
     stats_custom_page.load
   end

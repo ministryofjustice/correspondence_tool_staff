@@ -1,15 +1,14 @@
 require 'rails_helper'
 
-module Stats
+module Stats # rubocop:disable Metrics/ModuleLength
   describe R002AppealsPerformanceReport do
-
 
     before(:all) do
       DbHousekeeping.clean
 
       create :report_type, :r002
 
-      Team.all.map(&:destroy)
+      Team.all.each(&:destroy)
       Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
         @bizgrp_ab = create :business_group, name: 'BGAB'
         @dir_a     = create :directorate, name: 'DRA', business_group: @bizgrp_ab
@@ -31,7 +30,6 @@ module Stats
 
         @outcome = find_or_create :outcome, :granted
         @info_held = find_or_create :info_status, :held
-
 
         # create appeals based on today's date of 30/6/2017
         create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - responded late', case_type: :compliance_review_with_response)
@@ -81,11 +79,9 @@ module Stats
         create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'ico sar for team d - open in time')
       end
 
-
       ###############
       # TODO Find a way not to create the extraneous teams in the first place
       ##############
-
 
       # delete extraneous teams
       required_teams = [@bizgrp_ab, @dir_a, @dir_b, @bizgrp_cd, @dir_cd, @team_dacu_disclosure, @team_dacu_bmt, @team_a, @team_b, @team_c, @team_d]
@@ -190,6 +186,8 @@ module Stats
     end
 
     describe '#to_csv' do
+      let(:report_csv) { report = R002AppealsPerformanceReport.new; report.run; report.to_csv }
+
       it 'outputs results as a csv lines' do
         Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
           super_header = %q{"","","","",} +
@@ -213,14 +211,32 @@ module Stats
             BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,2,0,0,2,0
             Total,"","","",33.3,12,3,3,3,3,33.3,24,6,6,6,6
           EOCSV
-          report = R002AppealsPerformanceReport.new
-          report.run
-          actual_lines = report.to_csv.split("\n")
+          actual_lines = report_csv.map { |row| row.map(&:value) }
           expected_lines = expected_text.split("\n")
-          (0...actual_lines.size).each do |i|
-            expect(actual_lines[i]).to eq expected_lines[i]
+          actual_lines.zip(expected_lines).each do |actual, expected|
+            expect(CSV.generate_line(actual).chomp).to eq(expected)
           end
         end
+      end
+
+      it 'should produce rag ratings' do
+        rag_ratings = report_csv.map do |row|
+          row.map.with_index { |item, index| [index, item.rag_rating] if item.rag_rating }.compact
+        end
+
+        expect(rag_ratings).to eq([
+                                    [], [], [],
+                                    [[4, :red], [11, :red]],
+                                    [[4, :red], [11, :red]],
+                                    [[4, :red], [11, :red]],
+                                    [[4, :red], [11, :red]],
+                                    [[4, :red], [11, :red]],
+                                    [[4, :red], [11, :red]],
+                                    [[4, :red], [11, :red]],
+                                    [[11, :red]],
+                                    [[4, :red]],
+                                    [[4, :red], [11, :red]],
+                                  ])
       end
     end
 
@@ -257,7 +273,6 @@ module Stats
       kase
     end
 
-
     def create_ico(type:, received:, responded:, deadline:, team:, responder:, ident:)
       received_date = Date.parse(received)
       responded_date = responded.nil? ? nil : Date.parse(responded)
@@ -283,7 +298,6 @@ module Stats
       end
       kase
     end
-
     # rubocop:enable Metrics/ParameterLists
   end
 end
