@@ -42,7 +42,6 @@ RSpec.describe MessagesController, type: :controller do
       end
 
       it 'allows them to post on a closed case' do
-
         params[:case_id] = closed_case.id
         post :create , params: params
         expect(response).to redirect_to(case_path(closed_case, anchor: 'messages-section'))
@@ -129,7 +128,7 @@ RSpec.describe MessagesController, type: :controller do
     end
 
     context "overturned_sar case" do
-      let(:overturned_sar)     { create :overturned_ico_sar }
+      let(:overturned_sar)     { create :sar_case, :flagged_accepted }
       let(:params) do
         {
           case: {
@@ -144,6 +143,17 @@ RSpec.describe MessagesController, type: :controller do
 
         it "redirects to case detail page and contains a hash" do
           post :create , params: params
+          expect(response).to redirect_to(case_path(overturned_sar, anchor: 'messages-section'))
+        end
+      end
+
+      context 'as a multi-role person' do
+        let(:approver_manager)  { create :sar_approver_responder_manager }
+
+        before { sign_in approver_manager }
+
+        it "works" do
+          post :create, params: params
           expect(response).to redirect_to(case_path(overturned_sar, anchor: 'messages-section'))
         end
       end

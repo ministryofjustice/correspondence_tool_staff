@@ -22,10 +22,14 @@ class MessagesController < ApplicationController
   private
 
   def case_team
+    User.sort_teams_by_roles(case_teams).first
+  end
+
+  def case_teams
     if current_user.teams_for_case(@case).any?
-      current_user.team_for_case(@case)
+      current_user.teams_for_case(@case)
     else
-      User.sort_teams_by_roles(current_user.teams).first
+      current_user.teams
     end
   end
 
