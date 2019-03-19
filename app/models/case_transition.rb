@@ -24,6 +24,7 @@ class CaseTransition < ActiveRecord::Base
              class_name: 'Case::Base',
              foreign_key: :case_id
 
+  # This list should be bigger, but don't have time or inclination to move all event names here (yet)
   EXTEND_FOR_PIT_EVENT = 'extend_for_pit'
   REMOVE_PIT_EXTENSION_EVENT = 'remove_pit_extension'
   EXTEND_SAR_DEADLINE_EVENT = 'extend_sar_deadline'
