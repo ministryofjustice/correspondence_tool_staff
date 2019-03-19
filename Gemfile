@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'activerecord-session_store'
-gem 'acts_as_tree', '~> 2.8'
+gem 'acts_as_tree', '~> 2.9'
 gem 'awesome_print'
 gem 'aws-sdk'
 gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git', branch: 'bundler-fix'
