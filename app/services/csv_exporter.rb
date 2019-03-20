@@ -54,7 +54,7 @@ class CSVExporter
       [
         @kase.number,
         @kase.decorate.pretty_type, # Case type
-        I18n.t("state.#{@kase.current_state}").downcase,
+        I18n.t("state.#{@kase.current_state}"),
         @kase.responding_team&.name,
         @kase.responder&.full_name,
         @kase.received_date&.to_s,
