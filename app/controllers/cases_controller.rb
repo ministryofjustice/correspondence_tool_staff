@@ -166,7 +166,7 @@ class CasesController < ApplicationController
                                      :managing_team,
                                      :responding_team)
 
-    query_list_params = filter_params.merge(list_path: request.path,)
+    query_list_params = filter_params.merge(list_path: request.path)
     service = CaseSearchService.new(user: current_user,
                                     query_type: :list,
                                     query_params: query_list_params)

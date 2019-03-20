@@ -322,8 +322,8 @@ RSpec.describe Case::Base, type: :model do
   end
 
   context 'related teams' do
-    let(:responding_team)    { create :responding_team                      }
-    let(:responder)          { responding_team.responders.first             }
+    let(:responding_team)    { create :responding_team }
+    let(:responder)          { responding_team.responders.first }
 
     let!(:assigned_case)      { create :assigned_case,
                                        responding_team: responding_team }

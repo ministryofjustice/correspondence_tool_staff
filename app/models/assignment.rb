@@ -53,6 +53,7 @@ class Assignment < ApplicationRecord
 
   # Putting a 'limit 1' here breaks the caching of Case::Base#responder_assignment
   # please treat this as a 'private' method i.e. don't use it in application code
+  # obviously it can't be actually private due to the usage in Case::Base#responder_assignment
   scope :last_responding, -> {
     responding.where.not(state: 'rejected').order(id: :desc)
   }
