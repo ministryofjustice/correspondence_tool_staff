@@ -50,7 +50,7 @@ class CSVExporter
   end
 
   def to_csv #rubocop:disable Metrics/MethodLength,Metrics/CyclomaticComplexity
-    #begin
+    begin
       [
         @kase.number,
         @kase.decorate.pretty_type, # Case type
@@ -99,9 +99,9 @@ class CSVExporter
         in_target(@kase),
         num_days_late(@kase),
       ]
-    #rescue => err
-    #  raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
-    #end
+    rescue => err
+      raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
+    end
   end
 
   private
