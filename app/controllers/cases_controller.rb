@@ -119,7 +119,7 @@ class CasesController < ApplicationController
 
     respond_to do |format|
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('deleted')
+        send_csv_cases 'deleted'
       end
     end
   end
