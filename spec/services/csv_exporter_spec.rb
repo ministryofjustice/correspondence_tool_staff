@@ -1,30 +1,43 @@
 require 'rails_helper'
 
 describe CSVExporter do
-  let(:late_team) { create :responding_team, name: 'Transport for London' }
-  let(:late_foi_case) { create :closed_case, :fully_refused_exempt_s40,
-                          :late,
-                          :flagged,
-                          name: 'FOI Case name',
-                          email: 'dave@moj.com',
-                          message: 'foi message',
-                          postal_address: nil,
-                          late_team_id: late_team.id
+  let(:late_team) {
+    create :responding_team,
+      name: 'Transport for London'
   }
-  let(:sar_case) { create :closed_sar,
-                          name: 'SAR case name',
-                          postal_address: "2 High Street\nAnytown\nAY2 4FF",
-                          subject: 'Full details required',
-                          email: 'theresa@moj.com',
-                          message: 'my SAR message',
-                          subject_full_name: 'Theresa Cant'
+
+  let(:late_foi_case) {
+    create :closed_case,
+      :fully_refused_exempt_s40,
+      :late,
+      :flagged,
+      name: 'FOI Case name',
+      email: 'dave@moj.com',
+      message: 'foi message',
+      postal_address: nil,
+      late_team_id: late_team.id
   }
-  let(:extended_case)          { create :closed_case, :fully_refused_exempt_s40,
-                                        :extended_for_pit,
-                                   name: 'FOI Case name',
-                                   email: 'dave@moj.com',
-                                   message: 'foi message',
-                                   postal_address: nil }
+
+  let(:sar_case) {
+    create :closed_sar,
+      name: 'SAR case name',
+      postal_address: "2 High Street\nAnytown\nAY2 4FF",
+      subject: 'Full details required',
+      email: 'theresa@moj.com',
+      message: 'my SAR message',
+      subject_full_name: 'Theresa Cant'
+  }
+
+  let(:extended_case) {
+    create :closed_case,
+      :fully_refused_exempt_s40,
+      :extended_for_pit,
+      name: 'FOI Case name',
+      email: 'dave@moj.com',
+      message: 'foi message',
+      postal_address: nil
+  }
+
   context 'ICO' do
     context 'FOI' do
       let(:ico_case) { create(:overturned_ico_foi) }
@@ -45,6 +58,7 @@ describe CSVExporter do
 
     end
   end
+
   context 'late FOI' do
     it 'returns an array of fields' do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
@@ -79,7 +93,18 @@ describe CSVExporter do
                    'SAR Subject full name' => nil,
                    'Business unit responsible for late response' => late_team.name,
                    'Extended' => 'No',
-                   'Extension Count' => 0
+                   'Extension Count' => 0,
+                   'Casework officer' => nil,
+                   'Created by' => late_foi_case.creator.full_name,
+                   'Date created' => '2018-09-25',
+                   'Business group' => 'Responder Business Group',
+                   'Directorate name' => 'Responder Directorate',
+                   'Director General name' => 'Director General 2',
+                   'Director name' => 'Director 2',
+                   'Deputy Director name' => 'Deputy Director 3',
+                   'Draft in time' => nil,
+                   'In target' => 'Yes',
+                   'Number of days late' => 25,
                  })
       end
     end
@@ -154,7 +179,89 @@ describe CSVExporter do
                    'SAR Subject full name' => 'Theresa Cant',
                    'Business unit responsible for late response' => 'N/A',
                    'Extended' => 'No',
-                   'Extension Count' => 0})
+                   'Extension Count' => 0,
+                   'Casework officer' => nil,
+                   'Created by' => sar_case.creator.full_name,
+                   'Date created' => '2018-09-25',
+                   'Business group' => 'Responder Business Group',
+                   'Directorate name' => 'Responder Directorate',
+                   'Director General name' => 'Director General 2',
+                   'Director name' => 'Director 2',
+                   'Deputy Director name' => 'Deputy Director 4',
+                   'Draft in time' => nil,
+                   'In target' => 'Yes',
+                   'Number of days late' => nil,
+                 })
+      end
+    end
+  end
+
+  describe 'filter methods' do
+    let(:kase) { OpenStruct.new }
+    let(:csv)  { CSVExporter.new(nil) }
+
+    context '#num_days_late' do
+      it 'is nil when date_draft_compliant is not present' do
+        kase.date_draft_compliant = nil
+        kase.internal_deadline = Date.today
+
+        expect(csv.send(:num_days_late, kase)).to be nil
+      end
+
+      it 'is nil when internal_deadline is not present' do
+        kase.date_draft_compliant = Date.today
+        kase.internal_deadline = nil
+
+        expect(csv.send(:num_days_late, kase)).to be nil
+      end
+
+      it 'is nil when 0 days late' do
+        kase.date_draft_compliant = Date.today
+        kase.internal_deadline = Date.today
+
+        expect(csv.send(:num_days_late, kase)).to be nil
+      end
+
+      it 'is nil when not yet late' do
+        kase.date_draft_compliant = Date.today
+        kase.internal_deadline = Date.tomorrow
+
+        expect(csv.send(:num_days_late, kase)).to be nil
+      end
+
+      it 'returns correct number of days late' do
+        kase.date_draft_compliant = Date.today
+        kase.internal_deadline = Date.yesterday
+
+        expect(csv.send(:num_days_late, kase)).to eq 1
+      end
+    end
+
+    context '#casework_officer' do
+      it 'is nil when case is not trigger workflow' do
+        kase.workflow = 'silly-workflow'
+
+        expect(csv.send(:casework_officer, kase)).to be nil
+      end
+    end
+
+    context '#draft_in_time' do
+      it 'is Yes when draft in time' do
+        kase[:within_draft_deadline?] = false
+        expect(csv.send(:draft_in_time, kase)).to eq nil
+
+        kase[:within_draft_deadline?] = true
+        expect(csv.send(:draft_in_time, kase)).to eq 'Yes'
+      end
+    end
+
+    context '#in_target' do
+      it 'is Yes when response in target' do
+        kase[:business_unit_responded_in_time?] = false
+        expect(csv.send(:in_target, kase)).to eq nil
+
+        kase[:business_unit_responded_in_time?] = true
+        expect(csv.send(:in_target, kase)).to eq 'Yes'
       end
     end
   end

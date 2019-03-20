@@ -133,7 +133,8 @@ class CSVExporter
 
   def num_days_late(kase)
     if kase.date_draft_compliant.present? && kase.internal_deadline.present?
-      (kase.date_draft_compliant - kase.internal_deadline).to_i
+      days = (kase.date_draft_compliant - kase.internal_deadline).to_i
+      days > 0 ? days : nil
     end
   end
 
