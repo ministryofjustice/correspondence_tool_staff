@@ -12,12 +12,12 @@ class DefaultUser < User
   EMAIL = Settings.default_user_email
 
   # Ignore any attempts to change the DefaultUser Id
-  def id=(id)
+  def id=(_id)
     write_attribute :id, ID
   end
 
   # Ignore any attempts to change the DefaultUser Email
-  def email=(email)
+  def email=(_email)
     write_attribute :email, EMAIL
   end
 
@@ -25,7 +25,6 @@ class DefaultUser < User
     default_user = User.find_by(id: ID)
 
     if !default_user
-      password =
       DefaultUser.create!(
         id: ID,
         email: EMAIL,

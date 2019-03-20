@@ -6,8 +6,7 @@ RSpec.describe DefaultUser, type: :model do
 
 
   describe '#build!' do
-
-    it { expect(default_user.id).to eq -100 }
+    it { expect(default_user.id).to eq(-100) }
     it { expect(default_user.full_name).to eq '' }
     it { expect(default_user.roles).to eq [] }
     it { expect(default_user.send(:skip_full_name_check?)).to be true }
@@ -16,7 +15,7 @@ RSpec.describe DefaultUser, type: :model do
   describe '#id='do
     it 'cannot be overriden with a different value' do
       default_user.id = 12345
-      expect(default_user.id).to eq -100
+      expect(default_user.id).to eq(-100)
     end
   end
 
