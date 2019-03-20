@@ -352,7 +352,8 @@ CREATE TABLE public.cases (
     type character varying,
     appeal_outcome_id integer,
     dirty boolean DEFAULT false,
-    document_tsvector tsvector
+    document_tsvector tsvector,
+    user_id integer DEFAULT '-100'::integer NOT NULL
 );
 
 
@@ -1353,6 +1354,13 @@ CREATE INDEX index_cases_on_requester_type ON public.cases USING btree (requeste
 
 
 --
+-- Name: index_cases_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_on_user_id ON public.cases USING btree (user_id);
+
+
+--
 -- Name: index_cases_users_transitions_trackers_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1521,6 +1529,14 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 
 --
+-- Name: fk_rails_5b2f8d9aa6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cases
+    ADD CONSTRAINT fk_rails_5b2f8d9aa6 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -1638,6 +1654,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180705184513'),
 ('20180711151118'),
 ('20180717211105'),
-('20180806100827');
+('20180806100827'),
+('20190312104101');
 
 
