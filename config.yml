@@ -1,0 +1,7 @@
+version: 2.1
+
+jobs:
+  build:
+    branches:
+      only:
+        - /cloud-migrate-.*/
