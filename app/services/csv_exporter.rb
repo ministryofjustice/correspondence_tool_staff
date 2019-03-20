@@ -85,10 +85,10 @@ class CSVExporter
         @kase.created_at.strftime('%F'), # Date created
 
         # Some of this info can be seen in the Case > Teams page
-        # Business group → of the responding Business Unit/KILO (e.g. Comms & Info)
-        # Director general → head of the business group
-        # Director name → head of directorate
-        # Deputy Director → head of business unit
+        # Business group: of the responding Business Unit/KILO (e.g. Comms & Info)
+        # Director general: head of the business group
+        # Director name: head of directorate
+        # Deputy Director: head of business unit
         @kase.responding_team&.business_group&.name,
         @kase.responding_team&.directorate&.name,
         @kase.responding_team&.business_group&.team_lead, # Director General name
