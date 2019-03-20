@@ -55,7 +55,7 @@ describe CSVExporter do
           .to eq({
                    'Number' => '180817001',
                    'Case type' => 'FOI',
-                   'Current state' => 'closed',
+                   'Current state' => 'Closed',
                    'Responding team' => 'FOI Responding Team',
                    'Responder' => 'foi responding user',
                    'Date received' => '2018-08-17',
@@ -149,7 +149,7 @@ describe CSVExporter do
           .to eq({
                    'Number' => '180830001',
                    'Case type' => 'SAR',
-                   'Current state' => 'closed',
+                   'Current state' => 'Closed',
                    'Responding team' => 'SAR Responding Team',
                    'Responder' => 'sar responding user',
                    'Date received' => '2018-08-30',
