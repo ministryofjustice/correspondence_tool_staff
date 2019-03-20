@@ -169,13 +169,15 @@ module CTS::Cases
 
     def parse_options(options) # rubocop:disable Metrics/CyclomaticComplexity
       @target_states = []
-      @flag = if options.key?(:flag_for_disclosure)
-        options[:flag_for_disclosure] ? 'disclosure' : nil
-      elsif options.key?(:flag_for_team)
-        options[:flag_for_team]
-      else
-        nil
-      end
+      @flag =
+        if options.key?(:flag_for_disclosure)
+          options[:flag_for_disclosure] ? 'disclosure' : nil
+        elsif options.key?(:flag_for_team)
+          options[:flag_for_team]
+        else
+          nil
+        end
+
       @clear_cases = options.fetch(:clear, false)
       @dry_run = options.fetch(:dry_run, false)
       @created_at = options[:created_at]
@@ -371,30 +373,36 @@ module CTS::Cases
     end
 
     def responder
-      @responder ||= if !options.key?(:responder)
-        if responding_team.responders.empty?
-          raise "Responding team '#{responding_team.name}' has no responders."
+      @responder ||= begin
+        if !options.key?(:responder)
+          if responding_team.responders.empty?
+            raise "Responding team '#{responding_team.name}' has no responders."
+          else
+            responding_team.responders.first
+          end
         else
-          responding_team.responders.first
+          CTS::find_user(options[:responder])
         end
-      else
-        CTS::find_user(options[:responder])
       end
     end
 
     def responding_team
-      @responding_team ||= if !options.key?(:responding_team)
-        if options.key?(:responder)
-          responder.responding_teams.first
+      @responding_team ||= begin
+        if !options.key?(:responding_team)
+          if options.key?(:responder)
+            responder.responding_teams.first
+          else
+            BusinessUnit.responding.sample
+          end
         else
-          BusinessUnit.responding.sample
+          CTS::find_team(options[:responding_team])
         end
-      else
-        CTS::find_team(options[:responding_team])
       end
+
       if @responding_team.responders.none?
         create_responder(@responding_team)
       end
+
       @responding_team
     end
 
