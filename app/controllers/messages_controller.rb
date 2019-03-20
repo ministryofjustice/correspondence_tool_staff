@@ -21,6 +21,8 @@ class MessagesController < ApplicationController
 
   private
 
+  # need to sort with manager first so that if we are both manager and something else, we don't
+  # try to execute the action with our lower authority (which might fail)
   def case_team
     User.sort_teams_by_roles(case_teams).first
   end

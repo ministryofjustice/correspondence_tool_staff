@@ -127,34 +127,38 @@ RSpec.describe MessagesController, type: :controller do
       end
     end
 
-    context "overturned_sar case" do
-      let(:overturned_sar)     { create :sar_case, :flagged_accepted }
+    context "sar case" do
       let(:params) do
         {
           case: {
             message_text: 'This is a new message'
           },
-          case_id: overturned_sar.id
+          case_id: sar_case.id
         }
       end
 
       context "as a manager" do
+        let(:sar_case)     { create :sar_case }
+
         before { sign_in manager }
 
         it "redirects to case detail page and contains a hash" do
           post :create , params: params
-          expect(response).to redirect_to(case_path(overturned_sar, anchor: 'messages-section'))
+          expect(response).to redirect_to(case_path(sar_case, anchor: 'messages-section'))
         end
       end
 
       context 'as a multi-role person' do
-        let(:approver_manager)  { create :sar_approver_responder_manager }
+        let(:sar_case)     { create :awaiting_responder_sar }
+
+        let(:approver_manager)  { create :sar_multi_role_user }
 
         before { sign_in approver_manager }
 
-        it "works" do
+        it "creates using the manager role" do
           post :create, params: params
-          expect(response).to redirect_to(case_path(overturned_sar, anchor: 'messages-section'))
+          expect(response).to be_redirect
+          expect(sar_case.message_transitions.last.acting_team).to eq(approver_manager.managing_teams.first)
         end
       end
     end
