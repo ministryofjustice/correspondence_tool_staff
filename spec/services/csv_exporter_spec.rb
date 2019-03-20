@@ -38,6 +38,16 @@ describe CSVExporter do
       postal_address: nil
   }
 
+  # These columns can have arbitrary values as they are
+  # set by Faker within their respective factories
+  let(:transient_columns) {
+    [
+      'Director General name',
+      'Director name',
+      'Deputy Director name',
+    ]
+  }
+
   context 'ICO' do
     context 'FOI' do
       let(:ico_case) { create(:overturned_ico_foi) }
@@ -64,7 +74,13 @@ describe CSVExporter do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         csv = CSVExporter.new(late_foi_case).to_csv
         expect(csv.size).to eq(CSVExporter::CSV_COLUMN_HEADINGS.size)
-        expect(CSVExporter::CSV_COLUMN_HEADINGS.zip(csv).to_h)
+
+        result = CSVExporter::CSV_COLUMN_HEADINGS.zip(csv).to_h
+
+        # Test transient columns before removing them from +result+ hash
+        transient_columns.each { |key| expect(result[key]).not_to be_blank }
+
+        expect(result.except!(*transient_columns))
           .to eq({
                    'Number' => '180817001',
                    'Case type' => 'FOI',
@@ -99,9 +115,6 @@ describe CSVExporter do
                    'Date created' => '2018-09-25',
                    'Business group' => 'Responder Business Group',
                    'Directorate name' => 'Responder Directorate',
-                   'Director General name' => 'Director General 2',
-                   'Director name' => 'Director 2',
-                   'Deputy Director name' => 'Deputy Director 3',
                    'Draft in time' => nil,
                    'In target' => 'Yes',
                    'Number of days late' => 25,
@@ -150,7 +163,13 @@ describe CSVExporter do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         csv = CSVExporter.new(sar_case).to_csv
         expect(csv.size).to eq(CSVExporter::CSV_COLUMN_HEADINGS.size)
-        expect(CSVExporter::CSV_COLUMN_HEADINGS.zip(csv).to_h)
+
+        result = CSVExporter::CSV_COLUMN_HEADINGS.zip(csv).to_h
+
+        # Test transient columns before removing them from +result+ hash
+        transient_columns.each { |key| expect(result[key]).not_to be_blank }
+
+        expect(result.except!(*transient_columns))
           .to eq({
                    'Number' => '180830001',
                    'Case type' => 'SAR',
@@ -185,9 +204,6 @@ describe CSVExporter do
                    'Date created' => '2018-09-25',
                    'Business group' => 'Responder Business Group',
                    'Directorate name' => 'Responder Directorate',
-                   'Director General name' => 'Director General 2',
-                   'Director name' => 'Director 2',
-                   'Deputy Director name' => 'Deputy Director 4',
                    'Draft in time' => nil,
                    'In target' => 'Yes',
                    'Number of days late' => nil,
