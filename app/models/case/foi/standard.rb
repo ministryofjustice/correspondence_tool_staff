@@ -125,17 +125,4 @@ class Case::FOI::Standard < Case::Base
   def foi_standard?
     true
   end
-
-  def initial_deadline
-    extensions = self.transitions
-                       .where(event: 'extend_for_pit')
-                       .order(:id)
-
-    if extensions.any?
-      extensions.first.original_final_deadline
-    else
-      external_deadline
-    end
-  end
-
 end

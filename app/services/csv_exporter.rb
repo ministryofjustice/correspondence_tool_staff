@@ -67,7 +67,7 @@ class CSVExporter
         @kase.respond_to?(:subject_type) ? @kase.subject_type.humanize : nil,
         @kase.respond_to?(:subject_full_name) ? @kase.subject_full_name : nil,
         @kase.decorate.late_team_name,
-        kase_extended?(@kase) ? 'Yes' : 'No',
+        extension_count(@kase) > 0 ? 'Yes' : 'No',
         extension_count(@kase)
       ]
     rescue => err
@@ -77,29 +77,21 @@ class CSVExporter
 
   private
 
-  def kase_extended?(kase)
-    kase.external_deadline != kase.initial_deadline
-  end
-
   def extension_count(kase)
-    if kase_extended?(kase)
-      pit_count, sar_count = 0, 0
-      kase.transitions.map(&:event).each do |event|
-        case event
-        when 'extend_for_pit'
-          pit_count += 1
-        when 'remove_pit_extension'
-          pit_count = 0
-        when 'extend_sar_deadline'
-          sar_count += 1
-        when 'remove_sar_deadline'
-          sar_count = 0
-        end
+    pit_count, sar_count = 0, 0
+    kase.transitions.map(&:event).each do |event|
+      case event
+      when CaseTransition::EXTEND_FOR_PIT_EVENT
+        pit_count += 1
+      when CaseTransition::REMOVE_PIT_EXTENSION_EVENT
+        pit_count = 0
+      when CaseTransition::EXTEND_SAR_DEADLINE_EVENT
+        sar_count += 1
+      when CaseTransition::REMOVE_SAR_EXTENSION_EVENT
+        sar_count = 0
       end
-      pit_count + sar_count
-    else
-      0
     end
+    pit_count + sar_count
   end
 
   def dequote_and_truncate(text)
