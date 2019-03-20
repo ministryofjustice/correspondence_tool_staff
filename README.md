@@ -147,6 +147,39 @@ $ xcode-select --install
 ```
 </details>
 
+#### Issues installing PostgreSQL (pg) gem
+
+When running `bundle install` on MacOS `gem pg` may fail to build and install.
+
+(These issues may not occur if following the instructions above about setting the PKG_CONFIG_PATH)
+
+##### Error with missing libpq-fe.h
+```
+...
+No pg_config... trying anyway. If building fails, please try again with
+ --with-pg-config=/path/to/pg_config
+checking for libpq-fe.h... no
+Can't find the 'libpq-fe.h header
+*** extconf.rb failed ***
+Could not create Makefile due to some reason, probably lack of necessary
+libraries and/or headers.  Check the mkmf.log file for more details.  You may
+need configuration options.
+...
+```
+
+Assuming the installation steps have been followed, execute in Terminal:
+
+```
+export CONFIGURE_ARGS="with-pg-include=/usr/local/opt/postgresql@9.5/include";
+gem install pg -v '1.1.4' --source 'https://rubygems.org/';
+
+```
+And ensure you add the following to `.bash_profile` or similar to prevent TCP connection errors:
+
+```
+export PGHOST=localhost
+```
+
 <details>
 <summary>Installing Redis</summary>
 
@@ -163,7 +196,8 @@ brew install redis
 
 This project can produce code coverage data (w/o JS or views) using the `simplecov` gem
 set COVERAGE=1 (or any value) to generate a coverage report.
-Parallel tests are supposed to be supported, but YMMV.
+Parallel tests are supposed to be supported - however the coverage output from simplecov is a little
+strange (the total lines in the project are different for each coverage run)
 
 This project includes the `parallel_tests` gem which enables multiple CPUs to be used during testing
 in order to speed up execution. Otherwise running the tests takes an unacceptably long amount of time.
@@ -330,37 +364,6 @@ browser windows should be sync. If you make any changes to assets or views then 
 the browsers should automatically update and sync.
 
 The UI URL are there if you would like to tweak the BrowserSync server and configure it further
-
-#### Issues installing PostgreSQL (pg) gem
-
-When running `bundle install` on MacOS `gem pg` may fail to build and install.
-
-##### Error with missing libpq-fe.h
-```
-...
-No pg_config... trying anyway. If building fails, please try again with
- --with-pg-config=/path/to/pg_config
-checking for libpq-fe.h... no
-Can't find the 'libpq-fe.h header
-*** extconf.rb failed ***
-Could not create Makefile due to some reason, probably lack of necessary
-libraries and/or headers.  Check the mkmf.log file for more details.  You may
-need configuration options.
-...
-```
-
-Assuming the installation steps have been followed, execute in Terminal:
-
-```
-export CONFIGURE_ARGS="with-pg-include=/usr/local/opt/postgresql@9.5/include";
-gem install pg -v '1.1.4' --source 'https://rubygems.org/';
-
-```
-And ensure you add the following to `.bash_profile` or similar to prevent TCP connection errors:
-
-```
-export PGHOST=localhost
-```
 
 #### Emails
 
