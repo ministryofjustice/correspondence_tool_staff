@@ -4,34 +4,45 @@ class CSVExporterError < RuntimeError; end
 
 class CSVExporter
   CSV_COLUMN_HEADINGS = [
-      'Number',
-      'Case type',
-      'Current state',
-      'Responding team',
-      'Responder',
-      'Date received',
-      'Internal deadline',
-      'External deadline',
-      'Date responded',
-      'Date compliant draft uploaded',
-      'Trigger',
-      'Name',
-      'Requester type',
-      'Message',
-      'Info held',
-      'Outcome',
-      'Refusal reason',
-      'Exemptions',
-      'Postal address',
-      'Email',
-      'Appeal outcome',
-      'Third party',
-      'Reply method',
-      'SAR Subject type',
-      'SAR Subject full name',
-      'Business unit responsible for late response',
-      'Extended',
-      'Extension Count',
+    'Number',
+    'Case type',
+    'Current state',
+    'Responding team',
+    'Responder',
+    'Date received',
+    'Internal deadline',
+    'External deadline',
+    'Date responded',
+    'Date compliant draft uploaded',
+    'Trigger',
+    'Name',
+    'Requester type',
+    'Message',
+    'Info held',
+    'Outcome',
+    'Refusal reason',
+    'Exemptions',
+    'Postal address',
+    'Email',
+    'Appeal outcome',
+    'Third party',
+    'Reply method',
+    'SAR Subject type',
+    'SAR Subject full name',
+    'Business unit responsible for late response',
+    'Extended',
+    'Extension Count',
+    'Casework officer',
+    'Created by',
+    'Date created',
+    'Business group',
+    'Directorate name',
+    'Director General name',
+    'Director name',
+    'Deputy Director name',
+    'Draft in time',
+    'In target',
+    'Number of days late',
   ]
 
   def initialize(kase)
@@ -39,10 +50,10 @@ class CSVExporter
   end
 
   def to_csv #rubocop:disable Metrics/MethodLength,Metrics/CyclomaticComplexity
-    begin
+    #begin
       [
         @kase.number,
-        @kase.decorate.pretty_type,
+        @kase.decorate.pretty_type, # Case type
         I18n.t("state.#{@kase.current_state}").downcase,
         @kase.responding_team&.name,
         @kase.responder&.full_name,
@@ -68,11 +79,29 @@ class CSVExporter
         @kase.respond_to?(:subject_full_name) ? @kase.subject_full_name : nil,
         @kase.decorate.late_team_name,
         extension_count(@kase) > 0 ? 'Yes' : 'No',
-        extension_count(@kase)
+        extension_count(@kase),
+        casework_officer(@kase),
+        @kase.creator.full_name,
+        @kase.created_at.strftime('%F'), # Date created
+
+        # Some of this info can be seen in the Case > Teams page
+        # Business group → of the responding Business Unit/KILO (e.g. Comms & Info)
+        # Director general → head of the business group
+        # Director name → head of directorate
+        # Deputy Director → head of business unit
+        @kase.responding_team&.business_group&.name,
+        @kase.responding_team&.directorate&.name,
+        @kase.responding_team&.business_group&.team_lead, # Director General name
+        @kase.responding_team&.directorate&.team_lead, # Director name
+        @kase.responding_team&.team_lead, # Deputy Director name
+
+        draft_in_time(@kase), # Draft in time
+        in_target(@kase),
+        num_days_late(@kase),
       ]
-    rescue => err
-      raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
-    end
+    #rescue => err
+    #  raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
+    #end
   end
 
   private
@@ -100,5 +129,30 @@ class CSVExporter
 
   def humanize_boolean(boolean)
     boolean ? 'Yes' : nil
+  end
+
+  def num_days_late(kase)
+    if kase.date_draft_compliant.present? && kase.internal_deadline.present?
+      (kase.date_draft_compliant - kase.internal_deadline).to_i
+    end
+  end
+
+  # Caseworker officer is blank for non-trigger and
+  # always a disclosure specialist for trigger cases.
+  # Catch exception from Case#assigned_disclosure_specialist
+  def casework_officer(kase)
+    return unless kase.workflow == 'trigger'
+
+    kase.assigned_disclosure_specialist.user.full_name rescue nil
+  end
+
+  # Catch exception from Case#within_draft_deadline?
+  def draft_in_time(kase)
+    humanize_boolean(kase.within_draft_deadline?) rescue nil
+  end
+
+  # Catch exception from Case#business_unit_responded_in_time?
+  def in_target(kase)
+    humanize_boolean(kase.business_unit_responded_in_time?) rescue nil
   end
 end
