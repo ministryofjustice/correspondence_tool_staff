@@ -127,7 +127,7 @@ module Stats
         else
           raise "Invalid team type #{team.class}"
         end
-        result_set[:responsible] = team.team_leader&.value || ''
+        result_set[:responsible] = team.team_lead
       end
 
       @stats.stats[:total][:business_group] = 'Total'

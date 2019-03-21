@@ -94,27 +94,27 @@ class CorrespondenceType < ApplicationRecord
   end
 
   def self.foi
-    find_by!(abbreviation: 'FOI')
+    find_by_abbreviation! 'FOI'
   end
 
   def self.gq
-    find_by!(abbreviation: 'GQ')
+    find_by_abbreviation! 'GQ'
   end
 
   def self.sar
-    find_by!(abbreviation: 'SAR')
+    find_by_abbreviation! 'SAR'
   end
 
   def self.ico
-    find_by!(abbreviation: 'ICO')
+    find_by_abbreviation! 'ICO'
   end
 
   def self.overturned_sar
-    find_by!(abbreviation: 'OVERTURNED_SAR')
+    find_by_abbreviation! 'OVERTURNED_SAR'
   end
 
   def self.overturned_foi
-    find_by!(abbreviation: 'OVERTURNED_FOI')
+    find_by_abbreviation! 'OVERTURNED_FOI'
   end
 
   def abbreviation_and_name

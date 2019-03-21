@@ -100,7 +100,7 @@ class Team < ApplicationRecord
   end
 
   def team_lead
-    properties.lead.singular_or_nil&.value || ''
+    team_leader&.value || ''
   end
 
   def team_lead=(name)
