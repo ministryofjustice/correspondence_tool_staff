@@ -37,13 +37,13 @@ class User < ApplicationRecord
   # implies that we could have better implementations of the above based on the 'teams' collection
   default_scope do
     includes(:team_roles,
+             :teams,
              :responding_team_roles,
              :responding_teams,
              :approving_team_roles,
              :approving_team,
              :managing_team_roles,
-             :managing_teams,
-             :teams)
+             :managing_teams)
   end
 
   has_many :cases, through: :assignments
