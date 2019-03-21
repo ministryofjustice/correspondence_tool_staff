@@ -99,8 +99,12 @@ class Team < ApplicationRecord
     I18n.t("team_lead_types.#{type.underscore}")
   end
 
-  def team_lead
+  def team_leader_name
     team_leader&.value || ''
+  end
+
+  def team_lead
+    properties.lead.singular_or_nil&.value || ''
   end
 
   def team_lead=(name)
