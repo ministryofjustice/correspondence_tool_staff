@@ -27,7 +27,7 @@ class CaseFinderService
         end
       end
 
-      @scope = scopes.reduce { |merged_scopes, scope| merged_scopes.or(scope) }
+      @scope = scopes.reduce { |merged_scopes, scope| merged_scopes.merge(scope) }
     end
 
     self

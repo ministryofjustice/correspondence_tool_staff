@@ -297,7 +297,6 @@ RSpec.describe CasesController, type: :controller do
           end
         end
 
-
         def sar_closure_params(sar)
           date_responded = 3.days.ago
           {
@@ -313,7 +312,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
   end
-
 
   # An astute reader who has persevered to this point in the file may notice
   # that the following tests are in a different structure than those above:
@@ -404,7 +402,6 @@ RSpec.describe CasesController, type: :controller do
   end
 
   describe 'GET incoming_cases' do
-
     context "as an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
         get :incoming_cases
@@ -443,6 +440,26 @@ RSpec.describe CasesController, type: :controller do
       it "be redirected to signin if trying to list of questions" do
         get :my_open_cases, params: {tab: 'in_time'}
         expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'without stubs' do
+      let!(:in_time_case) { create(:accepted_case) }
+      let!(:late_case) { Timecop.freeze(50.days.ago) { create(:accepted_case) } }
+      let!(:closed_case) { create(:closed_case) }
+
+      before do
+        sign_in responder
+      end
+
+      it 'gets my in time cases' do
+        get :my_open_cases, params: { tab: 'in_time' }
+        expect(assigns(:cases)).to match_array([in_time_case])
+      end
+
+      it 'gets my late cases' do
+        get :my_open_cases, params: { tab: 'late' }
+        expect(assigns(:cases)).to match_array([late_case])
       end
     end
 
@@ -501,7 +518,6 @@ RSpec.describe CasesController, type: :controller do
 
       expect(assigns(:case).errors.messages[:message_text].first)
           .to eq("can't be blank")
-
     end
 
     it 'syncs case transitions tracker for user' do
@@ -601,9 +617,7 @@ RSpec.describe CasesController, type: :controller do
           expect(response).to have_rendered(:show)
         end
       end
-
     end
-
 
     context 'viewing an assigned_case' do
       before do
@@ -620,7 +634,6 @@ RSpec.describe CasesController, type: :controller do
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
         end
-
       end
 
       context 'as an authenticated manager' do
@@ -633,7 +646,6 @@ RSpec.describe CasesController, type: :controller do
         it 'renders the show template' do
           expect(response).to render_template(:show)
         end
-
       end
 
       context 'as a responder of the assigned responding team' do
@@ -845,7 +857,6 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
-
   end
 
   describe 'GET respond' do
@@ -929,7 +940,6 @@ RSpec.describe CasesController, type: :controller do
           expect(response).to have_http_status 401
         end
       end
-
     end
 
     context 'as an authenticated responder' do
@@ -1188,7 +1198,6 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-
       it 'creates a papertrail version with the current user as whodunnit' do
         Timecop.freeze(date) do
           patch :update, params: edit_params.to_unsafe_hash
@@ -1220,7 +1229,6 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
-
   end
 
   describe 'GET new_overturned_ico' do
@@ -1287,11 +1295,6 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
-
-    # context 'logged in as responder' do
-    #   before { sign_in responder }
-    # end
-
   end
 
   def stub_current_case_finder_cases_with(result)
@@ -1316,5 +1319,4 @@ RSpec.describe CasesController, type: :controller do
     allow(GlobalNavManager).to receive(:new).and_return gnm
     gnm
   end
-
 end
