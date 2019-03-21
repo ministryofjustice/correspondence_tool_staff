@@ -351,6 +351,11 @@ en:
         pending_press_office_clearance: Pending clearance - Press office
         pending_private_office_clearance: Pending clearance - Private office
         responded: Ready to close
+        closed: Closed
+        case/ico:
+          awaiting_dispatch: Ready to send to ICO
+          responded: Closed - awaiting ICO decision
+          closed: "Closed - %{ico_decision} by ICO"
 
       case:
         linked_case_number: Case number

@@ -43,7 +43,7 @@ class CSVExporter
       [
         @kase.number,
         @kase.decorate.pretty_type,
-        I18n.t("state.#{@kase.current_state}").downcase,
+        I18n.t("helpers.label.state_selector.#{@kase.current_state}"),
         @kase.responding_team&.name,
         @kase.responder&.full_name,
         @kase.received_date&.to_s,
@@ -81,13 +81,13 @@ class CSVExporter
     pit_count, sar_count = 0, 0
     kase.transitions.map(&:event).each do |event|
       case event
-      when 'extend_for_pit'
+      when CaseTransition::EXTEND_FOR_PIT_EVENT
         pit_count += 1
-      when 'remove_pit_extension'
+      when CaseTransition::REMOVE_PIT_EXTENSION_EVENT
         pit_count = 0
-      when 'extend_sar_deadline'
+      when CaseTransition::EXTEND_SAR_DEADLINE_EVENT
         sar_count += 1
-      when 'remove_sar_deadline'
+      when CaseTransition::REMOVE_SAR_EXTENSION_EVENT
         sar_count = 0
       end
     end
