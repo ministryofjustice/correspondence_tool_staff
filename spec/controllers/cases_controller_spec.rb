@@ -328,17 +328,13 @@ RSpec.describe CasesController, type: :controller do
     let!(:active_kase) { create(:case) }
     # This case should be outside the 6 month threshold for downloading
     let!(:ancient_deleted_kase) do
-      create(:case).tap do |kase|
-        Timecop.travel(-(6.months + 1.day)) do
-          CaseDeletionService.new(manager, kase, reason_for_deletion: 'Just because').call
-        end
+      Timecop.travel(7.months.ago) do
+        create(:case, :deleted_case)
       end
     end
     let!(:old_deleted_kase) do
-      create(:case).tap do |kase|
-        Timecop.travel(-1.days) do
-          CaseDeletionService.new(manager, kase, reason_for_deletion: 'Just because').call
-        end
+      Timecop.travel(1.day.ago) do
+        create(:case, :deleted_case)
       end
     end
     let!(:deleted_kase) { create(:case, :deleted_case) }

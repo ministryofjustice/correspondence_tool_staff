@@ -20,13 +20,11 @@ class Case::SARPolicy < Case::BasePolicy
         if @user.responder?
           case_ids = Assignment.with_teams(@user.responding_teams).pluck(:case_id)
           scopes << @scope.where(id: case_ids)
-          # scopes << @scope.with_teams(@user.responding_teams)
         end
 
         if @user.approver?
           case_ids = Assignment.with_teams(@user.approving_team).pluck(:case_id)
           scopes << @scope.where(id: case_ids)
-          # scopes << @scope.with_teams(@user.approving_team)
         end
 
         if scopes.any?

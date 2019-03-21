@@ -109,7 +109,7 @@ class CasesController < ApplicationController
     end
   end
 
-  # users only want to see cases deleted in the last 6 months
+  # Users only want to see cases deleted in the last 6 months
   def deleted_cases
     cases = Case::Base.unscoped
               .soft_deleted

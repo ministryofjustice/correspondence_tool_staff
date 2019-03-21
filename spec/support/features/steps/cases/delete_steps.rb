@@ -8,7 +8,7 @@ def delete_case_step(kase:)
   expect(confirm_destroy_page).to have_reason_for_deletion
 
   confirm_destroy_page.confirm_button.click
-  # without a reason for deletion, page debounces back to user
+  # Without a reason for deletion, page debounces back to user
   expect(confirm_destroy_page).to have_reason_for_deletion_error
 
   confirm_destroy_page.fill_in_delete_reason
