@@ -1,15 +1,29 @@
 class AddUserToCase < ActiveRecord::Migration[5.0]
-  # To allow Case reports to show which user created the case.
-  # For existing cases, a 'dummy' user must be created with a fixed ID.
+  # Allow Case reports to save which user created the case.
+  # For existing cases, a 'Default User' is assigned.
   # The user creation is done here rather than data_migrations to ensure
-  # the DefaultUser exists before the column is created.
+  # the 'Default User' exists before the column is created.
+  #
+  # A 'DefaultUser' class to represent retrospective case creators
+  # was determined to be unnecessary at this juncture.
+
+  DEFAULT_USER_ID = -100
+
   def up
-    DefaultUser.build!
-    add_reference :cases, :user, foreign_key: true, null:false, default: -100
+    User.new(
+      id: DEFAULT_USER_ID,
+      email: Settings.default_user_email, # ideally dud emails
+      full_name: '',
+      password: SecureRandom.base64(20),
+      deleted_at: Date.today # to prevent login attempts
+    )
+    .save!(validate: false)
+
+    add_reference :cases, :user, foreign_key: true, null:false, default: DEFAULT_USER_ID
   end
 
   def down
     remove_reference :cases, :user
-    User.delete(DefaultUser::ID)
+    User.delete(DEFAULT_USER_ID)
   end
 end

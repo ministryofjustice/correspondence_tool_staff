@@ -323,12 +323,4 @@ RSpec.describe User, type: :model do
       expect(team1_other_team_names).not_to include(team1.name)
     end
   end
-
-  describe '#skip_full_name_check?' do
-    let(:user) { build :user }
-
-    it 'does not skip full name check' do
-      expect(user.send(:skip_full_name_check?)).to be false
-    end
-  end
 end

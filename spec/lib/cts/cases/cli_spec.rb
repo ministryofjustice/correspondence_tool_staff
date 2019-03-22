@@ -15,7 +15,7 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
                     {
                       number: number_to_create,
                       type: 'Case::FOI::Standard',
-                      creator: DefaultUser::ID,
+                      creator: User.first.id,
                     }
                   )
     find_or_create :team_dacu
