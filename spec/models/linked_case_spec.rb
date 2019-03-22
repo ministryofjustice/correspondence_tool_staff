@@ -83,12 +83,12 @@ describe LinkedCase do
 
     it 'does not return linked cases which have been soft deleted' do
       expect(foi.linked_cases).to match_array( [second_foi, third_foi] )
-      CaseDeletionService.new(manager, second_foi).call
+      CaseDeletionService.new(manager, second_foi, reason_for_deletion: 'Just do it').call
       expect(foi.reload.linked_cases).to eq [ third_foi ]
     end
 
     it 'is still valid even after a linked case has been deleted' do
-      CaseDeletionService.new(manager, second_foi).call
+      CaseDeletionService.new(manager, second_foi, reason_for_deletion: 'Just do it').call
       expect(foi).to be_valid
     end
   end
