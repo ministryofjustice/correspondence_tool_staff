@@ -145,10 +145,16 @@ describe CSVExporter do
     end
 
     context 'SAR' do
-      context 'extended' do
-        let(:kase) { create :closed_sar, :extended_deadline_sar,
+      context 'extension removed' do
+        let!(:kase) do
+          create(:sar_case, :extended_deadline_sar,
+                 current_state: 'drafting',
                             message: 'my SAR message',
-                            subject_full_name: 'Theresa Cant' }
+                            subject_full_name: 'Theresa Cant').tap do |k|
+            CaseRemoveSARDeadlineExtensionService.new(k.transitions.last.acting_user, k).call
+          end
+        end
+
 
         it 'marks an extended SAR having an extended count of 1' do
           expect(csv_data).to include({

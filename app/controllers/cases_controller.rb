@@ -104,7 +104,22 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :closed_cases }
       format.csv do
-        send_csv_cases'closed'
+        send_csv_cases 'closed'
+      end
+    end
+  end
+
+  # Users only want to see cases deleted in the last 6 months
+  def deleted_cases
+    cases = Case::Base.unscoped
+              .soft_deleted
+              .updated_since(6.months.ago)
+              .by_last_transitioned_date
+    @cases = Pundit.policy_scope(current_user, cases)
+
+    respond_to do |format|
+      format.csv do
+        send_csv_cases 'deleted'
       end
     end
   end
@@ -132,7 +147,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :index }
       format.csv do
-        send_csv_cases'my-open'
+        send_csv_cases 'my-open'
       end
     end
   end
@@ -280,9 +295,11 @@ class CasesController < ApplicationController
 
   def destroy
     authorize @case
-    service = CaseDeletionService.new(current_user, @case)
-    service.call
-    if service.result == :ok
+
+    service = CaseDeletionService.new(current_user,
+                                      @case,
+                                      params.require(:case).permit(:reason_for_deletion))
+    if service.call == :ok
       flash[:notice] = "You have deleted case #{@case.number}."
       redirect_to cases_path
     else
@@ -553,8 +570,6 @@ class CasesController < ApplicationController
     end
   end
 
-
-
   def update_closure
     authorize @case
     close_params = process_closure_params(@case.type_abbreviation)
@@ -610,7 +625,6 @@ class CasesController < ApplicationController
       render '/cases/ico/late_team'
     end
   end
-
 
   def search
     service = CaseSearchService.new(user: current_user,

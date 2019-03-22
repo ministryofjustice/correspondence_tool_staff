@@ -14,21 +14,26 @@
 
 = render partial: 'layouts/header'
 
-.delete-copy
-  p
-    = "You are deleting the case: "
-    strong.strong-block
-      = @case.subject
+= form_for @case, as: :case, url: case_path(@case), method: :delete do |f|
 
-  .notice
-    i.icon.icon-important
-      span.visually-hidden
-        = "Important! "
-    strong.bold-small
-      = "Once you delete this case, you will not be able to retrieve it."
+  .delete-copy
+    p.delete-message
+      = "You are deleting the case: "
+      strong.strong-block
+        = @case.subject
 
-.button-holder
-  = link_to "Delete case", case_path(@case), class: 'button', method: :delete
-  = link_to('Cancel',
-            case_path(@case),
-            class: 'acts-like-button button-left-spacing')
+    p
+      = f.text_area :reason_for_deletion
+
+    .notice
+      i.icon.icon-important
+        span.visually-hidden
+          = "Important! "
+      strong.bold-small
+        = "Once you delete this case, you will not be able to retrieve it."
+
+  .button-holder
+    = f.submit('Delete case', class: 'button')
+    = link_to('Cancel',
+              case_path(@case),
+              class: 'acts-like-button button-left-spacing')

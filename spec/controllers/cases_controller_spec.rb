@@ -323,6 +323,41 @@ RSpec.describe CasesController, type: :controller do
   # how that action/functionality behaves becomes hard. The tests below seek to
   # remedy this by modelling how they could be grouped by functionality
   # primarily, with sub-grouping for different contexts.
+  #
+  describe 'GET deleted_cases' do
+    let!(:active_kase) { create(:case) }
+    # This case should be outside the 6 month threshold for downloading
+    let!(:ancient_deleted_kase) do
+      Timecop.travel(7.months.ago) do
+        create(:case, :deleted_case)
+      end
+    end
+    let!(:old_deleted_kase) do
+      Timecop.travel(1.day.ago) do
+        create(:case, :deleted_case)
+      end
+    end
+    let!(:deleted_kase) { create(:case, :deleted_case) }
+    let!(:deleted_sar_kase) { create(:sar_case, :deleted_case) }
+
+    context 'as an manager' do
+      before { sign_in manager }
+
+      it 'retrieves only deleted cases' do
+        get :deleted_cases, format: :csv
+        expect(assigns(:cases)).to eq([deleted_sar_kase, deleted_kase, old_deleted_kase])
+      end
+    end
+
+    context 'as a lesser user' do
+      before { sign_in responder }
+
+      it 'retrieves only deleted cases I am supposed to see' do
+        get :deleted_cases, format: :csv
+        expect(assigns(:cases)).to eq([deleted_kase, old_deleted_kase])
+      end
+    end
+  end
 
   describe 'GET index' do
     let(:decorate_result) { double 'decorated_result' }

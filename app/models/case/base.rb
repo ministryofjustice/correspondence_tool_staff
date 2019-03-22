@@ -158,6 +158,10 @@ class Case::Base < ApplicationRecord
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
 
   validates :creator, presence: true
+  scope :soft_deleted, -> { where(deleted: true) }
+
+  scope :updated_since, ->(date) { where('updated_at >= ?', date) }
+
   validates :current_state, presence: true, on: :update
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates_presence_of :received_date
@@ -169,6 +173,8 @@ class Case::Base < ApplicationRecord
 
   validates_with ::RespondedCaseValidator
   validates_with ::ClosedCaseValidator
+
+  validates_presence_of :reason_for_deletion, if: -> { deleted }
 
   has_many :assignments, dependent: :destroy, foreign_key: :case_id
 
