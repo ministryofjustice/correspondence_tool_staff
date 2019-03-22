@@ -104,10 +104,12 @@ $ brew install postgresql@9.5
 Having done this, make sure all the post-install variables have been put in
 `.bash_profile` or similar e.g.
 
+```
 export PKG_CONFIG_PATH="/usr/local/opt/postgresql@9.5/lib/pkgconfig"
 export CPPFLAGS="-I/usr/local/opt/postgresql@9.5/include"
 export LDFLAGS="-L/usr/local/opt/postgresql@9.5/lib"
 export PATH=$PATH:/usr/local/opt/postgresql@9.5/bin
+```
 
 The PKG_CONFIG_PATH and PATH are useful to help install the PG gem
 </details>
@@ -154,18 +156,6 @@ When running `bundle install` on MacOS `gem pg` may fail to build and install.
 (These issues may not occur if following the instructions above about setting the PKG_CONFIG_PATH)
 
 ##### Error with missing libpq-fe.h
-```
-...
-No pg_config... trying anyway. If building fails, please try again with
- --with-pg-config=/path/to/pg_config
-checking for libpq-fe.h... no
-Can't find the 'libpq-fe.h header
-*** extconf.rb failed ***
-Could not create Makefile due to some reason, probably lack of necessary
-libraries and/or headers.  Check the mkmf.log file for more details.  You may
-need configuration options.
-...
-```
 
 Assuming the installation steps have been followed, execute in Terminal:
 
