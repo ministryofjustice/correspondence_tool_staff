@@ -5,9 +5,9 @@ en:
     awaiting_responder_email: Waiting to be accepted
     awaiting_dispatch: Ready to send
     drafting: Draft in progress
-    pending_dacu_clearance: Pending clearance - Disclosure
-    pending_press_office_clearance: Pending clearance - Press office
-    pending_private_office_clearance: Pending clearance - Private office
+    pending_dacu_clearance: Pending clearance
+    pending_press_office_clearance: Pending clearance
+    pending_private_office_clearance: Pending clearance
     responded: Ready to close
     closed: Closed
     case/ico:
