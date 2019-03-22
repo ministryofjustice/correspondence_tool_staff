@@ -28,7 +28,7 @@ module Stats
     end
 
     def run
-      case_ids.each { |case_id| analyse_case(case_id) }
+      Case::Base.find(case_ids).reject { |k| k.unassigned? }.each { |kase| analyse_case(kase) }
       @stats.finalise
     end
 
@@ -86,9 +86,7 @@ module Stats
       @stats.stats[:total][:responsible] = ''
     end
 
-    def analyse_case(case_id)
-      kase = Case::Base.find case_id
-      return if kase.unassigned?
+    def analyse_case(kase)
       column_key = analyse_timeliness(kase)
       @stats.record_stats(kase.responding_team.id, column_key)
     end
