@@ -76,7 +76,11 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'workflow validation' do
-    it { should validate_inclusion_of(:workflow).in_array %w{ standard trigger} }
+    it 'validates the workflow' do
+      should validate_inclusion_of(:workflow).
+                in_array(%w{ standard trigger full_approval}).
+                with_message('invalid')
+    end
   end
 
   describe 'info_status_held_validation' do

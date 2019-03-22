@@ -57,14 +57,19 @@ class Case::Base < ApplicationRecord
                 :uploaded_request_files,
                 :request_amends_comment,
                 :upload_comment,
-                :uploading_user # Used when creating case sent by post.
+                :uploading_user, # Used when creating case sent by post.
+                :draft_compliant
+
+  jsonb_accessor :properties,
+                 date_draft_compliant: :date,
+                 has_pit_extension: [:boolean, default: false]
 
   attr_accessor :message_text
 
-  jsonb_accessor  :properties,
-                  has_pit_extension: [:boolean, default: false]
-
-  acts_as_gov_uk_date :received_date, :date_responded, :external_deadline,
+  acts_as_gov_uk_date :date_responded,
+                      :date_draft_compliant,
+                      :external_deadline,
+                      :received_date,
                       validate_if: :received_in_acceptable_range?
 
   scope :by_deadline, -> {
@@ -397,6 +402,10 @@ class Case::Base < ApplicationRecord
     date_responded <= external_deadline
   end
 
+  def within_draft_deadline?
+    date_draft_compliant <= internal_deadline
+  end
+
   def attachments_dir(attachment_type, upload_group)
     "#{S3Uploader.id_for_case(self)}/#{attachment_type}/#{upload_group}"
   end
@@ -718,6 +727,9 @@ class Case::Base < ApplicationRecord
     if self.new_record? || received_date_changed?
       validate_received_date
     end
+    if self.date_draft_compliant.present?
+      validate_date_draft_compliant
+    end
   end
 
   def validate_received_date
@@ -733,6 +745,26 @@ class Case::Base < ApplicationRecord
       )
     end
     errors[:received_date].any?
+  end
+
+  def validate_date_draft_compliant
+    if self.date_draft_compliant < self.received_date
+      errors.add(
+        :date_draft_compliant,
+        I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.before_received')
+      )
+    elsif self.date_draft_compliant > Date.today
+      errors.add(
+        :date_draft_compliant,
+        I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.not_in_future')
+      )
+    elsif self.date_responded.present? && self.date_draft_compliant > self.date_responded
+      errors.add(
+        :date_draft_compliant,
+        I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.after_date_responded')
+      )
+    end
+    errors[:date_draft_compliant].any?
   end
 
   def received_date_changed?

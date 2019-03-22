@@ -119,7 +119,7 @@ FactoryBot.define do
       kase.approver_assignments.for_team(evaluator.approving_team).singular
         .update_attributes(user: evaluator.approver,
                            state: 'accepted')
-      create :case_transition_progress_for_clearance,
+      create :case_transition_pending_dacu_clearance,
              case: kase,
              acting_team: evaluator.responding_team,
              acting_user: evaluator.responder,
@@ -131,6 +131,10 @@ FactoryBot.define do
   factory :approved_ico_foi_case, parent: :pending_dacu_clearance_ico_foi_case do
     transient do
       identifier { 'approved ICO FOI case' }
+# date draft compliant is passed in in a transient blocked so it can is be
+# changed in the tests. It is added to the the case in the after create block
+# to match the order the code updates the case.
+      date_draft_compliant { received_date + 2.days }
     end
 
     after(:create) do |kase, evaluator|
@@ -140,6 +144,7 @@ FactoryBot.define do
              acting_user: evaluator.approver
 
       kase.approver_assignments.each { |a| a.update approved: true }
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
       kase.reload
     end
   end
@@ -147,13 +152,18 @@ FactoryBot.define do
   factory :responded_ico_foi_case, parent: :approved_ico_foi_case do
     transient do
       identifier { 'responded ICO FOI case' }
+  # date draft compliant is passed in in a transient blocked so it can is be
+  # changed in the tests. It is added to the the case in the after create block
+  # to match the order the code updates the case.
+      date_draft_compliant { received_date + 2.days }
     end
 
     date_responded { Date.today }
 
-    after(:create) do |kase, _evaluator|
+    after(:create) do |kase, evaluator|
       create :case_transition_respond_to_ico,
              case: kase
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
       kase.reload
     end
   end

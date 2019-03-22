@@ -248,9 +248,6 @@ Rails.application.routes.draw do
     patch 'unflag_for_clearance' => 'cases#unflag_for_clearance', on: :member
     patch 'unflag_taken_on_case_for_clearance' => 'cases#unflag_taken_on_case_for_clearance', on: :member
     patch 'flag_for_clearance' => 'cases#flag_for_clearance', on: :member
-    get 'approve_response' => 'cases#approve_response', on: :member
-    get 'approve_response_interstitial' => 'cases#approve_response_interstitial', on: :member
-    post 'execute_response_approval' => 'cases#execute_response_approval', on: :member
     get :request_amends, on: :member
     patch :execute_request_amends, on: :member
     post  :filter, on: :collection
@@ -286,8 +283,22 @@ Rails.application.routes.draw do
 
     resources :messages, only: :create
 
-    get 'new_response_upload', on: :member
-    post 'upload_responses', on: :member
+    get 'approve', on: :member
+    patch 'approve',
+          action: :execute_approve,
+          on: :member
+    get 'upload_responses', on: :member
+    patch 'upload_responses',
+          action: :execute_upload_responses,
+          on: :member
+    get 'upload_response_and_approve', on: :member
+    patch 'upload_response_and_approve',
+          action: :execute_upload_response_and_approve,
+          on: :member
+    get 'upload_response_and_return_for_redraft', on: :member
+    patch 'upload_response_and_return_for_redraft',
+          action: :execute_upload_response_and_return_for_redraft,
+          on: :member
 
     resources :case_attachments, path: 'attachments', only: [:destroy] do
       get 'download', on: :member

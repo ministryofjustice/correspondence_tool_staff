@@ -1,4 +1,6 @@
 require 'page_objects/sections/cases/ico/case_details_section'
+require 'page_objects/sections/cases/linked_cases_section'
+require 'page_objects/sections/cases/case_request_section'
 
 module PageObjects
   module Sections

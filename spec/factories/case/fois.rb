@@ -121,6 +121,12 @@ FactoryBot.define do
 
       kase.reload
     end
+
+    trait :late do
+      received_date { 30.business_days.ago }
+      date_responded { 1.business_day.ago }
+      date_draft_compliant { 1.business_day.ago }
+    end
   end
 
   factory :case_within_escalation_deadline, parent: :case do
@@ -255,18 +261,20 @@ FactoryBot.define do
   end
 
   factory :redrafting_case, parent: :pending_dacu_clearance_case do
+    transient do
+      is_draft_compliant? { true }
+    end
+
     flagged_accepted
 
     after(:create) do |kase, evaluator|
-      # TODO: This should be approved: false if it's being redrafted
-      # team_dacu_disclosure = find_or_create :team_dacu_disclosure
-      # disclosure_approval  = kase.assignments.approving.where(team_id: team_dacu_disclosure.id).first
-      # disclosure_approval.update(approved: true)
-
-      create :case_transition_upload_response_and_return_for_redraft,
-             case: kase,
-             acting_team: evaluator.approving_team,
-             acting_user: evaluator.approver
+      transition = create :case_transition_upload_response_and_return_for_redraft,
+                          case: kase,
+                          acting_team: evaluator.approving_team,
+                          acting_user: evaluator.approver
+      if evaluator.is_draft_compliant?
+        kase.update!(date_draft_compliant: transition.created_at)
+      end
       kase.reload
     end
 
@@ -315,9 +323,20 @@ FactoryBot.define do
 
   factory :approved_case, parent: :ready_to_send_case do
     taken_on_by_disclosure
+# date draft compliant is passed in in a transient blocked so it can is be
+# changed in the tests. It is added to the the case in the after create block
+# to match the order the code updates the case.
+    transient do
+      date_draft_compliant { received_date + 2.days }
+    end
+
+    after(:create) do |kase, evaluator|
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
+      kase.reload
+    end
   end
 
-  factory :responded_case, parent: :ready_to_send_case do
+  factory :responded_case, aliases: [:responded_foi_case], parent: :ready_to_send_case do
     transient do
       identifier { "responded case" }
     end
@@ -376,6 +395,7 @@ FactoryBot.define do
       received_date  { 30.business_days.ago }
       date_responded { 1.business_day.ago }
       late_team_id   { responding_team.id }
+      date_draft_compliant { 1.business_day.ago }
     end
 
     trait :granted_in_full do
@@ -832,6 +852,7 @@ FactoryBot.define do
       responses  { [build(:correspondence_response,
                           type: 'response',
                           user_id: responder.id)] }
+      when_response_uploaded { DateTime.now }
     end
 
     after(:create) do |kase, evaluator|
@@ -842,7 +863,8 @@ FactoryBot.define do
                case: kase,
                acting_team: evaluator.responding_team,
                acting_user: evaluator.responder,
-               filenames: evaluator.responses.map(&:filename)
+               filenames: evaluator.responses.map(&:filename),
+               created_at: evaluator.when_response_uploaded
       end
     end
   end

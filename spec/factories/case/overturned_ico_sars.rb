@@ -158,7 +158,12 @@ FactoryBot.define do
   factory :awaiting_dispatch_ot_ico_sar, parent: :pending_dacu_clearance_ot_ico_sar do
     transient do
       identifier { 'awaiting dispatch ICO SAR case' }
+# date draft compliant is passed in in a transient blocked so it can is be
+# changed in the tests. It is added to the the case in the after create block
+# to match the order the code updates the case.
+      date_draft_compliant { received_date + 2.days }
     end
+
     workflow { 'trigger' }
 
     after(:create) do |kase, evaluator|
@@ -167,6 +172,7 @@ FactoryBot.define do
              case: kase,
              acting_team: evaluator.approving_team,
              acting_user: evaluator.approver
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
       kase.current_state = 'awaiting_dispatch'
     end
   end

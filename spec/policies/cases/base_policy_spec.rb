@@ -437,7 +437,7 @@ describe Case::BasePolicy do
     end
   end
 
-  permissions :execute_response_approval? do
+  permissions :approve? do
     let(:flagged_case_responder)  { pending_dacu_clearance_case.responder }
 
     it { should_not permit(manager,   pending_dacu_clearance_case) }
@@ -464,7 +464,7 @@ describe Case::BasePolicy do
     it { should_not permit(press_officer,          pending_press_clearance_case) }
   end
 
-  permissions :upload_responses_for_approve? do
+  permissions :upload_response_and_approve? do
     it { should_not permit(manager,                accepted_case) }
     it { should_not permit(responder,              accepted_case) }
     it { should_not permit(disclosure_specialist,  accepted_case) }
@@ -483,7 +483,7 @@ describe Case::BasePolicy do
     it { should_not permit(press_officer,          pending_press_clearance_case) }
   end
 
-  permissions :upload_responses_for_redraft? do
+  permissions :upload_response_and_return_for_redraft? do
     it { should_not permit(manager,                accepted_case) }
     it { should_not permit(responder,              accepted_case) }
     it { should_not permit(disclosure_specialist,  accepted_case) }

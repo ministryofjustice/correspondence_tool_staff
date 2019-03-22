@@ -5,10 +5,10 @@ en:
     admin_case_list: Admin case list - Track-a-query
     all_cases: All open cases - Track-a-query
     all_new_cases: All new cases - Track-a-query
+    approve_page: Clearing response - %{case_number} - Track-a-query
     assign_case_page: Assigning case to a business unit - %{case_number} - Track-a-query
     change_password: Forgot your password - Track-a-query
     choose_case_type_page: Choosing a correspondence type - Track-a-query
-    clear_response_page: Clearing response - %{case_number} - Track-a-query
     close_case_page: Closing a case - %{case_number} - Track-a-query
     closed_cases_page: All closed cases - Track-a-query
     create_case_page: Creating a %{case_type} case - Track-a-query
@@ -34,4 +34,4 @@ en:
     settings_directorate: Settings - %{business_group} - %{directorate} - Track-a-query
     show_case_page: Viewing case details - %{case_number} - Track-a-query
     stats: Performance Reports - Track-a-query
-    upload_response_page: Uploading a response - %{case_number} - Track-a-query
+    upload_responses_page: Uploading a response - %{case_number} - Track-a-query

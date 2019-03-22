@@ -2,6 +2,7 @@ require 'rails_helper'
 
 describe 'cases/overturned_foi/case_details.html.slim', type: :view do
   let(:unassigned_case) { create(:overturned_ico_foi) }
+  let(:approved_case)   { create(:approved_trigger_ot_ico_foi).decorate }
   let(:closed_case)     { create(:closed_ot_ico_foi) }
   let(:bmt_manager)     { find_or_create(:disclosure_bmt_user) }
 
@@ -87,16 +88,20 @@ describe 'cases/overturned_foi/case_details.html.slim', type: :view do
         expect(partial.timeliness.text).to eq 'Answered in time'
       end
     end
+  end
 
-    it 'displays the time taken to send the response' do
-      Timecop.freeze(Time.local(2018, 9, 23, 10, 0, 0)) do
-        closed_case.update(
-          date_responded: 1.business_day.after(closed_case.external_deadline)
-        )
-        partial = render_partial(closed_case)
+  describe 'draft compliance details' do
+    it 'displays the date compliant' do
+      assign(:case, approved_case)
 
-        expect(partial.time_taken.text).to eq '21 working days'
-      end
+      render partial: 'cases/overturned_foi/case_details.html.slim',
+             locals:{ case_details: approved_case,
+                      link_type: nil }
+
+      partial = case_details_section(rendered).compliance_details
+
+      expect(partial.compliance_date.data.text).to eq approved_case.date_draft_compliant
+      expect(partial.compliant_timeliness.data.text).to eq approved_case.draft_timeliness
     end
   end
 

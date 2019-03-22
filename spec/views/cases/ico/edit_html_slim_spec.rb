@@ -4,7 +4,7 @@ describe 'cases/edit.html.slim', type: :view do
   it 'displays the edit case page' do
 
     related_case = create(:compliance_review)
-    kase = create :accepted_ico_foi_case,
+    kase = create :approved_ico_foi_case,
                   related_cases: [related_case]
 
     assign(:correspondence_type_key, 'ico')
@@ -49,6 +49,10 @@ describe 'cases/edit.html.slim', type: :view do
     expect(page.form.internal_deadline_day.value).to eq kase.internal_deadline.day.to_s
     expect(page.form.internal_deadline_month.value).to eq kase.internal_deadline.month.to_s
     expect(page.form.internal_deadline_year.value).to eq kase.internal_deadline.year.to_s
+
+    expect(page.form.date_draft_compliant_day.value).to eq kase.date_draft_compliant.day.to_s
+    expect(page.form.date_draft_compliant_month.value).to eq kase.date_draft_compliant.month.to_s
+    expect(page.form.date_draft_compliant_year.value).to eq kase.date_draft_compliant.year.to_s
 
     expect(page.form.root_element['action']).to match(/^\/cases\/\d+$/)
     expect(page.form.case_details.value).to eq kase.message

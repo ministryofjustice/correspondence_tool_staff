@@ -20,8 +20,12 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
+  # Use business_days_until(to_date, inclusive: true) to ensure the
+  # date_responded is taken into account. This is due to a bug raised
+  # where the case report showed 20 days to respond when in fact it was
+  # 21 working days (bug CT-2119)
   def time_taken
-    business_days = received_date.business_days_until(date_responded)
+    business_days = received_date.business_days_until(date_responded, true)
     I18n.t('common.case.time_taken_result', count: business_days)
   end
 
@@ -30,6 +34,14 @@ class Case::BaseDecorator < Draper::Decorator
       I18n.t('common.case.answered_in_time')
     else
       I18n.t('common.case.answered_late')
+    end
+  end
+
+  def draft_timeliness
+    if within_draft_deadline?
+      I18n.t('common.case.compliant_in_time')
+    else
+      I18n.t('common.case.compliant_late')
     end
   end
 
@@ -61,6 +73,14 @@ class Case::BaseDecorator < Draper::Decorator
 
   def escalation_deadline
     I18n.l(object.escalation_deadline, format: :default)
+  end
+
+  def date_draft_compliant
+    I18n.l(object.date_draft_compliant, format: :default)
+  end
+
+  def has_date_draft_compliant?
+    object.date_draft_compliant.present?
   end
 
   def error_summary_message

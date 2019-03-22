@@ -18,13 +18,13 @@ div id="case-#{@correspondence_type_key}" class="case"
       = "Actions you can take on this case"
     .button-holder
       - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
-        - if policy(@case).execute_response_approval?
+        - if policy(@case).approve?
           = action_button_for(:approve)
         - if policy(@case).upload_responses?
           = action_button_for(:add_responses)
-        - if policy(@case).upload_responses_for_approve?
+        - if policy(@case).upload_response_and_approve?
           = action_button_for(:upload_response_and_approve)
-        - if policy(@case).upload_responses_for_redraft?
+        - if policy(@case).upload_response_and_return_for_redraft?
           = action_button_for(:upload_response_and_return_for_redraft)
 
         - if policy(@case).can_respond?

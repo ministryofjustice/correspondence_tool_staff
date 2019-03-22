@@ -311,7 +311,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe '#teams_names' do
+  describe '#other_teams_names' do
     let(:user)      { create :responder, responding_teams: [team1, team2, team3] }
     let(:team1)     { create :responding_team }
     let(:team2)     { create :responding_team }

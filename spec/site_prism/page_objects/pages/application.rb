@@ -11,7 +11,6 @@ module PageObjects
         @app_sections ||= {}
       end
 
-
       {
         admin_cases:                    'Admin::CasesPage',
         admin_cases_new:                'Admin::Cases::NewPage',
@@ -20,13 +19,12 @@ module PageObjects
         admin_cases_new_ico:            'Admin::Cases::NewICOPage',
         admin_cases_new_overturned_sar: 'Admin::Cases::NewOverturnedSARPage',
         admin_cases_new_overturned_foi: 'Admin::Cases::NewOverturnedFOIPage',
-        approve_response_interstitial:  'Cases::ApproveResponseInterstitialPage',
-        approve_response:               'Cases::ApproveResponsePage',
         assign_to_new_team:             'Assignments::AssignToNewTeamPage',
         assignments_edit:               'Assignments::EditPage',
         assignments_new:                'Assignments::NewPage',
         assignment_rejected:            'Assignments::ShowRejectedPage',
         cases:                          'CasesPage',
+        cases_approve:                  'Cases::ApprovePage',
         cases_close:                    'Cases::ClosePage',
         cases_closure_outcomes:         'Cases::ClosureOutcomesPage',
         cases_new:                      'Cases::NewPage',
@@ -38,7 +36,11 @@ module PageObjects
         cases_edit:                     'Cases::EditPage',
         cases_edit_ico:                 'Cases::Edit::ICOPage',
         cases_edit_closure:             'Cases::EditClosurePage',
-        cases_new_response_upload:      'Cases::NewResponseUploadPage',
+        cases_upload_responses:         'Cases::UploadResponsesPage',
+        cases_upload_response_and_approve:
+          'Cases::UploadResponseAndApprovePage',
+        cases_upload_response_and_return_for_redraft:
+          'Cases::UploadResponseAndReturnForRedraftPage',
         cases_remove_clearance_form:    'Cases::RemoveClearanceFormPage',
         cases_respond:                  'Cases::RespondPage',
         cases_search:                   'Cases::SearchPage',

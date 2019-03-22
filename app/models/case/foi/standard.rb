@@ -42,6 +42,8 @@ class Case::FOI::Standard < Case::Base
     end
   end
 
+  include DraftTimeliness::ResponseAdded
+
   before_save do
     self.wokflow = 'standard' if workflow.nil?
   end
@@ -51,7 +53,8 @@ class Case::FOI::Standard < Case::Base
                  escalation_deadline: :date,
                  internal_deadline: :date,
                  external_deadline: :date,
-                 late_team_id: :integer
+                 late_team_id: :integer,
+                 date_draft_compliant: :date
 
   has_paper_trail only: [
                     :name,

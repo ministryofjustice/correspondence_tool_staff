@@ -98,7 +98,12 @@ FactoryBot.define do
           parent: :pending_dacu_clearance_ot_ico_foi do
     transient do
       identifier { 'approved by disclosure overturned ico foi case'}
+# date draft compliant is passed in in a transient blocked so it can is be
+# changed in the tests. It is added to the the case in the after create block
+# to match the order the code updates the case.
+      date_draft_compliant { received_date + 2.days }
     end
+
 
     after(:create) do |kase, evaluator|
 
@@ -112,6 +117,8 @@ FactoryBot.define do
 
       kase.assignments.approving.for_team(evaluator.approving_team)
         .update(approved: true)
+
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
 
       kase.reload
     end
@@ -142,6 +149,10 @@ FactoryBot.define do
           parent: :pending_private_clearance_ot_ico_foi do
     transient do
       identifier { 'approved press private overturned ico foi case'}
+# date draft compliant is passed in in a transient blocked so it can is be
+# changed in the tests. It is added to the the case in the after create block
+# to match the order the code updates the case.
+      date_draft_compliant { received_date + 2.days }
     end
 
     after(:create) do |kase, evaluator|
@@ -245,7 +256,7 @@ FactoryBot.define do
     end
 
     received_date    { 4.business_days.ago }
-    date_responded   { 3.business_days.ago }
+    date_responded   { 2.business_days.ago }
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
 
@@ -267,7 +278,7 @@ FactoryBot.define do
     end
 
     received_date    { 4.business_days.ago }
-    date_responded   { 3.business_days.ago }
+    date_responded   { 2.business_days.ago }
     info_held_status { find_or_create :info_status, :held }
     outcome          { find_or_create :outcome, :granted }
 

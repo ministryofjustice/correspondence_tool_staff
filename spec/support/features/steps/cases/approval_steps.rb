@@ -3,15 +3,15 @@ def approve_case_step(kase:,
                       expected_status:,
                       expected_notice: "#{expected_team.name} has been notified that the response is ready to send.")
   cases_show_page.actions.clear_case.click
-  expect(approve_response_interstitial_page).to be_displayed
+  expect(cases_approve_page).to be_displayed
 
-  if approve_response_interstitial_page.has_bypass_press_option?
-    approve_response_interstitial_page.bypass_press_option.radio_yes.click
-    expect(approve_response_interstitial_page.bypass_press_option)
+  if cases_approve_page.has_bypass_press_option?
+    cases_approve_page.bypass_press_option.radio_yes.click
+    expect(cases_approve_page.bypass_press_option)
       .to have_no_bypass_reason_text
   end
 
-  approve_response_interstitial_page.clear_response_button.click
+  cases_approve_page.clear_response_button.click
   expect(cases_show_page).to be_displayed(id: kase.id)
   unless expected_notice.nil?
     expect(cases_show_page.notice.text)
@@ -26,16 +26,15 @@ def approve_case_step(kase:,
   expect(case_row.status.text).to eq expected_status
 end
 
-
 def approve_case_with_bypass(kase:, expected_team:, expected_status:)
   cases_show_page.actions.clear_case.click
-  expect(approve_response_interstitial_page).to be_displayed
-  expect(approve_response_interstitial_page).to have_bypass_press_option
-  approve_response_interstitial_page.bypass_press_option.radio_no.click
-  expect(approve_response_interstitial_page.bypass_press_option)
+  expect(cases_approve_page).to be_displayed
+  expect(cases_approve_page).to have_bypass_press_option
+  cases_approve_page.bypass_press_option.radio_no.click
+  expect(cases_approve_page.bypass_press_option)
       .to have_bypass_reason_text
-  approve_response_interstitial_page.bypass_press_option.bypass_reason_text.set 'No Presss office approval required'
-  approve_response_interstitial_page.clear_response_button.click
+  cases_approve_page.bypass_press_option.bypass_reason_text.set 'No Press office approval required'
+  cases_approve_page.clear_response_button.click
 
   expect(cases_show_page).to be_displayed(id: kase.id)
   open_cases_page.load
@@ -44,6 +43,25 @@ def approve_case_with_bypass(kase:, expected_team:, expected_status:)
   expect(case_row.status.text).to eq expected_status
 end
 
+def approve_upload_case_with_bypass(kase:, expected_team:, expected_status:)
+  stub_s3_uploader_for_all_files!
+
+  cases_show_page.actions.upload_approve.click
+  expect(cases_upload_response_and_approve_page).to be_displayed
+  expect(cases_upload_response_and_approve_page).to have_bypass_press_option
+  cases_upload_response_and_approve_page.bypass_press_option.radio_no.click
+  expect(cases_upload_response_and_approve_page.bypass_press_option)
+      .to have_bypass_reason_text
+  cases_upload_response_and_approve_page.bypass_press_option.bypass_reason_text.set 'No Press office approval required'
+  cases_upload_response_and_approve_page.drop_in_dropzone(UPLOAD_RESPONSE_DOCX_FIXTURE)
+  cases_upload_response_and_approve_page.upload_response_button.click
+
+  expect(cases_show_page).to be_displayed(id: kase.id)
+  open_cases_page.load
+  case_row = open_cases_page.row_for_case_number(kase.number)
+  expect(case_row.who_its_with.text).to eq expected_team.name
+  expect(case_row.status.text).to eq expected_status
+end
 
 def request_amends(kase:, expected_team:, expected_status:, expected_action: nil)
   cases_show_page.actions.request_amends.click

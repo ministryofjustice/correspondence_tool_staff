@@ -24,16 +24,18 @@ en:
     attributes:
       business_unit:
         correspondence_type_ids: "Correspondence types"
+      case/base:
+        date_draft_compliant: Date compliant draft uploaded
       case/ico/base:
         uploaded_ico_decision_files: ''
         internal_deadline: Draft deadline
         date_ico_decision_received: "Date ICO's decision received at MOJ"
+      case/overturned_ico/sar:
+        external_deadline: Final deadline
       case/sar:
         third_party: ''
       report:
         correspondence_type: Case type
-      case/overturned_ico/sar:
-        external_deadline: Final deadline
 
     errors:
       models:
@@ -54,6 +56,10 @@ en:
             received_date:
               not_in_future: "can't be in the future."
               past: too far in past.
+            date_draft_compliant:
+              before_received: "can't be before date received"
+              not_in_future: "can't be in the future."
+              after_date_responded: "can't be after the date responded"
             postal_address:
               blank: "and email can't both be blank"
             number:
@@ -178,6 +184,7 @@ en:
       show?: You are not authorised to view this case.
       unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
       update?: You are not authorised to edit this case.
+      upload_responses?: You are not authorised to upload a response for this case.
     case/ico/foi_policy:
       can_close_case?: You are not authorised to close this case
       can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
@@ -344,6 +351,11 @@ en:
         pending_press_office_clearance: Pending clearance - Press office
         pending_private_office_clearance: Pending clearance - Private office
         responded: Ready to close
+        closed: Closed
+        case/ico:
+          awaiting_dispatch: Ready to send to ICO
+          responded: Closed - awaiting ICO decision
+          closed: "Closed - %{ico_decision} by ICO"
 
       case:
         linked_case_number: Case number
@@ -460,11 +472,16 @@ en:
       assign: Assign to a responder
       case-details: Case details
       original-case-details: Original case details
+      clear_response: Clear response
+      compliant_in_time: Uploaded in time
+      compliant_late: Uploaded late
       create_overturned: Create an ICO Overturned case
       data_subject: Data subject
       data_subject_type: Type of data subject
+      date_draft_uploaded: Date draft uploaded
       date_ico_decision_received: Date ICO's decision was received
       date_responded: Date response sent to requester
+      draft_timeliness: Draft timeliness
       case/ico:
         date_responded: Date response sent to ICO
       outcome: Outcome
@@ -514,7 +531,6 @@ en:
       upload_and_redraft: Upload changes for redraft
       who_its_with: With
       respond: Mark response as sent
-      clear_response: Clear response
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
 
@@ -606,14 +622,6 @@ en:
       already_accepted: Case already accepted by %{name}
 
   cases:
-    approve_response_interstitial:
-      approve_message:
-        foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-        sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-        ico: "Once you clear this response, %{managing_team} can send the response and close the case."
-        overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-        overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-      clear: Clear response
     bypass_approvals_form:
       press_clearance_reqd: Does Press office need to clear this response?
       affirmative: 'Yes'
@@ -674,6 +682,8 @@ en:
       actions: Actions
     edit:
       heading: Edit case details
+      date_draft_compliant: Date compliant draft was uploaded
+      date_draft_compliant_example: "For example, 01 02 2018"
     update:
       case_updated: Case updated
     fixed_details:
@@ -746,14 +756,29 @@ en:
         attachments_heading: Response
     new_case_link:
       heading: 'Link case'
-    new_response_upload:
+    upload_responses:
       heading: Upload response
       upload_response: 'Upload response'
+    request_amends:
+      heading: Request amends
+    approve:
+      heading: Clear response
+      approve_message:
+        foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+        sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
+        ico: "Once you clear this response, %{managing_team} can send the response and close the case."
+        overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+        overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
+    response_upload_form:
       upload_hint_copy: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
-    request_amends:
-      heading: Request amends
+    upload_response_and_approve:
+      heading: Upload response
+      upload_response: 'Upload response'
+    upload_response_and_return_for_redraft:
+      heading: Upload response
+      upload_response: 'Upload response'
 
     confirm_respond:
       success: The response has been marked as sent.

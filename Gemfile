@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
 gem 'activerecord-session_store'
-gem 'acts_as_tree', '~> 2.8'
+gem 'acts_as_tree', '~> 2.9'
 gem 'awesome_print'
 gem 'aws-sdk'
 gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git', branch: 'bundler-fix'
 gem 'business_time'
 gem 'config'
-gem 'devise', '~> 4.5'
+gem 'devise', '~> 4.6'
 gem 'draper', '3.0.1'
 gem 'dropzonejs-rails', '>= 0.8'
 gem 'foreman', '~> 0.85.0'
@@ -66,7 +66,7 @@ group :test do
   gem 'i18n-tasks', '~> 0.9.28'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
-  gem 'shoulda-matchers', '~> 3.1'
+  gem 'shoulda-matchers', '~> 4.0'
   gem 'site_prism'
 end
 
@@ -75,6 +75,8 @@ group :development, :test do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
+  # Used to try and track down N+1 query problems
+  gem 'bullet'
   gem 'byebug', platform: :mri
   gem 'chromedriver-helper'
   gem 'colorize'

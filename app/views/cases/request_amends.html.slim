@@ -20,10 +20,10 @@
           locals: { nsi: @next_step_info }
 
 = form_for @case, as: :case, url: execute_request_amends_case_path(@case) do |f|
+
+  = f.radio_button_fieldset :draft_compliant
+
   = f.text_area :request_amends_comment
 
   .button-holder
     =  f.submit "Request amends" ,  {class: "button", role:"button"}
-
-
-

@@ -1,28 +1,6 @@
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
-
-def stub_current_case_finder_cases_with(result)
-  pager = double 'Kaminari Pager', decorate: result
-  cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
-  cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
-  page = instance_double GlobalNavManager::Page, cases: cases
-  gnm = instance_double GlobalNavManager, current_page_or_tab: page
-  allow(GlobalNavManager).to receive(:new).and_return gnm
-  gnm
-end
-
-def stub_current_case_finder_for_closed_cases_with(result)
-  pager = double 'Kaminari Pager', decorate: result
-  cases_by_last_transitioned_date = double 'ActiveRecord Cases by last transitioned', page: pager
-  cases = double 'ActiveRecord Cases', by_last_transitioned_date: cases_by_last_transitioned_date
-  page = instance_double GlobalNavManager::Page, cases: cases
-  gnm = instance_double GlobalNavManager, current_page_or_tab: page
-  allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
-  allow(GlobalNavManager).to receive(:new).and_return gnm
-  gnm
-end
-
 RSpec.describe CasesController, type: :controller do
 
   let(:all_cases)             { create_list(:case, 5)   }
@@ -149,7 +127,7 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'csv format' do
-        it 'generates a file and downloads it' do
+        it 'prevents the user from downloading' do
           expect(CSVGenerator).not_to receive(:new)
 
           get :closed_cases, format: 'csv'
@@ -188,23 +166,24 @@ RSpec.describe CasesController, type: :controller do
       end
 
       context 'csv format' do
-        it 'generates a file and downloads it' do
-          generator = double CSVGenerator
-          expect(CSVGenerator).to receive(:new).and_return(generator)
-          expect(CSVGenerator).to receive(:options).with('closed').and_return({filename: 'abc.csv', type: 'text/csv; charset=utf-8'})
-          expect(generator).to receive(:to_csv).and_return('csv data')
+        let!(:gnm) {stub_current_case_finder_for_closed_cases_with(:closed_cases_result) }
+        let(:record) { double }
 
+        before do
+          expect(CSVGenerator).to receive(:filename).with('closed').and_return('abc.csv')
           get :closed_cases, format: 'csv'
           expect(response.status).to eq 200
+        end
+
+        it 'generates a file and downloads it' do
+          expect(gnm.current_page_or_tab.cases.by_last_transitioned_date).to receive(:each).and_yield(record)
+          expect(record).to receive(:to_csv).and_return(['a', 'csv', 'line'])
+
           expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
-          expect(response.body).to eq 'csv data'
+          expect(response.body).to eq "#{CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)}a,csv,line\n"
         end
 
         it 'does not paginate the result set' do
-          gnm = stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
-          allow_any_instance_of(CSVGenerator).to receive(:to_csv).and_return ''
-          get :closed_cases, format: 'csv', params: { page: 'our_page' }
-
           expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
               .not_to have_received(:page).with('our_page')
         end
@@ -353,7 +332,6 @@ RSpec.describe CasesController, type: :controller do
 
     before do
       allow(CaseFinderService).to receive(:new).and_return(finder)
-      allow(finder).to receive(:for_user).and_return(finder)
       allow(finder).to receive(:for_params).and_return(finder)
     end
 
@@ -467,15 +445,12 @@ RSpec.describe CasesController, type: :controller do
 
       context 'csv request' do
         it 'downloads a csv file' do
-          generator = double CSVGenerator
-          expect(CSVGenerator).to receive(:new).and_return(generator)
-          expect(CSVGenerator).to receive(:options).with('my-open').and_return({filename: 'abc.csv', type: 'text/csv; charset=utf-8'})
-          expect(generator).to receive(:to_csv).and_return('csv data')
+          expect(CSVGenerator).to receive(:filename).with('my-open').and_return('abc.csv')
 
           get :my_open_cases, params: { tab: 'in_time' }, format: 'csv'
           expect(response.status).to eq 200
           expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
-          expect(response.body).to eq 'csv data'
+          expect(response.body).to eq CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)
         end
       end
     end
@@ -839,188 +814,10 @@ RSpec.describe CasesController, type: :controller do
 
   end
 
-  describe 'GET new_response_upload' do
-    let(:kase) { create(:accepted_case, responder: responder) }
-
-    context 'as an anonymous user' do
-      describe 'GET new_response_upload' do
-        it 'redirects to signin' do
-          get :new_response_upload, params: { id: kase }
-          expect(response).to redirect_to(new_user_session_path)
-        end
-      end
-    end
-
-    context "as a responder who isn't assigned to the case" do
-      let(:unassigned_responder) { create(:responder) }
-
-      before { sign_in unassigned_responder }
-
-      it 'redirects to case detail page' do
-        get :new_response_upload, params: { id: kase }
-        expect(response).to redirect_to(case_path(kase))
-      end
-    end
-
-    context 'as the assigned responder' do
-      before { sign_in responder }
-
-      it 'assigns @case' do
-        get :new_response_upload, params: { id: kase, action: 'upload' }
-        expect(assigns(:case)).to eq(Case::Base.first)
-      end
-
-
-
-      it 'renders the new_response_upload view' do
-        get :new_response_upload, params: { id: kase, action: 'upload'  }
-        expect(response).to have_rendered(:new_response_upload)
-      end
-    end
-
-
-    context 'as an authenticated manager' do
-      before { sign_in manager }
-
-      it 'redirects to case detail page' do
-        get :new_response_upload, params: { id: kase }
-        expect(response).to redirect_to(case_path(kase))
-      end
-    end
-
-  end
-
-  describe 'POST upload responses' do
-    let(:kase) { create(:accepted_case, responder: responder) }
-    let(:uploads_key) { "uploads/#{kase.id}/responses/#{Faker::Internet.slug}.jpg" }
-    let(:params) do
-      {
-        id:             kase,
-        type:           'response',
-        uploaded_files: [uploads_key]
-      }
-    end
-
-    def do_upload_responses
-      post :upload_responses, params: params
-    end
-
-
-    context 'as an anonymous user' do
-
-      it 'does not call ResponseUploaderService' do
-        expect(ResponseUploaderService).not_to receive(:new)
-      end
-
-      it 'redirects to signin' do
-        do_upload_responses
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context "as a responder who isn't assigned to the case" do
-      let(:unassigned_responder) { create(:responder) }
-
-      before { sign_in unassigned_responder }
-
-      it 'does not call ResponseUploaderService' do
-        expect(ResponseUploaderService).not_to receive(:new)
-      end
-
-      it 'redirects to case detail page' do
-        do_upload_responses
-        expect(response).to redirect_to(case_path(kase))
-      end
-    end
-
-    # TODO: ensure removed files are removed from params list  ???
-
-
-    #     context 'files removed from dropzone upload' do
-    #       let(:leftover_files) do
-    #         [instance_double(Aws::S3::Object, delete: nil)]
-    #       end
-    #
-    #       it 'removes any files left behind in uploads' do
-    #         do_upload_responses
-    #         leftover_files.each do |object|
-    #           expect(object).to have_received(:delete)
-    #         end
-    #       end
-    #     end
-
-    context 'as the assigned responder' do
-      before { sign_in responder }
-
-      let(:uploader) { double ResponseUploaderService }
-      let(:expected_params) { BypassParamsManager.new(
-        ActionController::Parameters.new({"type"=>"response", "uploaded_files"=>[uploads_key], "id"=>kase.id.to_s, "controller"=>"cases", "action"=>"upload_responses"}))
-      }
-      let(:response_uploader) { double ResponseUploaderService, upload!: nil, result: :ok }
-      let(:flash) { MockFlash.new(action_params: 'upload')}
-
-      it 'calls ResponseUploaderService' do
-        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
-        expect(ResponseUploaderService).to receive(:new).with(kase.decorate, responder, expected_params, 'upload').and_return(response_uploader)
-        do_upload_responses
-      end
-
-      it 'redirects to the case detail page' do
-        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
-        expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
-        do_upload_responses
-        expect(response).to redirect_to(case_path(kase))
-      end
-
-      it 'sets a flash message' do
-        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
-        expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
-        do_upload_responses
-        expect(flash[:notice]).to eq "You have uploaded the response for this case."
-      end
-
-      context 'no files specified' do
-        before do
-          allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
-          expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
-          expect(response_uploader).to receive(:result).and_return(:blank)
-        end
-
-        it 're-renders the page' do
-          do_upload_responses
-          expect(response).to have_rendered(:new_response_upload)
-        end
-
-        it 'keeps the action_params flash' do
-          do_upload_responses
-          expect(flash.kept).to include :action_params
-        end
-      end
-
-      context 'there is an upload error' do
-        before do
-          allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
-          expect(ResponseUploaderService).to receive(:new).and_return(response_uploader)
-          expect(response_uploader).to receive(:result).and_return(:error)
-        end
-
-        it 're-renders the page if there is an upload error' do
-          do_upload_responses
-          expect(response).to have_rendered(:new_response_upload)
-        end
-
-        it 'keeps the action_params flash' do
-          do_upload_responses
-          expect(flash.kept).to include :action_params
-        end
-      end
-    end
-  end
-
   describe 'GET respond' do
 
-    let(:responder)            { find_or_create(:foi_responder)                              }
-    let(:another_responder)    { create(:responder)                              }
+    let(:responder)            { find_or_create(:foi_responder) }
+    let(:another_responder)    { create(:responder)             }
 
     context 'as an anonymous user' do
       it 'redirects to sign_in' do
@@ -1461,6 +1258,28 @@ RSpec.describe CasesController, type: :controller do
     #   before { sign_in responder }
     # end
 
+  end
+
+  def stub_current_case_finder_cases_with(result)
+    pager = double 'Kaminari Pager', decorate: result
+    cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
+    cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
+    page = instance_double GlobalNavManager::Page, cases: cases
+    gnm = instance_double GlobalNavManager, current_page_or_tab: page
+    allow(GlobalNavManager).to receive(:new).and_return gnm
+    gnm
+  end
+
+  def stub_current_case_finder_for_closed_cases_with(result)
+    pager = double 'Kaminari Pager', decorate: result
+    cases_by_last_transitioned_date = double 'ActiveRecord Cases by last transitioned', page: pager
+    cases = double 'ActiveRecord Cases', by_last_transitioned_date: cases_by_last_transitioned_date
+    page = instance_double GlobalNavManager::Page, cases: cases
+    gnm = instance_double GlobalNavManager, current_page_or_tab: page
+    allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
+    allow(cases).to receive(:includes).and_return(cases)
+    allow(GlobalNavManager).to receive(:new).and_return gnm
+    gnm
   end
 
 end

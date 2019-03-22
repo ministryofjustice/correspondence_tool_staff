@@ -30,6 +30,8 @@
 
 class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
 
+  include DraftTimeliness::ResponseAdded
+
   attr_accessor :flag_for_disclosure_specialists
 
   delegate :message, to: :original_case

@@ -1,19 +1,18 @@
-#bypass-press-office-option
-  .form-group
-    fieldset#js-bypass-actions
-      legend
-        span.form-label-bold
-          = t('.press_clearance_reqd')
-      .multiple-choice
-        input type="radio" value="true" checked="checked" name="bypass_approval[press_office_approval_required]" id="bypass_approval_press_office_approval_required_true"
-        label for="bypass_approval_press_office_approval_required_true" data-target="bypass_approval_press_office_approval_erquired_true_content"
-          = t('.affirmative')
-      .multiple-choice
-        input type="radio" value="false" name="bypass_approval[press_office_approval_required]" id="bypass_approval_press_office_approval_required_false"
-        label for="bypass_approval_press_office_approval_required_false" data-target="bypass_approval_press_office_approval_required_false_content"
-          = t('.negative')
+.form-group
+  fieldset#js-bypass-actions
+    legend
+      span.form-label-bold
+        = t('.press_clearance_reqd')
+    .multiple-choice
+      input type="radio" value="true" checked="checked" name="bypass_approval[press_office_approval_required]" id="bypass_approval_press_office_approval_required_true"
+      label for="bypass_approval_press_office_approval_required_true" data-target="bypass_approval_press_office_approval_erquired_true_content"
+        = t('.affirmative')
+    .multiple-choice
+      input type="radio" value="false" name="bypass_approval[press_office_approval_required]" id="bypass_approval_press_office_approval_required_false"
+      label for="bypass_approval_press_office_approval_required_false" data-target="bypass_approval_press_office_approval_required_false_content"
+        = t('.negative')
 
-  .form-group#js-bypass-reasons
-    label.form-label for="bypass_approval_bypass_message"
-      = t('.why_not')
-    textarea.form-control name="bypass_approval[bypass_message]" id="bypass_approval_bypass_message"
+.form-group#js-bypass-reasons
+  label.form-label for="bypass_approval_bypass_message"
+    = t('.why_not')
+  textarea.form-control name="bypass_approval[bypass_message]" id="bypass_approval_bypass_message"

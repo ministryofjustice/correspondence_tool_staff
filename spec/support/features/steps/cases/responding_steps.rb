@@ -3,8 +3,8 @@ UPLOAD_RESPONSE_DOCX_FIXTURE = Rails.root.join 'spec/fixtures/response.docx'
 def upload_response_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
   stub_s3_uploader_for_all_files!
   cases_show_page.actions.upload_response.click
-  cases_new_response_upload_page.drop_in_dropzone(file)
-  cases_new_response_upload_page.upload_response_button.click
+  cases_upload_responses_page.drop_in_dropzone(file)
+  cases_upload_responses_page.upload_response_button.click
   expect(cases_show_page).to be_displayed
   expect(cases_show_page.notice)
       .to have_text 'You have uploaded the response for this case.'
@@ -13,8 +13,7 @@ end
 def upload_ico_decision_and_close_step(file: UPLOAD_RESPONSE_DOCX_FIXTURE)
   stub_s3_uploader_for_all_files!
   cases_close_page.ico.drop_in_dropzone(file)
-  cases_new_response_upload_page.upload_response_button.click
-
+  cases_upload_responses_page.upload_response_button.click
   expect(cases_show_page).to be_displayed
   expect(cases_show_page.notice)
       .to have_text "You've closed this case"
@@ -86,7 +85,9 @@ def close_sar_case_step(timeliness: 'in time', tmm: false, editable: true)
     .to eq Date.today.strftime(Settings.default_date_format)
   expect(show_page.response_details.timeliness.data.text)
     .to eq "Answered #{timeliness}"
-  expect(show_page.response_details.time_taken.data.text).to match(/\d+ working days/)
+
+  # Regex required to handle both cases of 1 or more days to respond
+  expect(show_page.response_details.time_taken.data.text).to match(/\d+ working day[s{1}]?/)
 
   if tmm
     expect(show_page.response_details.refusal_reason.data.text)

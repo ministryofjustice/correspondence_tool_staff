@@ -231,8 +231,9 @@ RSpec.describe Assignment, type: :model do
         it 'queues the job' do
           t = Time.now
           expect {
-            Timecop.freeze(t)
-            create :assignment, :responding, case_id: kase.id
+            Timecop.freeze(t) do
+              create :assignment, :responding, case_id: kase.id
+            end
           }.to have_enqueued_job(SearchIndexUpdaterJob).at(t + 10.seconds).at_least(1)
         end
       end

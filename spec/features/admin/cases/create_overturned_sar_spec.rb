@@ -40,7 +40,7 @@ feature 'creating ICO Overturned SAR case' do
 
     admin_cases_new_overturned_sar_page.submit_button.click
     expect(admin_cases_page).to be_displayed
-    expect(admin_cases_page.case_list.count).to eq 3
+    expect(admin_cases_page).to have_case_list count: 3
 
     overturned_sar_row = admin_cases_page.case_list[0]
     expect(overturned_sar_row.number).to have_text('Case/Overturned Ico/Sar')
