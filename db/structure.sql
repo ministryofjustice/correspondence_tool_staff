@@ -353,7 +353,7 @@ CREATE TABLE public.cases (
     appeal_outcome_id integer,
     dirty boolean DEFAULT false,
     document_tsvector tsvector,
-    reason_for_deletion character varying
+    reason_for_deletion character varying DEFAULT 'Unspecified'::character varying NOT NULL
 );
 
 
