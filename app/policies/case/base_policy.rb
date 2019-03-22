@@ -17,9 +17,6 @@ class Case::BasePolicy < ApplicationPolicy
     policy_class.new(@user, @case).__send__(policy_name)
   end
 
-
-
-
   # PolicyScopes
   #
   # This inner Scope class is responsible for returning a collection of Case::Base records that the
@@ -30,12 +27,15 @@ class Case::BasePolicy < ApplicationPolicy
   # which is in fact shorthand for:
   #     scope = Case::BasePolicy::Scope.new(user, Case::Base.all).resolve
   #
-
   class Scope
     attr_reader :user, :scope
 
+    # This should be a list of all concrete case types.
     CASE_TYPES = [
         Case::FOI::Standard,
+        Case::FOI::TimelinessReview,
+        Case::FOI::ComplianceReview,
+        Case::FOI::InternalReview,
         Case::SAR,
         Case::ICO::FOI,
         Case::ICO::SAR,
@@ -48,21 +48,15 @@ class Case::BasePolicy < ApplicationPolicy
       @scope = scope
     end
 
-
     # We resolve the scope for Case::BasePolicy by getting the scope on each of the sub-classes
-    # and then combining them.  Unfortunately ActiveRecord::Relation#or doesn't work - we get
-    #
-    #    ArgumentError Relation passed to #or must be structurally compatible. Incompatible values: [:create_with]
-    #
-    # This appears to be a known bug, so we are getting round it by getting all the ids, and then returning
-    # a relation comprising the records with those ids.
-    #
+    # and then combining them using or.
+    # This is because a list/relation of different types (from Case::Base.all) resolves to
+    # one policy(this one, Case::BasePolicy) for scope resolution
     def resolve
-      ids = []
-      CASE_TYPES.each do |case_type|
-        ids << Pundit.policy_scope(user, case_type).pluck(:id)
+      scopes = CASE_TYPES.map do |case_type|
+        "#{case_type}Policy::Scope".constantize.new(@user,@scope.where(type: case_type.to_s)).resolve
       end
-      Case::Base.where(id: ids.flatten)
+      scopes.reduce { |memo, scope| memo.or(scope) }
     end
   end
 

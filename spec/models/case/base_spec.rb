@@ -75,6 +75,16 @@ RSpec.describe Case::Base, type: :model do
     it { should validate_presence_of(:type)          }
   end
 
+  context 'deleting' do
+    it 'isnt valid without a reason' do
+      expect(build(:case, deleted: true)).not_to be_valid
+    end
+
+    it 'is valid with a reason' do
+      expect(build(:case, deleted: true, reason_for_deletion: 'It needs to go')).to be_valid
+    end
+  end
+
   describe 'workflow validation' do
     it 'validates the workflow' do
       should validate_inclusion_of(:workflow).
