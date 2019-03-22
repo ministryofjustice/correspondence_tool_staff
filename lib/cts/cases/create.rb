@@ -184,8 +184,7 @@ module CTS::Cases
 
       if options[:received_date]
         @received_date = options[:received_date]
-      elsif @created_at.present? &&
-        DateTime.parse(@created_at) < DateTime.now
+      elsif @created_at.present? && (DateTime.parse(@created_at) < DateTime.now)
         @received_date = @created_at
       end
     end
@@ -374,14 +373,10 @@ module CTS::Cases
 
     def responder
       @responder ||= begin
-        if !options.key?(:responder)
-          if responding_team.responders.empty?
-            raise "Responding team '#{responding_team.name}' has no responders."
-          else
-            responding_team.responders.first
-          end
-        else
+        if options.key?(:responder)
           CTS::find_user(options[:responder])
+        else
+          responding_team.responders.first!
         end
       end
     end
