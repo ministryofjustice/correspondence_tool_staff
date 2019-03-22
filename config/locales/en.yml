@@ -370,7 +370,7 @@ en:
         message: Full request
         postal_address: Address
         flag_for_disclosure_specialists:
-          Clearance required by Disclosure BMT?
+          Clearance required by Disclosure?
         request_amends_comment: Add amends/comments
         upload_comment: Add message (optional)
         type:
