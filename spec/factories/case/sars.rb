@@ -41,6 +41,7 @@ FactoryBot.define do
       flag_for_disclosure { nil }
       approving_team      { find_or_create :team_disclosure }
       approver            { approving_team.approvers.first }
+      i_am_deleted        { false }
     end
 
     current_state                 { 'unassigned' }
@@ -59,6 +60,10 @@ FactoryBot.define do
     trait :third_party do
       third_party { true }
       third_party_relationship { 'Aunt' }
+    end
+
+    trait :deleted_case do
+      i_am_deleted { true }
     end
 
     after(:create) do | kase, evaluator|
@@ -84,6 +89,10 @@ FactoryBot.define do
           disclosure_assignment.update(state: 'accepted',
                                        user: evaluator.approver)
         end
+      end
+
+      if evaluator.i_am_deleted
+        kase.update! deleted: true, reason_for_deletion: 'Needs to go'
       end
     end
 

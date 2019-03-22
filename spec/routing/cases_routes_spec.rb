@@ -31,6 +31,10 @@ describe 'cases routes', type: :routing do
     it { should route_to 'cases#closed_cases' }
   end
 
+  describe get: '/cases/deleted' do
+    it { should route_to 'cases#deleted_cases' }
+  end
+
   describe get: '/cases/incoming' do
     it { should route_to 'cases#incoming_cases' }
   end

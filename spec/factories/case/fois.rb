@@ -93,6 +93,7 @@ FactoryBot.define do
       # Et voila! You can now debug individual case setups within the context
       # of a large and unwieldy test (framework).
       debug { false }
+      i_am_deleted           { false }
     end
 
     workflow                  { 'standard' }
@@ -120,6 +121,14 @@ FactoryBot.define do
       ma.update! created_at: evaluator.creation_time
 
       kase.reload
+
+      if evaluator.i_am_deleted
+        kase.update! deleted: true, reason_for_deletion: 'Needs to go'
+      end
+    end
+
+    trait :deleted_case do
+      i_am_deleted { true }
     end
 
     trait :late do
