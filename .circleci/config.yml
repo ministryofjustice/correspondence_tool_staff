@@ -1,0 +1,14 @@
+defaults: &defaults
+  docker:
+    - image: circleci/node:10.15.0-browsers
+
+version: 2.1
+
+jobs:
+  build:
+    <<: *defaults
+    steps:
+      - checkout
+    branches:
+      only:
+        - /cloud-migrate-.*/
