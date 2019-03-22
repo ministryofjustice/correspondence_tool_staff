@@ -9,7 +9,7 @@ describe CaseDeletionService do
     let(:state_machine) { double ConfigurableStateMachine::Machine, destroy_case!: true }
 
     before(:each) do
-      @service = CaseDeletionService.new(user, kase)
+      @service = CaseDeletionService.new(user, kase, reason_for_deletion: 'Because')
       allow(kase).to receive(:state_machine).and_return(state_machine)
     end
 
@@ -26,19 +26,16 @@ describe CaseDeletionService do
       end
 
       it 'sets results to :ok' do
-        @service.call
-        expect(@service.result).to eq :ok
+        expect(@service.call).to eq :ok
       end
 
     end
 
     context 'if anything fails in the transaction' do
       it 'raises an error when it saves' do
-        expect(kase).to receive(:update).and_raise(RuntimeError)
-        @service.call
-        expect(@service.result).to eq :error
+        expect(kase).to receive(:update).and_return(false)
+        expect(@service.call).to eq :error
       end
     end
-
   end
 end
