@@ -140,20 +140,23 @@ class CSVExporter
 
   # Caseworker officer is blank for non-trigger and
   # always a disclosure specialist for trigger cases.
-  # Catch exception from Case#assigned_disclosure_specialist
+  # Note Case#assigned_disclosure_specialist throws an exception if no
+  # 'approving' assignees are found
   def casework_officer(kase)
     return unless kase.workflow == 'trigger'
 
-    kase.assigned_disclosure_specialist.user.full_name rescue nil
+    kase.assigned_disclosure_specialist.user.full_name
   end
 
-  # Catch exception from Case#within_draft_deadline?
   def draft_in_time(kase)
-    humanize_boolean(kase.within_draft_deadline?) rescue nil
+    return unless kase.respond_to?(:date_draft_compliant)
+
+    humanize_boolean(kase.within_draft_deadline?)
   end
 
-  # Catch exception from Case#business_unit_responded_in_time?
+  # Note Case#business_unit_responded_in_time? throws an exception if
+  # no 'respond' events are found
   def in_target(kase)
-    humanize_boolean(kase.business_unit_responded_in_time?) rescue nil
+    humanize_boolean(kase.business_unit_responded_in_time?)
   end
 end
