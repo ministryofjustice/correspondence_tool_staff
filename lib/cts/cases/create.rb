@@ -382,7 +382,7 @@ module CTS::Cases
                              if options.key?(:responder)
                                responder.responding_teams.first
                              else
-                               BusinessUnit.responding.sample
+                               BusinessUnit.includes(:responders).responding.sample
                              end
                            else
                              CTS::find_team(options[:responding_team])

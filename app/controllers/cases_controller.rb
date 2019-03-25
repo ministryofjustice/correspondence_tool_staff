@@ -134,9 +134,13 @@ class CasesController < ApplicationController
 
   def my_open_cases
     unpaginated_cases = @global_nav_manager
-                            .current_page_or_tab
-                            .cases
-                            .by_deadline
+                          .current_page_or_tab
+                          .cases
+                          .includes(:message_transitions,
+                                    :responder,
+                                    :responding_team,
+                                    :approver_assignments)
+                          .by_deadline
     if download_csv_request?
       @cases = unpaginated_cases
     else
@@ -153,10 +157,16 @@ class CasesController < ApplicationController
   end
 
   def open_cases
-    full_list_of_cases = @global_nav_manager.current_page_or_tab.cases
-    query_list_params = filter_params.merge(
-      list_path: request.path,
-    )
+    full_list_of_cases = @global_nav_manager
+                           .current_page_or_tab
+                           .cases
+                           .includes(:message_transitions,
+                                     :responder,
+                                     :approver_assignments,
+                                     :managing_team,
+                                     :responding_team)
+
+    query_list_params = filter_params.merge(list_path: request.path)
     service = CaseSearchService.new(user: current_user,
                                     query_type: :list,
                                     query_params: query_list_params)
@@ -1088,7 +1098,12 @@ class CasesController < ApplicationController
   end
 
   def set_case
-    @case = Case::Base.find(params[:id])
+    @case = Case::Base
+              .includes(:message_transitions,
+                        transitions: [:acting_user, :acting_team, :target_team],
+                        assignments: [:team],
+                        approver_assignments: [:user])
+              .find(params[:id])
     @case_transitions = @case.transitions.case_history.order(id: :desc)
     @correspondence_type_key = @case.type_abbreviation.downcase
   end

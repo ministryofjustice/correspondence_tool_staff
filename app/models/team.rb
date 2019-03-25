@@ -28,6 +28,11 @@ class Team < ApplicationRecord
   has_many :properties, class_name: TeamProperty, :dependent => :delete_all
   has_many :areas, -> { area }, class_name: TeamProperty
 
+  # This can be eager loaded using includes
+  has_one :team_leader,
+          -> { lead },
+          class_name: TeamProperty.to_s
+
   scope :with_user, ->(user) {
     includes(:user_roles)
       .where(teams_users_roles: { user_id: user.id })
@@ -92,6 +97,10 @@ class Team < ApplicationRecord
 
   def pretty_team_lead_title
     I18n.t("team_lead_types.#{type.underscore}")
+  end
+
+  def team_leader_name
+    team_leader&.value || ''
   end
 
   def team_lead

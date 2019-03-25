@@ -82,10 +82,11 @@ RSpec.describe Assignment, type: :model do
   end
 
   describe 'scope last_responding' do
+    let(:assignment1) { build(:assignment, :responding) }
+    let(:assignment2) { build(:assignment, :responding) }
+    let(:kase) { create(:case).tap {|kase| kase.assignments << assignment1; kase.assignments << assignment2} }
     it 'returns the last responding assignment' do
-      create :assignment, :responding
-      assignment2 = create :assignment, :responding
-      expect(Assignment.last_responding).to eq [assignment2]
+      expect(kase.responder_assignment).to eq assignment2
     end
   end
 
