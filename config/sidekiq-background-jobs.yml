@@ -7,29 +7,4 @@ staging:
 :logfile: ./log/sidekiq-background-jobs.log
 :queues:
   - correspondence_tool_staff_mailers
-  - correspondence_tool_staff_report_generator
   - correspondence_tool_staff_search_index_updater
-
-r003_report_definition: &r003_report_definition
-  class: ReportGeneratorJob
-  queue: report_generator
-  args: ['R003']
-  description: This job generates the R003 YTD Business unit performance report
-
-:schedule:
-  R003 YTD Business unit performance report: 
-    <<: *r003_report_definition
-    cron: '0 0 * * * *' # Run on the hour
-
-  R005 Monthly performance report:
-    class: ReportGeneratorJob
-    queue: report_generator
-    args: ['R005']
-    description: This job generates the R005 Monthly performance report
-    cron: '5 0 * * * *' # Five minutes past each hour
-
-development:
-  :schedule:
-    R003 YTD Business unit performance report:
-      <<: *r003_report_definition
-      every: ['2m', first_in: '0s']
