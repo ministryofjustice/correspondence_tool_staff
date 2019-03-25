@@ -353,7 +353,7 @@ CREATE TABLE public.cases (
     appeal_outcome_id integer,
     dirty boolean DEFAULT false,
     document_tsvector tsvector,
-    reason_for_deletion character varying NOT NULL
+    reason_for_deletion character varying
 );
 
 
@@ -1640,6 +1640,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180711151118'),
 ('20180717211105'),
 ('20180806100827'),
-('20190228142249');
+('20190228142249'),
+('20190325082640');
 
 
