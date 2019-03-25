@@ -13,7 +13,7 @@ class CaseCreateService
     @correspondence_type_key  = correspondence_type_key
     @params                   = params
     @permitted_params         = create_params(correspondence_type_key)
-    @correspondence_type      = CorrespondenceType.find_by_abbreviation(@correspondence_type_key.upcase)
+    @correspondence_type      = CorrespondenceType.find_by_abbreviation!(@correspondence_type_key.upcase)
     @case                     = create_case_of_default_subclass
     @flash_notice             = nil
     @case_class               = determine_case_class

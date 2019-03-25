@@ -19,6 +19,8 @@
 #
 
 class CaseTransition < ActiveRecord::Base
+  ASSIGN_RESPONDER_EVENT = 'assign_responder'
+
   belongs_to :case,
              inverse_of: :transitions,
              class_name: 'Case::Base',
