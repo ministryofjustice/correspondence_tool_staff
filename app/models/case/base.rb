@@ -130,8 +130,7 @@ class Case::Base < ApplicationRecord
 
   # cases that have ever been flagged for approval
   scope :flagged_for_approval, ->(*teams) do
-    joins(:assignments)
-      .where(assignments: { team_id: teams.map(&:id), role: 'approving' })
+    joins(:assignments).merge(Assignment.flagged_for_approval(teams))
   end
   scope :trigger, -> { where(workflow: TRIGGER_WORKFLOWS) }
   scope :non_trigger, -> { where.not(workflow: TRIGGER_WORKFLOWS) }

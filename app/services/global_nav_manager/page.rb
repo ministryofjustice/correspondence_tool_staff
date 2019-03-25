@@ -1,9 +1,10 @@
 class GlobalNavManager
   class Page
-    attr_reader :name, :path, :scopes, :tabs
+    attr_reader :name, :path, :scope_names, :tabs
 
     IGNORE_QUERY_PARAMS = ['page']
 
+    # 'parent' here is actually a GlobalNavManager instance
     def initialize(name, parent, attrs)
       @name = name
       @parent = parent
@@ -46,7 +47,7 @@ class GlobalNavManager
     end
 
     def finder
-      @parent.finder.for_scopes(@scopes)
+      @parent.finder.for_scopes_with_or(@scope_names)
     end
 
     def cases
@@ -93,12 +94,12 @@ class GlobalNavManager
 
     def process_scope(scope)
       if scope.respond_to? :keys
-        @scopes = (
+        @scope_names = (
           scopes_for(user_teams, from_scope: scope.to_h.with_indifferent_access) +
           scopes_for(user_roles, from_scope: scope.to_h.with_indifferent_access)
         ).uniq
       else
-        @scopes = [scope]
+        @scope_names = [scope]
       end
     end
 

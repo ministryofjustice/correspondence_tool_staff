@@ -32,7 +32,7 @@ describe GlobalNavManager::Tab do
                                       user: responder,
                                       request: request }
   let(:parent_page) { instance_double GlobalNavManager::Page,
-                                      scopes: ['open'],
+                                      scope_names: ['open'],
                                       path: '/opened' }
   let(:tab) { GlobalNavManager::Tab.new 'late',
                                         parent_page,

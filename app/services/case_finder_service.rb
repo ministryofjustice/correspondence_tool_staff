@@ -7,30 +7,32 @@ class CaseFinderService
     @scope = Pundit.policy_scope(@user, Case::Base.all)
   end
 
+  # Normally we want an and (merge) when reducing our scopes e.g. open_cases in_time
+  # but when we are looking for users and roles, we want an or. Hence the existence of
+  # these 2 methods.
   def for_scopes scope_names
-    # This takes a list of scope names:
-    #
-    #   ['open_cases', 'open_flagged_for_approval']
-    #
-    # And performs an AREL OR on them:
-    #
-    #   open_cases_scope.or(open_flagged_for_approval_scope)
-    #
-    # This will work with any number of *_scope methods that return an AREL.
-    if scope_names.any?
-      scopes = scope_names.map do |scope_name|
-        scope_method = "#{scope_name}_scope"
-        if respond_to? scope_method, true
-          __send__ scope_method
-        else
-          raise NameError.new("could not find scope named #{scope_method}")
-        end
-      end
-
-      @scope = scopes.reduce { |merged_scopes, scope| merged_scopes.merge(scope) }
+    @scope = scope_names_to_scopes(scope_names).reduce do |merged_scopes, scope|
+      merged_scopes.and(scope)
     end
-
     self
+  end
+
+  def for_scopes_with_or scope_names
+    @scope = scope_names_to_scopes(scope_names).reduce do |merged_scopes, scope|
+      merged_scopes.or(scope)
+    end
+    self
+  end
+
+  def scope_names_to_scopes scope_names
+    scope_names.map do |scope_name|
+      scope_method = "#{scope_name}_scope"
+      if respond_to? scope_method, true
+        __send__ scope_method
+      else
+        raise NameError.new("could not find scope named #{scope_method}")
+      end
+    end
   end
 
   def for_params(params)
@@ -120,19 +122,20 @@ class CaseFinderService
     scope.in_states(states.split(','))
   end
 
+  CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE = [
+    Case::FOI::ComplianceReview,
+    Case::FOI::TimelinessReview
+  ].map(&:name)
+
   def new_cases_from_last_3_days(team)
-    case_types_only_visible_with_further_clearance = [
-      'Case::FOI::ComplianceReview',
-      'Case::FOI::TimelinessReview'
-    ]
     scope
       .joins(:transitions)
-      .where.not(type: case_types_only_visible_with_further_clearance)
+      .where.not(type: CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE)
       .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
       .or(
         scope
           .joins(:transitions)
-          .where(type: case_types_only_visible_with_further_clearance)
+          .where(type: CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE)
           .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
           .where('case_transitions.event = ?', :request_further_clearance)
       )

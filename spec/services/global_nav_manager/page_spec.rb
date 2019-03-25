@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 describe GlobalNavManager::Page do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:disclosure_bmt_user)   { find_or_create :disclosure_bmt_user }
@@ -125,7 +124,7 @@ describe GlobalNavManager::Page do
         let(:user) { press_officer }
 
         it 'sets the scopes using the users team' do
-          expect(incoming_cases_page.scopes).to eq ['incoming_for_press_office']
+          expect(incoming_cases_page.scope_names).to eq ['incoming_for_press_office']
         end
       end
 
@@ -133,23 +132,23 @@ describe GlobalNavManager::Page do
         let(:user) { responder }
 
         it 'sets the scopes using the users role' do
-          expect(open_cases_page.scopes).to eq ['opened']
+          expect(open_cases_page.scope_names).to eq ['opened']
         end
       end
 
       context 'disclosure specialist' do
         let(:user) { disclosure_specialist_bmt }
 
-        it 'merges scopes' do
-          expect(open_cases_page.scopes).to match_array ['opened', 'flagged']
+        it 'merges scope_names' do
+          expect(open_cases_page.scope_names).to match_array ['opened', 'flagged']
         end
       end
     end
   end
 
-  describe '#scopes' do
-    it 'returns the scopes' do
-      expect(open_cases_page.scopes).to eq ['opened']
+  describe '#scope_names' do
+    it 'returns the scope_names' do
+      expect(open_cases_page.scope_names).to eq ['opened']
     end
   end
 
@@ -195,7 +194,7 @@ describe GlobalNavManager::Page do
     let(:cfs) { instance_double(CaseFinderService) }
 
     before do
-      allow(cfs).to receive(:for_scopes).and_return(cfs)
+      allow(cfs).to receive(:for_scopes_with_or).and_return(cfs)
       allow(global_nav).to receive(:finder).and_return(cfs)
     end
 
@@ -207,7 +206,7 @@ describe GlobalNavManager::Page do
 
     it 'calls for_scopes on the finder' do
       open_cases_page.finder
-      expect(cfs).to have_received(:for_scopes).with(['opened'])
+      expect(cfs).to have_received(:for_scopes_with_or).with(['opened'])
     end
   end
 

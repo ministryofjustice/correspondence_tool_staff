@@ -26,11 +26,9 @@ class UserActiveCaseCountService
   end
 
   def get_scopes_for_user(user)
-    scopes = []
-    user.roles.each do |role|
-      scopes << Settings.global_navigation.pages.my_open_cases.scope.__send__(role)
-    end
-    scopes.compact
+    user.roles.map do |role|
+      Settings.global_navigation.pages.my_open_cases.scope.__send__(role)
+    end.compact
   end
 
 end
