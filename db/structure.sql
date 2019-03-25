@@ -1369,6 +1369,13 @@ CREATE INDEX index_cases_users_transitions_trackers_on_case_id ON public.cases_u
 
 
 --
+-- Name: index_cases_users_transitions_trackers_on_case_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_cases_users_transitions_trackers_on_case_id_and_user_id ON public.cases_users_transitions_trackers USING btree (case_id, user_id);
+
+
+--
 -- Name: index_cases_users_transitions_trackers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1658,6 +1665,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180806100827'),
 ('20190228142249'),
 ('20190312104101'),
-('20190325082640');
+('20190325082640'),
+('20190326113949');
 
 

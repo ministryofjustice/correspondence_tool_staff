@@ -7,7 +7,11 @@
 #  user_id            :integer
 #  case_transition_id :integer
 #
-
+# This model is meant to track which messages have been
+# viewed by users, so that we can show a message bubble telling
+# them that they have not seen everything on a case.
+# The field 'case_trasition_id' reflects the last message
+# a particular user has looked at.
 class CasesUsersTransitionsTracker < ActiveRecord::Base
   belongs_to :case,
              class_name: 'Case::Base',
@@ -19,15 +23,16 @@ class CasesUsersTransitionsTracker < ActiveRecord::Base
 
   class << self
     def sync_for_case_and_user(kase, user)
-      latest_transition_id = kase.message_transitions.pluck(:id).last
-      if latest_transition_id.present?
+      latest_transition = kase.message_transitions.last
+      if latest_transition.present?
         tracker = find_by case: kase, user: user
         if tracker
-          tracker.update case_transition_id: latest_transition_id
+          # Pretty sure this can't fail, but its a good pattern to use ! methods
+          tracker.update! case_transition_id: latest_transition.id
         else
-          create case: kase,
-                 user: user,
-                 case_transition_id: latest_transition_id
+          create! case: kase,
+                  user: user,
+                  case_transition_id: latest_transition.id
         end
       end
     end

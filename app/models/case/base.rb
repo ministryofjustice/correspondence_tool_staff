@@ -601,10 +601,6 @@ class Case::Base < ApplicationRecord
     users_transitions_trackers.where(user: user).singular_or_nil
   end
 
-  def sync_transition_tracker_for_user(user)
-    CasesUsersTransitionsTracker.sync_for_case_and_user(self, user)
-  end
-
   def format_workflow_class_name(type_template, type_workflow_template)
     if workflow.present?
       type_workflow_template % {type: type_abbreviation, workflow: workflow}
