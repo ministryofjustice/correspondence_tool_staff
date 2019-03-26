@@ -1,6 +1,6 @@
 class GlobalNavManager
   class Page
-    attr_reader :name, :path, :scope_names, :tabs
+    attr_reader :name, :path, :tabs
 
     IGNORE_QUERY_PARAMS = ['page']
 
@@ -64,6 +64,9 @@ class GlobalNavManager
     end
 
     private
+
+    # This 'method' is tested, so only exists for that reason
+    attr_reader :scope_names
 
     def build_tabs(tabs_settings)
       tabs_settings ||= []

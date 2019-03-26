@@ -124,7 +124,7 @@ describe GlobalNavManager::Page do
         let(:user) { press_officer }
 
         it 'sets the scopes using the users team' do
-          expect(incoming_cases_page.scope_names).to eq ['incoming_for_press_office']
+          expect(incoming_cases_page.__send__(:scope_names)).to eq ['incoming_for_press_office']
         end
       end
 
@@ -132,7 +132,7 @@ describe GlobalNavManager::Page do
         let(:user) { responder }
 
         it 'sets the scopes using the users role' do
-          expect(open_cases_page.scope_names).to eq ['opened']
+          expect(open_cases_page.__send__(:scope_names)).to eq ['opened']
         end
       end
 
@@ -140,7 +140,7 @@ describe GlobalNavManager::Page do
         let(:user) { disclosure_specialist_bmt }
 
         it 'merges scope_names' do
-          expect(open_cases_page.scope_names).to match_array ['opened', 'flagged']
+          expect(open_cases_page.__send__(:scope_names)).to match_array ['opened', 'flagged']
         end
       end
     end
@@ -148,7 +148,7 @@ describe GlobalNavManager::Page do
 
   describe '#scope_names' do
     it 'returns the scope_names' do
-      expect(open_cases_page.scope_names).to eq ['opened']
+      expect(open_cases_page.__send__(:scope_names)).to eq ['opened']
     end
   end
 
