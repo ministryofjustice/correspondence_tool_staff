@@ -80,7 +80,8 @@ describe CSVExporter do
                    'SAR Subject full name' => nil,
                    'Business unit responsible for late response' => late_team.name,
                    'Extended' => 'No',
-                   'Extension Count' => 0
+                   'Extension Count' => 0,
+                   'Deletion Reason' => nil,
                  })
       end
     end
@@ -90,6 +91,14 @@ describe CSVExporter do
     let(:csv_data) do
       Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
         CSVExporter::CSV_COLUMN_HEADINGS.zip(CSVExporter.new(kase).to_csv).to_h
+      end
+    end
+
+    context 'deleted' do
+      let(:kase) { create(:case, :deleted_case) }
+
+      it 'returns the deletion reason' do
+        expect(csv_data).to include({'Deletion Reason' => kase.reason_for_deletion} )
       end
     end
 
@@ -174,8 +183,11 @@ describe CSVExporter do
                    'SAR Subject full name' => 'Theresa Cant',
                    'Business unit responsible for late response' => 'N/A',
                    'Extended' => 'No',
-                   'Extension Count' => 0})
+                   'Extension Count' => 0,
+                   'Deletion Reason' => nil,
+                 })
       end
     end
   end
+
 end
