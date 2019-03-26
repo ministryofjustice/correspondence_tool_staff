@@ -417,7 +417,9 @@ CREATE TABLE public.cases_users_transitions_trackers (
     id integer NOT NULL,
     case_id integer,
     user_id integer,
-    case_transition_id integer
+    case_transition_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 
