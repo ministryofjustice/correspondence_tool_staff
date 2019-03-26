@@ -5,7 +5,7 @@ class GlobalNavManager
     IGNORE_QUERY_PARAMS = ['page']
 
     # 'parent' here is actually a GlobalNavManager instance
-    def initialize(name, parent, attrs)
+    def initialize(name:, parent:, attrs:)
       @name = name
       @parent = parent
       @path = attrs[:path]
@@ -110,7 +110,7 @@ class GlobalNavManager
           from_scope[user_team_or_role]
         end
 
-      end .compact.uniq
+      end.compact.uniq
     end
   end
 end

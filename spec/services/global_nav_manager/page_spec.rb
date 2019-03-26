@@ -50,24 +50,24 @@ describe GlobalNavManager::Page do
                                       user: user,
                                       request: request }
   let(:incoming_cases_page) { described_class.new(
-                                :incoming_cases,
-                                global_nav,
-                                config.pages.incoming_cases
+                                name: :incoming_cases,
+                                parent: global_nav,
+                                attrs: config.pages.incoming_cases
                               ) }
   let(:open_cases_page)     { described_class.new(
-                                :open_cases,
-                                global_nav,
-                                config.pages.open_cases
+                                name: :open_cases,
+                                parent: global_nav,
+                                attrs: config.pages.open_cases
                               ) }
   let(:closed_cases_page)   { described_class.new(
-                                :closed_cases,
-                                global_nav,
-                                config.pages.closed_cases
+                                name: :closed_cases,
+                                parent: global_nav,
+                                attrs: config.pages.closed_cases
                               ) }
   let(:stats_page)          { described_class.new(
-                                :stats,
-                                global_nav,
-                                config.pages.stats_page
+                                name: :stats,
+                                parent: global_nav,
+                                attrs: config.pages.stats_page
                               ) }
   let(:in_time_tab) { instance_double(GlobalNavManager::Tab,
                                       fullpath: 'in_time_fullpath',
