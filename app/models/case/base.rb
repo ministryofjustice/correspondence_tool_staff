@@ -414,7 +414,12 @@ class Case::Base < ApplicationRecord
     date_responded <= external_deadline
   end
 
+  # +date_draft_compliant+ was added February 2019, historical
+  # Cases do not have draft timeliness information set and
+  # therefore cannot be considered to be in/out of draft deadline
   def within_draft_deadline?
+    return unless date_draft_compliant.present?
+
     date_draft_compliant <= internal_deadline
   end
 
