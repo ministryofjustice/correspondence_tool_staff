@@ -32,6 +32,7 @@ class CSVExporter
       'Business unit responsible for late response',
       'Extended',
       'Extension Count',
+      'Deletion Reason',
   ]
 
   def initialize(kase)
@@ -68,7 +69,8 @@ class CSVExporter
         @kase.respond_to?(:subject_full_name) ? @kase.subject_full_name : nil,
         @kase.decorate.late_team_name,
         extension_count(@kase) > 0 ? 'Yes' : 'No',
-        extension_count(@kase)
+        extension_count(@kase),
+        @kase.reason_for_deletion,
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
