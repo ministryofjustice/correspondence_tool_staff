@@ -125,14 +125,14 @@ feature "Downloading stats(csv) from the system" do
     report = stats_index_page.foi.reports.detect { |r| r.download_link.text =~ /Monthly report/ }
     report.download_link.click
     expect(page.response_headers['Content-Disposition'])
-        .to match(/filename="r005_monthly_performance_report.csv"/)
+        .to match(/filename="r005_monthly_performance_report.xlsx"/)
     stats_index_page.load
   end
 
   def download_r105_report
     stats_index_page.sar.reports.last.download_link.click
     expect(page.response_headers['Content-Disposition'])
-        .to match(/filename="r105_sar_monthly_performance_report.csv"/)
+        .to match(/filename="r105_sar_monthly_performance_report.xlsx"/)
     stats_index_page.load
   end
 

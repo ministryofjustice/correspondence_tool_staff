@@ -9,10 +9,22 @@ class StatsController < ApplicationController
 
   def download
     report = Report.new report_type_id: params[:id]
-    report.run_and_update!
-    report.trim_older_reports
 
-    send_data report.report_data, filename: report.report_type.filename('csv')
+    if report.xlsx?
+      report_data = report.run
+
+      axlsx = create_spreadsheet(report_data)
+
+      send_data axlsx.to_stream.read,
+                filename: report.report_type.filename('xlsx'),
+                disposition: :attachment,
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    else
+      report.run_and_update!
+      report.trim_older_reports
+
+      send_data report.report_data, filename: report.report_type.filename('csv')
+    end
   end
 
   def download_audit
