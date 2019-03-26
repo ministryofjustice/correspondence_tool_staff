@@ -52,7 +52,6 @@ RSpec.describe CasesController, type: :controller do
                                                   responder: another_responder,
                                                   responding_team: another_responder.responding_teams.first }
 
-
   describe '#set_cases' do
     before(:each) do
       user = find_or_create :foi_responder
@@ -447,19 +446,33 @@ RSpec.describe CasesController, type: :controller do
       let!(:in_time_case) { create(:accepted_case) }
       let!(:late_case) { Timecop.freeze(50.days.ago) { create(:accepted_case) } }
       let!(:closed_case) { create(:closed_case) }
+      let!(:active_case) { flagged_case }
 
-      before do
-        sign_in responder
+      context 'responder' do
+        before do
+          sign_in responder
+        end
+
+        it 'gets my in time cases' do
+          get :my_open_cases, params: { tab: 'in_time' }
+          expect(assigns(:cases)).to match_array([in_time_case])
+        end
+
+        it 'gets my late cases' do
+          get :my_open_cases, params: { tab: 'late' }
+          expect(assigns(:cases)).to match_array([late_case])
+        end
       end
 
-      it 'gets my in time cases' do
-        get :my_open_cases, params: { tab: 'in_time' }
-        expect(assigns(:cases)).to match_array([in_time_case])
-      end
+      context 'disclosure specialist' do
+        before do
+          sign_in disclosure_specialist
+        end
 
-      it 'gets my late cases' do
-        get :my_open_cases, params: { tab: 'late' }
-        expect(assigns(:cases)).to match_array([late_case])
+        it 'gets only incoming cases' do
+          get :incoming_cases
+          expect(assigns(:cases)).to match_array([flagged_case])
+        end
       end
     end
 

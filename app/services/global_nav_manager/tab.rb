@@ -1,8 +1,8 @@
 class GlobalNavManager
   class Tab < Page
-    attr_reader :name, :parent
+    attr_reader :name
 
-    def initialize(name, parent, attrs)
+    def initialize(name:, parent:, attrs:)
       @name        = name
       @parent      = parent
       @path        = attrs[:path] || name.to_s

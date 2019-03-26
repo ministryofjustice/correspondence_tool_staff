@@ -47,7 +47,7 @@ class GlobalNavManager
     end
 
     def finder
-      @parent.finder.for_scopes_with_or(@scope_names)
+      @parent.finder.for_scopes(@scope_names)
     end
 
     def cases
@@ -71,7 +71,7 @@ class GlobalNavManager
     def build_tabs(tabs_settings)
       tabs_settings ||= []
       tabs_settings.map do |tab_name, tab_settings|
-        Tab.new(tab_name, self, tab_settings)
+        Tab.new(name: tab_name, parent: self, attrs: tab_settings)
       end .find_all do |tab|
         tab.visible?
       end
