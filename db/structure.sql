@@ -353,7 +353,7 @@ CREATE TABLE public.cases (
     appeal_outcome_id integer,
     dirty boolean DEFAULT false,
     document_tsvector tsvector,
-    user_id integer DEFAULT '-100'::integer NOT NULL
+    user_id integer DEFAULT '-100'::integer NOT NULL,
     reason_for_deletion character varying
 );
 
