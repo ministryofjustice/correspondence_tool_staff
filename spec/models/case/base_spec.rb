@@ -55,10 +55,12 @@ RSpec.describe Case::Base, type: :model do
   let(:case_being_drafted_flagged) { create :case_being_drafted, :flagged,
                                             approving_team: approving_team }
   let(:case_being_drafted_trigger) { create :case_being_drafted, :flagged_accepted }
-  let(:trigger_foi)        { create :case,
-                              :flagged,
-                              received_date: Date.today - 6.months
-                            }
+
+  let(:trigger_foi) {
+    create :case,
+    :flagged,
+    received_date: Date.today - 6.months # Valid if within 1 year of today
+  }
 
   let(:ot_ico_foi_draft)   { create :ot_ico_foi_noff_draft }
   let(:ot_ico_sar_draft)   { create :ot_ico_sar_noff_draft }
