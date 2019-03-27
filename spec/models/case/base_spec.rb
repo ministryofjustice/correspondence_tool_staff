@@ -81,7 +81,6 @@ RSpec.describe Case::Base, type: :model do
 
   context 'deleting' do
     it 'is not valid without a reason' do
-      skip 'Awaiting merge of CT-2169'
       expect(build(:case, deleted: true)).not_to be_valid
     end
 

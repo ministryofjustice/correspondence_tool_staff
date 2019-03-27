@@ -9,10 +9,10 @@ def delete_case_step(kase:)
 
   confirm_destroy_page.confirm_button.click
   # Without a reason for deletion, page debounces back to user
-  # expect(confirm_destroy_page).to have_reason_for_deletion_error
-  #
-  # confirm_destroy_page.fill_in_delete_reason
-  # confirm_destroy_page.confirm_button.click
+  expect(confirm_destroy_page).to have_reason_for_deletion_error
+
+  confirm_destroy_page.fill_in_delete_reason
+  confirm_destroy_page.confirm_button.click
 
   expect(open_cases_page).to be_displayed
   expect(open_cases_page.notices.first.heading.text)
