@@ -121,8 +121,8 @@ module CTS::Cases
            desc: 'Change created-at.'
     option :received_date, type: :string,
            desc: 'Change received-date and created-at.'
-    option :user, type: :numeric, aliases: 'u',
-           desc: 'User Id of the person who entered the case info'
+    option :creator, type: :numeric, aliases: 'c',
+           desc: 'User Id of the person who entered the case (aka Creator)'
     def create(*target_states)  # rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       CTS.info "Creating #{options[:number]} cases in each of the following states:"
       CTS.info "\t" + target_states.join("\n\t")
@@ -161,7 +161,7 @@ module CTS::Cases
       options[:number].times do |n|
 
         # Case creation requires an actual User object, command line
-        # only accepts integer User Id
+        # only accepts integer User Id, system aliases user as creator.
         options[:creator] = User.find_by(id: options[:creator])
 
         CTS.info "Creating #{target_states.join ', '} case(s) ##{n}"

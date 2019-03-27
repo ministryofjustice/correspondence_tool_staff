@@ -9,9 +9,7 @@ module CTS::Cases
   # Utility methods to create fully-formed Case objects with appropriate
   # transition history
   class Create
-    attr_accessor :logger, :options
-
-    attr_accessor :flag
+    attr_accessor :logger, :options, :flag
 
     def initialize(logger, options = {})
       @logger = logger
