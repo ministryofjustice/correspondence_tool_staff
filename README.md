@@ -30,21 +30,6 @@ $ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
 $ cd correspondence_tool_staff
 ```
 
-#### Generating Documentation
-
-You can generate documentation for the project with:
-
-```
-bundle exec yardoc
-```
-
-If you need to you can edit settings for Yard in `Rakefile`. The documentation
-is generated in the `doc` folder, to view it on OSX run:
-
-```
-open doc/index.html
-```
-
 ### Installing the app for development
 
 You can either install the app in a docker container, or set it up natively on your mac.  Instructions for both methods are given below.
@@ -72,8 +57,6 @@ Messages to the logs behave slightly differently than expected:
 * Any `puts` commands in the code will be output to the `docker-compose` window, but not to the `log/development.log` file.
 * Any `Rails.logger.info|error|warn|debug` commands in the code will be output to the `log/development.log` file and NOT to the `docker-compose` window.
 * The `docker-compose logs` command on the host machine will display the same output as for the `docker-compose` window.
-
-
 
 ### Installing locally on a mac
 
@@ -149,26 +132,22 @@ $ xcode-select --install
 ```
 </details>
 
-#### Issues installing PostgreSQL (pg) gem
+###### Issues installing PostgreSQL (pg) gem
 
 When running `bundle install` on MacOS `gem pg` may fail to build and install.
 
 (These issues may not occur if following the instructions above about setting the PKG_CONFIG_PATH)
 
-##### Error with missing libpq-fe.h
+###### Error with missing libpq-fe.h
 
 Assuming the installation steps have been followed, execute in Terminal:
 
-```
 export CONFIGURE_ARGS="with-pg-include=/usr/local/opt/postgresql@9.5/include";
 gem install pg -v '1.1.4' --source 'https://rubygems.org/';
 
-```
 And ensure you add the following to `.bash_profile` or similar to prevent TCP connection errors:
 
-```
 export PGHOST=localhost
-```
 
 <details>
 <summary>Installing Redis</summary>
@@ -500,6 +479,21 @@ control aspects of the build. The available build arguments are:
 
   These are required to scan the uploaded files for viruses (clamav & Co.) and
   to generate a PDF preview (libreoffice).
+  
+#### Generating Documentation
+
+You can generate documentation for the project with:
+
+```
+bundle exec yardoc
+```
+
+If you need to you can edit settings for Yard in `Rakefile`. The documentation
+is generated in the `doc` folder, to view it on OSX run:
+
+```
+open doc/index.html
+```
 
 #### Guide to our deploy process
 For our deploy process please see the our [confluence page](https://dsdmoj.atlassian.net/wiki/spaces/CD/pages/164660145/Manual+-+Development+and+Release+Process)
