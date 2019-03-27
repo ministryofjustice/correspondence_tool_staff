@@ -414,7 +414,12 @@ class Case::Base < ApplicationRecord
     date_responded <= external_deadline
   end
 
+  # +date_draft_compliant+ was added February 2019, historical
+  # Cases do not have draft timeliness information set and
+  # therefore cannot be considered to be in/out of draft deadline
   def within_draft_deadline?
+    return unless date_draft_compliant.present?
+
     date_draft_compliant <= internal_deadline
   end
 
@@ -511,6 +516,12 @@ class Case::Base < ApplicationRecord
     date_responded <= external_deadline
   end
 
+  # Note use of +responded?+ as guard to prevent exceptions
+  # thrown by business_unit_responded_in_time? from arising
+  def response_in_target?
+    responded? && business_unit_responded_in_time?
+  end
+
   # determines whether or not an individual BU responded to a case in time, measured
   # from the date the case was assigned to the business unit to the time the case was marked as responded.
   # Note that the time limit is different for trigger cases (the internal time limit) than for non trigger
@@ -556,6 +567,13 @@ class Case::Base < ApplicationRecord
 
   def already_late?
     Date.today > external_deadline
+  end
+
+  def num_days_draft_deadline_late
+    return unless date_draft_compliant.present? && internal_deadline.present?
+
+    days = (date_draft_compliant - internal_deadline).to_i
+    days > 0 ? days : nil
   end
 
   def current_team_and_user
@@ -655,22 +673,39 @@ class Case::Base < ApplicationRecord
     !dirty?
   end
 
-  def assigned_disclosure_specialist
+  def assigned_disclosure_specialist!
     ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.dacu_disclosure.id }
     raise 'No assigned disclosure specialist' if ass.nil? || ass.user.nil?
     ass.user
   end
 
-  def assigned_press_officer
+  def assigned_disclosure_specialist
+    assignments
+      .approving
+      .accepted
+      .detect { |a| a.team_id == BusinessUnit.dacu_disclosure.id }
+      &.user
+  end
+
+  def assigned_press_officer!
     ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.press_office.id }
     raise 'No assigned press officer' if ass.nil? || ass.user.nil?
     ass.user
   end
 
-  def assigned_private_officer
+  def assigned_private_officer!
     ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.private_office.id }
     raise 'No assigned private officer' if ass.nil? || ass.user.nil?
     ass.user
+  end
+
+  # Caseworker officer is blank for non-trigger and
+  # always a disclosure specialist for trigger cases as requested by
+  # London team.
+  def casework_officer
+    if trigger?
+      assigned_disclosure_specialist&.full_name
+    end
   end
 
   def requires_flag_for_disclosure_specialists?
@@ -707,6 +742,11 @@ class Case::Base < ApplicationRecord
       external_deadline: initial_deadline,
       has_pit_extension: false
     )
+  end
+
+
+  def trigger?
+    TRIGGER_WORKFLOWS.include?(workflow)
   end
 
   # predicate methods

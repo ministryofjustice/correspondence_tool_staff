@@ -70,7 +70,7 @@ describe CaseApprovalService do
 
       context 'approving case that requires another level of clearance' do
         let(:kase)            { create :pending_dacu_clearance_case_flagged_for_press }
-        let(:user)            { kase.assigned_disclosure_specialist }
+        let(:user)            { kase.assigned_disclosure_specialist! }
         let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
         it 'returns :ok' do

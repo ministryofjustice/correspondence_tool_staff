@@ -37,11 +37,16 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
+  # Note +common.case.compliant_unknown+ for historical Cases
+  # before Draft Timeliness functionality introduced
   def draft_timeliness
-    if within_draft_deadline?
+    case within_draft_deadline?
+    when true
       I18n.t('common.case.compliant_in_time')
-    else
+    when false
       I18n.t('common.case.compliant_late')
+    else
+      I18n.t('common.case.compliant_unknown')
     end
   end
 
