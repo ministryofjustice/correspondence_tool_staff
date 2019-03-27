@@ -2,8 +2,16 @@ require 'cts'
 
 # rubocop:disable Metrics/ClassLength
 module CTS::Cases
+  # @todo Used by Admin section to generate test data.
+  #       Code requires auditing to ensure it is still valid in relation to
+  #       on-going changes in the core user-facing system.
+  #
+  # Utility methods to create fully-formed Case objects with appropriate
+  # transition history
   class Create
-    attr_accessor :logger, :options, :flag
+    attr_accessor :logger, :options
+
+    attr_accessor :flag
 
     def initialize(logger, options = {})
       @logger = logger
@@ -169,6 +177,10 @@ module CTS::Cases
 
     def parse_options(options) # rubocop:disable Metrics/CyclomaticComplexity
       @target_states = []
+      @clear_cases = options.fetch(:clear, false)
+      @dry_run = options.fetch(:dry_run, false)
+      @created_at = options[:created_at]
+
       @flag =
         if options.key?(:flag_for_disclosure)
           options[:flag_for_disclosure] ? 'disclosure' : nil
@@ -177,10 +189,6 @@ module CTS::Cases
         else
           nil
         end
-
-      @clear_cases = options.fetch(:clear, false)
-      @dry_run = options.fetch(:dry_run, false)
-      @created_at = options[:created_at]
 
       if options[:received_date]
         @received_date = options[:received_date]
@@ -197,10 +205,30 @@ module CTS::Cases
       else
         logger.error "Unrecognised parameter: #{state}"
         logger.error "Journeys checked:"
+
         journeys_to_check.each do |name, states|
           logger.error "  #{name}: #{states.join(', ')}"
         end
+
         @invalid_params = true
+      end
+    end
+
+    def flag_for_dacu_disclosure(*cases)
+      cases.each do |kase|
+        cleared_case = CaseFlagForClearanceService.new(
+          user: CTS::dacu_manager,
+          kase: kase,
+          team: DefaultTeamService.new(kase).approving_team,
+        )
+
+        cleared_case.call
+
+        unless cleared_case.result == :ok
+          raise "Could not flag case for clearance by DACU Disclosure, " \
+                "case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, " \
+                "result: #{cleared_case.result}"
+        end
       end
     end
 
@@ -224,26 +252,15 @@ module CTS::Cases
       end
     end
 
-    def flag_for_dacu_disclosure(*cases)
-      cases.each do |kase|
-        dts = DefaultTeamService.new(kase)
-        result = CaseFlagForClearanceService.new(
-          user: CTS::dacu_manager,
-          kase: kase,
-          team: dts.approving_team,
-          ).call
-        unless result == :ok
-          raise "Could not flag case for clearance by DACU Disclosure, case id: #{kase.id}, user id: #{CTS::dacu_manager.id}, result: #{result}"
-        end
-      end
-    end
+    # (Begin) Magic Method transition functions used by {#run_transitions}
 
     def transition_to_awaiting_responder(kase)
-      cars = CaseAssignResponderService.new team: responding_team,
-                                            kase: kase,
-                                            role: 'responding',
-                                            user: CTS::dacu_manager
-      cars.call
+      CaseAssignResponderService.new(
+        team: responding_team,
+        kase: kase,
+        role: 'responding',
+        user: CTS::dacu_manager
+      ).call
     end
 
     def transition_to_drafting(kase)
@@ -251,21 +268,30 @@ module CTS::Cases
     end
 
     def transition_to_accepted_by_dacu_disclosure(kase)
-      assignment = kase.approver_assignments
-        .where(team: CTS::dacu_disclosure_team).first
+      assignment = kase
+        .approver_assignments
+        .find_by(team: CTS::dacu_disclosure_team)
+
       user = CTS::dacu_disclosure_approver
+
       service = CaseAcceptApproverAssignmentService.new(
         assignment: assignment,
         user: user
       )
 
       unless service.call
-        raise "Could not accept approver assignment, case id: #{kase.id}, user id: #{user.id}, result: #{service.result}"
+        raise "Could not accept approver assignment, " \
+              "case id: #{kase.id}, user id: #{user.id}, " \
+              "result: #{service.result}"
       end
     end
 
     def transition_to_taken_on_by_press_office(kase)
-      call_case_flag_for_clearance_service(kase, CTS::press_officer, CTS::press_office_team)
+      call_case_flag_for_clearance_service(
+        kase,
+        CTS::press_officer,
+        CTS::press_office_team
+      )
     end
 
     def transition_to_taken_on_by_private_office(kase)
@@ -280,39 +306,51 @@ module CTS::Cases
           kase: kase,
           current_user: responder,
           filepath: 'spec/fixtures/eon.pdf',
-          )
-        kase.state_machine.add_responses!(acting_user: responder,
-                                          acting_team: kase.responding_team,
-                                          filenames: kase.attachments)
+        )
+
+        kase.state_machine.add_responses!(
+          acting_user: responder,
+          acting_team: kase.responding_team,
+          filenames: kase.attachments
+        )
       end
     end
 
     def transition_to_responded(kase)
-
-      responder = kase.ico? ? kase.assigned_disclosure_specialist : kase.responder
-
       kase.update(date_responded: 5.business_days.after(kase.received_date))
+
+      responder =
+        if kase.ico?
+          kase.assigned_disclosure_specialist
+        else
+          kase.responder
+        end
 
       kase.respond(responder)
     end
 
     def transition_to_pending_dacu_disclosure_clearance(kase)
-      case get_correspondence_type_abbreviation
+      case correspondence_type_abbreviation
       when :sar
         dts = DefaultTeamService.new(kase)
 
-        kase.state_machine.progress_for_clearance!(acting_user: responder,
-                                                   acting_team: kase.responding_team,
-                                                   target_team: dts.approving_team)
+        kase.state_machine.progress_for_clearance!(
+          acting_user: responder,
+          acting_team: kase.responding_team,
+          target_team: dts.approving_team
+        )
       else
         ResponseUploaderService.seed!(
           kase: kase,
           current_user: responder,
           filepath: 'spec/fixtures/eon.pdf',
-          )
-        kase.state_machine.add_responses!(acting_user: responder,
-                                          acting_team:responding_team,
-                                          filenames: kase.attachments)
+        )
+
+        kase.state_machine.add_responses!(
+          acting_user: responder,
+          acting_team:responding_team,
+          filenames: kase.attachments
+        )
       end
     end
 
@@ -330,22 +368,28 @@ module CTS::Cases
 
     def transition_to_closed(kase)
       case kase.type_abbreviation
-      when 'FOI', 'OVERTURNED_FOI' then transition_to_closed_for_foi(kase)
-      when 'ICO' then transition_to_closed_for_ico(kase)
-      when 'SAR', 'OVERTURNED_SAR' then transition_to_closed_for_sar(kase)
+      when 'FOI', 'OVERTURNED_FOI'
+        transition_to_closed_for_foi(kase)
+      when 'ICO'
+        transition_to_closed_for_ico(kase)
+      when 'SAR', 'OVERTURNED_SAR'
+        transition_to_closed_for_sar(kase)
       else
-        # No good having this fail silently.
+        # Cannot allow silent fail as this suggests a rogue case type
         raise "Don't know how to close #{kase.type_abbreviation} cases."
       end
     end
 
+    # (End) Magic Method transition functions used by {#run_transitions}
+
     # rubocop:disable Metrics/CyclomaticComplexity
     def journeys_to_check
-      CTS::Cases::Constants::CASE_JOURNEYS[get_correspondence_type_abbreviation].find_all do |name, _states|
+      CTS::Cases::Constants::CASE_JOURNEYS[correspondence_type_abbreviation]
+      .find_all do |name, _states|
         @flag.blank? ||
           (@flag == 'disclosure' && name == :flagged_for_dacu_disclosure) ||
-          (@flag == 'press' && name == :flagged_for_press_office) ||
-          (@flag == 'private' && name == :flagged_for_private_office)
+          (@flag == 'press'      && name == :flagged_for_press_office) ||
+          (@flag == 'private'    && name == :flagged_for_private_office)
       end
     end
     # rubocop:enable Metrics/CyclomaticComplexity
@@ -355,19 +399,20 @@ module CTS::Cases
         pos = states.find_index(state)
         return states.take(pos + 1) if pos
       end
-      return []
+
+      []
     end
 
     def get_journey_for_flagged_state(flag)
       case flag
       when 'disclosure'
-        CASE_JOURNEYS[get_correspondence_type_abbreviation][:flagged_for_dacu_displosure]
+        CASE_JOURNEYS[][:flagged_for_dacu_displosure]
       when 'press'
-        CASE_JOURNEYS[get_correspondence_type_abbreviation][:flagged_for_press_office]
+        CASE_JOURNEYS[correspondence_type_abbreviation][:flagged_for_press_office]
       when 'private'
-        CASE_JOURNEYS[get_correspondence_type_abbreviation][:flagged_for_private_office]
+        CASE_JOURNEYS[correspondence_type_abbreviation][:flagged_for_private_office]
       else
-        CASE_JOURNEYS[get_correspondence_type_abbreviation][:unflagged]
+        CASE_JOURNEYS[correspondence_type_abbreviation][:unflagged]
       end
     end
 
@@ -383,14 +428,12 @@ module CTS::Cases
 
     def responding_team
       @responding_team ||= begin
-        if !options.key?(:responding_team)
-          if options.key?(:responder)
-            responder.responding_teams.first
-          else
-            BusinessUnit.responding.sample
-          end
-        else
+        if options.key?(:responding_team)
           CTS::find_team(options[:responding_team])
+        elsif options.key?(:responder)
+          responder.responding_teams.first
+        else
+          BusinessUnit.includes(:responders).responding.sample
         end
       end
 
@@ -406,52 +449,77 @@ module CTS::Cases
     end
 
     def call_case_approval_service(user, kase)
-      result = CaseApprovalService
-        .new(user: user, kase: kase, bypass_params: nil).call
-      unless result == :ok
-        raise "Could not approve case response , case id: #{kase.id}, user id: #{user.id}, result: #{result}"
+      approval_service = CaseApprovalService.new(
+        user: user,
+        kase: kase,
+        bypass_params: nil
+      )
+
+      approval_service.call
+
+      unless approval_service.result == :ok
+        raise "  Could not approve case response, " \
+                  "case id: #{kase.id}, user id: #{user.id}, " \
+                  "result: #{approval_service.result}"
       end
     end
 
     def call_case_flag_for_clearance_service(kase, user, team)
-      service = CaseFlagForClearanceService.new user: user, kase: kase, team: team
-      result = service.call
-      unless result == :ok
-        raise "Could not flag case for clearance, case id: #{kase.id}, user id: #{user.id}, result: #{result}"
+      clearance_service = CaseFlagForClearanceService.new(
+        user: user,
+        kase: kase,
+        team: team
+      )
+
+      clearance_service.call
+
+      unless clearance_service.result == :ok
+        raise "  Could not flag case for clearance, " \
+                  "case id: #{kase.id}, user id: #{user.id}, " \
+                  "result: #{clearance_service.result}"
       end
     end
 
     def create_responder(responding_team)
       name = Faker::Name.name
-      user = User.create!(full_name: name,
-                          email: Faker::Internet.email(name),
-                          password: 'correspondence')
-      TeamsUsersRole.create(user: user, team: responding_team, role: 'responder')
+      user = User.create!(
+        full_name: name,
+        email: Faker::Internet.email(name),
+        password: 'correspondence'
+      )
+
+      TeamsUsersRole.create(
+        user: user,
+        team: responding_team,
+        role: 'responder'
+      )
     end
 
-    def get_correspondence_type_abbreviation
+    def correspondence_type_abbreviation
       @klass.state_machine_name.to_sym.downcase
     end
 
-
-
     def transition_to_closed_for_foi(kase)
       kase.prepare_for_close
-      kase.update(date_responded: Date.today,
-                  info_held_status: CaseClosure::InfoHeldStatus.held,
-                  outcome_abbreviation: 'granted')
+      kase.update(
+        date_responded: Date.today,
+        info_held_status: CaseClosure::InfoHeldStatus.held,
+        outcome_abbreviation: 'granted'
+      )
       kase.close(CTS::dacu_manager)
     end
 
     def transition_to_closed_for_ico(kase)
       kase.prepare_for_close
-      ico_decision = options.fetch(:ico_decision, Case::ICO::Base.ico_decisions.keys.sample )
+      ico_decision = options.fetch(:ico_decision, Case::ICO::Base.ico_decisions.keys.sample)
       kase.update_attributes(date_ico_decision_received: Date.today, ico_decision: ico_decision)
+
       if kase.overturned?
         uploader = S3Uploader.new(kase, CTS::dacu_manager)
         uploader.add_file_to_case('spec/fixtures/ico_decision.png', :ico_decision)
         kase.ico_decision_comment = options.fetch(:ico_decision_comment, Faker::TvShows::DrWho.quote)
       end
+
       kase.save!
       kase.close(CTS::dacu_manager)
     end
@@ -497,9 +565,9 @@ module CTS::Cases
     end
 
     def prepare_overturned_case(kase)
-      # TODO: The appeal case being created here should be flagged for
-      #       disclosure, but that should be done by virtue of it being an ICO
-      #       appeal, we shouldn't have to say so.
+      # @todo: The appeal case being created here should be flagged for
+      #   disclosure, but that should be done by virtue of it being an ICO
+      #   appeal, we should not have to explicitly say so.
 
       case_creator = CTS::Cases::Create.new(
         Rails.logger,
