@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.15
--- Dumped by pg_dump version 9.5.15
+-- Dumped from database version 9.5.14
+-- Dumped by pg_dump version 9.5.14
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -354,7 +354,7 @@ CREATE TABLE public.cases (
     dirty boolean DEFAULT false,
     document_tsvector tsvector,
     user_id integer DEFAULT '-100'::integer NOT NULL,
-    reason_for_deletion character varying
+    reason_for_deletion character varying DEFAULT 'Unspecified'::character varying NOT NULL
 );
 
 
@@ -1656,5 +1656,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180711151118'),
 ('20180717211105'),
 ('20180806100827'),
-('20190312104101'),
-('20190228142249');
+('20190228142249'),
+('20190312104101');
+
+

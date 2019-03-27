@@ -32,6 +32,7 @@ class CSVExporter
     'Business unit responsible for late response',
     'Extended',
     'Extension Count',
+    'Deletion Reason',
     'Casework officer',
     'Created by',
     'Date created',
@@ -80,7 +81,8 @@ class CSVExporter
         @kase.decorate.late_team_name,
         extension_count(@kase) > 0 ? 'Yes' : 'No',
         extension_count(@kase),
-        casework_officer(@kase),
+        @kase.reason_for_deletion,
+        @kase.casework_officer,
         @kase.creator.full_name,
         @kase.created_at.strftime('%F'), # Date created
 
@@ -95,9 +97,10 @@ class CSVExporter
         @kase.responding_team&.directorate&.team_lead, # Director name
         @kase.responding_team&.team_lead, # Deputy Director name
 
-        draft_in_time(@kase), # Draft in time
-        in_target(@kase),
-        num_days_late(@kase),
+        # Draft Timliness related information
+        humanize_boolean(@kase.within_draft_deadline?), # Draft in time
+        humanize_boolean(@kase.response_in_target?), # In Target
+        @kase.num_days_draft_deadline_late, # Number of days late
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
@@ -129,34 +132,5 @@ class CSVExporter
 
   def humanize_boolean(boolean)
     boolean ? 'Yes' : nil
-  end
-
-  def num_days_late(kase)
-    if kase.date_draft_compliant.present? && kase.internal_deadline.present?
-      days = (kase.date_draft_compliant - kase.internal_deadline).to_i
-      days > 0 ? days : nil
-    end
-  end
-
-  # Caseworker officer is blank for non-trigger and
-  # always a disclosure specialist for trigger cases.
-  # Note Case#assigned_disclosure_specialist throws an exception if no
-  # 'approving' assignees are found
-  def casework_officer(kase)
-    return unless kase.workflow == 'trigger'
-
-    kase.assigned_disclosure_specialist.user.full_name
-  end
-
-  def draft_in_time(kase)
-    return unless kase.respond_to?(:date_draft_compliant)
-
-    humanize_boolean(kase.within_draft_deadline?)
-  end
-
-  # Note Case#business_unit_responded_in_time? throws an exception if
-  # no 'respond' events are found
-  def in_target(kase)
-    humanize_boolean(kase.business_unit_responded_in_time?)
   end
 end

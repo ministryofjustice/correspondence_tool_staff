@@ -55,10 +55,11 @@ RSpec.describe Case::Base, type: :model do
   let(:case_being_drafted_flagged) { create :case_being_drafted, :flagged,
                                             approving_team: approving_team }
   let(:case_being_drafted_trigger) { create :case_being_drafted, :flagged_accepted }
-  let(:trigger_foi) do
-    create :case, :flagged,
-           received_date: Date.parse('16/11/2016')
-  end
+  let(:trigger_foi)        { create :case,
+                              :flagged,
+                              received_date: Date.today - 6.months
+                            }
+
   let(:ot_ico_foi_draft)   { create :ot_ico_foi_noff_draft }
   let(:ot_ico_sar_draft)   { create :ot_ico_sar_noff_draft }
   let(:kase) { create :case }
@@ -1397,34 +1398,6 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe '#assigned_disclosure_specialist!' do
-    it 'returns the specialist' do
-      disclosure_specialist = find_or_create :disclosure_specialist
-      kase = create :assigned_case, :flagged_accepted, approver: disclosure_specialist
-
-      expect(kase.assigned_disclosure_specialist!).to eq disclosure_specialist
-    end
-  end
-
-  describe '#assigned_press_officer!' do
-    it 'returns the press_officer' do
-      press_officer = find_or_create :press_officer
-      kase = create :assigned_case, :taken_on_by_press
-
-      expect(kase.assigned_press_officer!).to eq press_officer
-    end
-  end
-
-  describe '#assigned_private_officer!' do
-    it 'returns the private_officer' do
-
-      private_officer = find_or_create :private_officer
-      kase = create :assigned_case, :taken_on_by_private
-
-      expect(kase.assigned_private_officer!).to eq private_officer
-    end
-  end
-
   describe '#requires_flag_for_disclosure_specialists?' do
     it 'returns true' do
       expect(kase.requires_flag_for_disclosure_specialists?).to be true
@@ -1465,7 +1438,6 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-
   describe '#responded_late?' do
     context 'date responded is nil' do
       it 'is false' do
@@ -1497,6 +1469,79 @@ RSpec.describe Case::Base, type: :model do
           expect(kase.responded_late?).to be false
         end
       end
+    end
+  end
+
+  describe '#num_days_draft_deadline_late' do
+    it 'is nil when date_draft_compliant is not present' do
+      kase.date_draft_compliant = nil
+      kase.internal_deadline = Date.today
+
+      expect(kase.num_days_draft_deadline_late).to be nil
+    end
+
+    it 'is nil when internal_deadline is not present' do
+      kase.date_draft_compliant = Date.today
+      kase.internal_deadline = nil
+
+      expect(kase.num_days_draft_deadline_late).to be nil
+    end
+
+    it 'is nil when 0 days late' do
+      kase.date_draft_compliant = Date.today
+      kase.internal_deadline = Date.today
+
+      expect(kase.num_days_draft_deadline_late).to be nil
+    end
+
+    it 'is nil when not yet late' do
+      kase.date_draft_compliant = Date.today
+      kase.internal_deadline = Date.tomorrow
+
+      expect(kase.num_days_draft_deadline_late).to be nil
+    end
+
+    it 'returns correct number of days late' do
+      kase.date_draft_compliant = Date.today
+      kase.internal_deadline = Date.yesterday
+
+      expect(kase.num_days_draft_deadline_late).to eq 1
+    end
+  end
+
+  describe '#casework_officer' do
+    it 'is nil when non-trigger case' do
+      expect(kase.casework_officer).to eq nil
+    end
+
+    it 'is nil when trigger case without responder' do
+      expect(trigger_foi.casework_officer).to eq nil
+    end
+
+    it 'returns assigned user name for trigger case' do
+      disclosure_specialist = find_or_create :disclosure_specialist
+      case_assigned_to_user = create(:assigned_case,
+        :flagged_accepted,
+        approver: disclosure_specialist
+      )
+
+      expect(case_assigned_to_user.casework_officer)
+        .to eq disclosure_specialist.full_name
+    end
+  end
+
+  # See ./spec/models/case/foi/standard_spec.rb for thorough
+  # business_unit_responded_in_time? tests
+  describe '#response_in_target?' do
+    it 'is true when responded to' do
+      kase = create :responded_case
+      expect(kase.response_in_target?).to eq true
+    end
+  end
+
+  describe '#trigger?' do
+    it 'is true for a trigger case' do
+      expect(trigger_foi.trigger?).to eq true
     end
   end
 end
