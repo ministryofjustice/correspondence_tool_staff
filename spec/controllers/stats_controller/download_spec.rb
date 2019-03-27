@@ -16,19 +16,6 @@ RSpec.describe StatsController, type: :controller do
               .with_args(manager, Case::Base)
     end
 
-    context 'there is an already-generated report' do
-      let!(:report)     { create :r003_report,
-                                 report_data: 'existing report data' }
-      let(:report_type) { report.report_type }
-
-      it 'responds with existing report data' do
-        get :download, params: { id: report_type.id }
-        expect(response.headers['Content-Disposition'])
-          .to eq 'attachment; filename="r003_business_unit_performance_report.csv"'
-        expect(response.body).to eq report.report_data
-      end
-    end
-
     context 'there is no already-generated report' do
       let(:report_type) { find_or_create :report_type, :r003 }
 
@@ -101,34 +88,5 @@ RSpec.describe StatsController, type: :controller do
       end
     end
 
-    context 'there is a scheduled job but also a RAILS_ENV section with no schedule' do
-      let!(:report)     { create :r003_report,
-                                 report_data: 'existing report data' }
-      let(:report_type) { report.report_type }
-
-      before do
-        allow(YAML).to receive(:load_file).and_return(
-                         {
-                           'test' => {
-                             concurrency: 1
-                           },
-                           schedule: {
-                             'R003 YTD Business unit performance report' => {
-                               'args'  => ['R003'],
-                               'every' => ['2m', first_in: '0s'],
-                             }
-                           }
-                         }
-                       )
-
-      end
-
-      it 'responds with existing report data' do
-        get :download, params: { id: report_type.id }
-        expect(response.headers['Content-Disposition'])
-          .to eq 'attachment; filename="r003_business_unit_performance_report.csv"'
-        expect(response.body).to eq report.report_data
-      end
-    end
   end
 end

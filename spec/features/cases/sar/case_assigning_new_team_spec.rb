@@ -2,15 +2,13 @@ require "rails_helper"
 
 feature 'Assigning a SAR case to a new team' do
   given(:disclosure_bmt_user) { find_or_create :disclosure_bmt_user }
-  given(:responding_team)     { create :responding_team }
+  given!(:responding_team)     { create :responding_team }
 
   background do
     login_as disclosure_bmt_user
   end
 
   scenario 're-assigning a closed SAR case' do
-    responding_team
-
     closed_case = create :closed_sar
 
     cases_show_page.load(id: closed_case.id)

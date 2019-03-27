@@ -351,10 +351,10 @@ feature 'filters whittle down search results' do
   end
 
   def create_case_with_exemptions(exemption_codes)
-    exemptions = []
-    exemption_codes.each do |code|
-      exemptions << CaseClosure::Exemption.__send__(code)
-    end
+    exemptions = exemption_codes.map do |code|
+      CaseClosure::Exemption.__send__(code)
+    end.compact
+    raise "Not all codes can be found #{exemption_codes.inspect}" if exemptions.size != exemption_codes.size
     create :closed_case,
            subject: "Prison guards #{exemption_codes.join(',')}",
            info_held_status: find_or_create(:info_status, :held),

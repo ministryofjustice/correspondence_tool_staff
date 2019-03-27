@@ -21,11 +21,7 @@ class CaseAssignResponderService
         @result = :could_not_create_assignment
       end
     end
-    if @result == :ok
-      true
-    else
-      false
-    end
+    @result == :ok
   end
 
 end

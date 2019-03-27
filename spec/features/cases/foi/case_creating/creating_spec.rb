@@ -2,20 +2,20 @@ require 'rails_helper'
 
 feature 'FOI Case creation by a manager' do
 
-  given(:responder)       { find_or_create(:foi_responder) }
-  given(:responding_team) { create :responding_team, responders: [responder] }
+  given!(:responder)       { find_or_create(:foi_responder) }
+  given!(:responding_team) { create :responding_team, responders: [responder] }
   given(:manager)         { find_or_create :disclosure_bmt_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
 
   background do
-    responding_team
     find_or_create :team_dacu_disclosure
     login_as manager
     cases_page.load
   end
 
   scenario 'creating a case that does not need clearance', js: true do
-    create_foi_case_step flag_for_disclosure: false
+    kase = create_foi_case_step flag_for_disclosure: false
+    expect(assignments_new_page).to be_displayed(case_id: kase.id)
 
     assign_case_step business_unit: responder.responding_teams.first
   end
