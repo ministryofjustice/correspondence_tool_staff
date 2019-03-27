@@ -68,32 +68,53 @@ class CorrespondenceType < ApplicationRecord
     OVERTURNED_FOI: [Case::OverturnedICO::FOI],
   }.with_indifferent_access.freeze
 
+  # Keep a cache of all (6!) items to prevent endless N+1 queries using this tiny class
+  class << self
+    def all_cached
+      @@all ||= all
+    end
+
+    def clear_cache
+      @@all = nil
+    end
+
+    # This method is used by Case::Base to find its correspondence type
+    def find_by_abbrevation! abbreviation
+      all_cached.detect { |ct| ct.abbreviation == abbreviation } || super
+    end
+  end
+
+  # Invalidate the cache after saving a change
+  after_save do
+    self.class.clear_cache
+  end
+
   def self.by_report_category
     CorrespondenceType.properties_where_not(report_category_name: '').properties_order(:report_category_name)
   end
 
   def self.foi
-    find_by!(abbreviation: 'FOI')
+    find_by_abbreviation! 'FOI'
   end
 
   def self.gq
-    find_by!(abbreviation: 'GQ')
+    find_by_abbreviation! 'GQ'
   end
 
   def self.sar
-    find_by!(abbreviation: 'SAR')
+    find_by_abbreviation! 'SAR'
   end
 
   def self.ico
-    find_by!(abbreviation: 'ICO')
+    find_by_abbreviation! 'ICO'
   end
 
   def self.overturned_sar
-    find_by!(abbreviation: 'OVERTURNED_SAR')
+    find_by_abbreviation! 'OVERTURNED_SAR'
   end
 
   def self.overturned_foi
-    find_by!(abbreviation: 'OVERTURNED_FOI')
+    find_by_abbreviation! 'OVERTURNED_FOI'
   end
 
   def abbreviation_and_name

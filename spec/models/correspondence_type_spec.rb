@@ -78,12 +78,12 @@ describe CorrespondenceType, type: :model do
     end
   end
 
-  describe '.by_report_category' do
+  describe '#by_report_category' do
 
     let(:cts)  { CorrespondenceType.by_report_category }
 
     it 'returns only those correspondence types where report_category_name is present' do
-      expect(CorrespondenceType.all.size).to eq 5
+      expect(CorrespondenceType.all.size).to be > 2
       expect(cts.size).to eq 2
     end
 

@@ -21,8 +21,7 @@ class Report < ApplicationRecord
                       validate_if: :period_within_acceptable_range?
 
   belongs_to :report_type
-  attr_accessor :correspondence_type,
-
+  attr_accessor :correspondence_type
 
   def self.last_by_abbr(abbr)
     report_type = ReportType.find_by_abbr(abbr)

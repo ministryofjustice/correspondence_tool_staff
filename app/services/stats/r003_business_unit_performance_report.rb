@@ -10,7 +10,13 @@ module Stats
     end
 
     def case_scope
-      Case::Base.standard_foi
+      Case::Base
+        .includes(:assign_responder_transitions,
+                  :responded_transitions,
+                  :responder_assignment,
+                  :responding_team,
+                  :approver_assignments)
+        .standard_foi
     end
 
     def report_type

@@ -176,7 +176,7 @@ class Case::Base < ApplicationRecord
 
   validates_presence_of :reason_for_deletion, if: -> { deleted }
 
-  has_many :assignments, dependent: :destroy, foreign_key: :case_id
+  has_many :assignments, inverse_of: :case, dependent: :destroy, foreign_key: :case_id
 
   has_many :teams, through: :assignments
 
@@ -209,6 +209,7 @@ class Case::Base < ApplicationRecord
   has_one :responding_team,
           through: :responder_assignment,
           source: :team
+
   accepts_nested_attributes_for :responding_team
 
   has_many :responding_team_users,
@@ -225,8 +226,6 @@ class Case::Base < ApplicationRecord
            source: :user
 
   has_many :approving_teams,
-           -> { where("state != 'rejected'") },
-           class_name: BusinessUnit,
            through: :approver_assignments,
            source: :team
 
@@ -237,6 +236,7 @@ class Case::Base < ApplicationRecord
   has_many :transitions,
            class_name: 'CaseTransition',
            foreign_key: :case_id,
+           inverse_of: :case,
            autosave: false,
            dependent: :destroy do
               def most_recent
@@ -248,17 +248,24 @@ class Case::Base < ApplicationRecord
            class_name: 'CaseTransition',
            foreign_key: :case_id
 
-  has_many :users_transitions_trackers,
-           class_name: 'CasesUsersTransitionsTracker',
+  has_many :responded_transitions,
+           -> { responded },
+           class_name: 'CaseTransition',
            foreign_key: :case_id
 
-  has_many :responded_transitions, -> { responded },
+  has_many :assign_responder_transitions,
+           -> { where(event: CaseTransition::ASSIGN_RESPONDER_EVENT) },
            class_name: 'CaseTransition',
+           foreign_key: :case_id
+
+  has_many :users_transitions_trackers,
+           class_name: 'CasesUsersTransitionsTracker',
            foreign_key: :case_id
 
   has_many :attachments, -> { order(id: :desc) },
            class_name: 'CaseAttachment',
            foreign_key: :case_id,
+           inverse_of: :case,
            dependent: :destroy
 
   belongs_to :late_team, class_name: 'BusinessUnit'
@@ -504,7 +511,7 @@ class Case::Base < ApplicationRecord
   end
 
   def responded?
-    transitions.where(event: 'respond').any?
+    responded_transitions.any?
   end
 
   def responded_late?
@@ -528,11 +535,9 @@ class Case::Base < ApplicationRecord
   # (the external time limit)
   #
   def business_unit_responded_in_time?
-    responding_transitions = transitions.where(event: 'respond')
-    if responding_transitions.any?
-      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
-      responding_transition = responding_transitions.last
-      responding_date = responding_transition.created_at.to_date
+    if responded_transitions.any?
+      responding_team_assignment_date = assign_responder_transitions.last.created_at.to_date
+      responding_date = responded_transitions.last.created_at.to_date
       internal_deadline = deadline_calculator
                               .internal_deadline_for_date(correspondence_type, responding_team_assignment_date)
       internal_deadline >= responding_date
@@ -542,10 +547,10 @@ class Case::Base < ApplicationRecord
   end
 
   def business_unit_already_late?
-    if transitions.where(event: 'respond').any?
+    if responded_transitions.any?
       raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
     else
-      responding_team_assignment_date = transitions.where(event: 'assign_responder').last.created_at.to_date
+      responding_team_assignment_date = assign_responder_transitions.last.created_at.to_date
       internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
       internal_deadline < Date.today
     end
@@ -619,20 +624,10 @@ class Case::Base < ApplicationRecord
     self.class.type_abbreviation
   end
 
-  # Return the CorrespondenceType object for this case.
-  #
-  # The CorrespondenceType is determined by the class of this case, which must
-  # define the method <tt>type_abbreviation</tt> as a class method. This must
-  # match an abbreviation of an existing CorrespondenceType object.
-  #
-  # As this isn't expressed with Rails relationships, the CorrespondenceType
-  # object is cached inside the case object. For environments where the
-  # CorrespondenceType object can change you may need to reload this object to
-  # ensure you have the latest. For example in tests, when expecting a
-  # default_press_officer to be defined on the CorrespondenceType for this case.
   def correspondence_type
-    @correspondence_type ||=
-      CorrespondenceType.find_by!(abbreviation: type_abbreviation.parameterize.underscore.upcase)
+    # CorrespondenceType.find_by_abbreviation! is overloaded to look in a
+    # global cache of all (probably 6) correspondence types
+    CorrespondenceType.find_by_abbreviation! type_abbreviation.parameterize.underscore.upcase
   end
 
   # Override this method if you want to make this correspondence type

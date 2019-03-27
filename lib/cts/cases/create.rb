@@ -1,6 +1,7 @@
 require 'cts'
 
 # rubocop:disable Metrics/ClassLength
+
 module CTS::Cases
   # @todo Used by Admin section to generate test data.
   #       Code requires auditing to ensure it is still valid in relation to
@@ -584,4 +585,5 @@ module CTS::Cases
     end
   end
 end
+
 # rubocop:enable Metrics/ClassLength
