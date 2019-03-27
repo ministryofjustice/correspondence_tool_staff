@@ -26,6 +26,7 @@
 #  type                 :string
 #  appeal_outcome_id    :integer
 #  dirty                :boolean          default(FALSE)
+#  user_id              :integer          default(-100), not null, foreign key
 #
 
 require 'rails_helper'
@@ -33,10 +34,10 @@ require 'rails_helper'
 describe Case::OverturnedICO::SAR do
 
   let(:new_case)       { described_class.new }
+  let(:creator)        { create(:user, :orphan) }
 
   # TODO: Clean up factories, I think we're creating at on of extra cases we don't need here
   let(:sar_ico_appeal) { create :ico_sar_case }
-  # let(:sar_case)       { create :sar_case }
   let(:sar)            { find_or_create :sar_correspondence_type }
 
   describe '.type_abbreviation' do
@@ -45,18 +46,8 @@ describe Case::OverturnedICO::SAR do
     end
   end
 
-  # before :each do
-  #   puts "before teams: #{Team.count}  users: #{User.count}"
-  # end
-
-  # after :each do
-  #   puts "teams: #{Team.count}  users: #{User.count}"
-  # end
-
   context 'validations' do
-
     context 'all mandatory fields specified' do
-
       context 'created in a factory' do
         it 'is valid' do
           kase = create :overturned_ico_sar
@@ -82,13 +73,12 @@ describe Case::OverturnedICO::SAR do
                       'email'                   => 'stephen@stephenrichards.eu',
                       'ico_officer_name'        => 'Dan Dare'
               }).to_unsafe_hash
+          params[:creator] = creator
           kase = described_class.new(params)
           expect(kase).to be_valid
         end
       end
     end
-
-
 
     context 'received_date' do
       it 'errors if blank' do
@@ -279,7 +269,6 @@ describe Case::OverturnedICO::SAR do
   end
 
   describe '#link_related_cases' do
-
     let(:link_case_1)             { create :sar_case }
     let(:link_case_2)             { create :sar_case }
     let(:link_case_3)             { create :sar_case }
@@ -323,7 +312,6 @@ describe Case::OverturnedICO::SAR do
       @kase.link_related_cases
       expect(@kase.original_case.linked_cases).to include(@kase)
     end
-
   end
 
   describe '#correspondence_type_for_business_unit_assignment' do

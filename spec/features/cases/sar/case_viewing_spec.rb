@@ -68,7 +68,7 @@ feature 'viewing SAR cases' do
     given(:kase) do
       create :accepted_sar,
              responder: responder,
-             uploading_user: manager,
+             creator: manager,
              uploaded_request_files: [request_file]
     end
 

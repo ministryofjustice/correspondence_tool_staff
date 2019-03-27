@@ -26,6 +26,7 @@
 #  type                 :string
 #  appeal_outcome_id    :integer
 #  dirty                :boolean          default(FALSE)
+#  user_id              :integer          default(-100), not null, foreign key
 #
 
 require 'rails_helper'
@@ -33,6 +34,7 @@ require 'rails_helper'
 describe Case::OverturnedICO::FOI do
 
   let(:new_case)                { described_class.new }
+  let(:creator)                 { create(:user, :orphan) }
 
   # TODO: Clean up factories, I think we're creating at on of extra cases we don't need here
   let(:original_ico_appeal)     { create :ico_foi_case, original_case: original_case }
@@ -80,6 +82,7 @@ describe Case::OverturnedICO::FOI do
                       'email'                   => 'stephen@stephenrichards.eu',
                       'ico_officer_name'        => 'Dan Dare'
               }).to_unsafe_hash
+          params[:creator] = creator
           kase = described_class.new(params)
           expect(kase).to be_valid
         end

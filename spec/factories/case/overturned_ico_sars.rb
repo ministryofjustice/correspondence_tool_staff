@@ -26,6 +26,7 @@ FactoryBot.define do
     reply_method        { 'send_by_email' }
     email               { 'dave@moj.com' }
     ico_officer_name    { 'Dan Dare' }
+    creator             { create(:user, :orphan) }
 
     trait :flagged do
       after(:create) do |kase, evaluator|

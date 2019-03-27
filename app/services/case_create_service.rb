@@ -42,7 +42,7 @@ class CaseCreateService
   end
 
   def create_case
-    @case = @case_class.new(@permitted_params.merge(uploading_user: @user))
+    @case = @case_class.new(@permitted_params.merge(creator: @user))
 
     if @case.invalid? || @result == :error
       @result = :error
