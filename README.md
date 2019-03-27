@@ -144,7 +144,7 @@ export PGHOST=localhost
 
 </details>
 
-#####Installing Redis
+##### Installing Redis
 
 Redis is needed to run the 'db:reseed' task. Redis is used as the adapted for
 delayed jobs in the system.
@@ -154,7 +154,7 @@ brew install redis
 ```
 </details>
 
-#####Testing
+##### Testing
 
 This project can produce code coverage data (w/o JS or views) using the `simplecov` gem
 set COVERAGE=1 (or any value) to generate a coverage report.
@@ -190,7 +190,7 @@ rails parallel:spec:features
 rails parallel:spec:non_features
 ```
 
-######Browser testing
+###### Browser testing
 
 We use [headless chrome](https://developers.google.com/web/updates/2017/04/headless-chrome)
 for Capybara tests, which require JavaScript. You will need to install Chrome >= 59.
