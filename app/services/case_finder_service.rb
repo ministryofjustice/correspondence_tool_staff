@@ -7,32 +7,30 @@ class CaseFinderService
     @scope = Pundit.policy_scope(@user, Case::Base.all)
   end
 
-  # Normally we want an and (merge) when reducing our scopes e.g. open_cases in_time
-  # but when we are looking for users and roles, we want an or. Hence the existence of
-  # these 2 methods.
   def for_scopes scope_names
-    @scope = scope_names_to_scopes(scope_names).reduce do |merged_scopes, scope|
-      merged_scopes.and(scope)
-    end
-    self
-  end
-
-  def for_scopes_with_or scope_names
-    @scope = scope_names_to_scopes(scope_names).reduce do |merged_scopes, scope|
-      merged_scopes.or(scope)
-    end
-    self
-  end
-
-  def scope_names_to_scopes scope_names
-    scope_names.map do |scope_name|
-      scope_method = "#{scope_name}_scope"
-      if respond_to? scope_method, true
-        __send__ scope_method
-      else
-        raise NameError.new("could not find scope named #{scope_method}")
+    # This takes a list of scope names:
+    #
+    #   ['open_cases', 'open_flagged_for_approval']
+    #
+    # And performs an AREL OR on them:
+    #
+    #   open_cases_scope.or(open_flagged_for_approval_scope)
+    #
+    # This will work with any number of *_scope methods that return an AREL.
+    if scope_names.any?
+      scopes = scope_names.map do |scope_name|
+        scope_method = "#{scope_name}_scope"
+        if respond_to? scope_method, true
+          __send__ scope_method
+        else
+          raise NameError.new("could not find scope named #{scope_method}")
+        end
       end
+
+      @scope = scopes.reduce { |merged_scopes, scope| merged_scopes.or(scope) }
     end
+
+    self
   end
 
   def for_params(params)
@@ -92,9 +90,9 @@ class CaseFinderService
 
   def open_cases_scope
     open_scope = scope.presented_as_open
-      .joins(:assignments)
-      .where(assignments: { state: ['pending', 'accepted']})
-      .distinct('case.id')
+                   .joins(:assignments)
+                   .where(assignments: { state: ['pending', 'accepted']})
+                   .distinct('case.id')
     if user.responder_only?
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       open_scope.where(id: case_ids)

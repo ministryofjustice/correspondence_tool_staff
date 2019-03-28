@@ -72,7 +72,7 @@ class GlobalNavManager
       tabs_settings ||= []
       tabs_settings.map do |tab_name, tab_settings|
         Tab.new(name: tab_name, parent: self, attrs: tab_settings)
-      end .find_all do |tab|
+      end.find_all do |tab|
         tab.visible?
       end
     end

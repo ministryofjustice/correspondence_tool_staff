@@ -79,10 +79,10 @@ describe GlobalNavManager::Page do
 
   before do
     allow(GlobalNavManager::Tab).to receive(:new)
-                                      .with(:in_time, any_args())
+                                      .with(hash_including(name: :in_time))
                                       .and_return(in_time_tab)
     allow(GlobalNavManager::Tab).to receive(:new)
-                                      .with(:late, any_args())
+                                      .with(hash_including(name: :late))
                                       .and_return(late_tab)
     allow(CaseFinderService).to receive(:new)
                                   .and_return(instance_spy(CaseFinderService))
@@ -194,7 +194,7 @@ describe GlobalNavManager::Page do
     let(:cfs) { instance_double(CaseFinderService) }
 
     before do
-      allow(cfs).to receive(:for_scopes_with_or).and_return(cfs)
+      allow(cfs).to receive(:for_scopes).and_return(cfs)
       allow(global_nav).to receive(:finder).and_return(cfs)
     end
 
@@ -206,7 +206,7 @@ describe GlobalNavManager::Page do
 
     it 'calls for_scopes on the finder' do
       open_cases_page.finder
-      expect(cfs).to have_received(:for_scopes_with_or).with(['opened'])
+      expect(cfs).to have_received(:for_scopes).with(['opened'])
     end
   end
 
