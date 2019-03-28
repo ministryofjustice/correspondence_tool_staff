@@ -23,8 +23,6 @@ RSpec.describe StatsController, type: :controller do
         Timecop.freeze(Date.new(2019, 3, 22)) do
           get :download, params: { id: report_type.id }
 
-          expect(response.body).to eq(File.read(Rails.root.join('spec', 'fixtures', 'spreadsheet.xlsx')))
-
           expect(response.headers['Content-Disposition'])
             .to eq 'attachment; filename="r005_monthly_performance_report.xlsx"'
         end

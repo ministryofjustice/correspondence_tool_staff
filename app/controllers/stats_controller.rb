@@ -2,6 +2,8 @@ class StatsController < ApplicationController
 
   before_action :authorize_user
 
+  SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
   def index
     @foi_reports = ReportType.standard.foi.order(:full_name)
     @sar_reports = ReportType.standard.sar.order(:full_name)
@@ -18,7 +20,7 @@ class StatsController < ApplicationController
       send_data axlsx.to_stream.read,
                 filename: report.report_type.filename('xlsx'),
                 disposition: :attachment,
-                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                type: SPREADSHEET_CONTENT_TYPE
     else
       report.run_and_update!
       report.trim_older_reports
@@ -53,7 +55,7 @@ class StatsController < ApplicationController
         send_data axlsx.to_stream.read,
                   filename: @report.report_type.filename('xlsx'),
                   disposition: :attachment,
-                  type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                  type: SPREADSHEET_CONTENT_TYPE
       else
         @report.run_and_update!(@report.period_start, @report.period_end)
         flash[:download] =  "Your custom report has been created. #{view_context.link_to 'Download', stats_download_custom_report_path(id: @report.id)}"
