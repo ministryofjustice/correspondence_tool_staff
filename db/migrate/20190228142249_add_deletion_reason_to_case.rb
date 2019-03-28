@@ -1,8 +1,9 @@
 class AddDeletionReasonToCase < ActiveRecord::Migration[5.0]
   def change
-    # This migration is broken - see following one (fix_reason_for_deletion) for fix
     change_table :cases do |t|
-      t.string :reason_for_deletion, null: true, default: 'Unspecified'
+      # No default - otherwise non-deleted cases get a reason for deletion
+      # also can't backfill cases as some old deleted cases don't meet the current validations
+      t.string :reason_for_deletion
     end
   end
 end
