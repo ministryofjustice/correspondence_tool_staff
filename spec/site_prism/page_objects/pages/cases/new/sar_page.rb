@@ -5,7 +5,7 @@ module PageObjects
         class SARPage < PageObjects::Pages::Base
           include SitePrism::Support::DropInDropzone
 
-          set_url '/cases/new/sar'
+          set_url '/case_sars/new'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

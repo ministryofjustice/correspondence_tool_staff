@@ -21,8 +21,7 @@ feature 'creating ICO with invalid params' do
 
     click_button 'Create case'
 
-    # Because we post to /cases, we don't actually land back on the new page
-    expect(page.current_path).to eq '/cases'
+    expect(page.current_path).to eq '/case_ico_fois'
     expect(cases_new_ico_page.errors.details.count).to eq 1
     expect(cases_new_ico_page.errors.details.first)
       .to have_content('Draft deadline cannot be after final deadline')

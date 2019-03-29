@@ -1,0 +1,14 @@
+- content_for :page_title do
+  = t('page_title.create_case_page',case_type: kase.type_abbreviation)
+
+= GovukElementsErrorsHelper.error_summary kase.object,
+        "#{pluralize(kase.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+- content_for :heading
+= t('.heading')
+
+- content_for :sub_heading
+= t4c(kase, '', 'sub_heading', case_type: kase.type_abbreviation)
+
+= render partial: 'layouts/header'
+

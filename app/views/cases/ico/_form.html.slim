@@ -2,7 +2,8 @@
 
 = f.text_field :ico_officer_name
 
-= render partial: 'cases/ico/case_linking/new_case_link_form', locals: {f: f}
+= render partial: 'cases/ico/case_linking/new_case_link_form',
+        locals: {f: f, correspondence_type_key: @correspondence_type_key, kase: @case}
 
 .form-group
   = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.received_date'),

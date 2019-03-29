@@ -61,8 +61,6 @@
       - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
         - panel.text_area :postal_address, {rows: 4}
 
-  = render partial: 'cases/sar/new_form_details', locals: { f: f }
-
   = f.collection_select :responding_team, BusinessUnit.responding.responding_for_correspondence_type(CorrespondenceType.sar).active, :id, :name, { selected: @case.responding_team.id }
 
   = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?]

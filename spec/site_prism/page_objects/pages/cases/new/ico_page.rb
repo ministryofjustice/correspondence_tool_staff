@@ -3,7 +3,7 @@ module PageObjects
     module Cases
       module New
         class ICOPage < PageObjects::Pages::Base
-          set_url '/cases/new/ico'
+          set_url '/case_ico_fois/new'
 
           section :errors, PageObjects::Sections::Errors, '.error-summary'
 

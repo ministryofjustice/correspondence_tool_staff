@@ -198,7 +198,16 @@ Rails.application.routes.draw do
 
   post '/feedback' => 'feedback#create'
 
+  # Each case type gets its own controller for new and create as the behaviours
+  # are all different and different parameters are passed
+  resources :case_foi_standards, only: [:new, :create], controller: :foi_standard_cases do
+  end
+  resources :case_ico_fois, only: [:new, :create], controller: :foi_ico_cases do
+  end
+  resources :case_sars, only: [:new, :create], controller: :sar_cases do
+  end
 
+  # TODO - need to remove :create and :new actions from cases_controller
   resources :cases, except: :new do
     authenticated :user, -> (u) { u.manager? }  do
       root to: redirect(gnav.default_urls.manager), as: :manager_root
@@ -253,7 +262,6 @@ Rails.application.routes.draw do
     patch :execute_request_amends, on: :member
     post  :filter, on: :collection
     get 'remove_clearance' => 'cases#remove_clearance', on: :member
-    # get 'upload_response_approve' => 'cases#upload_response_approve', on: :member
     get :extend_for_pit, on: :member
     patch :execute_extend_for_pit, on: :member
     patch :request_further_clearance, on: :member

@@ -5,7 +5,7 @@ module PageObjects
         class FOIPage < PageObjects::Pages::Base
           include SitePrism::Support::DropInDropzone
 
-          set_url '/cases/new/foi'
+          set_url '/case_foi_standards/new'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
