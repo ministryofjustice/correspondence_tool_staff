@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.15
--- Dumped by pg_dump version 9.5.15
+-- Dumped from database version 9.5.14
+-- Dumped by pg_dump version 9.5.14
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -353,6 +353,7 @@ CREATE TABLE public.cases (
     appeal_outcome_id integer,
     dirty boolean DEFAULT false,
     document_tsvector tsvector,
+    user_id integer DEFAULT '-100'::integer NOT NULL,
     reason_for_deletion character varying
 );
 
@@ -1354,6 +1355,13 @@ CREATE INDEX index_cases_on_requester_type ON public.cases USING btree (requeste
 
 
 --
+-- Name: index_cases_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_on_user_id ON public.cases USING btree (user_id);
+
+
+--
 -- Name: index_cases_users_transitions_trackers_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1522,6 +1530,14 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 
 --
+-- Name: fk_rails_5b2f8d9aa6; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cases
+    ADD CONSTRAINT fk_rails_5b2f8d9aa6 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -1641,6 +1657,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180717211105'),
 ('20180806100827'),
 ('20190228142249'),
+('20190312104101'),
 ('20190325082640');
 
 

@@ -26,6 +26,7 @@
 #  type                 :string
 #  appeal_outcome_id    :integer
 #  dirty                :boolean          default(FALSE)
+#  user_id              :integer          not null, default(-100), foreign key
 #
 
 #rubocop:disable Metrics/ClassLength
@@ -57,7 +58,6 @@ class Case::Base < ApplicationRecord
                 :uploaded_request_files,
                 :request_amends_comment,
                 :upload_comment,
-                :uploading_user, # Used when creating case sent by post.
                 :draft_compliant
 
   jsonb_accessor :properties,
@@ -157,6 +157,7 @@ class Case::Base < ApplicationRecord
   scope :internal_review_timeliness, -> { where(type: 'Case::FOI::TimelinessReview')}
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
 
+  validates :creator, presence: true
   scope :soft_deleted, -> { where(deleted: true) }
 
   scope :updated_since, ->(date) { where('updated_at >= ?', date) }
@@ -276,6 +277,10 @@ class Case::Base < ApplicationRecord
   belongs_to :refusal_reason, class_name: 'CaseClosure::RefusalReason'
 
   belongs_to :info_held_status, class_name: 'CaseClosure::InfoHeldStatus'
+
+  # A Case creator has no bearing on what the user can do with a Case.
+  # Abilities are defined via config/state_machine/* and related predicates
+  belongs_to :creator, class_name: 'User', foreign_key: :user_id
 
   has_many :cases_exemptions,
            class_name: 'CaseExemption',
@@ -416,7 +421,12 @@ class Case::Base < ApplicationRecord
     date_responded <= external_deadline
   end
 
+  # +date_draft_compliant+ was added February 2019, historical
+  # Cases do not have draft timeliness information set and
+  # therefore cannot be considered to be in/out of draft deadline
   def within_draft_deadline?
+    return unless date_draft_compliant.present?
+
     date_draft_compliant <= internal_deadline
   end
 
@@ -513,6 +523,12 @@ class Case::Base < ApplicationRecord
     date_responded <= external_deadline
   end
 
+  # Note use of +responded?+ as guard to prevent exceptions
+  # thrown by business_unit_responded_in_time? from arising
+  def response_in_target?
+    responded? && business_unit_responded_in_time?
+  end
+
   # determines whether or not an individual BU responded to a case in time, measured
   # from the date the case was assigned to the business unit to the time the case was marked as responded.
   # Note that the time limit is different for trigger cases (the internal time limit) than for non trigger
@@ -556,6 +572,13 @@ class Case::Base < ApplicationRecord
 
   def already_late?
     Date.today > external_deadline
+  end
+
+  def num_days_draft_deadline_late
+    return unless date_draft_compliant.present? && internal_deadline.present?
+
+    days = (date_draft_compliant - internal_deadline).to_i
+    days > 0 ? days : nil
   end
 
   def current_team_and_user
@@ -645,22 +668,39 @@ class Case::Base < ApplicationRecord
     !dirty?
   end
 
-  def assigned_disclosure_specialist
+  def assigned_disclosure_specialist!
     ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.dacu_disclosure.id }
     raise 'No assigned disclosure specialist' if ass.nil? || ass.user.nil?
     ass.user
   end
 
-  def assigned_press_officer
+  def assigned_disclosure_specialist
+    assignments
+      .approving
+      .accepted
+      .detect { |a| a.team_id == BusinessUnit.dacu_disclosure.id }
+      &.user
+  end
+
+  def assigned_press_officer!
     ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.press_office.id }
     raise 'No assigned press officer' if ass.nil? || ass.user.nil?
     ass.user
   end
 
-  def assigned_private_officer
+  def assigned_private_officer!
     ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.private_office.id }
     raise 'No assigned private officer' if ass.nil? || ass.user.nil?
     ass.user
+  end
+
+  # Caseworker officer is blank for non-trigger and
+  # always a disclosure specialist for trigger cases as requested by
+  # London team.
+  def casework_officer
+    if trigger?
+      assigned_disclosure_specialist&.full_name
+    end
   end
 
   def requires_flag_for_disclosure_specialists?
@@ -697,6 +737,11 @@ class Case::Base < ApplicationRecord
       external_deadline: initial_deadline,
       has_pit_extension: false
     )
+  end
+
+
+  def trigger?
+    TRIGGER_WORKFLOWS.include?(workflow)
   end
 
   # predicate methods
@@ -814,14 +859,15 @@ class Case::Base < ApplicationRecord
     ]
   end
 
+  # Note: When creating a case Delivery Method: Post
+  # allows the user to upload documents (presumably letters)
+  # which are converted to PDF files via a delayed job
   def process_uploaded_request_files
-    if uploading_user.nil?
-      # I really don't feel comfortable with having this special snowflake of a
-      # attribute that only ever needs to be populated when creating a new case
-      # that was sent by post.
-      raise "Uploading user required for processing uploaded request files"
+    if creator.nil?
+      raise "Creator user required for processing uploaded request files"
     end
-    uploader = S3Uploader.new(self, uploading_user)
+
+    uploader = S3Uploader.new(self, creator)
     uploader.process_files(uploaded_request_files, :request)
   end
 

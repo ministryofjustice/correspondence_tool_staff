@@ -475,6 +475,7 @@ en:
       clear_response: Clear response
       compliant_in_time: Uploaded in time
       compliant_late: Uploaded late
+      compliant_unknown: Unknown draft compliancy
       create_overturned: Create an ICO Overturned case
       data_subject: Data subject
       data_subject_type: Type of data subject
