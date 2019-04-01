@@ -1,9 +1,8 @@
 # Correspondence Tools - Staff
-[![Build Status](https://travis-ci.org/ministryofjustice/correspondence_tool_staff.svg?branch=develop)](https://travis-ci.org/ministryofjustice/correspondence_tool_staff)
+[![Build Status](https://semaphoreci.com/api/v1/correspondence-tool/correspondence_tool_staff-4/branches/master/badge.svg)](https://semaphoreci.com/correspondence-tool/correspondence_tool_staff-4)
 [![Code Climate](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/gpa.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
 [![Test Coverage](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/coverage.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/coverage)
 [![Issue Count](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/issue_count.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
-[![Build Status](https://semaphoreci.com/api/v1/aliuk2012/correspondence_tool_staff/branches/master/badge.svg)](https://semaphoreci.com/aliuk2012/correspondence_tool_staff)
 
 
 A simple application to allow internal staff users to answer correspondence.
@@ -407,7 +406,7 @@ rake db:dump:help
 The papertrail gem is used as an auditing tool, keeping the old copies of records every time they are
 changed.  There are a couple of complexities in using this tool which are described below:
 
-## JSONB fields on the database
+#### JSONB fields on the database
 The default serializer does not de-serialize the properties column correctly because internally it is
 held as JSON, and papertrail serializes the object in YAML.  The custom serializer ```CtsPapertrailSerializer```
 takes care of this and reconstitutes the JSON fields correctly.  See ```/spec/lib/papertrail_spec.rb``` for
@@ -456,7 +455,7 @@ control aspects of the build. The available build arguments are:
 
   These are required to scan the uploaded files for viruses (clamav & Co.) and
   to generate a PDF preview (libreoffice).
-  
+
 #### Generating Documentation
 
 You can generate documentation for the project with:

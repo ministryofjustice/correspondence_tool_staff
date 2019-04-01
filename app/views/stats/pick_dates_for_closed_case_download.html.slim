@@ -1,0 +1,26 @@
+- content_for :page_title do
+  - t('page_title.custom_report')
+
+/ = GovukElementsErrorsHelper.error_summary @report,
+/         "#{pluralize(@report.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+- content_for :heading
+  | Create custom report
+
+= render partial: 'layouts/header'
+
+= form_for @report, as: :report, url: stats_download_closed_cases_path, target: '_blank' do |f|
+  fieldset
+    legend
+      .heading-small
+        = t('.timescale_copy')
+
+    .period-start
+      = f.gov_uk_date_field :period_start, {legend_text: t('stats.common.period_start'),
+              form_hint_text: t('cases.new.received_date_copy')}
+
+    .period-end
+      = f.gov_uk_date_field :period_end, {legend_text: t('stats.common.period_end'),
+              form_hint_text: t('cases.new.received_date_copy')}
+
+  = f.submit 'Create custom report', class:'button'
