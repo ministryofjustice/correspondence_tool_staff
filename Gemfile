@@ -62,7 +62,7 @@ gem 'uglifier', '>= 1.3.0'
 group :test do
   gem 'capybara'
   gem 'codeclimate-test-reporter', '~> 1.0'
-  gem 'i18n-tasks', '~> 0.9.28'
+  gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 4.0'
