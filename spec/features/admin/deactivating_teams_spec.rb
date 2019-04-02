@@ -12,6 +12,8 @@ feature 'deactivating directorates' do
     teams_show_page.load(id: dir.id)
     teams_show_page.deactivate_team_link.click
 
+    puts "\n+++++ TEST VALUES: dir.name: #{dir.name}\nteams_show_page.flash_notice.text: #{teams_show_page.flash_notice.text}\n"
+
     expect(teams_show_page.flash_notice.text).to eq(
     "#{dir.name} directorate has now been deactivated")
   end
