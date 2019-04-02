@@ -134,8 +134,9 @@ class Team < ApplicationRecord
   end
 
   def original_team_name
-    team_name = name.remove('DEACTIVATED')
-    team_name.remove(deleted_at.to_s)
+    puts "\n+++++ team#original_team_name\nname: #{name}\ndeleted_at.to_s: #{deleted_at}\n"
+
+    name.remove('DEACTIVATED', deleted_at.to_s)
   end
 
   private
