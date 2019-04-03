@@ -19,6 +19,8 @@ class Team < ApplicationRecord
   validate :valid_role
   validate :deletion_validation
 
+  DEACTIVATION_LABEL = '[DEACTIVATED]'.freeze
+
   acts_as_tree
 
   has_paper_trail ignore: [:created_at, :updated_at]
@@ -139,19 +141,16 @@ class Team < ApplicationRecord
   #   To retrieve the Team name without any of the  deactivation information
   #   we require this string replacement workaround
   def original_team_name
-    name.remove('[DEACTIVATED]', /@\((.)*\)/)
+    name.remove(DEACTIVATION_LABEL, /@\((.)*\)/)
   end
 
   private
 
-  # this method applies to Business Groups and Directorates only.  It is overridden in BusinessUnit.
-  #
+  # This method applies to Business Groups and Directorates only.
+  # It is overridden in BusinessUnit.
   def deletion_validation
-    if deleted_at.present?
-      if has_active_children?
-        errors.add(:base, 'Unable to delete team: team still has active children')
-      end
-
+    if deleted_at.present? && has_active_children?
+      errors.add(:base, 'Unable to delete team: team still has active children')
     end
   end
 end

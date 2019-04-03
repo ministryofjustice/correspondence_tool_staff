@@ -26,9 +26,11 @@ class TeamDeletionService
   #   ease purposes. Note use of brackets to allow extraction of team name
   #   without additional information when required.
   def soft_delete
+    deletion_date = DateTime.now.strftime('%F %T')
+
     @team.update_attributes!(
       deleted_at: Time.current,
-      name: "[DEACTIVATED] #{@team.name} @(#{DateTime.now.strftime('%F %T')})"
+      name: "#{Team::DEACTIVATION_LABEL} #{@team.name} @(#{deletion_date})"
     )
   end
 end
