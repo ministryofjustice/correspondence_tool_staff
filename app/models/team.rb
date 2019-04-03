@@ -133,10 +133,13 @@ class Team < ApplicationRecord
     !active?
   end
 
+  # @note (Mohammed Seedat 2019-04-03) Original Team Name workaround
+  #   Team table has no way of storing historical data. On deactivation, the
+  #   Team's name is changed - name therefore stores deletion information.
+  #   To retrieve the Team name without any of the  deactivation information
+  #   we require this string replacement workaround
   def original_team_name
-    puts "\n+++++ team#original_team_name\nname: #{name}\ndeleted_at.to_s: #{deleted_at}\n"
-
-    name.remove('DEACTIVATED', deleted_at.to_s)
+    name.remove('[DEACTIVATED]', /@\((.)*\)/)
   end
 
   private

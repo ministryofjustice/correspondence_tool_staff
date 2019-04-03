@@ -21,10 +21,14 @@ class TeamDeletionService
 
   private
 
+  # @note (Mohammed Seedat 2019-04-03)
+  #   Deactivation information is stored in Team name string for reporting
+  #   ease purposes. Note use of brackets to allow extraction of team name
+  #   without additional information when required.
   def soft_delete
-    @team.update_attributes!(deleted_at: Time.current,
-                             name: "DEACTIVATED #{@team.name} " + Time.now.to_s)
+    @team.update_attributes!(
+      deleted_at: Time.current,
+      name: "[DEACTIVATED] #{@team.name} @(#{DateTime.now.strftime('%F %T')})"
+    )
   end
-
-
 end
