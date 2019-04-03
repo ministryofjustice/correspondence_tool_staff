@@ -19,7 +19,7 @@ class Team < ApplicationRecord
   validate :valid_role
   validate :deletion_validation
 
-  DEACTIVATION_LABEL = '[DEACTIVATED]'.freeze
+  DEACTIVATED_LABEL = '[DEACTIVATED]'.freeze
 
   acts_as_tree
 
@@ -141,7 +141,7 @@ class Team < ApplicationRecord
   #   To retrieve the Team name without any of the  deactivation information
   #   we require this string replacement workaround
   def original_team_name
-    name.remove(DEACTIVATION_LABEL, /@\((.)*\)/)
+    name.remove(DEACTIVATED_LABEL, /@\((.)*\)/).strip
   end
 
   private
