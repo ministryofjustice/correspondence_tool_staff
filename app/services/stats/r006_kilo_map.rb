@@ -18,7 +18,6 @@ module Stats
       'Includes a list of all teams and users that respond to requests for information'
     end
 
-    # KiloMap isn't really a 'Report' in the normal sense of the word
     class << self
       def xlsx?
         false

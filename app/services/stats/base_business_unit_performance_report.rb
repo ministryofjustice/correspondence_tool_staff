@@ -82,6 +82,8 @@ module Stats
       @stats.finalise
     end
 
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [4, 11, 16]
+
     # This method needs to return a grid of 'cells' with value and rag_rating properties
     def to_csv
       csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
@@ -92,7 +94,7 @@ module Stats
             OpenStruct.new value: item
           # item at index+1 is the case count - don't mark 0/0 as Red RAG rating
           # These are the positions of the 3 items which need a RAG rating
-          elsif [4, 11, 16].include?(item_index) && row[item_index+1] != 0
+          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index+1] != 0
             OpenStruct.new value: item, rag_rating: rag_rating(item)
           else
             OpenStruct.new value: item
