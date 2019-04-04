@@ -116,7 +116,7 @@ describe CSVExporter do
           'Directorate name' => 'Responder Directorate',
           'Draft in time' => nil,
           'In target' => 'Yes',
-          'Number of days late' => 25,
+          'Number of days late' => 14,
         })
       end
     end
@@ -249,7 +249,7 @@ describe CSVExporter do
           'Directorate name' => 'Responder Directorate',
           'Draft in time' => nil,
           'In target' => 'Yes',
-          'Number of days late' => nil,
+          'Number of days late' => 2,
         })
       end
     end
