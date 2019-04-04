@@ -56,6 +56,7 @@ node_modules
 !db/structure.sql
 !public/robots.txt
 !lib/assets/kilo_map.csv
+!spec/fixtures/*.xlsx
 
 # Generated documentation.
 doc

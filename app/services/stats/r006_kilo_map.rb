@@ -18,11 +18,14 @@ module Stats
       'Includes a list of all teams and users that respond to requests for information'
     end
 
-
+    class << self
+      def xlsx?
+        false
+      end
+    end
 
     def initialize
-      @result_set = []
-      @result_set << COLUMN_HEADINGS
+      @result_set = [COLUMN_HEADINGS]
     end
 
     def run
@@ -30,12 +33,9 @@ module Stats
     end
 
     def to_csv
-      csv_string = CSV.generate do |csv|
-        @result_set.each do |line|
-          csv << line
-        end
+      @result_set.map do |row|
+        row.map { |item| OpenStruct.new(value: item) }
       end
-      csv_string
     end
 
     def period_start
@@ -109,7 +109,6 @@ module Stats
       process_areas_and_users(areas, users)
     end
 
-
     def process_areas_and_users(areas, users)
       while areas.any? || users.any?
         line = []
@@ -131,6 +130,5 @@ module Stats
         @result_set << line
       end
     end
-
   end
 end
