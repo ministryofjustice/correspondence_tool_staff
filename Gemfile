@@ -70,7 +70,7 @@ gem 'uglifier', '>= 1.3.0'
 group :test do
   gem 'capybara'
   gem 'codeclimate-test-reporter', '~> 1.0'
-  gem 'i18n-tasks', '~> 0.9.28'
+  gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 4.0'
@@ -85,7 +85,18 @@ group :development, :test do
   # Used to try and track down N+1 query problems
   gem 'bullet'
   gem 'byebug', platform: :mri
+
+  # @todo (Mohammed Seedat 02/04/19): warning when updating chromedriver-helper
+  # +--------------------------------------------------------------------+
+  # |                                                                    |
+  # |  NOTICE: chromedriver-helper is deprecated after 2019-03-31.       |
+  # |                                                                    |
+  # |  Please update to use the 'webdrivers' gem instead.                |
+  # |  See https://github.com/flavorjones/chromedriver-helper/issues/83  |
+  # |                                                                    |
+  # +--------------------------------------------------------------------+
   gem 'chromedriver-helper'
+  
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
@@ -94,7 +105,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.65.0', require: false
+  gem 'rubocop', '~> 0.66.0', require: false
   gem 'rubocop-rspec', require: false
   gem 'ruby-progressbar'
 

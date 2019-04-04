@@ -574,10 +574,8 @@ class Case::Base < ApplicationRecord
     Date.today > external_deadline
   end
 
-  def num_days_draft_deadline_late
-    return unless date_draft_compliant.present? && internal_deadline.present?
-
-    days = (date_draft_compliant - internal_deadline).to_i
+  def num_days_late
+    days = (Date.today - external_deadline).to_i
     days > 0 ? days : nil
   end
 

@@ -15,7 +15,7 @@ describe TeamDeletionService do
         it 'updates the team name' do
           Timecop.freeze(time) do
             service.call
-            expect(dir.reload.name).to include "DEACTIVATED", dir.name
+            expect(dir.reload.name).to include Team::DEACTIVATED_LABEL, dir.name
           end
         end
 
@@ -55,7 +55,7 @@ describe TeamDeletionService do
 
             expect(service.result).to eq :ok
             expect(bu_without_users.deleted_at).not_to be_nil
-            expect(bu_without_users.name).to match(/^DEACTIVATED/)
+            expect(bu_without_users.name).to start_with(Team::DEACTIVATED_LABEL)
           end
         end
 
@@ -70,7 +70,7 @@ describe TeamDeletionService do
             expect(service.result).to eq :error
             expect(bu_with_users.errors[:base]).to eq ['Unable to deactivate: this business unit has team members']
             expect(bu_with_users.deleted_at).to be_nil
-            expect(bu_with_users.name).not_to match(/^DEACTIVATED/)
+            expect(bu_with_users.name).not_to start_with(Team::DEACTIVATED_LABEL)
           end
         end
 
@@ -104,7 +104,7 @@ describe TeamDeletionService do
 
             expect(service.result).to eq :ok
             expect(bu.deleted_at).not_to be_nil
-            expect(bu.name).to match(/^DEACTIVATED/)
+            expect(bu.name).to start_with(Team::DEACTIVATED_LABEL)
           end
         end
       end
