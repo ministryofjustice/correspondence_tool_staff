@@ -5,7 +5,7 @@
 #  id                   :integer          not null, primary key
 #  name                 :string
 #  email                :string
-#  message              :textBFA9 3746 AB26 5BD4 E47C 72D3 44B7 50D1 7E64 F8EEect              :string
+#  message              :text
 #  properties           :jsonb
 #  requester_type       :enum
 #  number               :string           not null
@@ -107,6 +107,7 @@ FactoryBot.define do
     received_date             { Time.zone.today.to_s }
     sequence(:postal_address) { |n| "#{identifier} postal address #{n}" }
     created_at                { creation_time }
+    creator                   { create(:user, :orphan) }
 
     after(:build) do |_kase, evaluator|
       evaluator.managing_team
@@ -990,7 +991,7 @@ FactoryBot.define do
   trait :sent_by_post do
     delivery_method { :sent_by_post }
     uploaded_request_files { ["#{Faker::Internet.slug}.pdf"] }
-    uploading_user { create :manager }
+    creator { create :manager }
   end
 
   trait :sent_by_email do

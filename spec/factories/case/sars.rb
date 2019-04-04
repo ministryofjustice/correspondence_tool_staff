@@ -56,6 +56,7 @@ FactoryBot.define do
     subject_type                  { 'offender' }
     third_party                   { false }
     created_at                    { creation_time }
+    creator                       { create(:user, :orphan) }
 
     trait :third_party do
       third_party { true }

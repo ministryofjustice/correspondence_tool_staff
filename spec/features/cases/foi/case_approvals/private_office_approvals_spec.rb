@@ -51,7 +51,7 @@ feature 'cases requiring clearance by press office' do
   end
 
   scenario 'Press Officer approves a case that requires Private Office approval' do
-    login_as pending_press_clearance_case.assigned_press_officer
+    login_as pending_press_clearance_case.assigned_press_officer!
     cases_show_page.load(id: pending_press_clearance_case.id)
 
     approve_case_step kase:            pending_press_clearance_case,
@@ -64,7 +64,7 @@ feature 'cases requiring clearance by press office' do
   end
 
   scenario 'Private Officer approves a case' do
-    login_as pending_private_clearance_case.assigned_private_officer
+    login_as pending_private_clearance_case.assigned_private_officer!
 
     cases_show_page.load(id: pending_private_clearance_case.id)
     expect(cases_show_page.case_status.details.who_its_with.text)

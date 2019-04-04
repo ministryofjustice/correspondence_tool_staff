@@ -22,7 +22,7 @@ FactoryBot.define do
     external_deadline           { 20.business_days.after(received_date) }
     internal_deadline           { 10.business_days.before(external_deadline) }
     uploaded_request_files      { ["#{Faker::Internet.slug}.pdf"] }
-    uploading_user              { find_or_create :manager }
+    creator                     { find_or_create :manager }
     created_at                  { creation_time }
 
     after(:create) do |kase, evaluator|

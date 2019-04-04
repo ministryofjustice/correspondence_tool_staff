@@ -150,7 +150,7 @@ describe Case::SAR do
     it 'can be empty on update if attached request files is present' do
       kase = create :sar_case,
                     uploaded_request_files: ["#{Faker::Internet.slug}.pdf"],
-                    uploading_user: create(:manager),
+                    creator: create(:manager),
                     message: 'foo'
       expect(kase).to be_valid
       kase.update_attributes(message: '')

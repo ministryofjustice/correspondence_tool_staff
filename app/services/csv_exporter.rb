@@ -4,35 +4,46 @@ class CSVExporterError < RuntimeError; end
 
 class CSVExporter
   CSV_COLUMN_HEADINGS = [
-      'Number',
-      'Case type',
-      'Current state',
-      'Responding team',
-      'Responder',
-      'Date received',
-      'Internal deadline',
-      'External deadline',
-      'Date responded',
-      'Date compliant draft uploaded',
-      'Trigger',
-      'Name',
-      'Requester type',
-      'Message',
-      'Info held',
-      'Outcome',
-      'Refusal reason',
-      'Exemptions',
-      'Postal address',
-      'Email',
-      'Appeal outcome',
-      'Third party',
-      'Reply method',
-      'SAR Subject type',
-      'SAR Subject full name',
-      'Business unit responsible for late response',
-      'Extended',
-      'Extension Count',
-      'Deletion Reason',
+    'Number',
+    'Case type',
+    'Current state',
+    'Responding team',
+    'Responder',
+    'Date received',
+    'Internal deadline',
+    'External deadline',
+    'Date responded',
+    'Date compliant draft uploaded',
+    'Trigger',
+    'Name',
+    'Requester type',
+    'Message',
+    'Info held',
+    'Outcome',
+    'Refusal reason',
+    'Exemptions',
+    'Postal address',
+    'Email',
+    'Appeal outcome',
+    'Third party',
+    'Reply method',
+    'SAR Subject type',
+    'SAR Subject full name',
+    'Business unit responsible for late response',
+    'Extended',
+    'Extension Count',
+    'Deletion Reason',
+    'Casework officer',
+    'Created by',
+    'Date created',
+    'Business group',
+    'Directorate name',
+    'Director General name',
+    'Director name',
+    'Deputy Director name',
+    'Draft in time',
+    'In target',
+    'Number of days late',
   ]
 
   def initialize(kase)
@@ -71,6 +82,25 @@ class CSVExporter
         extension_count(@kase) > 0 ? 'Yes' : 'No',
         extension_count(@kase),
         @kase.reason_for_deletion,
+        @kase.casework_officer,
+        @kase.creator.full_name,
+        @kase.created_at.strftime('%F'), # Date created
+
+        # Some of this info can be seen in the Case > Teams page
+        # Business group: of the responding Business Unit/KILO (e.g. Comms & Info)
+        # Director general: head of the business group
+        # Director name: head of directorate
+        # Deputy Director: head of business unit
+        @kase.responding_team&.business_group&.name,
+        @kase.responding_team&.directorate&.name,
+        @kase.responding_team&.business_group&.team_lead, # Director General name
+        @kase.responding_team&.directorate&.team_lead, # Director name
+        @kase.responding_team&.team_lead, # Deputy Director name
+
+        # Draft Timliness related information
+        humanize_boolean(@kase.within_draft_deadline?), # Draft in time
+        humanize_boolean(@kase.response_in_target?), # In Target
+        @kase.num_days_draft_deadline_late, # Number of days late
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")

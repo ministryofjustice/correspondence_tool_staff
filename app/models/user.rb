@@ -194,6 +194,7 @@ class User < ApplicationRecord
   end
 
   private
+
   def bad_passwords
     %w{
         1234567890
