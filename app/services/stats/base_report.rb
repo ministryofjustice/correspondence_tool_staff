@@ -1,6 +1,11 @@
 module Stats
   class BaseReport
 
+    # These are the current RAG (red-amber-green) thresholds for each report type
+    # obviously anything above the 'amber' threshold is 'green'
+    RAG_THRESHOLDS_FOI = {red: 85, amber: 90}
+    RAG_THRESHOLDS_SAR = {red: 80, amber: 85}
+
     attr_reader :period_start, :period_end
 
     def initialize(period_start = nil, period_end = nil)
@@ -17,6 +22,20 @@ module Stats
       @period_end = @reporting_period.period_end
     end
 
+    def rag_thresholds
+      report_type.foi ? RAG_THRESHOLDS_FOI : RAG_THRESHOLDS_SAR
+    end
+
+    def rag_rating(value)
+      if value < rag_thresholds[:red]
+        :red
+      elsif value < rag_thresholds[:amber]
+        :amber
+      else
+        :green
+      end
+    end
+
     def self.title
       raise "#{self} doesn't implement .title method"
     end
@@ -25,25 +44,24 @@ module Stats
       raise "#{self} doesn't implement .description method"
     end
 
-
     def self.report_type
-      puts self.class.to_s
-      raise 'This method shuld be defined in the child class'
+      raise 'This method should be defined in the child class'
     end
-
 
     def default_reporting_period
       report_type.default_reporting_period
     end
-
 
     def results
       @stats.stats
     end
 
     def to_csv
-      @stats.to_csv(first_column_header: @first_column_heading,
+      csv = @stats.to_csv(first_column_header: @first_column_heading,
                     superheadings:       @superheadings)
+      csv.map do |csv_row|
+        csv_row.map { |item| OpenStruct.new(value: item) }
+      end
     end
 
     def reporting_period

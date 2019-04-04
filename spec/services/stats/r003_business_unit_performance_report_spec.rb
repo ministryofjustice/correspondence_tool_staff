@@ -72,7 +72,7 @@ module Stats
         it 'defaults from beginning of year to now' do
           Timecop.freeze(Time.local(2017, 12, 7, 12,33,44)) do
             report = R003BusinessUnitPerformanceReport.new
-            expect(report.__send__(:reporting_period)).to eq '1 Jan 2017 to 7 Dec 2017'
+            expect(report.reporting_period).to eq '1 Jan 2017 to 7 Dec 2017'
           end
         end
       end
@@ -82,7 +82,7 @@ module Stats
           d1 = Date.new(2017, 6, 1)
           d2 = Date.new(2017, 6, 30)
           report = R003BusinessUnitPerformanceReport.new(d1, d2)
-          expect(report.__send__(:reporting_period)).to eq '1 Jun 2017 to 30 Jun 2017'
+          expect(report.reporting_period).to eq '1 Jun 2017 to 30 Jun 2017'
         end
       end
     end
@@ -98,7 +98,6 @@ module Stats
         expect(R003BusinessUnitPerformanceReport.description).to eq 'Shows all FOI open cases and cases closed this month, in-time or late, by responding team'
       end
     end
-
 
     context 'without business unit columns' do
       describe '#results' do
@@ -196,43 +195,63 @@ module Stats
       end
 
       describe '#to_csv' do
-        it 'outputs results as a csv lines' do
+        let(:report_csv) do
           Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-            super_header = %q{"","","","",} +
-                %q{Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,} +
-                %q{Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,} +
-                %q{Overall,Overall,Overall,Overall,Overall,Overall}
-            header = %q{Business group,Directorate,Business unit,Responsible,} +
-                %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
-                %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
-                %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
-            expected_text = <<~EOCSV
-            Business unit report (FOIs) - 1 Jan 2017 to 30 Jun 2017
-            #{super_header}
-            #{header}
-            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4
-            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
-            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
-            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
-            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
-            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
-            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
-            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0
-            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0
-            Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4
-            EOCSV
-            report = R003BusinessUnitPerformanceReport.new
-            report.run
-            actual_lines = report.to_csv.split("\n")
-            expected_lines = expected_text.split("\n")
+            report = R003BusinessUnitPerformanceReport.new; report.run; report.to_csv
+          end
+        end
 
-            (0...actual_lines.size).each do |i|
-              expect(actual_lines[i]).to eq expected_lines[i]
-            end
+        it 'does rag ratings' do
+          rag_ratings = report_csv.map do |row|
+            row.map.with_index { |item, index| [index, item.rag_rating] if item.rag_rating }.compact
+          end
+
+          expect(rag_ratings).to eq([
+                                      [], [], [],
+                                      [[4, :red], [11, :red], [16, :red]],
+                                      [[4, :red], [11, :red], [16, :red]],
+                                      [[4, :red], [11, :red], [16, :red]],
+                                      [[4, :red], [16, :red]],
+                                      [[4, :red], [16, :red]],
+                                      [[4, :red], [16, :red]],
+                                      [[4, :red], [16, :red]],
+                                      [[4, :red], [16, :red]],
+                                      [[4, :red], [16, :red]],
+                                      [[4, :red], [11, :red], [16, :red]],
+                                    ])
+        end
+
+        it 'outputs results as a csv lines' do
+          super_header = %q{"","","","",} +
+              %q{Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,} +
+              %q{Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,} +
+              %q{Overall,Overall,Overall,Overall,Overall,Overall}
+          header = %q{Business group,Directorate,Business unit,Responsible,} +
+              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
+              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
+              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
+          expected_text = <<~EOCSV
+          Business unit report (FOIs) - 1 Jan 2017 to 30 Jun 2017
+          #{super_header}
+          #{header}
+          BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4
+          BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
+          BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
+          BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
+          BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
+          BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
+          BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
+          BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0
+          BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0
+          Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4
+          EOCSV
+          actual_lines = report_csv.map { |row| row.map(&:value) }
+          expected_lines = expected_text.split("\n")
+          actual_lines.zip(expected_lines).each do |actual, expected|
+            expect(CSV.generate_line(actual).chomp).to eq(expected)
           end
         end
       end
-
 
       context 'with a case in the db that is unassigned' do
         before do
@@ -397,11 +416,10 @@ module Stats
             EOCSV
             report = R003BusinessUnitPerformanceReport.new(Date.today.beginning_of_year, Date.today, true)
             report.run
-            actual_lines = report.to_csv.split("\n")
+            actual_lines = report.to_csv.map { |row| row.map(&:value) }
             expected_lines = expected_text.split("\n")
-
-            (0...actual_lines.size).each do |i|
-              expect(actual_lines[i]).to eq expected_lines[i]
+            actual_lines.zip(expected_lines).each do |actual, expected|
+              expect(CSV.generate_line(actual).chomp).to eq(expected)
             end
           end
         end

@@ -36,8 +36,8 @@ class ReportType < ApplicationRecord
     class_name.constantize
   end
 
-  def filename
-    "#{class_name.to_s.underscore.sub('stats/', '')}.csv"
+  def filename(extension)
+    "#{class_name.to_s.underscore.sub('stats/', '')}.#{extension}"
   end
 
   def self.method_missing(meth, *args)
