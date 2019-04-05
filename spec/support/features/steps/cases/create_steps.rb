@@ -78,10 +78,7 @@ def create_sar_case_step(params={})
   Case::Base.find(kase_id)
 end
 
-def create_overturned_ico_case_step(params={})
-  ico_case = params.delete(:ico_case)
-  flagged = params.delete(:flag_for_disclosure)
-  case_type = params[:case_type].downcase
+def create_overturned_ico_case_step(ico_case:, flagged:, case_type:)
 
   cases_show_page.load(id: ico_case.id)
   expect(cases_show_page).to be_displayed(id: ico_case.id)
@@ -89,11 +86,17 @@ def create_overturned_ico_case_step(params={})
   # button when available
   cases_show_page.actions.create_overturned.click
 
-  expect(cases_new_overturned_ico_page).to be_displayed
-  expect(cases_new_overturned_ico_page).to have_form
-  expect(cases_new_overturned_ico_page).to have_text(ico_case.number)
+  if case_type.upcase == 'SAR'
+    new_overturned_ico_page = cases_new_sar_overturned_ico_page
+  else
+    new_overturned_ico_page = cases_new_foi_overturned_ico_page
+  end
 
-  form = cases_new_overturned_ico_page.form
+  expect(new_overturned_ico_page).to be_displayed
+  expect(new_overturned_ico_page).to have_form
+  expect(new_overturned_ico_page).to have_text(ico_case.number)
+
+  form = new_overturned_ico_page.form
 
   final_deadline = 10.business_days.from_now
   form.final_deadline.day.set(final_deadline.day)
@@ -109,7 +112,7 @@ def create_overturned_ico_case_step(params={})
 
   if form.has_flag_for_disclosure_specialists?
     form.choose_flag_for_disclosure_specialists(flagged ? 'yes' : 'no',
-                                                case_type: case_type)
+                                                case_type: case_type.downcase)
   end
 
   click_button 'Create case'

@@ -1,11 +1,13 @@
-class FoiStandardCasesController < CaseBaseController
+class FoiStandardCasesController < CasesController
+  include CreateCase
+  include NewCase
 
   def new
     @correspondence_type_key = 'foi'
-    new_method CorrespondenceType.foi
+    new_case_for CorrespondenceType.foi
   end
 
   def create
-    create_method CorrespondenceType.foi, 'foi'
+    create_case_for_type CorrespondenceType.foi, 'foi'
   end
 end

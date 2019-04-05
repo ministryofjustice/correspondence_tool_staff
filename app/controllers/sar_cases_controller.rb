@@ -1,11 +1,13 @@
-class SarCasesController < CaseBaseController
+class SarCasesController < CasesController
+  include CreateCase
+  include NewCase
 
   def new
-    new_method CorrespondenceType.sar
+    new_case_for CorrespondenceType.sar
   end
 
   def create
-    create_method CorrespondenceType.sar, 'sar'
+    create_case_for_type CorrespondenceType.sar, 'sar'
   end
 
 end

@@ -1223,7 +1223,7 @@ RSpec.describe CasesController, type: :controller do
 
   end
 
-  describe 'GET new_overturned_ico' do
+  describe OverturnedSarCasesController do
 
     let(:ico_sar)             { create :ico_sar_case }
     let(:sar)                 { create :sar_case }
@@ -1256,7 +1256,7 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'renders the new overturned ico case page' do
-          expect(response).to render_template('cases/new')
+          expect(response).to render_template('overturned_sar_cases/new')
         end
       end
 

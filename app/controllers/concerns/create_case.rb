@@ -1,16 +1,7 @@
-# hopefully a temporary artifact while we work out the best structure
-class CaseBaseController < ApplicationController
-  def new_method correspondence_type
-    default_subclass = correspondence_type.sub_classes.first
+module CreateCase
+  extend ActiveSupport::Concern
 
-    authorize default_subclass, :can_add_case?
-
-    @case = default_subclass.new.decorate
-    @case_types = correspondence_type.sub_classes.map(&:to_s)
-    @s3_direct_post = s3_uploader_for(@case, 'requests')
-  end
-
-  def create_method correspondence_type, correspondence_type_key
+  def create_case_for_type correspondence_type, correspondence_type_key
     begin
       service = CaseCreateService.new current_user, correspondence_type_key, params
       authorize service.case_class, :can_add_case?
@@ -31,12 +22,6 @@ class CaseBaseController < ApplicationController
       flash.now[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
       render :new
     end
-  end
-
-  private
-
-  def s3_uploader_for(kase, upload_type)
-    S3Uploader.s3_direct_post_for_case(kase, upload_type)
   end
 
 end

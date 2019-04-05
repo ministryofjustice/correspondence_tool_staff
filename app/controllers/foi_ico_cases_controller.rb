@@ -1,10 +1,12 @@
-class FoiIcoCasesController < CaseBaseController
+class FoiIcoCasesController < CasesController
+  include CreateCase
+
   def new
     @correspondence_type_key = 'ico'
-    new_method CorrespondenceType.ico
+    new_case_for CorrespondenceType.ico
   end
 
   def create
-    create_method CorrespondenceType.ico, 'ico'
+    create_case_for_type CorrespondenceType.ico, 'ico'
   end
 end

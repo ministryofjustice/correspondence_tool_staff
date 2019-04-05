@@ -7,7 +7,6 @@ class CasesController < ApplicationController
   include SARCasesParams
   include OverturnedICOParams
 
-
   before_action :set_case,
                 only: [
                   :approve,
@@ -195,7 +194,7 @@ class CasesController < ApplicationController
     redirect_to redirect_url
   end
 
-  def new
+  def select_type
     permitted_correspondence_types
 
     if FeatureSet.sars.disabled? && FeatureSet.ico.disabled?
