@@ -444,26 +444,9 @@ RSpec.describe CasesController, type: :controller do
     end
 
     context 'without stubs' do
-      # let!(:in_time_case) { create(:accepted_case) }
-      # let!(:late_case) { Timecop.freeze(50.days.ago) { create(:accepted_case) } }
       let!(:closed_case) { create(:closed_case) }
       let!(:active_case) { flagged_case }
 
-      # context 'responder' do
-      #   before do
-      #     sign_in responder
-      #   end
-      #
-      #   it 'gets my in time cases' do
-      #     get :my_open_cases, params: { tab: 'in_time' }
-      #     expect(assigns(:cases)).to match_array([in_time_case])
-      #   end
-      #
-      #   it 'gets my late cases' do
-      #     get :my_open_cases, params: { tab: 'late' }
-      #     expect(assigns(:cases)).to match_array([late_case])
-      #   end
-      # end
       before do
         sign_in manager_approver
       end
