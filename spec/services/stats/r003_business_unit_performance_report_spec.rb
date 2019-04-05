@@ -207,17 +207,19 @@ module Stats
           end
 
           expect(rag_ratings).to eq([
-                                      [], [], [],
-                                      [[4, :red], [11, :red], [16, :red]],
-                                      [[4, :red], [11, :red], [16, :red]],
-                                      [[4, :red], [11, :red], [16, :red]],
+                                      [],
+                                      (0..21).map { |x| [x, :blue] },
+                                      (0..21).map { |x| [x, :grey] },
+                                      [[4, :red], [10, :red], [16, :red]],
+                                      [[4, :red], [10, :red], [16, :red]],
+                                      [[4, :red], [10, :red], [16, :red]],
+                                      [[4, :red], [10, :red], [16, :red]],
+                                      [[4, :red], [10, :red], [16, :red]],
                                       [[4, :red], [16, :red]],
                                       [[4, :red], [16, :red]],
                                       [[4, :red], [16, :red]],
                                       [[4, :red], [16, :red]],
-                                      [[4, :red], [16, :red]],
-                                      [[4, :red], [16, :red]],
-                                      [[4, :red], [11, :red], [16, :red]],
+                                      [[4, :red], [10, :red], [16, :red]],
                                     ])
         end
 

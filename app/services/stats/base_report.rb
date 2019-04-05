@@ -36,6 +36,17 @@ module Stats
       end
     end
 
+    def header_cell row_index, item
+      case row_index
+      when 0
+        OpenStruct.new value: item
+      when 1
+        OpenStruct.new value: item, rag_rating: :blue
+      else
+        OpenStruct.new value: item, rag_rating: :grey
+      end
+    end
+
     def self.title
       raise "#{self} doesn't implement .title method"
     end

@@ -57,7 +57,10 @@ module Stats
         end
 
         expect(rag_ratings).to eq([
-                                    [], [], [], [], [],
+                                    [],
+                                    (0..18).map { |c| [c, :blue] },
+                                    (0..18).map { |c| [c, :grey] },
+                                    [], [],
                                     [[7, :red], [13, :red]],
                                     [[1, :red], [7, :green], [13, :red]],
                                     [],

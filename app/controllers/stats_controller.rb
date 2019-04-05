@@ -89,7 +89,11 @@ class StatsController < ApplicationController
   BRIGHT_LIME_GREEN = '00FF00'
 
   # mapping of RAG ratings to spreadsheet cell colours
-  RAG_RATING_COLOURS = { red: BRIGHT_RED, amber: BRIGHT_YELLOW, green: BRIGHT_LIME_GREEN }
+  RAG_RATING_COLOURS = { red: BRIGHT_RED,
+                         amber: BRIGHT_YELLOW,
+                         green: BRIGHT_LIME_GREEN,
+                         grey: LIGHT_GREY,
+                         blue: LIGHT_BLUE }
 
   # Assumes no report spans more than 26 columns
   SPREADSHEET_COLUMN_NAMES = ('A'..'Z').to_a
