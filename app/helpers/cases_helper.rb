@@ -47,8 +47,8 @@ module CasesHelper
               class: 'button'
     when :create_overturned
       link_to t('common.case.create_overturned'),
-              @case.original_case_type == 'FOI' ? new_overturned_ico_case_foi_overturned_path(@case)
-                : new_overturned_ico_case_sar_overturned_path(@case),
+              @case.original_case_type == 'FOI' ? new_overturned_ico_case_overturned_ico_foi_path(@case)
+                : new_overturned_ico_case_overturned_ico_sar_path(@case),
               id: 'action--create-overturned',
               class: 'button'
     when :respond

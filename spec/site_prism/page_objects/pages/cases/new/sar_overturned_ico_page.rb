@@ -3,7 +3,7 @@ module PageObjects
     module Cases
       module New
         class SarOverturnedIcoPage < PageObjects::Pages::Base
-          set_url '/case_sar_overturneds/{id}/new_overturned_ico'
+          set_url '/case_overturned_ico_sars/{id}/new_overturned_ico'
 
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'

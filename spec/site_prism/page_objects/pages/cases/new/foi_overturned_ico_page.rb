@@ -3,7 +3,7 @@ module PageObjects
     module Cases
       module New
         class FoiOverturnedIcoPage < PageObjects::Pages::Base
-          set_url '/case_foi_overturneds/{id}/new_overturned_ico'
+          set_url '/case_overturned_ico_fois/{id}/new_overturned_ico'
 
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
