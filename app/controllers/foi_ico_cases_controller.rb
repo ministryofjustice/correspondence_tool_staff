@@ -1,5 +1,6 @@
 class FoiIcoCasesController < CasesController
   include CreateCase
+  include NewCase
 
   def new
     @correspondence_type_key = 'ico'
