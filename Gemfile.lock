@@ -369,7 +369,7 @@ GEM
     parser (2.6.2.0)
       ast (~> 2.4.0)
     pg (1.1.4)
-    pg_search (2.1.4)
+    pg_search (2.1.5)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
     phantomjs (2.1.1.0)
@@ -635,7 +635,7 @@ DEPENDENCIES
   paper_trail (~> 10.2)
   parallel_tests
   pg (~> 1.1)
-  pg_search (~> 2.1.4)
+  pg_search (~> 2.1.5)
   pry
   pry-byebug
   pry-rails
