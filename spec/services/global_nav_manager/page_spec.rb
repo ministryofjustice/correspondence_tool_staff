@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 describe GlobalNavManager::Page do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:disclosure_bmt_user)   { find_or_create :disclosure_bmt_user }
@@ -51,24 +50,24 @@ describe GlobalNavManager::Page do
                                       user: user,
                                       request: request }
   let(:incoming_cases_page) { described_class.new(
-                                :incoming_cases,
-                                global_nav,
-                                config.pages.incoming_cases
+                                name: :incoming_cases,
+                                parent: global_nav,
+                                attrs: config.pages.incoming_cases
                               ) }
   let(:open_cases_page)     { described_class.new(
-                                :open_cases,
-                                global_nav,
-                                config.pages.open_cases
+                                name: :open_cases,
+                                parent: global_nav,
+                                attrs: config.pages.open_cases
                               ) }
   let(:closed_cases_page)   { described_class.new(
-                                :closed_cases,
-                                global_nav,
-                                config.pages.closed_cases
+                                name: :closed_cases,
+                                parent: global_nav,
+                                attrs: config.pages.closed_cases
                               ) }
   let(:stats_page)          { described_class.new(
-                                :stats,
-                                global_nav,
-                                config.pages.stats_page
+                                name: :stats,
+                                parent: global_nav,
+                                attrs: config.pages.stats_page
                               ) }
   let(:in_time_tab) { instance_double(GlobalNavManager::Tab,
                                       fullpath: 'in_time_fullpath',
@@ -80,10 +79,10 @@ describe GlobalNavManager::Page do
 
   before do
     allow(GlobalNavManager::Tab).to receive(:new)
-                                      .with(:in_time, any_args())
+                                      .with(hash_including(name: :in_time))
                                       .and_return(in_time_tab)
     allow(GlobalNavManager::Tab).to receive(:new)
-                                      .with(:late, any_args())
+                                      .with(hash_including(name: :late))
                                       .and_return(late_tab)
     allow(CaseFinderService).to receive(:new)
                                   .and_return(instance_spy(CaseFinderService))
@@ -125,7 +124,7 @@ describe GlobalNavManager::Page do
         let(:user) { press_officer }
 
         it 'sets the scopes using the users team' do
-          expect(incoming_cases_page.scopes).to eq ['incoming_for_press_office']
+          expect(incoming_cases_page.__send__(:scope_names)).to eq ['incoming_for_press_office']
         end
       end
 
@@ -133,23 +132,23 @@ describe GlobalNavManager::Page do
         let(:user) { responder }
 
         it 'sets the scopes using the users role' do
-          expect(open_cases_page.scopes).to eq ['opened']
+          expect(open_cases_page.__send__(:scope_names)).to eq ['opened']
         end
       end
 
       context 'disclosure specialist' do
         let(:user) { disclosure_specialist_bmt }
 
-        it 'merges scopes' do
-          expect(open_cases_page.scopes).to match_array ['opened', 'flagged']
+        it 'merges scope_names' do
+          expect(open_cases_page.__send__(:scope_names)).to match_array ['opened', 'flagged']
         end
       end
     end
   end
 
-  describe '#scopes' do
-    it 'returns the scopes' do
-      expect(open_cases_page.scopes).to eq ['opened']
+  describe '#scope_names' do
+    it 'returns the scope_names' do
+      expect(open_cases_page.__send__(:scope_names)).to eq ['opened']
     end
   end
 

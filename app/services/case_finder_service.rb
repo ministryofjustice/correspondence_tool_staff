@@ -90,9 +90,9 @@ class CaseFinderService
 
   def open_cases_scope
     open_scope = scope.presented_as_open
-      .joins(:assignments)
-      .where(assignments: { state: ['pending', 'accepted']})
-      .distinct('case.id')
+                   .joins(:assignments)
+                   .where(assignments: { state: ['pending', 'accepted']})
+                   .distinct('case.id')
     if user.responder_only?
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       open_scope.where(id: case_ids)
@@ -120,19 +120,20 @@ class CaseFinderService
     scope.in_states(states.split(','))
   end
 
+  CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE = [
+    Case::FOI::ComplianceReview,
+    Case::FOI::TimelinessReview
+  ].map(&:name)
+
   def new_cases_from_last_3_days(team)
-    case_types_only_visible_with_further_clearance = [
-      'Case::FOI::ComplianceReview',
-      'Case::FOI::TimelinessReview'
-    ]
     scope
       .joins(:transitions)
-      .where.not(type: case_types_only_visible_with_further_clearance)
+      .where.not(type: CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE)
       .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
       .or(
         scope
           .joins(:transitions)
-          .where(type: case_types_only_visible_with_further_clearance)
+          .where(type: CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE)
           .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
           .where('case_transitions.event = ?', :request_further_clearance)
       )

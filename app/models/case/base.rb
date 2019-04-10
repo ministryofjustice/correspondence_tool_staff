@@ -130,8 +130,7 @@ class Case::Base < ApplicationRecord
 
   # cases that have ever been flagged for approval
   scope :flagged_for_approval, ->(*teams) do
-    joins(:assignments)
-      .where(assignments: { team_id: teams.map(&:id), role: 'approving' })
+    joins(:assignments).merge(Assignment.flagged_for_approval(teams))
   end
   scope :trigger, -> { where(workflow: TRIGGER_WORKFLOWS) }
   scope :non_trigger, -> { where.not(workflow: TRIGGER_WORKFLOWS) }
@@ -597,10 +596,6 @@ class Case::Base < ApplicationRecord
 
   def transition_tracker_for_user(user)
     users_transitions_trackers.where(user: user).singular_or_nil
-  end
-
-  def sync_transition_tracker_for_user(user)
-    CasesUsersTransitionsTracker.sync_for_case_and_user(self, user)
   end
 
   def format_workflow_class_name(type_template, type_workflow_template)

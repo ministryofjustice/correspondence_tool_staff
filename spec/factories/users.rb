@@ -75,7 +75,7 @@ FactoryBot.define do
 
       full_name      { generate(:manager_name) }
       managing_teams { [create(:managing_team)] }
-      approving_team { create(:approving_team) }
+      approving_team { create(:team_disclosure) }
     end
 
     factory :disclosure_bmt_user, parent: :manager do

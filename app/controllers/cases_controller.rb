@@ -277,7 +277,7 @@ class CasesController < ApplicationController
       get_flash_errors_for_case(@case)
       set_permitted_events
       @accepted_now = params[:accepted_now]
-      @case.sync_transition_tracker_for_user(current_user)
+      CasesUsersTransitionsTracker.sync_for_case_and_user(@case, current_user)
       render :show
     end
   end
