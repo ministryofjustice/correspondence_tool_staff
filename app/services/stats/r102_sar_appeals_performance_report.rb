@@ -18,7 +18,7 @@ module Stats
     end
 
     def case_ids
-      CaseSelector.new(Case::ICO::SAR).ids_for_period_appeals(@period_start, @period_end)
+      CaseSelector.new(Case::ICO::SAR.all).ids_for_period_appeals(@period_start, @period_end)
     end
 
     def report_type

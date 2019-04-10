@@ -15,10 +15,14 @@ module Stats
         responsible:                     ''
     }
 
+    class << self
+      def xlsx?
+        true
+      end
+    end
+
     def initialize(period_start = nil, period_end = nil)
       super
-      # @period_start = period_start
-      # @period_end = period_end
       @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], column_headings)
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
@@ -28,12 +32,29 @@ module Stats
     end
 
     def run
-      case_ids.each { |case_id| analyse_case(case_id) }
+      Case::Base.find(case_ids).reject { |k| k.unassigned? }.each { |kase| analyse_case(kase) }
       @stats.finalise
     end
 
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [4, 10]
+
     def to_csv
-      @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+      csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+
+      csv.map.with_index do |row, row_index|
+        row.map.with_index do |item, item_index|
+          # data rows start at index 3 as there are 2 superheadings + 1 heading
+          if row_index <= superheadings.size
+            header_cell row_index, item
+            # item at index+1 is the case count - don't mark 0/0 as Red RAG rating
+            # These are the positions of the items which need a RAG rating
+          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index+1] != 0
+            OpenStruct.new value: item, rag_rating: rag_rating(item)
+          else
+            OpenStruct.new value: item
+          end
+        end
+      end
     end
 
     private
@@ -47,17 +68,20 @@ module Stats
         directorate_results = @stats.stats[bu.directorate.id]
         business_group_results = @stats.stats[bu.business_group.id]
         bu_results.each do |key, value|
-          directorate_results   [key] += value
+          directorate_results[key] += value
           business_group_results[key] += value
-          overall_total_results [key] += value
+          overall_total_results[key] += value
         end
       end
     end
 
     # another callback method to populate the team names from the team id column
     def populate_team_details_callback
-      @stats.stats.except(:total).each do | team_id, result_set|
-        team = Team.find(team_id)
+      stats_by_team = @stats.stats.except(:total)
+      teams = Team.includes(:team_leader, parent: :parent).find(stats_by_team.keys)
+
+      stats_by_team.each do |team_id, result_set|
+        team = teams.detect { |t| t.id == team_id }
         case team.class.to_s
           when 'BusinessUnit'
             result_set[:business_unit] = team.name
@@ -74,7 +98,7 @@ module Stats
           else
             raise "Invalid team type"
         end
-        result_set[:responsible] = team.team_lead
+        result_set[:responsible] = team.team_leader_name
       end
 
       @stats.stats[:total][:business_group] = 'Total'
@@ -83,9 +107,7 @@ module Stats
       @stats.stats[:total][:responsible] = ''
     end
 
-    def analyse_case(case_id)
-      kase = Case::Base.find case_id
-      return if kase.unassigned?
+    def analyse_case(kase)
       column_key = analyse_timeliness(kase)
       @stats.record_stats(kase.responding_team.id, column_key)
     end

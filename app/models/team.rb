@@ -19,6 +19,8 @@ class Team < ApplicationRecord
   validate :valid_role
   validate :deletion_validation
 
+  DEACTIVATED_LABEL = '[DEACTIVATED]'.freeze
+
   acts_as_tree
 
   has_paper_trail ignore: [:created_at, :updated_at]
@@ -27,6 +29,11 @@ class Team < ApplicationRecord
   has_many :users, -> { order(:full_name) }, through: :user_roles
   has_many :properties, class_name: TeamProperty, :dependent => :delete_all
   has_many :areas, -> { area }, class_name: TeamProperty
+
+  # This can be eager loaded using includes
+  has_one :team_leader,
+          -> { lead },
+          class_name: TeamProperty.to_s
 
   scope :with_user, ->(user) {
     includes(:user_roles)
@@ -94,6 +101,10 @@ class Team < ApplicationRecord
     I18n.t("team_lead_types.#{type.underscore}")
   end
 
+  def team_leader_name
+    team_leader&.value || ''
+  end
+
   def team_lead
     properties.lead.singular_or_nil&.value || ''
   end
@@ -124,21 +135,26 @@ class Team < ApplicationRecord
     !active?
   end
 
+  # @note (Mohammed Seedat 2019-04-03) Original Team Name workaround
+  #   Team table has no way of storing historical data. On deactivation, the
+  #   Team's name is changed - name therefore stores deletion information.
+  #   To retrieve the Team name without any of the  deactivation information
+  #   we require this string replacement workaround.
+  #
+  # @todo (Mohammed Seedat 2019-04-03) Investigate implementation further
+  #
+  # @example '[DEACTIVATED] The Avengers @(2019-01-02 12:32)'
   def original_team_name
-    team_name = name.remove('DEACTIVATED')
-    team_name.remove(deleted_at.to_s)
+    name.remove(DEACTIVATED_LABEL, /@\((.)*\)/).strip
   end
 
   private
 
-  # this method applies to Business Groups and Directorates only.  It is overridden in BusinessUnit.
-  #
+  # This method applies to Business Groups and Directorates only.
+  # It is overridden in BusinessUnit.
   def deletion_validation
-    if deleted_at.present?
-      if has_active_children?
-        errors.add(:base, 'Unable to delete team: team still has active children')
-      end
-
+    if deleted_at.present? && has_active_children?
+      errors.add(:base, 'Unable to delete team: team still has active children')
     end
   end
 end

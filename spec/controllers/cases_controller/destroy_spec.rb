@@ -3,12 +3,13 @@ require "rails_helper"
 describe CasesController, type: :controller do
   describe 'GET destroy_case' do
     let(:manager)           { create :manager }
-    let(:kase)              { create :case }
-    let(:params)            { { id: kase.id } }
+    let(:params)            { { id: kase.id, case: { reason_for_deletion: 'I was told to' } } }
 
     before { sign_in manager }
 
     context 'FOI case' do
+      let(:kase)              { create :foi_case }
+
       it 'authorises' do
         expect{
           delete :destroy, params: params

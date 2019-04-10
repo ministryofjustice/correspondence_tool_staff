@@ -649,7 +649,7 @@ describe ConfigurableStateMachine::Machine do
         k.approver_assignments.first.user
       end
 
-      def assigned_disclosure_specialist(kase)
+      def assigned_disclosure_specialist!(kase)
         kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure).first.user
       end
     end

@@ -78,7 +78,6 @@ class CasesController < ApplicationController
 
   def index
     @cases = CaseFinderService.new(current_user)
-               .for_user
                .for_params(request.params)
                .scope
                .page(params[:page])
@@ -89,18 +88,38 @@ class CasesController < ApplicationController
 
   def closed_cases
     unpaginated_cases =  @global_nav_manager
-                             .current_page_or_tab
-                             .cases
-                             .by_last_transitioned_date
+                           .current_page_or_tab
+                           .cases
+                           .includes(:outcome,
+                                     :info_held_status,
+                                     :assignments,
+                                     :cases_exemptions,
+                                     :exemptions)
+                           .by_last_transitioned_date
     if download_csv_request?
-      @cases = unpaginated_cases.limit(1000)
+      @cases = unpaginated_cases
     else
       @cases = unpaginated_cases.page(params[:page]).decorate
     end
     respond_to do |format|
       format.html     { render :closed_cases }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('closed')
+        send_csv_cases 'closed'
+      end
+    end
+  end
+
+  # Users only want to see cases deleted in the last 6 months
+  def deleted_cases
+    cases = Case::Base.unscoped
+              .soft_deleted
+              .updated_since(6.months.ago)
+              .by_last_transitioned_date
+    @cases = Pundit.policy_scope(current_user, cases)
+
+    respond_to do |format|
+      format.csv do
+        send_csv_cases 'deleted'
       end
     end
   end
@@ -115,9 +134,13 @@ class CasesController < ApplicationController
 
   def my_open_cases
     unpaginated_cases = @global_nav_manager
-                            .current_page_or_tab
-                            .cases
-                            .by_deadline
+                          .current_page_or_tab
+                          .cases
+                          .includes(:message_transitions,
+                                    :responder,
+                                    :responding_team,
+                                    :approver_assignments)
+                          .by_deadline
     if download_csv_request?
       @cases = unpaginated_cases
     else
@@ -128,16 +151,22 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :index }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('my-open')
+        send_csv_cases 'my-open'
       end
     end
   end
 
   def open_cases
-    full_list_of_cases = @global_nav_manager.current_page_or_tab.cases
-    query_list_params = filter_params.merge(
-      list_path: request.path,
-    )
+    full_list_of_cases = @global_nav_manager
+                           .current_page_or_tab
+                           .cases
+                           .includes(:message_transitions,
+                                     :responder,
+                                     :approver_assignments,
+                                     :managing_team,
+                                     :responding_team)
+
+    query_list_params = filter_params.merge(list_path: request.path)
     service = CaseSearchService.new(user: current_user,
                                     query_type: :list,
                                     query_params: query_list_params)
@@ -155,7 +184,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :index }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('open')
+        send_csv_cases 'open'
       end
     end
   end
@@ -203,7 +232,7 @@ class CasesController < ApplicationController
         render :new
       end
     rescue ActiveRecord::RecordNotUnique
-      flash[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
+      flash.now[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
       render :new
     end
   end
@@ -276,9 +305,11 @@ class CasesController < ApplicationController
 
   def destroy
     authorize @case
-    service = CaseDeletionService.new(current_user, @case)
-    service.call
-    if service.result == :ok
+
+    service = CaseDeletionService.new(current_user,
+                                      @case,
+                                      params.require(:case).permit(:reason_for_deletion))
+    if service.call == :ok
       flash[:notice] = "You have deleted case #{@case.number}."
       redirect_to cases_path
     else
@@ -549,8 +580,6 @@ class CasesController < ApplicationController
     end
   end
 
-
-
   def update_closure
     authorize @case
     close_params = process_closure_params(@case.type_abbreviation)
@@ -607,7 +636,6 @@ class CasesController < ApplicationController
     end
   end
 
-
   def search
     service = CaseSearchService.new(user: current_user,
                                     query_type: :search,
@@ -631,7 +659,7 @@ class CasesController < ApplicationController
     respond_to do |format|
       format.html     { render :search }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options('search')
+        send_csv_cases 'search'
       end
     end
   end
@@ -1070,7 +1098,12 @@ class CasesController < ApplicationController
   end
 
   def set_case
-    @case = Case::Base.find(params[:id])
+    @case = Case::Base
+              .includes(:message_transitions,
+                        transitions: [:acting_user, :acting_team, :target_team],
+                        assignments: [:team],
+                        approver_assignments: [:user])
+              .find(params[:id])
     @case_transitions = @case.transitions.case_history.order(id: :desc)
     @correspondence_type_key = @case.type_abbreviation.downcase
   end

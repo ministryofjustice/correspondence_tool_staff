@@ -207,14 +207,17 @@ class AssignmentsController < ApplicationController
   def set_business_units
     correspondence_type = @case.correspondence_type_for_business_unit_assignment
     if params[:business_group_id].present?
-      @business_units = BusinessGroup.find(params[:business_group_id])
-                          .business_units.responding_for_correspondence_type(
-                            correspondence_type
-                          ).order(:name)
+      @business_units = BusinessGroup
+                          .includes(:directorates, :business_units => :areas)
+                          .find(params[:business_group_id])
+                          .business_units
+                          .responding_for_correspondence_type(correspondence_type)
+                          .order(:name)
     elsif params[:show_all].present? && params[:show_all]
-      @business_units = BusinessUnit.responding_for_correspondence_type(
-        correspondence_type
-      ).order(:name)
+      @business_units = BusinessUnit
+                          .includes(:areas)
+                          .responding_for_correspondence_type(correspondence_type)
+                          .order(:name)
     end
   end
 
@@ -253,7 +256,10 @@ class AssignmentsController < ApplicationController
   end
 
   def set_case
-    @case = Case::Base.find(params[:case_id]).decorate
+    @case = Case::Base
+              .includes(:transitions => [:target_team, :acting_team, :acting_user])
+              .find(params[:case_id])
+              .decorate
     @case_transitions = @case.transitions.decorate
   end
 

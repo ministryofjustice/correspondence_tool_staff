@@ -1,14 +1,22 @@
 source 'https://rubygems.org'
 
 gem 'activerecord-session_store'
-gem 'acts_as_tree', '~> 2.8'
+gem 'acts_as_tree', '~> 2.9'
+# Gems to help generating with Excel spreadsheets
+# undeclared (but documented) dependency on rubyzip
+# This is from the readme of axlsx_rails.
+gem 'rubyzip', '>= 1.2.1'
+gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
+gem 'axlsx_rails'
+# AXLSX styler - easy styling of cells based on cell references
+gem 'axlsx_styler'
 gem 'awesome_print'
 gem 'aws-sdk'
 gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git', branch: 'bundler-fix'
 gem 'business_time'
 gem 'config'
-gem 'devise', '~> 4.5'
-gem 'draper', '3.0.1'
+gem 'devise', '~> 4.6'
+gem 'draper', '3.1.0'
 gem 'dropzonejs-rails', '>= 0.8'
 gem 'foreman', '~> 0.85.0'
 gem 'factory_bot_rails', '~> 5.0.1'
@@ -33,7 +41,7 @@ gem 'mimetype-fu', '~> 0.1.2'
 gem 'govuk_notify_rails'
 gem 'paper_trail', '~> 10.2'
 gem 'pg', '~> 1.1'
-gem 'pg_search', '~> 2.1.4'
+gem 'pg_search', '~> 2.1.5'
 gem 'pry-rails'
 gem 'puma', '~> 3.12'
 gem 'pundit', '~>2.0'
@@ -47,7 +55,6 @@ gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
 gem 'sidekiq', '~> 5.2'
 gem 'sidekiq-logging-json', '~> 0.0.18'
-gem 'sidekiq-scheduler'
 
 gem 'table_print'
 gem 'thor-rails'
@@ -63,7 +70,7 @@ gem 'uglifier', '>= 1.3.0'
 group :test do
   gem 'capybara'
   gem 'codeclimate-test-reporter', '~> 1.0'
-  gem 'i18n-tasks', '~> 0.9.28'
+  gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 4.0'
@@ -75,8 +82,21 @@ group :development, :test do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
+  # Used to try and track down N+1 query problems
+  gem 'bullet'
   gem 'byebug', platform: :mri
+
+  # @todo (Mohammed Seedat 02/04/19): warning when updating chromedriver-helper
+  # +--------------------------------------------------------------------+
+  # |                                                                    |
+  # |  NOTICE: chromedriver-helper is deprecated after 2019-03-31.       |
+  # |                                                                    |
+  # |  Please update to use the 'webdrivers' gem instead.                |
+  # |  See https://github.com/flavorjones/chromedriver-helper/issues/83  |
+  # |                                                                    |
+  # +--------------------------------------------------------------------+
   gem 'chromedriver-helper'
+  
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
@@ -85,7 +105,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.65.0', require: false
+  gem 'rubocop', '~> 0.66.0', require: false
   gem 'rubocop-rspec', require: false
   gem 'ruby-progressbar'
 

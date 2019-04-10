@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 describe Case::BasePolicy::Scope do
 
   describe 'case scope policy' do
@@ -60,6 +59,17 @@ describe Case::BasePolicy::Scope do
 
     after(:all)  { DbHousekeeping.clean }
 
+    # This is checked with a test because using Case::Base.descendants on every call might be a little
+    # slow, and resolving it using a constant results in an empty array due to class loading issues
+    describe 'CASE_TYPES' do
+      it 'contains all concrete case types' do
+        expect(Case::BasePolicy::Scope::CASE_TYPES)
+          .to match_array(Case::Base.descendants.reject do |klass|
+            # ::Base indicates an ABC (abstract bases class) and DummyCase is created by the Papertrail spec
+            klass.name.ends_with?('::Base') || klass.name == 'DummyCase'
+          end)
+      end
+    end
 
     describe '#resolve' do
       context 'managers' do

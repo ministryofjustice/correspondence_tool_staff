@@ -29,7 +29,7 @@ describe UserDeletionService do
       it 'deletes the teams users role' do
         expect(responder.team_roles.size).to eq 1
         service.call
-        expect(responder.team_roles.size).to eq 0
+        expect(responder.reload.team_roles.size).to eq 0
       end
     end
 
@@ -45,7 +45,7 @@ describe UserDeletionService do
       it 'deletes the teams users role' do
         expect(responder.team_roles.size).to eq 2
         service.call
-        expect(responder.team_roles.size).to eq 1
+        expect(responder.reload.team_roles.size).to eq 1
         expect(responder.team_roles.last.team).to eq(team_2)
       end
 

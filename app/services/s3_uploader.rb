@@ -48,6 +48,10 @@ class S3Uploader
   def add_attachments(uploaded_files, type)
     attachments = create_attachments(uploaded_files, type)
 
+    # TODO (Mohammed Seedat): this block of code is not necessary
+    # because `create_attachments` can throw an exception on
+    # CaseAttachment.create! This block of code runs during
+    # the web-request before any jobs are added to a jobs queue
     unless attachments.all?(&:valid?)
       attachments.reject(&:valid?).each do |attachment|
         Rails.logger.error "invalid attachment for case #{@case.id}: #{attachment}"
@@ -58,7 +62,7 @@ class S3Uploader
     @case.attachments << attachments
     remove_leftover_upload_files
     Rails.logger.warn "Queueing PDF maker job for attachments: " +
-                      attachments.map {|a| "##{a.id}:{a.key}" }.join(', ')
+                      attachments.map {|a| "#{a.id}:#{a.key}" }.join(', ')
     attachments.each { |ra| PdfMakerJob.perform_later(ra.id) }
     attachments
   end

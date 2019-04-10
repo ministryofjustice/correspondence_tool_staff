@@ -16,7 +16,7 @@ en:
     custom_report: Creating a custom report - Track-a-query
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query
-    edit_case_page: Editting a case - %{case_number} - Track-a-query
+    edit_case_page: Editing a case - %{case_number} - Track-a-query
     extend_sar_deadline: Extend deadline for SAR - %{case_number}
     forgot_password: Forgot your password - Track-a-query
     linking_case_page: Linking to an existing case - %{case_number} - Track-a-query

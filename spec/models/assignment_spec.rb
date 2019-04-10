@@ -15,6 +15,16 @@
 
 require 'rails_helper'
 
+# @note (Mohammed Seedat 2019-04-03)
+#   have_enqued_job behaviour has changed in RSpec 3.8.2
+#
+#   https://www.rubydoc.info/gems/rspec-rails/file/Changelog.md
+#   Backport: Make the ActiveJob matchers fail when
+#   multiple jobs are queued for negated matches.
+#
+#   To mitigate: do not create a new object inside the expect
+#   block
+
 RSpec.describe Assignment, type: :model do
   let(:assigned_case)   { create :assigned_case }
   let(:assigned_flagged_case) { create :assigned_case, :flagged }
@@ -82,10 +92,11 @@ RSpec.describe Assignment, type: :model do
   end
 
   describe 'scope last_responding' do
+    let(:assignment1) { build(:assignment, :responding) }
+    let(:assignment2) { build(:assignment, :responding) }
+    let(:kase) { create(:case).tap {|kase| kase.assignments << assignment1; kase.assignments << assignment2} }
     it 'returns the last responding assignment' do
-      create :assignment, :responding
-      assignment2 = create :assignment, :responding
-      expect(Assignment.last_responding).to eq [assignment2]
+      expect(kase.responder_assignment).to eq assignment2
     end
   end
 
@@ -271,9 +282,10 @@ RSpec.describe Assignment, type: :model do
 
         it 'queues the job' do
           t = Time.now
+
           expect {
             Timecop.freeze(t) do
-              @assignment.update(state: 'bypassed')
+              @assignment.update(state: 'bypassed');
             end
           }.to have_enqueued_job(SearchIndexUpdaterJob).at(t + 10.seconds).at_least(1)
         end
@@ -289,8 +301,14 @@ RSpec.describe Assignment, type: :model do
         end
 
         it 'does not queue the job' do
+          new_assignment = create(
+            :assignment,
+            :responding,
+            case_id: kase.id
+          )
+
           expect {
-            create :assignment, :responding, case_id: kase.id
+            new_assignment
           }.not_to have_enqueued_job(SearchIndexUpdaterJob)
         end
       end
@@ -304,8 +322,14 @@ RSpec.describe Assignment, type: :model do
         end
 
         it 'does not queue the job' do
+          new_assignment = create(
+            :assignment,
+            :responding,
+            case_id: kase.id
+          )
+
           expect {
-            create :assignment, :responding, case_id: kase.id
+            new_assignment
           }.not_to have_enqueued_job(SearchIndexUpdaterJob)
         end
       end
@@ -320,8 +344,14 @@ RSpec.describe Assignment, type: :model do
         end
 
         it 'does not queue the job' do
+          new_assignment = create(
+            :assignment,
+            :responding,
+            case_id: kase.id
+          )
+
           expect {
-            create :assignment, :responding, case_id: kase.id
+            new_assignment
           }.not_to have_enqueued_job(SearchIndexUpdaterJob)
         end
       end
@@ -335,8 +365,14 @@ RSpec.describe Assignment, type: :model do
         end
 
         it 'does not queue the job' do
+          new_assignment = create(
+            :assignment,
+            :responding,
+            case_id: kase.id
+          )
+
           expect {
-            create :assignment, :responding, case_id: kase.id
+            new_assignment
           }.not_to have_enqueued_job(SearchIndexUpdaterJob)
         end
       end

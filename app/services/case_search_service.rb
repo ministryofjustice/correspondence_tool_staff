@@ -24,9 +24,6 @@ class CaseSearchService
     end
   end
 
-
-
-
   def call(full_list_of_cases = nil)
     if @error == false && @query.valid?
       @result_set = @query.results(full_list_of_cases)

@@ -9,10 +9,14 @@ module Stats
         month:     ''
     }
 
+    class << self
+      def xlsx?
+        true
+      end
+    end
+
     def initialize(period_start = nil, period_end = nil)
       super
-      # @period_start = period_start
-      # @period_end = period_end
       @stats = StatsCollector.new(array_of_month_numbers + [:total], R005_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS))
       @superheadings = superheadings
 
@@ -31,13 +35,32 @@ module Stats
     end
 
     def run
-      case_ids = CaseSelector.new(case_scope).ids_for_cases_received_in_period(@period_start, @period_end)
-      case_ids.each { |case_id| analyse_case(case_id) }
+      CaseSelector.new(case_scope)
+        .cases_received_in_period(@period_start, @period_end)
+        .includes(:responded_transitions, :approver_assignments, :assign_responder_transitions)
+        .reject { |k| k.unassigned? }
+        .each { |kase| analyse_case(kase) }
       @stats.finalise
     end
 
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [1, 7, 13]
+
     def to_csv
-      @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+      csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+
+      csv.map.with_index do |row, row_index|
+        row.map.with_index do |item, item_index|
+          if row_index <= superheadings.size
+            header_cell row_index, item
+            # item at index+1 is the case count - don't mark 0/0 as Red RAG rating
+            # These are the positions of the items which need a RAG rating
+          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index+1] != 0
+            OpenStruct.new value: item, rag_rating: rag_rating(item)
+          else
+            OpenStruct.new value: item
+          end
+        end
+      end
     end
 
     private
@@ -49,16 +72,13 @@ module Stats
       ]
     end
 
-    def analyse_case(case_id)
-      kase = Case::Base.find case_id
-      unless kase.unassigned?
-        analyser = CaseAnalyser.new(kase)
-        analyser.run
-        column_key = analyser.result
-        month = kase.received_date.month
-        @stats.record_stats(month, column_key)
-        @stats.record_stats(:total, column_key)
-      end
+    def analyse_case(kase)
+      analyser = CaseAnalyser.new(kase)
+      analyser.run
+      column_key = analyser.result
+      month = kase.received_date.month
+      @stats.record_stats(month, column_key)
+      @stats.record_stats(:total, column_key)
     end
 
     def array_of_month_numbers

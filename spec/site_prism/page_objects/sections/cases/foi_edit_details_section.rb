@@ -12,6 +12,9 @@ module PageObjects
         element :full_name, '#case_foi_name'
         element :email, '#case_foi_email'
         element :address, '#case_foi_postal_address'
+        element :date_draft_compliant_day, '#case_foi_date_draft_compliant_dd'
+        element :date_draft_compliant_month, '#case_foi_date_draft_compliant_mm'
+        element :date_draft_compliant_year, '#case_foi_date_draft_compliant_yyyy'
 
         element :type_of_requester, :xpath,
                 '//fieldset[contains(.,"Type of requester")]'

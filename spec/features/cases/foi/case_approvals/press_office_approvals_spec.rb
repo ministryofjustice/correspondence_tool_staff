@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 feature 'cases requiring clearance by press office' do
-  given(:dacu_disclosure)             { find_or_create :team_dacu_disclosure }
+  given!(:dacu_disclosure)             { find_or_create :team_dacu_disclosure }
   given(:disclosure_specialist)       { find_or_create :disclosure_specialist }
   given(:other_disclosure_specialist) { find_or_create :disclosure_specialist }
   given!(:press_officer)              { find_or_create :default_press_officer }
@@ -18,15 +18,10 @@ feature 'cases requiring clearance by press office' do
   given(:pending_press_clearance_case) { create :pending_press_clearance_case,
                                                 press_officer: press_officer }
 
-  given(:case_available_for_taking_on) { create :case_being_drafted,
+  given!(:case_available_for_taking_on) { create :case_being_drafted,
                                                 created_at: 1.business_day.ago }
 
   scenario 'Press Officer taking on a case', js: true do
-    private_office
-    dacu_disclosure
-    private_officer
-    case_available_for_taking_on
-
     login_as press_officer
     incoming_cases_page.load
 

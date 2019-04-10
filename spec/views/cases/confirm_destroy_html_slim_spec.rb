@@ -28,8 +28,9 @@ describe 'cases/confirm_destroy.html.slim', type: :view do
     expect(page.delete_copy.text).to eq "You are deleting the case: #{kase.subject}"
 
     expect(page).to have_warning
+    expect(page).to have_reason_for_deletion
 
-    expect(page.confirm_button.text).to eq "Delete case"
+    expect(page.confirm_button_text).to eq "Delete case"
     expect(page).to have_cancel
 
   end

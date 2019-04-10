@@ -248,7 +248,7 @@ describe ResponseUploaderService do
     context 'as Disclosure' do
 
       let(:kase)            { create :pending_dacu_clearance_case_flagged_for_press }
-      let(:user)            { kase.assigned_disclosure_specialist }
+      let(:user)            { kase.assigned_disclosure_specialist! }
 
       context 'clear and upload a response' do
         let(:action)          { 'upload-approve' }

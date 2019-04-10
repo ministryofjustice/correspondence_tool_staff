@@ -13,7 +13,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html     { render :show }
       format.csv do
-        send_data CSVGenerator.new(@cases).to_csv, CSVGenerator.options("#{@user.full_name.downcase.tr(' ', '_')}")
+        send_csv_cases @user.full_name.downcase.tr(' ', '_')
       end
     end
   end

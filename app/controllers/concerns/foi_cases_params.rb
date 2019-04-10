@@ -25,6 +25,7 @@ module FOICasesParams
       :subject,
       :message,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :date_draft_compliant_dd, :date_draft_compliant_mm, :date_draft_compliant_yyyy,
       :delivery_method,
       :flag_for_disclosure_specialists,
       uploaded_request_files: [],
@@ -67,7 +68,7 @@ module FOICasesParams
     closure_params
   end
 
-  def respond_foi_params	
+  def respond_foi_params
     params.require(:case_foi).permit(
       :date_responded_dd,
       :date_responded_mm,

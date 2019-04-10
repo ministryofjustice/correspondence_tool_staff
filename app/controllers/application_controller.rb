@@ -42,8 +42,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
-
   # Don't bother setting the global nav for requests with paths in GLOBAL_NAV_EXCLUSION_PATHS
   def global_nav_required?
     GLOBAL_NAV_EXCLUSION_PATHS.exclude?(request.path)
@@ -62,5 +60,12 @@ class ApplicationController < ActionController::Base
       request,
       Settings.global_navigation,
     )
+  end
+
+  def send_csv_cases(action_string)
+    headers["Content-Type"] = 'text/csv; charset=utf-8'
+    headers["Content-Disposition"] =
+      %(attachment; filename="#{CSVGenerator.filename(action_string)}")
+    self.response_body = CSVGenerator.new(@cases)
   end
 end

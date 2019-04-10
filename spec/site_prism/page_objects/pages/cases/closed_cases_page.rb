@@ -24,6 +24,7 @@ module PageObjects
           end
         end
 
+        element :download_deleted_cases_link, 'a:contains("Download deleted cases")'
       end
     end
   end

@@ -46,7 +46,7 @@ describe GetCaseClassFromParamsService do
 
       get_case_class_service.call
       expect(get_case_class_service.error?).to be_truthy
-      expect(get_case_class_service.case_class).to eq nil
+      expect(get_case_class_service.case_class).to eq Case::FOI::Standard
     end
   end
 

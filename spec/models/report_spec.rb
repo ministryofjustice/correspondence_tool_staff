@@ -87,7 +87,7 @@ RSpec.describe Report, type: :model do
     let(:args)           { [Date.yesterday, Date.today] }
     let(:report_service) { instance_double(
                              Stats::R003BusinessUnitPerformanceReport,
-                             to_csv: 'report,data',
+                             to_csv: [[OpenStruct.new(value: 'report'),OpenStruct.new(value: 'data')]],
                              period_start: Date.yesterday,
                              period_end: Date.today,
                              run: true
@@ -105,19 +105,19 @@ RSpec.describe Report, type: :model do
                         period_end: Date.today
       }
       expect(report).to receive(:update!).with(update_params)
-      report.run(*args)
+      report.run_and_update!(*args)
       expect(report_service).to have_received(:run)
     end
 
     it 'updates start and end dates' do
-      report.run(*args)
+      report.run_and_update!(*args)
       expect(report.period_start).to eq Date.yesterday
       expect(report.period_end).to   eq Date.today
     end
 
     it 'updates the report_data' do
-      report.run(*args)
-      expect(report.report_data).to eq 'report,data'
+      report.run_and_update!(*args)
+      expect(report.report_data).to eq "report,data\n"
     end
   end
 

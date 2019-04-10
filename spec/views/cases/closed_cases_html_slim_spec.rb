@@ -1,12 +1,10 @@
 require 'rails_helper'
 
 describe 'cases/closed_cases.html.slim' do
-  let(:case_1) { create :closed_case, received_date: 20.business_day.ago }
-  let(:case_2) { create :closed_case }
+  let!(:case_1) { create :closed_case, received_date: 20.business_days.ago }
+  let!(:case_2) { create :closed_case }
 
   it 'displays all the cases' do
-    case_1
-    case_2
     cases = Case::Base.closed.most_recent_first.page.decorate
     assign(:cases, cases)
 
@@ -29,6 +27,8 @@ describe 'cases/closed_cases.html.slim' do
     expect(row.case_number.text).to eq "Link to case #{case_2.number}"
     expect(row.subject_name.name.text).to eq case_2.name
     expect(row.subject_name.subject.text).to eq case_2.subject
+
+    expect(page).to have_download_deleted_cases_link
   end
 
   describe 'pagination' do

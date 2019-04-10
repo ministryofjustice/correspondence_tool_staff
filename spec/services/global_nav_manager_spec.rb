@@ -123,8 +123,6 @@ describe GlobalNavManager do
     before do
       allow(CaseFinderService).to receive(:new)
                                     .and_return case_finder_service
-      allow(case_finder_service).to receive(:for_user)
-                                      .and_return case_finder_service
       allow(case_finder_service).to receive(:for_params)
                                       .and_return case_finder_service
     end
@@ -135,7 +133,6 @@ describe GlobalNavManager do
 
     it 'customizes for user and params' do
       gnm.finder
-      expect(case_finder_service).to have_received(:for_user)
       expect(case_finder_service).to have_received(:for_params)
                                        .with({ 'state' => 'unequivocal' })
     end

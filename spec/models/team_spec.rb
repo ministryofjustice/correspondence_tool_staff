@@ -298,10 +298,15 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#original_team_name' do
-    let!(:bu) { create(:business_unit, :deactivated, name: "DEACTIVATED bu") }
-    it 'removes deactivated from the name' do
-      expect(bu.name).to include('DEACTIVATED')
-      expect(bu.original_team_name).not_to include('DEACTIVATED')
+    let!(:bu) {
+      create(
+        :business_unit,
+        :deactivated, name: "[DEACTIVATED] The Avengers @(2022-01-21 13:21)"
+      )
+    }
+
+    it 'excludes DEACTIVATED and DateTime from the name' do
+      expect(bu.original_team_name).to eq 'The Avengers'
     end
   end
 end

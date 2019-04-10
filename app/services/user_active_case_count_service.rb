@@ -14,14 +14,14 @@ class UserActiveCaseCountService
 
   def active_cases_for_user(user)
     scopes = get_scopes_for_user(user)
-    CaseFinderService.new(user).for_user.for_scopes(scopes).scope
+    CaseFinderService.new(user).for_scopes(scopes).scope
   end
 
   private
 
   def get_counts_for_user(user)
     scopes = get_scopes_for_user(user)
-    case_count = CaseFinderService.new(user).for_user.for_scopes(scopes).scope.size
+    case_count = CaseFinderService.new(user).for_scopes(scopes).scope.size
     @case_counts_by_user[user.id] = case_count
   end
 

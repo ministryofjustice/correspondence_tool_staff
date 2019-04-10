@@ -34,6 +34,10 @@ module PageObjects
           element :internal_deadline_month, '#case_ico_internal_deadline_mm'
           element :internal_deadline_year, '#case_ico_internal_deadline_yyyy'
 
+          element :date_draft_compliant_day, '#case_ico_date_draft_compliant_dd'
+          element :date_draft_compliant_month, '#case_ico_date_draft_compliant_mm'
+          element :date_draft_compliant_year, '#case_ico_date_draft_compliant_yyyy'
+
           element :case_details, '#case_ico_message'
 
           element :dropzone_container, '.dropzone'

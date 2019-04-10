@@ -154,6 +154,17 @@ FactoryBot.define do
       managing_teams    { [ find_or_create(:team_dacu) ] }
     end
 
+    factory :sar_multi_role_user do
+      transient do
+        identifier { 'approving-responding-managing user' }
+      end
+
+      full_name         { generate(:approver_responder_manager_name) }
+      approving_team    { find_or_create(:approving_team) }
+      responding_teams  { [ find_or_create(:sar_responding_team) ] }
+      managing_teams    { [ find_or_create(:team_dacu) ] }
+    end
+
     factory :disclosure_specialist do
       transient do
         identifier { 'disclosure-specialist approving user' }

@@ -24,16 +24,18 @@ en:
     attributes:
       business_unit:
         correspondence_type_ids: "Correspondence types"
+      case/base:
+        date_draft_compliant: Date compliant draft uploaded
       case/ico/base:
         uploaded_ico_decision_files: ''
         internal_deadline: Draft deadline
         date_ico_decision_received: "Date ICO's decision received at MOJ"
+      case/overturned_ico/sar:
+        external_deadline: Final deadline
       case/sar:
         third_party: ''
       report:
         correspondence_type: Case type
-      case/overturned_ico/sar:
-        external_deadline: Final deadline
 
     errors:
       models:
@@ -54,6 +56,10 @@ en:
             received_date:
               not_in_future: "can't be in the future."
               past: too far in past.
+            date_draft_compliant:
+              before_received: "can't be before date received"
+              not_in_future: "can't be in the future."
+              after_date_responded: "can't be after the date responded"
             postal_address:
               blank: "and email can't both be blank"
             number:
@@ -345,6 +351,11 @@ en:
         pending_press_office_clearance: Pending clearance - Press office
         pending_private_office_clearance: Pending clearance - Private office
         responded: Ready to close
+        closed: Closed
+        case/ico:
+          awaiting_dispatch: Ready to send to ICO
+          responded: Closed - awaiting ICO decision
+          closed: "Closed - %{ico_decision} by ICO"
 
       case:
         linked_case_number: Case number
@@ -359,7 +370,7 @@ en:
         message: Full request
         postal_address: Address
         flag_for_disclosure_specialists:
-          Clearance required by DACU Disclosure?
+          Clearance required by Disclosure?
         request_amends_comment: Add amends/comments
         upload_comment: Add message (optional)
         type:
@@ -464,6 +475,7 @@ en:
       clear_response: Clear response
       compliant_in_time: Uploaded in time
       compliant_late: Uploaded late
+      compliant_unknown: Unknown draft compliancy
       create_overturned: Create an ICO Overturned case
       data_subject: Data subject
       data_subject_type: Type of data subject
@@ -671,6 +683,8 @@ en:
       actions: Actions
     edit:
       heading: Edit case details
+      date_draft_compliant: Date compliant draft was uploaded
+      date_draft_compliant_example: "For example, 01 02 2018"
     update:
       case_updated: Case updated
     fixed_details:

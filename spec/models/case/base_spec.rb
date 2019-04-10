@@ -26,6 +26,7 @@
 #  type                 :string
 #  appeal_outcome_id    :integer
 #  dirty                :boolean          default(FALSE)
+#  user_id              :integer          not null, default(-100), foreign key
 #
 
 require 'rails_helper'
@@ -54,10 +55,13 @@ RSpec.describe Case::Base, type: :model do
   let(:case_being_drafted_flagged) { create :case_being_drafted, :flagged,
                                             approving_team: approving_team }
   let(:case_being_drafted_trigger) { create :case_being_drafted, :flagged_accepted }
-  let(:trigger_foi) do
-    create :case, :flagged,
-           received_date: Date.parse('16/11/2016')
-  end
+
+  let(:trigger_foi) {
+    create :case,
+    :flagged,
+    received_date: Date.today - 6.months # Valid if within 1 year of today
+  }
+
   let(:ot_ico_foi_draft)   { create :ot_ico_foi_noff_draft }
   let(:ot_ico_sar_draft)   { create :ot_ico_sar_noff_draft }
   let(:kase) { create :case }
@@ -73,6 +77,16 @@ RSpec.describe Case::Base, type: :model do
   describe 'mandatory attributes' do
     it { should validate_presence_of(:received_date) }
     it { should validate_presence_of(:type)          }
+  end
+
+  context 'deleting' do
+    it 'is not valid without a reason' do
+      expect(build(:case, deleted: true)).not_to be_valid
+    end
+
+    it 'is valid with a reason' do
+      expect(build(:case, deleted: true, reason_for_deletion: 'It needs to go')).to be_valid
+    end
   end
 
   describe 'workflow validation' do
@@ -1225,21 +1239,13 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#correspondence_type' do
     it 'retrieves a correspondence_type object' do
-      expect(kase.correspondence_type).to eq CorrespondenceType.foi
-    end
-
-    it 'only finds the correspondence_type once' do
-      foi = CorrespondenceType.foi
-      allow(CorrespondenceType).to receive(:find_by!).and_return(foi)
-      kase.correspondence_type
-      kase.correspondence_type
-      expect(CorrespondenceType).to have_received(:find_by!).at_least(1)
+      expect(kase.correspondence_type.abbreviation).to eq CorrespondenceType.foi.abbreviation
     end
   end
 
   describe '#correspondence_type_for_business_unit_assignment' do
     it 'returns the correspondence_type' do
-      expect(kase.correspondence_type).to eq CorrespondenceType.foi
+      expect(kase.correspondence_type.abbreviation).to eq CorrespondenceType.foi.abbreviation
     end
   end
 
@@ -1386,34 +1392,6 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe '#assigned_disclosure_specialist' do
-    it 'returns the specialist' do
-      disclosure_specialist = find_or_create :disclosure_specialist
-      kase = create :assigned_case, :flagged_accepted, approver: disclosure_specialist
-
-      expect(kase.assigned_disclosure_specialist).to eq disclosure_specialist
-    end
-  end
-
-  describe '#assigned_press_officer' do
-    it 'returns the press_officer' do
-      press_officer = find_or_create :press_officer
-      kase = create :assigned_case, :taken_on_by_press
-
-      expect(kase.assigned_press_officer).to eq press_officer
-    end
-  end
-
-  describe '#assigned_private_officer' do
-    it 'returns the private_officer' do
-
-      private_officer = find_or_create :private_officer
-      kase = create :assigned_case, :taken_on_by_private
-
-      expect(kase.assigned_private_officer).to eq private_officer
-    end
-  end
-
   describe '#requires_flag_for_disclosure_specialists?' do
     it 'returns true' do
       expect(kase.requires_flag_for_disclosure_specialists?).to be true
@@ -1454,7 +1432,6 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-
   describe '#responded_late?' do
     context 'date responded is nil' do
       it 'is false' do
@@ -1486,6 +1463,59 @@ RSpec.describe Case::Base, type: :model do
           expect(kase.responded_late?).to be false
         end
       end
+    end
+  end
+
+  describe '#num_days_late' do
+    it 'is nil when 0 days late' do
+      kase.external_deadline = Date.today
+      expect(kase.num_days_late).to be nil
+    end
+
+    it 'is nil when not yet late' do
+      kase.external_deadline = Date.tomorrow
+      expect(kase.num_days_late).to be nil
+    end
+
+    it 'returns correct number of days late' do
+      kase.external_deadline = Date.yesterday
+      expect(kase.num_days_late).to eq 1
+    end
+  end
+
+  describe '#casework_officer' do
+    it 'is nil when non-trigger case' do
+      expect(kase.casework_officer).to eq nil
+    end
+
+    it 'is nil when trigger case without responder' do
+      expect(trigger_foi.casework_officer).to eq nil
+    end
+
+    it 'returns assigned user name for trigger case' do
+      disclosure_specialist = find_or_create :disclosure_specialist
+      case_assigned_to_user = create(:assigned_case,
+        :flagged_accepted,
+        approver: disclosure_specialist
+      )
+
+      expect(case_assigned_to_user.casework_officer)
+        .to eq disclosure_specialist.full_name
+    end
+  end
+
+  # See ./spec/models/case/foi/standard_spec.rb for thorough
+  # business_unit_responded_in_time? tests
+  describe '#response_in_target?' do
+    it 'is true when responded to' do
+      kase = create :responded_case
+      expect(kase.response_in_target?).to eq true
+    end
+  end
+
+  describe '#trigger?' do
+    it 'is true for a trigger case' do
+      expect(trigger_foi.trigger?).to eq true
     end
   end
 end

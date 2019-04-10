@@ -41,3 +41,6 @@
               span
                 = kase.subject
     = paginate @cases
+.download-cases-link
+  = link_to 'Download deleted cases', deleted_cases_path(format: :csv), id: 'download_deleted_cases'
+  | &nbsp;(.csv file)

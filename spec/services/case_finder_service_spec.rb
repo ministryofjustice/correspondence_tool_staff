@@ -237,8 +237,8 @@ describe CaseFinderService do
       end
     end
 
-    describe '#for_user' do
-      it 'returns a finder that with a finder scoped to the users cases' do
+    describe '#new' do
+      it 'returns a finder scoped to the users cases' do
         expected = [
           @accepted_case,
           @accepted_overturned_ico_foi,
@@ -273,7 +273,7 @@ describe CaseFinderService do
         ]
 
         finder = CaseFinderService.new(@responder)
-        expect(finder.for_user.scope).to match_array expected
+        expect(finder.scope).to match_array expected
       end
     end
 
@@ -350,7 +350,6 @@ describe CaseFinderService do
                 @accepted_overturned_ico_foi_original,
                 @accepted_overturned_ico_foi_original_appeal,
                 @closed_overturned_ico_foi,
-
               ]
       end
     end
@@ -420,7 +419,6 @@ describe CaseFinderService do
                 @overturned_ico_foi,
                 @awaiting_responder_overturned_ico_foi,
                 @accepted_overturned_ico_foi
-
               ]
       end
     end
@@ -482,7 +480,6 @@ describe CaseFinderService do
                   @overturned_ico_foi_original_appeal,
                   @awaiting_responder_overturned_ico_foi_original_appeal,
                   @accepted_overturned_ico_foi_original_appeal
-
                 ]
         end
       end
@@ -529,7 +526,6 @@ describe CaseFinderService do
               @overturned_ico_foi,
               @awaiting_responder_overturned_ico_foi,
               @accepted_overturned_ico_foi
-
           ]
         end
       end

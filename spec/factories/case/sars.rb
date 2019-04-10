@@ -41,6 +41,7 @@ FactoryBot.define do
       flag_for_disclosure { nil }
       approving_team      { find_or_create :team_disclosure }
       approver            { approving_team.approvers.first }
+      i_am_deleted        { false }
     end
 
     current_state                 { 'unassigned' }
@@ -55,10 +56,15 @@ FactoryBot.define do
     subject_type                  { 'offender' }
     third_party                   { false }
     created_at                    { creation_time }
+    creator                       { create(:user, :orphan) }
 
     trait :third_party do
       third_party { true }
       third_party_relationship { 'Aunt' }
+    end
+
+    trait :deleted_case do
+      i_am_deleted { true }
     end
 
     after(:create) do | kase, evaluator|
@@ -84,6 +90,10 @@ FactoryBot.define do
           disclosure_assignment.update(state: 'accepted',
                                        user: evaluator.approver)
         end
+      end
+
+      if evaluator.i_am_deleted
+        kase.update! deleted: true, reason_for_deletion: 'Needs to go'
       end
     end
 
@@ -175,7 +185,12 @@ FactoryBot.define do
   end
 
   factory :approved_sar, parent: :pending_dacu_clearance_sar do
-    date_draft_compliant { received_date + 2.days }
+    transient do
+# date draft compliant is passed in in a transient blocked so it can is be
+# changed in the tests. It is added to the the case in the after create block
+# to match the order the code updates the case.
+      date_draft_compliant { received_date + 2.days }
+    end
 
     after(:create) do |kase, evaluator|
       create :case_transition_approve,
@@ -184,6 +199,7 @@ FactoryBot.define do
              acting_user: evaluator.approver
 
       kase.approver_assignments.each { |a| a.update approved: true }
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
       kase.reload
     end
   end

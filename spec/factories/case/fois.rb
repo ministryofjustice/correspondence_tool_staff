@@ -5,7 +5,7 @@
 #  id                   :integer          not null, primary key
 #  name                 :string
 #  email                :string
-#  message              :textBFA9 3746 AB26 5BD4 E47C 72D3 44B7 50D1 7E64 F8EEect              :string
+#  message              :text
 #  properties           :jsonb
 #  requester_type       :enum
 #  number               :string           not null
@@ -93,6 +93,7 @@ FactoryBot.define do
       # Et voila! You can now debug individual case setups within the context
       # of a large and unwieldy test (framework).
       debug { false }
+      i_am_deleted           { false }
     end
 
     workflow                  { 'standard' }
@@ -106,6 +107,7 @@ FactoryBot.define do
     received_date             { Time.zone.today.to_s }
     sequence(:postal_address) { |n| "#{identifier} postal address #{n}" }
     created_at                { creation_time }
+    creator                   { create(:user, :orphan) }
 
     after(:build) do |_kase, evaluator|
       evaluator.managing_team
@@ -120,6 +122,14 @@ FactoryBot.define do
       ma.update! created_at: evaluator.creation_time
 
       kase.reload
+
+      if evaluator.i_am_deleted
+        kase.update! deleted: true, reason_for_deletion: 'Needs to go'
+      end
+    end
+
+    trait :deleted_case do
+      i_am_deleted { true }
     end
 
     trait :late do
@@ -323,12 +333,16 @@ FactoryBot.define do
 
   factory :approved_case, parent: :ready_to_send_case do
     taken_on_by_disclosure
+# date draft compliant is passed in in a transient blocked so it can is be
+# changed in the tests. It is added to the the case in the after create block
+# to match the order the code updates the case.
+    transient do
+      date_draft_compliant { received_date + 2.days }
+    end
 
-    after(:create) do |kase, _evaluator|
-      kase.update!(date_draft_compliant: kase.transitions
-                     .where(event: 'add_responses')
-                     .last
-                     .created_at)
+    after(:create) do |kase, evaluator|
+      kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
+      kase.reload
     end
   end
 
@@ -977,7 +991,7 @@ FactoryBot.define do
   trait :sent_by_post do
     delivery_method { :sent_by_post }
     uploaded_request_files { ["#{Faker::Internet.slug}.pdf"] }
-    uploading_user { create :manager }
+    creator { create :manager }
   end
 
   trait :sent_by_email do
