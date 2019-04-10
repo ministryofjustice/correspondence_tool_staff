@@ -18,20 +18,19 @@ module Stats
       map = R006KiloMap.new
       map.run
 
+      csv_lines = map.to_csv.map { |row| row.map(&:value) }
 
-      csv_lines = map.to_csv.split("\n")
-
-      expect(csv_lines.shift).to eq header_line
-      expect(csv_lines.shift).to match operations_line
-      expect(csv_lines.shift).to match dacu_directorate_line
-      expect(csv_lines.shift).to eq disclosure_line_1
-      expect(csv_lines.shift).to eq disclosure_line_2
-      expect(csv_lines.shift).to eq disclosure_line_3
-      expect(csv_lines.shift).to match dacu_line
-      expect(csv_lines.shift).to match press_office_directorate_line
-      expect(csv_lines.shift).to match press_office_line
+      expect(csv_lines.shift).to eq header_line.split(',')
+      expect(CSV.generate_line(csv_lines.shift).chomp).to match operations_line
+      expect(CSV.generate_line(csv_lines.shift).chomp).to match dacu_directorate_line
+      expect(CSV.generate_line(csv_lines.shift).chomp).to eq disclosure_line_1
+      expect(CSV.generate_line(csv_lines.shift).chomp).to eq disclosure_line_2
+      expect(CSV.generate_line(csv_lines.shift).chomp).to eq disclosure_line_3
+      expect(CSV.generate_line(csv_lines.shift).chomp).to match dacu_line
+      expect(CSV.generate_line(csv_lines.shift).chomp).to match press_office_directorate_line
+      expect(CSV.generate_line(csv_lines.shift).chomp).to match press_office_line
       # expect(csv_lines.shift).to match press_office_second_user_line
-      expect(csv_lines.shift).to match private_office_line
+      expect(CSV.generate_line(csv_lines.shift).chomp).to match private_office_line
       # expect(csv_lines.shift).to match private_office_second_user_line
     end
 

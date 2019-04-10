@@ -100,7 +100,7 @@ class CSVExporter
         # Draft Timliness related information
         humanize_boolean(@kase.within_draft_deadline?), # Draft in time
         humanize_boolean(@kase.response_in_target?), # In Target
-        @kase.num_days_draft_deadline_late, # Number of days late
+        @kase.num_days_late, # Number of days late
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")

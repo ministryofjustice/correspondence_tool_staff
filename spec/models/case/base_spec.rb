@@ -1457,40 +1457,20 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe '#num_days_draft_deadline_late' do
-    it 'is nil when date_draft_compliant is not present' do
-      kase.date_draft_compliant = nil
-      kase.internal_deadline = Date.today
-
-      expect(kase.num_days_draft_deadline_late).to be nil
-    end
-
-    it 'is nil when internal_deadline is not present' do
-      kase.date_draft_compliant = Date.today
-      kase.internal_deadline = nil
-
-      expect(kase.num_days_draft_deadline_late).to be nil
-    end
-
+  describe '#num_days_late' do
     it 'is nil when 0 days late' do
-      kase.date_draft_compliant = Date.today
-      kase.internal_deadline = Date.today
-
-      expect(kase.num_days_draft_deadline_late).to be nil
+      kase.external_deadline = Date.today
+      expect(kase.num_days_late).to be nil
     end
 
     it 'is nil when not yet late' do
-      kase.date_draft_compliant = Date.today
-      kase.internal_deadline = Date.tomorrow
-
-      expect(kase.num_days_draft_deadline_late).to be nil
+      kase.external_deadline = Date.tomorrow
+      expect(kase.num_days_late).to be nil
     end
 
     it 'returns correct number of days late' do
-      kase.date_draft_compliant = Date.today
-      kase.internal_deadline = Date.yesterday
-
-      expect(kase.num_days_draft_deadline_late).to eq 1
+      kase.external_deadline = Date.yesterday
+      expect(kase.num_days_late).to eq 1
     end
   end
 

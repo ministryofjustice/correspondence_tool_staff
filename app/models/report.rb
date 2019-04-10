@@ -11,6 +11,9 @@
 #  updated_at     :datetime         not null
 #
 
+# Because run_and_update! needs to generate CSV
+require 'csv'
+
 class Report < ApplicationRecord
 
   validates_presence_of :report_type_id,
@@ -35,8 +38,13 @@ class Report < ApplicationRecord
   def run(*args)
     report_service = report_type.class_constant.new(*args)
     report_service.run
+    report_service
+  end
 
-    update! report_data: report_service.to_csv,
+  def run_and_update!(*args)
+    report_service = run(*args)
+
+    update! report_data: generate_csv(report_service),
             period_start: report_service.period_start,
             period_end: report_service.period_end
   end
@@ -47,7 +55,19 @@ class Report < ApplicationRecord
       .destroy_all
   end
 
+  def xlsx?
+    report_type.class_constant.xlsx?
+  end
+
   private
+
+  def generate_csv(report_service)
+    CSV.generate(headers: true) do |csv_generator|
+      report_service.to_csv.each do |csv_row|
+        csv_generator << csv_row.map(&:value)
+      end
+    end
+  end
 
   def period_within_acceptable_range?
     i18n_prefix = 'activerecord.errors.models.report.attributes'

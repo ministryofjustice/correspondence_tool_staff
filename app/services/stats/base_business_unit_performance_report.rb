@@ -31,14 +31,16 @@ module Stats
       bu_responded_late:          'Business unit',
       bu_open_in_time:            'Business unit',
       bu_open_late:               'Business unit',
-    } 
-    
+    }
+
+    class << self
+      def xlsx?
+        true
+      end
+    end
 
     def initialize(period_start = nil, period_end = nil, generate_bu_columns=false)
       super(period_start, period_end)
-      # super(period_start, period_end)
-      # @period_start = period_start
-      # @period_end = period_end
       @generate_bu_columns = generate_bu_columns
       column_headings = if @generate_bu_columns
                           R003_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS).merge(R003_BU_PERFORMANCE_COLUMNS)
@@ -80,8 +82,25 @@ module Stats
       @stats.finalise
     end
 
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [4, 10, 16]
+
+    # This method needs to return a grid of 'cells' with value and rag_rating properties
     def to_csv
-      @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+      csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+      csv.map.with_index do |row, row_index|
+        row.map.with_index do |item, item_index|
+          # data rows start after 2 superheadings + 1 heading
+          if row_index <= superheadings.size
+            header_cell row_index, item
+          # item at index+1 is the case count - don't mark 0/0 as Red RAG rating
+          # These are the positions of the 3 items which need a RAG rating
+          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index+1] != 0
+            OpenStruct.new value: item, rag_rating: rag_rating(item)
+          else
+            OpenStruct.new value: item
+          end
+        end
+      end
     end
 
     private

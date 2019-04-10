@@ -8,7 +8,6 @@ module Stats
     let(:manager)     { find_or_create :disclosure_bmt_user }
     let(:report_type) { find_or_create :report_type, :r003 }
 
-
     let(:params)      {{report: {
                         correspondence_type: 'FOI',
                         report_type_id: report_type.id,
@@ -22,10 +21,11 @@ module Stats
                               period_start: Date.yesterday,
                               period_end: Date.today }
 
-
     after(:all) { ReportType.delete_all }
 
     describe '#create_custom_report' do
+      let(:dummy_report_type) { double(to_csv: []) }
+
       before do
         sign_in manager
       end
@@ -38,22 +38,10 @@ module Stats
 
       it 'runs the report' do
         expect(Report).to receive(:new).and_return(report)
-        allow(report).to receive(:run)
+        allow(report).to receive(:run).and_return(dummy_report_type)
         post :create_custom_report, params: params
         expect(report).to have_received(:run).with(Date.yesterday,
                                                    Date.today)
-      end
-
-      it 'populates the report_data column' do
-        post :create_custom_report, params: params
-        new_report= assigns(:report)
-        expect(new_report.report_data).to_not be_nil
-      end
-
-      it 'creates an entry in the database' do
-        total = Report.count
-        post :create_custom_report, params: params
-        expect(Report.count).to eq total + 1
       end
 
       context 'invalid params passed in' do
@@ -124,7 +112,6 @@ module Stats
           expect(assigns(:report).errors.count).to eq 2
         end
       end
-
     end
   end
 end
