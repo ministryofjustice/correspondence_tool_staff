@@ -3,7 +3,7 @@ module PageObjects
     module Cases
       module Edit
         class ICOPage < PageObjects::Pages::Base
-          set_url '/cases/ico/edit'
+          set_url '/cases/{id}/edit'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
