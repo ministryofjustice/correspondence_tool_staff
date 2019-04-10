@@ -43,16 +43,18 @@ module Stats
       @stats.finalise
     end
 
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [1, 7, 13]
+
     def to_csv
       csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
 
       csv.map.with_index do |row, row_index|
         row.map.with_index do |item, item_index|
           if row_index <= superheadings.size
-            OpenStruct.new value: item
+            header_cell row_index, item
             # item at index+1 is the case count - don't mark 0/0 as Red RAG rating
             # These are the positions of the items which need a RAG rating
-          elsif [1, 7, 13].include?(item_index) && row[item_index+1] != 0
+          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index+1] != 0
             OpenStruct.new value: item, rag_rating: rag_rating(item)
           else
             OpenStruct.new value: item

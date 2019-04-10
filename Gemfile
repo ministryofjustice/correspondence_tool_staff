@@ -41,7 +41,7 @@ gem 'mimetype-fu', '~> 0.1.2'
 gem 'govuk_notify_rails'
 gem 'paper_trail', '~> 10.2'
 gem 'pg', '~> 1.1'
-gem 'pg_search', '~> 2.1.4'
+gem 'pg_search', '~> 2.1.5'
 gem 'pry-rails'
 gem 'puma', '~> 3.12'
 gem 'pundit', '~>2.0'
@@ -105,7 +105,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.66.0', require: false
+  gem 'rubocop', '~> 0.67.2', require: false
   gem 'rubocop-rspec', require: false
   gem 'ruby-progressbar'
 

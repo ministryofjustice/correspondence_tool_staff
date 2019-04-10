@@ -4,10 +4,8 @@
 #
 ###################################
 
-
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
-
 
 feature 'ICO FOI case requiring clearance' do
   include CaseDateManipulation
@@ -30,6 +28,7 @@ feature 'ICO FOI case requiring clearance' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
+  # This test fails at the 'edit case' step when edit_case is fixed to actually do something
   scenario 'end-to-end journey', js: true do
     kase = create_and_assign_ico_case user: manager,
                                       responding_team: responding_team,
