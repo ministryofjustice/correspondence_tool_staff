@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
     @global_nav_manager = GlobalNavManager.new(
       current_user,
       request,
-      Settings.global_navigation,
+      Settings.global_navigation.pages,
     )
   end
 

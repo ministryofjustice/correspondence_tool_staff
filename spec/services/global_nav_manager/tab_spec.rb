@@ -32,11 +32,11 @@ describe GlobalNavManager::Tab do
                                       user: responder,
                                       request: request }
   let(:parent_page) { instance_double GlobalNavManager::Page,
-                                      scopes: ['open'],
+                                      scope_names: ['open'],
                                       path: '/opened' }
-  let(:tab) { GlobalNavManager::Tab.new 'late',
-                                        parent_page,
-                                        config.pages.open_cases.tabs.late }
+  let(:tab) { GlobalNavManager::Tab.new name: 'late',
+                                        parent: parent_page,
+                                        attrs: config.pages.open_cases.tabs.late }
 
   it 'inherits from GlobalNavManager::Page' do
     expect(tab).to be_a GlobalNavManager::Page

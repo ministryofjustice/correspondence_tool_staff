@@ -1,10 +1,11 @@
 class GlobalNavManager
   class Page
-    attr_reader :name, :path, :scopes, :tabs
+    attr_reader :name, :path, :tabs
 
     IGNORE_QUERY_PARAMS = ['page']
 
-    def initialize(name, parent, attrs)
+    # 'parent' here is actually a GlobalNavManager instance
+    def initialize(name:, parent:, attrs:)
       @name = name
       @parent = parent
       @path = attrs[:path]
@@ -46,7 +47,7 @@ class GlobalNavManager
     end
 
     def finder
-      @parent.finder.for_scopes(@scopes)
+      @parent.finder.for_scopes(@scope_names)
     end
 
     def cases
@@ -64,11 +65,14 @@ class GlobalNavManager
 
     private
 
+    # This 'method' is tested, so only exists for that reason
+    attr_reader :scope_names
+
     def build_tabs(tabs_settings)
       tabs_settings ||= []
       tabs_settings.map do |tab_name, tab_settings|
-        Tab.new(tab_name, self, tab_settings)
-      end .find_all do |tab|
+        Tab.new(name: tab_name, parent: self, attrs: tab_settings)
+      end.find_all do |tab|
         tab.visible?
       end
     end
@@ -93,12 +97,12 @@ class GlobalNavManager
 
     def process_scope(scope)
       if scope.respond_to? :keys
-        @scopes = (
+        @scope_names = (
           scopes_for(user_teams, from_scope: scope.to_h.with_indifferent_access) +
           scopes_for(user_roles, from_scope: scope.to_h.with_indifferent_access)
         ).uniq
       else
-        @scopes = [scope]
+        @scope_names = [scope]
       end
     end
 
@@ -109,7 +113,7 @@ class GlobalNavManager
           from_scope[user_team_or_role]
         end
 
-      end .compact.uniq
+      end.compact.uniq
     end
   end
 end
