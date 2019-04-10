@@ -225,17 +225,19 @@ module Stats # rubocop:disable Metrics/ModuleLength
         end
 
         expect(rag_ratings).to eq([
-                                    [], [], [],
-                                    [[4, :red], [11, :red]],
-                                    [[4, :red], [11, :red]],
-                                    [[4, :red], [11, :red]],
-                                    [[4, :red], [11, :red]],
-                                    [[4, :red], [11, :red]],
-                                    [[4, :red], [11, :red]],
-                                    [[4, :red], [11, :red]],
-                                    [[11, :red]],
-                                    [[4, :red]],
-                                    [[4, :red], [11, :red]],
+                                    [],
+                                    (0..15).map { |x| [x, :blue] },
+                                    (0..15).map { |x| [x, :grey] },
+                                    [[4, :red], [10, :red]],
+                                    [[4, :red], [10, :red]],
+                                    [[4, :red], [10, :red]],
+                                    [[4, :red], [10, :red]],
+                                    [[4, :red], [10, :red]],
+                                    [[4, :red], [10, :red]],
+                                    [[4, :red], [10, :red]],
+                                    [[10, :red]],
+                                    [[4, :red], [10, :red]],
+                                    [[4, :red], [10, :red]],
                                   ])
       end
     end
