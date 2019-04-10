@@ -7,6 +7,8 @@ if ENV['COVERAGE'].present?
     add_group "Validators", "app/validators"
     # application doesn't use action cable
     add_filter '/app/channels/'
+    # all emails (including devise ones) get sent via gov.uk notify service
+    add_filter '/app/mailers/application_mailer.rb'
   end
 end
 
