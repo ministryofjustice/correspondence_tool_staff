@@ -9,7 +9,7 @@ section
         .grid-row
           .column-two-thirds
             .report-description
-              = report.class_name.constantize.description
+              = report.description
             .report-period
               span.bold-small
                 = "Reporting period: "
@@ -19,4 +19,4 @@ section
                 = 'Download report'
                 span.visually-hidden
                   = " - #{ report.full_name }"
-              = ' (.csv file)'
+              = " (.#{report.file_extension} file)"

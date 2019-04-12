@@ -33,7 +33,7 @@ class ReportType < ApplicationRecord
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
   def class_constant
-    class_name.constantize
+    @_class_constant ||= class_name.constantize
   end
 
   def filename(extension)
@@ -54,5 +54,13 @@ class ReportType < ApplicationRecord
 
   def default_reporting_period_text
     Stats::ReportingPeriodCalculator.new(period_name: default_reporting_period.to_sym).to_s
+  end
+
+  def file_extension
+    class_constant.xlsx? ? 'xslx' : 'csv'
+  end
+
+  def description
+    class_constant.description
   end
 end
