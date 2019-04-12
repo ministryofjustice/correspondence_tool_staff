@@ -3,9 +3,9 @@ module OverturnedICOParams
 
   def create_ico_overturned_foi_params
     params
-      .require(:case_overturned_foi)
+      .require(:overturned_foi)
       .permit(create_overturned_ico_params_list)
-      .merge(original_case_params(params[:case_overturned_foi]))
+      .merge(original_case_params(params[:overturned_foi]))
   end
 
   def create_ico_overturned_sar_params

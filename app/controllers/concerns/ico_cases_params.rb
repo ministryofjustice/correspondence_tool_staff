@@ -4,7 +4,7 @@ module ICOCasesParams
   private
 
   def create_ico_params
-    case_params = params.require(:case_ico)
+    case_params = params.require(:ico)
 
     if case_params[:original_case_ids].present?
       case_params[:original_case_id] = case_params.delete(:original_case_ids).first
@@ -29,8 +29,8 @@ module ICOCasesParams
   end
 
   def record_late_team_ico_params
-    if params[:case_ico].present?
-      params.require(:case_ico).permit(:late_team_id)
+    if params[:ico].present?
+      params.require(:ico).permit(:late_team_id)
     else
       {}
     end
@@ -51,7 +51,7 @@ module ICOCasesParams
   end
 
   def process_ico_closure_params
-    params.require(:case_ico).permit(
+    params.require(:ico).permit(
                                  :date_ico_decision_received_dd,
                                  :date_ico_decision_received_mm,
                                  :date_ico_decision_received_yyyy,
@@ -194,7 +194,7 @@ module ICOCasesParams
   end
 
   def respond_ico_params
-    params.require(:case_ico).permit(
+    params.require(:ico).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
@@ -202,7 +202,7 @@ module ICOCasesParams
   end
 
   def ico_close_date_responded_params
-      params.require(:case_ico).permit(
+      params.require(:ico).permit(
                                  :date_ico_decision_received_dd,
                                  :date_ico_decision_received_mm,
                                  :date_ico_decision_received_yyyy

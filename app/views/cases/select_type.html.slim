@@ -10,7 +10,8 @@
 = render partial: 'layouts/header'
 
 ul#create-correspondences
+
   - @permitted_correspondence_types.each do |correspondence_type|
-    li style="margin-bottom: 15px"
+    li
       = link_to correspondence_type.abbreviation_and_name,
                 new_polymorphic_url(correspondence_type.sub_classes.first)

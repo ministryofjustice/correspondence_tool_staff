@@ -95,7 +95,7 @@ class CaseCreateService
   def determine_case_class
     case_class_service = GetCaseClassFromParamsService.new(
         type: @correspondence_type,
-        params: @params["case_#{@correspondence_type_key}"]
+        params: @params["#{@correspondence_type_key}"]
       )
     case_class_service.call
 

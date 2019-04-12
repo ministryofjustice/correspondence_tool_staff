@@ -1,7 +1,7 @@
 #rubocop:disable Metrics/ClassLength
 require './lib/translate_for_case'
 
-class CasesController < ApplicationController
+class Cases::BaseController < ApplicationController
   include FOICasesParams
   include ICOCasesParams
   include SARCasesParams
@@ -931,6 +931,11 @@ class CasesController < ApplicationController
         end
       end
     end
+  end
+
+  # All existing partials are in /views/cases
+  def self.controller_path
+    "cases"
   end
 
   private

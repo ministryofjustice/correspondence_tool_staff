@@ -197,80 +197,106 @@ Rails.application.routes.draw do
 
   post '/feedback' => 'feedback#create'
 
-  # Each case type gets its own controller for new and create
-  # as the behaviours are all different and different parameters are passed
-  resources :case_foi_standards, only: [:new, :create], controller: :foi_standard_cases do
-  end
-  resources :case_ico_fois, only: [:new, :create], controller: :foi_ico_cases do
-  end
-  resources :case_sars, only: [:new, :create], controller: :sar_cases do
-  end
+  scope :cases do
+    # Each case type gets its own controller for new and create
+    # as the behaviours are all different and different parameters are passed
+    resources :fois, only: [:new, :create], controller: 'cases/foi', as: :case_foi_standards
+    resources :icos, only: [:new, :create], controller: 'cases/ico', as: :case_icos do
+    end
+    resources :ico_fois, only: [:new, :create], controller: 'cases/ico_foi', as: :case_ico_fois do
+    end
+    resources :ico_sars, only: [:new, :create], controller: 'cases/ico_sar', as: :case_ico_sars do
+    end
+    resources :sars, only: [:new, :create], controller: 'cases/sar', as: :case_sars do
+    end
 
-  resources :case_overturned_ico_fois, only: [:create], controller: :overturned_foi_cases do
-    get :new_overturned_ico, on: :member
-  end
+    resources :overturned_ico_fois, only: [:create], controller: 'cases/overturned_foi', as: :case_overturned_fois do
+      get :new, on: :member
+    end
 
-  resources :case_overturned_ico_sars, only: [:create], controller: :overturned_sar_cases do
-    get :new_overturned_ico, on: :member
+    resources :overturned_ico_sars, only: [:create], controller: 'cases/overturned_sar', as: :case_overturned_sars do
+      get :new, on: :member
+    end
   end
 
   # TODO - need to remove :create and :new actions from cases_controller
-  resources :cases, except: [:new, :create] do
-    authenticated :user, -> (u) { u.manager? }  do
-      root to: redirect(gnav.default_urls.manager), as: :manager_root
-    end
+  resources :cases, controller: 'cases/base', except: [:new, :create] do
+    # authenticated :user, -> (u) { u.manager? }  do
+    #   root to: redirect(gnav.default_urls.manager), as: :manager_root
+    # end
+    #
+    # authenticated :user, -> (u) { u.responder?}  do
+    #   root to: redirect(gnav.default_urls.responder), as: :responder_root
+    # end
+    #
+    # authenticated :user, -> (u) { u.approver?}  do
+    #   root to: redirect(gnav.default_urls.approver), as: :approver_root
+    # end
 
-    authenticated :user, -> (u) { u.responder?}  do
-      root to: redirect(gnav.default_urls.responder), as: :responder_root
-    end
+    # OPEN Cases
+    get 'my_open', on: :collection, to: redirect('/cases/my_open/in_time'), as: :root_my_open
+    get 'my_open/:tab' => 'cases/base#my_open_cases', on: :collection, as: :my_open
+    get 'open' => 'cases/base#open_cases', on: :collection, as: :open
+    get 'open/in_time', to: redirect('/cases/open')
+    get 'open/late',    to: redirect('/cases/open')
 
-    authenticated :user, -> (u) { u.approver?}  do
-      root to: redirect(gnav.default_urls.approver), as: :approver_root
-    end
+    # CLOSE Cases
+    get 'close', on: :member
+    get 'closed' => 'cases/base#closed_cases', on: :collection
+    get 'edit_closure', on: :member, as: :edit_closure
+    patch 'process_closure', on: :member
+    patch 'update_closure', on: :member
+    get 'closure_outcomes', on: :member
+
 
     get :select_type, on: :new
     get 'new_linked_cases_for', on: :collection
 
-    get 'close', on: :member
-    get 'closure_outcomes', on: :member
+
     get 'respond_and_close', on: :member
-    get 'closed' => 'cases#closed_cases', on: :collection
-    get 'deleted' => 'cases#deleted_cases', on: :collection
-    get 'confirm_destroy' => 'cases#confirm_destroy', on: :member
-    get 'edit_closure', on: :member, as: :edit_closure
-    get 'incoming' => 'cases#incoming_cases', on: :collection
-    get 'my_open', on: :collection, to: redirect('/cases/my_open/in_time'), as: :root_my_open
-    get 'my_open/:tab' => 'cases#my_open_cases', on: :collection, as: :my_open
-    get 'open' => 'cases#open_cases', on: :collection, as: :open
-    get 'open/in_time', to: redirect('/cases/open')
-    get 'open/late',    to: redirect('/cases/open')
-    patch 'process_closure', on: :member
-    patch 'process_date_responded', on: :member
     patch 'process_respond_and_close', on: :member
-    patch 'update_closure', on: :member
+
+    get 'deleted' => 'cases/base#deleted_cases', on: :collection
+    get 'confirm_destroy' => 'cases/base#confirm_destroy', on: :member
+    get 'incoming' => 'cases/base#incoming_cases', on: :collection
+
+    patch 'process_date_responded', on: :member
+
     patch 'record_late_team', on: :member
     get 'respond', on: :member
     patch 'confirm_respond', on: :member
+
     get '/assignments/assign_to_team' => 'assignments#assign_to_team', as: 'assign_to_responder_team'
-    patch 'unflag_for_clearance' => 'cases#unflag_for_clearance', on: :member
-    patch 'unflag_taken_on_case_for_clearance' => 'cases#unflag_taken_on_case_for_clearance', on: :member
-    patch 'flag_for_clearance' => 'cases#flag_for_clearance', on: :member
+    patch 'unflag_for_clearance' => 'cases/base#unflag_for_clearance', on: :member
+    patch 'unflag_taken_on_case_for_clearance' => 'cases/base#unflag_taken_on_case_for_clearance', on: :member
+    patch 'flag_for_clearance' => 'cases/base#flag_for_clearance', on: :member
     get :request_amends, on: :member
     patch :execute_request_amends, on: :member
     post  :filter, on: :collection
     get 'remove_clearance' => 'cases#remove_clearance', on: :member
-    get :extend_for_pit, on: :member
-    patch :execute_extend_for_pit, on: :member
     patch :request_further_clearance, on: :member
-    patch :remove_pit_extension, on: :member
     get :new_case_link, on: :member
     post :execute_new_case_link, on: :member
-    delete 'destroy_link/:linked_case_number' => 'cases#destroy_case_link' , on: :member, as: 'destroy_link_on'
-    patch 'progress_for_clearance' => 'cases#progress_for_clearance', on: :member
+    delete 'destroy_link/:linked_case_number' => 'cases/base#destroy_case_link' , on: :member, as: 'destroy_link_on'
+    patch 'progress_for_clearance' => 'cases/base#progress_for_clearance', on: :member
+
+
+    # Search Cases
+    get 'search' => 'cases/base#search', on: :collection
+
+
+    # PIT Extensions
+    get :extend_for_pit, on: :member
+    patch :execute_extend_for_pit, on: :member
+    patch :remove_pit_extension, on: :member
+
+
+    # SAR Extensions
     get :extend_sar_deadline, on: :member
     patch :execute_extend_sar_deadline, on: :member
     patch :remove_sar_deadline_extension, on: :member
 
+    # Case Assignments
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member
       patch 'accept', on: :member
@@ -307,8 +333,6 @@ Rails.application.routes.draw do
     resources :case_attachments, path: 'attachments', only: [:destroy] do
       get 'download', on: :member
     end
-
-    get 'search' => 'cases#search', on: :collection
   end
 
   authenticated :user, ->(u) { u.admin? } do
