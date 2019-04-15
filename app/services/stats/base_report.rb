@@ -9,15 +9,21 @@ module Stats
     attr_reader :period_start, :period_end
 
     def initialize(period_start = nil, period_end = nil)
-      raise "Cannot instantiate Stats::BaseReport - use derived class instead" if self.class == BaseReport
+      raise 'Cannot instantiate Stats::BaseReport - use derived class instead' if self.class == BaseReport
+
       @stats = nil                        # implement @stats as an instance of StatsCollector in derived class
       @first_column_heading = 'Teams'     # override in derived class if other heading required
       @superheadings = []                 # override in derived class if extra heading lines required in CSV
+
       if period_start.nil? && period_end.nil?
-        @reporting_period = ReportingPeriodCalculator.new(period_name: default_reporting_period)
+        @reporting_period = ReportingPeriod::Calculator.build(default_reporting_period)
       else
-        @reporting_period = ReportingPeriodCalculator.new(period_start: period_start, period_end: period_end)
+        @reporting_period = ReportingPeriod::Calculator::DateInterval(
+          period_start: period_start,
+          period_end: period_end
+        )
       end
+
       @period_start = @reporting_period.period_start
       @period_end = @reporting_period.period_end
     end
