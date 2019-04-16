@@ -5,6 +5,7 @@ module ReportingPeriod
     context '#initialize' do
       it 'works on first day of next quarter' do
         Timecop.freeze(Date.new(2018, 7, 1)) do
+          puts "\nLastQuarterSpec, Time.now: #{DateTime.now}\n"
           last_quarter = described_class.new
 
           expect(last_quarter.period_start.to_date).to eq Date.new(2018, 4, 1)
