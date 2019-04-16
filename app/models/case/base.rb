@@ -352,6 +352,8 @@ class Case::Base < ApplicationRecord
 
   include CaseStates
 
+  # @note Magic methods for all available Case states such as unassigned?,
+  #   pending_dacu_clearance?, etc
   ConfigurableStateMachine::Machine.states.each do |state|
     define_method("#{state}?") { current_state == state }
   end
