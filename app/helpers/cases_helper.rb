@@ -193,6 +193,12 @@ module CasesHelper
     link_to 'Delete case', confirm_destroy_case_path(kase)
   end
 
+  def action_link_for_destroy_case(kase)
+    link_to 'Delete case', 
+      confirm_destroy_case_path(kase),
+      class: 'button-secondary'
+  end
+
   def action_link_for_extend_for_pit(kase)
     link_to I18n.t('common.case.extend_for_pit'),
             extend_for_pit_case_path(kase),

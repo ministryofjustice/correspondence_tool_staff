@@ -40,6 +40,9 @@ div id="case-#{@correspondence_type_key}" class="case"
         - if policy(@case).assignments_execute_reassign_user?
           = action_button_for(:reassign_user)
 
+        - if policy(@case).destroy_case?
+          = action_link_for_destroy_case(@case)
+          
         - action_button_for(:progress_for_clearance)
 
   section.case-info
