@@ -20,14 +20,17 @@ module ReportingPeriod
       "#{@period_start.strftime(mask)} to #{@period_end.strftime(mask)}"
     end
 
-    def self.build(period_start: nil, period_end: nil, period_name: '')
-      if period_name.present?
-        "ReportingPeriod::#{period_name.to_s.camelize}".constantize.new
-      else
+    # @note (Mohammed Seedat): Current implementation of notes assumes
+    #   supplying +period_start+ and +period_end+ supercedes using a
+    #   named reporting period
+    def self.build(period_start: nil, period_end: nil, period_name: nil)
+      if period_start.present? && period_end.present?
         ReportingPeriod::DateInterval.new(
           period_start: period_start,
           period_end: period_end
         )
+      else
+        "ReportingPeriod::#{period_name.to_s.camelize}".constantize.new
       end
     end
 
