@@ -15,14 +15,11 @@ module Stats
       @first_column_heading = 'Teams'     # override in derived class if other heading required
       @superheadings = []                 # override in derived class if extra heading lines required in CSV
 
-      if period_start.nil? && period_end.nil?
-        @reporting_period = ReportingPeriod::Calculator.build(default_reporting_period)
-      else
-        @reporting_period = ReportingPeriod::Calculator::DateInterval(
-          period_start: period_start,
-          period_end: period_end
-        )
-      end
+      @reporting_period = ReportingPeriod::Calculator.build(
+        period_start: period_start,
+        period_end: period_end,
+        period_name: default_reporting_period
+      )
 
       @period_start = @reporting_period.period_start
       @period_end = @reporting_period.period_end

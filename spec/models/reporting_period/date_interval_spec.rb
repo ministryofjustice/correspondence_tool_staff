@@ -2,8 +2,8 @@ require 'rails_helper'
 
 module ReportingPeriod
   describe DateInterval do
-    let(:feb_1)         { Date.new(2018, 2, 1) }
-    let(:apr_30)        { Date.new(2018, 4, 30 ) }
+    let(:feb_1)   { Date.new(2018, 2, 1) }
+    let(:apr_30)  { Date.new(2018, 4, 30) }
 
     context '#initialize' do
       it 'sets date periods' do
@@ -12,8 +12,8 @@ module ReportingPeriod
           period_end: apr_30
         )
 
-        expect(date_interval.period_start).to eq feb_1
-        expect(date_interval.period_end).to eq apr_30
+        expect(date_interval.period_start.to_date).to eq feb_1
+        expect(date_interval.period_end.to_date).to eq apr_30
       end
     end
   end
