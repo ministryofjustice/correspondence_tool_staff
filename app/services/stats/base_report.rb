@@ -51,11 +51,11 @@ module Stats
     end
 
     def self.title
-      raise "#{self} does not implement .title method"
+      raise "#{self} doesn't implement .title method"
     end
 
     def self.description
-      raise "#{self} does not implement .description method"
+      raise "#{self} doesn't implement .description method"
     end
 
     def self.report_type
