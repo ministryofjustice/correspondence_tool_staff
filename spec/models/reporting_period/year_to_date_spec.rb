@@ -6,10 +6,6 @@ module ReportingPeriod
     let(:dec_31)  { Date.new(2018, 12, 31) }
 
     context '#initialize' do
-      after(:each) do
-        Timecop.return
-      end
-
       it 'works on the first day of the year' do
         Timecop.freeze(jan_1 + 1.hours) do
           year_to_date = described_class.new

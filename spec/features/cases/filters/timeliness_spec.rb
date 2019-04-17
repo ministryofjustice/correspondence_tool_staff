@@ -20,7 +20,6 @@ feature 'filtering cases by timeliness' do
 
   after(:all) do
     DbHousekeeping.clean
-    Timecop.return
   end
 
   before do

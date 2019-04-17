@@ -32,8 +32,6 @@ describe S3Uploader do
     allow(uploads_object).to receive(:move_to).with(destination_path)
   end
 
-  after(:each) { Timecop.return }
-
   describe '.s3_direct_post_for_case' do
     it 'retrieves an s3 presigned post' do
       allow(CASE_UPLOADS_S3_BUCKET).to receive(:presigned_post)

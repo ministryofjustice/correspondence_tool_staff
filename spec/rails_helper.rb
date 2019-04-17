@@ -175,6 +175,11 @@ RSpec.configure do |config|
     CTS.instance_variables.each { |var| CTS.remove_instance_variable var }
   end
 
+  # Automatically reset Date/Time/DateTime to prevent issues
+  # during CI builds
+  config.after(:all) do
+    Timecop.return
+  end
 end
 
 def seed_database_for_tests

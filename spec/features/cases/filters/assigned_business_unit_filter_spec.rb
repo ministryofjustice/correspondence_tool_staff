@@ -37,10 +37,8 @@ feature 'filtering by assigned business unit' do
     Case::Base.update_all_indexes
   end
 
-
   after(:all) do
     DbHousekeeping.clean
-    Timecop.return
   end
 
   context 'from search page' do

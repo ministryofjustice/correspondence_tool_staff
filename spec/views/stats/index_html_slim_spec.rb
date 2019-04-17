@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe 'stats/index.html.slim', type: :view do
-  after(:all)   { Timecop.return }
-
   let!(:time)          { Time.local(2018, 10, 3) }
   let(:report_1)      { build_stubbed :report_type, :r004 }
   let(:report_2)      { build_stubbed :report_type, :r005 }
