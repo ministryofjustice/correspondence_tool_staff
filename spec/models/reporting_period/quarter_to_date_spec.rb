@@ -2,14 +2,16 @@ require 'rails_helper'
 
 module ReportingPeriod
   describe QuarterToDate do
+    after do
+      Timecop.return
+    end
+
     let(:apr_1)   { Date.new(2018, 4, 1) }
     let(:jun_30)  { Date.new(2018, 6, 30) }
 
     context '#initialize' do
       it 'works on first day of quarter' do
         Timecop.freeze(apr_1) do
-          puts "\nQuarterToDateSpec 1, Time.now: #{DateTime.now}\n"
-
           quarter_to_date = described_class.new
 
           expect(quarter_to_date.period_start.to_date).to eq apr_1

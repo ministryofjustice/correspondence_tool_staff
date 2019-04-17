@@ -17,12 +17,10 @@ module Stats
 
     describe '#case_scope' do
       before do
-        Timecop.freeze(Time.local(2019, 1, 1))
         create(:r105_report_type) unless ReportType.find_by(abbr: 'R105')
       end
 
       after do
-        Timecop.return
         ReportType.r105.destroy if ReportType.find_by(abbr: 'R105')
       end
 
