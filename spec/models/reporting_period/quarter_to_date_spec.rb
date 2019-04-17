@@ -21,8 +21,6 @@ module ReportingPeriod
 
       it 'works on last day of quarter' do
         Timecop.freeze(jun_30 + 23.hours) do
-          puts "\nQuarterToDateSpec 2, Time.now: #{DateTime.now}\n"
-
           quarter_to_date = described_class.new
 
           expect(quarter_to_date.period_start.to_date).to eq apr_1
