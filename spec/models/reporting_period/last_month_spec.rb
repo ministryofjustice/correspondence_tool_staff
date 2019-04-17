@@ -4,9 +4,9 @@ module ReportingPeriod
   describe LastMonth do
     context '#initialize' do
       it 'works on first day of next month' do
-        date = Date.new(2018, 7, 1)
-        expected_start = Date.new(2018, 6, 1)
-        expected_end = Date.new(2018, 6, 30)
+        date = Date.new(1998, 10, 1)
+        expected_start = Date.new(1998, 9, 1)
+        expected_end = Date.new(1998, 9, 30)
 
         Timecop.freeze(date) do
           last_month = described_class.new

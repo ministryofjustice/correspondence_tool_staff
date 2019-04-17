@@ -2,8 +2,8 @@ require 'rails_helper'
 
 module ReportingPeriod
   describe QuarterToDate do
-    let!(:apr_1)   { Date.new(2018, 4, 1) }
-    let!(:jun_30)  { Date.new(2018, 6, 30) }
+    let!(:apr_1)   { Date.new(2003, 4, 1) }
+    let!(:jun_30)  { Date.new(2003, 6, 30) }
 
     context '#initialize' do
       it 'works on first day of quarter' do
@@ -17,7 +17,7 @@ module ReportingPeriod
 
       it 'works on last day of quarter' do
         date = jun_30 + 23.hours
-        
+
         Timecop.freeze(date) do
           quarter_to_date = described_class.new
 

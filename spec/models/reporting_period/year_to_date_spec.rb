@@ -2,8 +2,8 @@ require 'rails_helper'
 
 module ReportingPeriod
   describe YearToDate do
-    let(:jan_1)   { Date.new(2018, 1, 1) }
-    let(:dec_31)  { Date.new(2018, 12, 31) }
+    let(:jan_1)   { Date.new(1983, 1, 1) }
+    let(:dec_31)  { Date.new(1983, 12, 31) }
 
     context '#initialize' do
       it 'works on the first day of the year' do

@@ -1,8 +1,8 @@
 module ReportingPeriod
   class QuarterToDate < Calculator
     def initialize
-      period_start = Date.today.beginning_of_quarter
-      period_end = Date.today
+      period_start = Date.current.beginning_of_quarter
+      period_end = Date.current
 
       super(period_start: period_start, period_end: period_end)
     end
