@@ -104,8 +104,6 @@ RSpec.describe Case::Base, type: :model do
         responded_case = create :responded_case
       end
 
-      Timecop.return
-
       create :closed_case, last_transitioned_at: 2.days.ago
       create :closed_case, last_transitioned_at: 1.day.ago
       expect(Case::Base.opened).to match_array [ open_case, responded_case ]
