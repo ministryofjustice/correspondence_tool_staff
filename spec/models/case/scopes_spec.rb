@@ -94,11 +94,16 @@ RSpec.describe Case::Base, type: :model do
 
   describe 'open scope' do
     it 'returns only closed cases in most recently closed first' do
-      Timecop.freeze 1.minute.ago
-      open_case = create :case
-      Timecop.freeze 2.minutes.ago
-      responded_case = create :responded_case
-      Timecop.return
+      open_case, responded_case = nil
+
+      Timecop.freeze(1.minute.ago) do
+        open_case = create :case
+      end
+
+      Timecop.freeze(2.minutes.ago) do
+        responded_case = create :responded_case
+      end
+
       create :closed_case, last_transitioned_at: 2.days.ago
       create :closed_case, last_transitioned_at: 1.day.ago
       expect(Case::Base.opened).to match_array [ open_case, responded_case ]
