@@ -53,7 +53,7 @@ class ReportType < ApplicationRecord
   end
 
   def default_reporting_period_text
-    Stats::ReportingPeriodCalculator.new(period_name: default_reporting_period.to_sym).to_s
+    ReportingPeriod::Calculator.build(period_name: default_reporting_period).to_s
   end
 
   def file_extension
