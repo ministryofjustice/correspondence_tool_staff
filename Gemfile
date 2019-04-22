@@ -54,7 +54,7 @@ gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
 gem 'sidekiq', '~> 5.2'
-gem 'sidekiq-logging-json', '~> 0.0.18'
+gem 'sidekiq-logging-json', '~> 0.0.19'
 
 gem 'table_print'
 gem 'thor-rails'

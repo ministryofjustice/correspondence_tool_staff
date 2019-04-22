@@ -509,7 +509,7 @@ GEM
       rack (>= 1.5.0)
       rack-protection (>= 1.5.0)
       redis (>= 3.3.5, < 5)
-    sidekiq-logging-json (0.0.18)
+    sidekiq-logging-json (0.0.19)
       sidekiq (>= 3)
     simplecov (0.13.0)
       docile (~> 1.1.0)
@@ -658,7 +658,7 @@ DEPENDENCIES
   shell-spinner
   shoulda-matchers (~> 4.0)
   sidekiq (~> 5.2)
-  sidekiq-logging-json (~> 0.0.18)
+  sidekiq-logging-json (~> 0.0.19)
   site_prism
   slim-rails (~> 3.2)
   spring
