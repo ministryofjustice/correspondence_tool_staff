@@ -26,10 +26,7 @@ RSpec::Matchers.define :allow_file_extension do |extension|
 end
 
 RSpec.describe CaseAttachment, type: :model do
-
-  before(:each) { Timecop.freeze Time.new(2017, 6, 14, 14, 22, 3) }
-  after(:each) { Timecop.return }
-
+  let!(:time) { Time.new(2017, 6, 14, 14, 22, 3) }
 
   describe 'type enum' do
     it { should have_enum(:type).with_values %w{ response request ico_decision } }
@@ -270,27 +267,33 @@ RSpec.describe CaseAttachment, type: :model do
         let(:kase) { jpg_case_attachment.case }
 
         it 'uploads the file to s3' do
-          expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
-          expect(s3_object).to receive(:upload_file).with('xxx')
+          Timecop.freeze(time) do
+            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
+            expect(s3_object).to receive(:upload_file).with('xxx')
 
-          jpg_case_attachment.__send__(:upload_preview, 'xxx', 0)
+            jpg_case_attachment.__send__(:upload_preview, 'xxx', 0)
+          end
         end
 
         it 'raises if fails after the maximum number of retries has been reached' do
-          expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
-          expect(s3_object).to receive(:upload_file).with('xxx').and_return(false)
+          Timecop.freeze(time) do
+            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
+            expect(s3_object).to receive(:upload_file).with('xxx').and_return(false)
 
-          expect {
-            jpg_case_attachment.__send__(:upload_preview, 'xxx', 5)
-          }.to raise_error RuntimeError, "Max upload retry exceeded for CaseAttachment #{jpg_case_attachment.id}"
+            expect {
+              jpg_case_attachment.__send__(:upload_preview, 'xxx', 5)
+            }.to raise_error RuntimeError, "Max upload retry exceeded for CaseAttachment #{jpg_case_attachment.id}"
+          end
         end
 
         it 'requeues the job if uplaod fails and max retries as not been reached' do
-          expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
-          expect(s3_object).to receive(:upload_file).with('xxx').and_return(false)
+          Timecop.freeze(time) do
+            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
+            expect(s3_object).to receive(:upload_file).with('xxx').and_return(false)
 
-          expect(PdfMakerJob).to receive(:perform_with_delay).with(jpg_case_attachment.id, 3)
-          jpg_case_attachment.__send__(:upload_preview, 'xxx', 2)
+            expect(PdfMakerJob).to receive(:perform_with_delay).with(jpg_case_attachment.id, 3)
+            jpg_case_attachment.__send__(:upload_preview, 'xxx', 2)
+          end
         end
       end
     end

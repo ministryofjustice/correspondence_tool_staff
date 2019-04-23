@@ -16,8 +16,13 @@ module Stats
     end
 
     describe '#case_scope' do
-      before(:all)  { Timecop.freeze(Time.local(2019, 1, 1)) }
-      after(:all)   { Timecop.return }
+      before do
+        create(:r105_report_type) unless ReportType.find_by(abbr: 'R105')
+      end
+
+      after do
+        ReportType.r105.destroy if ReportType.find_by(abbr: 'R105')
+      end
 
       before(:each) do
         @period_start = 0.business_days.after(Date.new(2018, 12, 20))
@@ -38,7 +43,7 @@ module Stats
 
       it 'returns only SAR cases within the selected period' do
         report = R105SarMonthlyPerformanceReport.new(@period_start, @period_end)
-        expect(report.case_scope).to match_array( [ @sar_2, @sar_3 ])
+        expect(report.case_scope).to match_array( [@sar_2, @sar_3, @sar_4])
       end
     end
   end
