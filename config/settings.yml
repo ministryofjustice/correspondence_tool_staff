@@ -192,6 +192,12 @@ enabled_features:
     Host-demo: true
     Host-staging: true
     Host-prod: true
+  offender_sars:
+    Local: true
+    Host-dev: true
+    Host-demo: true
+    Host-staging: false
+    Host-prod: false
   ico:
     Local: true
     Host-dev: true
