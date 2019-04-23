@@ -45,6 +45,11 @@ module Stats
 
     }.freeze
 
+    RESPONDED_IN_TIME = :responded_in_time
+    RESPONDED_LATE    = :responded_late
+    OPEN_LATE         = :open_late
+    OPEN_IN_TIME      = :open_in_time
+
     attr_reader :result, :bu_result
 
     def initialize(kase)
@@ -65,29 +70,52 @@ module Stats
       @result = add_trigger_state(timeliness)
     end
 
+    def add_trigger_state(timeliness)
+      "#{@kase.trigger_status}_#{timeliness}".to_sym
+    end
+
+    # Unassigned cases are considered open in time or open late
+    def analyse_case_for_responding_business_unit
+      @bu_result =
+        if @kase.unassigned?
+          analyse_open_case
+        elsif @kase.responded?
+          analyse_responded_case_for_responding_business_unit
+        else
+          analyse_open_case_for_responding_business_unit
+        end
+    end
+
     def analyse_closed_case
-      @kase.responded_in_time? ? :responded_in_time : :responded_late
+      if @kase.responded_in_time?
+        RESPONDED_IN_TIME
+      else
+        RESPONDED_LATE
+      end
     end
 
     def analyse_open_case
-      @kase.already_late? ? :open_late : :open_in_time
-    end
-
-    def add_trigger_state(timeliness)
-      status = @kase.flagged? ? 'trigger_' + timeliness.to_s : 'non_trigger_' + timeliness.to_s
-      status.to_sym
-    end
-
-    def analyse_case_for_responding_business_unit
-      @bu_result = @kase.responded? ? analyse_responded_case_for_responding_business_unit : analyse_open_case_for_responding_business_unit
+      if @kase.already_late?
+        OPEN_LATE
+      else
+        OPEN_IN_TIME
+      end
     end
 
     def analyse_responded_case_for_responding_business_unit
-      @kase.business_unit_responded_in_time? ? :responded_in_time : :responded_late
+      if @kase.business_unit_responded_in_time?
+        RESPONDED_IN_TIME
+      else
+        RESPONDED_LATE
+      end
     end
 
     def analyse_open_case_for_responding_business_unit
-      @kase.business_unit_already_late? ? :open_late : :open_in_time
+      if @kase.business_unit_already_late?
+        OPEN_LATE
+      else
+        OPEN_IN_TIME
+      end
     end
   end
 end
