@@ -28,6 +28,7 @@ module Stats
           3.times { create_case(:trigger_responded_in_time, 4) }
           2.times { create_case(:non_trigger_open_in_time, 4) }
           1.times { create_case(:non_trigger_open_late, 4) }
+          2.times { create_case(:non_trigger_open_late, 3, case_type: :case) } # unassigned
 
           # these should be ignored
           create :compliance_review
@@ -56,16 +57,19 @@ module Stats
           row.map.with_index { |item, index| [index, item.rag_rating] if item.rag_rating }.compact
         end
 
-        expect(rag_ratings).to eq([
-                                    [],
-                                    (0..18).map { |c| [c, :blue] },
-                                    (0..18).map { |c| [c, :grey] },
-                                    [], [],
-                                    [[7, :red], [13, :red]],
-                                    [[1, :red], [7, :green], [13, :red]],
-                                    [],
-                                    [[1, :red], [7, :red], [13, :red]],
-                                  ])
+        expected = [
+          [],
+          (0..18).map { |c| [c, :blue] },       # Headings
+          (0..18).map { |c| [c, :grey] },       # Column Names
+          [],
+          [],
+          [[1, :red], [7, :red], [13, :red]],   # March
+          [[1, :red], [7, :green], [13, :red]], # April
+          [],
+          [[1, :red], [7, :red], [13, :red]],   # Totals
+        ]
+
+        expect(rag_ratings).to eq(expected)
       end
 
       it 'contains report name and reporting period in row 1 column 1' do
@@ -98,23 +102,23 @@ module Stats
           'March' => {
             month_name:                     'March',
             non_trigger_performance_pctg:   0.0,
-            non_trigger_total:              0,
+            non_trigger_total:              2,
             non_trigger_responded_in_time:  0,
             non_trigger_responded_late:     0,
             non_trigger_open_in_time:       0,
-            non_trigger_open_late:          0,
+            non_trigger_open_late:          2,
             trigger_perfomance_pctg:        66.7,
             trigger_total:                  3,
             trigger_responded_in_time:      2,
             trigger_responded_late:         1,
             trigger_open_in_time:           0,
             trigger_open_late:              0,
-            overall_performance_pctg:       66.7,
-            overall_total:                  3,
+            overall_performance_pctg:       40.0,
+            overall_total:                  5,
             overall_responded_in_time:      2,
             overall_responded_late:         1,
             overall_open_in_time:           0,
-            overall_open_late:              0,
+            overall_open_late:              2,
           },
           'April' => {
             month_name:                     'April',
@@ -140,23 +144,23 @@ module Stats
           'Total' => {
             month_name:                     'Total',
             non_trigger_performance_pctg:   0.0,
-            non_trigger_total:              3,
+            non_trigger_total:              5,
             non_trigger_responded_in_time:  0,
             non_trigger_responded_late:     0,
             non_trigger_open_in_time:       2,
-            non_trigger_open_late:          1,
+            non_trigger_open_late:          3,
             trigger_perfomance_pctg:        83.3,
             trigger_total:                  6,
             trigger_responded_in_time:      5,
             trigger_responded_late:         1,
             trigger_open_in_time:           0,
             trigger_open_late:              0,
-            overall_performance_pctg:       71.4,
-            overall_total:                  9,
+            overall_performance_pctg:       55.6,
+            overall_total:                  11,
             overall_responded_in_time:      5,
             overall_responded_late:         1,
             overall_open_in_time:           2,
-            overall_open_late:              1,
+            overall_open_late:              3,
           }
         } }
 
@@ -200,8 +204,8 @@ module Stats
 
     private
 
-    def create_case(state, month)
-      k = create :assigned_case, received_date: Date.new(2017, month, 22)
+    def create_case(state, month, case_type: :assigned_case)
+      k = create case_type, received_date: Date.new(2017, month, 22)
       analyser = double CaseAnalyser
       allow(CaseAnalyser).to receive(:new).with(k).and_return(analyser)
       expect(analyser).to receive(:run)

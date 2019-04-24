@@ -572,7 +572,7 @@ class Case::Base < ApplicationRecord
   end
 
   def already_late?
-    Date.today > external_deadline
+    Date.current > external_deadline
   end
 
   def num_days_late
@@ -734,9 +734,13 @@ class Case::Base < ApplicationRecord
     )
   end
 
-
   def trigger?
     TRIGGER_WORKFLOWS.include?(workflow)
+  end
+
+  # @note A flagged case can be assumed to be a trigger case
+  def trigger_status
+    flagged? ? 'trigger': 'non_trigger'
   end
 
   # predicate methods
