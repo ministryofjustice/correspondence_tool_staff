@@ -687,6 +687,11 @@ en:
       date_draft_compliant_example: "For example, 01 02 2018"
     update:
       case_updated: Case updated
+    filter_closed_cases:
+      heading: Download closed cases
+      timescale_copy: Which time period would you like to download?
+      last_month: Last month
+      submit: Download cases (.csv)
     fixed_details:
       requester: Requester
       email_address: Email address

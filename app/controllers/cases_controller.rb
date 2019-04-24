@@ -109,6 +109,10 @@ class CasesController < ApplicationController
     end
   end
 
+  def filter_closed_cases
+    @report = Report.new
+  end
+
   # Users only want to see cases deleted in the last 6 months
   def deleted_cases
     cases = Case::Base.unscoped

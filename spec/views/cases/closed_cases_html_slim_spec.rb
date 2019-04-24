@@ -29,6 +29,7 @@ describe 'cases/closed_cases.html.slim' do
     expect(row.subject_name.subject.text).to eq case_2.subject
 
     expect(page).to have_download_deleted_cases_link
+    expect(page).to have_closed_cases_filter_link
   end
 
   describe 'pagination' do

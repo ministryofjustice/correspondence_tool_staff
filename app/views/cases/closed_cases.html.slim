@@ -7,8 +7,8 @@
 = render partial: 'layouts/header'
 
 .download-cases-link
-  = download_csv_link(request.fullpath)
-  | &nbsp;(.csv file)
+  = link_to 'Download cases', closed_filter_cases_path, class: 'closed-cases-filter-link'
+
 .grid-row
   .column-full.table-container.container
     table.report.closed-case-report.table-font-xsmall

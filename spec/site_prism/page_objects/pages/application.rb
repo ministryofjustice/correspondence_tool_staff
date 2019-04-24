@@ -49,6 +49,7 @@ module PageObjects
         confirm_destroy:                'Cases::ConfirmDestroyPage',
         cases_extend_for_pit:           'Cases::ExtendForPITPage',
         cases_extend_sar_deadline:      'Cases::ExtendSARDeadlinePage',
+        filter_closed_cases:            'Cases::FilterClosedCasesPage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',

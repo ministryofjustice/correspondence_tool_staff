@@ -15,6 +15,7 @@ en:
     create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
+    download_closed_cases: Download closed cases - Track-a-query
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query
     edit_case_page: Editing a case - %{case_number} - Track-a-query
     extend_sar_deadline: Extend deadline for SAR - %{case_number}

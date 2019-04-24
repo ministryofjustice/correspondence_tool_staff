@@ -10,6 +10,8 @@ module PageObjects
         section :page_heading,
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+        element :closed_cases_filter_link, 'a:contains("Download cases")'
+
         section :closed_case_report, '.closed-case-report' do
           element :heading_row, 'thead'
           section :table_body, 'tbody' do
