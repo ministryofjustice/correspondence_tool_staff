@@ -738,8 +738,7 @@ class Case::Base < ApplicationRecord
     TRIGGER_WORKFLOWS.include?(workflow)
   end
 
-  # @todo (Mohammed Seedat): require clarification as to whether a 'flagged'
-  #   case and 'trigger?' case are the same thing
+  # @note A flagged case can be assumed to be a trigger case
   def trigger_status
     flagged? ? 'trigger': 'non_trigger'
   end
