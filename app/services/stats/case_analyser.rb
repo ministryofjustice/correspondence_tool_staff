@@ -45,10 +45,10 @@ module Stats
 
     }.freeze
 
-    RESPONDED_IN_TIME = :responded_in_time
-    RESPONDED_LATE    = :responded_late
-    OPEN_LATE         = :open_late
-    OPEN_IN_TIME      = :open_in_time
+    RESPONDED_IN_TIME = :responded_in_time.freeze
+    RESPONDED_LATE    = :responded_late.freeze
+    OPEN_LATE         = :open_late.freeze
+    OPEN_IN_TIME      = :open_in_time.freeze
 
     attr_reader :result, :bu_result
 
