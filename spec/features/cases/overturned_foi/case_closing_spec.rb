@@ -71,7 +71,8 @@ feature 'Closing a case' do
       cases_closure_outcomes_page.submit_button.click
 
       expect(cases_show_page).to have_content("You've closed this case")
-      expect(cases_show_page.actions.text).to eq "Assign to another team"
+      expect(cases_show_page.actions).to have_content("Assign to another team")
+      expect(cases_show_page.actions).to have_content("Delete case")
 
       show_page = cases_show_page.case_details.response_details
       expect(show_page.date_responded.data.text)
@@ -103,7 +104,8 @@ feature 'Closing a case' do
       close_page.submit_button.click
 
       expect(cases_show_page).to have_content("You've closed this case")
-      expect(cases_show_page.actions.text).to eq "Assign to another team"
+      expect(cases_show_page.actions).to have_content("Assign to another team")
+      expect(cases_show_page.actions).to have_content("Delete case")
 
       show_page = cases_show_page.case_details.response_details
       expect(show_page.date_responded.data.text)
@@ -137,7 +139,8 @@ feature 'Closing a case' do
       cases_closure_outcomes_page.submit_button.click
 
       expect(cases_show_page).to have_content("You've closed this case")
-      expect(cases_show_page.actions.text).to eq "Assign to another team"
+      expect(cases_show_page.actions).to have_content("Assign to another team")
+      expect(cases_show_page.actions).to have_content("Delete case")
 
       show_page = cases_show_page.case_details.response_details
       expect(show_page.date_responded.data.text)
@@ -176,7 +179,8 @@ feature 'Closing a case' do
       cases_closure_outcomes_page.submit_button.click
 
       expect(cases_show_page).to have_content("You've closed this case")
-      expect(cases_show_page.actions.text).to eq "Assign to another team"
+      expect(cases_show_page.actions).to have_content("Assign to another team")
+      expect(cases_show_page.actions).to have_content("Delete case")
 
       show_page = cases_show_page.case_details.response_details
       expect(show_page.date_responded.data.text)
