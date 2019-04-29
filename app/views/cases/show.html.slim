@@ -9,7 +9,6 @@
   .alert-orange
     = t('alerts.escalation_warning_html', escalation_deadline: @case.escalation_deadline)
 
-
 = render partial: 'shared/components/case_page_heading', locals: {kase: @case}
 
 div id="case-#{@correspondence_type_key}" class="case"
@@ -29,6 +28,10 @@ div id="case-#{@correspondence_type_key}" class="case"
 
         - if policy(@case).can_respond?
           = action_button_for(:respond)
+
+        - if policy(@case).can_accept_or_reject_approver_assignment?
+          = render partial: 'take_case_on_or_de_escalate',
+            locals: { case_details: @case }        
 
         - permitted_events = @permitted_events - [:add_responses, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
         - if @case.type_abbreviation.in? %w( SAR OVERTURNED_SAR )
@@ -71,10 +74,6 @@ div id="case-#{@correspondence_type_key}" class="case"
   - if case_attachments_visible_for_case?
     section.case-info
       = render partial: 'cases/case_attachments', locals: {case_details: @case}
-
-  - if policy(@case).can_accept_or_reject_approver_assignment?
-    section.case-info
-      = render partial: 'what_do_you_want_to_do', locals: { case_details: @case }
 
   section#messages-section.case-info
     = render partial: 'cases/case_messages', locals: { case_details: @case }
