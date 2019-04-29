@@ -349,7 +349,7 @@ describe 'cases/show.html.slim', type: :view do
     end
   end
 
-  describe 'link to extend case for pit' do
+  describe 'button to extend case for pit' do
     before do
       assign(:case, case_being_drafted)
     end

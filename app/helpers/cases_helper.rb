@@ -189,6 +189,12 @@ module CasesHelper
     end
   end
 
+  def action_buttons_for_allowed_events(kase, *events)
+    events
+      .find_all { |name| policy(kase).send("#{name}?") } 
+      .map  { |name| send("action_button_for_#{name}", kase) }
+  end  
+
   def action_link_for_destroy_case(kase)
     link_to 'Delete case', confirm_destroy_case_path(kase)
   end
@@ -199,18 +205,20 @@ module CasesHelper
       class: 'button-secondary'
   end
 
-  def action_link_for_extend_for_pit(kase)
+  def action_button_for_extend_for_pit(kase)
     link_to I18n.t('common.case.extend_for_pit'),
             extend_for_pit_case_path(kase),
-            id: 'action--extend-for-pit'
+            id: 'action--extend-for-pit',
+            class: 'button-secondary'
 
   end
 
-  def action_link_for_remove_pit_extension(kase)
+  def action_button_for_remove_pit_extension(kase)
     link_to I18n.t('common.case.remove_pit_extension'),
             remove_pit_extension_case_path(kase),
             id: 'action--remove-pit-extension',
-            method: :patch
+            method: :patch,
+            class: 'button-secondary'
   end
 
   def action_link_for_new_case_link(kase)
