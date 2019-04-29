@@ -190,12 +190,9 @@ module CasesHelper
   end
 
   def action_buttons_for_allowed_events(kase, *events)
-    allowed_events = events.find_all do |event_name|
-      policy(kase).__send__ "#{event_name}?"
-    end
-    allowed_events.map do |event_name|
-      __send__ "action_button_for_#{event_name}", kase
-    end
+    events
+      .find_all { |name| policy(kase).send("#{name}?") } 
+      .map  { |name| send("action_button_for_#{name}", kase) }
   end  
 
   def action_link_for_destroy_case(kase)
