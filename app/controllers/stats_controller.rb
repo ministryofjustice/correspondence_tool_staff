@@ -7,6 +7,7 @@ class StatsController < ApplicationController
   def index
     @foi_reports = ReportType.standard.foi.order(:full_name)
     @sar_reports = ReportType.standard.sar.order(:full_name)
+    @closed_cases = ReportType.where(abbr: 'R007')
   end
 
   def download
@@ -22,9 +23,7 @@ class StatsController < ApplicationController
                 disposition: :attachment,
                 type: SPREADSHEET_CONTENT_TYPE
     else
-      report.run_and_update!
-      report.trim_older_reports
-
+      report.run_and_update!(user: current_user)
       send_data report.report_data, filename: report.report_type.filename('csv')
     end
   end

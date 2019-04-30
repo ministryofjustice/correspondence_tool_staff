@@ -22,3 +22,7 @@ hr
 = render partial: 'stats/report',
         locals: { correspondence_type: 'Standard SAR reports',
                 reports: @sar_reports }
+
+= render partial: 'stats/report',
+        locals: { correspondence_type: 'Case full data',
+                reports: @closed_cases }

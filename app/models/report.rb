@@ -44,9 +44,16 @@ class Report < ApplicationRecord
   def run_and_update!(*args)
     report_service = run(*args)
 
-    update! report_data: generate_csv(report_service),
-            period_start: report_service.period_start,
-            period_end: report_service.period_end
+    self.report_data = generate_csv(report_service)
+    self.period_start = report_service.period_start
+    self.period_end = report_service.period_end
+
+    if report_service.persist_results?
+      save!
+
+      # @todo (Mohammed Seedat): Any cases where trimming not required?
+      trim_older_reports
+    end
   end
 
   def trim_older_reports
@@ -62,7 +69,8 @@ class Report < ApplicationRecord
   private
 
   def generate_csv(report_service)
-    CSV.generate(headers: true) do |csv_generator|
+    # Force quotes to prevent jagged rows in CSVs
+    CSV.generate(headers: true, force_quotes: true) do |csv_generator|
       report_service.to_csv.each do |csv_row|
         csv_generator << csv_row.map(&:value)
       end
