@@ -9,6 +9,8 @@ module Stats
   class CasesStatsCollector
     attr_reader :stats # Duck-type StatsController#stats
 
+    # Assume CSVExporter will ensure the @column_list and
+    # values set for @stats will be consistent
     def initialize
       @columns_list = CSVExporter::CSV_COLUMN_HEADINGS
       @stats = {}
@@ -21,7 +23,7 @@ module Stats
     # Called by BaseReport#to_csv to create actual spreadsheet data
     # duck-type StatsCollector#to_csv therefore ignores
     # +first_column_header+ and +superheadings+ parameters
-    def to_csv(*args)
+    def to_csv(*)
       CaseStatsEnumerator.new(
         @stats,
         @columns_list
@@ -36,14 +38,15 @@ module Stats
         @columns_list = columns_list
       end
 
-      # This is a lazy enumerator for each of the rows in the report.
-      # so that we don't sit and timeout the browser waiting to fetch all
-      # the rows from the database in a big report.
+      # Lazy enumerator as per Stats::StatsCollector::StatsEnumerator
       def each
         @_stats ||= @stats.to_enum
 
         yield @columns_list
-        yield @_stats.next.second
+
+        @_stats.each do |row|
+          yield row.second
+        end
       end
     end
   end
