@@ -70,15 +70,14 @@ module Stats
       @stats.stats
     end
 
-    # Called by your selected Report#generate_csv
-    # Convert +@stats+ to an Array of hash-like OpenStructs for output.
-    # Header row will generate each header title as a separate OpenStruct
+    # Called by the selected Report#generate_csv method.
+    # Converts +@stats+ to an Array of hash-like OpenStructs for output.
     #
     # Example output:
     # [
     #   [ #<OpenStruct value="Number">, #<OpenStruct value="Current state">],
-    #   [ #<OpenStruct value="190319002, Closed"> ],
-    #   [ #<OpenStruct value="828919910, Open"> ]
+    #   [ #<OpenStruct value="190319002">, #<OpenStruct value="Open">],
+    #   [ #<OpenStruct value="828919910">, #<OpenStruct value="Closed"> ]
     # ]
     def to_csv
       # +csv+ will contain all the raw data making up this spreadsheet
@@ -96,6 +95,10 @@ module Stats
       @reporting_period.to_s
     end
 
+    # By default all generated Reports are persisted
+    # to the database. This would be detrimental for
+    # result sets that are known to be very large
+    # e.g. Closed Cases report
     def persist_results?
       true
     end
