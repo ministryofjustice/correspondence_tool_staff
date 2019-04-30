@@ -1,3 +1,7 @@
+// New design system in pararell (prefixed classes so expecting no conflicts)
+@import "govuk_frontend_rails";
+// End new design system, continue with old system
+
 // From GDS's alphagov/govuk_frontend_toolkit
 @import 'colours';
 @import 'font_stack';
