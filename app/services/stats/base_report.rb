@@ -95,10 +95,9 @@ module Stats
       @reporting_period.to_s
     end
 
-    # By default all generated Reports are persisted
-    # to the database. This would be detrimental for
-    # result sets that are known to be very large
-    # e.g. Closed Cases report
+    # By default all generated Reports are persisted to the database.
+    # This would be detrimental for result sets that are known to be very
+    # large e.g. Closed Cases report
     def persist_results?
       true
     end
