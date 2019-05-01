@@ -3,6 +3,7 @@ class StatsController < ApplicationController
   before_action :authorize_user
 
   SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  AllCases = Struct.new(:abbreviation, :report_category_name)
 
   def index
     @foi_reports = ReportType.standard.foi.order(:full_name)
@@ -37,9 +38,6 @@ class StatsController < ApplicationController
   def custom
     @report = Report.new
     set_fields_for_custom_action
-    if FeatureSet.sars.disabled?
-      @report.correspondence_type = 'FOI'
-    end
   end
 
   def create_custom_report
@@ -120,6 +118,7 @@ class StatsController < ApplicationController
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
     @correspondence_types = CorrespondenceType.by_report_category
+    @correspondence_types += [AllCases.new('ALL_CASES', 'All Cases')]
   end
 
   def authorize_user
