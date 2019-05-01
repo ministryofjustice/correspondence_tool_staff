@@ -78,6 +78,17 @@ FactoryBot.define do
       sar               { false }
     end
 
+    trait :r007 do
+      abbr              { 'R007' }
+      full_name         { 'Closed in last month report' }
+      class_name        { 'Stats::R007ClosedCasesReport' }
+      custom_report     { true }
+      standard_report   { false }
+      seq_id            { 500 }
+      foi               { false }
+      sar               { false }
+    end
+
     trait :r102 do
       abbr              { 'R102' }
       full_name         { 'Appeals performance report(SARs)' }
