@@ -217,6 +217,10 @@ Rails.application.routes.draw do
     # The following two routes are necessary to proved the paths:
     # /cases/new                      - select the type of correspondence for the new case
     # /cases/new/foi, /cases/new/sar  - create a new case for the given correspondence type
+    get ':correspondence_type/case-details' => 'offender_sars#case_details', action: :new
+    get ':correspondence_type/representative' => 'offender_sars#representative', action: :new
+    get ':correspondence_type/information' => 'offender_sars#information', action: :new
+    get ':correspondence_type/date-received' => 'offender_sars#date_received', action: :new    
     get '', action: :new, on: :new
     get ':correspondence_type',
         action: :new,
@@ -224,6 +228,7 @@ Rails.application.routes.draw do
         as: '',
         defaults: { correspondence_type: '' }
     get 'new_linked_cases_for', on: :collection
+
 
     get 'close', on: :member
     get 'closure_outcomes', on: :member
@@ -362,6 +367,9 @@ Rails.application.routes.draw do
 
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
 
+  # TEMP: Offender Sars Templates
+  get '/offender_sars' => 'offender_sars#demo'
+  get '/offender_sars/*step' => 'offender_sars#demo'
 
   root to: redirect('/users/sign_in')
 end
