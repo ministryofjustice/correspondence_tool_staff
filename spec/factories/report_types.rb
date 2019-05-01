@@ -67,6 +67,17 @@ FactoryBot.define do
       sar               { false }
     end
 
+    trait :r006 do
+      abbr              { 'R006' }
+      full_name         { 'Business unit map' }
+      class_name        { 'Stats::R006KiloMap' }
+      custom_report     { false }
+      standard_report   { false }
+      seq_id            { 9999 }
+      foi               { false }
+      sar               { false }
+    end
+
     trait :r102 do
       abbr              { 'R102' }
       full_name         { 'Appeals performance report(SARs)' }
@@ -100,15 +111,4 @@ FactoryBot.define do
     sar { true }
     seq_id { 300 }
   end
-
-  factory :r006_business_unit_map, parent: :report_type do
-    abbr { 'R006' }
-    full_name { 'Business unit map' }
-    class_name { 'Stats::R006KiloMap' }
-    custom_report { false }
-    standard_report { false }
-    seq_id { 9999 }
-  end
-
-
 end

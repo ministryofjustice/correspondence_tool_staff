@@ -8,7 +8,7 @@ RSpec.describe TeamsController, type: :controller do
   let(:business_unit)   { find_or_create :foi_responding_team }
   let(:business_unit2)  { find_or_create :sar_responding_team }
   let(:manager)         { create :manager }
-  let(:business_map)    { create :r006_business_unit_map }
+  let(:business_map)    { create :report_type, :r006 }
   let(:reports)         { [ business_map ]}
   let(:foi_responder)   { find_or_create(:foi_responder) }
 
