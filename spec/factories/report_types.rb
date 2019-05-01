@@ -99,16 +99,16 @@ FactoryBot.define do
       foi               { false }
       sar               { true }
     end
-  end
 
-  factory :r105_report_type, parent: :report_type do
-    abbr { 'R105' }
-    full_name { 'Monthly report (SARs)' }
-    class_name { 'Stats::R105SarMonthlyPerformanceReport' }
-    custom_report { true }
-    standard_report { true }
-    foi { false }
-    sar { true }
-    seq_id { 300 }
+    trait :r105 do
+      abbr              { 'R105' }
+      full_name         { 'Monthly report (SARs)' }
+      class_name        { 'Stats::R105SarMonthlyPerformanceReport' }
+      custom_report     { true }
+      standard_report   { true }
+      seq_id            { 300 }
+      foi               { false }
+      sar               { true }
+    end
   end
 end

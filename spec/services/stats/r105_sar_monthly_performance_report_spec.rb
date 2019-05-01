@@ -17,7 +17,7 @@ module Stats
 
     describe '#case_scope' do
       before do
-        create(:r105_report_type) unless ReportType.find_by(abbr: 'R105')
+        create(:report_type, :r105) unless ReportType.find_by(abbr: 'R105')
       end
 
       after do

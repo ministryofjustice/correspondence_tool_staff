@@ -38,7 +38,7 @@ feature "Downloading stats(csv) from the system" do
     create :report_type, :r005
     create :report_type, :r102
     create :report_type, :r103
-    create :r105_report_type
+    create :report_type, :r105
   end
 
   after(:all) do
