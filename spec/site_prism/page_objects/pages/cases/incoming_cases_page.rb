@@ -19,7 +19,7 @@ module PageObjects
             element :take_on_case, '.button'
             element :success_message, '.action-success'
             element :undo_assign_link, '.action-success a'
-            element :de_escalate_link, '.js-de-escalate-link'
+            element :de_escalate_link, '.de-escalate-link'
             element :undo_de_escalate_link, '.js-undo-de-escalate-link'
             element :requested_by, '.container-notices'
           end
