@@ -7,7 +7,7 @@ class StatsController < ApplicationController
   def index
     @foi_reports = ReportType.standard.foi.order(:full_name)
     @sar_reports = ReportType.standard.sar.order(:full_name)
-    @closed_cases = ReportType.where(abbr: 'R007')
+    @closed_reports = ReportType.where(abbr: 'R007')
   end
 
   def download
