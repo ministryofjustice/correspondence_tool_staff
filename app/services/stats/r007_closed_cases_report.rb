@@ -9,14 +9,7 @@ module Stats
     end
 
     def case_scope
-      closed_scope = Case::Base.presented_as_closed
-
-      if @user.responder_only?
-        case_ids = Assignment.with_teams(@user.responding_teams).pluck(:case_id)
-        closed_scope.where(id: case_ids).most_recent_first
-      else
-        closed_scope.most_recent_first
-      end
+      CaseFinderService.new(@user).closed_cases_scope
     end
 
     def report_type
