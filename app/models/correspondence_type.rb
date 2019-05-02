@@ -68,6 +68,7 @@ class CorrespondenceType < ApplicationRecord
     OVERTURNED_FOI: [Case::OverturnedICO::FOI],
   }.with_indifferent_access.freeze
 
+  # Interim solution to allow 'All Cases' to be considered a custom reporting option
   AllCases = Struct.new(:abbreviation, :report_category_name)
 
   # Keep a cache of all (6!) items to prevent endless N+1 queries using this tiny class

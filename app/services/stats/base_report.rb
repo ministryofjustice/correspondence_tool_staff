@@ -103,6 +103,7 @@ module Stats
       true
     end
 
+    # Instance method makes testing easier e.g. when using instance_double
     def persist_results?
       self.class.persist_results?
     end
