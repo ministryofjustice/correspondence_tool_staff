@@ -2,7 +2,7 @@
   = link_to 'Take case on',
             accept_case_assignment_path(case_details, case_details.approver_assignments.with_teams(current_user.teams).first),
             id: "take_case_on_#{case_details.id}",
-            class: 'button take-case-on-link',
+            class: 'button-secondary take-case-on-link',
             remote: !current_page?(case_path(case_details.id)),
             method: :patch
   - if policy(case_details).unflag_for_clearance?
@@ -16,6 +16,6 @@
     = link_to 'Take case on',
         take_case_on_case_assignment_path(case_details.id, current_user.id),
         id: "take_case_on_#{case_details.id}",
-        class: 'button take-case-on-link',
+        class: 'button-secondary take-case-on-link',
         remote: true,
         method: :patch
