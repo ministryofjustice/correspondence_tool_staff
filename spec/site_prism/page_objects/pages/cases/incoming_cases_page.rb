@@ -16,7 +16,7 @@ module PageObjects
             element :message, '.case_message_extract'
           end
           section :actions, 'td[aria-label="Actions"]' do
-            element :take_on_case, '.button'
+            element :take_on_case, '.take-case-on-link'
             element :success_message, '.action-success'
             element :undo_assign_link, '.action-success a'
             element :de_escalate_link, '.de-escalate-link'
