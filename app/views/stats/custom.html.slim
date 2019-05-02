@@ -33,11 +33,10 @@
             value_method: :id,
             text_method: :full_name
 
-    .js-report-type-options data-report-type="ALL_CASES"
-      = f.radio_button_fieldset :report_type_id,
-            choices: @custom_reports_all_cases,
-            value_method: :id,
-            text_method: :full_name
+    .js-report-type-options data-report-type="CLOSED_CASES"
+      - @custom_reports_closed_cases.each do |report_type|
+        = f.hidden_field :report_type_id, value: report_type.id
+
   fieldset
     legend
       .heading-small

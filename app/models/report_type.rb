@@ -29,7 +29,6 @@ class ReportType < ApplicationRecord
   scope :standard, -> { where( standard_report: true ) }
   scope :foi, -> { where( foi: true ) }
   scope :sar, -> { where( sar: true ) }
-  scope :all_cases, -> { where(custom_report: true, standard_report: false, foi: false, sar: false) }
 
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
@@ -51,6 +50,10 @@ class ReportType < ApplicationRecord
 
   def self.respond_to_missing?(meth, include_private = false)
     meth.to_s =~ /^r\d\d\d$/ || super
+  end
+
+  def self.closed_cases_report
+    where(abbr: 'R007')
   end
 
   def default_reporting_period_text

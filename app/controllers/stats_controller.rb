@@ -1,4 +1,7 @@
 class StatsController < ApplicationController
+  # @note (Mohammed Seedat): Interim solution to allow 'Closed Cases'
+  #   to be considered a custom reporting option
+  FauxCorrespondenceType = Struct.new(:abbreviation, :report_category_name)
 
   before_action :authorize_user
 
@@ -7,7 +10,7 @@ class StatsController < ApplicationController
   def index
     @foi_reports = ReportType.standard.foi.order(:full_name)
     @sar_reports = ReportType.standard.sar.order(:full_name)
-    @closed_reports = ReportType.where(abbr: 'R007')
+    @closed_reports = ReportType.closed_cases_report
   end
 
   def download
@@ -109,8 +112,9 @@ class StatsController < ApplicationController
   def set_fields_for_custom_action
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
-    @custom_reports_all_cases = ReportType.all_cases
-    @correspondence_types = CorrespondenceType.custom_reporting_types
+    @custom_reports_closed_cases = ReportType.closed_cases_report
+    @correspondence_types = CorrespondenceType.custom_reporting_types +
+      [FauxCorrespondenceType.new('CLOSED_CASES', 'Closed Cases Report')]
   end
 
   def authorize_user
@@ -118,11 +122,13 @@ class StatsController < ApplicationController
   end
 
   def create_custom_params
-    params.require(:report).permit(
-      :correspondence_type,
-      :report_type_id,
-      :period_start_dd, :period_start_mm, :period_start_yyyy,
-      :period_end_dd, :period_end_mm, :period_end_yyyy,
+    params
+      .require(:report)
+      .permit(
+        :correspondence_type,
+        :report_type_id,
+        :period_start_dd, :period_start_mm, :period_start_yyyy,
+        :period_end_dd, :period_end_mm, :period_end_yyyy,
       )
   end
 

@@ -17,6 +17,10 @@ moj.Modules.CustomReports = {
     if (this.$correspondenceTypes.length > 0){
       this.$optionPanels.each(function(){
         $(this).hide();
+
+        $('input[type="hidden"]', this).each(function() {
+          $(this).prop('disabled', true);
+        });
       });
 
       var selected = $('.js-correspondence-type input:checked', this.$correspondenceTypes);
@@ -26,8 +30,15 @@ moj.Modules.CustomReports = {
 
         if (panel.length) {
           panel.show();
+
+          // Some Report Types are the default report type for a given Case
+          // Type (e.g. Closed Cases Report) and therefore automatically
+          // set for form submission
+          $('input[type="hidden"]', panel).each(function() {
+            $(this).prop('disabled', false);
+          });
         }
       }
     }
-  }
+  },
 };
