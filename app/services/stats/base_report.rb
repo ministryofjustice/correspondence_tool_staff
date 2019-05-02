@@ -6,9 +6,9 @@ module Stats
     RAG_THRESHOLDS_FOI = { red: 85, amber: 90 }
     RAG_THRESHOLDS_SAR = { red: 80, amber: 85 }
 
-    attr_reader :period_start, :period_end
+    attr_reader :period_start, :period_end, :user
 
-    def initialize(period_start = nil, period_end = nil)
+    def initialize(**options)
       raise 'Cannot instantiate Stats::BaseReport - use derived class instead' if self.class == BaseReport
 
       @stats = nil                        # implement @stats as an instance of StatsCollector in derived class
@@ -16,11 +16,12 @@ module Stats
       @superheadings = []                 # override in derived class if extra heading lines required in CSV
 
       @reporting_period = ReportingPeriod::Calculator.build(
-        period_start: period_start,
-        period_end: period_end,
+        period_start: options[:period_start],
+        period_end: options[:period_end],
         period_name: default_reporting_period
       )
 
+      @user = options[:user] # Some reports depend on the current user context e.g. Closed Cases
       @period_start = @reporting_period.period_start
       @period_end = @reporting_period.period_end
     end
@@ -98,8 +99,12 @@ module Stats
     # By default all generated Reports are persisted to the database.
     # This would be detrimental for result sets that are known to be very
     # large e.g. Closed Cases report
-    def persist_results?
+    def self.persist_results?
       true
+    end
+
+    def persist_results?
+      self.class.persist_results?
     end
   end
 end

@@ -84,7 +84,7 @@ RSpec.describe Report, type: :model do
   end
 
   describe '#run' do
-    let(:args) { [Date.yesterday, Date.today] }
+    let(:options) {{ period_start: Date.yesterday, period_end: Date.today }}
     let(:report_service) {
       instance_double(
         Stats::R003BusinessUnitPerformanceReport,
@@ -105,23 +105,23 @@ RSpec.describe Report, type: :model do
 
     before do
       expect(Stats::R003BusinessUnitPerformanceReport)
-        .to receive(:new).with(*args).and_return(report_service)
+        .to receive(:new).with(**options).and_return(report_service)
     end
 
     it 'saves report when ReportService.persist_results? and then runs' do
       expect(report).to receive(:save!)
-      report.run_and_update!(*args)
+      report.run_and_update!(**options)
       expect(report_service).to have_received(:run)
     end
 
     it 'updates start and end dates' do
-      report.run_and_update!(*args)
+      report.run_and_update!(**options)
       expect(report.period_start).to eq Date.yesterday
       expect(report.period_end).to   eq Date.today
     end
 
     it 'updates the report_data' do
-      report.run_and_update!(*args)
+      report.run_and_update!(**options)
       expect(report.report_data).to eq "\"report\",\"data\"\n"
     end
   end

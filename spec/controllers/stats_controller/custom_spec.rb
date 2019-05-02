@@ -37,23 +37,14 @@ RSpec.describe StatsController, type: :controller do
       expect(assigns(:custom_reports_sar)).to eq ReportType.custom.sar
     end
 
-    it 'sets @custom_reports_sar' do
+    it 'sets @correspondence_types' do
       get :custom
-      expect(assigns(:correspondence_types)).to eq CorrespondenceType.by_report_category
+      expect(assigns(:correspondence_types)).to eq CorrespondenceType.custom_reporting_types
     end
 
     it 'renders the template' do
       get :custom
       expect(response).to render_template(:custom)
     end
-
-    context 'setting default correspondence type' do
-      it 'sets the correspondence type to FOI if sars is not enabled' do
-        allow(FeatureSet).to receive(:sars).and_return(double 'FeatureSet-Sars', enabled?: false, disabled?: true)
-        get :custom
-        expect(assigns(:report).correspondence_type).to eq 'FOI'
-      end
-    end
-
   end
 end

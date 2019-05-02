@@ -2,8 +2,7 @@ class StatsController < ApplicationController
 
   before_action :authorize_user
 
-  SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-  AllCases = Struct.new(:abbreviation, :report_category_name)
+  SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'.freeze
 
   def index
     @foi_reports = ReportType.standard.foi.order(:full_name)
@@ -45,7 +44,10 @@ class StatsController < ApplicationController
 
     if @report.valid?
       if @report.xlsx?
-        report_data = @report.run(@report.period_start, @report.period_end)
+        report_data = @report.run(
+          period_start: @report.period_start,
+          period_end: @report.period_end
+        )
 
         axlsx = create_spreadsheet(report_data)
 
@@ -54,16 +56,27 @@ class StatsController < ApplicationController
                   disposition: :attachment,
                   type: SPREADSHEET_CONTENT_TYPE
       else
-        @report.run_and_update!(@report.period_start, @report.period_end)
-        flash[:download] =  "Your custom report has been created. #{view_context.link_to 'Download', stats_download_custom_report_path(id: @report.id)}"
-        redirect_to stats_custom_path
+        @report.run_and_update!(
+          user: current_user,
+          period_start: @report.period_start,
+          period_end: @report.period_end
+        )
+
+        if @report.immediate_download?
+          send_data @report.report_data, filename: @report.report_type.filename('csv')
+        else
+          flash[:download] =  "Your custom report has been created. #{view_context.link_to 'Download', stats_download_custom_report_path(id: @report.id)}"
+          redirect_to stats_custom_path
+        end
       end
     else
       if create_custom_params[:correspondence_type].blank?
         @report.errors.add(:correspondence_type, :blank)
         @report.errors.delete(:report_type_id)
       end
+
       set_fields_for_custom_action
+
       render :custom
     end
   end
@@ -117,8 +130,8 @@ class StatsController < ApplicationController
   def set_fields_for_custom_action
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
-    @correspondence_types = CorrespondenceType.by_report_category
-    @correspondence_types += [AllCases.new('ALL_CASES', 'All Cases')]
+    @custom_reports_all_cases = ReportType.all_cases
+    @correspondence_types = CorrespondenceType.custom_reporting_types
   end
 
   def authorize_user

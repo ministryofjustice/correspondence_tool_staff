@@ -15,10 +15,9 @@ module Stats
       end
     end
 
-    def initialize(user:, period_start: nil, period_end: nil)
-      super(period_start, period_end)
+    def initialize(**options)
+      super(**options)
 
-      @user = user
       @stats = CasesStatsCollector.new
     end
 
@@ -28,7 +27,7 @@ module Stats
         .each { |kase| @stats.add(kase) }
     end
 
-    def persist_results?
+    def self.persist_results?
       false
     end
   end

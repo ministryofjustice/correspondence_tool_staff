@@ -15,8 +15,9 @@ module Stats
       end
     end
 
-    def initialize(period_start = nil, period_end = nil)
-      super
+    def initialize(**options)
+      super(**options)
+
       @stats = StatsCollector.new(array_of_month_numbers + [:total], R005_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS))
       @superheadings = superheadings
 

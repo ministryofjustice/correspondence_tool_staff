@@ -1,9 +1,6 @@
 moj.Modules.CustomReports = {
   $correspondenceTypes  : $('#js-correspondence-types'),
-  $FOIOption        : $('#report_correspondence_type_foi'),
-  $SAROption        : $('#report_correspondence_type_sar'),
-  $FOIReports       : $('#js-report-types-foi'),
-  $SARReports       : $('#js-report-types-sar'),
+  $optionPanels     : $('#js-report-types .js-report-type-options'),
 
   init: function () {
     var self = this;
@@ -12,30 +9,24 @@ moj.Modules.CustomReports = {
 
     //Bind events
     self.$correspondenceTypes.on('change', ':radio', function(){
-
       self.showHideReportsTypes();
-
     });
   },
 
   showHideReportsTypes: function (){
-    //If we have multiple types
     if (this.$correspondenceTypes.length > 0){
-      if (this.$SAROption.is(':checked')){
+      this.$optionPanels.each(function(){
+        $(this).hide();
+      });
 
-        this.$FOIReports.hide();
-        this.$SARReports.show();
+      var selected = $('.js-correspondence-type input:checked', this.$correspondenceTypes);
 
-      } else if(this.$FOIOption.is(':checked') ){
+      if (selected.length) {
+        var panel = this.$optionPanels.filter('[data-report-type="' + selected[0].value + '"]');
 
-        this.$FOIReports.show();
-        this.$SARReports.hide();
-
-      } else {
-
-        this.$FOIReports.hide();
-        this.$SARReports.hide();
-
+        if (panel.length) {
+          panel.show();
+        }
       }
     }
   }

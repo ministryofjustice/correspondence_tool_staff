@@ -35,14 +35,14 @@ class Report < ApplicationRecord
     self.report_type = ReportType.find_by(abbr: abbr)
   end
 
-  def run(*args)
-    report_service = report_type.class_constant.new(*args)
+  def run(**args)
+    report_service = report_type.class_constant.new(**args)
     report_service.run
     report_service
   end
 
-  def run_and_update!(*args)
-    report_service = run(*args)
+  def run_and_update!(**args)
+    report_service = run(**args)
 
     self.report_data = generate_csv(report_service)
     self.period_start = report_service.period_start
@@ -50,8 +50,6 @@ class Report < ApplicationRecord
 
     if report_service.persist_results?
       save!
-
-      # @todo (Mohammed Seedat): Any cases where trimming not required?
       trim_older_reports
     end
   end
@@ -64,6 +62,11 @@ class Report < ApplicationRecord
 
   def xlsx?
     report_type.class_constant.xlsx?
+  end
+
+  # All Cases reports e.g. Closed Cases should be downloaded immediately not via a download link
+  def immediate_download?
+    @_immediate_download ||= !self.report_type.class_constant.persist_results?
   end
 
   private

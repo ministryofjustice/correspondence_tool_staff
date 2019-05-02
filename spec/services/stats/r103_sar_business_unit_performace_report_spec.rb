@@ -26,7 +26,7 @@ module Stats
           it 'uses the specify period' do
             d1 = Date.new(2017, 6, 1)
             d2 = Date.new(2017, 6, 30)
-            report = R103SarBusinessUnitPerformanceReport.new(d1, d2)
+            report = R103SarBusinessUnitPerformanceReport.new(period_start: d1, period_end: d2)
             expect(report.__send__(:reporting_period)).to eq '1 Jun 2017 to 30 Jun 2017'
           end
         end

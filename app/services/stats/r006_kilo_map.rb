@@ -24,7 +24,7 @@ module Stats
       end
     end
 
-    def initialize
+    def initialize(**options)
       @result_set = [COLUMN_HEADINGS]
     end
 

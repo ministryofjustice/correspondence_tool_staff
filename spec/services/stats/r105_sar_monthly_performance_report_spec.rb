@@ -42,7 +42,7 @@ module Stats
       end
 
       it 'returns only SAR cases within the selected period' do
-        report = R105SarMonthlyPerformanceReport.new(@period_start, @period_end)
+        report = R105SarMonthlyPerformanceReport.new(period_start: @period_start, period_end: @period_end)
         expect(report.case_scope).to match_array( [@sar_2, @sar_3, @sar_4])
       end
     end
