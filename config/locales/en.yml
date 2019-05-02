@@ -831,6 +831,7 @@ en:
       period_end: Date to
     custom:
       timescale_copy: Which time period should this report cover?
+      success: Your custom report has been created.
   teams:
     business_unit_list:
       team_members: Team members

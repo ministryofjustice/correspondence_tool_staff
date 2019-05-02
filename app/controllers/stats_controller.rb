@@ -44,30 +44,9 @@ class StatsController < ApplicationController
 
     if @report.valid?
       if @report.xlsx?
-        report_data = @report.run(
-          period_start: @report.period_start,
-          period_end: @report.period_end
-        )
-
-        axlsx = create_spreadsheet(report_data)
-
-        send_data axlsx.to_stream.read,
-                  filename: @report.report_type.filename('xlsx'),
-                  disposition: :attachment,
-                  type: SPREADSHEET_CONTENT_TYPE
+        generate_custom_excel_report(@report)
       else
-        @report.run_and_update!(
-          user: current_user,
-          period_start: @report.period_start,
-          period_end: @report.period_end
-        )
-
-        if @report.immediate_download?
-          send_data @report.report_data, filename: @report.report_type.filename('csv')
-        else
-          flash[:download] =  "Your custom report has been created. #{view_context.link_to 'Download', stats_download_custom_report_path(id: @report.id)}"
-          redirect_to stats_custom_path
-        end
+        generate_custom_csv_report(@report)
       end
     else
       if create_custom_params[:correspondence_type].blank?
@@ -145,5 +124,44 @@ class StatsController < ApplicationController
       :period_start_dd, :period_start_mm, :period_start_yyyy,
       :period_end_dd, :period_end_mm, :period_end_yyyy,
       )
+  end
+
+  def generate_custom_excel_report(report)
+    report_data = report.run(
+      period_start: report.period_start,
+      period_end: report.period_end
+    )
+
+    send_data(
+      create_spreadsheet(report_data).to_stream.read,
+      filename: report.report_type.filename('xlsx'),
+      disposition: :attachment,
+      type: SPREADSHEET_CONTENT_TYPE
+    )
+  end
+
+  def generate_custom_csv_report(report)
+    report.run_and_update!(
+      user: current_user,
+      period_start: report.period_start,
+      period_end: report.period_end
+    )
+
+    if report.immediate_download?
+      send_data(
+        report.report_data,
+        filename: report.report_type.filename('csv')
+      )
+    else
+      flash[:download] = [
+        t('stats.custom.success'),
+        view_context.link_to(
+          'Download',
+          stats_download_custom_report_path(id: report.id)
+        ),
+      ].join(' ')
+
+      redirect_to stats_custom_path
+    end
   end
 end

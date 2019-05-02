@@ -28,7 +28,8 @@ module Stats
       deleted
     }
 
-    def initialize(**options)
+    # Note: Does not run parent constructor
+    def initialize(**)
       @case_ids = Case::Base.unscoped.pluck(:id)
       @date_mask = '%Y-%m-%d'
     end
