@@ -81,6 +81,8 @@ Timecop.safe_mode = true
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 $LOAD_PATH.unshift(File.join(File.expand_path('..', __FILE__), 'site_prism'))
 require 'site_prism/page_objects/pages/application.rb'
+# include linked_cases_section specifically to avoid machine-specific load order issues
+require "site_prism/page_objects/sections/cases/linked_cases_section.rb"
 Dir[Rails.root.join("spec/site_prism/support/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/site_prism/page_objects/sections/shared/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/site_prism/page_objects/sections/**/*.rb")].each { |f| require f }
