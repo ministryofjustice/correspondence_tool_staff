@@ -44,10 +44,10 @@ class CaseTransition < ActiveRecord::Base
                  linked_case_id:             :integer,
                  original_final_deadline:    :date
 
-  belongs_to :acting_user, class_name: User
-  belongs_to :acting_team, class_name: Team
-  belongs_to :target_user, class_name: User
-  belongs_to :target_team, class_name: Team
+  belongs_to :acting_user, class_name: User.name
+  belongs_to :acting_team, class_name: Team.name
+  belongs_to :target_user, class_name: User.name
+  belongs_to :target_team, class_name: Team.name
 
   scope :accepted,          -> { where to_state: 'drafting'  }
   scope :drafting,          -> { where to_state: 'drafting'  }

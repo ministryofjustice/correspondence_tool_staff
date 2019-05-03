@@ -82,8 +82,8 @@ Rails.application.configure do
   # lograge configuration - these settings are in addition to the ones
   # specified in /config/intializers/lograge.rb
   #
-  config.lograge.keep_original_rails_log = true
-  config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
+  # config.lograge.keep_original_rails_log = true
+  # config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
 
   if defined?(BetterErrors)
     if ENV.key? 'SHOW_BETTER_ERRORS_TO'
