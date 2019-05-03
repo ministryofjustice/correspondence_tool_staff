@@ -11,6 +11,14 @@ moj.Modules.CustomReports = {
     self.$correspondenceTypes.on('change', ':radio', function(){
       self.showHideReportsTypes();
     });
+
+    // Pre-select case type
+    var select = $.urlParam('select');
+    if (select) {
+      $('input[value="' + select + '"]', this.$correspondenceTypes).each(function(){
+        this.click();
+      });
+    }
   },
 
   showHideReportsTypes: function (){
