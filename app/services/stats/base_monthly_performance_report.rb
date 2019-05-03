@@ -2,12 +2,14 @@ module Stats
   class BaseMonthlyPerformanceReport < BaseReport
 
     R005_SPECIFIC_COLUMNS = {
-        month:    'Month'
-    }
+      month:    'Month'
+    }.freeze
 
     R005_SPECIFIC_SUPERHEADINGS = {
-        month:     ''
-    }
+      month:     ''
+    }.freeze
+
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [1, 7, 13].freeze
 
     class << self
       def xlsx?
@@ -39,12 +41,10 @@ module Stats
       CaseSelector.new(case_scope)
         .cases_received_in_period(@period_start, @period_end)
         .includes(:responded_transitions, :approver_assignments, :assign_responder_transitions)
-        .reject { |k| k.unassigned? }
         .each { |kase| analyse_case(kase) }
+
       @stats.finalise
     end
-
-    INDEXES_FOR_PERCENTAGE_COLUMNS = [1, 7, 13]
 
     def to_csv
       csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
@@ -68,8 +68,8 @@ module Stats
 
     def superheadings
       [
-          ["#{self.class.title} - #{reporting_period}"],
-          R005_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).values
+        ["#{self.class.title} - #{reporting_period}"],
+        R005_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).values
       ]
     end
 
@@ -95,6 +95,5 @@ module Stats
         end
       end
     end
-
   end
 end
