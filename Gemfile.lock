@@ -1338,7 +1338,7 @@ DEPENDENCIES
   launchy
   libreconv (~> 0.9.1)
   listen (~> 3.1.5)
-  lograge
+  lograge (~> 0.10)
   logstash-event
   mechanize (>= 2.7.5)
   mimetype-fu (~> 0.1.2)
