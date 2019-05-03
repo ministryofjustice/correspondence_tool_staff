@@ -22,8 +22,8 @@ module Stats
     end
 
     def run
-      #.cases_for_period(@period_start, @period_end)
       case_scope
+        .where(received_date: [@period_start..@period_end])
         .each { |kase| @stats.add(kase) }
     end
 
