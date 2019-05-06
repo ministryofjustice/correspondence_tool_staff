@@ -105,7 +105,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.67.2', require: false
+  gem 'rubocop', '~> 0.68.1', require: false
   gem 'rubocop-rspec', require: false
   gem 'ruby-progressbar'
 
