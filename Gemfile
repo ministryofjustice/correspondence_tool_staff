@@ -74,6 +74,7 @@ group :test do
   gem 'shoulda-matchers', '~> 4.0'
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 3.0'
+  gem 'spring-commands-rspec'
 end
 
 group :development, :test do
