@@ -1,6 +1,6 @@
 moj.Modules.CustomReports = {
-  $correspondenceTypes  : $('#js-correspondence-types'),
-  $optionPanels     : $('#js-report-types .js-report-type-options'),
+  $correspondenceTypes  : $('.js-correspondence-types'),
+  $optionPanels     : $('.js-report-type-options'),
 
   init: function () {
     var self = this;
@@ -31,7 +31,7 @@ moj.Modules.CustomReports = {
         });
       });
 
-      var selected = $('.js-correspondence-type input:checked', this.$correspondenceTypes);
+      var selected = $('input:checked', this.$correspondenceTypes);
 
       if (selected.length) {
         var panel = this.$optionPanels.filter('[data-report-type="' + selected[0].value + '"]');

@@ -68,7 +68,10 @@ module Stats
             external_deadline: Date.current + 10.days
           )
           
-          report = R105SarMonthlyPerformanceReport.new(@period_start, @period_end)
+          report = R105SarMonthlyPerformanceReport.new(
+            period_start: @period_start,
+            period_end: @period_end
+          )
           report.run
           results = report.results
 

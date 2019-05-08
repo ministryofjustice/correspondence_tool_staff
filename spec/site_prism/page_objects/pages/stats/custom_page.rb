@@ -19,13 +19,18 @@ module PageObjects
 
         element :foi_report, '#report_correspondence_type_foi'
         element :sar_report, '#report_correspondence_type_sar'
+        element :closed_cases_report, '#report_correspondence_type_closed_cases'
 
-        section :report_types_foi, '#js-report-types-foi' do
+        section :options_foi, '.report-type-options--foi' do
           elements :reports, 'label'
         end
 
-        section :report_types_sar, '#js-report-types-sar' do
+        section :options_sar, '.report-type-options--sar' do
           elements :reports, 'label'
+        end
+
+        section :options_closed_cases, '.report-type-options--closed-cases' do
+          element :option_closed_case, '#report_type_closed_case_option'
         end
 
         section :period_start, '.period-start' do

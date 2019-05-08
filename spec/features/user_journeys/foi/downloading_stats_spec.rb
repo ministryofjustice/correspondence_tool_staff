@@ -31,14 +31,14 @@ feature "Downloading stats(csv) from the system" do
 
   before(:all) do
     CaseClosure::MetadataSeeder.seed!(verbose: false)
+    all_reports = ReportType.all
 
-    create :report_type, :r002
-    create :report_type, :r003
-    create :report_type, :r004
-    create :report_type, :r005
-    create :report_type, :r102
-    create :report_type, :r103
-    create :report_type, :r105
+    # Perform check for existence of ReportType to duplication errors
+    %i[r002 r003 r004 r005 r007 r102 r103 r105].each do |report_type|
+      unless all_reports.any? { |rt| rt.abbr == report_type.to_s.upcase }
+        create(:report_type, report_type)
+      end
+    end
   end
 
   after(:all) do
@@ -71,6 +71,14 @@ feature "Downloading stats(csv) from the system" do
       download_custom_r004_report
     end
   end
+
+  scenario 'closed cases report', js: true do
+    login_as_manager
+    views_stats_home_page
+    view_custom_report_creation_page
+    create_custom_r007_report
+  end
+
   context 'as a responder' do
     scenario "standard reports" do
       # Manager creates & assigns to kilo
@@ -88,7 +96,6 @@ feature "Downloading stats(csv) from the system" do
       create_custom_r003_report
       create_custom_r004_report
       download_custom_r004_report
-
     end
   end
 
@@ -157,6 +164,16 @@ feature "Downloading stats(csv) from the system" do
     stats_custom_page.submit_button.click
 
     expect(stats_custom_page.success_message).to have_download_link
+  end
+
+  def create_custom_r007_report
+    stats_custom_page.choose_type_of_correspondence('closed_cases')
+    stats_custom_page.fill_in_period_start(Date.yesterday)
+    stats_custom_page.fill_in_period_end(Date.yesterday)
+    stats_custom_page.submit_button.click
+
+    # @note (Mohammed Seedat): cannot add expectations until new confirmation
+    #   screen is completed
   end
 
   def download_custom_r004_report

@@ -11,7 +11,7 @@
 
 = form_for @report, url: stats_create_custom_report_path do |f|
 
-  #js-correspondence-types
+  .js-correspondence-types
     / Cannot use GOVUK.ShowHideContent because radio_button_fieldset does not allow each data-target
     / to have a bespoke/calculated value
     = f.radio_button_fieldset :correspondence_type,
@@ -20,22 +20,22 @@
           text_method: :report_category_name,
           class: 'multiple-choice js-correspondence-type'
 
-  #js-report-types
-    .js-report-type-options data-report-type="FOI"
+  .report-types
+    .js-report-type-options.report-type-options--foi data-report-type="FOI"
       = f.radio_button_fieldset :report_type_id,
             choices: @custom_reports_foi,
             value_method: :id,
             text_method: :full_name
 
-    .js-report-type-options data-report-type="SAR"
+    .js-report-type-options.report-type-options--sar data-report-type="SAR"
       = f.radio_button_fieldset :report_type_id,
             choices: @custom_reports_sar,
             value_method: :id,
             text_method: :full_name
 
-    .js-report-type-options data-report-type="CLOSED_CASES"
+    .js-report-type-options.report-type-options--closed-cases data-report-type="CLOSED_CASES"
       - @custom_reports_closed_cases.each do |report_type|
-        = f.hidden_field :report_type_id, value: report_type.id
+        = f.hidden_field :report_type_id, value: report_type.id, id: 'report_report_type_id_closed_cases', disabled: true
 
   fieldset
     legend
