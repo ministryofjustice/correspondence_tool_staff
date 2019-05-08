@@ -46,8 +46,8 @@ class User < ApplicationRecord
              :managing_teams)
   end
 
-  has_many :cases, through: :assignments
   has_many :assignments
+  has_many :cases, through: :assignments
   has_many :team_roles, class_name: 'TeamsUsersRole'
   has_many :teams, through: :team_roles
   has_many :managing_team_roles,
