@@ -29,10 +29,6 @@ module PageObjects
           elements :reports, 'label'
         end
 
-        section :options_closed_cases, '.report-type-options--closed-cases' do
-          element :option_closed_case, '#report_type_closed_case_option'
-        end
-
         section :period_start, '.period-start' do
           element :day, '#report_period_start_dd'
           element :month, '#report_period_start_mm'
