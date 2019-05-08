@@ -75,6 +75,7 @@ group :test do
   gem 'shoulda-matchers', '~> 4.0'
   gem 'site_prism'
   gem 'spring-commands-rspec'
+  gem 'webdrivers', '~> 3.0'
 end
 
 group :development, :test do
@@ -85,18 +86,6 @@ group :development, :test do
   # Used to try and track down N+1 query problems
   gem 'bullet'
   gem 'byebug', platform: :mri
-
-  # @todo (Mohammed Seedat 02/04/19): warning when updating chromedriver-helper
-  # +--------------------------------------------------------------------+
-  # |                                                                    |
-  # |  NOTICE: chromedriver-helper is deprecated after 2019-03-31.       |
-  # |                                                                    |
-  # |  Please update to use the 'webdrivers' gem instead.                |
-  # |  See https://github.com/flavorjones/chromedriver-helper/issues/83  |
-  # |                                                                    |
-  # +--------------------------------------------------------------------+
-  gem 'chromedriver-helper'
-  
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
