@@ -18,8 +18,6 @@ class BusinessUnit < Team
 
   VALID_ROLES = %w{ responder approver manager }.freeze
   validates :parent_id, presence: true
-  validates_presence_of :correspondence_type_roles
-
 
   belongs_to :directorate, foreign_key: 'parent_id'
 
@@ -79,6 +77,11 @@ class BusinessUnit < Team
 
   after_save :update_search_index
 
+  after_create do
+    correspondence_type_roles.each do |role|
+      role.save!
+    end
+  end
 
   def self.responding_for_correspondence_type(correspondence_type)
     joins(:correspondence_type_roles).where(
@@ -135,7 +138,7 @@ class BusinessUnit < Team
   end
 
   def correspondence_type_ids=(correspondence_type_ids)
-    self.correspondence_types = correspondence_type_ids
+    correspondence_types = correspondence_type_ids
                                   .select(&:present?)
                                   .map { |id| CorrespondenceType.find(id) }
   end
