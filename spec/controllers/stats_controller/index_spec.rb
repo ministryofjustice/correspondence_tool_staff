@@ -32,11 +32,6 @@ RSpec.describe StatsController, type: :controller do
       expect(assigns(:sar_reports)).to eq ReportType.standard.sar.order(:full_name)
     end
 
-    it 'sets @closed_reports  ' do
-      get :index
-      expect(assigns(:closed_reports)).to eq ReportType.where(abbr: 'R007')
-    end
-
     it 'renders the template' do
       get :index
       expect(response).to render_template(:index)

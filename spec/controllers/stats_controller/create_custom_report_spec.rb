@@ -90,7 +90,6 @@ module Stats
         it 'sets @report to the values that were passed in' do
           post :create_custom_report, params: params
           expect(assigns(:report)).to be_new_record
-
         end
 
         it 'sets @custom_reports_foi' do
@@ -103,9 +102,9 @@ module Stats
           expect(assigns(:custom_reports_sar)).to eq ReportType.custom.sar
         end
 
-        it 'sets @custom_reports_all_cases' do
+        it 'sets @custom_reports_closed_cases' do
           post :create_custom_report, params: params
-          expect(assigns(:custom_reports_all_cases)).to eq ReportType.all_cases
+          expect(assigns(:custom_reports_closed_cases)).to eq ReportType.closed_cases_report
         end
 
         it 'renders the template' do

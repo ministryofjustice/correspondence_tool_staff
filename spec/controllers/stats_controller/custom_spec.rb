@@ -39,7 +39,8 @@ RSpec.describe StatsController, type: :controller do
 
     it 'sets @correspondence_types' do
       get :custom
-      expect(assigns(:correspondence_types)).to eq CorrespondenceType.custom_reporting_types
+      expected = %w[FOI SAR CLOSED_CASES]
+      expect(assigns(:correspondence_types).map(&:abbreviation)).to eq expected
     end
 
     it 'renders the template' do
