@@ -12,8 +12,13 @@ moj.Modules.CustomReports = {
       self.showHideReportsTypes();
     });
 
-    // Pre-select case type
+    self.selectCorrespondenceType();
+  },
+
+  // Pre-select case type if supplied
+  selectCorrespondenceType: function() {
     var select = $.urlParam('select');
+
     if (select) {
       $('input[value="' + select + '"]', this.$correspondenceTypes).each(function(){
         this.click();
@@ -21,7 +26,7 @@ moj.Modules.CustomReports = {
     }
   },
 
-  showHideReportsTypes: function (){
+  showHideReportsTypes: function () {
     if (this.$correspondenceTypes.length > 0){
       this.$optionPanels.each(function(){
         $(this).hide();
