@@ -22,11 +22,15 @@ module PageObjects
         element :closed_cases_report, '#report_correspondence_type_closed_cases'
 
         section :options_foi, '.report-type-options--foi' do
-          elements :reports, 'label'
+          elements :reports, 'input'
         end
 
         section :options_sar, '.report-type-options--sar' do
-          elements :reports, 'label'
+          elements :reports, 'input'
+        end
+
+        section :options_closed_cases, '.report-type-options--closed-cases' do
+          elements :reports, 'input', visible: false
         end
 
         section :period_start, '.period-start' do

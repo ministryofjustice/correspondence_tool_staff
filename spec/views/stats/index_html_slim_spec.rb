@@ -10,8 +10,11 @@ describe 'stats/index.html.slim', type: :view do
     ]
   }
 
-  let(:sar_reports)    { [build_stubbed(:report_type, :r105)] }
-  let(:closed_reports) { [build_stubbed(:report_type, :r007)] }
+  let(:sar_reports) {
+    [
+      build_stubbed(:report_type, :r105)
+    ]
+  }
 
   let!(:year_to_date_period) do
     Timecop.freeze(time) do
@@ -26,11 +29,9 @@ describe 'stats/index.html.slim', type: :view do
     Timecop.freeze(time) do
       assign(:foi_reports, foi_reports)
       assign(:sar_reports, sar_reports)
-      assign(:closed_reports, closed_reports)
 
       render
       stats_index_page.load(rendered)
-
       stats_index_page
     end
   end
@@ -64,17 +65,6 @@ describe 'stats/index.html.slim', type: :view do
           title: 'Standard SAR reports',
           date_period: year_to_date_period,
           reports: sar_reports
-        )
-      end
-    end
-
-    context 'for Closed Cases reports' do
-      it 'is present' do
-        expected_content(
-          page_section: page.closed_cases,
-          title: 'Closed Cases reports',
-          date_period: year_to_date_period,
-          reports: closed_reports
         )
       end
     end

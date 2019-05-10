@@ -35,7 +35,10 @@
 
     .js-report-type-options.report-type-options--closed-cases data-report-type="CLOSED_CASES"
       - @custom_reports_closed_cases.each do |report_type|
-        = f.hidden_field :report_type_id, value: report_type.id, id: 'report_report_type_id_closed_cases', disabled: true
+        = f.hidden_field :report_type_id,
+            value: report_type.id,
+            id: 'report_report_type_id_closed_cases',
+            disabled: true
 
   fieldset
     legend

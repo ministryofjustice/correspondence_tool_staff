@@ -69,6 +69,10 @@ class StatsController < ApplicationController
     send_data report.report_data, {filename: filename, disposition: :attachment}
   end
 
+  def self.closed_cases_correspondence_type
+    FauxCorrespondenceType.new('CLOSED_CASES', 'Closed Cases Report')
+  end
+
   private
 
   # The plan here is/was to colour the spreadsheet titles just like the existing reports from ITG
@@ -113,7 +117,7 @@ class StatsController < ApplicationController
     @custom_reports_sar = ReportType.custom.sar
     @custom_reports_closed_cases = ReportType.closed_cases_report
     @correspondence_types = CorrespondenceType.custom_reporting_types +
-      [FauxCorrespondenceType.new('CLOSED_CASES', 'Closed Cases Report')]
+      [self.closed_cases_correspondence_type]
   end
 
   def authorize_user
