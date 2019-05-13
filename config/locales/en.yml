@@ -561,6 +561,11 @@ en:
     summary_error: 'prevented this form from being submitted:'
     close: Close case
 
+  steps: 
+    new:
+      heading: Who is the subject?
+      sub_heading: Create a case
+
   admin:
     cases:
       index:
@@ -590,7 +595,6 @@ en:
       select_type:
         heading: Choose correspondence type
         sub_heading: Admin
-
     users:
       index:
         cases: Cases

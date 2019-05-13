@@ -1012,7 +1012,7 @@ class CasesController < ApplicationController
       @s3_direct_post = s3_uploader_for(@case, 'requests')
     else
       flash.alert =
-          helpers.t "cases.new.correspondence_type_errors.#{validation_result}",
+          helpers.t "cases.new.correspondence_type_errors.#{valid_type}",
                     type: @correspondence_type_key
       redirect_to new_case_path
     end
