@@ -117,7 +117,7 @@ class StatsController < ApplicationController
     @custom_reports_sar = ReportType.custom.sar
     @custom_reports_closed_cases = ReportType.closed_cases_report
     @correspondence_types = CorrespondenceType.custom_reporting_types +
-      [self.closed_cases_correspondence_type]
+      [self.class.closed_cases_correspondence_type]
   end
 
   def authorize_user
