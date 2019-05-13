@@ -218,6 +218,7 @@ Rails.application.routes.draw do
     # /cases/new                      - select the type of correspondence for the new case
     # /cases/new/foi, /cases/new/sar  - create a new case for the given correspondence type
     get '', action: :new, on: :new
+    get 'offender_sar/(:step)' => "steps#new"
     get ':correspondence_type',
         action: :new,
         on: :new,
