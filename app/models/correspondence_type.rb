@@ -125,4 +125,7 @@ class CorrespondenceType < ApplicationRecord
     SUB_CLASSES_MAP[abbreviation]
   end
 
+  def self.custom_reporting_types
+    self.by_report_category
+  end
 end

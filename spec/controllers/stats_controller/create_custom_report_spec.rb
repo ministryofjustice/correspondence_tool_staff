@@ -40,8 +40,8 @@ module Stats
         expect(Report).to receive(:new).and_return(report)
         allow(report).to receive(:run).and_return(dummy_report_type)
         post :create_custom_report, params: params
-        expect(report).to have_received(:run).with(Date.yesterday,
-                                                   Date.today)
+        expect(report).to have_received(:run).with(period_start: Date.yesterday,
+                                                   period_end: Date.today)
       end
 
       context 'invalid params passed in' do
@@ -90,8 +90,8 @@ module Stats
         it 'sets @report to the values that were passed in' do
           post :create_custom_report, params: params
           expect(assigns(:report)).to be_new_record
-
         end
+
         it 'sets @custom_reports_foi' do
           post :create_custom_report, params: params
           expect(assigns(:custom_reports_foi)).to eq ReportType.custom.foi
@@ -100,6 +100,11 @@ module Stats
         it 'sets @custom_reports_sar' do
           post :create_custom_report, params: params
           expect(assigns(:custom_reports_sar)).to eq ReportType.custom.sar
+        end
+
+        it 'sets @custom_reports_closed_cases' do
+          post :create_custom_report, params: params
+          expect(assigns(:custom_reports_closed_cases)).to eq ReportType.closed_cases_report
         end
 
         it 'renders the template' do

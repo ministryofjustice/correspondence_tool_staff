@@ -40,13 +40,6 @@ class CaseFinderService
     self
   end
 
-  private
-
-  def index_cases_scope
-    # effectively a nop; just return all the cases the user can view
-    scope
-  end
-
   def closed_cases_scope
     closed_scope = scope.presented_as_closed
     if user.responder_only?
@@ -55,6 +48,13 @@ class CaseFinderService
     else
       closed_scope.most_recent_first
     end
+  end
+
+  private
+
+  def index_cases_scope
+    # effectively a nop; just return all the cases the user can view
+    scope
   end
 
   def incoming_approving_cases_scope
