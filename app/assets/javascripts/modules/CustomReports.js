@@ -1,9 +1,6 @@
 moj.Modules.CustomReports = {
-  $correspondenceTypes  : $('#js-correspondence-types'),
-  $FOIOption        : $('#report_correspondence_type_foi'),
-  $SAROption        : $('#report_correspondence_type_sar'),
-  $FOIReports       : $('#js-report-types-foi'),
-  $SARReports       : $('#js-report-types-sar'),
+  $correspondenceTypes  : $('.js-correspondence-types'),
+  $optionPanels     : $('.js-report-type-options'),
 
   init: function () {
     var self = this;
@@ -12,31 +9,49 @@ moj.Modules.CustomReports = {
 
     //Bind events
     self.$correspondenceTypes.on('change', ':radio', function(){
-
       self.showHideReportsTypes();
-
     });
+
+    self.selectCorrespondenceType();
   },
 
-  showHideReportsTypes: function (){
-    //If we have multiple types
+  // Pre-select case type if supplied
+  selectCorrespondenceType: function() {
+    var select = $.urlParam('select');
+
+    if (select) {
+      $('input[value="' + select + '"]', this.$correspondenceTypes).each(function(){
+        this.click();
+      });
+    }
+  },
+
+  showHideReportsTypes: function () {
     if (this.$correspondenceTypes.length > 0){
-      if (this.$SAROption.is(':checked')){
+      this.$optionPanels.each(function(){
+        $(this).hide();
 
-        this.$FOIReports.hide();
-        this.$SARReports.show();
+        $('input[type="hidden"]', this).each(function() {
+          $(this).prop('disabled', true);
+        });
+      });
 
-      } else if(this.$FOIOption.is(':checked') ){
+      var selected = $('input:checked', this.$correspondenceTypes);
 
-        this.$FOIReports.show();
-        this.$SARReports.hide();
+      if (selected.length) {
+        var panel = this.$optionPanels.filter('[data-report-type="' + selected[0].value + '"]');
 
-      } else {
+        if (panel.length) {
+          panel.show();
 
-        this.$FOIReports.hide();
-        this.$SARReports.hide();
-
+          // Some Report Types are the default report type for a given Case
+          // Type (e.g. Closed Cases Report) and therefore automatically
+          // set for form submission
+          $('input[type="hidden"]', panel).each(function() {
+            $(this).prop('disabled', false);
+          });
+        }
       }
     }
-  }
+  },
 };

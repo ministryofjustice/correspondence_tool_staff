@@ -17,7 +17,7 @@ module Stats
 
     describe '#case_scope' do
       before do
-        create(:r105_report_type) unless ReportType.find_by(abbr: 'R105')
+        create(:report_type, :r105) unless ReportType.find_by(abbr: 'R105')
       end
 
       after do
@@ -42,7 +42,7 @@ module Stats
       end
 
       it 'returns only SAR cases within the selected period' do
-        report = R105SarMonthlyPerformanceReport.new(@period_start, @period_end)
+        report = R105SarMonthlyPerformanceReport.new(period_start: @period_start, period_end: @period_end)
         expect(report.case_scope).to match_array( [@sar_2, @sar_3, @sar_4])
       end
 
@@ -68,7 +68,10 @@ module Stats
             external_deadline: Date.current + 10.days
           )
           
-          report = R105SarMonthlyPerformanceReport.new(@period_start, @period_end)
+          report = R105SarMonthlyPerformanceReport.new(
+            period_start: @period_start,
+            period_end: @period_end
+          )
           report.run
           results = report.results
 

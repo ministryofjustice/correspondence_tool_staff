@@ -81,7 +81,7 @@ module Stats
         it 'uses the specify period' do
           d1 = Date.new(2017, 6, 1)
           d2 = Date.new(2017, 6, 30)
-          report = R003BusinessUnitPerformanceReport.new(d1, d2)
+          report = R003BusinessUnitPerformanceReport.new(period_start: d1, period_end: d2)
           expect(report.reporting_period).to eq '1 Jun 2017 to 30 Jun 2017'
         end
       end
@@ -275,7 +275,7 @@ module Stats
         before do
           Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
             # report = R003BusinessUnitPerformanceReport.new
-            report = R003BusinessUnitPerformanceReport.new(Date.today.beginning_of_year, Date.today, true)
+            report = R003BusinessUnitPerformanceReport.new(period_start: Date.today.beginning_of_year, period_end: Date.today, generate_bu_columns: true)
             report.run
             @results = report.results
           end
@@ -416,7 +416,7 @@ module Stats
               BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
               Total,"","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4,0.0,17,0,8,0,9
             EOCSV
-            report = R003BusinessUnitPerformanceReport.new(Date.today.beginning_of_year, Date.today, true)
+            report = R003BusinessUnitPerformanceReport.new(period_start: Date.today.beginning_of_year, period_end: Date.today, generate_bu_columns: true)
             report.run
             actual_lines = report.to_csv.map { |row| row.map(&:value) }
             expected_lines = expected_text.split("\n")

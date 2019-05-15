@@ -84,40 +84,66 @@ RSpec.describe Report, type: :model do
   end
 
   describe '#run' do
-    let(:args)           { [Date.yesterday, Date.today] }
-    let(:report_service) { instance_double(
-                             Stats::R003BusinessUnitPerformanceReport,
-                             to_csv: [[OpenStruct.new(value: 'report'),OpenStruct.new(value: 'data')]],
-                             period_start: Date.yesterday,
-                             period_end: Date.today,
-                             run: true
-                           ) }
-    let(:report)         { create :r003_report }
+    let(:options) {{ period_start: Date.yesterday, period_end: Date.today }}
+    let(:report_service) {
+      instance_double(
+        Stats::R003BusinessUnitPerformanceReport,
+        to_csv: [
+          [
+            OpenStruct.new(value: 'report'),
+            OpenStruct.new(value: 'data')
+          ]
+        ],
+        period_start: Date.yesterday,
+        period_end: Date.today,
+        run: true,
+        persist_results?: true,
+      )
+    }
+
+    let(:report) { create :r003_report }
 
     before do
       expect(Stats::R003BusinessUnitPerformanceReport)
-        .to receive(:new).with(*args).and_return(report_service)
+        .to receive(:new).with(**options).and_return(report_service)
     end
 
-    it 'instantiates and runs a report' do
-      update_params = { report_data: instance_of(String),
-                        period_start: Date.yesterday,
-                        period_end: Date.today
-      }
-      expect(report).to receive(:update!).with(update_params)
-      report.run_and_update!(*args)
+    it 'saves report when ReportService.persist_results? and then runs' do
+      expect(report).to receive(:save!)
+      report.run_and_update!(**options)
       expect(report_service).to have_received(:run)
     end
 
     it 'updates start and end dates' do
-      report.run_and_update!(*args)
+      report.run_and_update!(**options)
       expect(report.period_start).to eq Date.yesterday
       expect(report.period_end).to   eq Date.today
     end
 
     it 'updates the report_data' do
-      report.run_and_update!(*args)
-      expect(report.report_data).to eq "report,data\n"
+      report.run_and_update!(**options)
+      expect(report.report_data).to eq "\"report\",\"data\"\n"
+    end
+  end
+
+  describe '#run_and_update!' do
+    let(:non_persisting_report_service) {
+      instance_double(
+        Stats::R007ClosedCasesReport,
+        to_csv: [],
+        period_start: Date.yesterday,
+        period_end: Date.today,
+        run: true,
+        persist_results?: false,
+      )
+    }
+
+    it 'does not save report when ReportService.persist_results? is false' do
+      new_report = create :r007_report
+
+      expect(non_persisting_report_service.persist_results?).to eq false
+      expect(new_report).not_to receive(:save!)
+      new_report.run_and_update!(user: OpenStruct.new(id: 1))
     end
   end
 

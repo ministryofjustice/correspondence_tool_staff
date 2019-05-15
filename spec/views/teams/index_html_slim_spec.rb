@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'teams/index.html.slim', type: :view do
 
   let(:manager)      { create :manager }
-  let(:business_map) { build_stubbed(:r006_business_unit_map) }
+  let(:business_map) { build_stubbed(:report_type, :r006) }
   let(:reports)      { [business_map] }
 
   before(:each) do

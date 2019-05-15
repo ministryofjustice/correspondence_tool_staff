@@ -21,8 +21,9 @@ module Stats
       end
     end
 
-    def initialize(period_start = nil, period_end = nil)
-      super
+    def initialize(**options)
+      super(**options)
+
       @stats = StatsCollector.new(Team.hierarchy.map(&:id) + [:total], column_headings)
       @superheadings = superheadings
       @stats.add_callback(:before_finalise, -> { roll_up_stats_callback })
