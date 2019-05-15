@@ -488,7 +488,7 @@ GEM
       activerecord (>= 4.2, < 5.3)
       its-it (~> 1.2)
       schema_plus_core
-    selenium-webdriver (3.141.5926)
+    selenium-webdriver (3.142.2)
       childprocess (>= 0.5, < 2.0)
       rubyzip (~> 1.2, >= 1.2.2)
     sentry-raven (2.9.0)
