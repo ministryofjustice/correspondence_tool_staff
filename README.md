@@ -416,6 +416,31 @@ examples of how to reify a previous version, or get a hash of field values for t
 
 Continuous integration is carried out by SemaphoreCI.
 
+### Data Migrations
+
+The app uses the `rails-data-migrations` gem https://github.com/OffgridElectric/rails-data-migrations 
+
+Data migrations work like regular migrations but for data; they're found in `db/data_migrations`. 
+
+To create a data migration you need to run:
+
+`rails generate data_migration migration_name`
+
+and this will create a `migration_name.rb` file in `db/data_migrations` folder with the following content:
+
+```
+class MigrationName < DataMigration
+  def up
+    # put your code here
+  end
+end
+```
+
+Finally, at release time, you need to run:
+
+`rake data:migrate`
+
+This will run all pending data migrations and store migration history in data_migrations table.
 
 ### Smoke Tests
 
