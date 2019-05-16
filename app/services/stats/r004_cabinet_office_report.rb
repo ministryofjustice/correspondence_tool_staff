@@ -15,9 +15,9 @@ module Stats
       end
     end
 
-    def initialize(period_start = nil, period_end = nil)
+    def initialize(**options)
       super
-      # @today = Time.now
+
       @stats = StatsCollector.new(report_lines.keys, COLUMNS)
       @first_column_heading = self.class.title
       @superheadings = superheadings
