@@ -23,7 +23,8 @@ module Stats
 
     def run
       case_scope
-        .where(received_date: [@period_start..@period_end])
+        .where(date_responded: [@period_start..@period_end])
+        .by_last_transitioned_date
         .each { |kase| @stats.add(kase) }
     end
 
