@@ -1,5 +1,23 @@
 module Cases
   class PitExtensionController < BaseController
+    before_action :set_case, only: [:extend_for_pit, :execute_extend_for_pit, :remove_pit_extension]
+
+    # Was extend_for_pit
+    def new
+      extend_for_pit
+    end
+
+    # Was execute_extend_for_pit
+    def create
+      execute_extend_for_pit
+    end
+
+    # Was remove_pit_extension
+    def destroy
+      remove_pit_extension
+    end
+
+    # Original
     def extend_for_pit
       authorize @case
 

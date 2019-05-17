@@ -1,12 +1,16 @@
 module Cases
   class ApprovalController < BaseController
-    def approve
+    before_action :set_case, only: [:approve, :execute_approve]
+
+    # Was approve
+    def new
       authorize @case
 
       @case = @case.decorate
     end
 
-    def execute_approve
+    # Was execute approve
+    def create
       authorize @case, :approve?
 
       case_approval_service = CaseApprovalService.new(
@@ -31,6 +35,5 @@ module Cases
         render :approve
       end
     end
-
   end
 end

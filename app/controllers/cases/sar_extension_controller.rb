@@ -1,7 +1,23 @@
 module Cases
   class SarExtensionController < BaseController
+    before_action :set_case, only: [:extend_sar_deadline, :execute_extend_sar_deadline, :remove_sar_deadline_extension]
 
+    # Was extend_sar_deadline
+    def new
+      extend_sar_deadline
+    end
 
+    # Was execute_extend_sar_deadline
+    def create
+      execute_extend_sar_deadline
+    end
+
+    # Was remove_sar_deadline_extension
+    def destroy
+      remove_sar_deadline_extension
+    end
+
+    # Original
     def extend_sar_deadline
       authorize @case
 

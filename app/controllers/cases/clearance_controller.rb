@@ -1,5 +1,14 @@
 module Cases
   class ClearanceController < BaseController
+    before_action :set_decorated_case, only: [
+      :flag_for_clearance,
+      :progress_for_clearance,
+      :remove_clearance,
+      :request_further_clearance,
+      :unflag_for_clearance,
+      :unflag_taken_on_case_for_clearance
+    ]
+
     def remove_clearance
       authorize @case
       # interstitial page for unflag_taken_on_case_for_clearance

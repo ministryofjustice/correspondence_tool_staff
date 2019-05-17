@@ -1,5 +1,8 @@
 module Cases
   class ClosureController < BaseController
+    before_action :set_case, only: [:closure_outcomes, :edit_closure, :process_date_responded, :respond, :update_closure]
+    before_action :set_decorated_case, only: [:close, :confirm_respond, :process_closure, :process_respond_and_close, :respond_and_close]
+
     def close
       # prepopulate date if it was entered by the KILO
       authorize @case, :can_close_case?

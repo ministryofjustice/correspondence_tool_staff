@@ -1,5 +1,16 @@
 module Cases
-  class ResponseController
+  class ResponseController < BaseController
+    before_action :set_case, only: [
+      :upload_responses,
+      :execute_upload_response_and_approve,
+      :execute_upload_response_and_return_for_redraft,
+      :execute_upload_responses,
+      :upload_response_and_approve,
+      :upload_response_and_return_for_redraft,
+      :response_upload_for_redraft
+    ]
+    before_action :set_decorated_case, only: [:upload_responses, ]
+
     def upload_responses
       authorize @case
 

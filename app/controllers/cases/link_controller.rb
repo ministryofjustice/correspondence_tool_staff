@@ -1,5 +1,7 @@
 module Cases
   class LinkController < BaseController
+    before_action :set_case, only: [:new_case_link, :destroy_case_link, :execute_new_case_link]
+
     def new_case_link
       authorize @case
 
