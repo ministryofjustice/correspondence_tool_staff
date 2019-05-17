@@ -1,5 +1,6 @@
 module Cases
   class SarController < BaseController
+    include SARCasesParams
     include CreateCase
     include NewCase
 

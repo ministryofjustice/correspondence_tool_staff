@@ -116,7 +116,7 @@ module CTS::Cases
     option :responder, aliases: :r, type: :string,
            desc: 'ID or name of responder to use for case assignments.'
     option :responding_team, aliases: :t, type: :string,
-           desc: 'ID or name of responding team to use for case assignments.'
+           desc: 'ID or name of respondinag team to use for case assignments.'
     option :created_at, type: :string,
            desc: 'Change created-at.'
     option :received_date, type: :string,

@@ -1,5 +1,5 @@
 module Cases
-  class IcoFoiController < BaseController
+  class IcoFoiController < IcoConntroller
     include CreateCase
     include NewCase
 

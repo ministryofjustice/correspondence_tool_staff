@@ -28,7 +28,7 @@
 #  dirty                :boolean          default(FALSE)
 #
 
-class Case::SAR < Case::Base
+class Case::SAR::Standard < Case::Base
   class << self
     def type_abbreviation
       # This string is used when constructing paths or methods in other parts of
@@ -46,9 +46,9 @@ class Case::SAR < Case::Base
 
   def self.searchable_fields_and_ranks
     super.merge(
-        {
-            subject_full_name:     'B'
-        }
+      {
+        subject_full_name:     'B'
+      }
     )
   end
 
@@ -68,23 +68,23 @@ class Case::SAR < Case::Base
   attr_accessor :missing_info
 
   enum subject_type: {
-         offender:             'offender',
-         staff:                'staff',
-         member_of_the_public: 'member_of_the_public'
-       }
+    offender:             'offender',
+    staff:                'staff',
+    member_of_the_public: 'member_of_the_public'
+  }
   enum reply_method: {
-         send_by_post:  'send_by_post',
-         send_by_email: 'send_by_email',
-       }
+    send_by_post:  'send_by_post',
+    send_by_email: 'send_by_email',
+  }
 
   has_paper_trail only: [
-                    :name,
-                    :email,
-                    :postal_address,
-                    :properties,
-                    :received_date,
-                    :subject,
-                  ]
+    :name,
+    :email,
+    :postal_address,
+    :properties,
+    :received_date,
+    :subject,
+  ]
 
   validates_presence_of :subject_full_name
   validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
@@ -178,4 +178,8 @@ class Case::SAR < Case::Base
                  message: "can't be blank if no request files attached")
     end
   end
+
 end
+
+
+

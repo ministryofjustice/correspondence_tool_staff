@@ -1,4 +1,6 @@
 class SearchController < Cases::BaseController
+  before_action :set_url, only: [:index]
+
   def index
     service = CaseSearchService.new(
       user: current_user,
