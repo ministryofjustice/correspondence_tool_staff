@@ -1,34 +1,16 @@
 module Cases
   class PitExtensionController < BaseController
-    before_action :set_case, only: [
-      :extend_for_pit,
-      :execute_extend_for_pit,
-      :remove_pit_extension
-    ]
+    before_action :set_case, only: [:new, :create, :destroy]
 
     # Was extend_for_pit
     def new
-      extend_for_pit
-    end
-
-    # Was execute_extend_for_pit
-    def create
-      execute_extend_for_pit
-    end
-
-    # Was remove_pit_extension
-    def destroy
-      remove_pit_extension
-    end
-
-    # Original
-    def extend_for_pit
       authorize @case
 
       @case = CaseExtendForPITDecorator.decorate @case
     end
 
-    def execute_extend_for_pit
+    # Was execute_extend_for_pit
+    def create
       authorize @case, :extend_for_pit?
 
       pit_params = params[:case]
@@ -59,7 +41,8 @@ module Cases
       end
     end
 
-    def remove_pit_extension
+    # Was remove_pit_extension
+    def destroy
       authorize @case, :remove_pit_extension?
 
       service = CaseRemovePITExtensionService.new current_user,

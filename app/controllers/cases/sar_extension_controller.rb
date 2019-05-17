@@ -1,34 +1,16 @@
 module Cases
   class SarExtensionController < BaseController
-    before_action :set_case, only: [
-      :extend_sar_deadline,
-      :execute_extend_sar_deadline,
-      :remove_sar_deadline_extension
-    ]
+    before_action :set_case, only: [:new, :create, :destroy]
 
     # Was extend_sar_deadline
     def new
-      extend_sar_deadline
-    end
-
-    # Was execute_extend_sar_deadline
-    def create
-      execute_extend_sar_deadline
-    end
-
-    # Was remove_sar_deadline_extension
-    def destroy
-      remove_sar_deadline_extension
-    end
-
-    # Original
-    def extend_sar_deadline
       authorize @case
 
       @case = CaseExtendSARDeadlineDecorator.decorate @case
     end
 
-    def execute_extend_sar_deadline
+    # Was execute_extend_sar_deadline
+    def create
       authorize @case, :extend_sar_deadline?
 
       service = CaseExtendSARDeadlineService.new(
@@ -52,7 +34,8 @@ module Cases
       end
     end
 
-    def remove_sar_deadline_extension
+    # Was remove_extend_sar_deadline
+    def destroy
       authorize @case, :remove_sar_deadline_extension?
 
       service = CaseRemoveSARDeadlineExtensionService.new(
@@ -69,6 +52,5 @@ module Cases
         redirect_to case_path(@case.id)
       end
     end
-
   end
 end
