@@ -26,7 +26,7 @@ class Cases::BaseController < ApplicationController
     :update,
   ]
 
-  ## RESTful methods
+
   def index
     @cases = CaseFinderService.new(current_user)
       .for_params(request.params)
@@ -174,37 +174,10 @@ class Cases::BaseController < ApplicationController
   end
 
 
-
-  ## PRIVATE METHODS REQUIRE SORTING OUT INTO MODELS/ETC
-
   protected
 
   def set_url
     @action_url = request.env['PATH_INFO']
-  end
-
-  # TODO: Used by SearchController and FilterController
-  def filter_params
-    params.fetch(:search_query, {}).permit(
-      :search_text,
-      :parent_id,
-      :external_deadline_from,
-      :external_deadline_from_dd,
-      :external_deadline_from_mm,
-      :external_deadline_from_yyyy,
-      :external_deadline_to,
-      :external_deadline_to_dd,
-      :external_deadline_to_mm,
-      :external_deadline_to_yyyy,
-      common_exemption_ids: [],
-      exemption_ids: [],
-      filter_assigned_to_ids: [],
-      filter_case_type: [],
-      filter_open_case_status: [],
-      filter_sensitivity: [],
-      filter_status: [],
-      filter_timeliness: [],
-    )
   end
 
   def set_permitted_events

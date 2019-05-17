@@ -35,4 +35,12 @@ class SearchController < Cases::BaseController
       end
     end
   end
+
+  private
+
+  def filter_params
+    params.fetch(:search_query, {}).permit(
+      :search_text,
+    )
+  end
 end
