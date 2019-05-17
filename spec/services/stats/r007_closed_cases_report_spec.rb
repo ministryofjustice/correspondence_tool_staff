@@ -27,23 +27,23 @@ module Stats
         @cases = {
           closed_sar: {
             type: :closed_sar,
-            received: @period_end - 1.hours,
+            responded: @period_end - 1.hours,
           },
           closed_foi: {
             type: :closed_case,
-            received: @period_start,
+            responded: @period_start,
           },
           outside_period_foi: {
             type: :closed_case,
-            received: @period_end + 1.days
+            responded: @period_end + 1.days
           },
           responded_foi: {
             type: :responded_case,
-            received: @period_start + 1.hour,
+            responded: @period_start + 1.hour,
           },
           open_foi: {
             type: :accepted_case,
-            received: @period_start + 1.days,
+            responded: @period_start + 1.days,
             state: 'totally-not-accepted-really'
           },
         }
@@ -52,7 +52,7 @@ module Stats
           kase = build(
             options[:type],
             name: key,
-            received_date: options[:received],
+            date_responded: options[:responded],
             current_state: options[:state] || 'closed'
           )
 
