@@ -6,7 +6,6 @@ module Cases
       :remove_clearance,
       :request_further_clearance,
       :unflag_for_clearance,
-      :unflag_taken_on_case_for_clearance
     ]
 
     def remove_clearance

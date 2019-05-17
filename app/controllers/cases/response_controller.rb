@@ -9,7 +9,7 @@ module Cases
       :upload_response_and_return_for_redraft,
       :response_upload_for_redraft
     ]
-    before_action :set_decorated_case, only: [:upload_responses, ]
+    before_action :set_decorated_case, only: [:upload_responses]
 
     def upload_responses
       authorize @case

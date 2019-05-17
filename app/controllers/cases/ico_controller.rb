@@ -4,6 +4,8 @@ module Cases
     include CreateCase
     include NewCase
 
+    before_action :set_case, only: [:record_late_team]
+
     def new
       @correspondence_type_key = 'ico'
       new_case_for CorrespondenceType.ico
