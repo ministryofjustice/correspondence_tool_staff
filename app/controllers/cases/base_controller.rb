@@ -62,7 +62,6 @@ class Cases::BaseController < ApplicationController
     end
   end
 
-  # TODO: This was #select_type
   def new
     permitted_correspondence_types
 
