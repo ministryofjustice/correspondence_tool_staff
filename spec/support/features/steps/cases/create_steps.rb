@@ -78,6 +78,37 @@ def create_sar_case_step(params={})
   Case::Base.find(kase_id)
 end
 
+def create_osar_case_step(params={})
+  flag_for_disclosure = params.delete(:flag_for_disclosure) { false }
+
+  # Assume we are on a case listing page
+  expect(cases_page).to have_new_case_button
+  sleep 6
+  cases_page.new_case_button.click
+
+  expect(cases_new_page).to be_displayed
+  sleep 6
+byebug
+  cases_new_page.create_link_for_correspondence('OSAR').click
+  sleep 6
+  expect(cases_new_sar_page).to be_displayed
+  sleep 6
+
+  cases_new_sar_page.fill_in_case_details(params)
+  sleep 6
+  cases_new_sar_page.choose_flag_for_disclosure_specialists(
+    flag_for_disclosure ? 'yes' : 'no'
+  )
+  click_button 'Create case'
+  sleep 6
+
+  expect(assignments_new_page).to be_displayed
+
+  # Return the case we created using the params of the current  path
+  kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
+  Case::Base.find(kase_id)
+end
+
 def create_overturned_ico_case_step(params={})
   ico_case = params.delete(:ico_case)
   flagged = params.delete(:flag_for_disclosure)

@@ -19,18 +19,6 @@ feature 'adding cases' do
     login_as admin
   end
 
-  fcontext 'Case::OffSar::Standard' do
-    scenario 'creating a case with the default values' do
-      admin_cases_page.load
-      admin_cases_page.create_case_button.click
-      admin_cases_new_page.create_link_for_correspondence('OFFENDER_SAR').click
-      byebug
-      
-      expect(admin_cases_page).to be_displayed
-      expect(admin_cases_page.case_list.count).to eq 1
-    end
-  end
-
   context 'Case::FOI::Standard' do
     scenario 'creating a case with the default values' do
       admin_cases_page.load
