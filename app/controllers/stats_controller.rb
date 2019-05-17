@@ -70,7 +70,7 @@ class StatsController < ApplicationController
   end
 
   def self.closed_cases_correspondence_type
-    FauxCorrespondenceType.new('CLOSED_CASES', 'Closed Cases Report')
+    FauxCorrespondenceType.new('CLOSED_CASES', 'Closed cases report')
   end
 
   private
