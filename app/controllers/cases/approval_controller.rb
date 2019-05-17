@@ -1,6 +1,6 @@
 module Cases
   class ApprovalController < BaseController
-    before_action :set_case, only: [:approve, :execute_approve]
+    before_action :set_case, only: [:new, :create]
 
     # Was approve
     def new
