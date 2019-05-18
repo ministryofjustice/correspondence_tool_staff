@@ -9,7 +9,7 @@
 
 = render partial: 'layouts/header'
 
-= form_for @report, url: stats_create_custom_report_path do |f|
+= form_for @report, url: stats_path do |f|
 
   .js-correspondence-types
     / Cannot use GOVUK.ShowHideContent because radio_button_fieldset does not allow each data-target

@@ -364,14 +364,11 @@ Rails.application.routes.draw do
     end
   end
 
-  # resource :stats do
-    get '/stats' => 'stats#index'
-    get '/stats/download/:id' => 'stats#download', as: :stats_download
-    get '/stats/download_audit' => 'stats#download_audit', as: :stats_download_audit
-    get '/stats/download_custom_report/:id' => 'stats#download_custom_report', as: :stats_download_custom_report
-    get '/stats/custom' => 'stats#custom'
-    post 'stats/create_custom_report' => 'stats#create_custom_report'
-  # end
+  resources :stats, only: [:index, :show, :new, :create] do
+    get 'download_custom/:id', action: :download_custom, on: :collection, as: :download_custom
+    get :download_audit, on: :collection, as: :download_audit
+  end
+
 
   #get '/search' => 'cases#search'
 
