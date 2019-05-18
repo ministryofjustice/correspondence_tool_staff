@@ -299,12 +299,7 @@ Rails.application.routes.draw do
             on: :member
     end
 
-
-
-
-    # Amendment_controller
-    get :request_amends, on: :member
-    patch :execute_request_amends, on: :member
+    resources :amendment, only: [:new, :create]
 
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member
