@@ -53,6 +53,7 @@ describe GlobalNavManager do
       config.reload!
     end
   end
+  let(:pages_config) { config.pages }
 
   let(:incoming_page) { instance_double GlobalNavManager::Page,
                                         'incoming cases page',
@@ -68,20 +69,20 @@ describe GlobalNavManager do
   let(:stats_page)    { instance_double GlobalNavManager::Page,
                                          'stats page',
                                          visible?: false }
-  let(:gnm) { GlobalNavManager.new(responder, request, config) }
+  let(:gnm) { GlobalNavManager.new(responder, request, pages_config) }
 
   before do
     allow(GlobalNavManager::Page).to receive(:new)
-                                       .with(:incoming_cases, any_args())
+                                       .with(hash_including(name: :incoming_cases))
                                        .and_return(incoming_page)
     allow(GlobalNavManager::Page).to receive(:new)
-                                       .with(:opened_cases, any_args())
+                                       .with(hash_including(name: :opened_cases))
                                        .and_return(open_page)
     allow(GlobalNavManager::Page).to receive(:new)
-                                       .with(:closed_cases, any_args())
+                                       .with(hash_including(name: :closed_cases))
                                        .and_return(closed_page)
     allow(GlobalNavManager::Page).to receive(:new)
-                                       .with(:stats_page, any_args())
+                                       .with(hash_including(name: :stats_page))
                                        .and_return(stats_page)
   end
 
@@ -91,15 +92,15 @@ describe GlobalNavManager do
       expect(open_page).to receive(:visible?).and_return true
       expect(closed_page).to receive(:visible?).and_return true
       expect(stats_page).to receive(:visible?).and_return false
-      gnm = GlobalNavManager.new(responder, request, config)
+      gnm = GlobalNavManager.new(responder, request, pages_config)
       expect(GlobalNavManager::Page).to have_received(:new)
-                                          .with(:opened_cases,
-                                                gnm,
-                                                config.pages.opened_cases)
+                                          .with(name: :opened_cases,
+                                                parent: gnm,
+                                                attrs: pages_config.opened_cases)
       expect(GlobalNavManager::Page).to have_received(:new)
-                                          .with(:closed_cases,
-                                                gnm,
-                                                config.pages.closed_cases)
+                                          .with(name: :closed_cases,
+                                                parent: gnm,
+                                                attrs: pages_config.closed_cases)
       expect(gnm.nav_pages).to eq [open_page, closed_page]
     end
   end

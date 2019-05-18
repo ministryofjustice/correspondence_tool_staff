@@ -29,11 +29,12 @@ class ReportType < ApplicationRecord
   scope :standard, -> { where( standard_report: true ) }
   scope :foi, -> { where( foi: true ) }
   scope :sar, -> { where( sar: true ) }
+  scope :closed_cases_report, -> { where(abbr: 'R007') }
 
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
   def class_constant
-    class_name.constantize
+    @_class_constant ||= class_name.constantize
   end
 
   def filename(extension)
@@ -53,6 +54,14 @@ class ReportType < ApplicationRecord
   end
 
   def default_reporting_period_text
-    Stats::ReportingPeriodCalculator.new(period_name: default_reporting_period.to_sym).to_s
+    ReportingPeriod::Calculator.build(period_name: default_reporting_period).to_s
+  end
+
+  def file_extension
+    class_constant.xlsx? ? 'xlsx' : 'csv'
+  end
+
+  def description
+    class_constant.description
   end
 end

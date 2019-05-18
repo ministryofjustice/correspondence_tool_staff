@@ -5,8 +5,6 @@ feature 'filtering by external deadline' do
 
   describe 'external deadline filter', js: true do
     before(:all) do
-      Timecop.freeze(Time.local(2018, 5, 11, 12, 0, 0))
-
       @all_cases = [
         :std_draft_foi,
         :std_closed_foi,
@@ -49,7 +47,6 @@ feature 'filtering by external deadline' do
 
     after(:all) do
       DbHousekeeping.clean
-      Timecop.return
     end
 
     context 'filtering on the open cases page' do

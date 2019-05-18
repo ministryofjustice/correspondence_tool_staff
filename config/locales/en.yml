@@ -538,7 +538,7 @@ en:
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
-      request: "ICO's request and documents"
+      request: "ICO's request"
     case_list:
       view_case: "Link to case "
       message_notification: Conversations
@@ -705,11 +705,14 @@ en:
       received_date: Date received at MOJ
       received_date_copy: "For example, 01 02 2018"
       case/ico:
-        internal_deadline_copy: "For example, 01 02 2018"
+        internal_deadline_copy: >-
+          This should be calculated as half of the final deadline, or 10 working days if 
+          no deadline has been provided by the ICO.<br>
+          You will be able to change this date later.
         external_deadline_copy: >-
-          We'll use this date to set the draft deadline, calculated as 20
-          working days before the final deadline.<br>
-          You will be able to change both dates later.
+          This should be taken from the ICO investigation letter or email, or calculated 
+          as 20 working days if no deadline has been provided.<br>
+          You will be able to change this date later.
         sub_heading: Create an ICO appeal case
       case/overturned_ico/sar:
         sub_heading: Create an ICO Overturned (SAR) case
@@ -831,6 +834,7 @@ en:
       period_end: Date to
     custom:
       timescale_copy: Which time period should this report cover?
+      success: Your custom report has been created.
   teams:
     business_unit_list:
       team_members: Team members

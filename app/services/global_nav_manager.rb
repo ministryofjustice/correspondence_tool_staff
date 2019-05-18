@@ -2,14 +2,12 @@ class GlobalNavManager
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
 
-  attr_reader :nav_pages, :request, :user, :settings
+  attr_reader :nav_pages, :request, :user
 
-  def initialize(user, request, settings)
+  def initialize(user, request, pages)
     @user = user
     @request = request
-    @nav_pages = []
-    @settings = settings
-    add_pages_for_user(settings)
+    @nav_pages = pages_for_user(pages)
   end
 
   def each
@@ -49,12 +47,9 @@ class GlobalNavManager
     nil
   end
 
-  def add_pages_for_user(settings)
-    settings.pages.each do |page_name, page_settings|
-      page = Page.new(page_name, self, page_settings)
-      if page.visible?
-        @nav_pages << page
-      end
-    end
+  def pages_for_user(pages)
+    pages.map do |page_name, page_settings|
+      Page.new(name: page_name, parent: self, attrs: page_settings)
+    end.select(&:visible?)
   end
 end

@@ -19,10 +19,10 @@ gem 'devise', '~> 4.6'
 gem 'draper', '3.1.0'
 gem 'dropzonejs-rails', '>= 0.8'
 gem 'foreman', '~> 0.85.0'
-gem 'factory_bot_rails', '~> 5.0.1'
+gem 'factory_bot_rails', '~> 5.0.2'
 gem 'faker', '~> 1.9.3'
 gem 'gov_uk_date_fields', '~> 3.1'
-gem 'govuk_template',         '~> 0.23.0'
+gem 'govuk_template',         '~> 0.26.0'
 gem 'govuk_frontend_toolkit', '>= 8.0.0'
 gem 'govuk_elements_rails',   '>= 3.1.2'
 gem 'govuk_elements_form_builder', '>= 1.2.0'
@@ -39,9 +39,9 @@ gem 'lograge'
 gem 'mechanize', '>= 2.7.5'
 gem 'mimetype-fu', '~> 0.1.2'
 gem 'govuk_notify_rails'
-gem 'paper_trail', '~> 10.2'
+gem 'paper_trail', '~> 10.3'
 gem 'pg', '~> 1.1'
-gem 'pg_search', '~> 2.1.4'
+gem 'pg_search', '~> 2.1.7'
 gem 'pry-rails'
 gem 'puma', '~> 3.12'
 gem 'pundit', '~>2.0'
@@ -54,7 +54,7 @@ gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
 gem 'sidekiq', '~> 5.2'
-gem 'sidekiq-logging-json', '~> 0.0.18'
+gem 'sidekiq-logging-json', '~> 0.0.19'
 
 gem 'table_print'
 gem 'thor-rails'
@@ -75,6 +75,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', '~> 4.0'
   gem 'site_prism'
+  gem 'webdrivers', '~> 3.0'
 end
 
 group :development, :test do
@@ -85,18 +86,6 @@ group :development, :test do
   # Used to try and track down N+1 query problems
   gem 'bullet'
   gem 'byebug', platform: :mri
-
-  # @todo (Mohammed Seedat 02/04/19): warning when updating chromedriver-helper
-  # +--------------------------------------------------------------------+
-  # |                                                                    |
-  # |  NOTICE: chromedriver-helper is deprecated after 2019-03-31.       |
-  # |                                                                    |
-  # |  Please update to use the 'webdrivers' gem instead.                |
-  # |  See https://github.com/flavorjones/chromedriver-helper/issues/83  |
-  # |                                                                    |
-  # +--------------------------------------------------------------------+
-  gem 'chromedriver-helper'
-  
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
@@ -105,10 +94,9 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.66.0', require: false
+  gem 'rubocop', '~> 0.67.2', require: false
   gem 'rubocop-rspec', require: false
   gem 'ruby-progressbar'
-
 end
 
 group :development do

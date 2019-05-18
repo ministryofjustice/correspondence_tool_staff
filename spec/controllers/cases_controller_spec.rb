@@ -8,6 +8,7 @@ RSpec.describe CasesController, type: :controller do
   let(:manager)               { find_or_create :disclosure_specialist_bmt }
   let(:responder)             { find_or_create :foi_responder }
   let(:another_responder)     { create :responder }
+  let(:manager_approver)      { create :manager_approver }
   let(:responding_team)       { responder.responding_teams.first }
   let(:co_responder)          { create :responder,
                                        responding_teams: [responding_team] }
@@ -18,7 +19,7 @@ RSpec.describe CasesController, type: :controller do
                                        approving_team: team_dacu_disclosure }
   let(:unassigned_case)       { create(:case) }
   let(:assigned_case)         { create :assigned_case,
-                                        responding_team: responding_team }
+                                       responding_team: responding_team }
   let(:accepted_case)         { create :accepted_case,
                                        responder: responder,
                                        responding_team: responding_team }
@@ -30,15 +31,15 @@ RSpec.describe CasesController, type: :controller do
                                        responder: responder,
                                        responding_team: responding_team }
   let(:flagged_case)          { create :assigned_case, :flagged,
-                                        responding_team: responding_team,
-                                        approving_team: team_dacu_disclosure }
+                                       responding_team: responding_team,
+                                       approving_team: team_dacu_disclosure }
   let(:flagged_accepted_case) { create :accepted_case, :flagged_accepted,
                                        responding_team: responding_team,
                                        approver: disclosure_specialist,
                                        responder: responder}
 
   let(:assigned_trigger_case)               { create :assigned_case, :flagged_accepted,
-                                                      approver: disclosure_specialist }
+                                                     approver: disclosure_specialist }
   let(:pending_dacu_clearance_case)         { create :pending_dacu_clearance_case,
                                                      responding_team: responding_team }
   let(:case_accepted_by_approver_responder) { create :accepted_case,
@@ -51,7 +52,6 @@ RSpec.describe CasesController, type: :controller do
                                                   approver:  approver_responder,
                                                   responder: another_responder,
                                                   responding_team: another_responder.responding_teams.first }
-
 
   describe '#set_cases' do
     before(:each) do
@@ -185,7 +185,7 @@ RSpec.describe CasesController, type: :controller do
 
         it 'does not paginate the result set' do
           expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
-              .not_to have_received(:page).with('our_page')
+            .not_to have_received(:page).with('our_page')
         end
       end
     end
@@ -293,10 +293,9 @@ RSpec.describe CasesController, type: :controller do
             expect(Case::SAR.first.date_responded).to be nil
             expect(ActionNotificationsMailer)
               .not_to have_received(:notify_team)
-                    .with(sar.managing_team, sar, 'Case closed')
+                        .with(sar.managing_team, sar, 'Case closed')
           end
         end
-
 
         def sar_closure_params(sar)
           date_responded = 3.days.ago
@@ -313,7 +312,6 @@ RSpec.describe CasesController, type: :controller do
       end
     end
   end
-
 
   # An astute reader who has persevered to this point in the file may notice
   # that the following tests are in a different structure than those above:
@@ -404,7 +402,6 @@ RSpec.describe CasesController, type: :controller do
   end
 
   describe 'GET incoming_cases' do
-
     context "as an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
         get :incoming_cases
@@ -443,6 +440,21 @@ RSpec.describe CasesController, type: :controller do
       it "be redirected to signin if trying to list of questions" do
         get :my_open_cases, params: {tab: 'in_time'}
         expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'without stubs' do
+      let!(:closed_case) { create(:closed_case) }
+      let!(:active_case) { flagged_case }
+
+      before do
+        sign_in manager_approver
+      end
+
+      it 'gets only incoming cases' do
+        get :incoming_cases
+        expect(assigns(:cases)).not_to match_array([closed_case, active_case])
+        expect(assigns(:cases)).to match_array([active_case])
       end
     end
 
@@ -500,8 +512,7 @@ RSpec.describe CasesController, type: :controller do
           flash:{"case_errors"=>{:message_text => ["can't be blank"]}}
 
       expect(assigns(:case).errors.messages[:message_text].first)
-          .to eq("can't be blank")
-
+        .to eq("can't be blank")
     end
 
     it 'syncs case transitions tracker for user' do
@@ -601,9 +612,7 @@ RSpec.describe CasesController, type: :controller do
           expect(response).to have_rendered(:show)
         end
       end
-
     end
-
 
     context 'viewing an assigned_case' do
       before do
@@ -620,7 +629,6 @@ RSpec.describe CasesController, type: :controller do
         it "redirects to signin" do
           expect(response).to redirect_to(new_user_session_path)
         end
-
       end
 
       context 'as an authenticated manager' do
@@ -633,7 +641,6 @@ RSpec.describe CasesController, type: :controller do
         it 'renders the show template' do
           expect(response).to render_template(:show)
         end
-
       end
 
       context 'as a responder of the assigned responding team' do
@@ -652,9 +659,9 @@ RSpec.describe CasesController, type: :controller do
           responder_assignment = assigned_case.assignments.last
           CaseFlagForClearanceService.new(user: press_officer, kase: assigned_case, team: press_office).call
           expect(response)
-              .to redirect_to(edit_case_assignment_path(
-                                assigned_case,
-                                responder_assignment.id))
+            .to redirect_to(edit_case_assignment_path(
+                              assigned_case,
+                              responder_assignment.id))
         end
 
         it 'does not update the message tracker for the user' do
@@ -768,9 +775,9 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { case_with_response.responder }
 
         it { should have_permitted_events_including :add_message_to_case,
-                                                         :add_responses,
-                                                         :respond,
-                                                         :remove_response }
+                                                    :add_responses,
+                                                    :respond,
+                                                    :remove_response }
 
         it 'renders the show page' do
           expect(response).to have_rendered(:show)
@@ -845,7 +852,6 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
-
   end
 
   describe 'GET respond' do
@@ -866,7 +872,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'redirects to the application root' do
         expect(get :respond, params: { id: case_with_response.id }).
-            to redirect_to(manager_root_path)
+          to redirect_to(manager_root_path)
       end
     end
 
@@ -882,7 +888,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'renders the respond template' do
         expect(get :respond, params: { id: case_with_response.id }).
-            to render_template(:respond)
+          to render_template(:respond)
       end
     end
 
@@ -892,7 +898,7 @@ RSpec.describe CasesController, type: :controller do
 
       it 'redirects to the application root' do
         expect(get :respond, params: { id: case_with_response.id }).
-              to redirect_to(responder_root_path)
+          to redirect_to(responder_root_path)
       end
     end
   end
@@ -929,7 +935,6 @@ RSpec.describe CasesController, type: :controller do
           expect(response).to have_http_status 401
         end
       end
-
     end
 
     context 'as an authenticated responder' do
@@ -1103,35 +1108,35 @@ RSpec.describe CasesController, type: :controller do
     let(:kase)                          { create :accepted_case }
     let(:edit_params) do
       ActionController::Parameters.new({
-        correspondence_type: 'foi',
-        case_foi:  {
-          name: 'Tony Blair',
-          email: 'tb@blairco.pol',
-          postal_address: '2, Vinery Way London W6 0LQ',
-          requester_type: 'offender',
-          received_date_dd: '1',
-          received_date_mm: '10',
-          received_date_yyyy: '2017',
-          subject: 'TEST case',
-          message: 'Lorem ipsum dolor',
-        },
-        commit: 'Submit',
-        id:  kase.id.to_s
-      })
+                                         correspondence_type: 'foi',
+                                         case_foi:  {
+                                           name: 'Tony Blair',
+                                           email: 'tb@blairco.pol',
+                                           postal_address: '2, Vinery Way London W6 0LQ',
+                                           requester_type: 'offender',
+                                           received_date_dd: '1',
+                                           received_date_mm: '10',
+                                           received_date_yyyy: '2017',
+                                           subject: 'TEST case',
+                                           message: 'Lorem ipsum dolor',
+                                         },
+                                         commit: 'Submit',
+                                         id:  kase.id.to_s
+                                       })
     end
 
     let(:expected_params) do
       ActionController::Parameters.new({
-       name: 'Tony Blair',
-       email: 'tb@blairco.pol',
-       postal_address: '2, Vinery Way London W6 0LQ',
-       requester_type: 'offender',
-       received_date_dd: '1',
-       received_date_mm: '10',
-       received_date_yyyy: '2017',
-       subject: 'TEST case',
-       message: 'Lorem ipsum dolor',
-     }).permit(
+                                         name: 'Tony Blair',
+                                         email: 'tb@blairco.pol',
+                                         postal_address: '2, Vinery Way London W6 0LQ',
+                                         requester_type: 'offender',
+                                         received_date_dd: '1',
+                                         received_date_mm: '10',
+                                         received_date_yyyy: '2017',
+                                         subject: 'TEST case',
+                                         message: 'Lorem ipsum dolor',
+                                       }).permit(
         :name,
         :email,
         :postal_address,
@@ -1188,7 +1193,6 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-
       it 'creates a papertrail version with the current user as whodunnit' do
         Timecop.freeze(date) do
           patch :update, params: edit_params.to_unsafe_hash
@@ -1220,7 +1224,6 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
-
   end
 
   describe OverturnedSarCasesController do
@@ -1287,11 +1290,6 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
-
-    # context 'logged in as responder' do
-    #   before { sign_in responder }
-    # end
-
   end
 
   def stub_current_case_finder_cases_with(result)
@@ -1316,5 +1314,4 @@ RSpec.describe CasesController, type: :controller do
     allow(GlobalNavManager).to receive(:new).and_return gnm
     gnm
   end
-
 end

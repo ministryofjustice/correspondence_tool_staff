@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 describe 'cases/index.html.slim', type: :view do
   def allow_case_policy(policy_name)
     policy = double('Pundit::Policy', policy_name => true)
@@ -11,7 +10,6 @@ describe 'cases/index.html.slim', type: :view do
     policy = double('Pundit::Policy', policy_name => false)
     allow(view).to receive(:policy).with(:case).and_return(policy)
   end
-
 
   let(:responder)       { find_or_create :foi_responder }
   let(:responding_team) { responder.responding_teams.first }
@@ -38,7 +36,7 @@ describe 'cases/index.html.slim', type: :view do
     allow(request).to receive(:filtered_parameters).and_return({})
     assign(:global_nav_manager, GlobalNavManager.new(responder,
                                                      request,
-                                                     Settings.global_navigation))
+                                                     Settings.global_navigation.pages))
   end
 
   def login_as(user)

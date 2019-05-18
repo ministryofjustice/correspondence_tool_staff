@@ -112,5 +112,19 @@ RSpec.describe ReportType, type: :model do
       end
     end
 
+    context '#file_extension' do
+      it 'assumes csv only if concrete class does not support xlsx' do
+        r006 = create :report_type, :r006
+        expect(r006.file_extension).to eq 'csv'
+      end
+    end
+
+    context '#description' do
+      it 'returns concrete class description' do
+        r003 = create :report_type, :r003
+        expect(r003.description)
+          .to eq Stats::R003BusinessUnitPerformanceReport.description
+      end
+    end
   end
 end

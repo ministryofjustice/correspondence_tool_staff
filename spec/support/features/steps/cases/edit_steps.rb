@@ -1,8 +1,10 @@
-# TODO - this doesn't run any tests as kase.correspondence_type is not a string
-def edit_case_step(kase:, **args)
-  case kase.correspondence_type
-  when 'foi' then edit_foi_case_step(kase, args)
-  when 'ico' then edit_ico_case_step(kase, args)
+def edit_case_step(kase:, subject:, original_case: nil)
+  case kase.correspondence_type.abbreviation.downcase
+  when 'foi' then edit_foi_case_step(kase: kase, subject: subject)
+  when 'overturned_foi' then edit_foi_case_step(kase: kase, subject: subject)
+  when 'ico' then edit_ico_case_step(kase: kase, original_case: original_case)
+  else
+    raise "Don't know how to edit a case with type #{kase.correspondence_type.abbreviation.downcase}"
   end
 end
 
@@ -20,25 +22,19 @@ def edit_foi_case_step(kase:, subject:)
   end
 end
 
-def edit_ico_case_step(kase:, **params)
+def edit_ico_case_step(kase:, original_case:)
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_case
 
   cases_show_page.case_details.edit_case.click
-  expect(cases_edit_ico_page).to be_displayed
 
-  cases_edit_ico_page.form.fill_in_case_details(params)
-  if params[:original_case].present?
-    cases_edit_ico_page.form.add_original_case(params[:original_case])
+  expect(cases_edit_ico_page).to be_displayed(id: kase.id)
+
+  if original_case.present?
+    cases_edit_ico_page.form.add_original_case(original_case)
   end
-  cases_edit_ico_page.form.add_related_cases([foi_timeliness_review])
 
   cases_edit_page.submit_button.click
-
-  if subject
-    expect(cases_show_page.page_heading.heading.text)
-        .to eq "Case subject, #{subject}"
-  end
 end
 
 def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Metrics/ParameterLists, Metrics/CyclomaticComplexity

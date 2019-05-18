@@ -130,8 +130,7 @@ class Case::Base < ApplicationRecord
 
   # cases that have ever been flagged for approval
   scope :flagged_for_approval, ->(*teams) do
-    joins(:assignments)
-      .where(assignments: { team_id: teams.map(&:id), role: 'approving' })
+    joins(:assignments).merge(Assignment.flagged_for_approval(teams))
   end
   scope :trigger, -> { where(workflow: TRIGGER_WORKFLOWS) }
   scope :non_trigger, -> { where.not(workflow: TRIGGER_WORKFLOWS) }
@@ -353,6 +352,8 @@ class Case::Base < ApplicationRecord
 
   include CaseStates
 
+  # @note Magic methods for all available Case states such as unassigned?,
+  #   pending_dacu_clearance?, etc
   ConfigurableStateMachine::Machine.states.each do |state|
     define_method("#{state}?") { current_state == state }
   end
@@ -571,7 +572,7 @@ class Case::Base < ApplicationRecord
   end
 
   def already_late?
-    Date.today > external_deadline
+    Date.current > external_deadline
   end
 
   def num_days_late
@@ -597,10 +598,6 @@ class Case::Base < ApplicationRecord
 
   def transition_tracker_for_user(user)
     users_transitions_trackers.where(user: user).singular_or_nil
-  end
-
-  def sync_transition_tracker_for_user(user)
-    CasesUsersTransitionsTracker.sync_for_case_and_user(self, user)
   end
 
   def format_workflow_class_name(type_template, type_workflow_template)
@@ -737,9 +734,13 @@ class Case::Base < ApplicationRecord
     )
   end
 
-
   def trigger?
     TRIGGER_WORKFLOWS.include?(workflow)
+  end
+
+  # @note A flagged case can be assumed to be a trigger case
+  def trigger_status
+    flagged? ? 'trigger': 'non_trigger'
   end
 
   # predicate methods

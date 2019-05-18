@@ -960,15 +960,6 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe '#sync_transition_tracker_for_user' do
-    it 'calls CasesUsersTransitionsTracker.sync_for_case_and_user' do
-      allow(CasesUsersTransitionsTracker).to receive(:sync_for_case_and_user)
-      kase.sync_transition_tracker_for_user(responder)
-      expect(CasesUsersTransitionsTracker)
-        .to have_received(:sync_for_case_and_user).with(kase, responder)
-    end
-  end
-
   describe 'search' do
     before :all do
       @responding_team_a = create :responding_team, name: 'Accrediting Aptitudes'
