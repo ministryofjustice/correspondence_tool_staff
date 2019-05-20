@@ -418,9 +418,9 @@ Continuous integration is carried out by SemaphoreCI.
 
 ### Data Migrations
 
-The app uses the `rails-data-migrations` gem https://github.com/OffgridElectric/rails-data-migrations 
+The app uses the `rails-data-migrations` gem https://github.com/OffgridElectric/rails-data-migrations
 
-Data migrations work like regular migrations but for data; they're found in `db/data_migrations`. 
+Data migrations work like regular migrations but for data; they're found in `db/data_migrations`.
 
 To create a data migration you need to run:
 
@@ -458,6 +458,49 @@ and then run
 
 ```
 bundle exec rails smoke
+```
+### Site prism page manifest file
+
+The tests use the Site Prism gem to manage page objects which behave as an abstract description of the pages in the application; they're used in feature tests for finding elements, describing the URL path for a given page and for defining useful methods e.g. for completing particular form fields on the page in question.
+
+If you add new Site Prism page objects, it's easy to follow the existing structure - however, there is one gotcha which is that in order to refer to them in your tests, you also need to add the new objects to a manifest file here so that it maps an instantiated object to the new Page object class you've defined.
+
+See `spec/site_prism/page_objects/pages/application.rb`
+
+### Localisation keys checking
+
+As part of the test suite, we check to see if any `tr` keys are missing from the localised YAML files
+
+There is a command line tool provided to check for these manually as well - `i18n-tasks missing` - you can see the output from it below.
+
+```
+$ i18n-tasks missing
+Missing translations (1) | i18n-tasks v0.9.29
++--------+------------------------------------+--------------------------------------------------+
+| Locale | Key                                | Value in other locales or source                 |
++--------+------------------------------------+--------------------------------------------------+
+|  all   | offender_sars.case_details.heading | app/views/offender_sars/case_details.html.slim:5 |
++--------+------------------------------------+--------------------------------------------------+
+
+...fixing happens...
+
+$ i18n-tasks missing
+✓ Good job! No translations are missing.
+$
+```
+There's also a similar task called `i18n-tasks unused`
+
+```
+$ i18n-tasks unused
+Unused keys (1) | i18n-tasks v0.9.29
++--------+-----------------------+---------------+
+| Locale | Key                   | Value         |
++--------+-----------------------+---------------+
+|   en   | steps.new.sub_heading | Create a case |
++--------+-----------------------+---------------+
+$ i18n-tasks unused
+✓ Well done! Every translation is in use.
+$
 ```
 
 ### Deploying
