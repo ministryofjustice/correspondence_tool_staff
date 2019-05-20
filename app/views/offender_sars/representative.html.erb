@@ -1,1 +1,48 @@
-Representative
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+
+    <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
+        <span class="govuk-caption-xl">Create SAR case</span>
+        <h1 class="govuk-heading-xl">Who is making the subject access request?</h1>
+      </legend>
+      <div class="govuk-form-group">
+        <h3 class="govuk-heading-m">Is this information being requested on someone else's behalf?</h3>
+        <div class="govuk-radios govuk-radios--conditional" data-module="radios">
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="" name="how-contacted" type="radio" value="email" data-aria-controls="myConditional">
+            <label class="govuk-label govuk-radios__label" for="">Yes</label>
+          </div>
+          <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="myConditional">
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="">Full name of the representative</label>
+              <input class="govuk-input govuk-!-width-two-thirds" id="" name="">
+            </div>
+            <div class="govuk-form-group">
+              <label class="govuk-label" for="contact-by-email">Relationship to the subject</label>
+              <input class="govuk-input govuk-!-width-two-thirds" id="" name="">
+            </div>
+          </div>
+          <div class="govuk-radios__item">
+            <input class="govuk-radios__input" id="" name="how-contacted" type="radio" value="phone" data-aria-controls="">
+            <label class="govuk-label govuk-radios__label" for="">No</label>
+          </div>
+        </div>
+      </div>
+
+      <p>&nbsp;</p>
+
+      <h3 class="govuk-heading-m">Where should the information be sent?</h3>
+
+      <div class="govuk-form-group">
+        <span id="more-detail-hint" class="govuk-hint">Please include the full postal or email address</span>
+        <textarea class="govuk-textarea" id="more-detail" name="more-detail" rows="5" aria-describedby="more-detail-hint"></textarea>
+      </div>
+
+      <p>&nbsp;</p>
+
+      <a class="govuk-button" href="create-case3">Continue</a>
+
+    </div>
+
+  </div>
