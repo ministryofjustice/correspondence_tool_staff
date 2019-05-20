@@ -1,4 +1,8 @@
 <h1>Who is making the subject access request? </h1>
 
 <%= link_to "Previous", "/cases/new/osar"%>
-<%= link_to "Continue", "/cases/new/osar/requested-info"%>
+
+<%= form_for @case, url: cases_osar_path do |f| %>
+  <input type="hidden" name="current_step" value="<%= @case.current_step %>" %>
+  <%= f.submit "Continue" %>
+<% end %>
