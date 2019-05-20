@@ -561,10 +561,10 @@ en:
     summary_error: 'prevented this form from being submitted:'
     close: Close case
 
-  steps: 
+  steps:
     new:
       heading: Who is the subject?
-      sub_heading: Create a case
+      # sub_heading: Create a case
 
   admin:
     cases:
@@ -710,11 +710,11 @@ en:
       received_date_copy: "For example, 01 02 2018"
       case/ico:
         internal_deadline_copy: >-
-          This should be calculated as half of the final deadline, or 10 working days if 
+          This should be calculated as half of the final deadline, or 10 working days if
           no deadline has been provided by the ICO.<br>
           You will be able to change this date later.
         external_deadline_copy: >-
-          This should be taken from the ICO investigation letter or email, or calculated 
+          This should be taken from the ICO investigation letter or email, or calculated
           as 20 working days if no deadline has been provided.<br>
           You will be able to change this date later.
         sub_heading: Create an ICO appeal case

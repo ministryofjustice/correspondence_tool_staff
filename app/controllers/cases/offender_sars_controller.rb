@@ -11,7 +11,7 @@ class Cases::OffenderSarsController < CasesController
     permitted_correspondence_types
     set_correspondence_type(params[:correspondence_type])
     prepare_new_case
-    if @case # the submitted information is valid
+    if @case # TODO - verify the submitted information is valid
       get_next_step(@case)
       redirect_to osar_new_case_path + "/#{@case.current_step}"
     end
