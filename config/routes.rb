@@ -366,7 +366,7 @@ Rails.application.routes.draw do
 
   resources :stats, only: [:index, :show, :new, :create] do
     get 'download_custom/:id', action: :download_custom, on: :collection, as: :download_custom
-    get :download_audit, on: :collection, as: :download_audit
+    get :download_audit, on: :collection
   end
 
 
