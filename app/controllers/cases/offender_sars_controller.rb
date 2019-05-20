@@ -11,7 +11,7 @@ class Cases::OffenderSarsController < CasesController
     permitted_correspondence_types
     set_correspondence_type(params[:correspondence_type])
     prepare_new_case
-    if true # the submitted information is valid
+    if @case # the submitted information is valid
       get_next_step(@case)
       redirect_to osar_new_case_path + "/#{@case.current_step}"
     end
@@ -29,7 +29,7 @@ class Cases::OffenderSarsController < CasesController
   end
 
   def get_step_partial(current_step)
-    step_name = current_step.split("/").first.gsub('-', '_')
+    step_name = current_step.split("/").first.tr('-', '_')
     "#{step_name}_step"
   end
 end
