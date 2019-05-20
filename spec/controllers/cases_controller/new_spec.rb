@@ -105,6 +105,35 @@ describe CasesController, type: :controller do
         expect(assigns(:correspondence_type)).to eq CorrespondenceType.ico
       end
     end
+
+    context 'new offender SAR case' do
+      let(:params) { { correspondence_type: 'osar' } }
+
+      before do
+        sign_in manager
+      end
+
+      it 'authorizes' do
+        expect { get :new, params: params }
+          .to require_permission(:can_add_case?)
+                .with_args(manager, Case::OSAR)
+      end
+
+      it 'renders the new template' do
+        get :new, params: params
+        expect(response).to render_template(:new)
+      end
+
+      it 'assigns @case' do
+        get :new, params: params
+        expect(assigns(:case)).to be_a Case::OSAR
+      end
+
+      it 'assigns @correspondence_type' do
+        get :new, params: params
+        expect(assigns(:correspondence_type)).to eq CorrespondenceType.osar
+      end
+    end
   end
 
   describe '#new_overturned_ico' do
