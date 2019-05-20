@@ -78,8 +78,8 @@ def create_sar_case_step(params={})
   Case::Base.find(kase_id)
 end
 
-def create_osar_case_step(params={})
-  flag_for_disclosure = params.delete(:flag_for_disclosure) { false }
+def create_osar_case_step(_params={})
+  # flag_for_disclosure = params.delete(:flag_for_disclosure) { false }
 
   # Assume we are on a case listing page
   expect(cases_page).to have_new_case_button
