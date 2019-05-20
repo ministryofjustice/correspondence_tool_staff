@@ -5,7 +5,6 @@ class Cases::OffenderSarsController < CasesController
     set_correspondence_type(params[:correspondence_type])
     prepare_new_case
     @case.current_step = params[:step]
-    render :new
   end
 
   def create
