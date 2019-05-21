@@ -194,11 +194,14 @@ class Cases::BaseController < ApplicationController
 
   def set_case
     @case = Case::Base
-              .includes(:message_transitions,
-                        transitions: [:acting_user, :acting_team, :target_team],
-                        assignments: [:team],
-                        approver_assignments: [:user])
-              .find(params[:id])
+      .includes(
+        :message_transitions,
+        transitions: [:acting_user, :acting_team, :target_team],
+        assignments: [:team],
+        approver_assignments: [:user]
+      )
+      .find(params[:id])
+
     @case_transitions = @case.transitions.case_history.order(id: :desc)
     @correspondence_type_key = @case.type_abbreviation.downcase
   end
@@ -266,6 +269,7 @@ class Cases::BaseController < ApplicationController
 
   def set_assignments
     @assignments = []
+
     if @case.responding_team.in? current_user.responding_teams
       @assignments << @case.responder_assignment
     end
