@@ -39,11 +39,6 @@ class Case::OSAR < Case::Base
   end
 
   include DraftTimeliness::ProgressedForClearance
-  include Steppable 
-
-  def steps
-    %w[subject-details requester-details requested-info date-received].freeze
-  end
 
   before_save do
     self.workflow = 'standard' if workflow.nil?
