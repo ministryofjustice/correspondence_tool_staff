@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'OSAR Case creation by a manager' do
+feature 'Offender SAR Case creation by a manager' do
 
   given(:responder)       { find_or_create(:foi_responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }
@@ -15,7 +15,7 @@ feature 'OSAR Case creation by a manager' do
   end
 
   scenario 'creating a case that does not need clearance', js: true do
-    create_osar_case_step
+    create_offender_sar_case_step
 
     # TODO: make these subsequent tests work
     # responding_team = responder.responding_teams.first

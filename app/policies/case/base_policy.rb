@@ -37,7 +37,7 @@ class Case::BasePolicy < ApplicationPolicy
         Case::FOI::ComplianceReview,
         Case::FOI::InternalReview,
         Case::SAR,
-        Case::OSAR,
+        Case::SAR::Offender,
         Case::ICO::FOI,
         Case::ICO::SAR,
         Case::OverturnedICO::SAR,

@@ -88,7 +88,7 @@ describe CorrespondenceType, type: :model do
     end
 
     it 'returns them in alphabetic order of report category name' do
-      expect(cts.map(&:report_category_name)).to eq [ 'FOI report', 'OSAR report', 'SAR report' ]
+      expect(cts.map(&:report_category_name)).to eq [ 'FOI report', 'Offender SAR report', 'SAR report' ]
     end
   end
 

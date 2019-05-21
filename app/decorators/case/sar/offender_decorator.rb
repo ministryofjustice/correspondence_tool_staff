@@ -1,4 +1,4 @@
-class Case::OSARDecorator < Case::BaseDecorator
+class Case::SAR::OffenderDecorator < Case::BaseDecorator
   include Steppable
 
   def steps

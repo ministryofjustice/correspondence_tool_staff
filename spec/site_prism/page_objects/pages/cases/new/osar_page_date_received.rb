@@ -2,9 +2,9 @@ module PageObjects
   module Pages
     module Cases
       module New
-        class OSARPageDateReceived < PageObjects::Pages::Base
+        class OffenderSARPageDateReceived < PageObjects::Pages::Base
 
-          set_url '/cases/new/osar/date-received'
+          set_url '/cases/new/offender/date-received'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

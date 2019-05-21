@@ -199,7 +199,7 @@ Rails.application.routes.draw do
   post '/feedback' => 'feedback#create'
 
 
-  post 'cases/osar' => "cases/offender_sars#create", defaults: { correspondence_type: 'osar' }
+  post 'cases/offender' => "cases/offender_sars#create", defaults: { correspondence_type: 'offender' }
   resources :cases, except: :new do
     authenticated :user, -> (u) { u.manager? }  do
       root to: redirect(gnav.default_urls.manager), as: :manager_root
@@ -219,7 +219,7 @@ Rails.application.routes.draw do
     # /cases/new                      - select the type of correspondence for the new case
     # /cases/new/foi, /cases/new/sar  - create a new case for the given correspondence type
     get '', action: :new, on: :new
-    get 'osar/(:step)' => "cases/offender_sars#new", on: :new, as: "osar", defaults: { correspondence_type: 'osar' }
+    get 'offender/(:step)' => "cases/offender_sars#new", on: :new, as: "offender_sar", defaults: { correspondence_type: 'offender' }
     get ':correspondence_type',
         action: :new,
         on: :new,

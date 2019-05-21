@@ -28,7 +28,7 @@ describe CasesController, type: :controller do
         expect(assigns(:permitted_correspondence_types))
           .to match_array [CorrespondenceType.foi,
                            CorrespondenceType.sar,
-                           CorrespondenceType.osar,
+                           CorrespondenceType.offender_sar,
                            CorrespondenceType.ico]
       end
     end
@@ -107,7 +107,7 @@ describe CasesController, type: :controller do
     end
 
     context 'new offender SAR case' do
-      let(:params) { { correspondence_type: 'osar' } }
+      let(:params) { { correspondence_type: 'offender' } }
 
       before do
         sign_in manager
@@ -116,7 +116,7 @@ describe CasesController, type: :controller do
       it 'authorizes' do
         expect { get :new, params: params }
           .to require_permission(:can_add_case?)
-                .with_args(manager, Case::OSAR)
+                .with_args(manager, Case::SAR::Offender)
       end
 
       it 'renders the new template' do
@@ -126,12 +126,12 @@ describe CasesController, type: :controller do
 
       it 'assigns @case' do
         get :new, params: params
-        expect(assigns(:case)).to be_a Case::OSAR
+        expect(assigns(:case)).to be_a Case::SAR::Offender
       end
 
       it 'assigns @correspondence_type' do
         get :new, params: params
-        expect(assigns(:correspondence_type)).to eq CorrespondenceType.osar
+        expect(assigns(:correspondence_type)).to eq CorrespondenceType.offender_sar
       end
     end
   end

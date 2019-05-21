@@ -1,7 +1,6 @@
 <h1>Who is the subject?</h1>
 
-<%= form_for @case, url: cases_osar_path do |f| %>
+<%= form_for @case, url: cases_offender_path do |f| %>
   <input type="hidden" name="current_step" value="<%= @case.current_step %>" %>
   <%= f.submit "Continue" %>
 <% end %>
-<%#= link_to "Continue", "/cases/new/osar/requester-details"%>

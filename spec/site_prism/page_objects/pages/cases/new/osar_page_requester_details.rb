@@ -2,9 +2,9 @@ module PageObjects
   module Pages
     module Cases
       module New
-        class OSARPageRequesterDetails < PageObjects::Pages::Base
+        class OffenderSARPageRequesterDetails < PageObjects::Pages::Base
 
-          set_url '/cases/new/osar/requester-details'
+          set_url '/cases/new/offender/requester-details'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
