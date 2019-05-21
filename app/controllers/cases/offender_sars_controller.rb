@@ -1,5 +1,4 @@
 class Cases::OffenderSarsController < CasesController
-
   def new
     permitted_correspondence_types
     set_correspondence_type(params[:correspondence_type])
