@@ -1,12 +1,14 @@
 module CreateCase
   extend ActiveSupport::Concern
 
-  def create_case_for_type correspondence_type, correspondence_type_key
+  def create_case_for_type(correspondence_type, correspondence_type_key)
     begin
       service = CaseCreateService.new current_user, correspondence_type_key, params
       authorize service.case_class, :can_add_case?
+
       service.call
       @case = service.case
+
       case service.result
       when :assign_responder
         flash[:creating_case] = true
@@ -23,5 +25,4 @@ module CreateCase
       render :new
     end
   end
-
 end

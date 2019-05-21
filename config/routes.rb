@@ -174,7 +174,6 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
 
-  # devise_for :users
   devise_for :users, controllers: { passwords: 'passwords' }
 
   gnav = Settings.global_navigation
@@ -197,18 +196,13 @@ Rails.application.routes.draw do
 
   post '/feedback' => 'feedback#create'
 
-  scope :cases, module: 'cases' do
-    # Each case type gets its own controller for new and create
-    # as the behaviours are all different and different parameters are passed
+  namespace :cases, module: 'cases' do
+    # Case creation per type
     resources :fois, only: [:new, :create], controller: 'cases/foi', as: :case_foi_standards
-    resources :icos, only: [:new, :create], controller: 'cases/ico', as: :case_icos do
-    end
-    resources :ico_fois, only: [:new, :create], controller: 'cases/ico_foi', as: :case_ico_fois do
-    end
-    resources :ico_sars, only: [:new, :create], controller: 'cases/ico_sar', as: :case_ico_sars do
-    end
-    resources :sars, only: [:new, :create], controller: 'cases/sar', as: :case_sars do
-    end
+    resources :icos, only: [:new, :create], controller: 'cases/ico', as: :case_icos
+    resources :ico_fois, only: [:new, :create], controller: 'cases/ico_foi', as: :case_ico_fois
+    resources :ico_sars, only: [:new, :create], controller: 'cases/ico_sar', as: :case_ico_sars
+    resources :sars, only: [:new, :create], controller: 'cases/sar', as: :case_sars
 
     resources :overturned_ico_fois, only: [:create], controller: 'cases/overturned_foi', as: :case_overturned_fois do
       get :new, on: :member
@@ -218,23 +212,23 @@ Rails.application.routes.draw do
       get :new, on: :member
     end
 
+    resources :ico do
+      patch 'record_late_team'#, on: :member - not sure why member not working
+    end
+
     # Search and Filtering
     resources :search, only: [:index], as: :search_cases
 
-    resources :filter, path: '/' do
-      get 'my_open', on: :collection, to: redirect('filter/my_open/in_time'), as: :root_my_open
-      get 'my_open/:tab' => 'filter#my_open', on: :collection, as: :my_open
-      get 'open' => 'filter#open', on: :collection, as: :open
+    resource :filter, only: [], path: '/' do
+      get 'my_open', to: redirect('filter/my_open/in_time'), as: :root_my_open
+      get 'my_open/:tab' => 'filter#my_open', as: :my_open
+      get 'open' => 'filter#open'
       get 'open/in_time', to: redirect('filter/open')
       get 'open/late',    to: redirect('filter/open')
-      get 'closed' => 'filter#closed', on: :collection
-      get 'deleted' => 'filter/#deleted', on: :collection
-      get 'incoming' => 'filter#incoming', on: :collection
-      post  :filter, on: :collection
-    end
-
-    resources :ico do
-      patch 'record_late_team'#, on: :member - not sure why member not working
+      get 'closed' => 'filter#closed'
+      get 'deleted' => 'filter#deleted'
+      get 'incoming' => 'filter#incoming'
+      get 'filter' => 'filter#filter'
     end
   end
 
@@ -323,6 +317,27 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :stats, only: [:index, :show, :new, :create] do
+    get 'download_custom/:id', action: :download_custom, on: :collection, as: :download_custom
+    get :download_audit, on: :collection
+  end
+
+  resource :users
+
+  resources :teams do
+    resources :users do
+      get 'confirm_destroy', on: :member
+    end
+
+    get 'business_areas_covered' => 'teams#business_areas_covered',
+        as: 'areas_covered_by', on: :member
+    post 'create_areas_covered'=> 'teams#create_business_areas_covered',
+        as: 'create_areas_covered_by', on: :member
+    delete 'destroy_business_area' => 'teams#destroy_business_area', on: :member
+    patch 'update_business_area' => 'teams#update_business_area', on: :member
+    get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
+  end
+
   authenticated :user, ->(u) { u.admin? } do
     namespace :admin do
       root to: redirect('/admin/cases')
@@ -342,33 +357,11 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :teams do
-    resources :users do
-      get 'confirm_destroy', on: :member
-    end
-
-    get 'business_areas_covered' => 'teams#business_areas_covered',
-        as: 'areas_covered_by', on: :member
-    post 'create_areas_covered'=> 'teams#create_business_areas_covered',
-        as: 'create_areas_covered_by', on: :member
-    delete 'destroy_business_area' => 'teams#destroy_business_area', on: :member
-    patch 'update_business_area' => 'teams#update_business_area', on: :member
-    get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
-  end
-
-  resource :users
-
   authenticate :user do
     resources :users do
       resources :teams, only: :index
     end
   end
-
-  resources :stats, only: [:index, :show, :new, :create] do
-    get 'download_custom/:id', action: :download_custom, on: :collection, as: :download_custom
-    get :download_audit, on: :collection
-  end
-
 
   #get '/search' => 'cases#search'
 

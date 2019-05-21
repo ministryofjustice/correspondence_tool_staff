@@ -3,6 +3,13 @@ module Cases
     before_action :set_url, only: [:open]
     before_action :set_state_selector, only: [:open, :my_open]
 
+    # Formerly 'filter', now 'index'
+    def filter
+      state_selector = StateSelector.new(params)
+      redirect_url = make_redirect_url_with_additional_params(states: state_selector.states_for_url)
+      redirect_to redirect_url
+    end
+
     def closed
       unpaginated_cases = @global_nav_manager
         .current_page_or_tab
@@ -114,13 +121,6 @@ module Cases
         format.html { render :index }
         format.csv { send_csv_cases 'open' }
       end
-    end
-
-    # Formerly 'filter', now 'index'
-    def filter
-      state_selector = StateSelector.new(params)
-      redirect_url = make_redirect_url_with_additional_params(states: state_selector.states_for_url)
-      redirect_to redirect_url
     end
 
 

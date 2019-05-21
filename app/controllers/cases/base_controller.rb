@@ -26,13 +26,14 @@ class Cases::BaseController < ApplicationController
     :update,
   ]
 
-
   def index
     @cases = CaseFinderService.new(current_user)
       .for_params(request.params)
       .scope
       .page(params[:page])
       .decorate
+
+    @state_selector = StateSelector.new(params)
     @current_tab_name = 'all_cases'
     @can_add_case = policy(Case::Base).can_add_case?
   end
@@ -69,6 +70,7 @@ class Cases::BaseController < ApplicationController
     if params[:correspondence_type].present?
       set_correspondence_type(params[:correspondence_type])
       prepare_new_case
+
       # TODO: Redirect to appropriate new here
       render :new
     else

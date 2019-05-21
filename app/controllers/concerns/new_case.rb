@@ -3,7 +3,6 @@ module NewCase
 
   def new_case_for correspondence_type
     default_subclass = correspondence_type.sub_classes.first
-
     authorize default_subclass, :can_add_case?
 
     @case = default_subclass.new.decorate
