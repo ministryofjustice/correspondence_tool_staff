@@ -191,7 +191,7 @@ GEM
       i18n (>= 0.7)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
-    ffi (1.10.0)
+    ffi (1.11.1)
     foreman (0.85.0)
       thor (~> 0.19.1)
     formatador (0.2.5)
@@ -488,7 +488,7 @@ GEM
       activerecord (>= 4.2, < 5.3)
       its-it (~> 1.2)
       schema_plus_core
-    selenium-webdriver (3.142.1)
+    selenium-webdriver (3.142.3)
       childprocess (>= 0.5, < 2.0)
       rubyzip (~> 1.2, >= 1.2.2)
     sentry-raven (2.9.0)
