@@ -2,43 +2,10 @@
 require './lib/translate_for_case'
 
 class Cases::BaseController < ApplicationController
-  before_action :set_case, only: [:edit]
-  before_action :set_assignments, only: [:show]
-
-  # As per the Draper documentation, we really shouldn't be decorating @case at
-  # the beginning of controller actions (see:
-  # https://github.com/drapergem/draper#when-to-decorate-objects) as we do
-  # here. Unfortunately we have a good bit of code that already relies on @case
-  # being a decorator so instead of changing each of these actions let's
-  # relegate them to a deprecated 'set_decorated_case' and change `set_case` to
-  # not decorate @case. Also, as "case" is a reserved word in Ruby, the
-  # suggestion in the Draper documentation isn't the best idea. So for an
-  # action to move from using set_decorated_case to set_case it will have to
-  # re-assign @case to be decorated, e.g.:
-  #
-  #   @case = @case.decorate
-  #
-  # or, this could be done in a new after_action block.
-  before_action :set_decorated_case, only: [
-    :confirm_destroy,
-    :destroy,
-    :show,
-    :update,
-  ]
-
-  def index
-    @cases = CaseFinderService.new(current_user)
-      .for_params(request.params)
-      .scope
-      .page(params[:page])
-      .decorate
-
-    @state_selector = StateSelector.new(params)
-    @current_tab_name = 'all_cases'
-    @can_add_case = policy(Case::Base).can_add_case?
-  end
-
   def show
+    set_decorated_case
+    set_assignments
+
     if flash.key?(:query_id)
       SearchQuery.find(flash[:query_id])&.update_for_click(params[:pos].to_i)
     end
@@ -112,7 +79,9 @@ class Cases::BaseController < ApplicationController
   end
 
   def edit
+    set_case
     set_correspondence_type(@case.type_abbreviation.downcase)
+
     authorize @case
 
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
@@ -122,6 +91,7 @@ class Cases::BaseController < ApplicationController
   end
 
   def update
+    set_decorated_case
     set_correspondence_type(params.fetch(:correspondence_type))
     @case = Case::Base.find(params[:id])
     authorize @case
@@ -149,6 +119,7 @@ class Cases::BaseController < ApplicationController
   end
 
   def destroy
+    set_decorated_case
     authorize @case
 
     service = CaseDeletionService.new(
@@ -167,6 +138,7 @@ class Cases::BaseController < ApplicationController
   end
 
   def confirm_destroy
+    set_decorated_case
     authorize @case
   end
 

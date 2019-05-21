@@ -1,13 +1,16 @@
 module Cases
-  class FilterController < BaseController
+  class FiltersController < BaseController
     before_action :set_url, only: [:open]
     before_action :set_state_selector, only: [:open, :my_open]
 
-    # Formerly 'filter', now 'index'
-    def filter
-      state_selector = StateSelector.new(params)
-      redirect_url = make_redirect_url_with_additional_params(states: state_selector.states_for_url)
-      redirect_to redirect_url
+    def show
+      if params[:state_selector].present?
+        state_selector = StateSelector.new(params)
+        redirect_url = make_redirect_url_with_additional_params(states: state_selector.states_for_url)
+        redirect_to redirect_url
+      else
+        redirect_to root_my_open_filter_path
+      end
     end
 
     def closed
@@ -123,6 +126,18 @@ module Cases
       end
     end
 
+    # @todo (Mohammed Seedat) Was cases#index but is not being used
+    # def index
+    #   @cases = CaseFinderService.new(current_user)
+    #     .for_params(request.params)
+    #     .scope
+    #     .page(params[:page])
+    #     .decorate
+    #
+    #   @state_selector = StateSelector.new(params)
+    #   @current_tab_name = 'all_cases'
+    #   @can_add_case = policy(Case::Base).can_add_case?
+    # end
 
     private
 

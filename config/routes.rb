@@ -196,7 +196,7 @@ Rails.application.routes.draw do
 
   post '/feedback' => 'feedback#create'
 
-  namespace :cases, module: 'cases' do
+  scope :cases, module: 'cases' do
     # Case creation per type
     resources :fois, only: [:new, :create], controller: 'cases/foi', as: :case_foi_standards
     resources :icos, only: [:new, :create], controller: 'cases/ico', as: :case_icos
@@ -217,22 +217,21 @@ Rails.application.routes.draw do
     end
 
     # Search and Filtering
-    resources :search, only: [:index], as: :search_cases
-
+    resource :search, only: [:show]
     resource :filter, only: [], path: '/' do
-      get 'my_open', to: redirect('filter/my_open/in_time'), as: :root_my_open
-      get 'my_open/:tab' => 'filter#my_open', as: :my_open
-      get 'open' => 'filter#open'
-      get 'open/in_time', to: redirect('filter/open')
-      get 'open/late',    to: redirect('filter/open')
-      get 'closed' => 'filter#closed'
-      get 'deleted' => 'filter#deleted'
-      get 'incoming' => 'filter#incoming'
-      get 'filter' => 'filter#filter'
+      get 'my_open', to: redirect('/cases/my_open/in_time'), as: :root_my_open
+      get 'my_open/:tab' => 'filters#my_open', as: :my_open
+      get 'open' => 'filters#open'
+      get 'open/in_time', to: redirect('/cases/open')
+      get 'open/late',    to: redirect('/cases/open')
+      get 'closed' => 'filters#closed'
+      get 'deleted' => 'filters#deleted'
+      get 'incoming' => 'filters#incoming'
+      get '/' => 'filters#show'
     end
   end
 
-  resources :cases, controller: 'cases/base', except: [:create] do
+  resources :cases, controller: 'cases/base', except: [:index, :create] do
     # General
     get :confirm_destroy, on: :member
 

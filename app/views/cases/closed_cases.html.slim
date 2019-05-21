@@ -42,5 +42,5 @@
                 = kase.subject
     = paginate @cases
 .download-cases-link
-  = link_to 'Download deleted cases', deleted_cases_filter_path(format: :csv), id: 'download_deleted_cases'
+  = link_to 'Download deleted cases', deleted_filter_path(format: :csv), id: 'download_deleted_cases'
   | &nbsp;(.csv file)

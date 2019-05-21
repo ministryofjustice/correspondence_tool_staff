@@ -1,9 +1,9 @@
 module Cases
-  class SearchController < BaseController
-    before_action :set_url, only: [:index]
-    before_action :set_state_selector, only: [:index]
+  class SearchesController < BaseController
+    def show
+      set_url
+      @state_selector = StateSelector.new(params)
 
-    def index
       service = CaseSearchService.new(
         user: current_user,
         query_type: :search,
@@ -31,7 +31,7 @@ module Cases
       @filter_crumbs = @query.filter_crumbs
 
       respond_to do |format|
-        format.html { render :search }
+        format.html {render :search }
         format.csv { send_csv_cases 'search' }
       end
     end
@@ -42,10 +42,6 @@ module Cases
       params.fetch(:search_query, {}).permit(
         :search_text,
       )
-    end
-
-    def set_state_selector
-      @state_selector = StateSelector.new(params)
     end
   end
 end
