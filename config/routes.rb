@@ -220,7 +220,7 @@ Rails.application.routes.draw do
     get ':correspondence_type/case-details' => 'offender_sars#case_details', action: :new
     get ':correspondence_type/representative' => 'offender_sars#representative', action: :new
     get ':correspondence_type/information' => 'offender_sars#information', action: :new
-    get ':correspondence_type/date-received' => 'offender_sars#date_received', action: :new    
+    get ':correspondence_type/date-received' => 'offender_sars#date_received', action: :new
     get '', action: :new, on: :new
     get ':correspondence_type',
         action: :new,
@@ -366,10 +366,6 @@ Rails.application.routes.draw do
   get 'ping', to: 'heartbeat#ping', format: :json
 
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
-
-  # TEMP: Offender Sars Templates
-  get '/offender_sars' => 'offender_sars#demo'
-  get '/offender_sars/*step' => 'offender_sars#demo'
 
   root to: redirect('/users/sign_in')
 end
