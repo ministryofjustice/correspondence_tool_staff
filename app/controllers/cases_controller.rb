@@ -1193,7 +1193,7 @@ class CasesController < ApplicationController
 
     # TO-DO - This is here for development testing only
     # Remove when there is a proper user with the right team/roles for Offender SARs
-    types << CorrespondenceType.osar if FeatureSet.offender_sars.enabled?
+    types << CorrespondenceType.offender_sar if FeatureSet.offender_sars.enabled?
     @permitted_correspondence_types = types
   end
 

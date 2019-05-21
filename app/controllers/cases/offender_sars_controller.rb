@@ -12,7 +12,7 @@ class Cases::OffenderSarsController < CasesController
     prepare_new_case
     if @case # TODO - verify the submitted information is valid
       get_next_step(@case)
-      redirect_to osar_new_case_path + "/#{@case.current_step}"
+      redirect_to offender_sar_new_case_path + "/#{@case.current_step}"
     end
   end
 

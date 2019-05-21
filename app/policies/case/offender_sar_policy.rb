@@ -1,4 +1,4 @@
-class Case::OSARPolicy < Case::BasePolicy
+class Case::SAR::OffenderPolicy < Case::BasePolicy
 
   class Scope
 

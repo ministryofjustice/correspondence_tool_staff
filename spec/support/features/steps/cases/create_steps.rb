@@ -78,7 +78,7 @@ def create_sar_case_step(params={})
   Case::Base.find(kase_id)
 end
 
-def create_osar_case_step(_params={})
+def create_offender_sar_case_step(_params={})
   # flag_for_disclosure = params.delete(:flag_for_disclosure) { false }
 
   # Assume we are on a case listing page
@@ -87,15 +87,15 @@ def create_osar_case_step(_params={})
 
   expect(cases_new_page).to be_displayed
 
-  cases_new_page.create_link_for_correspondence('OSAR').click
+  cases_new_page.create_link_for_correspondence('OFFENDER').click
 
-  expect(cases_new_osar_subject_details_page).to be_displayed
+  expect(cases_new_offender_sar_subject_details_page).to be_displayed
   click_on "Continue"
-  expect(cases_new_osar_requester_details_page).to be_displayed
+  expect(cases_new_offender_sar_requester_details_page).to be_displayed
   click_on "Continue"
-  expect(cases_new_osar_requested_info_page).to be_displayed
+  expect(cases_new_offender_sar_requested_info_page).to be_displayed
   click_on "Continue"
-  expect(cases_new_osar_date_received_page).to be_displayed
+  expect(cases_new_offender_sar_date_received_page).to be_displayed
   # cases_new_sar_page.fill_in_case_details(params)
   # cases_new_sar_page.choose_flag_for_disclosure_specialists(
   #   flag_for_disclosure ? 'yes' : 'no'
