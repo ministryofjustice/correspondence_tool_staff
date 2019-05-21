@@ -64,6 +64,7 @@ feature 'removing a response from response details' do
           expect(uploaded_file.first.actions.remove['data-confirm'])
             .to eq "Are you sure you want to remove #{attached_response.filename}?"
           accept_alert do
+            scroll_to uploaded_file.first.actions.remove
             uploaded_file.first.actions.remove.click
           end
           sleep 0.25
@@ -156,6 +157,7 @@ feature 'removing a response from response details' do
           expect(uploaded_file.first.actions.remove['data-confirm'])
             .to eq "Are you sure you want to remove #{attached_response.filename}?"
           accept_alert do
+            scroll_to uploaded_file.first.actions.remove
             uploaded_file.first.actions.remove.click
           end
           cases_show_page.wait_until_case_attachments_visible count: 0
