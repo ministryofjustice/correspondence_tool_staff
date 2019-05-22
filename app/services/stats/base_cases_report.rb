@@ -25,7 +25,7 @@ module Stats
       case_scope
         .where(received_date: [@period_start..@period_end])
         .order(received_date: :asc)
-        .each { |kase| @stats.add(kase) }
+        .find_each(batch_size: 100) { |kase| @stats.add(kase) }
     end
 
     def self.persist_results?
