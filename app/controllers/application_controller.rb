@@ -66,6 +66,12 @@ class ApplicationController < ActionController::Base
     headers["Content-Type"] = 'text/csv; charset=utf-8'
     headers["Content-Disposition"] =
       %(attachment; filename="#{CSVGenerator.filename(action_string)}")
+
+    headers['X-Accel-Buffering'] = 'no'
+    headers["Cache-Control"] ||= "no-cache"
+    headers.delete("Content-Length")
+    response.status = 200
+
     self.response_body = CSVGenerator.new(@cases)
   end
 end
