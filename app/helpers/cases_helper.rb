@@ -37,7 +37,7 @@ module CasesHelper
               class: 'button'
     when :assign_to_new_team
       link_to 'Assign to another team',
-              assign_to_new_team_case_assignment_path(@case, @case .responder_assignment),
+              assign_to_new_team_case_assignment_path(@case, @case.responder_assignment),
               id: 'action--assign-new-team',
               class: 'button-secondary'
     when :add_responses
