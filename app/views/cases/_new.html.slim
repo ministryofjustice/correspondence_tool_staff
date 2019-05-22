@@ -5,10 +5,10 @@
         "#{pluralize(kase.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 - content_for :heading
-= t('.heading')
+  = t('.heading')
 
 - content_for :sub_heading
-= t4c(kase, '', 'sub_heading', case_type: kase.type_abbreviation)
+  = t4c(kase, '', 'sub_heading', case_type: kase.type_abbreviation)
 
 = render partial: 'layouts/header'
 

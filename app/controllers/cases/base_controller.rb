@@ -2,6 +2,7 @@
 require './lib/translate_for_case'
 
 class Cases::BaseController < ApplicationController
+
   def show
     set_decorated_case
     set_assignments
@@ -41,7 +42,6 @@ class Cases::BaseController < ApplicationController
       # TODO: Redirect to appropriate new here
       render :new
     else
-      # set_creatable_correspondence_types
       authorize Case::Base, :can_add_case?
       render :select_type
     end
@@ -69,7 +69,7 @@ class Cases::BaseController < ApplicationController
       else
         @case = @case.decorate
         @case_types = @correspondence_type.sub_classes.map(&:to_s)
-        @s3_direct_post = s3_uploader_for @case, 'requests'
+        @s3_direct_post = S3Uploader.for(@case, 'requests')
         render :new
       end
     rescue ActiveRecord::RecordNotUnique
@@ -85,7 +85,7 @@ class Cases::BaseController < ApplicationController
     authorize @case
 
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
-    @s3_direct_post = s3_uploader_for(@case, 'requests')
+    @s3_direct_post = S3Uploader.for(@case, 'requests')
     @case = @case.decorate
     render :edit
   end
@@ -198,10 +198,6 @@ class Cases::BaseController < ApplicationController
     end
   end
 
-  def s3_uploader_for(kase, upload_type)
-    S3Uploader.s3_direct_post_for_case(kase, upload_type)
-  end
-
   def set_correspondence_type(type)
     @correspondence_type = CorrespondenceType.find_by_abbreviation(type.upcase)
     @correspondence_type_key = type
@@ -272,7 +268,7 @@ class Cases::BaseController < ApplicationController
 
       @case = default_subclass.new.decorate
       @case_types = @correspondence_type.sub_classes.map(&:to_s)
-      @s3_direct_post = s3_uploader_for(@case, 'requests')
+      @s3_direct_post = S3Uploader.for(@case, 'requests')
     else
       flash.alert =
         helpers.t "cases.new.correspondence_type_errors.#{validation_result}",

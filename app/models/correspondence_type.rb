@@ -107,7 +107,7 @@ class CorrespondenceType < ApplicationRecord
   end
 
   def self.offender_sar
-    find_by_abbrevation! 'OFFENDER_SAR'
+    find_by_abbrevation! 'OFFENDER'
   end
 
   def self.ico

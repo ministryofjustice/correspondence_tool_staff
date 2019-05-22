@@ -1,18 +1,20 @@
 module Cases
-  class LinkController < BaseController
+  class LinksController < BaseController
     before_action :set_case, only: [
       :destroy_case_link,
       :execute_new_case_link,
       :new_case_link,
     ]
 
-    def new_case_link
+    # Was new_case_link
+    def new
       authorize @case
 
       @case = CaseLinkDecorator.decorate @case
     end
 
-    def execute_new_case_link
+    # Was execute_new_case_link
+    def create
       authorize @case, :new_case_link?
 
       link_case_number = params[:case][:linked_case_number]
@@ -34,7 +36,8 @@ module Cases
       end
     end
 
-    def destroy_case_link
+    # Was destroy_case_link
+    def destroy
       authorize @case, :new_case_link?
 
       linked_case_number = params[:linked_case_number]
@@ -52,7 +55,8 @@ module Cases
       end
     end
 
-    def new_linked_cases_for
+    # Was new_linked_cases_for
+    def index
       set_correspondence_type(params.fetch(:correspondence_type))
       @link_type = params[:link_type].strip
 

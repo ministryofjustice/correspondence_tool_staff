@@ -1,0 +1,6 @@
+<% content_for :page_title do %>
+  <%= t('page_title.create_case_page', case_type: kase.type_abbreviation) %>
+<% end %><%= GovukElementsErrorsHelper.error_summary kase.object, "#{pluralize(kase.errors.count, t('common.error'))} #{ t('common.summary_error')}", "")) %>
+<% content_for :heading do %><%= ::Temple::Utils.escape_html((t('.heading'))) %>
+<% end; content_for :sub_heading do %><%= ::Temple::Utils.escape_html((t4c(kase, '', 'sub_heading', case_type: kase.type_abbreviation))) %>
+<% end %><%= ::Temple::Utils.escape_html((render partial: 'layouts/header')) %>

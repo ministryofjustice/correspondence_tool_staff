@@ -17,12 +17,12 @@ module CreateCase
       else # including :error
         @case = @case.decorate
         @case_types = correspondence_type.sub_classes.map(&:to_s)
-        @s3_direct_post = s3_uploader_for @case, 'requests'
-        render :new
+        @s3_direct_post = S3Uploader.for(@case, 'requests')
+        render 'cases/new'
       end
     rescue ActiveRecord::RecordNotUnique
       flash.now[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
-      render :new
+      render 'cases/new'
     end
   end
 end

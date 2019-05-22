@@ -72,7 +72,7 @@ class GetCaseClassFromParamsService
   end
 
   def get_sar_case_class_from_params
-    Case::SAR
+    Case::SAR::Standard
   end
 
   def set_error_on_ico_case(kase)

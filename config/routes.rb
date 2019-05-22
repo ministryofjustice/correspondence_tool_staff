@@ -198,17 +198,17 @@ Rails.application.routes.draw do
 
   scope :cases, module: 'cases' do
     # Case creation per type
-    resources :fois, only: [:new, :create], controller: 'cases/foi', as: :case_foi_standards
-    resources :icos, only: [:new, :create], controller: 'cases/ico', as: :case_icos
-    resources :ico_fois, only: [:new, :create], controller: 'cases/ico_foi', as: :case_ico_fois
-    resources :ico_sars, only: [:new, :create], controller: 'cases/ico_sar', as: :case_ico_sars
-    resources :sars, only: [:new, :create], controller: 'cases/sar', as: :case_sars
+    resources :fois, only: [:new, :create], controller: 'foi', as: :case_foi_standards
+    resources :sars, only: [:new, :create], controller: 'sar', as: :case_sar_standards
+    resources :icos, only: [:new, :create], controller: 'ico', as: :case_icos
+    resources :ico_fois, only: [:new, :create], controller: 'ico_foi', as: :case_ico_fois
+    resources :ico_sars, only: [:new, :create], controller: 'ico_sar', as: :case_ico_sars
 
-    resources :overturned_ico_fois, only: [:create], controller: 'cases/overturned_foi', as: :case_overturned_fois do
+    resources :overturned_ico_fois, only: [:create], controller: 'overturned_foi', as: :case_overturned_fois do
       get :new, on: :member
     end
 
-    resources :overturned_ico_sars, only: [:create], controller: 'cases/overturned_sar', as: :case_overturned_sars do
+    resources :overturned_ico_sars, only: [:create], controller: 'overturned_sar', as: :case_overturned_sars do
       get :new, on: :member
     end
 
@@ -232,12 +232,9 @@ Rails.application.routes.draw do
   end
 
   resources :cases, controller: 'cases/base', except: [:index, :create] do
-    # General
     get :confirm_destroy, on: :member
 
-
     # Case behaviours
-
     resources :closure do
       get 'close', on: :member
       get 'edit_closure', on: :member, as: :edit_closure
@@ -251,7 +248,7 @@ Rails.application.routes.draw do
       patch 'confirm_respond', on: :member
     end
 
-    resources :clearance do
+    resources :clearances do
       patch 'unflag_for_clearance' => 'cases/base#unflag_for_clearance', on: :member
       patch 'unflag_taken_on_case_for_clearance' => 'cases/base#unflag_taken_on_case_for_clearance', on: :member
       patch 'flag_for_clearance' => 'cases/base#flag_for_clearance', on: :member
@@ -260,11 +257,12 @@ Rails.application.routes.draw do
       patch 'progress_for_clearance' => 'cases/base#progress_for_clearance', on: :member
     end
 
-    resources :link do
-      get 'new_linked_cases_for', on: :collection
-      get :new_case_link, on: :member
-      post :execute_new_case_link, on: :member
-      delete 'destroy_link/:linked_case_number' => 'cases/base#destroy_case_link' , on: :member, as: 'destroy_link_on'
+    #new_case_link_case GET    /cases/:id/new_case_link(.:format)                                   cases#new_case_link
+    resources :links, except: [:edit, :update] do
+      # get 'new_linked_cases_for', on: :collection
+      # get :new_case_link, on: :member
+      # post :execute_new_case_link, on: :member
+      # delete 'destroy_link/:linked_case_number' => 'cases/base#destroy_case_link' , on: :member, as: 'destroy_link_on'
     end
 
     resources :pit_extension, only: [:new, :create] do
@@ -307,9 +305,9 @@ Rails.application.routes.draw do
       get :assign_to_team, on: :collection, as: 'assign_to_responder_team'
     end
 
-    resources :case_attachments, path: 'attachments'
+    # resources :case_attachments, path: 'attachments'
 
-    resources :messages, only: :create
+    resources :messages, only: [:create]
 
     resources :case_attachments, path: 'attachments', only: [:destroy] do
       get 'download', on: :member
