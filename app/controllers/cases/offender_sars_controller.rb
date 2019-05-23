@@ -18,6 +18,25 @@ class Cases::OffenderSarsController < CasesController
 
   private
 
+  def prepare_new_case
+    valid_type = validate_correspondence_type(params[:correspondence_type].upcase)
+    if valid_type == :ok
+      set_correspondence_type(params[:correspondence_type])
+      default_subclass = @correspondence_type.sub_classes.first
+
+      authorize default_subclass, :can_add_case?
+
+      @case = default_subclass.new.decorate
+      @case_types = @correspondence_type.sub_classes.map(&:to_s)
+      @s3_direct_post = s3_uploader_for(@case, 'requests')
+    else
+      flash.alert =
+          helpers.t "cases.new.correspondence_type_errors.#{valid_type}",
+                    type: @correspondence_type_key
+      redirect_to new_case_path
+    end
+  end
+
   def get_next_step(obj)
     obj.current_step = params[:current_step]
     if params[:previous_button]
