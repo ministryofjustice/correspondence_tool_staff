@@ -596,7 +596,7 @@ DEPENDENCIES
   bullet
   business_time
   byebug
-  capybara
+  capybara (~> 3.20.2)
   codeclimate-test-reporter (~> 1.0)
   colorize
   config
