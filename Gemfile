@@ -72,7 +72,6 @@ group :test do
   gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
-  gem 'webdrivers', '~> 3.0'
   gem 'shoulda-matchers', '~> 4.0'
   gem 'site_prism'
   gem 'webdrivers', '~> 3.0'
@@ -95,7 +94,7 @@ group :development, :test do
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
   gem 'rubocop', '~> 0.70.0', require: false
-  gem 'rubocop-rspec', require: false
+  gem 'rubocop-rspec', '~> 1.33.0', require: false
   gem 'rubocop-performance', require: false
   gem 'ruby-progressbar'
   gem 'spring-commands-rspec'
