@@ -97,6 +97,7 @@ group :development, :test do
   gem 'rubocop-rspec', '~> 1.33.0', require: false
   gem 'rubocop-performance', require: false
   gem 'ruby-progressbar'
+  gem 'selenium-webdriver', '~> 3.142.2'
   gem 'spring-commands-rspec'
 end
 
