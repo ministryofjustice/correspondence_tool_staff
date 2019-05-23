@@ -67,6 +67,28 @@ FactoryBot.define do
       sar               { false }
     end
 
+    trait :r006 do
+      abbr              { 'R006' }
+      full_name         { 'Business unit map' }
+      class_name        { 'Stats::R006KiloMap' }
+      custom_report     { false }
+      standard_report   { false }
+      seq_id            { 9999 }
+      foi               { false }
+      sar               { false }
+    end
+
+    trait :r007 do
+      abbr              { 'R007' }
+      full_name         { 'Closed in last month report' }
+      class_name        { 'Stats::R007ClosedCasesReport' }
+      custom_report     { true }
+      standard_report   { false }
+      seq_id            { 500 }
+      foi               { false }
+      sar               { false }
+    end
+
     trait :r102 do
       abbr              { 'R102' }
       full_name         { 'Appeals performance report(SARs)' }
@@ -88,27 +110,16 @@ FactoryBot.define do
       foi               { false }
       sar               { true }
     end
+
+    trait :r105 do
+      abbr              { 'R105' }
+      full_name         { 'Monthly report (SARs)' }
+      class_name        { 'Stats::R105SarMonthlyPerformanceReport' }
+      custom_report     { true }
+      standard_report   { true }
+      seq_id            { 300 }
+      foi               { false }
+      sar               { true }
+    end
   end
-
-  factory :r105_report_type, parent: :report_type do
-    abbr { 'R105' }
-    full_name { 'Monthly report (SARs)' }
-    class_name { 'Stats::R105SarMonthlyPerformanceReport' }
-    custom_report { true }
-    standard_report { true }
-    foi { false }
-    sar { true }
-    seq_id { 300 }
-  end
-
-  factory :r006_business_unit_map, parent: :report_type do
-    abbr { 'R006' }
-    full_name { 'Business unit map' }
-    class_name { 'Stats::R006KiloMap' }
-    custom_report { false }
-    standard_report { false }
-    seq_id { 9999 }
-  end
-
-
 end

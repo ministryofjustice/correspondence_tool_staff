@@ -1,8 +1,11 @@
 class StatsController < ApplicationController
+  # @note (Mohammed Seedat): Interim solution to allow 'Closed Cases'
+  #   to be considered a custom reporting option
+  FauxCorrespondenceType = Struct.new(:abbreviation, :report_category_name)
 
   before_action :authorize_user
 
-  SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'.freeze
 
   def index
     @foi_reports = ReportType.standard.foi.order(:full_name)
@@ -22,9 +25,7 @@ class StatsController < ApplicationController
                 disposition: :attachment,
                 type: SPREADSHEET_CONTENT_TYPE
     else
-      report.run_and_update!
-      report.trim_older_reports
-
+      report.run_and_update!(user: current_user)
       send_data report.report_data, filename: report.report_type.filename('csv')
     end
   end
@@ -38,9 +39,6 @@ class StatsController < ApplicationController
   def custom
     @report = Report.new
     set_fields_for_custom_action
-    if FeatureSet.sars.disabled?
-      @report.correspondence_type = 'FOI'
-    end
   end
 
   def create_custom_report
@@ -48,25 +46,18 @@ class StatsController < ApplicationController
 
     if @report.valid?
       if @report.xlsx?
-        report_data = @report.run(@report.period_start, @report.period_end)
-
-        axlsx = create_spreadsheet(report_data)
-
-        send_data axlsx.to_stream.read,
-                  filename: @report.report_type.filename('xlsx'),
-                  disposition: :attachment,
-                  type: SPREADSHEET_CONTENT_TYPE
+        generate_custom_excel_report(@report)
       else
-        @report.run_and_update!(@report.period_start, @report.period_end)
-        flash[:download] =  "Your custom report has been created. #{view_context.link_to 'Download', stats_download_custom_report_path(id: @report.id)}"
-        redirect_to stats_custom_path
+        generate_custom_csv_report(@report)
       end
     else
       if create_custom_params[:correspondence_type].blank?
         @report.errors.add(:correspondence_type, :blank)
         @report.errors.delete(:report_type_id)
       end
+
       set_fields_for_custom_action
+
       render :custom
     end
   end
@@ -76,6 +67,10 @@ class StatsController < ApplicationController
     filename = report.report_type.filename('csv')
 
     send_data report.report_data, {filename: filename, disposition: :attachment}
+  end
+
+  def self.closed_cases_correspondence_type
+    FauxCorrespondenceType.new('CLOSED_CASES', 'Closed cases report')
   end
 
   private
@@ -120,7 +115,9 @@ class StatsController < ApplicationController
   def set_fields_for_custom_action
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
-    @correspondence_types = CorrespondenceType.by_report_category
+    @custom_reports_closed_cases = ReportType.closed_cases_report
+    @correspondence_types = CorrespondenceType.custom_reporting_types +
+      [self.class.closed_cases_correspondence_type]
   end
 
   def authorize_user
@@ -128,11 +125,52 @@ class StatsController < ApplicationController
   end
 
   def create_custom_params
-    params.require(:report).permit(
-      :correspondence_type,
-      :report_type_id,
-      :period_start_dd, :period_start_mm, :period_start_yyyy,
-      :period_end_dd, :period_end_mm, :period_end_yyyy,
+    params
+      .require(:report)
+      .permit(
+        :correspondence_type,
+        :report_type_id,
+        :period_start_dd, :period_start_mm, :period_start_yyyy,
+        :period_end_dd, :period_end_mm, :period_end_yyyy,
       )
+  end
+
+  def generate_custom_excel_report(report)
+    report_data = report.run(
+      period_start: report.period_start,
+      period_end: report.period_end
+    )
+
+    send_data(
+      create_spreadsheet(report_data).to_stream.read,
+      filename: report.report_type.filename('xlsx'),
+      disposition: :attachment,
+      type: SPREADSHEET_CONTENT_TYPE
+    )
+  end
+
+  def generate_custom_csv_report(report)
+    report.run_and_update!(
+      user: current_user,
+      period_start: report.period_start,
+      period_end: report.period_end
+    )
+
+    if report.immediate_download?
+      send_data(
+        report.report_data,
+        filename: report.report_type.filename('csv')
+      )
+    else
+      flash[:download] = [
+        t('stats.custom.success'),
+        view_context.link_to(
+          'Download',
+          stats_download_custom_report_path(id: report.id)
+        ),
+      ].join(' ')
+
+      redirect_to stats_custom_path
+    end
   end
 end

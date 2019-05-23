@@ -1,7 +1,7 @@
 require 'csv'
 
 module Stats
-  class R006KiloMap
+  class R006KiloMap < BaseReport
 
     COLUMN_HEADINGS = [
         'Business group',
@@ -24,7 +24,8 @@ module Stats
       end
     end
 
-    def initialize
+    # Note: Does not run parent constructor
+    def initialize(**)
       @result_set = [COLUMN_HEADINGS]
     end
 

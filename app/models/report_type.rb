@@ -29,6 +29,7 @@ class ReportType < ApplicationRecord
   scope :standard, -> { where( standard_report: true ) }
   scope :foi, -> { where( foi: true ) }
   scope :sar, -> { where( sar: true ) }
+  scope :closed_cases_report, -> { where(abbr: 'R007') }
 
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
