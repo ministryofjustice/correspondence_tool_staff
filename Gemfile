@@ -83,7 +83,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
-  gem 'bullet'
+  gem 'bullet', '~> 6.0.0'
   gem 'byebug', platform: :mri
   gem 'colorize'
   gem 'guard-jasmine'
