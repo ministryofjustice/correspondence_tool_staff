@@ -2,7 +2,6 @@ module Steppable
   extend ActiveSupport::Concern
 
   included do
-    # helper here
     attr_writer :current_step
   end
 

@@ -3,6 +3,8 @@ class Cases::OffenderSarsController < CasesController
     permitted_correspondence_types
     set_correspondence_type(params[:correspondence_type])
     prepare_new_case
+
+    @case = OffenderSARCaseForm.new(@case, params, session)
     @case.current_step = params[:step]
   end
 
@@ -10,7 +12,10 @@ class Cases::OffenderSarsController < CasesController
     permitted_correspondence_types
     set_correspondence_type(params[:correspondence_type])
     prepare_new_case
-    if @case # TODO - verify the submitted information is valid
+
+    @case = OffenderSARCaseForm.new(@case, params, session)
+    if @case.valid_params?
+      @case.session_persist_state # TODO - verify the submitted information is valid
       get_next_step(@case)
       redirect_to offender_sar_new_case_path + "/#{@case.current_step}"
     end
