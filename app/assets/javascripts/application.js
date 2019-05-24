@@ -19,8 +19,8 @@
 //= require moj
 //= require_tree ./modules
 
-// New design system require
-//= require govuk_frontend_rails
+// New design system...
+//= require govuk-frontend-2.11.0.min
 
 (function () {
   // Show and hide toggled content
@@ -41,7 +41,6 @@
   moj.init();
 }(GOVUK));
 
-// New design system JavaScript
-window.onload = function() {
-  window.GOVUKFrontend.initAll()
-};
+
+// New design system GovUK initialise
+window.GOVUKFrontend.initAll();
