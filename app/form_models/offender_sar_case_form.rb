@@ -8,8 +8,7 @@ class OffenderSARCaseForm
 
   #validate :email_addresses_must_match
 
-  def initialize(kase, params, session)
-    @params = case_params(params) || {}
+  def initialize(session)
     @session = session
     build_case_from_session
     self
@@ -30,9 +29,15 @@ class OffenderSARCaseForm
     true
   end
 
-  def session_persist_state
+  def session_persist_state(params)
     @session[:offender_sar_state] ||= {}
-    @session[:offender_sar_state] = @session[:offender_sar_state].merge @params
+    params ||= {}
+    @session[:offender_sar_state] = @session[:offender_sar_state].merge params
+  end
+
+  def assign_params(params)
+    params ||= {}
+    @case.assign_attributes(params)
   end
 
   def valid?
@@ -40,11 +45,9 @@ class OffenderSARCaseForm
     @case.valid? && super
   end
 
-  def valid_params?
-    valid = true
-    @params.each do |param, value|
-      valid = false if value.empty? # todo - can we farm this out to the model? e.g. @case.validate_attribute(param)
-    end
+  def valid_attributes?(params)
+    params ||= {}
+    @case.valid_attributes?(params)
   end
 
   private
@@ -53,9 +56,4 @@ class OffenderSARCaseForm
     values = @session[:offender_sar_state] || {}
     @case = Case::SAR::Offender.new(values).decorate
   end
-
-  def case_params(params)
-    params.require(:offender_sar_case_form).permit(:name, :email, :message) if params[:offender_sar_case_form].present?
-  end
-
 end

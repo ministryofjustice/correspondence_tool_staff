@@ -4,4 +4,6 @@ class Case::SAR::Offender < Case::SAR::Standard
       'OFFENDER'
     end
   end
+
+  validates :number, presence: true
 end

@@ -200,6 +200,7 @@ Rails.application.routes.draw do
 
 
   post 'cases/offender' => "cases/offender_sars#create", defaults: { correspondence_type: 'offender' }
+  get 'cases/offender/cancel' => "cases/offender_sars#cancel", defaults: { correspondence_type: 'offender' }
   resources :cases, except: :new do
     authenticated :user, -> (u) { u.manager? }  do
       root to: redirect(gnav.default_urls.manager), as: :manager_root

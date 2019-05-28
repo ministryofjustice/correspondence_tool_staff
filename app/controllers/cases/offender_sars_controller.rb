@@ -4,7 +4,7 @@ class Cases::OffenderSarsController < CasesController
     set_correspondence_type(params[:correspondence_type])
     prepare_new_case
 
-    @case = OffenderSARCaseForm.new(@case, params, session)
+    @case = OffenderSARCaseForm.new(session)
     @case.current_step = params[:step]
   end
 
@@ -13,12 +13,22 @@ class Cases::OffenderSarsController < CasesController
     set_correspondence_type(params[:correspondence_type])
     prepare_new_case
 
-    @case = OffenderSARCaseForm.new(@case, params, session)
-    if @case.valid_params? # TODO - verify the submitted information is valid
-      @case.session_persist_state
+    @case = OffenderSARCaseForm.new(session)
+
+    @case.assign_params(case_params) if case_params
+
+    if @case.valid_attributes?(case_params)
+      @case.session_persist_state(case_params)
       get_next_step(@case)
       redirect_to offender_sar_new_case_path + "/#{@case.current_step}"
+    else
+      render :new
     end
+  end
+
+  def cancel
+    session[:offender_sar_state] = nil
+    redirect_to offender_sar_new_case_path
   end
 
   private
@@ -54,5 +64,9 @@ class Cases::OffenderSarsController < CasesController
   def get_step_partial(current_step)
     step_name = current_step.split("/").first.tr('-', '_')
     "#{step_name}_step"
+  end
+
+  def case_params
+    params.require(:offender_sar_case_form).permit(:name, :email, :message) if params[:offender_sar_case_form].present?
   end
 end
