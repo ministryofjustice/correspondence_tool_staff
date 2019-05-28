@@ -14,8 +14,8 @@ class Cases::OffenderSarsController < CasesController
     prepare_new_case
 
     @case = OffenderSARCaseForm.new(@case, params, session)
-    if @case.valid_params?
-      @case.session_persist_state # TODO - verify the submitted information is valid
+    if @case.valid_params? # TODO - verify the submitted information is valid
+      @case.session_persist_state
       get_next_step(@case)
       redirect_to offender_sar_new_case_path + "/#{@case.current_step}"
     end

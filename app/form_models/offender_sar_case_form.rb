@@ -3,14 +3,15 @@ class OffenderSARCaseForm
   include Steppable
 
   delegate :id, :name, :email, :message, :type_abbreviation, :object, :errors, to: :@case
+
   attr_reader :case
+
   #validate :email_addresses_must_match
 
   def initialize(kase, params, session)
-    @case = kase
-    @params = case_params(params)
+    @params = case_params(params) || {}
     @session = session
-    foo
+    build_case_from_session
     self
   end
 
@@ -31,7 +32,7 @@ class OffenderSARCaseForm
 
   def session_persist_state
     @session[:offender_sar_state] ||= {}
-    @session[:offender_sar_state].merge @params
+    @session[:offender_sar_state] = @session[:offender_sar_state].merge @params
   end
 
   def valid?
@@ -47,6 +48,11 @@ class OffenderSARCaseForm
   end
 
   private
+
+  def build_case_from_session
+    values = @session[:offender_sar_state] || {}
+    @case = Case::SAR::Offender.new(values).decorate
+  end
 
   def case_params(params)
     params.require(:offender_sar_case_form).permit(:name, :email, :message) if params[:offender_sar_case_form].present?
