@@ -28,7 +28,7 @@ gem 'govuk_elements_rails',   '>= 3.1.2'
 gem 'govuk_elements_form_builder', '>= 1.2.0'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'humanize_boolean'
-gem 'jbuilder', '~> 2.8'
+gem 'jbuilder', '~> 2.9'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'jsonb_accessor', '~> 1.0.0.beta.1'
@@ -45,7 +45,7 @@ gem 'pg_search', '~> 2.1.7'
 gem 'pry-rails'
 gem 'puma', '~> 3.12'
 gem 'pundit', '~>2.0'
-gem 'rails', '~> 5.0'
+gem 'rails', '~> 5.0.7.2'
 gem 'rails-data-migrations', '~> 1.1.0'
 gem 'recursive-open-struct'
 gem 'sass-rails', '~> 5.0'
@@ -53,7 +53,7 @@ gem 'sentry-raven', '~> 2.9.0'
 gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
-gem 'sidekiq', '~> 5.2'
+gem 'sidekiq', '~> 5.2.7'
 gem 'sidekiq-logging-json', '~> 0.0.19'
 
 gem 'table_print'
@@ -68,35 +68,36 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'bcrypt', '~> 3.1.7'
 
 group :test do
-  gem 'capybara'
+  gem 'capybara', '~> 3.20.2'
   gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
-  gem 'webdrivers', '~> 3.0'
   gem 'shoulda-matchers', '~> 4.0'
-  gem 'site_prism'
+  gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 3.0'
 end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'annotate'
+  gem 'annotate', '~> 2.7.5'
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
-  gem 'bullet'
+  gem 'bullet', '~> 6.0.0'
   gem 'byebug', platform: :mri
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
-  gem 'parallel_tests'
+  gem 'parallel_tests', '~> 2.29'
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.67.2', require: false
-  gem 'rubocop-rspec', require: false
+  gem 'rubocop', '~> 0.70.0', require: false
+  gem 'rubocop-rspec', '~> 1.33.0', require: false
+  gem 'rubocop-performance', require: false
   gem 'ruby-progressbar'
+  gem 'selenium-webdriver', '~> 3.142.2'
   gem 'spring-commands-rspec'
 end
 
