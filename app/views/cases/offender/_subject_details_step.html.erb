@@ -1,6 +1,8 @@
 <h1>Who is the subject?</h1>
 
 <%= form_for @case, url: cases_offender_path do |f| %>
+  <%= f.text_field :name %>
+
   <%= f.text_field :email %>
 
   <input type="hidden" name="current_step" value="<%= @case.current_step %>" %>

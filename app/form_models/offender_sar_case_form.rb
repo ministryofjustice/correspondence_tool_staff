@@ -6,8 +6,6 @@ class OffenderSARCaseForm
 
   attr_reader :case
 
-  #validate :email_addresses_must_match
-
   def initialize(session)
     @session = session
     build_case_from_session
