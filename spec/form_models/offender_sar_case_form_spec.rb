@@ -50,13 +50,70 @@ RSpec.describe OffenderSARCaseForm, type: :model do
       expect(case_form.get_step_partial).to eq "subject_details_step"
     end
 
-    it "returns the second step as a partial filename" do
+    it "returns each subsequent step as a partial filename" do
+      expect(case_form.get_step_partial).to eq "subject_details_step"
       case_form.next_step
       expect(case_form.get_step_partial).to eq "requester_details_step"
       case_form.next_step
       expect(case_form.get_step_partial).to eq "requested_info_step"
       case_form.next_step
       expect(case_form.get_step_partial).to eq "date_received_step"
+    end
+  end
+
+  describe "#valid_attributes?" do
+    context "when params is empty" do
+      it "returns true" do
+        expect(case_form.valid_attributes?({})).to be true
+      end
+    end
+
+    context "when params is nil" do
+      let(:params) { nil }
+
+      it "returns true" do
+        expect(case_form.valid_attributes?(params)).to be true
+      end
+    end
+
+    context "when params is set and valid" do
+      let(:params) { ActionController::Parameters.new(
+        case_form: { name: "Bob Smithers", email: "bob@example.com" }
+      ).require(:case_form).permit(:name, :email)}
+
+      context "and the form model has the values merged" do
+        it "returns true" do
+          case_form.assign_params(params)
+
+          expect(case_form.valid_attributes?(params)).to be true
+        end
+      end
+
+      context "and the form model does not have the values merged" do
+        it "returns false" do
+          expect(case_form.valid_attributes?(params)).to be false
+        end
+      end
+    end
+
+    context "when params is set and not valid" do
+      let(:params) { ActionController::Parameters.new(
+        case_form: { name: "", email: "notanemail" }
+      ).require(:case_form).permit(:name, :email)}
+
+      context "and the form model has the values merged" do
+        it "returns false" do
+          case_form.assign_params(params)
+
+          expect(case_form.valid_attributes?(params)).to be false
+        end
+      end
+
+      context "and the form model does not have the values merged" do
+        it "returns false" do
+          expect(case_form.valid_attributes?(params)).to be false
+        end
+      end
     end
   end
 end
