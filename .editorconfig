@@ -1,6 +1,6 @@
 root = true
 
-[*.{erb,rb,js,scss}]
+[*.{erb,rb,js,scss,slim}]
 indent_style = space
 indent_size = 2
 end_of_line = lf

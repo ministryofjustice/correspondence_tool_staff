@@ -1,5 +1,8 @@
 // Override font size of gov-uk template (set to 62.5% then 160% on body)
+// These should be removable once full upgrade is done
+
 html { font-size: 100%; }
 body { font-size: 100%; }
+body table th, body table td { font-size: 1rem; }
 
 // Override styles here for new design system if needed (global fixes)

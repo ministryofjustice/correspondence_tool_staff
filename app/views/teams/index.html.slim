@@ -6,58 +6,54 @@
 
 = render partial: 'layouts/header'
 
-.grid-row
-  .column-full.table-container.container
-    table.report.table-font-xsmall
-      colgroup
-        col
-        col
-        col
-        col
-      thead
-        tr
-          th scope='col'
+.govuk-grid-row
+  .govuk-grid-column-full
+    table.govuk-table
+      caption.govuk-table__caption
+      thead.govuk-table__head
+        tr.govuk-table__row
+          th.govuk-table__header scope='col'
             | Name
-          th scope='col'
+          th.govuk-table__header scope='col'
             = t('team_leads.director_general')
-          th scope='col'
+          th.govuk-table__header scope='col'
             = t('team_types.directorate').pluralize
-          th scope='col'
+          th.govuk-table__header scope='col'
             = 'Actions'
-      tbody
+      tbody.govuk-table__body
         - @teams.active.each do |team|
-          tr
-            td aria-label="Name"
+          tr.govuk-table__row
+            td.govuk-table__cell aria-label="Name"
               = link_to team_path(team) do
                 span.visually-hidden
                   = "View the details of "
                 = team.name
-            td aria-label="#{ t('team_leads.director_general') }"
+            td.govuk-table__cell aria-label="#{ t('team_leads.director_general') }"
               = team.team_lead
-            td aria-label="#{ t('team_types.directorate').pluralize }"
+            td.govuk-table__cell aria-label="#{ t('team_types.directorate').pluralize }"
               = team.children.size
-            td aria-label="Actions"
+            td.govuk-table__cell aria-label="Actions"
               = link_to 'Edit', edit_team_path(team, team_type: 'bg'), { class: 'action--edit' }
 
     br
-    = link_to 'Add new business group', new_team_path(team_type: 'bg'), class: 'button'
+    = link_to 'Add new business group', new_team_path(team_type: 'bg'), class: 'govuk-button'
 
 
 section
-  h2.heading-large
+  h2.govuk-heading-l
     = "Business unit maps"
-  ul.report-list
+  ul
     - @reports.each do |report|
       li
-        h3.bold-medium
+        h3.govuk-heading-m
           = report.full_name
-        .grid-row
-          .column-two-thirds
+        .govuk-grid-row
+          .govuk-grid-column-two-thirds
             div
               = report.class_name.constantize.description
-            .report-list-download
+            p
               = link_to stats_download_path(id: report.id), target: '_blank' do
                 = 'Download report'
-                span.visually-hidden
+                span.govuk-visually-hidden.govuk-visually-hidden-focusable
                   = " - #{ report.full_name }"
               = ' (.csv file)'
