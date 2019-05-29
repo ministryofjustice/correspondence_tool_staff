@@ -2,7 +2,7 @@ class OffenderSARCaseForm
   include ActiveModel::Model
   include Steppable
 
-  delegate :id, :name, :email, :message, :type_abbreviation, :object, :errors, to: :@case
+  delegate :id, :name, :email, :message, :type_abbreviation, :object, :errors, :prison_number, to: :@case
 
   attr_reader :case
 

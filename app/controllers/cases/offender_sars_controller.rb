@@ -67,6 +67,6 @@ class Cases::OffenderSarsController < CasesController
   end
 
   def case_params
-    params.require(:offender_sar_case_form).permit(:name, :email, :message) if params[:offender_sar_case_form].present?
+    params.require(:offender_sar_case_form).permit(:name, :email, :message, :prison_number) if params[:offender_sar_case_form].present?
   end
 end

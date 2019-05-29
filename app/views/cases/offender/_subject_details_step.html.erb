@@ -5,6 +5,8 @@
 
   <%= f.text_field :email %>
 
+  <%= f.text_field :prison_number %>
+
   <input type="hidden" name="current_step" value="<%= @case.current_step %>" %>
   <%= f.submit "Continue" %>
 <% end %>
