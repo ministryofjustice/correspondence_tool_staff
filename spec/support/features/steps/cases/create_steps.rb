@@ -92,6 +92,7 @@ def create_offender_sar_case_step(_params={})
   expect(cases_new_offender_sar_subject_details_page).to be_displayed
   fill_in :offender_sar_case_form_name, with: "Bob Smith"
   fill_in :offender_sar_case_form_email, with: "bob@example.com"
+  fill_in :offender_sar_case_form_prison_number, with: "ABC123"
   click_on "Continue"
   expect(cases_new_offender_sar_requester_details_page).to be_displayed
   click_on "Continue"
