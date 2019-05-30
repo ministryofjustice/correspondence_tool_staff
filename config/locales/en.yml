@@ -708,6 +708,8 @@ en:
       heading: Add case details
       received_date: Date received at MOJ
       received_date_copy: "For example, 01 02 2018"
+      date_of_birth: Date of birth
+      date_of_birth_copy: "For example, 12 1 2007"
       case/ico:
         internal_deadline_copy: >-
           This should be calculated as half of the final deadline, or 10 working days if
