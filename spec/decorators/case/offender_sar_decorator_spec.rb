@@ -4,7 +4,6 @@ describe Case::SAR::OffenderDecorator do
   let(:offender_sar_case) { create(:offender_sar_case) }
 
   it 'instantiates the correct decorator' do
-    byebug
     expect(Case::SAR.new.decorate).to be_instance_of Case::SARDecorator
   end
 

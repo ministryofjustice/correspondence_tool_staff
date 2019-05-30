@@ -9,7 +9,6 @@ class OffenderSARCaseForm
   def initialize(session)
     @session = session
     build_case_from_session
-    self
   end
 
   def steps
