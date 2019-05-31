@@ -11,15 +11,17 @@ describe CasesController, type: :controller do
 
     context 'foi case' do
       let(:kase)  do
-        create :accepted_case,
-               name: 'Original Name',
-               email: 'original_email@moj.com',
-               message: 'Original message',
-               received_date: now.to_date,
-               postal_address: 'Original Postal Address',
-               subject: 'Original subject',
-               requester_type: 'member_of_the_public',
-               delivery_method: 'sent_by_email'
+        Timecop.freeze(now) do
+          create :accepted_case,
+                 name: 'Original Name',
+                 email: 'original_email@moj.com',
+                 message: 'Original message',
+                 received_date: now.to_date,
+                 postal_address: 'Original Postal Address',
+                 subject: 'Original subject',
+                 requester_type: 'member_of_the_public',
+                 delivery_method: 'sent_by_email'
+        end
       end
       let(:params) do
           {
@@ -119,17 +121,19 @@ describe CasesController, type: :controller do
 
     context 'sar case' do
       let(:kase)  do
-        create :accepted_sar,
-               name: 'Original Name',
-               email: 'original_email@moj.com',
-               message: 'origninal full case',
-               received_date: now.to_date,
-               postal_address: '',
-               subject: 'Original summary',
-               third_party: false,
-               reply_method: 'send_by_email',
-               subject_type: 'offender',
-               subject_full_name: 'original subject'
+        Timecop.freeze(now) do
+          create :accepted_sar,
+                 name: 'Original Name',
+                 email: 'original_email@moj.com',
+                 message: 'origninal full case',
+                 received_date: now.to_date,
+                 postal_address: '',
+                 subject: 'Original summary',
+                 third_party: false,
+                 reply_method: 'send_by_email',
+                 subject_type: 'offender',
+                 subject_full_name: 'original subject'
+        end
       end
       let(:params) do
         {
