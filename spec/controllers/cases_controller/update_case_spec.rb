@@ -76,9 +76,11 @@ describe CasesController, type: :controller do
           before(:each) { params['case_foi']['received_date_yyyy'] = '2017' }
 
           it 'does not update the record' do
-            original_kase = kase.clone
-            patch :update, params: params
-            expect(kase.reload).to eq original_kase
+            Timecop.freeze(now) do
+              original_kase = kase.clone
+              patch :update, params: params
+              expect(kase.reload).to eq original_kase
+            end
           end
 
           it 'has error details on the record' do
@@ -94,26 +96,32 @@ describe CasesController, type: :controller do
 
         context 'date draft compliant before received date' do
           it 'has error details on the record' do
-            kase.date_responded = 3.business_days.after(kase.received_date)
-            params['case_foi']['date_draft_compliant_yyyy'] = '2016'
-            patch :update, params: params
-            expect(assigns(:case).errors.full_messages).to eq ["Date compliant draft uploaded can't be before date received"]
+            Timecop.freeze(now) do
+              kase.date_responded = 3.business_days.after(kase.received_date)
+              params['case_foi']['date_draft_compliant_yyyy'] = '2016'
+              patch :update, params: params
+              expect(assigns(:case).errors.full_messages).to eq ["Date compliant draft uploaded can't be before date received"]
+            end
           end
         end
 
         context 'date draft compliant in future' do
           it 'has error details on the record' do
-            params['case_foi']['date_draft_compliant_yyyy'] = '2020'
-            patch :update, params: params
-            expect(assigns(:case).errors.full_messages).to eq ['Date compliant draft uploaded can\'t be in the future.']
+            Timecop.freeze(now) do
+              params['case_foi']['date_draft_compliant_yyyy'] = '2020'
+              patch :update, params: params
+              expect(assigns(:case).errors.full_messages).to eq ['Date compliant draft uploaded can\'t be in the future.']
+            end
           end
         end
 
         context 'date draft compliant before received date' do
           it 'has error details on the record' do
-            params['case_foi']['date_draft_compliant_yyyy'] = '2016'
-            patch :update, params: params
-            expect(assigns(:case).errors.full_messages).to eq ["Date compliant draft uploaded can't be before date received"]
+            Timecop.freeze(now) do
+              params['case_foi']['date_draft_compliant_yyyy'] = '2016'
+              patch :update, params: params
+              expect(assigns(:case).errors.full_messages).to eq ["Date compliant draft uploaded can't be before date received"]
+            end
           end
         end
       end
