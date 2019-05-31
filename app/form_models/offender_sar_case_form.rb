@@ -2,7 +2,7 @@ class OffenderSARCaseForm
   include ActiveModel::Model
   include Steppable
 
-  delegate :id, :name, :email, :message, :type_abbreviation, :object, :errors, :subject_full_name, :prison_number, :subject_aliases, :previous_case_numbers, :other_subject_ids, :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy, :subject_type, :flag_for_disclosure_specialists, :third_party, :name, :third_party_relationship, :postal_address, to: :@case
+  delegate :id, :name, :email, :message, :type_abbreviation, :object, :errors, :subject_full_name, :prison_number, :subject_aliases, :previous_case_numbers, :other_subject_ids, :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy, :subject_type, :flag_for_disclosure_specialists, :third_party, :name, :third_party_relationship, :postal_address, :message, :received_date_dd, :received_date_mm, :received_date_yyyy, to: :@case
 
   attr_reader :case
 

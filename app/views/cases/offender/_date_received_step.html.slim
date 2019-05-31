@@ -1,8 +1,13 @@
 h1 When was the SAR received?
 
 = form_for @case, url: cases_offender_path do |f|
-  
+
+  .form-group
+    = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.date_sar_received'),
+        form_hint_text: t('cases.new.date_sar_received_copy'),
+        today_button: {class: ''} }
+
   = link_to "Previous", "/cases/new/offender/requested-info"
-  input name="current_step" type="hidden" value=@case.current_step 
+  input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue'
