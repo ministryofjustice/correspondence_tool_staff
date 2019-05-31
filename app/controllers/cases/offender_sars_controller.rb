@@ -14,7 +14,7 @@ class Cases::OffenderSarsController < CasesController
     prepare_new_case
 
     @case = OffenderSARCaseForm.new(session)
-    byebug
+    
     @case.assign_params(case_params) if case_params
 
     if @case.valid_attributes?(case_params)

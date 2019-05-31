@@ -1,0 +1,8 @@
+h1 When was the SAR received?
+
+= form_for @case, url: cases_offender_path do |f|
+  
+  = link_to "Previous", "/cases/new/offender/requested-info"
+  input name="current_step" type="hidden" value=@case.current_step 
+
+  = f.submit 'Continue'
