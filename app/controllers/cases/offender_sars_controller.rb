@@ -14,7 +14,7 @@ class Cases::OffenderSarsController < CasesController
     prepare_new_case
 
     @case = OffenderSARCaseForm.new(session)
-
+    byebug
     @case.assign_params(case_params) if case_params
 
     if @case.valid_attributes?(case_params)
@@ -67,6 +67,6 @@ class Cases::OffenderSarsController < CasesController
   end
 
   def case_params
-    params.require(:offender_sar_case_form).permit(:name, :email, :message, :subect_full_name, :prison_number, :subject_aliases, :previous_case_numbers, :other_subject_ids, :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy, :subject_type, :flag_for_disclosure_specialists, :third_party, :name, :third_party_relationship, :postal_address) if params[:offender_sar_case_form].present?
+    params.require(:offender_sar_case_form).permit(:name, :email, :message, :subject_full_name, :prison_number, :subject_aliases, :previous_case_numbers, :other_subject_ids, :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy, :subject_type, :flag_for_disclosure_specialists, :third_party, :name, :third_party_relationship, :postal_address) if params[:offender_sar_case_form].present?
   end
 end

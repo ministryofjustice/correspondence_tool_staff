@@ -15,6 +15,12 @@ class Case::SAR::Offender < Case::SAR::Standard
                   other_subject_ids: :string,
                   date_of_birth_dd: :string,
                   date_of_birth_mm: :string,
-                  date_of_birth_yyyy: :string
+                  date_of_birth_yyyy: :string,
+                  subject_type: :string
+
+  enum subject_type: {
+     offender: 'offender',
+     non_offender: 'non_offender',
+   }
 
 end

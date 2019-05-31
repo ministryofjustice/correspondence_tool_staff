@@ -1,0 +1,15 @@
+= form_for @case, url: cases_offender_path do |f|
+  
+  #third-party
+    = f.radio_button_fieldset(:third_party) do |fieldset|
+      - fieldset.radio_input(true, text_method: :humanize)
+        = f.text_field :name
+        = f.text_field :third_party_relationship
+      - fieldset.radio_input(false, text_method: :humanize)
+
+  = f.text_area :postal_address, {rows: 4}
+  
+  = link_to "Previous", "/cases/new/offender"
+  input name="current_step" type="hidden" value=@case.current_step 
+
+  = f.submit 'Continue'
