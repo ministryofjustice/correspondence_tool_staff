@@ -90,15 +90,38 @@ def create_offender_sar_case_step(_params={})
   cases_new_page.create_link_for_correspondence('OFFENDER').click
 
   expect(cases_new_offender_sar_subject_details_page).to be_displayed
-  fill_in :offender_sar_case_form_name, with: "Bob Smith"
-  fill_in :offender_sar_case_form_email, with: "bob@example.com"
+  fill_in :offender_sar_case_form_subject_full_name, with: "Bob Smith"
+  # fill_in :offender_sar_case_form_email, with: "bob@example.com"
   fill_in :offender_sar_case_form_prison_number, with: "ABC123"
+  fill_in :offender_sar_case_form_subject_aliases, with: "Bobby"
+  fill_in :offender_sar_case_form_previous_case_numbers, with: "12345"
+  fill_in :offender_sar_case_form_other_subject_ids, with: "1,2,3"
+  fill_in :offender_sar_case_form_date_of_birth_dd, with: "10"
+  fill_in :offender_sar_case_form_date_of_birth_mm, with: "10"
+  fill_in :offender_sar_case_form_date_of_birth_yyyy, with: "2000"
+  #choose :offender_sar_case_form_subject_type_offender
+  choose('offender_sar_case_form_subject_type_offender', visible: false)
+  choose('offender_sar_case_form_flag_for_disclosure_specialists_no', visible: false)
   click_on "Continue"
   expect(cases_new_offender_sar_requester_details_page).to be_displayed
+
+  choose('offender_sar_case_form_third_party_true', visible: false)
+  fill_in :offender_sar_case_form_name, with: "John Ali"
+  fill_in :offender_sar_case_form_third_party_relationship, with: "Father"
+  fill_in :offender_sar_case_form_postal_address, with: "66A Eltham Road, Nottingham, NG2 5AA"
   click_on "Continue"
   expect(cases_new_offender_sar_requested_info_page).to be_displayed
+
+
+  fill_in :offender_sar_case_form_message, with: "Offender Sar Case, urgent, needs to be looked at, please! like now? while we're young, today!"
   click_on "Continue"
   expect(cases_new_offender_sar_date_received_page).to be_displayed
+
+  fill_in :offender_sar_case_form_received_date_dd, with: "21"
+  fill_in :offender_sar_case_form_received_date_mm, with: "05"
+  fill_in :offender_sar_case_form_received_date_yyyy, with: "2019"
+  click_on "Continue"
+
   # cases_new_sar_page.fill_in_case_details(params)
   # cases_new_sar_page.choose_flag_for_disclosure_specialists(
   #   flag_for_disclosure ? 'yes' : 'no'
