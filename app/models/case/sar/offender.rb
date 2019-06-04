@@ -5,9 +5,8 @@ class Case::SAR::Offender < Case::SAR::Standard
     end
   end
 
-  validates :number, presence: true
   validates :prison_number, presence: true
-
+  validates_presence_of :name, :third_party_relationship, if: -> { third_party }
   jsonb_accessor :properties,
                   prison_number: :string,
                   subject_aliases: :string,
@@ -19,11 +18,16 @@ class Case::SAR::Offender < Case::SAR::Standard
                   subject_type: :string,
                   received_date_dd: :string,
                   received_date_mm: :string,
-                  received_date_yyyy: :string
+                  received_date_yyyy: :string,
+                  reply_method: :string
 
   enum subject_type: {
      offender: 'offender',
      non_offender: 'non_offender',
    }
+  enum reply_method: {
+         send_by_post:  'send_by_post',
+         send_by_email: 'send_by_email',
+       }
 
 end

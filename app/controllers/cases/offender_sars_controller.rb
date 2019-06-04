@@ -15,9 +15,19 @@ class Cases::OffenderSarsController < CasesController
 
     @case = OffenderSARCaseForm.new(session)
 
+    @case.case.creator = current_user #to-do Remove when we use the case create service
+    @case.case.subject = "Offender SAR" #to-do Remove when we use the case create service
+
     @case.assign_params(case_params) if case_params
+    @case.current_step = params[:current_step]
 
     if @case.valid_attributes?(case_params)
+      if @case.valid?
+        if @case.save
+          session[:offender_sar_state] = nil
+          redirect_to case_path(@case.case) and return
+        end
+      end
       @case.session_persist_state(case_params)
       get_next_step(@case)
       redirect_to offender_sar_new_case_path + "/#{@case.current_step}"
@@ -39,7 +49,8 @@ class Cases::OffenderSarsController < CasesController
       set_correspondence_type(params[:correspondence_type])
       default_subclass = @correspondence_type.sub_classes.first
 
-      authorize default_subclass, :can_add_case?
+      authorize default_subclass,
+      :can_add_case?
 
       @case = default_subclass.new.decorate
       @case_types = @correspondence_type.sub_classes.map(&:to_s)
@@ -67,6 +78,30 @@ class Cases::OffenderSarsController < CasesController
   end
 
   def case_params
-    params.require(:offender_sar_case_form).permit(:name, :email, :message, :subject_full_name, :prison_number, :subject_aliases, :previous_case_numbers, :other_subject_ids, :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy, :subject_type, :flag_for_disclosure_specialists, :third_party, :name, :third_party_relationship, :postal_address, :received_date_dd, :received_date_mm, :received_date_yyyy) if params[:offender_sar_case_form].present?
+    params.require(:offender_sar_case_form).permit(
+      :name,
+      :email,
+      :message,
+      :subject_full_name,
+      :prison_number,
+      :subject_aliases,
+      :previous_case_numbers,
+      :other_subject_ids,
+      :date_of_birth_dd,
+      :date_of_birth_mm,
+      :date_of_birth_yyyy,
+      :subject_type,
+      :flag_for_disclosure_specialists,
+      :third_party,
+      :name,
+      :third_party_relationship,
+      :postal_address,
+      :received_date_dd,
+      :received_date_mm,
+      :received_date_yyyy,
+      :reply_method,
+      :delivery_method,
+
+    ) if params[:offender_sar_case_form].present?
   end
 end
