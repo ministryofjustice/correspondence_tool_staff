@@ -1,13 +1,5 @@
 = form_for @case, url: cases_offender_path do |f|
 
-  = params.inspect
-
-  p Send by email
-  = @case.send_by_email?
-
-  p Send by post
-  = @case.send_by_post?
-
   #third-party
     = f.radio_button_fieldset(:third_party) do |fieldset|
       - fieldset.radio_input(true, text_method: :humanize)

@@ -108,6 +108,11 @@ def create_offender_sar_case_step(_params={})
   choose('offender_sar_case_form_third_party_true', visible: false)
   fill_in :offender_sar_case_form_name, with: "John Ali"
   fill_in :offender_sar_case_form_third_party_relationship, with: "Father"
+
+  choose('offender_sar_case_form_reply_method_send_by_email', visible: false)
+  fill_in :offender_sar_case_form_email, with: "bob@example.com"
+
+  choose('offender_sar_case_form_reply_method_send_by_post', visible: false)
   fill_in :offender_sar_case_form_postal_address, with: "66A Eltham Road, Nottingham, NG2 5AA"
   click_on "Continue"
   expect(cases_new_offender_sar_requested_info_page).to be_displayed

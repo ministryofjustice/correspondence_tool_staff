@@ -254,6 +254,10 @@ en:
     fieldset:
       bypass_approval_manager:
         press_office_approval: 'Does Press office need to clear this response?'
+      offender_sar_case_form:
+        subject_type: "What is their relationship to the MOJ?"
+        flag_for_disclosure_specialists: "Flag as high profile case?"
+
 
       assignment:
         state: What do you want to do?
@@ -413,6 +417,19 @@ en:
         received_date: "Received at MOJ"
         subject: "Case summary"
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
+      offender_sar_case_form:
+        subject_full_name: "Full name of data subject"
+        prison_number: "What is the subject's relevant prison number?"
+        subject_aliases: "Subject's alias if applicable"
+        previous_case_numbers: "Previous SAR cases"
+        other_subject_ids: "Subject’s PNC or other ID numbers"
+
+        email: "Recipient email address"
+        message: Full case details
+        name: "Full name of the requestor"
+        postal_address: "Recipient postal address"
+        received_date: "Received at MOJ"
+        subject: "Case summary"
       feedback:
         comment: Help make this service better
       search_query:
@@ -432,6 +449,13 @@ en:
         edit_case: 'Edit case details'
         edit_closure: 'Edit closure details'
 
+    hint:
+      offender_sar_case_form:
+        prison_number: "You can include multiple numbers separated by comma, space or paragraph return."
+        subject_aliases: "You can include multiple aliases separated by comma, space or paragraph return."
+        previous_case_numbers: "You can include multiple cases separated by comma, space or paragraph return."
+        other_subject_ids: "You can include multiple cases separated by comma, space or paragraph return."
+        date_of_birth: "For example, 12 11 2007"
   alerts:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>
@@ -561,11 +585,6 @@ en:
     summary_error: 'prevented this form from being submitted:'
     close: Close case
 
-  steps:
-    new:
-      heading: Who is the subject?
-      # sub_heading: Create a case
-
   admin:
     cases:
       index:
@@ -595,6 +614,7 @@ en:
       select_type:
         heading: Choose correspondence type
         sub_heading: Admin
+
     users:
       index:
         cases: Cases
@@ -708,10 +728,6 @@ en:
       heading: Add case details
       received_date: Date received at MOJ
       received_date_copy: "For example, 01 02 2018"
-      date_of_birth: Date of birth
-      date_of_birth_copy: "For example, 12 1 2007"
-      date_sar_received: When was the SAR received?
-      date_sar_received_copy: "For example, 12 11 2007"
       case/ico:
         internal_deadline_copy: >-
           This should be calculated as half of the final deadline, or 10 working days if
