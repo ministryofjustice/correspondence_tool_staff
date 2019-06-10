@@ -91,6 +91,7 @@ describe TeamDeletionService do
 
         context 'has closed cases but no open' do
           it 'returns :ok and soft deletes the team' do
+            DbHousekeeping.clean(seed: true)
             closed_case = create :closed_case
             bu = closed_case.responding_team
             bu.responders.destroy_all
