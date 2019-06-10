@@ -78,30 +78,18 @@ def create_sar_case_step(params={})
   Case::Base.find(kase_id)
 end
 
-def create_offender_sar_case_step(_params={})
+def create_offender_sar_case_step(params={})
   # flag_for_disclosure = params.delete(:flag_for_disclosure) { false }
 
   # Assume we are on a case listing page
   expect(cases_page).to have_new_case_button
   cases_page.new_case_button.click
-
   expect(cases_new_page).to be_displayed
 
   cases_new_page.create_link_for_correspondence('OFFENDER').click
-
   expect(cases_new_offender_sar_subject_details_page).to be_displayed
-  fill_in :offender_sar_case_form_subject_full_name, with: "Bob Smith"
-  # fill_in :offender_sar_case_form_email, with: "bob@example.com"
-  fill_in :offender_sar_case_form_prison_number, with: "ABC123"
-  fill_in :offender_sar_case_form_subject_aliases, with: "Bobby"
-  fill_in :offender_sar_case_form_previous_case_numbers, with: "12345"
-  fill_in :offender_sar_case_form_other_subject_ids, with: "1,2,3"
-  fill_in :offender_sar_case_form_date_of_birth_dd, with: "10"
-  fill_in :offender_sar_case_form_date_of_birth_mm, with: "10"
-  fill_in :offender_sar_case_form_date_of_birth_yyyy, with: "2000"
-  #choose :offender_sar_case_form_subject_type_offender
-  choose('offender_sar_case_form_subject_type_offender', visible: false)
-  choose('offender_sar_case_form_flag_for_disclosure_specialists_no', visible: false)
+
+  cases_new_offender_sar_subject_details_page.fill_in_case_details(params)
   click_on "Continue"
   expect(cases_new_offender_sar_requester_details_page).to be_displayed
 

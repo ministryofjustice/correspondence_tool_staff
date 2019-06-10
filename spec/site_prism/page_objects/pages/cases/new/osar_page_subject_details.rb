@@ -16,6 +16,19 @@ module PageObjects
 
           element :submit_button, '.button'
 
+          def fill_in_case_details(_params={})
+            fill_in :offender_sar_case_form_subject_full_name, with: "Bob Smith"
+            fill_in :offender_sar_case_form_prison_number, with: "ABC123"
+            fill_in :offender_sar_case_form_subject_aliases, with: "Bobby"
+            fill_in :offender_sar_case_form_previous_case_numbers, with: "12345"
+            fill_in :offender_sar_case_form_other_subject_ids, with: "1,2,3"
+            fill_in :offender_sar_case_form_date_of_birth_dd, with: "10"
+            fill_in :offender_sar_case_form_date_of_birth_mm, with: "10"
+            fill_in :offender_sar_case_form_date_of_birth_yyyy, with: "2000"
+            choose('offender_sar_case_form_subject_type_offender', visible: false)
+            choose('offender_sar_case_form_flag_for_disclosure_specialists_no', visible: false)
+          end
+
           # def set_received_date(received_date)
           #   date_received_day.set(received_date.day)
           #   date_received_month.set(received_date.month)
