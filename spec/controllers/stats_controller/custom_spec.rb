@@ -39,7 +39,7 @@ RSpec.describe StatsController, type: :controller do
 
     it 'sets @correspondence_types' do
       get :custom
-      expected = %w[FOI SAR CLOSED_CASES]
+      expected = %w[FOI OFFENDER SAR CLOSED_CASES]
       expect(assigns(:correspondence_types).map(&:abbreviation)).to eq expected
     end
 
