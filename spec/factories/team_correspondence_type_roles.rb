@@ -50,6 +50,10 @@ FactoryBot.define do
       # category_id   { find_or_create(:category, :sar).id }
     end
 
+    trait :offender_sar do
+      correspondence_type   { find_or_create :offender_sar_correspondence_type }
+    end
+
 
   end
 end

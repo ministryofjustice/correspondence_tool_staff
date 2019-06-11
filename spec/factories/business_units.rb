@@ -40,6 +40,7 @@ FactoryBot.define do
                              find_or_create(:foi_correspondence_type),
                              find_or_create(:sar_correspondence_type),
                              find_or_create(:ico_correspondence_type),
+                             find_or_create(:offender_sar_correspondence_type),
                            ] }
     directorate         { find_or_create :directorate }
     properties          { [find_or_create(:team_property, :area)] }
@@ -108,6 +109,13 @@ FactoryBot.define do
     code { Settings.foi_cases.default_managing_team }
     directorate { find_or_create :dacu_directorate }
     managers { [find_or_create(:disclosure_bmt_user, :orphan)] }
+  end
+
+  factory :team_branston, parent: :managing_team do
+    name { 'Branston Registry' }
+    email { 'branston@localhost' }
+    directorate { find_or_create :dacu_directorate }
+    managers { [find_or_create(:branston_user, :orphan)] }
   end
 
   factory :team_disclosure, aliases: [:team_dacu_disclosure], parent: :approving_team do
