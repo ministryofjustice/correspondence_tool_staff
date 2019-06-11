@@ -1,0 +1,27 @@
+= form_for @case, url: cases_offender_path do |f|
+
+  #third-party
+    = f.radio_button_fieldset(:third_party) do |fieldset|
+      - fieldset.radio_input(true, text_method: :humanize)
+        = f.text_field :name
+        = f.text_field :third_party_relationship
+      - fieldset.radio_input(false, text_method: :humanize)
+
+  h2.heading-medium How and where should the information be sent?
+  = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
+    - fieldset.radio_input('send_by_email',
+                           panel_id: 'reply_method_send_by_email_panel')
+    - fieldset.revealing_panel(:reply_method_send_by_email_panel) do |panel|
+      - panel.email_field :email
+
+    - fieldset.radio_input('send_by_post',
+                           panel_id: 'reply_method_send_by_post_panel')
+
+    - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
+      - panel.text_area :postal_address, {rows: 4}
+
+  p
+    = link_to "Previous", "/cases/new/offender"
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', class: 'button'

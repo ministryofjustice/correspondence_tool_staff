@@ -47,6 +47,7 @@ module Stats
 
     context 'data' do
       before(:all) do
+        DbHousekeeping.clean
         @bizgrp_ab = create :business_group, name: 'BGAB'
         @dir_a     = create :directorate, name: 'DRA', business_group: @bizgrp_ab
         @dir_b     = create :directorate, name: 'DRB', business_group: @bizgrp_ab
