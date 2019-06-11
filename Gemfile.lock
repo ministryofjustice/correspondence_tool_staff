@@ -20,41 +20,41 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    actioncable (5.0.7)
-      actionpack (= 5.0.7)
+    actioncable (5.0.7.2)
+      actionpack (= 5.0.7.2)
       nio4r (>= 1.2, < 3.0)
       websocket-driver (~> 0.6.1)
-    actionmailer (5.0.7)
-      actionpack (= 5.0.7)
-      actionview (= 5.0.7)
-      activejob (= 5.0.7)
+    actionmailer (5.0.7.2)
+      actionpack (= 5.0.7.2)
+      actionview (= 5.0.7.2)
+      activejob (= 5.0.7.2)
       mail (~> 2.5, >= 2.5.4)
       rails-dom-testing (~> 2.0)
-    actionpack (5.0.7)
-      actionview (= 5.0.7)
-      activesupport (= 5.0.7)
+    actionpack (5.0.7.2)
+      actionview (= 5.0.7.2)
+      activesupport (= 5.0.7.2)
       rack (~> 2.0)
       rack-test (~> 0.6.3)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
-    actionview (5.0.7)
-      activesupport (= 5.0.7)
+    actionview (5.0.7.2)
+      activesupport (= 5.0.7.2)
       builder (~> 3.1)
       erubis (~> 2.7.0)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    activejob (5.0.7)
-      activesupport (= 5.0.7)
+    activejob (5.0.7.2)
+      activesupport (= 5.0.7.2)
       globalid (>= 0.3.6)
-    activemodel (5.0.7)
-      activesupport (= 5.0.7)
+    activemodel (5.0.7.2)
+      activesupport (= 5.0.7.2)
     activemodel-serializers-xml (1.0.2)
       activemodel (> 5.x)
       activesupport (> 5.x)
       builder (~> 3.1)
-    activerecord (5.0.7)
-      activemodel (= 5.0.7)
-      activesupport (= 5.0.7)
+    activerecord (5.0.7.2)
+      activemodel (= 5.0.7.2)
+      activesupport (= 5.0.7.2)
       arel (~> 7.0)
     activerecord-session_store (1.1.3)
       actionpack (>= 4.0)
@@ -62,7 +62,7 @@ GEM
       multi_json (~> 1.11, >= 1.11.2)
       rack (>= 1.5.2, < 3)
       railties (>= 4.0)
-    activesupport (5.0.7)
+    activesupport (5.0.7.2)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
@@ -71,8 +71,8 @@ GEM
       activerecord (>= 3.0.0)
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
-    annotate (2.7.4)
-      activerecord (>= 3.2, < 6.0)
+    annotate (2.7.5)
+      activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 13.0)
     arel (7.1.4)
     ast (2.4.0)
@@ -103,14 +103,14 @@ GEM
     browser_sync_rails (0.1.1)
       rails
     builder (3.2.3)
-    bullet (5.9.0)
+    bullet (6.0.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     business_time (0.9.3)
       activesupport (>= 3.2.0)
       tzinfo
     byebug (11.0.1)
-    capybara (3.17.0)
+    capybara (3.20.2)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (~> 1.8)
@@ -191,7 +191,7 @@ GEM
       i18n (>= 0.7)
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
-    ffi (1.10.0)
+    ffi (1.11.1)
     foreman (0.85.0)
       thor (~> 0.19.1)
     formatador (0.2.5)
@@ -269,9 +269,8 @@ GEM
       rack (>= 1.2.1)
       rake
     jasmine-core (3.2.0)
-    jbuilder (2.8.0)
+    jbuilder (2.9.1)
       activesupport (>= 4.2.0)
-      multi_json (>= 1.2)
     jmespath (1.3.1)
     jquery-rails (4.3.3)
       rails-dom-testing (>= 1, < 3)
@@ -358,9 +357,9 @@ GEM
       activerecord (>= 4.2, < 6.1)
       request_store (~> 1.1)
     parallel (1.17.0)
-    parallel_tests (2.28.0)
+    parallel_tests (2.29.0)
       parallel
-    parser (2.6.2.1)
+    parser (2.6.3.0)
       ast (~> 2.4.0)
     pg (1.1.4)
     pg_search (2.1.7)
@@ -375,7 +374,6 @@ GEM
       pry (~> 0.10)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-    psych (3.1.0)
     public_suffix (3.0.3)
     puma (3.12.1)
     pundit (2.0.1)
@@ -385,17 +383,17 @@ GEM
       rack
     rack-test (0.6.3)
       rack (>= 1.0)
-    rails (5.0.7)
-      actioncable (= 5.0.7)
-      actionmailer (= 5.0.7)
-      actionpack (= 5.0.7)
-      actionview (= 5.0.7)
-      activejob (= 5.0.7)
-      activemodel (= 5.0.7)
-      activerecord (= 5.0.7)
-      activesupport (= 5.0.7)
+    rails (5.0.7.2)
+      actioncable (= 5.0.7.2)
+      actionmailer (= 5.0.7.2)
+      actionpack (= 5.0.7.2)
+      actionview (= 5.0.7.2)
+      activejob (= 5.0.7.2)
+      activemodel (= 5.0.7.2)
+      activerecord (= 5.0.7.2)
+      activesupport (= 5.0.7.2)
       bundler (>= 1.3.0)
-      railties (= 5.0.7)
+      railties (= 5.0.7.2)
       sprockets-rails (>= 2.0.0)
     rails-controller-testing (1.0.4)
       actionpack (>= 5.0.1.x)
@@ -411,9 +409,9 @@ GEM
     rails-i18n (5.1.3)
       i18n (>= 0.7, < 2)
       railties (>= 5.0, < 6)
-    railties (5.0.7)
-      actionpack (= 5.0.7)
-      activesupport (= 5.0.7)
+    railties (5.0.7.2)
+      actionpack (= 5.0.7.2)
+      activesupport (= 5.0.7.2)
       method_source
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
@@ -423,8 +421,8 @@ GEM
     rb-inotify (0.10.0)
       ffi (~> 1.0)
     recursive-open-struct (1.1.0)
-    redis (4.1.0)
-    regexp_parser (1.4.0)
+    redis (4.1.1)
+    regexp_parser (1.5.0)
     request_store (1.4.1)
       rack (>= 1.4)
     responders (2.4.1)
@@ -453,15 +451,16 @@ GEM
       rspec-mocks (~> 3.8.0)
       rspec-support (~> 3.8.0)
     rspec-support (3.8.0)
-    rubocop (0.67.2)
+    rubocop (0.70.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5, != 2.5.1.1)
-      psych (>= 3.1.0)
+      parser (>= 2.6)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 1.4.0, < 1.6)
-    rubocop-rspec (1.32.0)
+      unicode-display_width (>= 1.4.0, < 1.7)
+    rubocop-performance (1.3.0)
+      rubocop (>= 0.68.0)
+    rubocop-rspec (1.33.0)
       rubocop (>= 0.60.0)
     ruby-progressbar (1.10.0)
     ruby_dep (1.5.0)
@@ -488,7 +487,7 @@ GEM
       activerecord (>= 4.2, < 5.3)
       its-it (~> 1.2)
       schema_plus_core
-    selenium-webdriver (3.141.5926)
+    selenium-webdriver (3.142.3)
       childprocess (>= 0.5, < 2.0)
       rubyzip (~> 1.2, >= 1.2.2)
     sentry-raven (2.9.0)
@@ -498,7 +497,7 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (4.0.1)
       activesupport (>= 4.2.0)
-    sidekiq (5.2.6)
+    sidekiq (5.2.7)
       connection_pool (~> 2.2, >= 2.2.2)
       rack (>= 1.5.0)
       rack-protection (>= 1.5.0)
@@ -524,6 +523,8 @@ GEM
       ffi
     spring (2.0.2)
       activesupport (>= 4.2)
+    spring-commands-rspec (1.0.4)
+      spring (>= 0.9.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
       spring (>= 1.2, < 3.0)
@@ -555,7 +556,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.4)
-    unicode-display_width (1.5.0)
+    unicode-display_width (1.6.0)
     uniform_notifier (1.12.1)
     warden (1.2.8)
       rack (>= 2.0.6)
@@ -564,7 +565,7 @@ GEM
       activemodel (>= 5.0)
       bindex (>= 0.4.0)
       railties (>= 5.0)
-    webdrivers (3.8.0)
+    webdrivers (3.9.1)
       nokogiri (~> 1.6)
       rubyzip (~> 1.0)
       selenium-webdriver (~> 3.0)
@@ -582,7 +583,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-session_store
   acts_as_tree (~> 2.9)
-  annotate
+  annotate (~> 2.7.5)
   awesome_print
   aws-sdk
   axlsx!
@@ -592,10 +593,10 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   browser_sync_rails
-  bullet
+  bullet (~> 6.0.0)
   business_time
   byebug
-  capybara
+  capybara (~> 3.20.2)
   codeclimate-test-reporter (~> 1.0)
   colorize
   config
@@ -617,7 +618,7 @@ DEPENDENCIES
   guard-rubocop
   humanize_boolean
   i18n-tasks (~> 0.9.29)
-  jbuilder (~> 2.8)
+  jbuilder (~> 2.9)
   jquery-rails
   jquery-ui-rails
   jsonb_accessor (~> 1.0.0.beta.1)
@@ -630,7 +631,7 @@ DEPENDENCIES
   mechanize (>= 2.7.5)
   mimetype-fu (~> 0.1.2)
   paper_trail (~> 10.3)
-  parallel_tests
+  parallel_tests (~> 2.29)
   pg (~> 1.1)
   pg_search (~> 2.1.7)
   pry
@@ -638,27 +639,29 @@ DEPENDENCIES
   pry-rails
   puma (~> 3.12)
   pundit (~> 2.0)
-  rails (~> 5.0)
+  rails (~> 5.0.7.2)
   rails-controller-testing
   rails-data-migrations (~> 1.1.0)
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails (~> 3.8)
-  rubocop (~> 0.67.2)
-  rubocop-rspec
+  rubocop (~> 0.70.0)
+  rubocop-performance
+  rubocop-rspec (~> 1.33.0)
   ruby-progressbar
   rubyzip (>= 1.2.1)
   sass-rails (~> 5.0)
   schema_plus_enums (~> 0.1)
-  selenium-webdriver
+  selenium-webdriver (~> 3.142.2)
   sentry-raven (~> 2.9.0)
   shell-spinner
   shoulda-matchers (~> 4.0)
-  sidekiq (~> 5.2)
+  sidekiq (~> 5.2.7)
   sidekiq-logging-json (~> 0.0.19)
-  site_prism
+  site_prism (= 3.1)
   slim-rails (~> 3.2)
   spring
+  spring-commands-rspec
   spring-watcher-listen (~> 2.0.1)
   table_print
   thor-rails

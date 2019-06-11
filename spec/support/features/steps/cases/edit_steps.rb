@@ -26,6 +26,7 @@ def edit_ico_case_step(kase:, original_case:)
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_case
 
+  scroll_to cases_show_page.case_details.edit_case
   cases_show_page.case_details.edit_case.click
 
   expect(cases_edit_ico_page).to be_displayed(id: kase.id)
@@ -49,6 +50,7 @@ def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Me
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_closure
 
+  scroll_to cases_show_page.case_details.edit_closure
   cases_show_page.case_details.edit_closure.click
 
   expect(cases_edit_closure_page).to be_displayed
@@ -166,6 +168,7 @@ def edit_ico_case_closure_step(kase:, decision_received_date: Date.today, ico_de
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_closure
 
+  scroll_to cases_show_page.case_details.edit_closure
   cases_show_page.case_details.edit_closure.click
 
   expect(cases_edit_closure_page).to be_displayed

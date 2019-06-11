@@ -1,0 +1,25 @@
+#########################################################################
+#                                                                       #
+#                             OFFENDER SAR                              #
+#                                                                       #
+#########################################################################
+  offender:
+    name: Offender Subject Access Request
+    permitted_workflows:
+      - standard
+      - trigger
+
+    permitted_user_roles:
+      - manager
+      - responder
+      - approver
+
+    permitted_states:
+      - unassigned
+      - data_to_be_requested
+      - waiting_for_data
+      - ready_for_vetting
+      - vetting_in_progress
+      - ready_to_dispatch
+      - ready_to_close
+      - closed

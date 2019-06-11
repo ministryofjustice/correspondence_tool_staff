@@ -72,6 +72,7 @@ class Case::SAR::Standard < Case::Base
     staff:                'staff',
     member_of_the_public: 'member_of_the_public'
   }
+
   enum reply_method: {
     send_by_post:  'send_by_post',
     send_by_email: 'send_by_email',

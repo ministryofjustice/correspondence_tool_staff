@@ -228,6 +228,8 @@ class Cases::BaseController < ApplicationController
     types = current_user.managing_teams.first.correspondence_types.menu_visible.order(:name).to_a
     types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
     types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
+    types << CorrespondenceType.offender_sar if FeatureSet.offender_sars.enabled?
+
     @permitted_correspondence_types = types
   end
 

@@ -212,6 +212,11 @@ Rails.application.routes.draw do
       get :new, on: :member
     end
 
+    resources :offender_sars, only: [:new, :create], controller: 'offender_sar', as: :case_offender_sars do
+      get 'cancel', on: :collection
+      get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'offender_sar'
+    end
+
     resources :ico do
       patch 'record_late_team'#, on: :member - not sure why member not working
     end

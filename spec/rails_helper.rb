@@ -20,10 +20,17 @@ require 'rspec/rails'
 require 'capybara/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'capybara/rspec'
-require 'selenium-webdriver'
+
+# Webdrivers - Moved from deprecated chrome-helpers gem. Behaviour changed to require you to
+# explicitly issue a scroll command to bring off-screen elements below the fold up into view
+# before you click on them in feature specs
+# See https://stackoverflow.com/questions/55406656
+# and https://www.rubydoc.info/gems/capybara/Capybara/Node/Element#scroll_to-instance_method
+require 'webdrivers'
 
 require 'rails-controller-testing'
 require 'paper_trail/frameworks/rspec'
+Webdrivers.cache_time = 86_400
 
 Capybara.default_max_wait_time = 4
 
@@ -37,7 +44,8 @@ Capybara.register_driver :headless_chrome do |app|
   if ENV['CHROME_DEBUG'].present?
     configurationSetting = {}
   else
-    configurationSetting = { args: %w(headless disable-gpu) }
+    configurationSetting = { args: %w(headless disable-gpu no-sandbox --start-maximized
+                                      --window-size=1980,2080 --enable-features=NetworkService,NetworkServiceInProcess) }
   end
 
   capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
@@ -52,7 +60,6 @@ end
 Capybara.javascript_driver = :headless_chrome
 
 Capybara.server = :puma, { Silent: true }
-
 # Set these env variables to push screenshots for failed tests to S3.
 # if ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'].present? &&
 #    ENV['S3_TEST_SCREENSHOT_SECRET_ACCESS_KEY'].present?
@@ -81,6 +88,10 @@ Timecop.safe_mode = true
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 $LOAD_PATH.unshift(File.join(File.expand_path('..', __FILE__), 'site_prism'))
 require 'site_prism/page_objects/pages/application.rb'
+
+# include linked_cases_section specifically to avoid machine-specific load order issues
+require "site_prism/page_objects/sections/cases/linked_cases_section.rb"
+
 Dir[Rails.root.join("spec/site_prism/support/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/site_prism/page_objects/sections/shared/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/site_prism/page_objects/sections/**/*.rb")].each { |f| require f }
@@ -185,6 +196,7 @@ end
 def seed_database_for_tests
   FactoryBot.find_or_create :foi_correspondence_type
   FactoryBot.find_or_create :sar_correspondence_type
+  FactoryBot.find_or_create :offender_sar_correspondence_type
   FactoryBot.find_or_create :team_dacu
   FactoryBot.find_or_create :ico_correspondence_type
   FactoryBot.find_or_create :overturned_sar_correspondence_type
