@@ -1,16 +1,29 @@
 module Cases
   class FoiController < BaseController
-    include FOICasesParams
-    include CreateCase
     include NewCase
+    include FOICasesParams
 
-    def new
+    def initialize
+      @correspondence_type = CorrespondenceType.foi
       @correspondence_type_key = 'foi'
-      new_case_for CorrespondenceType.foi
+
+      super
     end
 
-    def create
-      create_case_for_type CorrespondenceType.foi, 'foi'
+    def new
+      new_case_for @correspondence_type
+    end
+
+    def case_type
+      Case::FOI::Standard.factory(params.dig(@correspondence_type_key, 'type'))
+    end
+
+    def create_params
+      create_foi_params
+    end
+
+    def edit_params
+      edit_foi_params
     end
   end
 end

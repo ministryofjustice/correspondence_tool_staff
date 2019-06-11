@@ -154,6 +154,15 @@ class Case::SAR::Standard < Case::Base
     initial_deadline + Settings.sar_extension_limit.to_i.days
   end
 
+  def self.factory(type)
+    case type&.downcase
+    when 'standard'
+      self
+    when 'offender'
+      Case::SAR::Offender
+    end
+  end
+
   private
 
   def use_subject_as_requester

@@ -2,7 +2,7 @@ module Cases
   class OverturnedFoiController < BaseController
     include OverturnedICOParams
     include OverturnedCase
-    include CreateCase
+    #include CreateCase
 
     # The 'new' action for this type needs an original case -
     # so it doesn't fit the normal rails pattern.

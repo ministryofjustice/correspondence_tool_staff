@@ -55,6 +55,14 @@ module Cases
       end
     end
 
+    def create_params
+      create_ico_params
+    end
+
+    def edit_params
+      edit_ico_params
+    end
+
     private
 
     def determine_overturned_ico_class(original_appeal_id)

@@ -547,6 +547,151 @@ ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
 
 
 --
+-- Name: teams; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.teams (
+    id integer NOT NULL,
+    name character varying NOT NULL,
+    email public.citext,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    type character varying,
+    parent_id integer,
+    role character varying,
+    code character varying,
+    deleted_at timestamp without time zone
+);
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0 NOT NULL,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip inet,
+    last_sign_in_ip inet,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    full_name character varying NOT NULL,
+    deleted_at timestamp without time zone,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    locked_at timestamp without time zone
+);
+
+
+--
+-- Name: query_closed_cases; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.query_closed_cases AS
+ SELECT c.number,
+    c.type,
+    c.current_state,
+    ( SELECT teams.name
+           FROM (public.teams
+             JOIN public.assignments ON ((teams.id = assignments.team_id)))
+          WHERE ((assignments.case_id = c.id) AND (assignments.role = 'responding'::public.team_roles) AND (assignments.state <> 'rejected'::public.state))
+          ORDER BY assignments.id DESC
+         LIMIT 1) AS responding_team_name,
+    ( SELECT users.full_name
+           FROM (public.users
+             JOIN public.assignments ON ((users.id = assignments.user_id)))
+          WHERE ((assignments.case_id = c.id) AND (assignments.role = 'responding'::public.team_roles) AND (assignments.state <> 'rejected'::public.state))
+          ORDER BY assignments.id DESC
+         LIMIT 1) AS responding_user_name,
+    c.received_date,
+    (c.properties ->> 'internal_deadline'::text) AS internal_deadline,
+    (c.properties ->> 'external_deadline'::text) AS external_deadline,
+    c.date_responded,
+    (c.properties ->> 'date_draft_compliant'::text),
+    ( SELECT 1
+           FROM public.assignments a
+          WHERE ((c.id = a.case_id) AND (a.role = 'approving'::public.team_roles))
+          ORDER BY a.id DESC
+         LIMIT 1) AS flagged,
+    c.name,
+    c.requester_type,
+    c.message,
+    ( SELECT cc.name
+           FROM public.case_closure_metadata cc
+          WHERE ((cc.id = c.info_held_status_id) AND (c.info_held_status_id <> NULL::integer))
+          ORDER BY cc.id DESC
+         LIMIT 1) AS info_held_status,
+    ( SELECT cc.name
+           FROM public.case_closure_metadata cc
+          WHERE ((cc.id = c.appeal_outcome_id) AND (c.appeal_outcome_id <> NULL::integer))
+          ORDER BY cc.id DESC
+         LIMIT 1) AS outcome,
+    ( SELECT cc.name
+           FROM public.case_closure_metadata cc
+          WHERE ((cc.id = c.refusal_reason_id) AND (c.refusal_reason_id <> NULL::integer))
+          ORDER BY cc.id DESC
+         LIMIT 1) AS refusal_reason,
+    NULL::unknown AS exemptions_map,
+    c.postal_address,
+    c.email,
+    ( SELECT cc.name
+           FROM public.case_closure_metadata cc
+          WHERE ((cc.id = c.appeal_outcome_id) AND (c.appeal_outcome_id <> NULL::integer))
+          ORDER BY cc.id DESC
+         LIMIT 1) AS appeal_outcome,
+    (c.properties ->> 'third_party'::text) AS third_party,
+    (c.properties ->> 'reply_method'::text) AS reply_method,
+    (c.properties ->> 'subject_type'::text) AS subject_type,
+    (c.properties ->> 'subject_full_name'::text) AS subject_full_name,
+    ( SELECT t.name
+           FROM public.teams t
+          WHERE ((t.id = (NULLIF((c.properties ->> 'late_team_id'::text), ''::text))::integer) AND ((c.properties ->> 'late_team_id'::text) <> NULL::text))) AS late_team_name,
+    ( SELECT count(ct.event) AS count
+           FROM public.case_transitions ct
+          WHERE (((ct.event)::text = 'extend_deadline_for_sar'::text) AND (ct.case_id = c.id))
+          GROUP BY ct.event) AS num_sar_extensions,
+    ( SELECT count(ct.event) AS count
+           FROM public.case_transitions ct
+          WHERE (((ct.event)::text = 'remove_extended_deadline_for_sar'::text) AND (ct.case_id = c.id))
+          GROUP BY ct.event) AS num_sar_extension_removals,
+    ( SELECT count(ct.event) AS count
+           FROM public.case_transitions ct
+          WHERE (((ct.event)::text = 'extend_for_pit'::text) AND (ct.case_id = c.id))
+          GROUP BY ct.event) AS num_pit_extensions,
+    ( SELECT count(ct.event) AS count
+           FROM public.case_transitions ct
+          WHERE (((ct.event)::text = 'remove_extend_for_pit'::text) AND (ct.case_id = c.id))
+          GROUP BY ct.event) AS num_pit_extension_removals,
+    c.reason_for_deletion,
+    ( SELECT u_1.full_name
+           FROM (public.users u_1
+             JOIN public.assignments a ON (((a.user_id = u_1.id) AND (a.case_id = c.id) AND (a.role = 'approving'::public.team_roles) AND (a.state = 'accepted'::public.state))))
+         LIMIT 1) AS caseworker,
+    u.full_name AS created_by,
+    c.created_at,
+    NULL::unknown AS business_group_name,
+    NULL::unknown AS directorate_name,
+    NULL::unknown AS director_general_name,
+    NULL::unknown AS director_name,
+    NULL::unknown AS deputy_director_name,
+    (c.properties ->> 'date_draft_compliant'::text) AS date_draft_compliant,
+    NULL::unknown AS response_in_target,
+    ( SELECT count(ct.event) AS count
+           FROM public.case_transitions ct
+          WHERE ((ct.case_id = c.id) AND ((ct.event)::text = 'respond'::text))
+          GROUP BY ct.event) AS num_responded,
+    ( SELECT date_part('day'::text, (now() - (((c.properties ->> 'external_deadline'::text))::timestamp without time zone)::timestamp with time zone)) AS date_part) AS num_days_late
+   FROM (public.cases c
+     LEFT JOIN public.users u ON ((u.id = c.user_id)));
+
+
+--
 -- Name: report_types; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -767,24 +912,6 @@ ALTER SEQUENCE public.team_properties_id_seq OWNED BY public.team_properties.id;
 
 
 --
--- Name: teams; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.teams (
-    id integer NOT NULL,
-    name character varying NOT NULL,
-    email public.citext,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    type character varying,
-    parent_id integer,
-    role character varying,
-    code character varying,
-    deleted_at timestamp without time zone
-);
-
-
---
 -- Name: teams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -832,31 +959,6 @@ CREATE SEQUENCE public.teams_users_roles_id_seq
 --
 
 ALTER SEQUENCE public.teams_users_roles_id_seq OWNED BY public.teams_users_roles.id;
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-    reset_password_token character varying,
-    reset_password_sent_at timestamp without time zone,
-    sign_in_count integer DEFAULT 0 NOT NULL,
-    current_sign_in_at timestamp without time zone,
-    last_sign_in_at timestamp without time zone,
-    current_sign_in_ip inet,
-    last_sign_in_ip inet,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    full_name character varying NOT NULL,
-    deleted_at timestamp without time zone,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    unlock_token character varying,
-    locked_at timestamp without time zone
-);
 
 
 --

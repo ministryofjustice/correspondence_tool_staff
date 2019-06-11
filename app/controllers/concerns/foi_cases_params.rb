@@ -4,6 +4,7 @@ module FOICasesParams
   def create_foi_params
     params.require(:foi).permit(
       :requester_type,
+      :type,
       :name,
       :postal_address,
       :email,
@@ -19,6 +20,7 @@ module FOICasesParams
   def edit_foi_params
     params.require(:foi).permit(
       :requester_type,
+      :type,
       :name,
       :postal_address,
       :email,

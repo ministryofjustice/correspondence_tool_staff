@@ -125,4 +125,17 @@ class Case::FOI::Standard < Case::Base
   def foi_standard?
     true
   end
+
+  def self.factory(type)
+    case type&.downcase
+    when 'standard'
+      self
+    when 'timelinessreview'
+      Case::FOI::TimelinessReview
+    when 'compliancereview'
+      Case::FOI::ComplianceReview
+    else
+      self
+    end
+  end
 end

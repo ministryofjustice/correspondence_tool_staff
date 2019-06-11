@@ -362,6 +362,10 @@ class Case::Base < ApplicationRecord
     self.type_abbreviation.downcase
   end
 
+  def self.factory(type)
+    raise NotImplementedError.new('Case type must implement self.factory')
+  end
+
   def to_csv
     CSVExporter.new(self).to_csv
   end

@@ -1,15 +1,29 @@
 module Cases
-  class SarController < ApplicationController
+  class SarController < BaseController
     include NewCase
-    include CreateCase
+    include SARCasesParams
 
-    def new
-      new_case_for(CorrespondenceType.sar)
-      render 'cases/new'
+    def initialize
+      @correspondence_type = CorrespondenceType.sar
+      @correspondence_type_key = 'sar'
+
+      super
     end
 
-    def create
-      create_case_for_type(CorrespondenceType.sar, 'sar')
+    def new
+      new_case_for @correspondence_type
+    end
+
+    def case_type
+      Case::SAR::Standard
+    end
+
+    def create_params
+      create_sar_params
+    end
+
+    def edit_params
+      edit_sar_params
     end
   end
 end

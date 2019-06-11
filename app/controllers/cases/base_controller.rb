@@ -34,37 +34,28 @@ class Cases::BaseController < ApplicationController
 
   def new
     permitted_correspondence_types
+    authorize Case::Base, :can_add_case?
 
-    if params[:correspondence_type].present?
-      set_correspondence_type(params[:correspondence_type])
-      prepare_new_case
-
-      # TODO: Redirect to appropriate new here
-      render :new
-    else
-      authorize Case::Base, :can_add_case?
-      render :select_type
-    end
+    # Remnant from existing case creation journey hence mismatching template
+    render :select_type
   end
 
   def create
     begin
-      set_correspondence_type(params.fetch(:correspondence_type))
+      authorize case_type, :can_add_case?
+
       service = CaseCreateService.new(
-        current_user,
-        @correspondence_type_key,
-        params
+        user: current_user,
+        case_type: case_type,
+        params: create_params
       )
-
-      authorize service.case_class, :can_add_case?
-
       service.call
       @case = service.case
 
       case service.result
       when :assign_responder
         flash[:creating_case] = true
-        flash[:notice] = service.flash_notice
+        flash[:notice] = service.message
         redirect_to new_case_assignment_path @case
       else
         @case = @case.decorate
@@ -96,8 +87,8 @@ class Cases::BaseController < ApplicationController
     @case = Case::Base.find(params[:id])
     authorize @case
 
-    case_params = edit_params(@correspondence_type_key)
-    service = CaseUpdaterService.new(current_user, @case, case_params)
+    #case_params = edit_params(@correspondence_type_key)
+    service = CaseUpdaterService.new(current_user, @case, edit_params)
     service.call
 
     if service.result == :error
@@ -149,6 +140,18 @@ class Cases::BaseController < ApplicationController
 
 
   protected
+
+  def case_type
+    raise NotImplementedError
+  end
+
+  def create_params
+    raise NotImplementedError
+  end
+
+  def edit_params
+    raise NotImplementedError
+  end
 
   def set_url
     @action_url = request.env['PATH_INFO']
@@ -249,53 +252,45 @@ class Cases::BaseController < ApplicationController
     end
   end
 
-  def prepare_new_case
-    valid_type = validate_correspondence_type(params[:correspondence_type].upcase)
+  # def prepare_new_case
+  #   if valid_correspondence_type(params[:correspondence_type].upcase)
+  #     #set_correspondence_type(params[:correspondence_type])
+  #     default_subclass = @correspondence_type.sub_classes.first
+  #
+  #     # Check user's authorisation
+  #     #
+  #     # We don't know what kind of case type (FOI Standard, IR Timeliness, etc)
+  #     # they want to create yet, but we need to authenticate them against some
+  #     # kind of case class, so pick the first subclass available to them. This
+  #     # could be improved by making case_subclasses a list of the case types
+  #     # they are permitted to create, and when that list is empty rejecting
+  #     # authorisation.
+  #     authorize default_subclass, :can_add_case?
+  #
+  #     @case = default_subclass.new.decorate
+  #     @case_types = @correspondence_type.sub_classes.map(&:to_s)
+  #     @s3_direct_post = S3Uploader.for(@case, 'requests')
+  #   else
+  #     flash.alert =
+  #       helpers.t "cases.new.correspondence_type_errors.#{validation_result}",
+  #                 type: @correspondence_type_key
+  #     redirect_to new_case_path
+  #   end
+  # end
 
-    if valid_type == :ok
-      set_correspondence_type(params[:correspondence_type])
-      default_subclass = @correspondence_type.sub_classes.first
+  def valid_correspondence_type(correspondence_type)
+    ct_exists = correspondence_type.in?(CorrespondenceType.pluck(:abbreviation))
+    ct_permitted = correspondence_type.in?(@permitted_correspondence_types.map(&:abbreviation))
 
-      # Check user's authorisation
-      #
-      # We don't know what kind of case type (FOI Standard, IR Timeliness, etc)
-      # they want to create yet, but we need to authenticate them against some
-      # kind of case class, so pick the first subclass available to them. This
-      # could be improved by making case_subclasses a list of the case types
-      # they are permitted to create, and when that list is empty rejecting
-      # authorisation.
-      authorize default_subclass, :can_add_case?
-
-      @case = default_subclass.new.decorate
-      @case_types = @correspondence_type.sub_classes.map(&:to_s)
-      @s3_direct_post = S3Uploader.for(@case, 'requests')
-    else
-      flash.alert =
-        helpers.t "cases.new.correspondence_type_errors.#{validation_result}",
-                  type: @correspondence_type_key
-      redirect_to new_case_path
-    end
+    ct_exists && ct_permitted
   end
 
-  def validate_correspondence_type(ct_abbr)
-    ct_exists    = ct_abbr.in?(CorrespondenceType.pluck(:abbreviation))
-    ct_permitted = ct_abbr.in?(@permitted_correspondence_types.map(&:abbreviation))
-
-    if ct_exists && ct_permitted
-      :ok
-    elsif !ct_exists
-      :unknown
-    else
-      :not_authorised
-    end
-  end
-
-  def edit_params(correspondence_type)
-    case correspondence_type
-    when 'foi' then edit_foi_params
-    when 'ico' then edit_ico_params
-    when 'sar' then edit_sar_params
-    end
-  end
+  # def edit_params(correspondence_type)
+  #   case correspondence_type
+  #   when 'foi' then edit_foi_params
+  #   when 'ico' then edit_ico_params
+  #   when 'sar' then edit_sar_params
+  #   end
+  # end
 end
 #rubocop:enable Metrics/ClassLength

@@ -2,7 +2,7 @@ module Cases
   class OverturnedSarController < BaseController
     include OverturnedICOParams
     include OverturnedCase
-    include CreateCase
+    #include CreateCase
 
     def new
       new_overturned_ico_for Case::OverturnedICO::SAR

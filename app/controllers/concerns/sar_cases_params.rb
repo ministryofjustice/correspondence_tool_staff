@@ -56,7 +56,6 @@ module SARCasesParams
     )
   end
 
-
   def missing_info_to_tmm
     if params[:case_sar][:missing_info] == "yes"
       @case.missing_info = true
