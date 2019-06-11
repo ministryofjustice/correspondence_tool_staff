@@ -40,9 +40,11 @@ class DevTeamSeeder
 
   #rubocop:disable Metrics/MethodLength
   def add_business_units
-    @foi = CorrespondenceType.foi
-    @sar = CorrespondenceType.sar
-    @ico = CorrespondenceType.ico
+    @foi      = CorrespondenceType.foi
+    @sar      = CorrespondenceType.sar
+    @ico      = CorrespondenceType.ico
+    @offender = CorrespondenceType.offender_sar
+
     @bu_dacu_bmt  = find_or_create_business_unit(parent: @dir_dacu,
                                                  name: 'Disclosure BMT',
                                                  code: Settings.foi_cases.default_managing_team,
@@ -95,6 +97,10 @@ class DevTeamSeeder
                                                  name: 'Communications and Information',
                                                  role: 'responder',
                                                  correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+    @bu_branston  = find_or_create_business_unit(parent: @dir_dacu,
+                                                 name: 'Branston Registry',
+                                                 role: 'manager',
+                                                 correspondence_type_ids: [@offender.id])
   end
   #rubocop:enable Metrics/MethodLength
 
@@ -119,6 +125,7 @@ class DevTeamSeeder
     TeamProperty.find_or_create_by!(team_id: @bu_utl.id,       key: 'lead', value: 'Farmer Jones')
     TeamProperty.find_or_create_by!(team_id: @bu_uttc.id,      key: 'lead', value: 'Gideon Osborne')
     TeamProperty.find_or_create_by!(team_id: @bu_candi.id,     key: 'lead', value: 'Candi Floss')
+    TeamProperty.find_or_create_by!(team_id: @bu_branston.id,  key: 'lead', value: 'Brian Rix')
   end
 
   # rubocop:disable Metrics/MethodLength
