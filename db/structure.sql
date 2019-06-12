@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.14
--- Dumped by pg_dump version 9.5.14
+-- Dumped from database version 9.5.15
+-- Dumped by pg_dump version 9.5.15
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -418,8 +418,8 @@ CREATE TABLE public.cases_users_transitions_trackers (
     case_id integer,
     user_id integer,
     case_transition_id integer,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
 );
 
 

@@ -12,13 +12,8 @@ class Case::SAR::Offender < Case::SAR::Standard
                   subject_aliases: :string,
                   previous_case_numbers: :string,
                   other_subject_ids: :string,
-                  date_of_birth_dd: :string,
-                  date_of_birth_mm: :string,
-                  date_of_birth_yyyy: :string,
+                  date_of_birth: :date,
                   subject_type: :string,
-                  received_date_dd: :string,
-                  received_date_mm: :string,
-                  received_date_yyyy: :string,
                   reply_method: :string
 
   enum subject_type: {
@@ -29,5 +24,8 @@ class Case::SAR::Offender < Case::SAR::Standard
          send_by_post:  'send_by_post',
          send_by_email: 'send_by_email',
        }
+
+  acts_as_gov_uk_date :date_of_birth, :received_date
+
 
 end
