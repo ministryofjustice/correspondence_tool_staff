@@ -45,11 +45,7 @@ class Case::SAR::Standard < Case::Base
   end
 
   def self.searchable_fields_and_ranks
-    super.merge(
-      {
-        subject_full_name:     'B'
-      }
-    )
+    super.merge({ subject_full_name: 'B' })
   end
 
   jsonb_accessor :properties,
@@ -68,7 +64,7 @@ class Case::SAR::Standard < Case::Base
   attr_accessor :missing_info
 
   enum subject_type: {
-    offender:             'offender',
+    offender_sar:             'offender',
     staff:                'staff',
     member_of_the_public: 'member_of_the_public'
   }
@@ -172,23 +168,29 @@ class Case::SAR::Standard < Case::Base
 
   def validate_message_or_uploaded_request_files
     if message.blank? && uploaded_request_files.blank?
-      errors.add(:message,
-                 :blank,
-                 message: "can't be blank if no request files attached")
-      errors.add(:uploaded_request_files,
-                 :blank,
-                 message: "can't be blank if no case details entered")
+      errors.add(
+        :message,
+        :blank,
+        message: "can't be blank if no request files attached"
+      )
+
+      errors.add(
+        :uploaded_request_files,
+        :blank,
+        message: "can't be blank if no case details entered"
+      )
     end
   end
 
   def validate_message_or_attached_request_files
     if message.blank? && attachments.request.blank?
-      errors.add(:message,
-                 :blank,
-                 message: "can't be blank if no request files attached")
+      errors.add(
+        :message,
+        :blank,
+        message: "can't be blank if no request files attached"
+      )
     end
   end
-
 end
 
 

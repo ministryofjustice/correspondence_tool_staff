@@ -1,6 +1,6 @@
 h1 Who is the subject?
 
-= form_for @case, url: cases_offender_path do |f|
+= form_for @case, url: case_sar_offenders_path, as: :offender_sar do |f|
   = f.text_field :subject_full_name
 
   = f.text_field :prison_number

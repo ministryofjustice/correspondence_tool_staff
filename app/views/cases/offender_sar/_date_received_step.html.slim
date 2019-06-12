@@ -1,6 +1,6 @@
 h1 When was the SAR received?
 
-= form_for @case, url: cases_offender_path do |f|
+= form_for @case, url: case_sar_offenders_path, as: :offender_sar do |f|
 
   .form-group
     = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.date_sar_received'),

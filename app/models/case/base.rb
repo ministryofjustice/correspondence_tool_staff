@@ -888,12 +888,13 @@ class Case::Base < ApplicationRecord
   end
 
   def validate_case_link(type, linked_case, attribute)
-    if not CaseLinkTypeValidator.classes_can_be_linked_with_type?(
-             klass: self.class.to_s,
-             linked_klass: linked_case.class.to_s,
-             type: type,
-           )
+    linkable = CaseLinkTypeValidator.classes_can_be_linked_with_type?(
+      klass: self.class.to_s,
+      linked_klass: linked_case.class.to_s,
+      type: type
+    )
 
+    unless linkable
       case_class_name = I18n.t("cases.types.#{self.class}")
       linked_class_name = I18n.t("cases.types.#{linked_case.class}")
       errors.add(
@@ -904,7 +905,6 @@ class Case::Base < ApplicationRecord
                         case_class: case_class_name,
                         linked_case_class: linked_class_name)
       )
-
     end
   end
 end

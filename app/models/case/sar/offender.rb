@@ -1,7 +1,7 @@
 class Case::SAR::Offender < Case::SAR::Standard
   class << self
     def type_abbreviation
-      'OFFENDER'
+      'OFFENDER_SAR'
     end
   end
 
@@ -23,7 +23,7 @@ class Case::SAR::Offender < Case::SAR::Standard
                   reply_method: :string
 
   enum subject_type: {
-    offender: 'offender',
+    offender_sar: 'offender',
     non_offender: 'non_offender',
   }
 end

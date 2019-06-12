@@ -5,43 +5,47 @@ module Cases
 
     def initialize
       @correspondence_type = CorrespondenceType.offender_sar
-      @correspondence_type_key = 'offender'
+      @correspondence_type_key = 'offender_sar'
 
       super
     end
 
     def new
       permitted_correspondence_types
-      set_correspondence_type(params[:correspondence_type])
-      prepare_new_case
+      #prepare_new_case
 
       @case = OffenderSARCaseForm.new(session)
-      @case.current_step = params[:step]
+
+      puts "\n\n\n+++++Current Step: #{params[:step]}\n\n\n"
+      step = params[:step].present? && params[:step] != 'new' ? params[:step] : @case.steps.first
+
+      # @todo: Why does current_step need to be set? is it something OffenderSARCaseForm
+      # can figure out itself?
+      @case.current_step = step
     end
 
     def create
       permitted_correspondence_types
-      set_correspondence_type(params[:correspondence_type])
-      prepare_new_case
+      #prepare_new_case
 
       @case = OffenderSARCaseForm.new(session)
 
       @case.case.creator = current_user #to-do Remove when we use the case create service
       @case.case.subject = "Offender SAR" #to-do Remove when we use the case create service
 
-      @case.assign_params(case_params) if case_params
+      @case.assign_params(create_params) if create_params
       @case.current_step = params[:current_step]
 
-      if @case.valid_attributes?(case_params)
+      if @case.valid_attributes?(create_params)
         if @case.valid?
           if @case.save
             session[:offender_sar_state] = nil
             redirect_to case_path(@case.case) and return
           end
         end
-        @case.session_persist_state(case_params)
+        @case.session_persist_state(create_params)
         get_next_step(@case)
-        redirect_to offender_sar_new_case_path + "/#{@case.current_step}"
+        redirect_to step_case_sar_offenders_path + "/#{@case.current_step}"
       else
         render :new
       end
@@ -59,7 +63,6 @@ module Cases
       edit_offender_sar_params
     end
 
-
     def cancel
       session[:offender_sar_state] = nil
       redirect_to offender_sar_new_case_path
@@ -67,6 +70,7 @@ module Cases
 
     private
 
+    # @todo: Should this be in Steppable?
     def get_next_step(obj)
       obj.current_step = params[:current_step]
 
@@ -77,9 +81,9 @@ module Cases
       end
     end
 
-    def get_step_partial(current_step)
-      step_name = current_step.split('/').first.tr('-', '_')
-      "#{step_name}_step"
-    end
+    # def get_step_partial(current_step)
+    #   step_name = current_step.split('/').first.tr('-', '_')
+    #   "#{step_name}_step"
+    # end
   end
 end

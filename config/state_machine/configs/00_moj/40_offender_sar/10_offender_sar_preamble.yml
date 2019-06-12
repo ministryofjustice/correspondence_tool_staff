@@ -3,7 +3,7 @@
 #                             OFFENDER SAR                              #
 #                                                                       #
 #########################################################################
-  offender:
+  offender_sar:
     name: Offender Subject Access Request
     permitted_workflows:
       - standard

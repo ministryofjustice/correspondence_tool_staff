@@ -56,20 +56,20 @@ class Case::ICO::Base < Case::Base
                       :received_date
 
   has_paper_trail only: [
-                    :date_responded,
-                    :external_deadline,
-                    :internal_deadline,
-                    :ico_officer_name,
-                    :ico_reference_number,
-                    :message,
-                    :properties,
-                    :received_date,
-                    :date_closed
-                  ]
+    :date_responded,
+    :external_deadline,
+    :internal_deadline,
+    :ico_officer_name,
+    :ico_reference_number,
+    :message,
+    :properties,
+    :received_date,
+    :date_closed
+  ]
 
   enum ico_decision: {
-      upheld: 'upheld',
-      overturned: 'overturned'
+    upheld: 'upheld',
+    overturned: 'overturned'
   }
 
   validates :ico_officer_name, presence: true
@@ -124,9 +124,7 @@ class Case::ICO::Base < Case::Base
   end
 
   def name=(_new_name)
-    raise StandardError.new(
-            'name attribute is read-only for ICO cases'
-      )
+    raise StandardError.new('name attribute is read-only for ICO cases')
   end
 
   def requires_flag_for_disclosure_specialists?
@@ -140,9 +138,7 @@ class Case::ICO::Base < Case::Base
   delegate :subject, to: :original_case
 
   def subject=(_new_subject)
-    raise StandardError.new(
-            'subject attribute is read-only for ICO cases'
-          )
+    raise StandardError.new('subject attribute is read-only for ICO cases')
   end
 
   def ico?
@@ -207,9 +203,11 @@ class Case::ICO::Base < Case::Base
     if received_date.present? && internal_deadline < received_date
       errors.add(
         :internal_deadline,
-        TranslateForCase.t(self,
-                           'activerecord.errors.models',
-                           'attributes.internal_deadline.before_received')
+        TranslateForCase.t(
+          self,
+          'activerecord.errors.models',
+          'attributes.internal_deadline.before_received'
+        )
       )
     end
     if external_deadline.present? && internal_deadline > external_deadline
@@ -224,16 +222,20 @@ class Case::ICO::Base < Case::Base
     if received_date < Date.today - 10.years
       errors.add(
         :received_date,
-        TranslateForCase.t(self,
-                           'activerecord.errors.models',
-                           'attributes.received_date.past')
+        TranslateForCase.t(
+          self,
+          'activerecord.errors.models',
+          'attributes.received_date.past'
+        )
       )
     elsif received_date > Date.today
       errors.add(
         :received_date,
-        TranslateForCase.t(self,
-                           'activerecord.errors.models',
-                           'attributes.received_date.not_in_future')
+        TranslateForCase.t(
+          self,
+          'activerecord.errors.models',
+          'attributes.received_date.not_in_future'
+        )
       )
     end
   end

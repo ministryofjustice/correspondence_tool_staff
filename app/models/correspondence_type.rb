@@ -61,8 +61,8 @@ class CorrespondenceType < ApplicationRecord
     FOI: [Case::FOI::Standard,
           Case::FOI::TimelinessReview,
           Case::FOI::ComplianceReview],
-    SAR: [Case::SAR::Standard,
-          Case::SAR::Offender],
+    SAR: [Case::SAR::Standard],
+    OFFENDER_SAR: [Case::SAR::Offender],
     ICO: [Case::ICO::FOI,
           Case::ICO::SAR],
     OVERTURNED_SAR: [Case::OverturnedICO::SAR],
@@ -107,7 +107,7 @@ class CorrespondenceType < ApplicationRecord
   end
 
   def self.offender_sar
-    find_by_abbrevation! 'OFFENDER'
+    find_by_abbrevation! 'OFFENDER_SAR'
   end
 
   def self.ico

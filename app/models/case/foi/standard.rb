@@ -57,29 +57,29 @@ class Case::FOI::Standard < Case::Base
                  date_draft_compliant: :date
 
   has_paper_trail only: [
-                    :name,
-                    :email,
-                    :postal_address,
-                    :properties,
-                    :received_date,
-                    :requester_type,
-                    :subject,
-                  ]
-
+    :name,
+    :email,
+    :postal_address,
+    :properties,
+    :received_date,
+    :requester_type,
+    :subject,
+  ]
 
   enum requester_type: {
-         academic_business_charity: 'academic_business_charity',
-         journalist: 'journalist',
-         member_of_the_public: 'member_of_the_public',
-         offender: 'offender',
-         solicitor: 'solicitor',
-         staff_judiciary: 'staff_judiciary',
-         what_do_they_know: 'what_do_they_know'
-       }
+    academic_business_charity: 'academic_business_charity',
+    journalist: 'journalist',
+    member_of_the_public: 'member_of_the_public',
+    offender_sar: 'offender',
+    solicitor: 'solicitor',
+    staff_judiciary: 'staff_judiciary',
+    what_do_they_know: 'what_do_they_know',
+  }
+
   enum delivery_method: {
-         sent_by_post: 'sent_by_post',
-         sent_by_email: 'sent_by_email',
-       }
+    sent_by_post: 'sent_by_post',
+    sent_by_email: 'sent_by_email',
+  }
 
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
   validates :message, presence: true, if: -> { sent_by_email? }
