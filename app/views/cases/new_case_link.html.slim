@@ -21,7 +21,7 @@
     strong.strong-block
       = @case.subject
 
-= form_for @case, as: :case, url: execute_new_case_link_case_path(@case), method: :post do |f|
+= form_for @case, as: :case, url: case_links_path(@case), method: :post do |f|
   = f.text_field :linked_case_number
 
   .button-holder

@@ -94,7 +94,7 @@ module CasesHelper
               class: 'button', method: :get
     when :progress_for_clearance
       link_to I18n.t('common.case.progress_for_clearance'),
-              progress_for_clearance_case_path(@case),
+              progress_for_clearance_case_clearance_path(@case),
               id: 'action--progress-for-clearance',
               class: 'button', method: :patch
     when :extend_sar_deadline
@@ -134,7 +134,7 @@ module CasesHelper
 
   def show_remove_clearance_link(kase)
     if policy(kase).remove_clearance?
-      link_to('Remove clearance', remove_clearance_case_path(id: kase.id))
+      link_to('Remove clearance', remove_clearance_case_clearance_path(id: kase.id))
     end
   end
 
@@ -192,16 +192,16 @@ module CasesHelper
 
   def action_buttons_for_allowed_events(kase, *events)
     events
-      .find_all { |name| policy(kase).send("#{name}?") } 
+      .find_all { |name| policy(kase).send("#{name}?") }
       .map  { |name| send("action_button_for_#{name}", kase) }
-  end  
+  end
 
   def action_link_for_destroy_case(kase)
     link_to 'Delete case', confirm_destroy_case_path(kase)
   end
 
   def action_button_for_destroy_case(kase)
-    link_to 'Delete case', 
+    link_to 'Delete case',
       confirm_destroy_case_path(kase),
       class: 'button-secondary'
   end
@@ -224,7 +224,7 @@ module CasesHelper
 
   def action_link_for_new_case_link(kase)
     link_to "Link a case",
-            new_case_link_case_path(kase.id),
+            new_case_link_path(kase.id),
             class: 'secondary-action-link',
             id: 'action--link-a-case'
   end
@@ -232,7 +232,7 @@ module CasesHelper
   def action_link_for_destroy_case_link(kase, linked_case)
     if policy(kase).destroy_case_link?
       link_to t('common.case.remove_linked_case_html', case_number: linked_case.number),
-              destroy_link_on_case_path(id: kase.id,
+              case_links_path(id: kase.id,
                                         linked_case_number: linked_case.number),
               data: { confirm: "Are you sure?" },
               method: :delete

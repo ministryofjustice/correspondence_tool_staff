@@ -1,13 +1,15 @@
 module Cases
   class ClearancesController < BaseController
     before_action :set_decorated_case, only: [
-      :create, :update, :destroy,
+      :flag_for_clearance,
+      :progress_for_clearance,
+      :remove_clearance,
       :request_further_clearance,
       :unflag_for_clearance,
     ]
 
-    # Was flag_for_clearance
-    def create
+    # Should be create
+    def flag_for_clearance
       authorize @case, :can_flag_for_clearance?
 
       CaseFlagForClearanceService.new(user: current_user,
@@ -21,8 +23,8 @@ module Cases
       end
     end
 
-    # Was progress_for_clearance
-    def update
+    # Should be update
+    def progress_for_clearance
       authorize @case
 
       @case.state_machine.progress_for_clearance!(
@@ -51,8 +53,8 @@ module Cases
       end
     end
 
-    # Was remove_clearance
-    def destroy
+    # Should be destroy
+    def remove_clearance
       authorize @case
       # interstitial page for unflag_taken_on_case_for_clearance
     end

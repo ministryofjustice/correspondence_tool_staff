@@ -7,7 +7,7 @@
             method: :patch
   - if policy(case_details).unflag_for_clearance?
     = link_to 'De-escalate',
-              unflag_for_clearance_case_path(id: case_details.id),
+              unflag_for_clearance_case_clearance_path(id: case_details.id),
               remote: !current_page?(case_path(case_details.id)),
               class: 'de-escalate-link button-secondary',
               method: :patch

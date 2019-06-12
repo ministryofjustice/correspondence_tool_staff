@@ -253,13 +253,20 @@ Rails.application.routes.draw do
       patch 'confirm_respond', on: :member
     end
 
+    # @todo: Refactor to be clearer in intent/state transistions
     resources :clearances do
+      # @todo: Implement
+      # post create (flag_for_clearance)
+      # delete destroy (remove_clearance)
+      #patch 'update/(:action)', to: 'clearances#update', on: :member, constraint: { action: [progress, extend, unflag]}
+
       patch 'unflag_for_clearance' => 'cases/base#unflag_for_clearance', on: :member
       patch 'unflag_taken_on_case_for_clearance' => 'cases/base#unflag_taken_on_case_for_clearance', on: :member
+      patch :request_further_clearance, on: :member # extend
+      patch 'progress_for_clearance' => 'cases/base#progress_for_clearance', on: :member # progress
+
       patch 'flag_for_clearance' => 'cases/base#flag_for_clearance', on: :member
       get 'remove_clearance' => 'cases#remove_clearance', on: :member
-      patch :request_further_clearance, on: :member
-      patch 'progress_for_clearance' => 'cases/base#progress_for_clearance', on: :member
     end
 
     #new_case_link_case GET    /cases/:id/new_case_link(.:format)                                   cases#new_case_link
