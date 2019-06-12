@@ -80,10 +80,5 @@ module Cases
         obj.next_step
       end
     end
-
-    # def get_step_partial(current_step)
-    #   step_name = current_step.split('/').first.tr('-', '_')
-    #   "#{step_name}_step"
-    # end
   end
 end
