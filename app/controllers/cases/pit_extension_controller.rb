@@ -1,5 +1,7 @@
 module Cases
-  class PitExtensionController < BaseController
+  class PitExtensionController < ApplicationController
+    include CaseSetup
+
     before_action :set_case, only: [:new, :create, :destroy]
 
     # Was extend_for_pit

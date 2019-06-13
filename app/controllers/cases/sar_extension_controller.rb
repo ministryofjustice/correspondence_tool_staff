@@ -1,5 +1,7 @@
 module Cases
-  class SarExtensionController < BaseController
+  class SarExtensionController < ApplicationController
+    include CaseSetup
+
     before_action :set_case, only: [:new, :create, :destroy]
 
     # Was extend_sar_deadline

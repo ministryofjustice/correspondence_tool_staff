@@ -1,5 +1,7 @@
 module Cases
-  class FiltersController < BaseController
+  class FiltersController < ApplicationController
+    include CaseSetup
+
     before_action :set_url, only: [:open]
     before_action :set_state_selector, only: [:open, :my_open]
 

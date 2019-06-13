@@ -1,7 +1,7 @@
-#rubocop:disable Metrics/ClassLength
 require './lib/translate_for_case'
 
 class Cases::BaseController < ApplicationController
+  include CaseSetup
 
   def show
     set_decorated_case
@@ -153,36 +153,6 @@ class Cases::BaseController < ApplicationController
     raise NotImplementedError
   end
 
-  def set_url
-    @action_url = request.env['PATH_INFO']
-  end
-
-  def set_permitted_events
-    @permitted_events = @case.state_machine.permitted_events(current_user.id)
-    @permitted_events ||= []
-    @filtered_permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance, :link_a_case, :remove_linked_case]
-  end
-
-  def set_decorated_case
-    set_case
-    @case = @case.decorate
-    @case_transitions = @case_transitions.decorate
-  end
-
-  def set_case
-    @case = Case::Base
-      .includes(
-        :message_transitions,
-        transitions: [:acting_user, :acting_team, :target_team],
-        assignments: [:team],
-        approver_assignments: [:user]
-      )
-      .find(params[:id])
-
-    @case_transitions = @case.transitions.case_history.order(id: :desc)
-    @correspondence_type_key = @case.type_abbreviation.downcase
-  end
-
   # Catch exceptions as a result of a user not being authorised to perform an
   # action on a case. The default behaviour is to redirect them to '/' but here
   # we change that for certain actions where it makes sense (i.e. ones that
@@ -254,4 +224,3 @@ class Cases::BaseController < ApplicationController
     end
   end
 end
-#rubocop:enable Metrics/ClassLength

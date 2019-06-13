@@ -1,5 +1,7 @@
 module Cases
-  class ClearancesController < BaseController
+  class ClearancesController < ApplicationController
+    include CaseSetup
+
     before_action :set_decorated_case, only: [
       :flag_for_clearance,
       :progress_for_clearance,

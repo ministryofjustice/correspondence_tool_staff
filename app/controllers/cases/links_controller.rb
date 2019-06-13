@@ -1,5 +1,7 @@
 module Cases
-  class LinksController < BaseController
+  class LinksController < ApplicationController
+    include CaseSetup
+
     before_action :set_case, only: [:new, :create, :destroy]
 
     # Was new_linked_cases_for

@@ -60,7 +60,7 @@ class ResponseUploaderService
 
   private
 
-  #  when approving, always log compliance date because it must be
+  # When approving, always log compliance date because it must be
   # when asking for a re-draft, log compliance date if it is compliant
   # other cases are the responder uploading so it's obvious that compliance isn't yet decided.
   # so the date cannot be recorded (yet)
@@ -144,5 +144,4 @@ class ResponseUploaderService
           .deliver_later
     end
   end
-
 end

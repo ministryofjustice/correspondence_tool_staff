@@ -1,26 +1,47 @@
 module Cases
-  class ClosureController < BaseController
-    before_action :set_case, only: [:closure_outcomes, :edit_closure, :process_date_responded, :update_closure]
-    before_action :set_decorated_case, only: [:close, :confirm_respond, :process_closure, :process_respond_and_close, :respond, :respond_and_close]
+  class ClosureController < ApplicationController
+    include CaseSetup
 
+    before_action :set_case, only: [
+      :closure_outcomes,
+      :edit_closure,
+      :process_date_responded,
+      :update_closure
+    ]
+
+    before_action :set_decorated_case, only: [
+      :close,
+      :confirm_respond,
+      :process_closure,
+      :process_respond_and_close,
+      :respond,
+      :respond_and_close
+    ]
+
+    # Should be new
     def close
       # prepopulate date if it was entered by the KILO
       authorize @case, :can_close_case?
+
       if @case.ico?
         @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
       end
       set_permitted_events
     end
 
+    # Should be edit
     def edit_closure
       authorize @case, :update_closure?
+
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
       @case = @case.decorate
       @team_collection = CaseTeamCollection.new(@case)
     end
 
+    # Should be update
     def process_date_responded
       authorize @case, :can_close_case?
+
       @case = @case.decorate
 
       @case.prepare_for_respond
@@ -33,15 +54,18 @@ module Cases
       end
     end
 
+    # Should be
     def closure_outcomes
-      @case = @case.decorate
+      @case = @case.decorate # TODO: Is this required - see before_action hook!
       authorize @case, :can_close_case?
+
       if @case.ico?
         @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
       end
       @team_collection = CaseTeamCollection.new(@case)
     end
 
+    # Should be create
     def process_closure
       authorize @case, :can_close_case?
       @case = @case.decorate
@@ -62,6 +86,7 @@ module Cases
 
     def respond_and_close
       authorize @case
+
       @case.date_responded = nil
       set_permitted_events
       render :close
@@ -89,6 +114,7 @@ module Cases
       end
     end
 
+    # Should be update
     def update_closure
       authorize @case
       close_params = process_closure_params(@case.type_abbreviation)

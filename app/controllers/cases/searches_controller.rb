@@ -1,5 +1,7 @@
 module Cases
-  class SearchesController < BaseController
+  class SearchesController < ApplicationController
+    include CaseSetup
+
     def show
       set_url
       @state_selector = StateSelector.new(params)

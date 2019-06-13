@@ -236,7 +236,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :cases, controller: 'cases/base', except: [:index, :create] do
+  resources :cases, controller: 'base', except: [:index, :create], module: 'cases' do
     get :confirm_destroy, on: :member
 
     # Case behaviours
@@ -245,10 +245,14 @@ Rails.application.routes.draw do
       get 'edit_closure', on: :member, as: :edit_closure
       patch 'process_closure', on: :member
       patch 'update_closure', on: :member
+
       get 'closure_outcomes', on: :member
+
       get 'respond_and_close', on: :member
       patch 'process_respond_and_close', on: :member
+
       patch 'process_date_responded', on: :member
+
       get 'respond', on: :member
       patch 'confirm_respond', on: :member
     end
@@ -287,19 +291,8 @@ Rails.application.routes.draw do
 
     resources :approval, only: [:new, :create]
 
-    resources :response do
-      get 'upload_responses', on: :member
-      patch 'upload_responses',
-            action: :execute_upload_responses,
-            on: :member
-      get 'upload_response_and_approve', on: :member
-      patch 'upload_response_and_approve',
-            action: :execute_upload_response_and_approve,
-            on: :member
-      get 'upload_response_and_return_for_redraft', on: :member
-      patch 'upload_response_and_return_for_redraft',
-            action: :execute_upload_response_and_return_for_redraft,
-            on: :member
+    resource :responses, only: [:create] do
+      get 'new/:response_action', to: 'responses#new', as: 'new'
     end
 
     resources :amendment, only: [:new, :create]
@@ -316,8 +309,6 @@ Rails.application.routes.draw do
       patch :execute_assign_to_new_team, on: :member
       get :assign_to_team, on: :collection, as: 'assign_to_responder_team'
     end
-
-    # resources :case_attachments, path: 'attachments'
 
     resources :messages, only: [:create]
 
@@ -371,8 +362,6 @@ Rails.application.routes.draw do
       resources :teams, only: :index
     end
   end
-
-  #get '/search' => 'cases#search'
 
   get 'ping', to: 'heartbeat#ping', format: :json
 

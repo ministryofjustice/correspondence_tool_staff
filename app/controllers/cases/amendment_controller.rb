@@ -1,5 +1,7 @@
 module Cases
-  class AmendmentController < BaseController
+  class AmendmentController < ApplicationController
+    include CaseSetup
+
     before_action :set_decorated_case, only: [:new, :create]
 
     # Was request_amends
