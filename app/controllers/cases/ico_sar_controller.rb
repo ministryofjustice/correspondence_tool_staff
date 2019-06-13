@@ -1,5 +1,5 @@
 module Cases
-  class IcoSarController < BaseController
+  class IcoSarController < CasesController
     include ICOCasesParams
     include CreateCase
     include NewCase

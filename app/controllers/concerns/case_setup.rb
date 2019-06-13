@@ -31,4 +31,21 @@ module CaseSetup
     @case = @case.decorate
     @case_transitions = @case_transitions.decorate
   end
+
+  def set_correspondence_type(type)
+    @correspondence_type = CorrespondenceType.find_by_abbreviation(type.upcase)
+    @correspondence_type_key = type
+  end
+
+  def set_assignments
+    @assignments = []
+
+    if @case.responding_team.in? current_user.responding_teams
+      @assignments << @case.responder_assignment
+    end
+
+    if current_user.approving_team.in? @case.approving_teams
+      @assignments << @case.assignments.for_team(current_user.approving_team.id).last
+    end
+  end
 end

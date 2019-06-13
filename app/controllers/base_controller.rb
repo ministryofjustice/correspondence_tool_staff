@@ -1,6 +1,6 @@
 require './lib/translate_for_case'
 
-class Cases::BaseController < ApplicationController
+class CasesController < ApplicationController
   include CaseSetup
 
   def show
@@ -133,10 +133,10 @@ class Cases::BaseController < ApplicationController
     authorize @case
   end
 
-  # All existing partials are in /views/cases
-  def self.controller_path
-    'cases'
-  end
+  # # All existing partials are in /views/cases
+  # def self.controller_path
+  #   'cases'
+  # end
 
 
   protected
@@ -171,11 +171,6 @@ class Cases::BaseController < ApplicationController
     end
   end
 
-  def set_correspondence_type(type)
-    @correspondence_type = CorrespondenceType.find_by_abbreviation(type.upcase)
-    @correspondence_type_key = type
-  end
-
   # This is how we should be building @permitted_correspondence_types, but it
   # is missing policies on CorrespondenceType
   # def permitted_correspondence_types
@@ -208,19 +203,4 @@ class Cases::BaseController < ApplicationController
     TranslateForCase.translate(*args, **options)
   end
   alias t4c translate_for_case
-
-
-  private
-
-  def set_assignments
-    @assignments = []
-
-    if @case.responding_team.in? current_user.responding_teams
-      @assignments << @case.responder_assignment
-    end
-
-    if current_user.approving_team.in? @case.approving_teams
-      @assignments << @case.assignments.for_team(current_user.approving_team.id).last
-    end
-  end
 end

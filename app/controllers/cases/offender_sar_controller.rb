@@ -1,5 +1,5 @@
 module Cases
-  class OffenderSarController < BaseController
+  class OffenderSarController < CasesController
     include NewCase
     include OffenderSARCasesParams
 
