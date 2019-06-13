@@ -1,5 +1,6 @@
 class CorrespondenceTypeSeeder
 
+  #rubocop:disable Metrics/MethodLength
   def seed!
     puts "----Seeding Correspondence Types----"
 
@@ -34,5 +35,14 @@ class CorrespondenceTypeSeeder
                 external_time_limit: 30,
                 deadline_calculator_class: 'CalendarDays')
 
+    rec = CorrespondenceType.find_by(abbreviation: 'OFFENDER')
+    rec = CorrespondenceType.new if rec.nil?
+    rec.update!(name: 'Offender SAR (OFFENDER)',
+                abbreviation: 'OFFENDER',
+                escalation_time_limit: 3,
+                internal_time_limit: 10,
+                external_time_limit: 20,
+                deadline_calculator_class: 'CalendarDays')
   end
+  #rubocop:enable Metrics/MethodLength
 end
