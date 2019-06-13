@@ -1,10 +1,10 @@
 require './lib/translate_for_case'
 
 class CasesController < ApplicationController
-  include CaseSetup
+  include SetupCase
 
   def show
-    set_decorated_case
+    set_decorated_case(params[:id])
     set_assignments
 
     if flash.key?(:query_id)
@@ -70,7 +70,7 @@ class CasesController < ApplicationController
   end
 
   def edit
-    set_case
+    set_case(params[:id])
     set_correspondence_type(@case.type_abbreviation.downcase)
 
     authorize @case
@@ -82,7 +82,7 @@ class CasesController < ApplicationController
   end
 
   def update
-    set_decorated_case
+    #set_decorated_case(params[:id]) # TODO: Repeating case load!
     set_correspondence_type(params.fetch(:correspondence_type))
     @case = Case::Base.find(params[:id])
     authorize @case
@@ -110,7 +110,7 @@ class CasesController < ApplicationController
   end
 
   def destroy
-    set_decorated_case
+    set_decorated_case(params[:id])
     authorize @case
 
     service = CaseDeletionService.new(
@@ -129,7 +129,7 @@ class CasesController < ApplicationController
   end
 
   def confirm_destroy
-    set_decorated_case
+    set_decorated_case(params[:id])
     authorize @case
   end
 

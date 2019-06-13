@@ -1,6 +1,6 @@
 module Cases
   class SearchesController < ApplicationController
-    include CaseSetup
+    include SetupCase
 
     def show
       set_url

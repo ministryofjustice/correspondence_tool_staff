@@ -1,7 +1,7 @@
-module CaseSetup
+module SetupCase
   extend ActiveSupport::Concern
 
-  def set_case
+  def set_case(case_id = params[:case_id])
     @case = Case::Base
       .includes(
         :message_transitions,
@@ -9,7 +9,7 @@ module CaseSetup
         assignments: [:team],
         approver_assignments: [:user]
       )
-      .find(params[:case_id] || params[:id])
+      .find(case_id)
 
     @case_transitions = @case.transitions.case_history.order(id: :desc)
     @correspondence_type_key = @case.type_abbreviation.downcase
@@ -25,8 +25,8 @@ module CaseSetup
     @filtered_permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance, :link_a_case, :remove_linked_case]
   end
 
-  def set_decorated_case
-    set_case
+  def set_decorated_case(case_id = params[:case_id])
+    set_case(case_id)
 
     @case = @case.decorate
     @case_transitions = @case_transitions.decorate

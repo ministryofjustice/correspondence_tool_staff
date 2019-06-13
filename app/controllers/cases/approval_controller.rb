@@ -1,5 +1,7 @@
 module Cases
-  class ApprovalController < BaseController
+  class ApprovalController < ApplicationController
+    include SetupCase
+
     before_action :set_case, only: [:new, :create]
 
     # Was approve

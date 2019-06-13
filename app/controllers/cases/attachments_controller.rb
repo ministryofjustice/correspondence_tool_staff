@@ -1,4 +1,4 @@
-class CaseAttachmentsController < ApplicationController
+class AttachmentsController < ApplicationController
   before_action :set_case,       only: [:destroy, :download, :show]
   before_action :set_attachment, only: [:destroy, :download, :show]
 

@@ -1,6 +1,6 @@
 module Cases
   class ClosureController < ApplicationController
-    include CaseSetup
+    include SetupCase
 
     before_action :set_case, only: [
       :closure_outcomes,

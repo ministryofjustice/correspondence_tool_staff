@@ -1,6 +1,6 @@
 module Cases
   class AmendmentController < ApplicationController
-    include CaseSetup
+    include SetupCase
 
     before_action :set_decorated_case, only: [:new, :create]
 

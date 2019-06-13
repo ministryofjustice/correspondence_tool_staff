@@ -1,6 +1,6 @@
 module Cases
   class ResponsesController < ApplicationController
-    include CaseSetup
+    include SetupCase
 
     before_action :set_action
     before_action :set_case, only: [:new, :create]
