@@ -362,7 +362,7 @@ class Case::Base < ApplicationRecord
     self.type_abbreviation.downcase
   end
 
-  def self.factory(type)
+  def self.factory(_type)
     raise NotImplementedError.new('Case type must implement self.factory')
   end
 

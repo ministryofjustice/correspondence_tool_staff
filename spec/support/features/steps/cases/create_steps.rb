@@ -128,7 +128,8 @@ def create_offender_sar_case_step(params = {})
   # Case::Base.find(kase_id)
 end
 
-def create_overturned_ico_case_step(params={})
+
+def create_overturned_ico_case_step(params={}) # rubocop:disable Metrics/MethodLength
   ico_case = params.delete(:ico_case)
   flagged = params.delete(:flag_for_disclosure)
   case_type = params[:case_type].downcase
