@@ -1,6 +1,7 @@
 module Cases
   class FiltersController < ApplicationController
     include SetupCase
+    include Searchable
 
     before_action :set_url, only: [:open]
     before_action :set_state_selector, only: [:open, :my_open]
@@ -101,7 +102,7 @@ module Cases
           :responding_team
         )
 
-      query_list_params = filter_params.merge(list_path: request.path)
+      query_list_params = search_params.merge(list_path: request.path)
 
       service = CaseSearchService.new(
         user: current_user,
@@ -169,29 +170,6 @@ module Cases
       end
 
       url_for(new_params)
-    end
-
-    def filter_params
-      params.fetch(:search_query, {}).permit(
-        :search_text,
-        :parent_id,
-        :external_deadline_from,
-        :external_deadline_from_dd,
-        :external_deadline_from_mm,
-        :external_deadline_from_yyyy,
-        :external_deadline_to,
-        :external_deadline_to_dd,
-        :external_deadline_to_mm,
-        :external_deadline_to_yyyy,
-        common_exemption_ids: [],
-        exemption_ids: [],
-        filter_assigned_to_ids: [],
-        filter_case_type: [],
-        filter_open_case_status: [],
-        filter_sensitivity: [],
-        filter_status: [],
-        filter_timeliness: [],
-      )
     end
   end
 end

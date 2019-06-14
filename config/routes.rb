@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+
   # Case Creation
   scope :cases, module: 'cases' do
     resources :fois, only: [:new, :create], controller: 'foi', as: :case_foi_standards
@@ -48,7 +49,7 @@ Rails.application.routes.draw do
     end
   end
 
-  # Search and Filtering
+  # Case Search and Filtering
   scope :cases, module: 'cases' do
     resource :search, only: [:show]
 
@@ -63,6 +64,11 @@ Rails.application.routes.draw do
       get 'incoming' => 'filters#incoming'
       get '/' => 'filters#show'
     end
+  end
+
+  # Case Actions
+  resources :cases, except: [:index, :create] do
+    get :confirm_destroy, on: :member
   end
 
   # Case Behaviours
@@ -140,10 +146,6 @@ Rails.application.routes.draw do
     end
   end
 
-  # Case Actions
-  resources :cases, except: [:index, :create] do
-    get :confirm_destroy, on: :member
-  end
 
   # Stats Reporting and Performance
   resources :stats, only: [:index, :show, :new, :create] do
