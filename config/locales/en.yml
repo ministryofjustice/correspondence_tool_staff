@@ -303,7 +303,7 @@ en:
         filter_timeliness: Timeliness
       team:
         role: What will the business unit be responsible for?
-        correspondente_type_ids: Correspondence types
+        correspondence_type_ids: Correspondence types
     hint:
       feedback:
         comment: |
