@@ -1,4 +1,4 @@
-module Searchable
+module SearchParams
   extend ActiveSupport::Concern
 
   def search_params
@@ -20,7 +20,7 @@ module Searchable
       filter_open_case_status: [],
       filter_sensitivity: [],
       filter_status: [],
-      filter_timeliness: [],
-      )
+      filter_timeliness: []
+    )
   end
 end
