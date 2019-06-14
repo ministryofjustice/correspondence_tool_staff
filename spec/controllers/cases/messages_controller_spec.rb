@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MessagesController, type: :controller do
+RSpec.describe Cases::MessagesController, type: :controller do
   let!(:team_dacu)         { find_or_create :team_dacu }
   let!(:manager)           { team_dacu.users.first }
   let!(:approver)          { create :approver }
