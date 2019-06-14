@@ -4,14 +4,12 @@ module Cases
 
     before_action :set_case, only: [:new, :create, :destroy]
 
-    # Was extend_sar_deadline
     def new
       authorize @case
 
       @case = CaseExtendSARDeadlineDecorator.decorate @case
     end
 
-    # Was execute_extend_sar_deadline
     def create
       authorize @case, :extend_sar_deadline?
 
@@ -36,14 +34,10 @@ module Cases
       end
     end
 
-    # Was remove_extend_sar_deadline
     def destroy
       authorize @case, :remove_sar_deadline_extension?
 
-      service = CaseRemoveSARDeadlineExtensionService.new(
-        current_user,
-        @case
-      )
+      service = CaseRemoveSARDeadlineExtensionService.new(current_user,@case)
       service.call
 
       if service.result == :ok
