@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CaseAttachmentsController, type: :controller do
+RSpec.describe Cases::AttachmentsController, type: :controller do
   let(:responder) { kase.responder }
   let(:manager)   { create :manager }
 
