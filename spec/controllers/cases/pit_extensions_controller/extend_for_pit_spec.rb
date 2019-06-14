@@ -11,7 +11,7 @@ describe Cases::PitExtensionsController, type: :controller do
     sign_in manager
   end
 
-  describe 'GET new' do
+  describe '#new' do
     it 'authorizes' do
       expect{ get :new, params: { case_id: case_being_drafted.id }}
         .to require_permission(:extend_for_pit?).with_args(

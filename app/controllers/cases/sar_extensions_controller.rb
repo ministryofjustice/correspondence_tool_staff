@@ -1,11 +1,11 @@
 module Cases
-  class SarExtensionController < ApplicationController
+  class SarExtensionsController < ApplicationController
     include SetupCase
 
     before_action :set_case, only: [:new, :create, :destroy]
 
     def new
-      authorize @case
+      authorize @case, :extend_sar_deadline?
 
       @case = CaseExtendSARDeadlineDecorator.decorate @case
     end
@@ -27,7 +27,7 @@ module Cases
       elsif service.result == :validation_error
         @case = CaseExtendSARDeadlineDecorator.decorate @case
         @case.reason_for_extending = params[:case][:reason_for_extending]
-        render :extend_sar_deadline
+        render :new
       else
         flash[:alert] = t('.error', case_number: @case.number)
         redirect_to case_path(@case.id)
