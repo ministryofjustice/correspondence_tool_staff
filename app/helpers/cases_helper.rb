@@ -99,14 +99,14 @@ module CasesHelper
               class: 'button', method: :patch
     when :extend_sar_deadline
       link_to I18n.t('common.case.extend_sar_deadline'),
-              extend_sar_deadline_case_path(@case),
+              new_case_sar_extension_path(@case),
               id: 'action--extend-deadline-for-sar',
               class: 'button-secondary'
     when :remove_sar_deadline_extension
       link_to I18n.t('common.case.remove_sar_deadline_extension'),
-              remove_sar_deadline_extension_case_path(@case),
+              case_sar_extension_path(@case),
               id: 'action--remove-extended-deadline-for-sar',
-              class: 'button-secondary', method: :patch
+              class: 'button-secondary', method: :delete
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
@@ -208,7 +208,7 @@ module CasesHelper
 
   def action_button_for_extend_for_pit(kase)
     link_to I18n.t('common.case.extend_for_pit'),
-            extend_for_pit_case_path(kase),
+            new_case_pit_extension_path(kase),
             id: 'action--extend-for-pit',
             class: 'button-secondary'
 
@@ -216,9 +216,9 @@ module CasesHelper
 
   def action_button_for_remove_pit_extension(kase)
     link_to I18n.t('common.case.remove_pit_extension'),
-            remove_pit_extension_case_path(kase),
+            case_pit_extension_path(kase),
             id: 'action--remove-pit-extension',
-            method: :patch,
+            method: :delete,
             class: 'button-secondary'
   end
 

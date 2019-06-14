@@ -31,8 +31,8 @@ ul.business-groups.list
         .team-actions
           - if assignment.new_record?
             = link_to t('button.assign'),
-                  case_assign_to_responder_team_path(case_id: kase.id,
+                assign_to_responder_team_case_assignments_path(case_id: kase.id,
                           team_id: team.id), class: 'button'
           - else
             = link_to t('button.assign'),
-                  execute_assign_to_new_team_case_assignment_path(kase.id, assignment.id, team_id: team.id), class: 'button', method: :patch
+                execute_assign_to_new_team_case_assignment_path(kase.id, assignment.id, team_id: team.id), class: 'button', method: :patch

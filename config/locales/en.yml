@@ -623,30 +623,28 @@ en:
         heading: Users
         teams: Teams
 
-
-  assignments:
-    accept:
-      success: Case taken on
-      already_accepted: Case already accepted by %{name}
-    assign_to_new_team:
-      heading: 'Assign to another team'
-    assign_to_team:
-      case_assigned: Case successfully assigned
-      case_created: Case assigned to %{business_unit_name}
-    execute_assign_to_new_team:
-      case_assigned: Case has been assigned to %{business_unit_name}
-    new:
-      heading: Assign case
-      new_assignment: Create case
-      assignment: Existing case
-    reassign_user:
-      heading: Change team member
-      action: Change team member
-    take_case_on:
-      success: Case taken on
-      already_accepted: Case already accepted by %{name}
-
   cases:
+    assignments:
+      accept:
+        success: Case taken on
+        already_accepted: Case already accepted by %{name}
+      assign_to_new_team:
+        heading: 'Assign to another team'
+      assign_to_team:
+        case_assigned: Case successfully assigned
+        case_created: Case assigned to %{business_unit_name}
+      execute_assign_to_new_team:
+        case_assigned: Case has been assigned to %{business_unit_name}
+      new:
+        heading: Assign case
+        new_assignment: Create case
+        assignment: Existing case
+      reassign_user:
+        heading: Change team member
+        action: Change team member
+      take_case_on:
+        success: Case taken on
+        already_accepted: Case already accepted by %{name}
     bypass_approvals_form:
       press_clearance_reqd: Does Press office need to clear this response?
       affirmative: 'Yes'
