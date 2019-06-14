@@ -12,15 +12,17 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          element :subject_full_name, '#case_sar_subject_full_name'
+          element :full_request, '#offender_sar_case_form_message'
 
           element :submit_button, '.button'
 
-          # def set_received_date(received_date)
-          #   date_received_day.set(received_date.day)
-          #   date_received_month.set(received_date.month)
-          #   date_received_year.set(received_date.year)
-          # end
+          def fill_in_case_details(params={})
+            kase = FactoryBot.build :offender_sar_case, params
+
+            full_request.set kase.message
+
+            #fill_in :offender_sar_case_form_message, with: "Offender Sar Case, urgent, needs to be looked at, please! like now? while we're young, today!"
+          end
         end
       end
     end

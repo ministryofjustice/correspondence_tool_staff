@@ -44,6 +44,11 @@ FactoryBot.define do
       i_am_deleted        { false }
     end
 
+    trait :third_party do
+      third_party { true }
+      third_party_relationship { 'Aunt' }
+    end
+
     current_state                 { 'unassigned' }
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(identifier) }
