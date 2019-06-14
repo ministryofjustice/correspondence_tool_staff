@@ -20,7 +20,7 @@
   - if @case.allow_event?(current_user, :upload_response_approve_and_bypass)
     .grid-row
       .column-two-thirds
-        = render partial: 'bypass_approvals_form'
+        = render partial: 'shared/bypass_approvals_form'
 
   .actions
     = submit_tag t('.upload_response'), class: 'button'

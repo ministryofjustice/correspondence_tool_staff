@@ -5,8 +5,7 @@ module Cases
     before_action :set_action
     before_action :set_case, only: [:new, :create]
 
-    # @todo (@mseedat-moj): ACTION_SETTINGS should be moved
-    #   into ResponseUploaderService
+    # @todo (@mseedat-moj): Move ACTION_SETTINGS to ResponseUploaderService
     ACTION_SETTINGS = {
       upload_responses: {
         approval_action: nil,
@@ -65,6 +64,8 @@ module Cases
       service.upload!
 
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+      @case = @case.decorate
+
 
       case service.result
       when :blank

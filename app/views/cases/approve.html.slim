@@ -23,7 +23,7 @@
 
 = form_tag approve_case_path(@case), method: :patch
   - if @case.allow_event?(current_user, :approve_and_bypass)
-    = render partial: 'bypass_approvals_form'
+    = render partial: 'shared/bypass_approvals_form'
 
   .actions
     = submit_tag 'Clear response', class: 'button'
