@@ -36,7 +36,7 @@ module Cases
       end
 
       respond_to do |format|
-        format.html { render :closed_cases }
+        format.html { render :closed }
         format.csv { send_csv_cases 'closed' }
       end
     end

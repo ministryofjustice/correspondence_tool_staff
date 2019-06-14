@@ -116,79 +116,9 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  context "as an anonymous user" do
-
-    describe 'GET closed_cases' do
-      context 'html' do
-        it "be redirected to signin if trying to update a specific case" do
-          get :closed_cases
-          expect(response).to redirect_to(new_user_session_path)
-        end
-      end
-
-      context 'csv format' do
-        it 'prevents the user from downloading' do
-          expect(CSVGenerator).not_to receive(:new)
-
-          get :closed_cases, format: 'csv'
-          expect(response.status).to eq 401
-          expect(response.header['Content-Type']).to eq 'text/csv; charset=utf-8'
-          expect(response.body).to eq 'You need to sign in or sign up before continuing.'
-        end
-      end
-    end
-  end
-
   context "as an authenticated manager" do
 
     before { sign_in manager }
-
-    describe 'GET closed_cases' do
-
-      it 'assigns cases returned by CaseFinderService' do
-        stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
-        get :closed_cases
-        expect(assigns(:cases)).to eq :closed_cases_result
-      end
-
-      it 'passes page param to the paginator' do
-        gnm = stub_current_case_finder_for_closed_cases_with(:closed_cases_result)
-        get :closed_cases, params: { page: 'our_page' }
-        expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
-          .to have_received(:page).with('our_page')
-      end
-
-      context 'html format' do
-        it 'renders the closed cases page' do
-          get :closed_cases
-          expect(response).to render_template :closed_cases
-        end
-      end
-
-      context 'csv format' do
-        let!(:gnm) {stub_current_case_finder_for_closed_cases_with(:closed_cases_result) }
-        let(:record) { double }
-
-        before do
-          expect(CSVGenerator).to receive(:filename).with('closed').and_return('abc.csv')
-          get :closed_cases, format: 'csv'
-          expect(response.status).to eq 200
-        end
-
-        it 'generates a file and downloads it' do
-          expect(gnm.current_page_or_tab.cases.by_last_transitioned_date).to receive(:each).and_yield(record)
-          expect(record).to receive(:to_csv).and_return(['a', 'csv', 'line'])
-
-          expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
-          expect(response.body).to eq "#{CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)}a,csv,line\n"
-        end
-
-        it 'does not paginate the result set' do
-          expect(gnm.current_page_or_tab.cases.by_last_transitioned_date)
-            .not_to have_received(:page).with('our_page')
-        end
-      end
-    end
 
     describe 'GET close' do
       it 'displays the process close page' do
@@ -313,51 +243,7 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  # An astute reader who has persevered to this point in the file may notice
-  # that the following tests are in a different structure than those above:
-  # there, the top-most grouping is a context describing authentication, with
-  # what action is being tested (GET new, POST create, etc) sub-grouped within
-  # those contexts. This breaks up the tests for, say, GET new so that to read
-  # how that action/functionality behaves becomes hard. The tests below seek to
-  # remedy this by modelling how they could be grouped by functionality
-  # primarily, with sub-grouping for different contexts.
-  #
-  describe 'GET deleted_cases' do
-    let!(:active_kase) { create(:case) }
-    # This case should be outside the 6 month threshold for downloading
-    let!(:ancient_deleted_kase) do
-      Timecop.travel(7.months.ago) do
-        create(:case, :deleted_case)
-      end
-    end
-    let!(:old_deleted_kase) do
-      Timecop.travel(1.day.ago) do
-        create(:case, :deleted_case)
-      end
-    end
-    let!(:deleted_kase) { create(:case, :deleted_case) }
-    let!(:deleted_sar_kase) { create(:sar_case, :deleted_case) }
-
-    context 'as an manager' do
-      before { sign_in manager }
-
-      it 'retrieves only deleted cases' do
-        get :deleted_cases, format: :csv
-        expect(assigns(:cases)).to eq([deleted_sar_kase, deleted_kase, old_deleted_kase])
-      end
-    end
-
-    context 'as a lesser user' do
-      before { sign_in responder }
-
-      it 'retrieves only deleted cases I am supposed to see' do
-        get :deleted_cases, format: :csv
-        expect(assigns(:cases)).to eq([deleted_kase, old_deleted_kase])
-      end
-    end
-  end
-
-  describe 'GET index' do
+  describe '#index' do
     let(:decorate_result) { double 'decorated_result' }
     let(:pager) { double 'Kaminari Pager', decorate: decorate_result }
     let(:cases) { double 'ActiveRecord Cases', page: pager }
@@ -401,109 +287,7 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  describe 'GET incoming_cases' do
-    context "as an anonymous user" do
-      it "be redirected to signin if trying to list of questions" do
-        get :incoming_cases
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context 'as an authenticated disclosure_specialist' do
-      before do
-        sign_in disclosure_specialist
-      end
-
-      it 'assigns the result set from the finder provided by GlobalNavManager' do
-        stub_current_case_finder_cases_with(:incoming_cases_result)
-        get :incoming_cases
-        expect(assigns(:cases)).to eq :incoming_cases_result
-      end
-
-      it 'renders the incoming_cases template' do
-        get :incoming_cases
-        expect(response).to render_template(:incoming_cases)
-      end
-
-      it 'passes page param to the paginator' do
-        gnm = stub_current_case_finder_cases_with(:incoming_cases_result)
-        get :incoming_cases, params: { page: 'our_page' }
-        expect(gnm.current_page_or_tab.cases.by_deadline)
-          .to have_received(:page).with('our_page')
-      end
-    end
-  end
-
-  describe 'GET my_open_cases' do
-
-    context "as an anonymous user" do
-      it "be redirected to signin if trying to list of questions" do
-        get :my_open_cases, params: {tab: 'in_time'}
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context 'without stubs' do
-      let!(:closed_case) { create(:closed_case) }
-      let!(:active_case) { flagged_case }
-
-      before do
-        sign_in manager_approver
-      end
-
-      it 'gets only incoming cases' do
-        get :incoming_cases
-        expect(assigns(:cases)).not_to match_array([closed_case, active_case])
-        expect(assigns(:cases)).to match_array([active_case])
-      end
-    end
-
-    context 'as an authenticated disclosure_specialist' do
-      before do
-        sign_in disclosure_specialist
-      end
-
-      it 'assigns the result set from the finder provided by GlobalNavManager' do
-        stub_current_case_finder_cases_with(:my_open_cases_result)
-        get :my_open_cases, params: { tab: 'in_time' }
-        expect(assigns(:cases)).to eq :my_open_cases_result
-      end
-
-      it 'passes page param to the paginator' do
-        gnm = stub_current_case_finder_cases_with(:my_open_cases_result)
-        get :my_open_cases, params: { page: 'our_page', tab: 'in_time' }
-        expect(gnm.current_page_or_tab.cases.by_deadline)
-          .to have_received(:page).with('our_page')
-      end
-
-      it 'sets @current_tab_name to all cases for "All open cases tab"' do
-        stub_current_case_finder_cases_with(:my_open_cases_result)
-        get :my_open_cases, params: { tab: 'in_time' }
-        expect(assigns(:current_tab_name)).to eq 'my_cases'
-      end
-
-      context 'html request' do
-        it 'renders the index template' do
-          stub_current_case_finder_cases_with(:my_open_cases_result)
-          get :my_open_cases, params: { tab: 'in_time' }
-          expect(response).to render_template(:index)
-        end
-      end
-
-      context 'csv request' do
-        it 'downloads a csv file' do
-          expect(CSVGenerator).to receive(:filename).with('my-open').and_return('abc.csv')
-
-          get :my_open_cases, params: { tab: 'in_time' }, format: 'csv'
-          expect(response.status).to eq 200
-          expect(response.header['Content-Disposition']).to eq %q{attachment; filename="abc.csv"}
-          expect(response.body).to eq CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)
-        end
-      end
-    end
-  end
-
-  describe 'GET show' do
+  describe '#show' do
 
     it 'retrieves message_text error from the flash' do
       sign_in responder
@@ -854,6 +638,180 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
+  describe '#edit' do
+    let(:kase) { create :accepted_case }
+
+    context 'as a logged in non-manager' do
+
+      before(:each)  do
+        sign_in responder
+        get :edit, params: { id: kase.id }
+      end
+
+      it 'redirects to case list' do
+        expect(response).to redirect_to root_path
+      end
+
+      it 'displays error message in flash' do
+        expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
+      end
+    end
+
+    context 'as a manager' do
+      before(:each) do
+        sign_in manager
+        get :edit, params: { id: kase.id }
+      end
+
+      it 'assigns case' do
+        expect(assigns(:case)).to eq kase
+      end
+
+      it 'renders edit' do
+        expect(response).to render_template :edit
+      end
+    end
+
+    context 'ICO cases' do
+      let(:kase) { create :accepted_ico_foi_case }
+
+      before(:each) do
+        sign_in manager
+        get :edit, params: { id: kase.id }
+      end
+
+      it 'renders edit' do
+        expect(response).to render_template :edit
+      end
+    end
+  end
+
+  describe '#update', versioning: true do
+
+    # let(:managing_team)                 { create :team_dacu_disclosure }
+    # let(:dacu_disclosure_specialist)    { managing_team.users.first }
+    let(:service)                       { double CaseUpdaterService }
+    let(:kase)                          { create :accepted_case }
+    let(:edit_params) do
+      ActionController::Parameters.new({
+                                         correspondence_type: 'foi',
+                                         case_foi:  {
+                                           name: 'Tony Blair',
+                                           email: 'tb@blairco.pol',
+                                           postal_address: '2, Vinery Way London W6 0LQ',
+                                           requester_type: 'offender',
+                                           received_date_dd: '1',
+                                           received_date_mm: '10',
+                                           received_date_yyyy: '2017',
+                                           subject: 'TEST case',
+                                           message: 'Lorem ipsum dolor',
+                                         },
+                                         commit: 'Submit',
+                                         id:  kase.id.to_s
+                                       })
+    end
+
+    let(:expected_params) do
+      ActionController::Parameters.new({
+                                         name: 'Tony Blair',
+                                         email: 'tb@blairco.pol',
+                                         postal_address: '2, Vinery Way London W6 0LQ',
+                                         requester_type: 'offender',
+                                         received_date_dd: '1',
+                                         received_date_mm: '10',
+                                         received_date_yyyy: '2017',
+                                         subject: 'TEST case',
+                                         message: 'Lorem ipsum dolor',
+                                       }).permit(
+        :name,
+        :email,
+        :postal_address,
+        :requester_type,
+        :received_date_dd,
+        :received_date_mm,
+        :received_date_yyyy,
+        :subject,
+        :message,
+        :correspondence_type_id
+      )
+    end
+
+    let(:date)    { Time.local(2017, 10, 3) }
+
+    context 'as a logged in non-manager' do
+      before(:each) do
+        Timecop.freeze(date) do
+          sign_in responder
+          patch :update, params: edit_params.to_unsafe_hash
+        end
+      end
+
+      it 'redirects' do
+        Timecop.freeze(date) do
+          expect(response).to redirect_to root_path
+        end
+      end
+
+      it 'gives error in flash' do
+        Timecop.freeze(date) do
+          expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
+        end
+      end
+    end
+
+    context 'as a manager' do
+
+      let(:manager)   { create :manager, managing_teams: [find_or_create(:team_dacu)] }
+
+      before(:each) {
+        sign_in manager
+      }
+
+      it 'calls case updater service' do
+        Timecop.freeze(date) do
+          expect(CaseUpdaterService).to receive(:new).
+            with(manager, kase, expected_params).
+            and_return(service)
+          expect(service).to receive(:call)
+          allow(service).to receive(:result)
+
+          patch :update, params: edit_params.to_unsafe_hash
+        end
+      end
+
+      it 'creates a papertrail version with the current user as whodunnit' do
+        Timecop.freeze(date) do
+          patch :update, params: edit_params.to_unsafe_hash
+          expect(kase.versions.size).to eq 2
+          expect(kase.versions.last.whodunnit).to eq manager.id.to_s
+        end
+      end
+    end
+    context 'case is an appeal' do
+      let(:kase)     { create :accepted_compliance_review}
+      context 'as a logged in non-manager' do
+        before(:each) do
+          Timecop.freeze(date) do
+            sign_in responder
+            patch :update, params: edit_params.to_unsafe_hash
+          end
+        end
+
+        it 'redirects' do
+          Timecop.freeze(date) do
+            expect(response).to redirect_to root_path
+          end
+        end
+
+        it 'gives error in flash' do
+          Timecop.freeze(date) do
+            expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
+          end
+        end
+      end
+    end
+  end
+
   describe 'GET respond' do
 
     let(:responder)            { find_or_create(:foi_responder) }
@@ -1052,180 +1010,6 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  describe 'GET edit' do
-    let(:kase) { create :accepted_case }
-
-    context 'as a logged in non-manager' do
-
-      before(:each)  do
-        sign_in responder
-        get :edit, params: { id: kase.id }
-      end
-
-      it 'redirects to case list' do
-        expect(response).to redirect_to root_path
-      end
-
-      it 'displays error message in flash' do
-        expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
-      end
-    end
-
-    context 'as a manager' do
-      before(:each) do
-        sign_in manager
-        get :edit, params: { id: kase.id }
-      end
-
-      it 'assigns case' do
-        expect(assigns(:case)).to eq kase
-      end
-
-      it 'renders edit' do
-        expect(response).to render_template :edit
-      end
-    end
-
-    context 'ICO cases' do
-      let(:kase) { create :accepted_ico_foi_case }
-
-      before(:each) do
-        sign_in manager
-        get :edit, params: { id: kase.id }
-      end
-
-      it 'renders edit' do
-        expect(response).to render_template :edit
-      end
-    end
-  end
-
-  describe 'PATCH update', versioning: true do
-
-    # let(:managing_team)                 { create :team_dacu_disclosure }
-    # let(:dacu_disclosure_specialist)    { managing_team.users.first }
-    let(:service)                       { double CaseUpdaterService }
-    let(:kase)                          { create :accepted_case }
-    let(:edit_params) do
-      ActionController::Parameters.new({
-                                         correspondence_type: 'foi',
-                                         case_foi:  {
-                                           name: 'Tony Blair',
-                                           email: 'tb@blairco.pol',
-                                           postal_address: '2, Vinery Way London W6 0LQ',
-                                           requester_type: 'offender',
-                                           received_date_dd: '1',
-                                           received_date_mm: '10',
-                                           received_date_yyyy: '2017',
-                                           subject: 'TEST case',
-                                           message: 'Lorem ipsum dolor',
-                                         },
-                                         commit: 'Submit',
-                                         id:  kase.id.to_s
-                                       })
-    end
-
-    let(:expected_params) do
-      ActionController::Parameters.new({
-                                         name: 'Tony Blair',
-                                         email: 'tb@blairco.pol',
-                                         postal_address: '2, Vinery Way London W6 0LQ',
-                                         requester_type: 'offender',
-                                         received_date_dd: '1',
-                                         received_date_mm: '10',
-                                         received_date_yyyy: '2017',
-                                         subject: 'TEST case',
-                                         message: 'Lorem ipsum dolor',
-                                       }).permit(
-        :name,
-        :email,
-        :postal_address,
-        :requester_type,
-        :received_date_dd,
-        :received_date_mm,
-        :received_date_yyyy,
-        :subject,
-        :message,
-        :correspondence_type_id
-      )
-    end
-
-    let(:date)    { Time.local(2017, 10, 3) }
-
-    context 'as a logged in non-manager' do
-      before(:each) do
-        Timecop.freeze(date) do
-          sign_in responder
-          patch :update, params: edit_params.to_unsafe_hash
-        end
-      end
-
-      it 'redirects' do
-        Timecop.freeze(date) do
-          expect(response).to redirect_to root_path
-        end
-      end
-
-      it 'gives error in flash' do
-        Timecop.freeze(date) do
-          expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
-        end
-      end
-    end
-
-    context 'as a manager' do
-
-      let(:manager)   { create :manager, managing_teams: [find_or_create(:team_dacu)] }
-
-      before(:each) {
-        sign_in manager
-      }
-
-      it 'calls case updater service' do
-        Timecop.freeze(date) do
-          expect(CaseUpdaterService).to receive(:new).
-            with(manager, kase, expected_params).
-            and_return(service)
-          expect(service).to receive(:call)
-          allow(service).to receive(:result)
-
-          patch :update, params: edit_params.to_unsafe_hash
-        end
-      end
-
-      it 'creates a papertrail version with the current user as whodunnit' do
-        Timecop.freeze(date) do
-          patch :update, params: edit_params.to_unsafe_hash
-          expect(kase.versions.size).to eq 2
-          expect(kase.versions.last.whodunnit).to eq manager.id.to_s
-        end
-      end
-    end
-    context 'case is an appeal' do
-      let(:kase)     { create :accepted_compliance_review}
-      context 'as a logged in non-manager' do
-        before(:each) do
-          Timecop.freeze(date) do
-            sign_in responder
-            patch :update, params: edit_params.to_unsafe_hash
-          end
-        end
-
-        it 'redirects' do
-          Timecop.freeze(date) do
-            expect(response).to redirect_to root_path
-          end
-        end
-
-        it 'gives error in flash' do
-          Timecop.freeze(date) do
-            expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
-          end
-        end
-      end
-    end
-  end
-
   describe OverturnedSarCasesController do
 
     let(:ico_sar)             { create :ico_sar_case }
@@ -1290,28 +1074,5 @@ RSpec.describe CasesController, type: :controller do
         end
       end
     end
-  end
-
-  def stub_current_case_finder_cases_with(result)
-    pager = double 'Kaminari Pager', decorate: result
-    cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
-    cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
-    allow(cases).to receive(:includes).and_return(cases)
-    page = instance_double GlobalNavManager::Page, cases: cases
-    gnm = instance_double GlobalNavManager, current_page_or_tab: page
-    allow(GlobalNavManager).to receive(:new).and_return gnm
-    gnm
-  end
-
-  def stub_current_case_finder_for_closed_cases_with(result)
-    pager = double 'Kaminari Pager', decorate: result
-    cases_by_last_transitioned_date = double 'ActiveRecord Cases by last transitioned', page: pager
-    cases = double 'ActiveRecord Cases', by_last_transitioned_date: cases_by_last_transitioned_date
-    page = instance_double GlobalNavManager::Page, cases: cases
-    gnm = instance_double GlobalNavManager, current_page_or_tab: page
-    allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
-    allow(cases).to receive(:includes).and_return(cases)
-    allow(GlobalNavManager).to receive(:new).and_return gnm
-    gnm
   end
 end

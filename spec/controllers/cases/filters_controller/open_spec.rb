@@ -1,33 +1,33 @@
 require "rails_helper"
 
 describe Cases::FiltersController, type: :controller do
+  let(:user) { find_or_create :disclosure_bmt_user }
+  let(:open_cases) { Case::Base.opened }
+
+  let(:current_page) {
+    instance_double(GlobalNavManager::Page, cases: open_cases)
+  }
+
+  let(:global_nav_manager) {
+    instance_double(GlobalNavManager, current_page_or_tab: current_page)
+  }
+
+  let(:search_query) {
+    create :search_query, :list, filter_case_type: ['foi-standard']
+  }
+
+  let(:parent_search_query) { create :search_query, :list }
+
+  let(:case_search_service) {
+    instance_double CaseSearchService,
+      call: nil,
+      error?: false,
+      result_set: Case::Base.all,
+      query: search_query,
+      parent: nil
+  }
+
   describe '#open' do
-    let(:user) { find_or_create :disclosure_bmt_user }
-    let(:open_cases) { Case::Base.opened }
-
-    let(:current_page) {
-      instance_double(GlobalNavManager::Page, cases: open_cases)
-    }
-
-    let(:global_nav_manager) {
-      instance_double(GlobalNavManager, current_page_or_tab: current_page)
-    }
-
-    let(:search_query) {
-      create :search_query, :list, filter_case_type: ['foi-standard']
-    }
-
-    let(:parent_search_query) { create :search_query, :list }
-
-    let(:case_search_service) {
-      instance_double CaseSearchService,
-        call: nil,
-        error?: false,
-        result_set: Case::Base.all,
-        query: search_query,
-        parent: nil
-    }
-
     context 'as an anonymous user' do
       it 'be redirected to signin if trying to list of questions' do
         get :open
