@@ -1,17 +1,15 @@
 module Cases
-  class PitExtensionController < ApplicationController
+  class PitExtensionsController < ApplicationController
     include SetupCase
 
     before_action :set_case, only: [:new, :create, :destroy]
 
-    # Was extend_for_pit
     def new
-      authorize @case
+      authorize @case, :extend_for_pit?
 
       @case = CaseExtendForPITDecorator.decorate @case
     end
 
-    # Was execute_extend_for_pit
     def create
       authorize @case, :extend_for_pit?
 
@@ -36,19 +34,17 @@ module Cases
         @case.extension_deadline_mm = pit_params[:extension_deadline_mm]
         @case.extension_deadline_dd = pit_params[:extension_deadline_dd]
         @case.reason_for_extending = pit_params[:reason_for_extending]
-        render :extend_for_pit
+        render :new
       else
         flash[:alert] = "Unable to perform PIT extension on case #{@case.number}"
         redirect_to case_path(@case.id)
       end
     end
 
-    # Was remove_pit_extension
     def destroy
       authorize @case, :remove_pit_extension?
 
-      service = CaseRemovePITExtensionService.new current_user,
-                                                  @case
+      service = CaseRemovePITExtensionService.new(current_user, @case)
       result = service.call
 
       if result == :ok

@@ -66,6 +66,10 @@ Rails.application.routes.draw do
 
   resources :cases, except: [:index, :create] do
     get :confirm_destroy, on: :member
+  end
+
+  resources :cases, module: 'cases' do
+
 
     # Case behaviours
     resources :closure do
@@ -109,13 +113,11 @@ Rails.application.routes.draw do
       # delete 'destroy_link/:linked_case_number' => 'cases/base#destroy_case_link' , on: :member, as: 'destroy_link_on'
     end
 
-    resources :pit_extension, only: [:new, :create] do
-      delete :destroy, on: :collection
-    end
+    resources :pit_extensions, only: [:new, :create]
+    resource :pit_extension, only: [:destroy]
 
-    resources :sar_extension, only: [:new, :create] do
-      delete :destroy, on: :collection
-    end
+    resources :sar_extensions, only: [:new, :create]
+    resource :sar_extension, only: [:destroy]
 
     resources :approval, only: [:new, :create]
 
@@ -140,7 +142,7 @@ Rails.application.routes.draw do
 
     resources :messages, only: [:create]
 
-    resources :case_attachments, path: 'attachments', only: [:destroy] do
+    resources :attachments, path: 'attachments', only: [:destroy] do
       get 'download', on: :member
     end
   end
