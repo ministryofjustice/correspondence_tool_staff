@@ -46,7 +46,7 @@ Rails.application.routes.draw do
     end
 
     resources :ico do
-      patch 'record_late_team'#, on: :member - not sure why member not working
+      patch 'record_late_team'#, on: :member - not sure why member not working
     end
 
     # Search and Filtering
