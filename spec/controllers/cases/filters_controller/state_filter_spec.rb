@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe CasesController, type: :controller do
+RSpec.describe Cases::FiltersController, type: :controller do
 
   let(:params) do
     {
@@ -18,19 +18,18 @@ RSpec.describe CasesController, type: :controller do
       'timeliness' => 'in_time',
       'tab' => 'in_time',
       'other_param' => 'other_value',
-      'controller' => 'cases',
-      'orig_action' => 'open_cases',
+      'controller' => 'filters',
+      'orig_action' => 'open',
       'commit' => 'Filter',
       'action' => 'filter'
     }
   end
 
-  describe 'POST filter' do
+  describe '#show' do
     context 'filtering by state' do
-
       before(:each) do
         sign_in create(:manager)
-        post :filter, params: params
+        get :show, params: params
         @redirect_url = URI.parse response.redirect_url
         @redirect_params = CGI.parse(@redirect_url.query)
       end
@@ -51,13 +50,12 @@ RSpec.describe CasesController, type: :controller do
     it 'removes the page parameter' do
       sign_in create(:manager)
       my_params = params.merge('page' => '3')
-      post :filter, params: my_params
+      get :show, params: my_params
       redirect_url = URI.parse response.redirect_url
       redirect_params = CGI.parse(redirect_url.query)
 
       expect(redirect_params).not_to have_key('page')
     end
   end
-
 end
 

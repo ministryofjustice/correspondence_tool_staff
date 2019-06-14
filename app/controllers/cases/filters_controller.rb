@@ -127,7 +127,7 @@ module Cases
       end
     end
 
-    # Note (mseedat-moj): Was cases#index but is not currently used
+    # @note (mseedat-moj): Was cases#index but is not currently used
     # def index
     #   @cases = CaseFinderService.new(current_user)
     #     .for_params(request.params)
@@ -140,10 +140,6 @@ module Cases
     #   @can_add_case = policy(Case::Base).can_add_case?
     # end
 
-    # All existing partials are in /views/cases
-    def self.controller_path
-      'cases'
-    end
 
     private
 
@@ -166,10 +162,12 @@ module Cases
     def make_redirect_url_with_additional_params(new_params)
       new_params[:controller] = params[:controller]
       new_params[:action] = params[:orig_action]
+
       params.keys.each do |key|
-        next if key.to_sym.in?( %i{ utf8 authenticity_token state_selector states action commit action orig_action page} )
+        next if key.to_sym.in?(%i[utf8 authenticity_token state_selector states action commit action orig_action page])
         new_params[key] = params[key]
       end
+
       url_for(new_params)
     end
 
