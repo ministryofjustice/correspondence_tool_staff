@@ -40,7 +40,6 @@ module Cases
       end
     end
 
-    # Users only want to see cases deleted in the last 6 months
     def deleted
       cases = Case::Base.unscoped
         .soft_deleted
@@ -128,7 +127,7 @@ module Cases
       end
     end
 
-    # @todo (Mohammed Seedat) Was cases#index but is not being used
+    # Note (mseedat-moj): Was cases#index but is not currently used
     # def index
     #   @cases = CaseFinderService.new(current_user)
     #     .for_params(request.params)
@@ -140,6 +139,11 @@ module Cases
     #   @current_tab_name = 'all_cases'
     #   @can_add_case = policy(Case::Base).can_add_case?
     # end
+
+    # All existing partials are in /views/cases
+    def self.controller_path
+      'cases'
+    end
 
     private
 

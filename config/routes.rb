@@ -64,7 +64,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :cases, controller: 'base', except: [:index, :create], module: 'cases' do
+  resources :cases, except: [:index, :create] do
     get :confirm_destroy, on: :member
 
     # Case behaviours

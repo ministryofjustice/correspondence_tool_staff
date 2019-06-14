@@ -133,10 +133,10 @@ class CasesController < ApplicationController
     authorize @case
   end
 
-  # # All existing partials are in /views/cases
-  # def self.controller_path
-  #   'cases'
-  # end
+  # All existing partials are in /views/cases
+  def self.controller_path
+    'cases'
+  end
 
 
   protected

@@ -33,7 +33,7 @@ module Cases
       @filter_crumbs = @query.filter_crumbs
 
       respond_to do |format|
-        format.html {render :search }
+        format.html
         format.csv { send_csv_cases 'search' }
       end
     end
