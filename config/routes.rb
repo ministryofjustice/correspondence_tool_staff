@@ -105,12 +105,7 @@ Rails.application.routes.draw do
       get 'remove_clearance' => 'cases#remove_clearance', on: :member
     end
 
-    resources :links, except: [:edit, :update] do
-      # get 'new_linked_cases_for', on: :collection
-      # get :new_case_link, on: :member
-      # post :execute_new_case_link, on: :member
-      # delete 'destroy_link/:linked_case_number' => 'cases/base#destroy_case_link' , on: :member, as: 'destroy_link_on'
-    end
+    resources :links, except: [:index, :edit, :update]
 
     resources :pit_extensions, only: [:new, :create]
     resource :pit_extension, only: [:destroy]
