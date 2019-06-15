@@ -4,40 +4,11 @@ module Cases
 
     before_action :set_case, only: [:new, :create, :destroy]
 
-    # Was new_linked_cases_for
-    def index
-      set_correspondence_type(params.fetch(:correspondence_type))
-      @link_type = params[:link_type].strip
-
-      respond_to do |format|
-        format.js do
-          if process_new_linked_cases_for_params
-            response = render_to_string(
-              partial: "cases/#{ @correspondence_type_key }/case_linking/linked_cases",
-              locals: {
-                linked_cases: @linked_cases.map(&:decorate),
-                link_type: @link_type,
-              }
-            )
-
-            render status: :ok, json: { content: response, link_type: @link_type }.to_json
-
-          else
-            render status: :bad_request,
-                   json: { linked_case_error: @linked_case_error,
-                           link_type: @link_type }.to_json
-          end
-        end
-      end
-    end
-
-    # Was new_case_link
     def new
       authorize @case, :new_case_link?
       @case = CaseLinkDecorator.decorate @case
     end
 
-    # Was execute_new_case_link
     def create
       authorize @case, :new_case_link?
 
@@ -59,7 +30,6 @@ module Cases
       end
     end
 
-    # Was destroy_case_link
     def destroy
       authorize @case, :new_case_link?
 

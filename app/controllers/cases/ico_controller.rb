@@ -15,6 +15,33 @@ module Cases
       create_case_for_type CorrespondenceType.ico, 'ico'
     end
 
+    # Was cases/new_linked_cases_for
+    def new_linked_cases_for
+      set_correspondence_type(params.fetch(:correspondence_type))
+      @link_type = params[:link_type].strip
+
+      respond_to do |format|
+        format.js do
+          if process_new_linked_cases_for_params
+            response = render_to_string(
+              partial: "cases/#{ @correspondence_type_key }/case_linking/linked_cases",
+              locals: {
+                linked_cases: @linked_cases.map(&:decorate),
+                link_type: @link_type,
+              }
+            )
+
+            render status: :ok, json: { content: response, link_type: @link_type }.to_json
+
+          else
+            render status: :bad_request,
+              json: { linked_case_error: @linked_case_error,
+                link_type: @link_type }.to_json
+          end
+        end
+      end
+    end
+
     # this action is only used for ICO cases
     def record_late_team
       authorize @case, :can_respond?

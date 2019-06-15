@@ -232,7 +232,7 @@ module CasesHelper
   def action_link_for_destroy_case_link(kase, linked_case)
     if policy(kase).destroy_case_link?
       link_to t('common.case.remove_linked_case_html', case_number: linked_case.number),
-              case_links_path(id: kase.id, id: linked_case.number),
+              case_link_path(case_id: kase.id, id: linked_case.number),
               data: { confirm: "Are you sure?" },
               method: :delete
     end
