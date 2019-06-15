@@ -22,7 +22,7 @@
       = @case.subject
 
 = form_for @case, as: :case, url: case_links_path(@case), method: :post do |f|
-  = f.text_field :linked_case_number
+  = f.text_field :id
 
   .button-holder
     = f.submit 'Add link', class: 'button'
