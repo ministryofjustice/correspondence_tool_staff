@@ -129,7 +129,7 @@ module ICOCasesParams
   end
 
   def validate_ico_original_case(original_case)
-    if not original_case.class.in? [Case::FOI::Standard, Case::SAR]
+    if not original_case.class.in? [Case::FOI::Standard, Case::SAR::Standard]
       @linked_case_error = ico_error('original_case_number', :wrong_type)
       false
     elsif not policy(original_case).show?

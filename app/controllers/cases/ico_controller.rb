@@ -1,7 +1,6 @@
 module Cases
   class IcoController < CasesController
     include ICOCasesParams
-    include CreateCase
     include NewCase
 
     before_action :set_case, only: [:record_late_team]

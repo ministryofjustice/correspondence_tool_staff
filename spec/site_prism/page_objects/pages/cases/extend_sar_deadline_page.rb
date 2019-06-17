@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class ExtendSARDeadlinePage < SitePrism::Page
-        set_url '/cases/{id}/extend_sar_deadline'
+        set_url '/cases/{id}/sar_extensions/new'
 
         section :primary_navigation,
           PageObjects::Sections::PrimaryNavigationSection,

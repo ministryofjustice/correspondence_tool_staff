@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 
-RSpec.describe AssignmentsController, type: :controller do
+RSpec.describe Cases::AssignmentsController, type: :controller do
   let(:manager)             { create :manager }
   let(:assigned_case)       { create :assigned_case }
   let(:assignment)          { assigned_case.responder_assignment }
@@ -753,7 +753,7 @@ RSpec.describe AssignmentsController, type: :controller do
       ActionController::Parameters.new(
         {
           :action     => 'execute_assign_to_new_team',
-          :controller => 'assignments',
+          :controller => 'cases/assignments',
           :team_id    => bu2.id.to_s,
           :id        => assignment.id.to_s,
           :case_id    => kase.id.to_s
@@ -883,7 +883,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
       it 'displays a flash message' do
         sign_in manager
-        allow_any_instance_of(AssignmentsController).to receive(:flash).and_return(flash)
+        allow_any_instance_of(Cases::AssignmentsController).to receive(:flash).and_return(flash)
         patch :assign_to_team, params: params.to_unsafe_hash
         expect(flash[:notice]).to eq "Case assigned to #{bu.name}"
       end

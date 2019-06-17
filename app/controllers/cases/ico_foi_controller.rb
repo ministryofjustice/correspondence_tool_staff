@@ -1,6 +1,5 @@
 module Cases
   class IcoFoiController < CasesController
-    include CreateCase
     include NewCase
 
     def new

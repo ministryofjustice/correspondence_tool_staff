@@ -38,7 +38,7 @@ describe CasesController, type: :controller do
       expect(assigns(:s3_direct_post)).to be_present
     end
 
-    describe FoiStandardCasesController do
+    describe Cases::FoiController do
       let(:params) { { correspondence_type: 'foi' } }
 
       before do
@@ -69,7 +69,7 @@ describe CasesController, type: :controller do
       end
     end
 
-    describe FoiIcoCasesController do
+    describe Cases::IcoFoiController do
       let(:params) { { correspondence_type: 'ico' } }
 
       before do
@@ -132,7 +132,7 @@ describe CasesController, type: :controller do
     end
 
     context 'authorization' do
-      describe OverturnedSarCasesController do
+      describe Cases::OverturnedSarController do
         it 'authorizes' do
           expect { get :new_overturned_ico, params: {id: ico_sar.id} }
               .to require_permission(:new_overturned_ico?)
@@ -140,7 +140,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context OverturnedFoiCasesController do
+      context Cases::OverturnedFoiController do
         it 'authorizes' do
           expect { get :new_overturned_ico, params: {id: ico_foi.id} }
               .to require_permission(:new_overturned_ico?)
@@ -159,7 +159,7 @@ describe CasesController, type: :controller do
         expect(service).to receive(:original_ico_appeal).and_return(ico_sar)
       end
 
-      describe OverturnedSarCasesController do
+      describe Cases::OverturnedSarController do
         let(:decorated_overturned_ico)  { double Case::OverturnedICO::SARDecorator, type_abbreviation: 'OVERTURNED_SAR' }
         let(:overturned_ico)            { double Case::OverturnedICO::SAR, decorate: decorated_overturned_ico }
 
@@ -187,7 +187,7 @@ describe CasesController, type: :controller do
       end
 
 
-      describe OverturnedSarCasesController do
+      describe Cases::OverturnedSarController do
 
         let(:decorated_ico_appeal)    { double Case::ICO::SARDecorator }
 
@@ -221,7 +221,7 @@ describe CasesController, type: :controller do
         expect(service).to receive(:original_ico_appeal).and_return(ico_sar)
       end
 
-      describe OverturnedSarCasesController do
+      describe Cases::OverturnedSarController do
         let(:decorated_overturned_ico)  { double Case::OverturnedICO::SARDecorator, type_abbreviation: 'OVERTURNED_SAR' }
         let(:overturned_ico)            { double Case::OverturnedICO::SAR, decorate: decorated_overturned_ico }
 
@@ -248,7 +248,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      describe OverturnedSarCasesController do
+      describe Cases::OverturnedSarController do
         let(:decorated_ico_appeal)    { double Case::ICO::SARDecorator }
 
         before(:each) do

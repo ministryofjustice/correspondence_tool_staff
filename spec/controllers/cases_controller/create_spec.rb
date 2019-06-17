@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe FoiStandardCasesController do
+describe Cases::FoiController do
   let(:manager)               { create :manager }
   let(:responder)             { find_or_create :foi_responder }
   let(:foi_params) do
@@ -191,7 +191,7 @@ describe FoiStandardCasesController do
         end      end
     end
 
-    describe FoiIcoCasesController do
+    describe Cases::IcoFoiController do
       context 'ICO case' do
         describe 'creating an ICO case' do
           before do
@@ -253,7 +253,7 @@ describe FoiStandardCasesController do
       end
     end
 
-    describe OverturnedFoiCasesController do
+    describe Cases::OverturnedFoiController do
       context 'ICO Overturned FOI case - non-trigger' do
         let(:received_date) { Date.today }
         let(:ico_overturned_foi_params) do
@@ -329,7 +329,7 @@ describe FoiStandardCasesController do
       end
     end
 
-    describe OverturnedSarCasesController do
+    describe Cases::OverturnedSarController do
       context 'ICO Overturned SAR case' do
         let(:ico_overturned_sar_params) do
           {
