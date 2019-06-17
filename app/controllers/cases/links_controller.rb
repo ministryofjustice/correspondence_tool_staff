@@ -65,7 +65,7 @@ module Cases
     def destroy
       authorize @case, :new_case_link?
 
-      linked_case_number = params[:linked_case_number]
+      linked_case_number = params[:id]
 
       service = CaseLinkingService.new current_user, @case, linked_case_number
 
