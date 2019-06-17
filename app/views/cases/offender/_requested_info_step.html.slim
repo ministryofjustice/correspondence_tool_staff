@@ -1,8 +1,7 @@
-h1 What information is being requested?
-
 = form_for @case, url: cases_offender_path do |f|
 
-  = f.text_area :message, {rows: 12}
+  = f.text_area :message, {rows: 12,
+    form_hint_text: t('helpers.hint.offender_sar_case_form.message')}
 
   p
     = link_to "Previous", "/cases/new/offender/requester-details"

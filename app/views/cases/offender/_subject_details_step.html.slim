@@ -1,5 +1,3 @@
-h1 Who is the subject?
-
 = form_for @case, url: cases_offender_path do |f|
   = f.text_field :subject_full_name
 
@@ -12,8 +10,7 @@ h1 Who is the subject?
   = f.text_field :other_subject_ids
 
   = f.gov_uk_date_field :date_of_birth, { legend_text: t('cases.new.date_of_birth'),
-    form_hint_text: t('cases.new.date_of_birth_copy'),
-    today_button: {class: ''} }
+    form_hint_text: t('cases.new.date_of_birth_copy') }
 
   = f.radio_button_fieldset :subject_type,
     choices: Case::SAR::Offender::subject_types.keys

@@ -257,7 +257,7 @@ en:
       offender_sar_case_form:
         subject_type: "What is their relationship to the MOJ?"
         flag_for_disclosure_specialists: "Flag as high profile case?"
-
+        third_party: Is this information being requested on someone else's behalf?
 
       assignment:
         state: What do you want to do?
@@ -425,8 +425,10 @@ en:
         other_subject_ids: "Subject’s PNC or other ID numbers"
 
         email: "Recipient email address"
-        message: Full case details
-        name: "Full name of the requestor"
+        message: Request details
+        name: "Full name of the representative"
+        third_party_relationship: Relationship to the subject
+        delivery_method: How should the information be sent?
         postal_address: "Recipient postal address"
         received_date: "Received at MOJ"
         subject: "Case summary"
@@ -456,6 +458,7 @@ en:
         previous_case_numbers: "You can include multiple cases separated by comma, space or paragraph return."
         other_subject_ids: "You can include multiple cases separated by comma, space or paragraph return."
         date_of_birth: "For example, 12 11 2007"
+        message: Enter a brief summary of the case, including any details that will be useful for processing the Offender SAR.
   alerts:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>
@@ -828,6 +831,8 @@ en:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
 
+    offender_sar:
+      subject_heading: Who is the subject?  
 
     search:
       heading: Search
