@@ -120,13 +120,6 @@ RSpec.describe CasesController, type: :controller do
 
     before { sign_in manager }
 
-    describe 'GET close' do
-      it 'displays the process close page' do
-        get :close, params: { id: responded_case }
-        expect(response).to render_template(:close)
-      end
-    end
-
     describe 'PATCH process_closure' do
       let(:outcome)     { find_or_create :outcome, :requires_refusal_reason }
       let(:info_held)   { find_or_create :info_status, :held }

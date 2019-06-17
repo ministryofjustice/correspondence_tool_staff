@@ -73,29 +73,7 @@ Rails.application.routes.draw do
 
   # Case Behaviours
   resources :cases, module: 'cases' do
-    resources :closure do
-      get 'close', on: :member
-      get 'edit_closure', on: :member, as: :edit_closure
-      patch 'process_closure', on: :member
-      patch 'update_closure', on: :member
-
-      get 'closure_outcomes', on: :member
-
-      get 'respond_and_close', on: :member
-      patch 'process_respond_and_close', on: :member
-
-      patch 'process_date_responded', on: :member
-
-      get 'respond', on: :member
-      patch 'confirm_respond', on: :member
-    end
-
     resources :clearances do
-      # @todo: Implement
-      # post create (flag_for_clearance)
-      # delete destroy (remove_clearance)
-      #patch 'update/(:action)', to: 'clearances#update', on: :member, constraint: { action: [progress, extend, unflag]}
-
       patch 'unflag_for_clearance' => 'cases/base#unflag_for_clearance', on: :member
       patch 'unflag_taken_on_case_for_clearance' => 'cases/base#unflag_taken_on_case_for_clearance', on: :member
       patch :request_further_clearance, on: :member # extend
@@ -121,23 +99,39 @@ Rails.application.routes.draw do
 
     resources :amendment, only: [:new, :create]
 
+    resources :messages, only: [:create]
+
+    resources :attachments, only: [:destroy] do
+      get 'download', on: :member
+    end
+  end
+
+  # Case Behaviours (awaiting move to module Cases)
+  resources :cases do
+    get 'close', on: :collection
+    get 'edit_closure', on: :member, as: :edit_closure
+    patch 'process_closure', on: :member
+    patch 'update_closure', on: :member
+    get 'closure_outcomes', on: :member
+    get 'respond_and_close', on: :member
+    patch 'process_respond_and_close', on: :member
+    patch 'process_date_responded', on: :member
+    get 'respond', on: :member
+    patch 'confirm_respond', on: :member
+
     resources :assignments, except: :create  do
       patch 'accept_or_reject', on: :member
       patch 'accept', on: :member
       patch 'unaccept', on: :member
       patch 'take_case_on', on: :member
+
       get :reassign_user , on: :member
-      get :assign_to_new_team, on: :member
-      get :select_team, on: :collection
       patch :execute_reassign_user, on: :member
+
+      get :select_team, on: :collection
+      get :assign_to_new_team, on: :member
       patch :execute_assign_to_new_team, on: :member
       get :assign_to_team, on: :collection, as: 'assign_to_responder_team'
-    end
-
-    resources :messages, only: [:create]
-
-    resources :attachments, only: [:destroy] do
-      get 'download', on: :member
     end
   end
 
