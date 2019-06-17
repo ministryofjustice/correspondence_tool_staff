@@ -1,6 +1,7 @@
 module Cases
   class SearchesController < ApplicationController
     include SetupCase
+    include SearchParams
 
     def show
       set_url
@@ -9,7 +10,7 @@ module Cases
       service = CaseSearchService.new(
         user: current_user,
         query_type: :search,
-        query_params: filter_params
+        query_params: search_params
       )
       service.call
       @query = service.query
@@ -36,14 +37,6 @@ module Cases
         format.html
         format.csv { send_csv_cases 'search' }
       end
-    end
-
-    private
-
-    def filter_params
-      params.fetch(:search_query, {}).permit(
-        :search_text,
-      )
     end
   end
 end

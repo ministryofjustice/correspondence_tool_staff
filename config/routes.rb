@@ -22,10 +22,9 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  post '/feedback' => 'feedback#create'
 
+  # Case Creation
   scope :cases, module: 'cases' do
-    # Case creation per type
     resources :fois, only: [:new, :create], controller: 'foi', as: :case_foi_standards
     resources :sars, only: [:new, :create], controller: 'sar', as: :case_sar_standards
     resources :icos, only: [:new, :create], controller: 'ico', as: :case_icos
@@ -48,10 +47,13 @@ Rails.application.routes.draw do
     resources :ico do
       patch 'record_late_team'#, on: :member - not sure why member not working
     end
+  end
 
-    # Search and Filtering
+  # Case Search and Filtering
+  scope :cases, module: 'cases' do
     resource :search, only: [:show]
-    resource :filter, only: [], path: '/' do
+
+    resource :filter, only: [:show], path: '/' do
       get 'my_open', to: redirect('/cases/my_open/in_time'), as: :root_my_open
       get 'my_open/:tab' => 'filters#my_open', as: :my_open
       get 'open' => 'filters#open'
@@ -64,14 +66,13 @@ Rails.application.routes.draw do
     end
   end
 
+  # Case Actions
   resources :cases, except: [:index, :create] do
     get :confirm_destroy, on: :member
   end
 
+  # Case Behaviours
   resources :cases, module: 'cases' do
-
-
-    # Case behaviours
     resources :closure do
       get 'close', on: :member
       get 'edit_closure', on: :member, as: :edit_closure
@@ -89,7 +90,6 @@ Rails.application.routes.draw do
       patch 'confirm_respond', on: :member
     end
 
-    # @todo: Refactor to be clearer in intent/state transistions
     resources :clearances do
       # @todo: Implement
       # post create (flag_for_clearance)
@@ -105,7 +105,6 @@ Rails.application.routes.draw do
       get 'remove_clearance' => 'cases#remove_clearance', on: :member
     end
 
-    #new_case_link_case GET    /cases/:id/new_case_link(.:format)                                   cases#new_case_link
     resources :links, except: [:edit, :update] do
       # get 'new_linked_cases_for', on: :collection
       # get :new_case_link, on: :member
@@ -142,11 +141,13 @@ Rails.application.routes.draw do
 
     resources :messages, only: [:create]
 
-    resources :attachments, path: 'attachments', only: [:destroy] do
+    resources :attachments, only: [:destroy] do
       get 'download', on: :member
     end
   end
 
+
+  # Stats Reporting and Performance
   resources :stats, only: [:index, :show, :new, :create] do
     get 'download_custom/:id', action: :download_custom, on: :collection, as: :download_custom
     get :download_audit, on: :collection
@@ -194,8 +195,8 @@ Rails.application.routes.draw do
   end
 
   get 'ping', to: 'heartbeat#ping', format: :json
-
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
+  post '/feedback' => 'feedback#create'
 
   root to: redirect('/users/sign_in')
 end

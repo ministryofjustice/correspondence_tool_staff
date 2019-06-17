@@ -1,6 +1,7 @@
 module Cases
   class FiltersController < ApplicationController
     include SetupCase
+    include SearchParams
 
     before_action :set_url, only: [:open]
     before_action :set_state_selector, only: [:open, :my_open]
@@ -35,7 +36,7 @@ module Cases
       end
 
       respond_to do |format|
-        format.html { render :closed_cases }
+        format.html { render :closed }
         format.csv { send_csv_cases 'closed' }
       end
     end
@@ -101,7 +102,7 @@ module Cases
           :responding_team
         )
 
-      query_list_params = filter_params.merge(list_path: request.path)
+      query_list_params = search_params.merge(list_path: request.path)
 
       service = CaseSearchService.new(
         user: current_user,
@@ -127,7 +128,7 @@ module Cases
       end
     end
 
-    # Note (mseedat-moj): Was cases#index but is not currently used
+    # @note (mseedat-moj): Was cases#index but is not currently used
     # def index
     #   @cases = CaseFinderService.new(current_user)
     #     .for_params(request.params)
@@ -140,10 +141,6 @@ module Cases
     #   @can_add_case = policy(Case::Base).can_add_case?
     # end
 
-    # All existing partials are in /views/cases
-    def self.controller_path
-      'cases'
-    end
 
     private
 
@@ -166,34 +163,13 @@ module Cases
     def make_redirect_url_with_additional_params(new_params)
       new_params[:controller] = params[:controller]
       new_params[:action] = params[:orig_action]
+
       params.keys.each do |key|
-        next if key.to_sym.in?( %i{ utf8 authenticity_token state_selector states action commit action orig_action page} )
+        next if key.to_sym.in?(%i[utf8 authenticity_token state_selector states action commit action orig_action page])
         new_params[key] = params[key]
       end
-      url_for(new_params)
-    end
 
-    def filter_params
-      params.fetch(:search_query, {}).permit(
-        :search_text,
-        :parent_id,
-        :external_deadline_from,
-        :external_deadline_from_dd,
-        :external_deadline_from_mm,
-        :external_deadline_from_yyyy,
-        :external_deadline_to,
-        :external_deadline_to_dd,
-        :external_deadline_to_mm,
-        :external_deadline_to_yyyy,
-        common_exemption_ids: [],
-        exemption_ids: [],
-        filter_assigned_to_ids: [],
-        filter_case_type: [],
-        filter_open_case_status: [],
-        filter_sensitivity: [],
-        filter_status: [],
-        filter_timeliness: [],
-      )
+      url_for(new_params)
     end
   end
 end

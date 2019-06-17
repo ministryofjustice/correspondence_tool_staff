@@ -650,12 +650,6 @@ en:
       affirmative: 'Yes'
       negative: 'No, the response is ready to send'
       why_not: 'Why is further clearance not required?'
-    closed_cases:
-      heading: Closed cases
-      number: Case number
-      number_html: 'Case <abbr title="number">No.</abbr>'
-      name-subject: Name/Subject
-      view_case: Link to case
     close:
       heading: Close case
       submit: Close case
@@ -690,19 +684,28 @@ en:
       external_deadline: Final deadline
       status: Status
       who_its_with: With
-    incoming_cases:
-      heading: New cases
-      view_case: Link to case
-      number: Case number
-      number_html: 'Case <abbr title="number">No.</abbr>'
-      request: Request
-      actions: Actions
     edit:
       heading: Edit case details
       date_draft_compliant: Date compliant draft was uploaded
       date_draft_compliant_example: "For example, 01 02 2018"
     update:
       case_updated: Case updated
+
+    filters:
+      closed_cases:
+        heading: Closed cases
+        number: Case number
+        number_html: 'Case <abbr title="number">No.</abbr>'
+        name-subject: Name/Subject
+        view_case: Link to case
+      incoming_cases:
+        heading: New cases
+        view_case: Link to case
+        number: Case number
+        number_html: 'Case <abbr title="number">No.</abbr>'
+        request: Request
+        actions: Actions
+
     fixed_details:
       requester: Requester
       email_address: Email address
@@ -814,6 +817,7 @@ en:
       close_form:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
+
     sar_extensions:
       create:
         success: Case extended for SAR
