@@ -1010,7 +1010,7 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  describe OverturnedSarCasesController do
+  describe Cases::OverturnedSarController do
 
     let(:ico_sar)             { create :ico_sar_case }
     let(:sar)                 { create :sar_case }

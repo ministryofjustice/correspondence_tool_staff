@@ -113,15 +113,15 @@ module Cases
                          .new(user: current_user, assignment: @assignment)
       if accept_service.call
         @success = true
-        @message = I18n.t('assignments.accept.success')
+        @message = I18n.t('cases.assignments.accept.success')
       else
         if accept_service.result == :not_pending
           if @assignment.user == current_user
             @success = true
-            @message = I18n.t('assignments.accept.success')
+            @message = I18n.t('cases.assignments.accept.success')
           else
             @success = false
-            @message = I18n.t('assignments.accept.already_accepted',
+            @message = I18n.t('cases.assignments.accept.already_accepted',
                               name: @assignment.user.full_name)
           end
         else
@@ -132,7 +132,7 @@ module Cases
         end
       end
       respond_to do |format|
-        format.js { render 'assignments/accept.js.erb' }
+        format.js { render 'cases/assignments/accept.js.erb' }
         format.html do
           if @success
             flash[:notice] = "#{ @message}. #{ get_undo_link }".html_safe
@@ -161,7 +161,7 @@ module Cases
       end
 
       respond_to do |format|
-        format.js { render 'assignments/accept.js.erb' }
+        format.js { render 'cases/assignments/accept.js.erb' }
         format.html do
           if @success
             flash[:notice] = "#{ @message}. #{ get_undo_link }".html_safe
@@ -179,7 +179,7 @@ module Cases
       unaccept_service.call
 
       respond_to do |format|
-        format.js { render 'assignments/unaccept.js.erb' }
+        format.js { render 'cases/assignments/unaccept.js.erb' }
         format.html { redirect_to case_path(@case) }
       end
     end
@@ -299,7 +299,7 @@ module Cases
       when 'FOI', 'OVERTURNED_FOI' then redirect_to case_path(@case)
       when 'SAR', 'OVERTURNED_SAR' then redirect_to responder_root_path
       when 'ICO' then
-        if @case.original_case_type === 'SAR'
+        if @case.original_case_type === 'SAR::Standard'
           redirect_to responder_root_path
         else
           redirect_to case_path(@case)
