@@ -89,7 +89,7 @@ module CasesHelper
               class: 'button'
     when :close, :respond_and_close
       link_to translate_for_case(@case, "common", 'close'),
-              close_case_path(@case),
+              new_case_closure_path(@case),
               id: 'action--close-case',
               class: 'button', method: :get
     when :progress_for_clearance
@@ -134,7 +134,7 @@ module CasesHelper
 
   def show_remove_clearance_link(kase)
     if policy(kase).remove_clearance?
-      link_to('Remove clearance', remove_clearance_case_clearance_path(id: kase.id))
+      link_to('Remove clearance', remove_clearance_case_clearance_path(kase))
     end
   end
 
