@@ -753,7 +753,7 @@ RSpec.describe Cases::AssignmentsController, type: :controller do
       ActionController::Parameters.new(
         {
           :action     => 'execute_assign_to_new_team',
-          :controller => 'assignments',
+          :controller => 'cases/assignments',
           :team_id    => bu2.id.to_s,
           :id        => assignment.id.to_s,
           :case_id    => kase.id.to_s
