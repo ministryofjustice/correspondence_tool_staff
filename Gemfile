@@ -72,7 +72,7 @@ group :test do
   gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
-  gem 'shoulda-matchers', '~> 4.0'
+  gem 'shoulda-matchers', '~> 4.1'
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 3.0'
 end
