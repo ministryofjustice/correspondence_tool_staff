@@ -73,13 +73,22 @@ class OffenderSARCaseForm
 
   def valid_attributes?(params)
     params ||= {}
+    if current_step == "subject-details"
+      params = params.merge "subject_type": "" unless params["subject_type"].present?
+    end
     @case.valid_attributes?(params)
+  end
+
+  def subject_type
+    object.subject_type
   end
 
   private
 
   def build_case_from_session
     values = @session[:offender_sar_state] || {}
+    values = values.merge subject_type: "offender" unless values["subject_type"].present?
+    values = values.merge flag_for_disclosure_specialists: "no" unless values["flag_for_disclosure_specialists"].present?
     @case = Case::SAR::Offender.new(values).decorate
   end
 end
