@@ -6,6 +6,7 @@ module Cases
     before_action :set_case, only: [:new, :create]
 
     # @todo (@mseedat-moj): Move ACTION_SETTINGS to ResponseUploaderService
+    # context is the current controller instance
     ACTION_SETTINGS = {
       upload_responses: {
         approval_action: nil,
@@ -20,9 +21,11 @@ module Cases
         execution_action: 'upload-approve',
         policy: :upload_response_and_approve?,
         compliant: true,
-        bypass_message: -> { params.dig(:bypass_approval, :bypass_message) },
-        bypass_further_approval: -> {
-          params.dig(
+        bypass_message: -> (context) {
+          context.params.dig(:bypass_approval, :bypass_message)
+        },
+        bypass_further_approval: -> (context) {
+          context.params.dig(
             :bypass_approval,
             :press_office_approval_required
           ) == 'false'
@@ -32,7 +35,9 @@ module Cases
         approval_action: 'approve',
         execution_action: 'upload-redraft',
         policy: :upload_response_and_return_for_redraft?,
-        compliant: -> { params[:draft_compliant] == 'yes' },
+        compliant: -> (context) {
+          context.params[:draft_compliant] == 'yes'
+        },
         bypass_message: nil,
         bypass_further_approval: false,
       },
@@ -94,7 +99,7 @@ module Cases
     end
 
     def as_proc(val)
-      val.respond_to?(:call) ? val.call : val
+      val.respond_to?(:call) ? val.call(self) : val
     end
   end
 end

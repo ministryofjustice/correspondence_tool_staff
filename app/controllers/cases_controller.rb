@@ -2,7 +2,6 @@ require './lib/translate_for_case'
 
 class CasesController < ApplicationController
   include SetupCase
-  include CloseCase
 
   before_action :set_case, only: [
     :closure_outcomes,

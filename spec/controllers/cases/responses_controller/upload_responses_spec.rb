@@ -43,7 +43,6 @@ describe Cases::ResponsesController, type: :controller  do
         post :create, params: params
       }.to require_permission(:upload_responses?)
              .with_args(responder, accepted_case)
-
     end
 
     let(:response_uploader) { double ResponseUploaderService, upload!: nil, result: :ok }
@@ -93,13 +92,11 @@ describe Cases::ResponsesController, type: :controller  do
 
       it 're-renders the page' do
         post :create, params: params
-
         expect(response).to have_rendered(:upload_responses)
       end
 
       it 'sets the flash alert' do
         post :create, params: params
-
         expect(request.flash[:alert]).to eq 'Please select the file(s) you used in your response.'
       end
     end
@@ -113,7 +110,6 @@ describe Cases::ResponsesController, type: :controller  do
 
       it 're-renders the page if there is an upload error' do
         post :create, params: params
-
         expect(response).to have_rendered(:upload_responses)
       end
 
