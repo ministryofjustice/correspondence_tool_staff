@@ -749,6 +749,8 @@ en:
         sub_heading: Create an ICO Overturned (SAR) case
       case/overturned_ico/foi:
         sub_heading: Create an ICO Overturned (FOI) case
+      offender_sar:
+        sub_heading: Create SAR case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
@@ -833,6 +835,9 @@ en:
 
     offender_sar:
       subject_heading: Who is the subject?  
+      requester_heading: Who is making the subject access request?
+      requested_info_heading: What information is being requested?
+      date_received_heading: When was the SAR received?
 
     search:
       heading: Search
