@@ -17,6 +17,7 @@ class OffenderSARCaseForm
            :date_of_birth_dd,
            :date_of_birth_mm,
            :date_of_birth_yyyy,
+           :date_of_birth,
            :subject_type,
            :flag_for_disclosure_specialists,
            :third_party,
@@ -27,6 +28,7 @@ class OffenderSARCaseForm
            :received_date_dd,
            :received_date_mm,
            :received_date_yyyy,
+           :received_date,
            :reply_method,
            :creator,
            :send_by_post?,
@@ -75,6 +77,12 @@ class OffenderSARCaseForm
     params ||= {}
     if current_step == "subject-details"
       params = params.merge "subject_type": "" unless params["subject_type"].present?
+      params = params.merge "date_of_birth": "" unless params["date_of_birth"].present?
+      params = params.merge "flag_for_disclosure_specialists": "" unless params["flag_for_disclosure_specialists"].present?
+    end
+    if current_step == "requester-details"
+      params = params.merge "third_party": "" unless params["third_party"].present?
+      params = params.merge "reply_method": "" unless params["reply_method"].present?
     end
     @case.valid_attributes?(params)
   end
@@ -87,8 +95,8 @@ class OffenderSARCaseForm
 
   def build_case_from_session
     values = @session[:offender_sar_state] || {}
-    values = values.merge subject_type: "offender" unless values["subject_type"].present?
-    values = values.merge flag_for_disclosure_specialists: "no" unless values["flag_for_disclosure_specialists"].present?
+    # values = values.merge subject_type: "offender" unless values["subject_type"].present?
+    # values = values.merge flag_for_disclosure_specialists: "no" unless values["flag_for_disclosure_specialists"].present?
     @case = Case::SAR::Offender.new(values).decorate
   end
 end

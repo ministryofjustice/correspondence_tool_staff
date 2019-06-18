@@ -1,4 +1,4 @@
-class Case::SAR::Offender < Case::SAR::Standard
+class Case::SAR::Offender < Case::Base
   class << self
     def type_abbreviation
       'OFFENDER'
@@ -22,27 +22,32 @@ class Case::SAR::Offender < Case::SAR::Standard
 # what information is being requested
 
 # when the SAR was received
-
-  validates :date_of_birth_dd, presence: true
-  validates :date_of_birth_mm, presence: true
-  validates :date_of_birth_yyyy, presence: true
+  validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
   validates_presence_of :name, :third_party_relationship, if: -> { third_party }
 
+  validates :date_of_birth, presence: true
+  validates :flag_for_disclosure_specialists, presence: true
+
+  validates_presence_of :email,          if: :send_by_email?
+  validates_presence_of :postal_address, if: :send_by_post?
+
+  validates :subject_full_name, presence: true
   validates :subject_type, presence: true
 
   jsonb_accessor :properties,
                   prison_number: :string,
+                  subject_full_name: :string,
                   subject_aliases: :string,
                   previous_case_numbers: :string,
                   other_subject_ids: :string,
-                  date_of_birth_dd: :string,
-                  date_of_birth_mm: :string,
-                  date_of_birth_yyyy: :string,
+                  external_deadline: :date,
+                  date_of_birth: :date,
+                  third_party: :boolean,
+                  third_party_relationship: :string,
                   subject_type: :string,
-                  received_date_dd: :string,
-                  received_date_mm: :string,
-                  received_date_yyyy: :string,
-                  reply_method: :string
+                  received_date: :date,
+                  reply_method: :string,
+                  flag_for_disclosure_specialists: :string
 
   enum subject_type: {
     offender: 'offender',
@@ -52,5 +57,5 @@ class Case::SAR::Offender < Case::SAR::Standard
     send_by_post:  'send_by_post',
     send_by_email: 'send_by_email',
   }
-
+  acts_as_gov_uk_date :date_of_birth
 end
