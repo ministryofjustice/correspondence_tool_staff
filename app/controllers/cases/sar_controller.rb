@@ -25,5 +25,17 @@ module Cases
     def edit_params
       edit_sar_params
     end
+
+    def process_closure_params
+      process_sar_closure_params
+    end
+
+    def respond_params
+      respond_sar_params
+    end
+
+    def process_date_responded_params
+      respond_sar_params
+    end
   end
 end

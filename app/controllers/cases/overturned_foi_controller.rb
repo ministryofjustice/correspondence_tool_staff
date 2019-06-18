@@ -12,5 +12,13 @@ module Cases
     def create
       create_case_for_type CorrespondenceType.overturned_foi, 'overturned_foi'
     end
+
+    def respond_params
+      respond_overturned_params
+    end
+
+    def process_date_responded_params
+      respond_overturned_params
+    end
   end
 end

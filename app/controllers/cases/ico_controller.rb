@@ -89,6 +89,18 @@ module Cases
       edit_ico_params
     end
 
+    def process_closure_params
+      process_ico_closure_params
+    end
+
+    def respond_params
+      respond_ico_params
+    end
+
+    def process_date_responded_params
+      ico_close_date_responded_params
+    end
+
     private
 
     def determine_overturned_ico_class(original_appeal_id)

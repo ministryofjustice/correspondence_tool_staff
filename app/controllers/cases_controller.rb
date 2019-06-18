@@ -20,6 +20,9 @@ class CasesController < ApplicationController
     :respond_and_close
   ]
 
+  # Attributes used by sub-classes to set the current Case type for the request
+  attr_reader :correspondence_type, :correspondence_type_key
+
   def show
     set_decorated_case(params[:id])
     set_assignments
@@ -160,8 +163,8 @@ class CasesController < ApplicationController
   # are currently undocumented and may require further investigation/checks
   # as not all
 
+  # Prepopulate date if it was entered by the KILO
   def close
-    # prepopulate date if it was entered by the KILO
     authorize @case, :can_close_case?
 
     if @case.ico?
@@ -169,6 +172,7 @@ class CasesController < ApplicationController
     end
 
     set_permitted_events
+    render 'cases/closures/close'
   end
 
   def edit_closure
@@ -177,16 +181,20 @@ class CasesController < ApplicationController
     @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     @case = @case.decorate
     @team_collection = CaseTeamCollection.new(@case)
+
+    render 'cases/closures/edit_closure'
   end
 
   def closure_outcomes
-    @case = @case.decorate # TODO: Is this required - see before_action hook!
+    @case = @case.decorate # @todo: Required? - See before_action hook!
     authorize @case, :can_close_case?
 
     if @case.ico?
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
     end
     @team_collection = CaseTeamCollection.new(@case)
+
+    render 'cases/closures/closure_outcomes'
   end
 
   def respond_and_close
@@ -194,12 +202,13 @@ class CasesController < ApplicationController
 
     @case.date_responded = nil
     set_permitted_events
-    render :close
+    render 'cases/closures/close'
   end
 
   def respond
     authorize @case, :can_respond?
     set_correspondence_type(@case.type_abbreviation.downcase)
+    render 'cases/closures/respond'
   end
 
   def process_date_responded
@@ -208,8 +217,8 @@ class CasesController < ApplicationController
     @case = @case.decorate
     @case.prepare_for_respond
 
-    if !@case.update process_date_responded_params(@correspondence_type_key)
-      render :close
+    if !@case.update process_date_responded_params
+      render render 'cases/closures/close'
     else
       @team_collection = CaseTeamCollection.new(@case)
       @case.update(late_team_id: @case.responding_team.id)
@@ -221,7 +230,7 @@ class CasesController < ApplicationController
     authorize @case, :can_close_case?
 
     @case = @case.decorate
-    close_params = process_closure_params(@case.type_abbreviation)
+    close_params = process_closure_params
     service = CaseClosureService.new(@case, current_user, close_params)
     service.call
 
@@ -233,14 +242,15 @@ class CasesController < ApplicationController
       set_permitted_events
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
       @team_collection = CaseTeamCollection.new(@case)
-      render :closure_outcomes
+      render render 'cases/closures/closure_outcomes'
     end
   end
 
   def process_respond_and_close
     authorize @case, :respond_and_close?
+
     @case.prepare_for_close
-    close_params = process_closure_params(@case.type_abbreviation)
+    close_params = process_closure_params
 
     if @case.update(close_params)
       @case.respond_and_close(current_user)
@@ -255,32 +265,36 @@ class CasesController < ApplicationController
     else
       set_permitted_events
       @team_collection = CaseTeamCollection.new(@case)
-      render :closure_outcomes
+      render render 'cases/closures/closure_outcomes'
     end
   end
 
   def update_closure
     authorize @case
-    close_params = process_closure_params(@case.type_abbreviation)
+
+    close_params = process_closure_params
     @case.prepare_for_close
 
     service = UpdateClosureService.new(@case, current_user, close_params)
     service.call
+
     if service.result == :ok
       set_permitted_events
       flash[:notice] = t('notices.closure_details_updated')
       redirect_to case_path(@case)
     else
       @case = @case.decorate
-      render :edit_closure
+      render 'cases/closures/edit_closure'
     end
   end
 
   def confirm_respond
     authorize @case, :can_respond?
-    params = respond_params(@correspondence_type_key)
+
+    params = respond_params
     service = MarkResponseAsSentService.new(@case, current_user, params)
     service.call
+
     case service.result
     when :ok
       flash[:notice] = t('.success')

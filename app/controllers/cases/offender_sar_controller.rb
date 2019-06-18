@@ -15,8 +15,6 @@ module Cases
       #prepare_new_case
 
       @case = OffenderSARCaseForm.new(session)
-
-      puts "\n\n\n+++++Current Step: #{params[:step]}\n\n\n"
       step = params[:step].present? && params[:step] != 'new' ? params[:step] : @case.steps.first
 
       # @todo: Why does current_step need to be set? is it something OffenderSARCaseForm
@@ -61,6 +59,18 @@ module Cases
 
     def edit_params
       edit_offender_sar_params
+    end
+
+    def process_closure_params
+      process_offender_sar_closure_params
+    end
+
+    def respond_params
+      respond_offender_sar_params
+    end
+
+    def process_date_responded_params
+      respond_offender_sar_params
     end
 
     def cancel

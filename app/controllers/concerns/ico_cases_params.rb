@@ -50,18 +50,17 @@ module ICOCasesParams
     result
   end
 
-  # def process_ico_closure_params
-  #   params.require(:ico).permit(
-  #                                :date_ico_decision_received_dd,
-  #                                :date_ico_decision_received_mm,
-  #                                :date_ico_decision_received_yyyy,
-  #                                :ico_decision_comment,
-  #                                :ico_decision,
-  #                                :late_team_id,
-  #                                uploaded_ico_decision_files: [],
-  #   )
-  # end
-
+  def process_ico_closure_params
+    params.require(:ico).permit(
+                                 :date_ico_decision_received_dd,
+                                 :date_ico_decision_received_mm,
+                                 :date_ico_decision_received_yyyy,
+                                 :ico_decision_comment,
+                                 :ico_decision,
+                                 :late_team_id,
+                                 uploaded_ico_decision_files: [],
+    )
+  end
 
   def process_new_linked_cases_for_ico_params
     case @link_type

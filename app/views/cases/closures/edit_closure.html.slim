@@ -1,0 +1,16 @@
+= GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = "#{@case.number} - #{@case.pretty_type}"
+
+= render partial: 'layouts/header'
+
+= render partial: "cases/#{@case.type_abbreviation.downcase}/close_form",
+                  locals: { kase: @case,
+                            form_url: update_closure_case_path(id: @case.id),
+                            submit_button: t('.submit')}

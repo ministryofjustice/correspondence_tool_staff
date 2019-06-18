@@ -25,5 +25,17 @@ module Cases
     def edit_params
       edit_foi_params
     end
+
+    def process_closure_params
+      process_foi_closure_params
+    end
+
+    def respond_params
+      respond_foi_params
+    end
+
+    def process_date_responded_params
+      respond_foi_params
+    end
   end
 end

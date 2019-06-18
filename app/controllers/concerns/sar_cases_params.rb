@@ -39,22 +39,22 @@ module SARCasesParams
     )
   end
 
-  # def process_sar_closure_params
-  #   params.require(:sar).permit(
-  #     :date_responded_dd,
-  #     :date_responded_mm,
-  #     :date_responded_yyyy,
-  #     :late_team_id,
-  #   ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
-  # end
+  def process_sar_closure_params
+    params.require(:sar).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+      :late_team_id,
+    ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
+  end
 
-  # def respond_sar_params
-  #   params.require(:sar).permit(
-  #     :date_responded_dd,
-  #     :date_responded_mm,
-  #     :date_responded_yyyy,
-  #   )
-  # end
+  def respond_sar_params
+    params.require(:sar).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+    )
+  end
 
   def missing_info_to_tmm
     if params[:case_sar][:missing_info] == "yes"
