@@ -1,26 +1,48 @@
 require "rails_helper"
 
 describe Cases::PitExtensionsController, type: :controller do
-  describe '#create' do
-    let(:service) { double(CaseExtendForPITService, call: :ok) }
-    let(:manager) { find_or_create :disclosure_bmt_user }
+  let(:manager) { find_or_create :disclosure_bmt_user }
 
-    let(:case_being_drafted) {
-      create :case_being_drafted, :flagged_accepted
-    }
+  let(:case_being_drafted) {
+    create :case_being_drafted, :flagged_accepted
+  }
 
-    let(:post_params) {
-      {
-        case_id: case_being_drafted.id,
-        case: {
-          extension_deadline_yyyy: '2017',
-          extension_deadline_mm: '02',
-          extension_deadline_dd: '10',
-          reason_for_extending:  'need more time',
-        }
+  let(:post_params) {
+    {
+      case_id: case_being_drafted.id,
+      case: {
+        extension_deadline_yyyy: '2017',
+        extension_deadline_mm: '02',
+        extension_deadline_dd: '10',
+        reason_for_extending:  'need more time',
       }
     }
+  }
 
+  let(:service) { double(CaseExtendForPITService, call: :ok) }
+
+  describe '#new' do
+    before do
+      sign_in manager
+    end
+
+    it 'authorizes' do
+      expect{ get :new, params: { case_id: case_being_drafted.id }}
+        .to require_permission(:extend_for_pit?).with_args(
+          manager,
+          case_being_drafted
+        )
+    end
+
+    it 'assigns case object' do
+      get :new, params: { case_id: case_being_drafted.id }
+
+      expect(assigns(:case)).to be_a CaseExtendForPITDecorator
+      expect(assigns(:case).object).to eq case_being_drafted
+    end
+  end
+
+  describe '#create' do
     before do
       allow(CaseExtendForPITService).to receive(:new).and_return(service)
       sign_in manager
@@ -72,4 +94,6 @@ describe Cases::PitExtensionsController, type: :controller do
       end
     end
   end
+
+
 end
