@@ -22,30 +22,69 @@ Rails.application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
+  # Case Concerns
+  # Legacy routes that are awaiting transition to more idiomatic
+  # controller/routing structures
+  concern :closable do
+    member do
+      get :close
+      get :edit_closure
+      get :closure_outcomes
+      get :respond_and_close
+      get :respond
+    end
 
-  # Case Creation
+    collection do
+      patch :process_closure
+      patch :update_closure
+      patch :process_respond_and_close
+      patch :process_date_responded
+      patch :confirm_respond
+    end
+  end
+
+
+  # Case Create & Case Specific Actions
   scope :cases, module: 'cases' do
-    resources :fois, only: [:new, :create], controller: 'foi', as: :case_foi_standards
-    resources :sars, only: [:new, :create], controller: 'sar', as: :case_sar_standards
-    resources :icos, only: [:new, :create], controller: 'ico', as: :case_icos
-    resources :ico_fois, only: [:new, :create], controller: 'ico_foi', as: :case_ico_fois
-    resources :ico_sars, only: [:new, :create], controller: 'ico_sar', as: :case_ico_sars
+    resources :fois, only: [:new, :create], controller: 'foi', as: :case_foi_standards do
+      concerns :closable
+    end
+
+    resources :sars, only: [:new, :create], controller: 'sar', as: :case_sar_standards do
+      concerns :closable
+    end
+
+    resources :icos, only: [:new, :create], controller: 'ico', as: :case_icos do
+      concerns :closable
+    end
+
+    resources :ico_fois, only: [:new, :create], controller: 'ico_foi', as: :case_ico_fois do
+      concerns :closable
+    end
+
+    resources :ico_sars, only: [:new, :create], controller: 'ico_sar', as: :case_ico_sars do
+      concerns :closable
+    end
 
     resources :overturned_ico_fois, only: [:create], controller: 'overturned_foi', as: :case_overturned_fois do
       get :new, on: :member
+      concerns :closable
     end
 
     resources :overturned_ico_sars, only: [:create], controller: 'overturned_sar', as: :case_overturned_sars do
       get :new, on: :member
+      concerns :closable
     end
 
     resources :offender_sars, only: [:new, :create], controller: 'offender_sar', as: :case_sar_offenders do
       get 'cancel', on: :collection
       get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
+      concerns :closable
     end
 
     resources :ico do
       patch 'record_late_team'#, on: :member - not sure why member not working
+      concerns :closable
     end
   end
 
@@ -66,23 +105,13 @@ Rails.application.routes.draw do
     end
   end
 
-  # Case Actions
+  # Case Actions (general)
   resources :cases, except: [:index, :create] do
     get :confirm_destroy, on: :member
   end
 
   # Case Behaviours
   resources :cases, module: 'cases' do
-    resources :clearances do
-      patch 'unflag_for_clearance' => 'cases/base#unflag_for_clearance', on: :member
-      patch 'unflag_taken_on_case_for_clearance' => 'cases/base#unflag_taken_on_case_for_clearance', on: :member
-      patch :request_further_clearance, on: :member # extend
-      patch 'progress_for_clearance' => 'cases/base#progress_for_clearance', on: :member # progress
-
-      patch 'flag_for_clearance' => 'cases/base#flag_for_clearance', on: :member
-      get 'remove_clearance' => 'cases#remove_clearance', on: :member
-    end
-
     resources :links, except: [:index, :edit, :update]
 
     resources :pit_extensions, only: [:new, :create]
@@ -104,37 +133,38 @@ Rails.application.routes.draw do
     resources :attachments, only: [:destroy] do
       get 'download', on: :member
     end
+
+    resource :clearances, as: '' do
+      get :remove_clearance
+      patch :unflag_for_clearance
+      patch :unflag_taken_on_case_for_clearance
+      patch :request_further_clearance
+      patch :progress_for_clearance
+      patch :flag_for_clearance
+    end
   end
 
   # Case Behaviours (awaiting move to module Cases)
   resources :cases do
-    get 'close', on: :collection
-    get 'edit_closure', on: :member, as: :edit_closure
-    patch 'process_closure', on: :member
-    patch 'update_closure', on: :member
-    get 'closure_outcomes', on: :member
-    get 'respond_and_close', on: :member
-    patch 'process_respond_and_close', on: :member
-    patch 'process_date_responded', on: :member
-    get 'respond', on: :member
-    patch 'confirm_respond', on: :member
-
     resources :assignments, except: :create  do
-      patch 'accept_or_reject', on: :member
-      patch 'accept', on: :member
-      patch 'unaccept', on: :member
-      patch 'take_case_on', on: :member
+      member do
+        get :reassign_user
+        get :assign_to_new_team
 
-      get :reassign_user , on: :member
-      patch :execute_reassign_user, on: :member
+        patch :accept
+        patch :accept_or_reject
+        patch :execute_reassign_user
+        patch :execute_assign_to_new_team
+        patch :take_case_on
+        patch :unaccept
+      end
 
-      get :select_team, on: :collection
-      get :assign_to_new_team, on: :member
-      patch :execute_assign_to_new_team, on: :member
-      get :assign_to_team, on: :collection, as: 'assign_to_responder_team'
+      collection do
+        get :select_team
+        get :assign_to_team, as: :assign_to_responder_team
+      end
     end
   end
-
 
   # Stats Reporting and Performance
   resources :stats, only: [:index, :show, :new, :create] do

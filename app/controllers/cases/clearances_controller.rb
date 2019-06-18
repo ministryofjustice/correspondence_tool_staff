@@ -2,30 +2,13 @@ module Cases
   class ClearancesController < ApplicationController
     include SetupCase
 
-    before_action :set_decorated_case, only: [
-      :flag_for_clearance,
-      :progress_for_clearance,
-      :remove_clearance,
-      :request_further_clearance,
-      :unflag_for_clearance,
-    ]
+    before_action :set_decorated_case
 
-    # Should be create
-    def flag_for_clearance
-      authorize @case, :can_flag_for_clearance?
-
-      CaseFlagForClearanceService.new(user: current_user,
-                                      kase: @case,
-                                      team: BusinessUnit.dacu_disclosure).call
-      respond_to do |format|
-        format.js { render 'cases/flag_for_clearance.js.erb' }
-        format.html do
-          redirect_to case_path(@case)
-        end
-      end
+    # Interstitial page for unflag_taken_on_case_for_clearance
+    def remove_clearance
+      authorize @case
     end
 
-    # Should be update
     def progress_for_clearance
       authorize @case
 
@@ -39,7 +22,24 @@ module Cases
       redirect_to case_path(@case.id)
     end
 
-    # Was request_further_clearance
+    def flag_for_clearance
+      authorize @case, :can_flag_for_clearance?
+
+      service = CaseFlagForClearanceService.new(
+        user: current_user,
+        kase: @case,
+        team: BusinessUnit.dacu_disclosure
+      )
+      service.call
+
+      respond_to do |format|
+        format.js { render 'flag_for_clearance.js.erb' }
+        format.html do
+          redirect_to case_path(@case)
+        end
+      end
+    end
+
     def request_further_clearance
       authorize @case
 
@@ -55,37 +55,19 @@ module Cases
       end
     end
 
-    # Should be destroy
-    def remove_clearance
-      authorize @case
-      # interstitial page for unflag_taken_on_case_for_clearance
-    end
-
-    def unflag_taken_on_case_for_clearance
-      authorize @case, :unflag_for_clearance?
-      service = CaseUnflagForClearanceService.new(user: current_user,
-                                                  kase: @case,
-                                                  team: BusinessUnit.dacu_disclosure,
-                                                  message: params[:message])
-      service.call
-      if service.result == :ok
-        flash[:notice] = "Clearance removed for this case."
-        redirect_to case_path(@case)
-      end
-    end
-
     def unflag_for_clearance
       authorize @case
 
-      CaseUnflagForClearanceService.new(
+      service = CaseUnflagForClearanceService.new(
         user: current_user,
         kase: @case,
         team: BusinessUnit.dacu_disclosure,
         message: params[:message]
-      ).call
+      )
+      service.call
 
       respond_to do |format|
-        format.js { render 'cases/unflag_for_clearance.js.erb' }
+        format.js { render 'unflag_for_clearance.js.erb' }
         format.html do
           flash[:notice] = "Case has been de-escalated. #{ get_de_escalated_undo_link }".html_safe
           if @case.type_abbreviation == 'SAR'
@@ -96,6 +78,24 @@ module Cases
         end
       end
     end
+
+    def unflag_taken_on_case_for_clearance
+      authorize @case, :unflag_for_clearance?
+
+      service = CaseUnflagForClearanceService.new(
+        user: current_user,
+        kase: @case,
+        team: BusinessUnit.dacu_disclosure,
+        message: params[:message]
+      )
+      service.call
+
+      if service.result == :ok
+        flash[:notice] = "Clearance removed for this case."
+        redirect_to case_path(@case)
+      end
+    end
+
 
     private
 
