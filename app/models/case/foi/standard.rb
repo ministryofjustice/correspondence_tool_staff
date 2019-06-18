@@ -70,7 +70,7 @@ class Case::FOI::Standard < Case::Base
     academic_business_charity: 'academic_business_charity',
     journalist: 'journalist',
     member_of_the_public: 'member_of_the_public',
-    offender_sar: 'offender',
+    offender: 'offender',
     solicitor: 'solicitor',
     staff_judiciary: 'staff_judiciary',
     what_do_they_know: 'what_do_they_know',
