@@ -1,14 +1,19 @@
 require "rails_helper"
 
 describe Cases::SearchesController, type: :controller do
-
-  let(:responder)             { find_or_create :foi_responder }
-  let(:responding_team)       { responder.responding_teams.first }
-  let(:unassigned_case)       { create(:case, :indexed) }
-  let(:assigned_case)         { create :assigned_case, :indexed, responding_team: responding_team }
+  let(:responder)       { find_or_create :foi_responder }
+  let(:responding_team) { responder.responding_teams.first }
+  let(:unassigned_case) { create(:case, :indexed) }
+  let(:assigned_case) {
+    create(
+      :assigned_case,
+      :indexed,
+      responding_team: responding_team
+    )
+  }
 
   describe '#show' do
-    let(:search_query)        { create :search_query }
+    let(:search_query) { create :search_query }
     let(:case_search_service) {
       instance_double CaseSearchService,
         call: nil,
