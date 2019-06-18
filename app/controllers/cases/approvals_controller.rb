@@ -1,12 +1,12 @@
 module Cases
-  class ApprovalController < ApplicationController
+  class ApprovalsController < ApplicationController
     include SetupCase
 
-    before_action :set_case, only: [:new, :create]
+    before_action :set_case
 
     # Was approve
     def new
-      authorize @case
+      authorize @case, :approve?
 
       @case = @case.decorate
     end
@@ -34,7 +34,7 @@ module Cases
       else
         flash.now[:alert] = case_approval_service.error_message
         @case = @case.decorate
-        render :approve
+        render :new
       end
     end
   end

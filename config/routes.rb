@@ -120,7 +120,7 @@ Rails.application.routes.draw do
     resources :sar_extensions, only: [:new, :create]
     resource :sar_extension, only: [:destroy]
 
-    resources :approval, only: [:new, :create]
+    resources :approvals, only: [:new, :create]
 
     resource :responses, only: [:create] do
       get 'new/:response_action', to: 'responses#new', as: 'new'

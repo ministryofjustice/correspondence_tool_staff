@@ -21,9 +21,9 @@
   p
     = t(".approve_message.#{@case.type_abbreviation.downcase}", managing_team: @case.managing_team.name)
 
-= form_tag approve_case_path(@case), method: :patch
+= form_tag case_approvals_path(@case), method: :post
   - if @case.allow_event?(current_user, :approve_and_bypass)
-    = render partial: 'shared/bypass_approvals_form'
+    = render partial: 'cases/shared/bypass_approvals_form'
 
   .actions
     = submit_tag 'Clear response', class: 'button'
