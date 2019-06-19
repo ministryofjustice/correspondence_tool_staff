@@ -33,6 +33,7 @@ class OffenderSARCaseForm
            :creator,
            :send_by_post?,
            :send_by_email?,
+           :foo,
            to: :@case
 
   attr_reader :case
@@ -75,15 +76,22 @@ class OffenderSARCaseForm
 
   def valid_attributes?(params)
     params ||= {}
+
     if current_step == "subject-details"
       params = params.merge "subject_type": "" unless params["subject_type"].present?
       params = params.merge "date_of_birth": "" unless params["date_of_birth"].present?
       params = params.merge "flag_for_disclosure_specialists": "" unless params["flag_for_disclosure_specialists"].present?
     end
+
     if current_step == "requester-details"
       params = params.merge "third_party": "" unless params["third_party"].present?
+      params.delete "name" unless params["third_party"] == "true"
+      params.delete "third_party_relationship" unless params["third_party"] == "true"
       params = params.merge "reply_method": "" unless params["reply_method"].present?
+      params.delete "email" unless params["reply_method"] == "send_by_email"
+      params.delete "postal_address" unless params["reply_method"] == "send_by_post"
     end
+
     @case.valid_attributes?(params)
   end
 

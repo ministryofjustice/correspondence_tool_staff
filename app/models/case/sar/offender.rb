@@ -23,11 +23,14 @@ class Case::SAR::Offender < Case::Base
 
 # when the SAR was received
   validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
-  validates :flag_for_disclosure_specialists, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
-  validates_presence_of :name, :third_party_relationship, if: -> { third_party }
+  validates :flag_for_disclosure_specialists, inclusion: {in: [ "yes", "no" ], message: "Please choose yes or no" }
+
+  validates :name, presence: true, if: -> { third_party }
+  validates :third_party_relationship, presence: true, if: -> { third_party }
 
   validates :date_of_birth, presence: true
   validates :received_date, presence: true
+  validates :message, presence: true
 
   validates_presence_of :email,          if: :send_by_email?
   validates_presence_of :postal_address, if: :send_by_post?
@@ -40,6 +43,8 @@ class Case::SAR::Offender < Case::Base
   jsonb_accessor :properties,
                   prison_number: :string,
                   subject_full_name: :string,
+                  escalation_deadline: :date,
+                  internal_deadline: :date,
                   subject_aliases: :string,
                   previous_case_numbers: :string,
                   other_subject_ids: :string,
@@ -64,6 +69,5 @@ class Case::SAR::Offender < Case::Base
                       :date_responded,
                       :date_draft_compliant,
                       :external_deadline,
-                      :received_date,
-                      validate_if: :received_in_acceptable_range?
+                      :received_date
 end

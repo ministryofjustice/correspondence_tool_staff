@@ -20,6 +20,7 @@ class Cases::OffenderSarsController < CasesController
 
     @case.assign_params(case_params) if case_params
     @case.current_step = params[:current_step]
+    @case_params = case_params
 
     if @case.valid_attributes?(case_params)
       if @case.valid?
