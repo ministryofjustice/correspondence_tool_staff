@@ -23,16 +23,19 @@ class Case::SAR::Offender < Case::Base
 
 # when the SAR was received
   validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
+  validates :flag_for_disclosure_specialists, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
   validates_presence_of :name, :third_party_relationship, if: -> { third_party }
 
   validates :date_of_birth, presence: true
-  validates :flag_for_disclosure_specialists, presence: true
+  validates :received_date, presence: true
 
   validates_presence_of :email,          if: :send_by_email?
   validates_presence_of :postal_address, if: :send_by_post?
 
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
+  validates :reply_method, presence: true
+  validates :subject, presence: true, length: { maximum: 100 }
 
   jsonb_accessor :properties,
                   prison_number: :string,
@@ -47,7 +50,7 @@ class Case::SAR::Offender < Case::Base
                   subject_type: :string,
                   received_date: :date,
                   reply_method: :string,
-                  flag_for_disclosure_specialists: :string
+                  flag_for_disclosure_specialists: :boolean
 
   enum subject_type: {
     offender: 'offender',
@@ -57,5 +60,10 @@ class Case::SAR::Offender < Case::Base
     send_by_post:  'send_by_post',
     send_by_email: 'send_by_email',
   }
-  acts_as_gov_uk_date :date_of_birth
+  acts_as_gov_uk_date :date_of_birth,
+                      :date_responded,
+                      :date_draft_compliant,
+                      :external_deadline,
+                      :received_date,
+                      validate_if: :received_in_acceptable_range?
 end
