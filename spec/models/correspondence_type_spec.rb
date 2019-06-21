@@ -105,7 +105,7 @@ describe CorrespondenceType, type: :model do
     end
 
     it 'returns SAR sub-classes' do
-      expect(sar.sub_classes).to eq [Case::SAR]
+      expect(sar.sub_classes).to eq [Case::SAR::Standard]
     end
   end
 end
