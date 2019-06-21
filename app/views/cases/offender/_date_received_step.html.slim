@@ -11,8 +11,7 @@
   .form-group
     = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.date_sar_received'),
         form_hint_text: t('cases.new.date_sar_received_copy'),
-        today_button: {class: ''} }
-
+        today_button: {class: ''}}
   p
     = link_to "Previous", "/cases/new/offender/requested-info"
   input name="current_step" type="hidden" value=@case.current_step
