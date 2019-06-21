@@ -56,7 +56,7 @@ FactoryBot.define do
     sequence(:subject_full_name)    { |n| "Subject #{n}" }
     subject_type                    { 'offender' }
     third_party                     { false }
-    flag_for_disclosure_specialists { false }
+    flag_for_disclosure_specialists { 'no' }
     created_at                      { creation_time }
     creator                         { create(:user, :orphan) }
   end

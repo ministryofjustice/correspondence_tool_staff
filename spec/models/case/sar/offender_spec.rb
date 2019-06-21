@@ -52,8 +52,12 @@ describe Case::SAR::Offender do
   end
 
   describe 'subject attribute' do
-    it { should validate_presence_of(:subject) }
-    it { should validate_length_of(:subject).is_at_most(100) }
+    it 'validates subject' do
+      kase = build :offender_sar_case
+
+      expect(kase).to validate_presence_of(:subject)
+      expect(kase).to validate_length_of(:subject).is_at_most(100)
+    end
   end
 
   describe '#subject_type' do
@@ -82,8 +86,12 @@ describe Case::SAR::Offender do
   end
 
   describe '#reply_method' do
-    it { should validate_presence_of(:reply_method) }
-    it { should allow_values('send_by_email', 'send_by_post').for(:reply_method) }
+    it 'validates reply method' do
+      kase = build :offender_sar_case
+
+      expect(kase).to validate_presence_of(:reply_method)
+      expect(kase).to allow_values('send_by_email', 'send_by_post').for(:reply_method)
+    end
   end
 
   describe '#email' do
@@ -132,7 +140,6 @@ describe Case::SAR::Offender do
 
   describe '#message' do
     it 'validates presence ' do
-      pending "This should not know about request files attached!"
       kase = build :offender_sar_case, message: ''
       expect(kase).not_to be_valid
       expect(kase.errors[:message])
