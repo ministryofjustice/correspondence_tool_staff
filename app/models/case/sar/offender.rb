@@ -15,7 +15,7 @@ class Case::SAR::Offender < Case::Base
 
 # flag as high profile case
 
-# is the information being requested on someone else’s behalf
+# is the information being requested on someone else's behalf
 
 # where information should be sent
 

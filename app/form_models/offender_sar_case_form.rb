@@ -75,15 +75,25 @@ class OffenderSARCaseForm
   end
 
   def valid_attributes?(params)
-    params ||= params = ActionController::Parameters.new({}).permit!
+    params ||= ActionController::Parameters.new({}).permit!
+    params = params_for_step(params, current_step)
+    @case.valid_attributes?(params)
+  end
 
-    if current_step == "subject-details"
+  def subject_type
+    object.subject_type
+  end
+
+  private
+
+  def params_for_step(params, step) # rubocop:disable Metrics/CyclomaticComplexity
+    if step == "subject-details"
       params.merge!("subject_type" => "") unless params["subject_type"].present?
       params.merge!("date_of_birth" => "") unless params["date_of_birth"].present?
       params.merge!("flag_for_disclosure_specialists" => "") unless params["flag_for_disclosure_specialists"].present?
     end
 
-    if current_step == "requester-details"
+    if step == "requester-details"
       params.merge!("third_party": "") unless params["third_party"].present?
       params.delete("name") unless params["third_party"] == "true"
       params.delete("third_party_relationship") unless params["third_party"] == "true"
@@ -93,14 +103,8 @@ class OffenderSARCaseForm
       params.delete("postal_address") unless params["reply_method"] == "send_by_post"
     end
 
-    @case.valid_attributes?(params)
+    params
   end
-
-  def subject_type
-    object.subject_type
-  end
-
-  private
 
   def build_case_from_session
     values = @session[:offender_sar_state] || {date_of_birth: nil}
