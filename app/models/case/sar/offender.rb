@@ -29,7 +29,6 @@ class Case::SAR::Offender < Case::Base
   validates :third_party_relationship, presence: true, if: -> { third_party }
 
   validates :date_of_birth, presence: true
-  validates :received_date, presence: true
   validates :message, presence: true
 
   validates_presence_of :email,          if: :send_by_email?
@@ -38,7 +37,6 @@ class Case::SAR::Offender < Case::Base
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
   validates :reply_method, presence: true
-  validates :subject, presence: true, length: { maximum: 100 }
 
   jsonb_accessor :properties,
                   prison_number: :string,

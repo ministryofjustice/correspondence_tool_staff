@@ -103,6 +103,10 @@ class OffenderSARCaseForm
       params.delete("postal_address") unless params["reply_method"] == "send_by_post"
     end
 
+    if step == "date-received"
+      params.merge!("received_date" => "") unless params["received_date"].present?
+    end
+
     params
   end
 
