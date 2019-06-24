@@ -51,15 +51,6 @@ describe Case::SAR::Offender do
     end
   end
 
-  describe 'subject attribute' do
-    it 'validates subject' do
-      kase = build :offender_sar_case
-
-      expect(kase).to validate_presence_of(:subject)
-      expect(kase).to validate_length_of(:subject).is_at_most(100)
-    end
-  end
-
   describe '#subject_type' do
     context 'valid values' do
       it 'does not error' do
