@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Cases::AssignmentsController, type: :controller do
+RSpec.describe AssignmentsController, type: :controller do
   let(:responding_team)   { accepted_case.responding_team }
   let(:responder)         { responding_team.responders.first }
   let(:approver)          { create :approver }

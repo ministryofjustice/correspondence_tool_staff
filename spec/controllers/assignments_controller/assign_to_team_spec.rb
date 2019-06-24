@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Cases::AssignmentsController, type: :controller do
+RSpec.describe AssignmentsController, type: :controller do
   let(:manager)           { create :manager }
   let(:unassigned_case)   { create :case }
   let(:responding_team)   { create :responding_team }
