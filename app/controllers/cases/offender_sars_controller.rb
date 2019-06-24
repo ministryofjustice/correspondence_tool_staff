@@ -25,6 +25,7 @@ class Cases::OffenderSarsController < CasesController
       if @case.valid?
         if @case.save
           session[:offender_sar_state] = nil
+          flash[:notice] = "Case created successfully"
           redirect_to case_path(@case.case) and return
         end
       end
