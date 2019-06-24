@@ -1,5 +1,5 @@
 module Cases
-  class AmendmentController < ApplicationController
+  class AmendmentsController < ApplicationController
     include SetupCase
 
     before_action :set_decorated_case, only: [:new, :create]
@@ -13,7 +13,7 @@ module Cases
 
     # Was execute_request_amends
     def create
-      authorize @case
+      authorize @case, :execute_request_amends?
 
       service = CaseRequestAmendsService.new(
         user: current_user,

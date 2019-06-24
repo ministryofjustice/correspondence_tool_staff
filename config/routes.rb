@@ -126,7 +126,7 @@ Rails.application.routes.draw do
       get 'new/:response_action', to: 'responses#new', as: 'new'
     end
 
-    resources :amendment, only: [:new, :create]
+    resources :amendments, only: [:new, :create]
 
     resources :messages, only: [:create]
 
