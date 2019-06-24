@@ -38,7 +38,7 @@ FactoryBot.define do
 
   factory :offender_sar_correspondence_type, parent: :correspondence_type do
     name { 'Offender Subject Access Request' }
-    abbreviation { 'OFFENDER' }
+    abbreviation { 'OFFENDER_SAR' }
     escalation_time_limit { 3 }
     internal_time_limit { 10 }
     external_time_limit { 30 }

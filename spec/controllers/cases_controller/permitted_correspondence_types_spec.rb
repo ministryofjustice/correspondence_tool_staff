@@ -1,10 +1,11 @@
 require "rails_helper"
 
 describe CasesController, type: :controller do
-  let(:manager)      { find_or_create :disclosure_bmt_user }
-  let(:controller)   { described_class.new }
-  let!(:sar)         { find_or_create :sar_correspondence_type }
-  let!(:ico)         { find_or_create :ico_correspondence_type }
+  let(:manager)       { find_or_create :disclosure_bmt_user }
+  let(:controller)    { described_class.new }
+  let!(:sar)          { find_or_create :sar_correspondence_type }
+  let!(:ico)          { find_or_create :ico_correspondence_type }
+  let!(:offender_sar) { find_or_create :offender_sar_correspondence_type }
 
   before do
     allow(controller).to receive(:current_user).and_return(manager)
@@ -32,5 +33,17 @@ describe CasesController, type: :controller do
     disable_feature(:ico)
     types = controller.__send__(:permitted_correspondence_types)
     expect(types).not_to include ico
+  end
+
+  it 'does permit Offender SAR cases if feature enabled' do
+    enable_feature(:offender_sars)
+    types = controller.__send__(:permitted_correspondence_types)
+    expect(types).to include offender_sar
+  end
+
+  it 'does not permit Offender SAR cases if feature is not enabled' do
+    disable_feature(:offender_sars)
+    types = controller.__send__(:permitted_correspondence_types)
+    expect(types).not_to include offender_sar
   end
 end
