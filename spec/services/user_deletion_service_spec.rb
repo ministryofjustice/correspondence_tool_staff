@@ -2,7 +2,11 @@ require 'rails_helper'
 
 describe UserDeletionService do
 
+    before :each do
+      DbHousekeeping.clean
+    end
   describe '#call' do
+
 
     let(:manager)       { find_or_create :disclosure_bmt_user}
     let(:team)          { find_or_create :foi_responding_team }
