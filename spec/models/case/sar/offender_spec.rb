@@ -140,7 +140,7 @@ describe Case::SAR::Offender do
 
   # describe '#within_escalation_deadline?' do
   #   it 'returns false' do
-  #     sar = build(:sar_case)
+  #     sar = build(:offender_sar_case)
   #     expect(sar.within_escalation_deadline?).to be_falsey
   #   end
   # end
@@ -161,37 +161,30 @@ describe Case::SAR::Offender do
   #   end
   # end
 
-  # describe 'papertrail versioning', versioning: true do
-  #   before(:each) do
-  #     @kase = create :sar_case,
-  #                    name: 'aaa',
-  #                    email: 'aa@moj.com',
-  #                    received_date: Date.today,
-  #                    subject: 'subject A'
-  #     @kase.update! name: 'bbb',
-  #                   email: 'bb@moj.com',
-  #                   received_date: 1.day.ago,
-  #                   subject: 'subject B'
-  #   end
+  describe 'papertrail versioning', versioning: true do
+    before(:each) do
+      @kase = create :offender_sar_case,
+                     name: 'aaa',
+                     email: 'aa@moj.com',
+                     received_date: Date.today,
+                     subject: 'subject A'
+      @kase.update! name: 'bbb',
+                    email: 'bb@moj.com',
+                    received_date: 1.day.ago,
+                    subject: 'subject B'
+    end
 
-  #   xit 'saves all values in the versions object hash' do
-  #     version_hash = YAML.load(@kase.versions.last.object)
-  #     expect(version_hash['email']).to eq 'aa@moj.com'
-  #     expect(version_hash['received_date']).to eq Date.today
-  #     expect(version_hash['subject']).to eq 'subject A'
-  #   end
+    it 'can reconsititue a record from a version (except for received_date)' do
+      original_kase = @kase.versions.last.reify
+      expect(original_kase.email).to eq 'aa@moj.com'
+      expect(original_kase.subject).to eq 'subject A'
+    end
 
-  #   it 'can reconsititue a record from a version (except for received_date)' do
-  #     original_kase = @kase.versions.last.reify
-  #     expect(original_kase.email).to eq 'aa@moj.com'
-  #     expect(original_kase.subject).to eq 'subject A'
-  #   end
-
-  #   it 'reconstitutes the received date properly' do
-  #     original_kase = @kase.versions.last.reify
-  #     expect(original_kase.received_date).to eq Date.today
-  #   end
-  # end
+    it 'reconstitutes the received date properly' do
+      original_kase = @kase.versions.last.reify
+      expect(original_kase.received_date).to eq Date.today
+    end
+  end
 
   # describe 'use_subject_as_requester callback' do
   #   context 'on create' do
@@ -221,18 +214,18 @@ describe Case::SAR::Offender do
   #   end
   # end
 
-  # describe '#requires_flag_for_disclosure_specialists?' do
-  #   it 'returns true' do
-  #     kase = create :sar_case
-  #     expect(kase.requires_flag_for_disclosure_specialists?).to be true
-  #   end
-  # end
+  describe '#requires_flag_for_disclosure_specialists?' do
+    it 'returns true' do
+      kase = create :offender_sar_case
+      expect(kase.requires_flag_for_disclosure_specialists?).to be true
+    end
+  end
 
-  # describe '.searchable_fields_and_ranks' do
-  #   it 'includes subject full name' do
-  #     expect(Case::SAR.searchable_fields_and_ranks).to include({subject_full_name: 'B'})
-  #   end
-  # end
+  describe '.searchable_fields_and_ranks' do
+    it 'includes subject full name' do
+      expect(Case::SAR::Offender.searchable_fields_and_ranks).to include({subject_full_name: 'B'})
+    end
+  end
 
   # describe 'deadline' do
   #   subject             { create :sar_case }
