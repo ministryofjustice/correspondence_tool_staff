@@ -3,14 +3,18 @@ require './lib/translate_for_case'
 class CasesController < ApplicationController
   include SetupCase
 
-  before_action :set_case, only: [
+  before_action -> { set_case(params[:id]) }, only: [
+    :edit,
     :closure_outcomes,
     :edit_closure,
     :process_date_responded,
     :update_closure
   ]
 
-  before_action :set_decorated_case, only: [
+  before_action -> { set_decorated_case(params[:id]) }, only: [
+    :show,
+    :destroy,
+    :confirm_destroy,
     :close,
     :confirm_respond,
     :process_closure,
@@ -23,7 +27,6 @@ class CasesController < ApplicationController
   attr_reader :correspondence_type, :correspondence_type_key
 
   def show
-    set_decorated_case(params[:id])
     set_assignments
 
     if flash.key?(:query_id)
@@ -47,7 +50,7 @@ class CasesController < ApplicationController
       @accepted_now = params[:accepted_now]
       CasesUsersTransitionsTracker.sync_for_case_and_user(@case, current_user)
 
-      render :show
+      render 'cases/show'
     end
   end
 
@@ -55,8 +58,7 @@ class CasesController < ApplicationController
     permitted_correspondence_types
     authorize Case::Base, :can_add_case?
 
-    # Remnant from existing case creation journey hence mismatching template
-    render :select_type
+    render 'cases/select_type'
   end
 
   def create
@@ -80,16 +82,15 @@ class CasesController < ApplicationController
         @case = @case.decorate
         @case_types = @correspondence_type.sub_classes.map(&:to_s)
         @s3_direct_post = S3Uploader.for(@case, 'requests')
-        render :new
+        render 'cases/new'
       end
     rescue ActiveRecord::RecordNotUnique
       flash.now[:notice] = t('activerecord.errors.models.case.attributes.number.duplication')
-      render :new
+      render 'cases/new'
     end
   end
 
   def edit
-    set_case(params[:id])
     set_correspondence_type(@case.type_abbreviation.downcase)
 
     authorize @case
@@ -97,11 +98,10 @@ class CasesController < ApplicationController
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     @s3_direct_post = S3Uploader.for(@case, 'requests')
     @case = @case.decorate
-    render :edit
+    render 'cases/edit'
   end
 
   def update
-    #set_decorated_case(params[:id]) # TODO: Repeating case load!
     set_correspondence_type(params.fetch(:correspondence_type))
     @case = Case::Base.find(params[:id])
     authorize @case
@@ -113,7 +113,7 @@ class CasesController < ApplicationController
     if service.result == :error
       @case = @case.decorate
       # flash[:notice] = t('.case_error')
-      render :edit and return
+      render 'cases/edit' and return
     end
 
     if service.result == :ok
@@ -129,7 +129,6 @@ class CasesController < ApplicationController
   end
 
   def destroy
-    set_decorated_case(params[:id])
     authorize @case
 
     service = CaseDeletionService.new(
@@ -143,24 +142,17 @@ class CasesController < ApplicationController
       flash[:notice] = "You have deleted case #{@case.number}."
       redirect_to cases_path
     else
-      render :confirm_destroy
+      render 'cases/confirm_destroy'
     end
   end
 
   def confirm_destroy
-    set_decorated_case(params[:id])
     authorize @case
   end
 
-  # All existing partials are in /views/cases
-  def self.controller_path
-    'cases'
-  end
 
-
-  # @note: Case Closure and Respond methods require refactoring as the behaviours
-  # are currently undocumented and may require further investigation/checks
-  # as not all
+  # @note: Case Closure and Respond methods require refactoring as per other
+  # case behaviours
 
   # Prepopulate date if it was entered by the KILO
   def close
@@ -217,11 +209,11 @@ class CasesController < ApplicationController
     @case.prepare_for_respond
 
     if !@case.update process_date_responded_params
-      render render 'cases/closures/close'
+      render 'cases/closures/close'
     else
       @team_collection = CaseTeamCollection.new(@case)
       @case.update(late_team_id: @case.responding_team.id)
-      redirect_to closure_outcomes_case_path(@case)
+      redirect_to polymorphic_path(@case, action: :closure_outcomes)
     end
   end
 
@@ -241,7 +233,7 @@ class CasesController < ApplicationController
       set_permitted_events
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
       @team_collection = CaseTeamCollection.new(@case)
-      render render 'cases/closures/closure_outcomes'
+      render 'cases/closures/closure_outcomes'
     end
   end
 
@@ -256,7 +248,7 @@ class CasesController < ApplicationController
       set_permitted_events
       @close_flash_message = t('notices.case_closed')
       if @permitted_events.include?(:update_closure)
-        flash[:notice] = "#{@close_flash_message}. #{ get_edit_close_link }".html_safe
+        flash[:notice] = "#{@close_flash_message}. #{get_edit_close_link}".html_safe
       else
         flash[:notice] = @close_flash_message
       end
@@ -264,7 +256,7 @@ class CasesController < ApplicationController
     else
       set_permitted_events
       @team_collection = CaseTeamCollection.new(@case)
-      render render 'cases/closures/closure_outcomes'
+      render 'cases/closures/closure_outcomes'
     end
   end
 
@@ -300,10 +292,10 @@ class CasesController < ApplicationController
       redirect_to case_path(@case)
     when :late
       @team_collection = CaseTeamCollection.new(@case)
-      render '/cases/ico/late_team'
+      render 'cases/ico/late_team'
     when :error
       set_correspondence_type(@case.type_abbreviation.downcase)
-      render :respond
+      render 'cases/closures/respond'
     else
       raise 'unexpected result from MarkResponseAsSentService'
     end
@@ -379,6 +371,14 @@ class CasesController < ApplicationController
     types << CorrespondenceType.offender_sar if FeatureSet.offender_sars.enabled?
 
     @permitted_correspondence_types = types
+  end
+
+  def get_edit_close_link
+    view_context.link_to(
+      "Edit case closure details",
+      polymorphic_path(@case, action: :edit_closure),
+      { class: "undo-take-on-link" }
+    )
   end
 
   def translate_for_case(*args, **options)

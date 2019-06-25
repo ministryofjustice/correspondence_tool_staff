@@ -28,8 +28,8 @@ module NewCase
   end
 
   def validate_correspondence_type(ct_abbr)
-    ct_exists    = ct_abbr.in?(CorrespondenceType.pluck(:abbreviation))
-    ct_permitted = ct_abbr.in?(@permitted_correspondence_types.map(&:abbreviation))
+    ct_exists    = ct_abbr.upcase.in?(CorrespondenceType.pluck(:abbreviation))
+    ct_permitted = ct_abbr.upcase.in?(@permitted_correspondence_types.map(&:abbreviation))
 
     if ct_exists && ct_permitted
       :ok

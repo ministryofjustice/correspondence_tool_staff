@@ -7,6 +7,7 @@ module Cases
 
     def new
       @correspondence_type_key = 'ico'
+      permitted_correspondence_types
       new_case_for CorrespondenceType.ico
     end
 

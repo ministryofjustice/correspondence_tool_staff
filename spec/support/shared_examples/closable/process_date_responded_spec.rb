@@ -1,20 +1,22 @@
 require "rails_helper"
 
-describe CasesController do
-  let(:manager)        { find_or_create :disclosure_bmt_user }
-  let(:responded_case) { create :responded_case,
-                                creation_time: 6.business_days.ago }
-  let(:date_responded) { 5.business_days.after(responded_case.created_at) }
-  let(:params)         { {
-                           id: responded_case.id,
-                           case_foi: {
-                             date_responded_dd: date_responded.day.to_s,
-                             date_responded_mm: date_responded.month.to_s,
-                             date_responded_yyyy: date_responded.year.to_s,
-                           }
-                         } }
+# Ensure a valid `kase` and `params` is declared in calling test
+RSpec.shared_examples 'process date responded spec' do |klass|
+  describe klass do
+    let(:manager) { find_or_create :disclosure_bmt_user }
+    let(:responded_case) { kase }
+    let(:date_responded) { 5.business_days.after(responded_case.created_at) }
+    let(:params) {
+      {
+        id: responded_case.id,
+        responded_case.type_abbreviation.downcase.to_sym => {
+          date_responded_dd: date_responded.day.to_s,
+          date_responded_mm: date_responded.month.to_s,
+          date_responded_yyyy: date_responded.year.to_s,
+        }
+      }
+    }
 
-  describe '#process_date_responded' do
     before do
       sign_in manager
     end
@@ -44,7 +46,7 @@ describe CasesController do
       it 'redirects to the closure outcomes page' do
         patch :process_date_responded, params: params
 
-        expect(response).to redirect_to(closure_outcomes_case_path(responded_case))
+        expect(response).to redirect_to(polymorphic_path(responded_case, action: :closure_outcomes))
       end
     end
   end

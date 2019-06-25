@@ -1,7 +1,5 @@
 class Case::OverturnedICO::SARPolicy < Case::SARPolicy
-
-  def new_overturned_ico?
+  def new?
     FeatureSet.ico.enabled? && @user.manager?
   end
-
 end

@@ -57,10 +57,10 @@ module SARCasesParams
   end
 
   def missing_info_to_tmm
-    if params[:case_sar][:missing_info] == "yes"
+    if params[:sar][:missing_info] == "yes"
       @case.missing_info = true
       CaseClosure::RefusalReason.sar_tmm.abbreviation
-    elsif params[:case_sar][:missing_info] == "no"
+    elsif params[:sar][:missing_info] == "no"
       @case.missing_info = false
     end
   end

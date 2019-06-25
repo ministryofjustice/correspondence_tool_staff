@@ -11,6 +11,7 @@ module Cases
     end
 
     def new
+      permitted_correspondence_types
       new_case_for @correspondence_type
     end
 

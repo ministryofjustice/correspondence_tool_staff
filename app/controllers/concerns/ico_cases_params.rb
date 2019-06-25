@@ -52,13 +52,13 @@ module ICOCasesParams
 
   def process_ico_closure_params
     params.require(:ico).permit(
-                                 :date_ico_decision_received_dd,
-                                 :date_ico_decision_received_mm,
-                                 :date_ico_decision_received_yyyy,
-                                 :ico_decision_comment,
-                                 :ico_decision,
-                                 :late_team_id,
-                                 uploaded_ico_decision_files: [],
+      :date_ico_decision_received_dd,
+      :date_ico_decision_received_mm,
+      :date_ico_decision_received_yyyy,
+      :ico_decision_comment,
+      :ico_decision,
+      :late_team_id,
+      uploaded_ico_decision_files: [],
     )
   end
 
@@ -201,10 +201,10 @@ module ICOCasesParams
   end
 
   def ico_close_date_responded_params
-      params.require(:ico).permit(
-                                 :date_ico_decision_received_dd,
-                                 :date_ico_decision_received_mm,
-                                 :date_ico_decision_received_yyyy
+    params.require(:ico).permit(
+      :date_ico_decision_received_dd,
+      :date_ico_decision_received_mm,
+      :date_ico_decision_received_yyyy
     )
   end
 end

@@ -19,13 +19,13 @@ RSpec.describe Cases::ApprovalsController, type: :controller do
     end
 
     it 'authorizes' do
-      expect { get :new, params}
+      expect { get :new, params: params}
         .to require_permission(:approve?)
           .with_args(approver, responded_trigger_case)
     end
 
     it 'renders the approve page' do
-      get :new, params
+      get :new, params: params
       expect(response).to have_rendered('new')
     end
   end
@@ -37,7 +37,7 @@ RSpec.describe Cases::ApprovalsController, type: :controller do
     end
 
     it 'authorizes' do
-      expect { post :create, params}
+      expect { post :create, params: params}
         .to require_permission(:approve?).with_args(
           approver,
           responded_trigger_case
@@ -45,7 +45,7 @@ RSpec.describe Cases::ApprovalsController, type: :controller do
     end
 
     it 'calls the case approval service' do
-      post :create, params
+      post :create, params: params
 
       expect(CaseApprovalService).to have_received(:new).with(
         hash_including(user: approver, kase: responded_trigger_case)
@@ -54,13 +54,13 @@ RSpec.describe Cases::ApprovalsController, type: :controller do
     end
 
     it 'flashes a notification' do
-      post :create, params
+      post :create, params: params
       expect(flash[:notice])
         .to eq 'Disclosure has been notified that the response is pending clearance.'
     end
 
     it 'redirects to case detail page' do
-      post :create, params
+      post :create, params: params
       expect(response).to redirect_to(case_path(responded_trigger_case))
     end
   end

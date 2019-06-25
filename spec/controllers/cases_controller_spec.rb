@@ -1,8 +1,6 @@
 require 'rails_helper'
-require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 RSpec.describe CasesController, type: :controller do
-
   let(:all_cases)             { create_list(:case, 5)   }
   let(:first_case)            { all_cases.first         }
   let(:manager)               { find_or_create :disclosure_specialist_bmt }
@@ -116,169 +114,50 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  context "as an authenticated manager" do
-
-    before { sign_in manager }
-
-    describe 'PATCH process_closure' do
-      let(:outcome)     { find_or_create :outcome, :requires_refusal_reason }
-      let(:info_held)   { find_or_create :info_status, :held }
-
-      it 'authorizes using can_close_case?' do
-        expect{
-          patch :process_closure, params: case_closure_params(responded_case)
-        }.to require_permission(:can_close_case?)
-               .with_args(manager, responded_case)
-      end
-
-      it "closes a case that has been responded to" do
-        patch :process_closure, params: case_closure_params(responded_case)
-        expect(Case::Base.first.current_state).to eq 'closed'
-        expect(Case::Base.first.outcome_id).to eq outcome.id
-        expect(Case::Base.first.date_responded).to eq 3.days.ago.to_date
-      end
-
-      def case_closure_params(kase)
-        date_responded = 3.days.ago
-        {
-          id: kase.id,
-          case_foi: {
-            date_responded_dd: date_responded.day,
-            date_responded_mm: date_responded.month,
-            date_responded_yyyy: date_responded.year,
-            info_held_status_abbreviation: info_held.abbreviation,
-            outcome_abbreviation: outcome.abbreviation,
-            # refusal_reason_name: refusal_reason.name,
-          }
-        }
-      end
-
-      context 'FOI internal review' do
-        let(:appeal_outcome)    { find_or_create :appeal_outcome, :upheld }
-        let(:info_held)         { find_or_create :info_status, :not_held }
-        let(:internal_review)   { create :responded_compliance_review }
-
-        it "closes a case that has been responded to" do
-          patch :process_closure, params: case_closure_params(internal_review)
-          expect(Case::Base.first.current_state).to eq 'closed'
-          expect(Case::Base.first.appeal_outcome_id).to eq appeal_outcome.id
-          expect(Case::Base.first.date_responded).to eq 3.days.ago.to_date
-        end
-
-        def case_closure_params(internal_review)
-          date_responded = 3.days.ago
-          {
-            id: internal_review.id,
-            case_foi: {
-              date_responded_dd: date_responded.day,
-              date_responded_mm: date_responded.month,
-              date_responded_yyyy: date_responded.year,
-              info_held_status_abbreviation: info_held.abbreviation,
-              appeal_outcome_name: appeal_outcome.name
-            }
-          }
-        end
-      end
-
-      context 'SAR' do
-        let(:responder)   { sar.responder }
-        let(:sar)         { create :accepted_sar }
-
-        before(:all) do
-          CaseClosure::MetadataSeeder.seed!
-        end
-
-        after(:all) do
-          CaseClosure::MetadataSeeder.unseed!
-        end
-
-        before do
-          allow(ActionNotificationsMailer).to receive_message_chain(:notify_team,
-                                                                    :deliver_later)
-        end
-
-        it "closes a case that has been responded to" do
-          sign_in responder
-          patch :process_respond_and_close, params: sar_closure_params(sar)
-          expect(Case::SAR.first.current_state).to eq 'closed'
-          expect(Case::SAR.first.refusal_reason_id).to eq CaseClosure::RefusalReason.sar_tmm.id
-          expect(Case::SAR.first.date_responded).to eq 3.days.ago.to_date
-          expect(ActionNotificationsMailer)
-            .to have_received(:notify_team)
-                  .with(sar.managing_team, sar, 'Case closed')
-        end
-
-        context 'not the assigned responder' do
-          it "does not progress the case" do
-            sign_in another_responder
-            patch :process_respond_and_close, params: sar_closure_params(sar)
-            expect(Case::SAR.first.current_state).to eq 'drafting'
-            expect(Case::SAR.first.date_responded).to be nil
-            expect(ActionNotificationsMailer)
-              .not_to have_received(:notify_team)
-                        .with(sar.managing_team, sar, 'Case closed')
-          end
-        end
-
-        def sar_closure_params(sar)
-          date_responded = 3.days.ago
-          {
-            id: sar.id,
-            case_sar: {
-              date_responded_dd: date_responded.day,
-              date_responded_mm: date_responded.month,
-              date_responded_yyyy: date_responded.year,
-              missing_info: 'yes'
-            }
-          }
-        end
-      end
-    end
-  end
-
-  describe '#index' do
-    let(:decorate_result) { double 'decorated_result' }
-    let(:pager) { double 'Kaminari Pager', decorate: decorate_result }
-    let(:cases) { double 'ActiveRecord Cases', page: pager }
-    let(:finder) { instance_double(CaseFinderService, scope: cases) }
-
-    before do
-      allow(CaseFinderService).to receive(:new).and_return(finder)
-      allow(finder).to receive(:for_params).and_return(finder)
-    end
-
-    context "as an anonymous user" do
-      it "be redirected to signin if trying to list of questions" do
-        get :index
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context 'as an authenticated user' do
-      before { sign_in manager }
-
-      it 'renders the index page' do
-        get :index
-        expect(response).to render_template :index
-      end
-
-      it 'assigns cases returned by CaseFinderService' do
-        get :index
-        expect(CaseFinderService).to have_received(:new).with(manager)
-        expect(assigns(:cases)).to eq decorate_result
-      end
-
-      it 'sets @current_tab_name' do
-        get :index
-        expect(assigns(:current_tab_name)).to eq 'all_cases'
-      end
-
-      it 'sets @can_add_case to true' do
-        get :index
-        expect(assigns(:can_add_case)).to eq true
-      end
-    end
-  end
+  # # Index is not used, as users are redirected to FiltersController
+  # describe '#index' do
+  #   let(:decorate_result) { double 'decorated_result' }
+  #   let(:pager) { double 'Kaminari Pager', decorate: decorate_result }
+  #   let(:cases) { double 'ActiveRecord Cases', page: pager }
+  #   let(:finder) { instance_double(CaseFinderService, scope: cases) }
+  #
+  #   before do
+  #     allow(CaseFinderService).to receive(:new).and_return(finder)
+  #     allow(finder).to receive(:for_params).and_return(finder)
+  #   end
+  #
+  #   context "as an anonymous user" do
+  #     it "be redirected to signin if trying to list of questions" do
+  #       get :index
+  #       expect(response).to redirect_to(new_user_session_path)
+  #     end
+  #   end
+  #
+  #   context 'as an authenticated user' do
+  #     before { sign_in manager }
+  #
+  #     it 'renders the index page' do
+  #       get :index
+  #       expect(response).to render_template :index
+  #     end
+  #
+  #     it 'assigns cases returned by CaseFinderService' do
+  #       get :index
+  #       expect(CaseFinderService).to have_received(:new).with(manager)
+  #       expect(assigns(:cases)).to eq decorate_result
+  #     end
+  #
+  #     it 'sets @current_tab_name' do
+  #       get :index
+  #       expect(assigns(:current_tab_name)).to eq 'all_cases'
+  #     end
+  #
+  #     it 'sets @can_add_case to true' do
+  #       get :index
+  #       expect(assigns(:can_add_case)).to eq true
+  #     end
+  #   end
+  # end
 
   describe '#show' do
 
@@ -800,121 +679,6 @@ RSpec.describe CasesController, type: :controller do
           Timecop.freeze(date) do
             expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
           end
-        end
-      end
-    end
-  end
-
-  describe 'GET respond' do
-
-    let(:responder)            { find_or_create(:foi_responder) }
-    let(:another_responder)    { create(:responder)             }
-
-    context 'as an anonymous user' do
-      it 'redirects to sign_in' do
-        expect(get :respond, params: { id: case_with_response.id }).
-          to redirect_to(new_user_session_path)
-      end
-    end
-
-    context 'as an authenticated manager' do
-
-      before { sign_in manager }
-
-      it 'redirects to the application root' do
-        expect(get :respond, params: { id: case_with_response.id }).
-          to redirect_to(manager_root_path)
-      end
-    end
-
-    context 'as the assigned responder' do
-
-      before { sign_in responder }
-
-      it 'does not transition current_state' do
-        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
-        get :respond, params: { id: case_with_response.id }
-        expect(case_with_response.current_state).to eq 'awaiting_dispatch'
-      end
-
-      it 'renders the respond template' do
-        expect(get :respond, params: { id: case_with_response.id }).
-          to render_template(:respond)
-      end
-    end
-
-    context 'as another responder' do
-
-      before { sign_in another_responder }
-
-      it 'redirects to the application root' do
-        expect(get :respond, params: { id: case_with_response.id }).
-          to redirect_to(responder_root_path)
-      end
-    end
-  end
-
-  describe Cases::OverturnedSarController do
-
-    let(:ico_sar)             { create :ico_sar_case }
-    let(:sar)                 { create :sar_case }
-    let(:overturned_ico_case) { create :overturned_ico_sar }
-
-    context 'logged in as manager' do
-
-      before { sign_in manager }
-
-      context 'valid params' do
-        before do
-          service = double(NewOverturnedIcoCaseService,
-                           call: nil,
-                           error?: false,
-                           success?: true,
-                           original_ico_appeal: ico_sar,
-                           original_case: sar,
-                           overturned_ico_case: overturned_ico_case)
-          params = ActionController::Parameters.new({ id: ico_sar.id })
-          expect(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
-          get :new_overturned_ico, params: params.to_unsafe_hash
-        end
-
-        it 'is success' do
-          expect(response).to be_success
-        end
-
-        it 'assigns a new overturned case to @case' do
-          expect(assigns(:case)).to eq overturned_ico_case
-        end
-
-        it 'renders the new overturned ico case page' do
-          expect(response).to render_template('overturned_sar_cases/new')
-        end
-      end
-
-      context 'invalid params' do
-        before do
-          service = double(NewOverturnedIcoCaseService,
-                           call: nil,
-                           error?: true,
-                           success?: false,
-                           original_ico_appeal: ico_sar,
-                           original_case: sar,
-                           overturned_ico_case: overturned_ico_case)
-          params = ActionController::Parameters.new({ id: ico_sar.id })
-          expect(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
-          get :new_overturned_ico, params: params.to_unsafe_hash
-        end
-
-        it 'is bad_request' do
-          expect(response).to be_bad_request
-        end
-
-        it 'assigns the original ico appeal to @case' do
-          expect(assigns(:case)).to eq ico_sar
-        end
-
-        it 'renders the show page for the ico appeal' do
-          expect(response).to render_template('cases/show')
         end
       end
     end

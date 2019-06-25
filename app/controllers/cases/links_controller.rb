@@ -16,7 +16,6 @@ module Cases
       service = CaseLinkingService.new current_user, @case, link_case_number
       result = service.create
 
-
       if result == :ok
         flash[:notice] = "Case #{link_case_number} has been linked to this case"
         redirect_to case_path(@case)
