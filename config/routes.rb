@@ -115,10 +115,10 @@ Rails.application.routes.draw do
     resources :links, except: [:index, :edit, :update]
 
     resources :pit_extensions, only: [:new, :create]
-    resource :pit_extension, only: [:destroy]
+    resource :pit_extensions, only: [:destroy]
 
     resources :sar_extensions, only: [:new, :create]
-    resource :sar_extension, only: [:destroy]
+    resource :sar_extensions, only: [:destroy]
 
     resources :approvals, only: [:new, :create]
 
