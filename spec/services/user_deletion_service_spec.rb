@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe UserDeletionService do
 
-    before :each do
-      DbHousekeeping.clean
-    end
-  describe '#call' do
+  before :each do
+    DbHousekeeping.clean
+  end
 
+  describe '#call' do
 
     let(:manager)       { find_or_create :disclosure_bmt_user}
     let(:team)          { find_or_create :foi_responding_team }
@@ -65,9 +65,9 @@ describe UserDeletionService do
     end
 
     context 'when user has live cases' do
-      let!(:kase)        { create :accepted_case,
-                                  responder: responder,
-                                  responding_team: team }
+      let!(:kase) { create :accepted_case,
+                           responder: responder,
+                           responding_team: team }
       context 'single team member' do
         it 'returns :ok' do
           service.call

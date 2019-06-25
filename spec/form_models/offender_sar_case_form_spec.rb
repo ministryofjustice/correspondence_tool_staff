@@ -63,9 +63,7 @@ RSpec.describe OffenderSARCaseForm, type: :model do
 
   describe "#valid_attributes?" do
     context "when params is empty" do
-      params = ActionController::Parameters.new(
-        {}
-      ).permit!
+      params = ActionController::Parameters.new( {} ).permit!
 
       it "returns false" do
         expect(case_form.valid_attributes?(params)).to be false

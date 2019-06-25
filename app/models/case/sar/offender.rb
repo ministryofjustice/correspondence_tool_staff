@@ -5,25 +5,8 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
-# Then I see an error message when I do not complete the following fields:
-
-# full name of data subject
-
-# date of birth
-
-# what is relationship to MoJ
-
-# flag as high profile case
-
-# is the information being requested on someone else's behalf
-
-# where information should be sent
-
-# what information is being requested
-
-# when the SAR was received
-  validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
-  validates :flag_for_disclosure_specialists, inclusion: {in: [ "yes", "no" ], message: "Please choose yes or no" }
+  validates :third_party, inclusion: { in: [ true, false ], message: "Please choose yes or no" }
+  validates :flag_for_disclosure_specialists, inclusion: { in: [ "yes", "no" ], message: "Please choose yes or no" }
 
   validates :name, presence: true, if: -> { third_party }
   validates :third_party_relationship, presence: true, if: -> { third_party }

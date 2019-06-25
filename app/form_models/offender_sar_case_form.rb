@@ -87,13 +87,12 @@ class OffenderSARCaseForm
   private
 
   def params_for_step(params, step) # rubocop:disable Metrics/CyclomaticComplexity
-    if step == "subject-details"
+    case step
+    when "subject-details"
       params.merge!("subject_type" => "") unless params["subject_type"].present?
       params.merge!("date_of_birth" => "") unless params["date_of_birth"].present?
       params.merge!("flag_for_disclosure_specialists" => "") unless params["flag_for_disclosure_specialists"].present?
-    end
-
-    if step == "requester-details"
+    when "requester-details"
       params.merge!("third_party": "") unless params["third_party"].present?
       params.delete("name") unless params["third_party"] == "true"
       params.delete("third_party_relationship") unless params["third_party"] == "true"
@@ -101,9 +100,7 @@ class OffenderSARCaseForm
       params.merge!("reply_method": "") unless params["reply_method"].present?
       params.delete("email") unless params["reply_method"] == "send_by_email"
       params.delete("postal_address") unless params["reply_method"] == "send_by_post"
-    end
-
-    if step == "date-received"
+    when "date-received"
       params.merge!("received_date" => "") unless params["received_date"].present?
     end
 
@@ -112,8 +109,6 @@ class OffenderSARCaseForm
 
   def build_case_from_session
     values = @session[:offender_sar_state] || {date_of_birth: nil}
-    # values = values.merge subject_type: "offender" unless values["subject_type"].present?
-    # values = values.merge flag_for_disclosure_specialists: "no" unless values["flag_for_disclosure_specialists"].present?
     @case = Case::SAR::Offender.new(values).decorate
   end
 end

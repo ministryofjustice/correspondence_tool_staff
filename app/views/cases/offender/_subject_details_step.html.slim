@@ -3,7 +3,7 @@ h1 Who is the subject?
 = form_for @case, url: cases_offender_path do |f|
   = f.text_field :subject_full_name
 
-  = f.text_field :prison_number, {form_hint_text: "this is nice"}
+  = f.text_field :prison_number
 
   = f.text_field :subject_aliases
 
