@@ -80,5 +80,101 @@ RSpec.describe Cases::SarController, type: :controller do
         }
       end
     end
+
+    describe '#update_closure' do
+      before(:all) do
+        CaseClosure::MetadataSeeder.seed!
+      end
+
+      after(:all) do
+        DbHousekeeping.clean
+      end
+
+      let(:responder) { create :foi_responder }
+      let(:manager)   { find_or_create :disclosure_bmt_user }
+      let(:new_date_responded) { 1.business_day.before(kase.date_responded) }
+      let(:params)             { {
+        id: kase.id,
+        sar: {
+          date_responded_yyyy: new_date_responded.year,
+          date_responded_mm: new_date_responded.month,
+          date_responded_dd: new_date_responded.day,
+          missing_info: 'yes',
+        }
+      } }
+
+      context 'when closed' do
+        context 'as a manager' do
+          let(:kase) { create :closed_sar }
+
+          before do
+            sign_in manager
+            patch :update_closure, params: params
+          end
+
+          it 'updates the cases date responded field' do
+            kase.reload
+            expect(kase.date_responded).to eq new_date_responded
+          end
+
+          it 'updates the cases refusal reason' do
+            kase.reload
+            expect(kase.refusal_reason).to eq CaseClosure::RefusalReason.sar_tmm
+          end
+
+          it 'redirects to the case details page' do
+            expect(response).to redirect_to case_path(id: kase.id)
+          end
+        end
+
+        context 'as a responder' do
+          let(:kase) { create :closed_sar, responder: responder }
+
+          before do
+            sign_in manager
+            patch :update_closure, params: params
+          end
+
+          it 'updates the cases date responded field' do
+            # TODO: out-of-business-hours failure here.
+            kase.reload
+            expect(kase.date_responded).to eq new_date_responded
+          end
+
+          it 'updates the cases refusal reason' do
+            kase.reload
+            expect(kase.refusal_reason).to eq CaseClosure::RefusalReason.sar_tmm
+          end
+
+          it 'redirects to the case details page' do
+            expect(response).to redirect_to case_path(id: kase.id)
+          end
+        end
+      end
+
+      context 'when open' do
+        before do
+          sign_in manager
+          patch :update_closure, params: params
+        end
+
+        let(:new_date_responded) { 1.business_day.ago }
+        let(:kase)               { create :sar_case }
+
+        it 'does not change the date responded' do
+          kase.reload
+          expect(kase.date_responded).not_to eq new_date_responded
+        end
+
+        it 'does not update the cases refusal reason' do
+          kase.reload
+          expect(kase.refusal_reason).to be_nil
+        end
+
+        it 'redirects to the case details page' do
+          expect(response).to redirect_to case_path(id: kase.id)
+        end
+      end
+    end
   end
 end
