@@ -85,25 +85,38 @@ class OffenderSARCaseForm
 
   private
 
-  def params_for_step(params, step) # rubocop:disable Metrics/CyclomaticComplexity
+  def params_for_step(params, step)
+    # We partially validate each step of the form using the model validations
+    # So in each step we need to ensure default values for certain fields
+    # and/or conditionally clear other fields depending on related values
     case step
     when "subject-details"
-      params.merge!("subject_type" => "") unless params["subject_type"].present?
-      params.merge!("date_of_birth" => "") unless params["date_of_birth"].present?
-      params.merge!("flag_for_disclosure_specialists" => "") unless params["flag_for_disclosure_specialists"].present?
+      set_empty_value_if_unset(params, "subject_type")
+      set_empty_value_if_unset(params, "date_of_birth")
+      set_empty_value_if_unset(params, "flag_for_disclosure_specialists")
     when "requester-details"
-      params.merge!("third_party": "") unless params["third_party"].present?
-      params.delete("name") unless params["third_party"] == "true"
-      params.delete("third_party_relationship") unless params["third_party"] == "true"
+      set_empty_value_if_unset(params, "third_party")
+      clear_param_if_condition(params, "name", "third_party", "true")
+      clear_param_if_condition(params, "third_party_relationship", "third_party", "true")
 
-      params.merge!("reply_method": "") unless params["reply_method"].present?
-      params.delete("email") unless params["reply_method"] == "send_by_email"
-      params.delete("postal_address") unless params["reply_method"] == "send_by_post"
+      set_empty_value_if_unset(params, "reply_method")
+      clear_param_if_condition(params, "email", "reply_method", "send_by_email")
+      clear_param_if_condition(params, "postal_address", "reply_method", "send_by_post")
+    when "requested-info"
+      # no tweaking needed
     when "date-received"
-      params.merge!("received_date" => "") unless params["received_date"].present?
+      set_empty_value_if_unset(params, "received_date")
     end
 
     params
+  end
+
+  def set_empty_value_if_unset(params, field)
+    params.merge!(field => "") unless params[field].present?
+  end
+
+  def clear_param_if_condition(params, target_field, check_field, value)
+    params.delete(target_field) unless params[check_field] == value
   end
 
   def build_case_from_session
