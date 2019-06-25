@@ -1,4 +1,3 @@
-#rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
   before_action :set_case, only: [
     :assign_to_team,
@@ -305,4 +304,3 @@ class AssignmentsController < ApplicationController
     end
   end
 end
-#rubocop:enable Metrics/ClassLength
