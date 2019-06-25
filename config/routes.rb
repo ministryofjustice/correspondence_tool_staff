@@ -122,7 +122,7 @@ Rails.application.routes.draw do
 
     resources :messages, only: [:create]
 
-    resources :attachments, only: [:destroy] do
+    resources :attachments, only: [:show, :destroy] do
       get 'download', on: :member
     end
 
