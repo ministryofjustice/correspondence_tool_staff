@@ -19,15 +19,12 @@ class Cases::OffenderSarsController < CasesController
 
     @case.assign_params(case_params) if case_params
     @case.current_step = params[:current_step]
-    @case_params = case_params
 
     if @case.valid_attributes?(case_params)
-      if @case.valid?
-        if @case.save
-          session[:offender_sar_state] = nil
-          flash[:notice] = "Case created successfully"
-          redirect_to case_path(@case.case) and return
-        end
+      if @case.save
+        session[:offender_sar_state] = nil
+        flash[:notice] = "Case created successfully"
+        redirect_to case_path(@case.case) and return
       end
       @case.session_persist_state(case_params)
       get_next_step(@case)
