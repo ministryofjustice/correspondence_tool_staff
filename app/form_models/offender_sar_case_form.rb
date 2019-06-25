@@ -2,38 +2,37 @@ class OffenderSARCaseForm
   include ActiveModel::Model
   include Steppable
 
-  delegate :id,
-           :name,
-           :email,
-           :message,
-           :type_abbreviation,
-           :object,
-           :errors,
-           :subject_full_name,
-           :prison_number,
-           :subject_aliases,
-           :previous_case_numbers,
-           :other_subject_ids,
+  delegate :creator,
            :date_of_birth_dd,
            :date_of_birth_mm,
            :date_of_birth_yyyy,
            :date_of_birth,
-           :subject_type,
+           :email,
+           :errors,
            :flag_for_disclosure_specialists,
-           :third_party,
-           :name,
-           :third_party_relationship,
-           :postal_address,
+           :id,
            :message,
+           :message,
+           :name,
+           :name,
+           :object,
+           :other_subject_ids,
+           :postal_address,
+           :previous_case_numbers,
+           :prison_number,
            :received_date_dd,
            :received_date_mm,
            :received_date_yyyy,
            :received_date,
            :reply_method,
-           :creator,
-           :send_by_post?,
            :send_by_email?,
-           :foo,
+           :send_by_post?,
+           :subject_aliases,
+           :subject_full_name,
+           :subject_type,
+           :third_party_relationship,
+           :third_party,
+           :type_abbreviation,
            to: :@case
 
   attr_reader :case
@@ -108,7 +107,13 @@ class OffenderSARCaseForm
   end
 
   def build_case_from_session
-    values = @session[:offender_sar_state] || {date_of_birth: nil}
+    # regarding the `{ date_of_birth: nil }` below...
+    # this is needed to prevent "NoMethodError undefined method `dd' for nil:NilClass"
+    # when a new Case::SAR::Offender is being created from scratch, because the field is not
+    # in the list of instance variables in the model at the point that the gov_uk_date_fields
+    # is adding its magic methods. This manifests when running tests or after rails server restart
+    values = @session[:offender_sar_state] || { date_of_birth: nil }
+
     @case = Case::SAR::Offender.new(values).decorate
   end
 end

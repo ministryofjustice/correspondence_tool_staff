@@ -14,21 +14,21 @@ class Case::SAR::Offender < Case::Base
   end
 
   jsonb_accessor :properties,
-                 prison_number: :string,
-                 subject_full_name: :string,
-                 escalation_deadline: :date,
-                 internal_deadline: :date,
-                 subject_aliases: :string,
-                 previous_case_numbers: :string,
-                 other_subject_ids: :string,
-                 external_deadline: :date,
                  date_of_birth: :date,
-                 third_party: :boolean,
-                 third_party_relationship: :string,
-                 subject_type: :string,
+                 escalation_deadline: :date,
+                 external_deadline: :date,
+                 flag_for_disclosure_specialists: :boolean,
+                 internal_deadline: :date,
+                 other_subject_ids: :string,
+                 previous_case_numbers: :string,
+                 prison_number: :string,
                  received_date: :date,
                  reply_method: :string,
-                 flag_for_disclosure_specialists: :boolean
+                 subject_aliases: :string,
+                 subject_full_name: :string,
+                 subject_type: :string,
+                 third_party_relationship: :string,
+                 third_party: :boolean
 
   enum subject_type: {
     offender: 'offender',
