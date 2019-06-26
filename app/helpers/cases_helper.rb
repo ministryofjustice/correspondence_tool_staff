@@ -42,7 +42,7 @@ module CasesHelper
               class: 'button-secondary'
     when :add_responses
       link_to t('common.case.upload_response'),
-              upload_responses_case_path(@case),
+              new_case_responses_path(@case,response_action: :upload_responses),
               id: 'action--upload-response',
               class: 'button'
     when :create_overturned
@@ -53,7 +53,7 @@ module CasesHelper
               class: 'button'
     when :respond
       link_to translate_for_case(@case, "common", 'respond'),
-              respond_case_path(@case),
+              polymorphic_path(@case, action: :respond),
               id: 'action--mark-response-as-sent',
               class: 'button'
     when :reassign_user
@@ -69,32 +69,32 @@ module CasesHelper
               class: 'button'
     when :approve
       link_to t('common.case.clear_response'),
-              approve_case_path(@case),
+              new_case_approval_path(@case),
               id: 'action--approve',
               class: 'button'
     when :request_amends
       link_to t('common.case.request_amends'),
-              request_amends_case_path(@case),
+              new_case_amendment_path(@case),
               id: 'action--request-amends',
               class: 'button'
     when :upload_response_and_approve
       link_to t('common.case.upload_approve'),
-              upload_response_and_approve_case_path(@case),
+              new_case_responses_path(@case,response_action: :upload_response_and_approve),
               id: 'action--upload-approve',
               class: 'button'
     when :upload_response_and_return_for_redraft
       link_to t('common.case.upload_and_redraft'),
-              upload_response_and_return_for_redraft_case_path(@case),
+              new_case_responses_path(@case,response_action: :upload_response_and_return_for_redraft),
               id: 'action--upload-redraft',
               class: 'button'
     when :close, :respond_and_close
       link_to translate_for_case(@case, "common", 'close'),
-              new_case_closure_path(@case),
+              polymorphic_path(@case, action: :respond_and_close),
               id: 'action--close-case',
               class: 'button', method: :get
     when :progress_for_clearance
       link_to I18n.t('common.case.progress_for_clearance'),
-              progress_for_clearance_case_clearance_path(@case),
+              progress_for_clearance_case_path(@case),
               id: 'action--progress-for-clearance',
               class: 'button', method: :patch
     when :extend_sar_deadline
@@ -216,7 +216,7 @@ module CasesHelper
 
   def action_button_for_remove_pit_extension(kase)
     link_to I18n.t('common.case.remove_pit_extension'),
-            case_pit_extension_path(kase),
+            case_pit_extensions_path(kase),
             id: 'action--remove-pit-extension',
             method: :delete,
             class: 'button-secondary'
@@ -248,13 +248,13 @@ module CasesHelper
     links = ''
     if kase.allow_event?(user, :edit_case)
       links << link_to(t('helpers.links.case_details.edit_case'),
-                       edit_case_path(kase),
-                       class: "secondary-action-link")
+        edit_case_path(kase),
+        class: "secondary-action-link")
     end
     if kase.allow_event?(user, :update_closure)
       links << link_to(t('helpers.links.case_details.edit_closure'),
-                       edit_closure_case_path(kase),
-                       class: "secondary-action-link")
+        polymorphic_path(kase, action: :edit_closure),
+        class: "secondary-action-link")
     end
     links
   end
