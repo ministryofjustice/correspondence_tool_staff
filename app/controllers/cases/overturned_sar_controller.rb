@@ -4,13 +4,16 @@ module Cases
     include OverturnedICOParams
     include OverturnedCase
 
+    def initialize
+      @correspondence_type = CorrespondenceType.overturned_sar
+      @correspondence_type_key = 'overturned_sar'
+
+      super
+    end
+
     def new
       permitted_correspondence_types
       new_overturned_ico_for Case::OverturnedICO::SAR
-    end
-
-    def create
-      create_case_for_type CorrespondenceType.overturned_sar, 'overturned_sar'
     end
 
     def respond_params

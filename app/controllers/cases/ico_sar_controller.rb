@@ -3,14 +3,16 @@ module Cases
     include ICOCasesParams
     include NewCase
 
-    def new
+    def initialize
+      @correspondence_type = CorrespondenceType.sar
       @correspondence_type_key = 'sar'
-      permitted_correspondence_types
-      new_case_for CorrespondenceType.sar
+
+      super
     end
 
-    def create
-      create_case_for_type CorrespondenceType.sar, 'sar'
+    def new
+      permitted_correspondence_types
+      new_case_for @correspondence_type
     end
 
     def process_closure_params

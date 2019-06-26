@@ -4,15 +4,18 @@ module Cases
     include OverturnedICOParams
     include OverturnedCase
 
+    def initialize
+      @correspondence_type = CorrespondenceType.overturned_foi
+      @correspondence_type_key = 'overturned_foi'
+
+      super
+    end
+
     # The 'new' action for this type needs an original case -
     # so it doesn't fit the normal rails pattern.
     def new
       permitted_correspondence_types
       new_overturned_ico_for Case::OverturnedICO::FOI
-    end
-
-    def create
-      create_case_for_type CorrespondenceType.overturned_foi, 'overturned_foi'
     end
 
     def respond_params
