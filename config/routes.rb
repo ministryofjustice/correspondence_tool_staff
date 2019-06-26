@@ -58,6 +58,14 @@ Rails.application.routes.draw do
       concerns :closable
     end
 
+    resources :ico_fois, only: [:new, :create], controller: 'ico_foi', as: :case_ico_fois do
+      concerns :closable
+    end
+
+    resources :ico_sars, only: [:new, :create], controller: 'ico_sar', as: :case_ico_sars do
+      concerns :closable
+    end
+
     resources :overturned_ico_fois, only: [:create], controller: 'overturned_foi', as: :case_overturned_fois do
       get :new, on: :member
       concerns :closable

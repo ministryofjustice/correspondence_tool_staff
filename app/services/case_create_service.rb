@@ -10,7 +10,7 @@ class CaseCreateService
   end
 
   def call
-    @case = @case_type.new(@params.merge(creator: @user).except!('type'))
+    @case = @case_type.new(@params.to_unsafe_h.merge(creator: @user).except!('type'))
 
     if @case.invalid? || @result == :error
       @result = :error

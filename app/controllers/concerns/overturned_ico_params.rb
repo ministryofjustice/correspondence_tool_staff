@@ -10,7 +10,7 @@ module OverturnedICOParams
 
   def create_ico_overturned_sar_params
     params
-      .require(:case_overturned_sar)
+      .require(:overturned_sar)
       .permit(create_overturned_ico_params_list)
       .merge(original_case_params(params[:case_overturned_sar]))
   end

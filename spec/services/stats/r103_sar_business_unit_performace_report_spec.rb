@@ -114,7 +114,7 @@ module Stats
 
           it 'selects only SAR cases' do
             expect(@scope.size).to eq 12
-            expect(@scope.map(&:type).uniq).to eq ['Case::SAR']
+            expect(@scope.map(&:type).uniq).to eq ['Case::SAR::Standard']
           end
 
           it 'excludes TMM cases' do
