@@ -6,22 +6,12 @@ class CasesController < ApplicationController
 
   before_action -> { set_case(params[:id]) }, only: [
     :edit,
-    :closure_outcomes,
-    :edit_closure,
-    :process_date_responded,
-    :update_closure
   ]
 
   before_action -> { set_decorated_case(params[:id]) }, only: [
     :show,
     :destroy,
     :confirm_destroy,
-    :close,
-    :confirm_respond,
-    :process_closure,
-    :process_respond_and_close,
-    :respond,
-    :respond_and_close
   ]
 
   # Attributes used by sub-classes to set the current Case type for the request
