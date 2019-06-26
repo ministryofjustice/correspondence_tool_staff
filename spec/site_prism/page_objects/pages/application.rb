@@ -64,7 +64,7 @@ module PageObjects
         request_amends:                 'Cases::RequestAmendsPage',
         reassign_user:                  'Assignments::ReassignUserPage',
         stats_index:                    'Stats::IndexPage',
-        stats_custom:                   'Stats::CustomPage',
+        stats_new:                      'Stats::NewPage',
         teams_new:                      'Teams::NewPage',
         teams_edit:                     'Teams::EditPage',
         teams_index:                    'Teams::IndexPage',

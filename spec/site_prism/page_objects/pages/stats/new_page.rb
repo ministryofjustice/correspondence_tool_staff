@@ -1,8 +1,8 @@
 module PageObjects
   module Pages
     module Stats
-      class CustomPage < PageObjects::Pages::Base
-        set_url '/stats/custom'
+      class NewPage < PageObjects::Pages::Base
+        set_url '/stats/new'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 

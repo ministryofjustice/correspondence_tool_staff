@@ -57,7 +57,7 @@ class StatsController < ApplicationController
   end
 
   def download_custom
-    report= Report.find(params[:id])
+    report = Report.find(params[:id])
     filename = report.report_type.filename('csv')
 
     send_data report.report_data, {filename: filename, disposition: :attachment}

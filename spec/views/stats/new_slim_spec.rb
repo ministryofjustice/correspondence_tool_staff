@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'stats/custom.html.slim', type: :view do
+describe 'stats/new.html.slim', type: :view do
   let(:report_1)      { instance_double ReportType,
                                         id: 1,
                                         full_name: "Report 1" }
@@ -22,8 +22,8 @@ describe 'stats/custom.html.slim', type: :view do
     ])
 
     render
-    stats_custom_page.load(rendered)
-    stats_custom_page
+    stats_new_page.load(rendered)
+    stats_new_page
   end
 
   context 'valid page' do
