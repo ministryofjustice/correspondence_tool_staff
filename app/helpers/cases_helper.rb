@@ -89,7 +89,7 @@ module CasesHelper
               class: 'button'
     when :close, :respond_and_close
       link_to translate_for_case(@case, "common", 'close'),
-              polymorphic_path(@case, action: :respond_and_close),
+              polymorphic_path(@case, action: :close),
               id: 'action--close-case',
               class: 'button', method: :get
     when :progress_for_clearance
