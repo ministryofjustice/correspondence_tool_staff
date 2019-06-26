@@ -95,7 +95,7 @@ RSpec.describe CasesHelper, type: :helper do
           @case = create(:responded_case)
           expect(action_button_for(:close)).to eq(
   "<a id=\"action--close-case\" class=\"button\" data-method=\"get\" \
-href=\"/cases/#{@case.id}/close\">Close case</a>"
+href=\"/cases/fois/#{@case.id}/close\">Close case</a>"
             )
         end
       end
@@ -106,7 +106,7 @@ href=\"/cases/#{@case.id}/close\">Close case</a>"
           @case = create(:responded_ico_foi_case)
           expect(action_button_for(:close)).to eq(
   "<a id=\"action--close-case\" class=\"button\" data-method=\"get\" \
-href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision</a>"
+href=\"/cases/ico_fois/#{@case.id}/close\">Record ICO&#39;s decision</a>"
             )
         end
       end
@@ -116,7 +116,7 @@ href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision</a>"
       it 'generates HTML that links to the progress_for_clearance case action' do
         @case = create(:accepted_sar, :flagged)
         expect(action_button_for(:progress_for_clearance)).to eq(
-"<a id=\"action--progress-for-clearance\" class=\"button\" rel=\"nofollow\" data-method=\"patch\" href=\"/cases/#{@case.id}/progress_for_clearance\">Ready for Disclosure clearance</a>"          )
+"<a id=\"action--progress-for-clearance\" class=\"button\" rel=\"nofollow\" data-method=\"patch\" href=\"/cases/#{@case.id}/clearances/progress_for_clearance\">Ready for Disclosure clearance</a>"          )
       end
     end
 
@@ -125,7 +125,7 @@ href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision</a>"
         it 'generates HTML that links to the upload response page' do
           @case = create(:accepted_case)
           expect(action_button_for(:add_responses)).to eq(
-             "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/upload_responses\">Upload response</a>"
+             "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/responses/new/upload_responses\">Upload response</a>"
             )
         end
       end
@@ -134,7 +134,7 @@ href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision</a>"
         it 'generates HTML that links to the upload response page' do
           @case = create(:accepted_case)
           expect(action_button_for(:add_responses)).to eq(
-           "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/upload_responses\">Upload response</a>"
+           "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/responses/new/upload_responses\">Upload response</a>"
          )
         end
       end
@@ -146,7 +146,7 @@ href=\"/cases/#{@case.id}/close\">Record ICO&#39;s decision</a>"
           @case = create(:case_with_response)
           expect(action_button_for(:respond)).to eq(
   "<a id=\"action--mark-response-as-sent\" class=\"button\" \
-href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
+href=\"/cases/fois/#{@case.id}/respond\">Mark response as sent</a>"
             )
         end
       end
@@ -156,7 +156,7 @@ href=\"/cases/#{@case.id}/respond\">Mark response as sent</a>"
           @case = create(:approved_ico_foi_case)
           expect(action_button_for(:respond)).to eq(
   "<a id=\"action--mark-response-as-sent\" class=\"button\" \
-href=\"/cases/#{@case.id}/respond\">Mark as sent to ICO</a>"
+href=\"/cases/ico_fois/#{@case.id}/respond\">Mark as sent to ICO</a>"
             )
         end
       end
@@ -168,7 +168,7 @@ href=\"/cases/#{@case.id}/respond\">Mark as sent to ICO</a>"
         expect(action_button_for(:request_amends))
           .to eq "<a id=\"action--request-amends\" " +
                  "class=\"button\" " +
-                 "href=\"/cases/#{@case.id}/request_amends\">" +
+                 "href=\"/cases/#{@case.id}/amendments/new\">" +
                  "Request amends</a>"
       end
     end
@@ -203,7 +203,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
         @case = create(:pending_dacu_clearance_case)
         expect(action_button_for(:upload_response_and_approve))
           .to eq(
-                "<a id=\"action--upload-approve\" class=\"button\" href=\"/cases/#{@case.id}/upload_response_and_approve\">Upload response and clear</a>"
+                "<a id=\"action--upload-approve\" class=\"button\" href=\"/cases/#{@case.id}/responses/new/upload_response_and_approve\">Upload response and clear</a>"
               )
       end
     end
@@ -298,11 +298,13 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       kase = create(:closed_sar)
       user = find_or_create(:disclosure_bmt_user)
       result = case_details_links(kase, user)
+
       edit_case_link = link_to('Edit case details',
                                "/cases/#{kase.id}/edit",
                                class: "secondary-action-link")
+
       edit_closure_link = link_to('Edit closure details',
-                                  "/cases/#{kase.id}/edit_closure",
+                                  "/cases/sars/#{kase.id}/edit_closure",
                                   class: "secondary-action-link")
       expect(result).to eq "#{edit_case_link}#{edit_closure_link}"
     end
