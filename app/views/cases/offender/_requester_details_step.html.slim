@@ -1,3 +1,11 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar.requester_heading')
+
+- content_for :sub_heading, flush: true
+  = t("cases.new.offender_sar.sub_heading")
+
+= render partial: 'layouts/header'
+
 = form_for @case, url: cases_offender_path do |f|
 
   #third-party
@@ -7,7 +15,8 @@
         = f.text_field :third_party_relationship
       - fieldset.radio_input(false, text_method: :humanize)
 
-  h2.heading-medium How and where should the information be sent?
+  h2.heading-medium
+    = t('helpers.label.offender_sar_case_form.delivery_method')
   = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
     - fieldset.radio_input('send_by_email',
                            panel_id: 'reply_method_send_by_email_panel')
