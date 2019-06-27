@@ -730,6 +730,7 @@ en:
       date_sar_received: "When was the SAR received?"
       date_sar_received_copy: "For example, 12 11 2007"
       date_of_birth: "Date of birth"
+      date_of_birth_copy: "For example, 24 11 1992"
       external_deadline: "Final deadline"
       external_deadline_copy: "For example, 01 02 2018"
       internal_deadline: Draft deadline
@@ -835,7 +836,7 @@ en:
         close_date:  Date response sent
 
     offender_sar:
-      subject_heading: Who is the subject?  
+      subject_heading: Who is the subject?
       requester_heading: Who is making the subject access request?
       requested_info_heading: What information is being requested?
       date_received_heading: When was the SAR received?
