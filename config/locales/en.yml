@@ -259,7 +259,7 @@ en:
       offender_sar_case_form:
         subject_type: "What is their relationship to the MOJ?"
         flag_for_disclosure_specialists: "Flag as high profile case?"
-
+        third_party: Is this information being requested on someone else's behalf?
 
       assignment:
         state: What do you want to do?
@@ -427,8 +427,10 @@ en:
         other_subject_ids: "Subject’s PNC or other ID numbers"
 
         email: "Recipient email address"
-        message: Full case details
-        name: "Full name of the requestor"
+        message: Request details
+        name: "Full name of the representative"
+        third_party_relationship: Relationship to the subject
+        delivery_method: How should the information be sent?
         postal_address: "Recipient postal address"
         received_date: "Received at MOJ"
         subject: "Case summary"
@@ -458,6 +460,7 @@ en:
         previous_case_numbers: "You can include multiple cases separated by comma, space or paragraph return."
         other_subject_ids: "You can include multiple cases separated by comma, space or paragraph return."
         date_of_birth: "For example, 12 11 2007"
+        message: Enter a brief summary of the case, including any details that will be useful for processing the Offender SAR.
   alerts:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>
@@ -747,6 +750,8 @@ en:
         sub_heading: Create an ICO Overturned (SAR) case
       case/overturned_ico/foi:
         sub_heading: Create an ICO Overturned (FOI) case
+      offender_sar:
+        sub_heading: Create SAR case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
@@ -829,6 +834,11 @@ en:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
 
+    offender_sar:
+      subject_heading: Who is the subject?  
+      requester_heading: Who is making the subject access request?
+      requested_info_heading: What information is being requested?
+      date_received_heading: When was the SAR received?
 
     search:
       heading: Search
