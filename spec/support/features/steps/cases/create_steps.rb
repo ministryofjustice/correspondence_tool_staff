@@ -115,17 +115,9 @@ def create_offender_sar_case_step(params={})
   fill_in :offender_sar_case_form_received_date_yyyy, with: "2019"
   click_on "Continue"
 
-  # cases_new_sar_page.fill_in_case_details(params)
-  # cases_new_sar_page.choose_flag_for_disclosure_specialists(
-  #   flag_for_disclosure ? 'yes' : 'no'
-  # )
-  # click_button 'Create case'
-
-  # expect(assignments_new_page).to be_displayed
-
-  # # Return the case we created using the params of the current  path
-  # kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
-  # Case::Base.find(kase_id)
+  # commented out next expectation while team assignment issue is getting fixed
+  # expect(cases_show_page).to be_displayed
+  # expect(cases_show_page).to have_content "Case created successfully"
 end
 
 def create_overturned_ico_case_step(params={})

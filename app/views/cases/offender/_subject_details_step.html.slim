@@ -25,8 +25,6 @@
 
   = f.radio_button_fieldset :flag_for_disclosure_specialists
 
-  p
-    = link_to "Previous", "/cases/new/offender"
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'
