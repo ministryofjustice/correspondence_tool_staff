@@ -20,8 +20,6 @@ module PageObjects
             kase = FactoryBot.build :offender_sar_case, params
 
             full_request.set kase.message
-
-            #fill_in :offender_sar_case_form_message, with: "Offender Sar Case, urgent, needs to be looked at, please! like now? while we're young, today!"
           end
         end
       end

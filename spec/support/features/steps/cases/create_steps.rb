@@ -101,14 +101,13 @@ def create_offender_sar_case_step(params={})
   click_on "Continue"
   expect(cases_new_offender_sar_date_received_page).to be_displayed
 
-  fill_in :offender_sar_case_form_received_date_dd, with: "21"
-  fill_in :offender_sar_case_form_received_date_mm, with: "05"
-  fill_in :offender_sar_case_form_received_date_yyyy, with: "2019"
-  click_on "Continue"
+  cases_new_offender_sar_date_received_page.fill_in_case_details(params)
 
+  click_on "Continue"
   # commented out next expectation while team assignment issue is getting fixed
   # expect(cases_show_page).to be_displayed
   # expect(cases_show_page).to have_content "Case created successfully"
+
 end
 
 def create_overturned_ico_case_step(params={})

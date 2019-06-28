@@ -28,7 +28,10 @@ module PageObjects
 
           element :date_of_birth_yyyy, '#offender_sar_case_form_date_of_birth_yyyy'
 
-          element :subject_type, '#offender_sar_case_form_subject_type_offender'
+          #element :subject_type, '#offender_sar_case_form_subject_type_offender'
+
+          #element :subject_type, :xpath,
+          #        '//fieldset[contains(.,"What is their relationship to the MOJ?")]'
 
           element :submit_button, '.button'
 
@@ -40,19 +43,9 @@ module PageObjects
             subject_aliases.set kase.subject_aliases
             previous_case_numbers.set kase.previous_case_numbers
             set_date_of_birth kase.date_of_birth
-            choose_subject_type kase.subject_type
-            choose_flag_for_disclosure_specialists "no"
 
-
-            #fill_in :offender_sar_case_form_prison_number, with: "ABC123"
-            #fill_in :offender_sar_case_form_subject_aliases, with: "Bobby"
-            #fill_in :offender_sar_case_form_previous_case_numbers, with: "12345"
-            #ill_in :offender_sar_case_form_other_subject_ids, with: "1,2,3"
-            #ill_in :offender_sar_case_form_date_of_birth_dd, with: "10"
-            #ill_in :offender_sar_case_form_date_of_birth_mm, with: "10"
-            #ill_in :offender_sar_case_form_date_of_birth_yyyy, with: "2000"
-            #choose('offender_sar_case_form_subject_type_offender', visible: false)
-            #choose('offender_sar_case_form_flag_for_disclosure_specialists_no', visible: false)
+            choose('offender_sar_case_form_subject_type_offender', visible: false)
+            choose('offender_sar_case_form_flag_for_disclosure_specialists_no', visible: false)
           end
 
           def set_date_of_birth(date_of_birth)
@@ -61,9 +54,6 @@ module PageObjects
             date_of_birth_yyyy.set(date_of_birth.year)
           end
 
-          def choose_flag_for_disclosure_specialists(choice = 'yes')
-            make_radio_button_choice("#offender_sar_case_form_flag_for_disclosure_specialists_#{choice}")
-          end
         end
       end
     end
