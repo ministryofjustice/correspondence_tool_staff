@@ -5,23 +5,141 @@ RSpec.describe Cases::OverturnedSarController, type: :controller do
   let(:approver) { create :approver }
   let(:ico_sar) { create :ico_sar_case }
   let(:sar) { create :sar_case }
-  let(:overturned_ico_case) { create :overturned_ico_sar }
+
+  let(:ico_sar_case)      { create :ico_sar_case, original_case: sar }
+  let(:original_ico_appeal_case) { create(:closed_ico_sar_case, :overturned_by_ico) }
+  let(:overturned_ico_case) { create :overturned_ico_sar, original_ico_appeal: original_ico_appeal_case }
+
+  context 'creating an OverturnedICO case' do
+      before(:each) do
+        sign_in manager
+
+        puts "\nID OF CASES\nSAR:#{sar.id}\nico_sar_case:#{ico_sar_case.id}\noriginal_ico_appeal_case:#{original_ico_appeal_case.id}\noverturned_ico_case:#{overturned_ico_case.id}\n"
+
+        params = ActionController::Parameters.new(ico_overturned_sar_params).require(:overturned_sar).permit(
+          [
+            :original_ico_appeal_id,
+            :reply_method,
+            :email,
+            :postal_address,
+            :external_deadline_dd,
+            :external_deadline_mm,
+            :external_deadline_yyyy,
+            :flag_for_disclosure_specialists,
+            :original_case_id,
+            :received_date_dd,
+            :received_date_mm,
+            :received_date_yyyy,
+          ]
+        ).merge(original_case_id: sar.id)
+
+        expect(CaseCreateService).to receive(:new).with(
+          user: manager,
+          case_type: Case::OverturnedICO::SAR,
+          params: params,
+        ).and_return(service)
+      end
+
+      let!(:service) {
+        double(
+          CaseCreateService,
+          user: manager,
+          params: controller_params,
+          case: overturned_ico_case,
+          case_type: Case::OverturnedICO::SAR,
+          call: nil,
+          message: 'Case successfully created'
+        )
+      }
+
+      let(:deadline) { 1.month.ago }
+      let(:create_ico_overturned_sar_params) do
+        {
+          email: 'stephen@stephenrichards.eu',
+          external_deadline_dd: deadline.day.to_s,
+          external_deadline_mm: deadline.month.to_s,
+          external_deadline_yyyy: deadline.year.to_s,
+          original_ico_appeal_id: ico_sar_case.id.to_s,
+          received_date_dd: "",#Date.today.day.to_s,
+          received_date_mm: "",#Date.today.month.to_s,
+          received_date_yyyy: "",#Date.today.year.to_s,
+        }
+      end
+
+      let(:ico_overturned_sar_params) do
+        {
+          overturned_sar: {
+            email: 'stephen@stephenrichards.eu',
+            external_deadline_dd: deadline.day.to_s,
+            external_deadline_mm: deadline.month.to_s,
+            external_deadline_yyyy: deadline.year.to_s,
+            original_ico_appeal_id: ico_sar_case.id.to_s,
+            received_date_dd: Date.today.day.to_s,
+            received_date_mm: Date.today.month.to_s,
+            received_date_yyyy: Date.today.year.to_s,
+          },
+          correspondence_type: 'overturned_sar',
+        }
+      end
+
+      let(:correspondence_type) { CorrespondenceType.sar }
+      let(:controller_params) {
+        ActionController::Parameters.new(ico_overturned_sar_params).require(:overturned_sar)
+      }
+      let(:new_overturned_case) { double Case::OverturnedICO::SAR, id: 87366 }
+      let(:decorated_overturned_case) { double(Case::OverturnedICO::SARDecorator, uploads_dir: 'xx') }
+
+
+      context 'case created OK' do
+        before(:each) do
+          expect(service).to receive(:result).and_return(:assign_responder)
+          expect(service).to receive(:message).and_return('Case successfully created')
+          expect(controller).to be_a Cases::OverturnedSarController
+
+          puts "\nico_overturned_sar_params:\n#{ico_overturned_sar_params.inspect}\n"
+          post :create, params: ico_overturned_sar_params.merge({pratt: 'yo mama'})
+        end
+
+        it 'sets the flash' do
+          expect(flash[:creating_case]).to be true
+          expect(flash[:notice]).to eq 'Case successfully created'
+        end
+
+        it 'redirects to the new case assignment page' do
+          expect(response).to redirect_to(new_case_assignment_path(overturned_ico_case))
+        end
+      end
+
+      context 'error when creating case' do
+        before(:each) do
+          expect(service).to receive(:result).and_return(:error)
+          expect(overturned_ico_case).to receive(:decorate).and_return(decorated_overturned_case)
+        end
+
+        it 'renders the new page' do
+          post :create, params: ico_overturned_sar_params
+          expect(response).to render_template(:new)
+        end
+      end
+    end
 
   context 'logged in as manager' do
     before { sign_in manager }
 
     context 'valid params' do
       before do
-        service = double(NewOverturnedIcoCaseService,
-          call: nil,
-          error?: false,
-          success?: true,
-          original_ico_appeal: ico_sar,
-          original_case: sar,
-          overturned_ico_case: overturned_ico_case)
+        service = double(
+          NewOverturnedIcoCaseService,
+            call: nil,
+            error?: false,
+            success?: true,
+            original_ico_appeal: ico_sar,
+            original_case: sar,
+            overturned_ico_case: overturned_ico_case
+        )
         params = ActionController::Parameters.new({ id: ico_sar.id })
         expect(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
-        #get :new_overturned_ico, params: params.to_unsafe_hash
+
         get :new, params: params.to_unsafe_hash
       end
 
