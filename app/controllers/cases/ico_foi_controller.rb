@@ -15,6 +15,10 @@ module Cases
       new_case_for @correspondence_type
     end
 
+    def case_type
+      Case::OverturnedICO::FOI
+    end
+
     def process_closure_params
       process_ico_closure_params
     end

@@ -1,6 +1,125 @@
 require 'rails_helper'
 
 RSpec.describe Cases::OverturnedFoiController, type: :controller do
+  describe '#create' do
+    let(:deadline) { 1.month.ago }
+    let(:manager) { create :manager }
+    let(:received_date) { Date.today }
+
+    let(:ico_overturned_foi_params) do
+      {
+        overturned_foi: {
+          email: 'stephen@stephenrichards.eu',
+          external_deadline_dd: deadline.day.to_s,
+          external_deadline_mm: deadline.month.to_s,
+          external_deadline_yyyy: deadline.year.to_s,
+          original_ico_appeal_id: ico_foi_case.id.to_s,
+          received_date_dd: received_date.day.to_s,
+          received_date_mm: received_date.month.to_s,
+          received_date_yyyy: received_date.year.to_s,
+        },
+        correspondence_type: 'overturned_foi',
+      }
+    end
+
+    let(:foi) { create :foi_case }
+
+    let(:ico_foi_case) {
+      create(
+        :ico_foi_case,
+        original_case: foi,
+        date_ico_decision_received: Date.today
+      )
+    }
+
+    let(:controller_params) {
+      ActionController::Parameters
+        .new(ico_overturned_foi_params)
+        .require(:overturned_foi)
+    }
+
+    let(:new_overturned_case) {
+      double Case::OverturnedICO::FOI, id: 87366
+    }
+
+    let(:decorated_overturned_case) {
+      double(Case::OverturnedICO::FOIDecorator, uploads_dir: 'xx')
+    }
+
+    let!(:service) {
+      double(
+        CaseCreateService,
+        user: manager,
+        params: controller_params,
+        case: new_overturned_case,
+        case_type: Case::OverturnedICO::FOI,
+        call: nil,
+        message: 'Case successfully created'
+      )
+    }
+
+    before(:each) do
+      sign_in manager
+
+      params = ActionController::Parameters.new(ico_overturned_foi_params)
+        .require(:overturned_foi)
+        .permit(
+          [
+            :original_ico_appeal_id,
+            :reply_method,
+            :email,
+            :postal_address,
+            :external_deadline_dd,
+            :external_deadline_mm,
+            :external_deadline_yyyy,
+            :flag_for_disclosure_specialists,
+            :original_case_id,
+            :received_date_dd,
+            :received_date_mm,
+            :received_date_yyyy,
+          ]
+        )
+        .merge(original_case_id: foi.id)
+
+      expect(CaseCreateService).to receive(:new).with(
+        user: manager,
+        case_type: Case::OverturnedICO::FOI,
+        params: params,
+      ).and_return(service)
+    end
+
+    context 'with valid params' do
+      before(:each) do
+        expect(service).to receive(:result).and_return(:assign_responder)
+        expect(service).to receive(:message).and_return('Case successfully created')
+        post :create, params: ico_overturned_foi_params
+      end
+
+      it 'sets the flash' do
+        expect(flash[:creating_case]).to be true
+        expect(flash[:notice]).to eq 'Case successfully created'
+      end
+
+      it 'redirects to the new case assignment page' do
+        expect(response)
+          .to redirect_to(new_case_assignment_path(new_overturned_case))
+      end
+    end
+
+    context 'with invalid params' do
+      before(:each) do
+        expect(service).to receive(:result).and_return(:error)
+        expect(new_overturned_case)
+          .to receive(:decorate).and_return(decorated_overturned_case)
+      end
+
+      it 'renders the new page' do
+        post :create, params: ico_overturned_foi_params
+        expect(response).to render_template(:new)
+      end
+    end
+  end
+
   describe 'closeable' do
     describe '#confirm_respond' do
       let(:case_with_response) { create :case_with_response }
