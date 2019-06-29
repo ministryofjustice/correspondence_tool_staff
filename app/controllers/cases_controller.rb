@@ -4,9 +4,7 @@ class CasesController < ApplicationController
   include SetupCase
   include Closable
 
-  before_action -> { set_case(params[:id]) }, only: [
-    :edit,
-  ]
+  before_action -> { set_case(params[:id]) }, only: [:edit]
 
   before_action -> { set_decorated_case(params[:id]) }, only: [
     :show,

@@ -1,5 +1,6 @@
 class CaseCreateService
   attr_reader :case, :result, :message
+  attr_reader :case_type # Used for tests
 
   def initialize(user:, case_type:, params:)
     @user = user

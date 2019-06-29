@@ -24,9 +24,7 @@ module Cases
     end
 
     def create_params
-      pams = create_ico_overturned_sar_params
-      puts "\n\nHIT CREATE PARAMS OverturnedSarController:\n#{pams.inspect}\n"
-      pams
+      create_ico_overturned_sar_params
     end
 
     def respond_params
