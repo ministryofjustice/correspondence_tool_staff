@@ -10,9 +10,20 @@ module Cases
       super
     end
 
+    # The 'new' action for this type needs an original case -
+    # so it doesn't fit the normal rails pattern.
     def new
+      authorize case_type, :can_add_case?
       permitted_correspondence_types
-      new_case_for @correspondence_type
+      new_overturned_ico_for case_type
+    end
+
+    def case_type
+      Case::ICO::SAR
+    end
+
+    def create_params
+      create_ico_params
     end
 
     def process_closure_params
