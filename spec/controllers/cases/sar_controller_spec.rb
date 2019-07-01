@@ -1,7 +1,31 @@
-require "rails_helper"
+require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 RSpec.describe Cases::SarController, type: :controller do
+  describe 'authentication' do
+    let(:params) do
+      {
+        correspondence_type: 'sar',
+        sar: {
+          requester_type: 'member_of_the_public',
+          type: 'Standard',
+          name: 'A. Member of Public',
+          postal_address: '102 Petty France',
+          email: 'member@public.com',
+          subject: 'SAR request from controller spec',
+          message: 'SAR about prisons and probation',
+          received_date_dd: Time.zone.today.day.to_s,
+          received_date_mm: Time.zone.today.month.to_s,
+          received_date_yyyy: Time.zone.today.year.to_s,
+          delivery_method: :sent_by_email,
+          flag_for_disclosure_specialists: false,
+        }
+      }
+    end
+
+    include_examples 'can_add_case policy spec', Case::SAR::Standard
+  end
+
   describe 'closeable' do
     describe '#edit_closure' do
       context 'SAR case' do
