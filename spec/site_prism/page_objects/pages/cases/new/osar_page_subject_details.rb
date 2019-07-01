@@ -28,11 +28,6 @@ module PageObjects
 
           element :date_of_birth_yyyy, '#offender_sar_case_form_date_of_birth_yyyy'
 
-          #element :subject_type, '#offender_sar_case_form_subject_type_offender'
-
-          #element :subject_type, :xpath,
-          #        '//fieldset[contains(.,"What is their relationship to the MOJ?")]'
-
           element :submit_button, '.button'
 
           def fill_in_case_details(params={})
