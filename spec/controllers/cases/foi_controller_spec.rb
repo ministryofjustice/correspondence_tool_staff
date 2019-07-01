@@ -2,6 +2,141 @@ require "rails_helper"
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 RSpec.describe Cases::FoiController, type: :controller do
+  describe '#create' do
+    let(:manager) { create :manager }
+    let(:foi_params) do
+      {
+        correspondence_type: 'foi',
+        foi: {
+          requester_type: 'member_of_the_public',
+          type: 'Standard',
+          name: 'A. Member of Public',
+          postal_address: '102 Petty France',
+          email: 'member@public.com',
+          subject: 'FOI request from controller spec',
+          message: 'FOI about prisons and probation',
+          received_date_dd: Time.zone.today.day.to_s,
+          received_date_mm: Time.zone.today.month.to_s,
+          received_date_yyyy: Time.zone.today.year.to_s,
+          delivery_method: :sent_by_email,
+          flag_for_disclosure_specialists: false,
+          uploaded_request_files: ['uploads/71/request/request.pdf'],
+        }
+      }
+    end
+
+    context "as an authenticated manager" do
+      before do
+        sign_in manager
+        find_or_create :team_dacu
+        find_or_create :team_dacu_disclosure
+      end
+
+      let(:created_case) { Case::FOI::Standard.first }
+
+      it 'makes a DB entry' do
+        expect { post :create, params: foi_params }.
+          to change { Case::FOI::Standard.count }.by 1
+      end
+
+      it 'uses the params provided' do
+        post :create, params: foi_params
+
+        expect(created_case.requester_type).to eq 'member_of_the_public'
+        expect(created_case.type).to eq 'Case::FOI::Standard'
+        expect(created_case.name).to eq 'A. Member of Public'
+        expect(created_case.postal_address).to eq '102 Petty France'
+        expect(created_case.email).to eq 'member@public.com'
+        expect(created_case.subject).to eq 'FOI request from controller spec'
+        expect(created_case.message).to eq 'FOI about prisons and probation'
+        expect(created_case.received_date).to eq Time.zone.today
+
+        expect(flash[:notice]).to eq "FOI case created<br/>Case number: #{created_case.number}"
+      end
+
+      it "create a internal review for timeliness" do
+        foi_params[:foi][:type] = 'TimelinessReview'
+        post :create, params: foi_params
+        expect(created_case.type).to eq 'Case::FOI::TimelinessReview'
+      end
+
+      it "create a internal review for compliance" do
+        foi_params[:foi][:type] = 'ComplianceReview'
+        post :create, params: foi_params
+        expect(created_case.type).to eq 'Case::FOI::ComplianceReview'
+      end
+
+      context 'flag_for_clearance' do
+        let!(:service) do
+          double(CaseFlagForClearanceService, call: true).tap do |svc|
+            allow(CaseFlagForClearanceService).to receive(:new).and_return(svc)
+          end
+        end
+
+        it 'does not flag for clearance if parameter is not set' do
+          foi_params[:foi].delete(:flag_for_disclosure_specialists)
+          expect { post :create, params: foi_params }
+            .not_to change { Case::FOI::Standard.count }
+          expect(service).not_to have_received(:call)
+        end
+
+        it "returns an error message if parameter is not set" do
+          foi_params[:foi].delete(:flag_for_disclosure_specialists)
+          post :create, params: foi_params
+          expect(assigns(:case).errors).to have_key(:flag_for_disclosure_specialists)
+          expect(response).to have_rendered(:new)
+        end
+
+        it "flags the case for clearance if parameter is true" do
+          foi_params[:foi][:flag_for_disclosure_specialists] = 'yes'
+          post :create, params: foi_params
+          expect(service).to have_received(:call)
+        end
+
+        it "does not flag the case for clearance if parameter is false" do
+          foi_params[:foi][:flag_for_disclosure_specialists] = false
+          post :create, params: foi_params
+          expect(service).not_to have_received(:call)
+        end
+      end
+
+      context 'with invalid params' do
+        let(:invalid_foi_params) {
+          foi_params.tap do |p|
+            p[:foi][:type] = 'standard'
+            p[:foi][:name] = ''
+            p[:foi][:email] = nil
+          end
+        }
+
+        it 're-renders new page' do
+          post :create, params: invalid_foi_params
+
+          expect(response).to have_rendered(:new)
+          expect(assigns(:case_types)).to eq [
+            'Case::FOI::Standard',
+            'Case::FOI::TimelinessReview',
+            'Case::FOI::ComplianceReview',
+          ]
+          expect(assigns(:case)).to be_an_instance_of(Case::FOI::Standard)
+          expect(assigns(:s3_direct_post)).to be_present
+        end
+      end
+
+      context 'with invalid FOI type' do
+        let(:invalid_foi_params) {
+          foi_params.tap do |p|
+            p[:foi][:type] = 'totally_madeup'
+          end
+        }
+
+        it 'raises an exception' do
+          assert_raises { post :create, params: invalid_foi_params }
+        end
+      end
+    end
+  end
+
   describe 'closeable' do
     describe '#closure_outcomes' do
       let(:kase) { create :responded_case }

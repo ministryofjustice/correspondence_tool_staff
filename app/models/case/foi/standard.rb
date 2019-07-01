@@ -135,7 +135,7 @@ class Case::FOI::Standard < Case::Base
     when 'compliancereview'
       Case::FOI::ComplianceReview
     else
-      self
+      raise ArgumentError.new("Invalid FOI type requested: #{type.inspect}")
     end
   end
 end
