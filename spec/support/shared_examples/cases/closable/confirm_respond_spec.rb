@@ -1,5 +1,4 @@
 require 'rails_helper'
-require "rails_helper"
 
 RSpec.shared_examples 'confirm respond spec' do |klass|
   describe klass, type: :controller do

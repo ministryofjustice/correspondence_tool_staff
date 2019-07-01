@@ -1,4 +1,3 @@
-# Taken from cases_controller_spec
 require 'rails_helper'
 
 # Ensure a valid `kase` is declared in calling test

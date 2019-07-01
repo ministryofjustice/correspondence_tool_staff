@@ -1,6 +1,6 @@
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.shared_examples "closure outcomes spec" do |klass|
+RSpec.shared_examples 'closure outcomes spec' do |klass|
   describe klass, type: :controller do
     let(:manager)        { find_or_create :disclosure_bmt_user }
     #let(:responded_case) { create :responded_case }

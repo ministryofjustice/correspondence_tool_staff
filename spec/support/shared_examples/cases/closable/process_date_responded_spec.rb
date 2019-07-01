@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 # Ensure a valid `kase` and `params` is declared in calling test
 RSpec.shared_examples 'process date responded spec' do |klass|
