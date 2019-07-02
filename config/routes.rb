@@ -61,6 +61,8 @@ Rails.application.routes.draw do
     end
 
     resources :icos, except: [:destroy], controller: 'ico', as: :case_icos do
+      get 'new_overturned_ico', on: :collection, to: 'ico#new_overturned_ico'
+      get 'new_linked_cases_for', on: :collection, to: 'ico#new_linked_cases_for'
       concerns :closable
     end
 

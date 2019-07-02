@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 
 describe CasesController, type: :controller do
   let(:manager)       { find_or_create :disclosure_bmt_user }
