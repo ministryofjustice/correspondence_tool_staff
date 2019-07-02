@@ -151,7 +151,13 @@ RSpec.describe Cases::FoiController, type: :controller do
     end
   end
 
-  describe '#update' do
+  describe '#edit' do
+    let(:kase) { create :accepted_case }
+
+    include_examples 'edit case spec'
+  end
+
+  describe '#update', versioning: true do
     let(:correspondence_type_abbr) { 'foi' }
     let(:kase)  do
       Timecop.freeze(now) do
@@ -194,6 +200,33 @@ RSpec.describe Cases::FoiController, type: :controller do
     }
 
     include_examples 'update case spec'
+
+    context 'compliance review' do
+      let(:responder) { find_or_create :foi_responder }
+      let(:kase) { create :accepted_compliance_review }
+      let(:date) { Time.local(2017, 10, 3) }
+
+      context 'as a logged in non-manager' do
+        before(:each) do
+          Timecop.freeze(date) do
+            sign_in responder
+            patch :update, params: params
+          end
+        end
+
+        it 'redirects' do
+          Timecop.freeze(date) do
+            expect(response).to redirect_to root_path
+          end
+        end
+
+        it 'gives error in flash' do
+          Timecop.freeze(date) do
+            expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
+          end
+        end
+      end
+    end
   end
 
   describe 'closeable' do

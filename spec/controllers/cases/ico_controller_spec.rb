@@ -3,6 +3,12 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 RSpec.describe Cases::IcoController, type: :controller do
   describe 'FOI' do
+    describe '#edit' do
+      let(:kase) { create :accepted_ico_foi_case }
+
+      include_examples 'edit case spec'
+    end
+
     describe '#update' do
       let(:manager) { find_or_create :disclosure_bmt_user }
       let(:now)     { Time.local(2018, 5, 30, 10, 23, 33) }
@@ -268,6 +274,12 @@ RSpec.describe Cases::IcoController, type: :controller do
   end
 
   describe 'SAR' do
+    describe '#edit' do
+      let(:kase) { create :accepted_ico_sar_case }
+
+      include_examples 'edit case spec'
+    end
+
     describe 'closable' do
       describe '#closure_outcomes' do
         let(:kase) { create :responded_ico_sar_case }

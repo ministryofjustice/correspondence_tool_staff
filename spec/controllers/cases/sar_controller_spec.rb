@@ -34,7 +34,13 @@ RSpec.describe Cases::SarController, type: :controller do
     include_examples 'new case spec', Case::SAR::Standard
   end
 
-  describe '#update' do
+  describe '#edit' do
+    let(:kase) { create :sar_case, :flagged_accepted }
+
+    include_examples 'edit case spec'
+  end
+
+  describe '#update', versioning: true do
     let(:correspondence_type_abbr) { 'sar' }
     let(:kase)  do
       Timecop.freeze(now) do
