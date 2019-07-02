@@ -3,6 +3,8 @@ module Cases
     include NewCase
     include OffenderSARCasesParams
 
+    before_action :set_case_types, only: [:new, :create]
+
     def initialize
       @correspondence_type = CorrespondenceType.offender_sar
       @correspondence_type_key = 'offender_sar'
@@ -24,26 +26,23 @@ module Cases
 
     def create
       authorize case_type, :can_add_case?
-      @case = OffenderSARCaseForm.new(session)
 
+      @case = OffenderSARCaseForm.new(session)
       @case.case.creator = current_user #to-do Remove when we use the case create service
       @case.case.subject = "Offender SAR" #to-do Remove when we use the case create service
-
       @case.assign_params(create_params) if create_params
       @case.current_step = params[:current_step]
 
       if !@case.valid_attributes?(create_params)
-        render :new and return
-      end
-
-      if @case.valid? && @case.save
+        render :new
+      elsif @case.valid? && @case.save
         session[:offender_sar_state] = nil
-        redirect_to case_path(@case.case) and return
+        redirect_to case_path(@case.case)
+      else
+        @case.session_persist_state(create_params)
+        get_next_step(@case)
+        redirect_to "#{step_case_sar_offenders_path}/#{@case.current_step}"
       end
-
-      @case.session_persist_state(create_params)
-      get_next_step(@case)
-      redirect_to step_case_sar_offenders_path + "/#{@case.current_step}"
     end
 
     def case_type
@@ -86,6 +85,10 @@ module Cases
       elsif params[:commit]
         obj.next_step
       end
+    end
+
+    def set_case_types
+      @case_types = @correspondence_type.sub_classes.map(&:to_s)
     end
   end
 end

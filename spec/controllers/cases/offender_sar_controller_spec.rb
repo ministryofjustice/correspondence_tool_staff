@@ -26,11 +26,28 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     include_examples 'can_add_case policy spec', Case::SAR::Offender
   end
 
+  # Not using shared_examples/new_spec due to the way Offender Sar Controller
+  # sets `@case` to be a OffenderSARCaseForm rather than a decorator at present
   describe '#new' do
     let(:case_types) { %w[Case::SAR::Offender] }
-
     let(:params) {{ correspondence_type: 'offender_sar' }}
+    let(:manager) { find_or_create :disclosure_bmt_user }
 
-    include_examples 'new case spec', Case::SAR::Offender
+    before do
+      sign_in manager
+    end
+
+    it 'authorizes' do
+      expect { get :new, params: params }
+        .to require_permission(:can_add_case?)
+          .with_args(manager, Case::SAR::Offender)
+    end
+
+    it 'renders the new template with a form object' do
+      get :new, params: params
+      expect(response).to render_template(:new)
+      expect(assigns(:case)).to be_a OffenderSARCaseForm
+      expect(assigns(:case_types)).to eq %w[Case::SAR::Offender]
+    end
   end
 end
