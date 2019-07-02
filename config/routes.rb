@@ -46,31 +46,32 @@ Rails.application.routes.draw do
 
   # Case Create & Case Specific Actions
   scope :cases, module: 'cases' do
-    resources :fois, except: [:destroy], controller: 'foi', as: :case_foi_standards do
+    resources :fois, except: [:show, :destroy], controller: 'foi', as: :case_foi_standards do
       concerns :closable
     end
 
-    resources :sars, except: [:destroy], controller: 'sar', as: :case_sar_standards do
+    resources :sars, except: [:show, :destroy], controller: 'sar', as: :case_sar_standards do
       concerns :closable
     end
 
-    resources :offender_sars, except: [:destroy], controller: 'offender_sar', as: :case_sar_offenders do
+    resources :offender_sars, except: [:show, :destroy], controller: 'offender_sar', as: :case_sar_offenders do
       get 'cancel', on: :collection
       get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
       concerns :closable
     end
 
-    resources :icos, except: [:destroy], controller: 'ico', as: :case_icos do
-      get 'new_overturned_ico', on: :collection, to: 'ico#new_overturned_ico'
+    resources :icos, except: [:show, :destroy], controller: 'ico', as: :case_icos do
+      get 'new_overturned_ico', on: :member, to: 'ico#new_overturned_ico'
       get 'new_linked_cases_for', on: :collection, to: 'ico#new_linked_cases_for'
+      patch 'record_late_team', on: :member, to: 'ico#record_late_team'
       concerns :closable
     end
 
-    resources :ico_fois, except: [:destroy], controller: 'ico_foi', as: :case_ico_fois do
+    resources :ico_fois, except: [:show, :destroy], controller: 'ico_foi', as: :case_ico_fois do
       concerns :closable
     end
 
-    resources :ico_sars, except: [:destroy], controller: 'ico_sar', as: :case_ico_sars do
+    resources :ico_sars, except: [:show, :destroy], controller: 'ico_sar', as: :case_ico_sars do
       concerns :closable
     end
 
@@ -81,11 +82,6 @@ Rails.application.routes.draw do
 
     resources :overturned_ico_sars, only: [:create], controller: 'overturned_sar', as: :case_overturned_sars do
       get :new, on: :member
-      concerns :closable
-    end
-
-    resources :ico do
-      patch 'record_late_team'#, on: :member - not sure why member not working
       concerns :closable
     end
   end
@@ -108,7 +104,7 @@ Rails.application.routes.draw do
   end
 
   # Case Actions (general)
-  resources :cases, except: [:index, :create] do
+  resources :cases, only: [:show, :destroy] do
     get :confirm_destroy, on: :member
   end
 
