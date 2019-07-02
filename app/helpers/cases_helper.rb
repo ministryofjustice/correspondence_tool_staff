@@ -134,7 +134,7 @@ module CasesHelper
 
   def show_remove_clearance_link(kase)
     if policy(kase).remove_clearance?
-      link_to('Remove clearance', remove_clearance_case_clearance_path(kase))
+      link_to('Remove clearance', remove_clearance_case_path(kase))
     end
   end
 
