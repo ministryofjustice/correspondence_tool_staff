@@ -9,7 +9,7 @@ class OffenderSARCaseForm
            :date_of_birth,
            :email,
            :errors,
-           :flag_for_disclosure_specialists,
+           :flag_as_high_profile,
            :id,
            :message,
            :message,
@@ -95,7 +95,7 @@ class OffenderSARCaseForm
     when "subject-details"
       set_empty_value_if_unset(params, "subject_type")
       set_empty_value_if_unset(params, "date_of_birth")
-      set_empty_value_if_unset(params, "flag_for_disclosure_specialists")
+      set_empty_value_if_unset(params, "flag_as_high_profile")
     when "requester-details"
       set_empty_value_if_unset(params, "third_party")
       clear_param_if_condition(params, "name", "third_party", "true")

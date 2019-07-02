@@ -13,7 +13,7 @@ class Case::SAR::Offender < Case::Base
                  date_of_birth: :date,
                  escalation_deadline: :date,
                  external_deadline: :date,
-                 flag_for_disclosure_specialists: :boolean,
+                 flag_as_high_profile: :boolean,
                  internal_deadline: :date,
                  other_subject_ids: :string,
                  previous_case_numbers: :string,
@@ -51,7 +51,7 @@ class Case::SAR::Offender < Case::Base
                   ]
 
   validates :third_party, inclusion: { in: [true, false], message: 'Please choose yes or no' }
-  validates :flag_for_disclosure_specialists, inclusion: { in: ['yes', 'no'], message: 'Please choose yes or no' }
+  validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
 
   validates :name, presence: true, if: -> { third_party }
   validates :third_party_relationship, presence: true, if: -> { third_party }

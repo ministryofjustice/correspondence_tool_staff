@@ -64,7 +64,7 @@ FactoryBot.define do
     prison_number                   { '123465' }
     subject_type                    { 'offender' }
     third_party                     { false }
-    flag_for_disclosure_specialists { 'no' }
+    flag_as_high_profile            { false }
     created_at                      { creation_time }
     creator                         { create(:user, :orphan) }
   end
