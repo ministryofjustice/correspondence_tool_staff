@@ -67,6 +67,10 @@ class Case::SAR::Offender < Case::Base
   validates :reply_method, presence: true
   validate :validate_date_of_birth
 
+  def validate_received_date
+    super
+  end
+
   def validate_date_of_birth
     if date_of_birth.present? && self.date_of_birth > Date.today
       errors.add(

@@ -90,6 +90,7 @@ class OffenderSARCaseForm
 
   def check_valid_dates_for_step(step)
     @case.validate_date_of_birth if step == "subject-details"
+    @case.validate_received_date if step == "date-received"
   end
 
   def params_for_step(params, step)
