@@ -759,6 +759,10 @@ class Case::Base < ApplicationRecord
   def overturned_ico_sar?;  false;  end
   def overturned_ico_foi?;  false;  end
 
+  def default_managing_team
+    BusinessUnit.dacu_bmt
+  end
+
   private
 
   def identifier
@@ -847,7 +851,7 @@ class Case::Base < ApplicationRecord
 
   def set_managing_team
     # For now, we just automatically assign cases to DACU.
-    self.managing_team = BusinessUnit.dacu_bmt
+    self.managing_team = self.default_managing_team
     self.managing_assignment.state = 'accepted'
   end
 
