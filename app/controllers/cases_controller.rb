@@ -105,7 +105,7 @@ class CasesController < ApplicationController
     end
 
     if service.result == :ok
-      flash[:notice] = t('.case_updated')
+      flash[:notice] = t('cases.update.case_updated')
     elsif service.result == :no_changes
       flash[:alert] = "No changes were made"
     end
