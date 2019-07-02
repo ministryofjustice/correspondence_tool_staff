@@ -15,7 +15,7 @@ module Cases
     def new
       authorize case_type, :can_add_case?
       permitted_correspondence_types
-      new_overturned_ico_for case_type
+      new_case_for(@correspondence_type, default_subclass: case_type)
     end
 
 

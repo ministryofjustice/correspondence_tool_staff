@@ -87,6 +87,15 @@ RSpec.describe Cases::OverturnedSarController, type: :controller do
         expect(response).to render_template('cases/show')
       end
     end
+
+    context 'authorization' do
+      let(:kase) { create :ico_sar_case }
+      let(:decorator) { Case::OverturnedICO::SARDecorator }
+      let(:ico_decorator) { Case::ICO::SARDecorator }
+      let(:abbreviation) { 'OVERTURNED_SAR' }
+
+      include_examples 'new overturned ico spec', Case::OverturnedICO::SAR
+    end
   end
 
   describe '#create' do

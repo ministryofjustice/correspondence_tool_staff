@@ -2,6 +2,20 @@ require "rails_helper"
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 RSpec.describe Cases::FoiController, type: :controller do
+  describe '#new' do
+    let(:case_types) {
+      %w[
+        Case::FOI::Standard
+        Case::FOI::TimelinessReview
+        Case::FOI::ComplianceReview
+      ]
+    }
+
+    let(:params) { { correspondence_type: 'foi' } }
+
+    include_examples 'new case spec', Case::FOI::Standard
+  end
+
   describe '#create' do
     let(:manager) { create :manager }
     let(:foi_params) do

@@ -12,7 +12,7 @@ module Cases
 
     def new
       permitted_correspondence_types
-      #prepare_new_case
+      authorize case_type, :can_add_case?
 
       @case = OffenderSARCaseForm.new(session)
       step = params[:step].present? && params[:step] != 'new' ? params[:step] : @case.steps.first
@@ -23,9 +23,7 @@ module Cases
     end
 
     def create
-      permitted_correspondence_types
-      #prepare_new_case
-
+      authorize case_type, :can_add_case?
       @case = OffenderSARCaseForm.new(session)
 
       @case.case.creator = current_user #to-do Remove when we use the case create service
@@ -34,19 +32,18 @@ module Cases
       @case.assign_params(create_params) if create_params
       @case.current_step = params[:current_step]
 
-      if @case.valid_attributes?(create_params)
-        if @case.valid?
-          if @case.save
-            session[:offender_sar_state] = nil
-            redirect_to case_path(@case.case) and return
-          end
-        end
-        @case.session_persist_state(create_params)
-        get_next_step(@case)
-        redirect_to step_case_sar_offenders_path + "/#{@case.current_step}"
-      else
-        render :new
+      if !@case.valid_attributes?(create_params)
+        render :new and return
       end
+
+      if @case.valid? && @case.save
+        session[:offender_sar_state] = nil
+        redirect_to case_path(@case.case) and return
+      end
+
+      @case.session_persist_state(create_params)
+      get_next_step(@case)
+      redirect_to step_case_sar_offenders_path + "/#{@case.current_step}"
     end
 
     def case_type

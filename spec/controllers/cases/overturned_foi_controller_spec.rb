@@ -1,6 +1,23 @@
 require 'rails_helper'
 
 RSpec.describe Cases::OverturnedFoiController, type: :controller do
+  describe '#new' do
+    let(:manager) { create :manager }
+
+    before do
+      sign_in manager
+    end
+
+    context 'authorization' do
+      let(:kase) { create :ico_foi_case }
+      let(:decorator) { Case::OverturnedICO::FOIDecorator }
+      let(:ico_decorator) { Case::ICO::FOIDecorator }
+      let(:abbreviation) { 'OVERTURNED_FOI' }
+
+      include_examples 'new overturned ico spec', Case::OverturnedICO::FOI
+    end
+  end
+
   describe '#create' do
     let(:deadline) { 1.month.ago }
     let(:manager) { create :manager }

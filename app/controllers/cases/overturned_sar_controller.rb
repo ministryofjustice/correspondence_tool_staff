@@ -14,7 +14,7 @@ module Cases
     # The 'new' action for this type needs an original case -
     # so it doesn't fit the normal rails pattern.
     def new
-      authorize case_type, :can_add_case?
+      authorize case_type
       permitted_correspondence_types
       new_overturned_ico_for case_type
     end

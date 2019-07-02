@@ -26,6 +26,14 @@ RSpec.describe Cases::SarController, type: :controller do
     include_examples 'can_add_case policy spec', Case::SAR::Standard
   end
 
+  describe '#new' do
+    let(:case_types) { %w[Case::SAR::Standard] }
+
+    let(:params) { { correspondence_type: 'sar' } }
+
+    include_examples 'new case spec', Case::SAR::Standard
+  end
+
   describe 'closeable' do
     describe '#edit_closure' do
       context 'SAR case' do

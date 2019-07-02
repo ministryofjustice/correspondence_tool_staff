@@ -1,19 +1,18 @@
 module NewCase
   extend ActiveSupport::Concern
 
-  def new_case_for(correspondence_type)
+  # default_subclass
+  #
+  # We don't know what kind of case type (FOI Standard, IR Timeliness, etc)
+  # they want to create yet, but we need to authenticate them against some
+  # kind of case class, so pick the first subclass available to them. This
+  # could be improved by making case_subclasses a list of the case types
+  # they are permitted to create, and when that list is empty rejecting
+  # authorisation.
+  def new_case_for(correspondence_type, default_subclass: correspondence_type.sub_classes.first)
     valid_type = validate_correspondence_type(@correspondence_type_key)
 
     if valid_type == :ok
-      # Check user's authorisation
-      #
-      # We don't know what kind of case type (FOI Standard, IR Timeliness, etc)
-      # they want to create yet, but we need to authenticate them against some
-      # kind of case class, so pick the first subclass available to them. This
-      # could be improved by making case_subclasses a list of the case types
-      # they are permitted to create, and when that list is empty rejecting
-      # authorisation.
-      default_subclass = correspondence_type.sub_classes.first
       authorize default_subclass, :can_add_case?
 
       @case = default_subclass.new.decorate
