@@ -671,6 +671,7 @@ en:
       date_draft_compliant: Date compliant draft was uploaded
       date_draft_compliant_example: "For example, 01 02 2018"
     update:
+
       case_updated: Case updated
 
     filters:
@@ -765,14 +766,6 @@ en:
       upload_response: 'Upload response'
     request_amends:
       heading: Request amends
-    approve:
-      heading: Clear response
-      approve_message:
-        foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-        sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-        ico: "Once you clear this response, %{managing_team} can send the response and close the case."
-        overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-        overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
     response_upload_form:
       upload_hint_copy: |
         You can upload different file types such as Word, Excel,
@@ -783,7 +776,6 @@ en:
     upload_response_and_return_for_redraft:
       heading: Upload response
       upload_response: 'Upload response'
-
     confirm_respond:
       success: The response has been marked as sent.
     foi:
@@ -792,14 +784,12 @@ en:
       close_form:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
-
     sar:
       new_form_common:
         dropzone: "Requestor's proof of ID and other documents"
       close_form:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
-
     sar_extensions:
       create:
         success: Case extended for SAR
@@ -810,7 +800,6 @@ en:
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{num_days} days.
-
     search:
       heading: Search
       external_deadline_from: From
@@ -831,6 +820,14 @@ en:
       Case::SAR::Standard: Non-offender SAR
       Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
       Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
+  approvals:
+    heading: Clear response
+    approve_message:
+      foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+      sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
+      ico: "Once you clear this response, %{managing_team} can send the response and close the case."
+      overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+      overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
 
   assignments:
     accept:

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'cases/approve.html.slim', type: :view do
+describe 'cases/approvals/new.html.slim', type: :view do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:foi_kase)              { create :pending_dacu_clearance_case }
   let(:late_foi_kase)         { create :pending_dacu_clearance_case, :late }
@@ -34,7 +34,7 @@ describe 'cases/approve.html.slim', type: :view do
       render_page
 
       expect(cases_approve_page.clearance)
-        .to have_text(I18n.t('cases.approve.approve_message.foi',
+        .to have_text(I18n.t('approvals.approve_message.foi',
                              managing_team: foi_kase.managing_team.name))
     end
 
@@ -54,7 +54,7 @@ describe 'cases/approve.html.slim', type: :view do
       render_page
 
       expect(cases_approve_page.clearance)
-        .to have_text(I18n.t('cases.approve.approve_message.sar',
+        .to have_text(I18n.t('approvals.approve_message.sar',
                              managing_team: foi_kase.managing_team.name))
     end
   end
@@ -76,7 +76,7 @@ describe 'cases/approve.html.slim', type: :view do
     it 'renders the bypass form' do
       render_page
 
-      expect(response).to have_rendered('cases/_bypass_approvals_form')
+      expect(response).to have_rendered('cases/shared/_bypass_approvals_form')
     end
   end
 

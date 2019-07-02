@@ -19,7 +19,7 @@
     strong.strong-block
       = @case.subject
   p
-    = t(".approve_message.#{@case.type_abbreviation.downcase}", managing_team: @case.managing_team.name)
+    = t("approvals.approve_message.#{@case.type_abbreviation.downcase}", managing_team: @case.managing_team.name)
 
 = form_tag case_approvals_path(@case), method: :post
   - if @case.allow_event?(current_user, :approve_and_bypass)
