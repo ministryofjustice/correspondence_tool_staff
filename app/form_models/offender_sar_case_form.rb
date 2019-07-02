@@ -78,6 +78,7 @@ class OffenderSARCaseForm
   def valid_attributes?(params)
     params ||= ActionController::Parameters.new({}).permit!
     params = params_for_step(params, current_step)
+    check_valid_dates_for_step(current_step)
     @case.valid_attributes?(params)
   end
 
@@ -86,6 +87,10 @@ class OffenderSARCaseForm
   end
 
   private
+
+  def check_valid_dates_for_step(step)
+    @case.validate_date_of_birth if step == "subject-details"
+  end
 
   def params_for_step(params, step)
     # We partially validate each step of the form using the model validations

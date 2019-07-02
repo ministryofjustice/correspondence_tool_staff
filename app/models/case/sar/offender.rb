@@ -65,4 +65,15 @@ class Case::SAR::Offender < Case::Base
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
   validates :reply_method, presence: true
+  validate :validate_date_of_birth
+
+  def validate_date_of_birth
+    if date_of_birth.present? && self.date_of_birth > Date.today
+      errors.add(
+        :date_of_birth,
+        I18n.t('activerecord.errors.models.case.attributes.date_of_birth.not_in_future')
+      )
+    end
+    errors[:date_of_birth].any?
+  end
 end
