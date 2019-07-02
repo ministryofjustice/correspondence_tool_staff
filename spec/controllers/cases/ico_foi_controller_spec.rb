@@ -82,8 +82,10 @@ RSpec.describe Cases::IcoFoiController, type: :controller do
         post :create, params: invalid_ico_params
 
         expect(response).to have_rendered(:new)
-        expect(assigns(:case_types)).to eq ['Case::ICO::FOI',
-          'Case::ICO::SAR',]
+        expect(assigns(:case_types)).to eq [
+          'Case::ICO::FOI',
+          'Case::ICO::SAR',
+        ]
         expect(assigns(:case)).to be_an_instance_of(Case::ICO::FOI)
         expect(assigns(:s3_direct_post)).to be_present
       end

@@ -1,12 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe CasesController, type: :controller do
-  let(:all_cases)             { create_list(:case, 5)   }
-  let(:first_case)            { all_cases.first         }
   let(:manager)               { find_or_create :disclosure_specialist_bmt }
   let(:responder)             { find_or_create :foi_responder }
   let(:another_responder)     { create :responder }
-  let(:manager_approver)      { create :manager_approver }
   let(:responding_team)       { responder.responding_teams.first }
   let(:co_responder)          { create :responder,
                                        responding_teams: [responding_team] }
@@ -28,16 +25,11 @@ RSpec.describe CasesController, type: :controller do
   let(:case_with_response)    { create :case_with_response,
                                        responder: responder,
                                        responding_team: responding_team }
-  let(:flagged_case)          { create :assigned_case, :flagged,
-                                       responding_team: responding_team,
-                                       approving_team: team_dacu_disclosure }
+
   let(:flagged_accepted_case) { create :accepted_case, :flagged_accepted,
                                        responding_team: responding_team,
                                        approver: disclosure_specialist,
                                        responder: responder}
-
-  let(:assigned_trigger_case)               { create :assigned_case, :flagged_accepted,
-                                                     approver: disclosure_specialist }
   let(:pending_dacu_clearance_case)         { create :pending_dacu_clearance_case,
                                                      responding_team: responding_team }
   let(:case_accepted_by_approver_responder) { create :accepted_case,
@@ -114,53 +106,7 @@ RSpec.describe CasesController, type: :controller do
     end
   end
 
-  # # Index is not used, as users are redirected to FiltersController
-  # describe '#index' do
-  #   let(:decorate_result) { double 'decorated_result' }
-  #   let(:pager) { double 'Kaminari Pager', decorate: decorate_result }
-  #   let(:cases) { double 'ActiveRecord Cases', page: pager }
-  #   let(:finder) { instance_double(CaseFinderService, scope: cases) }
-  #
-  #   before do
-  #     allow(CaseFinderService).to receive(:new).and_return(finder)
-  #     allow(finder).to receive(:for_params).and_return(finder)
-  #   end
-  #
-  #   context "as an anonymous user" do
-  #     it "be redirected to signin if trying to list of questions" do
-  #       get :index
-  #       expect(response).to redirect_to(new_user_session_path)
-  #     end
-  #   end
-  #
-  #   context 'as an authenticated user' do
-  #     before { sign_in manager }
-  #
-  #     it 'renders the index page' do
-  #       get :index
-  #       expect(response).to render_template :index
-  #     end
-  #
-  #     it 'assigns cases returned by CaseFinderService' do
-  #       get :index
-  #       expect(CaseFinderService).to have_received(:new).with(manager)
-  #       expect(assigns(:cases)).to eq decorate_result
-  #     end
-  #
-  #     it 'sets @current_tab_name' do
-  #       get :index
-  #       expect(assigns(:current_tab_name)).to eq 'all_cases'
-  #     end
-  #
-  #     it 'sets @can_add_case to true' do
-  #       get :index
-  #       expect(assigns(:can_add_case)).to eq true
-  #     end
-  #   end
-  # end
-
   describe '#show' do
-
     it 'retrieves message_text error from the flash' do
       sign_in responder
 
@@ -505,180 +451,6 @@ RSpec.describe CasesController, type: :controller do
 
         it 'renders case details page' do
           expect(response).to render_template :show
-        end
-      end
-    end
-  end
-
-  describe '#edit' do
-    let(:kase) { create :accepted_case }
-
-    context 'as a logged in non-manager' do
-
-      before(:each)  do
-        sign_in responder
-        get :edit, params: { id: kase.id }
-      end
-
-      it 'redirects to case list' do
-        expect(response).to redirect_to root_path
-      end
-
-      it 'displays error message in flash' do
-        expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
-      end
-    end
-
-    context 'as a manager' do
-      before(:each) do
-        sign_in manager
-        get :edit, params: { id: kase.id }
-      end
-
-      it 'assigns case' do
-        expect(assigns(:case)).to eq kase
-      end
-
-      it 'renders edit' do
-        expect(response).to render_template :edit
-      end
-    end
-
-    context 'ICO cases' do
-      let(:kase) { create :accepted_ico_foi_case }
-
-      before(:each) do
-        sign_in manager
-        get :edit, params: { id: kase.id }
-      end
-
-      it 'renders edit' do
-        expect(response).to render_template :edit
-      end
-    end
-  end
-
-  describe '#update', versioning: true do
-
-    # let(:managing_team)                 { create :team_dacu_disclosure }
-    # let(:dacu_disclosure_specialist)    { managing_team.users.first }
-    let(:service)                       { double CaseUpdaterService }
-    let(:kase)                          { create :accepted_case }
-    let(:edit_params) do
-      ActionController::Parameters.new({
-                                         correspondence_type: 'foi',
-                                         case_foi:  {
-                                           name: 'Tony Blair',
-                                           email: 'tb@blairco.pol',
-                                           postal_address: '2, Vinery Way London W6 0LQ',
-                                           requester_type: 'offender',
-                                           received_date_dd: '1',
-                                           received_date_mm: '10',
-                                           received_date_yyyy: '2017',
-                                           subject: 'TEST case',
-                                           message: 'Lorem ipsum dolor',
-                                         },
-                                         commit: 'Submit',
-                                         id:  kase.id.to_s
-                                       })
-    end
-
-    let(:expected_params) do
-      ActionController::Parameters.new({
-                                         name: 'Tony Blair',
-                                         email: 'tb@blairco.pol',
-                                         postal_address: '2, Vinery Way London W6 0LQ',
-                                         requester_type: 'offender',
-                                         received_date_dd: '1',
-                                         received_date_mm: '10',
-                                         received_date_yyyy: '2017',
-                                         subject: 'TEST case',
-                                         message: 'Lorem ipsum dolor',
-                                       }).permit(
-        :name,
-        :email,
-        :postal_address,
-        :requester_type,
-        :received_date_dd,
-        :received_date_mm,
-        :received_date_yyyy,
-        :subject,
-        :message,
-        :correspondence_type_id
-      )
-    end
-
-    let(:date)    { Time.local(2017, 10, 3) }
-
-    context 'as a logged in non-manager' do
-      before(:each) do
-        Timecop.freeze(date) do
-          sign_in responder
-          patch :update, params: edit_params.to_unsafe_hash
-        end
-      end
-
-      it 'redirects' do
-        Timecop.freeze(date) do
-          expect(response).to redirect_to root_path
-        end
-      end
-
-      it 'gives error in flash' do
-        Timecop.freeze(date) do
-          expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
-        end
-      end
-    end
-
-    context 'as a manager' do
-
-      let(:manager)   { create :manager, managing_teams: [find_or_create(:team_dacu)] }
-
-      before(:each) {
-        sign_in manager
-      }
-
-      it 'calls case updater service' do
-        Timecop.freeze(date) do
-          expect(CaseUpdaterService).to receive(:new).
-            with(manager, kase, expected_params).
-            and_return(service)
-          expect(service).to receive(:call)
-          allow(service).to receive(:result)
-
-          patch :update, params: edit_params.to_unsafe_hash
-        end
-      end
-
-      it 'creates a papertrail version with the current user as whodunnit' do
-        Timecop.freeze(date) do
-          patch :update, params: edit_params.to_unsafe_hash
-          expect(kase.versions.size).to eq 2
-          expect(kase.versions.last.whodunnit).to eq manager.id.to_s
-        end
-      end
-    end
-    context 'case is an appeal' do
-      let(:kase)     { create :accepted_compliance_review}
-      context 'as a logged in non-manager' do
-        before(:each) do
-          Timecop.freeze(date) do
-            sign_in responder
-            patch :update, params: edit_params.to_unsafe_hash
-          end
-        end
-
-        it 'redirects' do
-          Timecop.freeze(date) do
-            expect(response).to redirect_to root_path
-          end
-        end
-
-        it 'gives error in flash' do
-          Timecop.freeze(date) do
-            expect(flash[:alert]).to eq 'You are not authorised to edit this case.'
-          end
         end
       end
     end
