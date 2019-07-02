@@ -18,7 +18,7 @@
 
 .form-group
   = form_for @case, as: "case_#{@correspondence_type_key}",
-                    url: confirm_respond_case_path(id: @case.id) do |f|
+                    url: polymorphic_path(@case, action: :confirm_respond) do |f|
 
     .form-group
       = f.gov_uk_date_field :date_responded,

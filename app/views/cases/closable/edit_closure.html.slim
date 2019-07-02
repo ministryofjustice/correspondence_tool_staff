@@ -12,5 +12,5 @@
 
 = render partial: "cases/#{@case.type_abbreviation.downcase}/close_form",
                   locals: { kase: @case,
-                            form_url: update_closure_case_path(id: @case.id),
+                            form_url: polymorphic_path(@case, action: :update_closure),
                             submit_button: t('.submit')}

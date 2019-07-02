@@ -32,7 +32,7 @@ module Closable
     end
 
     set_permitted_events
-    render 'cases/closures/close'
+    render 'cases/closable/close'
   end
 
   def edit_closure
@@ -42,7 +42,7 @@ module Closable
     @case = @case.decorate
     @team_collection = CaseTeamCollection.new(@case)
 
-    render 'cases/closures/edit_closure'
+    render 'cases/closable/edit_closure'
   end
 
   def closure_outcomes
@@ -54,7 +54,7 @@ module Closable
     end
     @team_collection = CaseTeamCollection.new(@case)
 
-    render 'cases/closures/closure_outcomes'
+    render 'cases/closable/closure_outcomes'
   end
 
   def respond_and_close
@@ -62,13 +62,13 @@ module Closable
 
     @case.date_responded = nil
     set_permitted_events
-    render 'cases/closures/close'
+    render 'cases/closable/close'
   end
 
   def respond
     authorize @case, :can_respond?
     set_correspondence_type(@case.type_abbreviation.downcase)
-    render 'cases/closures/respond'
+    render 'cases/closable/respond'
   end
 
   def process_date_responded
@@ -78,7 +78,7 @@ module Closable
     @case.prepare_for_respond
 
     if !@case.update process_date_responded_params
-      render 'cases/closures/close'
+      render 'cases/closable/close'
     else
       @team_collection = CaseTeamCollection.new(@case)
       @case.update(late_team_id: @case.responding_team.id)
@@ -102,7 +102,7 @@ module Closable
       set_permitted_events
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
       @team_collection = CaseTeamCollection.new(@case)
-      render 'cases/closures/closure_outcomes'
+      render 'cases/closable/closure_outcomes'
     end
   end
 
@@ -125,7 +125,7 @@ module Closable
     else
       set_permitted_events
       @team_collection = CaseTeamCollection.new(@case)
-      render 'cases/closures/closure_outcomes'
+      render 'cases/closable/closure_outcomes'
     end
   end
 
@@ -144,7 +144,7 @@ module Closable
       redirect_to case_path(@case)
     else
       @case = @case.decorate
-      render 'cases/closures/edit_closure'
+      render 'cases/closable/edit_closure'
     end
   end
 
@@ -164,7 +164,7 @@ module Closable
       render 'cases/ico/late_team'
     when :error
       set_correspondence_type(@case.type_abbreviation.downcase)
-      render 'cases/closures/respond'
+      render 'cases/closable/respond'
     else
       raise 'unexpected result from MarkResponseAsSentService'
     end
