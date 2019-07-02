@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   # Case Concerns
   # Legacy routes that are awaiting transition to more idiomatic
   # controller/routing structures
-  concern :closable do
+  concern :closable_actions do
     member do
       get :close
       get :edit_closure
@@ -33,7 +33,9 @@ Rails.application.routes.draw do
       get :respond_and_close
       get :respond
     end
+  end
 
+  concern :closable_behaviours do
     collection do
       patch :process_closure
       patch :update_closure
@@ -43,46 +45,62 @@ Rails.application.routes.draw do
     end
   end
 
-
-  # Case Create & Case Specific Actions
+  # Case Create & Case Specific Actions (use polymorphic_path to generate url)
   scope :cases, module: 'cases' do
-    resources :fois, except: [:show, :destroy], controller: 'foi', as: :case_foi_standards do
-      concerns :closable
+    # Setup closable routing first. We may have a mis-match between the
+    # Case Model name e.g. Case::OverturnedICO::SAR and the corresponding
+    # view folder which uses the CorrespondenceType abbreviation (an arbitrary
+    # string e.g. overturned_sar). This legacy naming is why the routing for
+    # different Case types is more verbose.
+    correspondence_type_resources = {
+      foi: 'foi_standard', # views are in /foi
+      sar: 'sar_standard', # views are in /sar
+      offender_sar: 'offender_sar',
+      ico: 'ico',
+      ico_foi: 'ico_foi',
+      ico_sar: 'ico_sar',
+      overturned_ico_foi: 'overturned_ico_foi', # views are in /overturned_foi
+      overturned_ico_sar: 'overturned_ico_sar', # views are in /overturned_sar
+    }
+
+    correspondence_type_resources.each do |resource, model_name|
+      resources resource.to_s.pluralize, only: [], controller: resource, as: "case_#{model_name}" do
+        concerns :closable_actions
+      end
+
+      # These are actions primarily used via AJAX hence this additional routing
+      resource resource.to_s.pluralize, only: [], controller: resource, as: "case_#{model_name}" do
+        concerns :closable_behaviours
+      end
     end
 
-    resources :sars, except: [:show, :destroy], controller: 'sar', as: :case_sar_standards do
-      concerns :closable
-    end
 
-    resources :offender_sars, except: [:show, :destroy], controller: 'offender_sar', as: :case_sar_offenders do
+    # Standard routes, note use of `resources` and singular custom named routes
+    only = [:new, :create, :edit, :update]
+
+    resources :fois, only: only, controller: 'foi', as: :case_foi_standard
+    resources :sars, only: only, controller: 'sar', as: :case_sar_standard
+
+    resources :offender_sars, only: only, controller: 'offender_sar', as: :case_sar_offender do
       get 'cancel', on: :collection
       get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
-      concerns :closable
     end
 
-    resources :icos, except: [:show, :destroy], controller: 'ico', as: :case_icos do
+    resources :icos, only: only, controller: 'ico', as: :case_ico do
       get 'new_overturned_ico', on: :member, to: 'ico#new_overturned_ico'
       get 'new_linked_cases_for', on: :collection, to: 'ico#new_linked_cases_for'
       patch 'record_late_team', on: :member, to: 'ico#record_late_team'
-      concerns :closable
     end
 
-    resources :ico_fois, except: [:show, :destroy], controller: 'ico_foi', as: :case_ico_fois do
-      concerns :closable
-    end
+    resources :ico_fois, only: only, controller: 'ico_foi', as: :case_ico_foi
+    resources :ico_sars, only: only, controller: 'ico_sar', as: :case_ico_sar
 
-    resources :ico_sars, except: [:show, :destroy], controller: 'ico_sar', as: :case_ico_sars do
-      concerns :closable
-    end
-
-    resources :overturned_ico_fois, only: [:create], controller: 'overturned_foi', as: :case_overturned_fois do
+    resources :overturned_ico_fois, only: [:create], controller: 'overturned_ico_foi', as: :case_overturned_ico_foi do
       get :new, on: :member
-      concerns :closable
     end
 
-    resources :overturned_ico_sars, only: [:create], controller: 'overturned_sar', as: :case_overturned_sars do
+    resources :overturned_ico_sars, only: [:create], controller: 'overturned_ico_sar', as: :case_overturned_ico_sar do
       get :new, on: :member
-      concerns :closable
     end
   end
 
