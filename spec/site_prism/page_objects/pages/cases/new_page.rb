@@ -20,7 +20,7 @@ module PageObjects
         end
 
         def fill_in_case_type(choice)
-          make_radio_button_choice("case_foi_type_#{choice}")
+          make_radio_button_choice("foi_type_#{choice}")
           click_button 'Continue'
         end
       end
