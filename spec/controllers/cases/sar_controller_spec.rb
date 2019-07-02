@@ -34,6 +34,59 @@ RSpec.describe Cases::SarController, type: :controller do
     include_examples 'new case spec', Case::SAR::Standard
   end
 
+  describe '#update' do
+    let(:correspondence_type_abbr) { 'sar' }
+    let(:kase)  do
+      Timecop.freeze(now) do
+        create :accepted_sar,
+          name: 'Original Name',
+          email: 'original_email@moj.com',
+          message: 'origninal full case',
+          received_date: now.to_date,
+          postal_address: '',
+          subject: 'Original summary',
+          third_party: false,
+          reply_method: 'send_by_email',
+          subject_type: 'offender',
+          subject_full_name: 'original subject'
+      end
+    end
+    let(:params) do
+      {
+        'correspondence_type' => 'sar',
+        'sar' => {
+          'subject_full_name' => 'modified subject',
+          'subject_type' => 'member_of_the_public',
+          'third_party' => 'true',
+          'name' => 'the new requestor',
+          'third_party_relationship' => 'Aunty',
+          'received_date_dd' => '26',
+          'received_date_mm' => '5',
+          'received_date_yyyy' => '2018',
+          'date_draft_compliant_dd' => '28',
+          'date_draft_compliant_mm' => '5',
+          'date_draft_compliant_yyyy' => '2018',
+          'subject' => 'modified summary',
+          'message' => 'moidified full case',
+          'flag_for_disclosure_specialists' => 'no',
+          'reply_method' => 'send_by_post',
+          'email' => 'modified@Moj.com',
+          'postal_address' => 'modified address'
+        },
+        'commit' => 'Submit',
+        'id' => kase.id.to_s
+      }
+    end
+    let(:valid_params_check) {
+      expect(kase.third_party).to be true
+      expect(kase.reply_method).to eq 'send_by_post'
+      expect(kase.subject_type).to eq 'member_of_the_public'
+      expect(kase.subject_full_name).to eq 'modified subject'
+    }
+
+    include_examples 'update case spec'
+  end
+
   describe 'closeable' do
     describe '#edit_closure' do
       context 'SAR case' do

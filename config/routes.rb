@@ -46,23 +46,29 @@ Rails.application.routes.draw do
 
   # Case Create & Case Specific Actions
   scope :cases, module: 'cases' do
-    resources :fois, only: [:new, :create], controller: 'foi', as: :case_foi_standards do
+    resources :fois, except: [:destroy], controller: 'foi', as: :case_foi_standards do
       concerns :closable
     end
 
-    resources :sars, only: [:new, :create], controller: 'sar', as: :case_sar_standards do
+    resources :sars, except: [:destroy], controller: 'sar', as: :case_sar_standards do
       concerns :closable
     end
 
-    resources :icos, only: [:new, :create], controller: 'ico', as: :case_icos do
+    resources :offender_sars, except: [:destroy], controller: 'offender_sar', as: :case_sar_offenders do
+      get 'cancel', on: :collection
+      get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
       concerns :closable
     end
 
-    resources :ico_fois, only: [:new, :create], controller: 'ico_foi', as: :case_ico_fois do
+    resources :icos, except: [:destroy], controller: 'ico', as: :case_icos do
       concerns :closable
     end
 
-    resources :ico_sars, only: [:new, :create], controller: 'ico_sar', as: :case_ico_sars do
+    resources :ico_fois, except: [:destroy], controller: 'ico_foi', as: :case_ico_fois do
+      concerns :closable
+    end
+
+    resources :ico_sars, except: [:destroy], controller: 'ico_sar', as: :case_ico_sars do
       concerns :closable
     end
 
@@ -73,12 +79,6 @@ Rails.application.routes.draw do
 
     resources :overturned_ico_sars, only: [:create], controller: 'overturned_sar', as: :case_overturned_sars do
       get :new, on: :member
-      concerns :closable
-    end
-
-    resources :offender_sars, only: [:new, :create], controller: 'offender_sar', as: :case_sar_offenders do
-      get 'cancel', on: :collection
-      get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
       concerns :closable
     end
 

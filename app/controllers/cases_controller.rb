@@ -95,13 +95,12 @@ class CasesController < ApplicationController
     @case = Case::Base.find(params[:id])
     authorize @case
 
-    #case_params = edit_params(@correspondence_type_key)
     service = CaseUpdaterService.new(current_user, @case, edit_params)
     service.call
 
     if service.result == :error
       @case = @case.decorate
-      # flash[:notice] = t('.case_error')
+      flash[:notice] = t('.case_error')
       render 'cases/edit' and return
     end
 

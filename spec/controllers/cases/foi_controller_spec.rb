@@ -1,4 +1,4 @@
-require "rails_helper"
+require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
 RSpec.describe Cases::FoiController, type: :controller do
@@ -149,6 +149,51 @@ RSpec.describe Cases::FoiController, type: :controller do
         end
       end
     end
+  end
+
+  describe '#update' do
+    let(:correspondence_type_abbr) { 'foi' }
+    let(:kase)  do
+      Timecop.freeze(now) do
+        create :accepted_case,
+          name: 'Original Name',
+          email: 'original_email@moj.com',
+          message: 'Original message',
+          received_date: now.to_date,
+          postal_address: 'Original Postal Address',
+          subject: 'Original subject',
+          requester_type: 'member_of_the_public',
+          delivery_method: 'sent_by_email'
+      end
+    end
+
+    let(:params) do
+      {
+        'correspondence_type'=>'foi',
+        'foi' => {
+          'name' => 'Modified name',
+          'email' => 'modified_email@stephenrichards.eu',
+          'postal_address' => 'modified address',
+          'requester_type' => 'what_do_they_know',
+          'received_date_dd' => '26',
+          'received_date_mm' => '5',
+          'received_date_yyyy' => '2018',
+          'date_draft_compliant_dd' => '28',
+          'date_draft_compliant_mm' => '5',
+          'date_draft_compliant_yyyy' => '2018',
+          'subject' => 'modified subject',
+          'message' => 'modified full request'
+        },
+        'commit' => 'Submit',
+        'id' =>  kase.id.to_s
+      }
+    end
+
+    let(:valid_params_check) {
+      expect(kase.requester_type).to eq 'what_do_they_know'
+    }
+
+    include_examples 'update case spec'
   end
 
   describe 'closeable' do
