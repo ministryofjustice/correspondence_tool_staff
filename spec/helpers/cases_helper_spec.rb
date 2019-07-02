@@ -289,9 +289,12 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       kase = create(:case_being_drafted)
       user = find_or_create(:disclosure_bmt_user)
       result = case_details_links(kase, user)
-      expect(result).to eq link_to('Edit case details',
-                                        "/cases/#{kase.id}/edit",
-                                        class: "secondary-action-link")
+
+      expect(result).to eq link_to(
+        'Edit case details',
+        "/cases/fois/#{kase.id}/edit",
+        class: "secondary-action-link"
+      )
     end
 
     it 'adds a link to edit closure details if permitted' do
@@ -299,13 +302,17 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       user = find_or_create(:disclosure_bmt_user)
       result = case_details_links(kase, user)
 
-      edit_case_link = link_to('Edit case details',
-                               "/cases/#{kase.id}/edit",
-                               class: "secondary-action-link")
+      edit_case_link = link_to(
+        'Edit case details',
+        "/cases/sars/#{kase.id}/edit",
+        class: "secondary-action-link"
+      )
 
-      edit_closure_link = link_to('Edit closure details',
-                                  "/cases/sars/#{kase.id}/edit_closure",
-                                  class: "secondary-action-link")
+      edit_closure_link = link_to(
+        'Edit closure details',
+        "/cases/sars/#{kase.id}/edit_closure",
+        class: "secondary-action-link"
+      )
       expect(result).to eq "#{edit_case_link}#{edit_closure_link}"
     end
   end

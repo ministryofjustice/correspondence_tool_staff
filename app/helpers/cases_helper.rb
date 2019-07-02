@@ -248,9 +248,10 @@ module CasesHelper
     links = ''
     if kase.allow_event?(user, :edit_case)
       links << link_to(t('helpers.links.case_details.edit_case'),
-        edit_case_path(kase),
+        edit_polymorphic_path(kase),
         class: "secondary-action-link")
     end
+
     if kase.allow_event?(user, :update_closure)
       links << link_to(t('helpers.links.case_details.edit_closure'),
         polymorphic_path(kase, action: :edit_closure),
