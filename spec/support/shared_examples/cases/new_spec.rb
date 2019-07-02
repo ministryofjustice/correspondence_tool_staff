@@ -27,5 +27,4 @@ RSpec.shared_examples 'new case spec' do |klass|
     get :new, params: params
     expect(assigns(:case_types)).to eq case_types
   end
-
 end
