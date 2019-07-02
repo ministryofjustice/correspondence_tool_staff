@@ -4,7 +4,7 @@ module PageObjects
       class UploadResponseAndApprovePage < PageObjects::Pages::Base
         include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/upload_response_and_approve'
+        set_url '/cases/{id}/responses/new/upload_response_and_approve'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection,

@@ -4,7 +4,7 @@ module PageObjects
       class ClosePage < SitePrism::Page
         include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/close'
+        set_url '/cases/{correspondence_type}/{id}/close'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 

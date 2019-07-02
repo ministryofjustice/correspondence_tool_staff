@@ -4,7 +4,7 @@ module PageObjects
       class UploadResponseAndReturnForRedraftPage < PageObjects::Pages::Base
         include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/upload_response_and_return_for_redraft'
+        set_url '/cases/{id}/responses/new/upload_response_and_return_for_redraft'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 

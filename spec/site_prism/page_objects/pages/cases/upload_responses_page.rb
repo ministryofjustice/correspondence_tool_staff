@@ -4,7 +4,7 @@ module PageObjects
       class UploadResponsesPage < PageObjects::Pages::Base
         include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/upload_responses'
+        set_url '/cases/{id}/responses/new/upload_responses'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection,

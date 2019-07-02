@@ -4,7 +4,7 @@ module PageObjects
       class ClosureOutcomesPage < SitePrism::Page
         # include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/closure_outcomes'
+        set_url '/cases/{correspondence_type}/{id}/closure_outcomes'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 

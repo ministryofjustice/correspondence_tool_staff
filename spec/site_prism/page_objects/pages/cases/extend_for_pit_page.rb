@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class ExtendForPITPage < SitePrism::Page
-        set_url '/cases/{id}/extend_for_pit'
+        set_url '/cases/{id}/pit_extensions/new'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection,

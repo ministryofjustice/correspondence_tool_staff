@@ -4,7 +4,7 @@ module PageObjects
       class EditPage < PageObjects::Pages::Base
         # This page is just a version of the new page.
 
-        set_url '/cases/{id}/edit'
+        set_url '/cases/{correspondence_type}/{id}/edit'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
