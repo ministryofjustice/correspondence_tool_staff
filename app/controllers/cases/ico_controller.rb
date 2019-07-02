@@ -3,7 +3,7 @@ module Cases
     include ICOCasesParams
     include NewCase
 
-    before_action :set_case, only: [:record_late_team]
+    before_action -> { set_case(params[:id]) }, only: [:record_late_team]
 
     def new
       @correspondence_type_key = 'ico'
@@ -15,7 +15,6 @@ module Cases
       create_case_for_type CorrespondenceType.ico, 'ico'
     end
 
-    # Was cases/new_linked_cases_for
     def new_linked_cases_for
       set_correspondence_type(params.fetch(:correspondence_type))
       @link_type = params[:link_type].strip
@@ -42,7 +41,6 @@ module Cases
       end
     end
 
-    # this action is only used for ICO cases
     def record_late_team
       authorize @case, :can_respond?
       @case.prepare_for_recording_late_team
@@ -53,32 +51,6 @@ module Cases
       else
         @team_collection = CaseTeamCollection.new(@case)
         render '/cases/ico/late_team'
-      end
-    end
-
-    # TODO: MOVE TO NEW CONTROLLER
-    # The new action for overturned ICO cases is a separate action because it is a bit different
-    #
-    # from the other case types:
-    #
-    #   - it takes parameter (the id of the ICO appeal from which it is to be created)
-    #
-    # We can consider merging it back in to the generalised new, and having logic there to work out what to do
-    # and what page to show, but am leaving it for now.
-    #
-    def new_overturned_ico
-      overturned_case_class = determine_overturned_ico_class(params[:id])
-      authorize overturned_case_class
-      service = NewOverturnedIcoCaseService.new(params[:id])
-      service.call
-      if service.error?
-        @case = service.original_ico_appeal.decorate
-        render :show, :status => :bad_request
-      else
-        @case = service.overturned_ico_case.decorate
-        @original_ico_appeal = service.original_ico_appeal
-        set_correspondence_type(overturned_case_class.type_abbreviation.downcase)
-        render :new
       end
     end
 
@@ -123,6 +95,5 @@ module Cases
         raise '#record_late_team_params only valid for ICO cases'
       end
     end
-
   end
 end
