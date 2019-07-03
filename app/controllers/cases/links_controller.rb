@@ -12,7 +12,7 @@ module Cases
     def create
       authorize @case, :new_case_link?
 
-      link_case_number = params[:case][:original_case_number]
+      link_case_number = params[:case][:id]
       service = CaseLinkingService.new current_user, @case, link_case_number
       result = service.create
 
