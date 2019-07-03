@@ -4,7 +4,7 @@
 #   let(:offender_sar_case) { create(:offender_sar_case) }
 
 #   it 'instantiates the correct decorator' do
-#     expect(Case::SAR.new.decorate).to be_instance_of Case::SARDecorator
+#     expect(Case::SAR::Standard.new.decorate).to be_instance_of Case::SARDecorator
 #   end
 
 #   it 'formats the requester type' do

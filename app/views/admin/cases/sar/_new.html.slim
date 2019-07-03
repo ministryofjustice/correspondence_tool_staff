@@ -4,7 +4,7 @@
 
 = form_for @case, as: 'case_sar', url: admin_cases_path do |f|
   = hidden_field_tag 'correspondence_type', @correspondence_type_key
-  = f.hidden_field :type, value: 'Case::SAR'
+  = f.hidden_field :type, value: 'Case::SAR::Standard'
 
   section
     header
@@ -13,7 +13,7 @@
     = f.text_field :subject_full_name
 
     = f.radio_button_fieldset :subject_type,
-                              choices: Case::SAR::subject_types.keys
+                              choices: Case::SAR::Standard.subject_types.keys
 
     #third-party
       = f.radio_button_fieldset(:third_party) do |fieldset|
