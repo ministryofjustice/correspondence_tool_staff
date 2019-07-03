@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Cases::OverturnedSarController, type: :controller do
+RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
   let(:manager) { find_or_create :disclosure_specialist_bmt }
   let(:approver) { create :approver }
   let(:sar) { create :sar_case }
@@ -173,7 +173,7 @@ RSpec.describe Cases::OverturnedSarController, type: :controller do
       before(:each) do
         expect(service).to receive(:result).and_return(:assign_responder)
         expect(service).to receive(:message).and_return('Case successfully created')
-        expect(controller).to be_a Cases::OverturnedSarController
+        expect(controller).to be_a Cases::OverturnedIcoSarController
         post :create, params: ico_overturned_sar_params
       end
 
@@ -294,7 +294,6 @@ RSpec.describe Cases::OverturnedSarController, type: :controller do
       context 'processing' do
         before(:each)   do
           sign_in @responder
-
         end
 
         it 'redirects to cases show page' do

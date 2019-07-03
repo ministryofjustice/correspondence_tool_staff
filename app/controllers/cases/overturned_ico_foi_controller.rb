@@ -1,5 +1,5 @@
 module Cases
-  class OverturnedFoiController < CasesController
+  class OverturnedIcoFoiController < CasesController
     include FOICasesParams
     include OverturnedICOParams
     include OverturnedCase

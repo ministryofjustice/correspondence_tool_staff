@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Cases::OverturnedFoiController, type: :controller do
+RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
   describe '#new' do
     let(:manager) { create :manager }
 
