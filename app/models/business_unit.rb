@@ -110,6 +110,10 @@ class BusinessUnit < Team
     code == Settings.foi_cases.default_managing_team
   end
 
+  def self.dacu_branston
+    find_by!(code: Settings.offender_sar_cases.default_managing_team)
+  end
+
   def self.press_office
     find_by!(code: Settings.press_office_team_code)
   end
