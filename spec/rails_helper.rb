@@ -198,6 +198,7 @@ def seed_database_for_tests
   FactoryBot.find_or_create :sar_correspondence_type
   FactoryBot.find_or_create :offender_sar_correspondence_type
   FactoryBot.find_or_create :team_dacu
+  FactoryBot.find_or_create :team_branston
   FactoryBot.find_or_create :ico_correspondence_type
   FactoryBot.find_or_create :overturned_sar_correspondence_type
   FactoryBot.find_or_create :overturned_foi_correspondence_type
