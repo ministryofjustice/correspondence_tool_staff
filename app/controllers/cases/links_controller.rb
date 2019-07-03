@@ -12,7 +12,7 @@ module Cases
     def create
       authorize @case, :new_case_link?
 
-      link_case_number = params[:case][:id]
+      link_case_number = params[:case][:original_case_number]
       service = CaseLinkingService.new current_user, @case, link_case_number
       result = service.create
 
@@ -32,7 +32,7 @@ module Cases
     def destroy
       authorize @case, :new_case_link?
 
-      linked_case_number = params[:id]
+      linked_case_number = params[:id] # Note :id is a valid case number
       service = CaseLinkingService.new current_user, @case, linked_case_number
       result = service.destroy
 
