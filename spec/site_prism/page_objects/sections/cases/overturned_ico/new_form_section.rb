@@ -27,7 +27,7 @@ module PageObjects
           end
 
           def choose_flag_for_disclosure_specialists(choice = 'yes', case_type: 'foi')
-            make_radio_button_choice("case_overturned_#{case_type}_flag_for_disclosure_specialists_#{choice}")
+            make_radio_button_choice("overturned_#{case_type}_flag_for_disclosure_specialists_#{choice}")
           end
 
           def make_radio_button_choice(choice_id)

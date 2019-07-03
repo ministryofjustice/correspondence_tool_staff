@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe 'cases/upload_response_and_approve.html.slim', type: :view do
+describe 'cases/responses/upload_response_and_approve.html.slim', type: :view do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:kase) { create :pending_dacu_clearance_case }
 
@@ -23,14 +23,14 @@ describe 'cases/upload_response_and_approve.html.slim', type: :view do
     page = render_page
 
     expect(page.upload_response_form[:action])
-      .to eq upload_response_and_approve_case_path(id: kase.id)
+      .to eq new_case_responses_path(kase, response_action: :upload_response_and_approve)
   end
 
   it 'displays the uploader' do
     page = render_page
 
     expect(page).to have_dropzone_container
-    expect(response).to have_rendered('cases/_response_upload_form')
+    expect(response).to have_rendered('_response_upload_form')
   end
 
   context 'trigger foi case' do
@@ -40,7 +40,7 @@ describe 'cases/upload_response_and_approve.html.slim', type: :view do
       page = render_page
 
       expect(page).not_to have_bypass_press_option
-      expect(response).not_to have_rendered('cases/_bypass_approvals_form')
+      expect(response).not_to have_rendered('cases/shared/_bypass_approvals_form')
     end
   end
 
@@ -51,7 +51,7 @@ describe 'cases/upload_response_and_approve.html.slim', type: :view do
       page = render_page
 
       expect(page).to have_bypass_press_option
-      expect(response).to have_rendered('cases/_bypass_approvals_form')
+      expect(response).to have_rendered('cases/shared/_bypass_approvals_form')
     end
   end
 

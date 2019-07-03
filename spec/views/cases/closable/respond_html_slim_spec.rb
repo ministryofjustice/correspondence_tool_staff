@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 
-describe 'cases/respond.html.slim', type: :view do
+describe 'cases/closable/respond.html.slim', type: :view do
 
   let(:foi_case)         { build_stubbed(:case_with_response).decorate }
   let(:ico_case)         { build_stubbed(:approved_ico_foi_case).decorate }

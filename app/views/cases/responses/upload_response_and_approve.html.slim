@@ -12,7 +12,7 @@
 
 = render partial: 'layouts/header'
 
-= form_tag upload_response_and_approve_case_path(@case), method: :patch do
+= form_tag new_case_responses_path(@case, response_action: :upload_response_and_approve), method: :patch do
   = render partial: 'response_upload_form',
            locals: { kase: @case,
                      s3_direct_post: @s3_direct_post }
@@ -20,7 +20,7 @@
   - if @case.allow_event?(current_user, :upload_response_approve_and_bypass)
     .grid-row
       .column-two-thirds
-        = render partial: 'shared/bypass_approvals_form'
+        = render partial: 'cases/shared/bypass_approvals_form'
 
   .actions
     = submit_tag t('.upload_response'), class: 'button'

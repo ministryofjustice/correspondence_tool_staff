@@ -29,8 +29,8 @@ module PageObjects
         end
 
         section :ico_decision, '.ico-decision' do
-          element :upheld, 'input#case_ico_ico_decision_upheld', visible: false
-          element :overturned, 'input#case_ico_ico_decision_overturned', visible: false
+          element :upheld, 'input#ico_decision_upheld', visible: false
+          element :overturned, 'input#ico_decision_overturned', visible: false
         end
 
         section :is_info_held, '.js-info-held-status' do

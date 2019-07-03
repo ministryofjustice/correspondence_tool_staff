@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe 'cases/upload_response_and_return_for_redraft.html.slim', type: :view do
+describe 'cases/responses/upload_response_and_return_for_redraft.html.slim', type: :view do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:kase) { create :pending_dacu_clearance_case }
 
@@ -23,7 +23,7 @@ describe 'cases/upload_response_and_return_for_redraft.html.slim', type: :view d
     page = render_page
 
     expect(page).to have_dropzone_container
-    expect(response).to have_rendered('cases/_response_upload_form')
+    expect(response).to have_rendered('_response_upload_form')
   end
 
   it 'displays radio buttons for draft compliance' do

@@ -1,5 +1,5 @@
-- url = defined?(form_url) ? form_url : process_closure_case_path(id: @case.id)
-= form_for kase, as: :case_ico, url: url do |f|
+- url = defined?(form_url) ? form_url : polymorphic_path(@case, action: :process_closure)
+= form_for kase, as: :ico, url: url do |f|
 
   .ico-decision
     = f.radio_button_fieldset :ico_decision,

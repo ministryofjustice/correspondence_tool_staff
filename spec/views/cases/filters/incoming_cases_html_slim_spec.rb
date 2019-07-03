@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'capybara/dsl'
 
-describe 'cases/incoming_cases.html.slim', type: :view do
+describe 'cases/filters/incoming.html.slim', type: :view do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let(:case1) { create(:assigned_case, :flagged,

@@ -1,4 +1,4 @@
-= form_for @case, as: "case_#{@correspondence_type_key}",
+= form_for @case, as: "#{@correspondence_type_key}",
                   url: case_path(@case) do |f|
 
   = hidden_field_tag 'correspondence_type', @correspondence_type_key

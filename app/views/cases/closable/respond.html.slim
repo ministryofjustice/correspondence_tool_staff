@@ -17,7 +17,7 @@
 = render partial: 'layouts/header'
 
 .form-group
-  = form_for @case, as: "case_#{@correspondence_type_key}",
+  = form_for @case, as: "#{@correspondence_type_key}",
                     url: polymorphic_path(@case, action: :confirm_respond) do |f|
 
     .form-group

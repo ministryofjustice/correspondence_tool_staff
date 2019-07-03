@@ -5,7 +5,7 @@ module PageObjects
         class SARPage < PageObjects::Pages::Base
           include SitePrism::Support::DropInDropzone
 
-          set_url '/case_sars/new'
+          set_url '/cases/sars/new'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -13,20 +13,20 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          element :subject_full_name, '#case_sar_subject_full_name'
+          element :subject_full_name, '#sar_subject_full_name'
           element :subject_type, :xpath,
                   '//fieldset[contains(.,"Who is the person the information is being requested about?")]'
           element :third_party, :xpath,
                   "//fieldset[contains(.,\"being requested on someone's behalf\")]"
-          element :requester_full_name, '#case_sar_name'
-          element :third_party_relationship, '#case_sar_third_party_relationship'
+          element :requester_full_name, '#sar_name'
+          element :third_party_relationship, '#sar_third_party_relationship'
 
-          element :date_received_day, '#case_sar_received_date_dd'
-          element :date_received_month, '#case_sar_received_date_mm'
-          element :date_received_year, '#case_sar_received_date_yyyy'
+          element :date_received_day, '#sar_received_date_dd'
+          element :date_received_month, '#sar_received_date_mm'
+          element :date_received_year, '#sar_received_date_yyyy'
 
-          element :subject, '#case_sar_subject'
-          element :full_request, '#case_sar_message'
+          element :subject, '#sar_subject'
+          element :full_request, '#sar_message'
           element :dropzone_container, '.dropzone'
 
           # only shows up when using drop_in_dropzone
@@ -34,8 +34,8 @@ module PageObjects
 
           element :reply_method, :xpath,
                   '//fieldset[contains(.,"Where the information should be sent")]'
-          element :email, '#case_sar_email'
-          element :postal_address, '#case_sar_postal_address'
+          element :email, '#sar_email'
+          element :postal_address, '#sar_postal_address'
 
           element :flag_for_disclosure_specialists, :xpath,
                   '//fieldset[contains(.,"Flag for disclosure specialist")]'
@@ -83,7 +83,7 @@ module PageObjects
           end
 
           def choose_flag_for_disclosure_specialists(choice = 'yes')
-            make_radio_button_choice("case_sar_flag_for_disclosure_specialists_#{choice}")
+            make_radio_button_choice("sar_flag_for_disclosure_specialists_#{choice}")
           end
         end
       end

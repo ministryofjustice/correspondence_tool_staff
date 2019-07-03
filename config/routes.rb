@@ -63,23 +63,23 @@ Rails.application.routes.draw do
       overturned_ico_sar: 'overturned_ico_sar', # views are in /overturned_sar
     }
 
+    # Standard routes, note use of `resources` and singular custom named routes
+    only = [:index, :new, :edit, :update]
+
     correspondence_type_resources.each do |resource, model_name|
-      resources resource.to_s.pluralize, only: [], controller: resource, as: "case_#{model_name}" do
+      resources resource.to_s.pluralize, only: only, controller: resource, as: "case_#{model_name}" do
         concerns :closable_actions
       end
 
       # These are actions primarily used via AJAX hence this additional routing
-      resource resource.to_s.pluralize, only: [], controller: resource, as: "case_#{model_name}" do
+      resource resource.to_s.pluralize, only: [:create], controller: resource, as: "case_#{model_name}" do
         concerns :closable_behaviours
       end
     end
 
 
-    # Standard routes, note use of `resources` and singular custom named routes
-    only = [:new, :create, :edit, :update]
-
-    resources :fois, only: only, controller: 'foi', as: :case_foi_standard
-    resources :sars, only: only, controller: 'sar', as: :case_sar_standard
+    #resources :fois, only: only, controller: 'foi', as: :case_foi_standard
+    #resources :sars, only: only, controller: 'sar', as: :case_sar_standard
 
     resources :offender_sars, only: only, controller: 'offender_sar', as: :case_sar_offender do
       get 'cancel', on: :collection
@@ -92,14 +92,14 @@ Rails.application.routes.draw do
       patch 'record_late_team', on: :member, to: 'ico#record_late_team'
     end
 
-    resources :ico_fois, only: only, controller: 'ico_foi', as: :case_ico_foi
-    resources :ico_sars, only: only, controller: 'ico_sar', as: :case_ico_sar
+    #resources :ico_fois, only: only, controller: 'ico_foi', as: :case_ico_foi
+    #resources :ico_sars, only: only, controller: 'ico_sar', as: :case_ico_sar
 
-    resources :overturned_ico_fois, only: [:create], controller: 'overturned_ico_foi', as: :case_overturned_ico_foi do
+    resources :overturned_ico_fois, only: [:create], controller: 'overturned_ico_foi', as: :case_overturned_ico_fois do
       get :new, on: :member
     end
 
-    resources :overturned_ico_sars, only: [:create], controller: 'overturned_ico_sar', as: :case_overturned_ico_sar do
+    resources :overturned_ico_sars, only: [:create], controller: 'overturned_ico_sar', as: :case_overturned_ico_sars do
       get :new, on: :member
     end
   end
@@ -128,7 +128,7 @@ Rails.application.routes.draw do
 
   # Case Behaviours
   resources :cases, module: 'cases' do
-    resources :links, except: [:index, :edit, :update]
+    resources :links, except: [:show, :index, :edit, :update]
 
     resources :pit_extensions, only: [:new, :create]
     resource :pit_extensions, only: [:destroy]

@@ -5,7 +5,7 @@
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 - content_for :heading
-  = t('.heading')
+  = t('cases.request_amends.heading')
 
 - content_for :sub_heading
   span.visually-hidden
@@ -19,7 +19,7 @@
   = render partial: 'cases/clearance_copy',
           locals: { nsi: @next_step_info }
 
-= form_for @case, as: :case, url: execute_request_amends_case_path(@case), method: :post do |f|
+= form_for @case, as: :case, url: case_amendments_path(@case), method: :post do |f|
 
   = f.radio_button_fieldset :draft_compliant
 

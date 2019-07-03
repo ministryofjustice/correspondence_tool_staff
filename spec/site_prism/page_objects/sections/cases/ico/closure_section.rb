@@ -7,10 +7,10 @@ module PageObjects
           include SitePrism::Support::DropInDropzone
 
           section :ico_decision, '.ico-decision' do
-            element :overturned, '#case_ico_ico_decision_overturned'
-            element :overturned_label, 'label[for="case_ico_ico_decision_overturned"]'
-            element :upheld, '#case_ico_ico_decision_upheld'
-            element :upheld_label, 'label[for="case_ico_ico_decision_upheld"]'
+            element :overturned, '#ico_ico_decision_overturned'
+            element :overturned_label, 'label[for="ico_ico_decision_overturned"]'
+            element :upheld, '#ico_ico_decision_upheld'
+            element :upheld_label, 'label[for="ico_ico_decision_upheld"]'
           end
 
           element :date_ico_decision_received_day, :case_form_element, 'date_ico_decision_received_dd'
@@ -33,7 +33,7 @@ module PageObjects
           # Upload a file to Dropzone.js
           def drop_in_dropzone(file_path)
             super file_path: file_path,
-                  input_name: 'case_ico[uploaded_ico_decision_files][]',
+                  input_name: 'ico[uploaded_ico_decision_files][]',
                   container_selector: '.dropzone:first'
           end
         end

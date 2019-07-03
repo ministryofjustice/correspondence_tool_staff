@@ -1,5 +1,4 @@
-
-= form_for kase.object, as: :sar do |f|
+= form_for kase.object, as: :sar, url: case_create_action(kase.object)  do |f|
   = render partial: 'cases/sar/new_form_common', locals: { f: f, dropzone: true, kase: kase }
 
   - if FeatureSet.trigger_sars.enabled?

@@ -47,8 +47,7 @@ module CasesHelper
               class: 'button'
     when :create_overturned
       link_to t('common.case.create_overturned'),
-              @case.original_case_type == 'FOI' ? new_overturned_ico_case_overturned_ico_foi_path(@case)
-                : new_overturned_ico_case_overturned_ico_sar_path(@case),
+              new_overturned_ico_case_ico_path(@case),
               id: 'action--create-overturned',
               class: 'button'
     when :respond
@@ -79,12 +78,12 @@ module CasesHelper
               class: 'button'
     when :upload_response_and_approve
       link_to t('common.case.upload_approve'),
-              new_case_responses_path(@case,response_action: :upload_response_and_approve),
+              new_case_responses_path(@case, response_action: :upload_response_and_approve),
               id: 'action--upload-approve',
               class: 'button'
     when :upload_response_and_return_for_redraft
       link_to t('common.case.upload_and_redraft'),
-              new_case_responses_path(@case,response_action: :upload_response_and_return_for_redraft),
+              new_case_responses_path(@case, response_action: :upload_response_and_return_for_redraft),
               id: 'action--upload-redraft',
               class: 'button'
     when :close, :respond_and_close
@@ -104,7 +103,7 @@ module CasesHelper
               class: 'button-secondary'
     when :remove_sar_deadline_extension
       link_to I18n.t('common.case.remove_sar_deadline_extension'),
-              case_sar_extension_path(@case),
+              case_sar_extensions_path(@case),
               id: 'action--remove-extended-deadline-for-sar',
               class: 'button-secondary', method: :delete
     end
@@ -279,5 +278,9 @@ module CasesHelper
     # it is an "old style" closure, i.e. it was closed before we implemented the new
     # outcomes, info_held statuses, refusal reasons, etc
     user.manager? && kase.closed? && !kase.allow_event?(user, :update_closure)
+  end
+
+  def case_create_action(kase)
+    self.send("#{kase.model_name.singular}_index_path")
   end
 end

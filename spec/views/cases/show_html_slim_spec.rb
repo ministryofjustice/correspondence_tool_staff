@@ -274,7 +274,7 @@ describe 'cases/show.html.slim', type: :view do
 
         it 'links to the path for upload_responses' do
           expect(subject.upload_response['href'])
-            .to eq upload_responses_case_path(id: kase.id)
+            .to eq new_case_responses_path(kase, response_action: :upload_responses)
         end
       end
 
@@ -304,7 +304,7 @@ describe 'cases/show.html.slim', type: :view do
 
         it 'links to the path for upload_responses' do
           expect(subject.upload_approve['href'])
-            .to eq upload_response_and_approve_case_path(id: kase.id)
+            .to eq new_case_responses_path(kase, response_action: :upload_response_and_approve)
         end
       end
 
@@ -334,7 +334,7 @@ describe 'cases/show.html.slim', type: :view do
 
         it 'links to the path for upload_responses' do
           expect(subject.upload_redraft['href'])
-            .to eq upload_response_and_return_for_redraft_case_path(id: kase.id)
+            .to eq new_case_responses_path(kase, response_action: :upload_response_and_return_for_redraft)
         end
       end
 

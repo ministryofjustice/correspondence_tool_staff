@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'cases/search.html.slim', type: :view do
+describe 'cases/searches/show.html.slim', type: :view do
   def allow_case_policy(policy_name)
     policy = double('Pundit::Policy', policy_name => true)
     allow(view).to receive(:policy).with(:case).and_return(policy)

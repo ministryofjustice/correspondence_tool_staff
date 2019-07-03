@@ -4,7 +4,7 @@ module PageObjects
       module New
         class OffenderSARPageSubjectDetails < PageObjects::Pages::Base
 
-          set_url '/cases/new/offender'
+          set_url '/cases/offender_sar/new'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -12,7 +12,7 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          element :subject_full_name, '#case_sar_subject_full_name'
+          element :subject_full_name, '#offender_sar_subject_full_name'
 
           element :submit_button, '.button'
 
@@ -28,12 +28,6 @@ module PageObjects
             choose('offender_sar_case_form_subject_type_offender', visible: false)
             choose('offender_sar_case_form_flag_for_disclosure_specialists_no', visible: false)
           end
-
-          # def set_received_date(received_date)
-          #   date_received_day.set(received_date.day)
-          #   date_received_month.set(received_date.month)
-          #   date_received_year.set(received_date.year)
-          # end
         end
       end
     end

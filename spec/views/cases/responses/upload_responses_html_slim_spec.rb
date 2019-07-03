@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'cases/upload_responses.html.slim', type: :view do
+describe 'cases/responses/upload_responses.html.slim', type: :view do
 
   let(:drafting_case)         { build_stubbed(:accepted_case, :taken_on_by_press).decorate }
   let(:pending_clearance_case){ build_stubbed(:approved_ico_foi_case).decorate }

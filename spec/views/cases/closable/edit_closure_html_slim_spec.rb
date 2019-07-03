@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe 'cases/edit_closure.html.slim' do
+describe 'cases/closable/edit_closure.html.slim' do
   context 'with a SAR case' do
     let(:closed_sar) { create :closed_sar }
 
@@ -12,7 +12,7 @@ describe 'cases/edit_closure.html.slim' do
               partial: 'cases/sar/close_form',
               locals: {
                 kase: closed_sar,
-                form_url: update_closure_case_path(id: closed_sar.id),
+                form_url: polymorphic_path(closed_sar, action: :update_closure),
                 submit_button: 'Save changes'
               }
             )

@@ -4,7 +4,7 @@ module PageObjects
       module New
         class OffenderSARPageDateReceived < PageObjects::Pages::Base
 
-          set_url '/cases/new/offender/date-received'
+          set_url '/cases/offender_sars/new/date-received'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -12,7 +12,7 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          element :subject_full_name, '#case_sar_subject_full_name'
+          element :subject_full_name, '#offender_sar_subject_full_name'
 
           element :submit_button, '.button'
 
