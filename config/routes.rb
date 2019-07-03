@@ -122,7 +122,7 @@ Rails.application.routes.draw do
   end
 
   # Case Actions (general)
-  resources :cases, only: [:show, :destroy] do
+  resources :cases, only: [:new, :show, :destroy] do
     get :confirm_destroy, on: :member
   end
 
