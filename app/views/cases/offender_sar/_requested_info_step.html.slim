@@ -1,6 +1,6 @@
 h1 What information is being requested?
 
-= form_for @case, url: case_sar_offenders_path, as: :offender_sar do |f|
+= form_for @case, url: case_create_action(@case.object), as: :offender_sar do |f|
 
   = f.text_area :message, {rows: 12}
 

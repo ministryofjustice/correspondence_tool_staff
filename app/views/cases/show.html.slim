@@ -30,8 +30,8 @@ div id="case-#{@correspondence_type_key}" class="case"
           = action_button_for(:respond)
 
         - if policy(@case).can_accept_or_reject_approver_assignment?
-          = render partial: 'shared/take_case_on_or_de_escalate',
-            locals: { case_details: @case }        
+          = render partial: 'cases/shared/take_case_on_or_de_escalate',
+            locals: { case_details: @case }
 
         - permitted_events = @permitted_events - [:add_responses, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
         - if @case.type_abbreviation.in? %w( SAR OVERTURNED_SAR )
@@ -48,7 +48,7 @@ div id="case-#{@correspondence_type_key}" class="case"
       - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
         - if policy(@case).destroy_case?
           = action_button_for_destroy_case(@case)
-          
+
         - action_button_for(:progress_for_clearance)
 
   section.case-info
@@ -82,4 +82,4 @@ div id="case-#{@correspondence_type_key}" class="case"
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
   = render partial: 'shared/components/case_page_original_case_details'
-    
+

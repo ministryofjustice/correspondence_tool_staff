@@ -12,7 +12,9 @@
 
 = render partial: 'layouts/header'
 
-= form_tag new_case_responses_path(@case, response_action: :upload_response_and_return_for_redraft), method: :patch do
+= form_tag case_responses_path(@case), method: :post do
+  = hidden_field_tag 'response_action', @action
+
   .form-group
     = render partial: 'response_upload_form',
              locals: { kase: @case,

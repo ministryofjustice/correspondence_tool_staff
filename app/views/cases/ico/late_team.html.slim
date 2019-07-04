@@ -19,7 +19,6 @@ span.visually-hidden
 = render partial: 'layouts/header'
 
 div class="case-#{@case.type_abbreviation.downcase}"
-
   = form_for @case, as: "#{@case.type_abbreviation.downcase}", url: record_late_team_case_ico_path do |f|
 
     = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}

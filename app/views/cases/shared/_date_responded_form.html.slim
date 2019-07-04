@@ -2,12 +2,12 @@
   .column-full
     = render partial: 'cases/case_attachments', locals: { case_details: @case }
 
-- url = defined?(form_url) ? form_url : polymorphic_path(@case, action: :process_date_responded)
+- url = defined?(form_url) ? form_url : "#{polymorphic_path(@case, action: :process_date_responded)}"
 
 = form_for @case, as: :"#{@correspondence_type_key}", url: url do |f|
   .form-group
     - unless @case.ico?
-      = f.gov_uk_date_field :date_responded, { legend_text: t('cases.sahred.date_responded_form.close_date'),
+      = f.gov_uk_date_field :date_responded, { legend_text: t('cases.shared.date_responded_form.close_date'),
               form_hint_text: t('cases.shared.date_responded_form.date_example'),
               today_button: {class: ''} }
     - else
