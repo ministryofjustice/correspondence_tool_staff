@@ -32,11 +32,7 @@ Rails.application.routes.draw do
       get :closure_outcomes
       get :respond_and_close
       get :respond
-    end
-  end
 
-  concern :closable_behaviours do
-    collection do
       patch :process_closure
       patch :update_closure
       patch :process_respond_and_close
@@ -71,15 +67,8 @@ Rails.application.routes.draw do
         concerns :closable_actions
       end
 
-      # These are actions primarily used via AJAX hence this additional routing
-      resource resource.to_s.pluralize, only: [:create], controller: resource, as: "case_#{model_name}" do
-        concerns :closable_behaviours
-      end
+      resource resource.to_s.pluralize, only: [:create], controller: resource, as: "case_#{model_name}"
     end
-
-
-    #resources :fois, only: only, controller: 'foi', as: :case_foi_standard
-    #resources :sars, only: only, controller: 'sar', as: :case_sar_standard
 
     resources :offender_sars, only: only, controller: 'offender_sar', as: :case_sar_offender do
       get 'cancel', on: :collection
@@ -87,20 +76,20 @@ Rails.application.routes.draw do
     end
 
     resources :icos, only: only, controller: 'ico', as: :case_ico do
-      get 'new_overturned_ico', on: :member, to: 'ico#new_overturned_ico'
       get 'new_linked_cases_for', on: :collection, to: 'ico#new_linked_cases_for'
       patch 'record_late_team', on: :member, to: 'ico#record_late_team'
     end
 
-    #resources :ico_fois, only: only, controller: 'ico_foi', as: :case_ico_foi
-    #resources :ico_sars, only: only, controller: 'ico_sar', as: :case_ico_sar
-
     resources :overturned_ico_fois, only: [:create], controller: 'overturned_ico_foi', as: :case_overturned_ico_fois do
-      get :new, on: :member
+      get 'new/:id', as: 'new', to: 'overturned_ico_foi#new', on: :collection
     end
 
     resources :overturned_ico_sars, only: [:create], controller: 'overturned_ico_sar', as: :case_overturned_ico_sars do
-      get :new, on: :member
+      get 'new/:id', as: 'new', to: 'overturned_ico_sar#new', on: :collection
+    end
+
+    resources 'foi_compliance_review', only: [], controller: 'foi', as: :case_foi_compliance_review do
+      concerns :closable_actions
     end
   end
 
