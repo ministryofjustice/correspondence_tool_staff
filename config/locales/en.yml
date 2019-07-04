@@ -184,6 +184,7 @@ en:
       show?: You are not authorised to view this case.
       unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
       update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
       upload_responses?: You are not authorised to upload a response for this case.
     case/ico/foi_policy:
       <<: *case_policy
@@ -688,6 +689,8 @@ en:
 
       case_updated: Case updated
     filters:
+      index:
+        <<: *cases_list
       closed:
         heading: Closed cases
         number: Case number
@@ -802,11 +805,12 @@ en:
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{num_days} days.
-    search:
-      heading: Search
-      external_deadline_from: From
-      external_deadline_to: To
-      external_deadline_hint: For example. 31 01 2017
+    searches:
+      show:
+        heading: Search
+        external_deadline_from: From
+        external_deadline_to: To
+        external_deadline_hint: For example. 31 01 2017
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'

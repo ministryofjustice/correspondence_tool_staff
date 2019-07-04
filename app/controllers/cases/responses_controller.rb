@@ -47,7 +47,7 @@ module Cases
       authorize @case, @settings[:policy]
 
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
-      @approval_action = @settings[:approval_action]
+      @approval_action = @settings[:approval_action] # @todo: Unused value?
       @case = @case.decorate
 
       render @action

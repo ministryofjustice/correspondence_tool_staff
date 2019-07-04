@@ -157,7 +157,7 @@ module Closable
 
     case service.result
     when :ok
-      flash[:notice] = t('.success')
+      flash[:notice] = t('cases.confirm_respond.success')
       redirect_to case_path(@case)
     when :late
       @team_collection = CaseTeamCollection.new(@case)
