@@ -29,7 +29,7 @@ describe 'cases/edit.html.slim', type: :view do
       expect(page.foi_detail.date_received_month.value).to eq '8'
       expect(page.foi_detail.date_received_year.value).to eq '2016'
 
-      expect(page.foi_detail.form['action']).to match(/^\/cases\/\d+$/)
+      expect(page.foi_detail.form['action']).to match(/^\/cases\/fois\/\d+$/)
 
       expect(page.foi_detail.subject.value).to eq 'Ferrets'
       expect(page.foi_detail.full_request.value).to eq 'Can I keep a ferret in jail'

@@ -8,6 +8,7 @@ describe 'cases/responses/upload_response_and_approve.html.slim', type: :view do
     login_as disclosure_specialist
 
     assign(:case, kase.decorate)
+    assign(:action, 'upload_response_and_approve')
     assign(:s3_direct_post,
            S3Uploader.s3_direct_post_for_case(kase, :response))
   end
@@ -23,7 +24,9 @@ describe 'cases/responses/upload_response_and_approve.html.slim', type: :view do
     page = render_page
 
     expect(page.upload_response_form[:action])
-      .to eq new_case_responses_path(kase, response_action: :upload_response_and_approve)
+      .to eq case_responses_path(kase)
+    expect(page.response_action(visible: false).value)
+      .to eq 'upload_response_and_approve'
   end
 
   it 'displays the uploader' do

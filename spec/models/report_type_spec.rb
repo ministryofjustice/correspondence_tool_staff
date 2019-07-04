@@ -17,15 +17,13 @@
 require 'rails_helper'
 
 RSpec.describe ReportType, type: :model do
+  before(:each) do
+    ReportType.destroy_all
+  end
 
   it { should have_many(:reports) }
 
   describe 'custom scope' do
-
-    before do
-      ReportType.destroy_all
-    end
-
     it 'returns only closed cases in most recently closed first' do
       create :report_type
       custom_report_1 = create :report_type, custom_report: true
@@ -35,11 +33,6 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'standard scope' do
-
-    before do
-      ReportType.destroy_all
-    end
-
     it 'returns only closed cases in most recently closed first' do
       create :report_type
       custom_report_1 = create :report_type, standard_report: true
@@ -49,11 +42,6 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'foi scope' do
-
-    before do
-      ReportType.destroy_all
-    end
-
     it 'returns only reports associated with fois' do
       create :report_type
       custom_report_1 = create :report_type, foi: true
@@ -65,11 +53,6 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'sar scope' do
-
-    before do
-      ReportType.destroy_all
-    end
-
     it 'returns only reports associated with sars' do
       create :report_type
       custom_report_1 = create :report_type, sar: true

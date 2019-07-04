@@ -14,6 +14,10 @@
 require 'rails_helper'
 
 RSpec.describe Report, type: :model do
+  before do
+    ReportType.destroy_all
+  end
+
   let!(:r003_report_type) { find_or_create(:report_type, :r003) }
 
   describe 'report_type_id' do

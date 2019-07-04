@@ -40,7 +40,7 @@ describe Case::ICO::SAR do
 
   describe '#original_case_type' do
     subject { kase.original_case_type }
-    it { should eq 'SAR::Standard' }
+    it { should eq 'SAR' }
   end
 
   describe '#has_overturn? and #lacks?' do

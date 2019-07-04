@@ -54,7 +54,7 @@ describe 'cases/edit.html.slim', type: :view do
     expect(page.form.date_draft_compliant_month.value).to eq kase.date_draft_compliant.month.to_s
     expect(page.form.date_draft_compliant_year.value).to eq kase.date_draft_compliant.year.to_s
 
-    expect(page.form.root_element['action']).to match(/^\/cases\/\d+$/)
+    expect(page.form.root_element['action']).to match(/^\/cases\/icos\/\d+$/)
     expect(page.form.case_details.value).to eq kase.message
 
     expect(page.form).to have_submit_button

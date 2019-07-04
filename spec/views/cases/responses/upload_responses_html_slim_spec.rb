@@ -7,6 +7,7 @@ describe 'cases/responses/upload_responses.html.slim', type: :view do
 
   it 'displays the uploader' do
     assign(:case, drafting_case)
+    assign(:action, 'upload_responses')
     assign(:s3_direct_post, S3Uploader.s3_direct_post_for_case(drafting_case, :response))
     params[:mode] = 'upload'
     render
@@ -15,6 +16,7 @@ describe 'cases/responses/upload_responses.html.slim', type: :view do
 
     page = cases_upload_responses_page
 
-    expect(page.upload_response_button.value).to eq "Upload response"
+    expect(page.upload_response_button.value).to eq 'Upload response'
+    expect(page.response_action(visible: false).value).to eq 'upload_responses'
   end
 end

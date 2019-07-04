@@ -10,6 +10,7 @@ def create_foi_case_step(type: 'standard',
   expect(cases_new_page).to be_displayed
 
   cases_new_page.create_link_for_correspondence('FOI').click
+  # @todo: unsure why this fails
   expect(cases_new_foi_page).to be_displayed
 
   # cases_new_foi_page.fill_in_case_type(type)
@@ -71,10 +72,9 @@ def create_sar_case_step(params={})
   )
   click_button 'Create case'
 
-  expect(assignments_new_page).to be_displayed
-
-  # Return the case we created using the params of the current  path
+  # Return the case we created using the params of the current path
   kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
+  expect(assignments_new_page).to be_displayed(case_id: kase_id)
   Case::Base.find(kase_id)
 end
 
@@ -91,29 +91,30 @@ def create_offender_sar_case_step(params = {})
 
   cases_new_offender_sar_subject_details_page.fill_in_case_details(params)
   click_on "Continue"
+
   expect(cases_new_offender_sar_requester_details_page).to be_displayed
 
-  choose('offender_sar_case_form_third_party_true', visible: false)
-  fill_in :offender_sar_case_form_name, with: "John Ali"
-  fill_in :offender_sar_case_form_third_party_relationship, with: "Father"
-
-  choose('offender_sar_case_form_reply_method_send_by_email', visible: false)
-  fill_in :offender_sar_case_form_email, with: "bob@example.com"
-
-  choose('offender_sar_case_form_reply_method_send_by_post', visible: false)
-  fill_in :offender_sar_case_form_postal_address, with: "66A Eltham Road, Nottingham, NG2 5AA"
-  click_on "Continue"
-  expect(cases_new_offender_sar_requested_info_page).to be_displayed
-
-
-  fill_in :offender_sar_case_form_message, with: "Offender Sar Case, urgent, needs to be looked at, please! like now? while we're young, today!"
-  click_on "Continue"
-  expect(cases_new_offender_sar_date_received_page).to be_displayed
-
-  fill_in :offender_sar_case_form_received_date_dd, with: "21"
-  fill_in :offender_sar_case_form_received_date_mm, with: "05"
-  fill_in :offender_sar_case_form_received_date_yyyy, with: "2019"
-  click_on "Continue"
+  # choose('offender_sar_case_form_third_party_true', visible: false)
+  # fill_in :offender_sar_case_form_name, with: "John Ali"
+  # fill_in :offender_sar_case_form_third_party_relationship, with: "Father"
+  #
+  # choose('offender_sar_case_form_reply_method_send_by_email', visible: false)
+  # fill_in :offender_sar_case_form_email, with: "bob@example.com"
+  #
+  # choose('offender_sar_case_form_reply_method_send_by_post', visible: false)
+  # fill_in :offender_sar_case_form_postal_address, with: "66A Eltham Road, Nottingham, NG2 5AA"
+  # click_on "Continue"
+  # expect(cases_new_offender_sar_requested_info_page).to be_displayed
+  #
+  #
+  # fill_in :offender_sar_case_form_message, with: "Offender Sar Case, urgent, needs to be looked at, please! like now? while we're young, today!"
+  # click_on "Continue"
+  # expect(cases_new_offender_sar_date_received_page).to be_displayed
+  #
+  # fill_in :offender_sar_case_form_received_date_dd, with: "21"
+  # fill_in :offender_sar_case_form_received_date_mm, with: "05"
+  # fill_in :offender_sar_case_form_received_date_yyyy, with: "2019"
+  # click_on "Continue"
 
   # cases_new_sar_page.fill_in_case_details(params)
   # cases_new_sar_page.choose_flag_for_disclosure_specialists(
@@ -146,7 +147,7 @@ def create_overturned_ico_case_step(params={}) # rubocop:disable Metrics/MethodL
     new_overturned_ico_page = cases_new_foi_overturned_ico_page
   end
 
-  expect(new_overturned_ico_page).to be_displayed
+  expect(new_overturned_ico_page).to be_displayed(id: ico_case.id)
   expect(new_overturned_ico_page).to have_form
   expect(new_overturned_ico_page).to have_text(ico_case.number)
 
