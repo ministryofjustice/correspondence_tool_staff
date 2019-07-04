@@ -27,14 +27,17 @@ module PageObjects
           end
 
           def choose_flag_for_disclosure_specialists(choice = 'yes', case_type: 'foi')
-            make_radio_button_choice("overturned_#{case_type}_flag_for_disclosure_specialists_#{choice}")
+            selector = "overturned_#{case_type.gsub('::', '_')}_flag_for_disclosure_specialists_#{choice}"
+            make_radio_button_choice(selector)
           end
 
           def make_radio_button_choice(choice_id)
+            selector = "input##{choice_id}"
+
             if Capybara.current_driver == Capybara.javascript_driver
-              find("input##{choice_id}", visible: false).click
+              find(selector, visible: false).click
             else
-              find("input##{choice_id}").set(true)
+              find(selector).set(true)
             end
           end
         end

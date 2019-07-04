@@ -4,6 +4,7 @@ module PageObjects
       module New
         class ICOPage < PageObjects::Pages::Base
           set_url '/cases/icos/new'
+          set_url_matcher(/cases\/ico_(fois|sars)/)
 
           section :errors, PageObjects::Sections::Errors, '.error-summary'
 

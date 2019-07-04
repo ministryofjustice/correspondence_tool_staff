@@ -18,6 +18,7 @@ module PageObjects
 
         element :dropzone_container, '.dropzone'
         element :file_fields, '#uploaded_files'
+        element :response_action, '#response_action'
 
         # only shows up when using drop_in_dropzone
         element :uploaded_request_file_input, '#uploadedRequestFileInput'

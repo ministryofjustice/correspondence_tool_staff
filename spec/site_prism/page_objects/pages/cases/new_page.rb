@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class NewPage < PageObjects::Pages::Base
-        set_url '/cases/new/select_type'
+        set_url '/cases/new'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

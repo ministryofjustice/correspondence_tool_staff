@@ -4,7 +4,7 @@ module PageObjects
       module New
         class OffenderSARPageRequesterDetails < PageObjects::Pages::Base
 
-          set_url '/cases/offender_sars/new/requester-details'
+          set_url '/cases/offender_sars/requester-details'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

@@ -4,7 +4,7 @@ module PageObjects
       module New
         class OffenderSARPageDateReceived < PageObjects::Pages::Base
 
-          set_url '/cases/offender_sars/new/date-received'
+          set_url '/cases/offender_sars/date-received'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
