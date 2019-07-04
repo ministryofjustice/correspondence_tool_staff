@@ -41,7 +41,7 @@ module Cases
       else
         @case.session_persist_state(create_params)
         get_next_step(@case)
-        redirect_to "#{step_case_sar_offenders_path}/#{@case.current_step}"
+        redirect_to "#{step_case_sar_offender_index_path}/#{@case.current_step}"
       end
     end
 
@@ -71,7 +71,7 @@ module Cases
 
     def cancel
       session[:offender_sar_state] = nil
-      redirect_to offender_sar_new_case_path
+      redirect_to new_case_sar_offender_path
     end
 
     private
