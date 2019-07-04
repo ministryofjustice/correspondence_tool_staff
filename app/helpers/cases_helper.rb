@@ -37,7 +37,7 @@ module CasesHelper
               class: 'button'
     when :assign_to_new_team
       link_to 'Assign to another team',
-              assign_to_new_team_case_assignment_path(@case, @case .responder_assignment),
+              assign_to_new_team_case_assignment_path(@case, @case.responder_assignment),
               id: 'action--assign-new-team',
               class: 'button-secondary'
     when :add_responses
@@ -46,13 +46,17 @@ module CasesHelper
               id: 'action--upload-response',
               class: 'button'
     when :create_overturned
+      url = @case.original_case_type == 'FOI' ? new_case_overturned_ico_fois_path(@case) : new_case_overturned_ico_sars_path(@case)
+      puts "\nCASE HELPER URL create_overturned: #{url} is_foi?#{@case.foi?} klass: #{@case.class}\n"
       link_to t('common.case.create_overturned'),
-              new_overturned_ico_case_ico_path(@case),
+              url,
               id: 'action--create-overturned',
               class: 'button'
     when :respond
+      url = @case.foi? ? respond_case_ico_foi_path(@case) : polymorphic_path(@case, action: :respond)
+      puts "\nCASE HELPER URL respond: #{url} is_foi?#{@case.foi?} klass: #{@case.class}\n"
       link_to translate_for_case(@case, "common", 'respond'),
-              polymorphic_path(@case, action: :respond),
+              url,
               id: 'action--mark-response-as-sent',
               class: 'button'
     when :reassign_user
@@ -243,17 +247,20 @@ module CasesHelper
 
   end
 
+  # Note exceptions for FOI sub-classes because routes for FOI sub-classes
+  # do not exist
   def case_details_links(kase, user)
     links = ''
+
     if kase.allow_event?(user, :edit_case)
       links << link_to(t('helpers.links.case_details.edit_case'),
-        edit_polymorphic_path(kase),
+        kase.foi? ? edit_case_foi_standard_path(kase) : edit_polymorphic_path(kase),
         class: "secondary-action-link")
     end
 
     if kase.allow_event?(user, :update_closure)
       links << link_to(t('helpers.links.case_details.edit_closure'),
-        polymorphic_path(kase, action: :edit_closure),
+        kase.foi? ? edit_closure_case_foi_standard_path(kase) : polymorphic_path(kase, action: :edit_closure),
         class: "secondary-action-link")
     end
     links
