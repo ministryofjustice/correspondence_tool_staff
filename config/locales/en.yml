@@ -609,8 +609,11 @@ en:
         Case::FOI::ComplianceReview: FOI Compliance Review
         Case::FOI::TimelinessReview: FOI Timeliness Review
         Case::SAR::NonOffender: Non-offender SAR
+        Case::SAR::Standard: SAR
         Case::ICO::FOI: ICO FOI Appeal
         Case::ICO::SAR: ICO SAR Appeal
+        Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
+        Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
       new:
         create: Create
         heading: New Case
@@ -628,6 +631,15 @@ en:
         teams: Teams
 
   cases:
+    approvals:
+      new:
+        heading: Clear response
+        approve_message:
+          foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+          sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
+          ico: "Once you clear this response, %{managing_team} can send the response and close the case."
+          overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+          overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
     closable:
       close:
         heading: Close case
@@ -825,14 +837,7 @@ en:
       Case::SAR::Offender: Offender SAR
       Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
       Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
-  approvals:
-    heading: Clear response
-    approve_message:
-      foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-      sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-      ico: "Once you clear this response, %{managing_team} can send the response and close the case."
-      overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-      overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
+
   assignments:
     accept:
       success: Case taken on

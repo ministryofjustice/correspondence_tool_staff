@@ -34,7 +34,7 @@ describe 'cases/approvals/new.html.slim', type: :view do
       render_page
 
       expect(cases_approve_page.clearance)
-        .to have_text(I18n.t('approvals.approve_message.foi',
+        .to have_text(I18n.t('cases.approvals.new.approve_message.foi',
                              managing_team: foi_kase.managing_team.name))
     end
 
@@ -54,7 +54,7 @@ describe 'cases/approvals/new.html.slim', type: :view do
       render_page
 
       expect(cases_approve_page.clearance)
-        .to have_text(I18n.t('approvals.approve_message.sar',
+        .to have_text(I18n.t('cases.approvals.new.approve_message.sar',
                              managing_team: foi_kase.managing_team.name))
     end
   end
