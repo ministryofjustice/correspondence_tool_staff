@@ -13,6 +13,8 @@ module Cases
     end
 
     def new
+      authorize case_type, :can_add_case?
+
       permitted_correspondence_types
       new_case_for @correspondence_type
     end
@@ -59,8 +61,8 @@ module Cases
     # Can only be determined during case creation. Note defaulting to FOI
     # to allow subsequent validation to be performed during Case#Create
     def case_type
-      return Case::ICO::FOI unless create_params[:original_case_id].present?
-      Case::Base.find(create_params[:original_case_id]).class.ico_model
+      return Case::ICO::FOI unless original_case_id.present?
+      Case::Base.find(original_case_id).class.ico_model
     end
 
     def create_params
@@ -103,6 +105,14 @@ module Cases
         record_late_team_ico_params
       else
         raise '#record_late_team_params only valid for ICO cases'
+      end
+    end
+
+    def original_case_id
+      @_original_case_id ||= begin
+        if params && params[:ico].present? && params[:ico][:original_case_id].present?
+          params[:ico][:original_case_id]
+        end
       end
     end
   end
