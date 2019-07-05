@@ -52,9 +52,9 @@ module CasesHelper
               id: 'action--create-overturned',
               class: 'button'
     when :respond
-      url = @case.foi? ? respond_case_ico_foi_path(@case) : polymorphic_path(@case, action: :respond)
+      #url = @case.foi? ? respond_case_ico_foi_path(@case) : polymorphic_path(@case, action: :respond)
       link_to translate_for_case(@case, "common", 'respond'),
-              url,
+              polymorphic_path(@case, action: :respond),
               id: 'action--mark-response-as-sent',
               class: 'button'
     when :reassign_user

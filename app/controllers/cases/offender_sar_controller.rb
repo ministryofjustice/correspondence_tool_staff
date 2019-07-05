@@ -22,6 +22,9 @@ module Cases
       # @todo: Why does current_step need to be set? is it something OffenderSARCaseForm
       # can figure out itself?
       @case.current_step = step
+
+      @case = OffenderSARCaseForm.new(session)
+      @case.current_step = params[:step]
     end
 
     def create
@@ -37,6 +40,7 @@ module Cases
         render :new
       elsif @case.valid? && @case.save
         session[:offender_sar_state] = nil
+        flash[:notice] = "Case created successfully"
         redirect_to case_path(@case.case)
       else
         @case.session_persist_state(create_params)

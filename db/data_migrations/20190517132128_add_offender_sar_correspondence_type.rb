@@ -13,4 +13,3 @@ class AddOffenderSarCorrespondenceType < ActiveRecord::DataMigration
     )
   end
 end
-

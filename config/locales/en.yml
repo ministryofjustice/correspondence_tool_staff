@@ -204,6 +204,8 @@ en:
       <<: *case_policy
       extend_sar_deadline?: 'SAR deadline cannot be extended'
       remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
+    case/sar/offender_policy:
+      <<: *case_policy
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
@@ -261,7 +263,7 @@ en:
       offender_sar_case_form:
         subject_type: "What is their relationship to the MOJ?"
         flag_for_disclosure_specialists: "Flag as high profile case?"
-
+        third_party: Is this information being requested on someone else's behalf?
 
       assignment:
         state: What do you want to do?
@@ -429,8 +431,10 @@ en:
         other_subject_ids: "Subject’s PNC or other ID numbers"
 
         email: "Recipient email address"
-        message: Full case details
-        name: "Full name of the requestor"
+        message: Request details
+        name: "Full name of the representative"
+        third_party_relationship: Relationship to the subject
+        delivery_method: How should the information be sent?
         postal_address: "Recipient postal address"
         received_date: "Received at MOJ"
         subject: "Case summary"
@@ -460,6 +464,7 @@ en:
         previous_case_numbers: "You can include multiple cases separated by comma, space or paragraph return."
         other_subject_ids: "You can include multiple cases separated by comma, space or paragraph return."
         date_of_birth: "For example, 12 11 2007"
+        message: Enter a brief summary of the case, including any details that will be useful for processing the Offender SAR.
   alerts:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>
@@ -734,7 +739,7 @@ en:
       date_sar_received: "When was the SAR received?"
       date_sar_received_copy: "For example, 12 11 2007"
       date_of_birth: "Date of birth"
-      date_of_birth_copy: "For example, 12 11 2007"
+      date_of_birth_copy: "For example, 24 11 1992"
       external_deadline: "Final deadline"
       external_deadline_copy: "For example, 01 02 2018"
       internal_deadline: Draft deadline
@@ -755,6 +760,8 @@ en:
         sub_heading: Create an ICO Overturned (SAR) case
       case/overturned_ico/foi:
         sub_heading: Create an ICO Overturned (FOI) case
+      offender_sar:
+        sub_heading: Create SAR case
       sub_heading: Create %{case_type} case
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
@@ -823,6 +830,11 @@ en:
         external_deadline_from: From
         external_deadline_to: To
         external_deadline_hint: For example. 31 01 2017
+    offender_sar:
+      subject_heading: Who is the subject?
+      requester_heading: Who is making the subject access request?
+      requested_info_heading: What information is being requested?
+      date_received_heading: When was the SAR received?
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'

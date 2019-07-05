@@ -1,3 +1,5 @@
+= render partial: 'layouts/header'
+
 = form_for kase, as: :foi, url: case_create_action(kase.object) do |f|
   = f.radio_button_fieldset :type,
                             choices: @case_types,

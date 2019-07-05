@@ -13,14 +13,14 @@ module PageObjects
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
           element :subject_full_name, '#offender_sar_subject_full_name'
-
+          element :full_request, '#offender_sar_message'
           element :submit_button, '.button'
 
-          # def set_received_date(received_date)
-          #   date_received_day.set(received_date.day)
-          #   date_received_month.set(received_date.month)
-          #   date_received_year.set(received_date.year)
-          # end
+          def fill_in_case_details(params={})
+            kase = FactoryBot.build :offender_sar_case, params
+
+            full_request.set kase.message
+          end
         end
       end
     end

@@ -63,23 +63,25 @@ RSpec.describe OffenderSARCaseForm, type: :model do
 
   describe "#valid_attributes?" do
     context "when params is empty" do
-      it "returns true" do
-        expect(case_form.valid_attributes?({})).to be true
+      params = ActionController::Parameters.new({}).permit!
+
+      it "returns false" do
+        expect(case_form.valid_attributes?(params)).to be false
       end
     end
 
     context "when params is nil" do
       let(:params) { nil }
 
-      it "returns true" do
-        expect(case_form.valid_attributes?(params)).to be true
+      it "returns false" do
+        expect(case_form.valid_attributes?(params)).to be false
       end
     end
 
     context "when params is set and valid" do
       let(:params) { ActionController::Parameters.new(
-        case_form: { name: "Bob Smithers", email: "bob@example.com" }
-      ).require(:case_form).permit(:name, :email)}
+        case_form: { subject_type: "offender", date_of_birth: "2001-01-01", flag_for_disclosure_specialists: "no" }
+      ).require(:case_form).permit(:subject_type, :date_of_birth, :flag_for_disclosure_specialists)}
 
       context "and the form model has the values merged" do
         it "returns true" do

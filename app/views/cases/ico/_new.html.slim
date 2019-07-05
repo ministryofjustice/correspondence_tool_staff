@@ -1,3 +1,5 @@
+= render partial: 'layouts/header'
+
 = form_for kase, as: :ico, url: case_ico_index_path(kase) do |f|
   = hidden_field_tag 'correspondence_type', @correspondence_type_key
 
