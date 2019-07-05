@@ -47,14 +47,12 @@ module CasesHelper
               class: 'button'
     when :create_overturned
       url = @case.original_case_type == 'FOI' ? new_case_overturned_ico_fois_path(@case) : new_case_overturned_ico_sars_path(@case)
-      puts "\nCASE HELPER URL create_overturned: #{url} is_foi?#{@case.foi?} klass: #{@case.class}\n"
       link_to t('common.case.create_overturned'),
               url,
               id: 'action--create-overturned',
               class: 'button'
     when :respond
       url = @case.foi? ? respond_case_ico_foi_path(@case) : polymorphic_path(@case, action: :respond)
-      puts "\nCASE HELPER URL respond: #{url} is_foi?#{@case.foi?} klass: #{@case.class}\n"
       link_to translate_for_case(@case, "common", 'respond'),
               url,
               id: 'action--mark-response-as-sent',
@@ -247,8 +245,8 @@ module CasesHelper
 
   end
 
-  # Note exceptions for FOI sub-classes because routes for FOI sub-classes
-  # do not exist
+  # Note exceptions for FOI sub-classes because REST routes for FOI
+  # sub-classes do not exist (adds more complexity than needed)
   def case_details_links(kase, user)
     links = ''
 
