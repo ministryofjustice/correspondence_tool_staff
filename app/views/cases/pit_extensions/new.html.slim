@@ -7,7 +7,7 @@
     ""
 
 - content_for :heading
-  = t('.extend_for_pit')
+  = t('.heading')
 
 - content_for :sub_heading
   span.visually-hidden
@@ -36,8 +36,8 @@ br
 = form_for @case, as: :case, url: case_pit_extensions_path(@case), method: :post do |f|
   .form-group
     = f.gov_uk_date_field :extension_deadline,
-                          { legend_text: t('cases.extend_for_pit.extension_date'),
-                            form_hint_text: t('cases.extend_for_pit.extension_date_hint',
+                          { legend_text: t('.extension_date'),
+                            form_hint_text: t('.extension_date_hint',
                                               extension_limit: Settings.pit_extension_limit) }
 
 

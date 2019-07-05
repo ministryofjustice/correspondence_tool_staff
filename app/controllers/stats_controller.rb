@@ -163,7 +163,7 @@ class StatsController < ApplicationController
       )
     else
       flash[:download] = [
-        t('stats.custom.success'),
+        t('.success'),
         view_context.link_to(
           'Download',
           download_custom_stats_path(id: report.id)

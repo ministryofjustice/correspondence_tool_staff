@@ -662,16 +662,16 @@ en:
             <li>uploaded the response and any supporting documents</li>
             <li>sent the response to the person who made the request</li>
           </ul>
-        respond_date: Date response sent
     bypass_approvals_form:
       press_clearance_reqd: Does Press office need to clear this response?
       affirmative: 'Yes'
       negative: 'No, the response is ready to send'
       why_not: 'Why is further clearance not required?'
-    extend_for_pit:
-      extend_for_pit: Extend for Public Interest Test (PIT)
-      extension_date: Date of extension deadline
-      extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
+    pit_extensions:
+      new:
+        heading: Extend for Public Interest Test (PIT)
+        extension_date: Date of extension deadline
+        extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ
@@ -698,7 +698,7 @@ en:
       date_draft_compliant: Date compliant draft was uploaded
       date_draft_compliant_example: "For example, 01 02 2018"
     update:
-
+      case_error: Unable to save case updates
       case_updated: Case updated
     filters:
       index:
@@ -725,7 +725,7 @@ en:
       details: Details
     links:
       new:
-        id: Case number For example 170131001
+        linked_case_number: Case number For example 170131001
         heading: 'Link case'
     new:
       correspondence_type_errors:
@@ -789,10 +789,10 @@ en:
       upload_response_and_return_for_redraft:
         heading: Upload response
         upload_response: 'Upload response'
-    response_upload_form:
-      upload_hint_copy: |
-        You can upload different file types such as Word, Excel,
-        PDF and JPEG up to 20MB per file.
+      response_upload_form:
+        upload_hint_copy: |
+          You can upload different file types such as Word, Excel,
+          PDF and JPEG up to 20MB per file.
     confirm_respond:
       success: The response has been marked as sent.
     foi:
@@ -869,9 +869,10 @@ en:
     common:
       period_start: Date from
       period_end: Date to
-    custom:
-      timescale_copy: Which time period should this report cover?
+    generate_custom_csv_report:
       success: Your custom report has been created.
+    new:
+      timescale_copy: Which time period should this report cover?
   teams:
     business_unit_list:
       team_members: Team members
