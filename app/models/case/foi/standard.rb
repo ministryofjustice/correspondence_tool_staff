@@ -138,4 +138,8 @@ class Case::FOI::Standard < Case::Base
       raise ArgumentError.new("Invalid FOI type requested: #{type.inspect}")
     end
   end
+
+  def self.ico_model
+    Case::ICO::FOI
+  end
 end

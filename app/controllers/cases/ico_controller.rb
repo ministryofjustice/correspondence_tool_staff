@@ -5,14 +5,16 @@ module Cases
 
     before_action -> { set_case(params[:id]) }, only: [:record_late_team]
 
-    def new
+    def initialize
+      @correspondence_type = CorrespondenceType.ico
       @correspondence_type_key = 'ico'
-      permitted_correspondence_types
-      new_case_for CorrespondenceType.ico
+
+      super
     end
 
-    def create
-      create_case_for_type CorrespondenceType.ico, 'ico'
+    def new
+      permitted_correspondence_types
+      new_case_for @correspondence_type
     end
 
     def new_linked_cases_for
@@ -54,6 +56,11 @@ module Cases
       end
     end
 
+    # Can only be determined during case creation
+    def case_type
+      Case::Base.find(create_params[:original_case_id]).class.ico_model
+    end
+
     def create_params
       create_ico_params
     end
@@ -78,6 +85,7 @@ module Cases
 
     def determine_overturned_ico_class(original_appeal_id)
       original_appeal_case = Case::ICO::Base.find original_appeal_id
+
       case original_appeal_case.type
       when 'Case::ICO::FOI'
         Case::OverturnedICO::FOI

@@ -160,6 +160,10 @@ class Case::SAR::Standard < Case::Base
     end
   end
 
+  def self.ico_model
+    Case::ICO::SAR
+  end
+
   private
 
   def use_subject_as_requester

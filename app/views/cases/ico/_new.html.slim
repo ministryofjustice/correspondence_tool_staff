@@ -1,4 +1,4 @@
-= form_for kase, as: :ico, url: case_create_action(kase) do |f|
+= form_for kase, as: :ico, url: case_ico_index_path(kase) do |f|
   = hidden_field_tag 'correspondence_type', @correspondence_type_key
 
   = render partial: 'cases/ico/form', locals: { case_types: @case_types,
