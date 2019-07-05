@@ -4,12 +4,11 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 # rubocop:disable Metrics/ModuleLength
 module Stats
   describe R004CabinetOfficeReport do
-    before(:all)    { find_or_create :report_type, :r004 }
-    after(:all)     { ReportType.delete_all }
-
     context 'sections 1, 2, 3' do
 
       before(:all) do
+        ReportType.delete_all
+        create :report_type, :r004
 
         @frozen_time = Time.new 2017, 6, 14, 11, 20, 45
 
@@ -384,14 +383,12 @@ module Stats
       end
     end
 
-
-
-
-
-
     context 'section 4' do
 
       before(:all) do
+        ReportType.delete_all
+        create :report_type, :r004
+
         @frozen_time = Time.new 2017, 6, 14, 11, 20, 45
         CaseClosure::MetadataSeeder.seed!
 
