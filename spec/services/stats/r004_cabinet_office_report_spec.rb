@@ -4,9 +4,8 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 # rubocop:disable Metrics/ModuleLength
 module Stats
   describe R004CabinetOfficeReport do
-
-    before(:all)    { create :report_type, :r004 }
-    after(:all)     { ReportType.r004.destroy }
+    before(:all)    { find_or_create :report_type, :r004 }
+    after(:all)     { ReportType.delete_all }
 
     context 'sections 1, 2, 3' do
 

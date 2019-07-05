@@ -3,7 +3,7 @@ require 'rails_helper'
 module Stats
   describe R007ClosedCasesReport do
     before(:all) { create :report_type, :r007 }
-    after(:all)  { ReportType.r007.destroy }
+    after(:all)     { ReportType.delete_all }
 
     describe '.title' do
       it 'returns correct title' do

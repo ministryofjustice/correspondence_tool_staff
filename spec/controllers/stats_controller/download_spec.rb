@@ -1,9 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe StatsController, type: :controller do
-  let!(:kase)             { create :case }
-  let!(:r005_report_type) { create :report_type, :r005 }
-  let(:manager)           { find_or_create :disclosure_bmt_user }
+  let!(:kase) { create :case }
+  let!(:report_type) { find_or_create :report_type, :r005 }
+  let(:manager) { find_or_create :disclosure_bmt_user }
+
+  after(:all)     { ReportType.delete_all }
 
   describe '#download' do
     before do
@@ -17,8 +19,6 @@ RSpec.describe StatsController, type: :controller do
     end
 
     context 'there is no already-generated report' do
-      let(:report_type) { find_or_create :report_type, :r005 }
-
       it 'sends the generated report as an attachment' do
         Timecop.freeze(Date.new(2019, 3, 22)) do
           get :download, params: { id: report_type.id }
