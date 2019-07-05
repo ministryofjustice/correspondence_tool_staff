@@ -22,8 +22,8 @@ module PageObjects
             element :hint, 'span.form-hint'
           end
           section :missing_info, '.missing-info' do
-            element :yes, 'label[for="case_sar_missing_info_yes"]'
-            element :no, 'label[for="case_sar_missing_info_no"]'
+            element :yes, 'label[for="sar_missing_info_yes"]'
+            element :no, 'label[for="sar_missing_info_no"]'
           end
 
           # only shows up when using drop_in_dropzone

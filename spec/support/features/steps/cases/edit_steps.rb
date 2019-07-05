@@ -171,7 +171,6 @@ def edit_ico_case_closure_step(kase:, decision_received_date: Date.today, ico_de
   scroll_to cases_show_page.case_details.edit_closure
   cases_show_page.case_details.edit_closure.click
 
-  # @todo: Required test?
   expect(cases_edit_closure_page).to be_displayed(correspondence_type: 'icos', id: kase.id)
   expect(cases_edit_closure_page.date_responded_day_ico.value)
     .to eq kase.date_ico_decision_received.day.to_s

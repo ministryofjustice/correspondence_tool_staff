@@ -10,7 +10,6 @@ def create_foi_case_step(type: 'standard',
   expect(cases_new_page).to be_displayed
 
   cases_new_page.create_link_for_correspondence('FOI').click
-  # @todo: unsure why this fails
   expect(cases_new_foi_page).to be_displayed
 
   # cases_new_foi_page.fill_in_case_type(type)
