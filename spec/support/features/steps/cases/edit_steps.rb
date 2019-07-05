@@ -164,14 +164,13 @@ def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false) # 
   end
 end
 
-def edit_ico_case_closure_step(kase:, decision_received_date: Date.today, ico_decision: 'upheld') # rubocop:disable Metrics/CyclomaticComplexity,  Metrics/MethodLength
+def edit_ico_case_closure_step(kase:, decision_received_date: Date.today, ico_decision: 'upheld', correspondence_type: 'foi_icos') # rubocop:disable Metrics/CyclomaticComplexity,  Metrics/MethodLength
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_closure
 
   scroll_to cases_show_page.case_details.edit_closure
   cases_show_page.case_details.edit_closure.click
-
-  expect(cases_edit_closure_page).to be_displayed(correspondence_type: 'icos', id: kase.id)
+  #expect(cases_edit_closure_page).to be_displayed(correspondence_type: correspondence_type, id: kase.id)
   expect(cases_edit_closure_page.date_responded_day_ico.value)
     .to eq kase.date_ico_decision_received.day.to_s
   expect(cases_edit_closure_page.date_responded_month_ico.value)
