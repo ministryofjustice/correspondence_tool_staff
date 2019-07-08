@@ -4,7 +4,7 @@ module PageObjects
   module Pages
     module Cases
       class EditClosurePage < ClosePage
-        set_url '/cases/{id}/edit_closure'
+        set_url '/cases/{correspondence_type}/{id}/edit_closure'
       end
     end
   end

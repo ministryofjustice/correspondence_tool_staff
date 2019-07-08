@@ -7,7 +7,7 @@ describe 'cases/edit.html.slim', type: :view do
 
       kase = create :approved_sar,
                     subject_full_name: 'John Doe',
-                    subject_type: :offender,
+                    subject_type: 'member_of_the_public',
                     email: 'jd@moj.com',
                     subject: 'Court dates',
                     message: 'When was I last in court',

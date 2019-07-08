@@ -8,7 +8,7 @@ feature 'viewing details of case in the system' do
 
   given(:foi) do
     create :accepted_case,
-           requester_type: :offender,
+           requester_type: :journalist,
            name: 'Freddie FOI',
            email: 'freddie.foi@testing.digital.justice.gov.uk',
            subject: 'this is a foi',
@@ -75,7 +75,7 @@ feature 'viewing details of case in the system' do
     given(:request_file) { "#{Faker::Internet.slug}.pdf" }
     given(:foi) do
       create :accepted_case, :sent_by_post,
-             requester_type: :offender,
+             requester_type: :journalist,
              name: 'Freddie FOI',
              email: 'freddie.foi@testing.digital.justice.gov.uk',
              subject: 'this is a foi',

@@ -1,16 +1,12 @@
 class Case::SAR::Offender < Case::Base
   class << self
     def type_abbreviation
-      'OFFENDER'
+      'OFFENDER_SAR'
     end
-  end
 
-  def self.searchable_fields_and_ranks
-    super.merge(
-        {
-            subject_full_name:     'B'
-        }
-    )
+    def searchable_fields_and_ranks
+      super.merge({ subject_full_name: 'B'})
+    end
   end
 
   jsonb_accessor :properties,
@@ -54,8 +50,8 @@ class Case::SAR::Offender < Case::Base
                     :received_date,
                   ]
 
-  validates :third_party, inclusion: { in: [ true, false ], message: "Please choose yes or no" }
-  validates :flag_for_disclosure_specialists, inclusion: { in: [ "yes", "no" ], message: "Please choose yes or no" }
+  validates :third_party, inclusion: { in: [true, false], message: 'Please choose yes or no' }
+  validates :flag_for_disclosure_specialists, inclusion: { in: ['yes', 'no'], message: 'Please choose yes or no' }
 
   validates :name, presence: true, if: -> { third_party }
   validates :third_party_relationship, presence: true, if: -> { third_party }

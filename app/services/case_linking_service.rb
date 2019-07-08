@@ -115,13 +115,13 @@ class CaseLinkingService
   end
 
   def validate_sar_case_linking
-    if @case.is_a?(Case::SAR)
-      unless @link_case.is_a?(Case::SAR)
+    if @case.is_a?(Case::SAR::Standard)
+      unless @link_case.is_a?(Case::SAR::Standard)
         @case.errors.add(:linked_case_number, "can't link a SAR case to a non-SAR case")
         @result = :validation_error
       end
     else
-      if @link_case.is_a?(Case::SAR)
+      if @link_case.is_a?(Case::SAR::Standard)
         @case.errors.add(:linked_case_number, "can't link a non-SAR case to a SAR case")
         @result = :validation_error
       end

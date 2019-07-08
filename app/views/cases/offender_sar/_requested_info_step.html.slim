@@ -1,0 +1,18 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar.requested_info_heading')
+
+- content_for :sub_heading, flush: true
+  = t("cases.new.offender_sar.sub_heading")
+
+= render partial: 'layouts/header'
+
+= form_for @case, url: case_create_action(@case.object), as: :offender_sar do |f|
+
+  = f.text_area :message, {rows: 12,
+    form_hint_text: t('helpers.hint.offender_sar_case_form.message')}
+
+  p
+    = link_to "Previous", "/cases/new/offender/requester-details"
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', class: 'button'

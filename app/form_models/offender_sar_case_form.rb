@@ -42,10 +42,12 @@ class OffenderSARCaseForm
     build_case_from_session
   end
 
+  # @todo: Should these steps be defined in 'Steppable' or the controller
   def steps
     %w[subject-details requester-details requested-info date-received].freeze
   end
 
+  # @todo: Used in partial - should be decorator
   def get_step_partial
     step_name = current_step.split("/").first.tr('-', '_')
     "#{step_name}_step"
@@ -54,7 +56,7 @@ class OffenderSARCaseForm
   def save
     return unless valid?
     @case.save
-    true
+    true # @todo: Force true for now?
   end
 
   def session_persist_state(params)

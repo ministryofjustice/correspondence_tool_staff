@@ -184,19 +184,23 @@ en:
       show?: You are not authorised to view this case.
       unflag_for_clearance?: 'You are not authorised to remove clearance from this case'
       update?: You are not authorised to edit this case.
+      update_closure?: You are not authorised to edit this case.
       upload_responses?: You are not authorised to upload a response for this case.
     case/ico/foi_policy:
+      <<: *case_policy
       can_close_case?: You are not authorised to close this case
       can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
     case/ico/sar_policy:
       <<: *case_policy
+      can_close_case?: You are not authorised to close this case
+      can_accept_or_reject_responder_assignment?: You are not allowed to accept or reject responder assignment
     case/foi/standard_policy:
       <<: *case_policy
     case/foi/compliance_review_policy:
       <<: *case_policy
     case/foi/timeliness_review_policy:
       <<: *case_policy
-    case/sar_policy:
+    case/sar/standard_policy:
       <<: *case_policy
       extend_sar_deadline?: 'SAR deadline cannot be extended'
       remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
@@ -265,7 +269,7 @@ en:
         state: What do you want to do?
         team_id: Assign to
         user_id: Choose a new team member for this case
-      case_foi:
+      foi:
         info_held_status_abbreviation: Was the information held?
         requester_type: Requester type
         refusal_reason_abbreviation: What was the outcome?
@@ -275,16 +279,16 @@ en:
         flag_for_disclosure_specialists: Flag for disclosure specialists
         type: Type
         name: "Who is the requestor?"
-      case_ico:
+      ico:
         ico_decision: The original case has been
         delivery_method: How and where should the information be sent?
         type: Original Case Type
         late_team_id_html: " "
-      case_overturned_foi:
+      overturned_foi:
         reply_method: 'How should this information be sent to the requester?'
-      case_overturned_sar:
+      overturned_sar:
         reply_method: 'How should this information be sent to the requester?'
-      case_sar:
+      sar:
         late_team_id: Business unit responsible for late response
         missing_info: "Was the response asking for missing information (e.g. proof of ID) or
           clarification, i.e. a TMM?"
@@ -309,7 +313,7 @@ en:
         filter_timeliness: Timeliness
       team:
         role: What will the business unit be responsible for?
-        correspondente_type_ids: Correspondence types
+        correspondence_type_ids: Correspondence types
     hint:
       feedback:
         comment: |
@@ -321,9 +325,9 @@ en:
         upload_comment: This will be added to the converstation section of the case.
       team_property:
         value: Please provide one area at a time and be as concise as possible
-      case_sar:
+      sar:
         third_party_relationship: For example, solicitor, parent or guardian
-      case_ico:
+      ico:
         original_case_number_html: |
           Enter original case  reference number to link to.  For example 170131001.<br>
           We'll use the original case title for the appeal title.
@@ -365,7 +369,7 @@ en:
 
       case:
         linked_case_number: Case number For example 170131001
-      case_foi:
+      foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity
           staff_judiciary: Staff/Judiciary
@@ -386,7 +390,7 @@ en:
           Case::FOI::Standard: FOI
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
-      case_ico:
+      ico:
         ico_officer_name: "Name of the ICO information officer who's handling this case"
         ico_reference_number: "ICO case reference number"
         message: "ICO's request details"
@@ -400,18 +404,18 @@ en:
           upheld: Upheld by ICO
           overturned: Overturned by ICO
         ico_decision_comment: "Details of ICO's decision"
-      case_overturned_ico: &case_overturned_ico
+      overturned_ico: &overturned_ico
         email: "Requester's email"
         ico_officer_name: "Name of the ICO information officer who's handling this case"
         postal_address: "Requester's postal address"
         reply_method:
           send_by_email: "By email"
           send_by_post: "By post"
-      case_overturned_foi:
-        <<: *case_overturned_ico
-      case_overturned_sar:
-        <<: *case_overturned_ico
-      case_sar:
+      overturned_foi:
+        <<: *overturned_ico
+      overturned_sar:
+        <<: *overturned_ico
+      sar:
         email: "Recipient email address"
         message: Full case details
         name: "Full name of the requestor"
@@ -610,8 +614,11 @@ en:
         Case::FOI::ComplianceReview: FOI Compliance Review
         Case::FOI::TimelinessReview: FOI Timeliness Review
         Case::SAR::NonOffender: Non-offender SAR
+        Case::SAR::Standard: SAR
         Case::ICO::FOI: ICO FOI Appeal
         Case::ICO::SAR: ICO SAR Appeal
+        Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
+        Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
       new:
         create: Create
         heading: New Case
@@ -628,60 +635,48 @@ en:
         heading: Users
         teams: Teams
 
-
-  assignments:
-    accept:
-      success: Case taken on
-      already_accepted: Case already accepted by %{name}
-    assign_to_new_team:
-      heading: 'Assign to another team'
-    assign_to_team:
-      case_assigned: Case successfully assigned
-      case_created: Case assigned to %{business_unit_name}
-    execute_assign_to_new_team:
-      case_assigned: Case has been assigned to %{business_unit_name}
-    new:
-      heading: Assign case
-      new_assignment: Create case
-      assignment: Existing case
-    reassign_user:
-      heading: Change team member
-      action: Change team member
-    take_case_on:
-      success: Case taken on
-      already_accepted: Case already accepted by %{name}
-
   cases:
+    approvals:
+      new:
+        heading: Clear response
+        approve_message:
+          foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+          sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
+          ico: "Once you clear this response, %{managing_team} can send the response and close the case."
+          overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
+          overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
+    closable:
+      close:
+        heading: Close case
+        submit: Close case
+      closure_outcomes:
+        heading: Closure outcomes
+        submit: Close case
+      edit_closure:
+        heading: Edit case closure details
+        submit: Save changes
+      respond:
+        date_example: For example, 30 1 2017
+        case/ico:
+          respond_date: Add date this response was sent to ICO
+        heading: Mark as sent
+        reminders_html: |
+          <strong>Make sure you have:</strong>
+          <ul class="list list-bullet">
+            <li>cleared the response with the Deputy Director</li>
+            <li>uploaded the response and any supporting documents</li>
+            <li>sent the response to the person who made the request</li>
+          </ul>
     bypass_approvals_form:
       press_clearance_reqd: Does Press office need to clear this response?
       affirmative: 'Yes'
       negative: 'No, the response is ready to send'
       why_not: 'Why is further clearance not required?'
-    closed_cases:
-      heading: Closed cases
-      number: Case number
-      number_html: 'Case <abbr title="number">No.</abbr>'
-      name-subject: Name/Subject
-      view_case: Link to case
-    close:
-      heading: Close case
-      submit: Close case
-    closure_outcomes:
-      heading: Closure outcomes
-      submit: Close case
-    edit_closure:
-      heading: Edit case closure details
-      submit: Save changes
-    extend_for_pit:
-      extend_for_pit: Extend for Public Interest Test (PIT)
-      extension_date: Date of extension deadline
-      extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
-    extend_sar_deadline:
-      extension_period: How long would you like to extend by?
-      extend_further: The deadline for this case will be extended by a further %{num_days} days.
-    execute_extend_sar_deadline:
-      success: Case extended for SAR
-      error: Unable to perform SAR extension on case %{case_number}
+    pit_extensions:
+      new:
+        heading: Extend for Public Interest Test (PIT)
+        extension_date: Date of extension deadline
+        extension_date_hint: Cannot be more than %{extension_limit} working days beyond the final deadline.
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ
@@ -703,19 +698,29 @@ en:
       external_deadline: Final deadline
       status: Status
       who_its_with: With
-    incoming_cases:
-      heading: New cases
-      view_case: Link to case
-      number: Case number
-      number_html: 'Case <abbr title="number">No.</abbr>'
-      request: Request
-      actions: Actions
     edit:
       heading: Edit case details
       date_draft_compliant: Date compliant draft was uploaded
       date_draft_compliant_example: "For example, 01 02 2018"
     update:
+      case_error: Unable to save case updates
       case_updated: Case updated
+    filters:
+      index:
+        <<: *cases_list
+      closed:
+        heading: Closed cases
+        number: Case number
+        number_html: 'Case <abbr title="number">No.</abbr>'
+        name-subject: Name/Subject
+        view_case: Link to case
+      incoming:
+        heading: New cases
+        view_case: Link to case
+        number: Case number
+        number_html: 'Case <abbr title="number">No.</abbr>'
+        request: Request
+        actions: Actions
     fixed_details:
       requester: Requester
       email_address: Email address
@@ -723,6 +728,10 @@ en:
       external_deadline: Final deadline
       message: Full request
       details: Details
+    links:
+      new:
+        linked_case_number: Case number For example 170131001
+        heading: 'Link case'
     new:
       correspondence_type_errors:
         unknown: "Unknown correspondence type \"%{type}\""
@@ -757,29 +766,11 @@ en:
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
-    remove_sar_deadline_extension:
-      success: Deadline extension removed
-      error: Unable to remove SAR deadline extension
-    respond:
-      date_example: For example, 30 1 2017
-      case/ico:
-        respond_date: Add date this response was sent to ICO
-      heading: Mark as sent
-      reminders_html: |
-        <strong>Make sure you have:</strong>
-        <ul class="list list-bullet">
-          <li>cleared the response with the Deputy Director</li>
-          <li>uploaded the response and any supporting documents</li>
-          <li>sent the response to the person who made the request</li>
-        </ul>
-      respond_date: Date response sent
+
 
     overturned_shared:
       new_form:
         overturned_case_for: 'ICO Overturned case for:'
-
-
-
     select_type:
       heading: Choose correspondence type
       sub_heading: Create case
@@ -793,32 +784,22 @@ en:
         attachments_heading: Appeal response
       case:
         attachments_heading: Response
-    new_case_link:
-      heading: 'Link case'
-    upload_responses:
-      heading: Upload response
-      upload_response: 'Upload response'
     request_amends:
       heading: Request amends
-    approve:
-      heading: Clear response
-      approve_message:
-        foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-        sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-        ico: "Once you clear this response, %{managing_team} can send the response and close the case."
-        overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-        overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
-    response_upload_form:
-      upload_hint_copy: |
-        You can upload different file types such as Word, Excel,
-        PDF and JPEG up to 20MB per file.
-    upload_response_and_approve:
-      heading: Upload response
-      upload_response: 'Upload response'
-    upload_response_and_return_for_redraft:
-      heading: Upload response
-      upload_response: 'Upload response'
-
+    responses:
+      upload_responses:
+        heading: Upload response
+        upload_response: 'Upload response'
+      upload_response_and_approve:
+        heading: Upload response
+        upload_response: 'Upload response'
+      upload_response_and_return_for_redraft:
+        heading: Upload response
+        upload_response: 'Upload response'
+      response_upload_form:
+        upload_hint_copy: |
+          You can upload different file types such as Word, Excel,
+          PDF and JPEG up to 20MB per file.
     confirm_respond:
       success: The response has been marked as sent.
     foi:
@@ -827,41 +808,69 @@ en:
       close_form:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
-
     sar:
       new_form_common:
         dropzone: "Requestor's proof of ID and other documents"
       close_form:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
-
+    sar_extensions:
+      create:
+        success: Case extended for SAR
+        error: Unable to perform SAR extension on case %{case_number}
+      destroy:
+        success: Deadline extension removed
+        error: Unable to remove SAR deadline extension
+      new:
+        extension_period: How long would you like to extend by?
+        extend_further: The deadline for this case will be extended by a further %{num_days} days.
+    searches:
+      show:
+        heading: Search
+        external_deadline_from: From
+        external_deadline_to: To
+        external_deadline_hint: For example. 31 01 2017
     offender_sar:
       subject_heading: Who is the subject?
       requester_heading: Who is making the subject access request?
       requested_info_heading: What information is being requested?
       date_received_heading: When was the SAR received?
-
-    search:
-      heading: Search
-      external_deadline_from: From
-      external_deadline_to: To
-      external_deadline_hint: For example. 31 01 2017
-
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
       why: 'Reason for removing clearance'
-
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness
       Case::FOI::ComplianceReview: FOI - Internal review for compliance
       Case::ICO::FOI: ICO Appeal - FOI
       Case::ICO::SAR: ICO Appeal - SAR
-      Case::SAR: Non-offender SAR
+      Case::SAR::Standard: Non-offender SAR
+      Case::SAR::Offender: Offender SAR
       Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
       Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
 
+  assignments:
+    accept:
+      success: Case taken on
+      already_accepted: Case already accepted by %{name}
+    assign_to_new_team:
+      heading: 'Assign to another team'
+    assign_to_team:
+      case_assigned: Case successfully assigned
+      case_created: Case assigned to %{business_unit_name}
+    execute_assign_to_new_team:
+      case_assigned: Case has been assigned to %{business_unit_name}
+    new:
+      heading: Assign case
+      new_assignment: Create case
+      assignment: Existing case
+    reassign_user:
+      heading: Change team member
+      action: Change team member
+    take_case_on:
+      success: Case taken on
+      already_accepted: Case already accepted by %{name}
   feedback:
     error_html: |
       <strong>The following error(s) occurred:</strong>
@@ -872,9 +881,10 @@ en:
     common:
       period_start: Date from
       period_end: Date to
-    custom:
-      timescale_copy: Which time period should this report cover?
+    generate_custom_csv_report:
       success: Your custom report has been created.
+    new:
+      timescale_copy: Which time period should this report cover?
   teams:
     business_unit_list:
       team_members: Team members

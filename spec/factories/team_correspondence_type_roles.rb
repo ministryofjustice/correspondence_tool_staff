@@ -42,18 +42,14 @@ FactoryBot.define do
 
     trait :foi do
       correspondence_type   { find_or_create :foi_correspondence_type }
-      # category_id   { find_or_create(:category, :foi).id }
     end
 
     trait :sar do
       correspondence_type   { find_or_create :sar_correspondence_type }
-      # category_id   { find_or_create(:category, :sar).id }
     end
 
     trait :offender_sar do
       correspondence_type   { find_or_create :offender_sar_correspondence_type }
     end
-
-
   end
 end

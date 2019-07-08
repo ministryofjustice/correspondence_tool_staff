@@ -1,6 +1,6 @@
 = render partial: 'layouts/header'
-= form_for kase, as: :case_foi, url: cases_path do |f|
-  = hidden_field_tag 'correspondence_type', @correspondence_type_key
+
+= form_for kase, as: :foi, url: case_create_action(kase.object) do |f|
   = f.radio_button_fieldset :type,
                             choices: @case_types,
                             value_method: :demodulize

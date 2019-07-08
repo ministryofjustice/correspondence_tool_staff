@@ -83,6 +83,4 @@ class Case::OverturnedICO::SAR < Case::OverturnedICO::Base
     state_machine.respond!(acting_user: current_user, acting_team: self.responding_team)
     state_machine.close!(acting_user: current_user, acting_team: self.responding_team)
   end
-
-
 end

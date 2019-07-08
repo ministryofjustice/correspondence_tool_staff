@@ -3,13 +3,8 @@ require 'rails_helper'
 module Stats
   describe R103SarBusinessUnitPerformanceReport do
 
-    before(:all) do
-      create :report_type, :r103
-    end
-
-    after(:all) do
-      ReportType.r103.destroy
-    end
+    before(:all) { find_or_create :report_type, :r103 }
+    after(:all) { ReportType.delete_all }
 
     context 'date management, titles, description, etc' do
       context 'defining the period' do
@@ -114,7 +109,7 @@ module Stats
 
           it 'selects only SAR cases' do
             expect(@scope.size).to eq 12
-            expect(@scope.map(&:type).uniq).to eq ['Case::SAR']
+            expect(@scope.map(&:type).uniq).to eq ['Case::SAR::Standard']
           end
 
           it 'excludes TMM cases' do

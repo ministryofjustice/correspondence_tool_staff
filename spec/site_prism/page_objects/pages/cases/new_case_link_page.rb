@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class NewCaseLinkPage < PageObjects::Pages::Base
-        set_url '/cases/{id}/new_case_link'
+        set_url '/cases/{id}/links/new'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

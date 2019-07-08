@@ -125,21 +125,21 @@ describe CaseLinkTypeValidator do
                   .to_case(Case::ICO::FOI)
                   .as_type(:related) }
 
-    it { should allow_link(Case::SAR)
-                  .to_case(Case::SAR )
+    it { should allow_link(Case::SAR::Standard)
+                  .to_case(Case::SAR::Standard )
                   .as_type(:related) }
-    it { should allow_link(Case::SAR)
+    it { should allow_link(Case::SAR::Standard)
                   .to_case(Case::ICO::SAR )
                   .as_type(:related) }
     it { should allow_link(Case::ICO::SAR)
-                  .to_case(Case::SAR )
+                  .to_case(Case::SAR::Standard )
                   .as_type(:related) }
     it { should allow_link(Case::ICO::SAR)
                   .to_case(Case::ICO::SAR )
                   .as_type(:related) }
 
     it { should allow_link(Case::OverturnedICO::SAR)
-                  .to_case(Case::SAR )
+                  .to_case(Case::SAR::Standard )
                   .as_type(:original) }
     it { should allow_link(Case::OverturnedICO::SAR)
                   .to_case(Case::ICO::SAR )

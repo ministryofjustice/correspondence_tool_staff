@@ -1,17 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe TeamsController, type: :controller do
-
   let(:bg)              { find_or_create :responder_business_group }
   let(:another_bg)      { create :business_group }
   let(:directorate)     { find_or_create :responder_directorate }
   let(:business_unit)   { find_or_create :foi_responding_team }
   let(:business_unit2)  { find_or_create :sar_responding_team }
   let(:manager)         { create :manager }
-  let(:business_map)    { create :report_type, :r006 }
+  let(:business_map)    { find_or_create(:report_type, :r006) }
   let(:reports)         { [ business_map ]}
   let(:foi_responder)   { find_or_create(:foi_responder) }
-
 
   describe 'GET index' do
     context 'logged in as a manager' do

@@ -30,7 +30,7 @@
 
 FactoryBot.define do
 
-  factory :sar_case, class: Case::SAR do
+  factory :sar_case, class: Case::SAR::Standard do
     transient do
       creation_time       { 4.business_days.ago }
       identifier          { "new sar case" }
@@ -124,7 +124,7 @@ FactoryBot.define do
   factory :awaiting_responder_sar,
           parent: :sar_case,
           aliases: [:assigned_sar],
-          class: Case::SAR do
+          class: Case::SAR::Standard do
     transient do
       identifier { "assigned sar" }
     end

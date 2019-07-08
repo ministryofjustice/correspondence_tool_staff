@@ -1,4 +1,3 @@
-# rubocop:disable Metrics/ClassLength
 module Stats
   class R004CabinetOfficeReport < BaseReport
 
@@ -338,4 +337,3 @@ module Stats
 
   end
 end
-# rubocop:enable Metrics/ClassLength

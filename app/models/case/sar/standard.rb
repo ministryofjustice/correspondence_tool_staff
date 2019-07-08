@@ -45,11 +45,7 @@ class Case::SAR::Standard < Case::Base
   end
 
   def self.searchable_fields_and_ranks
-    super.merge(
-        {
-            subject_full_name:     'B'
-        }
-    )
+    super.merge({ subject_full_name: 'B' })
   end
 
   jsonb_accessor :properties,
@@ -68,23 +64,24 @@ class Case::SAR::Standard < Case::Base
   attr_accessor :missing_info
 
   enum subject_type: {
-         offender:             'offender',
-         staff:                'staff',
-         member_of_the_public: 'member_of_the_public'
-       }
+    offender_sar: 'offender',
+    staff: 'staff',
+    member_of_the_public: 'member_of_the_public'
+  }
+
   enum reply_method: {
-         send_by_post:  'send_by_post',
-         send_by_email: 'send_by_email',
-       }
+    send_by_post: 'send_by_post',
+    send_by_email: 'send_by_email',
+  }
 
   has_paper_trail only: [
-                    :name,
-                    :email,
-                    :postal_address,
-                    :properties,
-                    :received_date,
-                    :subject,
-                  ]
+    :name,
+    :email,
+    :postal_address,
+    :properties,
+    :received_date,
+    :subject,
+  ]
 
   validates_presence_of :subject_full_name
   validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
@@ -154,6 +151,19 @@ class Case::SAR::Standard < Case::Base
     initial_deadline + Settings.sar_extension_limit.to_i.days
   end
 
+  def self.factory(type)
+    case type&.downcase
+    when 'standard'
+      self
+    when 'offender'
+      Case::SAR::Offender
+    end
+  end
+
+  def self.ico_model
+    Case::ICO::SAR
+  end
+
   private
 
   def use_subject_as_requester
@@ -162,20 +172,30 @@ class Case::SAR::Standard < Case::Base
 
   def validate_message_or_uploaded_request_files
     if message.blank? && uploaded_request_files.blank?
-      errors.add(:message,
-                 :blank,
-                 message: "can't be blank if no request files attached")
-      errors.add(:uploaded_request_files,
-                 :blank,
-                 message: "can't be blank if no case details entered")
+      errors.add(
+        :message,
+        :blank,
+        message: "can't be blank if no request files attached"
+      )
+
+      errors.add(
+        :uploaded_request_files,
+        :blank,
+        message: "can't be blank if no case details entered"
+      )
     end
   end
 
   def validate_message_or_attached_request_files
     if message.blank? && attachments.request.blank?
-      errors.add(:message,
-                 :blank,
-                 message: "can't be blank if no request files attached")
+      errors.add(
+        :message,
+        :blank,
+        message: "can't be blank if no request files attached"
+      )
     end
   end
 end
+
+
+

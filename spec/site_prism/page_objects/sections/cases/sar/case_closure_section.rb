@@ -9,8 +9,8 @@ module PageObjects
           element :date_responded_year, :case_form_element, 'date_responded_yyyy'
 
           section :missing_info, '.missing-info' do
-            element :yes, 'label[for="case_sar_missing_info_yes"]'
-            element :no, 'label[for="case_sar_missing_info_no"]'
+            element :yes, 'label[for="sar_missing_info_yes"]'
+            element :no, 'label[for="sar_missing_info_no"]'
           end
         end
       end

@@ -4,7 +4,7 @@ module PageObjects
       module New
         class OffenderSARPageRequesterDetails < PageObjects::Pages::Base
 
-          set_url '/cases/new/offender/requester-details'
+          set_url '/cases/offender_sars/requester-details'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -12,13 +12,15 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          element :email_address, '#offender_sar_case_form_email'
+          element :subject_full_name, '#offender_sar_subject_full_name'
 
-          element :postal_address, '#offender_sar_case_form_postal_address'
+          element :email_address, '#offender_sar_email'
 
-          element :name, 'offender_sar_case_form_name'
+          element :postal_address, '#offender_sar_postal_address'
 
-          element :third_party_relationship, '#offender_sar_case_form_third_party_relationship'
+          element :name, 'offender_sar_name'
+
+          element :third_party_relationship, '#offender_sar_third_party_relationship'
 
           element :submit_button, '.button'
 
@@ -26,18 +28,18 @@ module PageObjects
             kase = FactoryBot.build :offender_sar_case, params
 
             if kase.third_party?
-              choose('offender_sar_case_form_third_party_true', visible: false)
+              choose('offender_sar_third_party_true', visible: false)
               requester_full_name.set kase.name
               third_party_relationship.set kase.third_party_relationship
             else
-              choose('offender_sar_case_form_third_party_false', visible: false)
+              choose('offender_sar_third_party_false', visible: false)
             end
 
             if kase.send_by_email?
-              choose('offender_sar_case_form_reply_method_send_by_email', visible: false)
+              choose('offender_sar_reply_method_send_by_email', visible: false)
               email_address.set kase.email
             elsif kase.send_by_post?
-              choose('offender_sar_case_form_reply_method_send_by_postase.email', visible: false)
+              choose('offender_sar_reply_method_send_by_postase.email', visible: false)
               postal_address.set kase.postal_address
             end
           end

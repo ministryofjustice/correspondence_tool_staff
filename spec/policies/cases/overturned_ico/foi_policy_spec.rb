@@ -30,7 +30,7 @@ RSpec.describe Case::OverturnedICO::FOIPolicy do
     it { should_not permit(responder,               Case::OverturnedICO::FOI) }
   end
 
-  permissions :new_overturned_ico? do
+  permissions :new? do
     context 'feature set enabled' do
       it 'the feature set is enabled' do
         expect(FeatureSet.ico.enabled?).to be true

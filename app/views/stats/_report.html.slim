@@ -15,7 +15,7 @@ section
                 = "Reporting period: "
               = report.default_reporting_period_text
             .report-list-download
-              = link_to stats_download_path(id: report.id), target: '_blank' do
+              = link_to stat_path(id: report.id), target: '_blank' do
                 = 'Download report'
                 span.visually-hidden
                   = " - #{ report.full_name }"

@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class RemoveClearanceFormPage < PageObjects::Pages::Base
-        set_url '/cases/{id}/remove_clearance'
+        set_url '/cases/{id}/clearances/remove_clearance'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

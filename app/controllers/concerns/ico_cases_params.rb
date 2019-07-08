@@ -4,7 +4,7 @@ module ICOCasesParams
   private
 
   def create_ico_params
-    case_params = params.require(:case_ico)
+    case_params = params.require(:ico)
 
     if case_params[:original_case_ids].present?
       case_params[:original_case_id] = case_params.delete(:original_case_ids).first
@@ -29,8 +29,8 @@ module ICOCasesParams
   end
 
   def record_late_team_ico_params
-    if params[:case_ico].present?
-      params.require(:case_ico).permit(:late_team_id)
+    if params[:ico].present?
+      params.require(:ico).permit(:late_team_id)
     else
       {}
     end
@@ -51,17 +51,16 @@ module ICOCasesParams
   end
 
   def process_ico_closure_params
-    params.require(:case_ico).permit(
-                                 :date_ico_decision_received_dd,
-                                 :date_ico_decision_received_mm,
-                                 :date_ico_decision_received_yyyy,
-                                 :ico_decision_comment,
-                                 :ico_decision,
-                                 :late_team_id,
-                                 uploaded_ico_decision_files: [],
+    params.require(:ico).permit(
+      :date_ico_decision_received_dd,
+      :date_ico_decision_received_mm,
+      :date_ico_decision_received_yyyy,
+      :ico_decision_comment,
+      :ico_decision,
+      :late_team_id,
+      uploaded_ico_decision_files: [],
     )
   end
-
 
   def process_new_linked_cases_for_ico_params
     case @link_type
@@ -129,7 +128,7 @@ module ICOCasesParams
   end
 
   def validate_ico_original_case(original_case)
-    if not original_case.class.in? [Case::FOI::Standard, Case::SAR]
+    if not original_case.class.in? [Case::FOI::Standard, Case::SAR::Standard]
       @linked_case_error = ico_error('original_case_number', :wrong_type)
       false
     elsif not policy(original_case).show?
@@ -194,7 +193,7 @@ module ICOCasesParams
   end
 
   def respond_ico_params
-    params.require(:case_ico).permit(
+    params.require(:ico).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
@@ -202,10 +201,10 @@ module ICOCasesParams
   end
 
   def ico_close_date_responded_params
-      params.require(:case_ico).permit(
-                                 :date_ico_decision_received_dd,
-                                 :date_ico_decision_received_mm,
-                                 :date_ico_decision_received_yyyy
+    params.require(:ico).permit(
+      :date_ico_decision_received_dd,
+      :date_ico_decision_received_mm,
+      :date_ico_decision_received_yyyy
     )
   end
 end

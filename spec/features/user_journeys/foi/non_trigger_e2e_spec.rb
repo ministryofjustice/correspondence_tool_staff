@@ -13,8 +13,6 @@
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 
-
-
 feature 'FOI case that does not require clearance' do
   include CaseDateManipulation
   include Features::Interactions
