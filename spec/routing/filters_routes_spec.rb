@@ -23,7 +23,7 @@ describe 'cases filters routes', type: :routing do
     end
 
     describe get: '/cases/my_open/in_time' do
-      it { should route_to  controller: 'cases/filters', action: 'my_open', tab: 'in_time' }
+      it { should route_to controller: 'cases/filters', action: 'my_open', tab: 'in_time' }
     end
   end
 end
