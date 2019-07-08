@@ -64,13 +64,13 @@ class Case::SAR::Standard < Case::Base
   attr_accessor :missing_info
 
   enum subject_type: {
-    offender_sar:             'offender',
-    staff:                'staff',
+    offender_sar: 'offender',
+    staff: 'staff',
     member_of_the_public: 'member_of_the_public'
   }
 
   enum reply_method: {
-    send_by_post:  'send_by_post',
+    send_by_post: 'send_by_post',
     send_by_email: 'send_by_email',
   }
 
