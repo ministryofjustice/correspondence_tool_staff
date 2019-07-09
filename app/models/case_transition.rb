@@ -18,7 +18,7 @@
 #  to_workflow    :string
 #
 
-class CaseTransition < ActiveRecord::Base
+class CaseTransition < ApplicationRecord
   ASSIGN_RESPONDER_EVENT = 'assign_responder'
 
   belongs_to :case,

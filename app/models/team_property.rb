@@ -10,7 +10,7 @@
 #  updated_at :datetime         not null
 #
 
-class TeamProperty < ActiveRecord::Base
+class TeamProperty < ApplicationRecord
 
 
   VALID_KEYS = %w(

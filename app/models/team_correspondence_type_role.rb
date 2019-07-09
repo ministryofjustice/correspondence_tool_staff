@@ -14,7 +14,7 @@
 #  updated_at             :datetime         not null
 #
 
-class TeamCorrespondenceTypeRole < ActiveRecord::Base
+class TeamCorrespondenceTypeRole < ApplicationRecord
 
   belongs_to :team
   belongs_to :correspondence_type
