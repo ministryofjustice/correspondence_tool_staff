@@ -29,7 +29,8 @@ describe 'cases/show.html.slim', type: :view do
       :upload_responses?,
       :upload_response_and_approve?,
       :upload_responses_for_flagged?,
-      :upload_response_and_return_for_redraft?
+      :upload_response_and_return_for_redraft?,
+      :mark_as_waiting_for_data
     ]
 
 
@@ -467,6 +468,38 @@ describe 'cases/show.html.slim', type: :view do
           expect(cases_show_page.actions).to have_remove_sar_deadline_extension
         end
       end
+    end
+  end
+
+  fcontext 'with an offender sar case' do
+    let(:offender_sar_case) { create(:offender_sar_case).decorate }
+
+    before do
+      assign(:case, offender_sar_case)
+      setup_policies(
+        mark_as_waiting_for_data: true
+      )
+    end
+
+    context 'as a manager' do
+      context 'when a case just created' do
+        it 'shows mark as waiting for data' do
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+byebug
+          expect(cases_show_page.actions).to have_mark_as_waiting_for_data
+        end
+      end
+      # context 'when a case is waiting for data' do
+      #   it 'shows mark as ready for vetting' do
+      #     login_as manager
+      #     render
+      #     cases_show_page.load(rendered)
+
+      #     expect(cases_show_page.actions).to have_mark_as_waiting_for_data
+      #   end
+      # end
     end
   end
 end

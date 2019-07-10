@@ -84,4 +84,8 @@ class Case::SAR::Offender < Case::Base
   def default_managing_team
     BusinessUnit.find_by!(code: Settings.offender_sar_cases.default_managing_team)
   end
+
+  def current_team_and_user_resolver
+    CurrentTeamAndUser::SAR::Offender.new(self)
+  end
 end

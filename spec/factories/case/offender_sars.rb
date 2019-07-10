@@ -19,7 +19,7 @@ FactoryBot.define do
       third_party_relationship { 'Aunt' }
     end
 
-    current_state                   { 'unassigned' }
+    current_state                   { 'data_to_be_requested' }
     sequence(:name)                 { |n| "#{identifier} name #{n}" }
     email                           { Faker::Internet.email(identifier) }
     reply_method                    { 'send_by_email' }
@@ -37,5 +37,95 @@ FactoryBot.define do
     flag_as_high_profile            { false }
     created_at                      { creation_time }
     creator                         { create(:user, :orphan) }
+  end
+
+  factory :waiting_for_data_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+    transient do
+      identifier { "waiting for data offender sar" }
+    end
+
+    created_at      { creation_time }
+    received_date   { creation_time }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_waiting_for_data,
+             case: kase
+      kase.reload
+    end
+  end
+
+  factory :ready_for_vetting_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+    transient do
+      identifier { "Ready for vetting offender sar" }
+    end
+
+    created_at      { creation_time }
+    received_date   { creation_time }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_ready_for_vetting,
+             case: kase
+      kase.reload
+    end
+  end
+
+  factory :vetting_in_progress_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+    transient do
+      identifier { "Vetting in progress offender sar" }
+    end
+
+    created_at      { creation_time }
+    received_date   { creation_time }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_vetting_in_progress,
+             case: kase
+      kase.reload
+    end
+  end
+
+  factory :ready_to_dispatch_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+    transient do
+      identifier { "Ready to dispatch offender sar" }
+    end
+
+    created_at      { creation_time }
+    received_date   { creation_time }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_ready_to_dispatch,
+             case: kase
+      kase.reload
+    end
+  end
+
+  factory :ready_to_close_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+    transient do
+      identifier { "Ready to close offender sar" }
+    end
+
+    created_at      { creation_time }
+    received_date   { creation_time }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_ready_to_close,
+             case: kase
+      kase.reload
+    end
+  end
+
+  factory :closed_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+    transient do
+      identifier { "Closed offender sar" }
+    end
+
+    created_at      { creation_time }
+    received_date   { creation_time }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_closed,
+             case: kase
+      kase.reload
+    end
   end
 end
