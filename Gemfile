@@ -41,7 +41,7 @@ gem 'mechanize', '>= 2.7.5'
 gem 'mimetype-fu', '~> 0.1.2'
 gem 'paper_trail', '~> 10.3'
 gem 'pg', '~> 1.1'
-gem 'pg_search', '~> 2.1.7'
+gem 'pg_search', '~> 2.2.0'
 gem 'pry-rails'
 gem 'puma', '~> 3.12'
 gem 'pundit', '~>2.0'
@@ -68,11 +68,11 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'bcrypt', '~> 3.1.7'
 
 group :test do
-  gem 'capybara', '~> 3.20.2'
+  gem 'capybara', '~> 3.25.0'
   gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
-  gem 'shoulda-matchers', '~> 4.0'
+  gem 'shoulda-matchers', '~> 4.1'
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 3.0'
 end
@@ -93,7 +93,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.70.0', require: false
+  gem 'rubocop', '~> 0.71.0', require: false
   gem 'rubocop-rspec', '~> 1.33.0', require: false
   gem 'rubocop-performance', require: false
   gem 'ruby-progressbar'
