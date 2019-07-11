@@ -18,7 +18,6 @@ class Case::SAR::Offender < Case::Base
                  other_subject_ids: :string,
                  previous_case_numbers: :string,
                  prison_number: :string,
-                 received_date: :date,
                  reply_method: :string,
                  subject_aliases: :string,
                  subject_full_name: :string,
@@ -66,6 +65,7 @@ class Case::SAR::Offender < Case::Base
   validates :subject_type, presence: true
   validates :reply_method, presence: true
   validate :validate_date_of_birth
+  validate :validate_received_date
 
   def validate_received_date
     super
