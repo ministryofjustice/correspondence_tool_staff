@@ -13,12 +13,11 @@ class Case::SAR::Offender < Case::Base
                  date_of_birth: :date,
                  escalation_deadline: :date,
                  external_deadline: :date,
-                 flag_for_disclosure_specialists: :boolean,
+                 flag_as_high_profile: :boolean,
                  internal_deadline: :date,
                  other_subject_ids: :string,
                  previous_case_numbers: :string,
                  prison_number: :string,
-                 received_date: :date,
                  reply_method: :string,
                  subject_aliases: :string,
                  subject_full_name: :string,
@@ -50,8 +49,8 @@ class Case::SAR::Offender < Case::Base
                     :received_date,
                   ]
 
-  validates :third_party, inclusion: { in: [true, false], message: 'Please choose yes or no' }
-  validates :flag_for_disclosure_specialists, inclusion: { in: ['yes', 'no'], message: 'Please choose yes or no' }
+  validates :third_party, inclusion: { in: [true, false], message: "can't be blank" }
+  validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
 
   validates :name, presence: true, if: -> { third_party }
   validates :third_party_relationship, presence: true, if: -> { third_party }
@@ -65,4 +64,20 @@ class Case::SAR::Offender < Case::Base
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
   validates :reply_method, presence: true
+  validate :validate_date_of_birth
+  validate :validate_received_date
+
+  def validate_received_date
+    super
+  end
+
+  def validate_date_of_birth
+    if date_of_birth.present? && self.date_of_birth > Date.today
+      errors.add(
+        :date_of_birth,
+        I18n.t('activerecord.errors.models.case.attributes.date_of_birth.not_in_future')
+      )
+    end
+    errors[:date_of_birth].any?
+  end
 end

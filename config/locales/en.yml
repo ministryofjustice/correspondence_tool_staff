@@ -60,6 +60,8 @@ en:
               before_received: "can't be before date received"
               not_in_future: "can't be in the future."
               after_date_responded: "can't be after the date responded"
+            date_of_birth:
+              not_in_future: "can't be in the future."
             postal_address:
               blank: "and email can't both be blank"
             number:

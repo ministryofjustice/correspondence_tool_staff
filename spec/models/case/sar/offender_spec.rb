@@ -43,11 +43,11 @@ describe Case::SAR::Offender do
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 
-      kase = build :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_for_disclosure_specialists: nil
+      kase = build :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
 
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_full_name]).to eq(["can't be blank"])
-      expect(kase.errors[:third_party]).to eq(["Please choose yes or no"])
+      expect(kase.errors[:third_party]).to eq(["can't be blank"])
     end
   end
 
@@ -77,11 +77,123 @@ describe Case::SAR::Offender do
   end
 
   describe '#reply_method' do
-    it 'validates reply method' do
-      kase = build :offender_sar_case
+    context 'valid values' do
+      it 'validates reply method' do
+        kase = build :offender_sar_case
+        expect(kase).to be_valid
+        expect(kase).to validate_presence_of(:reply_method)
+        expect(kase).to allow_values('send_by_email', 'send_by_post').for(:reply_method)
+      end
 
-      expect(kase).to validate_presence_of(:reply_method)
-      expect(kase).to allow_values('send_by_email', 'send_by_post').for(:reply_method)
+      it 'validates when email is set' do
+        kase = build(:offender_sar_case, reply_method: 'send_by_email', email: 'foo@example.com')
+        expect(kase).to be_valid
+      end
+
+      it 'validates when address is set' do
+        kase = build(:offender_sar_case, reply_method: 'send_by_post', postal_address: '22 Acacia Avenue')
+        expect(kase).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_case, reply_method: 'wibble')
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context 'nil' do
+      it 'errors' do
+        kase = build(:offender_sar_case, reply_method: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:reply_method]).to eq ["can't be blank"]
+      end
+    end
+
+    describe '#email' do
+      it 'validates presence of email when reply method is send by email' do
+        kase = build :offender_sar_case, reply_method: 'send_by_email', email: ''
+        expect(kase).not_to be_valid
+        expect(kase.errors[:email]).to eq ["can't be blank"]
+      end
+
+      it 'validates format of email when reply method is send by email' do
+        kase = build :offender_sar_case, reply_method: 'send_by_email', email: 'wibble'
+        expect(kase).not_to be_valid
+        expect(kase.errors[:email]).to eq ["is invalid"]
+      end
+    end
+
+    describe '#postal_address' do
+      it 'validates presence of postal address when reply method is send by post' do
+        kase = build :offender_sar_case, reply_method: 'send_by_post', postal_address: ''
+        expect(kase).not_to be_valid
+        expect(kase.errors[:postal_address]).to eq ["can't be blank"]
+      end
+    end
+  end
+
+  describe '#date_of_birth' do
+    context 'valid values' do
+      it 'validates date of birth' do
+        kase = build :offender_sar_case
+
+        expect(kase).to validate_presence_of(:date_of_birth)
+        expect(kase).to allow_values('01-01-1967').for(:date_of_birth)
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_case, date_of_birth: 'wibble')
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context 'date of birth cannot be in future' do
+      it 'errors' do
+        kase = build(:offender_sar_case, date_of_birth: 1.day.from_now)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:date_of_birth]).to eq ["can't be in the future."]
+      end
+    end
+
+    context 'nil' do
+      it 'errors' do
+        kase = build(:offender_sar_case, date_of_birth: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:date_of_birth]).to eq ["can't be blank"]
+      end
+    end
+  end
+
+  describe '#received_date' do
+    context 'valid values' do
+      it 'validates received date' do
+        kase = build :offender_sar_case
+
+        expect(kase).to validate_presence_of(:received_date)
+        expect(kase).to allow_values('01-01-2019').for(:received_date)
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_case, received_date: 'wibble')
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context 'received date cannot be in future' do
+      it 'errors' do
+        kase = build(:offender_sar_case, received_date: 1.day.from_now)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:received_date]).to eq ["can't be in the future."]
+      end
     end
   end
 
@@ -116,7 +228,7 @@ describe Case::SAR::Offender do
     end
 
     describe 'third party relationship' do
-      it 'must be persent when thrid party is true' do
+      it 'must be present when thrid party is true' do
         kase = build :offender_sar_case, third_party: true, third_party_relationship: ''
         expect(kase).not_to be_valid
         expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
@@ -133,8 +245,7 @@ describe Case::SAR::Offender do
     it 'validates presence ' do
       kase = build :offender_sar_case, message: ''
       expect(kase).not_to be_valid
-      expect(kase.errors[:message])
-        .to eq ["can't be blank"]
+      expect(kase.errors[:message]).to eq ["can't be blank"]
     end
   end
 

@@ -6,7 +6,7 @@ module OffenderSARCasesParams
       :delivery_method,
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :email,
-      :flag_for_disclosure_specialists,
+      :flag_as_high_profile,
       :message,
       :name,
       :other_subject_ids,

@@ -23,7 +23,9 @@
   = f.radio_button_fieldset :subject_type,
     choices: Case::SAR::Offender::subject_types.keys
 
-  = f.radio_button_fieldset :flag_for_disclosure_specialists
+  = f.radio_button_fieldset(:flag_as_high_profile) do |fieldset|
+    - fieldset.radio_input(true, text_method: :humanize)
+    - fieldset.radio_input(false, text_method: :humanize)
 
   input name="current_step" type="hidden" value=@case.current_step
 

@@ -80,8 +80,8 @@ RSpec.describe OffenderSARCaseForm, type: :model do
 
     context "when params is set and valid" do
       let(:params) { ActionController::Parameters.new(
-        case_form: { subject_type: "offender", date_of_birth: "2001-01-01", flag_for_disclosure_specialists: "no" }
-      ).require(:case_form).permit(:subject_type, :date_of_birth, :flag_for_disclosure_specialists)}
+        case_form: { subject_type: "offender", date_of_birth: "2001-01-01", flag_as_high_profile: "no" }
+      ).require(:case_form).permit(:subject_type, :date_of_birth, :flag_as_high_profile)}
 
       context "and the form model has the values merged" do
         it "returns true" do

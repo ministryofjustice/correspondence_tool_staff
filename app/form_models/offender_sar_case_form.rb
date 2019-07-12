@@ -9,7 +9,7 @@ class OffenderSARCaseForm
            :date_of_birth,
            :email,
            :errors,
-           :flag_for_disclosure_specialists,
+           :flag_as_high_profile,
            :id,
            :message,
            :message,
@@ -78,6 +78,7 @@ class OffenderSARCaseForm
   def valid_attributes?(params)
     params ||= ActionController::Parameters.new({}).permit!
     params = params_for_step(params, current_step)
+    check_valid_dates_for_step(current_step)
     @case.valid_attributes?(params)
   end
 
@@ -87,6 +88,11 @@ class OffenderSARCaseForm
 
   private
 
+  def check_valid_dates_for_step(step)
+    @case.validate_date_of_birth if step == "subject-details"
+    @case.validate_received_date if step == "date-received"
+  end
+
   def params_for_step(params, step)
     # We partially validate each step of the form using the model validations
     # So in each step we need to ensure default values for certain fields
@@ -95,7 +101,7 @@ class OffenderSARCaseForm
     when "subject-details"
       set_empty_value_if_unset(params, "subject_type")
       set_empty_value_if_unset(params, "date_of_birth")
-      set_empty_value_if_unset(params, "flag_for_disclosure_specialists")
+      set_empty_value_if_unset(params, "flag_as_high_profile")
     when "requester-details"
       set_empty_value_if_unset(params, "third_party")
       clear_param_if_condition(params, "name", "third_party", "true")
