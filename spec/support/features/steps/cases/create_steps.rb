@@ -103,9 +103,13 @@ def create_offender_sar_case_step(params = {})
   cases_new_offender_sar_date_received_page.fill_in_case_details(params)
 
   click_on "Continue"
-  # commented out next expectation while team assignment issue is getting fixed
-  # expect(cases_show_page).to be_displayed
-  # expect(cases_show_page).to have_content "Case created successfully"
+
+  expect(cases_show_page).to be_displayed
+  expect(cases_show_page).to have_content "Case created successfully"
+  click_on "All open cases"
+
+  expect(cases_page).to be_displayed
+  expect(cases_page).to have_content "Branston Registry"
 end
 
 
