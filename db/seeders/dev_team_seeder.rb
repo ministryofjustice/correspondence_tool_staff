@@ -100,7 +100,8 @@ class DevTeamSeeder
     @bu_branston  = find_or_create_business_unit(parent: @dir_dacu,
                                                  name: 'Branston Registry',
                                                  role: 'manager',
-                                                 correspondence_type_ids: [@offender.id])
+                                                 correspondence_type_ids: [@offender.id],
+                                                 code: 'BRANSTON')
   end
   #rubocop:enable Metrics/MethodLength
 

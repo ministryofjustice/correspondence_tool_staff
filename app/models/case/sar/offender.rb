@@ -80,4 +80,8 @@ class Case::SAR::Offender < Case::Base
     end
     errors[:date_of_birth].any?
   end
+
+  def default_managing_team
+    BusinessUnit.find_by!(code: Settings.offender_sar_cases.default_managing_team)
+  end
 end
