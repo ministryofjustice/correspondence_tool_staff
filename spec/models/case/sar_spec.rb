@@ -30,7 +30,7 @@
 
 require 'rails_helper'
 
-describe Case::SAR do
+describe Case::SAR::Standard do
 
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
@@ -250,7 +250,7 @@ describe Case::SAR do
 
   describe '.searchable_fields_and_ranks' do
     it 'includes subject full name' do
-      expect(Case::SAR.searchable_fields_and_ranks).to include({subject_full_name: 'B'})
+      expect(Case::SAR::Standard.searchable_fields_and_ranks).to include({subject_full_name: 'B'})
     end
   end
 

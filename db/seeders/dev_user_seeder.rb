@@ -11,6 +11,7 @@ class DevUserSeeder
       'pressoffice'   => BusinessUnit.press_office,
       'privateoffice' => BusinessUnit.private_office,
       'commsandinfo'  => BusinessUnit.find_by!(name: 'Communications and Information'),
+      'branston'  => BusinessUnit.find_by!(name: 'Branston Registry'),
     }
 
     @users = {
@@ -37,6 +38,7 @@ class DevUserSeeder
       'Prescilla Offenberg'=> [{ team: 'pressoffice',    role: 'approver' }],
       'Primrose Offord'    => [{ team: 'privateoffice',  role: 'approver' }],
       'Princeton Office'   => [{ team: 'privateoffice',  role: 'approver' }],
+      'Brian Rix'          => [{ team: 'branston',  role: 'manager' }],
     }
   end
   # rubocop:enable Metrics/MethodLength

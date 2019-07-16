@@ -27,7 +27,7 @@ Rails.application.configure do
     # searches are also a challenge...
     [:responder, :message_transitions, :responding_team, :approver_assignments, :managing_team].each do |assoc|
       [Case::FOI::TimelinessReview, Case::FOI::ComplianceReview,
-       Case::ICO::FOI, Case::FOI::Standard, Case::SAR].each do |klass|
+       Case::ICO::FOI, Case::FOI::Standard, Case::SAR::Standard, Case::SAR::Offender].each do |klass|
         Bullet.add_whitelist :type => :n_plus_one_query,
                              :class_name => klass.name,
                              :association => assoc

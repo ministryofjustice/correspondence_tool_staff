@@ -98,11 +98,12 @@ ignore_unused:
   - 'nav.tabs.{in_time,late}_html'
   - 'pundit.nil_class'
   - 'event.*'
-  - 'cases.index.heading_*'
+  - 'cases.index.*'
+  - 'cases.filters.index.*'
+  - 'filters.crumbs.list_filter_type.*'
   - 'devise.*'
   - 'errors.*'
   - 'cases.new.correspondence_type_errors.*'
-  - 'filters.crumbs.list_filter_type.*'
   - 'page_title.*_cases'
   - 'cases.new*.external_deadline_copy'
   - 'cases.new*.sub_heading'
@@ -120,6 +121,7 @@ ignore_unused:
   - users.show.message_notification
   - users.show.who_its_with
   - common.close
+  - stats.custom.success
 
 
 ## Consider these keys used:

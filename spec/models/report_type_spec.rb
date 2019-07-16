@@ -17,8 +17,6 @@
 require 'rails_helper'
 
 RSpec.describe ReportType, type: :model do
-  let!(:r003) { find_or_create :report_type, :r003 }
-  let!(:r006) { find_or_create :report_type, :r006 }
   after(:all) { ReportType.delete_all }
 
   it { should have_many(:reports) }
@@ -85,6 +83,7 @@ RSpec.describe ReportType, type: :model do
 
   describe '#class_constant' do
     it 'returns the report class name as a constant' do
+      r003 = create :report_type, :r003
       expect(r003.class_constant)
         .to eq Stats::R003BusinessUnitPerformanceReport
     end
@@ -92,6 +91,7 @@ RSpec.describe ReportType, type: :model do
 
   describe '#filename' do
     it 'formats the class name into a filename' do
+      r003 = find_or_create :report_type, :r003
       expect(r003.filename('csv')).to eq 'r003_business_unit_performance_report.csv'
     end
   end
@@ -115,12 +115,14 @@ RSpec.describe ReportType, type: :model do
 
     context '#file_extension' do
       it 'assumes csv only if concrete class does not support xlsx' do
+        r006 = create :report_type, :r006
         expect(r006.file_extension).to eq 'csv'
       end
     end
 
     context '#description' do
       it 'returns concrete class description' do
+        r003 = create :report_type, :r003
         expect(r003.description)
           .to eq Stats::R003BusinessUnitPerformanceReport.description
       end

@@ -5,40 +5,40 @@ module PageObjects
         class FormSection < SitePrism::Section
           include SitePrism::Support::DropInDropzone
 
-          element :ico_reference_number, '#case_ico_ico_reference_number'
-          element :ico_officer_name, '#case_ico_ico_officer_name'
+          element :ico_reference_number, '#ico_ico_reference_number'
+          element :ico_officer_name, '#ico_ico_officer_name'
 
-          element :original_case_number, '#case_ico_original_case_number'
+          element :original_case_number, '#ico_original_case_number'
           element :original_case_number_error, '.js-original-case .error-message'
           section :original_case,
                   PageObjects::Sections::Cases::LinkedCasesSection,
                   '.js-original-case-and-friends .js-original-case-report'
           element :link_original_case, :xpath, '//button[contains(.,"Link original case")]'
 
-          element :related_case_number, '#case_ico_related_case_number'
+          element :related_case_number, '#ico_related_case_number'
           element :related_case_number_error, '.js-related-case .error-message'
           section :related_cases,
                   PageObjects::Sections::Cases::LinkedCasesSection,
                   '.js-related-case-report'
           element :link_related_case, :xpath, '//button[contains(.,"Link related case")]'
 
-          element :date_received_day, '#case_ico_received_date_dd'
-          element :date_received_month, '#case_ico_received_date_mm'
-          element :date_received_year, '#case_ico_received_date_yyyy'
+          element :date_received_day, '#ico_received_date_dd'
+          element :date_received_month, '#ico_received_date_mm'
+          element :date_received_year, '#ico_received_date_yyyy'
 
-          element :external_deadline_day, '#case_ico_external_deadline_dd'
-          element :external_deadline_month, '#case_ico_external_deadline_mm'
-          element :external_deadline_year, '#case_ico_external_deadline_yyyy'
+          element :external_deadline_day, '#ico_external_deadline_dd'
+          element :external_deadline_month, '#ico_external_deadline_mm'
+          element :external_deadline_year, '#ico_external_deadline_yyyy'
 
-          element :internal_deadline_day, '#case_ico_internal_deadline_dd'
-          element :internal_deadline_month, '#case_ico_internal_deadline_mm'
-          element :internal_deadline_year, '#case_ico_internal_deadline_yyyy'
+          element :internal_deadline_day, '#ico_internal_deadline_dd'
+          element :internal_deadline_month, '#ico_internal_deadline_mm'
+          element :internal_deadline_year, '#ico_internal_deadline_yyyy'
 
-          element :date_draft_compliant_day, '#case_ico_date_draft_compliant_dd'
-          element :date_draft_compliant_month, '#case_ico_date_draft_compliant_mm'
-          element :date_draft_compliant_year, '#case_ico_date_draft_compliant_yyyy'
+          element :date_draft_compliant_day, '#ico_date_draft_compliant_dd'
+          element :date_draft_compliant_month, '#ico_date_draft_compliant_mm'
+          element :date_draft_compliant_year, '#ico_date_draft_compliant_yyyy'
 
-          element :case_details, '#case_ico_message'
+          element :case_details, '#ico_message'
 
           element :dropzone_container, '.dropzone'
 

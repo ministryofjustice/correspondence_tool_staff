@@ -3,20 +3,20 @@ module OverturnedICOParams
 
   def create_ico_overturned_foi_params
     params
-      .require(:case_overturned_foi)
+      .require(:overturned_foi)
       .permit(create_overturned_ico_params_list)
-      .merge(original_case_params(params[:case_overturned_foi]))
+      .merge(original_case_params(params[:overturned_foi]))
   end
 
   def create_ico_overturned_sar_params
     params
-      .require(:case_overturned_sar)
+      .require(:overturned_sar)
       .permit(create_overturned_ico_params_list)
-      .merge(original_case_params(params[:case_overturned_sar]))
+      .merge(original_case_params(params[:overturned_sar]))
   end
 
   def respond_overturned_params
-    params.require("case_#{@correspondence_type_key}").permit(
+    params.require(@correspondence_type_key).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,

@@ -284,7 +284,7 @@ feature 'Closing a case' do
     click_link kase.number
 
     expect(cases_show_page.actions).
-      to have_link('Close case', href: close_case_path(kase))
+      to have_link('Close case', href: close_case_overturned_ico_foi_path(kase))
     click_link 'Close case'
 
     expect(cases_close_page).to have_case_attachments

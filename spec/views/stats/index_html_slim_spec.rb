@@ -86,7 +86,7 @@ describe 'stats/index.html.slim', type: :view do
       ].join(' ')
 
       download_text = "Download report - #{reports[index].full_name}"
-      report_link = stats_download_path(id: reports[index].id)
+      report_link = stat_path(id: reports[index].id)
 
       expect(report.name.text).to eq reports[index].full_name
       expect(report.report_period.text).to eq reporting_period

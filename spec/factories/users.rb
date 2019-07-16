@@ -88,6 +88,16 @@ FactoryBot.define do
       managing_teams { [find_or_create(:team_dacu, :empty)] }
     end
 
+    factory :branston_user, parent: :manager do
+      transient do
+        identifier { 'branston registry managing user' }
+      end
+
+      full_name      { identifier }
+      email          { email_from_name(full_name) }
+      managing_teams { [find_or_create(:team_branston, :empty)] }
+    end
+
     trait :orphan do
       approving_team { nil }
       managing_teams { [] }

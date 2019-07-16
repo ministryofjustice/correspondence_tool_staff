@@ -1,0 +1,50 @@
+- content_for :page_title do
+  = t('page_title.pit_extension_page', case_number: @case.number)
+
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+br
+
+div.action-copy
+  p
+    = "You are extending the time on:"
+    strong.strong-block
+      = @case.subject
+  p.notice
+    i class="icon icon-important"
+      span.visually-hidden
+        = "Important"
+    strong.normal-weight
+      = "The additional time can't be used to determine whether exemptions apply."
+      br
+      = "It must already be identified that a qualified exemption applies."
+
+br
+
+= form_for @case, as: :case, url: case_pit_extensions_path(@case), method: :post do |f|
+  .form-group
+    = f.gov_uk_date_field :extension_deadline,
+                          { legend_text: t('.extension_date'),
+                            form_hint_text: t('.extension_date_hint',
+                                              extension_limit: Settings.pit_extension_limit) }
+
+
+  = f.text_area :reason_for_extending
+
+  .button-holder
+    = submit_tag 'Extend deadline', class: 'button'
+    = link_to('Cancel',
+              case_path(@case),
+              class: 'acts-like-button button-left-spacing')

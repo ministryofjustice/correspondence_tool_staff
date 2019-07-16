@@ -1,23 +1,22 @@
-#rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
-
   before_action :set_case, only: [
-                  :assign_to_team,
-                  :new,
-                  :select_team,
-                  :show_rejected,
-                  :take_case_on,
-                ]
+    :assign_to_team,
+    :new,
+    :select_team,
+    :take_case_on,
+  ]
+
   before_action :set_case_and_assignment, only: [
-                  :accept,
-                  :accept_or_reject,
-                  :assign_to_new_team,
-                  :edit,
-                  :execute_assign_to_new_team,
-                  :execute_reassign_user,
-                  :reassign_user,
-                  :unaccept,
-                ]
+    :accept,
+    :accept_or_reject,
+    :assign_to_new_team,
+    :edit,
+    :execute_assign_to_new_team,
+    :execute_reassign_user,
+    :reassign_user,
+    :unaccept,
+  ]
+
   before_action :validate_response, only: :accept_or_reject
 
   def new
@@ -305,4 +304,3 @@ class AssignmentsController < ApplicationController
     end
   end
 end
-#rubocop:enable Metrics/ClassLength

@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class ApprovePage < SitePrism::Page
-        set_url '/cases/{id}/approve'
+        set_url '/cases/{case_id}/approvals/new'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -12,6 +12,7 @@ module PageObjects
 
         section :clearance,
                 PageObjects::Sections::Cases::ClearanceCopySection, '.clearance-copy'
+
         section :bypass_press_option,
                 PageObjects::Sections::Cases::BypassPressOfficeOptionSection,
                 :xpath,

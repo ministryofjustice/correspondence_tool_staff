@@ -2,16 +2,17 @@
   .column-full
     = render partial: 'cases/case_attachments', locals: { case_details: @case }
 
-- url = defined?(form_url) ? form_url : process_date_responded_case_path(id: @case.id)
-= form_for @case, as: :"case_#{@correspondence_type_key}", url: url do |f|
+- url = defined?(form_url) ? form_url : "#{polymorphic_path(@case, action: :process_date_responded)}"
+
+= form_for @case, as: :"#{@correspondence_type_key}", url: url do |f|
   .form-group
     - unless @case.ico?
-      = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'),
-              form_hint_text: t('.date_example'),
+      = f.gov_uk_date_field :date_responded, { legend_text: t('cases.shared.date_responded_form.close_date'),
+              form_hint_text: t('cases.shared.date_responded_form.date_example'),
               today_button: {class: ''} }
     - else
-      = f.gov_uk_date_field :date_ico_decision_received, { legend_text: t('.date_ico_decision_received_date'),
-              form_hint_text: t('.date_example'),
+      = f.gov_uk_date_field :date_ico_decision_received, { legend_text: t('cases.shared.date_responded_form.date_ico_decision_received_date'),
+              form_hint_text: t('cases.shared.date_responded_form.date_example'),
               today_button: {class: ''} }
 
   = f.submit 'Continue', {class: 'button'}

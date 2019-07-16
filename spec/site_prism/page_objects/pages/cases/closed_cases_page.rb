@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class ClosedCasesPage < SitePrism::Page
-        set_url '/cases/closed_cases'
+        set_url '/cases/closed'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

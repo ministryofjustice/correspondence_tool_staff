@@ -36,6 +36,19 @@ FactoryBot.define do
     initialize_with { CorrespondenceType.find_or_create_by(name: name) }
   end
 
+  factory :offender_sar_correspondence_type, parent: :correspondence_type do
+    name { 'Offender Subject Access Request' }
+    abbreviation { 'OFFENDER_SAR' }
+    escalation_time_limit { 3 }
+    internal_time_limit { 10 }
+    external_time_limit { 30 }
+    deadline_calculator_class { 'CalendarDays' }
+    report_category_name { 'Offender SAR report' }
+
+
+    initialize_with { CorrespondenceType.find_or_create_by(name: name) }
+  end
+
   factory :gq_correspondence_type, parent: :correspondence_type do
     name { "General enquiry" }
     abbreviation { "GQ" }

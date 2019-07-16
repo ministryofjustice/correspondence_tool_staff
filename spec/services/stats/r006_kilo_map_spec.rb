@@ -10,19 +10,24 @@ module Stats
       dacu_disclosure = BusinessUnit.dacu_disclosure
       dacu_disclosure.users.map(&:destroy)
       dacu_disclosure.team_lead = 'Jeremy Corbyn'
+      dacu_branston = BusinessUnit.dacu_branston
+      dacu_branston.users.map(&:destroy)
+      dacu_disclosure.team_lead = 'David Gauke'
+
 
       create :manager, full_name: 'Theresa May', email: 'tm@pm.gov.uk', managing_teams: [dacu_disclosure]
       create :manager, full_name: 'David Cameron', email: 'dc@pm.gov.uk', managing_teams: [dacu_disclosure]
       create :manager, full_name: 'Gordon Brown', email: 'gb@pm.gov.uk', managing_teams: [dacu_disclosure]
+      create :manager, full_name: 'David Gauke', email: 'dg@pm.gov.uk', managing_teams: [dacu_branston]
 
       map = R006KiloMap.new
       map.run
 
       csv_lines = map.to_csv.map { |row| row.map(&:value) }
-
       expect(csv_lines.shift).to eq header_line.split(',')
       expect(CSV.generate_line(csv_lines.shift).chomp).to match operations_line
       expect(CSV.generate_line(csv_lines.shift).chomp).to match dacu_directorate_line
+      expect(CSV.generate_line(csv_lines.shift).chomp).to match disclosure_line_0
       expect(CSV.generate_line(csv_lines.shift).chomp).to eq disclosure_line_1
       expect(CSV.generate_line(csv_lines.shift).chomp).to eq disclosure_line_2
       expect(CSV.generate_line(csv_lines.shift).chomp).to eq disclosure_line_3
@@ -46,8 +51,12 @@ module Stats
       /"",DACU Directorate,"",Director \d{1,5}/
     end
 
+    def disclosure_line_0
+      /"","",Branston Registry,Deputy Director \d{1,5},Hammersmith,branston@localhost/
+    end
+
     def disclosure_line_1
-      %{"","",Disclosure,Jeremy Corbyn,Hammersmith,dacu.disclosure@localhost,David Cameron,dc@pm.gov.uk}
+      %{"","",Disclosure,David Gauke,Hammersmith,dacu.disclosure@localhost,David Cameron,dc@pm.gov.uk}
     end
 
     def disclosure_line_2

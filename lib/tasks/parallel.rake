@@ -10,6 +10,12 @@ namespace :parallel do
       abort unless system('parallel_test --type rspec `find spec -not -path "spec/features*" -name "*_spec.rb"`')
     end
     task specs: :non_features
+
+    desc 'Run only the [stats and model] specs'
+    task :stats do
+      abort unless system('parallel_test --type rspec `find spec -path "spec/services/stats*" -or -path "spec/models/*" -name "*_spec.rb"`')
+    end
+    task specs: :stats
   end
 end
 

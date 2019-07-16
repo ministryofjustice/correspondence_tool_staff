@@ -31,17 +31,17 @@ feature 'pagination' do
       visit '/cases/my_open/in_time'
 
       expect(my_open_cases_page.tabs[0].tab_link[:href])
-        .to eq my_open_cases_path(tab: :in_time)
+        .to eq my_open_filter_path(tab: :in_time)
       expect(my_open_cases_page.tabs[1].tab_link[:href])
-        .to eq my_open_cases_path(tab: :late)
+        .to eq my_open_filter_path(tab: :late)
 
       expect(my_open_cases_page.pagination).to have_next_page_link
       my_open_cases_page.pagination.next_page_link.click
 
       expect(my_open_cases_page.tabs[0].tab_link[:href])
-        .to eq my_open_cases_path(tab: :in_time)
+        .to eq my_open_filter_path(tab: :in_time)
       expect(my_open_cases_page.tabs[1].tab_link[:href])
-        .to eq my_open_cases_path(tab: :late)
+        .to eq my_open_filter_path(tab: :late)
     end
   end
 end

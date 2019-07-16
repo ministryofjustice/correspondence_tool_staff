@@ -42,6 +42,7 @@ module Stats
 
     context 'data' do
       before(:all) do
+        DbHousekeeping.clean
         @bizgrp_ab = create :business_group, name: 'BGAB'
         @dir_a     = create :directorate, name: 'DRA', business_group: @bizgrp_ab
         @dir_b     = create :directorate, name: 'DRB', business_group: @bizgrp_ab
@@ -108,7 +109,7 @@ module Stats
 
           it 'selects only SAR cases' do
             expect(@scope.size).to eq 12
-            expect(@scope.map(&:type).uniq).to eq ['Case::SAR']
+            expect(@scope.map(&:type).uniq).to eq ['Case::SAR::Standard']
           end
 
           it 'excludes TMM cases' do

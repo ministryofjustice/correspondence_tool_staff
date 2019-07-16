@@ -12,7 +12,7 @@ class StatsController < ApplicationController
     @sar_reports = ReportType.standard.sar.order(:full_name)
   end
 
-  def download
+  def show
     report = Report.new report_type_id: params[:id]
 
     if report.xlsx?
@@ -30,18 +30,12 @@ class StatsController < ApplicationController
     end
   end
 
-  def download_audit
-    report = Stats::R900AuditReport.new
-    report.run_and_update!
-    send_data report.report_data, filename: "R900Audit.csv"
-  end
-
-  def custom
+  def new
     @report = Report.new
     set_fields_for_custom_action
   end
 
-  def create_custom_report
+  def create
     @report = Report.new(create_custom_params)
 
     if @report.valid?
@@ -58,15 +52,21 @@ class StatsController < ApplicationController
 
       set_fields_for_custom_action
 
-      render :custom
+      render :new
     end
   end
 
-  def download_custom_report
-    report= Report.find(params[:id])
+  def download_custom
+    report = Report.find(params[:id])
     filename = report.report_type.filename('csv')
 
     send_data report.report_data, {filename: filename, disposition: :attachment}
+  end
+
+  def download_audit
+    report = Stats::R900AuditReport.new
+    report.run_and_update!
+    send_data report.report_data, filename: "R900Audit.csv"
   end
 
   def self.closed_cases_correspondence_type
@@ -163,14 +163,14 @@ class StatsController < ApplicationController
       )
     else
       flash[:download] = [
-        t('stats.custom.success'),
+        t('.success'),
         view_context.link_to(
           'Download',
-          stats_download_custom_report_path(id: report.id)
+          download_custom_stats_path(id: report.id)
         ),
       ].join(' ')
 
-      redirect_to stats_custom_path
+      redirect_to new_stat_path
     end
   end
 end

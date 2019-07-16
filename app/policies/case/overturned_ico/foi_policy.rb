@@ -1,9 +1,7 @@
 class Case::OverturnedICO::FOIPolicy < Case::FOI::StandardPolicy
-
-  def new_overturned_ico?
+  def new?
     FeatureSet.ico.enabled? && @user.manager?
   end
-
 
   # this method only needs to exist here until such time as we have
   # trigger overturned sars enabled, at which time we can delete it here

@@ -4,7 +4,7 @@ module PageObjects
       class UploadResponsesPage < PageObjects::Pages::Base
         include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/upload_responses'
+        set_url '/cases/{id}/responses/new/upload_responses'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection,
@@ -21,6 +21,7 @@ module PageObjects
         element :dropzone_container, '.dropzone'
         element :file_fields, '#uploaded_files'
         element :upload_response_button, '.button'
+        element :response_action, '#response_action'
 
         # only shows up when using drop_in_dropzone
         element :uploaded_request_file_input, '#uploadedRequestFileInput'

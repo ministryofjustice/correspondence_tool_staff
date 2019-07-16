@@ -2,7 +2,7 @@ module SARCasesParams
   extend ActiveSupport::Concern
 
   def create_sar_params
-    params.require(:case_sar).permit(
+    params.require(:sar).permit(
       :delivery_method,
       :email,
       :flag_for_disclosure_specialists,
@@ -22,7 +22,7 @@ module SARCasesParams
   end
 
   def edit_sar_params
-    params.require(:case_sar).permit(
+    params.require(:sar).permit(
       :subject_full_name,
       :subject_type,
       :third_party,
@@ -40,7 +40,7 @@ module SARCasesParams
   end
 
   def process_sar_closure_params
-    params.require(:case_sar).permit(
+    params.require(:sar).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
@@ -49,10 +49,19 @@ module SARCasesParams
   end
 
   def respond_sar_params
-    params.require(:case_sar).permit(
+    params.require(:sar).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
     )
+  end
+
+  def missing_info_to_tmm
+    if params[:sar][:missing_info] == "yes"
+      @case.missing_info = true
+      CaseClosure::RefusalReason.sar_tmm.abbreviation
+    elsif params[:sar][:missing_info] == "no"
+      @case.missing_info = false
+    end
   end
 end
