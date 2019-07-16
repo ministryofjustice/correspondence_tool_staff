@@ -127,7 +127,7 @@ class Case::FOI::Standard < Case::Base
   end
 
   def self.factory(type)
-    case type&.demodulize&.downcase
+    case type&.downcase
     when 'standard'
       self
     when 'timelinessreview'
