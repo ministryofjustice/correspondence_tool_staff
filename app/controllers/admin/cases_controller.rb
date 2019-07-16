@@ -108,7 +108,7 @@ class Admin::CasesController < AdminController
   def class_for_case
     case_classes = {
       'foi'              => 'Case::FOI::Standard',
-      'sar'              => 'Case::SAR',
+      'sar'              => 'Case::SAR::Standard',
       'ico'              => 'Case::ICO::FOI',
       'overturned_foi'   => 'Case::OverturnedICO::FOI',
       'overturned_sar'   => 'Case::OverturnedICO::SAR'

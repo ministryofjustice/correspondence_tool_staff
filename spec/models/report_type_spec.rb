@@ -17,6 +17,7 @@
 require 'rails_helper'
 
 RSpec.describe ReportType, type: :model do
+  after(:all) { ReportType.delete_all }
 
   it { should have_many(:reports) }
 

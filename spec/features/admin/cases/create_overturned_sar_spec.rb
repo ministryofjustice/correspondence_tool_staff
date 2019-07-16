@@ -51,7 +51,7 @@ feature 'creating ICO Overturned SAR case' do
     expect(ico_appeal_row.status.text).to eq 'Closed'
 
     sar_case_row = admin_cases_page.case_list[2]
-    expect(sar_case_row.number).to have_text('Case/Sar')
+    expect(sar_case_row.number).to have_text('SAR')
     expect(sar_case_row.status.text).to eq 'Closed'
   end
 

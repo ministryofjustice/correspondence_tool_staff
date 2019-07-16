@@ -84,11 +84,11 @@ describe CorrespondenceType, type: :model do
 
     it 'returns only those correspondence types where report_category_name is present' do
       expect(CorrespondenceType.all.size).to be > 2
-      expect(cts.size).to eq 2
+      expect(cts.size).to eq 3
     end
 
     it 'returns them in alphabetic order of report category name' do
-      expect(cts.map(&:report_category_name)).to eq [ 'FOI report', 'SAR report' ]
+      expect(cts.map(&:report_category_name)).to eq [ 'FOI report', 'Offender SAR report', 'SAR report' ]
     end
   end
 
@@ -105,7 +105,7 @@ describe CorrespondenceType, type: :model do
     end
 
     it 'returns SAR sub-classes' do
-      expect(sar.sub_classes).to eq [Case::SAR]
+      expect(sar.sub_classes).to eq [Case::SAR::Standard]
     end
   end
 end

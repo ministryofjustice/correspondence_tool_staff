@@ -45,7 +45,7 @@ feature 'creating ICO Overturned FOI case' do
     expect(admin_cases_page.case_list.count).to eq 3
 
     overturned_foi_row = admin_cases_page.case_list[0]
-    expect(overturned_foi_row.number).to have_text('Case/Overturned Ico/Foi')
+    expect(overturned_foi_row.number).to have_text('Overturned ICO appeal for FOI')
     expect(overturned_foi_row.status.text).to eq 'Closed'
 
     ico_appeal_row = admin_cases_page.case_list[1]

@@ -53,8 +53,8 @@ class Case::OverturnedICO::Base < Case::Base
   delegate :ico_decision_attachments, to: :original_ico_appeal
 
   enum reply_method: {
-      send_by_post:  'send_by_post',
-      send_by_email: 'send_by_email',
+    send_by_post:  'send_by_post',
+    send_by_email: 'send_by_email',
   }
 
   before_validation :copy_ico_officer_name
@@ -158,5 +158,4 @@ class Case::OverturnedICO::Base < Case::Base
   def validate_original_ico_appeal
     raise "Implement this method in the derived class"
   end
-
 end

@@ -89,8 +89,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
               .to eq "#{ linked_case.subject } #{ linked_case.name }"
           expect(row.remove_link.text.strip).to eq "Remove link to #{linked_case.number}"
           expect(row.remove_link['href'])
-              .to eq destroy_link_on_case_path(id: main_case.id,
-                                               linked_case_number: linked_case.number)
+              .to eq case_link_path(case_id: main_case.id, id: linked_case.number)
 
         end
       end
@@ -150,7 +149,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
       expect(partial.action_link.text).to eq 'Link a case'
 
       expect(partial.action_link.native[:href])
-          .to eq new_case_link_case_path(main_case.id)
+          .to eq new_case_link_path(main_case.id)
 
     end
   end

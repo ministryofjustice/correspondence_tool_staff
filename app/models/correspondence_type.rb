@@ -61,7 +61,8 @@ class CorrespondenceType < ApplicationRecord
     FOI: [Case::FOI::Standard,
           Case::FOI::TimelinessReview,
           Case::FOI::ComplianceReview],
-    SAR: [Case::SAR],
+    SAR: [Case::SAR::Standard],
+    OFFENDER_SAR: [Case::SAR::Offender],
     ICO: [Case::ICO::FOI,
           Case::ICO::SAR],
     OVERTURNED_SAR: [Case::OverturnedICO::SAR],
@@ -79,7 +80,7 @@ class CorrespondenceType < ApplicationRecord
     end
 
     # This method is used by Case::Base to find its correspondence type
-    def find_by_abbrevation! abbreviation
+    def find_by_abbreviation! abbreviation
       all_cached.detect { |ct| ct.abbreviation == abbreviation } || super
     end
   end
@@ -103,6 +104,10 @@ class CorrespondenceType < ApplicationRecord
 
   def self.sar
     find_by_abbreviation! 'SAR'
+  end
+
+  def self.offender_sar
+    find_by_abbreviation! 'OFFENDER_SAR'
   end
 
   def self.ico

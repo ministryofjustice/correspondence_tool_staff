@@ -58,7 +58,7 @@ feature 'downloading a response from response details' do
         expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).and_return(s3_object)
         expect(Tempfile).to receive(:new).and_return(double Tempfile, path: mypath, close: nil)
         expect(s3_object).to receive(:get).with(response_target: mypath)
-        expect_any_instance_of(CaseAttachmentsController).to receive(:send_file).
+        expect_any_instance_of(Cases::AttachmentsController).to receive(:send_file).
           with(mypath, {type: 'application/pdf', disposition: 'inline'}).
           and_call_original
 

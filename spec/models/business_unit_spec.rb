@@ -104,12 +104,14 @@ RSpec.describe BusinessUnit, type: :model do
 
   context 'multiple teams created' do
     let(:managing_team)       { find_or_create :team_dacu }
+    let(:branston_team)       { find_or_create :team_branston }
     let(:approving_team)      { find_or_create :approving_team }
 
     describe 'managing scope' do
       it 'returns only managing teams' do
         expect(BusinessUnit.managing).to match_array [
-                                           managing_team
+                                           managing_team,
+                                           branston_team
                                          ]
       end
     end

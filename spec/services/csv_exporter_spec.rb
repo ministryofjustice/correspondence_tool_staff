@@ -236,7 +236,7 @@ describe CSVExporter do
           'Appeal outcome' => nil,
           'Third party' => nil,
           'Reply method' => 'Send by email',
-          'SAR Subject type' => 'Offender',
+          'SAR Subject type' => 'Offender sar',
           'SAR Subject full name' => 'Theresa Cant',
           'Business unit responsible for late response' => 'N/A',
           'Extended' => 'No',

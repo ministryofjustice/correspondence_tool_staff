@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'cases/_ico_final_decision.html.slim', type: :view do
+describe 'cases/ico/_ico_final_decision.html.slim', type: :view do
   let(:upheld_closed_sar_ico_appeal)      { create(:closed_ico_sar_case).decorate }
   let(:overturned_ico_sar)  { create(:overturned_ico_sar).decorate }
 

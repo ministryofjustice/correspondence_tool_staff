@@ -4,10 +4,8 @@
 #
 ###################################
 
-
 require 'rails_helper'
 require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
-
 
 feature 'Overturned non-Offender SAR case requiring clearance' do
   include CaseDateManipulation
@@ -30,7 +28,8 @@ feature 'Overturned non-Offender SAR case requiring clearance' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'end-to-end journey', js: true do
+  # @todo: Test disable as is overturned FOI - requires revision
+  xscenario 'end-to-end journey', js: true do
     kase = create_and_assign_overturned_ico user: manager,
                                       responding_team: responding_team,
                                       ico_case: original_appeal_case,

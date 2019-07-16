@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class RequestAmendsPage < SitePrism::Page
-        set_url '/cases/{id}/request_amends'
+        set_url '/cases/{id}/amendments/new'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

@@ -4,7 +4,7 @@ module PageObjects
       class UploadResponseAndApprovePage < PageObjects::Pages::Base
         include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/{id}/upload_response_and_approve'
+        set_url '/cases/{id}/responses/new/upload_response_and_approve'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection,
@@ -20,6 +20,7 @@ module PageObjects
         element :upload_response_form, 'form'
         element :dropzone_container, '.dropzone'
         element :file_fields, '#uploaded_files'
+        element :response_action, '#response_action'
 
         # only shows up when using drop_in_dropzone
         element :uploaded_request_file_input, '#uploadedRequestFileInput'

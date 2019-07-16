@@ -13,9 +13,9 @@ module PageObjects
           element :date_responded_year, :case_form_element, 'date_responded_yyyy'
 
           section :appeal_outcome, '.appeal-outcome-group' do
-            element :upheld, 'label[for="case_foi_appeal_outcome_name_upheld"]'
-            element :upheld_in_part, 'label[for="case_foi_appeal_outcome_name_upheld_in_part"]'
-            element :overturned, 'label[for="case_foi_appeal_outcome_name_overturned"]'
+            element :upheld, 'label[for="foi_appeal_outcome_name_upheld"]'
+            element :upheld_in_part, 'label[for="foi_appeal_outcome_name_upheld_in_part"]'
+            element :overturned, 'label[for="foi_appeal_outcome_name_overturned"]'
           end
 
           section :is_info_held, '.js-info-held-status' do
@@ -26,9 +26,9 @@ module PageObjects
           end
 
           section :outcome, '.js-outcome-group' do
-            element :granted_in_full, 'label[for="case_foi_outcome_name_granted_in_full"]'
-            element :refused_in_part, 'label[for="case_foi_outcome_name_refused_in_part"]'
-            element :refused_fully, 'label[for="case_foi_outcome_name_refused_fully"]'
+            element :granted_in_full, 'label[for="foi_outcome_name_granted_in_full"]'
+            element :refused_in_part, 'label[for="foi_outcome_name_refused_in_part"]'
+            element :refused_fully, 'label[for="foi_outcome_name_refused_fully"]'
           end
 
           section :other_reasons, '.js-other-reasons' do

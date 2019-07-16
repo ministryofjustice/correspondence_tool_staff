@@ -6,7 +6,7 @@ module Stats
 
     before(:all) do
       DbHousekeeping.clean
-      create :report_type, :r003
+      find_or_create :report_type, :r003
 
       Team.all.map(&:destroy)
       Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do

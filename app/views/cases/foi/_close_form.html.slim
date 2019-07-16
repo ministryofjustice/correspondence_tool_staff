@@ -2,11 +2,12 @@
   .column-full
     = render partial: 'cases/case_attachments', locals: { case_details: @case }
 
-- url = defined?(form_url) ? form_url : process_closure_case_path(id: @case.id)
-= form_for @case, as: :case_foi, url: url do |f|
+- url = defined?(form_url) ? form_url : polymorphic_case(@case, action: :process_closure)
+
+= form_for @case, as: :foi, url: url do |f|
   .form-group
-    = f.gov_uk_date_field :date_responded, { legend_text: t('.close_date'),
-            form_hint_text: t('.date_example'),
+    = f.gov_uk_date_field :date_responded, { legend_text: t('cases.foi.close_form.close_date'),
+            form_hint_text: t('cases.foi.close_form.date_example'),
             today_button: {class: ''} }
 
   - if @case.responded_late?
@@ -30,9 +31,9 @@
       h2.form-label-bold
         = "What exemptions were applied?"
 
-      = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.absolute, heading: 'Absolute exemptions', hint: 'These have no public interest test attached', kase: @case, f: f }
+      = render partial: 'cases/shared/exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.absolute, heading: 'Absolute exemptions', hint: 'These have no public interest test attached', kase: @case, f: f }
 
-      = render partial: 'exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.qualified, heading: 'Qualified exemptions', hint: 'These are subject to a public interest test', kase: @case, f: f }
+      = render partial: 'cases/shared/exemption_checkbox_section', locals: { exemptions: CaseClosure::Exemption.qualified, heading: 'Qualified exemptions', hint: 'These are subject to a public interest test', kase: @case, f: f }
 
   .button-holder
     = f.submit submit_button, {class: 'button'}

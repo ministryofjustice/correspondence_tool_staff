@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class NewPage < PageObjects::Pages::Base
-        set_url '/cases/new/'
+        set_url '/cases/new'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -16,11 +16,11 @@ module PageObjects
 
 
         def create_link_for_correspondence(correspondence_type)
-          create_links.find { |link| link.text.match(correspondence_type) }
+          create_links.find { |link| link.text.downcase.match(correspondence_type.downcase)  }
         end
 
         def fill_in_case_type(choice)
-          make_radio_button_choice("case_foi_type_#{choice}")
+          make_radio_button_choice("foi_type_#{choice}")
           click_button 'Continue'
         end
       end

@@ -1,14 +1,13 @@
 require "rails_helper"
 
 describe CaseCreateService do
-
   let(:manager) { create :manager, managing_teams: [ team_dacu ] }
   let!(:team_dacu) { find_or_create :team_dacu }
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
   let(:regular_params) do
     ActionController::Parameters.new(
     {
-        case_foi: {
+        foi: {
           type: 'Standard',
           requester_type: 'member_of_the_public',
           name: 'A. Member of Public',
@@ -36,13 +35,12 @@ describe CaseCreateService do
     }
   end
 
-
   context '#call' do
     context 'unflagged FOI case' do
       let(:params) do
         regular_params.merge flag_for_disclosure_specialists: 'no'
       end
-      let(:ccs) { CaseCreateService.new(manager, 'foi', params) }
+      let(:ccs) { CaseCreateService.new(user: manager, case_type: Case::FOI::Standard, params: params[:foi]) }
 
       it 'creates a case' do
         expect { ccs.call }.to change { Case::Base.count }.by 1
@@ -73,10 +71,10 @@ describe CaseCreateService do
 
     context 'flagged FOI case' do
       let(:params) do
-        regular_params['case_foi']['flag_for_disclosure_specialists'] = 'yes'
+        regular_params['foi']['flag_for_disclosure_specialists'] = 'yes'
         regular_params
       end
-      let(:ccs) { CaseCreateService.new(manager, 'foi', params) }
+      let(:ccs) { CaseCreateService.new(user: manager, case_type: Case::FOI::Standard, params: params[:foi]) }
 
       it 'creates a case' do
         expect { ccs.call }.to change { Case::Base.count }.by 1
@@ -119,9 +117,9 @@ describe CaseCreateService do
       let(:foi)               { create :closed_case }
       let(:params) do
         ActionController::Parameters.new(
-          { 'case_ico' => {
+          { 'ico' => {
               'type'                    => 'Case::ICO::FOI',
-              'original_case_type'      => 'FOI',
+              #'original_case_type'      => 'FOI',
               'original_case_id'        => foi.id,
               'ico_officer_name'        => 'Ian C. Oldman',
               'ico_reference_number'    => 'ABC1344422',
@@ -138,7 +136,7 @@ describe CaseCreateService do
             }
           })
       end
-      let(:ccs) { CaseCreateService.new(manager, 'ico', params) }
+      let(:ccs) { CaseCreateService.new(user: manager, case_type: Case::ICO::FOI, params: params[:ico]) }
       let(:created_ico_case) { Case::ICO::FOI.last }
 
       it 'uses the params provided' do
@@ -182,15 +180,19 @@ describe CaseCreateService do
       let(:deadline)            { 1.month.from_now.to_date }
       let(:original_ico_appeal) { @original_ico_appeal }
       let(:original_case)       { @original_ico_appeal.original_case }
-      let(:ccs)                 { CaseCreateService.new(manager, 'overturned_sar', params) }
+      let(:ccs)                 { CaseCreateService.new(user: manager, case_type: Case::OverturnedICO::SAR, params: params[:overturned_sar]) }
       let(:params) do
         ActionController::Parameters.new(
           {
             correspondence_type: 'overturned_sar',
-            case_overturned_sar: ico_overturned_params.merge(
+            overturned_sar: ico_overturned_params.merge(
               original_ico_appeal_id: original_ico_appeal.id.to_s,
+              original_case_id: original_case.id,
+              received_date_dd: original_ico_appeal.date_ico_decision_received_dd,
+              received_date_mm: original_ico_appeal.date_ico_decision_received_mm,
+              received_date_yyyy: original_ico_appeal.date_ico_decision_received_yyyy,
             ),
-            commit:              'Create case',
+            commit: 'Create case',
           })
       end
       let(:new_case) { Case::OverturnedICO::SAR.last }
@@ -262,13 +264,17 @@ describe CaseCreateService do
       let(:deadline)            { 1.month.from_now.to_date }
       let(:original_ico_appeal) { @original_ico_appeal }
       let(:original_case)       { @original_ico_appeal.original_case }
-      let(:ccs)                 { CaseCreateService.new(manager, 'overturned_foi', params) }
+      let!(:ccs)                 { CaseCreateService.new(user: manager, case_type: Case::OverturnedICO::FOI, params: params[:overturned_foi]) }
       let(:params) do
         ActionController::Parameters.new(
           {
             correspondence_type: 'overturned_sar',
-            case_overturned_foi: ico_overturned_params.merge(
+            overturned_foi: ico_overturned_params.merge(
               original_ico_appeal_id: original_ico_appeal.id.to_s,
+              original_case_id: original_case.id,
+              received_date_dd: original_ico_appeal.date_ico_decision_received_dd,
+              received_date_mm: original_ico_appeal.date_ico_decision_received_mm,
+              received_date_yyyy: original_ico_appeal.date_ico_decision_received_yyyy,
             ),
             commit:              'Create case',
           })
@@ -277,6 +283,7 @@ describe CaseCreateService do
 
       it 'creates a case with the specified params' do
         ccs.call
+        expect(ccs.result).to eq(:assign_responder)
         expect(new_case).to be_valid
         expect(new_case.original_ico_appeal).to eq original_ico_appeal
         expect(new_case.original_case).to eq original_case
@@ -331,7 +338,7 @@ describe CaseCreateService do
 
       context 'Trigger Overturned FOI case' do
         before do
-          params[:case_overturned_foi][:flag_for_disclosure_specialists] = 'yes'
+          params[:overturned_foi][:flag_for_disclosure_specialists] = 'yes'
         end
 
         it 'sets the workflow to trigger' do
@@ -343,46 +350,12 @@ describe CaseCreateService do
     end
   end
 
-
-
-  describe '#create_params' do
-    context 'ICO Overturned FOI' do
-      # let(:received)            { 0.business_days.ago }
-      let(:deadline)            { 28.business_days.from_now }
-      let(:original_ico_appeal) { create :closed_ico_foi_case }
-      let(:original_case)       { original_ico_appeal.original_case }
-      let(:received_date)       { original_ico_appeal.date_ico_decision_received }
-      let(:params) do
-        ActionController::Parameters.new(
-          {
-            correspondence_type: 'overturned_foi',
-            case_overturned_foi: ico_overturned_params.merge(
-              original_ico_appeal_id: original_ico_appeal.id.to_s,
-              original_case_id:       original_case.id,
-              received_date_dd:       received_date.day.to_s,
-              received_date_mm:       received_date.month.to_s,
-              received_date_yyyy:     received_date.year.to_s,
-            ),
-            commit:              'Create case',
-          })
-      end
-
-      let(:service) { CaseCreateService.new(manager, 'overturned_foi', params) }
-
-      it 'returns case_overturned_foi params' do
-        create_params = service.__send__(:create_params, 'overturned_foi')
-        expect(create_params.to_hash)
-          .to eq params.require(:case_overturned_foi).permit!.to_hash
-      end
-    end
-  end
-
   context 'invalid case params' do
     let(:params) do
-      regular_params[:case_foi][:name] = nil
+      regular_params[:foi][:name] = nil
       regular_params
     end
-    let(:ccs) { CaseCreateService.new(manager, 'foi', params) }
+    let(:ccs) { CaseCreateService.new(user: manager, case_type: Case::FOI::Standard, params: params[:foi]) }
 
     it 'sets the result to "error"' do
       ccs.call

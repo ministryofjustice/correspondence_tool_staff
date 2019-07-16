@@ -145,42 +145,42 @@ feature "Downloading stats(csv) from the system" do
 
   def view_custom_report_creation_page
     stats_index_page.custom_reports.click
-    expect(stats_custom_page).to be_displayed
+    expect(stats_new_page).to be_displayed
   end
 
   def create_custom_r003_report
     r003 = ReportType.where(abbr:'R003').first
-    stats_custom_page.fill_in_form('foi', r003.id, Date.yesterday, Date.today)
-    stats_custom_page.submit_button.click
+    stats_new_page.fill_in_form('foi', r003.id, Date.yesterday, Date.today)
+    stats_new_page.submit_button.click
     expect(page.response_headers['Content-Disposition'])
         .to match(/filename="r003_business_unit_performance_report\.xlsx"/)
 
-    stats_custom_page.load
+    stats_new_page.load
   end
 
   def create_custom_r004_report
     r004 = ReportType.r004
-    stats_custom_page.fill_in_form('foi', r004.id, Date.yesterday, Date.today)
-    stats_custom_page.submit_button.click
+    stats_new_page.fill_in_form('foi', r004.id, Date.yesterday, Date.today)
+    stats_new_page.submit_button.click
 
-    expect(stats_custom_page.success_message).to have_download_link
+    expect(stats_new_page.success_message).to have_download_link
   end
 
   def create_custom_r007_report
-    stats_custom_page.choose_type_of_correspondence('closed_cases')
-    stats_custom_page.fill_in_period_start(Date.yesterday)
-    stats_custom_page.fill_in_period_end(Date.yesterday)
-    stats_custom_page.submit_button.click
+    stats_new_page.choose_type_of_correspondence('closed_cases')
+    stats_new_page.fill_in_period_start(Date.yesterday)
+    stats_new_page.fill_in_period_end(Date.yesterday)
+    stats_new_page.submit_button.click
 
     # @note (Mohammed Seedat): cannot add expectations until new confirmation
     #   screen is completed
   end
 
   def download_custom_r004_report
-    stats_custom_page.success_message.download_link.click
+    stats_new_page.success_message.download_link.click
     expect(page.response_headers['Content-Disposition'])
         .to match(/filename="r004_cabinet_office_report\.csv"/)
 
-    stats_custom_page.load
+    stats_new_page.load
   end
 end
