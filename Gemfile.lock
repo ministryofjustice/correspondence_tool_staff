@@ -299,8 +299,7 @@ GEM
     key_struct (0.4.2)
     launchy (2.4.3)
       addressable (~> 2.3)
-    libreconv (0.9.1)
-      spoon
+    libreconv (0.9.3)
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -519,8 +518,6 @@ GEM
       actionpack (>= 3.1)
       railties (>= 3.1)
       slim (>= 3.0, < 5.0)
-    spoon (0.0.6)
-      ffi
     spring (2.1.0)
       activesupport (>= 4.2)
     spring-commands-rspec (1.0.4)
@@ -624,7 +621,7 @@ DEPENDENCIES
   jsonb_accessor (~> 1.0.0.beta.1)
   kaminari
   launchy
-  libreconv (~> 0.9.1)
+  libreconv (~> 0.9.3)
   listen (~> 3.1.5)
   lograge
   logstash-event
