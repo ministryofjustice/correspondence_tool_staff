@@ -8,12 +8,15 @@
 
 .grid-row
   .column-full.button-holder
-    h2.heading-medium No of Cases created over the past week
+    h2.heading-medium
+      = t('admin.cases.index.subheadings.number_of_cases_created_over_past_week')
 
     table
       tr
-        th Date
-        th No. of Cases
+        th
+          = t('admin.cases.index.date')
+        th
+          = t('admin.cases.index.no_of_cases')
       - @dates.each do |date, count|
         tr
           td = date.strftime('%a %d %b %Y')
@@ -21,7 +24,7 @@
 
 .grid-row
   .column-full.button-holder
-    = link_to 'Download Audit CSV File', download_audit_stats_path, target: '_blank'
+    = link_to t('admin.cases.index.download_audit_csv_file'), download_audit_stats_path, target: '_blank'
 
 .grid-row
   .column-full.button-holder
@@ -29,7 +32,8 @@
 
 .grid-row
   .column-full.table-container.container
-    h2.heading-medium Existing cases
+    h2.heading-medium
+      = t('admin.cases.index.subheadings.existing_cases')
 
     table.report.table-font-xsmall
       colgroup
@@ -65,13 +69,13 @@
             td
               = kase.subject
               br
-              = "Created: #{kase.admin_created_at}"
+              = "#{t('admin.cases.index.created_at')} #{kase.admin_created_at}"
               br
-              = "Received: #{kase.admin_received_date}"
+              = "#{t('admin.cases.index.received_date')} #{kase.admin_received_date}"
               br
-              = "Internal: #{kase.admin_internal_deadline}"
+              = "#{t('admin.cases.index.internal')} #{kase.admin_internal_deadline}"
               br
-              = "External: #{kase.admin_external_deadline}"
+              = "#{t('admin.cases.index.external')} #{kase.admin_external_deadline}"
             td
               = t("state.#{kase.current_state}")
             td
