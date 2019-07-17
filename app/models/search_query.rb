@@ -11,7 +11,7 @@
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  parent_id        :integer
-#  query_type       :enum             default("search"), not null
+#  query_type       :enum           †  default("search"), not null
 #  filter_type      :string
 #
 

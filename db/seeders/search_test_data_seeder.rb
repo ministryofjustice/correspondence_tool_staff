@@ -14,6 +14,7 @@ class SearchTestDataSeeder
   end
 
   def create_case
+    creator = User.all.sample
     params = HashWithIndifferentAccess.new({
                type: select_type,
                name: select_name,
@@ -26,6 +27,7 @@ class SearchTestDataSeeder
                flag_for_team: set_flagged,
                responding_team: select_responding_team,
                target_state: select_target_state,
+               creator: creator
            })
     params[:received_date] = select_received_date(params[:target_state])
     params[:created_at] = select_created_at(params[:received_date])
@@ -33,6 +35,7 @@ class SearchTestDataSeeder
     case_creator = CTS::Cases::Create.new(Rails.logger, params)
     @case = case_creator.new_case
     selected_state = params['target_state']
+
     if @case.valid?
       case_creator.call(selected_state, @case)
       puts "Case created: #{@case.number}"

@@ -27,7 +27,7 @@ class CasesController < ApplicationController
                   :new_case_link,
                   :process_date_responded,
                   :record_late_team,
-                  :remove_pit_extension,
+                  :resemove_pit_extension,
                   :remove_sar_deadline_extension,
                   :response_upload_for_redraft,
                   :update_closure,
