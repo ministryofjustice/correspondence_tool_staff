@@ -25,17 +25,17 @@
   .form-group
     fieldset.gov_uk_date
       legend
-        = 'Received Date'
+        = t('cases.new.received_date_short')
       p.form-hint id="received_date-hint"
-        = 'Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
+        = t('cases.new.received_date_copy_long')
       input.form-control id="case_foi_received_date" name="case_foi[received_date]" aria-describedby="received_date-hint" type="string" value=@case.received_date.to_s size="40"
 
   .form-group
     fieldset.gov_uk_date
       legend
-        = 'Created At'
+        = t('cases.new.created_at')
       p.form-hint id="created_at-hint"
-        = 'Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
+        = t('cases.new.created_at_copy')
       input.form-control id="case_foi_created_at" name="case_foi[created_at]" aria-describedby="created_at-hint" type="string" value=@case.created_at.to_s size="40"
 
   #delivery-method
@@ -55,7 +55,7 @@
                               file_input_name: 'case[uploaded_request_files][]' }
 
   h2
-    = "Please only select one."
+    = t('cases.new.only_select_one')
   = f.check_box_fieldset :flag_for_disclosure_specialists, [:flagged_for_disclosure_specialist_clearance?, :flagged_for_press_office_clearance?, :flagged_for_private_office_clearance?]
 
   = f.collection_select :responding_team, BusinessUnit.responding, :id, :name, { selected: @case.responding_team.id }
