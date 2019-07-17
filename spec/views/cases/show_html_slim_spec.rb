@@ -30,7 +30,12 @@ describe 'cases/show.html.slim', type: :view do
       :upload_response_and_approve?,
       :upload_responses_for_flagged?,
       :upload_response_and_return_for_redraft?,
-      :mark_as_waiting_for_data
+      :mark_as_waiting_for_data,
+      :mark_as_ready_for_vetting,
+      :mark_as_vetting_in_progress,
+      :mark_as_ready_to_dispatch,
+      :mark_as_ready_to_close,
+      :mark_as_closed
     ]
 
 
@@ -471,35 +476,81 @@ describe 'cases/show.html.slim', type: :view do
     end
   end
 
-  fcontext 'with an offender sar case' do
+  context 'with an offender sar case' do
     let(:offender_sar_case) { create(:offender_sar_case).decorate }
 
     before do
       assign(:case, offender_sar_case)
       setup_policies(
-        mark_as_waiting_for_data: true
+        mark_as_waiting_for_data: true,
+        mark_as_ready_for_vetting: true,
+        mark_as_vetting_in_progress: true,
+        mark_as_ready_to_dispatch: true,
+        mark_as_ready_to_close: true,
+        mark_as_closed: true
       )
     end
 
     context 'as a manager' do
       context 'when a case just created' do
         it 'shows mark as waiting for data' do
+          assign(:permitted_events, [:mark_as_waiting_for_data])
+          assign(:filtered_permitted_events, [:mark_as_waiting_for_data])
           login_as manager
           render
           cases_show_page.load(rendered)
-byebug
+
           expect(cases_show_page.actions).to have_mark_as_waiting_for_data
         end
       end
-      # context 'when a case is waiting for data' do
-      #   it 'shows mark as ready for vetting' do
-      #     login_as manager
-      #     render
-      #     cases_show_page.load(rendered)
 
-      #     expect(cases_show_page.actions).to have_mark_as_waiting_for_data
-      #   end
-      # end
+      context 'when a case is waiting for data' do
+        it 'shows mark as ready for vetting' do
+          assign(:permitted_events, [:mark_as_ready_for_vetting])
+          assign(:filtered_permitted_events, [:mark_as_ready_for_vetting])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_mark_as_ready_for_vetting
+        end
+      end
+
+      context 'when a case is ready for vetting' do
+        it 'shows mark as vetting in progress' do
+          assign(:permitted_events, [:mark_as_vetting_in_progress])
+          assign(:filtered_permitted_events, [:mark_as_vetting_in_progress])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_mark_as_vetting_in_progress
+        end
+      end
+
+      context 'when a case is vetting in progress' do
+        it 'shows mark as ready to dispatch' do
+          assign(:permitted_events, [:mark_as_ready_to_dispatch])
+          assign(:filtered_permitted_events, [:mark_as_ready_to_dispatch])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_mark_as_ready_to_dispatch
+        end
+      end
+
+      context 'when a case is ready to dispatch' do
+        it 'shows mark as ready to close' do
+          assign(:permitted_events, [:mark_as_ready_to_close])
+          assign(:filtered_permitted_events, [:mark_as_ready_to_close])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_mark_as_ready_to_close
+        end
+      end
     end
   end
 end
