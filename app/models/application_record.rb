@@ -4,6 +4,5 @@ class ApplicationRecord < ActiveRecord::Base
   after_commit :warehouse_closed_report
 
   def warehouse_closed_report
-    'Warehousing complete'
   end
 end
