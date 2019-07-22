@@ -16,7 +16,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.workflow).to eq 'standard'
           expect(k.current_state).to eq 'data_to_be_requested'
           expect(k.state_machine.permitted_events(manager)).to eq [:add_message_to_case,
-                                                                   :mark_as_waiting_for_data]
+                                                                   :mark_as_next_state]
         end
       end
 
@@ -27,72 +27,52 @@ describe ConfigurableStateMachine::Machine do
           expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
           expect(k.current_state).to eq 'waiting_for_data'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case]
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :mark_as_next_state]
         end
       end
 
       context 'ready for vetting state' do
         it 'shows events' do
-          k = create :accepted_ot_ico_foi
-          expect(k.class).to eq Case::OverturnedICO::FOI
+          k = create :ready_for_vetting_offender_sar
+          expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'drafting'
+          expect(k.current_state).to eq 'ready_for_vetting'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :assign_to_new_team,
-                                                                      :destroy_case,
-                                                                      :extend_for_pit,
-                                                                      :flag_for_clearance,
-                                                                      :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance,
-                                                                      :unassign_from_user]
+                                                                      :mark_as_next_state]
         end
       end
 
       context 'vetting in progress state' do
         it 'shows events' do
-          k = create :with_response_ot_ico_foi
-          expect(k.class).to eq Case::OverturnedICO::FOI
+          k = create :vetting_in_progress_offender_sar
+          expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'awaiting_dispatch'
+          expect(k.current_state).to eq 'vetting_in_progress'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :destroy_case,
-                                                                      :extend_for_pit,
-                                                                      :flag_for_clearance,
-                                                                      :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance,
-                                                                      :unassign_from_user]
+                                                                      :mark_as_next_state]
         end
       end
 
       context 'ready to dispatch state' do
         it 'shows events' do
-          k = create :responded_ot_ico_foi
-          expect(k.class).to eq Case::OverturnedICO::FOI
+          k = create :ready_to_dispatch_offender_sar
+          expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'responded'
+          expect(k.current_state).to eq 'ready_to_dispatch'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :close,
-                                                                      :destroy_case,
-                                                                      :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :unassign_from_user]
+                                                                      :mark_as_next_state]
         end
       end
 
       context 'ready to close state' do
         it 'shows events' do
-          k = create :closed_ot_ico_foi
-          expect(k.class).to eq Case::OverturnedICO::FOI
+          k = create :ready_to_close_offender_sar
+          expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'closed'
+          expect(k.current_state).to eq 'ready_to_close'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :assign_to_new_team,
-                                                                      :destroy_case,
-                                                                      :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :update_closure]
+                                                                      :mark_as_next_state]
         end
       end
     end

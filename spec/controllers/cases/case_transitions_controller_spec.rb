@@ -15,12 +15,12 @@ RSpec.describe Cases::CaseTransitionsController, type: :controller do
       expect(assigns(:case)).to eq offender_sar
     end
 
-    # it 'authorizes' do
-    #   expect {
-    #     post :create, params: params
-    #   }.to require_permission(:create_case_transition?)
-    #     .with_args(manager, offender_sar)
-    # end
+    it 'authorizes' do
+      expect {
+        post :create, params: params
+      }.to require_permission(:create?)
+        .with_args(manager, offender_sar)
+    end
 
     # it 'flashes a notification' do
     #   patch :progress_for_clearance, params: params

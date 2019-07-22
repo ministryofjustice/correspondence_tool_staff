@@ -6,27 +6,27 @@
           manager:
             states:
               data_to_be_requested:
-                mark_as_waiting_for_data:
+                mark_as_next_state:
                   transition_to: waiting_for_data
                 add_message_to_case:
               waiting_for_data:
-                mark_as_ready_for_vetting:
+                mark_as_next_state:
                   transition_to: ready_for_vetting
                 add_message_to_case:
               ready_for_vetting:
-                mark_as_vetting_in_progress:
+                mark_as_next_state:
                   transition_to: vetting_in_progress
                 add_message_to_case:
               vetting_in_progress:
-                mark_as_ready_to_dispatch:
+                mark_as_next_state:
                   transition_to: ready_to_dispatch
                 add_message_to_case:
               ready_to_dispatch:
-                mark_as_ready_to_close:
+                mark_as_next_state:
                   transition_to: ready_to_close
                 add_message_to_case:
               ready_to_close:
-                mark_as_closed:
+                mark_as_next_state:
                   transition_to: closed
                 add_message_to_case:
               closed:

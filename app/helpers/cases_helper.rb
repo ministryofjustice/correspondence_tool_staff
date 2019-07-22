@@ -32,34 +32,40 @@ module CasesHelper
     case event
     when :mark_as_waiting_for_data
       link_to "Mark as waiting for data",
-              new_case_assignment_path(@case),
+              case_case_transitions_path(@case),
               id: 'action--mark-as-waiting-for-data',
-              class: 'button'
+              class: 'button',
+              method: 'post'
     when :mark_as_ready_for_vetting
       link_to "Mark as ready for vetting",
-              new_case_assignment_path(@case),
+              case_case_transitions_path(@case),
               id: 'action--mark-as-ready-for-vetting',
-              class: 'button'
+              class: 'button',
+              method: 'post'
     when :mark_as_vetting_in_progress
       link_to "Mark as vetting in progress",
-              new_case_assignment_path(@case),
+              case_case_transitions_path(@case),
               id: 'action--mark-as-vetting-in-progress',
-              class: 'button'
+              class: 'button',
+              method: 'post'
     when :mark_as_ready_to_dispatch
       link_to "Mark as ready to dispatch",
-              new_case_assignment_path(@case),
+              case_case_transitions_path(@case),
               id: 'action--mark-as-ready-to-dispatch',
-              class: 'button'
+              class: 'button',
+              method: 'post'
     when :mark_as_ready_to_close
       link_to "Mark as ready to close",
-              new_case_assignment_path(@case),
+              case_case_transitions_path(@case),
               id: 'action--mark-as-ready-to-close',
-              class: 'button'
+              class: 'button',
+              method: 'post'
     when :mark_as_closed
       link_to "Mark as closed",
-              new_case_assignment_path(@case),
+              case_case_transitions_path(@case),
               id: 'action--mark-as-closed',
-              class: 'button'
+              class: 'button',
+              method: 'post'
     when :assign_responder
       link_to I18n.t('common.case.assign'),
               new_case_assignment_path(@case),
