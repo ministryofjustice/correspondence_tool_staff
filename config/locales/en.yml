@@ -299,6 +299,8 @@ en:
         flag_for_disclosure_specialists: Flag for disclosure specialist?
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+      offender_sar: 
+        third_party: Please choose yes or no
       report:
         correspondence_type: Which type of cases do you want to report on?
         report_type_id: What should this report cover?
@@ -431,10 +433,10 @@ en:
         subject_aliases: "Subject's alias if applicable"
         previous_case_numbers: "Previous SAR cases"
         other_subject_ids: "Subject’s PNC or other ID numbers"
-
         email: "Recipient email address"
         message: Request details
         name: "Full name of the representative"
+        third_party: Is this information being requested on someone else's behalf?
         third_party_relationship: Relationship to the subject
         delivery_method: How should the information be sent?
         postal_address: "Recipient postal address"
