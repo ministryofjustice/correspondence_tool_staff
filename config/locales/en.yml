@@ -605,14 +605,22 @@ en:
         draft_deadline: Draft Deadline
         external_deadline: External Deadline
         heading: Cases
+        subheadings:
+          number_of_cases_created_over_past_week: No of Cases created over the past week
+          existing_cases: Existing cases 
+        date: Date
+        no_of_cases: No. of Cases
         id: ID
         number: Case No
         case_type: Case Type
         received_date: Received
+        internal: Internal
+        external: External
         request: Request
         deadlines: Deadlines
         status: Status
         who_its_with: Who Its With
+        download_audit_csv_file: Download Audit CSV File
 
         Case::FOI::Standard: FOI
         Case::FOI::ComplianceReview: FOI Compliance Review
@@ -627,6 +635,14 @@ en:
         create: Create
         heading: New Case
         sub_heading: Admin
+        ico:
+          headings:
+            only_for_closed_cases: ONLY for closed clases
+        sar:
+          headings:
+            about_data_subject: About the data subject
+            about_case: About the case
+            where_information_should_be_sent: Where the information should be sent
       select_type:
         heading: Choose correspondence type
         sub_heading: Admin
@@ -748,8 +764,13 @@ en:
       external_deadline_copy: "For example, 01 02 2018"
       internal_deadline: Draft deadline
       heading: Add case details
+      created_at: Created at
+      created_at_copy: 'Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
       received_date: Date received at MOJ
+      received_date_short: Received date
       received_date_copy: "For example, 01 02 2018"
+      received_date_copy_long: Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"
+      only_select_one: Please only select one.
       case/ico:
         internal_deadline_copy: >-
           This should be calculated as half of the final deadline, or 10 working days if

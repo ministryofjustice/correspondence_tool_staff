@@ -148,6 +148,20 @@ RSpec.describe Cases::FoiController, type: :controller do
           assert_raises { post :create, params: invalid_foi_params }
         end
       end
+
+      context 'with missing FOI type' do
+        let(:invalid_foi_params) {
+          foi_params.tap do |p|
+            p[:foi][:type] = ''
+            p[:foi][:name] = 'A Standard FOI'
+          end
+        }
+
+        it 'defaults to FOI Standard' do
+          post :create, params: invalid_foi_params
+          expect(Case::FOI::Standard.last.name).to eq 'A Standard FOI'
+        end
+      end
     end
   end
 
