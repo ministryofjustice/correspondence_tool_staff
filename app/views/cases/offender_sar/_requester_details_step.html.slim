@@ -19,16 +19,19 @@
   h2.heading-medium
     = t('helpers.label.offender_sar_case_form.delivery_method')
   = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
-    - fieldset.radio_input('send_by_email',
-                           panel_id: 'reply_method_send_by_email_panel')
-    - fieldset.revealing_panel(:reply_method_send_by_email_panel) do |panel|
-      - panel.email_field :email
+
 
     - fieldset.radio_input('send_by_post',
                            panel_id: 'reply_method_send_by_post_panel')
 
     - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
       - panel.text_area :postal_address, {rows: 4}
+
+    - fieldset.radio_input('send_by_email',
+        panel_id: 'reply_method_send_by_email_panel')
+
+    - fieldset.revealing_panel(:reply_method_send_by_email_panel) do |panel|
+      - panel.email_field :email
 
   p
     = link_to "Previous", "/cases/new/offender"
