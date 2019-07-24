@@ -438,7 +438,7 @@ en:
         name: "Full name of the representative"
         third_party: Is this information being requested on someone else's behalf?
         third_party_relationship: Relationship to the subject
-        delivery_method: How should the information be sent?
+        delivery_method: How and where should the information be sent?
         postal_address: "Recipient postal address"
         received_date: "Received at MOJ"
         subject: "Case summary"
