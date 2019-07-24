@@ -5,7 +5,13 @@ class Case::SAR::Offender < Case::Base
     end
 
     def searchable_fields_and_ranks
-      super.merge({ subject_full_name: 'B'})
+      super.merge({
+        subject_full_name: 'A',
+        prison_number: 'B',
+        previous_case_numbers: 'B',
+        subject_aliases: 'B',
+        other_subject_ids: 'B'
+      })
     end
   end
 
