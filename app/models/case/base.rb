@@ -698,6 +698,12 @@ class Case::Base < ApplicationRecord
     end
   end
 
+  def casework_officer_user
+    if trigger?
+      assigned_disclosure_specialist
+    end
+  end
+
   def requires_flag_for_disclosure_specialists?
     true
   end

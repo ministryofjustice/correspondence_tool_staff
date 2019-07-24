@@ -2,38 +2,55 @@ require 'rails_helper'
 
 RSpec.describe ApplicationRecord, type: :model do
   describe '#warehouse_closed_report' do
-    # let(:feedback) {
-    #   fe = spy('Feedback')
-    #   expect(fe).to have_received(:create!).exactly(:twice)
-    #   Feedback.create!(comment: 'Test', email: 'test@mail.com')
-    # }
-
-    before(:each) do
-      model = spy('Feedback')
-      expect(model).to have_received(:warehouse_closed_report).exactly(:twice)
-    end
-
     context 'on save' do
       it 'executes' do
-        Feedback.create!(comment: 'Test', email: 'test@mail.com')
+        kase = create :foi_case, name: 'initial name to be changed'
+
+
+        case_report = Warehouse::CasesReport.find_by(case_id: kase.id)
+
+        expect(case_report.case_id).to eq kase.id
+        expect(case_report.name).to eq 'initial name to be changed'
+
+        kase.name = 'WHat just happpened'
+        kase.save!
+        case_report.reload
+        expect(case_report.name).to eq 'WHat just happpened'
+
+
+
+        #
+        #
+        # csv_exporter = CSVExporter.new(kase)
+        # result = csv_exporter.to_csv
+        # puts "result: #{result.inspect}"
+        # fields = CSVExporter::CSV_COLUMN_HEADINGS.map{|f|f.parameterize.underscore}.join(',')
+        # fields += 'case_id'
+        #
+        # result << kase.id
+        #
+        # insert_sql = "insert into warehouse_cases_report (#{fields}) values (#{result.join(',').chomp(',')})"
+        # puts "\nSQL: #{insert_sql.inspect}\n"
+        # sql_result = ActiveRecord::Base.connection.execute insert_sql
+        # puts "sql_result: #{sql_result.inspect}"
       end
     end
 
     context 'on update' do
       it 'executes' do
-        model.update!(comment: 'Edited the comment')
+        #model.update!(comment: 'Edited the comment')
       end
     end
 
     context 'on destroy' do
       it 'executes' do
-        model.destroy!
+        #model.destroy!
       end
     end
 
     context 'on delete' do
       it 'executes' do
-        model.delete
+        #model.delete
       end
     end
   end

@@ -1,0 +1,75 @@
+# Not currently used as an ActiveRecord model as this is a simple
+# denormalised data-warehousing of all cases data required to generate
+# Open/Closed reports. There should be a one-to-one relationship between
+# this warehouse table and the cases table.
+class WarehouseCasesReport < ActiveRecord::Migration[5.0]
+
+  # Copied from CSVExporter::CSV_COLUMN_HEADINGS
+  REPORT_FIELDS = {
+    'Number' => :string,
+    'Case type' => :string,
+    'Current state' => :string,
+    'Responding team' => :string,
+    'Responder' => :string,
+    'Date received' => :date,
+    'Internal deadline' => :date,
+    'External deadline' => :date,
+    'Date responded' => :date,
+    'Date compliant draft uploaded' => :date,
+    'Trigger' => :string,
+    'Name' => :string,
+    'Requester type' => :string,
+    'Message' => :string,
+    'Info held' => :string,
+    'Outcome' => :string,
+    'Refusal reason' => :string,
+    'Exemptions' => :string,
+    'Postal address' => :string,
+    'Email' => :string,
+    'Appeal outcome' => :string,
+    'Third party' => :string,
+    'Reply method' => :string,
+    'SAR Subject type' => :string,
+    'SAR Subject full name' => :string,
+    'Business unit responsible for late response' => :string,
+    'Extended' => :string,
+    'Extension count' => :string,
+    'Deletion reason' => :string,
+    'Casework officer' => :string,
+    'Created by' => :string,
+    'Date created' => :datetime,
+    'Business group' => :string,
+    'Directorate name' => :string,
+    'Director General name' => :string,
+    'Director name' => :string,
+    'Deputy Director name' => :string,
+    'Draft in time' => :string,
+    'In target' => :string,
+    'Number of days late' => :integer,
+  }
+
+  def up
+    create_table :warehouse_cases_report, id: false do |t|
+      t.references :case, primary_key: true, foreign_key: true, null: false, index: true
+      t.timestamps
+
+      t.column :creator_id, :integer
+      t.column :responding_team_id, :integer
+      t.column :responder_id, :integer
+      t.column :casework_officer_user_id, :integer
+      t.column :business_group_id, :integer
+      t.column :directorate_id, :integer
+      t.column :director_general_name_property_id, :integer
+      t.column :director_name_property_id, :integer
+      t.column :deputy_director_name_property_id, :integer
+
+      REPORT_FIELDS.each do |field, col_type|
+        t.column field.parameterize.underscore, col_type, null: true
+      end
+    end
+  end
+
+  def down
+    drop_table :warehouse_cases_report
+  end
+end
