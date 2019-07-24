@@ -53,6 +53,9 @@ overturned_foi_cases:
 overturned_sar_cases:
   default_managing_team: DISCLOSURE-BMT
   default_clearance_team: DISCLOSURE
+offender_sar_cases:
+  default_managing_team: BRANSTON
+  default_clearance_team: BRANSTON
 
 pit_extension_limit: 20
 sar_extension_limit: 60

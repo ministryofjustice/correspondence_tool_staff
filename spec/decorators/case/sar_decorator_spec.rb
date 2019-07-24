@@ -1,12 +1,12 @@
 require "rails_helper"
 
-describe Case::SARDecorator do
+describe Case::SAR::StandardDecorator do
   let(:decorated_sar_case) { create(:sar_case,
                                      subject_type: "member_of_the_public")
                               .decorate }
 
   it 'instantiates the correct decorator' do
-    expect(Case::SAR.new.decorate).to be_instance_of Case::SARDecorator
+    expect(Case::SAR::Standard.new.decorate).to be_instance_of Case::SAR::StandardDecorator
   end
 
   it 'formats the requester type' do

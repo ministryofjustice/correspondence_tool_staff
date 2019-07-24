@@ -43,7 +43,7 @@ module CTS::Cases
 
     def new_case
       case @klass.to_s
-      when 'Case::SAR' then new_sar_case
+      when 'Case::SAR::Standard' then new_sar_case
       when /^Case::ICO/ then new_ico_case
       when /^Case::FOI/ then new_foi_case
       when /^Case::OverturnedICO/ then new_overturned_case
@@ -94,7 +94,7 @@ module CTS::Cases
         message:           options.fetch(:message,
                                          Faker::Lorem.paragraph(10, true, 10)),
         subject_type:      options.fetch(:subject_type,
-                                         Case::SAR.subject_types.keys.sample),
+                                         Case::SAR::Standard.subject_types.keys.sample),
         received_date:     get_sar_received_date,
         created_at:        get_created_at_date,
         reply_method:      options.fetch(:reply_method, 'send_by_email'),
@@ -532,7 +532,7 @@ module CTS::Cases
     def original_case_type(kase)
       case kase.type
       when 'Case::ICO::FOI' then 'Case::FOI::Standard'
-      when 'Case::ICO::SAR' then 'Case::SAR'
+      when 'Case::ICO::SAR' then 'Case::SAR::Standard'
       end
     end
 

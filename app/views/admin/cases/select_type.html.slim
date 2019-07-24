@@ -11,3 +11,6 @@ ul#create-correspondences
     li style="margin-bottom: 15px"
       = link_to correspondence_type.abbreviation_and_name,
                 new_admin_case_path(correspondence_type: correspondence_type.abbreviation.downcase)
+  li style="margin-bottom: 15px"
+  	= link_to "OFFENDER_SAR - test link",
+                new_case_path("offender_sar")

@@ -1,5 +1,5 @@
-- url = defined?(form_url) ? form_url : process_respond_and_close_case_path(id: @case.id)
-= form_for kase, as: :case_sar, url: url do |f|
+- url = defined?(form_url) ? form_url : polymorphic_path(@case, action: :process_respond_and_close)
+= form_for kase, as: :sar, url: url do |f|
 
   - if @case.responded_late?
     = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}

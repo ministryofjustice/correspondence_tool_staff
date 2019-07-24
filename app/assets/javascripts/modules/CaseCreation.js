@@ -1,14 +1,14 @@
 moj.Modules.CaseCreation = {
   $deliveryMethod       : $('#delivery-method'),
 
-  $deliveryMethodEmail  : $('#case_foi_delivery_method_sent_by_email'),
-  $deliveryMethodPost   : $('#case_foi_delivery_method_sent_by_post'),
+  $deliveryMethodEmail  : $('#foi_delivery_method_sent_by_email'),
+  $deliveryMethodPost   : $('#foi_delivery_method_sent_by_post'),
 
   $deliveryMethodFields : $('#delivery-method-fields'),
 
   $originalCaseFields: $('#js-search-for-case .js-original-case'),
-  $originalCaseInput: $('#case_ico_original_case_number'),
-  $relatedCaseInput: $('#case_ico_related_case_number'),
+  $originalCaseInput: $('#ico_original_case_number'),
+  $relatedCaseInput: $('#ico_related_case_number'),
   $relatedCaseFields: $('#js-search-for-case .js-related-case'),
   $searchOriginCaseButton: $('#xhr-search-original-case-button'),
   $searchRelatedCaseButton: $('#xhr-search-related-case-button'),
@@ -43,9 +43,9 @@ moj.Modules.CaseCreation = {
       this.$deliveryMethodFields.show();
 
       if (this.$deliveryMethodEmail.is(':checked')) {
-        $('#case_foi_message').closest('.form-group').show();
+        $('#foi_message').closest('.form-group').show();
       } else {
-        $('#case_foi_message').closest('.form-group').hide();
+        $('#foi_message').closest('.form-group').hide();
       }
 
       if (this.$deliveryMethodPost.is(':checked')) {
@@ -129,14 +129,14 @@ moj.Modules.CaseCreation = {
   getCaseDetails: function (button) {
 
     var related_case_ids = $( moj.Modules.CaseCreation.relatedCaseReport)
-                              .find(':hidden[name="case_ico[related_case_ids][]"]')
+                              .find(':hidden[name="ico[related_case_ids][]"]')
                               .map(function() { return this.value; })
                               .get()
                               .join(' ');
 
     return $.getJSON($(button).data('url'), {
-      'original_case_number': document.getElementById('case_ico_original_case_number').value,
-      'related_case_number' : document.getElementById('case_ico_related_case_number').value,
+      'original_case_number': document.getElementById('ico_original_case_number').value,
+      'related_case_number' : document.getElementById('ico_related_case_number').value,
       'related_case_ids': related_case_ids,
       'correspondence_type': document.getElementById('correspondence_type').value,
       'link_type': $(button).data('link-type')

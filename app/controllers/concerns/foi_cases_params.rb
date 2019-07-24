@@ -2,8 +2,9 @@ module FOICasesParams
   extend ActiveSupport::Concern
 
   def create_foi_params
-    params.require(:case_foi).permit(
+    params.require(:foi).permit(
       :requester_type,
+      :type,
       :name,
       :postal_address,
       :email,
@@ -17,8 +18,9 @@ module FOICasesParams
   end
 
   def edit_foi_params
-    params.require(:case_foi).permit(
+    params.require(:foi).permit(
       :requester_type,
+      :type,
       :name,
       :postal_address,
       :email,
@@ -33,7 +35,7 @@ module FOICasesParams
   end
 
   def process_foi_closure_params
-    closure_params = params.require(:case_foi).permit(
+    closure_params = params.require(:foi).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
@@ -69,7 +71,7 @@ module FOICasesParams
   end
 
   def respond_foi_params
-    params.require(:case_foi).permit(
+    params.require(:foi).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,

@@ -37,22 +37,24 @@ module CasesHelper
               class: 'button'
     when :assign_to_new_team
       link_to 'Assign to another team',
-              assign_to_new_team_case_assignment_path(@case, @case .responder_assignment),
+              assign_to_new_team_case_assignment_path(@case, @case.responder_assignment),
               id: 'action--assign-new-team',
               class: 'button-secondary'
     when :add_responses
       link_to t('common.case.upload_response'),
-              upload_responses_case_path(@case),
+              new_case_responses_path(@case,response_action: :upload_responses),
               id: 'action--upload-response',
               class: 'button'
     when :create_overturned
+      url = @case.original_case_type == 'FOI' ? new_case_overturned_ico_fois_path(@case) : new_case_overturned_ico_sars_path(@case)
       link_to t('common.case.create_overturned'),
-              new_overturned_ico_case_path(@case),
+              url,
               id: 'action--create-overturned',
               class: 'button'
     when :respond
+      #url = @case.foi? ? respond_case_ico_foi_path(@case) : polymorphic_path(@case, action: :respond)
       link_to translate_for_case(@case, "common", 'respond'),
-              respond_case_path(@case),
+              polymorphic_path(@case, action: :respond),
               id: 'action--mark-response-as-sent',
               class: 'button'
     when :reassign_user
@@ -68,27 +70,27 @@ module CasesHelper
               class: 'button'
     when :approve
       link_to t('common.case.clear_response'),
-              approve_case_path(@case),
+              new_case_approval_path(@case),
               id: 'action--approve',
               class: 'button'
     when :request_amends
       link_to t('common.case.request_amends'),
-              request_amends_case_path(@case),
+              new_case_amendment_path(@case),
               id: 'action--request-amends',
               class: 'button'
     when :upload_response_and_approve
       link_to t('common.case.upload_approve'),
-              upload_response_and_approve_case_path(@case),
+              new_case_responses_path(@case, response_action: :upload_response_and_approve),
               id: 'action--upload-approve',
               class: 'button'
     when :upload_response_and_return_for_redraft
       link_to t('common.case.upload_and_redraft'),
-              upload_response_and_return_for_redraft_case_path(@case),
+              new_case_responses_path(@case, response_action: :upload_response_and_return_for_redraft),
               id: 'action--upload-redraft',
               class: 'button'
     when :close, :respond_and_close
       link_to translate_for_case(@case, "common", 'close'),
-              close_case_path(@case),
+              polymorphic_path(@case, action: :close),
               id: 'action--close-case',
               class: 'button', method: :get
     when :progress_for_clearance
@@ -98,14 +100,14 @@ module CasesHelper
               class: 'button', method: :patch
     when :extend_sar_deadline
       link_to I18n.t('common.case.extend_sar_deadline'),
-              extend_sar_deadline_case_path(@case),
+              new_case_sar_extension_path(@case),
               id: 'action--extend-deadline-for-sar',
               class: 'button-secondary'
     when :remove_sar_deadline_extension
       link_to I18n.t('common.case.remove_sar_deadline_extension'),
-              remove_sar_deadline_extension_case_path(@case),
+              case_sar_extensions_path(@case),
               id: 'action--remove-extended-deadline-for-sar',
-              class: 'button-secondary', method: :patch
+              class: 'button-secondary', method: :delete
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
@@ -126,22 +128,22 @@ module CasesHelper
 
   def attachment_download_link(kase, attachment)
     link_to t('common.case.download_link_html', filename: attachment.filename),
-            download_case_case_attachment_path(kase, attachment),
-            class: 'download'
+      download_case_attachment_path(kase, attachment),
+      class: 'download'
 
   end
 
   def show_remove_clearance_link(kase)
     if policy(kase).remove_clearance?
-      link_to('Remove clearance', remove_clearance_case_path(id: kase.id))
+      link_to('Remove clearance', remove_clearance_case_path(kase))
     end
   end
 
   def attachment_preview_link(attachment)
     if attachment.preview_key != nil
       link_to "View",
-                 case_case_attachment_path(attachment.case, attachment),
-                 {target: "_blank", class: "view"}
+        case_attachment_path(attachment.case, attachment),
+        { target: "_blank", class: "view" }
     else
       ''
     end
@@ -149,7 +151,7 @@ module CasesHelper
 
   def attachment_remove_link(kase, attachment)
     link_to t('common.case.remove_link_html', filename: attachment.filename),
-            case_case_attachment_path(kase, attachment),
+            case_attachment_path(kase, attachment),
             {method: :delete, class:"delete",
             remote: true,
             data: {
@@ -191,23 +193,23 @@ module CasesHelper
 
   def action_buttons_for_allowed_events(kase, *events)
     events
-      .find_all { |name| policy(kase).send("#{name}?") } 
+      .find_all { |name| policy(kase).send("#{name}?") }
       .map  { |name| send("action_button_for_#{name}", kase) }
-  end  
+  end
 
   def action_link_for_destroy_case(kase)
     link_to 'Delete case', confirm_destroy_case_path(kase)
   end
 
   def action_button_for_destroy_case(kase)
-    link_to 'Delete case', 
+    link_to 'Delete case',
       confirm_destroy_case_path(kase),
       class: 'button-secondary'
   end
 
   def action_button_for_extend_for_pit(kase)
     link_to I18n.t('common.case.extend_for_pit'),
-            extend_for_pit_case_path(kase),
+            new_case_pit_extension_path(kase),
             id: 'action--extend-for-pit',
             class: 'button-secondary'
 
@@ -215,15 +217,15 @@ module CasesHelper
 
   def action_button_for_remove_pit_extension(kase)
     link_to I18n.t('common.case.remove_pit_extension'),
-            remove_pit_extension_case_path(kase),
+            case_pit_extensions_path(kase),
             id: 'action--remove-pit-extension',
-            method: :patch,
+            method: :delete,
             class: 'button-secondary'
   end
 
   def action_link_for_new_case_link(kase)
     link_to "Link a case",
-            new_case_link_case_path(kase.id),
+            new_case_link_path(kase.id),
             class: 'secondary-action-link',
             id: 'action--link-a-case'
   end
@@ -231,8 +233,7 @@ module CasesHelper
   def action_link_for_destroy_case_link(kase, linked_case)
     if policy(kase).destroy_case_link?
       link_to t('common.case.remove_linked_case_html', case_number: linked_case.number),
-              destroy_link_on_case_path(id: kase.id,
-                                        linked_case_number: linked_case.number),
+              case_link_path(case_id: kase.id, id: linked_case.number),
               data: { confirm: "Are you sure?" },
               method: :delete
     end
@@ -244,17 +245,21 @@ module CasesHelper
 
   end
 
+  # Note exceptions for FOI sub-classes because REST routes for FOI
+  # sub-classes do not exist (adds more complexity than needed)
   def case_details_links(kase, user)
     links = ''
+
     if kase.allow_event?(user, :edit_case)
       links << link_to(t('helpers.links.case_details.edit_case'),
-                       edit_case_path(kase),
-                       class: "secondary-action-link")
+        kase.foi? ? edit_case_foi_standard_path(kase) : edit_polymorphic_path(kase),
+        class: "secondary-action-link")
     end
+
     if kase.allow_event?(user, :update_closure)
       links << link_to(t('helpers.links.case_details.edit_closure'),
-                       edit_closure_case_path(kase),
-                       class: "secondary-action-link")
+        kase.foi? ? edit_closure_case_foi_standard_path(kase) : polymorphic_path(kase, action: :edit_closure),
+        class: "secondary-action-link")
     end
     links
   end
@@ -278,5 +283,14 @@ module CasesHelper
     # it is an "old style" closure, i.e. it was closed before we implemented the new
     # outcomes, info_held statuses, refusal reasons, etc
     user.manager? && kase.closed? && !kase.allow_event?(user, :update_closure)
+  end
+
+  # Note use of Case::FOI::Standard for Timeliness/ComplianceReview FOI cases
+  def case_create_action(kase)
+    if kase.foi?
+      self.send("case_foi_standard_index_path")
+    else
+      self.send("#{kase.model_name.singular}_index_path")
+    end
   end
 end

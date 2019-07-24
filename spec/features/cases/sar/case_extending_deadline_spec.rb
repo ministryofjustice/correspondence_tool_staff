@@ -67,7 +67,7 @@ feature 'when extending a SAR case deadline' do
       expect(cases_show_page.actions).to have_remove_sar_deadline_extension
 
       # 3. Trying to extend again displays an error message
-      visit extend_sar_deadline_case_path(id: kase.id)
+      visit new_case_sar_extension_path(kase)
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.alert.text).to eq('SAR deadline cannot be extended')
     end
@@ -83,6 +83,7 @@ feature 'when extending a SAR case deadline' do
 
     scenario 'can extend a SAR deadline' do
       login_as approver
+
       cases_show_page.load(id: kase.id)
 
       # 1. Extend by 30 days for the first time
@@ -107,7 +108,7 @@ feature 'when extending a SAR case deadline' do
       expect(cases_show_page.actions).not_to have_extend_sar_deadline
 
       # 2. Unauthorized to extend deadline
-      visit extend_sar_deadline_case_path(id: kase.id)
+      visit new_case_sar_extension_path(kase)
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.alert.text).to eq('SAR deadline cannot be extended')
     end

@@ -1,6 +1,7 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
+<<<<<<< HEAD
   after_commit :warehouse_report
 
   def warehouse_report
@@ -42,5 +43,14 @@ class ApplicationRecord < ActiveRecord::Base
     case_reports.each do |case_report|
       Warehouse::CasesReport.generate(case_report.case)
     end
+=======
+  def valid_attributes?(attributes)
+    attributes.each do |attribute|
+      self.class.validators_on(attribute).each do |validator|
+        validator.validate_each(self, attribute, send(attribute))
+      end
+    end
+    errors.none?
+>>>>>>> origin/master
   end
 end

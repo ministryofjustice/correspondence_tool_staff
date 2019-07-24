@@ -28,7 +28,7 @@ module PageObjects
       def method_missing(method, *args)
         if method.match %r{^choose_(.+)}
           choice = args.first
-          make_radio_button_choice("case_sar_#{$1}_#{choice}")
+          make_radio_button_choice("sar_#{$1}_#{choice}")
         else
           super
         end

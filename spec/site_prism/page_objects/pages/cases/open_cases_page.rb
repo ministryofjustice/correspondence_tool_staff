@@ -9,6 +9,7 @@ module PageObjects
         # This page is just a version of CasesPage, so look at that for the
         # page structure.
         set_url '/cases/open'
+        set_url_matcher(/cases\/(open|my_open)(\/(in_time))?/)
 
         section :filter_tab_links, '.ct-tab-container' do
           element :type_tab, 'a[href="#ct-tab-panel-type"]'

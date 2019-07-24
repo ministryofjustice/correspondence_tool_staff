@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class RespondPage < SitePrism::Page
-        set_url '/cases/{id}/respond'
+        set_url '/cases/{correspondence_type}/{id}/respond'
 
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 

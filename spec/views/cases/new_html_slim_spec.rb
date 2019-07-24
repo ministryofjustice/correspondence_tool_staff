@@ -41,7 +41,7 @@ describe 'cases/new.html.slim', type: :view do
 
   context 'SARs' do
     it 'displays the new case page' do
-      kase = Case::SAR.new.decorate
+      kase = Case::SAR::Standard.new.decorate
       assign(:case, kase)
       assign(:s3_direct_post, S3Uploader.s3_direct_post_for_case(kase, :request))
 

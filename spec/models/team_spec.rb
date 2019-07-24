@@ -53,6 +53,7 @@ RSpec.describe Team, type: :model do
 
   context 'multiple teams created' do
     let!(:managing_team)       { find_or_create :team_disclosure_bmt }
+    let!(:branston_team)       { find_or_create :team_branston }
     let!(:responding_team)     { find_or_create :foi_responding_team }
     let!(:sar_responding_team) { find_or_create :sar_responding_team }
     let!(:approving_team)      { find_or_create :team_disclosure }
@@ -60,7 +61,8 @@ RSpec.describe Team, type: :model do
     describe 'managing scope' do
       it 'returns managing teams' do
         expect(BusinessUnit.managing).to match_array [
-                                           managing_team
+                                           managing_team,
+                                           branston_team
                                          ]
       end
     end

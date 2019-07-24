@@ -4,8 +4,7 @@ module Stats
   describe R005MonthlyPerformanceReport do
 
     before(:all) { create :report_type, :r005 }
-
-    after(:all)   { ReportType.r005.destroy }
+    after(:all) { ReportType.delete_all }
 
     describe '.title' do
       it 'returns the title' do

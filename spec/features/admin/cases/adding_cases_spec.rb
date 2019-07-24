@@ -129,7 +129,7 @@ feature 'adding cases' do
     end
   end
 
-  context 'Case::SAR' do
+  context 'Case::SAR::Standard' do
     scenario 'creating a case with the default values' do
       admin_cases_page.load
       admin_cases_page.create_case_button.click
@@ -158,7 +158,7 @@ feature 'adding cases' do
       admin_cases_new_sar_page.submit_button.click
       expect(admin_cases_page).to be_displayed
       expect(admin_cases_page.case_list.count).to eq 1
-      kase = Case::SAR.first
+      kase = Case::SAR::Standard.first
       expect(kase.name).to eq 'Test Name'
       expect(kase.email).to eq 'test@localhost'
       expect(kase.subject).to eq 'test subject'
@@ -171,7 +171,7 @@ feature 'adding cases' do
       create_sar(flag: 'disclosure')
       expect(admin_cases_page).to be_displayed
       expect(admin_cases_page.case_list.count).to eq 1
-      kase = Case::SAR.first
+      kase = Case::SAR::Standard.first
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     end
 
@@ -179,7 +179,7 @@ feature 'adding cases' do
       create_sar(target_state: 'pending_dacu_disclosure_clearance', flag: 'disclosure')
       expect(admin_cases_page).to be_displayed
       expect(admin_cases_page.case_list.count).to eq 1
-      kase = Case::SAR.first
+      kase = Case::SAR::Standard.first
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     end
 
@@ -187,7 +187,7 @@ feature 'adding cases' do
       create_sar(target_state: 'awaiting_dispatch', flag: 'disclosure')
       expect(admin_cases_page).to be_displayed
       expect(admin_cases_page.case_list.count).to eq 1
-      kase = Case::SAR.first
+      kase = Case::SAR::Standard.first
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
     end
   end

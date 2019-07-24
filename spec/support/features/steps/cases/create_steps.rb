@@ -62,7 +62,7 @@ def create_sar_case_step(params={})
 
   expect(cases_new_page).to be_displayed
 
-  cases_new_page.create_link_for_correspondence('SAR').click
+  cases_new_page.create_link_for_correspondence('SAR - Subject access request').click
   expect(cases_new_sar_page).to be_displayed
 
   cases_new_sar_page.fill_in_case_details(params)
@@ -71,14 +71,48 @@ def create_sar_case_step(params={})
   )
   click_button 'Create case'
 
-  expect(assignments_new_page).to be_displayed
-
-  # Return the case we created using the params of the current  path
+  # Return the case we created using the params of the current path
   kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
+  expect(assignments_new_page).to be_displayed(case_id: kase_id)
   Case::Base.find(kase_id)
 end
 
-def create_overturned_ico_case_step(params={})
+def create_offender_sar_case_step(params = {})
+  # flag_for_disclosure = params.delete(:flag_for_disclosure) { false }
+
+  # Assume we are on a case listing page
+  expect(cases_page).to have_new_case_button
+  cases_page.new_case_button.click
+  expect(cases_new_page).to be_displayed
+
+  cases_new_page.create_link_for_correspondence('OFFENDER').click
+  expect(cases_new_offender_sar_subject_details_page).to be_displayed
+
+  cases_new_offender_sar_subject_details_page.fill_in_case_details(params)
+  click_on "Continue"
+  expect(cases_new_offender_sar_requester_details_page).to be_displayed
+
+  cases_new_offender_sar_requester_details_page.fill_in_case_details(params)
+  click_on "Continue"
+  expect(cases_new_offender_sar_requested_info_page).to be_displayed
+
+  cases_new_offender_sar_requested_info_page.fill_in_case_details(params)
+  click_on "Continue"
+  expect(cases_new_offender_sar_date_received_page).to be_displayed
+
+  cases_new_offender_sar_date_received_page.fill_in_case_details(params)
+  click_on "Continue"
+
+  expect(cases_show_page).to be_displayed
+  expect(cases_show_page).to have_content "Case created successfully"
+  click_on "All open cases"
+
+  expect(open_cases_page).to be_displayed
+  expect(cases_page).to have_content "Branston Registry"
+end
+
+
+def create_overturned_ico_case_step(params={}) # rubocop:disable Metrics/MethodLength
   ico_case = params.delete(:ico_case)
   flagged = params.delete(:flag_for_disclosure)
   case_type = params[:case_type].downcase
@@ -89,11 +123,17 @@ def create_overturned_ico_case_step(params={})
   # button when available
   cases_show_page.actions.create_overturned.click
 
-  expect(cases_new_overturned_ico_page).to be_displayed
-  expect(cases_new_overturned_ico_page).to have_form
-  expect(cases_new_overturned_ico_page).to have_text(ico_case.number)
+  if case_type.upcase == 'SAR'
+    new_overturned_ico_page = cases_new_sar_overturned_ico_page
+  else
+    new_overturned_ico_page = cases_new_foi_overturned_ico_page
+  end
 
-  form = cases_new_overturned_ico_page.form
+  expect(new_overturned_ico_page).to be_displayed(id: ico_case.id)
+  expect(new_overturned_ico_page).to have_form
+  expect(new_overturned_ico_page).to have_text(ico_case.number)
+
+  form = new_overturned_ico_page.form
 
   final_deadline = 10.business_days.from_now
   form.final_deadline.day.set(final_deadline.day)
@@ -109,7 +149,7 @@ def create_overturned_ico_case_step(params={})
 
   if form.has_flag_for_disclosure_specialists?
     form.choose_flag_for_disclosure_specialists(flagged ? 'yes' : 'no',
-                                                case_type: case_type)
+                                                case_type: case_type.downcase)
   end
 
   click_button 'Create case'

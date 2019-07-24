@@ -13,6 +13,10 @@ class S3Uploader
     )
   end
 
+  def self.for(kase, upload_type)
+    self.s3_direct_post_for_case(kase, upload_type)
+  end
+
   def self.id_for_case(kase)
     if kase.persisted?
       kase.id

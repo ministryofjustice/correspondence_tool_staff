@@ -11,7 +11,7 @@ module Stats
 
     def case_scope
       tmm = CaseClosure::RefusalReason.tmm
-      Case::SAR.where('refusal_reason_id IS NULL OR refusal_reason_id != ?', tmm.id)
+      Case::SAR::Standard.where('refusal_reason_id IS NULL OR refusal_reason_id != ?', tmm.id)
     end
 
     def report_type

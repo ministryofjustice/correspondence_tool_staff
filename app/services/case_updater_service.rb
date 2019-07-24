@@ -1,5 +1,4 @@
 class CaseUpdaterService
-
   attr_reader :result
 
   def initialize(user, kase, params)
