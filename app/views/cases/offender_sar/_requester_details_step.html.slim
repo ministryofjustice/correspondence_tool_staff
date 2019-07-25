@@ -9,7 +9,7 @@
 = form_for @case, url: case_create_action(@case.object), as: :offender_sar do |f|
   #third-party
     h2.heading-medium
-      = t('helpers.label.offender_sar_case_form.third_party')
+      = t('helpers.label.offender_sar.third_party')
     = f.radio_button_fieldset(:third_party, legend_options: { class: 'visually-hidden' }) do |fieldset|
       - fieldset.radio_input(true, text_method: :humanize)
         = f.text_field :name
@@ -17,7 +17,7 @@
       - fieldset.radio_input(false, text_method: :humanize)
 
   h2.heading-medium
-    = t('helpers.label.offender_sar_case_form.delivery_method')
+    = t('helpers.label.offender_sar.delivery_method')
   = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
 
 

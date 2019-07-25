@@ -262,7 +262,7 @@ en:
     fieldset:
       bypass_approval_manager:
         press_office_approval: 'Does Press office need to clear this response?'
-      offender_sar_case_form:
+      offender_sar:
         subject_type: "What is their relationship to the MOJ?"
         flag_for_disclosure_specialists: "Flag as high profile case?"
         third_party: Is this information being requested on someone else's behalf?
@@ -427,7 +427,7 @@ en:
         received_date: "Received at MOJ"
         subject: "Case summary"
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
-      offender_sar_case_form:
+      offender_sar:
         subject_full_name: "Full name of data subject"
         prison_number: "What is the subject's relevant prison number?"
         subject_aliases: "Subject's alias if applicable"
@@ -462,7 +462,7 @@ en:
         edit_closure: 'Edit closure details'
 
     hint:
-      offender_sar_case_form:
+      offender_sar:
         prison_number: "You can include multiple numbers separated by comma, space or paragraph return."
         subject_aliases: "You can include multiple aliases separated by comma, space or paragraph return."
         previous_case_numbers: "You can include multiple cases separated by comma, space or paragraph return."
