@@ -151,7 +151,14 @@ Rails.application.routes.draw do
       patch :flag_for_clearance
     end
 
-    resources :case_transitions, only: [:create]
+    member do
+      patch :mark_as_waiting_for_data, to: 'case_transitions#mark_as_waiting_for_data', as: 'mark_as_waiting_for_data'
+      patch :mark_as_ready_for_vetting
+      patch :mark_as_vetting_in_progress
+      patch :mark_as_ready_to_dispatch
+      patch :mark_as_ready_to_close
+      patch :mark_as_closed
+    end
   end
 
   # Case Behaviours (awaiting move to module Cases)

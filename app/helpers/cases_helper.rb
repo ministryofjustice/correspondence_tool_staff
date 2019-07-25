@@ -32,37 +32,37 @@ module CasesHelper
     case event
     when :mark_as_waiting_for_data
       link_to "Mark as waiting for data",
-              case_case_transitions_path(@case),
+              mark_as_waiting_for_data_case_path(@case),
               id: 'action--mark-as-waiting-for-data',
               class: 'button',
-              method: 'post'
-    when :mark_as_ready_for_vetting
+              method: 'patch'
+    when :waiting_for_data
       link_to "Mark as ready for vetting",
-              case_case_transitions_path(@case),
+              mark_as_ready_for_vetting_path(@case),
               id: 'action--mark-as-ready-for-vetting',
               class: 'button',
               method: 'post'
-    when :mark_as_vetting_in_progress
+    when :ready_for_vetting
       link_to "Mark as vetting in progress",
-              case_case_transitions_path(@case),
+              mark_as_vetting_in_progress_path(@case),
               id: 'action--mark-as-vetting-in-progress',
               class: 'button',
               method: 'post'
-    when :mark_as_ready_to_dispatch
+    when :vetting_in_progress
       link_to "Mark as ready to dispatch",
-              case_case_transitions_path(@case),
+              mark_as_ready_to_dispatch_path(@case),
               id: 'action--mark-as-ready-to-dispatch',
               class: 'button',
               method: 'post'
-    when :mark_as_ready_to_close
+    when :ready_to_dispatch
       link_to "Mark as ready to close",
-              case_case_transitions_path(@case),
+              mark_as_ready_to_close_path(@case),
               id: 'action--mark-as-ready-to-close',
               class: 'button',
               method: 'post'
-    when :mark_as_closed
+    when :ready_to_close
       link_to "Mark as closed",
-              case_case_transitions_path(@case),
+              mark_as_closed_path(@case),
               id: 'action--mark-as-closed',
               class: 'button',
               method: 'post'
