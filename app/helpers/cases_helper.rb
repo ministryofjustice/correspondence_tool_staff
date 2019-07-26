@@ -48,16 +48,16 @@ module CasesHelper
               id: 'action--mark-as-vetting-in-progress',
               class: 'button',
               method: 'patch'
+    when :mark_as_ready_to_copy
+      link_to "Mark as ready to copy",
+              mark_as_ready_to_copy_case_path(@case),
+              id: 'action--mark-as-ready-to-copy',
+              class: 'button',
+              method: 'patch'
     when :mark_as_ready_to_dispatch
       link_to "Mark as ready to dispatch",
               mark_as_ready_to_dispatch_case_path(@case),
               id: 'action--mark-as-ready-to-dispatch',
-              class: 'button',
-              method: 'patch'
-    when :mark_as_ready_to_close
-      link_to "Mark as ready to close",
-              mark_as_ready_to_close_case_path(@case),
-              id: 'action--mark-as-ready-to-close',
               class: 'button',
               method: 'patch'
     when :mark_as_closed

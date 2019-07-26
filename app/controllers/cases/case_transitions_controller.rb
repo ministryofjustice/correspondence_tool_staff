@@ -18,13 +18,13 @@ module Cases
       reload_case_page_on_success
     end
 
-    def mark_as_ready_to_dispatch
-      @case.state_machine.mark_as_ready_to_dispatch!(params_for_transition)
+    def mark_as_ready_to_copy
+      @case.state_machine.mark_as_ready_to_copy!(params_for_transition)
       reload_case_page_on_success
     end
 
-    def mark_as_ready_to_close
-      @case.state_machine.mark_as_ready_to_close!(params_for_transition)
+    def mark_as_ready_to_dispatch
+      @case.state_machine.mark_as_ready_to_dispatch!(params_for_transition)
       reload_case_page_on_success
     end
 

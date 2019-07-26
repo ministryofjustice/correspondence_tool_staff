@@ -84,6 +84,21 @@ FactoryBot.define do
     end
   end
 
+  factory :ready_to_copy_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+    transient do
+      identifier { "Ready to close offender sar" }
+    end
+
+    created_at      { creation_time }
+    received_date   { creation_time }
+
+    after(:create) do |kase, evaluator|
+      create :case_transition_ready_to_copy,
+             case: kase
+      kase.reload
+    end
+  end
+
   factory :ready_to_dispatch_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
     transient do
       identifier { "Ready to dispatch offender sar" }
@@ -94,21 +109,6 @@ FactoryBot.define do
 
     after(:create) do |kase, evaluator|
       create :case_transition_ready_to_dispatch,
-             case: kase
-      kase.reload
-    end
-  end
-
-  factory :ready_to_close_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
-    transient do
-      identifier { "Ready to close offender sar" }
-    end
-
-    created_at      { creation_time }
-    received_date   { creation_time }
-
-    after(:create) do |kase, evaluator|
-      create :case_transition_ready_to_close,
              case: kase
       kase.reload
     end

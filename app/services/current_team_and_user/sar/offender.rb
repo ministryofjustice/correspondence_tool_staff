@@ -28,17 +28,12 @@ module CurrentTeamAndUser
         @user = nil
       end
 
+      def ready_to_copy
+        @team = @case.managing_team
+        @user = nil
+      end
+
       def ready_to_dispatch
-        @team = @case.managing_team
-        @user = nil
-      end
-
-      def ready_to_close
-        @team = @case.managing_team
-        @user = nil
-      end
-
-      def wibble
         @team = @case.managing_team
         @user = nil
       end

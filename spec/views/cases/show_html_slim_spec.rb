@@ -33,8 +33,8 @@ describe 'cases/show.html.slim', type: :view do
       :mark_as_waiting_for_data,
       :mark_as_ready_for_vetting,
       :mark_as_vetting_in_progress,
+      :mark_as_ready_to_copy,
       :mark_as_ready_to_dispatch,
-      :mark_as_ready_to_close,
       :mark_as_closed
     ]
 
@@ -486,7 +486,7 @@ describe 'cases/show.html.slim', type: :view do
         mark_as_ready_for_vetting: true,
         mark_as_vetting_in_progress: true,
         mark_as_ready_to_dispatch: true,
-        mark_as_ready_to_close: true,
+        mark_as_ready_to_copy: true,
         mark_as_closed: true
       )
     end
@@ -542,13 +542,13 @@ describe 'cases/show.html.slim', type: :view do
 
       context 'when a case is ready to dispatch' do
         it 'shows mark as ready to close' do
-          assign(:permitted_events, [:mark_as_ready_to_close])
-          assign(:filtered_permitted_events, [:mark_as_ready_to_close])
+          assign(:permitted_events, [:mark_as_ready_to_copy])
+          assign(:filtered_permitted_events, [:mark_as_ready_to_copy])
           login_as manager
           render
           cases_show_page.load(rendered)
 
-          expect(cases_show_page.actions).to have_mark_as_ready_to_close
+          expect(cases_show_page.actions).to have_mark_as_ready_to_copy
         end
       end
     end

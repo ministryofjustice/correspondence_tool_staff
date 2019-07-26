@@ -15,6 +15,7 @@ feature 'Offender SAR Case creation by a manager' do
     cases_show_page.load(id: offender_sar_case.id)
 
     expect(cases_show_page).to have_content "Mark as waiting for data"
+    expect(cases_show_page).to have_content "Data to be requested"
     click_on "Mark as waiting for data"
 
     expect(cases_show_page).to be_displayed
@@ -26,12 +27,12 @@ feature 'Offender SAR Case creation by a manager' do
     click_on "Mark as vetting in progress"
 
     expect(cases_show_page).to be_displayed
-    expect(cases_show_page).to have_content "Mark as ready to dispatch"
-    click_on "Mark as ready to dispatch"
+    expect(cases_show_page).to have_content "Mark as ready to copy"
+    click_on "Mark as ready to copy"
 
     expect(cases_show_page).to be_displayed
-    expect(cases_show_page).to have_content "Mark as ready to close"
-    click_on "Mark as ready to close"
+    expect(cases_show_page).to have_content "Mark as ready to dispatch"
+    click_on "Mark as ready to dispatch"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as closed"

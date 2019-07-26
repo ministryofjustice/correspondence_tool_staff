@@ -19,6 +19,6 @@ en:
       waiting_for_data: Waiting for data
       ready_for_vetting: Ready for vetting
       vetting_in_progress: Vetting in progress
+      ready_to_copy: Ready to copy
       ready_to_dispatch: Ready to dispatch
-      ready_to_close: Ready to close
       closed: Closed

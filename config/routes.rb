@@ -155,8 +155,8 @@ Rails.application.routes.draw do
       patch :mark_as_waiting_for_data, to: 'case_transitions#mark_as_waiting_for_data', as: 'mark_as_waiting_for_data'
       patch :mark_as_ready_for_vetting, to: 'case_transitions#mark_as_ready_for_vetting', as: 'mark_as_ready_for_vetting'
       patch :mark_as_vetting_in_progress, to: 'case_transitions#mark_as_vetting_in_progress', as: 'mark_as_vetting_in_progress'
+      patch :mark_as_ready_to_copy, to: 'case_transitions#mark_as_ready_to_copy', as: 'mark_as_ready_to_copy'
       patch :mark_as_ready_to_dispatch, to: 'case_transitions#mark_as_ready_to_dispatch', as: 'mark_as_ready_to_dispatch'
-      patch :mark_as_ready_to_close, to: 'case_transitions#mark_as_ready_to_close', as: 'mark_as_ready_to_close'
       patch :mark_as_closed, to: 'case_transitions#mark_as_closed', as: 'mark_as_closed'
     end
   end

@@ -41,6 +41,6 @@ en:
     mark_as_waiting_for_data: Marked as waiting for data
     mark_as_ready_for_vetting: Marked as ready for vetting
     mark_as_vetting_in_progress: Marked as vetting in progress
+    mark_as_ready_to_copy: Marked as ready to copy
     mark_as_ready_to_dispatch: Marked as ready to dispatch
-    mark_as_ready_to_close: Marked as ready to close
     mark_as_closed:  Marked as closed

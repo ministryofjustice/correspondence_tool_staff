@@ -340,17 +340,17 @@ FactoryBot.define do
     acting_user { acting_team.managers.first }
   end
 
-  factory :case_transition_ready_to_dispatch, parent: :case_transition do
-    to_state { 'ready_to_dispatch' }
-    event { 'mark_as_ready_to_dispatch' }
+  factory :case_transition_ready_to_copy, parent: :case_transition do
+    to_state { 'ready_to_copy' }
+    event { 'mark_as_ready_to_copy' }
 
     acting_team { self.case.managing_team }
     acting_user { acting_team.managers.first }
   end
 
-  factory :case_transition_ready_to_close, parent: :case_transition do
-    to_state { 'ready_to_close' }
-    event { 'mark_as_ready_to_close' }
+  factory :case_transition_ready_to_dispatch, parent: :case_transition do
+    to_state { 'ready_to_dispatch' }
+    event { 'mark_as_ready_to_dispatch' }
 
     acting_team { self.case.managing_team }
     acting_user { acting_team.managers.first }

@@ -19,12 +19,12 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_user_is_a_manager
   end
 
-  def mark_as_ready_to_dispatch?
+  def mark_as_ready_to_copy?
     clear_failed_checks
     check_user_is_a_manager
   end
 
-  def mark_as_ready_to_close?
+  def mark_as_ready_to_dispatch?
     clear_failed_checks
     check_user_is_a_manager
   end
