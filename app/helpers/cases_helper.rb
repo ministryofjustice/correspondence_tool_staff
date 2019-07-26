@@ -1,6 +1,6 @@
 require './lib/translate_for_case'
 
-module CasesHelper
+module CasesHelper #rubocop:disable Metrics/ModuleLength
 
   def download_csv_link(full_path)
     uri = URI(full_path)

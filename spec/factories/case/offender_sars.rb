@@ -47,7 +47,7 @@ FactoryBot.define do
     created_at      { creation_time }
     received_date   { creation_time }
 
-    after(:create) do |kase, evaluator|
+    after(:create) do |kase|
       create :case_transition_waiting_for_data,
              case: kase
       kase.reload
@@ -62,7 +62,7 @@ FactoryBot.define do
     created_at      { creation_time }
     received_date   { creation_time }
 
-    after(:create) do |kase, evaluator|
+    after(:create) do |kase|
       create :case_transition_ready_for_vetting,
              case: kase
       kase.reload
@@ -77,7 +77,7 @@ FactoryBot.define do
     created_at      { creation_time }
     received_date   { creation_time }
 
-    after(:create) do |kase, evaluator|
+    after(:create) do |kase|
       create :case_transition_vetting_in_progress,
              case: kase
       kase.reload
@@ -92,7 +92,7 @@ FactoryBot.define do
     created_at      { creation_time }
     received_date   { creation_time }
 
-    after(:create) do |kase, evaluator|
+    after(:create) do |kase|
       create :case_transition_ready_to_copy,
              case: kase
       kase.reload
@@ -107,7 +107,7 @@ FactoryBot.define do
     created_at      { creation_time }
     received_date   { creation_time }
 
-    after(:create) do |kase, evaluator|
+    after(:create) do |kase|
       create :case_transition_ready_to_dispatch,
              case: kase
       kase.reload
@@ -122,7 +122,7 @@ FactoryBot.define do
     created_at      { creation_time }
     received_date   { creation_time }
 
-    after(:create) do |kase, evaluator|
+    after(:create) do |kase|
       create :case_transition_closed,
              case: kase
       kase.reload
