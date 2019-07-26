@@ -36,36 +36,36 @@ module CasesHelper
               id: 'action--mark-as-waiting-for-data',
               class: 'button',
               method: 'patch'
-    when :waiting_for_data
+    when :mark_as_ready_for_vetting
       link_to "Mark as ready for vetting",
-              mark_as_ready_for_vetting_path(@case),
+              mark_as_ready_for_vetting_case_path(@case),
               id: 'action--mark-as-ready-for-vetting',
               class: 'button',
-              method: 'post'
-    when :ready_for_vetting
+              method: 'patch'
+    when :mark_as_vetting_in_progress
       link_to "Mark as vetting in progress",
-              mark_as_vetting_in_progress_path(@case),
+              mark_as_vetting_in_progress_case_path(@case),
               id: 'action--mark-as-vetting-in-progress',
               class: 'button',
-              method: 'post'
-    when :vetting_in_progress
+              method: 'patch'
+    when :mark_as_ready_to_dispatch
       link_to "Mark as ready to dispatch",
-              mark_as_ready_to_dispatch_path(@case),
+              mark_as_ready_to_dispatch_case_path(@case),
               id: 'action--mark-as-ready-to-dispatch',
               class: 'button',
-              method: 'post'
-    when :ready_to_dispatch
+              method: 'patch'
+    when :mark_as_ready_to_close
       link_to "Mark as ready to close",
-              mark_as_ready_to_close_path(@case),
+              mark_as_ready_to_close_case_path(@case),
               id: 'action--mark-as-ready-to-close',
               class: 'button',
-              method: 'post'
-    when :ready_to_close
+              method: 'patch'
+    when :mark_as_closed
       link_to "Mark as closed",
-              mark_as_closed_path(@case),
+              mark_as_closed_case_path(@case),
               id: 'action--mark-as-closed',
               class: 'button',
-              method: 'post'
+              method: 'patch'
     when :assign_responder
       link_to I18n.t('common.case.assign'),
               new_case_assignment_path(@case),

@@ -11,8 +11,7 @@ feature 'Offender SAR Case creation by a manager' do
     cases_page.load
   end
 
-  scenario 'creating a case that does not need clearance', js: true do
-    # create_offender_sar_case_step
+  scenario 'creating a case that does not need clearance' do
     cases_show_page.load(id: offender_sar_case.id)
 
     expect(cases_show_page).to have_content "Mark as waiting for data"
@@ -20,5 +19,22 @@ feature 'Offender SAR Case creation by a manager' do
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready for vetting"
+    click_on "Mark as ready for vetting"
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as vetting in progress"
+    click_on "Mark as vetting in progress"
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as ready to dispatch"
+    click_on "Mark as ready to dispatch"
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as ready to close"
+    click_on "Mark as ready to close"
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as closed"
+    click_on "Mark as closed"
   end
 end
