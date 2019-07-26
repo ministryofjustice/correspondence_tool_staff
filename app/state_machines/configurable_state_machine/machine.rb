@@ -248,7 +248,6 @@ module ConfigurableStateMachine
       event_config = state_config[event]
       if can_trigger_event?(event_name: event, metadata: params)
         ActiveRecord::Base.transaction do
-          # binding.pry()
           to_state = find_destination_state(event_config: event_config, user: user)
           to_workflow = find_destination_workflow(event_config: event_config, user: user)
           CaseTransition.unset_most_recent(@kase)
