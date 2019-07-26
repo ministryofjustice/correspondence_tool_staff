@@ -334,7 +334,18 @@ describe Case::SAR::Offender do
 
   describe '.searchable_fields_and_ranks' do
     it 'includes subject full name' do
-      expect(Case::SAR::Offender.searchable_fields_and_ranks).to include({subject_full_name: 'B'})
+      expect(Case::SAR::Offender.searchable_fields_and_ranks).to include({
+        message: 'D',
+        name: 'A',
+        number: 'A',
+        other_subject_ids: 'B',
+        previous_case_numbers: 'B',
+        prison_number: 'B',
+        responding_team_name: 'B',
+        subject: 'C',
+        subject_aliases: 'B',
+        subject_full_name: 'A',
+      })
     end
   end
 
