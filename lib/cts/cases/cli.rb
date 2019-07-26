@@ -277,8 +277,7 @@ module CTS::Cases
 
     desc 'warehouse', 'Warehouse all the cases (long process)'
     def warehouse(*_args)
-      warehouser = CTS::Cases::Reindex.new(CTS, options)
-      warehouser.call
+      CTS::Cases::Warehouser.new(CTS, options).call
     end
   end
 end

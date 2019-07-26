@@ -6,42 +6,11 @@ class CasesController < ApplicationController
 
   before_action -> { set_case(params[:id]) }, only: [:edit, :update]
 
-<<<<<<< HEAD
-  before_action :set_case,
-                only: [
-                  :approve,
-                  :closure_outcomes,
-                  :destroy_case_link,
-                  :edit,
-                  :edit_closure,
-                  :execute_approve,
-                  :extend_for_pit,
-                  :extend_sar_deadline,
-                  :execute_extend_for_pit,
-                  :execute_extend_sar_deadline,
-                  :execute_new_case_link,
-                  :execute_upload_response_and_approve,
-                  :execute_upload_response_and_return_for_redraft,
-                  :execute_upload_responses,
-                  :new_case_link,
-                  :process_date_responded,
-                  :record_late_team,
-                  :resemove_pit_extension,
-                  :remove_sar_deadline_extension,
-                  :response_upload_for_redraft,
-                  :update_closure,
-                  :upload_response_and_approve,
-                  :upload_response_and_return_for_redraft,
-                  :upload_responses,
-                ]
-  before_action :set_url, only: [:search, :open_cases]
-=======
   before_action -> { set_decorated_case(params[:id]) }, only: [
     :show,
     :destroy,
     :confirm_destroy,
   ]
->>>>>>> origin/master
 
   # Attributes used by sub-classes to set the current Case type for the request
   attr_reader :correspondence_type, :correspondence_type_key
@@ -198,10 +167,10 @@ class CasesController < ApplicationController
   def user_not_authorized(exception)
     case exception.query
     when 'approve?',
-         'can_add_attachment?',
-         /^add_response_to_flagged_case/,
-         'upload_responses?',
-         'update_closure?'
+      'can_add_attachment?',
+      /^add_response_to_flagged_case/,
+      'upload_responses?',
+      'update_closure?'
       super(exception, case_path(@case))
     else
       super

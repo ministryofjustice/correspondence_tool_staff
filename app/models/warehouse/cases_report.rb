@@ -2,7 +2,7 @@ module Warehouse
   class CasesReport < ApplicationRecord
     self.table_name = 'warehouse_cases_report'
 
-    has_one :case
+    belongs_to :case, class_name: 'Case::Base'
 
     def self.generate(kase)
       if !(case_report = CasesReport.find_by(case_id: kase.id))
@@ -75,10 +75,43 @@ module Warehouse
       case_report.save!
     end
 
-    def self.warehouse_all
-      # TODO: Start GC every 500 records?
-      Case::Base.all.each { |kase| self.generate(kase) }
+    def self.reconcile
+      [
+        self.reconcile_missing_cases,
+        self.reconcile_deleted_cases
+      ]
     end
+
+    def self.reconcile_missing_cases
+      query =
+        Case::Base
+          .joins('Left Outer Join warehouse_cases_report On warehouse_cases_report.case_id = cases.id')
+          .where("cases.deleted = 'false' And warehouse_cases_report.case_id Is Null")
+
+      count = 0
+
+      query.in_batches(of: 50) do |batch|
+        batch.each do |kase|
+          self.generate(kase)
+          count += 1
+        end
+
+        GC.start  # Clear up allocated objects
+        sleep(10) # Throttle
+      end
+
+      count
+    end
+
+    # Because of foreign-key constraints should not be able to have any orphan
+    # CasesReport entries but included here for completeness
+    def self.reconcile_deleted_cases
+      self
+        .joins('Left Outer Join cases On cases.id = warehouse_cases_report.case_id')
+        .where("cases.deleted = 'true' Or cases.id is null")
+        .delete_all
+    end
+
 
     private
 

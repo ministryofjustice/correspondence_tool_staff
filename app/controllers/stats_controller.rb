@@ -1,3 +1,5 @@
+require 'csv'
+
 class StatsController < ApplicationController
   # @note (Mohammed Seedat): Interim solution to allow 'Closed Cases'
   #   to be considered a custom reporting option
@@ -67,6 +69,34 @@ class StatsController < ApplicationController
     report = Stats::R900AuditReport.new
     report.run_and_update!
     send_data report.report_data, filename: "R900Audit.csv"
+  end
+
+  def closed_cases
+    # 1  execute the query as a manual select statement
+    # 2. process in batches
+    # 3. GC.start and sleep 2 seconds
+    # 4. Output files in batch order number in a unique guid folder
+    # 5. Cat all files on end
+    # 6. zip file
+    # 7. Stream back to user
+
+
+
+    csv_file = CSV.generate(headers: true, force_quotes: true) do |csv|
+      #csv << header
+      pg_conn = ActiveRecord::Base.connection.instance_variable_get(:@connection)
+      pg_conn.send_query( "Select * from warehouse_cases_report;" )
+      pg_conn.set_single_row_mode
+      pg_conn.get_result.stream_each_row do |row|
+        csv << row
+      end
+      pg_conn.get_result  # => nil   (no more results)
+    end
+
+    send_data(
+      csv_file,
+      filename: 'closed-cases.csv'
+    )
   end
 
   def self.closed_cases_correspondence_type

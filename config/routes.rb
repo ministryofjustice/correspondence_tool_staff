@@ -178,6 +178,7 @@ Rails.application.routes.draw do
   resources :stats, only: [:index, :show, :new, :create] do
     get 'download_custom/:id', action: :download_custom, on: :collection, as: :download_custom
     get :download_audit, on: :collection
+    get :closed_cases, on: :collection, action: :closed_cases
   end
 
   resource :users

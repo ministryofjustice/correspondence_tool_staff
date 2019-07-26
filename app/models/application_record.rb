@@ -1,23 +1,19 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
-<<<<<<< HEAD
   after_commit :warehouse_report
 
   def warehouse_report
-    puts "In ApplicationRecord.warehouse_report\n"
     warehousable = [User, Team, Case::Base, CaseClosure, CaseTransition, TeamProperty]
 
     # 1. Add current object ot Warehouse?
-    return unless warehousable.any? { |type| puts "Checking if warehousable (#{type}): #{self.class} - any? #{self.kind_of?(type)}\n"; self.kind_of?(type) }
+    return unless warehousable.any? { |type| self.kind_of?(type) }
 
-    puts "\nTHIS IS A WAREHOUSABLE TYPE (#{self.class}\n"
 
     # 2. If this object forces a re-warehousing then add a new
     # job
 
     kases, case_reports = [], []
-
 
 
     if self.kind_of? User
@@ -33,7 +29,7 @@ class ApplicationRecord < ActiveRecord::Base
     elsif self.kind_of? CaseTransition
       kases = [self.case]
     else
-      puts "NOT A WAREHOUSABLE CLASS"
+      nil
     end
 
     kases.each do |kase|
@@ -43,7 +39,8 @@ class ApplicationRecord < ActiveRecord::Base
     case_reports.each do |case_report|
       Warehouse::CasesReport.generate(case_report.case)
     end
-=======
+  end
+
   def valid_attributes?(attributes)
     attributes.each do |attribute|
       self.class.validators_on(attribute).each do |validator|
@@ -51,6 +48,5 @@ class ApplicationRecord < ActiveRecord::Base
       end
     end
     errors.none?
->>>>>>> origin/master
   end
 end

@@ -179,6 +179,12 @@ class Case::Base < ApplicationRecord
 
   has_many :teams, through: :assignments
 
+  has_one :warehouse_cases_report,
+          class_name: 'Warehouse::CasesReport',
+          foreign_key: :case_id,
+          autosave: false,
+          dependent: :destroy
+
   has_one :managing_assignment,
           -> { managing },
           class_name: 'Assignment',
