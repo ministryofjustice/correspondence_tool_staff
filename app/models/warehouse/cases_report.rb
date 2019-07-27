@@ -4,6 +4,8 @@ module Warehouse
 
     belongs_to :case, class_name: 'Case::Base'
 
+    CASE_BATCH_SIZE = 500
+
     def self.generate(kase)
       if !(case_report = CasesReport.find_by(case_id: kase.id))
         case_report = self.new
@@ -75,6 +77,10 @@ module Warehouse
       case_report.save!
     end
 
+    def self.regenerate
+      self.process_cases(Case::Base.all)
+    end
+
     def self.reconcile
       [
         self.reconcile_missing_cases,
@@ -88,19 +94,7 @@ module Warehouse
           .joins('Left Outer Join warehouse_cases_report On warehouse_cases_report.case_id = cases.id')
           .where("cases.deleted = 'false' And warehouse_cases_report.case_id Is Null")
 
-      count = 0
-
-      query.in_batches(of: 50) do |batch|
-        batch.each do |kase|
-          self.generate(kase)
-          count += 1
-        end
-
-        GC.start  # Clear up allocated objects
-        sleep(10) # Throttle
-      end
-
-      count
+      self.process_cases(query)
     end
 
     # Because of foreign-key constraints should not be able to have any orphan
@@ -114,6 +108,22 @@ module Warehouse
 
 
     private
+
+    def self.process_cases(query)
+      count = 0
+
+      query.in_batches(of: CASE_BATCH_SIZE) do |batch|
+        batch.each do |kase|
+          self.generate(kase)
+          count += 1
+        end
+
+        GC.start  # Clear up allocated objects
+        sleep(10) # Throttle
+      end
+
+      count
+    end
 
     def self.extension_count(kase)
       pit_count, sar_count = 0, 0

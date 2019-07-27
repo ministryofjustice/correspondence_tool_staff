@@ -1,4 +1,5 @@
 require 'csv'
+require 'tempfile'
 
 class StatsController < ApplicationController
   # @note (Mohammed Seedat): Interim solution to allow 'Closed Cases'
@@ -80,23 +81,47 @@ class StatsController < ApplicationController
     # 6. zip file
     # 7. Stream back to user
 
+    total_rows = Warehouse::CasesReport.all.size
+    rows_per_fragment = 1000 # Completely arbitrary
+    num_fragments = (total_rows.to_f/rows_per_fragment.to_f).round
+    offset = 0
 
+    folder_name = FileUtils.mkdir_p(Dir.tmpdir + "/cts-reports/#{SecureRandom.uuid}").first
+    pg_conn = ActiveRecord::Base.connection.instance_variable_get(:@connection)
+    @temp_csv = ''
 
-    csv_file = CSV.generate(headers: true, force_quotes: true) do |csv|
-      #csv << header
-      pg_conn = ActiveRecord::Base.connection.instance_variable_get(:@connection)
-      pg_conn.send_query( "Select * from warehouse_cases_report;" )
-      pg_conn.set_single_row_mode
-      pg_conn.get_result.stream_each_row do |row|
-        csv << row
+    (0..num_fragments).each do |fragment_num|
+      fragment_name = "fragment_#{fragment_num}_"
+      csv_file = CSV.generate(headers: true, force_quotes: true) do |csv|
+        #csv << header
+
+        sql = "Select * from warehouse_cases_report Offset #{offset} Limit #{rows_per_fragment};"
+        pg_conn.send_query(sql)
+        pg_conn.set_single_row_mode
+
+        loop do
+          results = pg_conn.get_result or break
+
+          results.check
+          results.stream_each_row do |row|
+            csv << row
+          end
+        end
+
+        offset += rows_per_fragment
       end
-      pg_conn.get_result  # => nil   (no more results)
+
+      file = Tempfile.new([fragment_name, '.csv'], folder_name)
+      file.write(csv_file)
+      file.close
     end
 
-    send_data(
-      csv_file,
-      filename: 'closed-cases.csv'
-    )
+    if system("cd #{folder_name}; cat *.csv > closed-cases.csv; zip closed-cases.zip closed-cases.csv;")
+      send_file("#{folder_name}/closed-cases.zip")
+      #system("cd #{folder_name}; rm *;")
+    else
+      raise ArgumentError.new('Generating closed cases failed due to system calls failing: Folder - ' + folder_name)
+    end
   end
 
   def self.closed_cases_correspondence_type
