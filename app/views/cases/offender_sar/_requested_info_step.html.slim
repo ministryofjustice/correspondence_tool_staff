@@ -8,7 +8,7 @@
 
 = form_for @case, url: case_create_action(@case.object), as: :offender_sar do |f|
 
-  = f.text_area :message, {rows: 12}
+  = f.text_area :message, { rows: 12 }
 
   p
     = link_to "Previous", "/cases/new/offender/requester-details"
