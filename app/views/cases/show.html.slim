@@ -74,12 +74,17 @@ div id="case-#{@correspondence_type_key}" class="case"
     section.case-info
       = render partial: 'cases/case_attachments', locals: {case_details: @case}
 
-  section#messages-section.case-info
-    = render partial: 'cases/case_messages', locals: { case_details: @case }
+  - unless @case.is_offender_sar?
+    section#messages-section.case-info
+      = render partial: 'cases/case_messages', locals: { case_details: @case }
 
   - if @case_transitions.any?
     section.case-info.has-page-break
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
+
+  - if @case.is_offender_sar?
+    section.notes-section
+      = render partial: 'cases/offender_sar/case_notes',locals: { case_details: @case }
 
   = render partial: 'shared/components/case_page_original_case_details'
 
