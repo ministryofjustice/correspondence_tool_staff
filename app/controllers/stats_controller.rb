@@ -89,10 +89,11 @@ class StatsController < ApplicationController
     folder_name = FileUtils.mkdir_p(Dir.tmpdir + "/cts-reports/#{SecureRandom.uuid}").first
     pg_conn = ActiveRecord::Base.connection.instance_variable_get(:@connection)
     @temp_csv = ''
+    files = []
 
     (0..num_fragments).each do |fragment_num|
       fragment_name = "fragment_#{fragment_num}_"
-      csv_file = CSV.generate(headers: true, force_quotes: true) do |csv|
+      csv_file = CSV.generate(force_quotes: true) do |csv|
         #csv << header
 
         sql = "Select * from warehouse_cases_report Offset #{offset} Limit #{rows_per_fragment};"
@@ -100,6 +101,7 @@ class StatsController < ApplicationController
         pg_conn.set_single_row_mode
 
         loop do
+          puts "In loop"
           results = pg_conn.get_result or break
 
           results.check
@@ -109,10 +111,13 @@ class StatsController < ApplicationController
         end
 
         offset += rows_per_fragment
+        puts "\nIteration: #{fragment_num} - Offset: #{offset}"
       end
 
       file = Tempfile.new([fragment_name, '.csv'], folder_name)
       file.write(csv_file)
+      puts "\nCreated file: #{file.path}"
+      files << file
       file.close
     end
 
