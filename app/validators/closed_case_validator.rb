@@ -21,6 +21,7 @@ class ClosedCaseValidator < ActiveModel::Validator
                          :validate_refusal_reason,
                          :validate_exemptions,
                          :validate_late_team_id ],
+    'OFFENDER_SAR' =>   [],
   }
   # Validations applicable to cases that are being processed for closure.
   #

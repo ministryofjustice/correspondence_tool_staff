@@ -6,6 +6,5 @@ RSpec.describe Cases::CaseTransitionsController, type: :controller do
   it_behaves_like 'edit offender sar spec', :ready_for_vetting_offender_sar, :mark_as_vetting_in_progress
   it_behaves_like 'edit offender sar spec', :vetting_in_progress_offender_sar, :mark_as_ready_to_copy
   it_behaves_like 'edit offender sar spec', :ready_to_copy_offender_sar, :mark_as_ready_to_dispatch
-  # todo - fix this in https://dsdmoj.atlassian.net/browse/CT-2266
-  # it_behaves_like 'edit offender sar spec', :ready_to_dispatch_offender_sar, :mark_as_closed
+  it_behaves_like 'edit offender sar spec', :ready_to_dispatch_offender_sar, :mark_as_closed
 end
