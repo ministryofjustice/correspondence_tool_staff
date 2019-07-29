@@ -321,7 +321,12 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     user.manager? && kase.closed? && !kase.allow_event?(user, :update_closure)
   end
 
+  # Note use of Case::FOI::Standard for Timeliness/ComplianceReview FOI cases
   def case_create_action(kase)
-    self.send("#{kase.model_name.singular}_index_path")
+    if kase.foi?
+      self.send("case_foi_standard_index_path")
+    else
+      self.send("#{kase.model_name.singular}_index_path")
+    end
   end
 end

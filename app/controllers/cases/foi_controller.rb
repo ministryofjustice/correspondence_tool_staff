@@ -16,7 +16,9 @@ module Cases
     end
 
     def case_type
-      Case::FOI::Standard.factory(params.dig(@correspondence_type_key, 'type'))
+      foi_type = params.dig(@correspondence_type_key, 'type')
+      return Case::FOI::Standard if foi_type.blank?
+      Case::FOI::Standard.factory(foi_type)
     end
 
     def create_params
