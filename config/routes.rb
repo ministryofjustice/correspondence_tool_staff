@@ -73,6 +73,16 @@ Rails.application.routes.draw do
     resources :offender_sars, only: only, controller: 'offender_sar', as: :case_sar_offender do
       get 'cancel', on: :collection
       get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
+      patch '/transitions/:transition_name', to: 'offender_sar#transition', as: :transition
+
+      # member do
+      #   patch :mark_as_waiting_for_data, to: 'offender_sar#mark_as_waiting_for_data', as: 'mark_as_waiting_for_data'
+      #   patch :mark_as_ready_for_vetting, to: 'offender_sar#mark_as_ready_for_vetting', as: 'mark_as_ready_for_vetting'
+      #   patch :mark_as_vetting_in_progress, to: 'offender_sar#mark_as_vetting_in_progress', as: 'mark_as_vetting_in_progress'
+      #   patch :mark_as_ready_to_copy, to: 'offender_sar#mark_as_ready_to_copy', as: 'mark_as_ready_to_copy'
+      #   patch :mark_as_ready_to_dispatch, to: 'offender_sar#mark_as_ready_to_dispatch', as: 'mark_as_ready_to_dispatch'
+      #   patch :mark_as_closed, to: 'offender_sar#mark_as_closed', as: 'mark_as_closed'
+      # end
     end
 
     resources :icos, only: only, controller: 'ico', as: :case_ico do

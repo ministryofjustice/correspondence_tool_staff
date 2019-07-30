@@ -30,42 +30,12 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def action_button_for(event)
     case event
-    when :mark_as_waiting_for_data
+    when /mark_as_([a-zA-Z]*)/ # Only applies to Offender SAR
       link_to "Mark as waiting for data",
-              mark_as_waiting_for_data_case_path(@case),
-              id: 'action--mark-as-waiting-for-data',
-              class: 'button',
-              method: 'patch'
-    when :mark_as_ready_for_vetting
-      link_to "Mark as ready for vetting",
-              mark_as_ready_for_vetting_case_path(@case),
-              id: 'action--mark-as-ready-for-vetting',
-              class: 'button',
-              method: 'patch'
-    when :mark_as_vetting_in_progress
-      link_to "Mark as vetting in progress",
-              mark_as_vetting_in_progress_case_path(@case),
-              id: 'action--mark-as-vetting-in-progress',
-              class: 'button',
-              method: 'patch'
-    when :mark_as_ready_to_copy
-      link_to "Mark as ready to copy",
-              mark_as_ready_to_copy_case_path(@case),
-              id: 'action--mark-as-ready-to-copy',
-              class: 'button',
-              method: 'patch'
-    when :mark_as_ready_to_dispatch
-      link_to "Mark as ready to dispatch",
-              mark_as_ready_to_dispatch_case_path(@case),
-              id: 'action--mark-as-ready-to-dispatch',
-              class: 'button',
-              method: 'patch'
-    when :mark_as_closed
-      link_to "Mark as closed",
-              mark_as_closed_case_path(@case),
-              id: 'action--mark-as-closed',
-              class: 'button',
-              method: 'patch'
+        case_sar_offender_transition_path(@case, event),
+        id: "action--#{event.parameterize}",
+        class: 'button',
+        method: 'patch'
     when :assign_responder
       link_to I18n.t('common.case.assign'),
               new_case_assignment_path(@case),

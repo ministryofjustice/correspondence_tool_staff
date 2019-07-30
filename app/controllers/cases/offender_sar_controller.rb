@@ -4,7 +4,6 @@ module Cases
     include OffenderSARCasesParams
 
     before_action :set_case_types, only: [:new, :create]
-
     before_action :set_case, except: [:new, :create]
     before_action :set_date_of_birth, except: [:new, :create]
 
@@ -79,6 +78,23 @@ module Cases
     def cancel
       session[:offender_sar_state] = nil
       redirect_to new_case_sar_offender_path
+    end
+
+    # @todo: Explain why these are here
+    #
+    def transition
+      available_actions = %w[
+        mark_as_waiting_for_data
+        mark_as_ready_for_vetting
+        mark_as_vetting_in_progress
+      ]
+
+      if available_actions.include?(params[:transition_name])
+        @case.state_machine.send(params[:transition_name] + '!', params_for_transition)
+        reload_case_page_on_success
+      else
+        raise ArgumentError.new('Bad transition')
+      end
     end
 
     def mark_as_waiting_for_data
