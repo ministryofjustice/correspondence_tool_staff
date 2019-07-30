@@ -30,10 +30,11 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def action_button_for(event)
     case event
-    when /mark_as_([a-zA-Z]*)/ # Only applies to Offender SAR
-      link_to "Mark as waiting for data",
-        case_sar_offender_transition_path(@case, event),
-        id: "action--#{event.parameterize}",
+    # Offender SAR case state transitions e.g. mark as ready for vetting
+    when /mark_as_([a-zA-Z]*)/
+      link_to t("event.#{event}"),
+        transition_case_sar_offender_path(@case, event),
+        id: "action--#{event}",
         class: 'button',
         method: 'patch'
     when :assign_responder

@@ -80,13 +80,15 @@ module Cases
       redirect_to new_case_sar_offender_path
     end
 
-    # @todo: Explain why these are here
-    #
+    # Actions for specific workflow state transitions
     def transition
       available_actions = %w[
         mark_as_waiting_for_data
         mark_as_ready_for_vetting
         mark_as_vetting_in_progress
+        mark_as_ready_to_copy
+        mark_as_ready_to_dispatch
+        mark_as_closed
       ]
 
       if available_actions.include?(params[:transition_name])
@@ -97,35 +99,35 @@ module Cases
       end
     end
 
-    def mark_as_waiting_for_data
-      @case.state_machine.mark_as_waiting_for_data!(params_for_transition)
-      reload_case_page_on_success
-    end
+    # def mark_as_waiting_for_data
+    #   @case.state_machine.mark_as_waiting_for_data!(params_for_transition)
+    #   reload_case_page_on_success
+    # end
 
-    def mark_as_ready_for_vetting
-      @case.state_machine.mark_as_ready_for_vetting!(params_for_transition)
-      reload_case_page_on_success
-    end
+    # def mark_as_ready_for_vetting
+    #   @case.state_machine.mark_as_ready_for_vetting!(params_for_transition)
+    #   reload_case_page_on_success
+    # end
 
-    def mark_as_vetting_in_progress
-      @case.state_machine.mark_as_vetting_in_progress!(params_for_transition)
-      reload_case_page_on_success
-    end
+    # def mark_as_vetting_in_progress
+    #   @case.state_machine.mark_as_vetting_in_progress!(params_for_transition)
+    #   reload_case_page_on_success
+    # end
 
-    def mark_as_ready_to_copy
-      @case.state_machine.mark_as_ready_to_copy!(params_for_transition)
-      reload_case_page_on_success
-    end
+    # def mark_as_ready_to_copy
+    #   @case.state_machine.mark_as_ready_to_copy!(params_for_transition)
+    #   reload_case_page_on_success
+    # end
 
-    def mark_as_ready_to_dispatch
-      @case.state_machine.mark_as_ready_to_dispatch!(params_for_transition)
-      reload_case_page_on_success
-    end
+    # def mark_as_ready_to_dispatch
+    #   @case.state_machine.mark_as_ready_to_dispatch!(params_for_transition)
+    #   reload_case_page_on_success
+    # end
 
-    def mark_as_closed
-      @case.state_machine.mark_as_closed!(params_for_transition)
-      reload_case_page_on_success
-    end
+    # def mark_as_closed
+    #   @case.state_machine.mark_as_closed!(params_for_transition)
+    #   reload_case_page_on_success
+    # end
 
     private
 

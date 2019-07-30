@@ -38,9 +38,9 @@ en:
     upload_response_approve_and_bypass: Response uploaded and cleared - further clearance not required
     case/ico:
       respond: Response sent to ICO
-    mark_as_waiting_for_data: Marked as waiting for data
-    mark_as_ready_for_vetting: Marked as ready for vetting
-    mark_as_vetting_in_progress: Marked as vetting in progress
-    mark_as_ready_to_copy: Marked as ready to copy
-    mark_as_ready_to_dispatch: Marked as ready to dispatch
-    mark_as_closed:  Marked as closed
+    mark_as_waiting_for_data: Mark as waiting for data
+    mark_as_ready_for_vetting: Mark as ready for vetting
+    mark_as_vetting_in_progress: Mark as vetting in progress
+    mark_as_ready_to_copy: Mark as ready to copy
+    mark_as_ready_to_dispatch: Mark as ready to dispatch
+    mark_as_closed:  Mark as closed
