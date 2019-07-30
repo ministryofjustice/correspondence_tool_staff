@@ -32,9 +32,10 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     case event
     # Offender SAR case state transitions e.g. mark as ready for vetting
     when /mark_as_([a-zA-Z]*)/
-      link_to t("event.#{event}"),
+      link_text = t("event.#{event}")
+      link_to link_text,
         transition_case_sar_offender_path(@case, event),
-        id: "action--#{event}",
+        id: "action--#{link_text.parameterize}",
         class: 'button',
         method: 'patch'
     when :assign_responder
