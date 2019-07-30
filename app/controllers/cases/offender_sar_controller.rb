@@ -6,7 +6,7 @@ module Cases
     before_action :set_case_types, only: [:new, :create]
 
     before_action :set_case, except: [:new, :create]
-    before_action :set_date_of_birth_instance_var, except: [:new, :create]
+    before_action :set_date_of_birth, except: [:new, :create]
 
     def initialize
       @correspondence_type = CorrespondenceType.offender_sar
@@ -114,7 +114,7 @@ module Cases
     private
 
     def params_for_transition
-      {acting_user: current_user, acting_team: current_user.managing_teams.first}
+      { acting_user: current_user, acting_team: current_user.managing_teams.first }
     end
 
     def set_case
@@ -127,12 +127,12 @@ module Cases
       redirect_to case_path(@case)
     end
 
-    # this method is here to fix an issue with the gov_uk_date_fields
+    # This method is here to fix an issue with the gov_uk_date_fields
     # where the validation fails since the internal list of instance
     # variables lacks the date_of_birth field from the json properties
     #     NoMethodError: undefined method `valid?' for nil:NilClass
     #     ./app/state_machines/configurable_state_machine/machine.rb:256
-    def set_date_of_birth_instance_var
+    def set_date_of_birth
       @case.date_of_birth = @case.date_of_birth
     end
 

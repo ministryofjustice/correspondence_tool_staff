@@ -1,24 +1,24 @@
 en:
   state: &state_translations
-    unassigned: Needs reassigning
+    awaiting_dispatch: Ready to send
     awaiting_responder: To be accepted
     awaiting_responder_email: Waiting to be accepted
-    awaiting_dispatch: Ready to send
+    case/ico:
+      awaiting_dispatch: Ready to send to ICO
+      closed: "Closed - %{ico_decision} by ICO"
+      responded: Closed - awaiting ICO decision
+    case/sar/offender:
+      closed: Closed
+      data_to_be_requested: Data to be requested
+      ready_for_vetting: Ready for vetting
+      ready_to_copy: Ready to copy
+      ready_to_dispatch: Ready to dispatch
+      vetting_in_progress: Vetting in progress
+      waiting_for_data: Waiting for data
+    closed: Closed
     drafting: Draft in progress
     pending_dacu_clearance: Pending clearance
     pending_press_office_clearance: Pending clearance
     pending_private_office_clearance: Pending clearance
     responded: Ready to close
-    closed: Closed
-    case/ico:
-      awaiting_dispatch: Ready to send to ICO
-      responded: Closed - awaiting ICO decision
-      closed: "Closed - %{ico_decision} by ICO"
-    case/sar/offender:
-      data_to_be_requested: Data to be requested
-      waiting_for_data: Waiting for data
-      ready_for_vetting: Ready for vetting
-      vetting_in_progress: Vetting in progress
-      ready_to_copy: Ready to copy
-      ready_to_dispatch: Ready to dispatch
-      closed: Closed
+    unassigned: Needs reassigning
