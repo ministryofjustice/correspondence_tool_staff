@@ -72,7 +72,13 @@ class StatsController < ApplicationController
     send_data report.report_data, filename: "R900Audit.csv"
   end
 
+
   def closed_cases
+    report = Stats::ETL::ClosedCases.new
+    send_file(report.results_filepath)
+  end
+
+  def closed_cases_original
     # 1  execute the query as a manual select statement
     # 2. process in batches
     # 3. GC.start and sleep 2 seconds
@@ -88,7 +94,6 @@ class StatsController < ApplicationController
 
     folder_name = FileUtils.mkdir_p(Dir.tmpdir + "/cts-reports/#{SecureRandom.uuid}").first
     pg_conn = ActiveRecord::Base.connection.instance_variable_get(:@connection)
-    @temp_csv = ''
     files = []
 
     (0..num_fragments).each do |fragment_num|
