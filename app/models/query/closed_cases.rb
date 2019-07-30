@@ -1,8 +1,10 @@
 module Query
   class ClosedCases
-    attr_reader :limit, :offset
+    attr_reader :columns, :limit, :offset, :retrieval_scope
 
-    def initialize(offset: nil, limit: nil)
+    def initialize(retrieval_scope:, columns: ['*'], offset: nil, limit: nil)
+      @retrieval_scope = retrieval_scope
+      @columns = columns
       @offset = offset
       @limit = limit
       @connection = ActiveRecord::Base.connection.instance_variable_get(:@connection)
@@ -23,18 +25,24 @@ module Query
     end
 
     def query
+      warehouse = Warehouse::CasesReport.table_name
       limit = []
       limit << "OFFSET #{@offset}" if @offset.present?
       limit << "LIMIT #{@limit}" if @limit.present?
 
       <<~SQL
+        WITH retrieved_cases AS (#{@retrieval_scope.select(:id).to_sql})        
         SELECT 
-          *
+          #{@columns.join(', ').chomp(',')}
         FROM 
-          #{Warehouse::CasesReport.table_name}
-
+          #{warehouse}
+        INNER JOIN
+          retrieved_cases
+        ON 
+          retrieved_cases.id = #{warehouse}.case_id
         #{limit.join(' ')}
      SQL
     end
   end
 end
+

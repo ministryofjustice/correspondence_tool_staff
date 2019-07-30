@@ -3,12 +3,17 @@ require 'csv'
 module Stats
   module ETL
     class ClosedCases
-      attr_reader :results_filepath
+      attr_reader :results_filepath, :retrieval_scope
 
       ROWS_PER_FRAGMENT = 1000
       RESULTS_NAME = 'closed-cases'
 
-      def initialize
+      # +retrieval_scope+ : ActiveQuery relation which Query::ClosedCases
+      # will use to ensure Warehouse retrieval is scoped for the current
+      # requesting user
+      def initialize(retrieval_scope: nil)
+        @retrieval_scope = retrieval_scope
+
         self
           .extract
           .transform
@@ -16,38 +21,38 @@ module Stats
       end
 
       def extract
-        puts "Extract..."
-
         offset = 0
-        # Generate Header first
 
-        # We use `files` to prevent the Temp files being cleared
-        # by ruby GC before they have been fully processed
-        files = (0..num_fragments).map do |fragment_num|
+        # We use `@_temp_files` to prevent the Temp files being cleared
+        # by ruby GC before they have been fully processed. In EC2 instances
+        # this happens rapidly. Manual clearup required as a result.
+        @_temp_files =
+          [new_fragment("fragment_00_header_", heading)] +
+
+          (1..num_fragments + 1).map do |fragment_num|
           data = CSV.generate(force_quotes: true) do |csv|
-            query = Query::ClosedCases.new(offset: offset, limit: ROWS_PER_FRAGMENT)
-            query.execute do |row|
-              csv << row
-            end
+            Query::ClosedCases.new(
+              retrieval_scope: @retrieval_scope,
+              columns: columns,
+              offset: offset,
+              limit: ROWS_PER_FRAGMENT
+            )
+            .execute { |row| csv << row }
 
             offset += ROWS_PER_FRAGMENT
           end
 
-          new_fragment("fragment_#{fragment_num}_", data)
+          new_fragment("fragment_#{'%02d' % fragment_num}_", data)
         end
 
         self
       end
 
       def transform
-        puts "Transform..."
-
         self
       end
 
       def load
-        puts "Load..."
-
         commands = [
           "cd #{folder}",
           "cat *.csv > #{RESULTS_NAME}.csv",
@@ -64,6 +69,18 @@ module Stats
 
 
       private
+
+      def columns
+        @_columns ||= begin
+          CSVExporter::CSV_COLUMN_HEADINGS.map { |f| f.parameterize.underscore }
+        end
+      end
+
+      def heading
+        @_heading ||= begin
+          CSVExporter::CSV_COLUMN_HEADINGS.join(',').chomp(',')
+        end
+      end
 
       def folder
         @_folder ||= begin

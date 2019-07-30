@@ -44,7 +44,15 @@ class Report < ApplicationRecord
   def run_and_update!(**args)
     report_service = run(**args)
 
-    self.report_data = generate_csv(report_service)
+    if self.report_type.etl?
+      self.report_data = {
+        filepath: report_service.filepath,
+        user_id: report_service.user&.id # Allow reports to be restricted
+      }.to_json
+    else
+      self.report_data = generate_csv(report_service)
+    end
+
     self.period_start = report_service.period_start
     self.period_end = report_service.period_end
 

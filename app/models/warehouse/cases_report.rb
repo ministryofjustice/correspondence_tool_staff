@@ -23,7 +23,6 @@ module Warehouse
       case_report.director_name_property_id = kase.responding_team&.directorate&.properties&.lead&.singular_or_nil&.id # Director name
       case_report.deputy_director_name_property_id = kase.responding_team&.properties&.lead&.singular_or_nil&.id # Deputy Director name
 
-
       # Report fields - for output
       case_report.number = kase.number
       case_report.case_type = kase.decorate.pretty_type

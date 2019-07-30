@@ -4,7 +4,7 @@
 # this warehouse table and the cases table.
 class WarehouseCasesReport < ActiveRecord::Migration[5.0]
 
-  # Copied from CSVExporter::CSV_COLUMN_HEADINGS
+  # Copied from CSVExporter::CSV_COLUMN_HEADINGS (July 2019)
   REPORT_FIELDS = {
     'Number' => :string,
     'Case type' => :string,
