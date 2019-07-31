@@ -22,14 +22,25 @@ module Stats
         etl = Stats::ETL::ClosedCases.new(retrieval_scope: scope)
         report = Report.find_by(guid: report_guid)
 
+        # Put the report into Redis
+        redis = Redis.new
+        data = nil
+        File.open(etl.results_filepath, 'r') { |f| data = f.read }
+
+        redis.set(report_guid, data)
+        puts "\nSET REDIS KEY: #{report_guid}\n"
+
         if report
           report.report_data = {
             status: 'complete',
             filepath: etl.results_filepath,
-            user_id: user.id
+            user_id: user.id,
+            report_guid: report_guid,
+            filename: etl.filename,
           }.to_json
 
           report.save!
+          puts "Saved report: #{report.id} with guid: #{report_guid}"
         end
       end
     end

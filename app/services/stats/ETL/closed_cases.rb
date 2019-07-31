@@ -6,7 +6,7 @@ module Stats
       attr_reader :results_filepath, :retrieval_scope
 
       ROWS_PER_FRAGMENT = 1000
-      RESULTS_NAME = 'closed-cases'
+      RESULTS_NAME = 'closed-cases'.freeze
 
       # +retrieval_scope+ : ActiveQuery relation which Query::ClosedCases
       # will use to ensure Warehouse retrieval is scoped for the current
@@ -60,11 +60,15 @@ module Stats
         ].join('; ')
 
         if system(commands)
-          @results_filepath = "#{folder}/#{RESULTS_NAME}.zip"
+          @results_filepath = "#{folder}/#{filename}"
           #system("cd #{folder_name}; rm *;")
         end
 
         self
+      end
+
+      def filename
+        RESULTS_NAME + '.zip'
       end
 
 
