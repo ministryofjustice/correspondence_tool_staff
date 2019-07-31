@@ -464,10 +464,10 @@ en:
       offender_sar:
         date_of_birth: "For example, 12 11 2007"
         message: Enter a brief summary of the case, including any details that will be useful for processing the Offender SAR.
-        other_subject_ids: "You can include multiple numbers separated by comma or space."
-        previous_case_numbers: "You can include multiple cases separated by comma or space."
-        prison_number: "You can include multiple numbers separated by comma or space."
-        subject_aliases: "You can include multiple aliases separated by comma or space."
+        other_subject_ids: "You can include multiple numbers separated by a comma or a space."
+        previous_case_numbers: "You can include multiple cases separated by a comma or a space."
+        prison_number: "You can include multiple numbers separated by a comma or a space."
+        subject_aliases: "You can include multiple aliases separated by a comma or a space."
   alerts:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>

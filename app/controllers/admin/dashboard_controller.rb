@@ -23,6 +23,10 @@ class Admin::DashboardController < AdminController
                  .decorate
   end
 
+  def system
+    @version = `git rev-parse HEAD`.chomp
+  end
+
   private
 
   def count_cases_created_on(date)
