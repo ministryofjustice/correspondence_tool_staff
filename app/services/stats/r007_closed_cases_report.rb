@@ -52,8 +52,15 @@ module Stats
           .where(received_date: [@period_start..@period_end])
           .order(received_date: :asc)
 
-      etl = ETL::ClosedCases.new(retrieval_scope: scope)
-      @filepath = etl.results_filepath
+      options = {
+        etl: ETL::ClosedCases,
+        scope: scope
+      }
+      puts "\nPERFORMING NOW..."
+      WarehouseCasesReportCreateJob.perform_now(@user.id, @period_start.to_i, @period_end.to_i)
+
+      # etl = ETL::ClosedCases.new(retrieval_scope: scope)
+      # @filepath = etl.results_filepath
     end
 
     def persist_results?

@@ -595,7 +595,8 @@ CREATE TABLE public.reports (
     period_end date,
     report_data bytea,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    user_id integer
 );
 
 
@@ -1754,6 +1755,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190325082640'),
 ('20190326113949'),
 ('20190609165906'),
-('20190730133328');
+('20190730133328'),
+('20190730152459');
 
 
