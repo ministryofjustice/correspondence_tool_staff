@@ -1,0 +1,44 @@
+- content_for :heading
+  | System
+
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full.table-container.container
+    table.report.table-font-xsmall
+      colgroup
+        col
+        col
+      thead
+        tr
+          th scope='col'
+            | Setting
+          th scope='col'
+            | Info
+      tbody
+        tr
+          td
+            | App version
+          td
+            = @version
+        tr
+          td
+            | App codebase
+          td
+            = link_to 'Github', "https://github.com/ministryofjustice/correspondence_tool_staff/commits/#{@version}"
+        tr
+          td
+            | Total cases
+          td
+            = Case::Base.all.size
+        tr
+          td
+            | Active Job Queues
+          td
+            = simple_format(Sidekiq::Queue.all.map { |q| "#{q.name} (#{q.size} jobs)" }.join('<br>'))
+        tr
+          td
+            | Indexing
+          td
+            | Reindex all cases
+
