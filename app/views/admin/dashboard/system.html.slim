@@ -36,9 +36,4 @@
             | Active Job Queues
           td
             = simple_format(Sidekiq::Queue.all.map { |q| "#{q.name} (#{q.size} jobs)" }.join('<br>'))
-        tr
-          td
-            | Indexing
-          td
-            | Reindex all cases
 
