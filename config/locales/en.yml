@@ -908,6 +908,7 @@ en:
       period_end: Date to
     create:
       success: Your custom report has been created.
+      waiting: Your custom report will be available shortly.
     new:
       timescale_copy: Which time period should this report cover?
   teams:

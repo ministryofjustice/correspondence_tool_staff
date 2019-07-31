@@ -32,7 +32,7 @@ module Stats
       @stats.add_callback(:before_finalise, -> { AppealCalculations::Callbacks.calculate_percentages(@stats, appeal_types) })
     end
 
-    def run
+    def run(**args)
       Case::Base.find(case_ids).reject { |k| k.unassigned? }.each { |kase| analyse_case(kase) }
       @stats.finalise
     end

@@ -58,7 +58,7 @@ module Stats
       @bu_result = nil
     end
 
-    def run
+    def run(**args)
       analyse_case_for_main_stats
       analyse_case_for_responding_business_unit
     end

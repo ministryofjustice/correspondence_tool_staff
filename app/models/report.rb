@@ -35,20 +35,18 @@ class Report < ApplicationRecord
     self.report_type = ReportType.find_by(abbr: abbr)
   end
 
-  def run(**args)
+  def run(report_guid: SecureRandom.uuid, **args)
     report_service = report_type.class_constant.new(**args)
-    report_service.run
+    report_service.run(report_guid: report_guid)
     report_service
   end
 
   def run_and_update!(**args)
-    report_service = run(**args)
+    self.guid = SecureRandom.uuid
+    report_service = run(report_guid: guid, **args)
 
     if self.report_type.etl?
-      self.report_data = {
-        filepath: report_service.filepath,
-        user_id: report_service.user&.id # Allow reports to be restricted
-      }.to_json
+      self.report_data = { status: 'waiting' }.to_json
     else
       self.report_data = generate_csv(report_service)
     end
