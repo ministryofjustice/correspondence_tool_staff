@@ -49,7 +49,7 @@ describe Admin::DashboardController do
     it 'has Git version SHA' do
       git_sha = assigns(:version)
       expect(git_sha).to be_present
-      expect(git_sha).to match /^[0-9a-f]{40}$/
+      expect(git_sha).to match(/^[0-9a-f]{40}$/)
     end
   end
 end
