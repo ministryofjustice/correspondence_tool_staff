@@ -14,6 +14,8 @@
             = link_to "List Queries", admin_dashboard_list_queries_path
           li class="tab #{active_link_class('/admin/dashboard/search_queries')}"
             = link_to "Search Queries", admin_dashboard_search_queries_path
+          li class="tab #{active_link_class('/admin/dashboard/system')}"
+            = link_to "System", admin_dashboard_system_path
   = yield
 
 = render template: "layouts/application"
