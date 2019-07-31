@@ -18,17 +18,20 @@ module Stats
       end
 
       def process(report_guid:, user:, period_start:, period_end: Date.today)
-        scope = CaseFinderService.new(user).closed_cases_scope.where(received_date: [period_start..period_end]).order(received_date: :asc)
+        scope =
+          CaseFinderService.new(user)
+            .closed_cases_scope
+            .where(received_date: [period_start..period_end])
+            .order(received_date: :asc)
+
         etl = Stats::ETL::ClosedCases.new(retrieval_scope: scope)
         report = Report.find_by(guid: report_guid)
 
-        # Put the report into Redis
+        # Put the generated report into Redis for consumption by web app
         redis = Redis.new
         data = nil
         File.open(etl.results_filepath, 'r') { |f| data = f.read }
-
         redis.set(report_guid, data)
-        puts "\nSET REDIS KEY: #{report_guid}\n"
 
         if report
           report.report_data = {
@@ -40,7 +43,6 @@ module Stats
           }.to_json
 
           report.save!
-          puts "Saved report: #{report.id} with guid: #{report_guid}"
         end
       end
     end
