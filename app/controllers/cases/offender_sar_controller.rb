@@ -4,6 +4,8 @@ module Cases
     include OffenderSARCasesParams
 
     before_action :set_case_types, only: [:new, :create]
+    before_action :set_case, except: [:new, :create]
+    before_action :set_date_of_birth, except: [:new, :create]
 
     def initialize
       @correspondence_type = CorrespondenceType.offender_sar
@@ -78,7 +80,49 @@ module Cases
       redirect_to new_case_sar_offender_path
     end
 
+    # Actions for specific workflow state transitions
+    def transition
+      available_actions = %w[
+        mark_as_waiting_for_data
+        mark_as_ready_for_vetting
+        mark_as_vetting_in_progress
+        mark_as_ready_to_copy
+        mark_as_ready_to_dispatch
+        mark_as_closed
+      ]
+
+      if available_actions.include?(params[:transition_name])
+        @case.state_machine.send(params[:transition_name] + '!', params_for_transition)
+        reload_case_page_on_success
+      else
+        raise ArgumentError.new('Bad transition')
+      end
+    end
+
     private
+
+    def params_for_transition
+      { acting_user: current_user, acting_team: current_user.managing_teams.first }
+    end
+
+    def set_case
+      @case = Case::Base.find(params[:id])
+      authorize @case
+    end
+
+    def reload_case_page_on_success
+      flash[:notice] = t('cases.update.case_updated')
+      redirect_to case_path(@case)
+    end
+
+    # This method is here to fix an issue with the gov_uk_date_fields
+    # where the validation fails since the internal list of instance
+    # variables lacks the date_of_birth field from the json properties
+    #     NoMethodError: undefined method `valid?' for nil:NilClass
+    #     ./app/state_machines/configurable_state_machine/machine.rb:256
+    def set_date_of_birth
+      @case.date_of_birth = @case.date_of_birth
+    end
 
     # @todo: Should this be in Steppable?
     def get_next_step(obj)

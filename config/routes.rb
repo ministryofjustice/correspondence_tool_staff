@@ -73,6 +73,10 @@ Rails.application.routes.draw do
     resources :offender_sars, only: only, controller: 'offender_sar', as: :case_sar_offender do
       get 'cancel', on: :collection
       get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
+
+      member do
+        patch '/transitions/:transition_name', to: 'offender_sar#transition', as: :transition
+      end
     end
 
     resources :icos, only: only, controller: 'ico', as: :case_ico do
