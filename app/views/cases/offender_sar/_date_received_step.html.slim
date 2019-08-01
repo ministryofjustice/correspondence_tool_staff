@@ -9,8 +9,7 @@
 = form_for @case, url: case_create_action(@case.object), as: :offender_sar do |f|
 
   .form-group
-    = f.gov_uk_date_field :received_date, { legend_text: t('cases.new.date_sar_received'),
-      legend_class: 'visually-hidden',
+    = f.gov_uk_date_field :received_date, { legend_text: '',
       form_hint_text: t('cases.new.date_sar_received_copy'),
       today_button: {class: ''}}
   p
