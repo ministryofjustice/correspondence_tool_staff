@@ -1,11 +1,83 @@
 module Warehouse
   class CasesReport < ApplicationRecord
+
     self.table_name = 'warehouse_cases_report'
 
     belongs_to :case, class_name: 'Case::Base'
 
     CASE_BATCH_SIZE = 500
 
+    # +MAPPINGS+ could be refactored so that the respective class types
+    # contain the required information/execution output. However, the
+    # current implementation is experimental and less intrusive. The `fields`
+    # key links the Cases Report field to the source of the information.
+    # Each class Mapping is defined as:
+    #
+    # {
+    #   ClassNameString: {
+    #     fields: %w[
+    #       0 or more field names present in warehouse_cases_report
+    #       or in another table, used to pass to `execute`
+    #     ],
+    #     parameter: :key_name_used_by_where_clause,
+    #     execute: ->(_){ method that outputs an Array of `Case::Base` }
+    #   },
+    # }
+    #
+    # This is an alternative implementation to using if/else statements
+    # with hard coded `where` statements
+    MAPPINGS = {
+      'Case::Base': {
+        fields: [],
+        parameter: nil,
+        execute: ->(_){ [self] }
+      },
+      'CaseClosure': {
+        fields: %w[
+            info_held_status_id
+            refusal_reason_id
+            outcome_id
+            appeal_outcome_id
+          ],
+        parameter: :metadata_id,
+        execute: ->(sql){ Case::Base.where("#{sql}", metadata_id: self.id) },
+      },
+      'CaseTransition': {
+        fields: [],
+        parameter: nil,
+        execute: ->(_){ [self.case] },
+      },
+      'Team': {
+        fields: %w[
+            responding_team_id
+            business_group_id
+            directorate_id
+          ],
+        parameter: :team_id,
+        execute: ->(sql){ CasesReport.includes(:case).where("#{sql}", team_id: self.id).map(&:case) },
+      },
+      'TeamProperty': {
+        fields: %w[
+            director_general_name_property_id
+            director_name_property_id
+            deputy_director_name_property_id
+          ],
+        parameter: :property_id,
+        execute: ->(sql){ CasesReport.includes(:case).where("#{sql}", property_id: self.id).map(&:case) },
+      },
+      'User': {
+        fields: %w[
+            creator_id
+            casework_officer_user_id
+            responder_id
+          ],
+        parameter: :user_id,
+        execute: ->(sql){ CasesReport.includes(:case).where("#{sql}", user_id: self.id).map(&:case) },
+      },
+    }.freeze
+
+
+    #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
     def self.generate(kase)
       if !(case_report = CasesReport.find_by(case_id: kase.id))
         case_report = self.new
@@ -75,8 +147,9 @@ module Warehouse
 
       case_report.save!
     end
+    #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
-    def self.regenerate
+    def self.generate_all
       self.process_cases(Case::Base.all)
     end
 
@@ -90,8 +163,8 @@ module Warehouse
     def self.reconcile_missing_cases
       query =
         Case::Base
-          .joins('Left Outer Join warehouse_cases_report On warehouse_cases_report.case_id = cases.id')
-          .where("cases.deleted = 'false' And warehouse_cases_report.case_id Is Null")
+          .joins('LEFT OUTER JOIN warehouse_cases_report ON warehouse_cases_report.case_id = cases.id')
+          .where("cases.deleted = 'false' AND warehouse_cases_report.case_id IS NULL")
 
       self.process_cases(query)
     end
@@ -100,13 +173,31 @@ module Warehouse
     # CasesReport entries but included here for completeness
     def self.reconcile_deleted_cases
       self
-        .joins('Left Outer Join cases On cases.id = warehouse_cases_report.case_id')
-        .where("cases.deleted = 'true' Or cases.id is null")
+        .joins('LEFT OUTER JOIN cases ON cases.id = warehouse_cases_report.case_id')
+        .where("cases.deleted = 'true' OR cases.id is NULL")
         .delete_all
     end
 
+    # Ensure the warehouse remains in sync with changes elsewhere
+    # in the database.
+    #
+    # Although checking Class type is considered a code-smell, took the
+    # pragmatic/simpler decision to maintain sync operations in one place.
+    def self.sync(record)
+      mapping_klass = nil
 
-    private
+      return unless MAPPINGS.keys.any? do |type|
+        mapping_klass = type
+        record.kind_of?(type.to_s.constantize)
+      end
+
+      settings = MAPPINGS[mapping_klass.to_s.to_sym]
+      query = settings[:fields]
+        .map { |f| "#{f} = :#{settings[:parameter]}" }
+        .join(' OR ')
+
+      settings[:execute].call(query).each { |kase| self.generate(kase) }
+    end
 
     def self.process_cases(query)
       count = 0
@@ -124,6 +215,7 @@ module Warehouse
       count
     end
 
+    # Copied from CSVExporter
     def self.extension_count(kase)
       pit_count, sar_count = 0, 0
       kase.transitions.map(&:event).each do |event|
@@ -141,10 +233,12 @@ module Warehouse
       pit_count + sar_count
     end
 
+    # Copied from CSVExporter
     def self.dequote_and_truncate(text)
       text.tr('"', '').tr("'", '')[0..4000]
     end
 
+    # Copied from CSVExporter
     def self.humanize_boolean(boolean)
       boolean ? 'Yes' : nil
     end
