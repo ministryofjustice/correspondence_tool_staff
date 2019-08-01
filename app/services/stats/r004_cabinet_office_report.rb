@@ -31,7 +31,7 @@ module Stats
       'Includes performance data about how we are meeting statutory deadlines and how we are using exemptions.'
     end
 
-    def run(**args)
+    def run(*)
       @report_lines.keys.each do |category|
         next if category =~ /^_/
         populate_category(category)

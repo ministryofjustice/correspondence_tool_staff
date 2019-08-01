@@ -12,7 +12,6 @@ class ReportPolicy < ApplicationPolicy
     begin
       info = JSON.parse(report.report_data, symbolize_names: true)
       info[:user_id] == user.id
-    end
     rescue JSON::ParserError
       true
     end

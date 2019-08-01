@@ -28,22 +28,21 @@ module Stats
         # this happens rapidly. Manual clearup required as a result.
         @_temp_files =
           [new_fragment("fragment_00_header_", heading)] +
-
           (1..num_fragments + 1).map do |fragment_num|
-          data = CSV.generate(force_quotes: true) do |csv|
-            Query::ClosedCases.new(
-              retrieval_scope: @retrieval_scope,
-              columns: columns,
-              offset: offset,
-              limit: ROWS_PER_FRAGMENT
-            )
-            .execute { |row| csv << row }
+            data = CSV.generate(force_quotes: true) do |csv|
+              Query::ClosedCases.new(
+                retrieval_scope: @retrieval_scope,
+                columns: columns,
+                offset: offset,
+                limit: ROWS_PER_FRAGMENT
+              )
+              .execute { |row| csv << row }
 
-            offset += ROWS_PER_FRAGMENT
+              offset += ROWS_PER_FRAGMENT
+            end
+
+            new_fragment("fragment_#{'%02d' % fragment_num}_", data)
           end
-
-          new_fragment("fragment_#{'%02d' % fragment_num}_", data)
-        end
 
         self
       end

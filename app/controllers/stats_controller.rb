@@ -5,7 +5,6 @@ class StatsController < ApplicationController
   # @note (Mohammed Seedat): Interim solution to allow 'Closed Cases'
   #   to be considered a custom reporting option
   FauxCorrespondenceType = Struct.new(:abbreviation, :report_category_name)
-  Report
 
   before_action :authorize_user
 
@@ -180,7 +179,7 @@ class StatsController < ApplicationController
     end
   end
 
-  def report_download_link(report_id, translation_key, )
+  def report_download_link(report_id, translation_key)
     [
       t(".#{translation_key}"),
       view_context.link_to(

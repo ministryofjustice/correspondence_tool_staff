@@ -28,7 +28,7 @@ module Stats
     end
 
 
-    def run(**args)
+    def run(*)
       case_ids = Case::Base.where(received_date: @period_start..@period_end).pluck(:id)
       CSV.open(@filename, 'wb') do |csv|
         csv << COLUMN_NAMES

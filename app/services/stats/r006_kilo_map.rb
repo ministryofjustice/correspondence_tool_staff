@@ -29,7 +29,7 @@ module Stats
       @result_set = [COLUMN_HEADINGS]
     end
 
-    def run(**args)
+    def run(*)
       BusinessGroup.order(:name).each { |bg| process_business_group(bg) }
     end
 
