@@ -758,7 +758,7 @@ class Case::Base < ApplicationRecord
   def overturned_ico?;      false;  end
   def overturned_ico_sar?;  false;  end
   def overturned_ico_foi?;  false;  end
-  def is_offender_sar?;        false;  end
+  def is_offender_sar?;     false;  end
 
   def default_managing_team
     BusinessUnit.dacu_bmt

@@ -1,7 +1,6 @@
 module Cases
   class NotesController < ApplicationController
-    before_action :set_case, except: []
-    before_action :set_date_of_birth_instance_var, except: []
+    before_action :set_case, :set_date_of_birth
 
     def create
       begin
@@ -45,7 +44,7 @@ module Cases
     # variables lacks the date_of_birth field from the json properties
     #     NoMethodError: undefined method `valid?' for nil:NilClass
     #     ./app/state_machines/configurable_state_machine/machine.rb:256
-    def set_date_of_birth_instance_var
+    def set_date_of_birth
       @case.date_of_birth = @case.date_of_birth
     end
   end

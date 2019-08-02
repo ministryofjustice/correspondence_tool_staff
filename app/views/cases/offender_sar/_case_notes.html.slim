@@ -2,6 +2,8 @@
   = form_for case_details, as: :case, url: case_notes_path(case_details), method: :post, class: "message-form" do |f|
     .message-form data-ws-case-id="#{case_details.id}"
       h2.request--heading Add a note to this case:
+      = GovukElementsErrorsHelper.error_summary @case.object,
+              "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
       p For instance call notes or important changes to the status of the case
       = f.text_area :message_text, required: true
-      = f.submit "Add to case history", class: 'button-secondary'
+      = f.submit "Add to case history", class: 'button'

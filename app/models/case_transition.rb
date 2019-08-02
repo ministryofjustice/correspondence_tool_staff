@@ -32,10 +32,13 @@ class CaseTransition < ApplicationRecord
   EXTEND_SAR_DEADLINE_EVENT = 'extend_sar_deadline'
   REMOVE_SAR_EXTENSION_EVENT = 'remove_sar_deadline_extension'
   ADD_MESSAGE_TO_CASE_EVENT = 'add_message_to_case'
+  ADD_NOTE_TO_CASE_EVENT = 'add_note_to_case'
 
   after_destroy :update_most_recent, if: :most_recent?
 
-  validates :message, presence: true, if: -> { event == ADD_MESSAGE_TO_CASE_EVENT }
+  validates :message, presence: true, if: -> {
+    [ADD_MESSAGE_TO_CASE_EVENT, ADD_NOTE_TO_CASE_EVENT].include? event
+  }
 
   jsonb_accessor :metadata,
                  message:                    :text,
