@@ -121,10 +121,7 @@ FactoryBot.define do
     end
   end
 
-  factory :awaiting_responder_sar,
-          parent: :sar_case,
-          aliases: [:assigned_sar],
-          class: Case::SAR::Standard do
+  factory :awaiting_responder_sar, parent: :sar_case, aliases: [:assigned_sar], class: Case::SAR::Standard do
     transient do
       identifier { "assigned sar" }
     end

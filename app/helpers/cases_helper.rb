@@ -1,6 +1,6 @@
 require './lib/translate_for_case'
 
-module CasesHelper
+module CasesHelper #rubocop:disable Metrics/ModuleLength
 
   def download_csv_link(full_path)
     uri = URI(full_path)
@@ -30,6 +30,14 @@ module CasesHelper
   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def action_button_for(event)
     case event
+    # Offender SAR case state transitions e.g. mark as ready for vetting
+    when /mark_as_([a-zA-Z]*)/
+      link_text = t("event.#{event}")
+      link_to link_text,
+        transition_case_sar_offender_path(@case, event),
+        id: "action--#{link_text.parameterize}",
+        class: 'button',
+        method: 'patch'
     when :assign_responder
       link_to I18n.t('common.case.assign'),
               new_case_assignment_path(@case),
