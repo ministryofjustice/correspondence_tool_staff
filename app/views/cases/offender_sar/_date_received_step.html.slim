@@ -9,9 +9,11 @@
 = form_for @case, url: case_create_action(@case.object), as: :offender_sar do |f|
 
   .form-group
-    = f.gov_uk_date_field :received_date, { legend_text: '',
-      form_hint_text: t('cases.new.date_sar_received_copy'),
-      today_button: {class: ''}}
+    = f.gov_uk_date_field :received_date, {
+        legend_text: '',
+        form_hint_text: t('cases.new.date_sar_received_copy'),
+        today_button: true
+      }
   p
     = link_to "Previous", "/cases/new/offender/requested-info"
   input name="current_step" type="hidden" value=@case.current_step
