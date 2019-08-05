@@ -3,8 +3,9 @@ class ApplicationRecord < ActiveRecord::Base
 
   after_commit :warehouse
 
+  # Add any further warehousing operations here, ideally async
   def warehouse
-    Warehouse::CasesReport.sync(self)
+    Warehouse::ClosedCasesSyncJob.perform_now(self.class.to_s, self.id)
   end
 
   def valid_attributes?(attributes)

@@ -5,13 +5,13 @@ module Stats
     class ClosedCases
       attr_reader :results_filepath, :retrieval_scope
 
-      ROWS_PER_FRAGMENT = 1000
+      ROWS_PER_FRAGMENT = 1000 # Arbitrary value, may require experimentation
       RESULTS_NAME = 'closed-cases'.freeze
 
       # +retrieval_scope+ : ActiveQuery relation which Query::ClosedCases
       # will use to ensure Warehouse retrieval is scoped for the current
       # requesting user
-      def initialize(retrieval_scope: nil)
+      def initialize(retrieval_scope:)
         @retrieval_scope = retrieval_scope
 
         self
@@ -25,7 +25,7 @@ module Stats
 
         # We use `@_temp_files` to prevent the Temp files being cleared
         # by ruby GC before they have been fully processed. In EC2 instances
-        # this happens rapidly. Manual clearup required as a result.
+        # this happens rapidly. Manual clearup/purge required as a result
         @_temp_files =
           [new_fragment("fragment_00_header_", heading)] +
           (1..num_fragments + 1).map do |fragment_num|

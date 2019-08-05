@@ -5,6 +5,8 @@ module Warehouse
 
     def perform
       Report.destroy_all
+      # Delete all temp files
+      # Clear Redis queues if any
     end
   end
 end
