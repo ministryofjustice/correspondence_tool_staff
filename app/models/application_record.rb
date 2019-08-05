@@ -5,7 +5,9 @@ class ApplicationRecord < ActiveRecord::Base
 
   # Add any further warehousing operations here, ideally async
   def warehouse
-    Warehouse::ClosedCasesSyncJob.perform_now(self.class.to_s, self.id)
+    if Warehouse::CasesSyncJob.sync?(self)
+      Warehouse::CasesSyncJob.perform_now(self.class.to_s, self.id)
+    end
   end
 
   def valid_attributes?(attributes)
