@@ -38,7 +38,6 @@ gem 'libreconv', '~> 0.9.1'
 gem 'logstash-event'
 gem 'lograge'
 gem 'mechanize', '>= 2.7.5'
-gem 'memory_profiler', require: false
 gem 'mimetype-fu', '~> 0.1.2'
 gem 'paper_trail', '~> 10.3'
 gem 'pg', '~> 1.1'

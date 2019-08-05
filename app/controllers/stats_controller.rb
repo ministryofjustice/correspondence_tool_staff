@@ -1,6 +1,3 @@
-require 'csv'
-require 'tempfile'
-
 class StatsController < ApplicationController
   # @note (Mohammed Seedat): Interim solution to allow 'Closed Cases'
   #   to be considered a custom reporting option

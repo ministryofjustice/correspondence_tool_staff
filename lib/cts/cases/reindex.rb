@@ -10,7 +10,6 @@ module CTS::Cases
     end
 
     def call
-
       logger.info Benchmark::CAPTION
       logger.info Benchmark.measure { @count = Case::Base.update_all_indexes.count }
       logger.info "\n#{@count} cases reindexed"

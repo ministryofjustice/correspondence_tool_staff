@@ -138,12 +138,10 @@ module ConfigurableStateMachine
 
     def next_state_for_event(event, params)   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       user = extract_user_from_metadata(params)
-
       if can_trigger_event?(event_name: event, metadata: params)
         event = event.to_sym
         role = first_role_that_can_trigger_event_on_case(event_name: event, metadata: params, user: user).first
         user_role_config = @config.user_roles[role]
-
         raise InvalidEventError.new(kase: @kase,
                                     user: params[:acting_user],
                                     event: event,
@@ -151,7 +149,6 @@ module ConfigurableStateMachine
                                     message: "No such role") if user_role_config.nil?  ###
         state_config = user_role_config.states[@kase.current_state]
         if state_config.nil? || !state_config.to_hash.keys.include?(event)
-
           raise InvalidEventError.new(role: role,
                                       kase: @kase,
                                       user: params[:acting_user],
@@ -167,7 +164,6 @@ module ConfigurableStateMachine
           @kase.current_state
         end
       else
-
         raise InvalidEventError.new(role: nil,
                                     kase: @kase,
                                     user: user,
