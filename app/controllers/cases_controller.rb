@@ -10,6 +10,7 @@ class CasesController < ApplicationController
     :show,
     :destroy,
     :confirm_destroy,
+    :transition
   ]
 
   # Attributes used by sub-classes to set the current Case type for the request

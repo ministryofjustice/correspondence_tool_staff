@@ -5,7 +5,23 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
   end
 
   def can_add_note_to_case?
-    true
+    clear_failed_checks
+    check_user_is_a_manager
+  end
+
+  def close?
+    clear_failed_checks
+    check_user_is_a_manager
+  end
+
+  def can_close_case?
+    clear_failed_checks
+    check_user_is_a_manager
+  end
+
+  def respond_and_close?
+    clear_failed_checks
+    check_user_is_a_manager
   end
 
   def can_record_data_request?
