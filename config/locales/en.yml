@@ -755,7 +755,6 @@ en:
       correspondence_type_errors:
         unknown: "Unknown correspondence type \"%{type}\""
         not_authorised: "You are not authorised to create \"%{type}\" correspondences"
-      date_sar_received: "When was the SAR received?"
       date_sar_received_copy: "For example, 12 11 2007"
       date_of_birth: "Date of birth"
       date_of_birth_copy: "For example, 24 11 1992"
