@@ -57,17 +57,7 @@ class Report < ApplicationRecord
 
     self.period_start = report_service.period_start
     self.period_end = report_service.period_end
-
-    if report_service.persist_results?
-      save!
-      trim_older_reports
-    end
-  end
-
-  def trim_older_reports
-    Report
-      .where('id < ? and report_type_id = ?', self.id, self.report_type_id)
-      .destroy_all
+    self.save! if report_service.persist_results?
   end
 
   def xlsx?
