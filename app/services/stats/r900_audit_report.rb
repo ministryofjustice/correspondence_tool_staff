@@ -34,7 +34,7 @@ module Stats
       @date_mask = '%Y-%m-%d'
     end
 
-    def run
+    def run(*)
       @report_data = generate_csv
     end
 
