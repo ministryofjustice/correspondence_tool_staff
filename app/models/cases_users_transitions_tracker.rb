@@ -12,7 +12,7 @@
 # them that they have not seen everything on a case.
 # The field 'case_trasition_id' reflects the last message
 # a particular user has looked at.
-class CasesUsersTransitionsTracker < ActiveRecord::Base
+class CasesUsersTransitionsTracker < ApplicationRecord
   belongs_to :case,
              class_name: 'Case::Base',
              foreign_key: :case_id

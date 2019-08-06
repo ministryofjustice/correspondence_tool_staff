@@ -74,7 +74,7 @@ module Stats
       raise RuntimeError.new('#case_scope method must be defined in derived class')
     end
 
-    def run
+    def run(*)
       CaseSelector.new(case_scope)
         .cases_for_period(@period_start, @period_end)
         .reject { |kase| kase.unassigned? }.each do |kase|
