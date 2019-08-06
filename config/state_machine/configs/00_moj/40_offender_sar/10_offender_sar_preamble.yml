@@ -15,12 +15,10 @@
       - approver
 
     permitted_states:
-      - unassigned
       - data_to_be_requested
       - waiting_for_data
       - ready_for_vetting
       - vetting_in_progress
       - ready_to_copy
       - ready_to_dispatch
-      - case_closed
-      - case_destroyed
+      - closed

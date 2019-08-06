@@ -5,7 +5,13 @@ class Case::SAR::Offender < Case::Base
     end
 
     def searchable_fields_and_ranks
-      super.merge({ subject_full_name: 'B'})
+      super.merge({
+        subject_full_name: 'A',
+        prison_number: 'B',
+        previous_case_numbers: 'B',
+        subject_aliases: 'B',
+        other_subject_ids: 'B'
+      })
     end
   end
 
@@ -83,5 +89,9 @@ class Case::SAR::Offender < Case::Base
 
   def default_managing_team
     BusinessUnit.find_by!(code: Settings.offender_sar_cases.default_managing_team)
+  end
+
+  def current_team_and_user_resolver
+    CurrentTeamAndUser::SAR::Offender.new(self)
   end
 end
