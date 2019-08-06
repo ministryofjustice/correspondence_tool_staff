@@ -230,16 +230,21 @@ RSpec.describe StatsController, type: :controller do
           .with_args(manager, Case::Base)
     end
 
-    it 'responds with a csv' do
-      file_options = { filename: "#{report.report_type.class_name.to_s.underscore.sub('stats/', '')}.csv",
-        disposition: :attachment }
+    context 'non-etl' do
+      it 'responds with a csv' do
+        file_options = { filename: "#{report.report_type.class_name.to_s.underscore.sub('stats/', '')}.csv",
+          disposition: :attachment }
 
-      expect(@controller).to receive(:send_data)
-        .with(report.report_data, file_options) { | _csv, _options|
-          @controller.render body: :nil
-        }
+        expect(@controller).to receive(:send_data)
+          .with(report.report_data, file_options) { | _csv, _options|
+            @controller.render body: :nil
+          }
 
-      get :download_custom, params: { id: report.id  }
+        get :download_custom, params: { id: report.id  }
+      end
+    end
+
+    context 'etl' do
     end
   end
 end
