@@ -37,7 +37,7 @@ module Stats
       raise '#description should be defined in sub-class of BaseMonthlyPerformanceReport'
     end
 
-    def run
+    def run(*)
       CaseSelector.new(case_scope)
         .cases_received_in_period(@period_start, @period_end)
         .includes(:responded_transitions, :approver_assignments, :assign_responder_transitions)
