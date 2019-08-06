@@ -891,6 +891,8 @@ en:
     reassign_user:
       heading: Change team member
       action: Change team member
+    select_team: 
+      heading: Select team
     take_case_on:
       success: Case taken on
       already_accepted: Case already accepted by %{name}
