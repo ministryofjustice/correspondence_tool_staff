@@ -11,8 +11,7 @@
 #
 
 class TeamProperty < ApplicationRecord
-
-
+  
   VALID_KEYS = %w(
     area
     lead
