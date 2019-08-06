@@ -77,12 +77,16 @@ module Stats
       self.class.persist_results?
     end
 
+    def etl?
+      self.class.etl?
+    end
+
     # Using a job allows processing to be offloaded into a separate
     # server/container instance, increasing responsiveness of the web app.
     def run(**args)
       raise ArgumentError.new('Missing report_guid') unless args[:report_guid].present?
 
-      WarehouseClosedCasesCreateJob.perform_later(
+      ::Warehouse::ClosedCasesCreateJob.perform_later(
         args[:report_guid],
         @user.id,
         @period_start.to_i,

@@ -49,7 +49,7 @@ class Report < ApplicationRecord
     self.guid = SecureRandom.uuid
     report_service = run(report_guid: guid, **args)
 
-    if self.report_type.etl?
+    if etl?
       self.report_data = { status: WAITING }.to_json
     else
       self.report_data = generate_csv(report_service)
@@ -70,8 +70,8 @@ class Report < ApplicationRecord
   end
 
   def report_details
-    if self.etl?
-      info = JSON.parse(report.report_data, symbolize_names: true)
+    if etl?
+      info = JSON.parse(self.report_data, symbolize_names: true)
       data = Redis.new.get(info[:report_guid])
       filename = info[:filename]
       @etl_generation_status = info[:status]
@@ -85,6 +85,13 @@ class Report < ApplicationRecord
 
   def etl_ready?
     @etl_generation_status == COMPLETE
+  end
+
+  # ETL (Extract Transform Load) based reports are generated using
+  # the Warehouse, and therefore require processing before making
+  # available for download
+  def etl?
+    self.report_type&.etl?
   end
 
 

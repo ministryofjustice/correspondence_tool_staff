@@ -85,10 +85,10 @@ module Stats
         syncable, mapping_klass = self.class.syncable?(record)
         return unless syncable
 
-        execute_setting(record, MAPPINGS[mapping_klass.to_s.to_sym])
+        self.class.execute_setting(record, MAPPINGS[mapping_klass.to_s.to_sym])
       end
 
-      def execute_setting(record, setting)
+      def self.execute_setting(record, setting)
         query = setting[:fields]
           .map { |f| "#{f} = :#{setting[:parameter]}" }
           .join(' OR ')

@@ -6,7 +6,7 @@ class ApplicationRecord < ActiveRecord::Base
   # Add any further warehousing operations here, ideally async
   def warehouse
     if Warehouse::CasesSyncJob.sync?(self)
-      Warehouse::CasesSyncJob.perform_now(self.class.to_s, self.id)
+      Warehouse::CasesSyncJob.perform_later(self.class.to_s, self.id)
     end
   end
 
