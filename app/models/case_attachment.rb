@@ -14,7 +14,7 @@
 #  state        :string           default("unprocessed"), not null
 #
 
-class CaseAttachment < ActiveRecord::Base
+class CaseAttachment < ApplicationRecord
 
   UNCONVERTIBLE_EXTENSIONS = %w( .pdf .jpg .jpeg .bmp .gif .png )
 
