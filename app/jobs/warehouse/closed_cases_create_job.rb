@@ -5,6 +5,8 @@ module Warehouse
 
     # +period_start_ts+ and +period_end_ts+ are integer timestamps
     def perform(report_guid, user_id, period_start_ts, period_end_ts)
+      RavenContextProvider.set_context
+
       Stats::R007ClosedCasesReport.process(
         report_guid: report_guid,
         user: User.find(user_id),
