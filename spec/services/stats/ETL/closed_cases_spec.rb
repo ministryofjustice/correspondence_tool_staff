@@ -5,8 +5,6 @@ module Stats
     describe ClosedCases do
       describe '#initialize' do
         it 'returns self' do
-          report = Stats::ETL::ClosedCases.new
-          expect(report).to be_a Stats::ETL::ClosedCases
         end
       end
 
@@ -24,7 +22,6 @@ module Stats
 
       describe '#load' do
         it 'returns self' do
-
         end
       end
     end
