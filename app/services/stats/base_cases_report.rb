@@ -21,7 +21,7 @@ module Stats
       @stats = CasesStatsCollector.new
     end
 
-    def run
+    def run(*)
       case_scope
         .where(received_date: [@period_start..@period_end])
         .order(received_date: :asc)
