@@ -22,9 +22,8 @@ RSpec.describe ReportType, type: :model do
   it { should have_many(:reports) }
 
   describe 'custom scope' do
-
     before do
-      ReportType.destroy_all
+      ReportType.delete_all
     end
 
     it 'returns only closed cases in most recently closed first' do
@@ -36,9 +35,8 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'standard scope' do
-
     before do
-      ReportType.destroy_all
+      ReportType.delete_all
     end
 
     it 'returns only closed cases in most recently closed first' do
@@ -50,9 +48,8 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'foi scope' do
-
     before do
-      ReportType.destroy_all
+      ReportType.delete_all
     end
 
     it 'returns only reports associated with fois' do
@@ -66,9 +63,8 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'sar scope' do
-
     before do
-      ReportType.destroy_all
+      ReportType.delete_all
     end
 
     it 'returns only reports associated with sars' do
@@ -83,7 +79,7 @@ RSpec.describe ReportType, type: :model do
 
   describe '#class_constant' do
     before do
-      ReportType.destroy_all
+      ReportType.delete_all
     end
 
     it 'returns the report class name as a constant' do
@@ -95,7 +91,7 @@ RSpec.describe ReportType, type: :model do
 
   describe '#filename' do
     before do
-      ReportType.destroy_all
+      ReportType.delete_all
     end
 
     it 'formats the class name into a filename' do
@@ -104,8 +100,7 @@ RSpec.describe ReportType, type: :model do
     end
   end
 
-
-  describe '.method missing'  do
+  describe '#method missing'  do
     context 'method is a report abbreviation' do
       it 'calls find_by' do
         expect(ReportType).to receive(:find_by!).with(abbr: 'R002')
@@ -123,7 +118,7 @@ RSpec.describe ReportType, type: :model do
 
     context '#file_extension' do
       before do
-        ReportType.destroy_all
+        ReportType.delete_all
       end
 
       it 'assumes csv only if concrete class does not support xlsx' do
@@ -134,7 +129,7 @@ RSpec.describe ReportType, type: :model do
 
     context '#description' do
       before do
-        ReportType.destroy_all
+        ReportType.delete_all
       end
 
       it 'returns concrete class description' do
