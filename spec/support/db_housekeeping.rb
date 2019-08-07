@@ -18,6 +18,7 @@ module DbHousekeeping
       cases_users_transitions_trackers
       linked_cases
       search_queries
+      warehouse_case_reports
     )
     tables.each do |table|
       ActiveRecord::Base.connection.execute("TRUNCATE #{table} CASCADE")

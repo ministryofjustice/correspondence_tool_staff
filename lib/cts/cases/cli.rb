@@ -274,5 +274,10 @@ module CTS::Cases
       reindexer = CTS::Cases::Reindex.new(CTS, options)
       reindexer.call
     end
+
+    desc 'warehouse', 'Warehouse all the cases (long process)'
+    def warehouse(*_args)
+      CTS::Cases::Warehouser.new(CTS, options).call
+    end
   end
 end

@@ -913,6 +913,66 @@ ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
 
 
 --
+-- Name: warehouse_case_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.warehouse_case_reports (
+    case_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    creator_id integer,
+    responding_team_id integer,
+    responder_id integer,
+    casework_officer_user_id integer,
+    business_group_id integer,
+    directorate_id integer,
+    director_general_name_property_id integer,
+    director_name_property_id integer,
+    deputy_director_name_property_id integer,
+    number character varying,
+    case_type character varying,
+    current_state character varying,
+    responding_team character varying,
+    responder character varying,
+    date_received date,
+    internal_deadline date,
+    external_deadline date,
+    date_responded date,
+    date_compliant_draft_uploaded date,
+    trigger character varying,
+    name character varying,
+    requester_type character varying,
+    message character varying,
+    info_held character varying,
+    outcome character varying,
+    refusal_reason character varying,
+    exemptions character varying,
+    postal_address character varying,
+    email character varying,
+    appeal_outcome character varying,
+    third_party character varying,
+    reply_method character varying,
+    sar_subject_type character varying,
+    sar_subject_full_name character varying,
+    business_unit_responsible_for_late_response character varying,
+    extended character varying,
+    extension_count integer,
+    deletion_reason character varying,
+    casework_officer character varying,
+    created_by character varying,
+    date_created timestamp without time zone,
+    business_group character varying,
+    directorate_name character varying,
+    director_general_name character varying,
+    director_name character varying,
+    deputy_director_name character varying,
+    draft_in_time character varying,
+    in_target character varying,
+    number_of_days_late integer
+);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1252,6 +1312,14 @@ ALTER TABLE ONLY public.versions
 
 
 --
+-- Name: warehouse_case_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.warehouse_case_reports
+    ADD CONSTRAINT warehouse_case_reports_pkey PRIMARY KEY (case_id);
+
+
+--
 -- Name: cases_document_tsvector_index; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1539,6 +1607,21 @@ CREATE INDEX index_versions_on_item_type_and_item_id ON public.versions USING bt
 
 
 --
+-- Name: index_warehouse_case_reports_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_warehouse_case_reports_on_case_id ON public.warehouse_case_reports USING btree (case_id);
+
+
+--
+-- Name: fk_rails_2a80c865a7; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.warehouse_case_reports
+    ADD CONSTRAINT fk_rails_2a80c865a7 FOREIGN KEY (case_id) REFERENCES public.cases(id);
+
+
+--
 -- Name: fk_rails_5b2f8d9aa6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1668,6 +1751,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190228142249'),
 ('20190312104101'),
 ('20190325082640'),
-('20190326113949');
+('20190326113949'),
+('20190609165906');
 
 
