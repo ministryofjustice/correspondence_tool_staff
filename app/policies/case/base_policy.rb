@@ -294,6 +294,10 @@ class Case::BasePolicy < ApplicationPolicy
     raise Pundit::NotDefinedError.new("Please define 'show?' method in #{self.class}")
   end
 
+  def can_add_note_to_case?
+    false
+  end
+
   private
 
   check :user_in_responding_team do

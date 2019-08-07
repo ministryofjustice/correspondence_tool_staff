@@ -3,4 +3,8 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     clear_failed_checks
     check_user_is_a_manager
   end
+
+  def can_add_note_to_case?
+    true
+  end
 end

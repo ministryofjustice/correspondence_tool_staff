@@ -94,4 +94,8 @@ class Case::SAR::Offender < Case::Base
   def current_team_and_user_resolver
     CurrentTeamAndUser::SAR::Offender.new(self)
   end
+
+  def is_offender_sar?
+    true
+  end
 end
