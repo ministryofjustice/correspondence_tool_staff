@@ -249,6 +249,15 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe '#subject' do
+    it 'is the same as subject full name' do
+      kase = create :offender_sar_case
+      expect(kase.subject).to eq kase.subject_full_name
+      kase.update_attribute(:subject_full_name, "Bob Hope")
+      expect(kase.subject).to eq 'Bob Hope'
+    end
+  end
+
   # describe '#within_escalation_deadline?' do
   #   it 'returns false' do
   #     sar = build(:offender_sar_case)
@@ -277,18 +286,16 @@ describe Case::SAR::Offender do
       @kase = create :offender_sar_case,
                      name: 'aaa',
                      email: 'aa@moj.com',
-                     received_date: Date.today,
-                     subject: 'subject A'
+                     received_date: Date.today
       @kase.update! name: 'bbb',
                     email: 'bb@moj.com',
-                    received_date: 1.day.ago,
-                    subject: 'subject B'
+                    received_date: 1.day.ago
     end
 
     it 'can reconsititue a record from a version (except for received_date)' do
       original_kase = @kase.versions.last.reify
       expect(original_kase.email).to eq 'aa@moj.com'
-      expect(original_kase.subject).to eq 'subject A'
+      expect(original_kase.subject).to eq original_kase.subject_full_name
     end
 
     it 'reconstitutes the received date properly' do

@@ -35,7 +35,6 @@ module Cases
 
       @case = OffenderSARCaseForm.new(session)
       @case.case.creator = current_user #to-do Remove when we use the case create service
-      @case.case.subject = "Offender SAR" #to-do Remove when we use the case create service
       @case.assign_params(create_params) if create_params
       @case.current_step = params[:current_step]
 
