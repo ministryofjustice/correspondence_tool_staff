@@ -82,6 +82,10 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe '#class_constant' do
+    before do
+      ReportType.destroy_all
+    end
+
     it 'returns the report class name as a constant' do
       r003 = create :report_type, :r003
       expect(r003.class_constant)
@@ -90,6 +94,10 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe '#filename' do
+    before do
+      ReportType.destroy_all
+    end
+
     it 'formats the class name into a filename' do
       r003 = find_or_create :report_type, :r003
       expect(r003.filename('csv')).to eq 'r003_business_unit_performance_report.csv'
@@ -114,6 +122,10 @@ RSpec.describe ReportType, type: :model do
     end
 
     context '#file_extension' do
+      before do
+        ReportType.destroy_all
+      end
+
       it 'assumes csv only if concrete class does not support xlsx' do
         r006 = create :report_type, :r006
         expect(r006.file_extension).to eq 'csv'
@@ -121,6 +133,10 @@ RSpec.describe ReportType, type: :model do
     end
 
     context '#description' do
+      before do
+        ReportType.destroy_all
+      end
+
       it 'returns concrete class description' do
         r003 = create :report_type, :r003
         expect(r003.description)
