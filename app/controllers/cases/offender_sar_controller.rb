@@ -20,13 +20,6 @@ module Cases
       authorize case_type, :can_add_case?
 
       @case = OffenderSARCaseForm.new(session)
-      step = params[:step].present? && params[:step] != 'new' ? params[:step] : @case.steps.first
-
-      # @todo: Why does current_step need to be set? is it something OffenderSARCaseForm
-      # can figure out itself?
-      @case.current_step = step
-
-      @case = OffenderSARCaseForm.new(session)
       @case.current_step = params[:step]
     end
 
