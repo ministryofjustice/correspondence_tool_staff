@@ -282,24 +282,27 @@ describe Case::SAR::Offender do
   # end
 
   describe 'papertrail versioning', versioning: true do
+    let(:kase) { create :offender_sar_case,
+                           name: 'aaa',
+                           email: 'aa@moj.com',
+                           received_date: Date.today,
+                           subject_full_name: 'subject A' }
     before(:each) do
-      @kase = create :offender_sar_case,
-                     name: 'aaa',
-                     email: 'aa@moj.com',
-                     received_date: Date.today
-      @kase.update! name: 'bbb',
+      kase.update! name: 'bbb',
                     email: 'bb@moj.com',
-                    received_date: 1.day.ago
+                    received_date: 1.day.ago,
+                    subject_full_name: 'subject B'
     end
 
     it 'can reconsititue a record from a version (except for received_date)' do
-      original_kase = @kase.versions.last.reify
+      original_kase = kase.versions.last.reify
       expect(original_kase.email).to eq 'aa@moj.com'
-      expect(original_kase.subject).to eq original_kase.subject_full_name
+      expect(kase.subject_full_name).to eq 'subject B'
+      expect(original_kase.subject_full_name).to eq 'subject A'
     end
 
     it 'reconstitutes the received date properly' do
-      original_kase = @kase.versions.last.reify
+      original_kase = kase.versions.last.reify
       expect(original_kase.received_date).to eq Date.today
     end
   end
