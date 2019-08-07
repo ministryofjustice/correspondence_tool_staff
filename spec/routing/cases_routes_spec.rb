@@ -64,4 +64,8 @@ describe 'cases routes', type: :routing do
   describe post: '/cases/1/responses' do
     it { should route_to controller: 'cases/responses', action: 'create', case_id: '1' }
   end
+
+  describe post: '/cases/1/notes' do
+    it { should route_to controller: 'cases/notes', action: 'create', case_id: '1' }
+  end
 end

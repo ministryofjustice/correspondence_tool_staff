@@ -35,9 +35,9 @@ describe 'cases/show.html.slim', type: :view do
       :mark_as_vetting_in_progress,
       :mark_as_ready_to_copy,
       :mark_as_ready_to_dispatch,
-      :mark_as_closed
+      :mark_as_closed,
+      :can_add_note_to_case?
     ]
-
 
     if (policies.keys - policy_names).any?
       raise NameError,
@@ -487,11 +487,25 @@ describe 'cases/show.html.slim', type: :view do
         mark_as_vetting_in_progress: true,
         mark_as_ready_to_dispatch: true,
         mark_as_ready_to_copy: true,
-        mark_as_closed: true
+        mark_as_closed: true,
+        can_add_note_to_case?: true
       )
     end
 
     context 'as a manager' do
+      context 'partials' do
+        before do
+          assign(:permitted_events, [:add_note_to_case])
+          assign(:filtered_permitted_events, [:add_note_to_case])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+        end
+        it { should_not have_rendered 'cases/_case_messages'}
+        it { should have_rendered 'cases/offender_sar/_case_notes'}
+      end
+
+
       context 'when a case just created' do
         it 'shows mark as waiting for data' do
           assign(:permitted_events, [:mark_as_waiting_for_data])

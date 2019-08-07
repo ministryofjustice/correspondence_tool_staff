@@ -15,7 +15,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
           expect(k.current_state).to eq 'data_to_be_requested'
-          expect(k.state_machine.permitted_events(manager)).to eq [:add_message_to_case,
+          expect(k.state_machine.permitted_events(manager)).to eq [:add_note_to_case,
                                                                    :mark_as_waiting_for_data]
         end
       end
@@ -27,7 +27,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
           expect(k.current_state).to eq 'waiting_for_data'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
                                                                       :mark_as_ready_for_vetting]
         end
       end
@@ -38,7 +38,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
           expect(k.current_state).to eq 'ready_for_vetting'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
                                                                       :mark_as_vetting_in_progress]
         end
       end
@@ -49,7 +49,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
           expect(k.current_state).to eq 'vetting_in_progress'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
                                                                       :mark_as_ready_to_copy]
         end
       end
@@ -60,7 +60,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
           expect(k.current_state).to eq 'ready_to_copy'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
                                                                       :mark_as_ready_to_dispatch]
         end
       end
@@ -71,7 +71,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.class).to eq Case::SAR::Offender
           expect(k.workflow).to eq 'standard'
           expect(k.current_state).to eq 'ready_to_dispatch'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
                                                                       :mark_as_closed]
         end
       end

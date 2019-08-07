@@ -141,6 +141,7 @@ Rails.application.routes.draw do
     resources :amendments, only: [:new, :create]
 
     resources :messages, only: [:create]
+    resources :notes, only: [:create]
 
     resources :attachments, only: [:show, :destroy] do
       get 'download', on: :member
