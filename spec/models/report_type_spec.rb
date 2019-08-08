@@ -22,8 +22,9 @@ RSpec.describe ReportType, type: :model do
   it { should have_many(:reports) }
 
   describe 'custom scope' do
+
     before do
-      ReportType.delete_all
+      ReportType.destroy_all
     end
 
     it 'returns only closed cases in most recently closed first' do
@@ -35,8 +36,9 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'standard scope' do
+
     before do
-      ReportType.delete_all
+      ReportType.destroy_all
     end
 
     it 'returns only closed cases in most recently closed first' do
@@ -48,8 +50,9 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'foi scope' do
+
     before do
-      ReportType.delete_all
+      ReportType.destroy_all
     end
 
     it 'returns only reports associated with fois' do
@@ -63,8 +66,9 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'sar scope' do
+
     before do
-      ReportType.delete_all
+      ReportType.destroy_all
     end
 
     it 'returns only reports associated with sars' do
@@ -78,10 +82,6 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe '#class_constant' do
-    before do
-      ReportType.delete_all
-    end
-
     it 'returns the report class name as a constant' do
       r003 = create :report_type, :r003
       expect(r003.class_constant)
@@ -90,17 +90,14 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe '#filename' do
-    before do
-      ReportType.delete_all
-    end
-
     it 'formats the class name into a filename' do
       r003 = find_or_create :report_type, :r003
       expect(r003.filename('csv')).to eq 'r003_business_unit_performance_report.csv'
     end
   end
 
-  describe '#method missing'  do
+
+  describe '.method missing'  do
     context 'method is a report abbreviation' do
       it 'calls find_by' do
         expect(ReportType).to receive(:find_by!).with(abbr: 'R002')
@@ -117,10 +114,6 @@ RSpec.describe ReportType, type: :model do
     end
 
     context '#file_extension' do
-      before do
-        ReportType.delete_all
-      end
-
       it 'assumes csv only if concrete class does not support xlsx' do
         r006 = create :report_type, :r006
         expect(r006.file_extension).to eq 'csv'
@@ -128,10 +121,6 @@ RSpec.describe ReportType, type: :model do
     end
 
     context '#description' do
-      before do
-        ReportType.delete_all
-      end
-
       it 'returns concrete class description' do
         r003 = create :report_type, :r003
         expect(r003.description)
