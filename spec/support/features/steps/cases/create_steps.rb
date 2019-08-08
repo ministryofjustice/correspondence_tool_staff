@@ -105,10 +105,12 @@ def create_offender_sar_case_step(params = {})
 
   expect(cases_show_page).to be_displayed
   expect(cases_show_page).to have_content "Case created successfully"
+  expect(cases_show_page.page_heading).to have_content "Sabrina Adams"
   click_on "All open cases"
 
   expect(open_cases_page).to be_displayed
   expect(cases_page).to have_content "Branston Registry"
+  expect(open_cases_page).to have_content "Sabrina Adams"
 end
 
 
