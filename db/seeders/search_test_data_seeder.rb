@@ -14,6 +14,7 @@ class SearchTestDataSeeder
   end
 
   def create_case
+    creator = User.all.sample
     params = HashWithIndifferentAccess.new({
                type: select_type,
                name: select_name,
@@ -26,6 +27,7 @@ class SearchTestDataSeeder
                flag_for_team: set_flagged,
                responding_team: select_responding_team,
                target_state: select_target_state,
+               creator: creator,
            })
     params[:received_date] = select_received_date(params[:target_state])
     params[:created_at] = select_created_at(params[:received_date])
