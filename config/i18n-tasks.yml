@@ -122,6 +122,7 @@ ignore_unused:
   - users.show.who_its_with
   - common.close
   - stats.custom.success
+  - stats.create*
 
 
 ## Consider these keys used:

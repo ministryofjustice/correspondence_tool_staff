@@ -58,9 +58,17 @@ class StatsController < ApplicationController
 
   def download_custom
     report = Report.find(params[:id])
-    filename = report.report_type.filename('csv')
+    data, filename = report.report_details
 
-    send_data report.report_data, {filename: filename, disposition: :attachment}
+    if report.report_type.etl?
+      return download_waiting(report) unless report.etl_ready?
+      authorize report, :can_download_user_generated_report?
+    end
+
+    send_data data, {
+      filename: filename,
+      disposition: :attachment
+    }
   end
 
   def download_audit
@@ -162,15 +170,26 @@ class StatsController < ApplicationController
         filename: report.report_type.filename('csv')
       )
     else
-      flash[:download] = [
-        t('.success'),
-        view_context.link_to(
-          'Download',
-          download_custom_stats_path(id: report.id)
-        ),
-      ].join(' ')
-
+      flash[:download] = report_download_link(report.id, 'success')
       redirect_to new_stat_path
     end
+  end
+
+  def report_download_link(report_id, translation_key)
+    [
+      t(".#{translation_key}"),
+      view_context.link_to(
+        'Download',
+        download_custom_stats_path(id: report_id)
+      ),
+    ].join(' ')
+  end
+
+  def download_waiting(report)
+    flash[:download] = report_download_link(report.id, 'waiting')
+    @report = report
+    set_fields_for_custom_action
+
+    render :new
   end
 end

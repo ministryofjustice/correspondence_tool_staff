@@ -34,5 +34,6 @@ FactoryBot.define do
 
   factory :r007_report, parent: :report do
     report_type { find_or_create(:report_type, :r007) }
+    report_data { { status: Report::WAITING }.to_json }
   end
 end

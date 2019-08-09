@@ -906,8 +906,9 @@ en:
     common:
       period_start: Date from
       period_end: Date to
-    generate_custom_csv_report:
+    create:
       success: Your custom report has been created.
+      waiting: Your custom report will be available shortly.
     new:
       timescale_copy: Which time period should this report cover?
   teams:

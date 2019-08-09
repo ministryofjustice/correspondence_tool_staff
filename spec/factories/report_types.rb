@@ -12,6 +12,7 @@
 #  sar                      :boolean          default(FALSE)
 #  standard_report          :boolean          default(FALSE), not null
 #  default_reporting_period :string           default("year_to_date")
+#  etl                      :boolean          default(FALSE)
 #
 
 FactoryBot.define do
@@ -22,6 +23,7 @@ FactoryBot.define do
     custom_report { false }
     sequence(:seq_id) { |n| n + 100}
     default_reporting_period { 'year_to_date' }
+    etl { false }
 
     trait :r002 do
       abbr              { 'R002' }
@@ -32,6 +34,7 @@ FactoryBot.define do
       seq_id            { 100 }
       foi               { true }
       sar               { false }
+      etl               { true }
     end
 
     trait :r003 do
