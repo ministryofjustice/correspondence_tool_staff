@@ -12,9 +12,10 @@ module Warehouse
         kase.warehouse_case_report || self.new(case_id: kase.id)
       end
 
-      #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       # Every field is deliberately set explicitly, please do not use any
-      # clever magic etc
+      # clever magic etc as each field has a history of how it should
+      # be calculated and therefore needs to be readily understood
+      #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       def generate(kase)
         case_report = self.for(kase)
 

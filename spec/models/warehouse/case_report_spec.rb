@@ -140,8 +140,8 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
     end
   end
 
-  #rubocop:disable Metrics/MethodLength
   # Compares CSVExporter output with CaseReport output
+  #rubocop:disable Metrics/MethodLength
   def compare_output(kase)
     Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
       csv_row = CSVExporter.new(kase).to_csv
