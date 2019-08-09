@@ -445,15 +445,15 @@ module Stats
       responded_date = responded.nil? ? nil : Date.parse(responded)
       kase = nil
       Timecop.freeze(received_date + 10.hours) do
-        factory = case type
-        when 'std'
-          :case_with_response
-        when 'irt'
-          :accepted_timeliness_review
-        when 'irc'
-          :accepted_compliance_review
-        end
-
+        factory =
+          case type
+          when 'std'
+            :case_with_response
+          when 'irt'
+            :accepted_timeliness_review
+          when 'irc'
+            :accepted_compliance_review
+          end
 
         kase = create factory, responding_team: team, responder: responder, identifier: ident
         kase.external_deadline = Date.parse(deadline)
@@ -475,6 +475,5 @@ module Stats
     # rubocop:enable Metrics/CyclomaticComplexity
 
   end
-
 end
 # rubocop:enable Metrics/ModuleLength
