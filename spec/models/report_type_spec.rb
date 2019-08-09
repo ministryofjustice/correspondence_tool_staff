@@ -16,49 +16,45 @@
 
 require 'rails_helper'
 
+# ReportType causes significant issues during parallel testing due to the way
+# ReportType has in practice 2 primary keys - the Rails generated ID and the
+# admin set +abbr+. During parallel testing, truncating the `report_types` table
+# in one parallel test may cause failure in another parallel test thread.
+#
+# Therefore +create_report_type+ method used to ensure there is consistency
 RSpec.describe ReportType, type: :model do
-  after(:all) { ReportType.delete_all }
+  at_exit do
+    if ParallelTests.first_process?
+      ParallelTests.wait_for_other_processes_to_finish
+      ReportType.delete_all
+    end
+  end
 
   it { should have_many(:reports) }
 
   describe 'custom scope' do
-
-    before do
-      ReportType.destroy_all
-    end
-
     it 'returns only closed cases in most recently closed first' do
-      create :report_type
-      custom_report_1 = create :report_type, custom_report: true
-      custom_report_2 = create :report_type, custom_report: true
+      create_report_type
+      custom_report_1 = create_report_type(custom_report: true)
+      custom_report_2 = create_report_type(custom_report: true)
       expect(ReportType.custom).to match_array [ custom_report_1, custom_report_2 ]
     end
   end
 
   describe 'standard scope' do
-
-    before do
-      ReportType.destroy_all
-    end
-
     it 'returns only closed cases in most recently closed first' do
-      create :report_type
-      custom_report_1 = create :report_type, standard_report: true
-      custom_report_2 = create :report_type, standard_report: true
+      create_report_type
+      custom_report_1 = create_report_type(standard_report: true)
+      custom_report_2 = create_report_type(standard_report: true)
       expect(ReportType.standard).to match_array [ custom_report_1, custom_report_2 ]
     end
   end
 
   describe 'foi scope' do
-
-    before do
-      ReportType.destroy_all
-    end
-
     it 'returns only reports associated with fois' do
-      create :report_type
-      custom_report_1 = create :report_type, foi: true
-      custom_report_2 = create :report_type, foi: false
+      create_report_type
+      custom_report_1 = create_report_type(foi: true)
+      custom_report_2 = create_report_type(foi: false)
       expect(ReportType.foi).to match_array [ custom_report_1 ]
       expect(ReportType.foi).not_to include custom_report_2
 
@@ -66,15 +62,10 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe 'sar scope' do
-
-    before do
-      ReportType.destroy_all
-    end
-
     it 'returns only reports associated with sars' do
-      create :report_type
-      custom_report_1 = create :report_type, sar: true
-      custom_report_2 = create :report_type, sar: false
+      create_report_type
+      custom_report_1 = create_report_type(sar: true)
+      custom_report_2 = create_report_type(sar: false)
       expect(ReportType.sar).to match_array [ custom_report_1 ]
       expect(ReportType.sar).not_to include custom_report_2
 
@@ -82,12 +73,9 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe '#class_constant' do
-    before do
-      ReportType.destroy_all
-    end
-
     it 'returns the report class name as a constant' do
-      r003 = create :report_type, :r003
+      r003 = create_report_type(abbr: :r003)
+
       expect(r003.class_constant)
         .to eq Stats::R003BusinessUnitPerformanceReport
     end
@@ -95,7 +83,7 @@ RSpec.describe ReportType, type: :model do
 
   describe '#filename' do
     it 'formats the class name into a filename' do
-      r003 = find_or_create :report_type, :r003
+      r003 = create_report_type(abbr: :r003)
       expect(r003.filename('csv')).to eq 'r003_business_unit_performance_report.csv'
     end
   end
@@ -118,22 +106,26 @@ RSpec.describe ReportType, type: :model do
     end
 
     context '#file_extension' do
-      before do
-        ReportType.destroy_all
-      end
-
       it 'assumes csv only if concrete class does not support xlsx' do
-        r006 = create :report_type, :r006
+        r006 = create_report_type(abbr: :r006)
         expect(r006.file_extension).to eq 'csv'
       end
     end
 
     context '#description' do
       it 'returns concrete class description' do
-        r003 = create :report_type, :r003
+        r003 = create_report_type(abbr: :r003)
         expect(r003.description)
           .to eq Stats::R003BusinessUnitPerformanceReport.description
       end
+    end
+  end
+
+  def create_report_type(abbr: nil, **options)
+    if ParallelTests.first_process?
+      create :report_type, abbr, **options
+    else
+      sleep(1)
     end
   end
 end

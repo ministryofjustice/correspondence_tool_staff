@@ -17,7 +17,7 @@
 require 'devise'
 require 'capybara/rspec'
 require 'pundit/rspec'
-
+require 'rspec/retry'
 require 'aws-sdk'
 
 # Required or we'll get errors when we try to pre-sign S# direct uploads.
@@ -35,6 +35,10 @@ RSpec.configure do |config|
   config.filter_run :focus
   config.run_all_when_everything_filtered = true
 
+  # rspec-retry
+  config.verbose_retry = true
+  config.display_try_failure_messages = true
+  
   # # Many RSpec users commonly either run the entire suite or an individual
   # # file, and it's useful to allow more verbose output when running an
   # # individual spec file.
