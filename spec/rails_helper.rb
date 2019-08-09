@@ -1,4 +1,4 @@
-if ENV['COVERAGE'].present?
+if !!ENV['COVERAGE']
   require 'simplecov'
   SimpleCov.start 'rails' do
     add_group "Services", "app/services"

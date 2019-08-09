@@ -9,9 +9,8 @@ module Stats
   end
 
   describe BaseReport do
-
-    before(:all)  { create :report_type }
-    after(:all)   { ReportType.delete_all }
+    before(:all) { create_report_type(abbr: :r006) }
+    after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '.new' do
       it 'raises if BaseReport is instantiated' do

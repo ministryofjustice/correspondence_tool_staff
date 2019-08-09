@@ -48,8 +48,7 @@ module Stats
     end
 
     after(:all) { DbHousekeeping.clean }
-
-    let(:selector)    { CaseSelector.new(Case::Base.all) }
+    after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '.ids_for_cases_received_in_period' do
       it 'returns an array of all cases received in period' do

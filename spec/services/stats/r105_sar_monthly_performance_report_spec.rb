@@ -2,6 +2,8 @@ require 'rails_helper'
 
 module Stats
   describe R105SarMonthlyPerformanceReport do
+    after(:all) { DbHousekeeping.clean(seed: true) }
+
     describe '.title' do
       it 'returns correct title' do
         expect(R105SarMonthlyPerformanceReport.title).to eq 'Monthly report'
@@ -17,11 +19,7 @@ module Stats
 
     describe '#case_scope' do
       before do
-        create(:report_type, :r105) unless ReportType.find_by(abbr: 'R105')
-      end
-
-      after do
-        ReportType.r105.destroy if ReportType.find_by(abbr: 'R105')
+        create_report_type(abbr: :r105)
       end
 
       before(:all) do
@@ -67,7 +65,7 @@ module Stats
           in_time_unassigned_trigger_sar_case.update_attributes(
             external_deadline: Date.current + 10.days
           )
-          
+
           report = R105SarMonthlyPerformanceReport.new(
             period_start: @period_start,
             period_end: @period_end
