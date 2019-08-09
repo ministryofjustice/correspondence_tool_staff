@@ -73,6 +73,12 @@ class Case::SAR::Offender < Case::Base
   validate :validate_date_of_birth
   validate :validate_received_date
 
+  before_save :set_subject
+
+  def set_subject
+    self.subject = subject_full_name
+  end
+
   def validate_received_date
     super
   end
