@@ -2,7 +2,7 @@ module Searchable
   extend ActiveSupport::Concern
 
   included do
-    include PgSearch
+    include PgSearch::Model
 
     self.ignored_columns = self.ignored_columns + [searchable_document_tsvector]
 
