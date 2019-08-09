@@ -57,7 +57,7 @@ module Warehouse
         case_report.sar_subject_type = kase.respond_to?(:subject_type) ? kase.subject_type.humanize : nil
         case_report.sar_subject_full_name = kase.respond_to?(:subject_full_name) ? kase.subject_full_name : nil
         case_report.business_unit_responsible_for_late_response = kase.decorate.late_team_name
-        case_report.extended = extension_count(kase) > 0 ? 'Yes' : 'No'
+        case_report.extended = self.extension_count(kase) > 0 ? 'Yes' : 'No'
         case_report.extension_count = self.extension_count(kase)
         case_report.deletion_reason = kase.reason_for_deletion
         case_report.casework_officer = kase.casework_officer
