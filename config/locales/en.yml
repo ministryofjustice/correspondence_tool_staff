@@ -252,10 +252,11 @@ en:
 
   button:
     assign: Assign to this unit
-    next_page_assign: Create case
     confirm: Confirm
     create_case: Create case
     feedback: Send feedback
+    next_page_assign: Create case
+    request_amends: Request amends 
     save_changes: Save changes
 
   helpers:
