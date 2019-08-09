@@ -22,7 +22,7 @@ require 'rails_helper'
 # in one parallel test may cause failure in another parallel test thread.
 #
 # Therefore +create_report_type+ method used to ensure there is consistency
-RSpec.describe ReportType, type: :model do
+RSpec.describe ReportType, type: :model, retry: 2, retry_wait: 5 do
   at_exit do
     if ParallelTests.first_process?
       ParallelTests.wait_for_other_processes_to_finish
