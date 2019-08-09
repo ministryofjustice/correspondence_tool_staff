@@ -3,10 +3,8 @@ require 'rails_helper'
 # rubocop:disable Metrics/ModuleLength
 module Stats
   describe R003BusinessUnitPerformanceReport do
-
     before(:all) do
-      DbHousekeeping.clean
-      find_or_create :report_type, :r003
+      create_report_type(abbr: :r003)
 
       Team.all.map(&:destroy)
       Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
@@ -62,10 +60,7 @@ module Stats
       Team.where('id > ?', @team_d.id).destroy_all
     end
 
-    after(:all) do
-      DbHousekeeping.clean
-      ReportType.r003.destroy
-    end
+    after(:all) { DbHousekeeping.clean(seed: true) }
 
     context 'defining the period' do
       context 'no period parameters passsed in' do

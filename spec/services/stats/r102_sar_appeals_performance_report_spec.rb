@@ -2,12 +2,8 @@ require 'rails_helper'
 
 module Stats
   describe R102SarAppealsPerformanceReport do
-
-
     before(:all) do
-      DbHousekeeping.clean
-
-      create :report_type, :r102
+      create_report_type(abbr: :r102)
 
       Team.all.map(&:destroy)
       Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
@@ -84,10 +80,7 @@ module Stats
       Team.where.not(id: required_teams.map(&:id)).destroy_all
     end
 
-    after(:all) do
-      DbHousekeeping.clean
-      ReportType.r102.destroy
-    end
+    after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '#title' do
       it 'returns the report title' do

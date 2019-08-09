@@ -47,7 +47,7 @@ module Stats
       end
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) { DbHousekeeping.clean(seed: true) }
 
     let(:selector)    { CaseSelector.new(Case::Base.all) }
 

@@ -5,10 +5,8 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 module Stats
   describe R004CabinetOfficeReport do
     context 'sections 1, 2, 3' do
-
       before(:all) do
-        ReportType.delete_all
-        create :report_type, :r004
+        create_report_type(abbr: :r004)
 
         @frozen_time = Time.new 2017, 6, 14, 11, 20, 45
 
@@ -85,9 +83,7 @@ module Stats
 
       end
 
-      after(:all) do
-        DbHousekeeping.clean
-      end
+      after(:all) { DbHousekeeping.clean(seed: true) }
 
       context '1.A' do
         it 'records the total number' do
@@ -384,10 +380,8 @@ module Stats
     end
 
     context 'section 4' do
-
       before(:all) do
-        ReportType.delete_all
-        create :report_type, :r004
+        create_report_type(abbr: :r004)
 
         @frozen_time = Time.new 2017, 6, 14, 11, 20, 45
         CaseClosure::MetadataSeeder.seed!
@@ -418,7 +412,7 @@ module Stats
         end
       end
 
-      after(:all) { DbHousekeeping.clean }
+      after(:all) { DbHousekeeping.clean(seed: true) }
 
       context '4.A' do
         it 'counts the number of cases with just one exception s21 including in time and out of time' do

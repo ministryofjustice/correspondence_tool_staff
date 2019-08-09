@@ -4,9 +4,7 @@ module Stats # rubocop:disable Metrics/ModuleLength
   describe R002AppealsPerformanceReport do
 
     before(:all) do
-      DbHousekeeping.clean
-
-      create :report_type, :r002
+      create_report_type(abbr: :r002)
 
       Team.all.each(&:destroy)
       Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
@@ -88,10 +86,7 @@ module Stats # rubocop:disable Metrics/ModuleLength
       Team.where.not(id: required_teams.map(&:id)).destroy_all
     end
 
-    after(:all) do
-      ReportType.r002.destroy
-      DbHousekeeping.clean
-    end
+    after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '#title' do
       it 'returns the report title' do

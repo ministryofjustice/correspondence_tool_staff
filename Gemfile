@@ -93,7 +93,6 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
-  gem 'rspec-retry', '~> 0.6.1'
   gem 'rubocop', '~> 0.71.0', require: false
   gem 'rubocop-rspec', '~> 1.33.0', require: false
   gem 'rubocop-performance', require: false
