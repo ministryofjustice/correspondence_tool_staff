@@ -5,7 +5,7 @@ def create_report_type(abbr:, **options)
     if !(report_type = ReportType.find_by(abbr: abbr.upcase))
       report_type = find_or_create :report_type, abbr: abbr.upcase, **options
     end
-  rescue => e
+  rescue
     report_type = find_or_create :report_type, abbr.to_sym, **options
   end
 
