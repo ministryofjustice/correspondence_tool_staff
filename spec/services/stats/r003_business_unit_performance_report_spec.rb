@@ -106,86 +106,86 @@ module Stats
 
         it 'adds up directorate stats in each business_group' do
           expect(@results[@bizgrp_ab.id])
-              .to eq({
-                         business_group:                @bizgrp_ab.name,
-                         directorate:                   '',
-                         business_unit:                 '',
-                         responsible:                   @bizgrp_ab.team_lead,
-                         non_trigger_performance:       28.6,
-                         non_trigger_total:             9,
-                         non_trigger_responded_in_time: 2,
-                         non_trigger_responded_late:    2,
-                         non_trigger_open_in_time:      2,
-                         non_trigger_open_late:         3,
-                         trigger_performance:           33.3,
-                         trigger_total:                 5,
-                         trigger_responded_in_time:     1,
-                         trigger_responded_late:        1,
-                         trigger_open_in_time:          2,
-                         trigger_open_late:             1,
-                         overall_performance:           30.0,
-                         overall_total:                 14,
-                         overall_responded_in_time:     3,
-                         overall_responded_late:        3,
-                         overall_open_in_time:          4,
-                         overall_open_late:             4
-                     })
+            .to eq({
+              business_group:                @bizgrp_ab.name,
+              directorate:                   '',
+              business_unit:                 '',
+              responsible:                   @bizgrp_ab.team_lead,
+              non_trigger_performance:       28.6,
+              non_trigger_total:             9,
+              non_trigger_responded_in_time: 2,
+              non_trigger_responded_late:    2,
+              non_trigger_open_in_time:      2,
+              non_trigger_open_late:         3,
+              trigger_performance:           33.3,
+              trigger_total:                 5,
+              trigger_responded_in_time:     1,
+              trigger_responded_late:        1,
+              trigger_open_in_time:          2,
+              trigger_open_late:             1,
+              overall_performance:           30.0,
+              overall_total:                 14,
+              overall_responded_in_time:     3,
+              overall_responded_late:        3,
+              overall_open_in_time:          4,
+              overall_open_late:             4
+            })
         end
 
         it 'adds up business_unit stats in each directorate' do
           expect(@results[@bizgrp_cd.id])
-              .to eq({
-                         business_group:                @bizgrp_cd.name,
-                         directorate:                   '',
-                         business_unit:                 '',
-                         responsible:                   @bizgrp_cd.team_lead,
-                         non_trigger_performance:       50.0,
-                         non_trigger_total:             3,
-                         non_trigger_responded_in_time: 1,
-                         non_trigger_responded_late:    1,
-                         non_trigger_open_in_time:      1,
-                         non_trigger_open_late:         0,
-                         trigger_performance:           0.0,
-                         trigger_total:                 0,
-                         trigger_responded_in_time:     0,
-                         trigger_responded_late:        0,
-                         trigger_open_in_time:          0,
-                         trigger_open_late:             0,
-                         overall_performance:           50.0,
-                         overall_total:                 3,
-                         overall_responded_in_time:     1,
-                         overall_responded_late:        1,
-                         overall_open_in_time:          1,
-                         overall_open_late:             0
-                     })
+            .to eq({
+              business_group:                @bizgrp_cd.name,
+              directorate:                   '',
+              business_unit:                 '',
+              responsible:                   @bizgrp_cd.team_lead,
+              non_trigger_performance:       50.0,
+              non_trigger_total:             3,
+              non_trigger_responded_in_time: 1,
+              non_trigger_responded_late:    1,
+              non_trigger_open_in_time:      1,
+              non_trigger_open_late:         0,
+              trigger_performance:           0.0,
+              trigger_total:                 0,
+              trigger_responded_in_time:     0,
+              trigger_responded_late:        0,
+              trigger_open_in_time:          0,
+              trigger_open_late:             0,
+              overall_performance:           50.0,
+              overall_total:                 3,
+              overall_responded_in_time:     1,
+              overall_responded_late:        1,
+              overall_open_in_time:          1,
+              overall_open_late:             0
+            })
         end
 
         it 'adds up individual business_unit stats' do
           expect(@results[@team_c.id])
-              .to eq({
-                         business_group:                @bizgrp_cd.name,
-                         directorate:                   @dir_cd.name,
-                         business_unit:                 @team_c.name,
-                         responsible:                   @team_c.team_lead,
-                         non_trigger_performance:       50.0,
-                         non_trigger_total:             2,
-                         non_trigger_responded_in_time: 1,
-                         non_trigger_responded_late:    1,
-                         non_trigger_open_in_time:      0,
-                         non_trigger_open_late:         0,
-                         trigger_performance:           0.0,
-                         trigger_total:                 0,
-                         trigger_responded_in_time:     0,
-                         trigger_responded_late:        0,
-                         trigger_open_in_time:          0,
-                         trigger_open_late:             0,
-                         overall_performance:           50.0,
-                         overall_total:                 2,
-                         overall_responded_in_time:     1,
-                         overall_responded_late:        1,
-                         overall_open_in_time:          0,
-                         overall_open_late:             0
-                     })
+            .to eq({
+              business_group:                @bizgrp_cd.name,
+              directorate:                   @dir_cd.name,
+              business_unit:                 @team_c.name,
+              responsible:                   @team_c.team_lead,
+              non_trigger_performance:       50.0,
+              non_trigger_total:             2,
+              non_trigger_responded_in_time: 1,
+              non_trigger_responded_late:    1,
+              non_trigger_open_in_time:      0,
+              non_trigger_open_late:         0,
+              trigger_performance:           0.0,
+              trigger_total:                 0,
+              trigger_responded_in_time:     0,
+              trigger_responded_late:        0,
+              trigger_open_in_time:          0,
+              trigger_open_late:             0,
+              overall_performance:           50.0,
+              overall_total:                 2,
+              overall_responded_in_time:     1,
+              overall_responded_late:        1,
+              overall_open_in_time:          0,
+              overall_open_late:             0
+            })
         end
       end
 
@@ -202,31 +202,31 @@ module Stats
           end
 
           expect(rag_ratings).to eq([
-                                      [],
-                                      (0..21).map { |x| [x, :blue] },
-                                      (0..21).map { |x| [x, :grey] },
-                                      [[4, :red], [10, :red], [16, :red]],
-                                      [[4, :red], [10, :red], [16, :red]],
-                                      [[4, :red], [10, :red], [16, :red]],
-                                      [[4, :red], [10, :red], [16, :red]],
-                                      [[4, :red], [10, :red], [16, :red]],
-                                      [[4, :red], [16, :red]],
-                                      [[4, :red], [16, :red]],
-                                      [[4, :red], [16, :red]],
-                                      [[4, :red], [16, :red]],
-                                      [[4, :red], [10, :red], [16, :red]],
-                                    ])
+            [],
+            (0..21).map { |x| [x, :blue] },
+            (0..21).map { |x| [x, :grey] },
+            [[4, :red], [10, :red], [16, :red]],
+            [[4, :red], [10, :red], [16, :red]],
+            [[4, :red], [10, :red], [16, :red]],
+            [[4, :red], [10, :red], [16, :red]],
+            [[4, :red], [10, :red], [16, :red]],
+            [[4, :red], [16, :red]],
+            [[4, :red], [16, :red]],
+            [[4, :red], [16, :red]],
+            [[4, :red], [16, :red]],
+            [[4, :red], [10, :red], [16, :red]],
+          ])
         end
 
         it 'outputs results as a csv lines' do
           super_header = %q{"","","","",} +
-              %q{Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,} +
-              %q{Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,} +
-              %q{Overall,Overall,Overall,Overall,Overall,Overall}
+            %q{Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,} +
+            %q{Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,} +
+            %q{Overall,Overall,Overall,Overall,Overall,Overall}
           header = %q{Business group,Directorate,Business unit,Responsible,} +
-              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
-              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
-              %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
+            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
+            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
+            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
           expected_text = <<~EOCSV
           Business unit report (FOIs) - 1 Jan 2017 to 30 Jun 2017
           #{super_header}
@@ -283,103 +283,103 @@ module Stats
         it 'adds up directorate stats in each business_group' do
           expect(@results[@bizgrp_ab.id])
             .to eq({
-                     business_group:                @bizgrp_ab.name,
-                     directorate:                   '',
-                     business_unit:                 '',
-                     responsible:                   @bizgrp_ab.team_lead,
-                     non_trigger_performance:       28.6,
-                     non_trigger_total:             9,
-                     non_trigger_responded_in_time: 2,
-                     non_trigger_responded_late:    2,
-                     non_trigger_open_in_time:      2,
-                     non_trigger_open_late:         3,
-                     trigger_performance:           33.3,
-                     trigger_total:                 5,
-                     trigger_responded_in_time:     1,
-                     trigger_responded_late:        1,
-                     trigger_open_in_time:          2,
-                     trigger_open_late:             1,
-                     overall_performance:           30.0,
-                     overall_total:                 14,
-                     overall_responded_in_time:     3,
-                     overall_responded_late:        3,
-                     overall_open_in_time:          4,
-                     overall_open_late:             4,
-                     bu_performance:                0.0,
-                     bu_total:                      14,
-                     bu_responded_in_time:          0,
-                     bu_responded_late:             6,
-                     bu_open_in_time:               0,
-                     bu_open_late:                  8
-                   })
+              business_group:                @bizgrp_ab.name,
+              directorate:                   '',
+              business_unit:                 '',
+              responsible:                   @bizgrp_ab.team_lead,
+              non_trigger_performance:       28.6,
+              non_trigger_total:             9,
+              non_trigger_responded_in_time: 2,
+              non_trigger_responded_late:    2,
+              non_trigger_open_in_time:      2,
+              non_trigger_open_late:         3,
+              trigger_performance:           33.3,
+              trigger_total:                 5,
+              trigger_responded_in_time:     1,
+              trigger_responded_late:        1,
+              trigger_open_in_time:          2,
+              trigger_open_late:             1,
+              overall_performance:           30.0,
+              overall_total:                 14,
+              overall_responded_in_time:     3,
+              overall_responded_late:        3,
+              overall_open_in_time:          4,
+              overall_open_late:             4,
+              bu_performance:                0.0,
+              bu_total:                      14,
+              bu_responded_in_time:          0,
+              bu_responded_late:             6,
+              bu_open_in_time:               0,
+              bu_open_late:                  8
+            })
         end
 
         it 'adds up business_unit stats in each directorate' do
           expect(@results[@bizgrp_cd.id])
             .to eq({
-                     business_group:                @bizgrp_cd.name,
-                     directorate:                   '',
-                     business_unit:                 '',
-                     responsible:                   @bizgrp_cd.team_lead,
-                     non_trigger_performance:       50.0,
-                     non_trigger_total:             3,
-                     non_trigger_responded_in_time: 1,
-                     non_trigger_responded_late:    1,
-                     non_trigger_open_in_time:      1,
-                     non_trigger_open_late:         0,
-                     trigger_performance:           0.0,
-                     trigger_total:                 0,
-                     trigger_responded_in_time:     0,
-                     trigger_responded_late:        0,
-                     trigger_open_in_time:          0,
-                     trigger_open_late:             0,
-                     overall_performance:           50.0,
-                     overall_total:                 3,
-                     overall_responded_in_time:     1,
-                     overall_responded_late:        1,
-                     overall_open_in_time:          1,
-                     overall_open_late:             0,
-                     bu_performance:                0.0,
-                     bu_total:                      3,
-                     bu_responded_in_time:          0,
-                     bu_responded_late:             2,
-                     bu_open_in_time:               0,
-                     bu_open_late:                  1
-                   })
+              business_group:                @bizgrp_cd.name,
+              directorate:                   '',
+              business_unit:                 '',
+              responsible:                   @bizgrp_cd.team_lead,
+              non_trigger_performance:       50.0,
+              non_trigger_total:             3,
+              non_trigger_responded_in_time: 1,
+              non_trigger_responded_late:    1,
+              non_trigger_open_in_time:      1,
+              non_trigger_open_late:         0,
+              trigger_performance:           0.0,
+              trigger_total:                 0,
+              trigger_responded_in_time:     0,
+              trigger_responded_late:        0,
+              trigger_open_in_time:          0,
+              trigger_open_late:             0,
+              overall_performance:           50.0,
+              overall_total:                 3,
+              overall_responded_in_time:     1,
+              overall_responded_late:        1,
+              overall_open_in_time:          1,
+              overall_open_late:             0,
+              bu_performance:                0.0,
+              bu_total:                      3,
+              bu_responded_in_time:          0,
+              bu_responded_late:             2,
+              bu_open_in_time:               0,
+              bu_open_late:                  1
+            })
         end
 
         it 'adds up individual business_unit stats' do
           expect(@results[@team_c.id])
             .to eq({
-                     business_group:                @bizgrp_cd.name,
-                     directorate:                   @dir_cd.name,
-                     business_unit:                 @team_c.name,
-                     responsible:                   @team_c.team_lead,
-                     non_trigger_performance:       50.0,
-                     non_trigger_total:             2,
-                     non_trigger_responded_in_time: 1,
-                     non_trigger_responded_late:    1,
-                     non_trigger_open_in_time:      0,
-                     non_trigger_open_late:         0,
-                     trigger_performance:           0.0,
-                     trigger_total:                 0,
-                     trigger_responded_in_time:     0,
-                     trigger_responded_late:        0,
-                     trigger_open_in_time:          0,
-                     trigger_open_late:             0,
-                     overall_performance:           50.0,
-                     overall_total:                 2,
-                     overall_responded_in_time:     1,
-                     overall_responded_late:        1,
-                     overall_open_in_time:          0,
-                     overall_open_late:             0,
-                     bu_performance:                0.0,
-                     bu_total:                      2,
-                     bu_responded_in_time:          0,
-                     bu_responded_late:             2,
-                     bu_open_in_time:               0,
-                     bu_open_late:                  0
-                   })
+              business_group:                @bizgrp_cd.name,
+              directorate:                   @dir_cd.name,
+              business_unit:                 @team_c.name,
+              responsible:                   @team_c.team_lead,
+              non_trigger_performance:       50.0,
+              non_trigger_total:             2,
+              non_trigger_responded_in_time: 1,
+              non_trigger_responded_late:    1,
+              non_trigger_open_in_time:      0,
+              non_trigger_open_late:         0,
+              trigger_performance:           0.0,
+              trigger_total:                 0,
+              trigger_responded_in_time:     0,
+              trigger_responded_late:        0,
+              trigger_open_in_time:          0,
+              trigger_open_late:             0,
+              overall_performance:           50.0,
+              overall_total:                 2,
+              overall_responded_in_time:     1,
+              overall_responded_late:        1,
+              overall_open_in_time:          0,
+              overall_open_late:             0,
+              bu_performance:                0.0,
+              bu_total:                      2,
+              bu_responded_in_time:          0,
+              bu_responded_late:             2,
+              bu_open_in_time:               0,
+              bu_open_late:                  0
+            })
         end
       end
 
@@ -445,15 +445,15 @@ module Stats
       responded_date = responded.nil? ? nil : Date.parse(responded)
       kase = nil
       Timecop.freeze(received_date + 10.hours) do
-        factory = case type
-                    when 'std'
-                      :case_with_response
-                    when 'irt'
-                      :accepted_timeliness_review
-                    when 'irc'
-                      :accepted_compliance_review
-                  end
-
+        factory =
+          case type
+          when 'std'
+            :case_with_response
+          when 'irt'
+            :accepted_timeliness_review
+          when 'irc'
+            :accepted_compliance_review
+          end
 
         kase = create factory, responding_team: team, responder: responder, identifier: ident
         kase.external_deadline = Date.parse(deadline)
@@ -475,6 +475,5 @@ module Stats
     # rubocop:enable Metrics/CyclomaticComplexity
 
   end
-
 end
 # rubocop:enable Metrics/ModuleLength
