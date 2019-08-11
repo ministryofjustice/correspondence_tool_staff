@@ -17,17 +17,16 @@
 require 'devise'
 require 'capybara/rspec'
 require 'pundit/rspec'
-
 require 'aws-sdk'
 
 # Required or we'll get errors when we try to pre-sign S# direct uploads.
 ENV['AWS_ACCESS_KEY_ID']     = 'test_access_key_id'
 ENV['AWS_SECRET_ACCESS_KEY'] = 'test_secret_access_key'
 
-
 RSpec.configure do |config|
-# The settings below are suggested to provide a good initial experience
-# with RSpec, but feel free to customize to your heart's content.
+  # The settings below are suggested to provide a good initial experience
+  # with RSpec, but feel free to customize to your heart's content.
+
   # These two settings work together to allow you to limit a spec run
   # to individual examples or groups you care about by tagging them with
   # `:focus` metadata. When nothing is tagged with `:focus`, all examples

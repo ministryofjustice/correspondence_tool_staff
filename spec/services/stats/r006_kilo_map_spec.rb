@@ -1,12 +1,9 @@
 require 'rails_helper'
 
 module Stats
-
-
   describe R006KiloMap do
 
     it 'produces a kilo map as a csv' do
-
       dacu_disclosure = BusinessUnit.dacu_disclosure
       dacu_disclosure.users.map(&:destroy)
       dacu_disclosure.team_lead = 'Jeremy Corbyn'

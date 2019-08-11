@@ -2,8 +2,8 @@ require 'rails_helper'
 
 module Stats
   describe R007ClosedCasesReport do
-    before(:all) { create :report_type, :r007 }
-    after(:all) { ReportType.delete_all }
+    before(:all) { create_report_type(abbr: :r007)}
+    after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '.title' do
       it 'returns correct title' do

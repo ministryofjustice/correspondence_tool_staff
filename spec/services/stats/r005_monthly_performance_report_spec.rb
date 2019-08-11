@@ -3,8 +3,8 @@ require 'rails_helper'
 module Stats
   describe R005MonthlyPerformanceReport do
 
-    before(:all) { create :report_type, :r005 }
-    after(:all) { ReportType.delete_all }
+    before(:all) { create_report_type(abbr: :r005) }
+    after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '.title' do
       it 'returns the title' do
@@ -65,7 +65,7 @@ module Stats
           [[1, :red], [7, :red], [13, :red]],   # March
           [[1, :red], [7, :green], [13, :red]], # April
           [],
-          [[1, :red], [7, :red], [13, :red]],   # Totals
+          [[1, :red], [7, :amber], [13, :red]],   # Totals
         ]
 
         expect(rag_ratings).to eq(expected)
