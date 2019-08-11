@@ -13,9 +13,5 @@ module Warehouse
         Rails.logger.error("CasesSyncJob [FAIL] #{active_record_type}/#{model_id} to sync")
       end
     end
-
-    def self.sync?(record)
-      ::Stats::Warehouse::CasesReportSync.syncable?(record).first
-    end
   end
 end

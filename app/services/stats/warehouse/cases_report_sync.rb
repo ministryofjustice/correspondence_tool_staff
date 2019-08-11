@@ -5,8 +5,10 @@ module Stats
     class CasesReportSync
       # +MAPPINGS+ could be refactored so that the respective class types
       # contain the required information/execution output. The current
-      # implementation is experimental and less intrusive. The `fields`
-      # key links the Cases Report field to the source of the information.
+      # implementation is experimental, less intrusive and is easier to reason
+      # about in this central place. The `fields` key links the Cases Report
+      # field to the source of the information.
+      #
       # Each class Mapping is defined as:
       #
       # {
@@ -31,7 +33,7 @@ module Stats
           parameter: nil,
           execute: ->(record, _){ [record] }
         },
-        'CaseClosure': {
+        'CaseClosure::Metadatum': {
           fields: %w[
               info_held_status_id
               refusal_reason_id
@@ -78,9 +80,9 @@ module Stats
       # Ensure the warehouse remains in sync with changes elsewhere
       # in the database.
       #
-      # Although checking Class type is considered a code-smell, took the
-      # pragmatic/simpler decision to maintain sync operations in one place
-      # for this initial 'alpha' implementation.
+      # @note (mseedat-moj): Checking Class Type could be considered a
+      # code-smell, took the pragmatic/simpler decision to maintain sync
+      # operations in one place for this initial 'alpha' implementation
       def initialize(record)
         syncable, mapping_klass = self.class.syncable?(record)
         return unless syncable

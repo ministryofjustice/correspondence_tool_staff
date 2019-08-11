@@ -15,6 +15,8 @@
 #
 
 class Team < ApplicationRecord
+  include Warehousable
+
   validates :name, uniqueness: { scope: :type }
   validate :valid_role
   validate :deletion_validation

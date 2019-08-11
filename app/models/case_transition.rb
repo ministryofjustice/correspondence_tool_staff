@@ -19,6 +19,8 @@
 #
 
 class CaseTransition < ApplicationRecord
+  include Warehousable
+
   ASSIGN_RESPONDER_EVENT = 'assign_responder'
 
   belongs_to :case,
