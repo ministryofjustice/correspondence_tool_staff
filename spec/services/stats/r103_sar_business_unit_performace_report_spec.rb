@@ -88,7 +88,6 @@ module Stats
         Team.where('id > ?', @team_d.id).destroy_all
       end
 
-
       context 'without business unit columns' do
         # We only test that the correct cases are being selected for analysis.  The
         # analysis work, rolling up of business group and directorate toatls and calcualtion

@@ -412,6 +412,9 @@ RSpec.describe Case::Base, type: :model do
                   .through(:responder_assignment)
                   .source(:team) }
 
+    it { should have_one(:warehouse_case_report)
+      .class_name('Warehouse::CaseReport') }
+
     it { should have_many(:approver_assignments)
                   .class_name('Assignment') }
     it { should have_many(:approvers)
@@ -1474,24 +1477,36 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  describe '#casework_officer' do
-    it 'is nil when non-trigger case' do
-      expect(kase.casework_officer).to eq nil
-    end
-
-    it 'is nil when trigger case without responder' do
-      expect(trigger_foi.casework_officer).to eq nil
-    end
-
-    it 'returns assigned user name for trigger case' do
-      disclosure_specialist = find_or_create :disclosure_specialist
-      case_assigned_to_user = create(:assigned_case,
+  describe 'casework officer' do
+    let(:disclosure_specialist) { find_or_create :disclosure_specialist }
+    let(:case_assigned_to_user) {
+      create(
+        :assigned_case,
         :flagged_accepted,
         approver: disclosure_specialist
       )
+    }
 
-      expect(case_assigned_to_user.casework_officer)
-        .to eq disclosure_specialist.full_name
+    describe '#casework_officer (full name)' do
+      it 'returns assigned user full name for trigger case' do
+        expect(case_assigned_to_user.casework_officer)
+          .to eq disclosure_specialist.full_name
+      end
+    end
+
+    describe '#casework_officer_user (user object)' do
+      it 'is nil when non-trigger case' do
+        expect(kase.casework_officer_user).to eq nil
+      end
+
+      it 'is nil when trigger case without responder' do
+        expect(trigger_foi.casework_officer_user).to eq nil
+      end
+
+      it 'returns assigned user for trigger case' do
+        expect(case_assigned_to_user.casework_officer_user)
+          .to eq disclosure_specialist
+      end
     end
   end
 
