@@ -6,15 +6,16 @@ module Warehouse
 
     CASE_BATCH_SIZE = 500
 
-    # Usage of class methods is to allow this class to be used in async jobs
+    # Class methods to allow this class to be used in async jobs
     class << self
       def for(kase)
         kase.warehouse_case_report || self.new(case_id: kase.id)
       end
 
       # Every field is deliberately set explicitly, please do not use any
-      # clever magic etc as each field has a history of how it should
+      # clever meta-magic as each field has a history of how it should
       # be calculated and therefore needs to be readily understood
+      #
       #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
       def generate(kase)
         case_report = self.for(kase)
