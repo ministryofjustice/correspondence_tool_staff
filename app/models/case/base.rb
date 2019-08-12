@@ -179,6 +179,12 @@ class Case::Base < ApplicationRecord
 
   has_many :teams, through: :assignments
 
+  has_one :warehouse_case_report,
+          class_name: 'Warehouse::CaseReport',
+          foreign_key: :case_id,
+          autosave: false,
+          dependent: :destroy
+
   has_one :managing_assignment,
           -> { managing },
           class_name: 'Assignment',
@@ -697,8 +703,12 @@ class Case::Base < ApplicationRecord
   # always a disclosure specialist for trigger cases as requested by
   # London team.
   def casework_officer
+    casework_officer_user&.full_name
+  end
+
+  def casework_officer_user
     if trigger?
-      assigned_disclosure_specialist&.full_name
+      assigned_disclosure_specialist
     end
   end
 
