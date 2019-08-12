@@ -12,6 +12,6 @@
 
 
 
-= render partial: "cases/#{@case.type_abbreviation.downcase}/new",
+= render partial: "cases/#{@case.type_abbreviation.downcase.tr(' ','_')}/new",
          locals: { kase: @case,
                    correspondence_type: @correspondence_type }

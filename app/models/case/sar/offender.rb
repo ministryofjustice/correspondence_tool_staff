@@ -1,7 +1,11 @@
 class Case::SAR::Offender < Case::Base
   class << self
     def type_abbreviation
-      'OFFENDER_SAR'
+      'Offender SAR'
+    end
+
+    def folder_name
+      'offender_sar'
     end
 
     def searchable_fields_and_ranks
