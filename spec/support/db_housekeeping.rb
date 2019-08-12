@@ -18,6 +18,7 @@ module DbHousekeeping
       cases_users_transitions_trackers
       linked_cases
       search_queries
+      warehouse_case_reports
       report_types
     )
     tables.each do |table|

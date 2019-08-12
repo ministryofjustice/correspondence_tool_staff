@@ -38,4 +38,12 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
       expect(Case::Base).to have_received(:update_all_indexes)
     end
   end
+
+  describe 'warehouse sub-command' do
+    it 'warehouses all cases' do
+      allow(::Warehouse::CaseReport).to receive(:reconcile)
+      cli.warehouse
+      expect(::Warehouse::CaseReport).to have_received(:reconcile)
+    end
+  end
 end
