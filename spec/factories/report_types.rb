@@ -34,7 +34,6 @@ FactoryBot.define do
       seq_id            { 100 }
       foi               { true }
       sar               { false }
-      etl               { true }
     end
 
     trait :r003 do
@@ -90,6 +89,7 @@ FactoryBot.define do
       seq_id            { 500 }
       foi               { false }
       sar               { false }
+      etl               { true }
     end
 
     trait :r102 do
