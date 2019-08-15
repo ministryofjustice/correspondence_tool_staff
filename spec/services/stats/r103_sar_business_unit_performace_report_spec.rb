@@ -136,6 +136,7 @@ module Stats
           end
         end
 
+
         if type.present?
           refusal_reason = CaseClosure::RefusalReason.__send__(type)
           kase.refusal_reason = refusal_reason
@@ -144,6 +145,8 @@ module Stats
         kase
       end
       #rubocop:enable Metrics/ParameterLists
+
+
     end
   end
 end
