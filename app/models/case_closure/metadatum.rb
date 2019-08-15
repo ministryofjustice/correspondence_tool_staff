@@ -17,6 +17,7 @@
 #
 
 class CaseClosure::Metadatum < ApplicationRecord
+  include Warehousable
 
   self.table_name = :case_closure_metadata
 
