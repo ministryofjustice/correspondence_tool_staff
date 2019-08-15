@@ -2,6 +2,7 @@ require 'cts'
 require 'cts/cases/constants'
 require 'cts/cases/create'
 require 'cts/cases/reindex'
+require 'cts/cases/warehouser'
 
 module CTS::Cases
   class CLI < Thor
