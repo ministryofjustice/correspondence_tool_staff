@@ -596,7 +596,6 @@ CREATE TABLE public.reports (
     report_data bytea,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    user_id integer,
     guid character varying
 );
 
