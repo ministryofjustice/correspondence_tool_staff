@@ -24,9 +24,9 @@ describe Warehouse::CaseSyncJob, type: :job do
     it 'requires ActiveModel class type string' do
       model_id = -rand(1..998)
 
-      expect { job.perform(Object.new, model_id) }.to raise_error
-      expect { job.perform(User, model_id) }.to raise_error
-      expect { job.perform(User.new, model_id) }.to raise_error
+      expect { job.perform(Object.new, model_id) }.to raise_error NoMethodError
+      expect { job.perform(User, model_id) }.to raise_error NoMethodError
+      expect { job.perform(User.new, model_id) }.to raise_error NoMethodError
       expect(job.perform('User', model_id)).to be true
     end
 
