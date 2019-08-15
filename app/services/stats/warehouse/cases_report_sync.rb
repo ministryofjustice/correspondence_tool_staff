@@ -7,7 +7,8 @@ module Stats
       # contain the required information/execution output. The current
       # implementation is experimental, less intrusive and is easier to reason
       # about in this central place. The `fields` key links the Cases Report
-      # field to the source of the information.
+      # field to the source of the information (unless an ActiveRecord
+      # association is already defined).
       #
       # Each class Mapping is defined as:
       #
@@ -17,7 +18,6 @@ module Stats
       #       0 or more field names present in warehouse_cases_report
       #       or in another table, used to pass to `execute`
       #     ],
-      #     parameter: :key_name_used_by_where_clause,
       #     execute: ->(record, query){
       #       method that outputs an Array of `Case::Base` using the `query`
       #       string
@@ -28,9 +28,12 @@ module Stats
       # This is an alternative implementation to using if/else statements
       # with hard coded `where` statements
       MAPPINGS = {
+        'Assignment': {
+          fields: [],
+          execute: ->(record, _){ [record.case] },
+        },
         'Case::Base': {
           fields: [],
-          parameter: nil,
           execute: ->(record, _){ [record] }
         },
         'CaseClosure::Metadatum': {
@@ -40,12 +43,10 @@ module Stats
               outcome_id
               appeal_outcome_id
             ],
-          parameter: :metadata_id,
-          execute: ->(record, query){ self.find_cases(record, query, :metadata_id) },
+          execute: ->(record, query){ self.find_cases(record, query) },
         },
         'CaseTransition': {
           fields: [],
-          parameter: nil,
           execute: ->(record, _){ [record.case] },
         },
         'Team': {
@@ -54,8 +55,7 @@ module Stats
               business_group_id
               directorate_id
             ],
-          parameter: :team_id,
-          execute: ->(record, query){ self.find_cases(record, query, :team_id) },
+          execute: ->(record, query){ self.find_cases(record, query) },
         },
         'TeamProperty': {
           fields: %w[
@@ -63,8 +63,7 @@ module Stats
               director_name_property_id
               deputy_director_name_property_id
             ],
-          parameter: :property_id,
-          execute: ->(record, query){ self.find_cases(record, query, :property_id) },
+          execute: ->(record, query){ self.find_cases(record, query) },
         },
         'User': {
           fields: %w[
@@ -72,8 +71,7 @@ module Stats
               casework_officer_user_id
               responder_id
             ],
-          parameter: :user_id,
-          execute: ->(record, query){ self.find_cases(record, query, :user_id) },
+          execute: ->(record, query){ self.find_cases(record, query) },
         },
       }.freeze
 
@@ -84,26 +82,37 @@ module Stats
       # code-smell, took the pragmatic/simpler decision to maintain sync
       # operations in one place for this initial 'alpha' implementation
       def initialize(record)
-        syncable, mapping_klass = self.class.syncable?(record)
-        return unless syncable
+        raise ArgumentError.new('record must be an ApplicationRecord') unless record.kind_of? ApplicationRecord
 
-        self.class.execute_setting(record, MAPPINGS[mapping_klass.to_s.to_sym])
+        syncable, mapping_klass = self.class.syncable?(record)
+
+        if syncable
+          cases = self.class.affected_cases(
+            record,
+            MAPPINGS[mapping_klass.to_s.to_sym]
+          )
+          self.class.sync(cases)
+        end
       end
 
-      def self.execute_setting(record, setting)
+      def self.affected_cases(record, setting)
+        # Where clause conditions to search against CaseReport
         query = setting[:fields]
-          .map { |f| "#{f} = :#{setting[:parameter]}" }
+          .map { |f| "#{f} = :param" }
           .join(' OR ')
 
-        setting[:execute]
-          .call(record, query)
-          .each { |kase| ::Warehouse::CaseReport.generate(kase) }
+        # Get all Case(s) related to the CaseReport(s)
+        setting[:execute].call(record, query)
       end
 
-      def self.find_cases(record, query, parameter)
+      def self.sync(cases)
+        Array.wrap(cases).map { |kase| ::Warehouse::CaseReport.generate(kase) }
+      end
+
+      def self.find_cases(record, query)
         ::Warehouse::CaseReport
           .includes(:case)
-          .where("#{query}", parameter.to_sym => record.id)
+          .where("#{query}", param: record.id)
           .map(&:case)
       end
 
@@ -111,8 +120,9 @@ module Stats
         mapping_klass = nil
 
         result = MAPPINGS.keys.any? do |type|
-          mapping_klass = type
-          record.kind_of?(type.to_s.constantize)
+          if record.kind_of?(type.to_s.constantize)
+            !!(mapping_klass = type)
+          end
         end
 
         [result, mapping_klass]
