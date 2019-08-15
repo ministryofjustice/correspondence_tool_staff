@@ -1,16 +1,3 @@
-# == Schema Information
-#
-# Table name: reports
-#
-#  id             :integer          not null, primary key
-#  report_type_id :integer          not null
-#  period_start   :date
-#  period_end     :date
-#  report_data    :binary
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#
-
 require 'rails_helper'
 
 RSpec.describe Report, type: :model do
@@ -39,17 +26,40 @@ RSpec.describe Report, type: :model do
   end
 
   describe '#period_start' do
-    let(:tomorrow) { build(:report, period_start: Date.tomorrow.to_s,
-                                    report_type: r003_report_type) }
-    let(:today)    { build(:report, period_start: Date.today.to_s,
-                                    period_end: Date.today.to_s,
-                                    report_type: r003_report_type) }
-    let(:yesterday) { build(:report, period_start: Date.yesterday.to_s,
-                                     period_end: Date.today.to_s,
-                                     report_type: r003_report_type) }
-    let(:after_period_end) { build(:report, period_start: Date.today.to_s,
-                                            period_end: Date.yesterday.to_s,
-                                            report_type: r003_report_type)}
+    let(:tomorrow) {
+      build(
+        :report,
+        period_start: Date.tomorrow.to_s,
+        report_type: r003_report_type
+      )
+    }
+
+    let(:today) {
+      build(
+        :report,
+        period_start: Date.today.to_s,
+        period_end: Date.today.to_s,
+        report_type: r003_report_type
+      )
+    }
+
+    let(:yesterday) {
+      build(
+        :report,
+        period_start: Date.yesterday.to_s,
+        period_end: Date.today.to_s,
+        report_type: r003_report_type
+      )
+    }
+
+    let(:after_period_end) {
+      build(
+        :report,
+        period_start: Date.today.to_s,
+        period_end: Date.yesterday.to_s,
+        report_type: r003_report_type
+      )
+    }
 
     it 'cannot be in the future' do
       expect(tomorrow).to_not be_valid
@@ -69,10 +79,27 @@ RSpec.describe Report, type: :model do
   end
 
   describe '#period_end' do
-    let(:tomorrow) { build_stubbed(:report, period_end: Date.tomorrow.to_s) }
-    let(:today)    { build_stubbed(:report, period_start: Date.today.to_s,
-                                    period_end: Date.today.to_s)}
-    let(:yesterday) { build_stubbed(:report, period_end: Date.yesterday.to_s) }
+    let(:tomorrow) {
+      build_stubbed(
+        :report,
+        period_end: Date.tomorrow.to_s
+      )
+    }
+
+    let(:today) {
+      build_stubbed(
+        :report,
+        period_start: Date.today.to_s,
+        period_end: Date.today.to_s
+      )
+    }
+
+    let(:yesterday) {
+      build_stubbed(
+        :report,
+        period_end: Date.yesterday.to_s
+      )
+    }
 
     it "can't be in the future" do
       expect(tomorrow).to_not be_valid
@@ -89,6 +116,7 @@ RSpec.describe Report, type: :model do
 
   describe '#run' do
     let(:options) {{ period_start: Date.yesterday, period_end: Date.today }}
+
     let(:report_service) {
       instance_double(
         Stats::R003BusinessUnitPerformanceReport,
