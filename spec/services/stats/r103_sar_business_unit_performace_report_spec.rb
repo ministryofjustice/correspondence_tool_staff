@@ -42,7 +42,6 @@ module Stats
 
     context 'data' do
       before(:all) do
-        #DbHousekeeping.clean
         @bizgrp_ab = create :business_group, name: 'BGAB'
         @dir_a     = create :directorate, name: 'DRA', business_group: @bizgrp_ab
         @dir_b     = create :directorate, name: 'DRB', business_group: @bizgrp_ab
@@ -89,10 +88,7 @@ module Stats
         Team.where('id > ?', @team_d.id).destroy_all
       end
 
-      #after(:all)  { DbHousekeeping.clean }
-
       context 'without business unit columns' do
-
         # We only test that the correct cases are being selected for analysis.  The
         # analysis work, rolling up of business group and directorate toatls and calcualtion
         # of percentages is carried out in BasePerformanceUnitReport, and is fully testing
@@ -140,7 +136,6 @@ module Stats
           end
         end
 
-
         if type.present?
           refusal_reason = CaseClosure::RefusalReason.__send__(type)
           kase.refusal_reason = refusal_reason
@@ -149,8 +144,6 @@ module Stats
         kase
       end
       #rubocop:enable Metrics/ParameterLists
-
-
     end
   end
 end

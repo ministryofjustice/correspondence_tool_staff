@@ -110,49 +110,49 @@ module Stats
       it 'adds up directorate stats in each business_group' do
         expect(@results[@bizgrp_ab.id])
           .to eq({
-                   business_group:                @bizgrp_ab.name,
-                   directorate:                   '',
-                   business_unit:                 '',
-                   responsible:                   @bizgrp_ab.team_lead,
-                   ico_appeal_performance:        28.6,
-                   ico_appeal_total:              9,
-                   ico_appeal_responded_in_time:  2,
-                   ico_appeal_responded_late:     2,
-                   ico_appeal_open_in_time:       2,
-                   ico_appeal_open_late:          3,
-                 })
+            business_group:                @bizgrp_ab.name,
+            directorate:                   '',
+            business_unit:                 '',
+            responsible:                   @bizgrp_ab.team_lead,
+            ico_appeal_performance:        28.6,
+            ico_appeal_total:              9,
+            ico_appeal_responded_in_time:  2,
+            ico_appeal_responded_late:     2,
+            ico_appeal_open_in_time:       2,
+            ico_appeal_open_late:          3,
+          })
       end
 
       it 'adds up business_unit stats in each directorate' do
         expect(@results[@bizgrp_cd.id])
           .to eq({
-                   business_group:                @bizgrp_cd.name,
-                   directorate:                   '',
-                   business_unit:                 '',
-                   responsible:                   @bizgrp_cd.team_lead,
-                   ico_appeal_performance:        50.0,
-                   ico_appeal_total:              3,
-                   ico_appeal_responded_in_time:  1,
-                   ico_appeal_responded_late:     1,
-                   ico_appeal_open_in_time:       1,
-                   ico_appeal_open_late:          0,
-                 })
+            business_group:                @bizgrp_cd.name,
+            directorate:                   '',
+            business_unit:                 '',
+            responsible:                   @bizgrp_cd.team_lead,
+            ico_appeal_performance:        50.0,
+            ico_appeal_total:              3,
+            ico_appeal_responded_in_time:  1,
+            ico_appeal_responded_late:     1,
+            ico_appeal_open_in_time:       1,
+            ico_appeal_open_late:          0,
+          })
       end
 
       it 'adds up individual business_unit stats' do
         expect(@results[@team_c.id])
           .to eq({
-                   business_group:                @bizgrp_cd.name,
-                   directorate:                   @dir_cd.name,
-                   business_unit:                 @team_c.name,
-                   responsible:                   @team_c.team_lead,
-                   ico_appeal_performance:        50.0,
-                   ico_appeal_total:              2,
-                   ico_appeal_responded_in_time:  1,
-                   ico_appeal_responded_late:     1,
-                   ico_appeal_open_in_time:       0,
-                   ico_appeal_open_late:          0,
-                 })
+            business_group:                @bizgrp_cd.name,
+            directorate:                   @dir_cd.name,
+            business_unit:                 @team_c.name,
+            responsible:                   @team_c.team_lead,
+            ico_appeal_performance:        50.0,
+            ico_appeal_total:              2,
+            ico_appeal_responded_in_time:  1,
+            ico_appeal_responded_late:     1,
+            ico_appeal_open_in_time:       0,
+            ico_appeal_open_late:          0,
+          })
       end
     end
 
@@ -248,20 +248,20 @@ module Stats
       if responded_date.nil?
         factory = "accepted_ico_#{type}_case".to_sym
         kase = create factory,
-                      creation_time: received_date,
-                      external_deadline: deadline_date,
-                      responding_team: team,
-                      responder: responder,
-                      identifier: ident
+          creation_time: received_date,
+          external_deadline: deadline_date,
+          responding_team: team,
+          responder: responder,
+          identifier: ident
       else
         factory = "responded_ico_#{type}_case".to_sym
         kase = create factory,
-                      creation_time: received_date,
-                      external_deadline: deadline_date,
-                      responding_team: team,
-                      responder: responder,
-                      date_responded: responded_date,
-                      identifier: ident
+          creation_time: received_date,
+          external_deadline: deadline_date,
+          responding_team: team,
+          responder: responder,
+          date_responded: responded_date,
+          identifier: ident
       end
       kase
     end

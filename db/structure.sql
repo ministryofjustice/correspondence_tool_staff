@@ -971,7 +971,11 @@ CREATE TABLE public.warehouse_case_reports (
     deputy_director_name character varying,
     draft_in_time character varying,
     in_target character varying,
-    number_of_days_late integer
+    number_of_days_late integer,
+    info_held_status_id integer,
+    refusal_reason_id integer,
+    outcome_id integer,
+    appeal_outcome_id integer
 );
 
 
@@ -1756,7 +1760,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190325082640'),
 ('20190326113949'),
 ('20190609165906'),
+('20190609185907'),
 ('20190730133328'),
 ('20190731151806');
-
-

@@ -69,6 +69,6 @@ class WarehouseCaseReport < ActiveRecord::Migration[5.0]
   end
 
   def down
-    drop_table :warehouse_cases_report
+    drop_table :warehouse_case_reports
   end
 end

@@ -46,10 +46,9 @@ module Stats
         @oap_cxx = create :accepted_case, name: '@oap_cxx', received_date: @period_end + 2.days
       end
     end
-
     after(:all) { DbHousekeeping.clean(seed: true) }
 
-    let(:selector)    { CaseSelector.new(Case::Base.all) }
+    let(:selector) { CaseSelector.new(Case::Base.all) }
 
     describe '.ids_for_cases_received_in_period' do
       it 'returns an array of all cases received in period' do
@@ -75,27 +74,29 @@ module Stats
     describe '.ids_for_period' do
       context 'using Class name' do
         it 'returns an array of case_ids that were received or open during period' do
-          expected_ids = [ @obs_cos, @obs_cdp, @obs_coe, @obs_cap,
-                           @oos_cdp, @oos_coe, @oos_cap,
-                           @odp_cdp, @odp_coe, @odp_cap,
-                           @ooe_cap,
-                           @obs_cxx, @oos_cxx, @odp_cxx, @ooe_cxx ].map(&:id)
+          expected_ids = [
+            @obs_cos, @obs_cdp, @obs_coe, @obs_cap,
+            @oos_cdp, @oos_coe, @oos_cap,
+            @odp_cdp, @odp_coe, @odp_cap,
+            @ooe_cap,
+            @obs_cxx, @oos_cxx, @odp_cxx, @ooe_cxx
+          ].map(&:id)
           expect(selector.ids_for_period(@period_start, @period_end)).to match_array expected_ids
         end
       end
 
       context 'using scope' do
         it 'returns an array of case_ids that were received or open during period' do
-          expected_ids = [ @obs_cos, @obs_cdp, @obs_coe, @obs_cap,
-                           @oos_cdp, @oos_coe, @oos_cap,
-                           @odp_cdp, @odp_coe, @odp_cap,
-                           @ooe_cap,
-                           @obs_cxx, @oos_cxx, @odp_cxx, @ooe_cxx ].map(&:id)
+          expected_ids = [
+            @obs_cos, @obs_cdp, @obs_coe, @obs_cap,
+            @oos_cdp, @oos_coe, @oos_cap,
+            @odp_cdp, @odp_coe, @odp_cap,
+            @ooe_cap,
+            @obs_cxx, @oos_cxx, @odp_cxx, @ooe_cxx
+          ].map(&:id)
           expect(CaseSelector.new(Case::Base.all).ids_for_period(@period_start, @period_end)).to match_array expected_ids
         end
       end
     end
-
-
   end
 end

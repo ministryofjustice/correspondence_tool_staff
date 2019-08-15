@@ -6,9 +6,8 @@ module Warehouse
     def perform
       RavenContextProvider.set_context
 
+      # Reports generated, regardless if downloaded or not
       Report.destroy_all
-      # Delete all temp files
-      # Clear Redis queues if any
     end
   end
 end

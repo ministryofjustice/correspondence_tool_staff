@@ -11,6 +11,7 @@
 #
 
 class TeamProperty < ApplicationRecord
+  include Warehousable
 
   VALID_KEYS = %w(
     area
