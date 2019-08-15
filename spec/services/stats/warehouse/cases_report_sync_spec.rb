@@ -54,16 +54,16 @@ describe Stats::Warehouse::CasesReportSync do
 
   context '::MAPPINGS' do
     let(:syncable_klass_names) {
-        %i[
-          Assignment
-          Case::Base
-          CaseClosure::Metadatum
-          CaseTransition
-          Team
-          TeamProperty
-          User
-        ]
-      }
+      %i[
+        Assignment
+        Case::Base
+        CaseClosure::Metadatum
+        CaseTransition
+        Team
+        TeamProperty
+        User
+      ]
+    }
 
     it 'specifies the source of data for a CaseReport' do
       expect(described_class::MAPPINGS.keys.sort).to eq syncable_klass_names
