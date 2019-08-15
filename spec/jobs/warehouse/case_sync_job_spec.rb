@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Warehouse::CasesSyncJob, type: :job do
+describe Warehouse::CaseSyncJob, type: :job do
   include ActiveJob::TestHelper
 
   before(:each) do
@@ -43,7 +43,7 @@ describe Warehouse::CasesSyncJob, type: :job do
     end
 
     it 'syncs the ActiveRecord' do
-      allow(::Stats::Warehouse::CasesReportSync).to receive(:new).with(user)
+      allow(::Stats::Warehouse::CaseReportSync).to receive(:new).with(user)
       job.perform(user.class.to_s, user.id)
     end
   end

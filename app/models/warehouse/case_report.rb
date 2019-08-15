@@ -24,7 +24,7 @@ module Warehouse
         case_report.creator_id = kase.creator.id
         case_report.responding_team_id = kase.responding_team&.id
         case_report.responder_id = kase.responder&.id
-        case_report.casework_officer_user_id = kase.decorate.casework_officer_user&.id
+        case_report.casework_officer_user_id = kase.casework_officer_user&.id
         case_report.business_group_id = kase.responding_team&.business_group&.id
         case_report.directorate_id = kase.responding_team&.directorate&.id
         case_report.director_general_name_property_id = kase.responding_team&.business_group&.properties&.lead&.singular_or_nil&.id # Director General name

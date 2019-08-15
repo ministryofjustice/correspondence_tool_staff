@@ -1,5 +1,5 @@
 module Warehouse
-  class CasesSyncJob < ApplicationJob
+  class CaseSyncJob < ApplicationJob
 
     queue_as :warehouse
 
@@ -8,9 +8,9 @@ module Warehouse
       record = active_record_type.constantize.find_by(id: model_id)
 
       if record
-        ::Stats::Warehouse::CasesReportSync.new(record)
+        ::Stats::Warehouse::CaseReportSync.new(record)
       else
-        Rails.logger.error("CasesSyncJob [FAIL] #{active_record_type}/#{model_id} to sync")
+        Rails.logger.error("CaseSyncJob [FAIL] #{active_record_type}/#{model_id} to sync")
       end
     end
   end

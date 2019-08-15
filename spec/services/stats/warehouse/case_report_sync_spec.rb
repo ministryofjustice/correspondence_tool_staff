@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe Stats::Warehouse::CasesReportSync do
+describe Stats::Warehouse::CaseReportSync do
   context '#initialize' do
     it 'requires a warehousable ActiveRecord instance' do
       not_activerecord = String.new
@@ -28,6 +28,16 @@ describe Stats::Warehouse::CasesReportSync do
   end
 
   context '.find_cases' do
+    it 'returns an Array of Case::Base related to CaseReport' do
+      record = create :foi_case
+      Warehouse::CaseReport.generate(record)
+
+      query = "case_id = :param" # Note :param placeholder
+      result = described_class.find_cases(record, query)
+
+      expect(result).to respond_to :each
+      expect(result.size).to eq 1
+    end
   end
 
   context '.syncable?' do
@@ -206,26 +216,90 @@ describe Stats::Warehouse::CasesReportSync do
     end
 
     context 'TeamProperty' do
-      # director_general_name
-      # director_name
-      # deputy_director_name
+      let(:responded_case) { create :responded_foi_case }
+      let(:responding_team) { responded_case.responding_team }
+      let(:new_name) { 'Donald Druck ' + rand(20).to_s }
+
+      # {
+      #   CaseReport#field_name: {
+      #     property: team 'lead' row from TeamProperty,
+      #     kase: Case::Base the team/property affects
+      #   }
+      # }
+      let(:case_report_source_fields) {
+        {
+          director_general_name: {
+            property: responding_team.business_group.properties.lead.singular_or_nil,
+            kase: responded_case,
+          },
+          director_name: {
+            property: responding_team.directorate.properties.lead.singular_or_nil,
+            kase: responded_case,
+          },
+          deputy_director_name: {
+            property: responding_team.properties.lead.singular_or_nil,
+            kase: responded_case,
+          },
+        }
+      }
+
+      it 'updates related CaseReport fields' do
+        case_report_source_fields.each do |case_report_field, source|
+          kase = source[:kase]
+
+          Warehouse::CaseReport.generate(kase)
+          expect(kase.reload.warehouse_case_report).to be_present
+          property = source[:property]
+
+          property.update_attributes(value: new_name)
+          described_class.new(property) # re-sync
+          warehouse_case_report = kase.reload.warehouse_case_report
+          expect(warehouse_case_report.send(case_report_field)).to eq new_name
+        end
+      end
     end
 
     context 'User' do
-      let(:responded_case) { create :responded_case, :trigger }
-
-      before do
-        Warehouse::CaseReport.generate(responded_case)
-        expect(responded_case.reload.warehouse_case_report).to be_present
-      end
+      # {
+      #   CaseReport#field_name: {
+      #     field: Case::Base source field,
+      #     kase: Instance of Case::Base possessing the source field
+      #   }
+      # }
+      let(:case_report_source_fields) {
+        {
+          created_by: {
+            field: :creator,
+            kase: create(:foi_case),
+          },
+          casework_officer: {
+            field: :casework_officer_user,
+            kase: create(:case, :flagged_accepted),
+          },
+          responder: {
+            field: :responder,
+            kase: create(:responded_case)
+          },
+        }
+      }
 
       it 'updates related CaseReport fields' do
-        responded_case.creator.update_attributes(full_name: 'Andy King Esquire')
-        described_class.new(responded_case)
-        warehouse_case_report = responded_case.reload.warehouse_case_report
-        expect(warehouse_case_report.created_by).to eq 'Andy King Esquire'
+        new_name = 'Andy Kind Esquire' + rand(20).to_s
+
+        case_report_source_fields.each do |case_report_field, source|
+          source_field = source[:field]
+          kase = source[:kase]
+
+          Warehouse::CaseReport.generate(kase)
+          expect(kase.reload.warehouse_case_report).to be_present
+          user = kase.send(source_field)
+
+          user.update_attributes(full_name: new_name)
+          described_class.new(user) # re-sync
+          warehouse_case_report = kase.reload.warehouse_case_report
+          expect(warehouse_case_report.send(case_report_field)).to eq new_name
+        end
       end
-      # creator_id (created_by), casework_officer_user_id (casework_officer)
     end
   end
 end

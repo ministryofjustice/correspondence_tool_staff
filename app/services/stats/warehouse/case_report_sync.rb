@@ -2,7 +2,7 @@ module Stats
   module Warehouse
     # Separated the Sync operation from the ActiveRecord Warehouse::CaseReport
     # to prevent the full AR base class from being loaded
-    class CasesReportSync
+    class CaseReportSync
       # +MAPPINGS+ could be refactored so that the respective class types
       # contain the required information/execution output. The current
       # implementation is experimental, less intrusive and is easier to reason
