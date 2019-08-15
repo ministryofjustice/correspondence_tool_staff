@@ -22,6 +22,8 @@
 #
 
 class User < ApplicationRecord
+  include Warehousable
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable and :omniauthable
 

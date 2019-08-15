@@ -24,12 +24,16 @@ module Warehouse
         case_report.creator_id = kase.creator.id
         case_report.responding_team_id = kase.responding_team&.id
         case_report.responder_id = kase.responder&.id
-        case_report.casework_officer_user_id = kase.decorate.casework_officer_user&.id
+        case_report.casework_officer_user_id = kase.casework_officer_user&.id
         case_report.business_group_id = kase.responding_team&.business_group&.id
         case_report.directorate_id = kase.responding_team&.directorate&.id
         case_report.director_general_name_property_id = kase.responding_team&.business_group&.properties&.lead&.singular_or_nil&.id # Director General name
         case_report.director_name_property_id = kase.responding_team&.directorate&.properties&.lead&.singular_or_nil&.id # Director name
         case_report.deputy_director_name_property_id = kase.responding_team&.properties&.lead&.singular_or_nil&.id # Deputy Director name
+        case_report.info_held_status_id = kase.info_held_status&.id
+        case_report.refusal_reason_id = kase.refusal_reason&.id
+        case_report.outcome_id = kase.outcome&.id
+        case_report.appeal_outcome_id = kase.appeal_outcome&.id
 
         # Report fields - for output
         case_report.number = kase.number

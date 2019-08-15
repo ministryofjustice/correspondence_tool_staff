@@ -49,6 +49,7 @@ class Case::Base < ApplicationRecord
   end
 
   include Searchable
+  include Warehousable
 
   self.table_name = :cases
 
