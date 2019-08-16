@@ -65,8 +65,7 @@ module Stats
 
       describe '#num_fragments' do
         it 'returns the number of csv files to generate' do
-          etl = described_class.new(retrieval_scope: default_retrieval_scope)
-          num_fragments = etl.send(:num_fragments)
+          num_fragments = closed_cases_etl.send(:num_fragments)
 
           expect(::Warehouse::CaseReport.all.size).to eq 7
           expect(num_fragments).to eq 1
@@ -102,7 +101,7 @@ module Stats
 
       describe '#columns' do
         it 'returns list of Warehouse::CaseReport field names' do
-          case_report = Warehouse::CaseReport.new
+          case_report = ::Warehouse::CaseReport.new
           closed_cases_etl.send(:columns).each do |field|
             expect(case_report).to respond_to field
           end

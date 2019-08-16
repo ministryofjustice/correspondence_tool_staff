@@ -1,5 +1,5 @@
 module Query
-  class ClosedCases
+  class CaseReport
     attr_reader :columns, :limit, :offset, :retrieval_scope
 
     def initialize(retrieval_scope:, columns: ['*'], offset: nil, limit: nil)

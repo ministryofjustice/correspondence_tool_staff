@@ -8,7 +8,7 @@ module Stats
       ROWS_PER_FRAGMENT = 1000 # Arbitrary value, may require experimentation
       RESULTS_NAME = 'closed-cases'.freeze
 
-      # +retrieval_scope+ : ActiveQuery relation which Query::ClosedCases
+      # +retrieval_scope+ : ActiveQuery relation which Query::CaseReport
       # will use to ensure Warehouse retrieval is scoped for the current
       # requesting user
       def initialize(retrieval_scope:)
@@ -33,7 +33,7 @@ module Stats
           # 1. Rest of the CSV rows
           (1..num_fragments + 1).map do |fragment_num|
             data = CSV.generate(force_quotes: true) do |csv|
-              Query::ClosedCases.new(
+              Query::CaseReport.new(
                 retrieval_scope: @retrieval_scope,
                 columns: columns,
                 offset: offset,
