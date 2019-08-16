@@ -94,7 +94,7 @@ module Stats
         it 'returns a single line CSV' do
           header = closed_cases_etl.send(:heading)
           expect(header.size).to be > 0
-          expect(header).to match /([a-zA-Z0-9,\s])+/
+          expect(header).to match(/([a-zA-Z0-9,\s])+/)
           expect(header.include? "\n").to be false
           expect(header.last).not_to be ','
         end
