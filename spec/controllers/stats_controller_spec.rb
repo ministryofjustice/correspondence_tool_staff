@@ -196,6 +196,35 @@ RSpec.describe StatsController, type: :controller do
         expect(assigns(:report).errors.count).to eq 2
       end
     end
+
+    context 'etl - closed cases report' do
+      let(:report_type) { find_or_create :report_type, :r007 }
+
+      let(:params) {
+        {
+          report: {
+            correspondence_type: 'CLOSED_CASES',
+            report_type_id: report_type.id,
+            period_start_dd: Date.yesterday.day,
+            period_start_mm: Date.yesterday.month,
+            period_start_yyyy: Date.yesterday.year,
+            period_end_dd: Date.today.day,
+            period_end_mm: Date.today.month,
+            period_end_yyyy: Date.today.year
+          }
+        }
+      }
+
+      it 'creates a new report' do
+        expect {
+          post :create, params: params
+        }.to change(Report.all, :size).by(1)
+
+        report = Report.last
+        data = JSON.parse(report.report_data, symbolize_names: true)
+        expect(data[:status]).to eq Report::WAITING
+      end
+    end
   end
 
   describe '#index' do
@@ -222,24 +251,28 @@ RSpec.describe StatsController, type: :controller do
   end
 
   describe '#download_custom' do
-    let!(:report) { create :report }
+    context 'non-etl' do
+      let!(:report) { create :report }
 
-    it 'authorizes' do
-      expect { get :download_custom, params: { id: report.id } }
-        .to require_permission(:can_download_stats?)
-          .with_args(manager, Case::Base)
-    end
+      it 'authorizes' do
+        expect { get :download_custom, params: { id: report.id } }
+          .to require_permission(:can_download_stats?)
+            .with_args(manager, Case::Base)
+      end
 
-    it 'responds with a csv' do
-      file_options = { filename: "#{report.report_type.class_name.to_s.underscore.sub('stats/', '')}.csv",
-        disposition: :attachment }
-
-      expect(@controller).to receive(:send_data)
-        .with(report.report_data, file_options) { | _csv, _options|
-          @controller.render body: :nil
+      it 'responds with a csv file' do
+        file_options = {
+          filename: "#{report.report_type.class_name.to_s.underscore.sub('stats/', '')}.csv",
+          disposition: :attachment
         }
 
-      get :download_custom, params: { id: report.id  }
+        expect(@controller).to receive(:send_data)
+          .with(report.report_data, file_options) { | _csv, _options|
+            @controller.render body: :nil
+          }
+
+        get :download_custom, params: { id: report.id  }
+      end
     end
   end
 end
