@@ -12,7 +12,7 @@
 #  sar                      :boolean          default(FALSE)
 #  standard_report          :boolean          default(FALSE), not null
 #  default_reporting_period :string           default("year_to_date")
-#
+#  etl                      :boolean          default(FALSE)
 
 class ReportType < ApplicationRecord
 

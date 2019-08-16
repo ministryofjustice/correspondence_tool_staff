@@ -75,9 +75,12 @@ module Stats
       end
 
       context '#run' do
-        it 'returns only cases within the selected period' do
-          expected = %w[closed_sar closed_foi responded_foi]
-          expect(@report.run.map(&:name)).to match_array(expected)
+        it 'creates a job to generate closed cases' do
+          expect {
+            @report.run(report_guid: SecureRandom.uuid)
+          }.to change {
+            ActiveJob::Base.queue_adapter.enqueued_jobs.count
+          }.by 1
         end
       end
     end

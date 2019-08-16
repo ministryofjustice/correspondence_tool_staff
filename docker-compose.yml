@@ -9,6 +9,7 @@ services:
   web:
     build:
       args:
+        additional_packages: zip
         development_mode: "true"
       context: .
     container_name: cts_web

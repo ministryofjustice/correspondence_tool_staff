@@ -21,6 +21,8 @@ class TeamProperty < ApplicationRecord
   )
   ROLES = %w[manager responder approver]
 
+  belongs_to :team
+
   validates :value, uniqueness: { scope: [:team_id, :key], message: "%{value} is not unique in team and key" }
   validates :key, inclusion: { in: VALID_KEYS, message: "%{value} is not a valid key" }
 
