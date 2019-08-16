@@ -123,6 +123,7 @@ ignore_unused:
   - common.close
   - stats.custom.success
   - stats.create*
+  - stats.download_custom*
 
 
 ## Consider these keys used:
