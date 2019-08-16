@@ -251,6 +251,7 @@ en:
       default: "%-d %b %Y %H:%M"
 
   button:
+    add_to_case_history: Add to case history
     assign: Assign to this unit
     confirm: Confirm
     create_case: Create case
@@ -504,6 +505,7 @@ en:
     view_case: "Link to case "
     case:
       actions: Actions
+      add_note: Add a note to this case
       answered_in_time: Answered in time
       answered_late: Answered late
       assign: Assign to a responder
