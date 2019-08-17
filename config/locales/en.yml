@@ -865,6 +865,16 @@ en:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
       why: 'Reason for removing clearance'
+    data_requests:
+      create:
+        success: Data request successfully recorded
+      new:
+        add_another: Add another data request
+        data_placeholder: What data is needed? E.g. Executive summary
+        heading: Record data request
+        location_placeholder: Where is the data held? E.g. NPS, South East
+        record_requests: Record requests
+
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness
