@@ -55,6 +55,8 @@ class Case::SAR::Offender < Case::Base
                     :received_date,
                   ]
 
+  has_many :data_requests
+
   validates :third_party, inclusion: { in: [true, false], message: "can't be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
 

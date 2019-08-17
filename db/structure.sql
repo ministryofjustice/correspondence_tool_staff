@@ -485,6 +485,41 @@ CREATE TABLE public.data_migrations (
 
 
 --
+-- Name: data_requests; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_requests (
+    id integer NOT NULL,
+    case_id integer NOT NULL,
+    user_id integer NOT NULL,
+    location character varying NOT NULL,
+    data text NOT NULL,
+    date_requested character varying DEFAULT '2019-08-17'::character varying NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: data_requests_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_requests_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_requests_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_requests_id_seq OWNED BY public.data_requests.id;
+
+
+--
 -- Name: feedback; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -596,6 +631,7 @@ CREATE TABLE public.reports (
     report_data bytea,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
+    user_id integer,
     guid character varying
 );
 
@@ -1045,6 +1081,13 @@ ALTER TABLE ONLY public.correspondence_types ALTER COLUMN id SET DEFAULT nextval
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.data_requests ALTER COLUMN id SET DEFAULT nextval('public.data_requests_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.feedback ALTER COLUMN id SET DEFAULT nextval('public.feedback_id_seq'::regclass);
 
 
@@ -1211,6 +1254,14 @@ ALTER TABLE ONLY public.correspondence_types
 
 ALTER TABLE ONLY public.data_migrations
     ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: data_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_requests
+    ADD CONSTRAINT data_requests_pkey PRIMARY KEY (id);
 
 
 --
@@ -1456,6 +1507,27 @@ CREATE UNIQUE INDEX index_cases_users_transitions_trackers_on_case_id_and_user_i
 --
 
 CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON public.cases_users_transitions_trackers USING btree (user_id);
+
+
+--
+-- Name: index_data_requests_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_requests_on_case_id ON public.data_requests USING btree (case_id);
+
+
+--
+-- Name: index_data_requests_on_case_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_requests_on_case_id_and_user_id ON public.data_requests USING btree (case_id, user_id);
+
+
+--
+-- Name: index_data_requests_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_requests_on_user_id ON public.data_requests USING btree (user_id);
 
 
 --
@@ -1761,6 +1833,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190609165906'),
 ('20190609185907'),
 ('20190730133328'),
-('20190731151806');
+('20190731151806'),
+('20190817185027');
 
 
