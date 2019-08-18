@@ -116,6 +116,12 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               case_sar_extensions_path(@case),
               id: 'action--remove-extended-deadline-for-sar',
               class: 'button-secondary', method: :delete
+    when :record_data_request
+      btn_type = @case.current_state == 'data_to_be_requested' ? 'secondary' : 'tertiary'
+      link_to 'Record data request',
+              new_case_data_request_path(@case),
+              id: 'action--record-data-request',
+              class: "button-#{btn_type}", method: :get
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength

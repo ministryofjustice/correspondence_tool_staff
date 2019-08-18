@@ -36,7 +36,8 @@ describe 'cases/show.html.slim', type: :view do
       :mark_as_ready_to_copy,
       :mark_as_ready_to_dispatch,
       :mark_as_closed,
-      :can_add_note_to_case?
+      :can_add_note_to_case?,
+      :can_record_data_request?,
     ]
 
     if (policies.keys - policy_names).any?
@@ -488,7 +489,8 @@ describe 'cases/show.html.slim', type: :view do
         mark_as_ready_to_dispatch: true,
         mark_as_ready_to_copy: true,
         mark_as_closed: true,
-        can_add_note_to_case?: true
+        can_add_note_to_case?: true,
+        can_record_data_request?: true,
       )
     end
 
@@ -501,10 +503,10 @@ describe 'cases/show.html.slim', type: :view do
           render
           cases_show_page.load(rendered)
         end
+
         it { should_not have_rendered 'cases/_case_messages'}
         it { should have_rendered 'cases/offender_sar/_case_notes'}
       end
-
 
       context 'when a case just created' do
         it 'shows mark as waiting for data' do
@@ -563,6 +565,29 @@ describe 'cases/show.html.slim', type: :view do
           cases_show_page.load(rendered)
 
           expect(cases_show_page.actions).to have_mark_as_ready_to_copy
+        end
+      end
+
+      context 'record data request' do
+        before do
+          assign(:permitted_events, [:mark_as_waiting_for_data])
+          assign(:filtered_permitted_events, [:mark_as_waiting_for_data])
+          login_as manager
+        end
+
+        # Green button when no data requests have been recorded
+        it 'shows record data request button' do
+          render
+          cases_show_page.load(rendered)
+          expect(cases_show_page.actions.record_data_request['class']).to match(/button-secondary/)
+        end
+
+        # Grey button once one or more data requests have been recorded
+        it 'shows tertiary button after data request is recorded' do
+          offender_sar_case.current_state = 'ready_for_vetting'
+          render
+          cases_show_page.load(rendered)
+          expect(cases_show_page.actions.record_data_request['class']).to match(/button-tertiary/)
         end
       end
     end

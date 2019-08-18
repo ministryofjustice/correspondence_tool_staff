@@ -32,6 +32,7 @@ module PageObjects
           element :progress_to_disclosure, '#action--progress-for-clearance'
           element :extend_sar_deadline, '#action--extend-deadline-for-sar'
           element :remove_sar_deadline_extension, '#action--remove-extended-deadline-for-sar'
+          element :record_data_request, '#action--record-data-request'
           element :mark_as_waiting_for_data, '#action--mark-as-waiting-for-data'
           element :mark_as_ready_for_vetting, '#action--mark-as-ready-for-vetting'
           element :mark_as_vetting_in_progress, '#action--mark-as-vetting-in-progress'

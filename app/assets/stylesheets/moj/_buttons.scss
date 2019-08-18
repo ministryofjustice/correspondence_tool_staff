@@ -4,6 +4,12 @@
   margin-top: $gutter;
 }
 
+.button-tertiary{
+  @include button($grey-3);
+  margin-right: $gutter;
+  margin-top: $gutter;
+}
+
 .button-holder {
   @extend %contain-floats;
   @include box-sizing(border-box);
