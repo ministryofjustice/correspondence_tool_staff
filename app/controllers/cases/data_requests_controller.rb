@@ -13,17 +13,18 @@ module Cases
     end
 
     def create
-      @data_request = DataRequest.new(
-        offender_sar_case: @case,
+      service = DataRequestService.new(
+        kase: @case,
         user: current_user,
-        location: permitted_params[:location],
-        data: permitted_params[:data],
+        params: permitted_params
       )
+      service.call
 
-      if @data_request.save
+      if service.result == :ok
         flash[:notice] = t('.success')
         redirect_to new_case_data_request_path(@case)
       else
+        @data_request = service.data_request
         render :new
       end
     end
