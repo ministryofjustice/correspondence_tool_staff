@@ -9,12 +9,12 @@ module Cases
     end
 
     def new
-      authorize @case, policy_class: DataRequestPolicy
+      authorize @case, :can_record_data_request?
       @data_request = DataRequest.new
     end
 
     def create
-      authorize @case, policy_class: DataRequestPolicy
+      authorize @case, :can_record_data_request?
 
       service = DataRequestService.new(
         kase: @case,

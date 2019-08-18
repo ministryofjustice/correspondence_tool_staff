@@ -7,4 +7,8 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
   def can_add_note_to_case?
     true
   end
+
+  def can_record_data_request?
+    self.case.is_offender_sar?
+  end
 end
