@@ -46,6 +46,13 @@ describe DataRequestService do
         expect(service.data_request).to be_new_record
         expect(service.data_request.errors.size).to be > 0
       end
+
+      it 'only recovers from ActiveRecord exceptions' do
+        class FakeError < ArgumentError; end
+
+        allow_any_instance_of(DataRequest).to receive(:save!).and_raise(FakeError)
+        expect { service.call }.to raise_error FakeError
+      end
     end
   end
 end

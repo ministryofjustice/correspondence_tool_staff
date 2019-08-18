@@ -20,7 +20,7 @@ class DataRequestService
         )
         @data_request.save!
         @result = :ok
-      rescue StandardError
+      rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
         @result = :error
       end
     end
