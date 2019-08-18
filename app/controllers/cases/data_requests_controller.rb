@@ -9,10 +9,13 @@ module Cases
     end
 
     def new
+      authorize @case, policy_class: DataRequestPolicy
       @data_request = DataRequest.new
     end
 
     def create
+      authorize @case, policy_class: DataRequestPolicy
+
       service = DataRequestService.new(
         kase: @case,
         user: current_user,
