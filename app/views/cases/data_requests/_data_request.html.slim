@@ -1,8 +1,10 @@
-= form.text_field :location,
-    placeholder: t('cases.data_requests.new.location_placeholder'),
-    maxlength: 500
+.data-request__single
+  h3.page-heading--secondary.data-request__position
+    = "Request number #{form.index + 1}"
 
-= form.text_field :data,
-    placeholder: t('cases.data_requests.new.data_placeholder')
+  = form.text_field :location,
+      placeholder: t('cases.data_requests.new.location_placeholder'),
+      maxlength: 500
 
-hr
+  = form.text_field :data,
+      placeholder: t('cases.data_requests.new.data_placeholder')

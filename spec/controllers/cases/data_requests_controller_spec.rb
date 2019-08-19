@@ -17,10 +17,10 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       expect(assigns(:case)).to eq offender_sar_case
     end
 
-    it 'builds 3 @case.data_requests' do
-      kase = assigns(:case)
-      kase.data_requests.each { |data_request| expect(data_request).to be_new_record }
-      expect(kase.data_requests.size).to eq 3
+    it 'builds 3 @data_requests' do
+      data_requests = assigns(:data_requests)
+      data_requests.each { |data_request| expect(data_request).to be_a DataRequest }
+      expect(data_requests.size).to eq 3
     end
   end
 

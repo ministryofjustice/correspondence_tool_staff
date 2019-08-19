@@ -1,18 +1,18 @@
 class DataRequestService
-  attr_reader :result, :case
+  attr_reader :result, :case, :new_data_requests
 
   def initialize(kase:, user:, data_requests:)
     @result = nil
     @user = user
     @case = kase
-    @data_requests = data_requests
+    @new_data_requests = build_data_requests(data_requests)
   end
 
   def call
     ActiveRecord::Base.transaction do
       begin
         @result = :unprocessed
-        return if build_data_requests.empty?
+        return if @new_data_requests.empty?
 
         @case.save!
 
@@ -34,8 +34,10 @@ class DataRequestService
     location&.strip.present? || data&.strip.present?
   end
 
-  def build_data_requests
-    @data_requests.values.map do |data_request|
+  def build_data_requests(new_data_requests)
+    return [] unless @case.respond_to? :data_requests
+
+    new_data_requests.values.map do |data_request|
       next unless process?(
         **data_request.to_h.symbolize_keys.slice(:location, :data)
       )

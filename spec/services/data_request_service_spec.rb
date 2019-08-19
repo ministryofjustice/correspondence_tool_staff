@@ -23,7 +23,7 @@ describe DataRequestService do
     it 'requires a case, user and 0 or more data request fields' do
       expect(service.instance_variable_get(:@case)).to eq offender_sar_case
       expect(service.instance_variable_get(:@user)).to eq user
-      expect(service.instance_variable_get(:@data_requests)).to eq data_request_attributes
+      expect(service.instance_variable_get(:@new_data_requests)).to respond_to :each
     end
 
     # No restriction on case type as managed by model
@@ -67,8 +67,14 @@ describe DataRequestService do
 
     context 'on failure' do
       it 'does not save DataRequest when validation errors' do
-        data_requests = service.instance_variable_get(:@data_requests)
-        data_requests['0'][:location] = nil
+        params = data_request_attributes.clone
+        params.merge!({ '0' => { location: 'too', data: 'few' }})
+
+        service = DataRequestService.new(
+          kase: offender_sar_case,
+          user: user,
+          data_requests: params
+        )
 
         expect { service.call }.to change(DataRequest.all, :size).by(0)
         expect(service.case.errors.size).to be > 0
@@ -142,10 +148,22 @@ describe DataRequestService do
   end
 
   describe '#build_data_requests' do
+    it 'returns empty array if the case is unsupported by data requests' do
+      new_service = described_class.new(
+        kase: create(:foi_case),
+        user: user,
+        data_requests: data_request_attributes
+      )
+
+      expect(new_service.build_data_requests(data_request_attributes)).to eq []
+    end
+
     it 'generates a list of DataRequest instances' do
-      expect(service.build_data_requests).to respond_to :each
+      new_data_requests = service.build_data_requests(data_request_attributes)
+
+      expect(new_data_requests).to respond_to :each
       expect(
-        service.build_data_requests.all? do |data_request|
+        new_data_requests.all? do |data_request|
           data_request.kind_of? DataRequest
         end
       ).to be true
@@ -158,8 +176,8 @@ describe DataRequestService do
         '0' => { location: nil, data: '              ' },
         '1' => { location: '                  ', data: nil },
       }
-      service.instance_variable_set(:@data_requests, params)
-      expect(service.build_data_requests).to eq []
+
+      expect(service.build_data_requests(params)).to eq []
     end
   end
 end
