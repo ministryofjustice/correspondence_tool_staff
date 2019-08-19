@@ -1,27 +1,28 @@
 class DataRequestService
-  attr_reader :result, :data_request
+  attr_reader :result, :case
 
-  def initialize(kase:, user:, params:)
+  def initialize(kase:, user:, data_requests:)
     @result = nil
-    @case = kase
     @user = user
-    @location = params[:location]
-    @data = params[:data]
+    @case = kase
+    @data_requests = data_requests
   end
 
   def call
     ActiveRecord::Base.transaction do
       begin
-        @data_request = DataRequest.new(
-          offender_sar_case: @case,
-          user: @user,
-          location: @location,
-          data: @data,
-        )
-        @data_request.save!
+        @data_requests.values.each do |data_request|
+          @case.data_requests.new(
+            user: @user,
+            location: data_request[:location],
+            data: data_request[:data]
+          )
+        end
+
+        @case.save!
         @result = :ok
-      rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
-        @result = :error
+     rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
+       @result = :error
       end
     end
   end

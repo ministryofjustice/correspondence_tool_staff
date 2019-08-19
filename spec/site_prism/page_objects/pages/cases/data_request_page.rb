@@ -10,8 +10,10 @@ module PageObjects
         section :page_heading,
           PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-        element :location,  '#data_request_location'
-        element :data,      '#data_request_data'
+        section :form, '#edit_case' do
+          elements :location, 'input[name*="[location]"]'
+          elements :data, 'input[name*="[data]"]'
+        end
 
         element :submit_button, '.button'
       end

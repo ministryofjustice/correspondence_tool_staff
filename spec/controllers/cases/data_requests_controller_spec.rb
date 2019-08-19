@@ -17,8 +17,10 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       expect(assigns(:case)).to eq offender_sar_case
     end
 
-    it 'sets @data_request' do
-      expect(assigns(:data_request)).to be_new_record
+    it 'builds 3 @case.data_requests' do
+      kase = assigns(:case)
+      kase.data_requests.each { |data_request| expect(data_request).to be_new_record }
+      expect(kase.data_requests.size).to eq 3
     end
   end
 
@@ -26,9 +28,17 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     context 'with valid params' do
       let(:params) {
         {
-          data_request: {
-            location: 'Wormwood Scrubs',
-            data: 'Report on Mickey Spous 1972',
+          case: {
+            data_requests_attributes: {
+              '0': {
+                location: 'Wormwood Scrubs',
+                data: 'Report on Mickey Spous 1972',
+              },
+              '1': {
+                location: 'Super Max 1',
+                data: 'Full list of meals served',
+              },
+            },
           },
           case_id: offender_sar_case.id,
         }
@@ -36,16 +46,20 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
       it 'creates a new DataRequest' do
         expect { post :create, params: params }
-          .to change(DataRequest.all, :size).by 1
+          .to change(DataRequest.all, :size).by 2
       end
     end
 
     context 'with invalid params' do
       let(:invalid_params) {
         {
-          data_request: {
-            location: '',
-            data: '',
+          case: {
+            data_requests_attributes: {
+              '0': {
+                location: '',
+                data: '',
+              },
+            },
           },
           case_id: offender_sar_case.id,
         }

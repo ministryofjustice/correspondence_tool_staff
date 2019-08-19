@@ -1,8 +1,8 @@
 - content_for :page_title do
   = t('page_title.data_request_page', case_number: @case.number)
 
-= GovukElementsErrorsHelper.error_summary @data_request,
-  "#{pluralize(@data_request.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+= GovukElementsErrorsHelper.error_summary @case,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 - content_for :heading
   = t('.heading')
@@ -16,15 +16,13 @@ span.visually-hidden
 = render partial: 'layouts/header'
 
 .form-group
-  = form_for @data_request, url: case_data_requests_path(@case), method: :post do |f|
-    = f.text_field :location,
-        placeholder: t('.location_placeholder'),
-        maxlength: 500,
-        required: true
+  = form_for @case, as: :case, url: case_data_requests_path(@case), method: :post do |f|
+    = f.fields_for :data_requests do |builder|
+      = render partial: 'data_request', locals: { form_object: builder }
 
-    = f.text_field :data,
-        placeholder: t('.data_placeholder'),
-        required: true
+    p
+      a.js-add-data-request.display-none href='#'
+        = t('.add_another')
 
     .button-holder
       = f.submit t('.record_requests'), { class: 'button', role: 'button' }

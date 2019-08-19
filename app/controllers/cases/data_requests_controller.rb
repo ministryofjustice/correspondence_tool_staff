@@ -1,5 +1,7 @@
 module Cases
   class DataRequestsController < ApplicationController
+    DEFAULT_DATA_REQUESTS = 3
+
     before_action :set_case, only: [:new, :create]
 
     def index
@@ -10,7 +12,7 @@ module Cases
 
     def new
       authorize @case, :can_record_data_request?
-      @data_request = DataRequest.new
+      DEFAULT_DATA_REQUESTS.times { @case.data_requests.build }
     end
 
     def create
@@ -19,7 +21,7 @@ module Cases
       service = DataRequestService.new(
         kase: @case,
         user: current_user,
-        params: permitted_params
+        data_requests: permitted_params[:data_requests_attributes]
       )
       service.call
 
@@ -27,7 +29,7 @@ module Cases
         flash[:notice] = t('.success')
         redirect_to new_case_data_request_path(@case)
       else
-        @data_request = service.data_request
+        @case = service.case
         render :new
       end
     end
@@ -46,7 +48,7 @@ module Cases
     end
 
     def permitted_params
-      params.require(:data_request).permit(:location, :data)
+      params.require(:case).permit(data_requests_attributes: [:location, :data])
     end
   end
 end
