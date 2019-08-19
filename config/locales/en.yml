@@ -869,6 +869,9 @@ en:
       create:
         success: Data request successfully recorded
         unprocessed: Ensure Location and Data fields are completed
+      index:
+        heading: Data requested
+        none: No data requests recorded
       new:
         add_another: Add another data request
         data_placeholder: What data is needed? E.g. Executive summary

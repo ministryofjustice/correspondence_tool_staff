@@ -477,7 +477,7 @@ describe 'cases/show.html.slim', type: :view do
     end
   end
 
-  context 'with an offender sar case' do
+  describe 'offender sar case' do
     let(:offender_sar_case) { create(:offender_sar_case).decorate }
 
     before do
@@ -506,6 +506,7 @@ describe 'cases/show.html.slim', type: :view do
 
         it { should_not have_rendered 'cases/_case_messages'}
         it { should have_rendered 'cases/offender_sar/_case_notes'}
+        it { should have_rendered 'cases/offender_sar/_data_requests'}
       end
 
       context 'when a case just created' do
@@ -529,6 +530,7 @@ describe 'cases/show.html.slim', type: :view do
           cases_show_page.load(rendered)
 
           expect(cases_show_page.actions).to have_mark_as_ready_for_vetting
+          expect(cases_show_page.data_requests.section_heading).to be_present
         end
       end
 
@@ -588,6 +590,40 @@ describe 'cases/show.html.slim', type: :view do
           render
           cases_show_page.load(rendered)
           expect(cases_show_page.actions.record_data_request['class']).to match(/button-tertiary/)
+        end
+      end
+
+      context 'data requested section' do
+        #let(:offender_sar_case) { create(:offender_sar_case).decorate }
+
+        before do
+          login_as manager
+        end
+
+        it 'shows none message when case has no data requests' do
+          assign(:case, offender_sar_case)
+          render
+          cases_show_page.load(rendered)
+          expect(cases_show_page.data_requests.none.text).to eq 'No data requests recorded'
+        end
+
+        it 'shows data requests as table rows' do
+          2.times do
+            offender_sar_case.data_requests.build(
+              location: 'The Location',
+              data: 'Some data',
+              user: manager
+            )
+          end
+
+          assign(:case, offender_sar_case)
+          render
+          cases_show_page.load(rendered)
+          data_requests = cases_show_page.data_requests.rows
+
+          expect(data_requests.size).to eq 2
+          expect(data_requests.first.location.text).to eq 'The Location'
+          expect(data_requests.first.data.text).to eq 'Some data'
         end
       end
     end

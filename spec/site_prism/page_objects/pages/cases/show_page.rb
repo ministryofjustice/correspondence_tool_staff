@@ -46,6 +46,9 @@ module PageObjects
         section :case_status,
                 PageObjects::Sections::Cases::CaseStatusSection, '.case-status'
 
+        section :data_requests,
+          PageObjects::Sections::Cases::DataRequestsSection, '.data-requests'
+
         section :link_case,
                 PageObjects::Sections::Cases::LinkedCasesSection, '.case-linking'
 
