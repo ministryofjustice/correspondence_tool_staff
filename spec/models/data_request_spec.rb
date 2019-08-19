@@ -63,4 +63,23 @@ RSpec.describe DataRequest, type: :model do
         .to raise_error ActiveRecord::AssociationTypeMismatch
     end
   end
+
+  describe '#clean_attributes' do
+    subject(:data_request) { build :data_request }
+
+    it 'ensures string attributes do not have leading/trailing spaces' do
+      data_request.data = '    so much space '
+      data_request.location = '  the location'
+
+      data_request.clean_attributes
+
+      expect(data_request.data).to eq 'so much space'
+      expect(data_request.location).to eq 'the location'
+    end
+
+    it 'is executed before validating' do
+      data_request.location = '             ' # Meets min string length req
+      expect(data_request.valid?).to be false
+    end
+  end
 end

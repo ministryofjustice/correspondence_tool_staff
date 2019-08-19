@@ -27,6 +27,9 @@ module Cases
 
       if service.result == :ok
         flash[:notice] = t('.success')
+        redirect_to case_path(@case)
+      elsif service.result == :unprocessed
+        flash[:alert] = t('.unprocessed')
         redirect_to new_case_data_request_path(@case)
       else
         @case = service.case

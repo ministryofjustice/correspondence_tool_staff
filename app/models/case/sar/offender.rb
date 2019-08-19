@@ -49,7 +49,7 @@ class Case::SAR::Offender < Case::Base
     send_by_email: 'send_by_email',
   }
 
-  acts_as_gov_uk_date *GOV_UK_DATE_FIELDS
+  acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   has_paper_trail only: [
                     :name,
@@ -125,5 +125,11 @@ class Case::SAR::Offender < Case::Base
     reassign.each do |field|
       self.send("#{field}=", self.read_attribute(field))
     end
+  end
+
+  # User can add data requests at any point in the workflow, but
+  # the case state should not change
+  def allow_waiting_for_data_state?
+    self.current_state == 'data_to_be_requested'
   end
 end

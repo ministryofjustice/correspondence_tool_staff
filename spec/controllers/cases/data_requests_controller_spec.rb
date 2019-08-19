@@ -47,6 +47,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       it 'creates a new DataRequest' do
         expect { post :create, params: params }
           .to change(DataRequest.all, :size).by 2
+        expect(response).to redirect_to case_path(offender_sar_case)
       end
     end
 
@@ -56,7 +57,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
           case: {
             data_requests_attributes: {
               '0': {
-                location: '',
+                location: 'A Location',
                 data: '',
               },
             },
@@ -68,11 +69,29 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       it 'does not create a new DataRequest' do
         expect { post :create, params: invalid_params }
           .to change(DataRequest.all, :size).by 0
-      end
-
-      it 'renders new' do
-        post :create, params: invalid_params
         expect(response).to render_template(:new)
+      end
+    end
+
+    context 'with blank params' do
+      let(:blank_params) {
+        {
+          case: {
+            data_requests_attributes: {
+              '0': {
+                location: '         ',
+                data: nil,
+              },
+            },
+          },
+          case_id: offender_sar_case.id,
+        }
+      }
+
+      it 'does not create a new DataRequest' do
+        expect { post :create, params: blank_params }
+          .to change(DataRequest.all, :size).by 0
+        expect(response).to redirect_to new_case_data_request_path(offender_sar_case)
       end
     end
   end

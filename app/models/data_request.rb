@@ -6,4 +6,11 @@ class DataRequest < ApplicationRecord
   validates :data, presence: true, length: { minimum: 5 }
   validates :offender_sar_case, presence: true
   validates :user, presence: true
+
+  before_validation :clean_attributes
+
+  def clean_attributes
+    self.location = self.location&.strip
+    self.data = self.data&.strip
+  end
 end

@@ -457,7 +457,7 @@ describe Case::SAR::Offender do
   # end
 
   describe '#reassign_gov_uk_dates' do
-    let(:kase) { create :offender_sar_case }
+    let(:kase) { build :offender_sar_case }
 
     it 'only re-assigns Gov UK date fields that are unchanged' do
       original_dob = kase.date_of_birth
@@ -474,6 +474,17 @@ describe Case::SAR::Offender do
       kase.save!
 
       expect(kase.date_of_birth).to eq new_dob
+    end
+  end
+
+  describe '#allow_waiting_for_data_state?' do
+    it 'is true when the current state is data_to_be_requested only' do
+      kase = build :offender_sar_case
+      expect(kase.current_state).to eq 'data_to_be_requested'
+      expect(kase.allow_waiting_for_data_state?).to be true
+
+      kase.current_state = 'waiting_for_data'
+      expect(kase.allow_waiting_for_data_state?).to be false
     end
   end
 end

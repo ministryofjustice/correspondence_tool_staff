@@ -43,19 +43,47 @@ describe DataRequestService do
       it 'saves DataRequest and changes case status' do
         expect(offender_sar_case.current_state).to eq 'data_to_be_requested'
         expect { service.call }.to change(DataRequest.all, :size).by(4)
-        expect(service.result).to eq :ok
         expect(offender_sar_case.current_state).to eq 'waiting_for_data'
+        expect(service.result).to eq :ok
+      end
+
+      it 'skips any blank pairs of location/data' do
+        params = data_request_attributes.clone
+        params.merge!({
+          '0' => { location: nil, data: '              ' },
+          '2' => { location: '                  ', data: nil },
+        })
+
+        service = DataRequestService.new(
+          kase: offender_sar_case,
+          user: user,
+          data_requests: params
+        )
+
+        expect { service.call }.to change(DataRequest.all, :size).by(2)
+        expect(service.result).to be :ok
       end
     end
 
     context 'on failure' do
-      it 'does not save DataRequest' do
+      it 'does not save DataRequest when validation errors' do
         data_requests = service.instance_variable_get(:@data_requests)
         data_requests['0'][:location] = nil
 
         expect { service.call }.to change(DataRequest.all, :size).by(0)
-        expect(service.result).to eq :error
         expect(service.case.errors.size).to be > 0
+        expect(service.result).to eq :error
+      end
+
+      it 'does not save DataRequest when nothing to process' do
+        service = described_class.new(
+          kase: offender_sar_case,
+          user: user,
+          data_requests: {}
+        )
+
+        expect { service.call }.to change(DataRequest.all, :size).by(0)
+        expect(service.result).to be :unprocessed
       end
 
       it 'only recovers from ActiveRecord exceptions' do
@@ -64,6 +92,74 @@ describe DataRequestService do
         allow_any_instance_of(Case::Base).to receive(:save!).and_raise(FakeError)
         expect { service.call }.to raise_error FakeError
       end
+    end
+  end
+
+  describe '#process?' do
+    it 'returns true only when one or more of the attributes is present' do
+      test_cases = [
+        { expect: false, location: '', data: '' },
+        { expect: false, location: '       ', data: '' },
+        { expect: false, location: '       ', data: '     ' },
+        { expect: false, location: nil, data: '      ' },
+        { expect: false, location: '        ', data: nil },
+        { expect: true,  location: nil, data: ' Some Data      ' },
+        { expect: true,  location: ' A Location       ', data: nil },
+        { expect: true,  location: 'A Location        ', data: '  Some dat a' },
+      ]
+
+      test_cases.each do |params|
+        expect(service.process?(**params.slice(:location, :data))).to eq params[:expect]
+      end
+    end
+
+
+    it 'returns true when location and data are both present' do
+      result = service.process?(
+        location: ' The Location with spaces    ',
+        data: ' The Data with spaces'
+      )
+
+      expect(result).to be true
+    end
+
+    it 'returns true when either location and data present' do
+      result = service.process?(
+        location: ' The Location with spaces    ',
+        data: nil
+      )
+      expect(result).to be true
+
+      result = service.process?(
+        location: nil,
+        data: 'This is some data  '
+      )
+
+      expect(result).to be true
+    end
+
+    it 'returns false when both location and data are'
+  end
+
+  describe '#build_data_requests' do
+    it 'generates a list of DataRequest instances' do
+      expect(service.build_data_requests).to respond_to :each
+      expect(
+        service.build_data_requests.all? do |data_request|
+          data_request.kind_of? DataRequest
+        end
+      ).to be true
+
+      expect(service.case.data_requests.size).to be > 0
+    end
+
+    it 'generates an empty list when no DataRequest is built' do
+      params = {
+        '0' => { location: nil, data: '              ' },
+        '1' => { location: '                  ', data: nil },
+      }
+      service.instance_variable_set(:@data_requests, params)
+      expect(service.build_data_requests).to eq []
     end
   end
 end
