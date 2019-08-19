@@ -98,7 +98,5 @@ module Stats
         end
       end
     end
-
-
   end
 end
