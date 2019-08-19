@@ -12,7 +12,7 @@ module Cases
 
     def new
       authorize @case, :can_record_data_request?
-      DEFAULT_DATA_REQUESTS.times { @case.data_requests.build }
+      DEFAULT_DATA_REQUESTS.times { @case.data_requests.new }
     end
 
     def create

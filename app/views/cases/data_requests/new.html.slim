@@ -18,7 +18,10 @@ span.visually-hidden
 .form-group
   = form_for @case, as: :case, url: case_data_requests_path(@case), method: :post do |f|
     = f.fields_for :data_requests do |builder|
-      = render partial: 'data_request', locals: { form_object: builder }
+      / Do not show existing requests
+      / (inadvertently allow editing of existing data requests)
+      - if builder.object.new_record?
+        = render partial: 'data_request', locals: { form: builder }
 
     p
       a.js-add-data-request.display-none href='#'
