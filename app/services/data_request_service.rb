@@ -20,6 +20,10 @@ class DataRequestService
         end
 
         @case.save!
+        @case.state_machine.mark_as_waiting_for_data!(
+          acting_user: @user,
+          acting_team: BusinessUnit.dacu_branston,
+        )
         @result = :ok
      rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
        @result = :error

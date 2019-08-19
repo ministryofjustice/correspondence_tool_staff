@@ -40,9 +40,11 @@ describe DataRequestService do
 
   describe '#call' do
     context 'on success' do
-      it 'saves DataRequest' do
+      it 'saves DataRequest and changes case status' do
+        expect(offender_sar_case.current_state).to eq 'data_to_be_requested'
         expect { service.call }.to change(DataRequest.all, :size).by(4)
         expect(service.result).to eq :ok
+        expect(offender_sar_case.current_state).to eq 'waiting_for_data'
       end
     end
 
