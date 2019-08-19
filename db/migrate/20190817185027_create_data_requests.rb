@@ -6,7 +6,7 @@ class CreateDataRequests < ActiveRecord::Migration[5.0]
 
       t.string :location, null: false, length: 500
       t.text :data,  null: false
-      t.string :date_requested, null: false, default: Date.current
+      t.date :date_requested, null: false, default: Date.current
       t.timestamps
     end
 

@@ -494,7 +494,7 @@ CREATE TABLE public.data_requests (
     user_id integer NOT NULL,
     location character varying NOT NULL,
     data text NOT NULL,
-    date_requested character varying DEFAULT '2019-08-17'::character varying NOT NULL,
+    date_requested date DEFAULT '2019-08-19'::date NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -631,7 +631,6 @@ CREATE TABLE public.reports (
     report_data bytea,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    user_id integer,
     guid character varying
 );
 
