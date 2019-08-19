@@ -594,8 +594,6 @@ describe 'cases/show.html.slim', type: :view do
       end
 
       context 'data requested section' do
-        #let(:offender_sar_case) { create(:offender_sar_case).decorate }
-
         before do
           login_as manager
         end
@@ -608,15 +606,17 @@ describe 'cases/show.html.slim', type: :view do
         end
 
         it 'shows data requests as table rows' do
+          new_offender_sar_case = create(:offender_sar_case).decorate
+
           2.times do
-            offender_sar_case.data_requests.build(
+            new_offender_sar_case.data_requests.create(
               location: 'The Location',
               data: 'Some data',
               user: manager
             )
           end
 
-          assign(:case, offender_sar_case)
+          assign(:case, new_offender_sar_case)
           render
           cases_show_page.load(rendered)
           data_requests = cases_show_page.data_requests.rows

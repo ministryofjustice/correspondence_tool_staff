@@ -18,7 +18,7 @@
             th Date requested
             th Date received
         tbody
-          - case_details.data_requests.each do |data_request|
+          - case_details.data_requests.order(date_requested: :asc).each do |data_request|
             tr
               td
                 = data_request.location
