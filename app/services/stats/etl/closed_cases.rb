@@ -102,7 +102,7 @@ module Stats
 
       def new_fragment(filename, data)
         file = Tempfile.new([filename, '.csv'], folder)
-        file.write(data)
+        file.write(data, "\n")
         file.close
         file
       end
