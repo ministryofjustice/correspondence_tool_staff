@@ -15,6 +15,14 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
+  GOV_UK_DATE_FIELDS = %i[
+    date_of_birth
+    date_responded
+    date_draft_compliant
+    external_deadline
+    received_date
+  ].freeze
+
   jsonb_accessor :properties,
                  date_of_birth: :date,
                  escalation_deadline: :date,
@@ -41,11 +49,7 @@ class Case::SAR::Offender < Case::Base
     send_by_email: 'send_by_email',
   }
 
-  acts_as_gov_uk_date :date_of_birth,
-                      :date_responded,
-                      :date_draft_compliant,
-                      :external_deadline,
-                      :received_date
+  acts_as_gov_uk_date *GOV_UK_DATE_FIELDS
 
   has_paper_trail only: [
                     :name,
@@ -55,7 +59,8 @@ class Case::SAR::Offender < Case::Base
                     :received_date,
                   ]
 
-  has_many :data_requests
+  has_many :data_requests, dependent: :destroy, foreign_key: :case_id
+  accepts_nested_attributes_for :data_requests
 
   validates :third_party, inclusion: { in: [true, false], message: "can't be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
@@ -75,6 +80,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_date_of_birth
   validate :validate_received_date
 
+  before_validation :reassign_gov_uk_dates
   before_save :set_subject
 
   def set_subject
@@ -105,5 +111,19 @@ class Case::SAR::Offender < Case::Base
 
   def is_offender_sar?
     true
+  end
+
+  # This method is here to fix an issue with the gov_uk_date_fields
+  # where the validation fails since the internal list of instance
+  # variables lacks the date_of_birth field from the json properties
+  #     NoMethodError: undefined method `valid?' for nil:NilClass
+  #     ./app/state_machines/configurable_state_machine/machine.rb:256
+  #
+  # Only reassign dates that have not changed.
+  def reassign_gov_uk_dates
+    reassign = GOV_UK_DATE_FIELDS.map(&:to_s) - self.changed
+    reassign.each do |field|
+      self.send("#{field}=", self.read_attribute(field))
+    end
   end
 end

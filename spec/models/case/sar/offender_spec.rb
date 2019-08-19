@@ -455,4 +455,25 @@ describe Case::SAR::Offender do
   #     end
   #   end
   # end
+
+  describe '#reassign_gov_uk_dates' do
+    let(:kase) { create :offender_sar_case }
+
+    it 'only re-assigns Gov UK date fields that are unchanged' do
+      original_dob = kase.date_of_birth
+      kase.reassign_gov_uk_dates
+      kase.save!
+
+      expect(kase.date_of_birth).to eq original_dob
+    end
+
+    it 'does not reassign changed Gov UK dates fields' do
+      new_dob = Date.parse('1990-10-01')
+      kase.date_of_birth = new_dob
+      kase.reassign_gov_uk_dates
+      kase.save!
+
+      expect(kase.date_of_birth).to eq new_dob
+    end
+  end
 end
