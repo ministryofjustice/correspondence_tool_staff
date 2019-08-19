@@ -1,5 +1,6 @@
 require 'rails_helper'
 require 'fileutils'
+require 'csv'
 
 module Stats
   module ETL
@@ -77,7 +78,28 @@ module Stats
           filename = 'useless-file'
           data = 'My name is bob'
           file = closed_cases_etl.send(:new_fragment, filename, data)
-          expect(file.size).to be 14 # bytes
+          expect(file.size).to be 15 # 14 chars + new line char
+        end
+
+        it 'allows multiple fragments to be concatenated with new line' do
+          files = []
+          folder = closed_cases_etl.send(:folder)
+          data = 'Baa Baa Black Sheep, Have you any wool?, Yes sir, Yes sir'
+
+          3.times do |i|
+            filename = "csv-fragment-#{i}.csv"
+            files << closed_cases_etl.send(:new_fragment, filename, "#{data}-row#{i}")
+          end
+
+          `cd #{folder}; cat csv-fragment-* > test.csv`
+
+          rows = CSV.read("#{folder}/test.csv")
+          expect(rows.size).to eq 3
+
+          # Crude check to show each row is different
+          expect(rows[0].last.end_with? '-row0').to be true
+          expect(rows[1].last.end_with? '-row1').to be true
+          expect(rows[2].last.end_with? '-row2').to be true
         end
       end
 
