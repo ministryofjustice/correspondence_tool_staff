@@ -78,7 +78,7 @@ module Stats
           filename = 'useless-file'
           data = 'My name is bob'
           file = closed_cases_etl.send(:new_fragment, filename, data)
-          expect(file.size).to be 15 # 14 bytes + new line char
+          expect(file.size).to be 15 # 14 chars + new line char
         end
 
         it 'allows multiple fragments to be concatenated with new line' do
