@@ -1,13 +1,11 @@
-- translation_scope = 'cases.data_requests.index'
-
 .grid-row
   .column-full.data-requests
     h2.request--heading.data-requests__title
-      = t('heading', scope: translation_scope)
+      = t('cases.data_requests.index.heading')
 
     - if case_details.data_requests.empty?
       p.data-requests__none
-        = t('none', scope: translation_scope)
+        = t('cases.data_requests.index.none')
 
     - else
       table
