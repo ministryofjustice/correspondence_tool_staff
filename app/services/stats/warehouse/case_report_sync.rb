@@ -106,7 +106,9 @@ module Stats
       end
 
       def self.sync(cases)
-        Array.wrap(cases).map { |kase| ::Warehouse::CaseReport.generate(kase) }
+        Array.wrap(cases).compact.map do |kase|
+          ::Warehouse::CaseReport.generate(kase)
+        end
       end
 
       def self.find_cases(record, query)

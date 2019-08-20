@@ -1,3 +1,5 @@
+= link_to "Back", "/cases/offender_sars/requested-info", class: 'govuk-back-link'
+
 - content_for :heading, flush: true
   = t('cases.offender_sar.date_received_heading')
 
@@ -14,8 +16,7 @@
         form_hint_text: t('cases.new.date_sar_received_copy'),
         today_button: { class: '' } \
       }
-  p
-    = link_to "Previous", "/cases/new/offender/requested-info"
+
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'

@@ -12,6 +12,17 @@ describe Stats::Warehouse::CaseReportSync do
   end
 
   context '.affected_cases' do
+    it 'returns a list of cases affected by the record' do
+      record = Object.new
+      kase = create :foi_case
+
+      setting = {
+        fields: ['fake', 'useless'],
+        execute: ->(_record, _query) { [kase] }
+      }
+
+      expect(described_class.affected_cases(record, setting)).to eq [kase]
+    end
   end
 
   context '.sync' do
@@ -25,12 +36,17 @@ describe Stats::Warehouse::CaseReportSync do
     it 'accepts an array of cases' do
       expect(described_class.sync([case1, case2]).size).to eq 2
     end
+
+    it 'handles nil values' do
+      expect(described_class.sync(nil).size).to eq 0
+      expect(described_class.sync([nil]).size).to eq 0
+    end
   end
 
   context '.find_cases' do
     it 'returns an Array of Case::Base related to CaseReport' do
       record = create :foi_case
-      Warehouse::CaseReport.generate(record)
+      ::Warehouse::CaseReport.generate(record)
 
       query = "case_id = :param" # Note :param placeholder
       result = described_class.find_cases(record, query)
@@ -115,7 +131,7 @@ describe Stats::Warehouse::CaseReportSync do
       let(:warehouse_case_report) { kase.reload.warehouse_case_report }
 
       before do
-        Warehouse::CaseReport.generate(kase)
+        ::Warehouse::CaseReport.generate(kase)
         kase.reload
       end
 
@@ -166,7 +182,7 @@ describe Stats::Warehouse::CaseReportSync do
 
       before do
         all_cases
-          .each { |kase| Warehouse::CaseReport.generate(kase); kase.reload }
+          .each { |kase| ::Warehouse::CaseReport.generate(kase); kase.reload }
           .each { |kase| expect(kase.warehouse_case_report).to be_present }
       end
 
@@ -191,7 +207,7 @@ describe Stats::Warehouse::CaseReportSync do
       let(:new_team_name) { Faker::Company.name }
 
       before do
-        Warehouse::CaseReport.generate(responded_case)
+        ::Warehouse::CaseReport.generate(responded_case)
         expect(responded_case.reload.warehouse_case_report).to be_present
       end
 
@@ -247,7 +263,7 @@ describe Stats::Warehouse::CaseReportSync do
         case_report_source_fields.each do |case_report_field, source|
           kase = source[:kase]
 
-          Warehouse::CaseReport.generate(kase)
+          ::Warehouse::CaseReport.generate(kase)
           expect(kase.reload.warehouse_case_report).to be_present
           property = source[:property]
 
@@ -290,7 +306,7 @@ describe Stats::Warehouse::CaseReportSync do
           source_field = source[:field]
           kase = source[:kase]
 
-          Warehouse::CaseReport.generate(kase)
+          ::Warehouse::CaseReport.generate(kase)
           expect(kase.reload.warehouse_case_report).to be_present
           user = kase.send(source_field)
 
