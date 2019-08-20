@@ -13,6 +13,7 @@ module Stats
       # requesting user
       def initialize(retrieval_scope:)
         @retrieval_scope = retrieval_scope
+        @current_fragment_num = 0
 
         self
           .extract
@@ -21,32 +22,12 @@ module Stats
       end
 
       def extract
-        offset = 0
-
         # We use `@_temp_files` to prevent the Temp files being cleared
         # by ruby GC before they have been fully processed. In EC2 instances
-        # this happens rapidly. Manual clearup/purge required as a result
-        @_temp_files =
-          # 0. Header
-          [new_fragment("fragment_00_header_", heading)] +
-
-          # 1. Rest of the CSV rows
-          (1..num_fragments + 1).map do |fragment_num|
-            data = CSV.generate(force_quotes: true) do |csv|
-              Query::CaseReport.new(
-                retrieval_scope: @retrieval_scope,
-                columns: columns,
-                offset: offset,
-                limit: ROWS_PER_FRAGMENT
-              )
-              .execute { |row| csv << row }
-
-              offset += ROWS_PER_FRAGMENT
-            end
-
-            new_fragment("fragment_#{'%02d' % fragment_num}_", data)
-          end
-
+        # this happens rapidly. Manual clearup/purge required as a result.
+        #
+        # Ordering of generation matters, each function call creates a temp CSV
+        @_temp_files = generate_header_fragment + generate_data_fragments
         self
       end
 
@@ -83,7 +64,7 @@ module Stats
 
       def heading
         @_heading ||= begin
-          CSVExporter::CSV_COLUMN_HEADINGS.join(',').chomp(',')
+          CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS, force_quotes: true)
         end
       end
 
@@ -100,11 +81,37 @@ module Stats
         end
       end
 
-      def new_fragment(filename, data)
+      def new_fragment(data)
+        filename = "#{'%02d' % @current_fragment_num}-fragment-"
+        @current_fragment_num += 1
+
         file = Tempfile.new([filename, '.csv'], folder)
-        file.write(data, "\n")
+        file.write(data)
         file.close
         file
+      end
+
+      def generate_header_fragment
+        [new_fragment(heading)]
+      end
+
+      def generate_data_fragments
+        offset = 0
+
+        (1..num_fragments + 1).map do |_i|
+          data = CSV.generate(force_quotes: true) do |csv|
+            Query::CaseReport.new(
+              retrieval_scope: @retrieval_scope,
+              columns: columns,
+              offset: offset,
+              limit: ROWS_PER_FRAGMENT
+            ).execute { |row| csv << row }
+
+            offset += ROWS_PER_FRAGMENT
+          end
+
+          new_fragment(data)
+        end
       end
     end
   end
