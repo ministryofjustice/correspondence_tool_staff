@@ -94,5 +94,29 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         expect(response).to redirect_to new_case_data_request_path(offender_sar_case)
       end
     end
+
+    context 'with unknown service result' do
+      let(:params) {
+        {
+          case: {
+            data_requests_attributes: {
+              '0': {
+                location: 'Wormwood Scrubs',
+                data: 'Report on Mickey Spous 1972',
+              },
+            },
+          },
+          case_id: offender_sar_case.id,
+        }
+      }
+
+      it 'raises an ArgumentError' do
+        allow_any_instance_of(DataRequestService)
+          .to receive(:result).and_return(:bogus_result!)
+
+        expect { post :create, params: params }
+          .to raise_error ArgumentError, match(/Unknown result/)
+      end
+    end
   end
 end

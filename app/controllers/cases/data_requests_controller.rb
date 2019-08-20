@@ -29,16 +29,19 @@ module Cases
       )
       service.call
 
-      if service.result == :ok
+      case service.result
+      when :ok
         flash[:notice] = t('.success')
         redirect_to case_path(@case)
-      elsif service.result == :unprocessed
+      when :unprocessed
         flash[:alert] = t('.unprocessed')
         redirect_to new_case_data_request_path(@case)
-      else
+      when :error
         @case = service.case
         @data_requests = service.new_data_requests
         render :new
+      else
+        raise ArgumentError.new("Unknown result: #{service.result.inspect}")
       end
     end
 
