@@ -18,7 +18,6 @@ span.visually-hidden
 .form-group.data-request
   = form_for @case, as: :case, url: case_data_requests_path(@case), method: :post do |f|
     = f.fields_for :data_requests, @data_requests, include_id: false do |builder|
-
       = render partial: 'data_request', locals: { form: builder }
 
     p
