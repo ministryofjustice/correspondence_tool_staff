@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       class DataRequestPage < SitePrism::Page
-        set_url '/cases/{case_id}/data_requests/new'
+        set_url '/cases/{case_id}/data_requests{/new}'
 
         section :primary_navigation,
           PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
