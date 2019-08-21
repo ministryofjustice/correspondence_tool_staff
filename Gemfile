@@ -43,7 +43,7 @@ gem 'paper_trail', '~> 10.3'
 gem 'pg', '~> 1.1'
 gem 'pg_search', '~> 2.3.0'
 gem 'pry-rails'
-gem 'puma', '~> 4.0'
+gem 'puma', '~> 4.1'
 gem 'pundit', '~>2.0'
 gem 'rails', '~> 5.0.7.2'
 gem 'rails-data-migrations', '~> 1.1.0'
@@ -68,7 +68,7 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'bcrypt', '~> 3.1.7'
 
 group :test do
-  gem 'capybara', '~> 3.25.0'
+  gem 'capybara', '~> 3.28.0'
   gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
