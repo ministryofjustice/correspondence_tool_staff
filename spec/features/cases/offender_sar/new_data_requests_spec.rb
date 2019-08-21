@@ -6,7 +6,6 @@ feature 'Data Requests for an Offender SAR' do
 
   background do
     login_as manager
-    cases_page.load
   end
 
   scenario 'successfully add 5 new requests', js: true do
@@ -42,5 +41,30 @@ feature 'Data Requests for an Offender SAR' do
       expect(row.location).to have_text request[:location].strip
       expect(row.data).to have_text request[:data].strip
     end
+  end
+
+  scenario 'partial data entry fails' do
+    cases_show_page.load(id: offender_sar_case.id)
+    click_on 'Record data request'
+
+    # Note only filling in Location field, ommitting corresponding Data field
+    data_request_page.form.location[0].fill_in(with: 'HMP Brixton')
+    click_on 'Record requests'
+
+    expect(data_request_page).to be_displayed
+    expect(data_request_page).to have_text 'errors prevented this form'
+  end
+
+  scenario 'no data entry fails' do
+    cases_show_page.load(id: offender_sar_case.id)
+    click_on 'Record data request'
+
+    data_request_page.form.location[0].fill_in(with: '    ')
+    data_request_page.form.data[0].fill_in(with: '')
+
+    click_on 'Record requests'
+
+    expect(data_request_page).to be_displayed
+    expect(data_request_page).to have_text 'Ensure Location and Data fields are completed'
   end
 end
