@@ -5,14 +5,18 @@ RSpec.describe DataRequest, type: :model do
     context 'with valid params' do
       subject(:data_request) {
         described_class.new(
-          offender_sar_case: create(:offender_sar_case),
-          user: create(:user),
+          offender_sar_case: build(:offender_sar_case),
+          user: build(:user),
           location: 'X' * 500, # Max length
           data: 'Please supply a huge list of misdemeanours by Miers Porgan'
         )
       }
 
       it { should be_valid }
+
+      it 'has 0 num_pages by default' do
+        expect(data_request.num_pages).to eq 0
+      end
     end
 
     context 'validation' do
@@ -50,6 +54,14 @@ RSpec.describe DataRequest, type: :model do
         data_request.offender_sar_case = nil
         expect(data_request.valid?).to be false
       end
+
+      it 'ensures num_pages is a positive value only' do
+        data_request.num_pages = -10
+        expect(data_request.valid?).to be false
+
+        data_request.num_pages = 6.5
+        expect(data_request.valid?).to be false
+      end
     end
   end
 
@@ -59,7 +71,7 @@ RSpec.describe DataRequest, type: :model do
     it { should be_valid }
 
     it 'is restricted to Offender SAR at present' do
-      expect { data_request.offender_sar_case = create(:foi_case) }
+      expect { data_request.offender_sar_case = build(:foi_case) }
         .to raise_error ActiveRecord::AssociationTypeMismatch
     end
   end

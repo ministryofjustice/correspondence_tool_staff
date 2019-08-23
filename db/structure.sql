@@ -496,7 +496,8 @@ CREATE TABLE public.data_requests (
     data text NOT NULL,
     date_requested date DEFAULT '2019-08-19'::date NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    num_pages integer DEFAULT 0 NOT NULL
 );
 
 
@@ -1833,6 +1834,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190609185907'),
 ('20190730133328'),
 ('20190731151806'),
-('20190817185027');
+('20190817185027'),
+('20190823160424');
 
 

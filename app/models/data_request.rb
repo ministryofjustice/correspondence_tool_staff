@@ -6,6 +6,7 @@ class DataRequest < ApplicationRecord
   validates :data, presence: true, length: { minimum: 5 }
   validates :offender_sar_case, presence: true
   validates :user, presence: true
+  validates :num_pages, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
   before_validation :clean_attributes
 
