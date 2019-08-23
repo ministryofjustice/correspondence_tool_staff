@@ -5,9 +5,10 @@
   .alert-green
     = t('alerts.assignment_accepted_html', case_list_url: cases_path)
 
-- if @case.has_attribute?(:escalation_deadline) && @case.within_escalation_deadline?
-  .alert-orange
-    = t('alerts.escalation_warning_html', escalation_deadline: @case.escalation_deadline)
+- unless @case.is_offender_sar?
+  - if @case.has_attribute?(:escalation_deadline) && @case.within_escalation_deadline?
+    .alert-orange
+      = t('alerts.escalation_warning_html', escalation_deadline: @case.escalation_deadline)
 
 = render partial: 'shared/components/case_page_heading', locals: {kase: @case}
 
@@ -57,7 +58,8 @@ div id="case-#{@correspondence_type_key}" class="case"
   - if @case.respond_to?(:ico_decision) && @case.ico_decision.present?
     = render partial: 'cases/ico/ico_final_decision', locals: {case_details: @case}
 
-  = render partial: 'shared/components/case_linked_cases'
+  - unless @case.is_offender_sar?
+    = render partial: 'shared/components/case_linked_cases'
 
   - unless @case.overturned_ico?
     section.case-info
@@ -67,8 +69,9 @@ div id="case-#{@correspondence_type_key}" class="case"
     = render partial: "cases/#{@case.type_abbreviation.parameterize.underscore}/case_details",
              locals: {case_details: @case, link_type: nil}
 
-  section.case-info
-    = render partial: 'cases/clearance_levels', locals: { case_details: @case }
+  - unless @case.is_offender_sar?
+    section.case-info
+      = render partial: 'cases/clearance_levels', locals: { case_details: @case }
 
   - if case_attachments_visible_for_case?
     section.case-info
