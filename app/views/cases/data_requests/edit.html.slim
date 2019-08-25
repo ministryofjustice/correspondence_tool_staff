@@ -1,0 +1,33 @@
+- content_for :page_title do
+  = t('page_title.update_data_request_page', case_number: @case.number)
+
+= GovukElementsErrorsHelper.error_summary @case,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+- content_for :heading
+  = t('.heading_mark')
+
+- content_for :sub_heading
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+.form-group.data-request
+  = form_for @data_request, url: case_data_request_path(@case, @data_request) do |f|
+    h4.data-request__location.lede= @data_request.location
+    p.data-request__data= @data_request.data.humanize
+
+    hr
+
+    = f.gov_uk_date_field :date_received, { \
+        legend_text: t('.date_received'),   \
+        today_button: { class: '' }         \
+      }
+
+    = f.text_field :num_pages, class: 'form-control form-control-1-8'
+
+    .button-holder
+      = f.submit t('.save_mark'), { class: 'button', role: 'button' }

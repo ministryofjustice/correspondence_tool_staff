@@ -14,6 +14,7 @@
             th Location
             th Data
             th Date requested
+            th Pages
             th Date received
         tbody
           - case_details.data_requests.order(date_requested: :asc).each do |data_request|
@@ -25,4 +26,7 @@
               td
                 = data_request.date_requested.strftime('%F')
               td
-                | Unavailable
+                = data_request.num_pages
+              td
+                = data_request_edit_action(case_details, data_request)
+

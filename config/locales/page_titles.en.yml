@@ -36,3 +36,4 @@ en:
     show_case_page: Viewing case details - %{case_number} - Track-a-query
     stats: Performance Reports - Track-a-query
     upload_responses_page: Uploading a response - %{case_number} - Track-a-query
+    update_data_request_page: Mark data as received

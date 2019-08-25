@@ -2,7 +2,7 @@ module Cases
   class DataRequestsController < ApplicationController
     NUM_NEW_DATA_REQUESTS = 3
 
-    before_action :set_case, only: [:new, :create]
+    before_action :set_case, only: [:new, :create, :edit, :update]
 
     def index
     end
@@ -45,7 +45,20 @@ module Cases
       end
     end
 
+    def edit
+      @data_request = DataRequest.find(params[:id])
+    end
+
     def update
+      authorize @case, :can_record_data_request?
+
+      data_request = DataRequest.find(params[:id])
+      data_request.date_received = nil # Reset to force validation
+      data_request.update(
+        params.require(:data_request).permit(:case_id, :date_received, :num_pages)
+      )
+
+      redirect_to case_path(@case)
     end
 
     def destroy
