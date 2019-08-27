@@ -494,11 +494,11 @@ CREATE TABLE public.data_requests (
     user_id integer NOT NULL,
     location character varying NOT NULL,
     data text NOT NULL,
-    date_requested date NOT NULL,
-    date_received date,
-    num_pages integer DEFAULT 0 NOT NULL,
+    date_requested date DEFAULT '2019-08-27'::date NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    date_received date,
+    num_pages integer DEFAULT 0 NOT NULL
 );
 
 

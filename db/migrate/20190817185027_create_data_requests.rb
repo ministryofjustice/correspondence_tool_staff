@@ -1,5 +1,5 @@
 class CreateDataRequests < ActiveRecord::Migration[5.0]
-  def change
+  def up
     create_table :data_requests do |t|
       t.references :case, null: false
       t.references :user, null: false # Creator for this request
@@ -11,5 +11,9 @@ class CreateDataRequests < ActiveRecord::Migration[5.0]
     end
 
     add_index :data_requests, [:case_id, :user_id]
+  end
+
+  def down
+    drop_table :data_requests
   end
 end

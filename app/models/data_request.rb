@@ -9,14 +9,34 @@ class DataRequest < ApplicationRecord
   validates :num_pages, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :date_requested, presence: true
   validates :date_received, presence: true, on: :update
+  validate :validate_date_received?
 
   before_validation :clean_attributes
 
   acts_as_gov_uk_date :date_received
 
+  def kase
+    self.offender_sar_case
+  end
+
+
+  private
+
   def clean_attributes
-    # Whitespace removal
-    self.location = self.location&.strip
-    self.data = self.data&.strip
+    [:location, :data]
+      .each { |f| self.send("#{f}=", self.send("#{f}")&.strip) }
+      .each { |f| self.send("#{f}=", self.send("#{f}")&.upcase_first) }
+  end
+
+  def validate_date_received?
+    return false if self.date_received.blank?
+
+    if self.date_received > Date.today
+      errors.add(
+        :date_received,
+        I18n.t('activerecord.errors.models.data_request.attributes.date_received.future')
+      )
+    end
+    errors[:date_received].any?
   end
 end

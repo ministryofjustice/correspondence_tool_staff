@@ -62,6 +62,17 @@ RSpec.describe DataRequest, type: :model do
         data_request.num_pages = 6.5
         expect(data_request.valid?).to be false
       end
+
+      it 'ensure date_received is in the past' do
+        data_request.date_received = Date.today + 1.day
+        expect(data_request.valid?).to be false
+
+        data_request.date_received = Date.today
+        expect(data_request.valid?).to be true
+
+        data_request.date_received = Date.today - 1.day
+        expect(data_request.valid?).to be true
+      end
     end
   end
 
@@ -80,18 +91,45 @@ RSpec.describe DataRequest, type: :model do
     subject(:data_request) { build :data_request }
 
     it 'ensures string attributes do not have leading/trailing spaces' do
-      data_request.data = '    so much space '
-      data_request.location = '  the location'
+      data_request.data = '    So much space '
+      data_request.location = '  The location'
 
-      data_request.clean_attributes
+      data_request.send(:clean_attributes)
 
-      expect(data_request.data).to eq 'so much space'
-      expect(data_request.location).to eq 'the location'
+      expect(data_request.data).to eq 'So much space'
+      expect(data_request.location).to eq 'The location'
+    end
+
+    it 'ensures string attributes have the first letter capitalised' do
+      data_request.data = 'some DaTa'
+      data_request.location = 'leicester'
+
+      data_request.send(:clean_attributes)
+
+      expect(data_request.data).to eq 'Some DaTa'
+      expect(data_request.location).to eq 'Leicester'
     end
 
     it 'is executed before validating' do
       data_request.location = '             ' # Meets min string length req
       expect(data_request.valid?).to be false
+    end
+  end
+
+  describe '#validate_date_received?' do
+    subject(:data_request) { build :data_request }
+
+    it { should be_valid }
+
+    it 'is false when date_received is not set' do
+      data_request.date_received = nil
+      expect(data_request.send(:validate_date_received?)).to be false
+    end
+
+    it 'sets the error message when invalid' do
+      data_request.date_received = Date.today + 1.day
+      expect(data_request.send(:validate_date_received?)).to be true
+      expect(data_request.errors[:date_received]).to eq ['cannot be in the future']
     end
   end
 end

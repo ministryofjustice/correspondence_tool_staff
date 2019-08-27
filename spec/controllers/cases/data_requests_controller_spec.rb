@@ -119,4 +119,86 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       end
     end
   end
+
+  describe '#update' do
+    let(:data_request) {
+      create(:data_request, offender_sar_case: offender_sar_case)
+    }
+
+    context 'with valid params' do
+      let(:params) {
+        {
+          data_request: {
+            date_received_dd: 2,
+            date_received_mm: 8,
+            date_received_yyyy: 2012,
+            num_pages: 2,
+            location: 'not permitted during update',
+          },
+          id: data_request.id,
+          case_id: data_request.case_id,
+        }
+      }
+
+      before do
+        patch :update, params: params
+      end
+
+      it 'updates the DataRequest' do
+        expect(response).to redirect_to case_path(data_request.case_id)
+        expect(controller).to set_flash[:notice]
+      end
+
+      it 'only permits date_received and num_pages to be updated' do
+        expect(controller.send(:update_params).key?(:num_pages)).to be true
+        expect(controller.send(:update_params).key?(:date_received_dd)).to be true
+        expect(controller.send(:update_params).key?(:location)).to be false
+      end
+    end
+
+    context 'with invalid params' do
+      let(:params) {
+        {
+          data_request: {
+            id: data_request.id,
+            date_received_dd: 12,
+            date_received_mm: 13,
+            date_received_yyyy: 2129,
+            num_pages: -10,
+          },
+          id: data_request.id,
+          case_id: data_request.case_id,
+        }
+      }
+
+      it 'does not update the DataRequest' do
+        patch :update, params: params
+        expect(response).to render_template(:edit)
+      end
+    end
+
+    context 'with unknown service result' do
+      let(:params) {
+        {
+          data_request: {
+            id: data_request.id,
+            date_received_dd: 2,
+            date_received_mm: 8,
+            date_received_yyyy: 2012,
+            num_pages: 2,
+          },
+          id: data_request.id,
+          case_id: data_request.case_id,
+        }
+      }
+
+      it 'raises an ArgumentError' do
+        allow_any_instance_of(DataRequestUpdateService)
+          .to receive(:result).and_return(:bogus_result!)
+
+        expect { patch :update, params: params }
+          .to raise_error ArgumentError, match(/Unknown result/)
+      end
+    end
+  end
 end

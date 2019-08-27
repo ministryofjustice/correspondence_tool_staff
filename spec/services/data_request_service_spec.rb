@@ -12,7 +12,7 @@ describe DataRequestService do
     }
   }
   let(:service) {
-    DataRequestService.new(
+    described_class.new(
       kase: offender_sar_case,
       user: user,
       data_requests: data_request_attributes
@@ -44,6 +44,9 @@ describe DataRequestService do
         expect(offender_sar_case.current_state).to eq 'data_to_be_requested'
         expect { service.call }.to change(DataRequest.all, :size).by(4)
         expect(offender_sar_case.current_state).to eq 'waiting_for_data'
+
+        # @todo CaseTransition Added
+
         expect(service.result).to eq :ok
       end
 
@@ -54,7 +57,7 @@ describe DataRequestService do
           '2' => { location: '                  ', data: nil },
         })
 
-        service = DataRequestService.new(
+        service = described_class.new(
           kase: offender_sar_case,
           user: user,
           data_requests: params
@@ -70,7 +73,7 @@ describe DataRequestService do
         params = data_request_attributes.clone
         params.merge!({ '0' => { location: 'too', data: 'few' }})
 
-        service = DataRequestService.new(
+        service = described_class.new(
           kase: offender_sar_case,
           user: user,
           data_requests: params
@@ -89,7 +92,7 @@ describe DataRequestService do
         )
 
         expect { service.call }.to change(DataRequest.all, :size).by(0)
-        expect(service.result).to be :unprocessed
+        expect(service.result).to eq :unprocessed
       end
 
       it 'only recovers from ActiveRecord exceptions' do
@@ -143,8 +146,6 @@ describe DataRequestService do
 
       expect(result).to be true
     end
-
-    it 'returns false when both location and data are'
   end
 
   describe '#build_data_requests' do

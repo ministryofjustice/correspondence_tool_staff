@@ -151,6 +151,11 @@ en:
             url:
               bad_file_type: "unnacceptable type %{type} for file: %{filename}"
               invalid_url: "url is invalid for file: %{filename}"
+        data_request:
+          attributes:
+            date_received:
+              blank: must be completed
+              future: cannot be in the future
         linked_case:
           missing: "doesn't exist"
           references_self: "can't link to the same case"
@@ -377,6 +382,8 @@ en:
           closed: "Closed - %{ico_decision} by ICO"
       case:
         linked_case_number: Case number For example 170131001
+      data_request:
+        num_pages: Number of pages
       foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity
@@ -865,10 +872,10 @@ en:
         success: Data request successfully recorded
         unprocessed: Ensure Location and Data fields are completed
       edit:
-        date_received: Date received
+        date_received_mark: Date received
+        date_received_update: Date updated
         heading_mark: Mark data as received
         heading_update: Update number of pages
-        num_pages: Number of pages
         save_mark: Mark as received
         save_update: Update data received
       index:
@@ -883,6 +890,15 @@ en:
       show:
         link_mark: Mark as received
         link_update: Update page count
+      update:
+        log_message: "From %{location} (%{pages}) on %{date_received}"
+        log_pages: {
+          zero: pages,
+          one: page,
+          other: pages
+        }
+        success: Data request updated
+        unprocessed: Ensure date received and number of pages are completed
 
     types:
       Case::FOI::Standard: FOI
