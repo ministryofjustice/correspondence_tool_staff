@@ -19,6 +19,10 @@ class DataRequest < ApplicationRecord
     self.offender_sar_case
   end
 
+  def previous_num_pages
+    0
+  end
+
 
   private
 

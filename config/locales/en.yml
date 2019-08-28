@@ -891,7 +891,7 @@ en:
         link_mark: Mark as received
         link_update: Update page count
       update:
-        log_message: "From %{location} (%{pages}) on %{date_received}"
+        log_message: "%{data}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
         log_pages: {
           zero: pages,
           one: page,

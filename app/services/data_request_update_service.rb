@@ -37,15 +37,17 @@ class DataRequestUpdateService
   def log_message
     scope = 'cases.data_requests.update'
 
-    pages_description = [
-      @data_request.num_pages,
-      I18n.t('.log_pages', scope: scope, count: @data_request.num_pages)
-    ].join(' ')
+    # Create nicely readable sentences for both old and new number of pages
+    pages = [@data_request.previous_num_pages, @data_request.num_pages].map do |n|
+      "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
+    end
 
     I18n.t('.log_message',
+      data: @data_request.data,
       location: @data_request.location,
-      pages: pages_description,
       date_received: @data_request.date_received.strftime('%F'),
+      old_pages: pages.first,
+      new_pages: pages.second,
       scope: scope
     )
   end
