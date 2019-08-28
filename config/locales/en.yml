@@ -328,7 +328,7 @@ en:
           Let us know what you were doing and what could be improved or fixed.
       data_request:
         date_received: For example, 31 07 2019
-        num_pages: Changed from the number previously recorded
+        num_pages: Record new total number of pages
       search_query:
         business_unit_name_filter: For example, Legal Aid Agency
       case:
