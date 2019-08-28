@@ -38,10 +38,12 @@ class DataRequestUpdateService
     scope = 'cases.data_requests.update'
 
     # Create nicely readable sentences for both old and new number of pages
+    # i18n-tasks-use t('cases.data_requests.update.log_pages')
     pages = [@data_request.previous_num_pages, @data_request.num_pages].map do |n|
       "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
     end
 
+    # i18n-tasks-use t('cases.data_requests.update.log_message')
     I18n.t('.log_message',
       data: @data_request.data,
       location: @data_request.location,
