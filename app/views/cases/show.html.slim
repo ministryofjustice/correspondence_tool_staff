@@ -5,10 +5,9 @@
   .alert-green
     = t('alerts.assignment_accepted_html', case_list_url: cases_path)
 
-- unless @case.is_offender_sar?
-  - if @case.has_attribute?(:escalation_deadline) && @case.within_escalation_deadline?
-    .alert-orange
-      = t('alerts.escalation_warning_html', escalation_deadline: @case.escalation_deadline)
+- if show_escalation_deadline?(@case)
+  .alert-orange
+    = t('alerts.escalation_warning_html', escalation_deadline: @case.escalation_deadline)
 
 = render partial: 'shared/components/case_page_heading', locals: {kase: @case}
 
