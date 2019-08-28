@@ -2,7 +2,13 @@ require 'rails_helper'
 
 describe DataRequestUpdateService do
   let(:user) { create :user }
-  let(:data_request) { create :data_request, location: 'HMP Leicester' }
+  let(:data_request) {
+    create(
+      :data_request,
+      location: 'HMP Leicester',
+      data: 'A list of all evening meals'
+    )
+  }
   let(:offender_sar_case) { create :offender_sar_case }
   let(:params) {
     {
@@ -83,13 +89,13 @@ describe DataRequestUpdateService do
   describe '#log_message' do
     it 'creates a human readable case history message' do
       service.call
-      expect(CaseTransition.last.message).to eq "From HMP Leicester (21 pages) on 1992-12-01"
+      expect(CaseTransition.last.message).to eq "A list of all evening meals, HMP Leicester on 1992-12-01: changed from 0 pages to 21 pages"
     end
 
     it 'uses the singular word `page` when 1 page updated' do
       service.instance_variable_set(:@params, params.merge({ num_pages: 1 }))
       service.call
-      expect(CaseTransition.last.message).to eq "From HMP Leicester (1 page) on 1992-12-01"
+      expect(CaseTransition.last.message).to eq "A list of all evening meals, HMP Leicester on 1992-12-01: changed from 0 pages to 1 page"
     end
   end
 

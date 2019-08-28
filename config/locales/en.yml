@@ -328,7 +328,7 @@ en:
           Let us know what you were doing and what could be improved or fixed.
       data_request:
         date_received: For example, 31 07 2019
-        num_pages: Changed from the number previously recorded
+        num_pages: Record new total number of pages
       search_query:
         business_unit_name_filter: For example, Legal Aid Agency
       case:
@@ -872,14 +872,12 @@ en:
         success: Data request successfully recorded
         unprocessed: Ensure Location and Data fields are completed
       edit:
-        date_received_mark: Date received
-        date_received_update: Date updated
-        heading_mark: Mark data as received
-        heading_update: Update number of pages
-        save_mark: Mark as received
-        save_update: Update data received
+        date_received: Date received
+        heading: Update page count
+        save: Update data received
       index:
         heading: Data requested
+        link: Update page count
         none: No data requests recorded
       new:
         add_another: Add another data request
@@ -887,11 +885,8 @@ en:
         heading: Record data request
         location_placeholder: Where is the data held? E.g. NPS, South East
         record_requests: Record requests
-      show:
-        link_mark: Mark as received
-        link_update: Update page count
       update:
-        log_message: "From %{location} (%{pages}) on %{date_received}"
+        log_message: "%{data}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
         log_pages: {
           zero: pages,
           one: page,
