@@ -48,9 +48,6 @@ FactoryBot.define do
       identifier { 'Waiting for data Offender SAR' }
     end
 
-    # created_at      { creation_time }
-    # received_date   { creation_time }
-
     after(:create) do |kase|
       create :case_transition_waiting_for_data, case: kase
       kase.reload
@@ -61,9 +58,6 @@ FactoryBot.define do
     transient do
       identifier { 'Ready for vetting Offender SAR' }
     end
-
-    # created_at      { creation_time }
-    # received_date   { creation_time }
 
     after(:create) do |kase|
       create :case_transition_ready_for_vetting, case: kase
@@ -76,9 +70,6 @@ FactoryBot.define do
       identifier { 'Vetting in progress Offender SAR' }
     end
 
-    # created_at      { creation_time }
-    # received_date   { creation_time }
-
     after(:create) do |kase|
       create :case_transition_vetting_in_progress, case: kase
       kase.reload
@@ -89,9 +80,6 @@ FactoryBot.define do
     transient do
       identifier { 'Ready to close Offender SAR' }
     end
-
-    # created_at      { creation_time }
-    # received_date   { creation_time }
 
     after(:create) do |kase|
       create :case_transition_ready_to_copy, case: kase
@@ -104,9 +92,6 @@ FactoryBot.define do
       identifier { 'Ready to dispatch Offender SAR' }
     end
 
-    # created_at      { creation_time }
-    # received_date   { creation_time }
-
     after(:create) do |kase|
       create :case_transition_ready_to_dispatch, case: kase
       kase.reload
@@ -117,9 +102,6 @@ FactoryBot.define do
     transient do
       identifier { 'Closed Offender SAR' }
     end
-
-    # created_at      { creation_time }
-    # received_date   { creation_time }
 
     after(:create) do |kase|
       create :case_transition_closed, case: kase
