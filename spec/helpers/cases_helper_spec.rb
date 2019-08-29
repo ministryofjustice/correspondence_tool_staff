@@ -354,7 +354,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
         @is_offender_sar = is_offender_sar
       end
 
-      def has_attribute?(attr_name)
+      def has_attribute?(_attr_name)
         @has_attribute
       end
 
@@ -392,6 +392,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
           within_escalation_deadline: true,
           is_offender_sar: false,
         )
+        expect(show_escalation_deadline?(kase)).to eq true
       end
     end
 
