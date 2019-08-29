@@ -41,6 +41,11 @@ module Cases
     end
 
     def edit
+      authorize @case, :can_record_data_request?
+
+      # When editing a DataRequest we are creating a new DataRequestLog with
+      # the new user-entered values denormalized and saved in the
+      # DataRequest#cached_ attributes
       @data_request_log = @data_request.new_log
     end
 
