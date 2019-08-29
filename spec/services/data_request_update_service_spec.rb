@@ -43,8 +43,8 @@ describe DataRequestUpdateService do
       }
 
       before do
-        expect(data_request.num_pages).to eq 0
-        expect(data_request.date_received).to be_nil
+        expect(data_request.cached_num_pages).to eq 0
+        expect(data_request.cached_date_received).to be_nil
       end
 
       it 'creates a new case transition (history) entry' do
@@ -52,10 +52,17 @@ describe DataRequestUpdateService do
         expect(CaseTransition.last.event).to eq 'add_data_received'
       end
 
-      it 'updates the data request' do
+      it 'updates the data request with the same values as a new DataRequestLog' do
         service.call
-        expect(data_request.num_pages).to eq 21
-        expect(data_request.date_received.strftime('%F')).to eq '1992-12-01'
+        log = DataRequestLog.last
+
+        # De-normalised values should match the DataRequestLog values
+        expect(data_request.cached_num_pages).to eq 21
+        expect(data_request.cached_date_received.strftime('%F')).to eq '1992-12-01'
+
+        expect(log.num_pages).to eq data_request.cached_num_pages
+        expect(log.date_received).to eq data_request.cached_date_received
+        expect(log.user).to eq user
       end
     end
 
@@ -66,6 +73,7 @@ describe DataRequestUpdateService do
         service.instance_variable_set(:@params, bad_params)
 
         expect { service.call }.to change(CaseTransition.all, :size).by(0)
+        expect { service.call }.to change(DataRequestLog.all, :size).by(0)
         expect(service.data_request.errors.size).to be > 0
         expect(service.result).to eq :error
       end
@@ -74,13 +82,14 @@ describe DataRequestUpdateService do
         service.instance_variable_set(:@params, {})
 
         expect { service.call }.to change(CaseTransition.all, :size).by(0)
+        expect { service.call }.to change(DataRequestLog.all, :size).by(0)
         expect(service.result).to eq :unprocessed
       end
 
       it 'only recovers from ActiveRecord exceptions' do
         class FakeError < ArgumentError; end
 
-        allow_any_instance_of(DataRequest).to receive(:update!).and_raise(FakeError)
+        allow_any_instance_of(DataRequest).to receive(:save!).and_raise(FakeError)
         expect { service.call }.to raise_error FakeError
       end
     end

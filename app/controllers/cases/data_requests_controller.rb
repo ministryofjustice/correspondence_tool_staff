@@ -41,6 +41,7 @@ module Cases
     end
 
     def edit
+      @data_request_log = @data_request.new_log
     end
 
     def update
@@ -61,10 +62,15 @@ module Cases
         flash[:notice] = t('.unprocessed')
         redirect_to edit_case_data_request_path(@case, @data_request)
       when :error
+        @data_request_log = service.data_request_log
         render :edit
       else
         raise ArgumentError.new("Unknown result: #{service.result.inspect}")
       end
+    end
+
+    def destroy
+      raise NotImplementedError.new 'Data request delete unavailable'
     end
 
 
@@ -83,7 +89,7 @@ module Cases
     end
 
     def update_params
-      params.require(:data_request).permit(
+      params.require(:data_request_log).permit(
         :date_received_dd, :date_received_mm, :date_received_yyyy,
         :num_pages
       )
