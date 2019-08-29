@@ -7,14 +7,4 @@
   &__position {
     margin-bottom: $gutter-half;
   }
-
-  &__location {
-    text-transform: capitalize;
-  }
-
-  &__data {
-    &::first-letter {
-      text-transform: uppercase;
-    }
-  }
 }
