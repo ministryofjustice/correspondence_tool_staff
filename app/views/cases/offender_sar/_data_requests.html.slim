@@ -1,0 +1,28 @@
+.grid-row
+  .column-full.data-requests
+    h2.request--heading.data-requests__title
+      = t('cases.data_requests.index.heading')
+
+    - if case_details.data_requests.empty?
+      p.data-requests__none
+        = t('cases.data_requests.index.none')
+
+    - else
+      table
+        thead
+          tr
+            th Location
+            th Data
+            th Date requested
+            th Date received
+        tbody
+          - case_details.data_requests.order(date_requested: :asc).each do |data_request|
+            tr
+              td
+                = data_request.location
+              td
+                = truncate(data_request.data, length: 140)
+              td
+                = data_request.date_requested.strftime('%F')
+              td
+                | Unavailable

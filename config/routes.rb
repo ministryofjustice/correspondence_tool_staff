@@ -155,6 +155,8 @@ Rails.application.routes.draw do
       patch :progress_for_clearance
       patch :flag_for_clearance
     end
+
+    resources :data_requests
   end
 
   # Case Behaviours (awaiting move to module Cases)

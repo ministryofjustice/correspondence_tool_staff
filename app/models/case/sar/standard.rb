@@ -64,7 +64,7 @@ class Case::SAR::Standard < Case::Base
   attr_accessor :missing_info
 
   enum subject_type: {
-    offender_sar: 'offender',
+    offender: 'offender',
     staff: 'staff',
     member_of_the_public: 'member_of_the_public'
   }

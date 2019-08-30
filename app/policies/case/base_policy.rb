@@ -298,6 +298,10 @@ class Case::BasePolicy < ApplicationPolicy
     false
   end
 
+  def can_record_data_request?
+    false
+  end
+
   private
 
   check :user_in_responding_team do

@@ -54,6 +54,7 @@ module PageObjects
         confirm_destroy:                'Cases::ConfirmDestroyPage',
         cases_extend_for_pit:           'Cases::ExtendForPITPage',
         cases_extend_sar_deadline:      'Cases::ExtendSARDeadlinePage',
+        data_request:                   'Cases::DataRequestPage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',

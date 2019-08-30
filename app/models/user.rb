@@ -63,6 +63,7 @@ class User < ApplicationRecord
            class_name: 'TeamsUsersRole'
   has_many :managing_teams, through: :managing_team_roles, source: :team
   has_many :responding_teams, through: :responding_team_roles, source: :team
+  has_many :data_requests
   has_one  :approving_team, through: :approving_team_roles, source: :team
 
   validates :full_name, presence: true
