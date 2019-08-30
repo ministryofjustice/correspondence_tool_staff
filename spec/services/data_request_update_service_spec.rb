@@ -52,6 +52,10 @@ describe DataRequestUpdateService do
         expect(CaseTransition.last.event).to eq 'add_data_received'
       end
 
+      it 'creates a new log entry' do
+        expect { service.call }.to change(DataRequestLog.all, :size).by(1)
+      end
+
       it 'updates the data request with the same values as a new DataRequestLog' do
         service.call
         log = DataRequestLog.last
