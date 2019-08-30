@@ -50,10 +50,20 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
   end
 
-  it_behaves_like 'edit offender sar spec', :offender_sar_case, :mark_as_waiting_for_data
-  it_behaves_like 'edit offender sar spec', :waiting_for_data_offender_sar, :mark_as_ready_for_vetting
-  it_behaves_like 'edit offender sar spec', :ready_for_vetting_offender_sar, :mark_as_vetting_in_progress
-  it_behaves_like 'edit offender sar spec', :vetting_in_progress_offender_sar, :mark_as_ready_to_copy
-  it_behaves_like 'edit offender sar spec', :ready_to_copy_offender_sar, :mark_as_ready_to_dispatch
-  it_behaves_like 'edit offender sar spec', :ready_to_dispatch_offender_sar, :mark_as_closed
+  describe 'edit behaviour' do
+    OFFENDER_SAR_STATES = {
+      data_to_be_requested: :mark_as_waiting_for_data,
+      waiting_for_data: :mark_as_ready_for_vetting,
+      ready_for_vetting: :mark_as_vetting_in_progress,
+      vetting_in_progress: :mark_as_ready_to_copy,
+      ready_to_copy: :mark_as_ready_to_dispatch,
+      ready_to_dispatch: :mark_as_closed,
+    }.freeze
+
+    OFFENDER_SAR_STATES.each do |state, transition_event|
+      context "with Offender SAR in #{state} state" do
+        it_behaves_like 'edit offender sar spec', state.to_sym, transition_event
+      end
+    end
+  end
 end
