@@ -14,11 +14,9 @@ class DataRequestUpdateService
     ActiveRecord::Base.transaction do
       begin
         @result = :unprocessed
-        return if empty_params?
-
         @data_request_log = @data_request.data_request_logs.build(@params.merge!({ user: @user }))
-        @data_request.cached_date_received = @data_request_log.date_received
-        @data_request.cached_num_pages = @data_request_log.num_pages
+        return if unchanged?(@data_request_log)
+
         @data_request.save!
 
         @case.state_machine.add_data_received!(
@@ -57,12 +55,12 @@ class DataRequestUpdateService
     )
   end
 
-  def empty_params?
-    @params[:num_pages].blank? &&
-      %i[
-        date_received_dd
-        date_received_mm
-        date_received_yyy
-      ].all? { |field| @params[field].blank? }
+  # Allowing a user to create a new DataRequestLog which is a duplicate of the
+  # current total number of pages/date received is not currently considered a
+  # model error but rather a UX issue. Hence the check for unchanged? in this
+  # service rather than within the DataRequest model
+  def unchanged?(new_data_request_log)
+    @data_request.cached_num_pages_was == new_data_request_log.num_pages &&
+      @data_request.cached_date_received_was == new_data_request_log.date_received
   end
 end

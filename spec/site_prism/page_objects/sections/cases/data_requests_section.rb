@@ -11,7 +11,9 @@ module PageObjects
           element :location, 'td:nth-child(1)'
           element :data, 'td:nth-child(2)'
           element :date_requested, 'td:nth-child(3)'
-          element :date_received, 'td:nth-child(4)'
+          element :pages, 'td:nth-child(4)'
+          element :date_received, 'td:nth-child(5)'
+          element :action, '.data-requests__action'
         end
 
       end

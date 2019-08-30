@@ -71,19 +71,25 @@ describe DataRequestUpdateService do
         bad_params = params.clone
         bad_params.merge!(num_pages: -20)
         service.instance_variable_set(:@params, bad_params)
+        previous_cached_num_pages = data_request.cached_num_pages
+        previous_cached_date_received = data_request.cached_date_received
 
         expect { service.call }.to change(CaseTransition.all, :size).by(0)
         expect { service.call }.to change(DataRequestLog.all, :size).by(0)
         expect(service.data_request.errors.size).to be > 0
         expect(service.result).to eq :error
+
+        expect(data_request.reload.cached_num_pages).to eq previous_cached_num_pages
+        expect(data_request.reload.cached_date_received).to eq previous_cached_date_received
+
       end
 
-      it 'does not save DataRequest when nothing to process' do
+      it 'does not create DataRequestLog or CaseHistory when no data' do
         service.instance_variable_set(:@params, {})
 
         expect { service.call }.to change(CaseTransition.all, :size).by(0)
         expect { service.call }.to change(DataRequestLog.all, :size).by(0)
-        expect(service.result).to eq :unprocessed
+        expect(service.result).to eq :error
       end
 
       it 'only recovers from ActiveRecord exceptions' do
@@ -108,30 +114,47 @@ describe DataRequestUpdateService do
     end
   end
 
-  describe '#empty_params?' do
-    let(:empty_params) {
-      {
-        num_pages: nil,
-        date_received_dd: nil, date_received_mm: '', date_received_yyyy: nil,
-      }
+  describe '#unchanged?' do
+    let!(:data_request) {
+      create(
+        :data_request,
+        cached_num_pages: 24,
+        cached_date_received: Date.new(2018, 1, 3)
+      )
     }
 
-    it 'is true when no updatable values given' do
-      empty_params = {
-        num_pages: nil,
-        date_received_dd: nil, date_received_mm: '', date_received_yyyy: nil,
-      }
-      service.instance_variable_set(:@params, empty_params)
-
-      expect(service.send(:empty_params?)).to eq true
+    before do
+      service.instance_variable_set(:@data_request, data_request)
     end
 
-    it 'is false when any one updatable value is given' do
-      service.instance_variable_set(:@params, empty_params.merge({ num_pages: 2 }))
-      expect(service.send(:empty_params?)).to eq false
+    it 'is true when new values are same as old values' do
+      new_data_request_log = data_request.logs.build(
+        user: user,
+        num_pages: 24,
+        date_received: Date.new(2018, 1, 3),
+      )
 
-      service.instance_variable_set(:@params, empty_params.merge({ date_received_mm: 3 }))
-      expect(service.send(:empty_params?)).to eq false
+      expect(service.send(:unchanged?, new_data_request_log)).to eq true
+    end
+
+    it 'is false when number of pages is updated' do
+      new_data_request_log = data_request.logs.build(
+        user: user,
+        num_pages: 42, # Changed
+        date_received: Date.new(2018, 1, 3) # Same
+      )
+
+      expect(service.send(:unchanged?, new_data_request_log)).to eq false
+    end
+
+    it 'is false when date received is updated' do
+      new_data_request_log = data_request.logs.build(
+        user: user,
+        num_pages: 24, # Same
+        date_received: Date.new(1915, 12, 25) # Changed
+      )
+
+      expect(service.send(:unchanged?, new_data_request_log)).to eq false
     end
   end
 end

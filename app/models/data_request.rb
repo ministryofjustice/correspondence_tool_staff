@@ -1,7 +1,7 @@
 class DataRequest < ApplicationRecord
   belongs_to :offender_sar_case, class_name: 'Case::SAR::Offender', foreign_key: 'case_id'
   belongs_to :user
-  has_many   :data_request_logs
+  has_many   :data_request_logs, after_add: :update_cached_attributes
 
   validates :location, presence: true, length: { minimum: 5, maximum: 500 }
   validates :data, presence: true, length: { minimum: 5 }
@@ -30,6 +30,11 @@ class DataRequest < ApplicationRecord
 
 
   private
+
+  def update_cached_attributes(new_data_request_log)
+    self.cached_date_received = new_data_request_log.date_received
+    self.cached_num_pages = new_data_request_log.num_pages
+  end
 
   def clean_attributes
     [:location, :data]
