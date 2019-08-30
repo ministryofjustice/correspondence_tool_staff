@@ -55,6 +55,7 @@ module PageObjects
         cases_extend_for_pit:           'Cases::ExtendForPITPage',
         cases_extend_sar_deadline:      'Cases::ExtendSARDeadlinePage',
         data_request:                   'Cases::DataRequestPage',
+        data_request_edit:              'Cases::DataRequestEditPage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',

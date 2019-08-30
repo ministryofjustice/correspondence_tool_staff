@@ -45,7 +45,8 @@ class DataRequestService
       @case.data_requests.new(
         user: @user,
         location: data_request[:location],
-        data: data_request[:data]
+        data: data_request[:data],
+        date_requested: Date.current,
       )
     end.compact
   end

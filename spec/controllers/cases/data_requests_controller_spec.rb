@@ -119,4 +119,118 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       end
     end
   end
+
+  describe '#edit' do
+    let(:data_request) {
+      create(
+        :data_request,
+        cached_num_pages: 10,
+        cached_date_received: Date.yesterday
+      )
+    }
+
+    let(:params) {
+      {
+        id: data_request.id,
+        case_id: data_request.case_id,
+      }
+    }
+
+    it 'builds a new data_request_log with last received values' do
+      get :edit, params: params
+
+      expect(assigns(:data_request_log).new_record?).to eq true
+      expect(assigns(:data_request_log).num_pages).to eq 10
+      expect(assigns(:data_request_log).date_received).to eq Date.yesterday
+    end
+  end
+
+  describe '#update' do
+    let(:data_request) {
+      create(:data_request, offender_sar_case: offender_sar_case)
+    }
+
+    context 'with valid params' do
+      let(:params) {
+        {
+          data_request_log: {
+            date_received_dd: 2,
+            date_received_mm: 8,
+            date_received_yyyy: 2012,
+            num_pages: 2,
+            location: 'not permitted during update',
+          },
+          id: data_request.id,
+          case_id: data_request.case_id,
+        }
+      }
+
+      before do
+        patch :update, params: params
+      end
+
+      it 'updates the DataRequest' do
+        expect(response).to redirect_to case_path(data_request.case_id)
+        expect(controller).to set_flash[:notice]
+      end
+
+      it 'only permits date_received and num_pages to be updated' do
+        expect(controller.send(:update_params).key?(:num_pages)).to be true
+        expect(controller.send(:update_params).key?(:date_received_dd)).to be true
+        expect(controller.send(:update_params).key?(:location)).to be false
+      end
+    end
+
+    context 'with invalid params' do
+      let(:params) {
+        {
+          data_request_log: {
+            id: data_request.id,
+            date_received_dd: 12,
+            date_received_mm: 13,
+            date_received_yyyy: 2129,
+            num_pages: -10,
+          },
+          id: data_request.id,
+          case_id: data_request.case_id,
+        }
+      }
+
+      it 'does not update the DataRequest' do
+        patch :update, params: params
+        expect(response).to render_template(:edit)
+      end
+    end
+
+    context 'with unknown service result' do
+      let(:params) {
+        {
+          data_request_log: {
+            id: data_request.id,
+            date_received_dd: 2,
+            date_received_mm: 8,
+            date_received_yyyy: 2012,
+            num_pages: 2,
+          },
+          id: data_request.id,
+          case_id: data_request.case_id,
+        }
+      }
+
+      it 'raises an ArgumentError' do
+        allow_any_instance_of(DataRequestUpdateService)
+          .to receive(:result).and_return(:bogus_result!)
+
+        expect { patch :update, params: params }
+          .to raise_error ArgumentError, match(/Unknown result/)
+      end
+    end
+  end
+
+  describe '#destroy' do
+    it 'is not implemented' do
+      expect { delete :destroy, params: { case_id: 1, id: 1 }}
+        .to raise_error NotImplementedError, 'Data request delete unavailable'
+    end
+  end
 end

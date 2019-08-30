@@ -14,7 +14,9 @@
             th Location
             th Data
             th Date requested
+            th Pages
             th Date received
+            th
         tbody
           - case_details.data_requests.order(date_requested: :asc).each do |data_request|
             tr
@@ -25,4 +27,8 @@
               td
                 = data_request.date_requested.strftime('%F')
               td
-                | Unavailable
+                = data_request.cached_num_pages
+              td
+                = data_request.cached_date_received
+              td
+                = link_to t('cases.data_requests.index.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__action'

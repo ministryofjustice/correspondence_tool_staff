@@ -151,6 +151,11 @@ en:
             url:
               bad_file_type: "unnacceptable type %{type} for file: %{filename}"
               invalid_url: "url is invalid for file: %{filename}"
+        data_request:
+          attributes:
+            date_received:
+              blank: must be completed
+              future: cannot be in the future
         linked_case:
           missing: "doesn't exist"
           references_self: "can't link to the same case"
@@ -267,7 +272,7 @@ en:
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
         subject_type: "What is their relationship to the MOJ?"
-        third_party: Is this information being requested on someone else's behalf?
+        third_party: Please choose yes or no
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -300,8 +305,6 @@ en:
         flag_for_disclosure_specialists: Flag for disclosure specialist?
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
-      offender_sar: 
-        third_party: Please choose yes or no
       report:
         correspondence_type: Which type of cases do you want to report on?
         report_type_id: What should this report cover?
@@ -323,11 +326,21 @@ en:
       feedback:
         comment: |
           Let us know what you were doing and what could be improved or fixed.
+      data_request_log:
+        date_received: For example, 31 07 2019
+        num_pages: Record new total number of pages
       search_query:
         business_unit_name_filter: For example, Legal Aid Agency
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
+      offender_sar:
+        date_of_birth: "For example, 12 11 2007"
+        message: Enter a brief summary of the case, including any details that will be useful for processing the Offender SAR.
+        other_subject_ids: "You can include multiple numbers separated by a comma or a space."
+        previous_case_numbers: "You can include multiple cases separated by a comma or a space."
+        prison_number: "You can include multiple numbers separated by a comma or a space."
+        subject_aliases: "You can include multiple aliases separated by a comma or a space."
       team_property:
         value: Please provide one area at a time and be as concise as possible
       sar:
@@ -350,12 +363,8 @@ en:
           accepted: Accept
           rejected: Reject
         user_id: Business unit
-
       business_unit:
         id: Business Unit
-
-
-
       state_selector:
         unassigned: Needs reassigning
         awaiting_responder: To be accepted
@@ -371,9 +380,10 @@ en:
           awaiting_dispatch: Ready to send to ICO
           responded: Closed - awaiting ICO decision
           closed: "Closed - %{ico_decision} by ICO"
-
       case:
         linked_case_number: Case number For example 170131001
+      data_request_log:
+        num_pages: Number of pages
       foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity
@@ -462,14 +472,6 @@ en:
         edit_case: 'Edit case details'
         edit_closure: 'Edit closure details'
 
-    hint:
-      offender_sar:
-        date_of_birth: "For example, 12 11 2007"
-        message: Enter a brief summary of the case, including any details that will be useful for processing the Offender SAR.
-        other_subject_ids: "You can include multiple numbers separated by a comma or a space."
-        previous_case_numbers: "You can include multiple cases separated by a comma or a space."
-        prison_number: "You can include multiple numbers separated by a comma or a space."
-        subject_aliases: "You can include multiple aliases separated by a comma or a space."
   alerts:
     assignment_accepted_html: |
       <strong>You've accepted this case</strong><br>
@@ -869,8 +871,13 @@ en:
       create:
         success: Data request successfully recorded
         unprocessed: Ensure Location and Data fields are completed
+      edit:
+        date_received: Date received
+        heading: Update page count
+        save: Update data received
       index:
         heading: Data requested
+        link: Update page count
         none: No data requests recorded
       new:
         add_another: Add another data request
@@ -878,6 +885,15 @@ en:
         heading: Record data request
         location_placeholder: Where is the data held? E.g. NPS, South East
         record_requests: Record requests
+      update:
+        log_message: "%{data}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
+        log_pages: {
+          zero: pages,
+          one: page,
+          other: pages
+        }
+        success: Data request updated
+        unprocessed: Ensure either Date received or Number of pages is changed
 
     types:
       Case::FOI::Standard: FOI
