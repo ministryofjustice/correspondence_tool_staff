@@ -121,7 +121,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       link_to 'Record data request',
               new_case_data_request_path(@case),
               id: 'action--record-data-request',
-              class: "button-#{btn_type}", method: :get
+              class: "button-#{btn_type}"
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
