@@ -27,6 +27,7 @@ FactoryBot.define do
     sequence(:subject_aliases)      { |n| "#{identifier} subject alias #{n}" }
     previous_case_numbers           { '54321' }
     prison_number                   { '123465' }
+    other_subject_ids               { 'ABC 123 DEF' }
     subject_type                    { 'offender' }
     third_party                     { false }
     flag_as_high_profile            { false }

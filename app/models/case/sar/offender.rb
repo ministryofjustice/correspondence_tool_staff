@@ -83,9 +83,8 @@ class Case::SAR::Offender < Case::Base
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
 
-  def set_subject
-    self.subject = subject_full_name
-  end
+  before_save :use_subject_as_requester,
+              if: -> { name.blank? }
 
   def validate_received_date
     super
@@ -131,5 +130,15 @@ class Case::SAR::Offender < Case::Base
   # the case state should not change
   def allow_waiting_for_data_state?
     self.current_state == 'data_to_be_requested'
+  end
+
+  private
+
+  def set_subject
+    self.subject = subject_full_name
+  end
+
+  def use_subject_as_requester
+    self.name = self.subject_full_name
   end
 end

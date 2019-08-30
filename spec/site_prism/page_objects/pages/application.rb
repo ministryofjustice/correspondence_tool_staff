@@ -104,6 +104,7 @@ module PageObjects
         overturned_foi_case_details:  'Cases::OverturnedFOI::CaseDetailsSection',
         overturned_ico_new_form:      'Cases::OverturnedICO::NewFormSection',
         overturned_sar_case_details:  'Cases::OverturnedSAR::CaseDetailsSection',
+        offender_sar_case_details:    'Cases::OffenderSAR::CaseDetailsSection',
         dropzonejs_preview_template:  'Shared::DropzoneJSPreviewTemplateSection',
         pagination:                   'PaginationSection',
       }.each do |section_name, section_class|
