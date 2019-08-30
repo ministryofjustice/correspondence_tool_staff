@@ -1,4 +1,4 @@
-class DataRequestService
+class DataRequestCreateService
   attr_reader :result, :case, :new_data_requests
 
   def initialize(kase:, user:, data_requests:)

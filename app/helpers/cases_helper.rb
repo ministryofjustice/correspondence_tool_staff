@@ -309,7 +309,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   def show_escalation_deadline?(kase)
-    !kase.is_offender_sar? &&
+    !kase.offender_sar? &&
       kase.has_attribute?(:escalation_deadline) &&
       kase.within_escalation_deadline?
   end

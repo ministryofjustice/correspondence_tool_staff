@@ -111,7 +111,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       }
 
       it 'raises an ArgumentError' do
-        allow_any_instance_of(DataRequestService)
+        allow_any_instance_of(DataRequestCreateService)
           .to receive(:result).and_return(:bogus_result!)
 
         expect { post :create, params: params }

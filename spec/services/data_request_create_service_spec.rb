@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe DataRequestService do
+describe DataRequestCreateService do
   let(:user) { create :user }
   let(:offender_sar_case) { create :offender_sar_case }
   let(:data_request_attributes) {

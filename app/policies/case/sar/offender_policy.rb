@@ -9,6 +9,7 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
   end
 
   def can_record_data_request?
-    true
+    clear_failed_checks
+    check_can_trigger_event(:add_data_received)
   end
 end

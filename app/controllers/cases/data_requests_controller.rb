@@ -4,10 +4,10 @@ module Cases
 
     before_action :set_case, only: [:new, :create, :edit, :update]
     before_action :set_data_request, only: [:edit, :update]
+    before_action :authorize_action
+    after_action  :verify_authorized
 
     def new
-      authorize @case, :can_record_data_request?
-
       # Explicitly created DataRequest as an array rather than performing
       # 3.times { @case.data_requests.new } to ensure the partial _data_request
       # form.index is correct (rather than including existing data requests)
@@ -15,9 +15,7 @@ module Cases
     end
 
     def create
-      authorize @case, :can_record_data_request?
-
-      service = DataRequestService.new(
+      service = DataRequestCreateService.new(
         kase: @case,
         user: current_user,
         data_requests: create_params[:data_requests_attributes]
@@ -41,8 +39,6 @@ module Cases
     end
 
     def edit
-      authorize @case, :can_record_data_request?
-
       # When editing a DataRequest we are creating a new DataRequestLog with
       # the new user-entered values denormalized and saved in the
       # DataRequest#cached_ attributes
@@ -50,8 +46,6 @@ module Cases
     end
 
     def update
-      authorize @case, :can_record_data_request?
-
       service = DataRequestUpdateService.new(
         user: current_user,
         data_request: @data_request,
@@ -98,6 +92,10 @@ module Cases
         :date_received_dd, :date_received_mm, :date_received_yyyy,
         :num_pages
       )
+    end
+
+    def authorize_action
+      authorize @case, :can_record_data_request?
     end
   end
 end
