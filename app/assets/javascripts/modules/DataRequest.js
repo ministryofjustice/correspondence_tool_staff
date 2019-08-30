@@ -21,7 +21,9 @@ moj.Modules.DataRequest = {
     // Update new template with new index.
     // Brute force replace as there is no templating system.
     $formTemplate.attr('data-index', newIndex);
-    $('.js-data-request__number', $formTemplate).first().text(newIndex + 1);
+    $('.js-data-request__number', $formTemplate)[0].value = newIndex + 1;
+    $('.js-data-request__location', $formTemplate)[0].value = '';
+    $('.js-data-request__data', $formTemplate)[0].value = '';
 
     $('.form-control', $formTemplate).each(function rename() {
       this.name = this.name.replace(currentIndex, newIndex);
