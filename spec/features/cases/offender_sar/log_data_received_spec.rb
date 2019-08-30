@@ -37,7 +37,8 @@ feature 'Log data received for an Offender SAR Data Request' do
 
     row = cases_show_page.data_requests.rows.first
     expect(row.pages).to have_text '92'
-    expect(row.date_received).to have_text '2012-03-02' # Note formatting
+    expect(row.date_received).to have_text '2 Mar 2012'
+
 
     # Note pre-filled fields when making further update to the same Data Request
     click_link 'Update page count'

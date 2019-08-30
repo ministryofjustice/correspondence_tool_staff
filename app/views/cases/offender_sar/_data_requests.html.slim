@@ -30,6 +30,8 @@
               td
                 = data_request.cached_num_pages
               td
-                = data_request.cached_date_received
+                - if data_request.cached_date_received.present?
+                  time datetime="#{data_request.cached_date_received}"
+                    = l data_request.cached_date_received, format: :default
               td
                 = link_to t('cases.data_requests.index.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__action'
