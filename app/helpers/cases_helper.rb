@@ -301,4 +301,10 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       self.send("#{kase.model_name.singular}_index_path")
     end
   end
+
+  def show_escalation_deadline?(kase)
+    !kase.is_offender_sar? &&
+      kase.has_attribute?(:escalation_deadline) &&
+      kase.within_escalation_deadline?
+  end
 end
