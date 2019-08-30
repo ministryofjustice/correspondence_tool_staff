@@ -1,8 +1,8 @@
 - content_for :page_title do
   = t('page_title.data_request_edit_page', case_number: @case.number)
 
-= GovukElementsErrorsHelper.error_summary @data_request,
-  "#{pluralize(@data_request.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+= GovukElementsErrorsHelper.error_summary @data_request_log,
+  "#{pluralize(@data_request_log.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 - content_for :heading
   = t('.heading')
@@ -15,19 +15,23 @@ span.visually-hidden
 
 = render partial: 'layouts/header'
 
-.form-group.data-request
-  = form_for @data_request, url: case_data_request_path(@case, @data_request) do |f|
-    h4.data-request__location.lede= @data_request.location
-    p.data-request__data= @data_request.data.humanize
+.grid-row.data-request
+  .column-full
+
+    h2.data-request__location.lede= @data_request.location
+    p.data-request__data= @data_request.data
 
     hr
 
-    = f.gov_uk_date_field :date_received, { \
-        legend_text: t('.date_received'),   \
-        today_button: { class: '' }         \
-      }
+    .form-group
+      = form_for @data_request_log, url: case_data_request_path(@data_request.kase, @data_request), method: :patch do |f|
 
-    = f.text_field :num_pages, class: 'form-control form-control-1-8'
+        = f.gov_uk_date_field :date_received, { \
+            legend_text: t('.date_received'),   \
+            today_button: { class: '' }         \
+          }
 
-    .button-holder
-      = f.submit t('.save'), { class: 'button', role: 'button' }
+        = f.text_field :num_pages, class: 'form-control form-control-1-8'
+
+        .button-holder
+          = f.submit t('.save'), { class: 'button', role: 'button' }

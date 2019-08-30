@@ -326,7 +326,7 @@ en:
       feedback:
         comment: |
           Let us know what you were doing and what could be improved or fixed.
-      data_request:
+      data_request_log:
         date_received: For example, 31 07 2019
         num_pages: Record new total number of pages
       search_query:
@@ -382,7 +382,7 @@ en:
           closed: "Closed - %{ico_decision} by ICO"
       case:
         linked_case_number: Case number For example 170131001
-      data_request:
+      data_request_log:
         num_pages: Number of pages
       foi:
         requester_type:
@@ -893,7 +893,7 @@ en:
           other: pages
         }
         success: Data request updated
-        unprocessed: Ensure date received and number of pages are completed
+        unprocessed: Ensure either Date received or Number of pages is changed
 
     types:
       Case::FOI::Standard: FOI

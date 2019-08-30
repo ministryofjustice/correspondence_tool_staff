@@ -1,5 +1,5 @@
 class DataRequestUpdateService
-  attr_reader :result, :data_request
+  attr_reader :result, :data_request, :data_request_log
 
   def initialize(user:, data_request:, params:)
     @result = nil
@@ -7,16 +7,17 @@ class DataRequestUpdateService
     @user = user
     @data_request = data_request
     @params = params
+    @old_num_pages = @data_request.cached_num_pages
   end
 
   def call
     ActiveRecord::Base.transaction do
       begin
         @result = :unprocessed
-        return if empty_params?
+        @data_request_log = @data_request.data_request_logs.build(@params.merge!({ user: @user }))
+        return if unchanged?(@data_request_log)
 
-        @data_request.date_received = nil # Reset to force validation
-        @data_request.update!(@params)
+        @data_request.save!
 
         @case.state_machine.add_data_received!(
           acting_user: @user,
@@ -39,7 +40,7 @@ class DataRequestUpdateService
 
     # Create nicely readable sentences for both old and new number of pages
     # i18n-tasks-use t('cases.data_requests.update.log_pages')
-    pages = [@data_request.previous_num_pages, @data_request.num_pages].map do |n|
+    pages = [@old_num_pages, @data_request.cached_num_pages].map do |n|
       "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
     end
 
@@ -47,19 +48,19 @@ class DataRequestUpdateService
     I18n.t('.log_message',
       data: @data_request.data,
       location: @data_request.location,
-      date_received: @data_request.date_received.strftime('%F'),
+      date_received: @data_request.cached_date_received.strftime('%F'),
       old_pages: pages.first,
       new_pages: pages.second,
       scope: scope
     )
   end
 
-  def empty_params?
-    @params[:num_pages].blank? &&
-      %i[
-        date_received_dd
-        date_received_mm
-        date_received_yyy
-      ].all? { |field| @params[field].blank? }
+  # Allowing a user to create a new DataRequestLog which is a duplicate of the
+  # current total number of pages/date received is not currently considered a
+  # model error but rather a UX issue. Hence the check for unchanged? in this
+  # service rather than within the DataRequest model
+  def unchanged?(new_data_request_log)
+    @data_request.cached_num_pages_was == new_data_request_log.num_pages &&
+      @data_request.cached_date_received_was == new_data_request_log.date_received
   end
 end

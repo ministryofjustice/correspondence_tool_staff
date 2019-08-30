@@ -485,6 +485,40 @@ CREATE TABLE public.data_migrations (
 
 
 --
+-- Name: data_request_logs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_request_logs (
+    id integer NOT NULL,
+    data_request_id integer NOT NULL,
+    user_id integer NOT NULL,
+    date_received date NOT NULL,
+    num_pages integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: data_request_logs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_request_logs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_request_logs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_request_logs_id_seq OWNED BY public.data_request_logs.id;
+
+
+--
 -- Name: data_requests; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -494,11 +528,11 @@ CREATE TABLE public.data_requests (
     user_id integer NOT NULL,
     location character varying NOT NULL,
     data text NOT NULL,
-    date_requested date DEFAULT '2019-08-27'::date NOT NULL,
+    date_requested date NOT NULL,
+    cached_date_received date,
+    cached_num_pages integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    date_received date,
-    num_pages integer DEFAULT 0 NOT NULL
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -1082,6 +1116,13 @@ ALTER TABLE ONLY public.correspondence_types ALTER COLUMN id SET DEFAULT nextval
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY public.data_request_logs ALTER COLUMN id SET DEFAULT nextval('public.data_request_logs_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY public.data_requests ALTER COLUMN id SET DEFAULT nextval('public.data_requests_id_seq'::regclass);
 
 
@@ -1255,6 +1296,14 @@ ALTER TABLE ONLY public.correspondence_types
 
 ALTER TABLE ONLY public.data_migrations
     ADD CONSTRAINT data_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: data_request_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_logs
+    ADD CONSTRAINT data_request_logs_pkey PRIMARY KEY (id);
 
 
 --
@@ -1511,6 +1560,27 @@ CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON public.cases_u
 
 
 --
+-- Name: index_data_request_logs_on_data_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_logs_on_data_request_id ON public.data_request_logs USING btree (data_request_id);
+
+
+--
+-- Name: index_data_request_logs_on_data_request_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_logs_on_data_request_id_and_user_id ON public.data_request_logs USING btree (data_request_id, user_id);
+
+
+--
+-- Name: index_data_request_logs_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_request_logs_on_user_id ON public.data_request_logs USING btree (user_id);
+
+
+--
 -- Name: index_data_requests_on_case_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1693,6 +1763,14 @@ CREATE INDEX index_warehouse_case_reports_on_case_id ON public.warehouse_case_re
 
 
 --
+-- Name: fk_rails_274490f7ec; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_logs
+    ADD CONSTRAINT fk_rails_274490f7ec FOREIGN KEY (data_request_id) REFERENCES public.data_requests(id);
+
+
+--
 -- Name: fk_rails_2a80c865a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1706,6 +1784,22 @@ ALTER TABLE ONLY public.warehouse_case_reports
 
 ALTER TABLE ONLY public.cases
     ADD CONSTRAINT fk_rails_5b2f8d9aa6 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: fk_rails_8ea0aff84a; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_requests
+    ADD CONSTRAINT fk_rails_8ea0aff84a FOREIGN KEY (case_id) REFERENCES public.cases(id);
+
+
+--
+-- Name: fk_rails_fc711a84cc; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_request_logs
+    ADD CONSTRAINT fk_rails_fc711a84cc FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
@@ -1835,7 +1929,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190609185907'),
 ('20190730133328'),
 ('20190731151806'),
-('20190817185027'),
-('20190823160424');
+('20190817185027');
 
 
