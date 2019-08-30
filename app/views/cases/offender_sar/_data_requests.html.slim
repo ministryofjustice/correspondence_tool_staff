@@ -25,7 +25,8 @@
               td
                 = truncate(data_request.data, length: 140)
               td
-                = data_request.date_requested.strftime('%F')
+                time datetime="#{data_request.date_requested}"
+                  = l data_request.date_requested, format: :default
               td
                 = data_request.cached_num_pages
               td

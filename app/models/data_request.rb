@@ -43,6 +43,6 @@ class DataRequest < ApplicationRecord
   end
 
   def set_date_requested
-    self.date_requested = Date.current
+    self.date_requested = Date.current if self.date_requested.blank?
   end
 end

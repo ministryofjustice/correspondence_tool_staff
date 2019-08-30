@@ -17,6 +17,18 @@ RSpec.describe DataRequest, type: :model do
       it 'has 0 cached_num_pages by default' do
         expect(data_request.cached_num_pages).to eq 0
       end
+
+      it 'sets date_requested to today by default' do
+        data_request.save!
+        expect(data_request.date_requested).to eq Date.current
+      end
+
+      it 'uses supplied date_requested if present' do
+        new_data_request = data_request.clone
+        new_data_request.date_requested = Date.new(1992, 7, 11)
+        new_data_request.save!
+        expect(new_data_request.date_requested).to eq Date.new(1992, 7, 11)
+      end
     end
 
     context 'validation' do
