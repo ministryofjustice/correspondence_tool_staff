@@ -229,7 +229,9 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
   describe '#destroy' do
     it 'is not implemented' do
-      expect { delete :destroy, params: { case_id: 1, id: 1 }}
+      data_request = create :data_request, offender_sar_case: offender_sar_case
+
+      expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request.id }}
         .to raise_error NotImplementedError, 'Data request delete unavailable'
     end
   end

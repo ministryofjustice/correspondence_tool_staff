@@ -2,8 +2,8 @@ module Cases
   class DataRequestsController < ApplicationController
     NUM_NEW_DATA_REQUESTS = 3
 
-    before_action :set_case, only: [:new, :create, :edit, :update]
-    before_action :set_data_request, only: [:edit, :update]
+    before_action :set_case
+    before_action :set_data_request, only: [:edit, :update, :destroy]
     before_action :authorize_action
     after_action  :verify_authorized
 
