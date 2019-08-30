@@ -9,6 +9,6 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
   end
 
   def can_record_data_request?
-    self.case.offender_sar?
+    true
   end
 end

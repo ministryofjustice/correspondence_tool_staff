@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Cases::DataRequestsController, type: :controller do
-  let(:manager) { find_or_create :disclosure_bmt_user }
+  let(:manager) { find_or_create :branston_user }
   let(:offender_sar_case) { create :offender_sar_case }
 
   before do

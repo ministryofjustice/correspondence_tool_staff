@@ -23,6 +23,8 @@ class Case::SAR::Offender < Case::Base
     received_date
   ].freeze
 
+  acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
+
   jsonb_accessor :properties,
                  date_of_birth: :date,
                  escalation_deadline: :date,
@@ -49,15 +51,13 @@ class Case::SAR::Offender < Case::Base
     send_by_email: 'send_by_email',
   }
 
-  acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
-
   has_paper_trail only: [
-                    :name,
-                    :email,
-                    :postal_address,
-                    :properties,
-                    :received_date,
-                  ]
+    :name,
+    :email,
+    :postal_address,
+    :properties,
+    :received_date,
+  ]
 
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
   accepts_nested_attributes_for :data_requests
