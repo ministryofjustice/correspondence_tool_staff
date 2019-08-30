@@ -14,6 +14,8 @@ en:
     create_case_page: Creating a %{case_type} case - Track-a-query
     create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
+    data_request_page: Record data request
+    data_request_edit_page: Update page count
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query
     edit_case_page: Editing a case - %{case_number} - Track-a-query

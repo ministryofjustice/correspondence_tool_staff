@@ -2,11 +2,11 @@ require 'rails_helper'
 
 describe 'CurrentTeamAndUserSAROffenderService' do
 
-  let(:team_branston)             { find_or_create :team_branston }
-  let(:service)               { CurrentTeamAndUserService.new(kase) }
+  let(:team_branston) { find_or_create :team_branston }
+  let(:service) { CurrentTeamAndUserService.new(kase) }
 
   context 'data to be requested state' do
-    let(:kase)  { create :offender_sar_case }
+    let(:kase)  { create :offender_sar_case } # default state
     it 'returns the correct team and user' do
       expect(kase.current_state).to eq 'data_to_be_requested'
       expect(service.team).to eq team_branston
@@ -15,7 +15,7 @@ describe 'CurrentTeamAndUserSAROffenderService' do
   end
 
   context 'data to be requested state' do
-    let(:kase)  { create :waiting_for_data_offender_sar }
+    let(:kase)  { create :offender_sar_case, :waiting_for_data }
     it 'returns the correct team and user' do
       expect(kase.current_state).to eq 'waiting_for_data'
       expect(service.team).to eq team_branston

@@ -43,6 +43,9 @@ div id="case-#{@correspondence_type_key}" class="case"
         - if policy(@case).assignments_execute_reassign_user?
           = action_button_for(:reassign_user)
 
+        - if policy(@case).can_record_data_request?
+          = action_button_for(:record_data_request)
+
       = action_buttons_for_allowed_events(@case, :extend_for_pit, :remove_pit_extension).join(' ').html_safe
 
       - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
@@ -57,7 +60,11 @@ div id="case-#{@correspondence_type_key}" class="case"
   - if @case.respond_to?(:ico_decision) && @case.ico_decision.present?
     = render partial: 'cases/ico/ico_final_decision', locals: {case_details: @case}
 
-  - unless @case.is_offender_sar?
+  - if @case.offender_sar?
+    section.case-info
+      = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case }
+
+  - unless @case.offender_sar?
     = render partial: 'shared/components/case_linked_cases'
 
   - unless @case.overturned_ico?
@@ -68,7 +75,7 @@ div id="case-#{@correspondence_type_key}" class="case"
     = render partial: "cases/#{@case.type_abbreviation.parameterize.underscore}/case_details",
              locals: {case_details: @case, link_type: nil}
 
-  - unless @case.is_offender_sar?
+  - unless @case.offender_sar?
     section.case-info
       = render partial: 'cases/clearance_levels', locals: { case_details: @case }
 
@@ -76,7 +83,7 @@ div id="case-#{@correspondence_type_key}" class="case"
     section.case-info
       = render partial: 'cases/case_attachments', locals: {case_details: @case}
 
-  - unless @case.is_offender_sar?
+  - unless @case.offender_sar?
     section#messages-section.case-info
       = render partial: 'cases/case_messages', locals: { case_details: @case }
 
@@ -84,9 +91,9 @@ div id="case-#{@correspondence_type_key}" class="case"
     section.case-info.has-page-break
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
-  - if @case.is_offender_sar?
+  - if @case.offender_sar?
     section.notes-section
-      = render partial: 'cases/offender_sar/case_notes',locals: { case_details: @case }
+      = render partial: 'cases/offender_sar/case_notes', locals: { case_details: @case }
 
   = render partial: 'shared/components/case_page_original_case_details'
 

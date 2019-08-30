@@ -1,0 +1,10 @@
+.data-request {
+  &__single {
+    border-bottom: 1px solid $grey-3;
+    margin-bottom: $gutter;
+  }
+
+  &__position {
+    margin-bottom: $gutter-half;
+  }
+}
