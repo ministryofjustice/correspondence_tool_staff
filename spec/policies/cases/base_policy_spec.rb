@@ -604,4 +604,8 @@ describe Case::BasePolicy do
                                            )
     end
   end
+
+  permissions :can_record_data_request? do
+    it { should_not permit(manager, unassigned_case) }
+  end
 end

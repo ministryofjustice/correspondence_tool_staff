@@ -3,7 +3,7 @@ FactoryBot.define do
   factory :offender_sar_case, class: Case::SAR::Offender do
     transient do
       creation_time       { 4.business_days.ago }
-      identifier          { "new offender sar case" }
+      identifier          { 'New Offender SAR case' }
       managing_team       { find_or_create :team_branston }
       manager             { managing_team.managers.first }
       responding_team     { find_or_create :team_branston }
@@ -12,11 +12,6 @@ FactoryBot.define do
       approving_team      { find_or_create :team_branston }
       approver            { approving_team.approvers.first }
       i_am_deleted        { false }
-    end
-
-    trait :third_party do
-      third_party { true }
-      third_party_relationship { 'Aunt' }
     end
 
     current_state                   { 'data_to_be_requested' }
@@ -39,92 +34,77 @@ FactoryBot.define do
     creator                         { create(:user, :orphan) }
   end
 
-  factory :waiting_for_data_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+  trait :third_party do
+    third_party { true }
+    third_party_relationship { 'Aunt' }
+  end
+
+  trait :data_to_be_requested do
+    # Default state for a new offender_sar_case
+  end
+
+  trait :waiting_for_data do
     transient do
-      identifier { "waiting for data offender sar" }
+      identifier { 'Waiting for data Offender SAR' }
     end
 
-    created_at      { creation_time }
-    received_date   { creation_time }
-
     after(:create) do |kase|
-      create :case_transition_waiting_for_data,
-             case: kase
+      create :case_transition_waiting_for_data, case: kase
       kase.reload
     end
   end
 
-  factory :ready_for_vetting_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+  trait :ready_for_vetting do
     transient do
-      identifier { "Ready for vetting offender sar" }
+      identifier { 'Ready for vetting Offender SAR' }
     end
 
-    created_at      { creation_time }
-    received_date   { creation_time }
-
     after(:create) do |kase|
-      create :case_transition_ready_for_vetting,
-             case: kase
+      create :case_transition_ready_for_vetting, case: kase
       kase.reload
     end
   end
 
-  factory :vetting_in_progress_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+  trait :vetting_in_progress do
     transient do
-      identifier { "Vetting in progress offender sar" }
+      identifier { 'Vetting in progress Offender SAR' }
     end
 
-    created_at      { creation_time }
-    received_date   { creation_time }
-
     after(:create) do |kase|
-      create :case_transition_vetting_in_progress,
-             case: kase
+      create :case_transition_vetting_in_progress, case: kase
       kase.reload
     end
   end
 
-  factory :ready_to_copy_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+  trait :ready_to_copy do
     transient do
-      identifier { "Ready to close offender sar" }
+      identifier { 'Ready to close Offender SAR' }
     end
 
-    created_at      { creation_time }
-    received_date   { creation_time }
-
     after(:create) do |kase|
-      create :case_transition_ready_to_copy,
-             case: kase
+      create :case_transition_ready_to_copy, case: kase
       kase.reload
     end
   end
 
-  factory :ready_to_dispatch_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+  trait :ready_to_dispatch do
     transient do
-      identifier { "Ready to dispatch offender sar" }
+      identifier { 'Ready to dispatch Offender SAR' }
     end
 
-    created_at      { creation_time }
-    received_date   { creation_time }
-
     after(:create) do |kase|
-      create :case_transition_ready_to_dispatch,
-             case: kase
+      create :case_transition_ready_to_dispatch, case: kase
       kase.reload
     end
   end
 
-  factory :closed_offender_sar, parent: :offender_sar_case, class: Case::SAR::Offender do
+  trait :closed do
     transient do
-      identifier { "Closed offender sar" }
+      identifier { 'Closed Offender SAR' }
     end
 
-    created_at      { creation_time }
-    received_date   { creation_time }
-
     after(:create) do |kase|
-      create :case_transition_closed,
-             case: kase
+      create :case_transition_closed, case: kase
       kase.reload
     end
   end

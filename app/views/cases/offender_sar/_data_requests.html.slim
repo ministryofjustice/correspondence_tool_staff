@@ -1,0 +1,37 @@
+.grid-row
+  .column-full.data-requests
+    h2.request--heading.data-requests__title
+      = t('cases.data_requests.index.heading')
+
+    - if case_details.data_requests.empty?
+      p.data-requests__none
+        = t('cases.data_requests.index.none')
+
+    - else
+      table
+        thead
+          tr
+            th Location
+            th Data
+            th Date requested
+            th Pages
+            th Date received
+            th
+        tbody
+          - case_details.data_requests.order(date_requested: :asc).each do |data_request|
+            tr
+              td
+                = data_request.location
+              td
+                = truncate(data_request.data, length: 140)
+              td
+                time datetime="#{data_request.date_requested}"
+                  = l data_request.date_requested, format: :default
+              td
+                = data_request.cached_num_pages
+              td
+                - if data_request.cached_date_received.present?
+                  time datetime="#{data_request.cached_date_received}"
+                    = l data_request.cached_date_received, format: :default
+              td
+                = link_to t('cases.data_requests.index.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__action'

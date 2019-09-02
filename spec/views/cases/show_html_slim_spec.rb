@@ -36,7 +36,8 @@ describe 'cases/show.html.slim', type: :view do
       :mark_as_ready_to_copy,
       :mark_as_ready_to_dispatch,
       :mark_as_closed,
-      :can_add_note_to_case?
+      :can_add_note_to_case?,
+      :can_record_data_request?,
     ]
 
     if (policies.keys - policy_names).any?
@@ -476,7 +477,7 @@ describe 'cases/show.html.slim', type: :view do
     end
   end
 
-  context 'with an offender sar case' do
+  describe 'offender sar case' do
     let(:offender_sar_case) { create(:offender_sar_case).decorate }
 
     before do
@@ -488,7 +489,8 @@ describe 'cases/show.html.slim', type: :view do
         mark_as_ready_to_dispatch: true,
         mark_as_ready_to_copy: true,
         mark_as_closed: true,
-        can_add_note_to_case?: true
+        can_add_note_to_case?: true,
+        can_record_data_request?: true,
       )
     end
 
@@ -501,10 +503,11 @@ describe 'cases/show.html.slim', type: :view do
           render
           cases_show_page.load(rendered)
         end
+
         it { should_not have_rendered 'cases/_case_messages'}
         it { should have_rendered 'cases/offender_sar/_case_notes'}
+        it { should have_rendered 'cases/offender_sar/_data_requests'}
       end
-
 
       context 'when a case just created' do
         it 'shows mark as waiting for data' do
@@ -527,6 +530,7 @@ describe 'cases/show.html.slim', type: :view do
           cases_show_page.load(rendered)
 
           expect(cases_show_page.actions).to have_mark_as_ready_for_vetting
+          expect(cases_show_page.data_requests.section_heading).to be_present
         end
       end
 
@@ -563,6 +567,82 @@ describe 'cases/show.html.slim', type: :view do
           cases_show_page.load(rendered)
 
           expect(cases_show_page.actions).to have_mark_as_ready_to_copy
+        end
+      end
+
+      context 'record data request' do
+        before do
+          assign(:permitted_events, [:mark_as_waiting_for_data])
+          assign(:filtered_permitted_events, [:mark_as_waiting_for_data])
+          login_as manager
+        end
+
+        # Green button when no data requests have been recorded
+        it 'shows record data request button' do
+          render
+          cases_show_page.load(rendered)
+          expect(cases_show_page.actions.record_data_request['class']).to match(/button-secondary/)
+        end
+
+        # Grey button once one or more data requests have been recorded
+        it 'shows tertiary button after data request is recorded' do
+          offender_sar_case.current_state = 'ready_for_vetting'
+          render
+          cases_show_page.load(rendered)
+          expect(cases_show_page.actions.record_data_request['class']).to match(/button-tertiary/)
+        end
+      end
+
+      context 'data requested section' do
+        before do
+          login_as manager
+        end
+
+        it 'shows none message when case has no data requests' do
+          assign(:case, offender_sar_case)
+          render
+          cases_show_page.load(rendered)
+          expect(cases_show_page.data_requests.none.text).to eq 'No data requests recorded'
+        end
+
+        it 'shows data requests as table rows' do
+          new_offender_sar_case = create(:offender_sar_case).decorate
+
+          2.times do
+            new_offender_sar_case.data_requests.create(
+              location: 'The Location',
+              data: 'Some data',
+              date_requested: Date.new(2007, 7, 2),
+              user: manager
+            )
+          end
+
+          assign(:case, new_offender_sar_case)
+          render
+          cases_show_page.load(rendered)
+          data_requests = cases_show_page.data_requests.rows
+
+          expect(data_requests.size).to eq 2
+          expect(data_requests.first.location.text).to eq 'The Location'
+          expect(data_requests.first.data.text).to eq 'Some data'
+          expect(data_requests.first.date_requested.text).to eq '2 Jul 2007'
+          expect(data_requests.first.date_requested_time['datetime']).to eq '2007-07-02'
+          expect(data_requests.first.pages.text).to eq '0'
+        end
+
+        it 'truncates long data request data fields' do
+          new_offender_sar_case = create(:offender_sar_case).decorate
+          new_offender_sar_case.data_requests.create(
+            location: 'The Location',
+            data: 'Long information request ' * 100,
+            user: manager
+          )
+
+          assign(:case, new_offender_sar_case)
+          render
+          cases_show_page.load(rendered)
+          data_requests = cases_show_page.data_requests.rows
+          expect(data_requests.first.data.text).to end_with '...'
         end
       end
     end

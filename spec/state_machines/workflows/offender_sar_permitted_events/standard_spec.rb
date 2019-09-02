@@ -1,78 +1,61 @@
 require 'rails_helper'
 
 describe ConfigurableStateMachine::Machine do
-  context 'standard workflow' do
+  describe 'with standard workflow Offender SAR case' do
 
-##################### MANAGER  ############################
+    TRANSITIONS = [
+      {
+        state: :data_to_be_requested,
+        specific_events: [:mark_as_waiting_for_data]
+      },
+      {
+        state: :waiting_for_data,
+        specific_events: [:mark_as_ready_for_vetting]
+      },
+      {
+        state: :ready_for_vetting,
+        specific_events: [:mark_as_vetting_in_progress]
+      },
+      {
+        state: :vetting_in_progress,
+        specific_events: [:mark_as_ready_to_copy]
+      },
+      {
+        state: :ready_to_copy,
+        specific_events: [:mark_as_ready_to_dispatch]
+      },
+      {
+        state: :ready_to_dispatch,
+        specific_events: [:mark_as_closed]
+      },
+    ].freeze
 
-    context 'manager' do
+    UNIVERSAL_EVENTS = %i[
+      add_note_to_case
+      add_data_received
+    ].freeze
 
-      let(:manager)   { find_or_create :disclosure_bmt_user}
+    def offender_sar_case(with_state:)
+      create :offender_sar_case, with_state
+    end
 
-      context 'data to be requested state' do
-        it 'should show permitted events' do
-          k = create :offender_sar_case
-          expect(k.class).to eq Case::SAR::Offender
-          expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'data_to_be_requested'
-          expect(k.state_machine.permitted_events(manager)).to eq [:add_note_to_case,
-                                                                   :mark_as_waiting_for_data]
-        end
-      end
+    context 'as manager' do
+      let(:manager) { find_or_create :disclosure_bmt_user }
 
+      TRANSITIONS.each do |transition|
+        context "with Offender SAR in state #{transition[:state]}" do
+          let(:kase) { offender_sar_case with_state: transition[:state] }
 
-      context 'waiting for data state' do
-        it 'shows events' do
-          k = create :waiting_for_data_offender_sar
-          expect(k.class).to eq Case::SAR::Offender
-          expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'waiting_for_data'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
-                                                                      :mark_as_ready_for_vetting]
-        end
-      end
+          before do
+            expect(kase.current_state.to_sym).to eq transition[:state]
+          end
 
-      context 'ready for vetting state' do
-        it 'shows events' do
-          k = create :ready_for_vetting_offender_sar
-          expect(k.class).to eq Case::SAR::Offender
-          expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'ready_for_vetting'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
-                                                                      :mark_as_vetting_in_progress]
-        end
-      end
+          it 'only allows permitted events' do
+            permitted_events = UNIVERSAL_EVENTS + transition[:specific_events]
 
-      context 'vetting in progress state' do
-        it 'shows events' do
-          k = create :vetting_in_progress_offender_sar
-          expect(k.class).to eq Case::SAR::Offender
-          expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'vetting_in_progress'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
-                                                                      :mark_as_ready_to_copy]
-        end
-      end
-
-      context 'ready to copy state' do
-        it 'shows events' do
-          k = create :ready_to_copy_offender_sar
-          expect(k.class).to eq Case::SAR::Offender
-          expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'ready_to_copy'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
-                                                                      :mark_as_ready_to_dispatch]
-        end
-      end
-
-      context 'ready to dispatch state' do
-        it 'shows events' do
-          k = create :ready_to_dispatch_offender_sar
-          expect(k.class).to eq Case::SAR::Offender
-          expect(k.workflow).to eq 'standard'
-          expect(k.current_state).to eq 'ready_to_dispatch'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_note_to_case,
-                                                                      :mark_as_closed]
+            expect(kase.state_machine.permitted_events(manager))
+              .to match_array permitted_events
+          end
         end
       end
     end
