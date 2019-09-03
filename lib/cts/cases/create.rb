@@ -100,7 +100,7 @@ module CTS::Cases
       subject_full_name = options.fetch(:subject_full_name, Faker::Name.name)
       @klass.new(
         subject_full_name: options.fetch(:subject_full_name, Faker::Name.name),
-        email:             options.fetch(:email, Faker::Internet.email(subject_full_name)),
+        email:             options.fetch(:email, Faker::Internet.email(name: subject_full_name)),
         subject:           options.fetch(:subject, Faker::Company.catch_phrase),
         third_party:       options.fetch(:third_party, false),
         message: options.fetch(

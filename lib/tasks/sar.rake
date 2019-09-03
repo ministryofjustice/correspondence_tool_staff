@@ -5,9 +5,13 @@ namespace :sar do
     Timecop.freeze Time.now - 24.hours do
       kase = Case::SAR::Standard.new
       kase.name = Faker::Name.name
-      kase.email = Faker::Internet.email(kase.name)
+      kase.email = Faker::Internet.email(name: kase.name)
       kase.subject = Faker::Company.catch_phrase
-      kase.message = Faker::Lorem.paragraph(10, true, 10)
+      kase.message = Faker::Lorem.paragraph(
+        sentence_count: 10,
+        supplemental: true,
+        random_sentences_to_add: 10
+      )
       kase.category = category
       kase.received_date = Date.yesterday
       kase.postal_address = "2 Vinery Way\nLondon\nW6 0LQ"
