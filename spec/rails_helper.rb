@@ -41,20 +41,18 @@ Capybara.register_driver :chrome do |app|
 end
 
 Capybara.register_driver :headless_chrome do |app|
-  if ENV['CHROME_DEBUG'].present?
-    configurationSetting = {}
-  else
-    configurationSetting = { args: %w(headless disable-gpu no-sandbox --start-maximized
-                                      --window-size=1980,2080 --enable-features=NetworkService,NetworkServiceInProcess) }
+  options = Selenium::WebDriver::Chrome::Options.new
+
+  unless ENV["CHROME_DEBUG"]
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--start-maximized')
+    options.add_argument('--window-size=1980,2080')
+    options.add_argument('--enable-features=NetworkService,NetworkServiceInProcess')
   end
 
-  capabilities = Selenium::WebDriver::Remote::Capabilities.chrome(
-      chromeOptions: configurationSetting
-  )
-
-  Capybara::Selenium::Driver.new app,
-    browser: :chrome,
-    desired_capabilities: capabilities
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options)
 end
 
 Capybara.javascript_driver = :headless_chrome
