@@ -2,8 +2,7 @@
 = form_for kase, as: :"#{@correspondence_type_key}", url: url do |f|
 
   - if @case.responded_late?
-    = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
-
+    = render partial: 'cases/shared/team_caused_late_response', locals: { kase: @case, f: f }
 
   .js-info-held-status
     = f.radio_button_fieldset :info_held_status_abbreviation, choices: CaseClosure::InfoHeldStatus.all, text_method: :name, value_method: :abbreviation
@@ -14,5 +13,5 @@
   .grid-row
     .column-two-thirds
       .button-holder
-        = f.submit submit_button, {class: 'button'}
+        = f.submit submit_button, { class: 'button' }
         = link_to "Return to case detail", case_path(kase.id), class:'button-secondary button-left-spacing'

@@ -2,10 +2,12 @@ module Cases
   class OffenderSarController < CasesController
     include NewCase
     include OffenderSARCasesParams
-    include GovUKDateFixes
 
     before_action :set_case_types, only: [:new, :create]
-    before_action :set_date_of_birth, except: [:new, :create]
+
+    before_action -> { set_decorated_case(params[:id]) }, only: [
+      :transition
+    ]
 
     def initialize
       @correspondence_type = CorrespondenceType.offender_sar
