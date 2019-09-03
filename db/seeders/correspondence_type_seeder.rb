@@ -37,7 +37,7 @@ class CorrespondenceTypeSeeder
 
     rec = CorrespondenceType.find_by(abbreviation: 'OFFENDER_SAR')
     rec = CorrespondenceType.new if rec.nil?
-    rec.update!(name: 'Offender SAR (OFFENDER)',
+    rec.update!(name: 'Offender subject access request',
                 abbreviation: 'OFFENDER_SAR',
                 escalation_time_limit: 3,
                 internal_time_limit: 10,
