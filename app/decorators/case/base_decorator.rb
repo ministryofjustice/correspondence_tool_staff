@@ -180,7 +180,7 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def pretty_type
-    object.class.type_abbreviation
+    object.class.type_abbreviation.dasherize
   end
 
   def late_team_name
