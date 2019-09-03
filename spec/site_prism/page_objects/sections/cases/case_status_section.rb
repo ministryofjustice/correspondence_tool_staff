@@ -3,10 +3,10 @@ module PageObjects
     module Cases
       class CaseStatusSection < SitePrism::Section
 
-        section :details , '.case-status--intime' do
+        section :details , '.case-status__info.case-status__info--details' do
           element :copy_label , '.status .case-status__heading'
           element :copy ,
-                  '.status .case-status__data---large'
+                  '.status .case-status__data--large'
           element :who_its_with_label,
                   '.who_its_with .case-status__heading'
           element :who_its_with,
@@ -17,11 +17,11 @@ module PageObjects
                   '.ico-reference .case-status__data'
         end
 
-        section :deadlines , '.case-status__deadline' do
-          element :draft_label , '.draft .case-status__heading'
-          element :draft , '.draft .case-status__data'
-          element :final_label, '.external .case-status__heading'
-          element :final, '.external .case-status__data'
+        section :deadlines , '.case-status__info.case-status__info--deadlines' do
+          element :draft_label , '.draft .case-status__date-title'
+          element :draft , '.draft .case-status__date-value'
+          element :final_label, '.external .case-status__date-title'
+          element :final, '.external .case-status__date-value'
         end
       end
     end
