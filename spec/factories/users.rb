@@ -48,7 +48,7 @@ FactoryBot.define do
     #     user that is found will have it's password set to 'nil'.
     password { 'qwerty$123' }
     sequence(:full_name) { |n| "#{identifier} #{n}" }
-    email { Faker::Internet.email(full_name) }
+    email { Faker::Internet.email(name: full_name) }
 
     trait :dev do
       email { email_from_name(full_name) }

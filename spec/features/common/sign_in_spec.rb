@@ -30,7 +30,7 @@ feature "Signing in" do
   scenario "Signing in using invalid password" do
     login_page.load
 
-    login_page.log_in(responder.email, Faker::Lorem.characters(8) )
+    login_page.log_in(responder.email, Faker::Lorem.characters(number: 8) )
 
     expect(login_page.error_message).to have_content 'Invalid email or password'
   end

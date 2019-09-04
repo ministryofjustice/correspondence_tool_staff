@@ -67,14 +67,14 @@ class DatabaseAnonymizer
   def anonymize_user(user)
     unless user.email =~ /@digital.justice.gov.uk$/
       user.full_name = Faker::Name.unique.name
-      user.email = Faker::Internet.email(user.full_name)
+      user.email = Faker::Internet.email(name: user.full_name)
     end
     user
   end
 
   def anonymize_case(kase)
     kase.name = Faker::Name.name
-    kase.email = Faker::Internet.email(kase.name)
+    kase.email = Faker::Internet.email(name:kase.name)
     kase.subject = initial_letters(kase.subject) + Faker::Company.catch_phrase
     kase.message = Faker::Lorem.paragraph
     kase.postal_address = fake_address unless kase.postal_address.blank?
