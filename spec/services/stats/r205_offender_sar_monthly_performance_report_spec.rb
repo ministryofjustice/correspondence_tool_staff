@@ -71,7 +71,6 @@ module Stats
             period_end: @period_end
           )
           report.run
-          results = report.results
 
           expect(late_unassigned_trigger_sar_case.already_late?).to be true
           expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
@@ -81,6 +80,10 @@ module Stats
 
         # @todo (Mohammed Seedat): rules for lateness/flagged/trigger currently unimplemented
         xit 'has flagged cases' do
+          # Setup here
+          report.run
+          results = report.results
+
           expect(results[12][:trigger_open_late]).to eq(1)
           expect(results[12][:trigger_open_in_time]).to eq(1)
           expect(results[12][:trigger_total]).to eq(2)
