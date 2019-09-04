@@ -6,8 +6,7 @@ describe 'cases/show.html.slim', type: :view do
     allow(view).to receive(:current_user).and_return(user)
   end
 
-  #rubocop:disable Metrics/MethodLength
-  def setup_policies(policies)
+  def setup_policies(policies) #rubocop:disable Metrics/MethodLength
     policy_names = [
       :approve?,
       :assignments_execute_reassign_user?,
@@ -35,7 +34,7 @@ describe 'cases/show.html.slim', type: :view do
       :mark_as_vetting_in_progress,
       :mark_as_ready_to_copy,
       :mark_as_ready_to_dispatch,
-      :mark_as_closed,
+      :close,
       :can_add_note_to_case?,
       :can_record_data_request?,
     ]
@@ -488,7 +487,7 @@ describe 'cases/show.html.slim', type: :view do
         mark_as_vetting_in_progress: true,
         mark_as_ready_to_dispatch: true,
         mark_as_ready_to_copy: true,
-        mark_as_closed: true,
+        close: true,
         can_add_note_to_case?: true,
         can_record_data_request?: true,
       )

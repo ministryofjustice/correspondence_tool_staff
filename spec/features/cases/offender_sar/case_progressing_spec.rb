@@ -35,7 +35,7 @@ feature 'Offender SAR Case creation by a manager' do
     click_on "Mark as ready to dispatch"
 
     expect(cases_show_page).to be_displayed
-    expect(cases_show_page).to have_content "Mark as closed"
-    click_on "Mark as closed"
+    expect(cases_show_page).to have_content "Close case"
+    click_on "Close case"
   end
 end
