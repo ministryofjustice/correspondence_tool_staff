@@ -1,70 +1,85 @@
-.case-status.grid-row {
-  @include media(tablet) {
-    @include flexbox();
-    align-items: stretch;
-    margin: 0px;
+.case-status {
+  &.grid-row {
+    @include media(tablet) {
+      @include flexbox();
+      align-items: stretch;
+      margin: 0;
+    }
   }
-}
 
-
-.case-status__deadline, .case-status--intime {
-  /* Mobile first */
-  margin-left: $gutter-half;
-  margin-right: $gutter-half;
-  margin-bottom: $gutter-half;
-  padding: $gutter-half;
-
-
-  @include media(tablet) {
-    @include flex(1);
-    margin-left: 0;
+  &__info {
+    margin-left: $gutter-half;
+    margin-right: $gutter-half;
     margin-bottom: $gutter-half;
-    padding-bottom: $gutter-half;
-  }
-}
+    padding: $gutter-two-thirds;
 
-.case-status--intime {
-  background-color: $govuk-blue;
-  color: #ffffff;
-}
-
-.case-status__deadline {
-  border: 1px solid $border-colour;
-
-  @include media(tablet) {
-    margin-right: 0;
-  }
-}
-
-.case-status__group {
-  margin-bottom: $gutter;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-
-.case-status__heading {
-  @include core-19();
-}
-
-.case-status__data {
-  @include bold-24();
-}
-.case-status__data---large {
-  @include bold-36();
-}
-
-.external.case-status__group{
-  &:last-child {
     @include media(tablet) {
-      bottom: -7px;
-      position: relative;
+      @include flex(1);
+
+      margin-left: 0;
+      margin-bottom: $gutter-half;
+      padding-bottom: $gutter-half;
+    }
+
+    &--details {
+      background-color: $govuk-blue;
+      color: #ffffff;
+
+      @include media(tablet) {
+        min-width: calc(66% - #{$gutter-half});
+        margin: 0 $gutter-half 0 0;
+      }
+    }
+
+    &--deadlines {
+      @include media(tablet) {
+        margin: 0;
+      }
     }
   }
 
-  &:first-child {
-    @include media(tablet) {
-      position: static;
+  &__group {
+    margin-bottom: $gutter;
+
+    &:last-child {
+      margin-bottom: 0;
     }
+
+    &.external {
+      &:last-child {
+        @include media(tablet) {
+          bottom: -7px;
+          position: relative;
+        }
+      }
+
+      &:first-child {
+        @include media(tablet) {
+          position: static;
+        }
+      }
+    }
+  }
+
+  &__heading {
+    @include core-27();
+  }
+
+  &__data {
+    @include bold-24();
+  }
+
+  &__data--large {
+    @include bold-48();
+  }
+
+  &__date-title {
+    @include core-27();
+    color: $secondary-text-colour;
+    margin-bottom: 0.5rem;
+  }
+
+  &__date-value {
+    @include bold-36();
   }
 }
