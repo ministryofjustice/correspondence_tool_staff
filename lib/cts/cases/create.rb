@@ -52,8 +52,14 @@ module CTS::Cases
 
     def new_ico_case
       @klass.new(
-        message:              options.fetch(:message,
-                                            Faker::Lorem.paragraph(10, true, 10)),
+        message: options.fetch(
+          :message,
+          Faker::Lorem.paragraph(
+            sentence_count: 10,
+            supplemental: true,
+            random_sentences_to_add: 10
+          )
+        ),
         received_date:        get_ico_received_date,
         external_deadline:    get_ico_external_deadline,
         internal_deadline:    get_ico_internal_deadline,
@@ -70,11 +76,17 @@ module CTS::Cases
 
       @klass.new(
         name:            name,
-        email:           options.fetch(:email, Faker::Internet.email(name)),
+        email:           options.fetch(:email, Faker::Internet.email(name: name)),
         delivery_method: options.fetch(:delivery_method, 'sent_by_email'),
         subject:         options.fetch(:subject, Faker::Company.catch_phrase),
-        message:         options.fetch(:message,
-                                       Faker::Lorem.paragraph(10, true, 10)),
+        message: options.fetch(
+          :message,
+          Faker::Lorem.paragraph(
+            sentence_count: 10,
+            supplemental: true,
+            random_sentences_to_add: 10
+          )
+        ),
         requester_type:  options.fetch(:requester_type,
                                        Case::FOI::Standard.requester_types.keys.sample),
         received_date:   get_foi_received_date,
@@ -88,11 +100,17 @@ module CTS::Cases
       subject_full_name = options.fetch(:subject_full_name, Faker::Name.name)
       @klass.new(
         subject_full_name: options.fetch(:subject_full_name, Faker::Name.name),
-        email:             options.fetch(:email, Faker::Internet.email(subject_full_name)),
+        email:             options.fetch(:email, Faker::Internet.email(name: subject_full_name)),
         subject:           options.fetch(:subject, Faker::Company.catch_phrase),
         third_party:       options.fetch(:third_party, false),
-        message:           options.fetch(:message,
-                                         Faker::Lorem.paragraph(10, true, 10)),
+        message: options.fetch(
+          :message,
+          Faker::Lorem.paragraph(
+            sentence_count: 10,
+            supplemental: true,
+            random_sentences_to_add: 10
+          )
+        ),
         subject_type:      options.fetch(:subject_type,
                                          Case::SAR::Standard.subject_types.keys.sample),
         received_date:     get_sar_received_date,
@@ -483,7 +501,7 @@ module CTS::Cases
       name = Faker::Name.name
       user = User.create!(
         full_name: name,
-        email: Faker::Internet.email(name),
+        email: Faker::Internet.email(name: name),
         password: 'correspondence'
       )
 

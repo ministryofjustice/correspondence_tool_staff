@@ -16,7 +16,7 @@ FactoryBot.define do
 
     current_state                   { 'data_to_be_requested' }
     sequence(:name)                 { |n| "#{identifier} name #{n}" }
-    email                           { Faker::Internet.email(identifier) }
+    email                           { Faker::Internet.email(name: identifier) }
     reply_method                    { 'send_by_email' }
     sequence(:subject)              { |n| "#{identifier} subject #{n}" }
     sequence(:message)              { |n| "#{identifier} message #{n}" }

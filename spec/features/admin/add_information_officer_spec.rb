@@ -18,7 +18,7 @@ feature 'add information officer to a business unit' do
       .to have_text("Business unit: #{bu.name}")
 
     new_user_name = Faker::Name.name
-    new_user_email = Faker::Internet.email(new_user_name)
+    new_user_email = Faker::Internet.email(name: new_user_name)
     users_new_page.full_name.set new_user_name
     users_new_page.email.set new_user_email
 
