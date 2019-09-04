@@ -15,10 +15,17 @@
 
 hr
 
-= render partial: 'stats/report',
-         locals: {correspondence_type: 'Standard FOI reports',
-                  reports: @foi_reports}
+= render partial: 'stats/report', locals: {                                    \
+    correspondence_type: 'Standard FOI reports',                               \
+    reports: @reports[:foi],                                                   \
+  }                                                                            
 
-= render partial: 'stats/report',
-        locals: { correspondence_type: 'Standard SAR reports',
-                reports: @sar_reports }
+= render partial: 'stats/report', locals: {                                    \
+    correspondence_type: 'Standard SAR reports',                               \
+    reports: @reports[:sar],                                                   \
+  }                                                                            
+
+= render partial: 'stats/report', locals: {                                    \
+    correspondence_type: 'Offender SAR reports',                               \
+    reports: @reports[:offender_sar],                                          \
+  }

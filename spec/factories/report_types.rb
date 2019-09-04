@@ -124,5 +124,17 @@ FactoryBot.define do
       foi               { false }
       sar               { true }
     end
+
+    trait :r205 do
+      abbr              { 'R205' }
+      full_name         { 'Monthly report (Offender SARs)' }
+      class_name        { 'Stats::R205OffenderSarMonthlyPerformanceReport' }
+      custom_report     { false }
+      standard_report   { true }
+      seq_id            { 600 }
+      foi               { false }
+      sar               { false }
+      offender_sar      { true }
+    end
   end
 end

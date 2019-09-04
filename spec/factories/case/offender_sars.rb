@@ -104,7 +104,7 @@ FactoryBot.define do
     end
 
     after(:create) do |kase|
-      create :case_transition_closed, case: kase
+      create :case_transition_close, case: kase
       kase.reload
     end
   end

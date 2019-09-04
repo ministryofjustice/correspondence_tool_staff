@@ -132,4 +132,9 @@ class Case::SAR::Offender < Case::Base
   def allow_waiting_for_data_state?
     self.current_state == 'data_to_be_requested'
   end
+
+  # @todo (Mohammed Seedat): Conditions for a late business unit
+  def business_unit_already_late?
+    false
+  end
 end

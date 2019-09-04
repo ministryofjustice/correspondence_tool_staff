@@ -34,7 +34,7 @@ feature "Downloading stats(csv) from the system" do
     all_reports = ReportType.all
 
     # Perform check for existence of ReportType to duplication errors
-    %i[r002 r003 r004 r005 r007 r102 r103 r105].each do |report_type|
+    %i[r002 r003 r004 r005 r007 r102 r103 r105 r205].each do |report_type|
       unless all_reports.any? { |rt| rt.abbr == report_type.to_s.upcase }
         create(:report_type, report_type)
       end
@@ -140,6 +140,13 @@ feature "Downloading stats(csv) from the system" do
     stats_index_page.sar.reports.last.download_link.click
     expect(page.response_headers['Content-Disposition'])
         .to match(/filename="r105_sar_monthly_performance_report.xlsx"/)
+    stats_index_page.load
+  end
+
+  def download_r205_report
+    stats_index_page.offender_sar.reports.last.download_link.click
+    expect(page.response_headers['Content-Disposition'])
+      .to match(/filename="r205_offender_sar_monthly_performance_report.xlsx"/)
     stats_index_page.load
   end
 

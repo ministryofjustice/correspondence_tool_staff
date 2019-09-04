@@ -3,6 +3,14 @@ require 'rails_helper'
 describe 'stats/index.html.slim', type: :view do
   let!(:time) { Time.local(2018, 10, 3) }
 
+  let(:available_reports) {
+    {
+      foi: foi_reports,
+      sar: sar_reports,
+      offender_sar: offender_sar_reports,
+    }
+  }
+
   let(:foi_reports) {
     [
       build_stubbed(:report_type, :r004),
@@ -13,6 +21,12 @@ describe 'stats/index.html.slim', type: :view do
   let(:sar_reports) {
     [
       build_stubbed(:report_type, :r105)
+    ]
+  }
+
+  let(:offender_sar_reports) {
+    [
+      build_stubbed(:report_type, :r205)
     ]
   }
 
@@ -27,8 +41,7 @@ describe 'stats/index.html.slim', type: :view do
 
   let!(:page) do
     Timecop.freeze(time) do
-      assign(:foi_reports, foi_reports)
-      assign(:sar_reports, sar_reports)
+      assign(:reports, available_reports)
 
       render
       stats_index_page.load(rendered)
@@ -65,6 +78,17 @@ describe 'stats/index.html.slim', type: :view do
           title: 'Standard SAR reports',
           date_period: year_to_date_period,
           reports: sar_reports
+        )
+      end
+    end
+
+    context 'for Offender SAR reports' do
+      it 'is present' do
+        expected_content(
+          page_section: page.offender_sar,
+          title: 'Offender SAR reports',
+          date_period: year_to_date_period,
+          reports: offender_sar_reports
         )
       end
     end
