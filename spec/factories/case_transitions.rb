@@ -355,12 +355,4 @@ FactoryBot.define do
     acting_team { self.case.managing_team }
     acting_user { acting_team.managers.first }
   end
-
-  # factory :case_transition_close, parent: :case_transition do
-  #   to_state { 'closed' }
-  #   event { 'mark_as_closed' }
-
-  #   acting_team { self.case.managing_team }
-  #   acting_user { acting_team.managers.first }
-  # end
 end

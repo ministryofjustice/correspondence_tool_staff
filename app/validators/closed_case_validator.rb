@@ -34,6 +34,7 @@ class ClosedCaseValidator < ActiveModel::Validator
     'OVERTURNED_SAR' =>   [:validate_tmm,
                            :validate_date_responded],
     'OVERTURNED_FOI'=>    [],
+    'OFFENDER_SAR'  =>    [],
   }
 
   class << self

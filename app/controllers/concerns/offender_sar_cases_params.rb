@@ -33,11 +33,8 @@ module OffenderSARCasesParams
 
   def process_offender_sar_closure_params
     params.require(:offender_sar).permit(
-      :date_responded_dd,
-      :date_responded_mm,
-      :date_responded_yyyy,
-      :late_team_id,
-      ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
+      :info_held_status_abbreviation,
+    )
   end
 
   def respond_offender_sar_params

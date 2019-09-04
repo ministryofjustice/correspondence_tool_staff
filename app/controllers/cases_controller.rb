@@ -9,7 +9,7 @@ class CasesController < ApplicationController
   before_action -> { set_decorated_case(params[:id]) }, only: [
     :show,
     :destroy,
-    :confirm_destroy,
+    :confirm_destroy
   ]
 
   # Attributes used by sub-classes to set the current Case type for the request
