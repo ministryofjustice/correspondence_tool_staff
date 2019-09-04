@@ -1,6 +1,7 @@
-.grid-row
-  .column-full
-    = render partial: 'cases/case_attachments', locals: { case_details: @case }
+- unless @case.offender_sar?
+  .grid-row
+    .column-full
+      = render partial: 'cases/case_attachments', locals: { case_details: @case }
 
 - url = defined?(form_url) ? form_url : "#{polymorphic_path(@case, action: :process_date_responded)}"
 

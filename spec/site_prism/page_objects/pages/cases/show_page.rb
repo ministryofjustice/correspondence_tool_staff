@@ -38,7 +38,6 @@ module PageObjects
           element :mark_as_vetting_in_progress, '#action--mark-as-vetting-in-progress'
           element :mark_as_ready_to_copy, '#action--mark-as-ready-to-copy'
           element :mark_as_ready_to_dispatch, '#action--mark-as-ready-to-dispatch'
-          element :mark_as_closed, '#action--mark-as-closed'
         end
         element :extend_for_pit_action, '#action--extend-for-pit'
         element :remove_pit_extension_action, '#action--remove-pit-extension'

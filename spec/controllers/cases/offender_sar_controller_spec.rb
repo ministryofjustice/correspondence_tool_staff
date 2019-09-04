@@ -57,7 +57,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       ready_for_vetting: :mark_as_vetting_in_progress,
       vetting_in_progress: :mark_as_ready_to_copy,
       ready_to_copy: :mark_as_ready_to_dispatch,
-      ready_to_dispatch: :mark_as_closed,
+      ready_to_dispatch: :close,
     }.freeze
 
     OFFENDER_SAR_STATES.each do |state, transition_event|

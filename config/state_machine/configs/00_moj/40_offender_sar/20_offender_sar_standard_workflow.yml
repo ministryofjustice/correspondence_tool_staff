@@ -31,7 +31,7 @@
                 add_data_received:
                 add_note_to_case:
               ready_to_dispatch:
-                mark_as_closed:
+                close:
                   transition_to: closed
                 add_data_received:
                 add_note_to_case:

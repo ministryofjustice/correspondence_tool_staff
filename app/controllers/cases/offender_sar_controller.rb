@@ -2,11 +2,12 @@ module Cases
   class OffenderSarController < CasesController
     include NewCase
     include OffenderSARCasesParams
-    include GovUKDateFixes
 
     before_action :set_case_types, only: [:new, :create]
-    before_action :set_case, except: [:new, :create]
-    before_action :set_date_of_birth, except: [:new, :create]
+
+    before_action -> { set_decorated_case(params[:id]) }, only: [
+      :transition
+    ]
 
     def initialize
       @correspondence_type = CorrespondenceType.offender_sar
@@ -18,13 +19,6 @@ module Cases
     def new
       permitted_correspondence_types
       authorize case_type, :can_add_case?
-
-      @case = OffenderSARCaseForm.new(session)
-      step = params[:step].present? && params[:step] != 'new' ? params[:step] : @case.steps.first
-
-      # @todo: Why does current_step need to be set? is it something OffenderSARCaseForm
-      # can figure out itself?
-      @case.current_step = step
 
       @case = OffenderSARCaseForm.new(session)
       @case.current_step = params[:step]
@@ -82,13 +76,15 @@ module Cases
 
     # Actions for specific workflow state transitions
     def transition
+      authorize @case, :transition?
+
       available_actions = %w[
         mark_as_waiting_for_data
         mark_as_ready_for_vetting
         mark_as_vetting_in_progress
         mark_as_ready_to_copy
         mark_as_ready_to_dispatch
-        mark_as_closed
+        close
       ]
 
       if available_actions.include?(params[:transition_name])
@@ -103,11 +99,6 @@ module Cases
 
     def params_for_transition
       { acting_user: current_user, acting_team: current_user.managing_teams.first }
-    end
-
-    def set_case
-      @case = Case::Base.find(params[:id])
-      authorize @case
     end
 
     def reload_case_page_on_success

@@ -51,7 +51,7 @@ Rails.application.routes.draw do
     correspondence_type_resources = {
       foi: 'foi_standard', # views are in /foi
       sar: 'sar_standard', # views are in /sar
-      offender_sar: 'offender_sar',
+      offender_sar: 'sar_offender',
       ico: 'ico',
       ico_foi: 'ico_foi',
       ico_sar: 'ico_sar',
