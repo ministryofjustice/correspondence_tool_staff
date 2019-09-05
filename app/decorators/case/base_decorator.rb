@@ -195,6 +195,10 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
+  def closed_case_name
+    self.name.blank? ? self.subject : self.name
+  end
+
   private
 
   def translation_for_case(kase, path, key, options = {})
