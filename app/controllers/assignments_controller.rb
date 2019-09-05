@@ -17,6 +17,8 @@ class AssignmentsController < ApplicationController
     :unaccept,
   ]
 
+  before_action :check_case_not_deleted, only: [:edit]
+
   before_action :validate_response, only: :accept_or_reject
 
   def new
@@ -249,7 +251,7 @@ class AssignmentsController < ApplicationController
     if Case::Base.exists?(id: params[:case_id])
       set_case
     end
-    if Assignment.exists?(id: params[:id])
+    if @case && Assignment.exists?(id: params[:id])
       @assignment = @case.assignments.find(params[:id])
     end
   end
@@ -260,6 +262,13 @@ class AssignmentsController < ApplicationController
               .find(params[:case_id])
               .decorate
     @case_transitions = @case.transitions.decorate
+  end
+
+  def check_case_not_deleted
+    if @case.nil? && Case::Base.unscoped.find(params[:case_id])
+      flash[:notice] = 'Case has been deleted.'
+      redirect_to open_filter_path
+    end
   end
 
   def set_team_users
