@@ -126,11 +126,14 @@ feature 'respond to responder assignment' do
   scenario 'kilo clicks on a link to an assignment that has been deleted' do
     assignment_id = assignment.id
     assignment.accept responder
-    assigned_case.update_attribute(:deleted, true)
+
+    assigned_case.deleted = true
+    assigned_case.reason_for_deletion = 'testing assignment for deleted case'
+    assigned_case.save!
 
     visit edit_case_assignment_path assigned_case, assignment_id
 
     expect(page).to have_current_path(open_filter_path)
-    expect(page).to have_content("Case has been deleted.")
+    expect(page).to have_content('Case has been deleted.')
   end
 end
