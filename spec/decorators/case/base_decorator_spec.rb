@@ -438,4 +438,39 @@ describe Case::BaseDecorator, type: :model do
       expect(accepted_case.pretty_type).to eq 'FOI'
     end
   end
+  describe '#closed_case_name' do
+
+    class MockCase
+      def initialize(representative_name:)
+        @representative_name = representative_name
+        @subject = 'Monalisa Khan'
+      end
+
+      def representative_name
+        @representative_name
+      end
+
+      def subject
+        @subject
+      end
+    end
+
+    context 'when case represenatative name is empty' do
+      it 'returns the subject as the represenatative' do
+        kase = MockCase.new(
+          representative_name: '',
+        )
+        expect(closed_case_name(kase)).to eq 'Monalisa Khan'
+      end
+    end
+
+    context 'when case represenatative name is not empty' do
+      it 'returns the case represenatative name' do
+        kase = MockCase.new(
+          representative_name: 'Ingrid Myers',
+        )
+        expect(closed_case_name(kase)).to eq 'Ingrid Myers'
+      end
+    end
+  end
 end
