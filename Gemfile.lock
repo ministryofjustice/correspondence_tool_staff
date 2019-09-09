@@ -340,7 +340,7 @@ GEM
     modware (0.1.3)
       key_struct (~> 0.4)
     multi_json (1.13.1)
-    multipart-post (2.0.0)
+    multipart-post (2.1.1)
     nenv (0.3.0)
     net-http-digest_auth (1.4.1)
     net-http-persistent (3.0.0)
@@ -497,7 +497,7 @@ GEM
     selenium-webdriver (3.142.4)
       childprocess (>= 0.5, < 3.0)
       rubyzip (~> 1.2, >= 1.2.2)
-    sentry-raven (2.9.0)
+    sentry-raven (2.11.0)
       faraday (>= 0.7.6, < 1.0)
     shell-spinner (1.0.4)
       colorize
@@ -658,7 +658,7 @@ DEPENDENCIES
   sass-rails (~> 6.0)
   schema_plus_enums (~> 0.1)
   selenium-webdriver (~> 3.142.4)
-  sentry-raven (~> 2.9.0)
+  sentry-raven (~> 2.11.0)
   shell-spinner
   shoulda-matchers (~> 4.1)
   sidekiq (~> 5.2.7)
