@@ -39,7 +39,8 @@ class Case::SAR::Offender < Case::Base
                  subject_full_name: :string,
                  subject_type: :string,
                  third_party_relationship: :string,
-                 third_party: :boolean
+                 third_party: :boolean,
+                 late_team_id: :integer
 
   enum subject_type: {
     offender: 'offender',
@@ -110,6 +111,10 @@ class Case::SAR::Offender < Case::Base
 
   def offender_sar?
     true
+  end
+
+  def responding_team
+    managing_team
   end
 
   # This method is here to fix an issue with the gov_uk_date_fields

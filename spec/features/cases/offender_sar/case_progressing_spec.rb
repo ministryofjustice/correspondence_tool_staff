@@ -9,6 +9,11 @@ feature 'Offender SAR Case creation by a manager' do
     find_or_create :team_branston
     login_as manager
     cases_page.load
+    CaseClosure::MetadataSeeder.seed!
+  end
+
+  after do
+    CaseClosure::MetadataSeeder.unseed!
   end
 
   scenario 'creating a case that does not need clearance' do
@@ -37,5 +42,19 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Close case"
     click_on "Close case"
+
+    expect(cases_close_page).to be_displayed
+    cases_close_page.fill_in_date_responded(0.business_days.ago)
+    click_on "Continue"
+
+    expect(cases_closure_outcomes_page).to be_displayed
+    cases_closure_outcomes_page.is_info_held.yes.click
+
+    cases_closure_outcomes_page.submit_button.click
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Closed"
+    expect(cases_show_page).to have_content "Was the information held?"
+    expect(cases_show_page).to have_content "Yes"
   end
 end

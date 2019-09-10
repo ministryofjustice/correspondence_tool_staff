@@ -25,7 +25,7 @@ module PageObjects
 
         section :is_info_held, '.js-info-held-status' do
           element :held, 'input#foi_info_held_status_abbreviation_held', visible: false
-          element :yes,  'input#foi_info_held_status_abbreviation_held', visible: false
+          element :yes,  'input#foi_info_held_status_abbreviation_held, input#offender_sar_info_held_status_abbreviation_held', visible: false
 
           element :part_held,    'input#foi_info_held_status_abbreviation_part_held', visible: false
           element :held_in_part, 'input#foi_info_held_status_abbreviation_part_held', visible: false
