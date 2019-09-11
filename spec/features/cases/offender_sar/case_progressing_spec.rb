@@ -16,7 +16,7 @@ feature 'Offender SAR Case creation by a manager' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'creating a case that does not need clearance' do
+  scenario 'creating a case that does not need clearance', :js do
     cases_show_page.load(id: offender_sar_case.id)
 
     expect(cases_show_page).to have_content "Mark as waiting for data"
@@ -44,9 +44,9 @@ feature 'Offender SAR Case creation by a manager' do
     click_on "Close case"
 
     expect(cases_close_page).to be_displayed
-    cases_close_page.fill_in_date_responded(0.business_days.ago)
+    cases_close_page.fill_in_date_responded(offender_sar_case.received_date)
     click_on "Continue"
-
+sleep 10
     expect(cases_closure_outcomes_page).to be_displayed
     cases_closure_outcomes_page.is_info_held.yes.click
 
