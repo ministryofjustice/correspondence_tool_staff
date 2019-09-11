@@ -10,5 +10,6 @@
   .grid-row
     .column-two-thirds
       .button-holder
+        = hidden_field :offender_sar, value: "Test"
         = f.submit submit_button, { class: 'button' }
         = link_to "Return to case detail", case_path(kase.id), class:'button-secondary button-left-spacing'
