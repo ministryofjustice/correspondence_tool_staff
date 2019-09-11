@@ -433,43 +433,29 @@ describe Case::BaseDecorator, type: :model do
       end
     end
   end
+
   describe '#type_printer' do
     it 'pretty prints Case' do
       expect(accepted_case.pretty_type).to eq 'FOI'
     end
   end
+
   describe '#closed_case_name' do
+    let(:offender_sar_case) { build(:offender_sar_case, subject: 'The case subject') }
 
-    class MockCase
-      def initialize(representative_name:)
-        @representative_name = representative_name
-        @subject = 'Monalisa Khan'
-      end
-
-      def representative_name
-        @representative_name
-      end
-
-      def subject
-        @subject
+    context 'when name' do
+      context 'is not empty' do
+        it 'returns existing case name' do
+          offender_sar_case.name = 'Monalisa Khan'
+          expect(offender_sar_case.decorate.closed_case_name).to eq 'Monalisa Khan'
+        end
       end
     end
 
-    context 'when case represenatative name is empty' do
-      it 'returns the subject as the represenatative' do
-        kase = MockCase.new(
-          representative_name: '',
-        )
-        expect(closed_case_name(kase)).to eq 'Monalisa Khan'
-      end
-    end
-
-    context 'when case represenatative name is not empty' do
-      it 'returns the case represenatative name' do
-        kase = MockCase.new(
-          representative_name: 'Ingrid Myers',
-        )
-        expect(closed_case_name(kase)).to eq 'Ingrid Myers'
+    context 'is empty' do
+      it 'returns case subject instead' do
+        offender_sar_case.name = ''
+        expect(offender_sar_case.decorate.closed_case_name).to eq 'The case subject'
       end
     end
   end
