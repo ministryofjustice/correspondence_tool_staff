@@ -246,11 +246,21 @@ class AssignmentsController < ApplicationController
   end
 
   def set_case_and_assignment
-    if Case::Base.exists?(id: params[:case_id])
-      set_case
-    end
+    redirect_on_deleted_case! and return
+
+    set_case
+
     if Assignment.exists?(id: params[:id])
       @assignment = @case.assignments.find(params[:id])
+    end
+  end
+
+  def redirect_on_deleted_case!
+    # even if a case has been soft deleted users can still click
+    # existing links in emails to edit assigmments, etc
+    if Case::Base.unscoped.soft_deleted.exists?(params[:case_id])
+      flash[:notice] = 'Case has been deleted.'
+      redirect_to open_filter_path
     end
   end
 
