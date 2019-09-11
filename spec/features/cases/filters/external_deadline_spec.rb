@@ -12,15 +12,17 @@ feature 'filtering by external deadline' do
 
       @setup = StandardSetup.new(only_cases: @all_cases)
 
-      @case_due_today = create :case,
+      Timecop.freeze(4.business_hours.from_now) do
+        @case_due_today = create :case,
                                received_date: 20.business_days.ago,
                                subject: 'prison guards today'
-      @case_due_next_3_days = create :case,
+        @case_due_next_3_days = create :case,
                                      received_date: 18.business_days.ago,
                                      subject: 'prison guards next 3 days'
-      @case_due_next_10_days = create :case,
+        @case_due_next_10_days = create :case,
                                       received_date: 10.business_days.ago,
                                       subject: 'prison guards next 10 days'
+      end
 
       @all_case_numbers = @setup.cases.values.map(&:number) +
                           [
