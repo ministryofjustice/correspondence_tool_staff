@@ -587,6 +587,40 @@ ALTER SEQUENCE public.feedback_id_seq OWNED BY public.feedback.id;
 
 
 --
+-- Name: letter_templates; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.letter_templates (
+    id integer NOT NULL,
+    name character varying,
+    body character varying,
+    type character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: letter_templates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.letter_templates_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: letter_templates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.letter_templates_id_seq OWNED BY public.letter_templates.id;
+
+
+--
 -- Name: linked_cases; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1135,6 +1169,10 @@ ALTER TABLE ONLY public.feedback ALTER COLUMN id SET DEFAULT nextval('public.fee
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: letter_templates id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.letter_templates ALTER COLUMN id SET DEFAULT nextval('public.letter_templates_id_seq'::regclass);
 --
 
 ALTER TABLE ONLY public.linked_cases ALTER COLUMN id SET DEFAULT nextval('public.linked_cases_id_seq'::regclass);
@@ -1324,6 +1362,13 @@ ALTER TABLE ONLY public.feedback
 
 --
 -- Name: linked_cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: letter_templates letter_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.letter_templates
+    ADD CONSTRAINT letter_templates_pkey PRIMARY KEY (id);
+
+
 --
 
 ALTER TABLE ONLY public.linked_cases
@@ -1929,6 +1974,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190609185907'),
 ('20190730133328'),
 ('20190731151806'),
-('20190817185027');
+('20190817185027'),
+('20190912142741');
 
 
