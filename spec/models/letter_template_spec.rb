@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe LetterTemplate, type: :model do
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:body) }
-  it { should validate_presence_of(:type) }
+  it { should validate_presence_of(:template_type) }
 
-  it { should have_enum(:type).
+  it { should have_enum(:template_type).
           with_values(['acknowledgement', 'dispatch']) }
 
 

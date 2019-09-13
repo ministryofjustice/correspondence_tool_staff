@@ -1,7 +1,8 @@
 FactoryBot.define do
   factory :letter_template do
-    name { "Letter to requester" }
+    sequence(:name) { |n| "Letter to requester #{n}" }
+
     body { "Thank you for your offender subject access request, <%= values.name %>" }
-    type { 'acknowledgement' }
+    template_type { 'acknowledgement' }
   end
 end

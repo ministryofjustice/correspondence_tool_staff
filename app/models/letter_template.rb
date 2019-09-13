@@ -1,7 +1,7 @@
 class LetterTemplate < ApplicationRecord
-  validates :name, :body, :type, presence: true
+  validates :name, :body, :template_type, presence: true
 
-  enum type: {
+  enum template_type: {
     dispatch: 'dispatch',
     acknowledgement: 'acknowledgement',
   }
