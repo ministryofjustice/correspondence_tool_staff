@@ -6,6 +6,8 @@
 
 = render partial: 'layouts/header'
 
+= render partial: 'cases/shared/search_bar'
+
 .download-cases-link
   = link_to 'Download cases', new_stat_path(select: 'CLOSED_CASES')
 
