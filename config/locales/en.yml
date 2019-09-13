@@ -264,6 +264,7 @@ en:
     next_page_assign: Create case
     request_amends: Request amends 
     save_changes: Save changes
+    search: Search
 
   helpers:
     fieldset:
@@ -852,6 +853,9 @@ en:
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{num_days} days.
+    search_bar:
+      heading: Case number, requester name or keyword
+      hint: For example, 170113001, John Smith or prison meals 
     searches:
       show:
         heading: Search

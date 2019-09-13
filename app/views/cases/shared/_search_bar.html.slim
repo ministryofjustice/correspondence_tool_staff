@@ -2,8 +2,8 @@
   .column-full.button-holder
     = form_tag search_path, method: :get
       = label_tag 'search_query[search_text]', class: 'form-label-bold' do
-        = "Case number, requester name or keyword "
+        = t("cases.search_bar.heading")
         span.form-hint
-          = 'For example, 170113001, John Smith or prison meals'
+          = t("cases.search_bar.hint")
       = search_field_tag 'search_query[search_text]', @query.search_text, class: 'form-control'
-      = submit_tag 'Search', class: 'button button-no-margin', id: 'search-button'
+      = submit_tag t("button.search"), class: 'button button-no-margin', id: 'search-button'
