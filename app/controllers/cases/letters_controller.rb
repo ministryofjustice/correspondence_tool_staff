@@ -2,7 +2,7 @@ class Cases::LettersController < ApplicationController
   before_action :set_case
 
   def new
-    @letter_templates = LetterTemplate.all
+    @letter_templates = LetterTemplate.where(template_type: params[:type])
   end
 
   def render_letter

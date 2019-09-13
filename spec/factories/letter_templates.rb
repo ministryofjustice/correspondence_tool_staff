@@ -5,4 +5,12 @@ FactoryBot.define do
     body { "Thank you for your offender subject access request, <%= values.name %>" }
     template_type { 'acknowledgement' }
   end
+
+  trait :acknowledgement do
+    template_type { 'acknowledgement' }
+  end
+
+  trait :dispatch do
+    template_type { 'dispatch' }
+  end
 end

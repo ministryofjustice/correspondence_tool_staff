@@ -3,7 +3,8 @@ require 'rails_helper'
 RSpec.describe Cases::LettersController, type: :controller do
   let(:manager) { find_or_create :disclosure_bmt_user }
   let(:offender_sar_case) { create(:offender_sar_case) }
-  let(:letter_template) { create(:letter_template) }
+  let!(:letter_template_acknowledgement) { create(:letter_template, :acknowledgement) }
+  let!(:letter_template_dispatch) { create(:letter_template, :dispatch) }
 
   before do
     sign_in manager
@@ -23,13 +24,14 @@ RSpec.describe Cases::LettersController, type: :controller do
     end
 
     it 'sets @letter_templates' do
-      expect(assigns(:letter_templates)).to eq [letter_template]
+      expect(assigns(:letter_templates)).to eq [letter_template_acknowledgement]
+      expect(assigns(:letter_templates)).not_to include letter_template_dispatch
     end
   end
 
   describe "GET #render_letter" do
     before do
-      get :render_letter, params: { case_id: offender_sar_case.id, type: "acknowledgement", letter_template_id: letter_template.id }
+      get :render_letter, params: { case_id: offender_sar_case.id, type: "acknowledgement", letter_template_id: letter_template_acknowledgement.id }
     end
 
     it "returns http success" do
@@ -41,7 +43,7 @@ RSpec.describe Cases::LettersController, type: :controller do
     end
 
     it 'sets @letter_template' do
-      expect(assigns(:letter_template)).to eq letter_template
+      expect(assigns(:letter_template)).to eq letter_template_acknowledgement
     end
   end
 
