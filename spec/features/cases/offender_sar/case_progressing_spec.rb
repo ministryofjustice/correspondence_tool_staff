@@ -16,7 +16,7 @@ feature 'Offender SAR Case creation by a manager' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'creating a case that does not need clearance', :js do
+  scenario 'creating a case that does not need clearance' do
     cases_show_page.load(id: offender_sar_case.id)
 
     expect(cases_show_page).to have_content "Mark as waiting for data"
@@ -46,15 +46,16 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_close_page).to be_displayed
     cases_close_page.fill_in_date_responded(offender_sar_case.received_date)
     click_on "Continue"
-sleep 10
-    expect(cases_closure_outcomes_page).to be_displayed
-    cases_closure_outcomes_page.is_info_held.yes.click
 
+    expect(cases_closure_outcomes_page).to be_displayed
+    # TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
+    # cases_closure_outcomes_page.is_info_held.yes.click
     cases_closure_outcomes_page.submit_button.click
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Closed"
-    expect(cases_show_page).to have_content "Was the information held?"
-    expect(cases_show_page).to have_content "Yes"
+    # TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
+    # expect(cases_show_page).to have_content "Was the information held?"
+    # expect(cases_show_page).to have_content "Yes"
   end
 end
