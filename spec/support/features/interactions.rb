@@ -178,10 +178,10 @@ module Features
 
 
     def search_for(page:, search_phrase:, num_expected_results: nil)
-      page.primary_navigation.search.click
-      expect(cases_search_page).to be_displayed
-      cases_search_page.search_query.set search_phrase
-      cases_search_page.search_button.click
+      page.primary_navigation.all_open_cases.click
+      expect(open_cases_page).to be_displayed
+      open_cases_page.search_query.set search_phrase
+      open_cases_page.search_button.click
       unless num_expected_results.nil?
         cases = cases_search_page.case_list
         expect(cases.count).to eq num_expected_results
