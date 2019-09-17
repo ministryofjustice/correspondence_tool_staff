@@ -59,6 +59,8 @@ module PageObjects
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',
+        cases_new_letter:               'Cases::NewLetterPage',
+        cases_render_letter:            'Cases::RenderLetterPage',
         login:                          'LoginPage',
         my_open_cases:                  'Cases::MyOpenCasesPage',
         open_cases:                     'Cases::OpenCasesPage',

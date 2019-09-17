@@ -11,39 +11,56 @@ RSpec.describe Cases::LettersController, type: :controller do
   end
 
   describe "GET #new" do
-    before do
-      get :new, params: { case_id: offender_sar_case.id, type: "acknowledgement" }
-    end
+    context "with valid params" do
+      before do
+        get :new, params: { case_id: offender_sar_case.id, type: "acknowledgement" }
+      end
 
-    it "returns http success" do
-      expect(response).to have_http_status(:success)
-    end
+      it "returns http success" do
+        expect(response).to have_http_status(:success)
+      end
 
-    it 'sets @case' do
-      expect(assigns(:case)).to eq offender_sar_case
-    end
+      it 'sets @case' do
+        expect(assigns(:case)).to eq offender_sar_case
+      end
 
-    it 'sets @letter_templates' do
-      expect(assigns(:letter_templates)).to eq [letter_template_acknowledgement]
-      expect(assigns(:letter_templates)).not_to include letter_template_dispatch
+      it 'sets @letter_templates' do
+        expect(assigns(:letter_templates)).to eq [letter_template_acknowledgement]
+        expect(assigns(:letter_templates)).not_to include letter_template_dispatch
+      end
     end
   end
 
   describe "GET #render_letter" do
-    before do
-      get :render_letter, params: { case_id: offender_sar_case.id, type: "acknowledgement", letter_template_id: letter_template_acknowledgement.id }
-    end
+    context "with valid params" do
+      before do
+        get :render_letter, params: {
+          case_id: offender_sar_case.id,
+          type: "acknowledgement",
+          letter_form:  { letter_template_id: letter_template_acknowledgement.id }
+        }
+      end
 
-    it "returns http success" do
-      expect(response).to have_http_status(:success)
-    end
+      it "returns http success" do
+        expect(response).to have_http_status(:success)
+      end
 
-    it 'sets @case' do
-      expect(assigns(:case)).to eq offender_sar_case
-    end
+      it 'sets @case' do
+        expect(assigns(:case)).to eq offender_sar_case
+      end
 
-    it 'sets @letter_template' do
-      expect(assigns(:letter_template)).to eq letter_template_acknowledgement
+      it 'sets @letter_template' do
+        expect(assigns(:letter_template)).to eq letter_template_acknowledgement
+      end
+    end
+    context "with invalid params" do
+      before do
+        get :render_letter, params: { case_id: offender_sar_case.id, type: "acknowledgement" }
+      end
+
+      it "redirects" do
+        expect(response).to have_http_status(:redirect)
+      end
     end
   end
 

@@ -15,6 +15,7 @@
                   transition_to: ready_for_vetting
                 add_data_received:
                 add_note_to_case:
+                send_acknowledgement_letter:
               ready_for_vetting:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress

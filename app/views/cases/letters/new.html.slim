@@ -1,2 +1,4 @@
-h1 Cases::Letters#new
-p Find me in app/views/cases/letters/new.html.slim
+= form_for @letter, url: render_case_letters_path(@case.id, @type), method: :get do |f|
+  = f.radio_button_fieldset :letter_template_id, choices: @letter_templates, text_method: :name, value_method: :id
+  = f.submit "Continue", {class: 'button'}
+

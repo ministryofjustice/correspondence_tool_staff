@@ -268,6 +268,8 @@ en:
 
   helpers:
     fieldset:
+      letter_form:
+        letter_template_id: "Choose a letter template to use:"
       bypass_approval_manager:
         press_office_approval: 'Does Press office need to clear this response?'
       offender_sar:
