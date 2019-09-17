@@ -3,10 +3,12 @@ require 'rails_helper'
 describe 'cases/filters/closed.html.slim' do
   let!(:case_1) { create :closed_case, received_date: 20.business_days.ago }
   let!(:case_2) { create :closed_case }
+  let(:search_query) { build :search_query }
 
   it 'displays all the cases' do
     cases = Case::Base.closed.most_recent_first.page.decorate
     assign(:cases, cases)
+    assign(:query, search_query)
 
     render
 
@@ -38,6 +40,7 @@ describe 'cases/filters/closed.html.slim' do
 
     it 'renders the paginator' do
       assign(:cases, Case::Base.none.page.decorate)
+      assign(:query, search_query)
       render
       expect(response).to have_rendered('kaminari/_paginator')
     end
