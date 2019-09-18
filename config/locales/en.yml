@@ -262,7 +262,7 @@ en:
     create_case: Create case
     feedback: Send feedback
     next_page_assign: Create case
-    request_amends: Request amends 
+    request_amends: Request amends
     save_changes: Save changes
     search: Search
 
@@ -306,6 +306,8 @@ en:
         flag_for_disclosure_specialists: Flag for disclosure specialist?
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+      offender_sar:
+        third_party: Please choose yes or no
       report:
         correspondence_type: Which type of cases do you want to report on?
         report_type_id: What should this report cover?
@@ -524,6 +526,7 @@ en:
       date_draft_uploaded: Date draft uploaded
       date_ico_decision_received: Date ICO's decision was received
       date_responded: Date response sent to requester
+      date_of_birth: Date of birth
       draft_timeliness: Draft timeliness
       case/ico:
         date_responded: Date response sent to ICO
@@ -544,6 +547,9 @@ en:
       header_subject: "Case subject, "
       late_team: Business unit responsible for late response
       name: Requester
+      other_subject_ids: "Subject's PNC or other ID numbers"
+      previous_case_numbers: Previous SAR cases
+      prison_number: "Prison number"
       postal_address: "Requester’s postal address"
       progress_for_clearance: "Ready for Disclosure clearance"
       received_date: Date request received at MOJ
@@ -563,6 +569,7 @@ en:
       requester_type: "Type of requester"
       sar_response_address: Where the information should be sent
       status: Status
+      subject_aliases: Subject aliases
       third_party: Information requested on someone's behalf?
       third_party_relationship: Third party relationship
       time_taken: Time taken
@@ -612,7 +619,7 @@ en:
         heading: Cases
         subheadings:
           number_of_cases_created_over_past_week: No of Cases created over the past week
-          existing_cases: Existing cases 
+          existing_cases: Existing cases
         date: Date
         no_of_cases: No. of Cases
         id: ID
@@ -928,7 +935,7 @@ en:
     reassign_user:
       heading: Change team member
       action: Change team member
-    select_team: 
+    select_team:
       heading: Select team
     take_case_on:
       success: Case taken on
