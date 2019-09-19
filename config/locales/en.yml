@@ -271,6 +271,7 @@ en:
       bypass_approval_manager:
         press_office_approval: 'Does Press office need to clear this response?'
       offender_sar:
+        info_held_status_abbreviation: Was the information held?
         flag_for_disclosure_specialists: "Flag as high profile case?"
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
