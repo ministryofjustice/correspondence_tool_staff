@@ -5,7 +5,7 @@ class Case::SAR::OffenderDecorator < Case::BaseDecorator
   end
 
   def subject_type_display
-    object.subject_type.humanize
+    object.subject_type.humanize.tr(' ', '-')
   end
 
   def third_party_display

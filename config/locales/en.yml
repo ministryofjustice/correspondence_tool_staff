@@ -446,7 +446,7 @@ en:
         email: "Recipient email address"
         message: Request details
         name: "Full name of the representative"
-        other_subject_ids: "Subject’s PNC or other ID numbers"
+        other_subject_ids: "Subject's PNC or other ID numbers"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
@@ -454,6 +454,9 @@ en:
         subject: "Case summary"
         subject_aliases: "Subject's alias if applicable"
         subject_full_name: "Full name of data subject"
+        subject_type:
+          ex_offender: Ex-offender
+          offender: Offender
         third_party: Is this information being requested on someone else's behalf?
         third_party_relationship: Relationship to the subject
       feedback:
