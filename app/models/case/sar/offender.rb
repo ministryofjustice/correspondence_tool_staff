@@ -114,7 +114,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def responding_team
-    managing_team
+    managing_team # both responding and managing - Branston are the only team who work on offender SARs
   end
 
   # This method is here to fix an issue with the gov_uk_date_fields

@@ -13,6 +13,9 @@
   .grid-row
     .column-two-thirds
       .button-holder
-        = hidden_field :offender_sar, value: "Test"
+        / TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
+        / this hidden field is required in order for the form to be submitted successfully
+        / remove once we have fields which populate the "offender_sar" params (even if no radios selected)
+        = hidden_field :offender_sar, value: ""
         = f.submit submit_button, { class: 'button' }
         = link_to "Return to case detail", case_path(kase.id), class:'button-secondary button-left-spacing'
