@@ -1,19 +1,9 @@
-class LetterForm
-  include ActiveModel::Conversion
-  extend  ActiveModel::Naming
-  attr_accessor :letter_template_id
-
-  def initialize(letter_template_id)
-    @letter_template_id = letter_template_id
-  end
-end
-
 class Cases::LettersController < ApplicationController
   before_action :set_case
 
   def new
-    @type = params[:type]
-    @letter = LetterForm.new(params[:letter_template_id])
+    @type = type_name(params[:type])
+    @letter = Letter.new(params[:letter_template_id])
     @letter_templates = LetterTemplate.where(template_type: @type)
   end
 
@@ -24,7 +14,7 @@ class Cases::LettersController < ApplicationController
       redirect_to new_case_letters_path(@case.id, @type) and return
     end
     letter_template_id = params[:letter_form][:letter_template_id]
-    @letter = LetterForm.new(letter_template_id)
+    @letter = Letter.new(letter_template_id)
     @letter_template = LetterTemplate.find(letter_template_id)
   end
 
@@ -32,5 +22,9 @@ class Cases::LettersController < ApplicationController
 
   def set_case
     @case = Case::Base.find(params[:case_id])&.decorate
+  end
+
+  def type_name(type)
+    LetterTemplate.template_types[type] || 'unknown'
   end
 end

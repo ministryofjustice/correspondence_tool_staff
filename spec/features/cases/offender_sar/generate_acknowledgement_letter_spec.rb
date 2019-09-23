@@ -8,7 +8,6 @@ feature 'Generate an acknowledgement letter by a manager' do
   background do
     find_or_create :team_branston
     login_as manager
-    cases_page.load
   end
 
   scenario 'creating a case that does not need clearance', :js do
@@ -19,6 +18,9 @@ feature 'Generate an acknowledgement letter by a manager' do
     click_on "Send acknowledgement letter"
 
     expect(cases_new_letter_page).to be_displayed
-    sleep 10
+    cases_new_letter_page.new_letter_form.first_option.click
+    click_on "Continue"
+
+    expect(cases_render_letter_page).to be_displayed
   end
 end

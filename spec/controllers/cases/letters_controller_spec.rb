@@ -25,7 +25,7 @@ RSpec.describe Cases::LettersController, type: :controller do
       end
 
       it 'sets @letter_templates' do
-        expect(assigns(:letter_templates)).to eq [letter_template_acknowledgement]
+        expect(assigns(:letter_templates)).to include letter_template_acknowledgement
         expect(assigns(:letter_templates)).not_to include letter_template_dispatch
       end
     end
@@ -53,6 +53,7 @@ RSpec.describe Cases::LettersController, type: :controller do
         expect(assigns(:letter_template)).to eq letter_template_acknowledgement
       end
     end
+
     context "with invalid params" do
       before do
         get :render_letter, params: { case_id: offender_sar_case.id, type: "acknowledgement" }
