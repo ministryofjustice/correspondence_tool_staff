@@ -10,7 +10,7 @@ describe ConfigurableStateMachine::Machine do
       },
       {
         state: :waiting_for_data,
-        specific_events: [:mark_as_ready_for_vetting]
+        specific_events: [:mark_as_ready_for_vetting, :send_acknowledgement_letter]
       },
       {
         state: :ready_for_vetting,

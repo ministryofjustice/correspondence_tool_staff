@@ -4,7 +4,7 @@ feature 'Generate an acknowledgement letter by a manager' do
   given(:manager)           { find_or_create :branston_user }
   given(:managing_team)     { create :managing_team, managers: [manager] }
   given(:offender_sar_case) { create(:offender_sar_case, :waiting_for_data).decorate }
-  given(:letter_template)   { find_or_create :letter_template }
+  given!(:letter_template)   { find_or_create :letter_template }
 
   background do
     find_or_create :team_branston
