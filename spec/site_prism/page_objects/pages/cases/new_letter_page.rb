@@ -10,7 +10,7 @@ module PageObjects
         section :page_heading,
           PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-        section :new_letter_form, '#new_letter_form' do
+        section :new_letter_form, '#new_letter' do
           element :first_option, 'label', visible: true
         end
 

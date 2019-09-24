@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 feature 'Generate an acknowledgement letter by a manager' do
-  given(:manager)         { find_or_create :branston_user }
-  given(:managing_team)   { create :managing_team, managers: [manager] }
+  given(:manager)           { find_or_create :branston_user }
+  given(:managing_team)     { create :managing_team, managers: [manager] }
   given(:offender_sar_case) { create(:offender_sar_case, :waiting_for_data).decorate }
+  given(:letter_template)   { find_or_create :letter_template }
 
   background do
     find_or_create :team_branston
@@ -18,6 +19,7 @@ feature 'Generate an acknowledgement letter by a manager' do
     click_on "Send acknowledgement letter"
 
     expect(cases_new_letter_page).to be_displayed
+
     cases_new_letter_page.new_letter_form.first_option.click
     click_on "Continue"
 

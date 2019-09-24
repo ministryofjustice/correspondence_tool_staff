@@ -207,7 +207,6 @@ def seed_database_for_tests
   FactoryBot.find_or_create :sar_responder
   FactoryBot.find_or_create :default_press_officer
   FactoryBot.find_or_create :default_private_officer
-  FactoryBot.find_or_create :letter_template
 end
 
 Shoulda::Matchers.configure do |config|
