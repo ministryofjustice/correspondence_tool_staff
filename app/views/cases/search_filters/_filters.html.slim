@@ -1,0 +1,32 @@
+.grid-row.ct-filters
+  details role="group" style="margin-bottom:0px"
+    summary aria-controls="details-content-1" aria-expanded="false" role="button"
+      span Filter cases
+    #details-content-1.filter-content aria-hidden="false"
+      details role="group"
+        summary aria-controls="details-content-2" aria-expanded="false" role="button"
+          span Filter by status
+        #details-content-2.filter-content aria-hidden="true"
+          = render partial: 'cases/search_filters/open_case_status'
+      details role="group"
+        summary aria-controls="details-content-3" aria-expanded="false" role="button"
+          span Filter cases type
+        #details-content-3.filter-content aria-hidden="true"
+          = render partial: 'cases/search_filters/case_types'
+      details role="group"
+        summary aria-controls="details-content-4" aria-expanded="false" role="button"
+          span Filter by timeliness
+        #details-content-4.filter-content aria-hidden="true"
+          = render partial: 'cases/search_filters/timeliness'
+      details role="group"
+        summary aria-controls="details-content-5" aria-expanded="false" role="button"
+          span Filter by final deadline
+        #details-content-5.filter-content aria-hidden="true"
+          = render partial: 'cases/search_filters/final_deadline'
+      - if request.path.include? '/cases/search'
+        details role="group"
+          summary aria-controls="details-content-6" aria-expanded="false" role="button"
+            span Exemptions
+          #details-content-6.filter-content aria-hidden="true"
+            = render partial: 'cases/search_filters/exemptions'
+      input.button type="submit" value="Filter"

@@ -1,87 +1,36 @@
-// tabbed panels
-  $tab-border-width: 3px;
-.ct-filter {
+.ct-filters {
+  padding-left: $gutter-half;
 
-}
-.ct-tab-label{
-  display: inline-block;
-   margin-right: $gutter;
-}
-
-.ct-tab-wrapper {
-  display: inline-block;
-
-  @include media(mobile) {
-    margin-bottom: $tab-border-width * 2;
-  }
-}
-
-.ct-tab-item {
-  display: inline-block;
-}
-
-.ct-tab {
-  border: $tab-border-width solid $govuk-blue;
-  border-bottom-width: 0;
-  margin-right: $tab-border-width;
-  display: block;
-  outline: none;
-  padding: $tab-border-width * 3;
-  background-color: $govuk-blue;
-  color: $white;
-  text-decoration: none;
-  margin-bottom: $tab-border-width;
-
-  &:visited, &:link {
-    color: $white;
-  }
-
-  @include media(mobile) {
-    border-bottom-width: $tab-border-width;
-  }
-
-  &:focus {
-    background: $focus-colour;
-    color: $text-colour;
-    border-color: $focus-colour;
-    outline: none;
-  }
-
-  &[aria-selected="true"] {
-    color: $govuk-blue;
-    background: $page-colour;
-    border-color: $border-colour;
-    padding-bottom: $tab-border-width * 5;
-
-    @include media(mobile) {
-      padding-bottom: $tab-border-width * 3;
+  details {
+    summary {
+      span {
+        padding-top: 5px;
+        display: inline-block;
+        text-decoration: underline;
+      }
     }
 
-    &:focus {
-      background: $focus-colour;
-      color: $text-colour;
+    .filter-content {
+      padding: $gutter-half;
+      border-left: 5px solid $grey-2;
+
+      details {
+        margin-bottom: $gutter-half;
+
+        .filter-content {
+
+          .gridrow {
+            overflow: hidden;
+          }
+
+          .scrolling-details {
+            max-height: 15em;
+            overflow: hidden;
+            overflow-y: scroll;
+            margin-bottom: $gutter;
+          }
+        }
+      }
     }
   }
-}
-
-.ct-tab-panels {
-  margin-top: $tab-border-width * -2;
-  &[aria-expanded="false"] {
-    display: none;
-  }
-}
-
-.ct-tab-panel {
-  border: $tab-border-width solid $border-colour;
-  padding: 1em;
-}
-
-.ct-tab-panel summary{
-  margin-bottom: $gutter;
-}
-.ct-tab-panel .scrolling-details {
-  max-height: 15em;
-  overflow: hidden;
-  overflow-y: scroll;
-  margin-bottom: $gutter;
 }
