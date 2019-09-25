@@ -1,6 +1,6 @@
 h1.page-heading
   span.page-heading--primary
     = "Send #{@type} letter"
-= form_for @letter, url: render_case_letters_path(@case.id, @type), method: :get do |f|
+= form_for @letter, url: show_case_letters_path(@case.id, @type), method: :get do |f|
   = f.radio_button_fieldset :letter_template_id, choices: @letter_templates, text_method: :name, value_method: :id
   = f.submit "Continue", {class: 'button'}

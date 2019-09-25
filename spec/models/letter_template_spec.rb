@@ -8,6 +8,16 @@ RSpec.describe LetterTemplate, type: :model do
   it { should have_enum(:template_type).
           with_values(['acknowledgement', 'dispatch']) }
 
+  describe 'self.type_name' do
+    it 'returns the correct string for a valid type' do
+      expect(LetterTemplate.type_name('dispatch')).to eq 'dispatch'
+      expect(LetterTemplate.type_name('acknowledgement')).to eq 'acknowledgement'
+    end
+
+    it 'returns "unknown" for an invalid type' do
+      expect(LetterTemplate.type_name('foo')).to eq 'unknown'
+    end
+  end
 
   describe 'render' do
     let(:letter_template) { create(:letter_template) }

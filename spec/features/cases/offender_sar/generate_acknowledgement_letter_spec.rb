@@ -20,10 +20,10 @@ feature 'Generate an acknowledgement letter by a manager' do
 
     expect(cases_new_letter_page).to be_displayed
 
-    cases_new_letter_page.new_letter_form.first_option.click
+    cases_new_letter_page.new_letter.first_option.click
     click_on "Continue"
 
-    expect(cases_render_letter_page).to be_displayed
-    expect(cases_render_letter_page).to have_content "Thank you for your offender subject access request, Bob"
+    expect(cases_show_letter_page).to be_displayed
+    expect(cases_show_letter_page).to have_content "Thank you for your offender subject access request, Bob"
   end
 end

@@ -60,7 +60,7 @@ module PageObjects
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',
         cases_new_letter:               'Cases::NewLetterPage',
-        cases_render_letter:            'Cases::RenderLetterPage',
+        cases_show_letter:              'Cases::ShowLetterPage',
         login:                          'LoginPage',
         my_open_cases:                  'Cases::MyOpenCasesPage',
         open_cases:                     'Cases::OpenCasesPage',

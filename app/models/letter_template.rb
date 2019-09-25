@@ -6,6 +6,10 @@ class LetterTemplate < ApplicationRecord
     acknowledgement: 'acknowledgement',
   }
 
+  def self.type_name(type)
+    LetterTemplate.template_types[type] || 'unknown'
+  end
+
   def render(values)
     template = ERB.new(body)
     template.result(binding)

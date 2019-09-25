@@ -31,13 +31,13 @@ RSpec.describe Cases::LettersController, type: :controller do
     end
   end
 
-  describe "GET #render_letter" do
+  describe "GET #show" do
     context "with valid params" do
       before do
-        get :render_letter, params: {
+        get :show, params: {
           case_id: offender_sar_case.id,
           type: "acknowledgement",
-          letter_form:  { letter_template_id: letter_template_acknowledgement.id }
+          letter:  { letter_template_id: letter_template_acknowledgement.id }
         }
       end
 
@@ -56,7 +56,7 @@ RSpec.describe Cases::LettersController, type: :controller do
 
     context "with invalid params" do
       before do
-        get :render_letter, params: { case_id: offender_sar_case.id, type: "acknowledgement" }
+        get :show, params: { case_id: offender_sar_case.id, type: "acknowledgement" }
       end
 
       it "redirects" do

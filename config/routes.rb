@@ -160,7 +160,7 @@ Rails.application.routes.draw do
 
     resource :letters, only: [], path: "letters/:type"  do
         get "/new", to: 'letters#new'
-        get "/render", to: 'letters#render_letter', as: 'render'
+        get "/show", to: 'letters#show'
     end
   end
 
