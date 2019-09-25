@@ -3,7 +3,7 @@ require 'rails_helper'
 feature 'Generate an acknowledgement letter by a manager' do
   given(:manager)           { find_or_create :branston_user }
   given(:managing_team)     { create :managing_team, managers: [manager] }
-  given(:offender_sar_case) { create(:offender_sar_case, :waiting_for_data).decorate }
+  given(:offender_sar_case) { create(:offender_sar_case, :waiting_for_data, name: "Bob").decorate }
   given!(:letter_template)   { find_or_create :letter_template }
 
   background do
@@ -24,5 +24,6 @@ feature 'Generate an acknowledgement letter by a manager' do
     click_on "Continue"
 
     expect(cases_render_letter_page).to be_displayed
+    expect(cases_render_letter_page).to have_content "Thank you for your offender subject access request, Bob"
   end
 end

@@ -9,11 +9,11 @@ class Cases::LettersController < ApplicationController
 
   def render_letter
     @type = params[:type]
-    unless params[:letter_form] and params[:letter_form][:letter_template_id]
+    unless params[:letter] and params[:letter][:letter_template_id]
       flash[:notice] = 'Please select a template.'
       redirect_to new_case_letters_path(@case.id, @type) and return
     end
-    letter_template_id = params[:letter_form][:letter_template_id]
+    letter_template_id = params[:letter][:letter_template_id]
     @letter = Letter.new(letter_template_id)
     @letter_template = LetterTemplate.find(letter_template_id)
   end
