@@ -1,6 +1,10 @@
 require "rails_helper"
 
-feature 'filtering by external deadline' do
+def working_hours
+  Date.today.workday? && Time.now.during_business_hours?
+end
+
+feature 'filtering by external deadline', if: working_hours do
   include Features::Interactions
 
   describe 'external deadline filter', js: true do
@@ -12,17 +16,15 @@ feature 'filtering by external deadline' do
 
       @setup = StandardSetup.new(only_cases: @all_cases)
 
-      Timecop.freeze(Time.new(2019, 9, 19, 11, 0, 0)) do
-        @case_due_today = create :case,
-                               received_date: 20.business_days.ago,
-                               subject: 'prison guards today'
-        @case_due_next_3_days = create :case,
-                                     received_date: 18.business_days.ago,
-                                     subject: 'prison guards next 3 days'
-        @case_due_next_10_days = create :case,
-                                      received_date: 10.business_days.ago,
-                                      subject: 'prison guards next 10 days'
-      end
+      @case_due_today = create :case,
+                             received_date: 20.business_days.ago,
+                             subject: 'prison guards today'
+      @case_due_next_3_days = create :case,
+                                   received_date: 18.business_days.ago,
+                                   subject: 'prison guards next 3 days'
+      @case_due_next_10_days = create :case,
+                                    received_date: 10.business_days.ago,
+                                    subject: 'prison guards next 10 days'
 
       @all_case_numbers = @setup.cases.values.map(&:number) +
                           [
