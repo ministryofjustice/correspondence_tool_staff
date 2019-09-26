@@ -30,6 +30,14 @@ module PageObjects
             element :data, 'td'
           end
 
+          section :third_party_reference, 'tr.third-party-reference' do
+            element :data, 'td'
+          end
+
+          section :third_party_company_name, 'tr.third-party-company-name' do
+            element :data, 'td'
+          end
+
           section :prison_number, 'tr.prison-number' do
             element :data, 'td'
           end

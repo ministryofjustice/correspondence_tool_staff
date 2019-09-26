@@ -460,6 +460,8 @@ en:
           offender: Offender
         third_party: Is this information being requested on someone else's behalf?
         third_party_relationship: Relationship to the subject
+        third_party_reference: Their reference (optional)
+        third_party_company_name: Company name (optional)
       feedback:
         comment: Help make this service better
       search_query:
@@ -576,6 +578,8 @@ en:
       subject_aliases: Subject aliases
       third_party: Information requested on someone's behalf?
       third_party_relationship: Third party relationship
+      third_party_reference: Third party reference
+      third_party_company_name: Third party company name
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
@@ -866,7 +870,7 @@ en:
         extend_further: The deadline for this case will be extended by a further %{num_days} days.
     search_bar:
       heading: Case number, requester name or keyword
-      hint: For example, 170113001, John Smith or prison meals 
+      hint: For example, 170113001, John Smith or prison meals
     searches:
       show:
         heading: Search
