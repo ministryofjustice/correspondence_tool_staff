@@ -37,6 +37,15 @@ en:
       responded: 'Ready to close'
       open: 'Open'
       closed: 'Closed'
+    offender_sar_case_statuses:
+      data_to_be_requested: Data to be requested
+      waiting_for_data: Waiting for data
+      ready_for_vetting: Ready for vetting
+      vetting_in_progress: Vetting in progress
+      ready_to_copy: Ready to copy
+      ready_to_dispatch: Ready to dispatch
+      closed: Case closed
+      destroyed: Case destroyed
     sensitivities:
       non-trigger: 'Non-trigger'
       trigger: 'Trigger'

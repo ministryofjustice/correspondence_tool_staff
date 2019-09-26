@@ -49,6 +49,7 @@ class SearchQuery < ApplicationRecord
                  filter_sensitivity: [:string, array: true, default: []],
                  filter_case_type: [:string, array: true, default: []],
                  filter_open_case_status: [:string, array: true, default: []],
+                 filter_offender_sar_case_status: [:string, array: true, default: []],
                  filter_timeliness: [:string, array: true, default: []],
                  exemption_ids: [:integer, array: true, default: []],
                  common_exemption_ids: [:integer, array: true, default: []],
@@ -127,6 +128,7 @@ class SearchQuery < ApplicationRecord
   delegate :available_sensitivities, to: CaseTypeFilter
   delegate :available_case_types, to: CaseTypeFilter
   delegate :available_statuses, to: CaseStatusFilter
+  delegate :available_offender_sar_case_statuses, to: OpenCaseStatusFilter
   delegate :available_exemptions, to: ExemptionFilter
   delegate :available_common_exemptions, to: ExemptionFilter
   delegate :responding_business_units, to: AssignedBusinessUnitFilter
