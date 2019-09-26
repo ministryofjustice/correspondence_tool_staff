@@ -580,6 +580,7 @@ ALTER SEQUENCE public.feedback_id_seq OWNED BY public.feedback.id;
 CREATE TABLE public.letter_templates (
     id integer NOT NULL,
     name character varying,
+    abbreviation character varying,
     body character varying,
     template_type character varying,
     created_at timestamp without time zone NOT NULL,
@@ -1634,6 +1635,13 @@ CREATE INDEX index_data_requests_on_case_id_and_user_id ON public.data_requests 
 --
 
 CREATE INDEX index_data_requests_on_user_id ON public.data_requests USING btree (user_id);
+
+
+--
+-- Name: index_letter_templates_on_abbreviation; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_letter_templates_on_abbreviation ON public.letter_templates USING btree (abbreviation);
 
 
 --
