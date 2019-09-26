@@ -158,10 +158,7 @@ Rails.application.routes.draw do
 
     resources :data_requests
 
-    resource :letters, only: [], path: "letters/:type"  do
-        get "/new", to: 'letters#new'
-        get "/show", to: 'letters#show'
-    end
+    resource :letters, only: [:new, :show], path: "letters/:type"
   end
 
   # Case Behaviours (awaiting move to module Cases)
