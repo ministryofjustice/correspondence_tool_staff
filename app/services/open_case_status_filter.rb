@@ -14,6 +14,19 @@ class OpenCaseStatusFilter
     }
   end
 
+  def self.available_offender_sar_case_statuses
+    {
+      'data_to_be_requested' => I18n.t('filters.offender_sar_case_statuses.data_to_be_requested'),
+      'waiting_for_data'     => I18n.t('filters.offender_sar_case_statuses.waiting_for_data'),
+      'ready_for_vetting'    => I18n.t('filters.offender_sar_case_statuses.ready_for_vetting'),
+      'vetting_in_progress'  => I18n.t('filters.offender_sar_case_statuses.vetting_in_progress'),
+      'ready_to_copy'        => I18n.t('filters.offender_sar_case_statuses.ready_to_copy'),
+      'ready_to_dispatch'    => I18n.t('filters.offender_sar_case_statuses.ready_to_dispatch'),
+      'closed'               => I18n.t('filters.offender_sar_case_statuses.closed'),
+      'destroyed'            => I18n.t('filters.offender_sar_case_statuses.destroyed'),
+    }
+  end
+
   def self.filter_attributes
     [:filter_open_case_status]
   end

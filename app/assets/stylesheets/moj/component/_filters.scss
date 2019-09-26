@@ -23,6 +23,10 @@
             overflow: hidden;
           }
 
+          legend {
+            padding: $gutter-half 0;
+          }
+
           .scrolling-details {
             max-height: 15em;
             overflow: hidden;
