@@ -1,4 +1,4 @@
-a = link_to "Back", new_case_letters_path(@case.id, @type, letter_template_id: @letter.letter_template_id)
+a = link_to "Back", new_case_letters_path(@case.id, @type, letter_template_id: @letter.letter_template_id), class: 'govuk-back-link'
 
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -8,18 +8,20 @@ h1.page-heading
     = "#{@case.number}"
   span.page-heading--primary
     | Download acknowledgement letter
+
 hr
 
-h2  From
-p Data Protection Compliance Team<br>
-|  Ministry of Justice<br>
-|  Building 16, NDC Site<br>
-|  Burton Road<br>
-|  Branston<br>
-|  Burton Upon Trent<br>
-|  Staffordshire<br>
-|  DE14 3EG<br>
-|  Telephone: 01283 496066<br>
+section.letter--from-section
+  h2.request--heading  From
+  p Data Protection Compliance Team<br>
+  |  Ministry of Justice<br>
+  |  Building 16, NDC Site<br>
+  |  Burton Road<br>
+  |  Branston<br>
+  |  Burton Upon Trent<br>
+  |  Staffordshire<br>
+  |  DE14 3EG<br>
+  |  Telephone: 01283 496066<br>
 
-h2  To
+h2.request--heading  To
 = simple_format @letter_template.render(@case)
