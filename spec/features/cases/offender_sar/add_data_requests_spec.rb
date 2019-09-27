@@ -54,7 +54,7 @@ feature 'Data Requests for an Offender SAR' do
     click_on 'Record requests'
 
     expect(data_request_page).to be_displayed
-    expect(data_request_page).to have_text 'errors prevented this form'
+    expect(data_request_page).to have_text 'error prevented this form'
   end
 
   scenario 'no data entry fails' do
