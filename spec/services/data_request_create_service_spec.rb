@@ -71,7 +71,7 @@ describe DataRequestCreateService do
     context 'on failure' do
       it 'does not save DataRequest when validation errors' do
         params = data_request_attributes.clone
-        params.merge!({ '0' => { location: 'too', data: 'few' }})
+        params.merge!({ '0' => { location: 'too' * 500, data: 'many' }})
 
         service = described_class.new(
           kase: offender_sar_case,
