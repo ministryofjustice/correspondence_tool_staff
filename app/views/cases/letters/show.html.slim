@@ -1,3 +1,6 @@
+- content_for :page_title do
+  = t('page_title.show_letter_page', case_number: @case.number)
+
 a = link_to "Back", new_case_letters_path(@case.id, @type, letter_template_id: @letter.letter_template_id), class: 'govuk-back-link'
 
 span.visually-hidden

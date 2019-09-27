@@ -1,3 +1,6 @@
+- content_for :page_title do
+  = t('page_title.new_letter_page', case_number: @case.number)
+
 = link_to "Back", case_path(@case), class: 'govuk-back-link'
 
 h1.page-heading
