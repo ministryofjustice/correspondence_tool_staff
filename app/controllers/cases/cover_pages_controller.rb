@@ -3,7 +3,6 @@ module Cases
     before_filter :set_case, only: [:show]
 
     def show
-
     end
 
     private

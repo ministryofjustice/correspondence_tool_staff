@@ -1,0 +1,46 @@
+- content_for :page_title do
+  = t('page_title.preview_cover_page', case_number: @case.number)
+
+= link_to "Back", case_path(@case), class: 'govuk-back-link'
+
+h1.page-heading
+  span.page-heading--secondary
+    = "Print cover page"
+  span.page-heading--primary
+    = "#{@case.subject_full_name&.upcase}-#{@case.prison_number}"
+
+section.case-info
+  = render partial: 'cases/cover_pages/data_requests', locals: { case_details: @case }
+
+section.case-info.section--vetting
+  h2.request--heading Vetting
+
+  table
+    thead
+      th Vet date
+      th By
+    tbody
+      tr
+        td First vet date:
+        td Name:
+      tr
+        td Second vet date:
+        td Name:
+
+section.case-info.final-deadline
+  h2.request--heading.heading--final-deadline Final deadline: #{l @case.external_deadline, format: :default}
+
+= link_to "Print cover sheet", "javascript:window.print()", class: "button btn-primary", id: "print-cover-page"
+
+/css: elements to hide in print css
+  html {background: white !important}
+  #skiplink-container,
+  #global-cookie-message,
+  #global-header,
+  #global-header-bar,
+  .phase-banner,
+  .global-nav,
+  .govuk-back-link,
+  hr,
+  #footer {display: none;}
+
