@@ -460,7 +460,7 @@ en:
           offender: Offender
         third_party: Is this information being requested on someone else's behalf?
         third_party_relationship: Relationship to the subject
-        third_party_reference: Their reference (optional)
+        third_party_reference: Requester reference (optional)
         third_party_company_name: Company name (optional)
       feedback:
         comment: Help make this service better
