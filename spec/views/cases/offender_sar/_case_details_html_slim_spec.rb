@@ -42,15 +42,17 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     end
 
     it 'displays third party details if present' do
-      third_party_case = (create :sar_case, :third_party, name: 'Rick Westor').decorate
+      third_party_case = (create :offender_sar_case, :third_party, name: 'Rick Westor').decorate
       assign(:case, third_party_case)
-      render partial: 'cases/sar/case_details.html.slim', locals: {
+      render partial: 'cases/offender_sar/case_details.html.slim', locals: {
         case_details: third_party_case,
         link_type: nil
       }
-      partial = case_details_section(rendered).sar_basic_details
+      partial = offender_sar_case_details_section(rendered).sar_basic_details
       expect(partial.third_party.data.text).to eq 'Yes'
       expect(partial.requester_name.data.text).to eq 'Rick Westor'
+      expect(partial.third_party_reference.data.text).to eq 'FOOG1234'
+      expect(partial.third_party_company_name.data.text).to eq 'Foogle and Sons Solicitors at Law'
     end
 
     it 'does not display the email address if one is not provided' do
@@ -59,11 +61,11 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       offender_sar_case.reply_method = 'send_by_post'
 
       assign(:case, offender_sar_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/offender_sar/case_details.html.slim',
              locals: { case_details: offender_sar_case,
                        link_type: nil }
 
-      partial = case_details_section(rendered).sar_basic_details
+      partial = offender_sar_case_details_section(rendered).sar_basic_details
 
       expect(partial).to have_response_address
       expect(partial.response_address.data.text).to eq "1 High Street\nAnytown\nAT1 1AA"
@@ -74,11 +76,11 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       offender_sar_case.email = 'john.doe@moj.com'
 
       assign(:case, offender_sar_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/offender_sar/case_details.html.slim',
              locals:{ case_details: offender_sar_case,
                       link_type: nil }
 
-      partial = case_details_section(rendered).sar_basic_details
+      partial = offender_sar_case_details_section(rendered).sar_basic_details
 
       expect(partial).to have_response_address
       expect(partial.response_address.data.text).to eq 'john.doe@moj.com'

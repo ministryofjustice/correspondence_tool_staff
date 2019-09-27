@@ -37,7 +37,9 @@ FactoryBot.define do
 
   trait :third_party do
     third_party { true }
-    third_party_relationship { 'Aunt' }
+    third_party_relationship { 'Solicitor' }
+    third_party_reference { 'FOOG1234' }
+    third_party_company_name { 'Foogle and Sons Solicitors at Law' }
   end
 
   trait :data_to_be_requested do
