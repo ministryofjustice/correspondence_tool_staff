@@ -1,5 +1,7 @@
-secretfile filter=git-crypt diff=git-crypt
-
-*.key filter=git-crypt diff=git-crypt
-
-secretdir/** filter=git-crypt diff=git-crypt
+# git-crypt kubernetes secrets
+kube*/**/*secrets.yaml filter=git-crypt diff=git-crypt
+kube*/**/qa/*secrets.yaml filter=git-crypt diff=git-crypt
+kube*/**/development/*secrets.yaml filter=git-crypt diff=git-crypt
+kube*/**/staging/*secrets.yaml filter=git-crypt diff=git-crypt
+kube*/**/production/*secrets.yaml filter=git-crypt diff=git-crypt
+kube*/**/demo/*secrets.yaml filter=git-crypt diff=git-crypt

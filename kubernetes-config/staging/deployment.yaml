@@ -1,0 +1,254 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: track-a-query
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: track-a-query
+    spec:
+      containers:
+      - name: webapp
+        image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+        ports:
+        - containerPort: 3000
+        command: ["./run.sh"]
+        env:
+          - name: ENV
+            value: 'dev'
+          - name: RAILS_ENV
+            value: 'development'
+          - name: PROJECT
+            value: 'correspondence-staff'
+          - name: GA_TRACKING_ID
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: GA_TRACKING_ID
+          - name: SETTINGS__CTS_EMAIL_URL
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__CTS_EMAIL_URL
+          - name: SETTINGS__GOVUK_NOTIFY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__GOVUK_NOTIFY_API_KEY
+          - name: SETTINGS__SMOKE_TESTS__USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__USERNAME
+          - name: SETTINGS__SMOKE_TESTS__PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__PASSWORD
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SECRET_KEY_BASE
+          - name: SENTRY_DSN
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SENTRY_DSN
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-rds-output
+                key: url
+          - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-rds-output
+                key: database_password
+          - name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-elasticache-redis-output
+                key: url
+          - name: REDIS_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-elasticache-redis-output
+                key: auth_token
+          - name: SETTINGS__CASE_UPLOADS_S3_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: bucket_name
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: secret_access_key
+      - name: jobs
+        image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+        command: ["./run-background-jobs.sh"]
+        env:
+          - name: ENV
+            value: 'dev'
+          - name: RAILS_ENV
+            value: 'development'
+          - name: PROJECT
+            value: 'correspondence-staff-jobs'
+          - name: GA_TRACKING_ID
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: GA_TRACKING_ID
+          - name: SETTINGS__CTS_EMAIL_URL
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__CTS_EMAIL_URL
+          - name: SETTINGS__GOVUK_NOTIFY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__GOVUK_NOTIFY_API_KEY
+          - name: SETTINGS__SMOKE_TESTS__USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__USERNAME
+          - name: SETTINGS__SMOKE_TESTS__PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__PASSWORD
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SECRET_KEY_BASE
+          - name: SENTRY_DSN
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SENTRY_DSN
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-rds-output
+                key: url
+          - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-rds-output
+                key: database_password
+          - name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-elasticache-redis-output
+                key: url
+          - name: REDIS_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-elasticache-redis-output
+                key: auth_token
+          - name: SETTINGS__CASE_UPLOADS_S3_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: bucket_name
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: secret_access_key
+      - name: uploads
+        image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+        command: ["./run-uploads.sh"]
+        env:
+          - name: ENV
+            value: 'dev'
+          - name: RAILS_ENV
+            value: 'development'
+          - name: PROJECT
+            value: 'correspondence-staff-uploads'
+          - name: GA_TRACKING_ID
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: GA_TRACKING_ID
+          - name: SETTINGS__CTS_EMAIL_URL
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__CTS_EMAIL_URL
+          - name: SETTINGS__GOVUK_NOTIFY_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__GOVUK_NOTIFY_API_KEY
+          - name: SETTINGS__SMOKE_TESTS__USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__USERNAME
+          - name: SETTINGS__SMOKE_TESTS__PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__PASSWORD
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SECRET_KEY_BASE
+          - name: SENTRY_DSN
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SENTRY_DSN
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-rds-output
+                key: url
+          - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-rds-output
+                key: database_password
+          - name: REDIS_URL
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-elasticache-redis-output
+                key: url
+          - name: REDIS_AUTH_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-elasticache-redis-output
+                key: auth_token
+          - name: SETTINGS__CASE_UPLOADS_S3_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: bucket_name
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: secret_access_key

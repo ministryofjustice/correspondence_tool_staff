@@ -23,19 +23,40 @@ spec:
           - name: PROJECT
             value: 'correspondence-staff'
           - name: GA_TRACKING_ID
-            value: 'UA-37377084-57'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: GA_TRACKING_ID
           - name: SETTINGS__CTS_EMAIL_URL
-            value: 'https://dev.track-a-query.service.justice.gov.uk'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__CTS_EMAIL_URL
           - name: SETTINGS__GOVUK_NOTIFY_API_KEY
-            value: 'trackaquery_development-ec94811d-117a-4f52-8d3a-e4272089dc32-668470b3-793d-4d4f-9d6b-eb2c7a493474'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__GOVUK_NOTIFY_API_KEY
           - name: SETTINGS__SMOKE_TESTS__USERNAME
-            value: 'correspondence-staff-dev+smoke.tests@digital.justice.gov.uk'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__USERNAME
           - name: SETTINGS__SMOKE_TESTS__PASSWORD
-            value: 'Go239@4jB9TbS3k$ZgDmQI!X8eW0R72^'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__PASSWORD
           - name: SECRET_KEY_BASE
-            value: '40215e76a58b9b00a8a1cdc137d5b65a52b0228339d4172bf536a778a299be04f9c6a4fc0091d8bdd0d8a239855e6f7207ae0dc86cebf5cc15ae43d5ceb1c5ce'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SECRET_KEY_BASE
           - name: SENTRY_DSN
-            value: 'https://990ef5ad1d4143259d6a2e30d6857f72:eca2b64875a14701a4e77e1ec2608e69@sentry.service.dsd.io/97'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SENTRY_DSN
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
@@ -82,19 +103,40 @@ spec:
           - name: PROJECT
             value: 'correspondence-staff-jobs'
           - name: GA_TRACKING_ID
-            value: 'UA-37377084-57'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: GA_TRACKING_ID
           - name: SETTINGS__CTS_EMAIL_URL
-            value: 'https://dev.track-a-query.service.justice.gov.uk'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__CTS_EMAIL_URL
           - name: SETTINGS__GOVUK_NOTIFY_API_KEY
-            value: 'trackaquery_development-ec94811d-117a-4f52-8d3a-e4272089dc32-668470b3-793d-4d4f-9d6b-eb2c7a493474'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__GOVUK_NOTIFY_API_KEY
           - name: SETTINGS__SMOKE_TESTS__USERNAME
-            value: 'correspondence-staff-dev+smoke.tests@digital.justice.gov.uk'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__USERNAME
           - name: SETTINGS__SMOKE_TESTS__PASSWORD
-            value: 'Go239@4jB9TbS3k$ZgDmQI!X8eW0R72^'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__PASSWORD
           - name: SECRET_KEY_BASE
-            value: '40215e76a58b9b00a8a1cdc137d5b65a52b0228339d4172bf536a778a299be04f9c6a4fc0091d8bdd0d8a239855e6f7207ae0dc86cebf5cc15ae43d5ceb1c5ce'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SECRET_KEY_BASE
           - name: SENTRY_DSN
-            value: 'https://990ef5ad1d4143259d6a2e30d6857f72:eca2b64875a14701a4e77e1ec2608e69@sentry.service.dsd.io/97'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SENTRY_DSN
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
@@ -141,19 +183,40 @@ spec:
           - name: PROJECT
             value: 'correspondence-staff-uploads'
           - name: GA_TRACKING_ID
-            value: 'UA-37377084-57'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: GA_TRACKING_ID
           - name: SETTINGS__CTS_EMAIL_URL
-            value: 'https://dev.track-a-query.service.justice.gov.uk'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__CTS_EMAIL_URL
           - name: SETTINGS__GOVUK_NOTIFY_API_KEY
-            value: 'trackaquery_development-ec94811d-117a-4f52-8d3a-e4272089dc32-668470b3-793d-4d4f-9d6b-eb2c7a493474'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__GOVUK_NOTIFY_API_KEY
           - name: SETTINGS__SMOKE_TESTS__USERNAME
-            value: 'correspondence-staff-dev+smoke.tests@digital.justice.gov.uk'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__USERNAME
           - name: SETTINGS__SMOKE_TESTS__PASSWORD
-            value: 'Go239@4jB9TbS3k$ZgDmQI!X8eW0R72^'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SETTINGS__SMOKE_TESTS__PASSWORD
           - name: SECRET_KEY_BASE
-            value: '40215e76a58b9b00a8a1cdc137d5b65a52b0228339d4172bf536a778a299be04f9c6a4fc0091d8bdd0d8a239855e6f7207ae0dc86cebf5cc15ae43d5ceb1c5ce'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SECRET_KEY_BASE
           - name: SENTRY_DSN
-            value: 'https://990ef5ad1d4143259d6a2e30d6857f72:eca2b64875a14701a4e77e1ec2608e69@sentry.service.dsd.io/97'
+            valueFrom:
+              secretKeyRef:
+                name: app-secrets
+                key: SENTRY_DSN
           - name: DATABASE_URL
             valueFrom:
               secretKeyRef:
