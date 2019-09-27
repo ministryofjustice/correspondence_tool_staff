@@ -10,6 +10,7 @@
                   transition_to: waiting_for_data
                 add_data_received:
                 add_note_to_case:
+                send_acknowledgement_letter:
               waiting_for_data:
                 mark_as_ready_for_vetting:
                   transition_to: ready_for_vetting
