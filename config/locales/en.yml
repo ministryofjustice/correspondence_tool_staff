@@ -580,8 +580,8 @@ en:
       subject_aliases: Subject aliases
       third_party: Information requested on someone's behalf?
       third_party_relationship: Third party relationship
-      third_party_reference: Third party reference
-      third_party_company_name: Third party company name
+      third_party_reference: Requester reference
+      third_party_company_name: Company name
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"

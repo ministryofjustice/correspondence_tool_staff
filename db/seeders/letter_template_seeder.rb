@@ -9,10 +9,10 @@ class LetterTemplateSeeder
                 template_type: 'acknowledgement',
                 body: <<~EOF
                   <%= values.name %>
-                  «Solicitor»
+                  <%= values.third_party_company_name %>
                   <%= values.postal_address %>
 
-                  Your Reference: «LetRef»
+                  Your Reference: <%= values.third_party_reference %>
 
                   Our Reference:  DPA <%= values.number %>
 
@@ -23,9 +23,9 @@ class LetterTemplateSeeder
 
                   Dear Sirs
 
-                  Thank you for your subject access request (SAR) dated <%= values.received_date.strftime('%e %b %Y') %>
+                  Thank you for your subject access request (SAR) dated <%= values.received_date.strftime('%e %b %Y') %>.
 
-                  Please note that as your client has previously submitted a SAR and has been supplied with data, we will only be providing you with data not previously received, i.e. data from the date of the previous request. The previous request was started on <<date previous request received>>.
+                  Please note that as your client has previously submitted a SAR and has been supplied with data, we will only be providing you with data not previously received, i.e. data from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
 
                   To complete the SAR, we will have to identify information from a number of business areas, including establishments. Because of this, there is very little information we can provide in response to enquiries. It would be helpful if you could limit correspondence during this period.
 
