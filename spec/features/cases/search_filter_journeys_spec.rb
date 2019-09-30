@@ -251,11 +251,6 @@ feature 'filters whittle down search results' do
 
       cases_search_page.filter_on_exemptions(common: %w{ s40 } )
 
-      cases_search_page.filter_tab_links.assigned_to_tab.click
-      cases_search_page.assigned_to_filter_panel.business_unit_search_term.set('foi')
-      cases_search_page.assigned_to_filter_panel.foi_responding_team_checkbox.click
-      cases_search_page.assigned_to_filter_panel.apply_filter_button.click
-
       cases_search_page.filter_on_deadline('Today')
 
       @s40_exemption = '(s40) - Personal information'

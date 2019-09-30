@@ -66,7 +66,7 @@ feature 'filters whittle down search results' do
                         )
 
       open_cases_page.open_filter(:type)
-      expect(open_cases_page.type_filter_panel.non_trigger_checkbox)
+      expect(open_cases_page.filter_type_content.non_trigger_checkbox)
         .to be_checked
     end
 
@@ -88,7 +88,7 @@ feature 'filters whittle down search results' do
 
       login_step user: user
       open_cases_page.open_filter('type')
-      expect(open_cases_page.type_filter_panel).to have_no_sar_non_offender_checkbox
+      expect(open_cases_page.filter_type_content).to have_no_sar_non_offender_checkbox
     end
 
     scenario 'filter by ICO Overturned', js: true do

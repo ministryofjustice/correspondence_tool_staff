@@ -23,6 +23,7 @@ module PageObjects
           element :apply_filters_button, '#apply-filters-button'
         end
 
+        element :filter_cases_accordion, '#filter-cases-accordion'
         elements :filter_crumbs, '.filter-crumb a'
 
         element :search_results_count, '.search-results-summary'
@@ -36,8 +37,6 @@ module PageObjects
           element :status, 'td[aria-label="Status"]'
           element :who_its_with, 'td[aria-label="With"]'
         end
-
-        element :filters, '.ct-tab-container'
 
         section :filter_type_content,
                 PageObjects::Sections::Cases::TypeFilterPanelSection,

@@ -1,9 +1,11 @@
 module PageObjects
   module FilterMethods
     def open_filter(filter_name)
+      unless __send__("has_filter_cases_accordion?", visible: true)
+        case_filters.filter_cases_link.click
+      end
       unless __send__("has_filter_#{filter_name}_content?", visible: true)
         link_name = "filter_#{filter_name}_link"
-        case_filters.filter_cases_link.click
         case_filters.__send__(link_name).click
       end
     end

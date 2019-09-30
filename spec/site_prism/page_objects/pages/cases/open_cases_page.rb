@@ -23,6 +23,8 @@ module PageObjects
           element :apply_filters_button, '#apply-filters-button'
         end
 
+        element :filter_cases_accordion, '#filter-cases-accordion'
+
         section :filter_type_content,
                 PageObjects::Sections::Cases::TypeFilterPanelSection,
                 '#filter-type-content'
