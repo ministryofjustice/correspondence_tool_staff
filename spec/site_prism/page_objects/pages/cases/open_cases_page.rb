@@ -14,32 +14,27 @@ module PageObjects
         element :search_query, 'input[type="search"]'
         element :search_button, 'input.button#search-button'
 
-        section :filter_tab_links, '.ct-tab-container' do
-          element :type_tab, 'a[href="#ct-tab-panel-type"]'
-          element :timeliness_tab, 'a[href="#ct-tab-panel-timeliness"]'
-          element :status_tab, 'a[href="#ct-tab-panel-status"]'
-          element :deadline_tab, 'a[href="#ct-tab-panel-final-deadline"]'
-          element :assigned_to_tab, 'a[href="#ct-tab-panel-assigned-to"]'
+        section :case_filters, '#case-filters' do
+          element :filter_cases_link, '#filter-cases-link'
+          element :filter_type_link, '#filter-type-link'
+          element :filter_timeliness_link, '#filter-timeliness-link'
+          element :filter_status_link, '#filter-status-link'
+          element :filter_deadline_link, '#filter-deadline-link'
+          element :apply_filters_button, '#apply-filters-button'
         end
 
-        # section :filters, '.ct-tab-container' do
-        elements :options, '.ct-tab-item'
-
-        section :type_filter_panel,
+        section :filter_type_content,
                 PageObjects::Sections::Cases::TypeFilterPanelSection,
-                '#ct-tab-panel-type'
-        section :timeliness_filter_panel,
+                '#filter-type-content'
+        section :filter_timeliness_content,
                 PageObjects::Sections::Cases::TimelinessFilterPanelSection,
-                '#ct-tab-panel-timeliness'
-        section :status_filter_panel,
+                '#filter-timeliness-content'
+        section :filter_status_content,
                 PageObjects::Sections::Cases::OpenCaseStatusFilterPanelSection,
-                '#ct-tab-panel-status'
-        section :deadline_filter_panel,
+                '#filter-status-content'
+        section :filter_deadline_content,
                 PageObjects::Sections::Cases::DeadlineFilterPanelSection,
-                '#ct-tab-panel-final-deadline'
-        section :assigned_to_filter_panel,
-                PageObjects::Sections::Cases::AssignedToFilterPanelSection,
-                '#ct-tab-panel-assigned-to'
+                '#filter-deadline-content'
 
         elements :filter_crumbs, '.filter-crumb a'
 

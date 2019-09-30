@@ -26,8 +26,6 @@ module PageObjects
         element :trigger_checkbox,
                 '#search_query_filter_sensitivity_trigger',
                 visible: false
-
-        element :apply_filter_button, '.button-secondary[value="Filter"]'
       end
     end
   end

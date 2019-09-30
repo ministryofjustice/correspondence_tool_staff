@@ -13,12 +13,14 @@ module PageObjects
         element :search_query, 'input[type="search"]'
         element :search_button, 'input.button#search-button'
 
-        section :filter_tab_links, '.ct-tab-container' do
-          element :type_tab, 'a[href="#ct-tab-panel-type"]'
-          element :status_tab, 'a[href="#ct-tab-panel-status"]'
-          element :assigned_to_tab, 'a[href="#ct-tab-panel-assigned-to"]'
-          element :exemption_tab, 'a[href="#ct-tab-panel-exemption"]'
-          element :deadline_tab, 'a[href="#ct-tab-panel-final-deadline"]'
+        section :case_filters, '#case-filters' do
+          element :filter_cases_link, '#filter-cases-link'
+          element :filter_type_link, '#filter-type-link'
+          element :filter_timeliness_link, '#filter-timeliness-link'
+          element :filter_status_link, '#filter-status-link'
+          element :filter_deadline_link, '#filter-deadline-link'
+          element :filter_exemptions_link, '#filter-exemptions-link'
+          element :apply_filters_button, '#apply-filters-button'
         end
 
         elements :filter_crumbs, '.filter-crumb a'
@@ -37,22 +39,21 @@ module PageObjects
 
         element :filters, '.ct-tab-container'
 
-        section :status_filter_panel,
-                PageObjects::Sections::Cases::StatusFilterPanelSection,
-                '#ct-tab-panel-status'
-        section :type_filter_panel,
+        section :filter_type_content,
                 PageObjects::Sections::Cases::TypeFilterPanelSection,
-                '#ct-tab-panel-type'
-        section :assigned_to_filter_panel,
-                PageObjects::Sections::Cases::AssignedToFilterPanelSection,
-                '#ct-tab-panel-assigned-to'
-        section :exemption_filter_panel,
-                PageObjects::Sections::Cases::ExemptionFilterPanelSection,
-                '#ct-tab-panel-exemption'
-        section :deadline_filter_panel,
+                '#filter-type-content'
+        section :filter_timeliness_content,
+                PageObjects::Sections::Cases::TimelinessFilterPanelSection,
+                '#filter-timeliness-content'
+        section :filter_status_content,
+                PageObjects::Sections::Cases::OpenCaseStatusFilterPanelSection,
+                '#filter-status-content'
+        section :filter_deadline_content,
                 PageObjects::Sections::Cases::DeadlineFilterPanelSection,
-                '#ct-tab-panel-final-deadline'
-
+                '#filter-deadline-content'
+        section :filter_exemption_content,
+                PageObjects::Sections::Cases::ExemptionFilterPanelSection,
+                '#filter-exemptions-content'
 
         element :found_no_results_copy, '.search-no-results'
       end
