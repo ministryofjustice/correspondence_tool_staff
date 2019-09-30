@@ -157,6 +157,8 @@ Rails.application.routes.draw do
     end
 
     resources :data_requests
+
+    resource :letters, only: [:new, :show], path: "letters/:type"
   end
 
   # Case Behaviours (awaiting move to module Cases)

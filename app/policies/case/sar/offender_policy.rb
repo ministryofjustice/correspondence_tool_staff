@@ -28,4 +28,9 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     clear_failed_checks
     check_can_trigger_event(:add_data_received)
   end
+
+  def can_send_acknowledgement_letter?
+    clear_failed_checks
+    check_user_is_a_manager
+  end
 end
