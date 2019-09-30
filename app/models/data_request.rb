@@ -3,8 +3,8 @@ class DataRequest < ApplicationRecord
   belongs_to :user
   has_many   :data_request_logs, after_add: :update_cached_attributes
 
-  validates :location, presence: true, length: { minimum: 5, maximum: 500 }
-  validates :data, presence: true, length: { minimum: 5 }
+  validates :location, presence: true, length: { maximum: 500 }
+  validates :data, presence: true
   validates :offender_sar_case, presence: true
   validates :user, presence: true
   validates :date_requested, presence: true
