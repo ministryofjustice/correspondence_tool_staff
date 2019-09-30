@@ -127,6 +127,11 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               new_case_letters_path(@case.id, "acknowledgement"),
               id: 'action--send-acknowledgement-letter',
               class: 'button-secondary'
+    when :send_dispatch_letter
+      link_to 'Send dispatch letter',
+              new_case_letters_path(@case.id, "dispatch"),
+              id: 'action--send-dispatch-letter',
+              class: 'button-secondary'
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength

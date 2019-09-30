@@ -26,7 +26,7 @@ describe ConfigurableStateMachine::Machine do
       },
       {
         state: :ready_to_dispatch,
-        specific_events: [:close]
+        specific_events: [:close, :send_dispatch_letter]
       },
     ].freeze
 
