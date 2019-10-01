@@ -5,7 +5,7 @@
 
 h1.page-heading
   span.page-heading--secondary
-    = "Print cover page"
+    = @case.number
   span.page-heading--primary
     = "#{@case.subject_full_name&.upcase}-#{@case.prison_number}"
 
@@ -13,34 +13,28 @@ section.case-info
   = render partial: 'cases/cover_pages/data_requests', locals: { case_details: @case }
 
 section.case-info.section--vetting
-  h2.request--heading Vetting
+  h2.request--heading
+    = t('cases.cover_sheet.vetting')
 
   table
     thead
-      th Vet date
-      th By
+      th width="50%"
+        = t('cases.cover_sheet.vet_date')
+      th
+        = t('cases.cover_sheet.vet_by')
     tbody
       tr
-        td First vet date:
-        td Name:
+        td
+          = t('cases.cover_sheet.first_vet_date')
+        td
+          = t('cases.cover_sheet.vetter_name')
       tr
-        td Second vet date:
-        td Name:
+        td
+          = t('cases.cover_sheet.second_vet_date')
+        td
+          = t('cases.cover_sheet.vetter_name')
 
 section.case-info.final-deadline
-  h2.request--heading.heading--final-deadline Final deadline: #{l @case.external_deadline, format: :default}
+  h2.request--heading.heading--final-deadline.print-large Final deadline: #{l @case.external_deadline, format: :default}
 
 = link_to "Print cover sheet", "javascript:window.print()", class: "button btn-primary", id: "print-cover-page"
-
-/css: elements to hide in print css
-  html {background: white !important}
-  #skiplink-container,
-  #global-cookie-message,
-  #global-header,
-  #global-header-bar,
-  .phase-banner,
-  .global-nav,
-  .govuk-back-link,
-  hr,
-  #footer {display: none;}
-
