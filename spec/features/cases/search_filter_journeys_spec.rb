@@ -86,9 +86,9 @@ feature 'filters whittle down search results' do
       expect(cases_search_page.case_numbers)
         .to match_array expected_case_numbers(*@all_cases)
       cases_search_page.open_filter(:type)
-      expect(cases_search_page.type_filter_panel.foi_ir_compliance_checkbox)
+      expect(case_search_page.filter_type_content.foi_ir_compliance_checkbox)
         .not_to be_checked
-      expect(cases_search_page.type_filter_panel.foi_ir_timeliness_checkbox)
+      expect(case_search_page.filter_type_content.foi_ir_timeliness_checkbox)
         .not_to be_checked
       expect(cases_search_page.filter_crumb_for(crumb_text))
         .not_to be_present
@@ -114,7 +114,7 @@ feature 'filters whittle down search results' do
                                               :std_draft_foi,
                                               :std_closed_foi)
       cases_search_page.open_filter(:type)
-      expect(cases_search_page.type_filter_panel.foi_standard_checkbox)
+      expect(case_search_page.filter_type_content.foi_standard_checkbox)
         .to be_checked
       expect(cases_search_page.filter_crumb_for('Trigger'))
         .not_to be_present
@@ -124,7 +124,7 @@ feature 'filters whittle down search results' do
       expect(cases_search_page.case_numbers)
         .to match_array expected_case_numbers(*@all_cases)
       cases_search_page.open_filter(:type)
-      expect(cases_search_page.type_filter_panel.foi_standard_checkbox)
+      expect(case_search_page.filter_type_content.foi_standard_checkbox)
         .not_to be_checked
       expect(cases_search_page.filter_crumb_for('FOI - Standard'))
         .not_to be_present
@@ -177,7 +177,7 @@ feature 'filters whittle down search results' do
 
       login_step user: user
       cases_search_page.open_filter('type')
-      expect(cases_search_page.type_filter_panel).to have_no_sar_non_offender_checkbox
+      expect(case_search_page.filter_type_content).to have_no_sar_non_offender_checkbox
     end
   end
 

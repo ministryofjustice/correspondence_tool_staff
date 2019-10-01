@@ -18,7 +18,7 @@ def filter_on_type_step(page:, types: [], sensitivity: [], expected_cases:)
   end
   sensitivity.each do |option|
     element_name = "#{option}_checkbox"
-    expect(page.type_filter_panel.__send__(element_name))
+    expect(page.filter_type_content.__send__(element_name))
       .to be_checked
   end
 
