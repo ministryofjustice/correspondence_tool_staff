@@ -1,11 +1,10 @@
 .state-filter
   - if request.path.include? '/cases/search'
-    .gridrow
+    .grid-row
       .column-half
         = f.collection_check_boxes :filter_status, @query.available_statuses, :first, :second
-  .gridrow
+  .grid-row
     .column-half
       = f.collection_check_boxes :filter_offender_sar_case_status, @query.available_offender_sar_case_statuses, :first, :second
     .column-half
       = f.collection_check_boxes :filter_open_case_status, @query.available_open_case_statuses, :first, :second
-
