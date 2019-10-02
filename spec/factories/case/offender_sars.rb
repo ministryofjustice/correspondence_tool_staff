@@ -16,7 +16,7 @@ FactoryBot.define do
 
     current_state                   { 'data_to_be_requested' }
     sequence(:name)                 { |n| "#{identifier} name #{n}" }
-    email                           { Faker::Internet.email(identifier) }
+    email                           { Faker::Internet.email(name: identifier) }
     reply_method                    { 'send_by_email' }
     sequence(:subject)              { |n| "#{identifier} subject #{n}" }
     sequence(:message)              { |n| "#{identifier} message #{n}" }
@@ -27,6 +27,7 @@ FactoryBot.define do
     sequence(:subject_aliases)      { |n| "#{identifier} subject alias #{n}" }
     previous_case_numbers           { '54321' }
     prison_number                   { '123465' }
+    other_subject_ids               { 'ABC 123 DEF' }
     subject_type                    { 'offender' }
     third_party                     { false }
     flag_as_high_profile            { false }
@@ -36,7 +37,9 @@ FactoryBot.define do
 
   trait :third_party do
     third_party { true }
-    third_party_relationship { 'Aunt' }
+    third_party_relationship { 'Solicitor' }
+    third_party_reference { 'FOOG1234' }
+    third_party_company_name { 'Foogle and Sons Solicitors at Law' }
   end
 
   trait :data_to_be_requested do
@@ -88,6 +91,8 @@ FactoryBot.define do
   end
 
   trait :ready_to_dispatch do
+    date_responded { Date.today }
+    info_held_status { find_or_create :info_status, :held }
     transient do
       identifier { 'Ready to dispatch Offender SAR' }
     end

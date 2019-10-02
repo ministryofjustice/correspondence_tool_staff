@@ -11,6 +11,9 @@ module PageObjects
         set_url '/cases/open'
         set_url_matcher(/cases\/(open|my_open)(\/(in_time))?/)
 
+        element :search_query, 'input[type="search"]'
+        element :search_button, 'input.button#search-button'
+
         section :filter_tab_links, '.ct-tab-container' do
           element :type_tab, 'a[href="#ct-tab-panel-type"]'
           element :timeliness_tab, 'a[href="#ct-tab-panel-timeliness"]'

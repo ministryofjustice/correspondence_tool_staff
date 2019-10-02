@@ -433,9 +433,30 @@ describe Case::BaseDecorator, type: :model do
       end
     end
   end
+
   describe '#type_printer' do
     it 'pretty prints Case' do
       expect(accepted_case.pretty_type).to eq 'FOI'
+    end
+  end
+
+  describe '#closed_case_name' do
+    let(:offender_sar_case) { build(:offender_sar_case, subject: 'The case subject') }
+
+    context 'when name' do
+      context 'is not empty' do
+        it 'returns existing case name' do
+          offender_sar_case.name = 'Monalisa Khan'
+          expect(offender_sar_case.decorate.closed_case_name).to eq 'Monalisa Khan'
+        end
+      end
+    end
+
+    context 'is empty' do
+      it 'returns case subject instead' do
+        offender_sar_case.name = ''
+        expect(offender_sar_case.decorate.closed_case_name).to eq 'The case subject'
+      end
     end
   end
 end

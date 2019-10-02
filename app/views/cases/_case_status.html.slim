@@ -1,11 +1,12 @@
 .grid-row.case-status
   h2.visually-hidden
     = "Case status and deadlines"
-  .case-status--intime
+
+  .case-status__info.case-status__info--details
     .case-status__group.status
       .case-status__heading
         = t('common.case.status')
-      .case-status__data---large
+      .case-status__data--large
         = case_details.status
 
     - if case_details.current_state != 'closed'
@@ -14,6 +15,7 @@
           = t('common.case.who_its_with')
         .case-status__data
           = case_details.who_its_with
+
     - if case_details.respond_to?(:ico_reference_number)
       .case-status__group.ico-reference
         .case-status__heading
@@ -21,15 +23,16 @@
         .case-status__data
           = case_details.ico_reference_number
 
-  .case-status__deadline
+  .case-status__info.case-status__info--deadlines
     - if case_details.internal_deadline.present?
       .case-status__group.draft
-        .case-status__heading
+        .case-status__date-title
           = t('common.case.internal_deadline')
-        .case-status__data
+        .case-status__date-value
           = case_details.internal_deadline
+
     .case-status__group.external
-      .case-status__heading
+      .case-status__date-title
         = t('common.case.external_deadline')
-      .case-status__data
+      .case-status__date-value
         = case_details.external_deadline

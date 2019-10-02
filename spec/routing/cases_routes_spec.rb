@@ -68,4 +68,12 @@ describe 'cases routes', type: :routing do
   describe post: '/cases/1/notes' do
     it { should route_to controller: 'cases/notes', action: 'create', case_id: '1' }
   end
+
+  describe get: '/cases/1/letters/acknowledgement/new' do
+    it { should route_to controller: 'cases/letters', action: 'new', case_id: '1', type: 'acknowledgement'}
+  end
+
+  describe get: '/cases/1/letters/acknowledgement' do
+    it { should route_to controller: 'cases/letters', action: 'show', case_id: '1', type: 'acknowledgement' }
+  end
 end

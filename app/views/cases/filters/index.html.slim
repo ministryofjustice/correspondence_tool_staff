@@ -11,6 +11,8 @@
     .column-full.button-holder
       = link_to t('common.new_case_button'), new_case_path, class: 'button'
 
+= render partial: 'cases/shared/search_bar'
+
 - if request.path.include? '/cases/open'
   .grid-row
     .column-full.ct-tab-container

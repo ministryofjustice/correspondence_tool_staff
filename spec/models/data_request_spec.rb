@@ -37,7 +37,7 @@ RSpec.describe DataRequest, type: :model do
       it { should be_valid }
 
       it 'requires location' do
-        invalid_values = ['', ' ', nil, '1234']
+        invalid_values = ['', ' ', nil]
 
         invalid_values.each do |bad_location|
           data_request.location = bad_location
@@ -49,7 +49,7 @@ RSpec.describe DataRequest, type: :model do
       end
 
       it 'requires data' do
-        invalid_values = ['', ' ', nil, '1234']
+        invalid_values = ['', ' ', nil]
 
         invalid_values.each do |bad_data|
           data_request.data = bad_data

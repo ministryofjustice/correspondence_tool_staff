@@ -1,0 +1,6 @@
+.letter--from-section {
+  @include media(tablet) {
+    margin-left: 50%;
+  }
+  margin-bottom: $gutter-half;
+}

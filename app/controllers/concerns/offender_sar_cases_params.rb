@@ -21,6 +21,8 @@ module OffenderSARCasesParams
       :subject_type,
       :third_party,
       :third_party_relationship,
+      :third_party_reference,
+      :third_party_company_name,
       :reply_method,
       uploaded_request_files: [],
       )

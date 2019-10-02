@@ -262,14 +262,18 @@ en:
     create_case: Create case
     feedback: Send feedback
     next_page_assign: Create case
-    request_amends: Request amends 
+    request_amends: Request amends
     save_changes: Save changes
+    search: Search
 
   helpers:
     fieldset:
+      letter:
+        letter_template_id: "Choose a letter template to use:"
       bypass_approval_manager:
         press_office_approval: 'Does Press office need to clear this response?'
       offender_sar:
+        info_held_status_abbreviation: Was the information held?
         flag_for_disclosure_specialists: "Flag as high profile case?"
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
@@ -305,6 +309,8 @@ en:
         flag_for_disclosure_specialists: Flag for disclosure specialist?
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+      offender_sar:
+        third_party: Please choose yes or no
       report:
         correspondence_type: Which type of cases do you want to report on?
         report_type_id: What should this report cover?
@@ -443,7 +449,7 @@ en:
         email: "Recipient email address"
         message: Request details
         name: "Full name of the representative"
-        other_subject_ids: "Subject’s PNC or other ID numbers"
+        other_subject_ids: "Subject's PNC or other ID numbers"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
@@ -451,8 +457,13 @@ en:
         subject: "Case summary"
         subject_aliases: "Subject's alias if applicable"
         subject_full_name: "Full name of data subject"
+        subject_type:
+          ex_offender: Ex-offender
+          offender: Offender
         third_party: Is this information being requested on someone else's behalf?
         third_party_relationship: Relationship to the subject
+        third_party_reference: Requester reference (optional)
+        third_party_company_name: Company name (optional)
       feedback:
         comment: Help make this service better
       search_query:
@@ -523,6 +534,7 @@ en:
       date_draft_uploaded: Date draft uploaded
       date_ico_decision_received: Date ICO's decision was received
       date_responded: Date response sent to requester
+      date_of_birth: Date of birth
       draft_timeliness: Draft timeliness
       case/ico:
         date_responded: Date response sent to ICO
@@ -543,6 +555,9 @@ en:
       header_subject: "Case subject, "
       late_team: Business unit responsible for late response
       name: Requester
+      other_subject_ids: "Subject's PNC or other ID numbers"
+      previous_case_numbers: Previous SAR cases
+      prison_number: "Prison number"
       postal_address: "Requester’s postal address"
       progress_for_clearance: "Ready for Disclosure clearance"
       received_date: Date request received at MOJ
@@ -562,8 +577,11 @@ en:
       requester_type: "Type of requester"
       sar_response_address: Where the information should be sent
       status: Status
+      subject_aliases: Subject aliases
       third_party: Information requested on someone's behalf?
       third_party_relationship: Third party relationship
+      third_party_reference: Requester reference
+      third_party_company_name: Company name
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
@@ -611,7 +629,7 @@ en:
         heading: Cases
         subheadings:
           number_of_cases_created_over_past_week: No of Cases created over the past week
-          existing_cases: Existing cases 
+          existing_cases: Existing cases
         date: Date
         no_of_cases: No. of Cases
         id: ID
@@ -852,6 +870,9 @@ en:
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{num_days} days.
+    search_bar:
+      heading: Case number, requester name or keyword
+      hint: For example, 170113001, John Smith or prison meals
     searches:
       show:
         heading: Search
@@ -924,7 +945,7 @@ en:
     reassign_user:
       heading: Change team member
       action: Change team member
-    select_team: 
+    select_team:
       heading: Select team
     take_case_on:
       success: Case taken on

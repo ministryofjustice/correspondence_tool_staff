@@ -1,0 +1,9 @@
+.grid-row
+  .column-full.button-holder
+    = form_tag search_path, method: :get
+      = label_tag 'search_query[search_text]', class: 'form-label-bold' do
+        = t("cases.search_bar.heading")
+        span.form-hint
+          = t("cases.search_bar.hint")
+      = search_field_tag 'search_query[search_text]', @query.search_text, class: 'form-control'
+      = submit_tag t("button.search"), class: 'button button-no-margin', id: 'search-button'

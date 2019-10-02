@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe CaseRemovePITExtensionService do
-  let!(:received_date) { Date.new(2018, 9, 27) }
+  let!(:received_date) { 7.business_days.ago.to_date }
   let!(:team_dacu)     { find_or_create :team_disclosure_bmt }
   let!(:manager)       { find_or_create :disclosure_bmt_user }
 

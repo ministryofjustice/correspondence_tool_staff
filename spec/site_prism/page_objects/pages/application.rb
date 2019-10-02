@@ -59,6 +59,8 @@ module PageObjects
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',
+        cases_new_letter:               'Cases::NewLetterPage',
+        cases_show_letter:              'Cases::ShowLetterPage',
         login:                          'LoginPage',
         my_open_cases:                  'Cases::MyOpenCasesPage',
         open_cases:                     'Cases::OpenCasesPage',
@@ -104,6 +106,7 @@ module PageObjects
         overturned_foi_case_details:  'Cases::OverturnedFOI::CaseDetailsSection',
         overturned_ico_new_form:      'Cases::OverturnedICO::NewFormSection',
         overturned_sar_case_details:  'Cases::OverturnedSAR::CaseDetailsSection',
+        offender_sar_case_details:    'Cases::OffenderSAR::CaseDetailsSection',
         dropzonejs_preview_template:  'Shared::DropzoneJSPreviewTemplateSection',
         pagination:                   'PaginationSection',
       }.each do |section_name, section_class|

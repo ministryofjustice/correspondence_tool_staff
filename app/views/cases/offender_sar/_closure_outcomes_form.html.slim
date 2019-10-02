@@ -4,14 +4,18 @@
   - if @case.responded_late?
     = render partial: 'cases/shared/team_caused_late_response', locals: { kase: @case, f: f }
 
-  .js-info-held-status
-    = f.radio_button_fieldset :info_held_status_abbreviation, choices: CaseClosure::InfoHeldStatus.all, text_method: :name, value_method: :abbreviation
+  p Coming soon - reasons for late case
 
-  .js-outcome-group
-    = f.radio_button_fieldset :outcome_abbreviation, choices: CaseClosure::Outcome.active, text_method: :name, value_method: :abbreviation
+  / TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
+  /.js-info-held-status
+    = f.radio_button_fieldset :info_held_status_abbreviation, choices: CaseClosure::InfoHeldStatus.all, text_method: :name, value_method: :abbreviation
 
   .grid-row
     .column-two-thirds
       .button-holder
+        / TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
+        / this hidden field is required in order for the form to be submitted successfully
+        / remove once we have fields which populate the "offender_sar" params (even if no radios selected)
+        = hidden_field :offender_sar, value: ""
         = f.submit submit_button, { class: 'button' }
         = link_to "Return to case detail", case_path(kase.id), class:'button-secondary button-left-spacing'

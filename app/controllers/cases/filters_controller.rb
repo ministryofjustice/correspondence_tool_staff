@@ -5,6 +5,7 @@ module Cases
 
     before_action :set_url, only: [:open]
     before_action :set_state_selector, only: [:open, :my_open]
+    before_action :set_search_query, only: [:closed, :my_open]
 
     def show
       if params[:state_selector].present?
@@ -143,6 +144,16 @@ module Cases
 
 
     private
+
+    def set_search_query
+      service = CaseSearchService.new(
+        user: current_user,
+        query_type: :search,
+        query_params: search_params
+      )
+      service.call
+      @query = service.query
+    end
 
     def set_state_selector
       @state_selector = StateSelector.new(params)
