@@ -42,13 +42,13 @@ module PageObjects
         common.each do |checkbox_code|
           checkbox_name = "#{checkbox_code}_checkbox"
           # checkbox_id = filters.exemption_filter_panel.most_used.__send__(checkbox_name)['for']
-          exemption_filter_panel.most_used.__send__(checkbox_name).click
+          filter_exemption_content.most_used.__send__(checkbox_name).click
         end
       end
       if all.present?
         all.each do |checkbox_code|
           checkbox_name = "#{checkbox_code}_checkbox"
-          exemption_filter_panel.exemption_all.__send__(checkbox_name).click
+          filter_exemption_content.exemption_all.__send__(checkbox_name).click
         end
       end
       case_filters.apply_filters_button.click

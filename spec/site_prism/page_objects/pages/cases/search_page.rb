@@ -19,7 +19,7 @@ module PageObjects
           element :filter_timeliness_link, '#filter-timeliness-link'
           element :filter_status_link, '#filter-status-link'
           element :filter_deadline_link, '#filter-deadline-link'
-          element :filter_exemptions_link, '#filter-exemptions-link'
+          element :filter_exemption_link, '#filter-exemptions-link'
           element :apply_filters_button, '#apply-filters-button'
         end
 

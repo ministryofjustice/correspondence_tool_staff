@@ -121,7 +121,7 @@ feature 'filters whittle down search results' do
                                                             :std_unassigned_irt
                                                           )
       open_cases_page.open_filter(:status)
-      expect(open_cases_page.status_filter_panel.unassigned_checkbox)
+      expect(open_cases_page.filter_status_content.unassigned_checkbox)
         .to be_checked
 
       open_cases_page.filter_crumb_for('Needs reassigning').click
@@ -131,7 +131,7 @@ feature 'filters whittle down search results' do
       expect(open_cases_page.search_results_count.text).to eq '8 cases found'
 
       open_cases_page.open_filter(:status)
-      expect(open_cases_page.status_filter_panel.unassigned_checkbox)
+      expect(open_cases_page.filter_status_content.unassigned_checkbox)
         .not_to be_checked
     end
   end

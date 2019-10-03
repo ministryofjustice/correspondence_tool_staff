@@ -51,7 +51,7 @@ feature 'filters whittle down search results' do
                                                             )
 
       cases_search_page.open_filter(:status)
-      expect(cases_search_page.status_filter_panel.open_checkbox)
+      expect(cases_search_page.filter_status_content.open_checkbox)
         .to be_checked
 
       cases_search_page.filter_crumb_for('Open').click
@@ -59,7 +59,7 @@ feature 'filters whittle down search results' do
       expect(cases_search_page.case_numbers)
         .to match_array expected_case_numbers(*@all_cases)
       cases_search_page.open_filter(:status)
-      expect(cases_search_page.status_filter_panel.open_checkbox)
+      expect(cases_search_page.filter_status_content.open_checkbox)
         .not_to be_checked
       expect(cases_search_page.filter_crumb_for('Open'))
         .not_to be_present
@@ -86,9 +86,9 @@ feature 'filters whittle down search results' do
       expect(cases_search_page.case_numbers)
         .to match_array expected_case_numbers(*@all_cases)
       cases_search_page.open_filter(:type)
-      expect(case_search_page.filter_type_content.foi_ir_compliance_checkbox)
+      expect(cases_search_page.filter_type_content.foi_ir_compliance_checkbox)
         .not_to be_checked
-      expect(case_search_page.filter_type_content.foi_ir_timeliness_checkbox)
+      expect(cases_search_page.filter_type_content.foi_ir_timeliness_checkbox)
         .not_to be_checked
       expect(cases_search_page.filter_crumb_for(crumb_text))
         .not_to be_present
@@ -114,7 +114,7 @@ feature 'filters whittle down search results' do
                                               :std_draft_foi,
                                               :std_closed_foi)
       cases_search_page.open_filter(:type)
-      expect(case_search_page.filter_type_content.foi_standard_checkbox)
+      expect(cases_search_page.filter_type_content.foi_standard_checkbox)
         .to be_checked
       expect(cases_search_page.filter_crumb_for('Trigger'))
         .not_to be_present
@@ -124,7 +124,7 @@ feature 'filters whittle down search results' do
       expect(cases_search_page.case_numbers)
         .to match_array expected_case_numbers(*@all_cases)
       cases_search_page.open_filter(:type)
-      expect(case_search_page.filter_type_content.foi_standard_checkbox)
+      expect(cases_search_page.filter_type_content.foi_standard_checkbox)
         .not_to be_checked
       expect(cases_search_page.filter_crumb_for('FOI - Standard'))
         .not_to be_present
@@ -177,7 +177,7 @@ feature 'filters whittle down search results' do
 
       login_step user: user
       cases_search_page.open_filter('type')
-      expect(case_search_page.filter_type_content).to have_no_sar_non_offender_checkbox
+      expect(cases_search_page.filter_type_content).to have_no_sar_non_offender_checkbox
     end
   end
 
@@ -199,19 +199,19 @@ feature 'filters whittle down search results' do
 
         cases_search_page.open_filter(:exemption)
 
-        exemption_filter_panel = cases_search_page.exemption_filter_panel
-        expect(exemption_filter_panel.most_used.checkbox_for(:s40))
+        filter_exemption_content = cases_search_page.filter_exemption_content
+        expect(filter_exemption_content.most_used.checkbox_for(:s40))
           .to be_checked
-        expect(exemption_filter_panel.exemption_all.checkbox_for(:s40))
+        expect(filter_exemption_content.exemption_all.checkbox_for(:s40))
           .to be_checked
 
         cases_search_page.filter_crumb_for('(s40) - Personal information').click
         cases_search_page.open_filter(:exemption)
 
-        exemption_filter_panel = cases_search_page.exemption_filter_panel
-        expect(exemption_filter_panel.most_used.checkbox_for(:s40))
+        filter_exemption_content = cases_search_page.filter_exemption_content
+        expect(filter_exemption_content.most_used.checkbox_for(:s40))
           .not_to be_checked
-        expect(exemption_filter_panel.exemption_all.checkbox_for(:s40))
+        expect(filter_exemption_content.exemption_all.checkbox_for(:s40))
           .not_to be_checked
       end
     end
@@ -225,14 +225,14 @@ feature 'filters whittle down search results' do
 
         cases_search_page.open_filter(:exemption)
 
-        exemption_filter_panel = cases_search_page.exemption_filter_panel
-        expect(exemption_filter_panel.most_used.checkbox_for(:s21))
+        filter_exemption_content = cases_search_page.filter_exemption_content
+        expect(filter_exemption_content.most_used.checkbox_for(:s21))
           .to be_checked
-        expect(exemption_filter_panel.most_used.checkbox_for(:s22))
+        expect(filter_exemption_content.most_used.checkbox_for(:s22))
           .to be_checked
-        expect(exemption_filter_panel.exemption_all.checkbox_for(:s21))
+        expect(filter_exemption_content.exemption_all.checkbox_for(:s21))
           .to be_checked
-        expect(exemption_filter_panel.exemption_all.checkbox_for(:s22))
+        expect(filter_exemption_content.exemption_all.checkbox_for(:s22))
           .to be_checked
 
         s21_plus_one = '(s21) - Information accessible by other means + 1 more'
