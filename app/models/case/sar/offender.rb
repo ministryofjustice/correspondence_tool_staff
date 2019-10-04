@@ -139,10 +139,6 @@ class Case::SAR::Offender < Case::Base
     self.current_state == 'data_to_be_requested'
   end
 
-  # @todo (Mohammed Seedat): Conditions for a late business unit
-  def business_unit_already_late?
-    false
-  end
 
   private
 
