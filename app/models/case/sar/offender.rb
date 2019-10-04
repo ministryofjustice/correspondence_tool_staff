@@ -139,6 +139,7 @@ class Case::SAR::Offender < Case::Base
     self.current_state == 'data_to_be_requested'
   end
 
+
   private
 
   def set_subject

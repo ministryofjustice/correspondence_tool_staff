@@ -52,6 +52,17 @@ class ReportTypeSeeder
                          class_name: 'Stats::R103SarBusinessUnitPerformanceReport',
                          custom_report: true,
                          seq_id: 250},
+                {abbr: 'R205',
+                         full_name: 'Monthly report (Offender SARs)',
+                         class_name: 'Stats::R205OffenderSarMonthlyPerformanceReport',
+                         custom_report: false,
+                         standard_report: true,
+                         foi: false,
+                         sar: false,
+                         offender_sar: true,
+                         seq_id: 600,
+                         default_reporting_period: 'year_to_date',
+                         etl: false},
   ]
 
   def seed!(verbose: false)

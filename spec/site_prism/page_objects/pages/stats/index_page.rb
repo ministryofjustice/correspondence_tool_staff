@@ -18,7 +18,7 @@ module PageObjects
 
         element :report_caption, 'table caption'
 
-        %i[foi sar closed_cases].each_with_index do |performance_type, i|
+        %i[foi sar offender_sar].each_with_index do |performance_type, i|
           section performance_type, "section:nth-of-type(#{i + 1})" do
             element :type_name, 'h2'
             sections :reports, 'ul.report-list li' do

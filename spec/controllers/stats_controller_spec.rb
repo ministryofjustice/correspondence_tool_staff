@@ -234,14 +234,11 @@ RSpec.describe StatsController, type: :controller do
           .with_args(manager, Case::Base)
     end
 
-    it 'sets @foi_reports' do
+    it 'sets @reports' do
       get :index
-      expect(assigns(:foi_reports)).to eq ReportType.standard.foi.order(:full_name)
-    end
 
-    it 'sets @sar_reports' do
-      get :index
-      expect(assigns(:sar_reports)).to eq ReportType.standard.sar.order(:full_name)
+      available_standard_reports = assigns(:reports)
+      expect(available_standard_reports.keys).to match_array %i[foi sar offender_sar]
     end
 
     it 'renders the template' do

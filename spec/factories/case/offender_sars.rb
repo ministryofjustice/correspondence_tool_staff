@@ -108,8 +108,11 @@ FactoryBot.define do
       identifier { 'Closed Offender SAR' }
     end
 
+    received_date  { 22.business_days.ago }
+    date_responded { 4.business_days.ago }
+
     after(:create) do |kase|
-      create :case_transition_closed, case: kase
+      create :case_transition_close, case: kase
       kase.reload
     end
   end

@@ -8,8 +8,7 @@ class StatsController < ApplicationController
   SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'.freeze
 
   def index
-    @foi_reports = ReportType.standard.foi.order(:full_name)
-    @sar_reports = ReportType.standard.sar.order(:full_name)
+    @reports = ReportType.available_standard_reports
   end
 
   def show
