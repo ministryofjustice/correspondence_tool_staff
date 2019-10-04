@@ -199,7 +199,6 @@ describe SearchQuery do
                                                 :exemption_ids,
                                                 :external_deadline_from,
                                                 :external_deadline_to,
-                                                :filter_assigned_to_ids,
                                                 :filter_case_type,
                                                 :filter_open_case_status,
                                                 :filter_sensitivity,
@@ -460,11 +459,6 @@ describe SearchQuery do
     it 'includes status filters' do
       search_query = create :search_query, filter_status: ['closed']
       expect(search_query.applied_filters).to eq [CaseStatusFilter]
-    end
-
-    it 'includes assigned business unit filters' do
-      search_query = create :search_query, filter_assigned_to_ids: [1]
-      expect(search_query.applied_filters).to eq [AssignedBusinessUnitFilter]
     end
 
     it 'includes exemption filters' do

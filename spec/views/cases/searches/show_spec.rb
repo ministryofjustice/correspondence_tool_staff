@@ -27,7 +27,7 @@ describe 'cases/searches/show.html.slim', type: :view do
     end
 
     it 'should not display the filters' do
-      expect(cases_search_page).to have_no_filters
+      expect(cases_search_page).to have_no_case_filters
     end
 
     it 'should not display number of results found' do
@@ -52,7 +52,7 @@ describe 'cases/searches/show.html.slim', type: :view do
     end
 
     it 'should not display the filters' do
-      expect(cases_search_page).to have_no_filters
+      expect(cases_search_page).to have_no_case_filters
     end
 
     it 'should display number of results found' do
@@ -81,7 +81,7 @@ describe 'cases/searches/show.html.slim', type: :view do
     end
 
     it 'should display the filters' do
-      expect(cases_search_page).to have_filters
+      expect(cases_search_page).to have_case_filters
     end
 
     it 'should display number of results found' do
