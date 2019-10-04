@@ -44,8 +44,9 @@ module Stats
         expect(report.case_scope).to match_array( [@offender_sar_2, @offender_sar_3, @offender_sar_4])
       end
 
+      # @todo(Mohammed Seedat): Business Rules for 'in time' require clarification
       context 'unassigned cases' do
-        it 'is calculated as an open case' do
+        xit 'is calculated as an open case' do
           late_unassigned_trigger_sar_case = create(
             :offender_sar_case,
             flag_as_high_profile: true,
@@ -76,17 +77,6 @@ module Stats
           expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
           expect(report.case_scope).to include(late_unassigned_trigger_sar_case)
           expect(report.case_scope).to include(in_time_unassigned_trigger_sar_case)
-        end
-
-        # @todo (Mohammed Seedat): rules for lateness/flagged/trigger currently unimplemented
-        xit 'has flagged cases' do
-          # Setup here
-          report.run
-          results = report.results
-
-          expect(results[12][:trigger_open_late]).to eq(1)
-          expect(results[12][:trigger_open_in_time]).to eq(1)
-          expect(results[12][:trigger_total]).to eq(2)
         end
       end
     end
