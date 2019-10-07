@@ -3,8 +3,8 @@ require 'rails_helper'
 describe UpdateClosureService do
 
   describe '#call' do
-    let(:date_received)         { Date.new(2019, 5, 1) }
-    let(:new_date_responded)    { Date.new(2019, 5, 5) }
+    let(:date_received)         { 7.business_days.ago.to_date }
+    let(:new_date_responded)    { 4.business_days.ago.to_date }
     let(:team)                  { find_or_create :team_dacu }
     let(:user)                  { team.users.first }
     let(:kase)                  { create :closed_case, received_date: date_received }
