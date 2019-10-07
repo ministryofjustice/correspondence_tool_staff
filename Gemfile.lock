@@ -517,9 +517,11 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.2)
-    site_prism (3.1)
+    site_prism (3.4.1)
       addressable (~> 2.5)
-      capybara (~> 3.2)
+      capybara (~> 3.3)
+      site_prism-all_there (~> 0.3)
+    site_prism-all_there (0.3)
     slim (4.0.1)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
@@ -663,7 +665,7 @@ DEPENDENCIES
   shoulda-matchers (~> 4.1)
   sidekiq (~> 5.2.7)
   sidekiq-logging-json (~> 0.0.19)
-  site_prism (= 3.1)
+  site_prism (= 3.4.1)
   slim-rails (~> 3.2)
   spring
   spring-commands-rspec

@@ -73,7 +73,7 @@ group :test do
   gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 4.1'
-  gem 'site_prism', '= 3.1'
+  gem 'site_prism', '3.4.1'
   gem 'webdrivers', '~> 4.1'
 end
 
