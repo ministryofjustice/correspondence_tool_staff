@@ -79,7 +79,7 @@ end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'annotate', '~> 2.7.5'
+  gem 'annotate', '~> 3.0.2'
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
