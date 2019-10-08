@@ -5,9 +5,10 @@ module Stats
       business_group:                  'Business group',
       directorate:                     'Directorate',
       business_unit:                   'Business unit',
-      responsible:                     'Responsible'
+      responsible:                     'Responsible',
+      deactivated:                     'Deactivated',
     }
-    
+
     R003_BU_PERFORMANCE_COLUMNS = {
       bu_performance:             'Performance %',
       bu_total:                   'Total received',
@@ -21,9 +22,10 @@ module Stats
       business_group:                  '',
       directorate:                     '',
       business_unit:                   '',
-      responsible:                     ''
+      responsible:                     '',
+      deactivated:                     ''
     }
-    
+
     R003_BU_PERFORMANCE_SUPERHEADINGS = {
       bu_performance:             'Business unit',
       bu_total:                   'Business unit',
@@ -83,7 +85,7 @@ module Stats
       @stats.finalise
     end
 
-    INDEXES_FOR_PERCENTAGE_COLUMNS = [4, 10, 16]
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [5, 11, 17]
 
     # This method needs to return a grid of 'cells' with value and rag_rating properties
     def to_csv
@@ -147,6 +149,7 @@ module Stats
         else
           raise "Invalid team type #{team.class}"
         end
+        result_set[:deactivated] = team.deactivated
         result_set[:responsible] = team.team_leader_name
       end
 
@@ -154,6 +157,7 @@ module Stats
       @stats.stats[:total][:directorate] = ''
       @stats.stats[:total][:business_unit] = ''
       @stats.stats[:total][:responsible] = ''
+      @stats.stats[:total][:deactivated] = ''
     end
 
     def analyse_case(kase)
