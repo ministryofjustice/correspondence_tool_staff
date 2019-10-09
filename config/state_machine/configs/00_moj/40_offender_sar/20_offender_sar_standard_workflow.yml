@@ -37,6 +37,7 @@
                   transition_to: closed
                 add_data_received:
                 add_note_to_case:
+                send_dispatch_letter:
               closed:
                 add_data_received:
                 add_note_to_case:

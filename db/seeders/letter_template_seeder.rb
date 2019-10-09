@@ -1,4 +1,5 @@
 class LetterTemplateSeeder
+  #rubocop:disable Metrics/MethodLength
   def seed!
     puts "----Seeding Letter Templates----"
 
@@ -39,5 +40,51 @@ class LetterTemplateSeeder
                   Ministry of Justice
                 EOF
                 )
+
+    rec = LetterTemplate.find_by(abbreviation: 'solicitor-disclosed')
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: 'Solicitor disclosed letter',
+                abbreviation: 'solicitor-disclosed',
+                template_type: 'dispatch',
+                body: <<~EOF
+                  <%= values.name %>
+                  <%= values.third_party_company_name %>
+                  <%= values.postal_address %>
+
+                  Your Reference: <%= values.third_party_reference %>
+
+                  Our Reference:  DPA <%= values.number %>
+
+                  Date: <%= Date.today.strftime('%e %b %Y') %>
+
+                  DATA PROTECTION ACT 2018:  SUBJECT ACCESS REQUEST
+                  <%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase%>
+
+                  I am writing in response to your request for information made under the Data Protection Act 1998 (DPA) for the above person. The Ministry of Justice (MoJ) is sorry for the delay in responding to your subject access request (SAR).
+
+                  Enclosed is all the information related to your request that I am able to release. Some information may have been withheld and this is because the information is exempt from disclosure under the DPA. The exemptions within the DPA include information which is processed for the prevention or detection of crime or the apprehension or prosecution of offenders, and information that would identify third parties. Where we have withheld exempt information, you will see items redacted on the documents.
+
+                  I can confirm that the personal data contained within these documents is being processed by the MoJ for the purposes of the administration of justice and for the exercise of any functions of the Crown, a Minister of the Crown or a government department. As such we may share or exchange data with other Departments or organisations if it is lawful to do so, for example the Police or the Probation Service.
+
+                  If you have any queries regarding your request please contact the Data Protection Compliance Team (DPCT), at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
+
+                  Information Commissioner’s Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF
+                  Internet: www.ico.gov.uk
+
+                  Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any futures SARs.
+
+                  I would like to suggest that you do not keep this information where it can be accessed by others. It would be helpful to remind your client of this. In a prison establishment the information can be placed in stored property.
+
+                  Finally, the MoJ is sorry that your SAR was not completed within 40 days. We take our obligations under the DPA very seriously and we make every effort to complete all SARs by the statutory deadline but regrettably there are occasions when we are unable to achieve this.
+
+                  Yours sincerely
+
+
+                  Application Team
+                  Data Protection Compliance Team
+                  Ministry of Justice
+                EOF
+                )
   end
+  #rubocop:enable Metrics/MethodLength
 end
