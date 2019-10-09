@@ -69,6 +69,41 @@ private_office_team_name: Private Office
 press_office_team_code: PRESS-OFFICE
 private_office_team_code: PRIVATE-OFFICE
 
+homepage_navigation:
+  pages:
+    incoming_cases:
+      path: /cases/incoming
+
+      visibility: approver
+      scope:
+        'DISCLOSURE': incoming_approving_cases
+        'PRESS-OFFICE': incoming_cases_press_office
+        'PRIVATE-OFFICE': incoming_cases_private_office
+
+    open_cases:
+      path: /cases/open
+
+      scope:
+        approver: open_flagged_for_approval
+        manager: open_cases
+        responder: open_cases
+
+    my_open_cases:
+      path: /cases/my_open
+      scope:
+        approver: my_open_flagged_for_approval_cases
+        manager: my_open_cases
+        responder: my_open_cases
+      tabs:
+        in_time:
+          scope: in_time_cases
+        late:
+          scope: late_cases
+
+    closed_cases:
+      path: /cases/closed
+      scope: closed_cases
+
 global_navigation:
   default_urls:
     approver: /cases/open
@@ -87,7 +122,6 @@ global_navigation:
 
     open_cases:
       path: /cases/open
-
       scope:
         approver: open_flagged_for_approval
         manager: open_cases
