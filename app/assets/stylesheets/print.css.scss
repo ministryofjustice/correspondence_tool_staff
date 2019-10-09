@@ -1,0 +1,75 @@
+@page {
+  margin: 2cm;
+}
+
+#skiplink-container,
+#global-cookie-message,
+#global-header,
+#global-header-bar,
+.phase-banner,
+.global-nav,
+.govuk-back-link,
+hr,
+.button,
+.feedback,
+#footer { display: none!important; }
+
+body {
+  font-size: 11pt;
+}
+
+h2,
+h3 {
+  page-break-after: avoid;
+}
+
+.heading-xlarge,
+.page-heading {
+  font-size: 18pt!important;
+
+  .page-heading--secondary {
+    font-size: 12pt;
+  }
+}
+
+h2,
+h2.request--heading {
+  font-size: 15pt!important;
+
+  &.print-large {
+    font-size: 18pt!important;
+  }
+}
+
+h3 {
+  font-size: 13pt!important;
+}
+
+table th,
+table td,
+p {
+  font-size: 11pt!important;
+}
+
+img {
+  max-width: 100% !important;
+}
+
+ul, img {
+  page-break-inside: avoid;
+}
+
+a {
+  font-weight: bolder;
+  text-decoration: none;
+}
+
+#content {
+  max-width: 100%!important;
+  width: 98%;
+  padding-bottom: 0;
+}
+
+.case-info {
+  margin-bottom: 40px;
+}
