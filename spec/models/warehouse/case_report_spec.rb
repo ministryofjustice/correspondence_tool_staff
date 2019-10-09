@@ -30,17 +30,19 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(kase.warehouse_case_report).to be_nil
 
       case_report = described_class.for(kase)
-      expect(case_report.new_record?).to be true
+      kase.reload
+
+      expect(kase.warehouse_case_report).to eq case_report
     end
 
     it 'returns existing CaseReport if it exists' do
       kase = create :accepted_sar
       expect(kase.warehouse_case_report).to be_nil
-      described_class.generate(kase)
+      case_report = described_class.generate(kase)
       kase.reload
 
-      case_report = described_class.for(kase)
-      expect(case_report.new_record?).to be false
+      expect(kase.warehouse_case_report).to eq case_report
+      expect(described_class.for(kase)).to eq case_report
     end
   end
 
@@ -53,7 +55,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       end
     end
   end
-  
+
   describe '#generate_all' do
     it 'generates CaseReport for all existing Case::Base' do
       kases
@@ -62,13 +64,13 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(described_class.generate_all).to eq num_cases
     end
   end
-  
+
   describe '#reconcile' do
     it 'returns a tuple of number of processed missing and deleted cases' do
       expect(described_class.reconcile).to eq [0, 0]
     end
   end
-  
+
   describe '#reconcile_missing_cases' do
     it 'reconciles all undeleted missing cases' do
       new_kases = [create(:closed_case), create(:closed_sar)]

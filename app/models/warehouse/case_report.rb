@@ -9,7 +9,7 @@ module Warehouse
     # Class methods to allow this class to be used in async jobs
     class << self
       def for(kase)
-        kase.warehouse_case_report || self.new(case_id: kase.id)
+        kase.warehouse_case_report || self.where(case_id: kase.id).first_or_create!
       end
 
       # Every field is deliberately set explicitly, please do not use any
