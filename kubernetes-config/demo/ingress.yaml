@@ -5,9 +5,9 @@ metadata:
 spec:
   tls:
   - hosts:
-    - track-a-query-poc.apps.live-1.cloud-platform.service.justice.gov.uk
+    - track-a-query-demo.apps.live-1.cloud-platform.service.justice.gov.uk
   rules:
-  - host: track-a-query-poc.apps.live-1.cloud-platform.service.justice.gov.uk
+  - host: track-a-query-demo.apps.live-1.cloud-platform.service.justice.gov.uk
     http:
       paths:
       - path: /
