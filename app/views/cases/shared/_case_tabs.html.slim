@@ -1,9 +1,9 @@
 div.govuk-tabs
   h2.govuk-tabs__title.heading-medium
     = "Contents"
-  ul.govuk-tabs__list
+  ul#homepage-navigation.govuk-tabs__list
     - @homepage_nav_manager.each do |page|
-        li class="govuk-tabs__list-item"
+        li.govuk-tabs__list-item
           = link_to t("homepage_nav.pages.#{page.name}", count: current_user.teams.size), page.fullpath, {class: "govuk-tabs__tab #{active_link_class(page.fullpath)}"}
 style[type="text/css"]
   | .global-nav-item.open_cases a { border-bottom: 5px solid #005ea5; }
