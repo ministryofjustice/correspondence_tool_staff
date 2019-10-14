@@ -159,9 +159,16 @@ feature 'filters whittle down search results' do
     scenario 'clearing individual filters', js: true do
       expect(SearchQuery.count).to eq 5
 
+      expect(open_cases_page.search_results_count.text).to eq '1 case found'
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'            )).to be_present
+      expect(open_cases_page.filter_crumb_for('In time'            )).to be_present
+      expect(open_cases_page.filter_crumb_for('Ready to close'     )).to be_present
+      expect(open_cases_page.filter_crumb_for(@deadline_filter_text)).to be_present
+
       open_cases_page.filter_crumb_for(@deadline_filter_text).click
 
-      expect(SearchQuery.count).to eq 5
+      expect(SearchQuery.count).to eq 6
       expect(open_cases_page.search_results_count.text).to eq '1 case found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).to be_present
@@ -171,7 +178,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for('Ready to close').click
 
-      expect(SearchQuery.count).to eq 5
+      expect(SearchQuery.count).to eq 7
       expect(open_cases_page.search_results_count.text).to eq '1 case found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).to be_present
@@ -181,7 +188,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for('In time').click
 
-      expect(SearchQuery.count).to eq 5
+      expect(SearchQuery.count).to eq 8
       expect(open_cases_page.search_results_count.text).to eq '1 case found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).to be_present
@@ -191,7 +198,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for('Trigger').click
 
-      expect(SearchQuery.count).to eq 6
+      expect(SearchQuery.count).to eq 9
       expect(open_cases_page.search_results_count.text).to eq '3 cases found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).not_to be_present
@@ -201,7 +208,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for('FOI - Standard').click
 
-      expect(SearchQuery.count).to eq 7
+      expect(SearchQuery.count).to eq 10
       expect(open_cases_page.search_results_count.text).to eq '8 cases found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).not_to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).not_to be_present
