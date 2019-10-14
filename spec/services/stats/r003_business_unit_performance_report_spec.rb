@@ -262,9 +262,9 @@ module Stats
           BGCD,DRCD,"",#{@dir_cd.team_lead},"",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
           BGCD,DRCD,RTC,#{@team_c.team_lead},"",50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0
           BGCD,DRCD,RTD,#{@team_d.team_lead},"",0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0
-          BGDoom,"","",Director General 5,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
-          BGDoom,DRDoom,"",Director 7,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
-          BGDoom,DRDoom,Doomed,Deputy Director 13,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
+          BGDoom,"","",#{@bizgrp_e.team_lead},"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
+          BGDoom,DRDoom,"",#{@dir_e.team_lead},"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
+          BGDoom,DRDoom,Doomed,#{@team_e.team_lead},"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
           Total,"","","","",40.0,13,4,3,3,3,33.3,5,1,1,2,1,38.5,18,5,4,5,4
           EOCSV
           actual_lines = report_csv.map { |row| row.map(&:value) }
@@ -437,9 +437,9 @@ module Stats
               BGCD,DRCD,"",#{@dir_cd.team_lead},"",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
               BGCD,DRCD,RTC,#{@team_c.team_lead},"",50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0,0.0,2,0,2,0,0
               BGCD,DRCD,RTD,#{@team_d.team_lead},"",0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
-              BGDoom,"","",Director General 5,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
-              BGDoom,DRDoom,"",Director 7,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
-              BGDoom,DRDoom,Doomed,Deputy Director 13,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
+              BGDoom,"","",#{@bizgrp_e.team_lead},"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
+              BGDoom,DRDoom,"",#{@dir_e.team_lead},"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
+              BGDoom,DRDoom,Doomed,#{@team_e.team_lead},"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
               Total,"","","","",40.0,13,4,3,3,3,33.3,5,1,1,2,1,38.5,18,5,4,5,4,0.0,18,0,9,0,9
             EOCSV
             report = R003BusinessUnitPerformanceReport.new(period_start: Date.today.beginning_of_year, period_end: Date.today, generate_bu_columns: true)
