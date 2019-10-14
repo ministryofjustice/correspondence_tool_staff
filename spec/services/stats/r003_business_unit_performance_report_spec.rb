@@ -14,15 +14,25 @@ module Stats
         @bizgrp_cd = create :business_group, name: 'BGCD'
         @dir_cd    = create :directorate, name: 'DRCD', business_group: @bizgrp_cd
 
+        @bizgrp_e  = create :business_group, name: 'ForDoomedTeam'
+        @dir_e     = create :directorate, name: 'DoomedDir', business_group: @bizgrp_e
+
         @team_a = create :business_unit, name: 'RTA', directorate: @dir_a
         @team_b = create :business_unit, name: 'RTB', directorate: @dir_b
         @team_c = create :business_unit, name: 'RTC', directorate: @dir_cd
         @team_d = create :business_unit, name: 'RTD', directorate: @dir_cd
         @team_dacu_disclosure = find_or_create :team_dacu_disclosure
+
+        @team_e = create :business_unit, name: 'Doomed', directorate: @dir_e
+
+        #deleted_at: Time.new(2017, 6, 29, 12, 0, 0)
+
         @responder_a = create :responder, responding_teams: [@team_a]
         @responder_b = create :responder, responding_teams: [@team_b]
         @responder_c = create :responder, responding_teams: [@team_c]
         @responder_d = create :responder, responding_teams: [@team_d]
+        @responder_e = create :responder, responding_teams: [@team_e]
+
 
         @outcome = find_or_create :outcome, :granted
         @info_held = find_or_create :info_status, :held
@@ -49,6 +59,10 @@ module Stats
         create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, flagged: true, ident: 'case for team a - responded in time')
         create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, flagged: true, ident: 'case for team b - open late')
         create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, flagged: true, ident: 'case for team b - open in time')
+
+        #case for soon-to-be-deactivated team
+        #create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_e, responder: @responder_e, flagged: true, ident: 'case for Doomed Team, responded on time')
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_e, responder: @responder_e, ident: 'case for team e - Doom ed Team')
       end
 
 
@@ -57,7 +71,8 @@ module Stats
       ##############
 
       # delete extraneous teams
-      Team.where('id > ?', @team_d.id).destroy_all
+      Team.where('id > ?', @team_e.id).destroy_all
+
     end
 
     after(:all) { DbHousekeeping.clean(seed: true) }
@@ -244,6 +259,9 @@ module Stats
           BGCD,DRCD,"",#{@dir_cd.team_lead},"",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
           BGCD,DRCD,RTC,#{@team_c.team_lead},"",50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0
           BGCD,DRCD,RTD,#{@team_d.team_lead},"",0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0
+          ForDoomedTeam,"","",Director General 5,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
+          ForDoomedTeam,DoomedDir,"",Director 7,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
+          ForDoomedTeam,DoomedDir,Doomed,Deputy Director 13,\"\",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
           Total,"","","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4
           EOCSV
           actual_lines = report_csv.map { |row| row.map(&:value) }
@@ -416,6 +434,9 @@ module Stats
               BGCD,DRCD,"",#{@dir_cd.team_lead},"",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
               BGCD,DRCD,RTC,#{@team_c.team_lead},"",50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0,0.0,2,0,2,0,0
               BGCD,DRCD,RTD,#{@team_d.team_lead},"",0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
+              ForDoomedTeam,"","",Director General 5,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
+              ForDoomedTeam,DoomedDir,"",Director 7,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
+              ForDoomedTeam,DoomedDir,Doomed,Deputy Director 13,\"\",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
               Total,"","","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4,0.0,17,0,8,0,9
             EOCSV
             report = R003BusinessUnitPerformanceReport.new(period_start: Date.today.beginning_of_year, period_end: Date.today, generate_bu_columns: true)
