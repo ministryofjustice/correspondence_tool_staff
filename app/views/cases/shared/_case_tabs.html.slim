@@ -4,6 +4,8 @@ div.govuk-tabs
   ul#homepage-navigation.govuk-tabs__list
     - @homepage_nav_manager.each do |page|
         li.govuk-tabs__list-item
-          = link_to t("homepage_nav.pages.#{page.name}", count: current_user.teams.size), page.fullpath, {class: "govuk-tabs__tab #{active_link_class(page.fullpath)}"}
+          = link_to t("homepage_nav.pages.#{page.name}",
+              count: current_user.teams.size), page.fullpath,
+              {class: "govuk-tabs__tab #{active_link_class(page.fullpath)}"}
 style[type="text/css"]
   | .global-nav-item.open_cases a { border-bottom: 5px solid #005ea5; }
