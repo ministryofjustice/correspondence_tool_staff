@@ -14,8 +14,8 @@ module Stats
         @bizgrp_cd = create :business_group, name: 'BGCD'
         @dir_cd    = create :directorate, name: 'DRCD', business_group: @bizgrp_cd
 
-        @bizgrp_e  = create :business_group, name: 'ForDoomedTeam'
-        @dir_e     = create :directorate, name: 'DoomedDir', business_group: @bizgrp_e
+        @bizgrp_e  = create :business_group, name: 'BGDoom'
+        @dir_e     = create :directorate, name: 'DRDoom', business_group: @bizgrp_e
 
         @team_a = create :business_unit, name: 'RTA', directorate: @dir_a
         @team_b = create :business_unit, name: 'RTB', directorate: @dir_b
@@ -72,7 +72,7 @@ module Stats
 
       # delete extraneous teams
       Team.where('id > ?', @team_e.id).destroy_all
-
+      Team.where('name = ?','Operations').destroy_all
     end
 
     after(:all) { DbHousekeeping.clean(seed: true) }
@@ -232,6 +232,9 @@ module Stats
               [[5, :red], [17, :red]],
               [[5, :red], [17, :red]],
               [[5, :red], [17, :red]],
+              [[5, :green], [17, :green]],
+              [[5, :green], [17, :green]],
+              [[5, :green], [17, :green]],
               [[5, :red], [11, :red], [17, :red]],
             ])
 
@@ -259,10 +262,10 @@ module Stats
           BGCD,DRCD,"",#{@dir_cd.team_lead},"",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
           BGCD,DRCD,RTC,#{@team_c.team_lead},"",50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0
           BGCD,DRCD,RTD,#{@team_d.team_lead},"",0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0
-          ForDoomedTeam,"","",Director General 5,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
-          ForDoomedTeam,DoomedDir,"",Director 7,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
-          ForDoomedTeam,DoomedDir,Doomed,Deputy Director 13,\"\",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
-          Total,"","","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4
+          BGDoom,"","",Director General 5,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
+          BGDoom,DRDoom,"",Director 7,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
+          BGDoom,DRDoom,Doomed,Deputy Director 13,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
+          Total,"","","","",40.0,13,4,3,3,3,33.3,5,1,1,2,1,38.5,18,5,4,5,4
           EOCSV
           actual_lines = report_csv.map { |row| row.map(&:value) }
           expected_lines = expected_text.split("\n")
@@ -434,10 +437,10 @@ module Stats
               BGCD,DRCD,"",#{@dir_cd.team_lead},"",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
               BGCD,DRCD,RTC,#{@team_c.team_lead},"",50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0,0.0,2,0,2,0,0
               BGCD,DRCD,RTD,#{@team_d.team_lead},"",0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
-              ForDoomedTeam,"","",Director General 5,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
-              ForDoomedTeam,DoomedDir,"",Director 7,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
-              ForDoomedTeam,DoomedDir,Doomed,Deputy Director 13,\"\",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
-              Total,"","","","",33.3,12,3,3,3,3,33.3,5,1,1,2,1,33.3,17,4,4,5,4,0.0,17,0,8,0,9
+              BGDoom,"","",Director General 5,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
+              BGDoom,DRDoom,"",Director 7,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
+              BGDoom,DRDoom,Doomed,Deputy Director 13,"",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
+              Total,"","","","",40.0,13,4,3,3,3,33.3,5,1,1,2,1,38.5,18,5,4,5,4,0.0,18,0,9,0,9
             EOCSV
             report = R003BusinessUnitPerformanceReport.new(period_start: Date.today.beginning_of_year, period_end: Date.today, generate_bu_columns: true)
             report.run
