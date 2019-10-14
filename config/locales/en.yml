@@ -709,6 +709,14 @@ en:
             <li>uploaded the response and any supporting documents</li>
             <li>sent the response to the person who made the request</li>
           </ul>
+    cover_sheet:
+      vetting: Vetting
+      vet_date: Vet date
+      vet_by: By
+      vetter_name: 'Name:'
+      first_vet_date: 'First vet date:'
+      second_vet_date: 'Second vet date:'
+      final_deadline: 'Final deadline:'
     bypass_approvals_form:
       press_clearance_reqd: Does Press office need to clear this response?
       affirmative: 'Yes'
