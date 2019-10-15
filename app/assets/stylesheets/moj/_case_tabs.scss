@@ -27,7 +27,6 @@
 
   &__list-item {
     display: list-item;
-    text-align: -webkit-match-parent;
     margin-left: $gutter;
 
     @include media(tablet) {

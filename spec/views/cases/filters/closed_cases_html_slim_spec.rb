@@ -4,9 +4,6 @@ describe 'cases/filters/closed.html.slim' do
   let!(:case_1) { create :closed_case, received_date: 20.business_days.ago }
   let!(:case_2) { create :closed_case }
   let(:search_query) { build :search_query }
-  #let(:homepage_nav_manager) {
-  #  instance_double(GlobalNavManager, current_page_or_tab: current_page)
-  #}
   let(:request)         { instance_double ActionDispatch::Request,
                                           path: '/cases/closed',
                                           fullpath: '/cases/closed',

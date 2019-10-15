@@ -51,9 +51,10 @@
       display: block;
     }
 
-    // JAZ: Have to hide navigation items as they show on tabs anyway. Changing in
-    // settings.yml file breaks a lot of things on the app so to avoid major
-    // refactoring
+    // Javid: Current navigation is controlled by data definition in settings.yml
+    // Therefore cannot delete entries in settings.yml without causing significant
+    // breaking changes to the system, e.g. filters / page loading
+    // Workaround is to hide the nagivation items in the current global nav bar
     &.incoming_cases,
     &.closed_cases,
     &.my_open_cases {
