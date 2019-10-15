@@ -17,6 +17,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
+                preview_cover_page:
               ready_for_vetting:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
@@ -37,6 +38,7 @@
                   transition_to: closed
                 add_data_received:
                 add_note_to_case:
+                send_dispatch_letter:
               closed:
                 add_data_received:
                 add_note_to_case:

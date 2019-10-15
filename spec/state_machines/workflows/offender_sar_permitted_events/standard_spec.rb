@@ -10,7 +10,7 @@ describe ConfigurableStateMachine::Machine do
       },
       {
         state: :waiting_for_data,
-        specific_events: [:mark_as_ready_for_vetting, :send_acknowledgement_letter]
+        specific_events: [:mark_as_ready_for_vetting, :send_acknowledgement_letter, :preview_cover_page]
       },
       {
         state: :ready_for_vetting,
@@ -26,7 +26,7 @@ describe ConfigurableStateMachine::Machine do
       },
       {
         state: :ready_to_dispatch,
-        specific_events: [:close]
+        specific_events: [:close, :send_dispatch_letter]
       },
     ].freeze
 

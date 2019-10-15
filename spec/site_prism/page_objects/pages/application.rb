@@ -50,6 +50,7 @@ module PageObjects
         cases_respond:                  'Cases::RespondPage',
         cases_search:                   'Cases::SearchPage',
         cases_show:                     'Cases::ShowPage',
+        cases_cover:                    'Cases::CoverPage',
         closed_cases:                   'Cases::ClosedCasesPage',
         confirm_destroy:                'Cases::ConfirmDestroyPage',
         cases_extend_for_pit:           'Cases::ExtendForPITPage',

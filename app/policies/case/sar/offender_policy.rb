@@ -33,4 +33,9 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     clear_failed_checks
     check_user_is_a_manager
   end
+
+  def can_send_dispatch_letter?
+    clear_failed_checks
+    check_user_is_a_manager
+  end
 end
