@@ -1,10 +1,16 @@
 en:
-  nav:
+  homepage_nav: 
     pages:
       closed_cases: Closed cases
       incoming_cases: New cases
       my_open_cases: My open cases
       open_cases: All open cases
+  nav:
+    pages:
+      closed_cases: Closed cases
+      incoming_cases: New cases
+      my_open_cases: My open cases
+      open_cases: Cases
       search_cases: Search
       teams:
         one: Team

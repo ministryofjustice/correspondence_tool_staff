@@ -3,6 +3,7 @@
   margin-bottom: $gutter;
   border-bottom: 1px solid #DEE0E2;
   background: #F8F8F8;
+
   @media print {
     display: none;
   }
@@ -19,12 +20,14 @@
   &.active {
     border-bottom: 5px solid $link-colour;
   }
+
   @include media(tablet) {
     @include bold-16();
     display: inline-block;
     height: 100%;
     padding: 0.75em 1em;
   }
+
   @include media(desktop) {
     @include bold-19();
     display: inline-block;
@@ -39,12 +42,23 @@
   top: 1px;
   margin: 0;
   padding: 0;
+
   li {
     display: inline-block;
     list-style: none;
     @include media(mobile) {
       float: none;
       display: block;
+    }
+
+    // Javid: Current navigation is controlled by data definition in settings.yml
+    // Therefore cannot delete entries in settings.yml without causing significant
+    // breaking changes to the system, e.g. filters / page loading
+    // Workaround is to hide the nagivation items in the current global nav bar
+    &.incoming_cases,
+    &.closed_cases,
+    &.my_open_cases {
+      display: none!important;
     }
   }
 }

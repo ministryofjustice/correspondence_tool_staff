@@ -10,6 +10,9 @@ module PageObjects
       section :primary_navigation,
               PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+      section :homepage_navigation,
+              PageObjects::Sections::HomepageNavigationSection, '#homepage-navigation'
+
       section :state_filter, '.state-filter' do
         elements :check_boxes, 'label'
         element :apply_filter_button, 'input[value="Filter"]'

@@ -14,11 +14,23 @@ describe 'cases/filters/incoming.html.slim', type: :view do
                        name: 'Jane Doe',
                        subject: 'Court Reform',
                        message: 'message number 2').decorate }
-   let(:further_clearance_case) { create(:assigned_case, :flagged, :further_clearance_requested,
+  let(:further_clearance_case) { create(:assigned_case, :flagged, :further_clearance_requested,
                                    approving_team: team_dacu_disclosure,
                                    name: 'Questioning Jim',
                                    subject: 'Reform Reform',
                                    message: 'message number 3').decorate }
+  let(:request)         { instance_double ActionDispatch::Request,
+                                          path: '/cases/incoming',
+                                          fullpath: '/cases/incoming',
+                                          query_parameters: {},
+                                          params: {}}
+
+  before do
+    assign(:homepage_nav_manager, GlobalNavManager.new(disclosure_specialist,
+                                                     request,
+                                                     Settings.homepage_navigation.pages))
+    allow(controller).to receive(:current_user).and_return(disclosure_specialist)
+  end
 
   it 'displays the cases given it' do
     case1

@@ -13,125 +13,128 @@
 
 = render partial: 'cases/shared/search_bar'
 
-- if request.path.include? '/cases/open'
-  .grid-row
-    .column-full.ct-tab-container
-      .ct-tab-label
-        = "Filter by"
+= render partial: 'cases/shared/case_tabs'
 
-      ul role="tablist" aria-label="Filter by" class="ct-tab-wrapper"
-        li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-type"
-            = "Type"
-        li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-timeliness"
-            = "Timeliness"
-        li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-status"
-            = "Open case status"
-        li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
-            = "Final deadline"
-        li.ct-tab-item role="presentation"
-          a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
-            = "Assigned to"
-
-      .ct-tab-panels aria-expanded="false"
-
-        #ct-tab-panel-type.ct-tab-panel
-          = render partial: 'cases/search_filters/case_types'
-        #ct-tab-panel-timeliness.ct-tab-panel
-          = render partial: 'cases/search_filters/timeliness'
-        #ct-tab-panel-status.ct-tab-panel
-          = render partial: 'cases/search_filters/open_case_status'
-        #ct-tab-panel-final-deadline.ct-tab-panel
-          = render partial: 'cases/search_filters/final_deadline'
-        #ct-tab-panel-assigned-to.ct-tab-panel
-          = render partial: 'cases/search_filters/assigned_to'
-
-  - if @query.filter_crumbs.present?
-    = render partial: 'cases/search_filters/filter_crumbs',
-             locals: { query: @query,
-                       clear_params: {} }
-- else
-  = render partial: 'state_filter_form' unless request.path == '/cases/my_open'
-
-- if @global_nav_manager.current_page.tabs.present?
-  .grid-row
-    .column-full
-      nav.section-tabs
-        ul
-          - @global_nav_manager.current_page.tabs.each do |tab|
-            li class="tab #{active_link_class(tab.fullpath)}"
-              = link_to t("nav.tabs.#{tab.name}_html",
-                         count: tab.cases.count),
-                        tab.fullpath_with_query
-
-- if @cases.present?
-  - if request.path == '/cases/open'
-    = render partial: 'cases/shared/case_list'
-
-  - else
-    .download-cases-link
-      = download_csv_link(request.fullpath)
-      | &nbsp;(.csv file)
+section.govuk-tabs__panel
+  - if request.path.include? '/cases/open'
     .grid-row
-      .column-full.table-container.container
-        table.report.table-font-xsmall
-          colgroup
-            col
-            col
-            col
-            col
-            col
-            col
-            col
-            col
-            col
-          thead
-            th scope='col'
-              = t('.number_html')
-            th scope='col'
-              = t('.flag')
-            th scope='col'
-              = t('.type')
-            th scope='col'
-              = t('.request')
-            th scope='col'
-              = t('.draft_deadline')
-            th scope='col'
-              = t('.external_deadline')
-            th scope='col'
-              = t('.status')
-            th scope='col'
-              = t('.who_its_with')
-            th scope='col'
-              span.visually-hidden
-                = t('.message_notification')
-          tbody
-            - @cases.each do |kase|
-              tr.case_row
-                td aria-label="#{t('.number')}"
-                  span.visually-hidden
-                    = t('.view_case')
-                  = link_to kase.number, case_path(kase.id)
-                td aria-label="#{t('.flag')}"
-                  = kase.trigger_case_marker
-                td aria-label="#{t('.type')}"
-                  = "#{kase.pretty_type} "
-                td aria-label="#{t('.request_detail')}"
-                  = request_details_html(kase)
-                td aria-label="#{t('.draft_deadline')}"
-                  = kase.internal_deadline
-                td aria-label="#{t('.external_deadline')}"
-                  = kase.external_deadline
-                td aria-label="#{t('.status')}"
-                  = kase.status
-                td aria-label="#{t('.who_its_with')}"
-                  = kase.who_its_with
-                td aria-label="#{t('.message_notification')}"
-                  - if kase.message_notification_visible?(current_user)
-                    img { src=image_path('icons/message-bubble.svg')
-                          class="notification-speech-bubble"
-                          alt= "New notifications for case #{kase.number}" }
-        = paginate @cases
+      .column-full.ct-tab-container
+        .ct-tab-label
+          = "Filter by"
+
+        ul role="tablist" aria-label="Filter by" class="ct-tab-wrapper"
+          li.ct-tab-item role="presentation"
+            a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-type"
+              = "Type"
+          li.ct-tab-item role="presentation"
+            a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-timeliness"
+              = "Timeliness"
+          li.ct-tab-item role="presentation"
+            a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-status"
+              = "Open case status"
+          li.ct-tab-item role="presentation"
+            a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-final-deadline"
+              = "Final deadline"
+          li.ct-tab-item role="presentation"
+            a.ct-tab role="tab" tabindex="-1" href="#ct-tab-panel-assigned-to"
+              = "Assigned to"
+
+        .ct-tab-panels aria-expanded="false"
+
+          #ct-tab-panel-type.ct-tab-panel
+            = render partial: 'cases/search_filters/case_types'
+          #ct-tab-panel-timeliness.ct-tab-panel
+            = render partial: 'cases/search_filters/timeliness'
+          #ct-tab-panel-status.ct-tab-panel
+            = render partial: 'cases/search_filters/open_case_status'
+          #ct-tab-panel-final-deadline.ct-tab-panel
+            = render partial: 'cases/search_filters/final_deadline'
+          #ct-tab-panel-assigned-to.ct-tab-panel
+            = render partial: 'cases/search_filters/assigned_to'
+
+    - if @query.filter_crumbs.present?
+      = render partial: 'cases/search_filters/filter_crumbs',
+               locals: { query: @query,
+                         clear_params: {} }
+  - else
+    = render partial: 'state_filter_form' unless request.path == '/cases/my_open'
+
+  - if @global_nav_manager.current_page.tabs.present?
+    .grid-row
+      .column-full
+        nav.section-tabs
+          ul
+            - @global_nav_manager.current_page.tabs.each do |tab|
+              li class="tab #{active_link_class(tab.fullpath)}"
+                = link_to t("nav.tabs.#{tab.name}_html",
+                           count: tab.cases.count),
+                          tab.fullpath_with_query
+
+  - if @cases.present?
+    - if request.path == '/cases/open'
+      = render partial: 'cases/shared/case_list'
+
+    - else
+      .download-cases-link
+        = download_csv_link(request.fullpath)
+        | &nbsp;(.csv file)
+      .grid-row
+        .column-full.table-container.container
+          table.report.table-font-xsmall
+            colgroup
+              col
+              col
+              col
+              col
+              col
+              col
+              col
+              col
+              col
+            thead
+              th scope='col'
+                = t('.number_html')
+              th scope='col'
+                = t('.flag')
+              th scope='col'
+                = t('.type')
+              th scope='col'
+                = t('.request')
+              th scope='col'
+                = t('.draft_deadline')
+              th scope='col'
+                = t('.external_deadline')
+              th scope='col'
+                = t('.status')
+              th scope='col'
+                = t('.who_its_with')
+              th scope='col'
+                span.visually-hidden
+                  = t('.message_notification')
+            tbody
+              - @cases.each do |kase|
+                tr.case_row
+                  td aria-label="#{t('.number')}"
+                    span.visually-hidden
+                      = t('.view_case')
+                    = link_to kase.number, case_path(kase.id)
+                  td aria-label="#{t('.flag')}"
+                    = kase.trigger_case_marker
+                  td aria-label="#{t('.type')}"
+                    = "#{kase.pretty_type} "
+                  td aria-label="#{t('.request_detail')}"
+                    = request_details_html(kase)
+                  td aria-label="#{t('.draft_deadline')}"
+                    = kase.internal_deadline
+                  td aria-label="#{t('.external_deadline')}"
+                    = kase.external_deadline
+                  td aria-label="#{t('.status')}"
+                    = kase.status
+                  td aria-label="#{t('.who_its_with')}"
+                    = kase.who_its_with
+                  td aria-label="#{t('.message_notification')}"
+                    - if kase.message_notification_visible?(current_user)
+                      img { src=image_path('icons/message-bubble.svg')
+                            class="notification-speech-bubble"
+                            alt= "New notifications for case #{kase.number}" }
+          = paginate @cases

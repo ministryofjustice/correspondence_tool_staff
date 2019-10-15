@@ -1,0 +1,88 @@
+.govuk-tabs {
+  margin-top: 5px;
+
+  &__title {
+    padding-top: $gutter;
+
+    @include media(tablet) {
+      display: none;
+    }
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media(tablet) {
+      border-bottom: 1px solid #bfc1c3;
+
+      &:after {
+        content: '';
+        display: block;
+        clear: both;
+      }
+    }
+  }
+
+  &__list-item {
+    display: list-item;
+    margin-left: $gutter;
+
+    @include media(tablet) {
+      margin-left: 0;
+
+      a:link,
+      a:visited {
+        color: $black;
+      }
+    }
+
+    &:before {
+      content: "\2014";
+      margin-left: -25px;
+      padding-right: 5px;
+
+      @include media(tablet) {
+        content: '';
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+
+  &__tab {
+    display: inline-block;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    @include media(tablet) {
+      margin-right: 5px;
+      padding: 10px 20px;
+      float: left;
+      background-color: $highlight-colour;
+      text-align: center;
+      text-decoration: none;
+
+      &.active {
+        margin-top: -5px;
+        margin-bottom: -1px;
+        padding: 14px 19px 16px 19px;
+        border: 1px solid $border-colour;
+        border-bottom: 0;
+        background-color: $white;
+      }
+    }
+  }
+
+  &__panel {
+    @include media(tablet) {
+      margin-bottom: 0;
+      padding: $gutter;
+      border: 1px solid $border-colour;
+      border-top: 0;
+      margin-bottom: $gutter;
+    }
+  }
+}
+

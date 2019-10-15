@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!, :set_user, except: [:ping, :healthcheck]
   before_action :set_global_nav, if: -> { current_user.present?  && global_nav_required? }
   before_action :add_security_headers
+  before_action :set_hompepage_nav, if: -> { current_user.present?  && global_nav_required? }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -59,6 +60,14 @@ class ApplicationController < ActionController::Base
       current_user,
       request,
       Settings.global_navigation.pages,
+    )
+  end
+
+  def set_hompepage_nav
+    @homepage_nav_manager = GlobalNavManager.new(
+      current_user,
+      request,
+      Settings.homepage_navigation.pages,
     )
   end
 
