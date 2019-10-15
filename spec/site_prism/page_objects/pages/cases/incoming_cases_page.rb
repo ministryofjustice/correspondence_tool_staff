@@ -27,6 +27,8 @@ module PageObjects
 
         section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, '.feedback'
         section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+        section :homepage_navigation, PageObjects::Sections::HomepageNavigationSection, '#homepage-navigation'
+
 
         def case_numbers
           case_list.map do |row|

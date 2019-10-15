@@ -35,9 +35,7 @@ feature "Top level global navigation" do
       open_cases_page.load
       nav_links = open_cases_page.primary_navigation.all_links
       expect(nav_links.count).to eq 6
-      expect(nav_links[0]).to have_text('All open cases')
-      expect(nav_links[1]).to have_text('My open cases')
-      expect(nav_links[2]).to have_text('Closed cases')
+      expect(nav_links[0]).to have_text('Cases')
     end
   end
 
@@ -53,9 +51,7 @@ feature "Top level global navigation" do
       nav_links = incoming_cases_page.primary_navigation.all_links
       expect(nav_links.count).to eq 6
       expect(nav_links[0]).to have_text('New cases')
-      expect(nav_links[1]).to have_text('All open cases')
-      expect(nav_links[2]).to have_text('My open cases')
-      expect(nav_links[3]).to have_text('Closed cases')
+      expect(nav_links[1]).to have_text('Cases')
       expect(nav_links[4]).to have_text('Search')
       expect(nav_links[5]).to have_text('Team')
     end
@@ -67,9 +63,7 @@ feature "Top level global navigation" do
       nav_links = open_cases_page.primary_navigation.all_links
       expect(nav_links.count).to eq 6
       expect(nav_links[0]).to have_text('New cases')
-      expect(nav_links[1]).to have_text('All open cases')
-      expect(nav_links[2]).to have_text('My open cases')
-      expect(nav_links[3]).to have_text('Closed cases')
+      expect(nav_links[1]).to have_text('Cases')
       expect(nav_links[4]).to have_text('Search')
       expect(nav_links[5]).to have_text('Team')
     end
@@ -94,9 +88,7 @@ feature "Top level global navigation" do
       nav_links = incoming_cases_page.primary_navigation.all_links
       expect(nav_links.count).to eq 7
       expect(nav_links[0]).to have_text('New cases')
-      expect(nav_links[1]).to have_text('All open cases')
-      expect(nav_links[2]).to have_text('My open cases')
-      expect(nav_links[3]).to have_text('Closed cases')
+      expect(nav_links[1]).to have_text('Cases')
       expect(nav_links[4]).to have_text('Search')
       expect(nav_links[5]).to have_text('Teams')
       expect(nav_links[6]).to have_text('Performance')
@@ -109,9 +101,7 @@ feature "Top level global navigation" do
       nav_links = open_cases_page.primary_navigation.all_links
       expect(nav_links.count).to eq 7
       expect(nav_links[0]).to have_text('New cases')
-      expect(nav_links[1]).to have_text('All open cases')
-      expect(nav_links[2]).to have_text('My open cases')
-      expect(nav_links[3]).to have_text('Closed cases')
+      expect(nav_links[1]).to have_text('Cases')
       expect(nav_links[4]).to have_text('Search')
       expect(nav_links[5]).to have_text('Teams')
       expect(nav_links[6]).to have_text('Performance')
