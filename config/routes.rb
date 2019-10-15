@@ -159,7 +159,7 @@ Rails.application.routes.draw do
     resource :cover_page, only: [:show], path: "cover-page"
     resources :data_requests
 
-    resource :letters, only: [:new, :show], path: "letters/:type"
+    resource :letters, only: [:new, :show, :create], path: "letters/:type"
   end
 
   # Case Behaviours (awaiting move to module Cases)
