@@ -150,6 +150,14 @@ class Team < ApplicationRecord
     name.remove(DEACTIVATED_LABEL, /@\((.)*\)/).strip
   end
 
+  def deactivated
+    if active?
+      ""
+    else
+      deleted_at.strftime("%d/%m/%Y")
+    end
+  end
+
   private
 
   # This method applies to Business Groups and Directorates only.
