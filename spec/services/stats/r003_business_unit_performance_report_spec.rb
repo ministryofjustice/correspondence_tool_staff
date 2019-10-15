@@ -61,7 +61,6 @@ module Stats
         create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, flagged: true, ident: 'case for team b - open in time')
 
         #case for soon-to-be-deactivated team
-        #create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_e, responder: @responder_e, flagged: true, ident: 'case for Doomed Team, responded on time')
         create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_e, responder: @responder_e, ident: 'case for team e - Doom ed Team')
       end
 
