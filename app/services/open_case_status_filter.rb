@@ -28,7 +28,7 @@ class OpenCaseStatusFilter
   end
 
   def self.filter_attributes
-    [:filter_open_case_status]
+    [:filter_open_case_status, :filter_offender_sar_case_status]
   end
 
   def self.process_params!(params)

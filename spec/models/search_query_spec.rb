@@ -71,6 +71,7 @@ describe SearchQuery do
                                                  :filter_sensitivity,
                                                  :filter_status,
                                                  :filter_timeliness,
+                                                 :filter_offender_sar_case_status
                                                ]
     end
   end
@@ -165,6 +166,7 @@ describe SearchQuery do
           exemption_ids:           [21],
           common_exemption_ids:    [21],
           filter_open_case_status: ['unassigned'],
+          filter_offender_sar_case_status: [],
         )
       }
       let(:query_params) {
@@ -181,6 +183,7 @@ describe SearchQuery do
           exemption_ids:           [21],
           common_exemption_ids:    [21],
           filter_open_case_status: ['unassigned'],
+          filter_offender_sar_case_status: [],
         ).permit!
       }
 
@@ -207,6 +210,7 @@ describe SearchQuery do
                                                 :filter_sensitivity,
                                                 :filter_status,
                                                 :filter_timeliness,
+                                                :filter_offender_sar_case_status
                                               ]
     end
   end
