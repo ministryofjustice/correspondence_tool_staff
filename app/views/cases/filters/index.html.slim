@@ -20,10 +20,10 @@ section.govuk-tabs__panel
   - if request.path.include? '/cases/open'
     = render partial: 'cases/search_filters/filters'
 
-  - if @query.filter_crumbs.present?
-    = render partial: 'cases/search_filters/filter_crumbs',
-             locals: { query: @query,
-                       clear_params: {} }
+    - if @query.filter_crumbs.present?
+      = render partial: 'cases/search_filters/filter_crumbs',
+               locals: { query: @query,
+                         clear_params: {} }
   - else
     = render partial: 'state_filter_form' unless request.path == '/cases/my_open'
 
