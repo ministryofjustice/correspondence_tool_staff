@@ -1,36 +1,33 @@
-.ct-filters {
+.case-filters {
   padding-left: $gutter-half;
 
-  details {
-    summary {
-      span {
-        padding-top: 5px;
-        display: inline-block;
-        text-decoration: underline;
-      }
+  &__heading {
+    padding-top: 5px;
+    display: inline-block;
+    text-decoration: underline;
+  }
+
+  &__container,
+  &__content {
+    padding: $gutter-half;
+    border-left: 5px solid $grey-2;
+
+    details {
+      margin-bottom: $gutter-half;
+    }
+  }
+
+  &__content {
+
+    legend {
+      padding: $gutter-half 0;
     }
 
-    .filter-content {
-      padding: $gutter-half;
-      border-left: 5px solid $grey-2;
-
-      details {
-        margin-bottom: $gutter-half;
-
-        .filter-content {
-
-          legend {
-            padding: $gutter-half 0;
-          }
-
-          .scrolling-details {
-            max-height: 15em;
-            overflow: hidden;
-            overflow-y: scroll;
-            margin-bottom: $gutter;
-          }
-        }
-      }
+    &--exemptions {
+      max-height: 15em;
+      overflow: hidden;
+      overflow-y: scroll;
+      margin-bottom: $gutter;
     }
   }
 }
