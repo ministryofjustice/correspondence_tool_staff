@@ -6,36 +6,36 @@
       summary id="filter-cases-link" aria-controls="filter-cases-accordion" aria-expanded="false" role="button"
         span.case-filters__heading
           = t('filters.headings.filter_cases')
-      #filter-cases-accordion.case-filters__container aria-hidden="false"
+      .case-filters__container aria-hidden="false"
         details
-          summary#filter-status-link aria-controls="filter-status-content" aria-expanded="false" role="button"
+          summary aria-controls="filter-status-content" aria-expanded="false" role="button"
             span
               = t('filters.headings.filter_by_status')
-          #filter-status-content.case-filters__content aria-hidden="true"
+          .case-filters__content aria-hidden="true"
             = render partial: 'cases/search_filters/open_case_status', locals: { f: f }
         details
-          summary#filter-type-link aria-controls="filter-type-content" aria-expanded="false" role="button"
+          summary aria-controls="filter-type-content" aria-expanded="false" role="button"
             span
               = t('filters.headings.filter_case_type')
-          #filter-type-content.case-filters__content aria-hidden="true"
+          .case-filters__content aria-hidden="true"
             = render partial: 'cases/search_filters/case_types', locals: { f: f }
-        details.innerDetails
-          summary#filter-timeliness-link aria-controls="filter-timeliness-content" aria-expanded="false" role="button"
+        details
+          summary aria-controls="filter-timeliness-content" aria-expanded="false" role="button"
             span
               = t('filters.headings.filter_by_timeliness')
-          #filter-timeliness-content.case-filters__content aria-hidden="true"
+          .case-filters__content aria-hidden="true"
             = render partial: 'cases/search_filters/timeliness', locals: { f: f }
         details
-          summary#filter-deadline-link aria-controls="filter-deadline-content" aria-expanded="false" role="button"
+          summary aria-controls="filter-deadline-content" aria-expanded="false" role="button"
             span
               = t('filters.headings.filter_by_deadline')
-          #filter-deadline-content.case-filters__content aria-hidden="true"
+          .case-filters__content aria-hidden="true"
             = render partial: 'cases/search_filters/final_deadline', locals: { f: f }
         - if request.path.include? '/cases/search'
           details
-            summary#filter-exemptions-link aria-controls="filter-exemptions-content" aria-expanded="false" role="button"
+            summary aria-controls="filter-exemptions-content" aria-expanded="false" role="button"
               span
                 = t('filters.headings.filter_exemptions')
             .case-filters__content--exemptions.case-filters__content aria-hidden="true"
               = render partial: 'cases/search_filters/exemptions', locals: { f: f }
-        input#apply-filters-button.button type="submit" value="Filter"
+        input.button type="submit" value="Filter"

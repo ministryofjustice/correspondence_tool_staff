@@ -13,17 +13,17 @@ module PageObjects
         element :search_query, 'input[type="search"]'
         element :search_button, 'input.button#search-button'
 
-        section :case_filters, '#case-filters' do
-          element :filter_cases_link, '#filter-cases-link'
-          element :filter_type_link, '#filter-type-link'
-          element :filter_timeliness_link, '#filter-timeliness-link'
-          element :filter_status_link, '#filter-status-link'
-          element :filter_deadline_link, '#filter-deadline-link'
-          element :filter_exemption_link, '#filter-exemptions-link'
-          element :apply_filters_button, '#apply-filters-button'
+        section :case_filters, '.case-filters > details' do
+          element :filter_cases_link, '.case-filters__heading'
+          element :filter_status_link, '.case-filters__container details:nth-child(1) summary'
+          element :filter_type_link, '.case-filters__container details:nth-child(2) summary'
+          element :filter_timeliness_link, '.case-filters__container details:nth-child(3) summary'
+          element :filter_deadline_link, '.case-filters__container details:nth-child(4) summary'
+          element :filter_exemption_link, '.case-filters__container details:nth-child(5) summary'
+          element :apply_filters_button, '.case-filters__container > input'
         end
 
-        element :filter_cases_accordion, '#filter-cases-accordion'
+        element :filter_cases_accordion, '.case-filters__container'
         elements :filter_crumbs, '.filter-crumb a'
 
         element :search_results_count, '.search-results-summary'
@@ -38,21 +38,22 @@ module PageObjects
           element :who_its_with, 'td[aria-label="With"]'
         end
 
-        section :filter_type_content,
-                PageObjects::Sections::Cases::TypeFilterPanelSection,
-                '#filter-type-content'
-        section :filter_timeliness_content,
-                PageObjects::Sections::Cases::TimelinessFilterPanelSection,
-                '#filter-timeliness-content'
+
         section :filter_status_content,
                 PageObjects::Sections::Cases::OpenCaseStatusFilterPanelSection,
-                '#filter-status-content'
+                '.case-filters__container details:nth-child(1) .case-filters__content'
+        section :filter_type_content,
+                PageObjects::Sections::Cases::TypeFilterPanelSection,
+                '.case-filters__container details:nth-child(2) .case-filters__content'
+        section :filter_timeliness_content,
+                PageObjects::Sections::Cases::TimelinessFilterPanelSection,
+                '.case-filters__container details:nth-child(3) .case-filters__content'
         section :filter_deadline_content,
                 PageObjects::Sections::Cases::DeadlineFilterPanelSection,
-                '#filter-deadline-content'
+                '.case-filters__container details:nth-child(4) .case-filters__content'
         section :filter_exemption_content,
                 PageObjects::Sections::Cases::ExemptionFilterPanelSection,
-                '#filter-exemptions-content'
+                '.case-filters__content--exemptions'
 
         element :found_no_results_copy, '.search-no-results'
       end
