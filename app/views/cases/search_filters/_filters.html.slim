@@ -35,7 +35,7 @@
         - if request.path.include? '/cases/search'
           details
             summary aria-controls="filter-exemptions-content" aria-expanded="false" role="button"
-              span
+              span.case-filters__summary
                 = t('filters.headings.filter_exemptions')
             .case-filters__content.case-filters__content--exemptions aria-hidden="true"
               = render partial: 'cases/search_filters/exemptions', locals: { f: f }

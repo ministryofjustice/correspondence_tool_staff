@@ -14,7 +14,7 @@ module PageObjects
         element :search_button, 'input.button#search-button'
 
         section :case_filters, '.case-filters > details' do
-          element :filter_cases_link, '.case-filters__heading'
+          element :filter_cases_link, '.case-filters__summary--outer'
           element :filter_status_link, '.case-filters__container details:nth-child(1) summary'
           element :filter_type_link, '.case-filters__container details:nth-child(2) summary'
           element :filter_timeliness_link, '.case-filters__container details:nth-child(3) summary'
