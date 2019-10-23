@@ -14,32 +14,29 @@ module PageObjects
         element :search_query, 'input[type="search"]'
         element :search_button, 'input.button#search-button'
 
-        section :filter_tab_links, '.ct-tab-container' do
-          element :type_tab, 'a[href="#ct-tab-panel-type"]'
-          element :timeliness_tab, 'a[href="#ct-tab-panel-timeliness"]'
-          element :status_tab, 'a[href="#ct-tab-panel-status"]'
-          element :deadline_tab, 'a[href="#ct-tab-panel-final-deadline"]'
-          element :assigned_to_tab, 'a[href="#ct-tab-panel-assigned-to"]'
+        section :case_filters, '.case-filters > details' do
+          element :filter_cases_link, '.case-filters__summary--outer'
+          element :filter_status_link, '.case-filters__container details:nth-child(1) summary'
+          element :filter_type_link, '.case-filters__container details:nth-child(2) summary'
+          element :filter_timeliness_link, '.case-filters__container details:nth-child(3) summary'
+          element :filter_deadline_link, '.case-filters__container details:nth-child(4) summary'
+          element :apply_filters_button, '.case-filters__container > input'
         end
 
-        # section :filters, '.ct-tab-container' do
-        elements :options, '.ct-tab-item'
+        element :filter_cases_accordion, '.case-filters__container'
 
-        section :type_filter_panel,
-                PageObjects::Sections::Cases::TypeFilterPanelSection,
-                '#ct-tab-panel-type'
-        section :timeliness_filter_panel,
-                PageObjects::Sections::Cases::TimelinessFilterPanelSection,
-                '#ct-tab-panel-timeliness'
-        section :status_filter_panel,
+section :filter_status_content,
                 PageObjects::Sections::Cases::OpenCaseStatusFilterPanelSection,
-                '#ct-tab-panel-status'
-        section :deadline_filter_panel,
+                '.case-filters__container details:nth-child(1) .case-filters__content'
+        section :filter_type_content,
+                PageObjects::Sections::Cases::TypeFilterPanelSection,
+                '.case-filters__container details:nth-child(2) .case-filters__content'
+        section :filter_timeliness_content,
+                PageObjects::Sections::Cases::TimelinessFilterPanelSection,
+                '.case-filters__container details:nth-child(3) .case-filters__content'
+        section :filter_deadline_content,
                 PageObjects::Sections::Cases::DeadlineFilterPanelSection,
-                '#ct-tab-panel-final-deadline'
-        section :assigned_to_filter_panel,
-                PageObjects::Sections::Cases::AssignedToFilterPanelSection,
-                '#ct-tab-panel-assigned-to'
+                '.case-filters__container details:nth-child(4) .case-filters__content'
 
         elements :filter_crumbs, '.filter-crumb a'
 
