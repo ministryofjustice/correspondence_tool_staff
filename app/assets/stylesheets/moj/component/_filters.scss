@@ -1,10 +1,13 @@
 .case-filters {
   padding-left: $gutter-half;
 
-  &__heading {
-    padding-top: 5px;
-    display: inline-block;
+  &__summary {
     text-decoration: underline;
+
+    &--outer {
+      padding-top: 5px;
+      display: inline-block;
+    }
   }
 
   &__container,
