@@ -6,6 +6,7 @@ en:
       my_open_cases: My open cases
       open_cases: All open cases
   nav:
+    menu: Menu
     pages:
       closed_cases: Closed cases
       incoming_cases: New cases

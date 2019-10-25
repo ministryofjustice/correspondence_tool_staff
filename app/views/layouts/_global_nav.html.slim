@@ -2,7 +2,7 @@ nav.global-nav
   button.global-nav__menu-toggler { type="button" role="button"
     aria-controls="global-navigation" aria-expanded="false"
     aria-label="Show or hide Top Level Navigation" }
-    = t('filters.headings.menu')
+    = t('nav.menu')
   ul#global-navigation.global-nav__container aria-hidden="true"
     - @global_nav_manager.each do |page|
       li class="global-nav__item #{page.name}"
