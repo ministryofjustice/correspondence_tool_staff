@@ -29,12 +29,12 @@
             span.user-card--greetings
               = t('common.greeting', user: current_user.full_name )
             = link_to t('common.signout'), destroy_user_session_path, :method => :delete,  class: "user-card--signout"
+    - if user_signed_in?
+      = render partial: 'layouts/global_nav'
 
 = content_for :content do
   = csrf_meta_tags
   = render partial: 'layouts/phase_banner'
-  - if user_signed_in?
-    = render partial: 'layouts/global_nav'
 
   .grid-row
     .column-full
