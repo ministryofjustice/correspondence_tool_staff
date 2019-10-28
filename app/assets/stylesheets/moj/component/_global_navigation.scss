@@ -84,7 +84,8 @@
 
     &.incoming_cases,
     &.closed_cases,
-    &.my_open_cases {
+    &.my_open_cases,
+    &.search_cases {
       display: none!important;
     }
   }
