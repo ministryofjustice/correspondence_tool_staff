@@ -34,8 +34,8 @@ feature "Top level global navigation" do
     scenario "case pages should have nav entries for all pages" do
       open_cases_page.load
       nav_links = open_cases_page.primary_navigation.all_links
-      expect(nav_links.count).to eq 6
-      expect(nav_links[0]).to have_text('Cases')
+      expect(nav_links.count).to eq 7
+      expect(nav_links[0]).to have_text('Create case')
     end
   end
 
@@ -49,11 +49,12 @@ feature "Top level global navigation" do
       expect(incoming_cases_page.primary_navigation.active_link[:href])
         .to eq '/cases/incoming'
       nav_links = incoming_cases_page.primary_navigation.all_links
-      expect(nav_links.count).to eq 6
-      expect(nav_links[0]).to have_text('New cases')
-      expect(nav_links[1]).to have_text('Cases')
-      expect(nav_links[4]).to have_text('Search')
-      expect(nav_links[5]).to have_text('Team')
+      expect(nav_links.count).to eq 7
+      expect(nav_links[0]).to have_text('Create case')
+      expect(nav_links[1]).to have_text('New cases')
+      expect(nav_links[2]).to have_text('Cases')
+      expect(nav_links[5]).to have_text('Search')
+      expect(nav_links[6]).to have_text('Team')
     end
 
     scenario "open in-time page has nav entries" do
@@ -61,18 +62,19 @@ feature "Top level global navigation" do
       expect(open_cases_page.primary_navigation.active_link[:href])
         .to eq '/cases/open'
       nav_links = open_cases_page.primary_navigation.all_links
-      expect(nav_links.count).to eq 6
-      expect(nav_links[0]).to have_text('New cases')
-      expect(nav_links[1]).to have_text('Cases')
-      expect(nav_links[4]).to have_text('Search')
-      expect(nav_links[5]).to have_text('Team')
+      expect(nav_links.count).to eq 7
+      expect(nav_links[0]).to have_text('Create case')
+      expect(nav_links[1]).to have_text('New cases')
+      expect(nav_links[2]).to have_text('Cases')
+      expect(nav_links[5]).to have_text('Search')
+      expect(nav_links[6]).to have_text('Team')
     end
 
     scenario 'team link is rendered as teams if member of multiple teams' do
       allow(disclosure_specialist).to receive(:teams).and_return([managing_team, dacu])
       open_cases_page.load
       nav_links = open_cases_page.primary_navigation.all_links
-      expect(nav_links[5]).to have_text('Teams')
+      expect(nav_links[6]).to have_text('Teams')
     end
   end
 
@@ -86,12 +88,13 @@ feature "Top level global navigation" do
       expect(incoming_cases_page.primary_navigation.active_link[:href])
         .to eq '/cases/incoming'
       nav_links = incoming_cases_page.primary_navigation.all_links
-      expect(nav_links.count).to eq 7
-      expect(nav_links[0]).to have_text('New cases')
-      expect(nav_links[1]).to have_text('Cases')
-      expect(nav_links[4]).to have_text('Search')
-      expect(nav_links[5]).to have_text('Teams')
-      expect(nav_links[6]).to have_text('Performance')
+      expect(nav_links.count).to eq 8
+      expect(nav_links[0]).to have_text('Create case')
+      expect(nav_links[1]).to have_text('New cases')
+      expect(nav_links[2]).to have_text('Cases')
+      expect(nav_links[5]).to have_text('Search')
+      expect(nav_links[6]).to have_text('Teams')
+      expect(nav_links[7]).to have_text('Reports')
     end
 
     scenario "open in-time page has nav entries" do
@@ -99,12 +102,13 @@ feature "Top level global navigation" do
       expect(open_cases_page.primary_navigation.active_link[:href])
         .to eq '/cases/open'
       nav_links = open_cases_page.primary_navigation.all_links
-      expect(nav_links.count).to eq 7
-      expect(nav_links[0]).to have_text('New cases')
-      expect(nav_links[1]).to have_text('Cases')
-      expect(nav_links[4]).to have_text('Search')
-      expect(nav_links[5]).to have_text('Teams')
-      expect(nav_links[6]).to have_text('Performance')
+      expect(nav_links.count).to eq 8
+      expect(nav_links[0]).to have_text('Create case')
+      expect(nav_links[1]).to have_text('New cases')
+      expect(nav_links[2]).to have_text('Cases')
+      expect(nav_links[5]).to have_text('Search')
+      expect(nav_links[6]).to have_text('Teams')
+      expect(nav_links[7]).to have_text('Reports')
     end
   end
 end
