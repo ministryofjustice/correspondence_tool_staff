@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.14
--- Dumped by pg_dump version 9.5.14
+-- Dumped from database version 9.5.19
+-- Dumped by pg_dump version 9.5.19
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -11,6 +11,7 @@ SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
 SET check_function_bodies = false;
+SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
@@ -888,7 +889,8 @@ CREATE TABLE public.teams (
     parent_id integer,
     role character varying,
     code character varying,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    moved_to_unit_id integer
 );
 
 
@@ -1743,6 +1745,13 @@ CREATE INDEX index_teams_on_email ON public.teams USING btree (email);
 
 
 --
+-- Name: index_teams_on_moved_to_unit_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_teams_on_moved_to_unit_id ON public.teams USING btree (moved_to_unit_id);
+
+
+--
 -- Name: index_teams_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1988,6 +1997,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190731151806'),
 ('20190817185027'),
 ('20190912142741'),
-('20191002003615');
+('20191002003615'),
+('20191028094210');
 
 
