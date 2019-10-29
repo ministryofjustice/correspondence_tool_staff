@@ -27,6 +27,9 @@ class Team < ApplicationRecord
 
   has_paper_trail ignore: [:created_at, :updated_at]
 
+  has_many :deactivated_by_move_units, class_name: 'Team', foreign_key: :id
+  belongs_to :moved_to_unit, class_name: 'Team', optional: true
+
   has_many :user_roles, class_name: 'TeamsUsersRole'
   has_many :users, -> { order(:full_name) }, through: :user_roles
   has_many :properties, class_name: TeamProperty, :dependent => :delete_all
@@ -36,6 +39,9 @@ class Team < ApplicationRecord
   has_one :team_leader,
           -> { lead },
           class_name: TeamProperty.to_s
+
+  has_one :old_team, class_name: 'Team', foreign_key: :moved_to_unit_id
+  belongs_to :moved_to_unit, class_name: 'Team', optional: true
 
   scope :with_user, ->(user) {
     includes(:user_roles)
@@ -158,6 +164,13 @@ class Team < ApplicationRecord
     end
   end
 
+  def moved
+    if moved_to_unit?
+      moved_to_unit.parent_id.name
+    else
+      ""
+    end
+  end
   private
 
   # This method applies to Business Groups and Directorates only.
