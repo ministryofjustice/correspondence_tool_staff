@@ -165,8 +165,8 @@ class Team < ApplicationRecord
   end
 
   def moved
-    if moved_to_unit?
-      moved_to_unit.parent_id.name
+    if moved_to_unit.present?
+      moved_to_unit.parent.name
     else
       ""
     end
