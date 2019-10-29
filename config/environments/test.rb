@@ -43,6 +43,15 @@ Rails.application.configure do
     Bullet.add_whitelist :type => :n_plus_one_query,
                          :class_name => 'BusinessUnit',
                          :association => :correspondence_types
+    Bullet.add_whitelist :type => :n_plus_one_query,
+                         :class_name => 'BusinessGroup',
+                         :association => :moved_to_unit
+    Bullet.add_whitelist :type => :n_plus_one_query,
+                         :class_name => 'Directorate',
+                         :association => :moved_to_unit
+    Bullet.add_whitelist :type => :n_plus_one_query,
+                         :class_name => 'BusinessUnit',
+                         :association => :moved_to_unit
 
     # Enable this to track down most of the N+1 query issues
     Bullet.raise         = true # raise an error if n+1 query occurs
