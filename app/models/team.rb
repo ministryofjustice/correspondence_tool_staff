@@ -157,19 +157,11 @@ class Team < ApplicationRecord
   end
 
   def deactivated
-    if active?
-      ""
-    else
-      deleted_at.strftime("%d/%m/%Y")
-    end
+    deleted_at&.strftime("%d/%m/%Y") || ''
   end
 
   def moved
-    if moved_to_unit.present?
-      moved_to_unit.parent.name
-    else
-      ""
-    end
+    moved_to_unit&.parent&.name || ''
   end
   private
 
