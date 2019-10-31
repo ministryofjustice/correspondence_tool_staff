@@ -18,9 +18,9 @@ gem 'config', '~> 2.0'
 gem 'devise', '~> 4.7.1'
 gem 'draper', '3.1.0'
 gem 'dropzonejs-rails', '>= 0.8'
-gem 'foreman', '~> 0.85.0'
+gem 'foreman', '~> 0.86.0'
 gem 'factory_bot_rails', '~> 5.0.2'
-gem 'faker', '~> 2.2.2'
+gem 'faker', '~> 2.6.0'
 gem 'gov_uk_date_fields', '~> 3.1'
 gem 'govuk_template',         '~> 0.26.0'
 gem 'govuk_frontend_toolkit', '>= 9.0.0'
@@ -34,7 +34,7 @@ gem 'jquery-rails', '~> 4.3.5'
 gem 'jquery-ui-rails'
 gem 'jsonb_accessor', '~> 1.0.0.beta.1'
 gem 'kaminari'
-gem 'libreconv', '~> 0.9.3'
+gem 'libreconv', '~> 0.9.4'
 gem 'logstash-event'
 gem 'lograge'
 gem 'mechanize', '>= 2.7.5'
@@ -46,7 +46,7 @@ gem 'pry-rails'
 gem 'puma', '~> 4.1'
 gem 'pundit', '~>2.1'
 gem 'rails', '~> 5.0.7.2'
-gem 'rails-data-migrations', '~> 1.1.0'
+gem 'rails-data-migrations', '~> 1.2.0'
 gem 'recursive-open-struct'
 gem 'sass-rails', '~> 6.0'
 gem 'sentry-raven', '~> 2.11.0'
@@ -68,7 +68,7 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'bcrypt', '~> 3.1.7'
 
 group :test do
-  gem 'capybara', '~> 3.28.0'
+  gem 'capybara', '~> 3.29.0'
   gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.29'
   gem 'rails-controller-testing', require: false
@@ -79,7 +79,7 @@ end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'annotate', '~> 2.7.5'
+  gem 'annotate', '~> 3.0.2'
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
@@ -97,7 +97,7 @@ group :development, :test do
   gem 'rubocop-rspec', '~> 1.35.0', require: false
   gem 'rubocop-performance', require: false
   gem 'ruby-progressbar'
-  gem 'selenium-webdriver', '~> 3.142.4'
+  gem 'selenium-webdriver', '~> 3.142.6'
   gem 'spring-commands-rspec'
 end
 
