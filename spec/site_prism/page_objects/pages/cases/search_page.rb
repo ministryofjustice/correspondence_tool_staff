@@ -13,14 +13,17 @@ module PageObjects
         element :search_query, 'input[type="search"]'
         element :search_button, 'input.button#search-button'
 
-        section :filter_tab_links, '.ct-tab-container' do
-          element :type_tab, 'a[href="#ct-tab-panel-type"]'
-          element :status_tab, 'a[href="#ct-tab-panel-status"]'
-          element :assigned_to_tab, 'a[href="#ct-tab-panel-assigned-to"]'
-          element :exemption_tab, 'a[href="#ct-tab-panel-exemption"]'
-          element :deadline_tab, 'a[href="#ct-tab-panel-final-deadline"]'
+        section :case_filters, '.case-filters > details' do
+          element :filter_cases_link, '.case-filters__summary--outer'
+          element :filter_status_link, '.case-filters__container details:nth-child(1) summary'
+          element :filter_type_link, '.case-filters__container details:nth-child(2) summary'
+          element :filter_timeliness_link, '.case-filters__container details:nth-child(3) summary'
+          element :filter_deadline_link, '.case-filters__container details:nth-child(4) summary'
+          element :filter_exemption_link, '.case-filters__container details:nth-child(5) summary'
+          element :apply_filters_button, '.case-filters__container > input'
         end
 
+        element :filter_cases_accordion, '.case-filters__container'
         elements :filter_crumbs, '.filter-crumb a'
 
         element :search_results_count, '.search-results-summary'
@@ -35,24 +38,22 @@ module PageObjects
           element :who_its_with, 'td[aria-label="With"]'
         end
 
-        element :filters, '.ct-tab-container'
 
-        section :status_filter_panel,
-                PageObjects::Sections::Cases::StatusFilterPanelSection,
-                '#ct-tab-panel-status'
-        section :type_filter_panel,
+        section :filter_status_content,
+                PageObjects::Sections::Cases::OpenCaseStatusFilterPanelSection,
+                '.case-filters__container details:nth-child(1) .case-filters__content'
+        section :filter_type_content,
                 PageObjects::Sections::Cases::TypeFilterPanelSection,
-                '#ct-tab-panel-type'
-        section :assigned_to_filter_panel,
-                PageObjects::Sections::Cases::AssignedToFilterPanelSection,
-                '#ct-tab-panel-assigned-to'
-        section :exemption_filter_panel,
-                PageObjects::Sections::Cases::ExemptionFilterPanelSection,
-                '#ct-tab-panel-exemption'
-        section :deadline_filter_panel,
+                '.case-filters__container details:nth-child(2) .case-filters__content'
+        section :filter_timeliness_content,
+                PageObjects::Sections::Cases::TimelinessFilterPanelSection,
+                '.case-filters__container details:nth-child(3) .case-filters__content'
+        section :filter_deadline_content,
                 PageObjects::Sections::Cases::DeadlineFilterPanelSection,
-                '#ct-tab-panel-final-deadline'
-
+                '.case-filters__container details:nth-child(4) .case-filters__content'
+        section :filter_exemption_content,
+                PageObjects::Sections::Cases::ExemptionFilterPanelSection,
+                '.case-filters__content--exemptions'
 
         element :found_no_results_copy, '.search-no-results'
       end

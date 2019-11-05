@@ -1,13 +1,8 @@
-= form_for @query, url: @action_url, method: :get do |f|
-  = hidden_field_tag('search_query[parent_id]', @parent_id)
-  .grid-row
-    .column-half
-      = f.collection_check_boxes :filter_case_type,
-                                 @query.available_case_types(current_user),
-                                 :first,
-                                 :second
-    .column-half
-      = f.collection_check_boxes :filter_sensitivity, @query.available_sensitivities, :first, :second
-  = f.submit  "Filter", class: "button-secondary"
-  a.acts-like-button.button-left-spacing href="#"
-    = "Cancel"
+.grid-row
+  .column-half
+    = f.collection_check_boxes :filter_case_type,
+                               @query.available_case_types(current_user),
+                               :first,
+                               :second
+  .column-half
+    = f.collection_check_boxes :filter_sensitivity, @query.available_sensitivities, :first, :second
