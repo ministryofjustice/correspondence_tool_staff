@@ -9,8 +9,16 @@ class Cases::LettersController < ApplicationController
 
   def show
     letter_template_id = letter_params[:letter_template_id]
-    @letter = Letter.new(letter_template_id)
-    @letter_template = LetterTemplate.find(letter_template_id)
+    @letter = Letter.new(letter_template_id, @case)
+
+    respond_to do |format|
+      format.html
+      format.docx do
+        path = Rails.root.join('lib', 'assets', 'ims001.docx')
+        template = Sablon.template(path)
+        render plain: template.render_to_string({ values: @letter.values, 'html:body': @letter.body, letter_date: @letter.letter_date })
+      end
+    end
   end
 
   private

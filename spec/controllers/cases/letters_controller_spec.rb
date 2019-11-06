@@ -49,11 +49,25 @@ RSpec.describe Cases::LettersController, type: :controller do
         expect(assigns(:case)).to eq offender_sar_case
       end
 
-      it 'sets @letter_template' do
-        expect(assigns(:letter_template)).to eq letter_template_acknowledgement
+      it 'sets @letter' do
+        expect(assigns(:letter)).to be_a Letter
       end
     end
 
+    context 'word doc with valid params' do
+      before do
+        get :show, as: :docx, params: {
+          case_id: offender_sar_case.id,
+          type: "acknowledgement",
+          letter:  { letter_template_id: letter_template_acknowledgement.id }
+        }
+      end
+
+      it 'generates' do
+        expect(response).to have_http_status(:success)
+        expect(response.headers["Content-Type"]).to eq "application/vnd.openxmlformats-officedocument.wordprocessingml.document; charset=utf-8"
+      end
+    end
     context "with invalid params" do
       before do
         get :show, params: { case_id: offender_sar_case.id, type: "acknowledgement" }

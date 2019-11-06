@@ -111,6 +111,9 @@ global_navigation:
     responder: /cases/open
 
   pages:
+    create_case:
+      path: /cases/new
+      
     incoming_cases:
       path: /cases/incoming
 

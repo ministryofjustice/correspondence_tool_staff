@@ -6,8 +6,10 @@ en:
       my_open_cases: My open cases
       open_cases: All open cases
   nav:
+    menu: Menu
     pages:
       closed_cases: Closed cases
+      create_case: Create case
       incoming_cases: New cases
       my_open_cases: My open cases
       open_cases: Cases
@@ -15,7 +17,7 @@ en:
       teams:
         one: Team
         other: Teams
-      stats: Performance
+      stats: Reports
       system_admin: Admin
     tabs:
       in_time_html: |

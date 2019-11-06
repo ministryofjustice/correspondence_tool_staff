@@ -317,13 +317,14 @@ en:
       state_selector:
         selected_states: Filter by status
       search_query:
-        filter_sensitivity: Sensitivity
-        filter_case_type: Type
-        filter_open_case_status: Open case status
-        filter_status: Status
         common_exemption_ids: Most frequently used
         exemption_ids: All exemptions
         filter_assigned_to_ids: Matching business units
+        filter_case_type: Type
+        filter_offender_sar_case_status: Branston
+        filter_open_case_status: London
+        filter_sensitivity: Sensitivity
+        filter_status: Status
         filter_timeliness: Timeliness
       team:
         role: What will the business unit be responsible for?

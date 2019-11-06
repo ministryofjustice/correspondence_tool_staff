@@ -65,12 +65,12 @@ describe SearchQuery do
                                                  :exemption_ids,
                                                  :external_deadline_from,
                                                  :external_deadline_to,
-                                                 :filter_assigned_to_ids,
                                                  :filter_case_type,
                                                  :filter_open_case_status,
                                                  :filter_sensitivity,
                                                  :filter_status,
                                                  :filter_timeliness,
+                                                 :filter_offender_sar_case_status
                                                ]
     end
   end
@@ -96,7 +96,6 @@ describe SearchQuery do
           parent_id:              parent_search_query.id,
           filter_case_type:       ['foi-standard'],
           filter_sensitivity:     ['trigger'],
-          filter_assigned_to_ids: [12],
           external_deadline_from: Date.new(2018, 5, 20),
           external_deadline_to:   Date.new(2018, 5, 30),
           filter_timeliness:      ['in-time'],
@@ -112,7 +111,6 @@ describe SearchQuery do
           query_type:             'search',
           filter_case_type:       ['foi-standard'],
           filter_sensitivity:     ['trigger'],
-          filter_assigned_to_ids: [12],
           external_deadline_from: Date.new(2018, 5, 20),
           external_deadline_to:   Date.new(2018, 5, 30),
           filter_timeliness:      ['in-time'],
@@ -158,13 +156,13 @@ describe SearchQuery do
           parent_id:               parent_list_query.id,
           filter_case_type:        ['foi-standard'],
           filter_sensitivity:      ['trigger'],
-          filter_assigned_to_ids:  [12],
           external_deadline_from:  Date.new(2018, 5, 20),
           external_deadline_to:    Date.new(2018, 5, 30),
           filter_timeliness:       ['in-time'],
           exemption_ids:           [21],
           common_exemption_ids:    [21],
           filter_open_case_status: ['unassigned'],
+          filter_offender_sar_case_status: [],
         )
       }
       let(:query_params) {
@@ -174,13 +172,13 @@ describe SearchQuery do
           query_type:              'list',
           filter_case_type:        ['foi-standard'],
           filter_sensitivity:      ['trigger'],
-          filter_assigned_to_ids:  [12],
           external_deadline_from:  Date.new(2018, 5, 20),
           external_deadline_to:    Date.new(2018, 5, 30),
           filter_timeliness:       ['in-time'],
           exemption_ids:           [21],
           common_exemption_ids:    [21],
           filter_open_case_status: ['unassigned'],
+          filter_offender_sar_case_status: [],
         ).permit!
       }
 
@@ -201,12 +199,12 @@ describe SearchQuery do
                                                 :exemption_ids,
                                                 :external_deadline_from,
                                                 :external_deadline_to,
-                                                :filter_assigned_to_ids,
                                                 :filter_case_type,
                                                 :filter_open_case_status,
                                                 :filter_sensitivity,
                                                 :filter_status,
                                                 :filter_timeliness,
+                                                :filter_offender_sar_case_status
                                               ]
     end
   end
@@ -461,11 +459,6 @@ describe SearchQuery do
     it 'includes status filters' do
       search_query = create :search_query, filter_status: ['closed']
       expect(search_query.applied_filters).to eq [CaseStatusFilter]
-    end
-
-    it 'includes assigned business unit filters' do
-      search_query = create :search_query, filter_assigned_to_ids: [1]
-      expect(search_query.applied_filters).to eq [AssignedBusinessUnitFilter]
     end
 
     it 'includes exemption filters' do
