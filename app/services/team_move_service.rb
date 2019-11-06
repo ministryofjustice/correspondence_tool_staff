@@ -1,12 +1,25 @@
 class TeamMoveService
-  class InvalidDirectorate < RuntimeError
+  class InvalidDirectorateErrror < RuntimeError
     def initialize(team_move_service)
       business_unit = team_move_service.business_unit
       target_directorate = team_move_service.target_directorate
       super ("Cannot move to the original directorate")
     end
   end
-
+  class TeamHasChildrenError < RuntimeError
+    def initialize(team_move_service)
+      business_unit = team_move_service.business_unit
+      target_directorate = team_move_service.target_directorate
+      super ("Cannot move a team that has dependencies")
+    end
+  end
+  class TeamNotBusinessUnitError < RuntimeError
+    def initialize(team_move_service)
+      business_unit = team_move_service.business_unit
+      target_directorate = team_move_service.target_directorate
+      super ("Cannot move a team which is not a business unit")
+    end
+  end
   attr_reader :business_unit, :target_directorate, :new_unit
 
   def initialize(business_unit, target_directorate)
@@ -18,6 +31,13 @@ class TeamMoveService
   private
 
   def transfer_team
-      raise InvalidDirectorate.new(self) if @target_directorate == business_unit.directorate
+    raise TeamNotBusinessUnitError.new( self ) if @business_unit.type != 'BusinessUnit'
+    raise InvalidDirectorateErrror.new(self) if @target_directorate == business_unit.directorate
+    @new_unit = @business_unit.dup
+    @new_unit.directorate = target_directorate
+    @new_unit.name << "Moved from #{@business_unit.directorate.name}"
+    @new_unit.correspondence_type_roles = @business_unit.correspondence_type_roles
+    @new_unit.save
+    @new_unit
   end
 end
