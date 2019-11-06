@@ -513,6 +513,7 @@ en:
       case_cleared: "The response has been cleared and is ready to be sent to the ICO"
 
   common:
+    alert_banner: "We are planning run a migration soon, services may be disrupted. Date: TBC"
     choose_file: Choose a file
     error: error
     greeting: Hello %{user}
