@@ -35,6 +35,9 @@ feature 'Generate an acknowledgement letter by a manager' do
 
       expect(cases_show_letter_page).to be_displayed
       expect(cases_show_letter_page).to have_content "Thank you for your offender subject access request, Bob"
+
+      click_on "Save as Word"
+      expect(cases_show_letter_page).to be_displayed
     end
   end
 end

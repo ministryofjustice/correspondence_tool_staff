@@ -15,18 +15,32 @@ h1.page-heading
 hr
 
 section.letter--from-section
-  h2.request--heading  From
-  p Data Protection Compliance Team<br>
-  |  Ministry of Justice<br>
-  |  Building 16, NDC Site<br>
-  |  Burton Road<br>
-  |  Branston<br>
-  |  Burton Upon Trent<br>
-  |  Staffordshire<br>
-  |  DE14 3EG<br>
-  |  Telephone: 01283 496066<br>
-  |  Email: data.access@hmps.gsi.gov.uk
+  p
+    | Your Reference: #{@case.third_party_reference}
+  p
+    | Our Reference:  DPA #{@case.number}
+
+  p
+    | Date: #{Date.today.strftime('%e %b %Y')}
 
 
-h2.request--heading  To
-= simple_format @letter_template.render(@case)
+p
+  | #{@case.name} <br>
+  | #{@case.third_party_company_name} <br>
+  | #{simple_format @case.postal_address, {}, wrapper_tag: 'span'}
+
+
+= raw @letter.body
+
+p
+  | Yours sincerely
+
+
+
+p
+  | Application Team <br>
+  | Data Protection Compliance Team <br>
+  | Ministry of Justice <br>
+
+
+= link_to "Save as Word", url_for(format: "docx", letter: {letter_template_id: @letter.letter_template_id} ), class: "button"
