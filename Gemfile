@@ -96,7 +96,7 @@ group :development, :test do
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.8'
   gem 'rubocop', '~> 0.71.0', require: false
-  gem 'rubocop-rspec', '~> 1.35.0', require: false
+  gem 'rubocop-rspec', '~> 1.36.0', require: false
   gem 'rubocop-performance', require: false
   gem 'ruby-progressbar'
   gem 'selenium-webdriver', '~> 3.142.6'
