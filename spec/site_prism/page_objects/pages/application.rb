@@ -74,6 +74,7 @@ module PageObjects
         teams_edit:                     'Teams::EditPage',
         teams_index:                    'Teams::IndexPage',
         teams_areas:                    'Teams::BusinessAreasCoveredPage',
+        teams_move:                     'Teams::MoveToDirectoratePage',
         teams_show:                     'Teams::ShowPage',
         users_index:                    'Users::IndexPage',
         users_new:                      'Users::NewPage',

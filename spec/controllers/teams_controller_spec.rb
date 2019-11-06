@@ -563,6 +563,94 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
+  describe "#move_to_directorate" do
+    before do
+      sign_in manager
+    end
+
+    context "without choosing a business group" do
+      let(:params) {
+        {
+            id: business_unit.id
+        }
+      }
+
+      it 'authorises' do
+        pending "this doesn't work yet"
+        expect{
+          get :move_to_directorate, params: params
+        }.to require_permission(:business_areas_covered?)
+                 .with_args(manager, business_unit)
+      end
+
+      it 'assigns @team' do
+        get :move_to_directorate, params: params
+        expect(assigns(:team)).to eq business_unit
+      end
+
+      it 'renders the get_update_form.js.erb' do
+        get :move_to_directorate, params: params
+        expect(response).to render_template('teams/move_to_directorate')
+      end
+    end
+
+    context "with a business group selected" do
+      let(:params) {
+        {
+            id: business_unit.id,
+            business_group_id: bg.id
+        }
+      }
+
+      it 'assigns @directorates' do
+        get :move_to_directorate, params: params
+        expect(assigns(:directorates)).to match_array [directorate]
+      end
+    end
+  end
+
+  describe "PATCH #update_directorate" do
+    let(:destination_directorate)     { find_or_create :directorate, name: 'Destination Directorate' }
+    let(:params) {
+      {
+          id: business_unit.id,
+          directorate_id: destination_directorate.id
+      }
+    }
+
+    before do
+      sign_in manager
+    end
+
+    it 'authorises' do
+      pending "this doesn't work yet"
+      expect{
+        patch :update_directorate, params: params
+      }.to require_permission(:business_areas_covered?)
+               .with_args(manager, business_unit)
+    end
+
+    it 'assigns @team' do
+      patch :update_directorate, params: params
+      expect(assigns(:team)).to eq business_unit
+    end
+
+    it 'redirects away from team' do
+      pending "this will work after we are finished"
+      patch :update_directorate, params: params
+      expect(response).not_to redirect_to(team_path(business_unit))
+      expect(flash[:notice]).to have_content 'has been moved to'
+    end
+
+    it 'updates the area' do
+      pending 'this will work after we are finished'
+      old_parent = business_unit.parent
+      patch :update_directorate, params: params
+      expect(business_unit.reload.parent).not_to eq old_parent
+      expect(business_unit.reload.parent).to eq destination_directorate
+    end
+  end
+
   describe '#active_users' do
     let!(:team) {create :responding_team}
     let!(:user) { team.users.first }

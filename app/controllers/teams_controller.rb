@@ -8,7 +8,9 @@ class TeamsController < ApplicationController
                                   :destroy_business_area,
                                   :update_business_area,
                                   :update_business_area_form,
-                                  :update]
+                                  :update,
+                                  :move_to_directorate,
+                                  :update_directorate]
 
   before_action :set_areas, only: [:business_areas_covered,
                                    :create_business_areas_covered]
@@ -142,8 +144,38 @@ class TeamsController < ApplicationController
     end
   end
 
+  def move_to_directorate
+    # TODO https://dsdmoj.atlassian.net/browse/CT-2606
+    # authorize the user to move teams
+    set_directorates if params[:business_group_id]
+  end
+
+  def update_directorate
+    # TODO https://dsdmoj.atlassian.net/browse/CT-2606
+    # authorize the user to move teams
+    # authorize @team
+    @directorate = Directorate.find(params[:directorate_id])
+    service = TeamMoveService.new(@team, @directorate)
+    service.call
+    case service.result
+    when :ok
+      flash[:notice] = I18n.t('teams.move.moved_successfully',
+                        team_name: service.new_team.name,
+                        destination_directorate_name: @directorate.name)
+      redirect_to team_path(service.new_team)
+    else
+      flash[:alert] = I18n.t('teams.error')
+      redirect_to team_path(@team)
+    end
+  end
+
   private
 
+  def set_directorates
+      @directorates = Directorate
+        .where(parent_id: params[:business_group_id])
+        .order(:name)
+  end
 
   def team_params
     params.require(:team).permit(

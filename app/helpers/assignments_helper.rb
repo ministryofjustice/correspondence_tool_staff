@@ -16,6 +16,13 @@ module AssignmentsHelper
     end
   end
 
+  def filtered_directorate_heading(params)
+    if params[:business_group_id]
+      business_group = BusinessGroup.find(params[:business_group_id])
+      "#{ business_group.name } directorates"
+    end
+  end
+
   def all_option_for_new_case(kase, params)
     if params[:show_all]
       "See all business units"

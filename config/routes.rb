@@ -204,6 +204,8 @@ Rails.application.routes.draw do
     delete 'destroy_business_area' => 'teams#destroy_business_area', on: :member
     patch 'update_business_area' => 'teams#update_business_area', on: :member
     get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
+    get 'move_to_directorate' => 'teams#move_to_directorate', on: :member
+    patch 'update_directorate' => 'teams#update_directorate', on: :member
   end
 
   authenticated :user, ->(u) { u.admin? } do
