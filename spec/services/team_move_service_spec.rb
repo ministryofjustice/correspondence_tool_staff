@@ -17,10 +17,17 @@ describe TeamMoveService do
                          "Cannot move a team which is not a business unit"
 
       end
+      it 'returns error when the target directorate is not a directorate' do
+        expect{
+          TeamMoveService.new( bu, bu )
+        }.to raise_error TeamMoveService::InvalidDirectorateError,
+                         "Cannot move a Business Unit to a team that is not a directorate"
+
+      end
       it 'returns error for the original directorate' do
         expect{
           TeamMoveService.new( bu, original_dir)
-        }.to raise_error TeamMoveService::InvalidDirectorateErrror,
+        }.to raise_error TeamMoveService::OriginalDirectorateError,
                          "Cannot move to the original directorate"
 
       end
