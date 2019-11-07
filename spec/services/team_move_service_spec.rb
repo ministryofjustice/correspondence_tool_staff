@@ -35,7 +35,17 @@ describe TeamMoveService do
         team = TeamMoveService.new( bu, target_dir)
         expect(team.new_unit.directorate).to eq target_dir
       end
+      it 'Moves team user_roles to the new team, and removes them from the original team' do
 
+        tur = TeamsUsersRole.create user: create(:user),
+                                    team: bu,
+                                    role: 'manager'
+
+        team = TeamMoveService.new( bu, target_dir)
+        expect(team.new_unit.user_roles.first).to eq tur
+        expect(bu.user_roles.first).to eq nil
+
+      end
       # copy of the team has associations of team_x models
       # original team must be  deactivated
       # ^^ Both to be covered in a later ticket

@@ -34,6 +34,8 @@ class TeamMoveService
     @new_unit.name << " (Moved from #{@business_unit.directorate.name})"
     @new_unit.correspondence_type_roles = @business_unit.correspondence_type_roles
     @new_unit.properties = @business_unit.properties
+    @new_unit.user_roles = @business_unit.user_roles
+    
     @new_unit.save
     @new_unit
   end
