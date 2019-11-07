@@ -11,8 +11,6 @@ en:
       list_filter_type: &list_filter_type
         one: "%{first_value}"
         other: "%{first_value} + %{remaining_values_count} more"
-      assigned_business_units:
-        <<: *list_filter_type
       exemptions:
         <<: *list_filter_type
       external_deadline: "%{from_date} - %{to_date}"
@@ -26,6 +24,13 @@ en:
         <<: *list_filter_type
       timeliness:
         <<: *list_filter_type
+    headings:
+      filter_cases: Filter cases
+      filter_by_status: Filter by status
+      filter_case_type: Filter case type
+      filter_by_timeliness: Filter by timeliness
+      filter_by_deadline: Filter by final deadline
+      filter_exemptions: Exemptions
     open_case_statuses:
       unassigned: 'Needs reassigning'
       awaiting_responder: 'To be accepted'
@@ -37,6 +42,15 @@ en:
       responded: 'Ready to close'
       open: 'Open'
       closed: 'Closed'
+    offender_sar_case_statuses:
+      data_to_be_requested: Data to be requested
+      waiting_for_data: Waiting for data
+      ready_for_vetting: Ready for vetting
+      vetting_in_progress: Vetting in progress
+      ready_to_copy: Ready to copy
+      ready_to_dispatch: Ready to dispatch
+      closed: Case closed
+      destroyed: Case destroyed
     sensitivities:
       non-trigger: 'Non-trigger'
       trigger: 'Trigger'

@@ -8,8 +8,22 @@ class Letter
 
   attr_accessor :letter_template_id
 
-  def initialize(letter_template_id)
+  def initialize(letter_template_id, kase = nil)
     @letter_template_id = letter_template_id
+    @case = kase
+    @letter_template = LetterTemplate.find_by_id(letter_template_id)
+  end
+
+  def body
+    @letter_template&.render(@case)
+  end
+
+  def values
+    @case
+  end
+
+  def letter_date
+    Date.today.strftime('%e %b %Y')
   end
 end
 

@@ -1,64 +1,107 @@
 .global-nav {
-  @extend %site-width-container;
-  margin-bottom: $gutter;
-  border-bottom: 1px solid #DEE0E2;
-  background: #F8F8F8;
+  padding: 0 $gutter-half;
 
-  @media print {
-    display: none;
+  &__menu-toggler {
+    font-weight: normal;
+    font-size: 1.5rem;
+    position: relative;
+    float: right;
+    top: -4em;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: $white;
+    background: none;
+
+    @include media(desktop) {
+      display: none;
+    }
+
+    &:after {
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-color: transparent;
+      clip-path: polygon(0% 0%, 50% 100%, 100% 0%);
+      border-width: 8.66px 5px 0 5px;
+      border-top-color: inherit;
+      content: "";
+      margin-left: 5px;
+    }
+
+    &--open {
+      &:after {
+        clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        border-width: 0 5px 8.66px 5px;
+        border-color: transparent;
+        border-bottom-color: inherit;
+      }
+    }
   }
-}
 
-.global-nav a {
-  text-decoration: none;
-  @include bold-16();
-  float: none;
-  display: block;
-  text-align: center;
-  padding: 1em 1em 0.75em 1em;
+  &__container {
+    clear: both;
 
-  &.active {
-    border-bottom: 5px solid $link-colour;
+    .js-enabled & {
+      display: none;
+
+      &--open {
+        display: block;
+      }
+    }
+
+    @include media(desktop) {
+      padding: 10px 0 0 $gutter-half;
+
+      .js-enabled & {
+        display: block;
+      }
+    }
+
   }
 
-  @include media(tablet) {
-    @include bold-16();
-    display: inline-block;
-    height: 100%;
-    padding: 0.75em 1em;
-  }
+  &__item {
+    padding: 10px 0;
+    border-bottom: 1px solid #2e3133;
 
-  @include media(desktop) {
-    @include bold-19();
-    display: inline-block;
-    height: 100%;
-    padding: 1em 1em 0.75em 1em;
-  }
-}
+    @include media(desktop) {
+      display: inline-block;
+      border: none;
+      padding: 5px 0;
+      margin-right: $gutter-half;
+    }
 
-.global-nav ul {
-  @include clearfix;
-  position: relative;
-  top: 1px;
-  margin: 0;
-  padding: 0;
-
-  li {
-    display: inline-block;
-    list-style: none;
-    @include media(mobile) {
-      float: none;
-      display: block;
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
     }
 
     // Javid: Current navigation is controlled by data definition in settings.yml
     // Therefore cannot delete entries in settings.yml without causing significant
     // breaking changes to the system, e.g. filters / page loading
     // Workaround is to hide the nagivation items in the current global nav bar
+
     &.incoming_cases,
     &.closed_cases,
-    &.my_open_cases {
+    &.my_open_cases,
+    &.search_cases {
       display: none!important;
     }
+  }
+
+  &__link:link,
+  &__link:visited {
+    color: $white;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  @media print {
+    display: none;
   }
 }

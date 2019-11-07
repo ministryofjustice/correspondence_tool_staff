@@ -14,7 +14,13 @@ module PageObjects
                 '#search_query_filter_open_case_status_responded',
                 visible: false
 
-        element :apply_filter_button, '.button-secondary[value="Filter"]'
+        element :open_checkbox,
+          '#search_query_filter_status_open',
+          visible: false
+
+        element :closed_checkbox,
+          '#search_query_filter_status_closed',
+          visible: false
       end
     end
   end

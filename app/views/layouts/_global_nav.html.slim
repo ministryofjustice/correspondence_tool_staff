@@ -1,9 +1,12 @@
 nav.global-nav
-  ul
+  button.global-nav__menu-toggler { type="button" role="button"
+    aria-controls="global-navigation" aria-expanded="false"
+    aria-label="Show or hide Top Level Navigation" }
+    = t('nav.menu')
+  ul#global-navigation.global-nav__container aria-hidden="true"
     - @global_nav_manager.each do |page|
-      li class="global-nav-item #{page.name}"
+      li class="global-nav__item #{page.name}"
         = link_to t("nav.pages.#{page.name}",
             count: current_user.teams.size),
             page.fullpath,
-            {class: active_link_class(page.fullpath)}
-
+            {class: "global-nav__link #{active_link_class(page.fullpath)}" }

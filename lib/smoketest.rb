@@ -86,7 +86,7 @@ class Smoketest
   def check_open_cases_list_page
     info '.. Smoketest check "All open cases" page has loaded'
 
-    if @agent.page.at_css('.page-heading--primary').text != 'All open cases'
+    if @agent.page.at_css('.page-heading--primary').text != 'Cases'
       error "All open cases page has not loaded"
       exit 2
     end

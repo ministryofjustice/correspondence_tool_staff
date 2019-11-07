@@ -16,6 +16,7 @@
 //= require govuk_date_fields
 //= require vendor/polyfills/bind
 //= require govuk/show-hide-content
+//= require govuk/details.polyfill
 //= require moj
 //= require_tree ./modules
 
@@ -23,6 +24,9 @@
 (function () {
   // Show and hide toggled content
   new GOVUK.ShowHideContent().init();
+
+  // Details and summary polyfill to activate ARIA attributes
+  GOVUK.details.init();
 
   // Utility function to get URL Query String Parameters borrowed from
   // https://www.sitepoint.com/url-parameters-jquery/

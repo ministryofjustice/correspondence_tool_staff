@@ -45,14 +45,6 @@ module PageObjects
 
       section :pagination, PageObjects::Sections::PaginationSection, '.pagination'
 
-      section :filters, '.ct-tab-container' do
-          elements :options, '.ct-tab-item'
-          element :open_case_status, 'a[href="#ct-tab-panel-status"]'
-          section :status_filter_panel,
-                  PageObjects::Sections::Cases::StatusFilterPanelSection,
-                  '#ct-tab-panel-status'
-      end
-
       def case_numbers
         case_list.map do |row|
           row.number.text.delete('Link to case')

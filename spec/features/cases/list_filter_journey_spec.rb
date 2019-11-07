@@ -66,7 +66,7 @@ feature 'filters whittle down search results' do
                         )
 
       open_cases_page.open_filter(:type)
-      expect(open_cases_page.type_filter_panel.non_trigger_checkbox)
+      expect(open_cases_page.filter_type_content.non_trigger_checkbox)
         .to be_checked
     end
 
@@ -88,7 +88,7 @@ feature 'filters whittle down search results' do
 
       login_step user: user
       open_cases_page.open_filter('type')
-      expect(open_cases_page.type_filter_panel).to have_no_sar_non_offender_checkbox
+      expect(open_cases_page.filter_type_content).to have_no_sar_non_offender_checkbox
     end
 
     scenario 'filter by ICO Overturned', js: true do
@@ -121,7 +121,7 @@ feature 'filters whittle down search results' do
                                                             :std_unassigned_irt
                                                           )
       open_cases_page.open_filter(:status)
-      expect(open_cases_page.status_filter_panel.unassigned_checkbox)
+      expect(open_cases_page.filter_status_content.unassigned_checkbox)
         .to be_checked
 
       open_cases_page.filter_crumb_for('Needs reassigning').click
@@ -131,7 +131,7 @@ feature 'filters whittle down search results' do
       expect(open_cases_page.search_results_count.text).to eq '8 cases found'
 
       open_cases_page.open_filter(:status)
-      expect(open_cases_page.status_filter_panel.unassigned_checkbox)
+      expect(open_cases_page.filter_status_content.unassigned_checkbox)
         .not_to be_checked
     end
   end
@@ -158,6 +158,13 @@ feature 'filters whittle down search results' do
 
     scenario 'clearing individual filters', js: true do
       expect(SearchQuery.count).to eq 5
+
+      expect(open_cases_page.search_results_count.text).to eq '1 case found'
+      expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
+      expect(open_cases_page.filter_crumb_for('Trigger'            )).to be_present
+      expect(open_cases_page.filter_crumb_for('In time'            )).to be_present
+      expect(open_cases_page.filter_crumb_for('Ready to close'     )).to be_present
+      expect(open_cases_page.filter_crumb_for(@deadline_filter_text)).to be_present
 
       open_cases_page.filter_crumb_for(@deadline_filter_text).click
 
