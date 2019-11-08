@@ -6,7 +6,6 @@ RUN addgroup --gid 1000 --system appgroup && \
 
 WORKDIR /usr/src/app/
 
-
 ENV PUMA_PORT 3000
 
 EXPOSE $PUMA_PORT
@@ -54,48 +53,14 @@ COPY . .
 
 RUN mkdir log tmp
 
-
 RUN echo "Giving User permission..."
 RUN chown -R appuser:appgroup /usr/src/app/
 USER appuser
-RUN echo "=+=====++ ====== = == = = == ========="
-RUN mkdir fake-dir
-RUN pwd
-RUN ls -al
-RUN echo "=+=====++ ====== = == = = == ========="
 USER 1000
 
 RUN echo "RUNNING ASSET PIPELINE COMPILATION..."
 RUN chown -R appuser:appgroup ./*
 RUN ls -al
 RUN RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets
-
-#RUN echo "SETTING ENVIRONMENT VARIABLES..."
-#
-## RDS New Staging (London)
-#ENV DATABASE_URL=postgres://cp4gmTcfOW:syFpKbswUCOTOmBq@cloud-platform-6d3055284f4c1f39.cdwm328dlye6.eu-west-2.rds.amazonaws.com:5432/db6d3055284f4c1f39
-#ENV DB_ENGINE=postgres
-#ENV DB_HOST=cloud-platform-6d3055284f4c1f39.cdwm328dlye6.eu-west-2.rds.amazonaws.com
-#ENV DB_NAME=db6d3055284f4c1f39
-#ENV DB_PASSWORD=syFpKbswUCOTOmBq
-#ENV DB_PORT=5432
-#ENV DB_USERNAME=cp4gmTcfOW
-#ENV ENV=prod
-#ENV PROJECT=correspondence-staff
-#ENV RAILS_ENV=production
-#
-## Current DEV environment Redis server
-#ENV REDIS_HOST=coe10oxlc36q590d.eq1onc.ng.0001.euw1.cache.amazonaws.com
-#ENV REDIS_PORT=6379
-#ENV REDIS_URL=redis://coe10oxlc36q590d.eq1onc.ng.0001.euw1.cache.amazonaws.com:6379
-#
-## Current DEV app settings
-#ENV SECRET_KEY_BASE=60ae086f3a7a0e43804d411ff59dad6bc785686e2b981bde9b82368600df83635bb83bcf9f8c1cda6322f0f7e3a44794dfb84899a0cd4b1b4bfe1c8c5e285eff
-#ENV SETTINGS__CASE_UPLOADS_S3_BUCKET=correspondence-staff-case-uploads-dev
-#ENV SETTINGS__CTS_EMAIL_URL=https://dev.track-a-query.service.justice.gov.uk
-#ENV SETTINGS__GOVUK_NOTIFY_API_KEY=trackaquery_development-ec94811d-117a-4f52-8d3a-e4272089dc32-6eb3a617-465b-441e-b886-4be0d1b44084
-#ENV SETTINGS__SMOKE_TESTS__PASSWORD=Go239@4jB9TbS3k$ZgDmQI!X8eW0R72^
-#ENV SETTINGS__SMOKE_TESTS__USERNAME=correspondence-staff-dev+smoke.tests@digital.justice.gov.uk
-
 
 ENTRYPOINT ["./run.sh"]

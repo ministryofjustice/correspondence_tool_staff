@@ -28,7 +28,7 @@ development-setup)
     ;;
 
 reset)
-    if [[ "$ENV" = staging || "$ENV" = prod ]]
+    if [[ "$ENV" = staging || "$ENV" = production ]]
     then
         echo "cannot reset DB in staging or prod, see"
         echo "https://dsdmoj.atlassian.net/wiki/display/CD/Resetting+the+DB+in+Deployed+Environments"
