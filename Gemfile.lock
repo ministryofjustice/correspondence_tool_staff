@@ -99,7 +99,7 @@ GEM
     bindex (0.8.1)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
-    brakeman (4.6.1)
+    brakeman (4.7.1)
     browser_sync_rails (0.1.1)
       rails
     builder (3.2.3)
