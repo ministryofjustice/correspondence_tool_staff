@@ -37,6 +37,9 @@ class Team < ApplicationRecord
           -> { lead },
           class_name: TeamProperty.to_s
 
+  has_one :old_team, class_name: 'Team', foreign_key: :moved_to_unit_id
+  belongs_to :moved_to_unit, class_name: 'Team', optional: true
+
   scope :with_user, ->(user) {
     includes(:user_roles)
       .where(teams_users_roles: { user_id: user.id })
@@ -151,13 +154,12 @@ class Team < ApplicationRecord
   end
 
   def deactivated
-    if active?
-      ""
-    else
-      deleted_at.strftime("%d/%m/%Y")
-    end
+    deleted_at&.strftime("%d/%m/%Y") || ''
   end
 
+  def moved
+    moved_to_unit&.parent&.name || ''
+  end
   private
 
   # This method applies to Business Groups and Directorates only.
