@@ -44,9 +44,8 @@ describe TeamMoveService do
         team = TeamMoveService.new( bu, target_dir)
         expect(team.new_unit.user_roles.first).to eq tur
         expect(bu.user_roles.first).to eq nil
-
       end
-      # copy of the team has associations of team_x models
+
       # original team must be  deactivated
       # ^^ Both to be covered in a later ticket
 
