@@ -14,7 +14,7 @@
 
 .clearance-copy
   p
-    = "You are clearing the response to: "
+    = t('common.case.clearance_copy')
   p
     strong.strong-block
       = @case.subject
@@ -26,4 +26,4 @@
     = render partial: 'cases/shared/bypass_approvals_form'
 
   .actions
-    = submit_tag 'Clear response', class: 'button'
+    = submit_tag t('common.case.clear_response'), class: 'button'
