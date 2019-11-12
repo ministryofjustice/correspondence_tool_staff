@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
   before_action :check_maintenance_mode
 
   before_action :set_paper_trail_whodunnit
-  before_action :authenticate_user!, :set_user, except: [:ping, :healthcheck]
+  before_action :authenticate_user!, :set_user, except: [:ping, :healthcheck, :maintenance_mode]
   before_action :set_global_nav, if: -> { current_user.present?  && global_nav_required? }
   before_action :add_security_headers
   before_action :set_hompepage_nav, if: -> { current_user.present?  && global_nav_required? }
