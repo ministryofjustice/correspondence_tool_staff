@@ -513,7 +513,7 @@ en:
       case_cleared: "The response has been cleared and is ready to be sent to the ICO"
 
   common:
-    alert_banner: "We are planning run a migration soon, services may be disrupted. Date: TBC"
+    alert_banner: "This service will be down for essential maintenance during the afternoon of Wednesday 13 November. You will not have access after 13.00 on this day – the site will likely resume service after business hours. Apologies for the inconvenience."
     choose_file: Choose a file
     error: error
     greeting: Hello %{user}
