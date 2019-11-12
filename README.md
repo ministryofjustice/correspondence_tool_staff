@@ -335,8 +335,7 @@ $ export SETTINGS__CTS_EMAIL_PORT=5000
 Responses and other case attachments are uploaded directly to S3 before being
 submitted to the application to be added to the case. Each deployed environment
 has the permissions is needs to access the uploads bucket for that environment.
-In local development, uploads are place in the
-[correspondence-staff-case-uploads-testing](https://s3-eu-west-1.amazonaws.com/correspondence-staff-case-uploads-testing/)
+In local development, uploads are place in the https://<cloud-platform-generated-s3-bucket-address>/
 bucket.
 
 You'll need to provide access credentials to the aws-sdk gems to access
