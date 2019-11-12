@@ -236,5 +236,7 @@ Rails.application.routes.draw do
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
   post '/feedback' => 'feedback#create'
 
+  get '/maintenance', to: 'application#maintenance_mode'
+
   root to: redirect('/users/sign_in')
 end
