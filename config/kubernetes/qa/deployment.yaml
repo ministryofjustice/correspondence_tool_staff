@@ -14,10 +14,10 @@ spec:
         image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
         ports:
         - containerPort: 3000
-        command: ["./run.sh"]
+        command: ["./config/docker/entrypoint-webapp.sh"]
         env:
           - name: ENV
-            value: 'dev'
+            value: 'qa'
           - name: RAILS_ENV
             value: 'development'
           - name: PROJECT
@@ -94,10 +94,10 @@ spec:
                 key: secret_access_key
       - name: jobs
         image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
-        command: ["./run-background-jobs.sh"]
+        command: ["./config/docker/entrypoint-background-jobs.sh"]
         env:
           - name: ENV
-            value: 'dev'
+            value: 'qa'
           - name: RAILS_ENV
             value: 'development'
           - name: PROJECT
@@ -174,10 +174,10 @@ spec:
                 key: secret_access_key
       - name: uploads
         image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
-        command: ["./run-uploads.sh"]
+        command: ["./config/docker/entrypoint-uploads.sh"]
         env:
           - name: ENV
-            value: 'dev'
+            value: 'qa'
           - name: RAILS_ENV
             value: 'development'
           - name: PROJECT

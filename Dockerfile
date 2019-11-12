@@ -3,11 +3,9 @@ FROM ruby:2.5
 RUN addgroup --gid 1000 --system appgroup && \
     adduser --uid 1000 --system appuser --ingroup appgroup
 
-
 WORKDIR /usr/src/app/
 
 ENV PUMA_PORT 3000
-
 EXPOSE $PUMA_PORT
 
 RUN apt-get update && apt-get install -y apt-transport-https && \
@@ -29,14 +27,17 @@ RUN . /etc/os-release ; release="${VERSION#* (}" ; release="${release%)}" ; \
 #
 # Or by adding build args to the docker-compose file.
 
-
-RUN apt-get update && apt-get install -y less \
-                                         nodejs \
-                                         runit \
-                                         postgresql-client-9.5 \
-                                         $additional_packages && \
-                                         rm -rf /var/lib/apt/lists/*
-
+RUN echo "Installing libraries..."
+RUN apt-get update && \
+    apt-get install -y less \
+    nodejs \
+    runit \
+    postgresql-client-9.5 \
+    zip \
+    libreoffice \
+    clamav \
+    clamav-daemon \
+    clamav-freshclam
 
 COPY Gemfile Gemfile.lock ./
 
@@ -45,22 +46,14 @@ COPY Gemfile Gemfile.lock ./
 ARG development_mode
 
 RUN echo "development_mode=$development_mode"
-
 RUN bundle config --global frozen 1 \
     && bundle install ${development:+--with="test development"}
 
 COPY . .
 
 RUN mkdir log tmp
-
-RUN echo "Giving User permission..."
 RUN chown -R appuser:appgroup /usr/src/app/
 USER appuser
 USER 1000
-
-RUN echo "RUNNING ASSET PIPELINE COMPILATION..."
 RUN chown -R appuser:appgroup ./*
-RUN ls -al
-RUN RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets
-
-ENTRYPOINT ["./run.sh"]
+RUN chmod +x /usr/src/app/config/docker/*
