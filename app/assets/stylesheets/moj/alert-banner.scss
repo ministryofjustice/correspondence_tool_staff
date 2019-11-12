@@ -1,0 +1,24 @@
+.alert-banner {
+  @extend %site-width-container;
+  border: 4px solid $govuk-blue;
+  padding: 2rem 2rem 1rem;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  box-sizing: border-box;
+  position: relative;
+
+  &__icon {
+    color: $govuk-blue;
+    position: absolute;
+    left: 2rem;
+    top: 2rem;
+  }
+
+  &__info {
+    padding: 5px 0 0 55px;
+
+    @include media(tablet) {
+      font-size: 19px;
+    }
+  }
+}
