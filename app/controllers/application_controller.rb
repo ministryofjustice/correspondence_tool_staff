@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
   private
 
   def check_maintenance_mode
-    if maintenance_mode_on? and request.fullpath != '/maintenance'
+    if maintenance_mode_on? && request.fullpath != '/maintenance'
       redirect_to '/maintenance' and return
     end
   end
