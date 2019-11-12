@@ -30,17 +30,21 @@ class ApplicationController < ActionController::Base
   end
 
   def maintenance_mode
+    redirect_to '/' and return unless maintenance_mode_on?
     render layout: nil, file: "layouts/maintenance"
   end
 
   private
 
   def check_maintenance_mode
-    if request.fullpath != '/maintenance'
+    if maintenance_mode_on? and request.fullpath != '/maintenance'
       redirect_to '/maintenance' and return
     end
   end
 
+  def maintenance_mode_on?
+    File.exist? Rails.root.join('maintenance.txt')
+  end
 
   def download_csv_request?
     uri = URI(request.fullpath)
