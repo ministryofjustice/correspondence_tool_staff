@@ -11,8 +11,10 @@ echo 'Build image' && \
 docker build -t correspondence/track-a-query-ecr . && \
 docker tag correspondence/track-a-query-ecr:latest 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest && \
 docker push 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest && \
-#kubectl delete --filename config/kubernetes/$1 --namespace track-a-query-$1 && \
-kubectl apply --filename config/kubernetes/$1 --namespace track-a-query-$1 && \
+kubectl delete --filename config/kubernetes/$1 --namespace track-a-query-$1 && \
+kubectl create --filename config/kubernetes/$1 --namespace track-a-query-$1 && \
+# kubectl is the preferred way of deploying however it requires additional config
+# kubectl apply --filename config/kubernetes/$1 --namespace track-a-query-$1 && \
 kubectl get pods --namespace track-a-query-$1 && \
 echo 'Completed upload' && \
 echo '----------------------------' && \
