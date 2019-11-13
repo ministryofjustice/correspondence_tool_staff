@@ -2,12 +2,14 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: track-a-query-ingress
+  namespace: track-a-query-devlopment
 spec:
   tls:
     - hosts:
-        - track-a-query-development.apps.live-1.cloud-platform.service.justice.gov.uk
+        - dev.track-a-query.service.justice.gov.uk
+      secretName: track-a-query-certificate
   rules:
-    - host: track-a-query-development.apps.live-1.cloud-platform.service.justice.gov.uk
+    - host: dev.track-a-query.service.justice.gov.uk
       http:
         paths:
           - path: /
