@@ -2,7 +2,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: track-a-query-ingress
-  namespace: track-a-query-devlopment
+  namespace: track-a-query-development
 spec:
   tls:
     - hosts:
