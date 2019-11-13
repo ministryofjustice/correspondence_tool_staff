@@ -71,9 +71,9 @@ GEM
       activerecord (>= 3.0.0)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    annotate (3.0.2)
+    annotate (3.0.3)
       activerecord (>= 3.2, < 7.0)
-      rake (>= 10.4, < 13.0)
+      rake (>= 10.4, < 14.0)
     arel (7.1.4)
     ast (2.4.0)
     awesome_print (1.8.0)
@@ -593,7 +593,7 @@ PLATFORMS
 DEPENDENCIES
   activerecord-session_store
   acts_as_tree (~> 2.9)
-  annotate (~> 3.0.2)
+  annotate (~> 3.0.3)
   awesome_print
   aws-sdk (= 2.7.3)
   axlsx!
