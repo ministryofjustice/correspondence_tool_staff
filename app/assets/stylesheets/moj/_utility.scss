@@ -1,3 +1,18 @@
 .display-none {
   display: none;
 }
+
+/** TEMPORARY CLOUD PLATFORM BADGE **/
+body {
+  position: relative;
+}
+
+.cloud-platform {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: black;
+  color: white;
+  width: auto;
+  opacity: 0.3;
+}
