@@ -3,7 +3,7 @@
 echo '----------------------------' &&  \
 echo 'DEPLOYING: ' $1 && \
 echo 'AWS Login: ' && \
-$(aws ecr get-login --no-include-email --region eu-west-2) && \
+$(aws ecr get-login --no-include-email --region eu-west-2 --profile ecr-live-1) && \
 echo 'Begin environment upload' && \
 echo '----------------------------' && \
 echo '' && \
