@@ -28,6 +28,7 @@ RUN apt-get update && \
     nodejs \
     runit \
     postgresql-client-9.5 \
+    redis \
     zip \
     libreoffice \
     clamav \
