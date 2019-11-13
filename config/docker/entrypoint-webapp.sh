@@ -6,8 +6,8 @@ export SETTINGS__GIT_COMMIT="$APP_GIT_COMMIT"
 export SETTINGS__BUILD_DATE="$APP_BUILD_DATE"
 export SETTINGS__GIT_SOURCE="$APP_BUILD_TAG"
 
-printf '\e[33mINFO: Running asset pipeline build\e[0m\n'
-RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets
+# printf '\e[33mINFO: Running asset pipeline build\e[0m\n'
+# RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets
 
 case ${DOCKER_STATE} in
 create)
@@ -68,4 +68,4 @@ fi
 
 
 printf '\e[33mINFO: Launching Puma\e[0m\n'
-bundle exec puma -C config/puma.rb
+bundle exec puma -C config/puma.rb -e production
