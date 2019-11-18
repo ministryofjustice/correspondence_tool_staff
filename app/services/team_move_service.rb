@@ -14,29 +14,40 @@ class TeamMoveService
       super("Cannot move a team which is not a business unit")
     end
   end
-  attr_reader :business_unit, :target_directorate, :new_unit
 
-  def initialize(business_unit, target_directorate)
-    @business_unit             = business_unit
-    @target_directorate        = target_directorate
-    @new_unit                  = transfer_team
+  attr_reader :result, :new_team
+
+  def initialize(team, directorate)
+    @team = team
+    @directorate = directorate
+    @result = :incomplete
+    raise TeamNotBusinessUnitError.new if @team.type != 'BusinessUnit'
+    raise InvalidDirectorateError.new if @directorate.type != 'Directorate'
+    raise OriginalDirectorateError.new if @directorate == team.directorate
+  end
+
+  def call
+    ActiveRecord::Base.transaction do
+      begin
+        move_team
+        @result = :ok
+      rescue
+        @team.reload
+        @result = :error
+      end
+    end
   end
 
   private
 
-  def transfer_team
-    raise TeamNotBusinessUnitError.new if @business_unit.type != 'BusinessUnit'
-    raise InvalidDirectorateError.new if @target_directorate.type != 'Directorate'
-    raise OriginalDirectorateError.new if @target_directorate == business_unit.directorate
-
-    @new_unit = @business_unit.dup
-    @new_unit.directorate = target_directorate
-    @new_unit.name << " (Moved from #{@business_unit.directorate.name})"
-    @new_unit.correspondence_type_roles = @business_unit.correspondence_type_roles
-    @new_unit.properties = @business_unit.properties
-    @new_unit.user_roles = @business_unit.user_roles
-    @business_unit.destroy_related_user_roles!
-    @new_unit.save
-    @new_unit
+  def move_team
+    @new_team = @team.dup
+    @new_team.directorate = @directorate
+    @new_team.name << " (Moved from #{@team.directorate.name})"
+    @new_team.correspondence_type_roles = @team.correspondence_type_roles
+    @new_team.properties = @team.properties
+    @new_team.user_roles = @team.user_roles
+    @team.destroy_related_user_roles!
+    @new_team.save
   end
 end
