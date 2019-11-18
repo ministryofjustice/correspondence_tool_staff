@@ -94,7 +94,7 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
-  gem 'rspec-rails', '~> 3.8'
+  gem 'rspec-rails', '~> 3.9'
   gem 'rubocop', '~> 0.71.0', require: false
   gem 'rubocop-rspec', '~> 1.36.0', require: false
   gem 'rubocop-performance', require: false
