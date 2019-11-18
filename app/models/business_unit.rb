@@ -148,6 +148,9 @@ class BusinessUnit < Team
     users.any?
   end
 
+  def destroy_related_user_roles!
+    self.user_roles.destroy_all
+  end
 
   private
 
