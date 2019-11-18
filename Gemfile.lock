@@ -467,9 +467,6 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.5.0)
       rubocop (>= 0.71.0)
-    rubocop-rails (2.3.2)
-      rack (>= 1.1)
-      rubocop (>= 0.72.0)
     rubocop-rspec (1.36.0)
       rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
@@ -513,13 +510,11 @@ GEM
     shellany (0.0.1)
     shoulda-matchers (4.1.2)
       activesupport (>= 4.2.0)
-    sidekiq (5.2.7)
-      connection_pool (~> 2.2, >= 2.2.2)
-      rack (>= 1.5.0)
-      rack-protection (>= 1.5.0)
-      redis (>= 3.3.5, < 5)
-    sidekiq-logging-json (0.0.19)
-      sidekiq (>= 3)
+    sidekiq (6.0.3)
+      connection_pool (>= 2.2.2)
+      rack (>= 2.0.0)
+      rack-protection (>= 2.0.0)
+      redis (>= 4.1.0)
     simplecov (0.13.0)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -661,7 +656,6 @@ DEPENDENCIES
   rspec-rails (~> 3.9)
   rubocop (~> 0.76.0)
   rubocop-performance
-  rubocop-rails
   rubocop-rspec (~> 1.36.0)
   ruby-progressbar
   rubyzip (>= 1.2.4)
@@ -672,8 +666,7 @@ DEPENDENCIES
   sentry-raven (~> 2.12.3)
   shell-spinner
   shoulda-matchers (~> 4.1)
-  sidekiq (~> 5.2.7)
-  sidekiq-logging-json (~> 0.0.19)
+  sidekiq (~> 6.0.3)
   site_prism (= 3.1)
   slim-rails (~> 3.2)
   spring

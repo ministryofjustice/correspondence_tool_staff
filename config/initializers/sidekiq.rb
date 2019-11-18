@@ -1,7 +1,5 @@
-require 'sidekiq/logging/json'
-
 if Rails.env == 'production'
-  Sidekiq.logger.formatter = Sidekiq::Logging::Json::Logger.new
+  Sidekiq.logger.formatter = Sidekiq::Logger::Formatters::JSON.new
 end
 
 Sidekiq.configure_client do |config|
@@ -16,3 +14,6 @@ end
 #
 require "sidekiq/web"
 Sidekiq::Web.set(:sessions, { domain: ".example.com" })
+
+# Requirement since Sidekiq 5+
+Sidekiq::Extensions.enable_delay!
