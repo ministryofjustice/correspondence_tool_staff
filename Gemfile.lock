@@ -197,7 +197,7 @@ GEM
       railties (>= 4.2.0)
     faker (2.7.0)
       i18n (>= 1.6, < 1.8)
-    faraday (0.15.4)
+    faraday (0.17.0)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.1)
     foreman (0.86.0)
@@ -503,7 +503,7 @@ GEM
     selenium-webdriver (3.142.6)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
-    sentry-raven (2.11.2)
+    sentry-raven (2.12.3)
       faraday (>= 0.7.6, < 1.0)
     shell-spinner (1.0.4)
       colorize
@@ -665,7 +665,7 @@ DEPENDENCIES
   sass-rails (~> 6.0)
   schema_plus_enums (~> 0.1)
   selenium-webdriver (~> 3.142.6)
-  sentry-raven (~> 2.11.0)
+  sentry-raven (~> 2.12.3)
   shell-spinner
   shoulda-matchers (~> 4.1)
   sidekiq (~> 5.2.7)
