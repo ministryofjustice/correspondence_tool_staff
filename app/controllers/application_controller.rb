@@ -15,8 +15,10 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  before_action :check_maintenance_mode
+
   before_action :set_paper_trail_whodunnit
-  before_action :authenticate_user!, :set_user, except: [:ping, :healthcheck]
+  before_action :authenticate_user!, :set_user, except: [:ping, :healthcheck, :maintenance_mode]
   before_action :set_global_nav, if: -> { current_user.present?  && global_nav_required? }
   before_action :add_security_headers
   before_action :set_hompepage_nav, if: -> { current_user.present?  && global_nav_required? }
@@ -27,7 +29,22 @@ class ApplicationController < ActionController::Base
     @user = current_user
   end
 
+  def maintenance_mode
+    redirect_to '/' and return unless maintenance_mode_on?
+    render layout: nil, file: "layouts/maintenance"
+  end
+
   private
+
+  def check_maintenance_mode
+    if maintenance_mode_on? && request.fullpath != '/maintenance'
+      redirect_to '/maintenance' and return
+    end
+  end
+
+  def maintenance_mode_on?
+    File.exist? Rails.root.join('maintenance.txt')
+  end
 
   def download_csv_request?
     uri = URI(request.fullpath)

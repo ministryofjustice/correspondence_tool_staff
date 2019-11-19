@@ -21,28 +21,20 @@
   - content_for :body_classes do
     = "controller-" + controller.controller_name
 
-  - content_for :proposition_header do
-    - if current_user&.full_name.present?
-      .header-proposition.user-card
-        .content
-          nav#proposition-menu
-            span.user-card--greetings
-              = t('common.greeting', user: current_user.full_name )
-            = link_to t('common.signout'), destroy_user_session_path, :method => :delete,  class: "user-card--signout"
-    - if user_signed_in?
-      = render partial: 'layouts/global_nav'
+
+
 
 = content_for :content do
   = csrf_meta_tags
   = render partial: 'layouts/phase_banner'
-  = render partial: 'layouts/alert_banner'
 
   .grid-row
     .column-full
       main#content
         = render partial: 'layouts/flashes' unless flash.empty?
-        = content_for?(:tab_content) ? yield(:tab_content) : yield
-        = render partial: 'feedback/new' if controller_name != 'sessions'
+        h1.page-heading style="border-bottom: 1px solid #000"
+          = "Service down for planned maintenance"
+        p.lede  This service will be down for essential maintenance during the afternoon of Wednesday 13 November. You will not have access after 13.00 on this day – the site will likely resume service after business hours. Apologies for the inconvenience.
 
 - content_for :body_end do
   = javascript_include_tag "application"
