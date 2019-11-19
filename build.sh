@@ -31,6 +31,7 @@ function _build() {
 
   # 2. Display status message - include warning if the working copy is not clean
   p "------------------------------------------------------------------------"
+  p "Building Track a Query image for deployment"
   p "Git repository: $git_remote_url"
   p "Build tag: $docker_build_tag"
   p "Branch: $current_branch"
