@@ -23,7 +23,8 @@ fi
 # Check for any filenames containing "secret" in the list of files which are not
 # encrypted with git-crypt:
 #
-git-crypt status -u | grep secret
+# Exclude Rails required config/secrets from checks
+git-crypt status -u | grep secret | grep -v 'config/secrets.yml'
 
 # grep returns 0 if it finds some matches and 1 if there are no matches:
 if [[ $? -eq 0 ]]; then

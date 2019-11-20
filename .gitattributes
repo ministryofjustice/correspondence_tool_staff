@@ -2,9 +2,6 @@
 secretfile filter=git-crypt diff=git-crypt
 *.key filter=git-crypt diff=git-crypt
 
-# Rails settings
-config/secrets.yml filter=git-crypt diff=git-crypt
-
 # Kubernetes settings
 config/kubernetes/**/*secrets* filter=git-crypt diff=git-crypt
 config/kubernetes/**/qa/*secrets* filter=git-crypt diff=git-crypt
