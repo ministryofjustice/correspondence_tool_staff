@@ -269,6 +269,7 @@ GEM
       rails-i18n
       rainbow (>= 2.2.2, < 4.0)
       terminal-table (>= 1.5.1)
+    iniparse (1.4.4)
     its-it (1.3.0)
     jaro_winkler (1.5.4)
     jasmine (3.4.0)
@@ -359,6 +360,9 @@ GEM
       jwt (>= 1.5, < 3)
     ntlm-http (0.1.1)
     orm_adapter (0.5.0)
+    overcommit (0.51.0)
+      childprocess (>= 0.6.3, < 4)
+      iniparse (~> 1.4)
     paper_trail (10.3.1)
       activerecord (>= 4.2)
       request_store (~> 1.1)
@@ -641,6 +645,7 @@ DEPENDENCIES
   loofah (>= 2.3.1)
   mechanize (>= 2.7.5)
   mimetype-fu (~> 0.1.2)
+  overcommit
   paper_trail (~> 10.3)
   parallel_tests (~> 2.29)
   pg (~> 1.1)
