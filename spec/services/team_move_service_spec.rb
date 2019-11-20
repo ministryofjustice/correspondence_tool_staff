@@ -46,7 +46,7 @@ describe TeamMoveService do
         expect(bu.user_roles.first).to eq nil
       end
 
-      # TODO: original team must be deactivated, to be covered in a later ticket
+      # TODO: original team must be deactivated, to be covered in a later ticket CT-2590
     end
   end
 end
