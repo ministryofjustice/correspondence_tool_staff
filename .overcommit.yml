@@ -15,10 +15,10 @@
 #
 # Uncomment the following lines to make the configuration take effect.
 
-#PreCommit:
-#  CustomScript:
-#    enabled: true
-#    required_executable: './config/git-hooks/pre-commit.sh'
+PreCommit:
+  CustomScript:
+    enabled: true
+    required_executable: './config/git-hooks/pre-commit.sh'
 
 #  RuboCop:
 #    enabled: true
