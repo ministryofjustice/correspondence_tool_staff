@@ -1,14 +1,43 @@
-defaults: &defaults
-  docker:
-    - image: circleci/node:10.15.0-browsers
+version: 2
 
-version: 2.1
+references:
+  container_config: &container_config
+    docker:
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+        environment:
+          GITHUB_TEAM_NAME_SLUG: track-a-query
+          APPLICATION_DEPLOY_NAME: track-a-query
+  build_docker_image: &build_docker_image
+    run:
+      name: Build track-a-query docker image
+      command: |
+        export BUILD_DATE=$(date -Is) >> $BASH_ENV
+        source $BASH_ENV
+        docker build \
+          --build-arg VERSION_NUMBER=${CIRCLE_BUILD_NUM} \
+          --build-arg COMMIT_ID=${CIRCLE_SHA1} \
+          --build-arg BUILD_DATE=${BUILD_DATE} \
+          --build-arg BUILD_TAG=${CIRCLE_BRANCH} \
+          -t app .
+  push_docker_image: &push_docker_image
+    run:
+      name: Push  track-a-query docker image
+      command: |
+        login="$(aws ecr get-login --region eu-west-1 --no-include-email)"
+        ${login}
+        docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+        docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+        if [ "${CIRCLE_BRANCH}" == "master" ]; then
+          docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:latest"
+          docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:latest"
+        fi
 
 jobs:
   build:
-    <<: *defaults
+    <<: *container_config
     steps:
       - checkout
-    branches:
-      only:
-        - /cloud-migrate-.*/
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - *build_docker_image
+      - *push_docker_image
