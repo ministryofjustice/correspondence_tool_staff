@@ -57,7 +57,6 @@ node_modules
 !public/robots.txt
 !lib/assets/kilo_map.csv
 !spec/fixtures/*.xlsx
-!.git/hooks/pre-commit
 
 # Generated documentation.
 doc
