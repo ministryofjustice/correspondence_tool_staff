@@ -542,6 +542,35 @@ open doc/index.html
 #### Guide to our deploy process
 For our deploy process please see the our [confluence page](https://dsdmoj.atlassian.net/wiki/spaces/CD/pages/164660145/Manual+-+Development+and+Release+Process)
 
+#### Git-Crypt and Overcommit
+
+Sensitive information required to deploy the application into Cloud Platform
+are stored in the appropriate environment settings folders found in
+
+```
+config/kubernetes/<environment>/secrets.yaml
+```
+
+To perform any commits to this repository requires installation of `git-crypt` on your machine:
+
+https://github.com/AGWA/git-crypt
+
+To decrypt secrets, you must require authorization from your line manager.
+
+Once added as a `git-crypt` collaborator, only edit secrets that require editing and
+ensure the session is ended using `git-crypt lock` to prevent further accidental changes.
+
+Overcommit is used to execute checks/preventative scripts. See `./overcommit.yml` 
+and visit the Overcommit source page for more information: 
+
+https://github.com/sds/overcommit
+
+Overcommit was chosen over manual configuration of `.git/hooks/<hook name>` for ease of
+maintenance and configuration across developer machines.
+
+If in doubt about handling any secure credentials please do not hesitate to `#ask-cloud-platform`
+or `#security` in MOJ Slack.
+
 # Case Journey
 1. **unassigned**
    A new case entered by a DACU user is created in this state.  It is in this state very
