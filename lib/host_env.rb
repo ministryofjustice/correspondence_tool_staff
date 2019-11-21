@@ -1,10 +1,9 @@
 class HostEnv
-
   def self.staging?
     ENV['ENV'] == 'staging'
   end
 
-  def self.dev?
+  def self.development?
     ENV['ENV'] == 'dev'
   end
 
@@ -12,13 +11,16 @@ class HostEnv
     ENV['ENV'] == 'demo'
   end
 
-  def self.prod?
+  def self.production?
     ENV['ENV'] == 'prod'
   end
 
   def self.test?
     Rails.env.test?
-    # ENV['ENV'] == 'test'
+  end
+
+  def self.qa?
+    ENV['ENV'] == 'qa'
   end
 
   def self.local?
@@ -33,12 +35,9 @@ class HostEnv
     end
   end
 
-
   def self.safe?
-    Rails.env.development? || Rails.env.test? || HostEnv.staging? || HostEnv.dev? || HostEnv.demo?
+    Rails.env.development? || Rails.env.test? || HostEnv.staging? || HostEnv.development? || HostEnv.demo? || HostEnv.qa?
   end
-
-
 
   def self.safe
     if self.safe?
@@ -47,5 +46,4 @@ class HostEnv
       raise RuntimeError, 'This task can not be run in a live production environment'
     end
   end
-
 end
