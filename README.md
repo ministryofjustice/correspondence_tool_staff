@@ -573,7 +573,7 @@ leaked secrets!:
 ```
 bundle install && \
 bundle exec overcommit --install && \
-overcommit --sign pre-commit
+bundle exec overcommit --sign pre-commit
 ```
 
 Overcommit was chosen over manual configuration of `.git/hooks/<hook name>` for ease of
