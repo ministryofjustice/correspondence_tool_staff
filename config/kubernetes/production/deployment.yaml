@@ -3,7 +3,15 @@ kind: Deployment
 metadata:
   name: track-a-query
 spec:
-  replicas: 1
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: track-a-query
   template:
     metadata:
       labels:

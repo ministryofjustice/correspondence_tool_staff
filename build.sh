@@ -79,7 +79,7 @@ function _build() {
       latest_tag=${docker_registry}:${component}-latest
       ;;
     *)
-      latest_tag=${docker_registry}:${component}-${current_branch}-latest
+      latest_tag=${docker_registry}:${current_branch}-latest
       ;;
   esac
   docker tag $docker_registry_tag $latest_tag
