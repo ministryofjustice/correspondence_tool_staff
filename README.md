@@ -553,7 +553,13 @@ config/kubernetes/<environment>/secrets.yaml
 
 To perform any commits to this repository requires installation of `git-crypt` on your machine:
 
-https://github.com/AGWA/git-crypt
+```
+bundle install && \
+bundle exec overcommit --install && \
+overcommit --sign pre-commit
+```
+
+More information: https://github.com/AGWA/git-crypt
 
 To decrypt secrets, you must require authorization from your line manager.
 
