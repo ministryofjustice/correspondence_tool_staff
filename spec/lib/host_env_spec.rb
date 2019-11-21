@@ -259,7 +259,7 @@ describe HostEnv do
     end
 
     def env_value_for(name:)
-      @envvars.select { |envvar| envvar['name'] == name.upcase }.first['value']
+      @envvars.find { |envvar| envvar['name'] == name.upcase }['value']
     end
   end
 end
