@@ -109,17 +109,17 @@ function _deploy() {
     fi
   fi
 
-  # # set context for following operations
+  # Set context for following operations
   # kubectl config set-context ${context} --namespace=$namespace
   # kubectl config use-context ${context}
 
-  # apply image specific config
+  # Apply image specific config
   kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
           webapp=${docker_image_tag} \
           uploads=${docker_image_tag} \
           jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
-  # apply non-image specific config
+  # Apply non-image specific config
   kubectl apply \
     -f config/kubernetes/${environment}/service.yaml \
     -f config/kubernetes/${environment}/ingress.yaml \
