@@ -552,7 +552,9 @@ config/kubernetes/<environment>/secrets.yaml
 
 To perform any commits to this repository requires installation of `git-crypt` on your machine:
 
-https://github.com/AGWA/git-crypt
+For MacOS brew users: `brew install git-crypt`
+
+For other installation guides: https://github.com/AGWA/git-crypt
 
 To decrypt secrets, you must require authorization from your line manager.
 
@@ -563,6 +565,15 @@ Overcommit is used to execute checks/preventative scripts. See `./overcommit.yml
 and visit the Overcommit source page for more information: 
 
 https://github.com/sds/overcommit
+
+NOTE: YOU MUST INITIALISE OVERCOMMIT TO EXECUTE GIT HOOK SCRIPTS - e.g. to check for 
+leaked secrets!:
+
+```
+bundle install && \
+bundle exec overcommit --install && \
+bundle exec overcommit --sign pre-commit
+```
 
 Overcommit was chosen over manual configuration of `.git/hooks/<hook name>` for ease of
 maintenance and configuration across developer machines.
