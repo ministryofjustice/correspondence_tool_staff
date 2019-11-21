@@ -49,7 +49,7 @@ function _deploy() {
   fi
 
   # Ensure that the first argument is a reasonable image name
-  if [[ "$1" =~ ^$component ]]
+  if [[ "$1" =~ ^cts- ]]
   then
     image_tag=$1
   else
