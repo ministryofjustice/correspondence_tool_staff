@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: track-a-query-ingress
+  namespace: track-a-query-demo
+spec:
+  tls:
+    - hosts:
+        - demo.track-a-query.service.justice.gov.uk
+      secretName: track-a-query-certificate
+  rules:
+    - host: demo.track-a-query.service.justice.gov.uk
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: track-a-query-service
+              servicePort: 3000
