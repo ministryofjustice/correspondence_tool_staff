@@ -66,6 +66,5 @@ else
   printf '\e[33mINFO: Using remote redis-server specified in REDIS_URL\e[0m\n'
 fi
 
-
 printf '\e[33mINFO: Launching Puma\e[0m\n'
 bundle exec puma -C config/puma.rb -e production
