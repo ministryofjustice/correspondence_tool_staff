@@ -113,6 +113,8 @@ global_navigation:
   pages:
     create_case:
       path: /cases/new
+
+      visibility: manager
       
     incoming_cases:
       path: /cases/incoming
