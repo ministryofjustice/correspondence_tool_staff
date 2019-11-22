@@ -6,10 +6,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - dev.track-a-query.service.justice.gov.uk
+        - development.track-a-query.service.justice.gov.uk
       secretName: track-a-query-certificate
   rules:
-    - host: dev.track-a-query.service.justice.gov.uk
+    - host: development.track-a-query.service.justice.gov.uk
       http:
         paths:
           - path: /
