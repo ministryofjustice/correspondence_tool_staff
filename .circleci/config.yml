@@ -5,8 +5,9 @@ references:
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
         environment:
-          GITHUB_TEAM_NAME_SLUG: track-a-query
+          GITHUB_TEAM_NAME_SLUG: correspondence
           APPLICATION_DEPLOY_NAME: track-a-query
+          CIRCLE_PROJECT_REPONAME: track-a-query-ecr
   build_docker_image: &build_docker_image
     run:
       name: Build track-a-query docker image
@@ -25,11 +26,11 @@ references:
       command: |
         login="$(aws ecr get-login --region eu-west-1 --no-include-email)"
         ${login}
-        docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+        docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:circle-${CIRCLE_SHA1}"
         docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
         if [ "${CIRCLE_BRANCH}" == "master" ]; then
-          docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:latest"
-          docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:latest"
+          docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:circle-latest"
+          docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:circle-latest"
         fi
 
 jobs:
