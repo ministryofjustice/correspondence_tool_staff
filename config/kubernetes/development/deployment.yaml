@@ -20,7 +20,7 @@ spec:
       containers:
         - name: webapp
           imagePullPolicy: Always
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
           ports:
             - containerPort: 3000
           command: ["./config/docker/entrypoint-webapp.sh"]
@@ -104,7 +104,7 @@ spec:
                   name: track-a-query-s3-output
                   key: secret_access_key
         - name: jobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
           command: ["./config/docker/entrypoint-background-jobs.sh"]
           env:
             - name: ENV
@@ -184,7 +184,7 @@ spec:
                   name: track-a-query-s3-output
                   key: secret_access_key
         - name: uploads
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
           command: ["./config/docker/entrypoint-uploads.sh"]
           env:
             - name: ENV
