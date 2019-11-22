@@ -7,7 +7,6 @@ references:
         environment:
           GITHUB_TEAM_NAME_SLUG: correspondence
           APPLICATION_DEPLOY_NAME: track-a-query
-          CIRCLE_PROJECT_REPONAME: track-a-query-ecr
   build_docker_image: &build_docker_image
     run:
       name: Build track-a-query docker image
@@ -24,14 +23,31 @@ references:
     run:
       name: Push  track-a-query docker image
       command: |
-        login="$(aws ecr get-login --region eu-west-1 --no-include-email)"
+        team_name=correspondence
+        ecr_repo_name=track-a-query-ecr
+        component=track-a-query
+
+        current_branch=$(git branch | grep \* | cut -d ' ' -f2)
+        current_version=$(git rev-parse $current_branch)
+        short_version=$(git rev-parse --short $current_branch)
+        region='eu-west-2'
+        git_remote_url="https://github.com/ministryofjustice/correspondence_tool_staff.git";
+        git_fetch_url=$git_remote_url#$current_version
+
+        login="$(aws ecr get-login --region "$region" --no-include-email)"
         ${login}
-        docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:circle-${CIRCLE_SHA1}"
-        docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-        if [ "${CIRCLE_BRANCH}" == "master" ]; then
-          docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:circle-latest"
-          docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:circle-latest"
-        fi
+        docker_endpoint=754256621582.dkr.ecr.eu-west-2.amazonaws.com
+        docker_registry=${docker_endpoint}/${team_name}/${ecr_repo_name}
+
+        docker_build_tag=cts-${current_branch}-${short_version}
+        docker_registry_tag=${docker_registry}:${docker_build_tag}
+
+        docker tag app ${docker_registry_tag}
+        docker push ${docker_registry_tag}
+        # if [ "${CIRCLE_BRANCH}" == "master" ]; then
+        #   docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:circle-latest"
+        #   docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${CIRCLE_PROJECT_REPONAME}:circle-latest"
+        # fi
 
 jobs:
   build:
