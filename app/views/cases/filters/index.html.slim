@@ -6,6 +6,11 @@
 
 = render partial: 'layouts/header'
 
+- if @can_add_case
+  .grid-row
+    .column-full.button-holder
+      = link_to t('common.new_case_button'), new_case_path, class: 'button'
+
 = render partial: 'cases/shared/search_bar'
 
 = render partial: 'cases/shared/case_tabs'
