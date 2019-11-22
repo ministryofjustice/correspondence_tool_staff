@@ -99,7 +99,7 @@ class UserSeeder
   end
 
   def normalize_email(email, name)
-    HostEnv.prod? ? email.downcase : dummy_email(name)
+    HostEnv.production? ? email.downcase : dummy_email(name)
   end
 
   def dummy_email(name)

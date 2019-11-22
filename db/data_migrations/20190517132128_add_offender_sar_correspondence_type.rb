@@ -1,6 +1,7 @@
 class AddOffenderSarCorrespondenceType < ActiveRecord::DataMigration
   def up
     CorrespondenceType.create!(
+      id:                         7,
       name:                       'Offender SAR (OFFENDER)',
       abbreviation:               'OFFENDER_SAR',
       internal_time_limit:        10,

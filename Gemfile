@@ -109,6 +109,9 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-rubocop'
   gem 'listen', '~> 3.2.0'
+  # Rather than use defualt ./git/hooks folder we use overcommit for easier
+  # management
+  gem 'overcommit'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'
