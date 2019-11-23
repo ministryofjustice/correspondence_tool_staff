@@ -15,14 +15,14 @@
 #
 # Uncomment the following lines to make the configuration take effect.
 
-PreCommit:
+PrePush:
   CustomScript:
     enabled: true
     required_executable: './config/git-hooks/pre-commit.sh'
 
-#  RuboCop:
-#    enabled: true
-#    on_warn: fail # Treat all warnings as failures
+  RuboCop:
+   enabled: true
+   on_warn: fail # Treat all warnings as failures
 #
 #  TrailingWhitespace:
 #    enabled: true

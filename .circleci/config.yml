@@ -1,6 +1,27 @@
 version: 2
 
 references:
+  test_container_config: &test_container_config
+    docker:
+      - image: circleci/ruby:2.5.3-node-browsers-legacy
+        environment:
+          RAILS_ENV: test
+          RACK_ENV: test
+          PG_HOST: 127.0.0.1
+          PG_PASSWORD: ""
+          PG_USER: postgres
+          PGUSER: postgres
+          PGHOST: 127.0.0.1
+          POSTGRES_DB: peoplefinder_test
+
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          PG_PASSWORD: ""
+          PG_USER: postgres
+          POSTGRES_DB: peoplefinder_test-questions_test
+          POSTGRES_USER: postgres
+          PGUSER: postgres
+
   container_config: &container_config
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
