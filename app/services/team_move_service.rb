@@ -1,40 +1,58 @@
 class TeamMoveService
   class OriginalDirectorateError < RuntimeError
     def initialize
-      super("Cannot move to the original directorate")
+      super("Cannot move to the original Directorate")
     end
   end
+
   class InvalidDirectorateError < RuntimeError
     def initialize
-      super("Cannot move a Business Unit to a team that is not a directorate")
+      super("Cannot move a Business Unit to a team that is not a Directorate")
     end
   end
+
   class TeamNotBusinessUnitError < RuntimeError
     def initialize
-      super("Cannot move a team which is not a business unit")
+      super("Cannot move a team which is not a Business Unit")
     end
   end
-  attr_reader :business_unit, :target_directorate, :new_unit
 
-  def initialize(business_unit, target_directorate)
-    @business_unit             = business_unit
-    @target_directorate        = target_directorate
-    @new_unit                  = transfer_team
+  attr_reader :result, :new_team
+
+  def initialize(team, directorate)
+    @team = team
+    @directorate = directorate
+    @result = :incomplete
+
+    raise TeamNotBusinessUnitError.new unless @team.is_a? BusinessUnit
+    raise InvalidDirectorateError.new unless @directorate.is_a? Directorate
+    raise OriginalDirectorateError.new if directorate == team.directorate
+  end
+
+  def call
+    begin
+      ActiveRecord::Base.transaction do
+        move_team!
+        @result = :ok
+      end
+    rescue
+      @team.reload
+      @result = :error
+    end
   end
 
   private
 
-  def transfer_team
-    raise TeamNotBusinessUnitError.new if @business_unit.type != 'BusinessUnit'
-    raise InvalidDirectorateError.new if @target_directorate.type != 'Directorate'
-    raise OriginalDirectorateError.new if @target_directorate == business_unit.directorate
+  def move_team!
+    @new_team = @team.dup
 
-    @new_unit = @business_unit.dup
-    @new_unit.directorate = target_directorate
-    @new_unit.name << " (Moved from #{@business_unit.directorate.name})"
-    @new_unit.correspondence_type_roles = @business_unit.correspondence_type_roles
-    @new_unit.properties = @business_unit.properties
-    @new_unit.save
-    @new_unit
+    @new_team.directorate = @directorate
+    @new_team.name << " (Moved from #{@team.directorate.name})"
+    @new_team.correspondence_type_roles = @team.correspondence_type_roles
+    @new_team.properties = @team.properties
+    @new_team.user_roles = @team.user_roles
+
+    @team.destroy_related_user_roles!
+    @new_team.save!
   end
 end
