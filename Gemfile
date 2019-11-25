@@ -19,7 +19,7 @@ gem 'devise', '~> 4.7.1'
 gem 'draper', '3.1.0'
 gem 'dropzonejs-rails', '>= 0.8'
 gem 'foreman', '~> 0.86.0'
-gem 'factory_bot_rails', '~> 5.0.2'
+gem 'factory_bot_rails', '~> 5.1.1'
 gem 'faker', '~> 2.7.0'
 gem 'gov_uk_date_fields', '~> 3.1'
 gem 'govuk_template',         '~> 0.26.0'
@@ -44,19 +44,18 @@ gem 'paper_trail', '~> 10.3'
 gem 'pg', '~> 1.1'
 gem 'pg_search', '~> 2.3.0'
 gem 'pry-rails'
-gem 'puma', '~> 4.2'
+gem 'puma', '~> 4.3'
 gem 'pundit', '~>2.1'
 gem 'rails', '~> 5.0.7.2'
 gem 'rails-data-migrations', '~> 1.2.0'
 gem 'recursive-open-struct'
 gem 'sablon'
 gem 'sass-rails', '~> 6.0'
-gem 'sentry-raven', '~> 2.11.0'
+gem 'sentry-raven', '~> 2.12.3'
 gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
-gem 'sidekiq', '~> 5.2.7'
-gem 'sidekiq-logging-json', '~> 0.0.19'
+gem 'sidekiq', '~> 6.0.3'
 
 gem 'table_print'
 gem 'thor-rails'
@@ -81,7 +80,7 @@ end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'annotate', '~> 3.0.2'
+  gem 'annotate', '~> 3.0.3'
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
@@ -94,10 +93,11 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
-  gem 'rspec-rails', '~> 3.8'
-  gem 'rubocop', '~> 0.71.0', require: false
+  gem 'rspec-rails', '~> 3.9'
+  gem 'rubocop', '~> 0.76.0', require: false
   gem 'rubocop-rspec', '~> 1.36.0', require: false
   gem 'rubocop-performance', require: false
+  # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
   gem 'selenium-webdriver', '~> 3.142.6'
   gem 'spring-commands-rspec'
@@ -109,6 +109,9 @@ group :development do
   gem 'guard-rspec'
   gem 'guard-rubocop'
   gem 'listen', '~> 3.2.0'
+  # Rather than use defualt ./git/hooks folder we use overcommit for easier
+  # management
+  gem 'overcommit'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'
