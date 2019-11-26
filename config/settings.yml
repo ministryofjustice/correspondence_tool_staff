@@ -73,7 +73,6 @@ homepage_navigation:
   pages:
     incoming_cases:
       path: /cases/incoming
-
       visibility: approver
       scope:
         'DISCLOSURE': incoming_approving_cases
@@ -82,7 +81,6 @@ homepage_navigation:
 
     open_cases:
       path: /cases/open
-
       scope:
         approver: open_flagged_for_approval
         manager: open_cases
@@ -113,10 +111,10 @@ global_navigation:
   pages:
     create_case:
       path: /cases/new
+      visibility: manager
       
     incoming_cases:
       path: /cases/incoming
-
       visibility: approver
       scope:
         'DISCLOSURE': incoming_approving_cases
