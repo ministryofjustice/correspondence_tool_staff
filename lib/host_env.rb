@@ -23,6 +23,10 @@ class HostEnv
     ENV['ENV'] == 'qa'
   end
 
+  def self.job?
+    ENV['ENV'] == 'job'
+  end
+
   def self.local?
     host_env == 'Local'
   end

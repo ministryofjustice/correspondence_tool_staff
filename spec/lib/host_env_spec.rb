@@ -262,4 +262,20 @@ describe HostEnv do
       @envvars.find { |envvar| envvar['name'] == name.upcase }['value']
     end
   end
+
+  context 'cronjob cloud platform container' do
+    before(:each) do
+      ENV['RAILS_ENV'] = 'production'
+      ENV['ENV'] = 'job'
+    end
+
+    after(:each) do
+      ENV['RAILS_ENV'] = 'test'
+      ENV['ENV'] = nil
+    end
+
+    it 'is a job server environment' do
+      expect(HostEnv.job?).to be true
+    end
+  end
 end
