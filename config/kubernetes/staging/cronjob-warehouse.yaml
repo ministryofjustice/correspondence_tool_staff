@@ -1,0 +1,105 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: cronjob-warehouse
+  namespace: track-a-query-staging
+spec:
+  schedule: "*/30 * * * *"
+  successfulJobsHistoryLimit: 10
+  failedJobsHistoryLimit: 1
+  suspend: false
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            tier: worker
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: cronjob-warehouse
+              image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+              imagePullPolicy: Always
+              command:
+                - cts
+                - cases
+                - warehouse
+              env:
+                - name: ENV
+                  value: 'job'
+                - name: RAILS_ENV
+                  value: 'production'
+                - name: PROJECT
+                  value: 'correspondence-staff-cronjobs-warehouse'
+                - name: GA_TRACKING_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: GA_TRACKING_ID
+                - name: SETTINGS__CTS_EMAIL_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: SETTINGS__CTS_EMAIL_URL
+                - name: SETTINGS__GOVUK_NOTIFY_API_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: SETTINGS__GOVUK_NOTIFY_API_KEY
+                - name: SETTINGS__SMOKE_TESTS__USERNAME
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: SETTINGS__SMOKE_TESTS__USERNAME
+                - name: SETTINGS__SMOKE_TESTS__PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: SETTINGS__SMOKE_TESTS__PASSWORD
+                - name: SECRET_KEY_BASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: SECRET_KEY_BASE
+                - name: SENTRY_DSN
+                  valueFrom:
+                    secretKeyRef:
+                      name: app-secrets
+                      key: SENTRY_DSN
+                - name: DATABASE_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: track-a-query-rds-output
+                      key: url
+                - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: track-a-query-rds-output
+                      key: database_password
+                - name: REDIS_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: track-a-query-elasticache-redis-output
+                      key: url
+                - name: REDIS_AUTH_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: track-a-query-elasticache-redis-output
+                      key: auth_token
+                - name: SETTINGS__CASE_UPLOADS_S3_BUCKET
+                  valueFrom:
+                    secretKeyRef:
+                      name: track-a-query-s3-output
+                      key: bucket_name
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: track-a-query-s3-output
+                      key: access_key_id
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: track-a-query-s3-output
+                      key: secret_access_key
