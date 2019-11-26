@@ -120,11 +120,7 @@ function _deploy() {
           jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
   # Apply non-image specific config
-  kubectl apply \
-    -f config/kubernetes/${environment}/service.yaml \
-    -f config/kubernetes/${environment}/ingress.yaml \
-    -f config/kubernetes/${environment}/secrets.yaml \
-    -n $namespace
+  kubectl apply -f config/kubernetes/${environment} -n $namespace
 
 }
 
