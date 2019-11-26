@@ -49,5 +49,15 @@ class TeamMoveService
     @new_team.user_roles = @team.user_roles
     @team.destroy_related_user_roles!
     @new_team.save
+    # @team.open_cases.each do | this_kase |
+    #   this_kase.team_id = @new_team.team_id
+    #   this_kase.save
+    #   puts
+    # end
+    #@new_team.assignments = @team.assignments.where(team_id: @team.id)
+    Assignment.where(case_id: @team.open_cases.ids).update_all(team_id: @new_team.id)
+    # need to filter for open cases
+    #
+
   end
 end

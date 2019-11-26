@@ -45,6 +45,16 @@ describe TeamMoveService do
         expect(bu.user_roles.first).to eq nil
       end
 
+      let(:responding_team)       { find_or_create :responding_team }
+      let(:responder)             { find_or_create :foi_responder }
+      let!(:mykase)  { create :case_being_drafted, responding_team: responding_team, responder: responder }
+      it 'moves open cases to the new team and removes them from the original team' do
+        @service = TeamMoveService.new( responding_team, target_dir)
+        @service.call
+        expect(@service.new_team.open_cases.first).to eq mykase
+        #Next do/check the removal of the open assignments from the old team
+        puts
+      end
       # original team must be  deactivated
       # ^^ Both to be covered in a later ticket
 
