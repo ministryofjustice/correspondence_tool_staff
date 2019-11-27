@@ -636,7 +636,6 @@ RSpec.describe TeamsController, type: :controller do
     end
 
     it 'redirects away from team' do
-      pending "this will work after we are finished"
       patch :update_directorate, params: params
       expect(response).not_to redirect_to(team_path(business_unit))
       expect(flash[:notice]).to have_content 'has been moved to'
