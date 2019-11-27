@@ -23,6 +23,6 @@ feature 'moving business units' do
     end
 
     expect(teams_show_page.flash_notice.text).to eq(
-    "#{bu.name} has been moved to Responder Directorate")
+    "#{BusinessUnit.last.name} has been moved to Responder Directorate")
   end
 end
