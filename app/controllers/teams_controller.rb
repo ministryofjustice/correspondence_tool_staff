@@ -2,14 +2,14 @@ class TeamsController < ApplicationController
 
   before_action :set_team, only: [:business_areas_covered,
                                   :create_business_areas_covered,
-                                  :show,
-                                  :edit,
                                   :destroy,
                                   :destroy_business_area,
+                                  :edit,
+                                  :move_to_directorate,
+                                  :show,
+                                  :update,
                                   :update_business_area,
                                   :update_business_area_form,
-                                  :update,
-                                  :move_to_directorate,
                                   :update_directorate]
 
   before_action :set_areas, only: [:business_areas_covered,
