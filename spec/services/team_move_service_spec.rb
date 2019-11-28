@@ -52,9 +52,24 @@ describe TeamMoveService do
         @service = TeamMoveService.new( responding_team, target_dir)
         @service.call
         expect(@service.new_team.open_cases.first).to eq mykase
-        #Next do/check the removal of the open assignments from the old team
-        puts
+        expect(responding_team.open_cases.first).to be nil
       end
+
+      let(:responding_team_2)       { find_or_create :responding_team }
+      let(:responder_2)             { find_or_create :foi_responder }
+      let!(:my_kase_2)  { create :case_being_drafted, responding_team: responding_team_2, responder: responder_2 }
+
+      fit 'move open case transitions to the new team' do
+
+# my_kase_2.transitions.first.pluck(:acting_team_id, :target_team_id)
+
+# using factory :case_being_drafted, the case has TWO transitions,
+# assumedly one for the transition to drafted,
+# and one for the current _being drafted_ state (in the second, the target team is nill)
+
+      end
+      # Next, do case transition records
+
       # original team must be  deactivated
       # ^^ Both to be covered in a later ticket
 
