@@ -79,6 +79,15 @@ describe TeamFinderService do
       end
     end
 
+    context 'any assignment for user with specified role exists' do
+      it 'returns the team even if kase rejected' do
+        responder_assignment = kase.assignments.responding.singular
+        responder_assignment.update!(state: 'rejected', reasons_for_rejection: 'just because')
+        team = TeamFinderService.new(kase, responder, :responder).team_for_user
+        expect(team).to eq team_candi
+      end
+    end
+
     context 'accepted assignment exist for user with multiple roles' do
       it 'returns the correct team for the role' do
         user_assignments = multi_role_managed_case

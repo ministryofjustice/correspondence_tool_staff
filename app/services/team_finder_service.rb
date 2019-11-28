@@ -34,6 +34,15 @@ class TeamFinderService
     @assignment_role  = translate_role_for_assignment
   end
 
+  # returns the team for the named user on the case. The user must have been an assigned user
+  # on the case, or a TeamFinderService::UserNotFound error is raised
+  #
+  def team_for_user
+    assignments = @kase.assignments.where(user_id: @user.id, role: @assignment_role)
+    raise UserNotFoundError.new(self) if assignments.empty?
+    assignments.singular.team
+  end
+
   # returns the team for the named user on the case. The user must be an accepted assigned user
   # on the case, or a TeamFinderService::UserNotFound error is raised
   #

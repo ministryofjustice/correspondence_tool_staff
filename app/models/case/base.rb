@@ -405,6 +405,10 @@ class Case::Base < ApplicationRecord
     TeamFinderService.new(self, user, role).team_for_unassigned_user
   end
 
+  def team_for_user(user, role)
+    TeamFinderService.new(self, user, role).team_for_unassigned_user
+  end
+
   def allow_event?(user, event)
     state_machine.permitted_events(user.id).include?(event)
   end
