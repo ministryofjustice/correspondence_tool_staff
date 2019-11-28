@@ -406,7 +406,7 @@ class Case::Base < ApplicationRecord
   end
 
   def team_for_user(user, role)
-    TeamFinderService.new(self, user, role).team_for_unassigned_user
+    TeamFinderService.new(self, user, role).team_for_user
   end
 
   def allow_event?(user, event)
