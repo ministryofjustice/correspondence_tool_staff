@@ -1,0 +1,34 @@
+p.bold-medium
+  | Browse by business group
+
+ul.business-groups.list
+  - BusinessGroup.all.order(:name).each do |business_group|
+    li.business-group
+      - if business_group.id == params[:business_group_id].to_i
+        = business_group.name
+      - else
+        = link_to(business_group.name,
+                move_to_directorate_team_path(@team, business_group_id: business_group.id))
+
+- if params[:business_group_id]
+  p.bold-medium
+    = filtered_directorate_heading(params)
+
+- if defined?(@directorates)
+  ul.teams
+    - @directorates.each do |directorate|
+      li.team
+        .team-details
+          h3
+            .team-unit-name
+              = directorate.name
+
+        .team-actions
+          - if directorate == @team.directorate
+            = "This is where the team is currently located"
+          - else
+            = link_to t('button.move'),
+                update_directorate_team_path(@team, directorate_id: directorate.id),
+                method: :patch,
+                data: {confirm: I18n.t("teams.move.confirm_message")},
+                class: 'button'
