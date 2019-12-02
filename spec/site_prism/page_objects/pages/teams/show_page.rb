@@ -45,6 +45,7 @@ module PageObjects
 
         element :new_information_officer_button, 'a#action--new-responder-user'
         element :deactivate_team_link, 'a#deactivate-team-link'
+        element :move_team_link, 'a#move-team-link'
 
         def row_for_directorate(name)
           begin

@@ -258,6 +258,7 @@ en:
   button:
     add_to_case_history: Add to case history
     assign: Assign to this unit
+    move: Move to this directorate
     confirm: Confirm
     create_case: Create case
     feedback: Send feedback
@@ -527,6 +528,7 @@ en:
       case-details: Case details
       original-case-details: Original case details
       clear_response: Clear response
+      clearance_copy: 'You are clearing the response to: '
       compliant_in_time: Uploaded in time
       compliant_late: Uploaded late
       compliant_unknown: Unknown draft compliancy
@@ -995,6 +997,11 @@ en:
     deactivate_info:
       directorate: To deactivate this directorate you need to first deactivate all business units within it.
       business_unit: To deactivate this business unit you need to first deactivate all users within it.
+    move:
+      subhead: "Business unit: %{team_name}"
+      heading: Move business unit
+      moved_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
+      confirm_message: Are you sure you want to do this? This business unit will be deactivated to preserve its history, and a new one will be created
 
   users:
     new:

@@ -56,7 +56,7 @@ class GroupEmailSeeder
   end
 
   def normalize_email(email)
-    HostEnv.prod? ? email.downcase : dummy_email(email)
+    HostEnv.production? ? email.downcase : dummy_email(email)
   end
 
   def dummy_email(email)

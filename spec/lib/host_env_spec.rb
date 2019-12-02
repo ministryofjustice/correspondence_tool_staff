@@ -1,85 +1,132 @@
 require 'rails_helper'
 
 describe HostEnv do
+  RSpec.shared_examples "is safe?" do
+    describe 'safe?' do
+      it 'returns true' do
+        expect(HostEnv.safe?).to be true
+      end
+    end
 
-  context 'development rails environment' do
+    describe 'safe' do
+      before(:each) { @yielded = false }
+      it 'yields to the block' do
+        HostEnv.safe do
+          @yielded = true
+        end
+        expect(@yielded).to be true
+      end
+    end
+  end
+
+  describe 'local machine environment' do
+    context 'local development rails environment' do
+      before(:each) do
+        ENV['RAILS_ENV'] = 'development'
+      end
+
+      after(:each) do
+        ENV['RAILS_ENV'] = 'test'
+      end
+
+      describe 'HostEnv.staging?' do
+        it 'returns false' do
+          expect(HostEnv.staging?).to be false
+        end
+      end
+
+      describe 'HostEnv.development?' do
+        it 'returns false' do
+          expect(HostEnv.development?).to be false
+        end
+      end
+
+      describe 'HostEnv.qa?' do
+        it 'returns false' do
+          expect(HostEnv.qa?).to be false
+        end
+      end
+
+      include_examples "is safe?"
+    end
+
+    context 'local test rails environment' do
+      describe 'HostEnv.staging?' do
+        it 'returns false' do
+          expect(HostEnv.staging?).to be false
+        end
+      end
+
+      describe 'HostEnv.development?' do
+        it 'returns true' do
+          expect(HostEnv.development?).to be false
+        end
+      end
+
+      describe '.test?' do
+        it 'returns true' do
+          expect(HostEnv.test?).to be true
+        end
+      end
+
+      describe 'HostEnv.qa?' do
+        it 'returns false' do
+          expect(HostEnv.qa?).to be false
+        end
+      end
+
+      include_examples "is safe?"
+    end
+  end
+
+
+  # Cloud Platform Environments
+  #
+  # Namespace       RAILS_ENV       ENV
+  # --------------------------------------------------
+  # Demo            production      demo
+  # Development     production      dev
+  # Production      production      prod
+  # QA              production      qa
+  # Staging         production      staging
+
+  describe '5 cloud platform infrastructure environments' do
     before(:each) do
-      ENV['RAILS_ENV'] = 'development'
+      k8s_settings = YAML.load_file("config/kubernetes/#{namespace}/deployment.yaml")
+      @envvars = k8s_settings.dig('spec', 'template', 'spec', 'containers')[0]['env']
     end
 
-    after(:each) do
-      ENV['RAILS_ENV'] = 'test'
-    end
+    context '1. demo server' do
+      let(:namespace) { 'demo' }
 
-    describe 'HostEnv.staging?' do
-      it 'returns false' do
+      before(:each) do
+        ENV['RAILS_ENV'] = 'production'
+        ENV['ENV'] = 'demo'
+      end
+
+      after(:each) do
+        ENV['RAILS_ENV'] = 'test'
+        ENV['ENV'] = nil
+      end
+
+      it 'is a demo server environment' do
+        expect(HostEnv.demo?).to be true
+        expect_k8s_settings
+      end
+
+      it 'is not another environment' do
+        expect(HostEnv.development?).to be false
+        expect(HostEnv.production?).to be false
+        expect(HostEnv.qa?).to be false
         expect(HostEnv.staging?).to be false
       end
+
+      include_examples "is safe?"
     end
 
-    describe 'HostEnv.dev?' do
-      it 'returns false' do
-        expect(HostEnv.dev?).to be false
-      end
-    end
+    context '2. development server' do
+      let(:namespace) { 'development' }
 
-    describe 'safe?' do
-      it 'returns true' do
-        expect(HostEnv.safe?).to be true
-      end
-    end
-
-    describe 'safe' do
-      before(:each) { @yielded = false }
-      it 'yields to the block' do
-        HostEnv.safe do
-          @yielded = true
-        end
-        expect(@yielded).to be true
-      end
-
-    end
-  end
-
-  context 'test rails environment' do
-
-    describe 'HostEnv.staging?' do
-      it 'returns false' do
-        expect(HostEnv.staging?).to be false
-      end
-    end
-
-    describe 'HostEnv.dev?' do
-      it 'returns true' do
-        expect(HostEnv.dev?).to be false
-      end
-    end
-
-    describe '.test?' do
-      it 'returns true' do
-        expect(HostEnv.test?).to be true
-      end
-    end
-
-    describe 'safe?' do
-      it 'returns true' do
-        expect(HostEnv.safe?).to be true
-      end
-    end
-
-    describe 'safe' do
-      before(:each) { @yielded = false }
-      it 'yields to the block' do
-        HostEnv.safe do
-          @yielded = true
-        end
-        expect(@yielded).to be true
-      end
-    end
-  end
-
-  context 'production rails environment' do
-    context 'dev server' do
       before(:each) do
         ENV['RAILS_ENV'] = 'production'
         ENV['ENV'] = 'dev'
@@ -90,78 +137,24 @@ describe HostEnv do
         ENV['ENV'] = nil
       end
 
-      describe 'HostEnv.staging?' do
-        it 'returns false' do
-          expect(HostEnv.staging?).to be false
-        end
+      it 'is a development server environment' do
+        expect(HostEnv.development?).to be true
+        expect_k8s_settings
       end
 
-      describe 'HostEnv.dev?' do
-        it 'returns true' do
-          expect(HostEnv.dev?).to be true
-        end
+      it 'is not another environment' do
+        expect(HostEnv.demo?).to be false
+        expect(HostEnv.production?).to be false
+        expect(HostEnv.qa?).to be false
+        expect(HostEnv.staging?).to be false
       end
 
-      describe 'safe?' do
-        it 'returns true' do
-          expect(HostEnv.safe?).to be true
-        end
-      end
-
-
-      describe 'safe' do
-        before(:each) { @yielded = false }
-        it 'yields to the block' do
-          HostEnv.safe do
-            @yielded = true
-          end
-          expect(@yielded).to be true
-        end
-      end
+      include_examples "is safe?"
     end
 
-    context 'staging server' do
-      before(:each) do
-        ENV['RAILS_ENV'] = 'production'
-        ENV['ENV'] = 'staging'
-      end
+    context '3. production server' do
+      let(:namespace) { 'production' }
 
-      after(:each) do
-        ENV['RAILS_ENV'] = 'test'
-        ENV['ENV'] = nil
-      end
-
-      describe 'HostEnv.staging?' do
-        it 'returns true' do
-          expect(HostEnv.staging?).to be true
-        end
-      end
-
-      describe 'HostEnv.dev?' do
-        it 'returns false' do
-          expect(HostEnv.dev?).to be false
-        end
-      end
-
-      describe 'safe?' do
-        it 'returns true' do
-          expect(HostEnv.safe?).to be true
-        end
-      end
-
-
-      describe 'safe' do
-        before(:each) { @yielded = false }
-        it 'yields to the block' do
-          HostEnv.safe do
-            @yielded = true
-          end
-          expect(@yielded).to be true
-        end
-      end
-    end
-
-    context 'production server' do
       before(:each) do
         ENV['RAILS_ENV'] = 'production'
         ENV['ENV'] = 'prod'
@@ -173,16 +166,16 @@ describe HostEnv do
         ENV['ENV'] = nil
       end
 
-      describe 'HostEnv.staging?' do
-        it 'returns false' do
-          expect(HostEnv.staging?).to be false
-        end
+      it 'is a production server environment' do
+        expect(HostEnv.production?).to be true
+        expect_k8s_settings
       end
 
-      describe 'HostEnv.dev?' do
-        it 'returns false' do
-          expect(HostEnv.dev?).to be false
-        end
+      it 'is not another environment' do
+        expect(HostEnv.demo?).to be false
+        expect(HostEnv.development?).to be false
+        expect(HostEnv.qa?).to be false
+        expect(HostEnv.staging?).to be false
       end
 
       describe 'safe?' do
@@ -190,7 +183,6 @@ describe HostEnv do
           expect(HostEnv.safe?).to be false
         end
       end
-
 
       describe 'safe' do
         before(:each) { @yielded = false }
@@ -203,10 +195,71 @@ describe HostEnv do
           expect(@yielded).to be false
         end
       end
+    end
 
+    context '4. qa server' do
+      let(:namespace) { 'qa' }
+
+      before(:each) do
+        ENV['RAILS_ENV'] = 'production'
+        ENV['ENV'] = 'qa'
+      end
+
+      after(:each) do
+        ENV['RAILS_ENV'] = 'test'
+        ENV['ENV'] = nil
+      end
+
+      it 'is a qa server environment' do
+        expect(HostEnv.qa?).to be true
+        expect_k8s_settings
+      end
+
+      it 'is not another environment' do
+        expect(HostEnv.demo?).to be false
+        expect(HostEnv.development?).to be false
+        expect(HostEnv.production?).to be false
+        expect(HostEnv.staging?).to be false
+      end
+
+      include_examples "is safe?"
+    end
+
+    context '5. staging server' do
+      let(:namespace) { 'staging' }
+
+      before(:each) do
+        ENV['RAILS_ENV'] = 'production'
+        ENV['ENV'] = 'staging'
+      end
+
+      after(:each) do
+        ENV['RAILS_ENV'] = 'test'
+        ENV['ENV'] = nil
+      end
+
+      it 'is a staging server environment' do
+        expect(HostEnv.staging?).to be true
+        expect_k8s_settings
+      end
+
+      it 'is not another environment' do
+        expect(HostEnv.demo?).to be false
+        expect(HostEnv.development?).to be false
+        expect(HostEnv.production?).to be false
+        expect(HostEnv.qa?).to be false
+      end
+
+      include_examples "is safe?"
+    end
+
+    def expect_k8s_settings
+      expect(env_value_for(name: 'RAILS_ENV')).to eq ENV['RAILS_ENV']
+      expect(env_value_for(name: 'ENV')).to eq ENV['ENV']
+    end
+
+    def env_value_for(name:)
+      @envvars.find { |envvar| envvar['name'] == name.upcase }['value']
     end
   end
-
-
-
 end
