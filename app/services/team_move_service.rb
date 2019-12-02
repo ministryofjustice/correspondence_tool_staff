@@ -50,7 +50,7 @@ class TeamMoveService
     @team.destroy_related_user_roles!
     @new_team.save
     Assignment.where(case_id: @team.open_cases.ids).update_all(team_id: @new_team.id)
-    # CaseTransition.where(acting_team: @team).update_all(acting_team_id: @new_team.team.id)
-
+    CaseTransition.where(acting_team: @team).update_all(acting_team_id: @new_team.id)
+    CaseTransition.where(target_team: @team).update_all(target_team_id: @new_team.id)
   end
 end
