@@ -30,21 +30,9 @@ class TeamMoveService
   end
 
   def call
-    begin
-      ActiveRecord::Base.transaction do
-        move_team!
-        @result = :ok
-      end
-    rescue
-      @team.reload
-      @result = :error
-    end
-  end
-
-  def call
     ActiveRecord::Base.transaction do
       begin
-        move_team
+        move_team!
         @result = :ok
       rescue
         @team.reload
@@ -52,6 +40,8 @@ class TeamMoveService
       end
     end
   end
+
+  private
 
   def move_team!
     @new_team = @team.dup
