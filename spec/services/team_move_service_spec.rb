@@ -69,8 +69,16 @@ describe TeamMoveService do
         expect(my_kase_2.transitions.first.target_team_id).to eq @service.new_team.id
         expect(my_kase_2.transitions.second.acting_team_id).to eq @service.new_team.id
       end
-
-      # TODO: original team must be deactivated, to be covered in a later ticket CT-2590
+      it 'sets old team to deleted' do
+        @service = TeamMoveService.new( bu, target_dir)
+        @service.call
+        expect(bu.deleted_at).not_to be_nil
+      end
+      it 'sets new team to moved' do
+        @service = TeamMoveService.new( bu, target_dir)
+        @service.call
+        expect(bu.moved_to_unit).to eq @service.new_team
+      end
     end
   end
 end

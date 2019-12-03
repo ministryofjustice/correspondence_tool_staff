@@ -55,5 +55,10 @@ class TeamMoveService
     Assignment.where(case_id: @team.open_cases.ids).update_all(team_id: @new_team.id)
     CaseTransition.where(acting_team: @team).update_all(acting_team_id: @new_team.id)
     CaseTransition.where(target_team: @team).update_all(target_team_id: @new_team.id)
+    service = TeamDeletionService.new(@team)
+    service.call
+    @team.moved_to_unit = @new_team
+    @team.save
+    puts
   end
 end
