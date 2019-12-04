@@ -8,9 +8,8 @@ class CaseAttachmentUploadGroup
     @timestamp = get_time(array_of_time_and_user_id.first)
     @user = User.find(array_of_time_and_user_id.last)
     @collection = collection.to_a
-    team = kase.team_for_unassigned_user(@user, role)
+    team = kase.team_for_user(@user, role)
     @team_name = team.nil? ? '' : team.name
-
   end
 
 
