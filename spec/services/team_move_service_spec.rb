@@ -74,10 +74,11 @@ describe TeamMoveService do
         @service.call
         expect(bu.deleted_at).not_to be_nil
       end
-      it 'sets new team to moved' do
+      it 'sets new team to moved and showing the original team name' do
         @service = TeamMoveService.new( bu, target_dir)
         @service.call
         expect(bu.moved_to_unit).to eq @service.new_team
+        expect(@service.new_team.name).to eq bu.original_team_name
       end
     end
   end
