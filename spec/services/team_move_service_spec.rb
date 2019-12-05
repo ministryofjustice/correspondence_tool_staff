@@ -33,7 +33,6 @@ describe TeamMoveService do
         @service.call
         expect(@service.new_team.directorate).to eq target_dir
       end
-
       it 'moves team user_roles to the new team, and removes them from the original team' do
         team_user_role = TeamsUsersRole.create(
           user: create(:user),
@@ -46,7 +45,41 @@ describe TeamMoveService do
         expect(bu.user_roles.first).to eq nil
       end
 
-      # TODO: original team must be deactivated, to be covered in a later ticket CT-2590
+      let(:responding_team)       { find_or_create :responding_team }
+      let(:responder)             { find_or_create :foi_responder }
+      let!(:mykase)  { create :case_being_drafted, responding_team: responding_team, responder: responder }
+      it 'moves open cases to the new team and removes them from the original team' do
+        @service = TeamMoveService.new( responding_team, target_dir)
+        @service.call
+        expect(@service.new_team.open_cases.first).to eq mykase
+        expect(responding_team.open_cases.first).to be nil
+      end
+
+      let(:responding_team_2)       { find_or_create :responding_team }
+      let(:responder_2)             { find_or_create :foi_responder }
+      let!(:my_kase_2)  { create :case_being_drafted, responding_team: responding_team_2, responder: responder_2 }
+      it 'move all transitions of the open case to the new team' do
+        @service = TeamMoveService.new( responding_team_2, target_dir)
+        @service.call
+
+        # using factory :case_being_drafted, the case has TWO transitions,
+        # One for the transition to drafted,
+        # and one for the current _being drafted_ state (in the second, the target team is nill)
+
+        expect(my_kase_2.transitions.first.target_team_id).to eq @service.new_team.id
+        expect(my_kase_2.transitions.second.acting_team_id).to eq @service.new_team.id
+      end
+      it 'sets old team to deleted' do
+        @service = TeamMoveService.new( bu, target_dir)
+        @service.call
+        expect(bu.deleted_at).not_to be_nil
+      end
+      it 'sets new team to moved and showing the original team name' do
+        @service = TeamMoveService.new( bu, target_dir)
+        @service.call
+        expect(bu.moved_to_unit).to eq @service.new_team
+        expect(@service.new_team.name).to eq bu.original_team_name
+      end
     end
   end
 end
