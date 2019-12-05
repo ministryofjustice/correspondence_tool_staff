@@ -48,9 +48,9 @@ class TeamMoveService
     move_associations_to_new_team
     deactivate_old_team                        # Old team name gets amend to include deactivation text
     link_old_team_to_new_team
-    @new_team.name = @team.original_team_name  # New team gets original team name to retain consistency for the users
-    @new_team.save
+    restore_new_team_name_to_original_name     # New team gets original team name to retain consistency for the users
   end
+
   def copy_team_to_new_team
     @new_team = @team.dup
     @new_team.directorate = @directorate
@@ -63,19 +63,28 @@ class TeamMoveService
     @team.destroy_related_user_roles!
     @new_team.save
   end
+
   def move_associations_to_new_team
     Assignment.where(case_id: @team.open_cases.ids).update_all(team_id: @new_team.id)
     CaseTransition.where(acting_team: @team).update_all(acting_team_id: @new_team.id)
     CaseTransition.where(target_team: @team).update_all(target_team_id: @new_team.id)
   end
+
   def deactivate_old_team
     # This will change the old team's name, to show deactivation
     service = TeamDeletionService.new(@team)
     service.call
   end
+
   def link_old_team_to_new_team
     # We do this for reporting purposes
     @team.moved_to_unit = @new_team
     @team.save
+  end
+  
+  def restore_new_team_name_to_original_name
+    # New team gets original team name to retain consistency for the users
+    @new_team.name = @team.original_team_name
+    @new_team.save
   end
 end
