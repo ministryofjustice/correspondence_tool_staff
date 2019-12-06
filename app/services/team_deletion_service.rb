@@ -30,7 +30,8 @@ class TeamDeletionService
 
     @team.update_attributes!(
       deleted_at: Time.current,
-      name: "#{Team::DEACTIVATED_LABEL} #{@team.name} @(#{deletion_date})"
+      name: "#{Team::DEACTIVATED_LABEL} #{@team.name} @(#{deletion_date})",
+      code: "#{@team.code}-OLD"
     )
   end
 end

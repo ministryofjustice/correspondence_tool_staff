@@ -56,11 +56,12 @@ class TeamMoveService
     @new_team.directorate = @directorate
     # Team.name does not allow duplicates on validation for active teams,
     #  so to allow us to save the new team we must give it a unique name
-    @new_team.name << " (Moved from #{@team.directorate.name})"
+    @new_team.name = "(Moved from #{@team.directorate.name})"
+    # Duplicate @team.code is a problem too
+    @new_team.code = "#{@team.code}-NEW"
     @new_team.correspondence_type_roles = @team.correspondence_type_roles
     @new_team.properties = @team.properties
     @new_team.user_roles = @team.user_roles
-    @team.destroy_related_user_roles!
     @new_team.save
   end
 
@@ -81,10 +82,11 @@ class TeamMoveService
     @team.moved_to_unit = @new_team
     @team.save
   end
-  
+
   def restore_new_team_name_to_original_name
     # New team gets original team name to retain consistency for the users
     @new_team.name = @team.original_team_name
+    @new_team.code = @new_team.code.sub(/-NEW$/, "")
     @new_team.save
   end
 end
