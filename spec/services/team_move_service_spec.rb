@@ -20,6 +20,13 @@ describe TeamMoveService do
         responder: responder
     )
   }
+  let!(:klosed_kase) {
+    create(
+      :closed_case,
+        responding_team: business_unit,
+        responder: responder
+    )
+  }
 
 
   describe '#initialize' do
@@ -75,15 +82,16 @@ describe TeamMoveService do
         expect(business_unit.reload.user_roles).to be_empty
       end
 
-      context 'when the team being moved has open open_cases' do
+      context 'when the team being moved has open cases' do
         it 'moves open cases to the new team and removes them from the original team' do
+          expect(business_unit.open_cases.first).to eq kase
           service.call
 
-          expect(service.new_team.open_cases.first).to eq kase
           expect(business_unit.open_cases).to be_empty
+          expect(service.new_team.open_cases.first).to eq kase
         end
 
-        it 'move all transitions of the open case to the new team' do
+        it 'moves all transitions of the open case to the new team' do
           service.call
 
           # using factory :case_being_drafted, the case has TWO transitions,
@@ -94,6 +102,15 @@ describe TeamMoveService do
         end
       end
 
+      context 'when the team being moved has closed cases' do
+        it 'leaves closed cases with the original team' do
+          expect(business_unit.cases.closed.first).to eq klosed_kase
+          service.call
+
+          expect(service.new_team.cases.closed).to be_empty
+          expect(business_unit.cases.closed.first).to eq klosed_kase
+        end
+      end
 
       it 'sets old team to deleted' do
         service.call
