@@ -70,8 +70,8 @@ describe TeamMoveService do
         expect(business_unit.users).to match_array [responder]
         service.call
 
-        expect(business_unit.users).to match_array []
         expect(service.new_team.users).to match_array [responder]
+        expect(business_unit.users).to be_empty
       end
 
       it 'moves team user_roles to the new team, and removes them from the original team' do
@@ -81,6 +81,23 @@ describe TeamMoveService do
         expect(service.new_team.user_roles.first).to eq team_user_role
         expect(business_unit.reload.user_roles).to be_empty
       end
+
+      it 'sets old team to deleted' do
+        service.call
+
+        expect(business_unit.reload.deleted_at).not_to be_nil
+      end
+
+      it 'sets new team to moved and showing the original team name' do
+        service.call
+
+        expect(service.new_team).to eq business_unit.moved_to_unit
+        expect(service.new_team.name).to eq business_unit.original_team_name
+      end
+
+      it 'moves properties to the new team'
+      it 'moves correspondence type roles to the new team'
+      it 'ensures the new team has the same code as the old team'
 
       context 'when the team being moved has open cases' do
         it 'moves open cases to the new team and removes them from the original team' do
@@ -110,19 +127,6 @@ describe TeamMoveService do
           expect(service.new_team.cases.closed).to be_empty
           expect(business_unit.cases.closed.first).to eq klosed_kase
         end
-      end
-
-      it 'sets old team to deleted' do
-        service.call
-
-        expect(business_unit.reload.deleted_at).not_to be_nil
-      end
-
-      it 'sets new team to moved and showing the original team name' do
-        service.call
-
-        expect(service.new_team).to eq business_unit.moved_to_unit
-        expect(service.new_team.name).to eq business_unit.original_team_name
       end
     end
   end
