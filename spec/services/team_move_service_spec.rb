@@ -128,6 +128,42 @@ describe TeamMoveService do
           expect(business_unit.cases.closed.first).to eq klosed_kase
         end
       end
+
+      context 'when the team being moved has a code defined' do
+        it 'sets the deleted team code to WHATEVER-OLD' do
+          code = business_unit.code
+
+          service.call
+          expect(business_unit.reload.code).to eq "#{code}-OLD"
+          expect(service.new_team.code).to eq code
+        end
+      end
+
+      context 'when the team being moved has no code defined' do
+        it 'leaves the team code blank' do
+          business_unit.update_attribute(:code, nil)
+          service.call
+
+          expect(business_unit.reload.code).to be_blank
+          expect(service.new_team.code).to be_blank
+        end
+      end
+
+      context 'when the team being moved has trigger cases' do
+        let(:kase) {
+          create(
+            :case_being_drafted, :flagged,
+              responding_team: business_unit,
+              responder: responder
+          )
+        }
+        xit 'leaves the approving teams as Disclosure' do
+          expect(kase.approving_teams).to eq [BusinessUnit.dacu_disclosure]
+          service.call
+
+          expect(kase.reload.approving_teams).to eq [BusinessUnit.dacu_disclosure]
+        end
+      end
     end
   end
 end
