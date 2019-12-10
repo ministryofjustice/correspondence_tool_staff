@@ -132,8 +132,8 @@ describe TeamMoveService do
       context 'when the team being moved has a code defined' do
         it 'sets the deleted team code to WHATEVER-OLD' do
           code = business_unit.code
-
           service.call
+
           expect(business_unit.reload.code).to eq "#{code}-OLD"
           expect(service.new_team.code).to eq code
         end
@@ -157,7 +157,7 @@ describe TeamMoveService do
               responder: responder
           )
         }
-        xit 'leaves the approving teams as Disclosure' do
+        it 'leaves the approving teams as Disclosure' do
           expect(kase.approving_teams).to eq [BusinessUnit.dacu_disclosure]
           service.call
 
