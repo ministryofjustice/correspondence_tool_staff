@@ -35,7 +35,7 @@
             td aria-label="#{ t('team_leads.director_general') }"
               = team.team_lead
             td aria-label="#{ t('team_types.directorate').pluralize }"
-              = team.children.size
+              = team.children.active.size
             td aria-label="Actions"
               = link_to 'Edit', edit_team_path(team, team_type: 'bg'), { class: 'action--edit' }
 

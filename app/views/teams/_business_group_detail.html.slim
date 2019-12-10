@@ -39,7 +39,7 @@ h2.heading-medium
             td aria-label="#{t('team_leads.director')}"
               = team.team_lead
             td aria-label="#{t('team_types.business_unit').pluralize}"
-              = team.children.size
+              = team.children.active.size
             td aria-label="Actions"
               = link_to 'Edit', edit_team_path(team, team_type: 'dir'), { class: 'action--edit' }
               br
