@@ -77,7 +77,6 @@ p
                 class: 'button')
 hr
 
-- if FeatureSet.move_business_unit.enabled?
-  p = link_to "Move business unit", move_to_directorate_team_path(team.id), id: 'move-team-link'
+p = link_to "Move business unit", move_to_directorate_team_path(team.id), id: 'move-team-link'
 
 p = show_deactivate_link_or_info(current_user, @team)

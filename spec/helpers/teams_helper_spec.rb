@@ -35,7 +35,7 @@ RSpec.describe TeamsHelper, type: :helper do
     context "deactivatig directorate" do
       it 'returns a link for a team with no active children' do
         expect(show_deactivate_link_or_info(manager, empty_dir)).to eq(
-          link_to "Deactivate Directorate", team_path(empty_dir.id),
+          link_to "Deactivate directorate", team_path(empty_dir.id),
                                 data: {:confirm => I18n.t('.teams.directorate_detail.destroy')},
                                 method: :delete,
                                 id: 'deactivate-team-link'
@@ -52,7 +52,7 @@ RSpec.describe TeamsHelper, type: :helper do
     context "deactivating business unit" do
       it 'returns a link for a team with no active children' do
         expect(show_deactivate_link_or_info(manager, bu)).to eq(
-          link_to "Deactivate Business unit", team_path(bu.id),
+          link_to "Deactivate business unit", team_path(bu.id),
                                 data: {:confirm => I18n.t('.teams.business_unit_detail.destroy')},
                                 method: :delete,
                                 id: 'deactivate-team-link'
