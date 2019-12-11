@@ -260,12 +260,6 @@ enabled_features:
     Host-demo: true
     Host-staging: true
     Host-prod: true
-  move_business_unit:
-    Local: true
-    Host-dev: true
-    Host-demo: false
-    Host-staging: true
-    Host-prod: false
   overturned_trigger_sars:
     Local: true
     Host-dev: true
