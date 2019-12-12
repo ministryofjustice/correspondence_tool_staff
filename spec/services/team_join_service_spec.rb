@@ -21,6 +21,7 @@ describe TeamJoinService do
       code: 'XYZ'
     )
   }
+
   let(:params) do
     HashWithIndifferentAccess.new(
         {
@@ -31,6 +32,7 @@ describe TeamJoinService do
   end
 
   let(:second_user_service) { UserCreationService.new(team: business_unit, params: params)}
+
   let!(:kase) {
     create(
       :case_being_drafted,
@@ -79,6 +81,7 @@ describe TeamJoinService do
   describe '#call' do
     context 'joining a business unit into another business unit' do
       it 'Joins team users to the new team' do
+
         expect(business_unit.users).to match_array [responder]
         service.call
 
