@@ -108,7 +108,7 @@ group :development do
   gem 'guard-brakeman'
   gem 'guard-rspec'
   gem 'guard-rubocop'
-  gem 'listen', '~> 3.2.0'
+  gem 'listen', '~> 3.2.1'
   # Rather than use defualt ./git/hooks folder we use overcommit for easier
   # management
   gem 'overcommit'
