@@ -16,7 +16,6 @@ feature "Signing in" do
 
     expect(login_page.user_card).to have_link('Sign out', href: destroy_user_session_path)
 
-    expect(login_page).to have_content 'Signed in successfully.'
   end
 
   scenario "Signing in using invalid email" do
