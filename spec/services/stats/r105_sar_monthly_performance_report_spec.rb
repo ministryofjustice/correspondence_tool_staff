@@ -23,20 +23,22 @@ module Stats
       end
 
       before(:all) do
-        @period_start = 0.business_days.after(Date.new(2018, 12, 20))
-        @period_end = 0.business_days.after(Date.new(2018, 12, 31))
+        Timecop.freeze Time.new(2019, 6, 30, 12, 0, 0) do
+          @period_start = 0.business_days.after(Date.new(2018, 12, 20))
+          @period_end = 0.business_days.after(Date.new(2018, 12, 31))
 
-        @sar_1 = create :accepted_sar, identifier: 'sar-1', creation_time: @period_start - 5.hours
-        @foi_1 = create :accepted_case, identifier: 'foi-1', creation_time: @period_start - 5.hours
+          @sar_1 = create :accepted_sar, identifier: 'sar-1', creation_time: @period_start - 5.hours
+          @foi_1 = create :accepted_case, identifier: 'foi-1', creation_time: @period_start - 5.hours
 
-        @sar_2 = create :accepted_sar, identifier: 'sar-2', creation_time: @period_start + 10.minutes
-        @foi_2 = create :accepted_case, identifier: 'foi-2', creation_time: @period_start + 10.minutes
+          @sar_2 = create :accepted_sar, identifier: 'sar-2', creation_time: @period_start + 10.minutes
+          @foi_2 = create :accepted_case, identifier: 'foi-2', creation_time: @period_start + 10.minutes
 
-        @sar_3 = create :accepted_sar, identifier: 'sar-3', creation_time: @period_start + 5.days
-        @foi_3 = create :accepted_case, identifier: 'foi-3', creation_time: @period_start + 5.days
+          @sar_3 = create :accepted_sar, identifier: 'sar-3', creation_time: @period_start + 5.days
+          @foi_3 = create :accepted_case, identifier: 'foi-3', creation_time: @period_start + 5.days
 
-        @sar_4 = create :accepted_sar, identifier: 'sar-4', creation_time: @period_end  + 61.minutes
-        @foi_4 = create :accepted_case, identifier: 'foi-4', creation_time: @period_end  + 61.minutes
+          @sar_4 = create :accepted_sar, identifier: 'sar-4', creation_time: @period_end  + 61.minutes
+          @foi_4 = create :accepted_case, identifier: 'foi-4', creation_time: @period_end  + 61.minutes
+        end
       end
 
       it 'returns only SAR cases within the selected period' do
@@ -46,40 +48,42 @@ module Stats
 
       context 'unassigned cases' do
         it 'is calculated as an open case' do
-          late_unassigned_trigger_sar_case = create(
-            :sar_case,
-            :flagged,
-            identifier: 'sar-triggered-1',
-            creation_time: @period_start + 1.days,
-            received_date: @period_start+ 1.days
-          )
+          Timecop.freeze Time.new(2019, 6, 30, 12, 0, 0) do
+            late_unassigned_trigger_sar_case = create(
+              :sar_case,
+              :flagged,
+              identifier: 'sar-triggered-1',
+              creation_time: @period_start + 1.days,
+              received_date: @period_start+ 1.days
+            )
 
-          in_time_unassigned_trigger_sar_case = create(
-            :sar_case,
-            :flagged,
-            identifier: 'sar-triggered-2',
-            creation_time: @period_start + 1.days,
-            received_date: @period_start+ 1.days,
-          )
+            in_time_unassigned_trigger_sar_case = create(
+              :sar_case,
+              :flagged,
+              identifier: 'sar-triggered-2',
+              creation_time: @period_start + 1.days,
+              received_date: @period_start+ 1.days,
+            )
 
-          in_time_unassigned_trigger_sar_case.update_attributes(
-            external_deadline: Date.current + 10.days
-          )
+            in_time_unassigned_trigger_sar_case.update_attributes(
+              external_deadline: Date.current + 10.days
+            )
 
-          report = R105SarMonthlyPerformanceReport.new(
-            period_start: @period_start,
-            period_end: @period_end
-          )
-          report.run
-          results = report.results
+            report = R105SarMonthlyPerformanceReport.new(
+              period_start: @period_start,
+              period_end: @period_end
+            )
+            report.run
+            results = report.results
 
-          expect(late_unassigned_trigger_sar_case.already_late?).to be true
-          expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
-          expect(report.case_scope).to include(late_unassigned_trigger_sar_case)
-          expect(report.case_scope).to include(in_time_unassigned_trigger_sar_case)
-          expect(results[12][:trigger_open_late]).to eq(1)
-          expect(results[12][:trigger_open_in_time]).to eq(1)
-          expect(results[12][:trigger_total]).to eq(2)
+            expect(late_unassigned_trigger_sar_case.already_late?).to be true
+            expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
+            expect(report.case_scope).to include(late_unassigned_trigger_sar_case)
+            expect(report.case_scope).to include(in_time_unassigned_trigger_sar_case)
+            expect(results[12][:trigger_open_late]).to eq(1)
+            expect(results[12][:trigger_open_in_time]).to eq(1)
+            expect(results[12][:trigger_total]).to eq(2)
+          end
         end
       end
     end
