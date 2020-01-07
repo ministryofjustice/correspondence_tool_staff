@@ -174,9 +174,10 @@ describe Case::SAR::Offender do
     context 'valid values' do
       it 'validates received date' do
         kase = build :offender_sar_case
+        test_date = 4.business_days.ago.strftime("%d-%m-%Y")
 
         expect(kase).to validate_presence_of(:received_date)
-        expect(kase).to allow_values('01-01-2019').for(:received_date)
+        expect(kase).to allow_values(test_date).for(:received_date)
       end
     end
 
