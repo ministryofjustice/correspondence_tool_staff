@@ -16,7 +16,6 @@ describe Devise::SessionsController do
         @request.env["devise.mapping"] = Devise.mappings[:user]
         post :create, params: { user: {email: user.email, password: user.password } }
         expect(response).to redirect_to root_path
-        expect(flash[:notice]).to eq 'Signed in successfully.'
       end
     end
 
