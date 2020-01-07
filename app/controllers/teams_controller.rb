@@ -174,6 +174,7 @@ class TeamsController < ApplicationController
   def set_directorates
       @directorates = Directorate
         .where(parent_id: params[:business_group_id])
+        .active
         .order(:name)
   end
 

@@ -52,4 +52,11 @@ FactoryBot.define do
     email          { 'private_office@localhost' }
     business_group { find_or_create :operations_business_group }
   end
+
+  factory :deactivated_directorate, parent: :directorate do
+    name           { 'Deactivated Directorate' }
+    email          { 'deactivated-dir@localhost' }
+    business_group { find_or_create :responder_business_group }
+    deleted_at     { Time.now }
+  end
 end
