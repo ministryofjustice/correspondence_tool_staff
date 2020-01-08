@@ -99,7 +99,7 @@ group :development, :test do
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
-  gem 'selenium-webdriver', '~> 3.142.6'
+  gem 'selenium-webdriver', '~> 3.142.7'
   gem 'spring-commands-rspec'
 end
 
