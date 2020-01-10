@@ -83,13 +83,6 @@ references:
         bundle exec rspec ${TESTS}
         tmp/cc-test-reporter format-coverage -t simplecov -o "tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
 
-  # _cucumber: &cucumber
-  #   run:
-  #       name: Run cucumber tests
-  #       command: |
-  #         FEATURES=$(circleci tests glob "features/**/*.feature" | circleci tests split)
-  #         bundle exec cucumber ${FEATURES} --format progress --color
-
   _install-wkhtmltopdf: &install-wkhtmltopdf
     run:
       name: Install wkhtmltopdf
@@ -210,19 +203,6 @@ jobs:
       - store_artifacts:
           path: tmp/coverage
 
-  cucumber-tests:
-    executor: test-executor
-    parallelism: 4
-    steps:
-      - checkout
-      - build-base
-      - *install-wkhtmltopdf
-      - *wait-for-db
-      - *load-db
-      - *cucumber
-      - store_artifacts:
-          path: tmp/capybara
-
   other-tests:
     executor: test-executor
     steps:
@@ -314,19 +294,19 @@ workflows:
       - rspec-tests:
           requires:
             - build-test-container
-      - cucumber-tests:
-          requires:
-            - build-test-container
       - upload-coverage:
           requires:
             - rspec-tests
-            - cucumber-tests
             - other-tests
       - build-app-container:
           requires:
             - upload-coverage
       - auto-deploy-development:
+          requires:
+            - build-test-container
       - hold-deploy-notification:
+          requires:
+            - build-test-container
       - hold-demo:
           type: approval
       - deploy-demo:
@@ -356,13 +336,9 @@ workflows:
       - rspec-tests:
           requires:
             - build-test-container
-      - cucumber-tests:
-          requires:
-            - build-test-container
       - upload-coverage:
           requires:
             - rspec-tests
-            - cucumber-tests
             - other-tests
 
   build-deploy-branch:
@@ -400,9 +376,9 @@ workflows:
       - deploy-demo:
           requires:
             - hold-demo
-      - deploy-dev:
+      - deploy-development:
           requires:
-            - hold-dev
+            - hold-development
       - deploy-staging:
           requires:
             - hold-staging
