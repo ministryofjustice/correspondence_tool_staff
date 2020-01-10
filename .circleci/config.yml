@@ -1,14 +1,411 @@
-defaults: &defaults
-  docker:
-    - image: circleci/node:10.15.0-browsers
-
 version: 2.1
 
-jobs:
-  build:
-    <<: *defaults
+orbs:
+  slack: circleci/slack@3.4.1
+
+references:
+  _restore-cache: &restore-cache
+    restore_cache:
+      keys:
+        - v2-dependencies-{{ checksum "Gemfile.lock" }}
+        # fallback to using the latest cache if no exact match is found
+        - v2-dependencies-
+
+  _install-dependencies: &install-dependencies
+    run:
+      name: Install dependencies
+      command: |
+        bundler_version=$(cat Gemfile.lock | tail -1 | tr -d " ")
+        gem install bundler -v $bundler_version
+        bundle check || bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+  _save-cache: &save-cache
+    save_cache:
+      key: v2-dependencies-{{ checksum "Gemfile.lock" }}
+      paths:
+        - vendor/bundle
+
+  _attach-tmp-workspace: &attach-tmp-workspace
+      attach_workspace:
+        at: ~/repo/tmp
+
+  _create-tmp-dir: &create-tmp-dir
+    run:
+      name: Create workspace temporary directories
+      command: |
+        mkdir -p tmp/
+        mkdir -p tmp/coverage/
+
+  _install-codeclimate: &install-codeclimate
+    run:
+      name: Install Code Climate test-reporter
+      command: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > tmp/cc-test-reporter
+        chmod +x tmp/cc-test-reporter
+
+  _persist-codeclimate: &persist-codeclimate
+    persist_to_workspace:
+      root: tmp
+      paths:
+        - cc-test-reporter
+
+  _wait-for-db: &wait-for-db
+    run:
+      name: Wait for DB
+      command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+  _load-db: &load-db
+    run:
+      name: Database setup
+      command: bin/rails db:schema:load --trace
+
+  _rubocop: &rubocop
+    run:
+      name: Run rubocop
+      command: bundle exec rubocop
+
+  _brakeman: &brakeman
+    run:
+      name: Run brakeman
+      command: bundle exec brakeman
+
+  _jasmine: &jasmine
+    run:
+      name: Run jasmine
+      command: bundle exec rake jasmine:ci
+
+  _rspec: &rspec
+    run:
+      name: Run rspec tests
+      command: |
+        tmp/cc-test-reporter before-build
+        TESTS=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split)
+        bundle exec rspec ${TESTS}
+        tmp/cc-test-reporter format-coverage -t simplecov -o "tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+
+  # _cucumber: &cucumber
+  #   run:
+  #       name: Run cucumber tests
+  #       command: |
+  #         FEATURES=$(circleci tests glob "features/**/*.feature" | circleci tests split)
+  #         bundle exec cucumber ${FEATURES} --format progress --color
+
+  _install-wkhtmltopdf: &install-wkhtmltopdf
+    run:
+      name: Install wkhtmltopdf
+      command: |
+        sudo apt-get update && sudo apt-get -y install wkhtmltopdf
+
+  _script-build-app-container: &script-build-app-container
+    run:
+        name: Build and push Track a Query docker image
+        command: |
+          .circleci/build.sh
+
+# ------------------
+# EXECUTORS
+# ------------------
+executors:
+  cloud-platform-executor:
+    docker:
+    - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
+      environment:
+        GITHUB_TEAM_NAME_SLUG: correspondence
+        REPO_NAME: correspondence_tool_staff
+
+  test-executor:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/ruby:2.6.5-node-browsers
+        environment:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:circleci@127.0.0.1:5432/correspondence_platform_test
+          TZ: Europe/London
+          GITHUB_TEAM_NAME_SLUG: correspondence
+          REPO_NAME: correspondence_tool_staff
+      - image: circleci/postgres:9.6-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: "circleci"
+          POSTGRES_DB: correspondence_platform_test
+
+# ------------------
+# COMMANDS
+# ------------------
+commands:
+  build-base:
+    steps:
+      - *restore-cache
+      - *install-dependencies
+      - *save-cache
+
+  deploy-to:
+    description: >
+      Deploy Track a Query to the specified environment
+    parameters:
+      environment:
+        description: destination environment
+        type: string
     steps:
       - checkout
-    branches:
-      only:
-        - /cloud-migrate-.*/
+      - setup_remote_docker
+      - run:
+          name: deploying to << parameters.environment >>
+          command: |
+            .circleci/deploy.sh << parameters.environment >>
+      - slack/status:
+          success_message: ":tada: deploy of <$CIRCLE_BUILD_URL|$CIRCLE_BRANCH> to << parameters.environment >> successful!"
+          failure_message: ":red_circle: deploy of <$CIRCLE_BUILD_URL|$CIRCLE_BRANCH> to << parameters.environment >> failed!"
+
+  hold-notification:
+    description: >
+      Display a slack notification
+    parameters:
+      message:
+        description: slack message
+        type: string
+    steps:
+      - run:
+          name: Set slack notification options
+          command: |
+            if [[ $CIRCLE_BRANCH == "master" ]]; then
+              echo 'export CUSTOM_SLACK_COLOR="#FF8C00"' >> $BASH_ENV
+            else
+              echo 'export CUSTOM_SLACK_COLOR="#3AA3E3"' >> $BASH_ENV
+            fi
+      - slack/approval:
+          color: $CUSTOM_SLACK_COLOR
+          message: << parameters.message >>
+
+
+# ------------------
+# JOBS
+# ------------------
+jobs:
+  build-test-container:
+    executor: test-executor
+    steps:
+      - checkout
+      - setup_remote_docker
+      - *create-tmp-dir
+      - *install-codeclimate
+      - *persist-codeclimate
+      - build-base
+
+  rspec-tests:
+    executor: test-executor
+    parallelism: 4
+    steps:
+      - checkout
+      - build-base
+      - *install-wkhtmltopdf
+      - *wait-for-db
+      - *load-db
+      - *attach-tmp-workspace
+      - *rspec
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - coverage/codeclimate.*.json
+      - store_artifacts:
+          path: tmp/coverage
+
+  cucumber-tests:
+    executor: test-executor
+    parallelism: 4
+    steps:
+      - checkout
+      - build-base
+      - *install-wkhtmltopdf
+      - *wait-for-db
+      - *load-db
+      - *cucumber
+      - store_artifacts:
+          path: tmp/capybara
+
+  other-tests:
+    executor: test-executor
+    steps:
+      - checkout
+      - build-base
+      - *rubocop
+      - *brakeman
+      - *jasmine
+
+  upload-coverage:
+    executor: test-executor
+    steps:
+      - *attach-tmp-workspace
+      - run:
+          name: Upload coverage results to Code Climate
+          command: |
+            tmp/cc-test-reporter sum-coverage --output - --parts 4 tmp/coverage/codeclimate.*.json | tmp/cc-test-reporter upload-coverage --input -
+
+  build-app-container:
+    executor: cloud-platform-executor
+    steps:
+      - checkout
+      - setup_remote_docker
+      - *script-build-app-container
+
+  hold-build-notification:
+    executor: cloud-platform-executor
+    steps:
+      - hold-notification:
+          message: "Do you want to build <$CIRCLE_BUILD_URL|$CIRCLE_BRANCH>?"
+
+  hold-deploy-notification:
+    executor: cloud-platform-executor
+    steps:
+      - hold-notification:
+          message: "Deployment of <$CIRCLE_BUILD_URL|$CIRCLE_BRANCH> pending approval"
+
+  deploy-development:
+    executor: cloud-platform-executor
+    steps:
+      - deploy-to:
+          environment: development
+
+  deploy-staging:
+    executor: cloud-platform-executor
+    steps:
+      - deploy-to:
+          environment: staging
+
+  deploy-qa:
+    executor: cloud-platform-executor
+    steps:
+      - deploy-to:
+          environment: qa
+
+  deploy-demo:
+    executor: cloud-platform-executor
+    steps:
+      - deploy-to:
+          environment: demo
+
+  deploy-production:
+    executor: cloud-platform-executor
+    steps:
+      - deploy-to:
+          environment: production
+
+  auto-deploy-development:
+    executor: cloud-platform-executor
+    steps:
+      - deploy-to:
+          environment: development
+
+# ------------------
+# WORKFLOWS
+# ------------------
+workflows:
+  version: 2
+  test-build-deploy-master:
+    jobs:
+      - build-test-container:
+          filters:
+            branches:
+              only:
+                - master
+      - other-tests:
+          requires:
+            - build-test-container
+      - rspec-tests:
+          requires:
+            - build-test-container
+      - cucumber-tests:
+          requires:
+            - build-test-container
+      - upload-coverage:
+          requires:
+            - rspec-tests
+            - cucumber-tests
+            - other-tests
+      - build-app-container:
+          requires:
+            - upload-coverage
+      - auto-deploy-development:
+      - hold-deploy-notification:
+      - hold-demo:
+          type: approval
+      - deploy-demo:
+          requires:
+            - hold-staging
+      - hold-staging:
+          type: approval
+      - deploy-staging:
+          requires:
+            - hold-staging
+      - hold-production:
+          type: approval
+      - deploy-production:
+          requires:
+            - hold-production
+
+  test-branch:
+    jobs:
+      - build-test-container:
+          filters:
+            branches:
+              ignore:
+                - master
+      - other-tests:
+          requires:
+            - build-test-container
+      - rspec-tests:
+          requires:
+            - build-test-container
+      - cucumber-tests:
+          requires:
+            - build-test-container
+      - upload-coverage:
+          requires:
+            - rspec-tests
+            - cucumber-tests
+            - other-tests
+
+  build-deploy-branch:
+    jobs:
+      - hold-build-notification:
+          filters:
+            branches:
+              ignore:
+                - master
+      - hold-branch-build:
+          type: approval
+          filters:
+            branches:
+              ignore:
+                - master
+      - build-app-container:
+          requires:
+            - hold-branch-build
+      - hold-demo:
+          type: approval
+          requires:
+            - build-app-container
+      - hold-development:
+          type: approval
+          requires:
+            - build-app-container
+      - hold-staging:
+          type: approval
+          requires:
+            - build-app-container
+      - hold-qa:
+          type: approval
+          requires:
+            - build-app-container
+      - deploy-demo:
+          requires:
+            - hold-demo
+      - deploy-dev:
+          requires:
+            - hold-dev
+      - deploy-staging:
+          requires:
+            - hold-staging
+      - deploy-qa:
+          requires:
+            - hold-qa
