@@ -29,17 +29,17 @@ module CurrentTeamAndUser
 
     def pending_dacu_clearance
       @team = @dts.approving_team
-      @user = @case.approver_assignments.for_team(@team).first.user
+      @user = @case.approver_assignments.for_team(@team).first&.user
     end
 
     def pending_press_office_clearance
       @team = BusinessUnit.press_office
-      @user = @case.approver_assignments.for_team(@team).first.user
+      @user = @case.approver_assignments.for_team(@team).first&.user
     end
 
     def pending_private_office_clearance
       @team = BusinessUnit.private_office
-      @user = @case.approver_assignments.for_team(@team).first.user
+      @user = @case.approver_assignments.for_team(@team).first&.user
     end
 
     def responded
