@@ -64,10 +64,10 @@ references:
       name: Run rubocop
       command: bundle exec rubocop
 
-  _brakeman: &brakeman
-    run:
-      name: Run brakeman
-      command: bundle exec brakeman
+#  _brakeman: &brakeman
+#    run:
+#      name: Run brakeman
+#      command: bundle exec brakeman
 
   _jasmine: &jasmine
     run:
