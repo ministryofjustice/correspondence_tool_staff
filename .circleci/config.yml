@@ -219,7 +219,7 @@ jobs:
       - checkout
       - build-base
       - *rubocop
-      - *brakeman
+      #- *brakeman
       - *jasmine
 
   upload-coverage:
