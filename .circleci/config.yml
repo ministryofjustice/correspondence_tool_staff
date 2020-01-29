@@ -36,11 +36,19 @@ references:
         mkdir -p tmp/
         mkdir -p tmp/coverage/
 
+  # https://support.circleci.com/hc/en-us/articles/360003953613-Error-Installing-postgresql-client-9-6-on-Docker
   _install-postgres-client: &install-postgres-client
     run:
       name: Install PostgreSQL Client
       command: |
-        sudo apt-get update && sudo apt-get install postgresql-client-9.6
+
+        echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+
+        wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+        sudo apt-get update
+
+        sudo apt-get install postgresql-client-9.6
 
   _install-codeclimate: &install-codeclimate
     run:
