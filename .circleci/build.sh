@@ -33,7 +33,7 @@ function _circleci_build() {
           --build-arg APP_BRANCH=${CIRCLE_BRANCH} \
           --pull \
           --tag ${docker_registry_tag} \
-          --file ./Dockerfile \
+          --file ../Dockerfile \
 
   # Push
   docker push $docker_registry_tag
