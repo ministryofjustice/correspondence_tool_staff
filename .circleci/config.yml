@@ -186,8 +186,8 @@ jobs:
     executor: test-executor
     steps:
       - checkout
-      - install-postgres-client
       - setup_remote_docker
+      - *install-postgres-client
       - *create-tmp-dir
       - *install-codeclimate
       - *persist-codeclimate
@@ -198,8 +198,8 @@ jobs:
     parallelism: 4
     steps:
       - checkout
-      - install-postgres-client
       - build-base
+      - *install-postgres-client
       - *install-wkhtmltopdf
       - *wait-for-db
       - *load-db
@@ -216,7 +216,7 @@ jobs:
     executor: test-executor
     steps:
       - checkout
-      - install-postgres-client
+      - *install-postgres-client
       - build-base
       - *rubocop
       #- *brakeman
