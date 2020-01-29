@@ -23,7 +23,11 @@ function _circleci_build() {
   printf "\e[33mRegistry tag: $docker_registry_tag\e[0m\n"
   printf "\e[33m------------------------------------------------------------------------\e[0m\n"
 
+  printf "\e[33mPerforming AWS Login\e[0m\n"
   $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
+
+  printf "\e[33mPerforming Docker build with tag ${docker_registry_tag}\e[0m\n"
+  $(echo pwd)
 
   docker build \
           --build-arg VERSION_NUMBER=$CIRCLE_SHA1 \
@@ -36,6 +40,7 @@ function _circleci_build() {
           --file ../Dockerfile \
 
   # Push
+  printf "\e[33mPerforming Docker push to {$docker_registry_tag}\e[0m\n"
   docker push $docker_registry_tag
 
   if [ "${CIRCLE_BRANCH}" == "master" ]; then
