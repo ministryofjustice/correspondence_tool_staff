@@ -107,7 +107,7 @@ references:
     run:
         name: Build and push Track a Query docker image
         command: |
-          chmod -R 777 && .circleci/build.sh
+          chmod -R 777 .circleci/build.sh && .circleci/build.sh
 
 # ------------------
 # EXECUTORS
@@ -160,7 +160,7 @@ commands:
       - run:
           name: deploying to << parameters.environment >>
           command: |
-            chmod -R 777 && .circleci/deploy.sh << parameters.environment >>
+            chmod -R 777 .circleci/deploy.sh && .circleci/deploy.sh << parameters.environment >>
       - slack/status:
           success_message: ":tada: deploy of <$CIRCLE_BUILD_URL|$CIRCLE_BRANCH> to << parameters.environment >> successful!"
           failure_message: ":red_circle: deploy of <$CIRCLE_BUILD_URL|$CIRCLE_BRANCH> to << parameters.environment >> failed!"
