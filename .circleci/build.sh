@@ -36,13 +36,12 @@ function _circleci_build() {
           --build-arg BUILD_TAG="app-${CIRCLE_SHA1}" \
           --build-arg APP_BRANCH=${CIRCLE_BRANCH} \
           --pull \
-          --tag ${docker_registry_tag} \
-          --file ./Dockerfile \
-          .
+          --tag $docker_registry_tag \
+          --file ./Dockerfile .
 
   # Push
-  printf "\e[33mPerforming Docker push to {$docker_registry_tag}\e[0m\n"
-  docker push ${docker_registry_tag}
+  printf "\e[33mPerforming Docker push to $docker_registry_tag\e[0m\n"
+  docker push $docker_registry_tag
 
   if [ "${CIRCLE_BRANCH}" == "master" ]; then
     docker_registry_latest_tag="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPO_NAME}:app-latest"
@@ -52,7 +51,7 @@ function _circleci_build() {
   fi
 
   docker tag $docker_registry_tag ${docker_registry_latest_tag}
-  docker push ${docker_registry_latest_tag}
+  docker push $docker_registry_latest_tag
 }
 
 _circleci_build $@
