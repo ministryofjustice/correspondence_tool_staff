@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  slack: circleci/slack@3.4.1
+  slack: circleci/slack@3.4.2
 
 references:
   _restore-cache: &restore-cache
@@ -116,11 +116,21 @@ executors:
           TZ: Europe/London
           GITHUB_TEAM_NAME_SLUG: correspondence
           REPO_NAME: correspondence_tool_staff
-      - image: circleci/postgres:9.6-alpine
+      - image: circleci/postgres:9.6.5-alpine-ram
         environment:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: "circleci"
           POSTGRES_DB: correspondence_platform_test
+    steps:
+      - checkout
+      - run: sudo apt-get update
+      - run: sudo apt-get install postgresql-client-9.6
+      - run: whoami
+      - run: |
+          psql \
+          -d $TEST_DATABASE_URL \
+          -c "CREATE TABLE test (name char(25));"
+
 
 # ------------------
 # COMMANDS
