@@ -27,7 +27,7 @@ function _circleci_build() {
   $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
 
   printf "\e[33mPerforming Docker build with tag ${docker_registry_tag}\e[0m\n"
-  $(echo pwd)
+  $(echo ls -al)
 
   docker build \
           --build-arg VERSION_NUMBER=$CIRCLE_SHA1 \
@@ -37,7 +37,8 @@ function _circleci_build() {
           --build-arg APP_BRANCH=${CIRCLE_BRANCH} \
           --pull \
           --tag ${docker_registry_tag} \
-          --file ../Dockerfile \
+          --file ./Dockerfile \
+          .
 
   # Push
   printf "\e[33mPerforming Docker push to {$docker_registry_tag}\e[0m\n"
