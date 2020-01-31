@@ -164,6 +164,24 @@ describe TeamMoveService do
           expect(kase.reload.approving_teams).to eq [BusinessUnit.dacu_disclosure]
         end
       end
+
+      context 'when the team being moved is a "magic" team' do
+        let(:kase) { build(:responded_ico_foi_case) }
+        let(:disclosure_team) { BusinessUnit.dacu_disclosure }
+        let(:business_unit) { disclosure_team }
+        let(:disclosure_user) { disclosure_team.users.first }
+
+        it 'does something' do
+          pending 'failing spec to illustrate bug'
+          kase.save
+          create :case_transition_respond_to_ico, case: kase
+          kase.assignments.create(team: disclosure_team, user: disclosure_user, role: "approving")
+          expect(kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure).first.user).to eq disclosure_user
+
+          service.call
+          expect(kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure).first.user).to eq disclosure_user
+        end
+      end
     end
   end
 end
