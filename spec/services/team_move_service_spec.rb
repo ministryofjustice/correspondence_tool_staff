@@ -134,7 +134,7 @@ describe TeamMoveService do
           code = business_unit.code
           service.call
 
-          expect(business_unit.reload.code).to eq "#{code}-OLD"
+          expect(business_unit.reload.code).to eq "#{code}-OLD-#{business_unit.id}"
           expect(service.new_team.code).to eq code
         end
       end
