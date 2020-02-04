@@ -17,7 +17,7 @@ function _circleci_build() {
 
   # build
   #docker_registry_tag="${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${REPO_NAME}:app-${CIRCLE_SHA1}"
-  docker_registry_tag="correspondence/track-a-query-ecr:latest 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest"
+  docker_registry_tag="correspondence/track-a-query-ecr"
 
   printf "\e[33m------------------------------------------------------------------------\e[0m\n"
   printf "\e[33mBranch: $CIRCLE_BRANCH\e[0m\n"
