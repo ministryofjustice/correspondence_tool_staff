@@ -91,11 +91,14 @@ references:
   _rspec: &rspec
     run:
       name: Run rspec tests
-      command: |
-        tmp/cc-test-reporter before-build
-        TESTS=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split)
-        bundle exec rspec ${TESTS}
-        tmp/cc-test-reporter format-coverage -t simplecov -o "tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+            command: |
+              bundle exec rspec
+              tmp/cc-test-reporter format-coverage -t simplecov -o "tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+#      command: |
+#        tmp/cc-test-reporter before-build
+#        TESTS=$(circleci tests glob "spec/**/*_spec.rb" | circleci tests split)
+#        bundle exec rspec ${TESTS}
+#        tmp/cc-test-reporter format-coverage -t simplecov -o "tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
 
   _install-wkhtmltopdf: &install-wkhtmltopdf
     run:
