@@ -240,7 +240,7 @@ jobs:
             tmp/cc-test-reporter sum-coverage --output - --parts 4 tmp/coverage/codeclimate.*.json | tmp/cc-test-reporter upload-coverage --input -
 
 
-    build-app-container:
+  build-app-container:
     executor: cloud-platform-executor
     steps:
       - checkout
