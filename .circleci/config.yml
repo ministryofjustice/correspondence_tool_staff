@@ -92,7 +92,9 @@ references:
     run:
       name: Run rspec tests
       command: |
-        bundle exec rspec
+        bundle exec rails parallel:create
+        bundle exec rails parallel:load_structure
+        bundle exec rails parallel:spec:non_features
         tmp/cc-test-reporter format-coverage -t simplecov -o "tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
 
 #      command: |
