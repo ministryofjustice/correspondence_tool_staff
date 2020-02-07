@@ -137,6 +137,7 @@ jobs:
           at: ~/repo
       - *restore_cache
       - *install_bundler
+      - *install_psql
       - *check_bundler_version
       - *install_dependencies
       - *save_cache
