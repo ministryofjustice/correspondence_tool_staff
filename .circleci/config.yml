@@ -32,6 +32,12 @@ references:
       command: |
         gem install bundler -v 1.14.6
 
+  install_psql: &install_psql
+    run:
+      name: Install psql client
+      command: |
+         sudo apt update && sudo apt install postgresql-client
+
   check_bundler_version: &check_bundler_version
     run:
       name: Check the installed version of bundler
