@@ -16,13 +16,13 @@ references:
           PG_USER: postgres
           PGUSER: postgres
           PGHOST: 127.0.0.1
-          POSTGRES_DB: track-a-query-test
+          POSTGRES_DB: correspondence_platform_test
 
       - image: circleci/postgres:9.5-alpine
         environment:
           PG_PASSWORD: ""
           PG_USER: postgres
-          POSTGRES_DB: track-a-query-test
+          POSTGRES_DB: correspondence_platform_test
           POSTGRES_USER: postgres
           PGUSER: postgres
 
