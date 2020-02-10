@@ -149,8 +149,8 @@ jobs:
       - *restore_cache
       - *install_bundler
       - *install_psql
-      - *update_chromedriver
       - *check_bundler_version
+      - *update_chromedriver
       - *install_dependencies
       - *save_cache
       - *wait_for_db
