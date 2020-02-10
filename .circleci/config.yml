@@ -95,8 +95,7 @@ references:
     run:
       name: Run unit tests
       command: |
-        bin/rspec spec/features/cases/search_filter_journeys_spec.rb
-#       bundle exec rspec
+        bundle exec rspec
 # This command is from the CircleCI docs and is for running in a time
 # base system. We currenly are not using it, but here if we want to
 # implement it
