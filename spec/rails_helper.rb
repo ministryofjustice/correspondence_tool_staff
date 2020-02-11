@@ -92,6 +92,7 @@ require 'site_prism/page_objects/pages/application.rb'
 
 # include linked_cases_section specifically to avoid machine-specific load order issues
 require "site_prism/page_objects/sections/cases/linked_cases_section.rb"
+require "site_prism/page_objects/sections/cases/case_attachment_section.rb"
 
 Dir[Rails.root.join("spec/site_prism/support/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/site_prism/page_objects/sections/shared/**/*.rb")].each { |f| require f }
