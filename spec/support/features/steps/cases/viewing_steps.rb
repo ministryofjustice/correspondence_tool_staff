@@ -1,4 +1,5 @@
 # rubocop:disable Metrics/ParameterLists
+# rubocop:disable Metrics/CyclomaticComplexity
 def go_to_case_details_step(kase:,
                             page: nil,
                             expected_response_files: nil,
