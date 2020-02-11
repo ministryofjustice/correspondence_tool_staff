@@ -1,6 +1,6 @@
 module Cases
   class CoverPagesController < ApplicationController
-    before_filter :set_case, only: [:show]
+    before_action :set_case, only: [:show]
 
     def show
     end
