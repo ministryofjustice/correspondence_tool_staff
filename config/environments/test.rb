@@ -103,4 +103,6 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
+  # Useful for debugging webdrivers and chromedriver issues
+  # Webdrivers.logger.level = :DEBUG
 end
