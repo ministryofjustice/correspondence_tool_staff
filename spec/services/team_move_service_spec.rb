@@ -134,7 +134,7 @@ describe TeamMoveService do
           code = business_unit.code
           service.call
 
-          expect(business_unit.reload.code).to eq "#{code}-OLD"
+          expect(business_unit.reload.code).to eq "#{code}-OLD-#{business_unit.id}"
           expect(service.new_team.code).to eq code
         end
       end
@@ -162,6 +162,29 @@ describe TeamMoveService do
           service.call
 
           expect(kase.reload.approving_teams).to eq [BusinessUnit.dacu_disclosure]
+        end
+      end
+
+      context 'when the team being moved is an approver team' do
+        let(:kase) { build(:responded_ico_foi_case) }
+        let(:disclosure_team) { BusinessUnit.dacu_disclosure }
+        let(:business_unit) { disclosure_team }
+        let(:disclosure_user) { disclosure_team.users.first }
+
+        it 'it moves approver assignments to new team and users are preserved' do
+          create :case_transition_respond_to_ico, case: kase
+          kase.assignments.create(team: disclosure_team, user: disclosure_user, role: "approving")
+          assignments = kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure)
+
+          existing_approver_assignments_count = assignments.count
+          expect(assignments.first.user).to eq disclosure_user
+          expect(assignments.count).to eq existing_approver_assignments_count
+
+          service.call
+
+          assignments = kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure)
+          expect(assignments.first.user).to eq disclosure_user
+          expect(assignments.count).to eq existing_approver_assignments_count
         end
       end
     end
