@@ -1,4 +1,5 @@
 # rubocop:disable Metrics/ParameterLists
+# rubocop:disable Metrics/CyclomaticComplexity
 def go_to_case_details_step(kase:,
                             page: nil,
                             expected_response_files: nil,
@@ -28,7 +29,7 @@ def go_to_case_details_step(kase:,
   if expected_history.present?
     history_entries = cases_show_page.case_history.entries
     history_entries.zip(expected_history).each do |entry, expected_text|
-      expect(entry).to have_text(expected_text)
+      expect(entry).to have_text(expected_text) if expected_text
     end
   end
 end

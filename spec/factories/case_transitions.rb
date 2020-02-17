@@ -296,6 +296,15 @@ FactoryBot.define do
     acting_user { acting_team.approvers.first }
   end
 
+  factory :case_transition_await_dispatch_ico, parent: :case_transition do
+    association :case, factory: [:ico_foi_case]
+    event       { 'approve' }
+    to_state    { 'awaiting_dispatch' }
+
+    acting_team { find_or_create(:team_dacu_disclosure) }
+    acting_user { acting_team.approvers.first }
+  end
+
   factory :case_transition_close_ico, parent: :case_transition do
     association         :case, factory: [:ico_foi_case]
     event               { 'close' }
