@@ -371,7 +371,7 @@ GEM
       parallel
     parser (2.7.0.2)
       ast (~> 2.4.0)
-    pg (1.1.4)
+    pg (1.2.2)
     pg_search (2.3.0)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
@@ -646,7 +646,7 @@ DEPENDENCIES
   overcommit
   paper_trail (~> 10.3)
   parallel_tests (~> 2.30)
-  pg (~> 1.1)
+  pg (~> 1.2)
   pg_search (~> 2.3.0)
   pry
   pry-byebug
