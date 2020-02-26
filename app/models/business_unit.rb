@@ -161,11 +161,6 @@ class BusinessUnit < Team
       if open_cases.any?
         errors.add(:base, "Unable to deactivate: this business unit has open cases")
       end
-
-      if users.any?
-        errors.add(:base, "Unable to deactivate: this business unit has team members")
-      end
-
     end
   end
 

@@ -4,6 +4,7 @@ describe TeamMoveService do
   let(:original_dir) { find_or_create :directorate }
   let(:target_dir) { find_or_create :directorate }
   let(:responder) { create(:foi_responder, responding_teams: [business_unit]) }
+
   let(:service) { TeamMoveService.new(business_unit, target_dir) }
   let(:business_unit) {
     find_or_create(
@@ -13,6 +14,16 @@ describe TeamMoveService do
         code: 'ABC'
     )
   }
+  let(:params) do
+    HashWithIndifferentAccess.new(
+        {
+            'full_name' => 'Bob Dunnit',
+            'email' => 'bd@moj.com'
+        }
+    )
+  end
+
+  let(:second_user_service) { UserCreationService.new(team: business_unit, params: params) }
   let!(:kase) {
     create(
       :case_being_drafted,
@@ -66,20 +77,20 @@ describe TeamMoveService do
         expect(service.new_team.directorate).to eq target_dir
       end
 
-      it 'moves team users to the new team, and removes them from the original team' do
+      it 'moves team users to the new team' do
         expect(business_unit.users).to match_array [responder]
         service.call
 
         expect(service.new_team.users).to match_array [responder]
-        expect(business_unit.users).to be_empty
       end
 
-      it 'moves team user_roles to the new team, and removes them from the original team' do
-        team_user_role = business_unit.user_roles.first
+      it 'does not remove them from the original team' do
+        second_user_service.call
+        retained_user_roles = business_unit.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
         service.call
-
-        expect(service.new_team.user_roles.first).to eq team_user_role
-        expect(business_unit.reload.user_roles).to be_empty
+        new_user_roles = business_unit.reload.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+        expect(new_user_roles).to include retained_user_roles[0]
+        expect(new_user_roles).to include retained_user_roles[1]
       end
 
       it 'sets old team to deleted' do
