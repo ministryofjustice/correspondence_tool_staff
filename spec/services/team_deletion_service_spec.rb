@@ -58,22 +58,7 @@ describe TeamDeletionService do
             expect(bu_without_users.name).to start_with(Team::DEACTIVATED_LABEL)
           end
         end
-
-        context 'has users' do
-          it 'returns :error with error in team' do
-            expect(bu_with_users.users).not_to be_empty
-            expect(bu_with_users.deleted_at).to be_nil
-
-            service = TeamDeletionService.new(bu_with_users)
-            service.call
-
-            expect(service.result).to eq :error
-            expect(bu_with_users.errors[:base]).to eq ['Unable to deactivate: this business unit has team members']
-            expect(bu_with_users.deleted_at).to be_nil
-            expect(bu_with_users.name).not_to start_with(Team::DEACTIVATED_LABEL)
-          end
-        end
-
+        
         context 'has open cases' do
           it 'returns :error with message in team errors array' do
             create :assigned_case, responding_team: bu_without_users
