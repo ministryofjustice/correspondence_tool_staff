@@ -106,9 +106,26 @@ describe TeamMoveService do
         expect(service.new_team.name).to eq business_unit.original_team_name
       end
 
-      it 'moves properties to the new team'
-      it 'moves correspondence type roles to the new team'
-      it 'ensures the new team has the same code as the old team'
+      it 'moves properties to the new team' do
+        properties = business_unit.properties.pluck :id
+        service.call
+
+        expect(service.new_team.properties.pluck :id).to match_array properties
+      end
+
+      it 'moves correspondence type roles to the new team' do
+        correspondence_type_roles = business_unit.correspondence_type_roles.pluck :id
+        service.call
+
+        expect(service.new_team.correspondence_type_roles.pluck :id).to match_array correspondence_type_roles
+      end
+
+      it 'ensures the new team has the same code as the old team' do
+        code = business_unit.code
+        service.call
+
+        expect(service.new_team.code).to eq code
+      end
 
       context 'when the team being moved has open cases' do
         it 'moves open cases to the new team and removes them from the original team' do
