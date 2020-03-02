@@ -22,35 +22,30 @@ feature 'moving business units' do
   given(:responder) { find_or_create :foi_responder }
 
   scenario 'manager moves a business unit', js: true do
-    login_as manager
-    teams_show_page.load(id: bu.directorate.id)
-    expect(teams_show_page.row_for_business_unit(bu.name).name.text).to have_text(bu.name)
-
-    # verify manager can see cases before move
+    # verify responder can see cases before move
     login_as responder
     cases_page.load
     expect(cases_page).to have_text(bu.cases.opened.first.number)
     click_on "Closed cases"
     expect(cases_page).to have_text(bu.cases.closed.first.number)
 
+    # manager moves team
     login_as manager
+
     teams_show_page.load(id: bu.id)
     teams_show_page.move_team_link.click
     expect(teams_move_page).to be_displayed(id: bu.id)
 
     teams_move_page.business_groups.links.last.click
-
     expect(teams_move_page).to have_content "This is where the team is currently located"
 
     teams_move_page.business_groups.links.first.click
     accept_confirm do
       teams_move_page.directorates_list.directorates.first.move_to_directorate_link.click
     end
+    expect(teams_show_page).to have_content "#{bu.reload.name} has been moved to"
 
-    expect(teams_show_page.flash_notice.text).to eq(
-    "#{BusinessUnit.last.name} has been moved to Directorate 1")
-
-    # verify manager can see cases after move
+    # verify responder can see cases after move
     login_as responder
     cases_page.load
     new_bu = BusinessUnit.last
