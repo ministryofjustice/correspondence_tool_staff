@@ -43,8 +43,7 @@ feature 'moving business units' do
     accept_confirm do
       teams_move_page.directorates_list.directorates.first.move_to_directorate_link.click
     end
-    expect(teams_show_page.flash_notice.text).to eq(
-    "#{BusinessUnit.last.name} has been moved to Directorate 1")
+    expect(teams_show_page).to have_content "#{bu.reload.name} has been moved to"
 
     # verify responder can see cases after move
     login_as responder
