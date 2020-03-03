@@ -58,5 +58,10 @@ class UserCreationService
 
   def add_user_to_teams
     @team.__send__(@role.pluralize) << @user
+    @team.previous_teams.each do |team_id|
+      if team = Team.find_by_id(team_id)
+        team.__send__(@role.pluralize) << @user
+      end
+    end
   end
 end
