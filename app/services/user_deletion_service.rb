@@ -26,7 +26,10 @@ class UserDeletionService
   private
 
   def delete_memberships_of_team
-    roles = TeamsUsersRole.where(user_id: @target_user.id, team_id: @team.id)
+    team_ids = @team.previous_teams
+    team_ids << @team.id
+
+    roles = TeamsUsersRole.where(user_id: @target_user.id, team_id: team_ids)
     roles.destroy_all
   end
 
