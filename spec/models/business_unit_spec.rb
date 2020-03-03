@@ -133,6 +133,14 @@ RSpec.describe BusinessUnit, type: :model do
                                           ]
       end
     end
+
+    describe 'active scope' do
+      it 'returns only teams that are not deactivated' do
+        expect(BusinessUnit.responding.active.count).to eq 2
+        foi_responding_team.update_attribute(:deleted_at, Time.now)
+        expect(BusinessUnit.responding.active).to match_array [sar_responding_team]
+      end
+    end
   end
 
   it 'has a working factory' do

@@ -76,6 +76,7 @@ class BusinessUnit < Team
   scope :managing, -> { where(role: 'manager') }
   scope :approving, -> { where(role: 'approver') }
   scope :responding, -> { where(role: 'responder') }
+  scope :active, -> { where(deleted_at: nil) }
 
   after_save :update_search_index
 
