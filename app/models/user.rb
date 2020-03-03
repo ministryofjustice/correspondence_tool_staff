@@ -166,7 +166,7 @@ class User < ApplicationRecord
   end
 
   def multiple_team_member?
-    team_roles.size > 1
+    teams.active.size > 1
   end
 
   def password_blacklist
