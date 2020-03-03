@@ -68,20 +68,26 @@ describe TeamJoinService do
 
   describe '#call' do
     context 'joining a business unit into another business unit' do
-      it 'Joins team users to the new team, and removes them from the original team' do
+      it 'Joins team users to the new team' do
         expect(business_unit.users).to match_array [responder]
         service.call
 
         expect(service.target_team.users).to match_array [responder]
-        expect(business_unit.users).to be_empty
       end
 
-      it 'Joins team user_roles to the new team, and removes them from the original team' do
+      it 'Joins team user_roles to the new team, and does not remove them from the original team' do
         team_user_role = business_unit.user_roles.first
+        retained_user_roles = business_unit.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+
         service.call
 
-        expect(service.target_team.user_roles.first).to eq team_user_role
-        expect(business_unit.reload.user_roles).to be_empty
+        # expect(service.target_team.user_roles.first).to eq team_user_role
+        # expect(business_unit.reload.user_roles).to not_be_empty
+
+        new_user_roles = business_unit.reload.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+        expect(new_user_roles).to include retained_user_roles[0]
+        expect(new_user_roles).to include retained_user_roles[1]
+
       end
 
       it 'sets old team to deleted' do
