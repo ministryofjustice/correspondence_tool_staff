@@ -21,5 +21,24 @@ namespace :db do
       end
     end
   end
+  desc 'Add users to previous team incarnations'
+  task :add_users_to_previous_teams => :environment do
+    users = User.all
+    puts "Updating team roles for #{users.length} users... "
+    users.each do |user|
+      puts "* Checking team roles for #{user.full_name}"
+      user_teams = user.teams.pluck :id
+      user.teams.each do |team|
+        team.previous_teams.each do |team_id|
+          unless user_teams.include? team_id
+            team = Team.find_by_id(team_id)
+            puts " - adding #{team.role} role for #{team.name}"
+            team.__send__(team.role.pluralize) << user
+          end
+        end
+      end
+    end
+    puts "...completed"
+  end
 end
 
