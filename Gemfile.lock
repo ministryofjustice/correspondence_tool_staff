@@ -85,7 +85,7 @@ GEM
     aws-sdk-resources (2.7.3)
       aws-sdk-core (= 2.7.3)
     aws-sigv4 (1.0.0)
-    axlsx_rails (0.6.0)
+    axlsx_rails (0.6.1)
       actionpack (>= 3.1)
       caxlsx (>= 3.0)
     axlsx_styler (1.0.0)
