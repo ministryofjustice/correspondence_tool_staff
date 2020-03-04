@@ -6,17 +6,6 @@ GIT
     bank_holiday (0.0.4)
       dish
 
-GIT
-  remote: https://github.com/randym/axlsx.git
-  revision: c8ac844572b25fda358cc01d2104720c4c42f450
-  ref: c8ac844
-  specs:
-    axlsx (2.1.0.pre)
-      htmlentities (~> 4.3.4)
-      mimemagic (~> 0.3)
-      nokogiri (>= 1.6.6)
-      rubyzip (>= 1.2.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -85,12 +74,9 @@ GEM
     aws-sdk-resources (2.7.3)
       aws-sdk-core (= 2.7.3)
     aws-sigv4 (1.0.0)
-    axlsx_rails (0.6.0)
-      actionpack (>= 3.1)
-      caxlsx (>= 3.0)
-    axlsx_styler (0.2.0)
+    axlsx_styler (1.0.0)
       activesupport (>= 3.1)
-      axlsx (>= 2.0, < 4)
+      caxlsx (>= 2.0.2)
     bcrypt (3.1.13)
     better_errors (2.5.1)
       coderay (>= 1.0.0)
@@ -102,8 +88,8 @@ GEM
     brakeman (4.7.1)
     browser_sync_rails (0.1.1)
       rails
-    builder (3.2.3)
-    bullet (6.0.2)
+    builder (3.2.4)
+    bullet (6.1.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     business_time (0.9.3)
@@ -123,13 +109,16 @@ GEM
       mimemagic (~> 0.3)
       nokogiri (~> 1.10, >= 1.10.4)
       rubyzip (>= 1.3.0, < 3)
+    caxlsx_rails (0.6.2)
+      actionpack (>= 3.1)
+      caxlsx (>= 3.0)
     childprocess (1.0.1)
       rake (< 13.0)
     codeclimate-test-reporter (1.0.9)
       simplecov (<= 0.13)
     coderay (1.1.2)
     colorize (0.8.1)
-    concurrent-ruby (1.1.5)
+    concurrent-ruby (1.1.6)
     config (2.0.0)
       activesupport (>= 4.2)
       deep_merge (~> 1.2, >= 1.2.1)
@@ -149,7 +138,7 @@ GEM
     docile (1.1.5)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    draper (3.1.0)
+    draper (4.0.0)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
       activemodel-serializers-xml (>= 1.0)
@@ -187,7 +176,7 @@ GEM
       dry-equalizer (~> 0.2, >= 0.2.2)
       dry-inflector (~> 0.1, >= 0.1.2)
       dry-logic (~> 1.0, >= 1.0.2)
-    erubi (1.8.0)
+    erubi (1.9.0)
     erubis (2.7.0)
     execjs (2.7.0)
     factory_bot (5.1.1)
@@ -195,8 +184,8 @@ GEM
     factory_bot_rails (5.1.1)
       factory_bot (~> 5.1.0)
       railties (>= 4.2.0)
-    faker (2.9.0)
-      i18n (>= 1.6, < 1.8)
+    faker (2.10.2)
+      i18n (>= 1.6, < 2)
     faraday (0.17.0)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.3)
@@ -251,15 +240,15 @@ GEM
     guard-rubocop (1.3.0)
       guard (~> 2.0)
       rubocop (~> 0.20)
-    highline (2.0.2)
+    highline (2.0.3)
     htmlentities (4.3.4)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     humanize_boolean (0.0.2)
       i18n
-    i18n (1.7.0)
+    i18n (1.8.2)
       concurrent-ruby (~> 1.0)
-    i18n-tasks (0.9.29)
+    i18n-tasks (0.9.30)
       activesupport (>= 4.0.2)
       ast (>= 2.1.0)
       erubi
@@ -337,11 +326,11 @@ GEM
     mime-types (3.3)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2019.0904)
-    mimemagic (0.3.3)
+    mimemagic (0.3.4)
     mimetype-fu (0.1.2)
     mini_mime (1.0.2)
     mini_portile2 (2.4.0)
-    minitest (5.13.0)
+    minitest (5.14.0)
     modware (0.1.3)
       key_struct (~> 0.4)
     multi_json (1.13.1)
@@ -351,7 +340,7 @@ GEM
     net-http-persistent (3.1.0)
       connection_pool (~> 2.2)
     nio4r (2.5.2)
-    nokogiri (1.10.6)
+    nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
     notiffany (0.1.3)
       nenv (~> 0.1)
@@ -369,9 +358,9 @@ GEM
     parallel (1.19.1)
     parallel_tests (2.30.0)
       parallel
-    parser (2.6.5.0)
+    parser (2.7.0.2)
       ast (~> 2.4.0)
-    pg (1.1.4)
+    pg (1.2.2)
     pg_search (2.3.0)
       activerecord (>= 4.2)
       activesupport (>= 4.2)
@@ -385,7 +374,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (4.0.1)
-    puma (4.3.1)
+    puma (4.3.3)
       nio4r (~> 2.0)
     pundit (2.1.0)
       activesupport (>= 3.0.0)
@@ -434,7 +423,7 @@ GEM
     recursive-open-struct (1.1.0)
     redis (4.1.3)
     regexp_parser (1.6.0)
-    request_store (1.4.1)
+    request_store (1.5.0)
       rack (>= 1.4)
     responders (3.0.0)
       actionpack (>= 5.0)
@@ -471,7 +460,7 @@ GEM
       unicode-display_width (>= 1.4.0, < 1.7)
     rubocop-performance (1.5.1)
       rubocop (>= 0.71.0)
-    rubocop-rspec (1.36.0)
+    rubocop-rspec (1.38.1)
       rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
     rubyzip (2.0.0)
@@ -561,15 +550,15 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    tzinfo (1.2.5)
+    tzinfo (1.2.6)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.6)
-    unicode-display_width (1.6.0)
-    uniform_notifier (1.12.1)
+    unicode-display_width (1.6.1)
+    uniform_notifier (1.13.0)
     warden (1.2.8)
       rack (>= 2.0.6)
     web-console (3.7.0)
@@ -598,25 +587,25 @@ DEPENDENCIES
   annotate (~> 3.0.3)
   awesome_print
   aws-sdk (= 2.7.3)
-  axlsx!
-  axlsx_rails
   axlsx_styler
   bank_holiday!
   better_errors
   binding_of_caller
   browser_sync_rails
-  bullet (~> 6.0.2)
+  bullet (~> 6.1.0)
   business_time
   byebug
   capybara (~> 3.29.0)
+  caxlsx
+  caxlsx_rails
   codeclimate-test-reporter (~> 1.0)
   colorize
   config (~> 2.0)
   devise (~> 4.7.1)
-  draper (= 3.1.0)
+  draper (= 4.0.0)
   dropzonejs-rails (>= 0.8)
   factory_bot_rails (~> 5.1.1)
-  faker (~> 2.9.0)
+  faker (~> 2.10.2)
   foreman (~> 0.86.0)
   gov_uk_date_fields (~> 3.1)
   govuk_elements_form_builder (>= 1.2.0)
@@ -629,7 +618,7 @@ DEPENDENCIES
   guard-rspec
   guard-rubocop
   humanize_boolean
-  i18n-tasks (~> 0.9.29)
+  i18n-tasks (~> 0.9.30)
   jbuilder (~> 2.9)
   jquery-rails (~> 4.3.5)
   jquery-ui-rails
@@ -646,7 +635,7 @@ DEPENDENCIES
   overcommit
   paper_trail (~> 10.3)
   parallel_tests (~> 2.30)
-  pg (~> 1.1)
+  pg (~> 1.2)
   pg_search (~> 2.3.0)
   pry
   pry-byebug
@@ -661,7 +650,7 @@ DEPENDENCIES
   rspec-rails (~> 3.9)
   rubocop (~> 0.76.0)
   rubocop-performance
-  rubocop-rspec (~> 1.36.0)
+  rubocop-rspec (~> 1.38.1)
   ruby-progressbar
   rubyzip (>= 1.2.4)
   sablon
