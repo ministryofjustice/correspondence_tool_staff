@@ -180,7 +180,6 @@ RSpec.describe Team, type: :model do
   end
 
   describe '#enable_allocation' do
-
     let(:foi) { create :foi_correspondence_type }
 
     it 'creates a team property record' do
@@ -254,7 +253,6 @@ RSpec.describe Team, type: :model do
   end
 
   describe 'paper_trail versions', versioning: true do
-
     it 'has versions' do
       it { is_expected.to be_versioned }
     end

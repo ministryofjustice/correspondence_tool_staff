@@ -133,6 +133,14 @@ RSpec.describe BusinessUnit, type: :model do
                                           ]
       end
     end
+
+    describe 'active scope' do
+      it 'returns only teams that are not deactivated' do
+        expect(BusinessUnit.responding.active.count).to eq 2
+        foi_responding_team.update_attribute(:deleted_at, Time.now)
+        expect(BusinessUnit.responding.active).to match_array [sar_responding_team]
+      end
+    end
   end
 
   it 'has a working factory' do
@@ -317,5 +325,60 @@ RSpec.describe BusinessUnit, type: :model do
 
   end
 
+  describe '#previous_teams' do
+    context 'when a team has never moved' do
+      it 'returns empty array' do
+        current_team = create :business_unit
+        expect(current_team.previous_teams).to be_empty
+      end
+    end
 
+    context 'when a team has been moved once' do
+      let(:original_dir) { find_or_create :directorate }
+      let(:target_dir) { find_or_create :directorate }
+
+      let(:previous_team) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+        )
+      }
+
+      it 'returns team moved-from' do
+        service = TeamMoveService.new(previous_team, target_dir)
+        service.call
+        current_team = service.new_team
+        expect(current_team.previous_teams).to match_array [previous_team.id]
+      end
+    end
+
+    context 'when a team has been moved twice' do
+      let(:original_dir) { find_or_create :directorate }
+      let(:first_target_dir) { find_or_create :directorate }
+      let(:second_target_dir) { find_or_create :directorate }
+      let(:business_unit_to_move) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+        )
+      }
+
+      it 'tracks all history' do
+        first_team = business_unit_to_move
+        service = TeamMoveService.new(first_team, first_target_dir)
+        service.call
+        second_team = service.new_team
+
+        # pause momentarily to let the database catch up
+        sleep 1
+
+        service = TeamMoveService.new(second_team, second_target_dir)
+        service.call
+
+        third_team = service.new_team
+
+        expect(third_team.previous_teams).to match_array [first_team.id, second_team.id]
+      end
+    end
+  end
 end

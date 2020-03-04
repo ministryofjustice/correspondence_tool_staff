@@ -185,7 +185,22 @@ describe UserCreationService do
         end
       end
     end
+
+    context 'when the team has previous incarnations' do
+      let(:target_dir) { find_or_create :directorate }
+      let(:team_move_service) { TeamMoveService.new(@team, target_dir) }
+
+      it 'joins the user to both the current and previous teams' do
+        # move the team being joined first
+        team_move_service.call
+        new_team = team_move_service.new_team
+
+        # add a new user to the new team
+        service = UserCreationService.new(team: new_team, params: params)
+        service.call
+        expect(service.result).to eq :ok
+        expect(User.last.teams).to match_array [@team, new_team]
+      end
+    end
   end
-
-
 end
