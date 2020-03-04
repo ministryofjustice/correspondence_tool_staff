@@ -6,8 +6,8 @@ gem 'acts_as_tree', '~> 2.9'
 # undeclared (but documented) dependency on rubyzip
 # This is from the readme of axlsx_rails.
 gem 'rubyzip', '>= 1.2.4'
-gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
-gem 'axlsx_rails'
+gem 'caxlsx'
+gem 'caxlsx_rails'
 # AXLSX styler - easy styling of cells based on cell references
 gem 'axlsx_styler'
 gem 'awesome_print'
@@ -16,11 +16,11 @@ gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git'
 gem 'business_time'
 gem 'config', '~> 2.0'
 gem 'devise', '~> 4.7.1'
-gem 'draper', '3.1.0'
+gem 'draper', '4.0.0'
 gem 'dropzonejs-rails', '>= 0.8'
 gem 'foreman', '~> 0.86.0'
 gem 'factory_bot_rails', '~> 5.1.1'
-gem 'faker', '~> 2.9.0'
+gem 'faker', '~> 2.10.2'
 gem 'gov_uk_date_fields', '~> 3.1'
 gem 'govuk_template',         '~> 0.26.0'
 gem 'govuk_frontend_toolkit', '>= 9.0.0'
@@ -41,7 +41,7 @@ gem 'loofah', '>= 2.3.1'
 gem 'mechanize', '>= 2.7.5'
 gem 'mimetype-fu', '~> 0.1.2'
 gem 'paper_trail', '~> 10.3'
-gem 'pg', '~> 1.1'
+gem 'pg', '~> 1.2'
 gem 'pg_search', '~> 2.3.0'
 gem 'pry-rails'
 gem 'puma', '~> 4.3'
@@ -71,7 +71,7 @@ gem 'uglifier', '>= 1.3.0'
 group :test do
   gem 'capybara', '~> 3.29.0'
   gem 'codeclimate-test-reporter', '~> 1.0'
-  gem 'i18n-tasks', '~> 0.9.29'
+  gem 'i18n-tasks', '~> 0.9.30'
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 4.1'
   gem 'site_prism', '= 3.1'
@@ -84,7 +84,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
-  gem 'bullet', '~> 6.0.2'
+  gem 'bullet', '~> 6.1.0'
   gem 'byebug', platform: :mri
   gem 'colorize'
   gem 'guard-jasmine'
@@ -95,7 +95,7 @@ group :development, :test do
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.9'
   gem 'rubocop', '~> 0.76.0', require: false
-  gem 'rubocop-rspec', '~> 1.36.0', require: false
+  gem 'rubocop-rspec', '~> 1.38.1', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
