@@ -6,8 +6,8 @@ gem 'acts_as_tree', '~> 2.9'
 # undeclared (but documented) dependency on rubyzip
 # This is from the readme of axlsx_rails.
 gem 'rubyzip', '>= 1.2.4'
-gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
-gem 'axlsx_rails'
+gem 'caxlsx'
+gem 'caxlsx_rails'
 # AXLSX styler - easy styling of cells based on cell references
 gem 'axlsx_styler'
 gem 'awesome_print'
