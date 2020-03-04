@@ -102,8 +102,8 @@ GEM
     brakeman (4.7.1)
     browser_sync_rails (0.1.1)
       rails
-    builder (3.2.3)
-    bullet (6.0.2)
+    builder (3.2.4)
+    bullet (6.1.0)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     business_time (0.9.3)
@@ -569,7 +569,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.6)
     unicode-display_width (1.6.1)
-    uniform_notifier (1.12.1)
+    uniform_notifier (1.13.0)
     warden (1.2.8)
       rack (>= 2.0.6)
     web-console (3.7.0)
@@ -605,7 +605,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   browser_sync_rails
-  bullet (~> 6.0.2)
+  bullet (~> 6.1.0)
   business_time
   byebug
   capybara (~> 3.29.0)
