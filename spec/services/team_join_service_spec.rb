@@ -93,7 +93,12 @@ describe TeamJoinService do
         expect(new_user_roles).to include retained_user_roles[0]
         expect(new_user_roles).to include retained_user_roles[1]
       end
-
+      it 'allows old team users to see team history of the new team' do
+        #TODO
+      end
+      it 'allows new team users to see team history of the old team' do
+        #TODO
+      end
       it 'sets old team to deleted' do
         service.call
 
