@@ -49,7 +49,6 @@ class TeamJoinService
   end
   def keep_users_for_old_team
     @keep_user_roles = @team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
-#    @user_roles = @team.user_roles
   end
   def move_associations_to_new_team
     @target_team.user_roles += @team.user_roles
@@ -70,6 +69,7 @@ class TeamJoinService
     @team.moved_to_unit = @target_team
     @team.save
   end
+
   def restore_users_for_old_team
     @keep_user_roles.each do |ur|
       TeamsUsersRole.create!(team: Team.find(ur[0]), user: User.find(ur[1]), role: ur[2])

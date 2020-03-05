@@ -21,6 +21,7 @@ describe TeamJoinService do
       code: 'XYZ'
     )
   }
+
   let(:params) do
     HashWithIndifferentAccess.new(
         {
@@ -81,7 +82,6 @@ describe TeamJoinService do
       it 'Joins team users to the new team' do
         expect(business_unit.users).to match_array [responder]
         service.call
-
         expect(service.target_team.users).to match_array [responder]
       end
 
@@ -99,6 +99,7 @@ describe TeamJoinService do
       it 'allows new team users to see team history of the old team' do
         #TODO
       end
+
       it 'sets old team to deleted' do
         service.call
 
