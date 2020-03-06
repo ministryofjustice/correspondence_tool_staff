@@ -169,6 +169,10 @@ class TeamsController < ApplicationController
     end
   end
 
+  def join_directorate
+    set_directorates if params[:business_group_id]
+  end
+
   private
 
   def set_directorates

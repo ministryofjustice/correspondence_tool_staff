@@ -205,6 +205,7 @@ Rails.application.routes.draw do
     patch 'update_business_area' => 'teams#update_business_area', on: :member
     get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
     get 'move_to_directorate' => 'teams#move_to_directorate', on: :member
+    get 'join_directorate' => 'teams#join_directorate', on: :member
     patch 'update_directorate' => 'teams#update_directorate', on: :member
   end
 
