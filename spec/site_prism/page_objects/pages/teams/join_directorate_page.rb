@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Teams
       class JoinDirectoratePage < SitePrism::Page
-        set_url '/teams/{id}/move_to_directorate'
+        set_url '/teams/{id}/join_directorate'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

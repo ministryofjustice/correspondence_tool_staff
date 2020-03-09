@@ -34,6 +34,7 @@ feature 'joining business units' do
 
     teams_show_page.load(id: bu.id)
     teams_show_page.join_team_link.click
+
     expect(teams_join_page).to be_displayed(id: bu.id)
 
     # teams_move_page.business_groups.links.last.click
