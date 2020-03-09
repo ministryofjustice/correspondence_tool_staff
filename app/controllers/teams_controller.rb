@@ -6,6 +6,7 @@ class TeamsController < ApplicationController
                                   :destroy_business_area,
                                   :edit,
                                   :move_to_directorate,
+                                  :join_directorate,
                                   :show,
                                   :update,
                                   :update_business_area,
