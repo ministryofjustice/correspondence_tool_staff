@@ -380,5 +380,47 @@ RSpec.describe BusinessUnit, type: :model do
         expect(third_team.previous_teams).to match_array [first_team.id, second_team.id]
       end
     end
+    context 'when a team has been joined' do
+      let(:original_dir) { find_or_create :directorate }
+      let(:first_target_dir) { find_or_create :directorate }
+      let(:second_target_dir) { find_or_create :directorate }
+      let(:business_unit_to_move) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+          )
+      }
+      let(:business_unit_for_history) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+          )
+      }
+
+
+      it 'tracks all history, including joins' do
+        first_team = business_unit_to_move
+        service = TeamMoveService.new(first_team, first_target_dir)
+        service.call
+        second_team = service.new_team
+
+        # pause momentarily to let the database catch up
+        sleep 1
+
+        service = TeamMoveService.new(second_team, second_target_dir)
+        service.call
+
+        third_team = service.new_team
+        # create another team, with history into third team
+        fourth_team = business_unit_for_history
+        service = TeamMoveService.new(fourth_team, first_target_dir)
+        service.call
+        fifth_team = service.new_team
+
+        service = TeamJoinService.new(fifth_team, third_team)
+        service.call
+        expect(third_team.previous_teams).to match_array [first_team.id, second_team.id, fourth_team.id, fifth_team.id]
+      end
+    end
   end
 end
