@@ -170,8 +170,15 @@ class TeamsController < ApplicationController
     end
   end
 
-  def join_directorate
+  def join_teams
     set_directorates if params[:business_group_id]
+  end
+
+  def join_teams_form
+
+  end
+
+  def join_target_team
   end
 
   private
