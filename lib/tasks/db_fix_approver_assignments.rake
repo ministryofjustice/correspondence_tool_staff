@@ -28,7 +28,6 @@ namespace :db do
     users.each do |user|
       puts "* Checking team roles for #{user.full_name}"
       user.teams.each do |team|
-        user_teams = user.teams.pluck :id
         team.previous_teams.each do |team_id|
           team = Team.find_by_id(team_id)
           unless user.teams.reload.include? team
