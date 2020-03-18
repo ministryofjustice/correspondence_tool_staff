@@ -148,28 +148,16 @@ class BusinessUnit < Team
   def has_active_children?
     users.any?
   end
-
-  def original_previous_teams
-    previous_team_ids = []
-    previous_team = previous_incarnation(id)
-    while previous_team do
-      previous_team_ids << previous_team.id
-      previous_team = previous_incarnation(previous_team.id)
-    end
-    previous_team_ids
-  end
-
+  
   def previous_teams
     previous_team_ids = []
-    this_previous_team_ids = []
     previous_teams = previous_incarnations(id).ids
     while previous_teams.count() > 0 do
       previous_teams.each do |previous_team|
-        this_previous_team_ids << previous_team
+        previous_team_ids << previous_team
         # Add all the immediately previous incarnations of the team, remove the current
         previous_teams = previous_teams + previous_incarnations(previous_team).ids - [previous_team]
       end
-      previous_team_ids << this_previous_team_ids
     end
     previous_team_ids
   end
