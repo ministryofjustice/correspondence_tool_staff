@@ -148,7 +148,17 @@ class BusinessUnit < Team
   def has_active_children?
     users.any?
   end
-  
+
+  def original_previous_teams
+    previous_team_ids = []
+    previous_team = previous_incarnation(id)
+    while previous_team do
+      previous_team_ids << previous_team.id
+      previous_team = previous_incarnation(previous_team.id)
+    end
+    previous_team_ids
+  end
+
   def previous_teams
     previous_team_ids = []
     previous_teams = previous_incarnations(id).ids

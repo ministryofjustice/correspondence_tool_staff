@@ -421,6 +421,9 @@ RSpec.describe BusinessUnit, type: :model do
         service.call
         expect(third_team.previous_teams).to match_array [first_team.id, second_team.id, fourth_team.id, fifth_team.id]
       end
+      it 'retrieves all historic user roles from previous teams' do
+
+      end
     end
   end
 end
