@@ -37,6 +37,12 @@ feature 'joining business units' do
 
     expect(teams_join_page).to be_displayed(id: bu.id)
 
+    select("Operations")
+
+    select("Press Office Directorate")
+
+    teams_join_page.find_row("Press Office").join_team_link.click
+byebug
     # teams_move_page.business_groups.links.last.click
     # expect(teams_move_page).to have_content "This is where the team is currently located"
 
