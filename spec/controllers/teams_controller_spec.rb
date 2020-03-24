@@ -588,7 +588,7 @@ RSpec.describe TeamsController, type: :controller do
         expect(assigns(:team)).to eq business_unit
       end
 
-      it 'renders the get_update_form.js.erb' do
+      it 'renders the right template' do
         get :move_to_directorate, params: params
         expect(response).to render_template('teams/move_to_directorate')
       end
@@ -647,6 +647,30 @@ RSpec.describe TeamsController, type: :controller do
       patch :update_directorate, params: params
       expect(business_unit.reload.parent).not_to eq old_parent
       expect(business_unit.reload.parent).to eq destination_directorate
+    end
+  end
+
+  fdescribe "#join_teams" do
+    before do
+      sign_in manager
+    end
+
+    context "without choosing a business group" do
+      let(:params) {
+        {
+            id: business_unit.id
+        }
+      }
+
+      it 'assigns @team' do
+        get :join_teams, params: params
+        expect(assigns(:team)).to eq business_unit
+      end
+
+      it 'renders the right template' do
+        get :join_teams, params: params
+        expect(response).to render_template('teams/join_teams')
+      end
     end
   end
 
