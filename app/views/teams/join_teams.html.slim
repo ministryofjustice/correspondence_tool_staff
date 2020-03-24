@@ -1,0 +1,13 @@
+- content_for :page_title do
+  = t('page_title.move_team_page', team_name: @team.name)
+
+- content_for :heading
+  = t('teams.move.heading')
+
+- content_for :sub_heading
+  = t('teams.move.subhead', team_name: @team.name)
+
+= render partial: 'layouts/header'
+
+= render partial: 'browse_teams'
+

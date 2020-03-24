@@ -6,7 +6,7 @@ class TeamsController < ApplicationController
                                   :destroy_business_area,
                                   :edit,
                                   :move_to_directorate,
-                                  :join_directorate,
+                                  :join_teams,
                                   :show,
                                   :update,
                                   :update_business_area,
@@ -172,6 +172,7 @@ class TeamsController < ApplicationController
 
   def join_teams
     set_directorates if params[:business_group_id]
+    set_teams if params[:directorate_id]
   end
 
   def join_teams_form
@@ -188,6 +189,11 @@ class TeamsController < ApplicationController
         .where(parent_id: params[:business_group_id])
         .active
         .order(:name)
+  end
+
+  def set_teams
+    @directorate = Directorate.find(params[:directorate_id])
+    @business_units = @directorate.business_units
   end
 
   def team_params
