@@ -1,7 +1,7 @@
 module PageObjects
   module Pages
     module Teams
-      class JoinTeamPage < SitePrism::Page
+      class JoinTeamFormPage < SitePrism::Page
         set_url '/teams/{id}/join_teams'
 
         section :primary_navigation,
@@ -22,12 +22,6 @@ module PageObjects
             element :directorate_details, 'div.team-details'
             element :move_to_directorate_link, 'div.team-actions a'
           end
-        end
-
-        def find_row(directorate_name)
-          directorates_list.directorates.find { |item|
-            item.directorate_details.text == directorate_name
-          }
         end
       end
     end
