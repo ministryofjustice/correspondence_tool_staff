@@ -7,6 +7,7 @@ class TeamsController < ApplicationController
                                   :edit,
                                   :move_to_directorate,
                                   :join_teams,
+                                  :join_teams_form,
                                   :show,
                                   :update,
                                   :update_business_area,
@@ -176,7 +177,7 @@ class TeamsController < ApplicationController
   end
 
   def join_teams_form
-
+    @target_team = BusinessUnit.find(params[:business_unit_id])
   end
 
   def join_target_team

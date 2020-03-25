@@ -650,7 +650,7 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
-  fdescribe "#join_teams" do
+  describe "#join_teams" do
     before do
       sign_in manager
     end
@@ -658,7 +658,7 @@ RSpec.describe TeamsController, type: :controller do
     context "without choosing a business group" do
       let(:params) {
         {
-            id: business_unit.id
+          id: business_unit.id
         }
       }
 
@@ -670,6 +670,37 @@ RSpec.describe TeamsController, type: :controller do
       it 'renders the right template' do
         get :join_teams, params: params
         expect(response).to render_template('teams/join_teams')
+      end
+    end
+  end
+
+  describe "#join_teams_form" do
+    before do
+      sign_in manager
+    end
+
+    context "with a target business unit" do
+      let(:target_business_unit)   { find_or_create :foi_responding_team }
+      let(:params) {
+        {
+          id: business_unit.id,
+          business_unit_id: target_business_unit.id
+        }
+      }
+
+      it 'assigns @team' do
+        get :join_teams_form, params: params
+        expect(assigns(:team)).to eq business_unit
+      end
+
+      it 'assigns @target_team' do
+        get :join_teams_form, params: params
+        expect(assigns(:target_team)).to eq target_business_unit
+      end
+
+      it 'renders the right template' do
+        get :join_teams_form, params: params
+        expect(response).to render_template('teams/join_teams_form')
       end
     end
   end
