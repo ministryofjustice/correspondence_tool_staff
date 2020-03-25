@@ -1,0 +1,13 @@
+- content_for :page_title do
+  = t('page_title.move_team_page', team_name: @team.name)
+
+- content_for :heading
+  = t('teams.join.heading')
+
+- content_for :sub_heading
+  = t('teams.join.subhead', team_name: @team.name)
+
+= render partial: 'layouts/header'
+
+= form_tag join_teams_form_team_path(@team)
+  = text_field_tag :target_team_id, @target_team.id
