@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Teams
       class JoinTeamFormPage < SitePrism::Page
-        set_url '/teams/{id}/join_teams'
+        set_url '/teams/{id}/join_teams_form'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
