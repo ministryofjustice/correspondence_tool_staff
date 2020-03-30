@@ -30,7 +30,7 @@ class TeamJoinService
   def call
     ActiveRecord::Base.transaction do
       begin
-        join_team!
+        # join_team!
         @result = :ok
       rescue
         @team.reload

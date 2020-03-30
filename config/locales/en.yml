@@ -1005,7 +1005,7 @@ en:
     join:
       subhead: "Business unit: %{team_name}"
       heading: Join business unit
-      # joined_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
+      joined_successfully: "%{team_name} has been joined with %{target_team}"
 
   users:
     new:

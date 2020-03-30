@@ -9,5 +9,6 @@
 
 = render partial: 'layouts/header'
 
-= form_tag join_teams_form_team_path(@team)
+= form_tag join_teams_team_path(@team)
   = text_field_tag :target_team_id, @target_team.id
+  = submit_tag :join, class: 'join-team-button'

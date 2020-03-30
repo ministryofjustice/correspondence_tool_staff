@@ -8,6 +8,7 @@ class TeamsController < ApplicationController
                                   :move_to_directorate,
                                   :join_teams,
                                   :join_teams_form,
+                                  :join_target_team,
                                   :show,
                                   :update,
                                   :update_business_area,
@@ -177,10 +178,22 @@ class TeamsController < ApplicationController
   end
 
   def join_teams_form
-    @target_team = BusinessUnit.find(params[:business_unit_id])
+    @target_team = BusinessUnit.find(params[:target_team_id])
   end
 
   def join_target_team
+    @target_team = BusinessUnit.find(params[:target_team_id])
+    service = TeamJoinService.new(@team, @target_team)
+    service.call
+    case service.result
+    when :ok
+      flash[:notice] = I18n.t('teams.join.joined_successfully',
+                        team_name: @team.name, target_team: @target_team.name)
+      redirect_to team_path(service.target_team)
+    else
+      flash[:alert] = I18n.t('teams.error')
+      redirect_to join_teams_form_team_path(@team)
+    end
   end
 
   private
