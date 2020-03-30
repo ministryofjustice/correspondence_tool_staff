@@ -1,5 +1,5 @@
 # TO-DO https://dsdmoj.atlassian.net/browse/CT-2780
-# remove this file after update to Rails 5.2
+# remove this file after update to Rails 5.2
 # Monkey patch escape JavaScript method to prevent XSS vulnerability
 # https://github.com/advisories/GHSA-65cv-r6x7-79hv
 
@@ -11,8 +11,8 @@ ActionView::Helpers::JavaScriptHelper::JS_ESCAPE_MAP.merge!(
 )
 
 module ActionView::Helpers::JavaScriptHelper
-  alias :old_ej :escape_javascript
-  alias :old_j :j
+  alias old_ej escape_javascript
+  alias old_j j
 
   def escape_javascript(javascript)
     javascript = javascript.to_s
@@ -24,7 +24,7 @@ module ActionView::Helpers::JavaScriptHelper
     javascript.html_safe? ? result.html_safe : result
   end
 
-  alias :j :escape_javascript
+  alias j escape_javascript
 
   def foo
     'foo'
