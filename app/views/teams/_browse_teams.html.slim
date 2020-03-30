@@ -25,7 +25,10 @@ div.directorate-selector
               = business_unit.name
 
         .team-actions
-          = link_to business_unit.name,
-              join_teams_form_team_path(@team, business_unit_id: business_unit.id ),
-              method: :get,
-              class: 'button'
+          - if business_unit == @team
+            = "This is the team you're working with"
+          - else
+            = link_to business_unit.name,
+                join_teams_form_team_path(@team, target_team_id: business_unit.id ),
+                method: :get,
+                class: 'button'

@@ -13,6 +13,7 @@ module PageObjects
         element :heading, '.page-heading--primary'
         element :subhead, '.page-heading--secondary'
 
+        element :join_button, '.join-team-button'
 
       end
     end

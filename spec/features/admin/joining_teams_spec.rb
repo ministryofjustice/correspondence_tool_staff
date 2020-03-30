@@ -29,6 +29,8 @@ feature 'joining business units' do
     click_on "Closed cases"
     expect(cases_page).to have_text(bu.cases.closed.first.number)
 
+    target_team = Team.find_by_name "Press Office"
+
     # manager moves team
     login_as manager
 
@@ -41,9 +43,14 @@ feature 'joining business units' do
 
     select("Press Office Directorate")
 
-    teams_join_page.find_row("Press Office").join_team_link.click
+    teams_join_page.find_row(target_team.name).join_team_link.click
 
     expect(teams_join_form_page).to be_displayed(id: bu.id)
+
+    teams_join_form_page.join_button.click
+
+    expect(teams_show_page).to be_displayed(id: target_team.id)
+    expect(teams_show_page).to have_content "#{bu.name} has been joined with Press Office"
 
     # teams_move_page.business_groups.links.last.click
     # expect(teams_move_page).to have_content "This is where the team is currently located"
