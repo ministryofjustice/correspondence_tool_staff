@@ -5,7 +5,7 @@
   = t('teams.join.heading')
 
 - content_for :sub_heading
-  = t('teams.join.subhead', team_name: @team.name)
+  = team_breadcrumb(@team, true)
 
 = render partial: 'layouts/header'
 p Joining with another business unit means:
