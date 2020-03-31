@@ -18,4 +18,16 @@ module TeamsHelper
       I18n.t(".teams.deactivate_info.#{team_name}")
     end
   end
+
+  def join_teams_back_link
+    link_to "Back", join_teams_back_url, class: 'govuk-back-link'
+  end
+
+  def join_teams_cancel_link
+    link_to "Cancel", join_teams_back_url
+  end
+
+  def join_teams_back_url
+    join_teams_team_path(@team, business_group_id: @team.business_group.id, directorate_id: @team.directorate.id)
+  end
 end

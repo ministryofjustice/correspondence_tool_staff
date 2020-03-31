@@ -1005,6 +1005,7 @@ en:
     join:
       subhead: "Business unit: %{team_name}"
       heading: Join business unit
+      confirm_heading: Confirm join
       joined_successfully: "%{team_name} has been joined with %{target_team}"
 
   users:
