@@ -2,13 +2,52 @@
   = t('page_title.move_team_page', team_name: @team.name)
 
 - content_for :heading
-  = t('teams.join.heading')
+  = t('teams.join.confirm_heading')
 
 - content_for :sub_heading
-  = t('teams.join.subhead', team_name: @team.name)
+  = "#{@team.directorate.business_group.name} > #{@team.directorate.name} > #{@team.name}"
+
+= join_teams_back_link
 
 = render partial: 'layouts/header'
 
+h3
+  = @team.name
+dl
+  dt
+    | Business group
+  dd
+    = @team.directorate.business_group.name
+  dt
+    | Directorate
+  dd
+    = @team.directorate.name
+  dt
+    | Team
+  dd
+    = @team.name
+h2 Joining to
+
+h3
+  = @target_team.name
+
+dl
+  dt
+    | Business group
+  dd
+    = @target_team.directorate.business_group.name
+  dt
+    | Directorate
+  dd
+    = @target_team.directorate.name
+  dt
+    | Team
+  dd
+    = @target_team.name
+
+
 = form_tag join_teams_team_path(@team)
-  = text_field_tag :target_team_id, @target_team.id
-  = submit_tag :join, class: 'join-team-button'
+  = hidden_field_tag :target_team_id, @target_team.id
+  p
+    = submit_tag :confirm, class: 'join-team-button button'
+    = join_teams_cancel_link

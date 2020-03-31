@@ -8,6 +8,14 @@
   = t('teams.join.subhead', team_name: @team.name)
 
 = render partial: 'layouts/header'
+p Joining with another business unit means:
+
+ul
+  li all open cases and users will move to the destination business unit
+  li all members of the new business unit will be able to view closed cases
+  li all members can view performance reports for the unit up to the move
+
+p This action cannot be reversed
 
 = render partial: 'browse_teams'
 
