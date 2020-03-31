@@ -37,7 +37,7 @@ module TeamsHelper
     teams << team.parent&.parent
     teams << team.parent
     teams << team if include_self
-    crumb = teams.compact.map { |team| team_link(team) }
+    crumb = teams.compact.map { |t| team_link(t) }
     crumb.join(" > ").html_safe
   end
 
