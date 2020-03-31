@@ -19,15 +19,29 @@ module TeamsHelper
     end
   end
 
-  def join_teams_back_link
-    link_to "Back", join_teams_back_url, class: 'govuk-back-link'
+  def join_teams_back_link(team)
+    link_to "Back", join_teams_back_url(team), class: 'govuk-back-link'
   end
 
-  def join_teams_cancel_link
-    link_to "Cancel", join_teams_back_url
+  def join_teams_cancel_link(team)
+    link_to "Cancel", join_teams_back_url(team)
   end
 
-  def join_teams_back_url
-    join_teams_team_path(@team, business_group_id: @team.business_group.id, directorate_id: @team.directorate.id)
+  def join_teams_back_url(team)
+    join_teams_team_path(team, business_group_id: team.business_group.id, directorate_id: team.directorate.id)
+  end
+
+  def team_breadcrumb(team, include_self = false)
+    return "Business Group" unless team.parent
+    teams = []
+    teams << team.parent&.parent
+    teams << team.parent
+    teams << team if include_self
+    crumb = teams.compact.map { |team| team_link(team) }
+    crumb.join(" > ").html_safe
+  end
+
+  def team_link(team)
+    link_to team.name, team_path(team.id)
   end
 end

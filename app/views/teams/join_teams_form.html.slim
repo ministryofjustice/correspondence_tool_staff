@@ -4,10 +4,8 @@
 - content_for :heading
   = t('teams.join.confirm_heading')
 
-- content_for :sub_heading
-  = "#{@team.directorate.business_group.name} > #{@team.directorate.name} > #{@team.name}"
 
-= join_teams_back_link
+= join_teams_back_link(@team)
 
 = render partial: 'layouts/header'
 
@@ -45,9 +43,10 @@ dl
   dd
     = @target_team.name
 
+p #{@team.name}'s users and open cases will be joined to #{@target_team.name}'s business unit
 
 = form_tag join_teams_team_path(@team)
   = hidden_field_tag :target_team_id, @target_team.id
   p
     = submit_tag :confirm, class: 'join-team-button button'
-    = join_teams_cancel_link
+    = join_teams_cancel_link(@team)
