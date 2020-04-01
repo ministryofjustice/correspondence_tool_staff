@@ -26,8 +26,5 @@ module ActionView::Helpers::JavaScriptHelper
 
   alias j escape_javascript
 
-  def foo
-    'foo'
-  end
 end
 
