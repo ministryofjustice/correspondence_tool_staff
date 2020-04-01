@@ -648,6 +648,20 @@ RSpec.describe TeamsController, type: :controller do
       expect(business_unit.reload.parent).not_to eq old_parent
       expect(business_unit.reload.parent).to eq destination_directorate
     end
+
+    # context 'signed in as a non-manager' do
+
+    #   before(:each) do
+    #     sign_in foi_responder
+    #   end
+
+    #   it 'redirects to root with unauth message in flash' do
+    #     post :create, params:  { 'team' => {  'name' => 'Frog sizing unit' } }
+    #     expect(flash['alert']).to eq 'You are not authorised to add new teams'
+    #     expect(response).to redirect_to(root_path)
+    #   end
+    # end
+
   end
 
   describe "#join_teams" do
