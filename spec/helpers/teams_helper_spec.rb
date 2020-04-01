@@ -88,42 +88,4 @@ RSpec.describe TeamsHelper, type: :helper do
       end
     end
   end
-
-  describe "team_breadcrumb" do
-    let(:business_unit) { create :business_unit, id: 303, directorate: directorate }
-    let(:directorate) { create :directorate, id: 302, business_group: business_group }
-    let(:business_group) { create :business_group, id: 301 }
-
-    context "given a team that is a business group" do
-      it "returns 'Business Group'" do
-        expect(team_breadcrumb(business_group)).to eq(
-          "Business Group"
-        )
-      end
-    end
-
-    context "given a team that is a directorate" do
-      it "returns a link to the business group it belongs to" do
-        expect(team_breadcrumb(directorate)).to eq(
-          team_link(business_group)
-        )
-      end
-    end
-
-    context "given a team that is a business unit" do
-      it "returns a breadcrumb trail containing the group and directorate" do
-        expect(team_breadcrumb(business_unit)).to eq(
-          "#{team_link(business_group)} > #{team_link(directorate)}"
-        )
-      end
-    end
-
-    context "given a business unit and include self is true" do
-      it "returns a breadcrumb trail with itself and parents" do
-        expect(team_breadcrumb(business_unit, true)).to eq(
-          "#{team_link(business_group)} > #{team_link(directorate)} > #{team_link(business_unit)}"
-        )
-      end
-    end
-  end
 end
