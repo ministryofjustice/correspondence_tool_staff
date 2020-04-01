@@ -148,15 +148,12 @@ class TeamsController < ApplicationController
   end
 
   def move_to_directorate
-    # TODO https://dsdmoj.atlassian.net/browse/CT-2606
-    # authorize the user to move teams
+    authorize @team, :move?
     set_directorates if params[:business_group_id]
   end
 
   def update_directorate
-    # TODO https://dsdmoj.atlassian.net/browse/CT-2606
-    # authorize the user to move teams
-    # authorize @team
+    authorize @team, :move?
     @directorate = Directorate.find(params[:directorate_id])
     service = TeamMoveService.new(@team, @directorate)
     service.call
@@ -173,15 +170,18 @@ class TeamsController < ApplicationController
   end
 
   def join_teams
+    authorize @team, :join?
     set_directorates if params[:business_group_id]
     set_teams if params[:directorate_id]
   end
 
   def join_teams_form
+    authorize @team, :join?
     @target_team = BusinessUnit.find(params[:target_team_id])
   end
 
   def join_target_team
+    authorize @team, :join?
     @target_team = BusinessUnit.find(params[:target_team_id])
     service = TeamJoinService.new(@team, @target_team)
     service.call

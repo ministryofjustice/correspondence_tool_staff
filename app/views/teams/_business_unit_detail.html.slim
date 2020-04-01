@@ -77,7 +77,10 @@ p
                 class: 'button')
 hr
 
-p = link_to "Move business unit", move_to_directorate_team_path(team.id), id: 'move-team-link'
-p = link_to "Join business unit", join_teams_team_path(team.id), id: 'join-team-link'
+- if Pundit.policy(current_user, team).move?
+  p = link_to "Move business unit", move_to_directorate_team_path(team.id), id: 'move-team-link'
+
+- if Pundit.policy(current_user, team).join?
+  p = link_to "Join business unit", join_teams_team_path(team.id), id: 'join-team-link'
 
 p = show_deactivate_link_or_info(current_user, @team)
