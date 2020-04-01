@@ -32,13 +32,13 @@ module TeamsHelper
   end
 
   def team_breadcrumb(team, include_self = false)
-    return "Business Group" unless team.parent
+    return "Business group" unless team.parent
     teams = []
     teams << team.parent&.parent
     teams << team.parent
     teams << team if include_self
     crumb = teams.compact.map { |t| team_link(t) }
-    crumb.join(" > ").html_safe
+    output = crumb.join(" > ").html_safe + " >".html_safe
   end
 
   def team_link(team)
