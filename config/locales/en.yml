@@ -1003,6 +1003,7 @@ en:
       moved_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
       confirm_message: Are you sure you want to do this? This business unit will be deactivated to preserve its history, and a new one will be created
     join:
+      subhead: "Business unit: %{team_name}"
       heading: Join business unit
       confirm_heading: Confirm join
       joined_successfully: "%{team_name} has been joined with %{target_team}"

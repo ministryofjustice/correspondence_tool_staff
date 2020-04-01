@@ -30,18 +30,4 @@ module TeamsHelper
   def join_teams_back_url(team)
     join_teams_team_path(team, business_group_id: team.business_group.id, directorate_id: team.directorate.id)
   end
-
-  def team_breadcrumb(team, include_self = false)
-    return "Business group" unless team.parent
-    teams = []
-    teams << team.parent&.parent
-    teams << team.parent
-    teams << team if include_self
-    crumb = teams.compact.map { |t| team_link(t) }
-    output = crumb.join(" > ").html_safe + " >".html_safe
-  end
-
-  def team_link(team)
-    link_to team.name, team_path(team.id)
-  end
 end

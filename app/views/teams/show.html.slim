@@ -7,7 +7,7 @@
 - content_for :sub_heading
   span.visually-hidden
     = "You are viewing "
-  = team_breadcrumb(@team)
+  = @team.pretty_type
 
 = render partial: 'layouts/header'
 
