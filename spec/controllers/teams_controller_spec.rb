@@ -698,7 +698,7 @@ RSpec.describe TeamsController, type: :controller do
       let(:params) {
         {
           id: business_unit.id,
-          business_unit_id: target_business_unit.id
+          target_team_id: target_business_unit.id
         }
       }
 
