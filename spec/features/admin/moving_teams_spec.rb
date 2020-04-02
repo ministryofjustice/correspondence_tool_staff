@@ -36,10 +36,12 @@ feature 'moving business units' do
     teams_show_page.move_team_link.click
     expect(teams_move_page).to be_displayed(id: bu.id)
 
-    teams_move_page.business_groups.links.last.click
-    expect(teams_move_page).to have_content "This is where the team is currently located"
+    select("Responder Business Group")
+    # teams_move_page.business_groups.links.last.click
 
-    teams_move_page.business_groups.links.first.click
+    expect(teams_move_page).to have_content "This is where the team is currently located"
+    select("Business Group 1")
+
 
     teams_move_page.directorates_list.directorates.first.move_to_directorate_link.click
 
