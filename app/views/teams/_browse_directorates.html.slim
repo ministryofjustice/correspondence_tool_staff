@@ -1,14 +1,8 @@
-p.bold-medium
-  | Browse by business group
-
-ul.business-groups.list
-  - BusinessGroup.all.order(:name).each do |business_group|
-    li.business-group
-      - if business_group.id == params[:business_group_id].to_i
-        = business_group.name
-      - else
-        = link_to(business_group.name,
-                move_to_directorate_team_path(@team, business_group_id: business_group.id))
+div.bg-selector
+  h2 Select a business group
+  = form_tag move_to_directorate_team_path(@team), method: :get
+    = select_tag :business_group_id, options_from_collection_for_select(BusinessGroup.all.order(:name), :id, :name, params[:business_group_id]),
+      onchange: 'this.form.submit();', include_blank: "Choose..."
 
 - if params[:business_group_id]
   p.bold-medium
