@@ -16,17 +16,17 @@
 
 .grid-row
   .column-two-thirds
-    p.bold-small
+    h3.bold-small
       = "Role "
-      ul.areas-covered.list.list-bullet
-        li= team.role.humanize
+    ul.areas-covered.list.list-bullet
+      li= team.role.humanize
 .grid-row
   .column-two-thirds
-    p.bold-small
+    h3.bold-small
       = "Correspondence types "
-      ul.areas-covered.list.list-bullet
-        - team.correspondence_types.each do |cat|
-          li= cat.name
+    ul.areas-covered.list.list-bullet
+      - team.correspondence_types.each do |cat|
+        li= cat.name
 
 = render partial: 'shared/areas_covered_list', locals: { team: @team }
 
