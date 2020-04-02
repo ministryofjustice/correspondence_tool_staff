@@ -28,7 +28,5 @@ ul.business-groups.list
             = "This is where the team is currently located"
           - else
             = link_to t('button.move'),
-                update_directorate_team_path(@team, directorate_id: directorate.id),
-                method: :patch,
-                data: {confirm: I18n.t("teams.move.confirm_message")},
+                move_to_directorate_form_team_path(@team, directorate_id: directorate.id),
                 class: 'button'

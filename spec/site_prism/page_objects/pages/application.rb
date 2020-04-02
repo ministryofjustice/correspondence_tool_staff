@@ -75,6 +75,7 @@ module PageObjects
         teams_index:                    'Teams::IndexPage',
         teams_areas:                    'Teams::BusinessAreasCoveredPage',
         teams_move:                     'Teams::MoveToDirectoratePage',
+        teams_move_form:                'Teams::MoveToDirectorateFormPage',
         teams_join:                     'Teams::JoinTeamPage',
         teams_join_form:                'Teams::JoinTeamFormPage',
         teams_show:                     'Teams::ShowPage',

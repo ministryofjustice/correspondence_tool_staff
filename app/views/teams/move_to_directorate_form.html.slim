@@ -1,0 +1,49 @@
+- content_for :page_title do
+  = t('page_title.move_team_page', team_name: @team.name)
+
+- content_for :heading
+  = t('teams.move.confirm_heading')
+
+
+= move_to_directorate_back_link(@team)
+
+= render partial: 'layouts/header'
+
+h3
+  = @team.name
+dl
+  dt
+    | Business group
+  dd
+    = @team.directorate.business_group.name
+  dt
+    | Directorate
+  dd
+    = @team.directorate.name
+  dt
+    | Team
+  dd
+    = @team.name
+h2 Moving to
+
+h3
+  = @directorate.name
+
+dl
+  dt
+    | Business group
+  dd
+    = @directorate.business_group.name
+  dt
+    | Directorate
+  dd
+    = @directorate.name
+
+
+p #{@team.name}'s users and open cases will be moved to #{@directorate.name}
+
+= form_tag update_directorate_team_path(@team)
+  = hidden_field_tag :directorate_id, @directorate.id
+  p
+    = submit_tag "Confirm", class: 'update-directorate-button button'
+    = move_to_directorate_cancel_link(@team)

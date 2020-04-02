@@ -608,6 +608,41 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
+  describe "GET #move_to_directorate_form" do
+    let(:destination_directorate)     { find_or_create :directorate, name: 'Destination Directorate' }
+    before do
+      sign_in manager
+    end
+
+    context "without choosing a directorate" do
+    end
+
+    context "with a directorate selected" do
+      let(:params) {
+        {
+            id: business_unit.id,
+            directorate_id: destination_directorate.id
+        }
+      }
+      it 'assigns @directorate' do
+        get :move_to_directorate_form, params: params
+        expect(assigns(:directorate)).to eq destination_directorate
+      end
+
+      it 'authorises' do
+        expect{
+          get :move_to_directorate_form, params: params
+        }.to require_permission(:move?)
+                 .with_args(manager, business_unit)
+      end
+
+      it 'assigns @team' do
+        get :move_to_directorate, params: params
+        expect(assigns(:team)).to eq business_unit
+      end
+    end
+  end
+
   describe "PATCH #update_directorate" do
     let(:destination_directorate)     { find_or_create :directorate, name: 'Destination Directorate' }
     let(:params) {

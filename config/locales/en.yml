@@ -1002,6 +1002,7 @@ en:
     move:
       subhead: "Business unit: %{team_name}"
       heading: Move business unit
+      confirm_heading: Confirm move
       moved_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
       confirm_message: Are you sure you want to do this? This business unit will be deactivated to preserve its history, and a new one will be created
     join:

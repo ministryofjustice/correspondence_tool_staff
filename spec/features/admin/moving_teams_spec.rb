@@ -40,10 +40,13 @@ feature 'moving business units' do
     expect(teams_move_page).to have_content "This is where the team is currently located"
 
     teams_move_page.business_groups.links.first.click
-    accept_confirm do
-      teams_move_page.directorates_list.directorates.first.move_to_directorate_link.click
-    end
-    expect(teams_show_page).to have_content "#{bu.reload.name} has been moved to"
+
+    teams_move_page.directorates_list.directorates.first.move_to_directorate_link.click
+
+    expect(teams_move_form_page).to be_displayed(id: bu.id)
+    teams_move_form_page.move_button.click
+
+    expect(teams_show_page).to have_content "#{bu.original_team_name} has been moved to"
 
     # verify responder can see cases after move
     login_as responder
