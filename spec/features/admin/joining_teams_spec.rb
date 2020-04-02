@@ -35,6 +35,7 @@ feature 'joining business units' do
     login_as manager
 
     teams_show_page.load(id: bu.id)
+
     teams_show_page.join_team_link.click
 
     expect(teams_join_page).to be_displayed(id: bu.id)
@@ -50,7 +51,8 @@ feature 'joining business units' do
     teams_join_form_page.join_button.click
 
     expect(teams_show_page).to be_displayed(id: target_team.id)
-    expect(teams_show_page).to have_content "#{bu.name} has been joined with Press Office"
+
+    expect(teams_show_page).to have_content "#{bu.original_team_name} has been joined with Press Office"
 
     # teams_move_page.business_groups.links.last.click
     # expect(teams_move_page).to have_content "This is where the team is currently located"
