@@ -6,6 +6,7 @@ class TeamsController < ApplicationController
                                   :destroy_business_area,
                                   :edit,
                                   :move_to_directorate,
+                                  :move_to_directorate_form,
                                   :join_teams,
                                   :join_teams_form,
                                   :join_target_team,
@@ -150,6 +151,11 @@ class TeamsController < ApplicationController
   def move_to_directorate
     authorize @team, :move?
     set_directorates if params[:business_group_id]
+  end
+
+  def move_to_directorate_form
+    authorize @team, :move?
+    @directorate = Directorate.find(params[:directorate_id])
   end
 
   def update_directorate
