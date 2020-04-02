@@ -576,10 +576,9 @@ RSpec.describe TeamsController, type: :controller do
       }
 
       it 'authorises' do
-        pending "this doesn't work yet"
         expect{
           get :move_to_directorate, params: params
-        }.to require_permission(:business_areas_covered?)
+        }.to require_permission(:move?)
                  .with_args(manager, business_unit)
       end
 
@@ -623,10 +622,9 @@ RSpec.describe TeamsController, type: :controller do
     end
 
     it 'authorises' do
-      pending "this doesn't work yet"
       expect{
         patch :update_directorate, params: params
-      }.to require_permission(:business_areas_covered?)
+      }.to require_permission(:move?)
                .with_args(manager, business_unit)
     end
 
@@ -637,16 +635,17 @@ RSpec.describe TeamsController, type: :controller do
 
     it 'redirects away from team' do
       patch :update_directorate, params: params
+      expect(response).to redirect_to(team_path(Team.last))
       expect(response).not_to redirect_to(team_path(business_unit))
       expect(flash[:notice]).to have_content 'has been moved to'
     end
 
     it 'updates the area' do
-      pending 'this will work after we are finished'
       old_parent = business_unit.parent
       patch :update_directorate, params: params
-      expect(business_unit.reload.parent).not_to eq old_parent
-      expect(business_unit.reload.parent).to eq destination_directorate
+      new_business_unit = BusinessUnit.last
+      expect(new_business_unit.parent).not_to eq old_parent
+      expect(new_business_unit.parent).to eq destination_directorate
     end
 
     # context 'signed in as a non-manager' do

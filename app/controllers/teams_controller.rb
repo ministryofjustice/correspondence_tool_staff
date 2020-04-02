@@ -188,7 +188,7 @@ class TeamsController < ApplicationController
     case service.result
     when :ok
       flash[:notice] = I18n.t('teams.join.joined_successfully',
-                        team_name: @team.name, target_team: @target_team.name)
+                        team_name: @team.original_team_name, target_team: @target_team.name)
       redirect_to team_path(service.target_team)
     else
       flash[:alert] = I18n.t('teams.error')
