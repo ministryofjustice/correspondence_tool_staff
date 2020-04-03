@@ -1,20 +1,22 @@
 h2.heading-medium
-  | Browse by business group
+  = t('teams.browse_by_business_group')
 
 div.form-group.bg-selector
-  label.form-label for="business_group_id" Select a business group
+  label.form-label for="business_group_id"
+    = t('teams.join.labels.select_business_group')
   = form_tag join_teams_team_path(@team), method: :get
     = select_tag :business_group_id, options_from_collection_for_select(BusinessGroup.all.order(:name), :id, :name, params[:business_group_id]),
-      onchange: 'this.form.submit();', include_blank: "Choose...",
+      onchange: 'this.form.submit();', include_blank: t('common.choose'),
       class: 'form-control'
 
 div.form-group.directorate-selector
   - if defined?(@directorates)
-    label.form-label for="directorate_id" Select a Directorate
+    label.form-label for="directorate_id"
+      = t('teams.join.labels.select_directorate')
     = form_tag join_teams_team_path(@team), method: :get
       = hidden_field_tag :business_group_id, params[:business_group_id]
       = select_tag :directorate_id, options_from_collection_for_select(@directorates, :id, :name, params[:directorate_id]),
-        onchange: 'this.form.submit();', include_blank: "Choose...",
+        onchange: 'this.form.submit();', include_blank: t('common.choose'),
         class: 'form-control'
 
 - if defined?(@business_units)
@@ -28,9 +30,9 @@ div.form-group.directorate-selector
 
         .team-actions
           - if business_unit == @team
-            = "This is the team you're working with"
+            = t('teams.join.team_your_working_with')
           - else
-            = link_to "Join with this team",
+            = link_to t('teams.join.join_with_this_team'),
                 join_teams_form_team_path(@team, target_team_id: business_unit.id ),
                 method: :get,
                 class: 'button'
