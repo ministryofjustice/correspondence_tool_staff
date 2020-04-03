@@ -515,6 +515,7 @@ en:
 
   common:
     alert_banner: "This service will be down for essential maintenance during the afternoon of Wednesday 13 November. You will not have access after 13.00 on this day – the site will likely resume service after business hours. Apologies for the inconvenience."
+    choose: Choose...
     choose_file: Choose a file
     error: error
     greeting: Hello %{user}
@@ -980,6 +981,7 @@ en:
     download_custom:
       waiting: Your custom report will be ready soon. Try again shortly.
   teams:
+    browse_by_business_group: Browse by business group
     business_unit_list:
       team_members: Team members
     business_unit_detail:
@@ -1003,11 +1005,26 @@ en:
       moved_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
       confirm_message: Are you sure you want to do this? This business unit will be deactivated to preserve its history, and a new one will be created
     join:
-      subhead: "Business unit: %{team_name}"
-      heading: Join business unit
+      business_group: Business group
+      directorate: Directorate
+      team: Team
       confirm_heading: Confirm join
+      heading: Join business unit
+      intro:
+        bullet1: all open cases and users will move to the destination business unit
+        bullet2: all members of the new business unit will be able to view closed cases
+        bullet3: all members can view performance reports for the unit up to the move    
+        paragraph: "Joining with another business unit means:"
+        unreversible: This action cannot be reversed
       joined_successfully: "%{team_name} has been joined with %{target_team}"
-
+      joining_with: Joining with
+      join_with_this_team: Join with this team
+      labels: 
+        select_business_group: Select a business group
+        select_directorate: Select a directorate
+      subhead: "Business unit: %{team_name}"
+      team_your_working_with: This is the team you're working with
+      will_be_joined: "%{team_name}'s users and open cases will be joined to %{target_team_name}'s business unit"
   users:
     new:
       create: Create user

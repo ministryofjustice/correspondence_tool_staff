@@ -15,43 +15,44 @@ h2.heading-medium
 dl
   div
     dt
-      | Business group
+      = t('teams.join.business_group')
     dd
       = @team.directorate.business_group.name
   div
     dt
-      | Directorate
+      = t('teams.join.directorate')
     dd
       = @team.directorate.name
   div
     dt
-      | Team
+      = t('teams.join.team')
     dd
       = @team.name
 
-h2.heading-medium Joining with
-
+h2.heading-medium
+  = t('teams.join.joining_with')
 dl
   div
     dt
-      | Business group
+      = t('teams.join.business_group')
     dd
       = @target_team.directorate.business_group.name
   div
     dt
-      | Directorate
+      = t('teams.join.directorate')
     dd
       = @target_team.directorate.name
   div
     dt
-      | Team
+      = t('teams.join.team')
     dd
       = @target_team.name
 
-p #{@team.name}'s users and open cases will be joined to #{@target_team.name}'s business unit
+p
+  = t('teams.join.will_be_joined', team_name: @team.name, target_team_name: @target_team.name)
 
 = form_tag join_teams_team_path(@team)
   = hidden_field_tag :target_team_id, @target_team.id
   p.confirm-and-cancel
-    = submit_tag :confirm, class: 'join-team-button button'
+    = submit_tag t('button.confirm'), class: 'join-team-button button'
     = join_teams_cancel_link(@team)
