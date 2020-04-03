@@ -6,6 +6,9 @@
     - if case_details.message.present?
       p
         = show_hide_message(case_details)
+      p
+        = "Change" if case_details.offender_sar?
+
     - if case_details.attachments.request.present?
       - case_details.upload_request_groups.each do |ug|
         .case-attachments-group
