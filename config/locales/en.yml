@@ -1033,7 +1033,7 @@ en:
       team_currently_located: This is where the team is currently located   
       will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_directorate_name}"
     unreversible: This action cannot be reversed
-    team: Team
+    team: Business unit
   users:
     new:
       create: Create user
