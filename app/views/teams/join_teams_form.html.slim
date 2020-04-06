@@ -4,28 +4,26 @@
 - content_for :heading
   = t('teams.join.confirm_heading')
 
-
 = join_teams_back_link(@team)
 
 = render partial: 'layouts/header'
 
 h2.heading-medium
   = @team.name
-
 dl
   div
     dt
-      = t('teams.join.business_group')
+      = t('teams.business_group')
     dd
       = @team.directorate.business_group.name
   div
     dt
-      = t('teams.join.directorate')
+      = t('teams.directorate')
     dd
       = @team.directorate.name
   div
     dt
-      = t('teams.join.team')
+      = t('teams.team')
     dd
       = @team.name
 
