@@ -1,11 +1,27 @@
+p
+  = t('teams.move.intro.paragraph')
+
+ul.list.list-bullet
+  li
+    = t('teams.move.intro.bullet1')
+  li
+    = t('teams.move.intro.bullet2')
+  li
+    = t('teams.move.intro.bullet3')
+
+p
+  = t('teams.unreversible')
+
 div.bg-selector
-  h2 Select a business group
+  label.form-label for="business_group_id"
+    = t('teams.labels.select_business_group')
   = form_tag move_to_directorate_team_path(@team), method: :get
     = select_tag :business_group_id, options_from_collection_for_select(BusinessGroup.all.order(:name), :id, :name, params[:business_group_id]),
-      onchange: 'this.form.submit();', include_blank: "Choose..."
+      onchange: 'this.form.submit();', include_blank: "Choose...",
+      class: "form-control"
 
 - if params[:business_group_id]
-  p.bold-medium
+  h2.heading-medium
     = filtered_directorate_heading(params)
 
 - if defined?(@directorates)
@@ -19,7 +35,7 @@ div.bg-selector
 
         .team-actions
           - if directorate == @team.directorate
-            = "This is where the team is currently located"
+            = t('teams.move.team_currently_located')
           - else
             = link_to t('button.move'),
                 move_to_directorate_form_team_path(@team, directorate_id: directorate.id),
