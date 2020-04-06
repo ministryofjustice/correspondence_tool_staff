@@ -31,7 +31,7 @@ module PageObjects
                 PageObjects::Sections::Cases::CaseDetailsSection, '.case-details'
 
         element :message_label, '.request--heading'
-        element :message, '.request--message p'
+        element :message, '.request--message p:first'
 
         section :request,
                 PageObjects::Sections::Cases::CaseRequestSection, '.request'

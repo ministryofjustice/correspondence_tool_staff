@@ -4,7 +4,7 @@ module PageObjects
   module Sections
     module Cases
       class CaseRequestSection < SitePrism::Section
-        element :message, 'p'
+        element :message, 'p:first'
         element :show_more_link, '.ellipsis-button'
         element :ellipsis, '.ellipsis-delimiter'
         element :collapsed_text, '.ellipsis-complete'
