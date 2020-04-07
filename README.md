@@ -31,34 +31,6 @@ $ cd correspondence_tool_staff
 
 ### Installing the app for development
 
-You can either install the app in a docker container, or set it up natively on your mac.  Instructions for both methods are given below.
-
-#### Installing the app in a Docker container
-
-Install [Docker for Mac](https://docs.docker.com/docker-for-mac/) and then run this in the
-repository directory:
-
-```
-$ docker-compose up
-```
-
-This will build and run all the Docker containers locally and publish port 3000
-from the web container locally. The application will be available on
-http://localhost:3000/
-
-
-##### Editing source
-You can edit the source files directly on your local machine - the repository directory is shared with the docker container.
-
-##### Logs
-Messages to the logs behave slightly differently than expected:
-
-* Any `puts` commands in the code will be output to the `docker-compose` window, but not to the `log/development.log` file.
-* Any `Rails.logger.info|error|warn|debug` commands in the code will be output to the `log/development.log` file and NOT to the `docker-compose` window.
-* The `docker-compose logs` command on the host machine will display the same output as for the `docker-compose` window.
-
-### Installing locally on a mac
-
 #### Installing Dependencies
 
 If you want to run the app natively on your mac, follow these instructions to install dependencies.
