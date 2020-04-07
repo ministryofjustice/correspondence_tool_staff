@@ -42,19 +42,30 @@ class TeamJoinService
 
   def join_team!
     keep_users_for_old_team
+    join_users_to_new_team_history
     move_associations_to_new_team
     deactivate_old_team
     link_old_team_to_new_team
-    restore_users_for_old_team
   end
   def keep_users_for_old_team
-    #TODO Keep all _ old teams history _ user roles_ for team
+    #TODO Keep all _ old teams history _ user roles_ for team ? {No sure what I was thinking about here - review this TODO}
     @keep_user_roles = @team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
     # @keep_user_roles = @team.historic_user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
   end
+  def join_users_to_new_team_history
+    @target_team.previous_teams.each do |pt|
+      @keep_user_roles.each do |ur|
+        TeamsUsersRole.create(team: Team.find(pt), user: User.find(ur[1]), role: ur[2]) unless target_team.user_roles.where(team_id: pt, user_id: ur[1], role: ur[2])
+      end
+    end
+    @keep_user_roles.each do |ur|
+      TeamsUsersRole.create(team: @target_team, user: User.find(ur[1]), role: ur[2]) unless target_team.user_roles.where(team_id: @target_team.id, user_id: ur[1], role: ur[2])
+    end
+  end
+  def new_team_gets_old_team_history
+#todo
+  end
   def move_associations_to_new_team
-    @target_team.user_roles += @team.user_roles
-
     Assignment.where(case_id: @team.open_cases.ids, team_id: @team.id).update_all(team_id: @target_team.id)
     CaseTransition.where(acting_team: @team).update_all(acting_team_id: @target_team.id)
     CaseTransition.where(target_team: @team).update_all(target_team_id: @target_team.id)
@@ -72,10 +83,4 @@ class TeamJoinService
     @team.save
   end
 
-  def restore_users_for_old_team
-    @keep_user_roles.each do |ur|
-      TeamsUsersRole.create!(team: Team.find(ur[0]), user: User.find(ur[1]), role: ur[2])
-      puts
-    end
-  end
 end

@@ -396,7 +396,26 @@ RSpec.describe BusinessUnit, type: :model do
           directorate: original_dir,
           )
       }
+      let(:responder) { create(:foi_responder, responding_teams: [business_unit_for_history]) }
+      let(:responder) { create(:foi_responder, responding_teams: [business_unit]) }
+      let(:business_unit) {
+        find_or_create(
+            :business_unit,
+            name: 'Business Unit name',
+            directorate: original_dir,
+            code: 'ABC'
+        )
+      }
+      let(:params) do
+        HashWithIndifferentAccess.new(
+            {
+                'full_name' => 'Bob Dunnit',
+                'email' => 'bd@moj.com'
+            }
+        )
+      end
 
+      let(:new_user_service) { UserCreationService.new(team: business_unit, params: params)}
 
       it 'tracks all history, including joins' do
         first_team = business_unit_to_move
@@ -422,6 +441,28 @@ RSpec.describe BusinessUnit, type: :model do
         expect(third_team.previous_teams).to match_array [first_team.id, second_team.id, fourth_team.id, fifth_team.id]
       end
       it 'retrieves all historic user roles from previous teams' do
+        first_team = business_unit #business_unit_for_history
+        service = UserCreationService.new(team: first_team, params: params)
+        service.call
+        retained_first_team_user_roles = first_team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+
+        second_team = business_unit_to_move
+        service = UserCreationService.new(team: second_team, params: params)
+        service.call
+        retained_second_team_user_roles = second_team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+
+        service = TeamMoveService.new(first_team, first_target_dir)
+        service.call
+        moved_first_team = service.new_team
+
+        service = TeamJoinService.new(second_team, moved_first_team)
+        service.call
+        target_user_roles = moved_first_team.historic_user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+        expect(target_user_roles).to include(
+                                         retained_first_team_user_roles.first,
+                                         retained_second_team_user_roles.first
+                                         )
+        #   # check that second team users have role on first teams deactivated self
 
       end
     end

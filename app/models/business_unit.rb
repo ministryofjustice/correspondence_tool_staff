@@ -172,6 +172,10 @@ class BusinessUnit < Team
     previous_team_ids
   end
 
+  def historic_user_roles
+    TeamsUsersRole.where(:team_id => previous_teams)
+  end
+
   private
 
   def previous_incarnations(id)
