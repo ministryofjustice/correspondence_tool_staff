@@ -50,7 +50,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
   end
 
-  describe 'edit behaviour' do
+  describe 'transitions' do
     OFFENDER_SAR_STATES = {
       data_to_be_requested: :mark_as_waiting_for_data,
       waiting_for_data: :mark_as_ready_for_vetting,
@@ -64,6 +64,26 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       context "with Offender SAR in #{state} state" do
         it_behaves_like 'edit offender sar spec', state.to_sym, transition_event
       end
+    end
+  end
+
+  fdescribe '#edit' do
+    let(:offender_sar_case) { create(:offender_sar_case).decorate }
+    let(:params) {{ id: offender_sar_case.id }}
+    it 'does stuff' do
+      get :edit, params: params
+      expect(response).to render_template(:edit)
+      expect(assigns(:case)).to be_a Case::SAR::Offender
+    end
+  end
+
+  fdescribe '#update' do
+    let(:offender_sar_case) { create(:offender_sar_case).decorate }
+    let(:params) {{ id: offender_sar_case.id }}
+    it 'does stuff' do
+      patch :update, params: params
+      expect(response).to render_template(:show)
+      expect(assigns(:case)).to be_a Case::SAR::Offender
     end
   end
 end

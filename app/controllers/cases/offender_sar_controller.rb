@@ -6,7 +6,7 @@ module Cases
     before_action :set_case_types, only: [:new, :create]
 
     before_action -> { set_decorated_case(params[:id]) }, only: [
-      :transition
+      :transition, :edit
     ]
 
     def initialize
@@ -92,6 +92,35 @@ module Cases
         reload_case_page_on_success
       else
         raise ArgumentError.new('Bad transition')
+      end
+    end
+
+    def edit
+      permitted_correspondence_types
+      authorize case_type, :can_add_case?
+
+      # @case = OffenderSARCaseForm.new(@case)
+      @case.current_step = params[:step]
+    end
+
+    def update
+      authorize case_type, :can_add_case?
+
+      @case = OffenderSARCaseForm.new(@case)
+      @case.case.creator = current_user #to-do Remove when we use the case create service
+      @case.assign_params(create_params) if create_params
+      @case.current_step = params[:current_step]
+
+      if !@case.valid_attributes?(create_params)
+        render :edit
+      elsif @case.valid? && @case.save
+        session[:offender_sar_state] = nil
+        flash[:notice] = "Case edited successfully"
+        redirect_to case_path(@case.case)
+      else
+        @case.session_persist_state(create_params)
+        get_next_step(@case)
+        redirect_to "#{step_case_sar_offender_index_path}/#{@case.current_step}"
       end
     end
 
