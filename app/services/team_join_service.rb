@@ -55,19 +55,19 @@ class TeamJoinService
   def join_users_to_new_team_history
     @target_team.previous_teams.each do |pt|
       @keep_user_roles.each do |ur|
-        TeamsUsersRole.create(team: Team.find(pt), user: User.find(ur[1]), role: ur[2]) unless target_team.user_roles.where(team_id: pt, user_id: ur[1], role: ur[2])
+        TeamsUsersRole.create(team: Team.find(pt), user: User.find(ur[1]), role: ur[2]) unless @target_team.user_roles.where(team_id: pt, user_id: ur[1], role: ur[2]).count() > 0
       end
     end
     # Since previous_teams gives only the ids of historical teams,
     # we also need to add the joining users to the target team
     @keep_user_roles.each do |ur|
-      TeamsUsersRole.create(team: @target_team, user: User.find(ur[1]), role: ur[2]) unless target_team.user_roles.where(team_id: @target_team.id, user_id: ur[1], role: ur[2])
+      TeamsUsersRole.create(team: @target_team, user: User.find(ur[1]), role: ur[2]) unless @target_team.user_roles.where(team_id: @target_team.id, user_id: ur[1], role: ur[2]).count > 0
     end
   end
   def give_target_old_team_history
     @team.previous_teams.each do |t|
       @keep_users_roles_target_team.each do |ur|
-        TeamsUsersRole.create(team: Team.find(t), user: User.find(ur[1]), role: ur[2]) unless team.user_roles.where(team_id: t, user_id: ur[1], role: ur[2])
+        TeamsUsersRole.create(team: Team.find(t), user: User.find(ur[1]), role: ur[2]) unless @team.user_roles.where(team_id: t, user_id: ur[1], role: ur[2]).count() > 0
       end
     end
     # Since previous_teams gives only the ids of historical teams,
