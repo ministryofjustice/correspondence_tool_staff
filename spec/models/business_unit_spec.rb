@@ -426,7 +426,7 @@ RSpec.describe BusinessUnit, type: :model do
 
       let(:new_user_service) { UserCreationService.new(team: business_unit, params: params)}
 
-      it 'tracks all history, including joins' do
+      it 'tracks all ancestors of team' do
         first_team = business_unit_to_move
         service = TeamMoveService.new(first_team, first_target_dir)
         service.call
@@ -462,17 +462,17 @@ RSpec.describe BusinessUnit, type: :model do
 
         service = TeamMoveService.new(first_team, first_target_dir)
         service.call
-        moved_first_team = service.new_team
+        target_team = service.new_team
 
-        service = TeamJoinService.new(second_team, moved_first_team)
+        service = TeamJoinService.new(second_team, target_team)
         service.call
-        target_user_roles_historic = moved_first_team.historic_user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+        target_user_roles_historic = target_team.historic_user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
         expect(target_user_roles_historic).to include(
                                          retained_first_team_user_roles.first,
                                          retained_second_team_user_roles.first
                                          )
         # check that the target team users have roles on the joining team's deactivated selves
-        target_current_user_roles = moved_first_team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+        target_current_user_roles = target_team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
         second_team_user_roles = second_team.reload.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
         new_user_on_deactivated_team = [second_team.id, target_current_user_roles.first[1], target_current_user_roles.first[2]]
         expect(second_team_user_roles).to include(new_user_on_deactivated_team)
