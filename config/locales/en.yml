@@ -1001,7 +1001,7 @@ en:
     deactivate_info:
       directorate: To deactivate this directorate you need to first deactivate all business units within it.
       business_unit: To deactivate this business unit you need to first deactivate all users within it.
-    labels: 
+    labels:
       select_business_group: Select a business group
       select_directorate: Select a directorate
     join:
@@ -1010,7 +1010,7 @@ en:
       intro:
         bullet1: all open cases and users will move to the destination business unit
         bullet2: all members of the new business unit will be able to view closed cases
-        bullet3: all members can view performance reports for the unit up to the move    
+        bullet3: all members can view performance reports for the unit up to the move
         paragraph: "Joining with another business unit means:"
       joined_successfully: "%{team_name} has been joined with %{target_team}"
       joining_with: Joining with
@@ -1020,17 +1020,16 @@ en:
       will_be_joined: "%{team_name}'s users and open cases will be joined to %{target_team_name}'s business unit"
     move:
       confirm_heading: Confirm move
-      confirm_message: Are you sure you want to do this? This business unit will be deactivated to preserve its history, and a new one will be created
       heading: Move business unit
       intro:
         bullet1: all open cases and users will move with it
         bullet2: all members of the unit will be able to view closed cases
-        bullet3: all members can view performance reports for the unit up to the move   
+        bullet3: all members can view performance reports for the unit up to the move
         paragraph: "Moving a business unit means:"
       moved_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
       moving_to: Moving to
       subhead: "Business unit: %{team_name}"
-      team_currently_located: This is where the team is currently located   
+      team_currently_located: This is where the team is currently located
       will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_directorate_name}"
     unreversible: This action cannot be reversed
     team: Business unit
