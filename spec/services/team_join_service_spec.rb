@@ -31,7 +31,9 @@ describe TeamJoinService do
     )
   end
 
+  let(:team_move_service) { TeamMoveService.new(business_unit, target_dir) }
   let(:second_user_service) { UserCreationService.new(team: business_unit, params: params)}
+
   let!(:kase) {
     create(
       :case_being_drafted,
@@ -80,8 +82,10 @@ describe TeamJoinService do
   describe '#call' do
     context 'joining a business unit into another business unit' do
       it 'Joins team users to the new team' do
+
         expect(business_unit.users).to match_array [responder]
         service.call
+
         expect(service.target_team.users).to match_array [responder]
       end
 
@@ -92,12 +96,6 @@ describe TeamJoinService do
         new_user_roles = business_unit.reload.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
         expect(new_user_roles).to include retained_user_roles[0]
         expect(new_user_roles).to include retained_user_roles[1]
-      end
-      it 'allows old team users to see team history of the new team' do
-        #TODO
-      end
-      it 'allows new team users to see team history of the old team' do
-        #TODO
       end
 
       it 'sets old team to deleted' do
