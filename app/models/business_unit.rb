@@ -151,18 +151,25 @@ class BusinessUnit < Team
 
   def previous_teams
     previous_team_ids = []
-    previous_team = previous_incarnation(id)
-    while previous_team do
-      previous_team_ids << previous_team.id
-      previous_team = previous_incarnation(previous_team.id)
+    previous_teams = previous_incarnations(id).ids
+    while previous_teams.count() > 0 do
+      previous_teams.each do |previous_team|
+        previous_team_ids << previous_team
+        # Add all the immediately previous incarnations of the team, remove the current
+        previous_teams = previous_teams + previous_incarnations(previous_team).ids - [previous_team]
+      end
     end
     previous_team_ids
   end
 
+  def historic_user_roles
+    TeamsUsersRole.where(:team_id => previous_teams)
+  end
+
   private
 
-  def previous_incarnation(id)
-    Team.find_by_moved_to_unit_id(id)
+  def previous_incarnations(id)
+    Team.where(moved_to_unit_id: id)
   end
 
   def update_search_index

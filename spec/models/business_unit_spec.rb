@@ -380,5 +380,104 @@ RSpec.describe BusinessUnit, type: :model do
         expect(third_team.previous_teams).to match_array [first_team.id, second_team.id]
       end
     end
+    context 'when a team has been joined' do
+      let(:original_dir) { find_or_create :directorate }
+      let(:first_target_dir) { find_or_create :directorate }
+      let(:second_target_dir) { find_or_create :directorate }
+      let(:business_unit_to_move) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+          )
+      }
+      let(:business_unit_for_history) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+          )
+      }
+      let(:responder) { create(:foi_responder, responding_teams: [business_unit_for_history]) }
+      let(:responder) { create(:foi_responder, responding_teams: [business_unit]) }
+      let(:business_unit) {
+        find_or_create(
+            :business_unit,
+            name: 'Business Unit name',
+            directorate: original_dir,
+            code: 'ABC'
+        )
+      }
+      let(:params) do
+        HashWithIndifferentAccess.new(
+            {
+                'full_name' => 'Bob Dunnit',
+                'email' => 'bd@moj.com'
+            }
+        )
+      end
+
+      let(:params_joe) do
+        HashWithIndifferentAccess.new(
+            {
+                'full_name' => 'Joe Didit',
+                'email' => 'jd@moj.com'
+            }
+        )
+      end
+
+      let(:new_user_service) { UserCreationService.new(team: business_unit, params: params)}
+
+      it 'tracks all ancestors of team' do
+        first_team = business_unit_to_move
+        service = TeamMoveService.new(first_team, first_target_dir)
+        service.call
+        second_team = service.new_team
+
+        # pause momentarily to let the database catch up
+        sleep 1
+
+        service = TeamMoveService.new(second_team, second_target_dir)
+        service.call
+
+        third_team = service.new_team
+        # create another team, with history into third team
+        fourth_team = business_unit_for_history
+        service = TeamMoveService.new(fourth_team, first_target_dir)
+        service.call
+        fifth_team = service.new_team
+
+        service = TeamJoinService.new(fifth_team, third_team)
+        service.call
+        expect(third_team.previous_teams).to match_array [first_team.id, second_team.id, fourth_team.id, fifth_team.id]
+      end
+      it 'retrieves all historic user roles from previous teams' do
+        first_team = business_unit #business_unit_for_history
+        service = UserCreationService.new(team: first_team, params: params)
+        service.call
+        retained_first_team_user_roles = first_team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+
+        second_team = business_unit_to_move
+        service = UserCreationService.new(team: second_team, params: params_joe)
+        service.call
+        retained_second_team_user_roles = second_team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+
+        service = TeamMoveService.new(first_team, first_target_dir)
+        service.call
+        target_team = service.new_team
+
+        service = TeamJoinService.new(second_team, target_team)
+        service.call
+        target_user_roles_historic = target_team.historic_user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+        expect(target_user_roles_historic).to include(
+                                         retained_first_team_user_roles.first,
+                                         retained_second_team_user_roles.first
+                                         )
+        # check that the target team users have roles on the joining team's deactivated selves
+        target_current_user_roles = target_team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+        second_team_user_roles = second_team.reload.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+        new_user_on_deactivated_team = [second_team.id, target_current_user_roles.first[1], target_current_user_roles.first[2]]
+        expect(second_team_user_roles).to include(new_user_on_deactivated_team)
+
+      end
+    end
   end
 end
