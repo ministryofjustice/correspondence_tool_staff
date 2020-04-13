@@ -20,16 +20,15 @@ feature 'joining business units' do
   given(:bu) { find_or_create(:foi_responding_team) }
   given(:manager) { create :manager }
   given(:responder) { find_or_create :foi_responder }
+  given!(:target_team) { create(:responding_team, name: "Target Team", directorate: bu.directorate) }
 
-  scenario 'manager joins a business unit to another', js: true do
+  fscenario 'manager joins a business unit to another', js: true do
     # verify responder can see cases before move
     login_as responder
     cases_page.load
     expect(cases_page).to have_text(bu.cases.opened.first.number)
     click_on "Closed cases"
     expect(cases_page).to have_text(bu.cases.closed.first.number)
-
-    target_team = Team.find_by_name "Press Office"
 
     # manager moves team
     login_as manager
@@ -40,9 +39,9 @@ feature 'joining business units' do
 
     expect(teams_join_page).to be_displayed(id: bu.id)
 
-    select("Operations")
+    select("Responder Business Group")
 
-    select("Press Office Directorate")
+    select("Responder Directorate")
 
     teams_join_page.find_row(target_team.name).join_team_link.click
 
@@ -52,24 +51,16 @@ feature 'joining business units' do
 
     expect(teams_show_page).to be_displayed(id: target_team.id)
 
-    expect(teams_show_page).to have_content "#{bu.original_team_name} has been joined with Press Office"
+    expect(teams_show_page).to have_content "#{bu.original_team_name} has been joined with Target Team"
 
-    # teams_move_page.business_groups.links.last.click
-    # expect(teams_move_page).to have_content "This is where the team is currently located"
 
-    # teams_move_page.business_groups.links.first.click
-    # accept_confirm do
-    #   teams_move_page.directorates_list.directorates.first.move_to_directorate_link.click
-    # end
-    # expect(teams_show_page).to have_content "#{bu.reload.name} has been moved to"
+    # verify responder can see cases after join
+    login_as responder
+    cases_page.load
 
-    # # verify responder can see cases after move
-    # login_as responder
-    # cases_page.load
-    # new_bu = BusinessUnit.last
-    # expect(cases_page).to have_text(new_bu.cases.opened.first.number)
-    # click_on "Closed cases"
-    # expect(cases_page).to have_text(bu.reload.cases.closed.first.number)
+    expect(cases_page).to have_text(target_team.cases.opened.first.number)
+    click_on "Closed cases"
+    expect(cases_page).to have_text(bu.cases.closed.first.number)
   end
 
 end
