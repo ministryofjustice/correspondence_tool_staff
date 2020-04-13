@@ -9,17 +9,18 @@ describe TeamJoinService do
     find_or_create(
       :business_unit,
       name: 'Business Unit name',
-      directorate: original_dir,
-      code: 'ABC'
+      directorate: original_dir
     )
   }
   let(:target_business_unit) {
     find_or_create(
       :business_unit,
       name: 'Target Business Unit name',
-      directorate: target_dir,
-      code: 'XYZ'
+      directorate: target_dir
     )
+  }
+  let(:disclosure_team) {
+    find_or_create(:team_disclosure)
   }
 
   let(:params) do
@@ -51,11 +52,25 @@ describe TeamJoinService do
 
 
   describe '#initialize' do
+    it 'returns error when the team joining has a special role' do
+      expect{
+        TeamJoinService.new(disclosure_team, business_unit)
+      }.to raise_error TeamJoinService::TeamHasCodeError,
+                       "Cannot join a Business Unit that has a code defined"
+    end
+
+    it 'returns error when the team being joined has a special role' do
+      expect{
+        TeamJoinService.new(business_unit, disclosure_team)
+      }.to raise_error TeamJoinService::TeamHasCodeError,
+                       "Cannot join a Business Unit that has a code defined"
+    end
+
     it 'returns error when the team is not a business unit' do
       expect{
         TeamJoinService.new(original_dir, target_business_unit)
       }.to raise_error TeamJoinService::TeamNotBusinessUnitError,
-                       "Cannot move a team which is not a Business Unit"
+                       "Cannot join a team which is not a Business Unit"
     end
 
     it 'returns error when the target team is not a team' do
