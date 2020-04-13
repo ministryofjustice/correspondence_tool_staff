@@ -23,6 +23,23 @@ RSpec.describe TeamsHelper, type: :helper do
     end
   end
 
+  describe '#show_join_link_or_info' do
+    let(:foi_responding_team) { find_or_create(:foi_responding_team) }
+    let(:disclosure_team) { find_or_create(:team_disclosure) }
+
+    it 'returns a link if the team has no code' do
+      expect(show_join_link_or_info(foi_responding_team)).to eq(
+        link_to "Join business unit", join_teams_team_path(foi_responding_team.id), id: 'join-team-link'
+      )
+    end
+
+    it 'returns a message if the team has a code' do
+      expect(show_join_link_or_info(disclosure_team)).to eq(
+        t('teams.join.cannot_join_other_team', team_name: disclosure_team.name)
+      )
+    end
+  end
+
   describe '#show_deactivate_link_or_info' do
     let(:manager)                   { create :manager}
     let(:empty_dir)                 { create :directorate }
@@ -32,7 +49,7 @@ RSpec.describe TeamsHelper, type: :helper do
     let(:user)                      { create :responder }
     let(:bu_with_users)             { user.teams.first }
 
-    context "deactivatig directorate" do
+    context "deactivating directorate" do
       it 'returns a link for a team with no active children' do
         expect(show_deactivate_link_or_info(manager, empty_dir)).to eq(
           link_to "Deactivate directorate", team_path(empty_dir.id),

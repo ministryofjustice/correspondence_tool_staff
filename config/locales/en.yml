@@ -1018,6 +1018,7 @@ en:
       subhead: "Business unit: %{team_name}"
       team_your_working_with: This is the team you're working with
       will_be_joined: "%{team_name}'s users and open cases will be joined to %{target_team_name}'s business unit"
+      cannot_join_other_team: "%{team_name} cannot be joined with any other business unit"
     move:
       confirm_heading: Confirm move
       heading: Move business unit

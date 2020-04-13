@@ -19,6 +19,14 @@ module TeamsHelper
     end
   end
 
+  def show_join_link_or_info(team)
+    if team.code.present?
+      t('teams.join.cannot_join_other_team', team_name: team.name)
+    else
+      link_to t('teams.join.heading'), join_teams_team_path(team.id), id: 'join-team-link'
+    end
+  end
+
   def join_teams_back_link(team)
     link_to "Back", join_teams_back_url(team), class: 'govuk-back-link'
   end
