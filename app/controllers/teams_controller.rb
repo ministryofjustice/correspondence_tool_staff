@@ -213,7 +213,7 @@ class TeamsController < ApplicationController
 
   def set_teams
     @directorate = Directorate.find(params[:directorate_id])
-    @business_units = @directorate.business_units
+    @business_units = @directorate.business_units.active
   end
 
   def team_params

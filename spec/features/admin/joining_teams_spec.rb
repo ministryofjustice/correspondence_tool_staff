@@ -21,14 +21,18 @@ feature 'joining business units' do
   given(:manager) { create :manager }
   given(:responder) { find_or_create :foi_responder }
   given!(:target_team) { create(:responding_team, name: "Target Team", directorate: bu.directorate) }
+  given!(:deactivated_team) { create(:business_unit, :deactivated, name: "Deactivated Team", directorate: bu.directorate) }
+
 
   fscenario 'manager joins a business unit to another', js: true do
     # verify responder can see cases before move
     login_as responder
     cases_page.load
-    expect(cases_page).to have_text(bu.cases.opened.first.number)
+    open_case_number = bu.cases.opened.first.number
+    closed_case_number = bu.cases.closed.first.number
+    expect(cases_page).to have_text(open_case_number)
     click_on "Closed cases"
-    expect(cases_page).to have_text(bu.cases.closed.first.number)
+    expect(cases_page).to have_text(closed_case_number)
 
     # manager moves team
     login_as manager
@@ -42,6 +46,9 @@ feature 'joining business units' do
     select("Responder Business Group")
 
     select("Responder Directorate")
+
+    # Deactivated teams should not show up
+    expect(teams_join_page.find_row(deactivated_team.name)).to be_nil
 
     teams_join_page.find_row(target_team.name).join_team_link.click
 
@@ -58,9 +65,9 @@ feature 'joining business units' do
     login_as responder
     cases_page.load
 
-    expect(cases_page).to have_text(target_team.cases.opened.first.number)
+    expect(cases_page).to have_text(open_case_number)
     click_on "Closed cases"
-    expect(cases_page).to have_text(bu.cases.closed.first.number)
+    expect(cases_page).to have_text(closed_case_number)
   end
 
 end
