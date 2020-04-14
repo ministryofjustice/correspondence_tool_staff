@@ -1,54 +1,26 @@
 require 'rails_helper'
 
 describe TeamJoinService do
-  let(:original_dir) { find_or_create :directorate }
+  let(:original_joining_team) { create(:responding_team, name: "Joining Team") }
+  let(:original_target_team) { create(:responding_team, name: "Target Team") }
+  let(:joining_team_move_service) { TeamMoveService.new(original_joining_team, target_dir) }
+  let(:target_team_move_service) { TeamMoveService.new(original_target_team, target_dir) }
+  let(:business_unit) { joining_team_move_service.new_team }
+  let(:target_business_unit) { target_team_move_service.new_team }
   let(:target_dir) { find_or_create :directorate }
-  let(:responder) { create(:foi_responder, responding_teams: [business_unit]) }
+  let(:disclosure_team) { find_or_create(:team_disclosure) }
   let(:service) { TeamJoinService.new(business_unit, target_business_unit) }
-  let(:business_unit) {
-    find_or_create(
-      :business_unit,
-      name: 'Business Unit name',
-      directorate: original_dir
-    )
-  }
-  let(:target_business_unit) {
-    find_or_create(
-      :business_unit,
-      name: 'Target Business Unit name',
-      directorate: target_dir
-    )
-  }
-  let(:disclosure_team) {
-    find_or_create(:team_disclosure)
-  }
 
-  let(:params) do
-    HashWithIndifferentAccess.new(
-        {
-            'full_name' => 'Bob Dunnit',
-            'email' => 'bd@moj.com'
-        }
-    )
+  let!(:joining_team_user) { original_joining_team.responders.first }
+  let!(:target_team_user) { original_target_team.responders.first }
+
+  before do
+    joining_team_move_service.call
+    target_team_move_service.call
   end
 
-  let(:team_move_service) { TeamMoveService.new(business_unit, target_dir) }
-  let(:second_user_service) { UserCreationService.new(team: business_unit, params: params)}
-
-  let!(:kase) {
-    create(
-      :case_being_drafted,
-      responding_team: business_unit,
-      responder: responder
-    )
-  }
-  let!(:klosed_kase) {
-    create(
-      :closed_case,
-      responding_team: business_unit,
-      responder: responder
-    )
-  }
+  let!(:kase)  { create :case_being_drafted, responding_team: business_unit, responder: joining_team_user }
+  let!(:klosed_kase)  { create :closed_case, responding_team: business_unit, responder: joining_team_user }
 
 
   describe '#initialize' do
@@ -68,14 +40,14 @@ describe TeamJoinService do
 
     it 'returns error when the team is not a business unit' do
       expect{
-        TeamJoinService.new(original_dir, target_business_unit)
+        TeamJoinService.new(business_unit.directorate, target_business_unit)
       }.to raise_error TeamJoinService::TeamNotBusinessUnitError,
                        "Cannot join a team which is not a Business Unit"
     end
 
     it 'returns error when the target team is not a team' do
       expect{
-        TeamJoinService.new(business_unit, original_dir)
+        TeamJoinService.new(business_unit, business_unit.directorate)
       }.to raise_error TeamJoinService::InvalidTargetBusinessUnitError,
                        "Cannot join a Business Unit to a team that is not a Business Unit"
     end
@@ -96,40 +68,48 @@ describe TeamJoinService do
 
   describe '#call' do
     context 'joining a business unit into another business unit' do
-      it 'Joins team users to the new team' do
-        expect(business_unit.users).to match_array [responder]
+      it 'joins users to new team history' do
         service.call
-        expect(service.target_team.users).to match_array [responder]
+        expect(business_unit.reload.users).to match_array [joining_team_user, target_team_user]
+        expect(service.target_team.users).to match_array [joining_team_user, target_team_user]
+        expect(joining_team_user.reload.teams).to match_array [
+          target_business_unit,
+          business_unit,
+          original_joining_team,
+          original_target_team
+        ]
       end
 
-      it 'Joins team user_roles to the new team, and does not remove them from the original team' do
-        second_user_service.call
-        retained_user_roles = business_unit.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+      it 'gives the target team the old team history' do
         service.call
-        new_user_roles = business_unit.reload.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
-        expect(new_user_roles).to include retained_user_roles[0]
-        expect(new_user_roles).to include retained_user_roles[1]
+        expect(target_team_user.reload.teams).to match_array [
+          target_business_unit,
+          business_unit,
+          original_joining_team,
+          original_target_team
+        ]
       end
 
       it 'sets old team to deleted' do
+        sleep 1
         service.call
         expect(business_unit.reload.deleted_at).not_to be_nil
       end
 
-      it 'sets moved to on old team' do
+      it 'links the old team to the new team' do
         service.call
         expect(service.target_team).to eq business_unit.moved_to_unit
       end
 
       context 'when the team being moved has open cases' do
-        it 'Joins open cases to the new team and removes them from the original team' do
+        it 'joins open cases to the new team and removes them from the original team' do
           expect(business_unit.open_cases.first).to eq kase
           service.call
           expect(business_unit.open_cases).to be_empty
           expect(service.target_team.open_cases.first).to eq kase
         end
 
-        it 'Joins all transitions of the open case to the new team' do
+        it 'joins all transitions of the open case to the new team' do
           service.call
 
           # using factory :case_being_drafted, the case has TWO transitions,
@@ -154,7 +134,7 @@ describe TeamJoinService do
           create(
             :case_being_drafted, :flagged,
             responding_team: business_unit,
-            responder: responder
+            responder: joining_team_user
           )
         }
 
