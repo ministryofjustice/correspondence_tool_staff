@@ -97,10 +97,8 @@ describe TeamJoinService do
   describe '#call' do
     context 'joining a business unit into another business unit' do
       it 'Joins team users to the new team' do
-
         expect(business_unit.users).to match_array [responder]
         service.call
-
         expect(service.target_team.users).to match_array [responder]
       end
 
@@ -115,7 +113,6 @@ describe TeamJoinService do
 
       it 'sets old team to deleted' do
         service.call
-
         expect(business_unit.reload.deleted_at).not_to be_nil
       end
 
@@ -128,7 +125,6 @@ describe TeamJoinService do
         it 'Joins open cases to the new team and removes them from the original team' do
           expect(business_unit.open_cases.first).to eq kase
           service.call
-
           expect(business_unit.open_cases).to be_empty
           expect(service.target_team.open_cases.first).to eq kase
         end
@@ -148,7 +144,6 @@ describe TeamJoinService do
         it 'leaves closed cases with the original team' do
           expect(business_unit.cases.closed.first).to eq klosed_kase
           service.call
-
           expect(service.target_team.cases.closed).to be_empty
           expect(business_unit.cases.closed.first).to eq klosed_kase
         end
@@ -162,10 +157,10 @@ describe TeamJoinService do
             responder: responder
           )
         }
+
         it 'leaves the approving teams as Disclosure' do
           expect(kase.approving_teams).to eq [BusinessUnit.dacu_disclosure]
           service.call
-
           expect(kase.reload.approving_teams).to eq [BusinessUnit.dacu_disclosure]
         end
       end
