@@ -150,16 +150,20 @@ class BusinessUnit < Team
   end
 
   def previous_team_ids
-    ids = []
-    previous_teams = previous_incarnations(id).ids
+    previous_teams.pluck :id
+  end
+
+  def previous_teams
+    teams = []
+    previous_teams = previous_incarnations(id)
     while previous_teams.count() > 0 do
       previous_teams.each do |previous_team|
-        ids << previous_team
+        teams << previous_team
         # Add all the immediately previous incarnations of the team, remove the current
-        previous_teams = previous_teams + previous_incarnations(previous_team).ids - [previous_team]
+        previous_teams = previous_teams + previous_incarnations(previous_team) - [previous_team]
       end
     end
-    ids
+    teams
   end
 
   def historic_user_roles

@@ -380,6 +380,7 @@ RSpec.describe BusinessUnit, type: :model do
         expect(third_team.previous_team_ids).to match_array [first_team.id, second_team.id]
       end
     end
+
     context 'when a team has been joined' do
       let(:original_dir) { find_or_create :directorate }
       let(:first_target_dir) { find_or_create :directorate }
