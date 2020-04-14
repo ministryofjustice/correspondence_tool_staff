@@ -52,17 +52,11 @@ class TeamJoinService
   private
 
   def join_team!
-    keep_users_for_original_teams
     join_users_to_new_team_history
     give_target_old_team_history
     move_associations_to_new_team
     deactivate_old_team
     link_old_team_to_new_team
-  end
-
-  def keep_users_for_original_teams
-    @keep_user_roles = @team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
-    @keep_users_roles_target_team = @target_team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
   end
 
   def create_role(team, ur)
