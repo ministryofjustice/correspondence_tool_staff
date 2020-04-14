@@ -149,21 +149,21 @@ class BusinessUnit < Team
     users.any?
   end
 
-  def previous_teams
-    previous_team_ids = []
+  def previous_team_ids
+    ids = []
     previous_teams = previous_incarnations(id).ids
     while previous_teams.count() > 0 do
       previous_teams.each do |previous_team|
-        previous_team_ids << previous_team
+        ids << previous_team
         # Add all the immediately previous incarnations of the team, remove the current
         previous_teams = previous_teams + previous_incarnations(previous_team).ids - [previous_team]
       end
     end
-    previous_team_ids
+    ids
   end
 
   def historic_user_roles
-    TeamsUsersRole.where(:team_id => previous_teams)
+    TeamsUsersRole.where(team_id: previous_team_ids)
   end
 
   private
