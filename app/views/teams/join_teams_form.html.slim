@@ -1,0 +1,56 @@
+- content_for :page_title do
+  = t('page_title.move_team_page', team_name: @team.name)
+
+- content_for :heading
+  = t('teams.join.confirm_heading')
+
+= join_teams_back_link(@team)
+
+= render partial: 'layouts/header'
+
+h2.heading-medium
+  = @team.name
+dl
+  div
+    dt
+      = t('teams.business_group')
+    dd
+      = @team.directorate.business_group.name
+  div
+    dt
+      = t('teams.directorate')
+    dd
+      = @team.directorate.name
+  div
+    dt
+      = t('teams.team')
+    dd
+      = @team.name
+
+h2.heading-medium
+  = t('teams.join.joining_with')
+dl
+  div
+    dt
+      = t('teams.business_group')
+    dd
+      = @target_team.directorate.business_group.name
+  div
+    dt
+      = t('teams.directorate')
+    dd
+      = @target_team.directorate.name
+  div
+    dt
+      = t('teams.team')
+    dd
+      = @target_team.name
+
+p
+  = t('teams.join.will_be_joined', team_name: @team.name, target_team_name: @target_team.name)
+
+= form_tag join_teams_team_path(@team)
+  = hidden_field_tag :target_team_id, @target_team.id
+  p.confirm-and-cancel
+    = submit_tag t('button.confirm'), class: 'join-team-button button'
+    = join_teams_cancel_link(@team)

@@ -515,6 +515,7 @@ en:
 
   common:
     alert_banner: "This service will be down for essential maintenance during the afternoon of Wednesday 13 November. You will not have access after 13.00 on this day – the site will likely resume service after business hours. Apologies for the inconvenience."
+    choose: Choose...
     choose_file: Choose a file
     error: error
     greeting: Hello %{user}
@@ -980,12 +981,15 @@ en:
     download_custom:
       waiting: Your custom report will be ready soon. Try again shortly.
   teams:
+    browse_by_business_group: Browse by business group
+    business_group: Business group
     business_unit_list:
       team_members: Team members
     business_unit_detail:
       destroy: Are you sure you want to deactivate this business unit?
       team_members: Team members
       new_team_member: New team member
+    directorate: Directorate
     directorate_detail:
       destroy: Are you sure you want to deactivate this directorate?
     edit:
@@ -997,12 +1001,39 @@ en:
     deactivate_info:
       directorate: To deactivate this directorate you need to first deactivate all business units within it.
       business_unit: To deactivate this business unit you need to first deactivate all users within it.
-    move:
+    labels:
+      select_business_group: Select a business group
+      select_directorate: Select a directorate
+    join:
+      confirm_heading: Confirm join
+      heading: Join business unit
+      intro:
+        bullet1: all open cases and users will move to the destination business unit
+        bullet2: all members of the new business unit will be able to view closed cases
+        bullet3: all members can view performance reports for the unit up to the move
+        paragraph: "Joining with another business unit means:"
+      joined_successfully: "%{team_name} has been joined with %{target_team}"
+      joining_with: Joining with
+      join_with_this_team: Join with this team
       subhead: "Business unit: %{team_name}"
+      team_your_working_with: This is the team you're working with
+      will_be_joined: "%{team_name}'s users and open cases will be joined to %{target_team_name}'s business unit"
+      cannot_join_other_team: "%{team_name} cannot be joined with any other business unit"
+    move:
+      confirm_heading: Confirm move
       heading: Move business unit
+      intro:
+        bullet1: all open cases and users will move with it
+        bullet2: all members of the unit will be able to view closed cases
+        bullet3: all members can view performance reports for the unit up to the move
+        paragraph: "Moving a business unit means:"
       moved_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
-      confirm_message: Are you sure you want to do this? This business unit will be deactivated to preserve its history, and a new one will be created
-
+      moving_to: Moving to
+      subhead: "Business unit: %{team_name}"
+      team_currently_located: This is where the team is currently located
+      will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_directorate_name}"
+    unreversible: This action cannot be reversed
+    team: Business unit
   users:
     new:
       create: Create user

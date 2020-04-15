@@ -576,10 +576,9 @@ RSpec.describe TeamsController, type: :controller do
       }
 
       it 'authorises' do
-        pending "this doesn't work yet"
         expect{
           get :move_to_directorate, params: params
-        }.to require_permission(:business_areas_covered?)
+        }.to require_permission(:move?)
                  .with_args(manager, business_unit)
       end
 
@@ -588,7 +587,7 @@ RSpec.describe TeamsController, type: :controller do
         expect(assigns(:team)).to eq business_unit
       end
 
-      it 'renders the get_update_form.js.erb' do
+      it 'renders the right template' do
         get :move_to_directorate, params: params
         expect(response).to render_template('teams/move_to_directorate')
       end
@@ -609,6 +608,41 @@ RSpec.describe TeamsController, type: :controller do
     end
   end
 
+  describe "GET #move_to_directorate_form" do
+    let(:destination_directorate)     { find_or_create :directorate, name: 'Destination Directorate' }
+    before do
+      sign_in manager
+    end
+
+    context "without choosing a directorate" do
+    end
+
+    context "with a directorate selected" do
+      let(:params) {
+        {
+            id: business_unit.id,
+            directorate_id: destination_directorate.id
+        }
+      }
+      it 'assigns @directorate' do
+        get :move_to_directorate_form, params: params
+        expect(assigns(:directorate)).to eq destination_directorate
+      end
+
+      it 'authorises' do
+        expect{
+          get :move_to_directorate_form, params: params
+        }.to require_permission(:move?)
+                 .with_args(manager, business_unit)
+      end
+
+      it 'assigns @team' do
+        get :move_to_directorate, params: params
+        expect(assigns(:team)).to eq business_unit
+      end
+    end
+  end
+
   describe "PATCH #update_directorate" do
     let(:destination_directorate)     { find_or_create :directorate, name: 'Destination Directorate' }
     let(:params) {
@@ -623,10 +657,9 @@ RSpec.describe TeamsController, type: :controller do
     end
 
     it 'authorises' do
-      pending "this doesn't work yet"
       expect{
         patch :update_directorate, params: params
-      }.to require_permission(:business_areas_covered?)
+      }.to require_permission(:move?)
                .with_args(manager, business_unit)
     end
 
@@ -637,16 +670,86 @@ RSpec.describe TeamsController, type: :controller do
 
     it 'redirects away from team' do
       patch :update_directorate, params: params
+      expect(response).to redirect_to(team_path(Team.last))
       expect(response).not_to redirect_to(team_path(business_unit))
       expect(flash[:notice]).to have_content 'has been moved to'
     end
 
     it 'updates the area' do
-      pending 'this will work after we are finished'
       old_parent = business_unit.parent
       patch :update_directorate, params: params
-      expect(business_unit.reload.parent).not_to eq old_parent
-      expect(business_unit.reload.parent).to eq destination_directorate
+      new_business_unit = BusinessUnit.last
+      expect(new_business_unit.parent).not_to eq old_parent
+      expect(new_business_unit.parent).to eq destination_directorate
+    end
+
+    # context 'signed in as a non-manager' do
+
+    #   before(:each) do
+    #     sign_in foi_responder
+    #   end
+
+    #   it 'redirects to root with unauth message in flash' do
+    #     post :create, params:  { 'team' => {  'name' => 'Frog sizing unit' } }
+    #     expect(flash['alert']).to eq 'You are not authorised to add new teams'
+    #     expect(response).to redirect_to(root_path)
+    #   end
+    # end
+
+  end
+
+  describe "#join_teams" do
+    before do
+      sign_in manager
+    end
+
+    context "without choosing a business group" do
+      let(:params) {
+        {
+          id: business_unit.id
+        }
+      }
+
+      it 'assigns @team' do
+        get :join_teams, params: params
+        expect(assigns(:team)).to eq business_unit
+      end
+
+      it 'renders the right template' do
+        get :join_teams, params: params
+        expect(response).to render_template('teams/join_teams')
+      end
+    end
+  end
+
+  describe "#join_teams_form" do
+    before do
+      sign_in manager
+    end
+
+    context "with a target business unit" do
+      let(:target_business_unit)   { find_or_create :foi_responding_team }
+      let(:params) {
+        {
+          id: business_unit.id,
+          target_team_id: target_business_unit.id
+        }
+      }
+
+      it 'assigns @team' do
+        get :join_teams_form, params: params
+        expect(assigns(:team)).to eq business_unit
+      end
+
+      it 'assigns @target_team' do
+        get :join_teams_form, params: params
+        expect(assigns(:target_team)).to eq target_business_unit
+      end
+
+      it 'renders the right template' do
+        get :join_teams_form, params: params
+        expect(response).to render_template('teams/join_teams_form')
+      end
     end
   end
 

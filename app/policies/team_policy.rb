@@ -48,6 +48,16 @@ class TeamPolicy < ApplicationPolicy
     check_user_is_a_manager && check_team_is_active && check_team_has_no_active_children
   end
 
+  def move?
+    clear_failed_checks
+    check_user_is_a_manager
+  end
+
+  def join?
+    clear_failed_checks
+    check_user_is_a_manager
+  end
+
   class Scope
 
     attr_reader :user, :scope

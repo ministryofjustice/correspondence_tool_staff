@@ -1,0 +1,25 @@
+- content_for :page_title do
+  = t('page_title.move_team_page', team_name: @team.name)
+
+- content_for :heading
+  = t('teams.join.heading')
+
+- content_for :sub_heading
+  = t('teams.join.subhead', team_name: @team.name)
+
+= render partial: 'layouts/header'
+p
+  = t('teams.join.intro.paragraph')
+
+ul.list.list-bullet
+  li
+    = t('teams.join.intro.bullet1')
+  li
+    = t('teams.join.intro.bullet2')
+  li
+    = t('teams.join.intro.bullet3')
+
+p
+  = t('teams.unreversible')
+= render partial: 'browse_teams'
+

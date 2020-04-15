@@ -1,17 +1,25 @@
 class TeamJoinService
   class TeamNotBusinessUnitError < RuntimeError
     def initialize
-      super("Cannot move a team which is not a Business Unit")
+      super("Cannot join a team which is not a Business Unit")
     end
   end
+
   class InvalidTargetBusinessUnitError < RuntimeError
     def initialize
       super("Cannot join a Business Unit to a team that is not a Business Unit")
     end
   end
+
   class OriginalBusinessUnitError < RuntimeError
     def initialize
       super("Cannot join a Business Unit to itself")
+    end
+  end
+
+  class TeamHasCodeError < RuntimeError
+    def initialize
+      super("Cannot join a Business Unit that has a code defined")
     end
   end
 
@@ -25,6 +33,8 @@ class TeamJoinService
     raise TeamNotBusinessUnitError.new unless @team.is_a? BusinessUnit
     raise InvalidTargetBusinessUnitError.new unless @target_team.is_a? BusinessUnit
     raise OriginalBusinessUnitError.new if @team == @target_team
+    raise TeamHasCodeError.new if @team.code.present?
+    raise TeamHasCodeError.new if @target_team.code.present?
   end
 
   def call
