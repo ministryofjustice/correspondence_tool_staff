@@ -5,6 +5,16 @@ RUN set -ex
 RUN addgroup --gid 1000 --system appgroup && \
     adduser --uid 1000 --system appuser --ingroup appgroup
 
+# expect/add ping environment variables
+ARG VERSION_NUMBER
+ARG COMMIT_ID
+ARG BUILD_DATE
+ARG BUILD_TAG
+ENV VERSION_NUMBER=${VERSION_NUMBER}
+ENV COMMIT_ID=${COMMIT_ID}
+ENV BUILD_DATE=${BUILD_DATE}
+ENV BUILD_TAG=${BUILD_TAG}
+
 WORKDIR /usr/src/app/
 
 ENV PUMA_PORT 3000
