@@ -501,7 +501,7 @@ GEM
     shell-spinner (1.0.4)
       colorize
     shellany (0.0.1)
-    shoulda-matchers (4.1.2)
+    shoulda-matchers (4.3.0)
       activesupport (>= 4.2.0)
     sidekiq (6.0.3)
       connection_pool (>= 2.2.2)
@@ -550,7 +550,7 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    tzinfo (1.2.6)
+    tzinfo (1.2.7)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
@@ -659,7 +659,7 @@ DEPENDENCIES
   selenium-webdriver (~> 3.142.6)
   sentry-raven (~> 2.12.3)
   shell-spinner
-  shoulda-matchers (~> 4.1)
+  shoulda-matchers (~> 4.3)
   sidekiq (~> 6.0.3)
   site_prism (= 3.1)
   slim-rails (~> 3.2)
