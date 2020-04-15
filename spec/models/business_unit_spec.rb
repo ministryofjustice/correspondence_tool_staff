@@ -380,5 +380,103 @@ RSpec.describe BusinessUnit, type: :model do
         expect(third_team.previous_teams).to match_array [first_team.id, second_team.id]
       end
     end
+    context 'when a team has been joined' do
+      let(:original_dir) { find_or_create :directorate }
+      let(:first_target_dir) { find_or_create :directorate }
+      let(:second_target_dir) { find_or_create :directorate }
+      let(:business_unit_to_move) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+          )
+      }
+      let(:business_unit_for_history) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+          )
+      }
+      let(:responder) { create(:foi_responder, responding_teams: [business_unit_for_history]) }
+      let(:responder) { create(:foi_responder, responding_teams: [business_unit]) }
+      let(:business_unit) {
+        find_or_create(
+            :business_unit,
+            name: 'Business Unit name',
+            directorate: original_dir,
+            code: 'ABC'
+        )
+      }
+      let(:params) do
+        HashWithIndifferentAccess.new(
+            {
+                'full_name' => 'Bob Dunnit',
+                'email' => 'bd@moj.com'
+            }
+        )
+      end
+
+      let(:params_joe) do
+        HashWithIndifferentAccess.new(
+            {
+                'full_name' => 'Joe Didit',
+                'email' => 'jd@moj.com'
+            }
+        )
+      end
+
+      let(:new_user_service) { UserCreationService.new(team: business_unit, params: params)}
+
+      it 'tracks all ancestors of team' do
+        first_team = business_unit_to_move
+        service = TeamMoveService.new(first_team, first_target_dir)
+        service.call
+        second_team = service.new_team
+
+        # pause momentarily to let the database catch up
+        sleep 1
+
+        service = TeamMoveService.new(second_team, second_target_dir)
+        service.call
+
+        third_team = service.new_team
+        # create another team, with history into third team
+        fourth_team = business_unit_for_history
+        service = TeamMoveService.new(fourth_team, first_target_dir)
+        service.call
+        fifth_team = service.new_team
+
+        service = TeamJoinService.new(fifth_team, third_team)
+        service.call
+        expect(third_team.previous_teams).to match_array [first_team.id, second_team.id, fourth_team.id, fifth_team.id]
+      end
+
+      let(:joining_team) { create(:responding_team, name: "Joining Team") }
+      let(:original_target_team) { create(:responding_team, name: "Target Team") }
+
+      it 'assigns current and historic user roles for teams with history' do
+        joining_team_user = joining_team.users.first
+        original_target_team_user = original_target_team.users.first
+
+        service = TeamMoveService.new(original_target_team, first_target_dir)
+        service.call
+        target_team = service.new_team
+
+        service = TeamJoinService.new(joining_team, target_team)
+        service.call
+
+        expect(target_team.reload.responders).to match_array [joining_team_user, original_target_team_user]
+
+        expect(original_target_team_user.reload.teams).to match_array [
+          original_target_team, target_team, joining_team
+        ]
+
+        expect(joining_team_user.reload.teams).to match_array [
+          original_target_team, target_team, joining_team
+        ]
+
+        historic_teams = target_team.reload.historic_user_roles.collect {|t| t.team }.uniq
+        expect(historic_teams).to match_array [original_target_team, joining_team]
+      end
+    end
   end
 end

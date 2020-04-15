@@ -1,0 +1,27 @@
+dl {
+  display: table;
+  margin: 3em 0;
+  width: 100%;
+
+  div {
+    display: table-row;
+  }
+
+  dt,
+  dd {
+    display: table-cell;
+    overflow-wrap: break-word;
+    border-bottom: 1px solid $border-colour;
+    padding: 10px 0;
+  }
+
+  dt {
+    width: 30%;
+    font-weight: bold;
+  }
+
+  dd {
+    width: 70%;
+  }
+
+}
