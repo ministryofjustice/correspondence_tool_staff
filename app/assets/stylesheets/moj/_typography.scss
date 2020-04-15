@@ -1,3 +1,13 @@
+// Customisations to Gov UK Elements typography for new parts of app,
+// where styles are unused in other parts
+.list {
+  li {
+    margin: 1rem 0 0 2rem;
+  }
+}
+// End Customisations to Gov UK Elements
+
+
 .table-caption {
   @include bold-24;
   float: left;

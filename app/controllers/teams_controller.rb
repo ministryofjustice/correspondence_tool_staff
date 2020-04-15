@@ -6,6 +6,10 @@ class TeamsController < ApplicationController
                                   :destroy_business_area,
                                   :edit,
                                   :move_to_directorate,
+                                  :move_to_directorate_form,
+                                  :join_teams,
+                                  :join_teams_form,
+                                  :join_target_team,
                                   :show,
                                   :update,
                                   :update_business_area,
@@ -145,15 +149,17 @@ class TeamsController < ApplicationController
   end
 
   def move_to_directorate
-    # TODO https://dsdmoj.atlassian.net/browse/CT-2606
-    # authorize the user to move teams
+    authorize @team, :move?
     set_directorates if params[:business_group_id]
   end
 
+  def move_to_directorate_form
+    authorize @team, :move?
+    @directorate = Directorate.find(params[:directorate_id])
+  end
+
   def update_directorate
-    # TODO https://dsdmoj.atlassian.net/browse/CT-2606
-    # authorize the user to move teams
-    # authorize @team
+    authorize @team, :move?
     @directorate = Directorate.find(params[:directorate_id])
     service = TeamMoveService.new(@team, @directorate)
     service.call
@@ -169,6 +175,33 @@ class TeamsController < ApplicationController
     end
   end
 
+  def join_teams
+    authorize @team, :join?
+    set_directorates if params[:business_group_id]
+    set_teams if params[:directorate_id]
+  end
+
+  def join_teams_form
+    authorize @team, :join?
+    @target_team = BusinessUnit.find(params[:target_team_id])
+  end
+
+  def join_target_team
+    authorize @team, :join?
+    @target_team = BusinessUnit.find(params[:target_team_id])
+    service = TeamJoinService.new(@team, @target_team)
+    service.call
+    case service.result
+    when :ok
+      flash[:notice] = I18n.t('teams.join.joined_successfully',
+                        team_name: @team.original_team_name, target_team: @target_team.name)
+      redirect_to team_path(service.target_team)
+    else
+      flash[:alert] = I18n.t('teams.error')
+      redirect_to join_teams_form_team_path(@team)
+    end
+  end
+
   private
 
   def set_directorates
@@ -176,6 +209,11 @@ class TeamsController < ApplicationController
         .where(parent_id: params[:business_group_id])
         .active
         .order(:name)
+  end
+
+  def set_teams
+    @directorate = Directorate.find(params[:directorate_id])
+    @business_units = @directorate.business_units.active
   end
 
   def team_params
