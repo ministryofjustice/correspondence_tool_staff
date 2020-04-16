@@ -16,9 +16,9 @@ gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git'
 gem 'business_time'
 gem 'config', '~> 2.0'
 gem 'devise', '~> 4.7.1'
-gem 'draper', '4.0.0'
+gem 'draper', '4.0.1'
 gem 'dropzonejs-rails', '>= 0.8'
-gem 'foreman', '~> 0.86.0'
+gem 'foreman', '~> 0.87.1'
 gem 'factory_bot_rails', '~> 5.1.1'
 gem 'faker', '~> 2.10.2'
 gem 'gov_uk_date_fields', '~> 3.1'
@@ -29,7 +29,7 @@ gem 'govuk_elements_form_builder', '>= 1.2.0'
 gem 'govuk_notify_rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'humanize_boolean'
-gem 'jbuilder', '~> 2.9'
+gem 'jbuilder', '~> 2.10'
 gem 'jquery-rails', '~> 4.3.5'
 gem 'jquery-ui-rails'
 gem 'jsonb_accessor', '~> 1.0.0.beta.1'
@@ -55,7 +55,7 @@ gem 'sentry-raven', '~> 2.12.3'
 gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
-gem 'sidekiq', '~> 6.0.3'
+gem 'sidekiq', '~> 6.0.6'
 
 gem 'table_print'
 gem 'thor-rails'
@@ -73,14 +73,14 @@ group :test do
   gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.30'
   gem 'rails-controller-testing', require: false
-  gem 'shoulda-matchers', '~> 4.1'
+  gem 'shoulda-matchers', '~> 4.3'
   gem 'site_prism', '= 3.1'
-  gem 'webdrivers', '~> 4.1'
+  gem 'webdrivers', '~> 4.2'
 end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'annotate', '~> 3.0.3'
+  gem 'annotate', '~> 3.1.1'
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
@@ -89,12 +89,12 @@ group :development, :test do
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
-  gem 'parallel_tests', '~> 2.30'
+  gem 'parallel_tests', '~> 2.32'
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 3.9'
-  gem 'rubocop', '~> 0.76.0', require: false
+  gem 'rubocop', '~> 0.81.0', require: false
   gem 'rubocop-rspec', '~> 1.38.1', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
