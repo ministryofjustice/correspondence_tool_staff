@@ -53,8 +53,8 @@ module Cases
       create_offender_sar_params
     end
 
-    def edit_params
-      edit_offender_sar_params
+    def update_params
+      update_offender_sar_params
     end
 
     def process_closure_params
@@ -106,21 +106,14 @@ module Cases
     def update
       authorize case_type, :can_add_case?
 
-      @case = OffenderSARCaseForm.new(@case)
-      @case.case.creator = current_user #to-do Remove when we use the case create service
-      @case.assign_params(create_params) if create_params
-      @case.current_step = params[:current_step]
+      # @case = OffenderSARCaseForm.new(@case)
+      @case.assign_attributes(update_params) if update_params
 
-      if !@case.valid_attributes?(create_params)
-        render :edit
-      elsif @case.valid? && @case.save
-        session[:offender_sar_state] = nil
+      if @case.valid? && @case.save
         flash[:notice] = "Case edited successfully"
-        redirect_to case_path(@case.case)
+        redirect_to case_path(@case.id) and return
       else
-        @case.session_persist_state(create_params)
-        get_next_step(@case)
-        redirect_to "#{step_case_sar_offender_index_path}/#{@case.current_step}"
+        render :edit
       end
     end
 

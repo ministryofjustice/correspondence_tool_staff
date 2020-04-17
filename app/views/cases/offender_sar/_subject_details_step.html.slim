@@ -6,7 +6,7 @@
 
 = render partial: 'layouts/header'
 
-= form_for @case, url: url, as: :offender_sar do |f|
+= form_for @case.object, url: url, as: :offender_sar do |f|
   = f.text_field :subject_full_name
 
   = f.text_field :prison_number

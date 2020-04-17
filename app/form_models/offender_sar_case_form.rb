@@ -49,10 +49,6 @@ class OffenderSARCaseForm
     end
   end
 
-  # @todo: Should these steps be defined in 'Steppable' or the controller
-  def steps
-    %w[subject-details requester-details requested-info date-received].freeze
-  end
 
   # @todo: Used in partial - should be decorator
   def get_step_partial

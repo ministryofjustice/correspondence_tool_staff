@@ -141,6 +141,10 @@ class Case::SAR::Offender < Case::Base
     self.current_state == 'data_to_be_requested'
   end
 
+  # @todo: Should these steps be defined in 'Steppable' or the controller
+  def steps
+    %w[subject-details requester-details requested-info date-received].freeze
+  end
 
   private
 
