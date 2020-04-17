@@ -129,6 +129,30 @@ describe TeamJoinService do
         end
       end
 
+      context 'when the team being moved has responded cases' do
+        let(:responded_kase) {
+          create(
+            :responded_case,
+              responding_team: business_unit,
+              responder: joining_team_user
+          )
+        }
+
+        it 'moves the open and responded cases' do
+          expect(business_unit.cases).to match_array [
+            kase,
+            klosed_kase,
+            responded_kase
+          ]
+          service.call
+          expect(business_unit.cases.reload).to match_array [klosed_kase]
+          expect(service.target_team.cases).to match_array [
+            kase,
+            responded_kase
+          ]
+        end
+      end
+
       context 'when the team being moved has trigger cases' do
         let(:kase) {
           create(

@@ -193,6 +193,30 @@ describe TeamMoveService do
         end
       end
 
+      context 'when the team being moved has responded cases' do
+        let(:responded_kase) {
+          create(
+            :responded_case,
+              responding_team: business_unit,
+              responder: responder
+          )
+        }
+
+        it 'moves the open and responded cases' do
+          expect(business_unit.cases).to match_array [
+            kase,
+            klosed_kase,
+            responded_kase
+          ]
+          service.call
+          expect(business_unit.cases.reload).to match_array [klosed_kase]
+          expect(service.new_team.cases).to match_array [
+            kase,
+            responded_kase
+          ]
+        end
+      end
+
       context 'when the team being moved is an approver team' do
         let(:kase) { build(:responded_ico_foi_case) }
         let(:disclosure_team) { BusinessUnit.dacu_disclosure }
