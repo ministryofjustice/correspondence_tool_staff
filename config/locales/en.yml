@@ -1005,6 +1005,7 @@ en:
       select_business_group: Select a business group
       select_directorate: Select a directorate
     join:
+      cannot_join_other_team: "%{team_name} cannot be joined with any other business unit"
       confirm_heading: Confirm join
       heading: Join business unit
       intro:
@@ -1017,8 +1018,7 @@ en:
       join_with_this_team: Join with this team
       subhead: "Business unit: %{team_name}"
       team_your_working_with: This is the team you're working with
-      will_be_joined: "%{team_name}'s users and open cases will be joined to %{target_team_name}'s business unit"
-      cannot_join_other_team: "%{team_name} cannot be joined with any other business unit"
+      will_be_joined: "%{team_name}'s users and open cases will be joined with %{target_team_name}'s business unit"
     move:
       confirm_heading: Confirm move
       heading: Move business unit
@@ -1032,8 +1032,8 @@ en:
       subhead: "Business unit: %{team_name}"
       team_currently_located: This is where the team is currently located
       will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_directorate_name}"
-    unreversible: This action cannot be reversed
     team: Business unit
+    unreversible: This action cannot be reversed
   users:
     new:
       create: Create user

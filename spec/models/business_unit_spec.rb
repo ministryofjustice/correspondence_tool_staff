@@ -348,7 +348,7 @@ RSpec.describe BusinessUnit, type: :model do
         service = TeamMoveService.new(previous_team, target_dir)
         service.call
         current_team = service.new_team
-        expect(current_team.previous_teams).to match_array [previous_team.id]
+        expect(current_team.previous_teams).to match_array [previous_team]
       end
     end
 
@@ -377,9 +377,10 @@ RSpec.describe BusinessUnit, type: :model do
 
         third_team = service.new_team
 
-        expect(third_team.previous_teams).to match_array [first_team.id, second_team.id]
+        expect(third_team.previous_teams).to match_array [first_team, second_team]
       end
     end
+
     context 'when a team has been joined' do
       let(:original_dir) { find_or_create :directorate }
       let(:first_target_dir) { find_or_create :directorate }
@@ -447,7 +448,7 @@ RSpec.describe BusinessUnit, type: :model do
 
         service = TeamJoinService.new(fifth_team, third_team)
         service.call
-        expect(third_team.previous_teams).to match_array [first_team.id, second_team.id, fourth_team.id, fifth_team.id]
+        expect(third_team.previous_teams).to match_array [first_team, second_team, fourth_team, fifth_team]
       end
 
       let(:joining_team) { create(:responding_team, name: "Joining Team") }
