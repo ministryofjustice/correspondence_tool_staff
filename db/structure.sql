@@ -355,7 +355,8 @@ CREATE TABLE public.cases (
     dirty boolean DEFAULT false,
     document_tsvector tsvector,
     user_id integer DEFAULT '-100'::integer NOT NULL,
-    reason_for_deletion character varying
+    reason_for_deletion character varying,
+    date_of_birth_new date
 );
 
 
