@@ -74,7 +74,7 @@ class TeamMoveService
   end
 
   def move_associations_to_new_team
-    Assignment.where(case_id: @team.open_cases.ids, team_id: @team.id).update_all(team_id: @new_team.id)
+    Assignment.where(case_id: @team.assigned_open_cases.ids, team_id: @team.id).update_all(team_id: @new_team.id)
     CaseTransition.where(acting_team: @team).update_all(acting_team_id: @new_team.id)
     CaseTransition.where(target_team: @team).update_all(target_team_id: @new_team.id)
   end

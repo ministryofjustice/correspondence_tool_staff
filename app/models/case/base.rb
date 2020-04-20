@@ -116,6 +116,7 @@ class Case::Base < ApplicationRecord
   end
 
   scope :in_open_state, -> { where. not(current_state: %w[responded closed] ) }
+  scope :in_open_or_responded_state, -> { where. not(current_state: %w[closed] ) }
 
   scope :accepted, -> { joins(:assignments)
                           .where(assignments: {state: ['accepted']} ) }

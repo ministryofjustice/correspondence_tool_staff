@@ -71,6 +71,7 @@ class BusinessUnit < Team
            source: :case
 
   has_many :open_cases, -> { in_open_state }, through: :pending_accepted_assignments, source: :case
+  has_many :assigned_open_cases, -> { in_open_or_responded_state }, through: :pending_accepted_assignments, source: :case
 
 
   scope :managing, -> { where(role: 'manager') }
