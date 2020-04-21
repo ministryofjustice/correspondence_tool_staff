@@ -28,6 +28,7 @@ class Case::SAR::Offender < Case::Base
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
+                 date_of_birth: :date,
                  escalation_deadline: :date,
                  external_deadline: :date,
                  flag_as_high_profile: :boolean,
@@ -140,10 +141,9 @@ class Case::SAR::Offender < Case::Base
     self.current_state == 'data_to_be_requested'
   end
 
-
-  def get_step_partial
-    step_name = current_step.split("/").first.tr('-', '_')
-    "#{step_name}_step"
+  # @todo: Should these steps be defined in 'Steppable' or the controller
+  def steps
+    %w[subject-details requester-details requested-info date-received].freeze
   end
 
   private
