@@ -93,11 +93,6 @@ class OffenderSARCaseForm
     object.subject_type
   end
 
-  # @todo: Should these steps be defined in 'Steppable' or the controller
-  def steps
-    %w[subject-details requester-details requested-info date-received].freeze
-  end
-
   private
 
   def check_valid_dates_for_step(step)
