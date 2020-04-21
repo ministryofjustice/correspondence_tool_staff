@@ -30,25 +30,6 @@ module PageObjects
 
           element :submit_button, '.button'
 
-          def fill_in_case_details(params={})
-            kase = FactoryBot.build :offender_sar_case, params
-
-            subject_full_name.set 'Sabrina Adams'
-            prison_number.set kase.prison_number
-            subject_aliases.set kase.subject_aliases
-            previous_case_numbers.set kase.previous_case_numbers
-            set_date_of_birth kase.date_of_birth
-
-            choose('offender_sar_subject_type_offender', visible: false)
-            choose('offender_sar_flag_as_high_profile_false', visible: false)
-          end
-
-          def set_date_of_birth(date_of_birth)
-            date_of_birth_dd.set(date_of_birth.day)
-            date_of_birth_mm.set(date_of_birth.month)
-            date_of_birth_yyyy.set(date_of_birth.year)
-          end
-
           def edit_name(value)
             subject_full_name.set value
           end
