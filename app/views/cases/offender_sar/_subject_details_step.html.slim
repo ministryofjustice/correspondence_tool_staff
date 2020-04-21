@@ -6,7 +6,6 @@
 
 = render partial: 'layouts/header'
 
-- @case.date_of_birth = @case.date_of_birth
 = form_for @case.object, url: url, as: :offender_sar do |f|
   = f.text_field :subject_full_name
 

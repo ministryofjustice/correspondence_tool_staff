@@ -101,6 +101,7 @@ module Cases
 
       # @case = OffenderSARCaseForm.new(@case)
       @case.current_step = params[:step]
+      apply_date_workaround
     end
 
     def update
@@ -119,6 +120,12 @@ module Cases
     end
 
     private
+
+    def apply_date_workaround
+      # an issue with the Gov UK Date Fields causes the fields to show up empty
+      # on edit unless you assign to the :date_of_birth field before display
+      @case.date_of_birth = @case.date_of_birth
+    end
 
     def params_for_transition
       { acting_user: current_user, acting_team: current_user.managing_teams.first }

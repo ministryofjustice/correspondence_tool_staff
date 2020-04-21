@@ -93,6 +93,11 @@ class OffenderSARCaseForm
     object.subject_type
   end
 
+  # @todo: Should these steps be defined in 'Steppable' or the controller
+  def steps
+    %w[subject-details requester-details requested-info date-received].freeze
+  end
+
   private
 
   def check_valid_dates_for_step(step)
@@ -106,7 +111,6 @@ class OffenderSARCaseForm
     # and/or conditionally clear other fields depending on related values
     case step
     when "subject-details"
-      byebug
       set_empty_value_if_unset(params, "subject_type")
       set_empty_value_if_unset(params, "date_of_birth")
       set_empty_value_if_unset(params, "flag_as_high_profile")
