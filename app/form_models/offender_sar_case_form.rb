@@ -49,6 +49,10 @@ class OffenderSARCaseForm
     end
   end
 
+  # @todo: Should these steps be defined in 'Steppable' or the controller
+  def steps
+    %w[subject-details requester-details requested-info date-received].freeze
+  end
 
   # @todo: Used in partial - should be decorator
   def get_step_partial
@@ -102,6 +106,7 @@ class OffenderSARCaseForm
     # and/or conditionally clear other fields depending on related values
     case step
     when "subject-details"
+      byebug
       set_empty_value_if_unset(params, "subject_type")
       set_empty_value_if_unset(params, "date_of_birth")
       set_empty_value_if_unset(params, "flag_as_high_profile")

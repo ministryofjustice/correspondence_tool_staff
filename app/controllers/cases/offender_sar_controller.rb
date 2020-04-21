@@ -6,7 +6,7 @@ module Cases
     before_action :set_case_types, only: [:new, :create]
 
     before_action -> { set_decorated_case(params[:id]) }, only: [
-      :transition, :edit
+      :transition, :edit, :update
     ]
 
     def initialize
@@ -108,6 +108,7 @@ module Cases
 
       # @case = OffenderSARCaseForm.new(@case)
       @case.assign_attributes(update_params) if update_params
+      @case.current_step = params[:current_step]
 
       if @case.valid? && @case.save
         flash[:notice] = "Case edited successfully"
