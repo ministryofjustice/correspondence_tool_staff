@@ -30,7 +30,7 @@ references:
     run:
       name: Install bundler
       command: |
-        gem install bundler -v 1.14.6
+        gem install bundler -v 1.17.1
 
   install_psql: &install_psql
     run:
