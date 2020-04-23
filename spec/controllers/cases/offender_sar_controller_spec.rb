@@ -70,6 +70,12 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   describe '#edit' do
     let(:offender_sar_case) { create(:offender_sar_case).decorate }
     let(:params) {{ id: offender_sar_case.id }}
+    let(:manager) { find_or_create :disclosure_bmt_user }
+
+    before do
+      sign_in manager
+    end
+
     it 'does stuff' do
       get :edit, params: params
       expect(response).to render_template(:edit)
@@ -80,11 +86,45 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   describe '#update' do
     let(:offender_sar_case) { create(:offender_sar_case).decorate }
     let(:params) {{ id: offender_sar_case.id }}
-    it 'does stuff' do
-      pending "TODO Broken while working on date fields"
-      patch :update, params: params
-      expect(response).to render_template(:show)
-      expect(assigns(:case)).to be_a Case::SAR::Offender
+    let(:manager) { find_or_create :disclosure_bmt_user }
+    let(:params) do
+      {
+        id: offender_sar_case.id,
+        offender_sar: {
+          requester_type: 'member_of_the_public',
+          type: 'Offender',
+          name: 'A. N. Other',
+          postal_address: '102 Petty France',
+          email: 'member@public.com',
+          subject: 'Offender SAR request from controller spec',
+          message: 'Offender SAR about a former offender',
+          received_date_dd: Time.zone.today.day.to_s,
+          received_date_mm: Time.zone.today.month.to_s,
+          received_date_yyyy: Time.zone.today.year.to_s,
+          delivery_method: :sent_by_email,
+          flag_for_disclosure_specialists: false,
+        }
+      }
+    end
+
+    before do
+      sign_in manager
+    end
+
+    context 'with valid params' do
+      before(:each) do
+        patch :update, params: params
+        expect(assigns(:case)).to be_a Case::SAR::Offender
+      end
+
+      it 'sets the flash' do
+        expect(flash[:notice]).to eq 'Case edited successfully'
+      end
+
+      it 'redirects to the new case assignment page' do
+        expect(response)
+          .to redirect_to(case_path(offender_sar_case))
+      end
     end
   end
 end
