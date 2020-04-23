@@ -41,7 +41,6 @@ feature 'editing an ICO case' do
     expect(case_details.date_received.data.text    ).to eq '4 Mar 2018'
     expect(case_details.external_deadline.data.text).to eq '24 Mar 2018'
     expect(case_details.internal_deadline.data.text).to eq '14 Mar 2018'
-
     expect(cases_show_page.request.message.text).to eq kase.message
 
     expect(cases_show_page.ico.original_cases).to have_linked_records(count: 1)

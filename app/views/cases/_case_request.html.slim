@@ -4,10 +4,11 @@
 
   .request--message.section-requested-info
     - if case_details.message.present?
-      p
+      p.message-body
         = show_hide_message(case_details)
-      p
-        = "Change" if case_details.offender_sar?
+      - if case_details.offender_sar?
+        p.change-link
+          = "Change"
 
     - if case_details.attachments.request.present?
       - case_details.upload_request_groups.each do |ug|
