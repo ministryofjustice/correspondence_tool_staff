@@ -37,5 +37,13 @@ feature 'Offender SAR Case editing by a manager' do
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
     expect(cases_show_page).to have_content I18n.l(1.week.ago.to_date, format: :default)
     expect(cases_show_page).to have_content 'Case edited successfully'
+
+    cases_show_page.offender_sar_requested_info.change_link.click
+    expect(cases_edit_offender_sar_requested_info_page).to be_displayed
+    cases_edit_offender_sar_requested_info_page.edit_message "In a hole in the ground there lived a Hobbit."
+    click_on "Continue"
+    expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
+    expect(cases_show_page).to have_content "In a hole in the ground there lived a Hobbit."
+    expect(cases_show_page).to have_content 'Case edited successfully'
   end
 end

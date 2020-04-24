@@ -8,7 +8,7 @@
         = show_hide_message(case_details)
       - if case_details.offender_sar?
         p.change-link
-          = "Change"
+          = link_to "Change", edit_step_case_sar_offender_path(case_details, "requested_info")
 
     - if case_details.attachments.request.present?
       - case_details.upload_request_groups.each do |ug|
