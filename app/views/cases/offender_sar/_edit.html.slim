@@ -1,2 +1,7 @@
-  = render "cases/offender_sar/#{@case.get_step_partial}", url: case_sar_offender_path(@case)
+- content_for :sub_heading, flush: true
+  = t("cases.edit.offender_sar.sub_heading")
+
+= @case.back_link(:edit, nil)
+
+= render "cases/offender_sar/#{@case.get_step_partial}", url: case_sar_offender_path(@case)
 

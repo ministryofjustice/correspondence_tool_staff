@@ -17,4 +17,12 @@ class Case::SAR::OffenderDecorator < Case::BaseDecorator
     "#{step_name}_step"
   end
 
+  def back_link(mode, previous_step)
+    if mode == :edit
+      url = h.case_path(id)
+    else
+      url = "#{h.step_case_sar_offender_index_path}/#{previous_step}"
+    end
+    h.link_to "Back", url, class: 'govuk-back-link'
+  end
 end

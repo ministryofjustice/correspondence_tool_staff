@@ -10,6 +10,6 @@
 - content_for :sub_heading
   = "#{@case.number} - #{@case.pretty_type}"
 
-= render partial: 'layouts/header'
+= render partial: 'layouts/header' unless @case.offender_sar?
 
 = render partial: "cases/#{@case.type_abbreviation.downcase}/edit", locals: { kase: @case }

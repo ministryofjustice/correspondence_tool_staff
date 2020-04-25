@@ -35,6 +35,7 @@ class OffenderSARCaseForm
            :third_party_company_name,
            :third_party,
            :type_abbreviation,
+           :back_link,
            to: :@case
 
   attr_reader :case, :session

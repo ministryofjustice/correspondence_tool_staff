@@ -757,6 +757,8 @@ en:
       heading: Edit case details
       date_draft_compliant: Date compliant draft was uploaded
       date_draft_compliant_example: "For example, 01 02 2018"
+      offender_sar:
+        sub_heading: Edit Offender SAR case
     update:
       case_error: Unable to save case updates
       case_updated: Case updated
