@@ -1,6 +1,6 @@
 module SetupCase
   extend ActiveSupport::Concern
-# random commend
+
   def set_case(case_id = params[:case_id])
     @case = Case::Base
       .includes(
