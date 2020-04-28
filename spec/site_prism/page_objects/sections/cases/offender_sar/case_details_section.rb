@@ -11,7 +11,7 @@ module PageObjects
         section :sar_basic_details, '.sar-basic-details' do
           section :case_type, 'tr.case-type' do
             element :sar_trigger, 'td .sar-trigger'
-            element :data, 'td'
+            element :data, 'td:first'
           end
 
           section :data_subject, 'tr.data-subject' do
@@ -27,7 +27,7 @@ module PageObjects
           end
 
           section :third_party, 'tr.third-party' do
-            element :data, 'td'
+            element :data, 'td:first'
           end
 
           section :third_party_reference, 'tr.third-party-reference' do
@@ -55,7 +55,7 @@ module PageObjects
           end
 
           section :date_received, 'tr.date-received' do
-            element :data, 'td'
+            element :data, 'td:first'
           end
 
           section :date_of_birth, 'tr.date-of-birth' do

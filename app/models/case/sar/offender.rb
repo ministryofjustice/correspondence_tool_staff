@@ -23,6 +23,8 @@ class Case::SAR::Offender < Case::Base
     received_date
   ].freeze
 
+  include Steppable
+
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
@@ -139,6 +141,10 @@ class Case::SAR::Offender < Case::Base
     self.current_state == 'data_to_be_requested'
   end
 
+  # @todo: Should these steps be defined in 'Steppable' or the controller
+  def steps
+    %w[subject-details requester-details requested-info date-received].freeze
+  end
 
   private
 

@@ -50,7 +50,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
   end
 
-  describe 'edit behaviour' do
+  describe 'transitions' do
     OFFENDER_SAR_STATES = {
       data_to_be_requested: :mark_as_waiting_for_data,
       waiting_for_data: :mark_as_ready_for_vetting,
@@ -63,6 +63,67 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     OFFENDER_SAR_STATES.each do |state, transition_event|
       context "with Offender SAR in #{state} state" do
         it_behaves_like 'edit offender sar spec', state.to_sym, transition_event
+      end
+    end
+  end
+
+  describe '#edit' do
+    let(:offender_sar_case) { create(:offender_sar_case).decorate }
+    let(:params) {{ id: offender_sar_case.id }}
+    let(:manager) { find_or_create :disclosure_bmt_user }
+
+    before do
+      sign_in manager
+    end
+
+    it 'does stuff' do
+      get :edit, params: params
+      expect(response).to render_template(:edit)
+      expect(assigns(:case)).to be_a Case::SAR::Offender
+    end
+  end
+
+  describe '#update' do
+    let(:offender_sar_case) { create(:offender_sar_case).decorate }
+    let(:params) {{ id: offender_sar_case.id }}
+    let(:manager) { find_or_create :disclosure_bmt_user }
+    let(:params) do
+      {
+        id: offender_sar_case.id,
+        offender_sar: {
+          requester_type: 'member_of_the_public',
+          type: 'Offender',
+          name: 'A. N. Other',
+          postal_address: '102 Petty France',
+          email: 'member@public.com',
+          subject: 'Offender SAR request from controller spec',
+          message: 'Offender SAR about a former offender',
+          received_date_dd: Time.zone.today.day.to_s,
+          received_date_mm: Time.zone.today.month.to_s,
+          received_date_yyyy: Time.zone.today.year.to_s,
+          delivery_method: :sent_by_email,
+          flag_for_disclosure_specialists: false,
+        }
+      }
+    end
+
+    before do
+      sign_in manager
+    end
+
+    context 'with valid params' do
+      before(:each) do
+        patch :update, params: params
+        expect(assigns(:case)).to be_a Case::SAR::Offender
+      end
+
+      it 'sets the flash' do
+        expect(flash[:notice]).to eq 'Case edited successfully'
+      end
+
+      it 'redirects to the new case assignment page' do
+        expect(response)
+          .to redirect_to(case_path(offender_sar_case))
       end
     end
   end

@@ -6,7 +6,7 @@ module Cases
     before_action :set_case_types, only: [:new, :create]
 
     before_action -> { set_decorated_case(params[:id]) }, only: [
-      :transition
+      :transition, :edit, :update
     ]
 
     def initialize
@@ -53,8 +53,8 @@ module Cases
       create_offender_sar_params
     end
 
-    def edit_params
-      edit_offender_sar_params
+    def update_params
+      update_offender_sar_params
     end
 
     def process_closure_params
@@ -95,7 +95,37 @@ module Cases
       end
     end
 
+    def edit
+      permitted_correspondence_types
+      authorize case_type, :can_add_case?
+
+      # @case = OffenderSARCaseForm.new(@case)
+      @case.current_step = params[:step]
+      apply_date_workaround
+    end
+
+    def update
+      authorize case_type, :can_add_case?
+
+      # @case = OffenderSARCaseForm.new(@case)
+      @case.assign_attributes(update_params) if update_params
+      @case.current_step = params[:current_step]
+
+      if @case.valid? && @case.save
+        flash[:notice] = "Case edited successfully"
+        redirect_to case_path(@case.id) and return
+      else
+        render :edit
+      end
+    end
+
     private
+
+    def apply_date_workaround
+      # an issue with the Gov UK Date Fields causes the fields to show up empty
+      # on edit unless you assign to the :date_of_birth field before display
+      @case.date_of_birth = @case.date_of_birth
+    end
 
     def params_for_transition
       { acting_user: current_user, acting_team: current_user.managing_teams.first }

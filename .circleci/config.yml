@@ -30,7 +30,7 @@ references:
     run:
       name: Install bundler
       command: |
-        gem install bundler -v 1.14.6
+        gem install bundler -v 1.17.1
 
   install_psql: &install_psql
     run:
@@ -65,6 +65,7 @@ references:
     run:
       name: Install dependencies
       command: |
+        bundle install --path vendor/bundle && bundle clean
         if [ "${CIRCLE_NODE_INDEX}" == "0" ]; then
           bundle check --path vendor/bundle || bundle install --path vendor/bundle && bundle clean
         fi
