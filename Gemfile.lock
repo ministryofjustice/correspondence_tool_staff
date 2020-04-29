@@ -248,7 +248,7 @@ GEM
       i18n
     i18n (1.8.2)
       concurrent-ruby (~> 1.0)
-    i18n-tasks (0.9.30)
+    i18n-tasks (0.9.31)
       activesupport (>= 4.0.2)
       ast (>= 2.1.0)
       erubi
@@ -358,7 +358,7 @@ GEM
     parallel (1.19.1)
     parallel_tests (2.32.0)
       parallel
-    parser (2.7.1.0)
+    parser (2.7.1.1)
       ast (~> 2.4.0)
     pg (1.2.2)
     pg_search (2.3.0)
@@ -620,7 +620,7 @@ DEPENDENCIES
   guard-rspec
   guard-rubocop
   humanize_boolean
-  i18n-tasks (~> 0.9.30)
+  i18n-tasks (~> 0.9.31)
   jbuilder (~> 2.10)
   jquery-rails (~> 4.3.5)
   jquery-ui-rails
