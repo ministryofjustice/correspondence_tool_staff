@@ -38,7 +38,7 @@ class DevUserSeeder
       'Prescilla Offenberg'=> [{ team: 'pressoffice',    role: 'approver' }],
       'Primrose Offord'    => [{ team: 'privateoffice',  role: 'approver' }],
       'Princeton Office'   => [{ team: 'privateoffice',  role: 'approver' }],
-      'Brian Rix'          => [{ team: 'branston',  role: 'manager' }],
+      'Brian Rix'          => [{ team: 'branston',       role: 'responder' }],
     }
   end
   # rubocop:enable Metrics/MethodLength
