@@ -14,7 +14,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Dear Sirs
                   <br>
-                  <br>Thank you for your subject access request (SAR) dated <%= values.received_date.strftime('%e %b %Y') %>.
+                  <br>Thank you for your subject access request (SAR) dated <%= 'XXXXXXX' %><%# TODO values.request_dated.strftime('%e %b %Y') %>.
                   <br>
                   <br>Please note that as your client has previously submitted a SAR and has been supplied with data, we will only be providing you with data not previously received, i.e. data from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
                   <br>
@@ -36,7 +36,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Dear Sirs
                   <br>
-                  <br>Thank you for your subject access request (SAR) dated <%= values.received_date.strftime('%e %b %Y') %>.
+                  <br>Thank you for your subject access request (SAR) dated <%= 'XXXXXXX' %><%# TODO values.request_dated.strftime('%e %b %Y') %>.
                   <br>
                   <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty’s Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
                   <br>
@@ -53,7 +53,7 @@ class LetterTemplateSeeder
                 body: <<~EOF
                   <p><strong>DATA PROTECTION ACT 2018:  SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <br>Thank you for your Subject Access Request (SAR) dated <%= values.received_date.strftime('%e %b %Y') %>.
+                  <br>Thank you for your Subject Access Request (SAR) dated <%= 'XXXXXXX' %><%# TODO values.request_dated.strftime('%e %b %Y') %>.
                   <br>
                   <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty’s Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
                   <br>
