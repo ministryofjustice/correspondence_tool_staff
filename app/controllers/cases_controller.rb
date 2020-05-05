@@ -197,7 +197,7 @@ class CasesController < ApplicationController
     # operation ... we don't want to possibly allow SAR or ICO types to be
     # permitted at any point.
 
-    if current_user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar)
+    if current_user.permitted_correspondence_types == [CorrespondenceType.offender_sar]
       @permitted_correspondence_types = [CorrespondenceType.offender_sar]
     else
       types = current_user.managing_teams.first.correspondence_types.menu_visible.order(:name).to_a
