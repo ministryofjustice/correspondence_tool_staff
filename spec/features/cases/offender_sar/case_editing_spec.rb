@@ -11,7 +11,7 @@ feature 'Offender SAR Case editing by a manager' do
     cases_show_page.load(id: offender_sar_case.id)
   end
 
-  scenario 'creating a case that does not need clearance', js: true do
+  scenario 'editing an offender SAR case', js: true do
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
 
     cases_show_page.offender_sar_subject_details.change_link.click

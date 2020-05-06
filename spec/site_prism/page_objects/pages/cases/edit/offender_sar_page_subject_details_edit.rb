@@ -13,19 +13,12 @@ module PageObjects
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
           element :subject_full_name, '#offender_sar_subject_full_name'
-
           element :prison_number, '#offender_sar_prison_number'
-
           element :subject_aliases, '#offender_sar_subject_aliases'
-
           element :previous_case_numbers, '#offender_sar_previous_case_numbers'
-
           element :other_subject_ids, '#offender_sar_other_subject_ids'
-
           element :date_of_birth_dd, '#offender_sar_date_of_birth_dd'
-
           element :date_of_birth_mm, '#offender_sar_date_of_birth_mm'
-
           element :date_of_birth_yyyy, '#offender_sar_date_of_birth_yyyy'
 
           element :submit_button, '.button'
