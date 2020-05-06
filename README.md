@@ -413,6 +413,16 @@ Finally, at release time, you need to run:
 
 This will run all pending data migrations and store migration history in data_migrations table.
 
+### Letter templates and synchronising data
+
+The app has templated correspondence for generating case-related letters for the Offender SAR case type.
+
+The template body for each letter is maintained in the `letter_templates` table in the database, and populated from information in the /db/seeders/letter_template_seeder.rb script.
+
+Whenever any changes to the letter templates are required DO NOT EDIT THE DATABASE, but amend the seeder and then on each environment, run `rails db:seed:dev:letter_templates` to delete and re-populate the table.
+
+This is required whenever any new template is added; should someone have edited the versions in the database directly, those changes will be overwritten the next time the seeder is run.
+
 ### Smoke Tests
 
 The smoke test runs through the process of signing into the service using a dedicated user account setup as Disclosure BMT team member.
@@ -533,12 +543,12 @@ To decrypt secrets, you must require authorization from your line manager.
 Once added as a `git-crypt` collaborator, only edit secrets that require editing and
 ensure the session is ended using `git-crypt lock` to prevent further accidental changes.
 
-Overcommit is used to execute checks/preventative scripts. See `./overcommit.yml` 
-and visit the Overcommit source page for more information: 
+Overcommit is used to execute checks/preventative scripts. See `./overcommit.yml`
+and visit the Overcommit source page for more information:
 
 https://github.com/sds/overcommit
 
-NOTE: YOU MUST INITIALISE OVERCOMMIT TO EXECUTE GIT HOOK SCRIPTS - e.g. to check for 
+NOTE: YOU MUST INITIALISE OVERCOMMIT TO EXECUTE GIT HOOK SCRIPTS - e.g. to check for
 leaked secrets!:
 
 ```
