@@ -449,9 +449,10 @@ en:
       offender_sar:
         delivery_method: How and where should the information be sent?
         email: "Recipient email address"
+        high_profile: High profile
         message: Request details
         name: "Full name of the representative"
-        other_subject_ids: "Subject's PNC or other ID numbers"
+        other_subject_ids: "Police national computer number"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
@@ -534,8 +535,8 @@ en:
       compliant_late: Uploaded late
       compliant_unknown: Unknown draft compliancy
       create_overturned: Create an ICO Overturned case
-      data_subject: Data subject
-      data_subject_type: Type of data subject
+      data_subject: Full name of subject
+      data_subject_type: 'What is their relationship to MOJ?'
       date_draft_uploaded: Date draft uploaded
       date_ico_decision_received: Date ICO's decision was received
       date_responded: Date response sent to requester
@@ -560,7 +561,7 @@ en:
       header_subject: "Case subject, "
       late_team: Business unit responsible for late response
       name: Requester
-      other_subject_ids: "Subject's PNC or other ID numbers"
+      other_subject_ids: "Police national computer number"
       previous_case_numbers: Previous SAR cases
       prison_number: "Prison number"
       postal_address: "Requester’s postal address"
@@ -582,10 +583,10 @@ en:
       requester_type: "Type of requester"
       sar_response_address: Where the information should be sent
       status: Status
-      subject_aliases: Subject aliases
+      subject_aliases: Alias
       third_party: Information requested on someone's behalf?
-      third_party_relationship: Third party relationship
-      third_party_reference: Requester reference
+      third_party_relationship: Relationship
+      third_party_reference: Requester reference number
       third_party_company_name: Company name
       time_taken: Time taken
       time_taken_result:
