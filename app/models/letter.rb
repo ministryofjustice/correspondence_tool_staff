@@ -25,5 +25,9 @@ class Letter
   def letter_date
     Date.today.strftime('%e %b %Y')
   end
+
+  def template_name
+    @letter_template&.name
+  end
 end
 
