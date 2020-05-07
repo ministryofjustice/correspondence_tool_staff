@@ -128,7 +128,7 @@ module Cases
     end
 
     def params_for_transition
-      { acting_user: current_user, acting_team: current_user.managing_teams.first }
+      { acting_user: current_user, acting_team: @case.default_managing_team }
     end
 
     def reload_case_page_on_success
