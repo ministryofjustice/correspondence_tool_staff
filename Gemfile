@@ -1,4 +1,7 @@
 source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+ruby '2.5.1'
 
 gem 'activerecord-session_store'
 gem 'acts_as_tree', '~> 2.9'
@@ -46,7 +49,11 @@ gem 'pg_search', '~> 2.3.0'
 gem 'pry-rails'
 gem 'puma', '~> 4.3'
 gem 'pundit', '~>2.1'
-gem 'rails', '~> 5.0.7.2'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 5.2.4', '>= 5.2.4.2'
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
+
 gem 'rails-data-migrations', '~> 1.2.0'
 gem 'recursive-open-struct'
 gem 'sablon'
@@ -58,7 +65,7 @@ gem 'schema_plus_enums', '~> 0.1'
 gem 'sidekiq', '~> 6.0.6'
 
 gem 'table_print'
-gem 'thor-rails'
+# gem 'thor-rails'
 gem 'timecop'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
