@@ -19,6 +19,12 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     user_can_manage_offender_sar_cases
   end
 
+  def show?
+    clear_failed_checks
+
+    user_can_manage_offender_sar_cases
+  end
+
   def respond_and_close?
     clear_failed_checks
     user_can_manage_offender_sar_cases
@@ -40,6 +46,6 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
   end
 
   def user_can_manage_offender_sar_cases
-    user.manager? || user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar)
+    user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar)
   end
 end
