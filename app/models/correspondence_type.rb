@@ -91,7 +91,7 @@ class CorrespondenceType < ApplicationRecord
   end
 
   def self.by_report_category
-    CorrespondenceType.properties_where_not(report_category_name: '').properties_order(:report_category_name)
+    CorrespondenceType.properties_where_not(Arel.sql(report_category_name: '')).properties_order(Arel.sql(:report_category_name.to_s))
   end
 
   def self.foi
