@@ -3,7 +3,6 @@ require 'rails_helper'
 describe UserCreationService do
 
   describe '#call' do
-
     let(:params) do
       ActiveSupport::HashWithIndifferentAccess.new(
         {
@@ -13,16 +12,10 @@ describe UserCreationService do
       )
     end
 
-    let(:service)  { UserCreationService.new(team: @team, params: params) }
-
-    before(:all) do
-      @team = create :responding_team, name: 'User Creation Team'
-    end
-
-    after(:all) { DbHousekeeping.clean }
+    let!(:team) { find_or_create :responding_team, name: 'User Creation Team' }
+    let(:service)  { UserCreationService.new(team: team, params: params) }
 
     context 'when no existing user exists' do
-
       context 'valid' do
         it 'creates a user' do
           expect{
@@ -36,7 +29,7 @@ describe UserCreationService do
           expect { service.call }.to change{ TeamsUsersRole.count }.by(1)
           expect(User.last.team_roles.size).to eq 1
           tr = User.last.team_roles.singular
-          expect(tr.team_id).to eq @team.id
+          expect(tr.team_id).to eq team.id
           expect(tr.role).to eq 'responder'
         end
 
@@ -44,8 +37,8 @@ describe UserCreationService do
           service.call
           expect(service.result).to eq :ok
         end
-
       end
+
       context 'invalid' do
         it 'returns :error' do
           params[:email] = ''
@@ -57,15 +50,9 @@ describe UserCreationService do
     end
 
     context 'the user already exists in this team' do
-      before(:all) do
-        @existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: '102pettyfrance')
-        @existing_user.team_roles << TeamsUsersRole.new(team: @team, role: 'responder')
-        @existing_user.save!
-      end
-
-      after(:all) do
-        User.find_by_email!('dd@moj.com').destroy
-      end
+      let!(:existing_user) { User.new(full_name: 'danny driver', email: 'dd@moj.com', password: '102pettyfrance') }
+      let!(:existing_user_role) { existing_user.team_roles << TeamsUsersRole.new(team: team, role: 'responder') }
+      let!(:success) { existing_user.save }
 
       it 'returns :error' do
         service.call
@@ -88,24 +75,21 @@ describe UserCreationService do
     end
 
     context 'when a user with the same email exists' do
-      before(:each) do
-        team_2 = BusinessUnit.create(name: 'UCT 2', parent_id: @team.parent_id, role: 'responder')
-        @existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: '102pettryfrance')
-        @existing_user.team_roles << TeamsUsersRole.new(team: team_2, role: 'responder')
-        @existing_user.save!
-      end
+      let!(:other_team) { find_or_create :responding_team, name: 'Another User Creation Team' }
+      let!(:existing_user) { User.new(full_name: 'danny driver', email: 'dd@moj.com', password: '102pettyfrance') }
+      let!(:existing_user_role) { existing_user.team_roles << TeamsUsersRole.new(team: other_team, role: 'responder') }
+      let!(:success) { existing_user.save }
 
       context 'when the names match' do
-
         it 'does not create a new user record' do
           expect { service.call }.not_to change{ User.count }
         end
 
         it 'creates a team_user_role record' do
           expect{ service.call }.to change{ TeamsUsersRole.count }.by(1)
-          expect(@existing_user.reload.team_roles.size).to eq 2
-          tr = @existing_user.team_roles.last
-          expect(tr.team_id).to eq @team.id
+          expect(existing_user.reload.team_roles.size).to eq 2
+          tr = existing_user.team_roles.last
+          expect(tr.team_id).to eq team.id
           expect(tr.role).to eq 'responder'
         end
 
@@ -118,8 +102,8 @@ describe UserCreationService do
       context 'names match but different role' do
         before do
           approving_team = create :approving_team
-          @existing_user.team_roles.clear
-          @existing_user.team_roles << TeamsUsersRole.new(team: approving_team,
+          existing_user.team_roles.clear
+          existing_user.team_roles << TeamsUsersRole.new(team: approving_team,
                                                           role: 'approver')
         end
 
@@ -130,9 +114,9 @@ describe UserCreationService do
 
         it 'creates a team_user_role record' do
           expect{ service.call }.to change{ TeamsUsersRole.count }.by(1)
-          expect(@existing_user.reload.team_roles.size).to eq 2
-          tr = @existing_user.team_roles.last
-          expect(tr.team_id).to eq @team.id
+          expect(existing_user.reload.team_roles.size).to eq 2
+          tr = existing_user.team_roles.last
+          expect(tr.team_id).to eq team.id
           expect(tr.role).to eq 'responder'
         end
 
@@ -140,8 +124,8 @@ describe UserCreationService do
 
       context 'deleted user rejoins the team' do
         before do
-           @existing_user.reload.update!(deleted_at: Date.yesterday)
-           @existing_user.team_roles.delete_all
+           existing_user.reload.update!(deleted_at: Date.yesterday)
+           existing_user.team_roles.delete_all
         end
 
         it 'it returns existing_ok' do
@@ -151,22 +135,22 @@ describe UserCreationService do
 
         it 'creates a team_user_role record' do
           expect{ service.call }.to change{ TeamsUsersRole.count }.by(1)
-          expect(@existing_user.reload.team_roles.size).to eq 1
-          tr = @existing_user.team_roles.last
-          expect(tr.team_id).to eq @team.id
+          expect(existing_user.reload.team_roles.size).to eq 1
+          tr = existing_user.team_roles.last
+          expect(tr.team_id).to eq team.id
           expect(tr.role).to eq 'responder'
         end
 
         it 'unlocks their account' do
           service.call
-          expect(@existing_user.reload.deleted_at).to be_nil
+          expect(existing_user.reload.deleted_at).to be_nil
         end
 
       end
 
       context 'when names mismatch' do
         before(:each) {
-          @existing_user.reload.update!(full_name: 'Stephen Richards')
+          existing_user.reload.update!(full_name: 'Stephen Richards')
         }
 
         it 'does not create a new user record' do
@@ -188,7 +172,7 @@ describe UserCreationService do
 
     context 'when the team has previous incarnations' do
       let(:target_dir) { find_or_create :directorate }
-      let(:team_move_service) { TeamMoveService.new(@team, target_dir) }
+      let(:team_move_service) { TeamMoveService.new(team, target_dir) }
 
       it 'joins the user to both the current and previous teams' do
         # move the team being joined first
@@ -199,7 +183,7 @@ describe UserCreationService do
         service = UserCreationService.new(team: new_team, params: params)
         service.call
         expect(service.result).to eq :ok
-        expect(User.last.teams).to match_array [@team, new_team]
+        expect(User.last.teams).to match_array [team, new_team]
       end
     end
   end
