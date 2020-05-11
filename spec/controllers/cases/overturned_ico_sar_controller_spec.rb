@@ -49,7 +49,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
       end
 
       it 'is success' do
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it 'assigns a new overturned case to @case' do
@@ -223,7 +223,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
           sign_in @responder
           get :respond_and_close, params: params
           expect(flash[:alert]).to be_nil
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it 'does not authorize approvers' do
@@ -245,7 +245,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         end
 
         it 'returns success' do
-          expect(response).to be_success
+          expect(response).to be_successful
         end
 
         it 'assigns case' do
