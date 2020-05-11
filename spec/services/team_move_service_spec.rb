@@ -15,7 +15,7 @@ describe TeamMoveService do
     )
   }
   let(:params) do
-    HashWithIndifferentAccess.new(
+    ActiveSupport::HashWithIndifferentAccess.new(
         {
             'full_name' => 'Bob Dunnit',
             'email' => 'bd@moj.com'

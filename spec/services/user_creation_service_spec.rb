@@ -5,7 +5,7 @@ describe UserCreationService do
   describe '#call' do
 
     let(:params) do
-      HashWithIndifferentAccess.new(
+      ActiveSupport::HashWithIndifferentAccess.new(
         {
           'full_name' => 'Danny Driver',
           'email' => 'dd@moj.com'
