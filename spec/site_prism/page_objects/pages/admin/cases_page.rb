@@ -36,7 +36,7 @@ module PageObjects
 
         def case_numbers
           case_list.map do |row|
-            row.number.text.delete('Link to case').gsub("\n",'')
+            row.number.text.delete('Link to case').delete("\n")
           end
         end
       end
