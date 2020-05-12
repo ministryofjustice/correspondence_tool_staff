@@ -1,5 +1,6 @@
 class LetterTemplateSeeder
   #rubocop:disable Metrics/MethodLength
+  #rubocop:disable Metrics/CyclomaticComplexity
   def seed!
     puts "----Seeding Letter Templates----"
 
@@ -32,7 +33,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your Subject Access Request (SAR) dated <%= 'XXXXXXX' %><%# TODO values.request_dated.strftime('%e %b %Y') %>.
                   <br>
-                  <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty’s Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
+                  <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty's Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
                   <br>
                   <br>Should you require a copy of any other personal information held by the MoJ, we invite you to submit a new SAR once the COVID-19 pandemic is over. Unfortunately, we are unable to advise when this will be at present. You can also request the disclosure of routine information that does not need to be provided through a formal SAR from your keyworker in the prison.
                   </p>
@@ -54,7 +55,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>I can confirm that the personal data contained within these documents is being processed by the MoJ for the purposes of the administration of justice and for the exercise of any functions of the Crown, a Minister of the Crown or a government department. As such we may share or exchange data with other Departments or organisations if it is lawful to do so, for example the Police or the Probation Service.
                   <br>
-                  <br>If you have any queries regarding your request please contact the Data Protection Compliance Team (DPCT), at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address: Information Commissioner’s Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF Internet: www.ico.gov.uk
+                  <br>If you have any queries regarding your request please contact the Data Protection Compliance Team (DPCT), at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address: Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF Internet: www.ico.gov.uk
                   <br>
                   <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any future SARs.
                   <br>
@@ -100,7 +101,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your subject access request (SAR) dated <%= 'XXXXXXX' %><%# TODO values.request_dated.strftime('%e %b %Y') %>.
                   <br>
-                  <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty’s Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
+                  <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty's Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
                   <br>
                   <br>Should you require a copy of any other personal information held by the MoJ, we invite you to submit a new SAR once the COVID-19 pandemic is over. Unfortunately, we are unable to advise when this will be at present.
                   </p>
@@ -124,7 +125,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>If you have any queries regarding your request please contact the Data Protection Compliance Team (DPCT), at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
                   <br>
-                  <br>Information Commissioner’s Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF
+                  <br>Information Commissioner's Office, Wycliffe House, Water Lane, Wilmslow, Cheshire, SK9 5AF
                   <br>Internet: www.ico.gov.uk
                   <br>
                   <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any futures SARs.
@@ -137,4 +138,5 @@ class LetterTemplateSeeder
                 )
   end
   #rubocop:enable Metrics/MethodLength
+  #rubocop:enable Metrics/CyclomaticComplexity
 end
