@@ -90,7 +90,7 @@ module PageObjects
           element :change_link, 'a'
         end
 
-        section :offender_sar_requested_info, '.section-requested-info' do
+        section :offender_sar_requested_info, '.section-requested-heading' do
           element :change_link, 'a'
         end
 

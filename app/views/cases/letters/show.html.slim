@@ -10,7 +10,7 @@ h1.page-heading
   span.page-heading--secondary
     = "#{@case.number}"
   span.page-heading--primary
-    | Download acknowledgement letter
+    | Download #{@letter.template_name}
 
 hr
 
@@ -26,7 +26,8 @@ section.letter--from-section
 
 p
   | #{@case.name} <br>
-  | #{@case.third_party_company_name} <br>
+  - if @case.third_party_company_name.present?
+    | #{@case.third_party_company_name} <br>
   | #{simple_format @case.postal_address, {}, wrapper_tag: 'span'}
 
 
