@@ -26,7 +26,7 @@ describe UserActiveCaseCountService do
   describe '#active_cases_for_user' do
     it 'returns active cases for user' do
       expected = [ kase_1, kase_2 ]
-      expect(service.active_cases_for_user(user_1)).to eq expected
+      expect(service.active_cases_for_user(user_1)).to match_array expected
     end
 
     it "works with admins" do
