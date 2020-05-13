@@ -142,9 +142,6 @@ class OffenderSARCaseForm
     # in the list of instance variables in the model at the point that the gov_uk_date_fields
     # is adding its magic methods. This manifests when running tests or after rails server restart
     values = @session[:offender_sar_state] || { date_of_birth: nil }
-    if !values.key?(:date_of_birth)
-      values[:date_of_birth] = nil
-    end
 
     @case = Case::SAR::Offender.new(values).decorate
   end
