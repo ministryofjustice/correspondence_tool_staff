@@ -35,7 +35,7 @@ describe 'cases/case_request.html.slim', type: :view do
 
   let(:empty_message) { "" }
 
-  describe 'Displaying help message for offender sar case with empty request' do
+  describe 'Displaying help message when the request of an offender-sar case is empty' do
     let(:offender_sar_case) {
       (create :offender_sar_case, subject_aliases: 'John Smith',
               date_of_birth: '2019-09-01', message: empty_message).decorate
