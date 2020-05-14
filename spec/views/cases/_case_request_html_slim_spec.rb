@@ -33,6 +33,41 @@ describe 'cases/case_request.html.slim', type: :view do
         "The first line of Lorem Ipsum, 'Lorem ipsum dolor sit amet', comes from a line in section 1.10.32."
   }
 
+  let(:empty_message) { "" }
+
+  describe 'Displaying help message for offender sar case with empty request' do
+    let(:offender_sar_case) {
+      (create :offender_sar_case, subject_aliases: 'John Smith',
+              date_of_birth: '2019-09-01', message: empty_message).decorate
+    }
+  
+    let(:branston_user) { find_or_create :branston_user }
+  
+    def login_as(user)
+      allow(view).to receive(:current_user).and_return(user)
+      super(user)
+    end
+  
+    before { login_as branston_user }
+
+    let(:partial) do
+      render partial: 'cases/case_request.html.slim',
+             locals:{ case_details: offender_sar_case }
+
+      case_request_section(rendered)
+    end
+
+    it 'displays the help message for indicating the usage of the request box' do
+      expect(partial.message.text).to eq I18n.t('cases.offender_sar.request_info_hint')
+    end
+
+    it 'does not have a collapsed request' do
+      expect(partial).to have_no_show_more_link
+      expect(partial).to have_no_preview
+      expect(partial).to have_no_ellipsis
+      expect(partial).to have_no_collapsed_text
+    end
+  end
 
   describe 'Displaying a short request' do
     let(:kase) { create(:case_being_drafted,
