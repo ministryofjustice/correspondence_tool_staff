@@ -36,20 +36,8 @@ describe 'cases/case_request.html.slim', type: :view do
   let(:empty_message) { "" }
 
   describe 'Displaying help message when the request of an offender-sar case is empty' do
-    let(:offender_sar_case) {
-      (create :offender_sar_case, subject_aliases: 'John Smith',
-              date_of_birth: '2019-09-01', message: empty_message).decorate
-    }
+    let(:offender_sar_case) { (create :offender_sar_case, message: empty_message).decorate }
   
-    let(:branston_user) { find_or_create :branston_user }
-  
-    def login_as(user)
-      allow(view).to receive(:current_user).and_return(user)
-      super(user)
-    end
-  
-    before { login_as branston_user }
-
     let(:partial) do
       render partial: 'cases/case_request.html.slim',
              locals:{ case_details: offender_sar_case }
