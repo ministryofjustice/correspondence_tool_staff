@@ -10,9 +10,7 @@ class LetterTemplateSeeder
                 abbreviation: 'prisoner-acknowledgement',
                 template_type: 'acknowledgement',
                 body: <<~EOF
-                  <strong>
-                    DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  </strong>
+                  <strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
                   <br>Thank you for your Subject Access Request (SAR) dated <%= 'XXXXXXX' %><%# TODO values.request_dated.strftime('%e %b %Y') %>.
                   <br>
@@ -38,9 +36,7 @@ class LetterTemplateSeeder
                 abbreviation: 'prisoner-acknowledgement-covid',
                 template_type: 'acknowledgement',
                 body: <<~EOF
-                  <strong>
-                    DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  </strong>
+                  <strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
                   <br>Thank you for your Subject Access Request (SAR) dated <%= 'XXXXXXX' %><%# TODO values.request_dated.strftime('%e %b %Y') %>.
                   <br>
@@ -64,13 +60,9 @@ class LetterTemplateSeeder
                 abbreviation: 'prisoner-disclosed',
                 template_type: 'dispatch',
                 body: <<~EOF
-                  <strong>
-                    DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  </strong>
+                  <strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <strong>
-                    <%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %>
-                  </strong>
+                  <strong><%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %></strong>
                   <br>
                   <br>I am writing in response to your request for information made under the Data Protection Act 1998 (DPA). The Ministry of Justice (MoJ) is sorry for the delay in responding to your subject access request (SAR).
                   <br>
@@ -102,13 +94,9 @@ class LetterTemplateSeeder
                 abbreviation: 'prisoner-disclosed-covid',
                 template_type: 'dispatch',
                 body: <<~EOF
-                  <strong>
-                    DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  </strong>
+                  <strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <strong>
-                    <%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %>
-                  </strong>
+                  <strong><%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %></strong>
                   <br>
                   <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA).
                   <br>
@@ -143,24 +131,16 @@ class LetterTemplateSeeder
                   Dear Colleague
                   <br>
                   <br>
-                  <strong>
-                    DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  </strong>
+                  <strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <strong>
-                    <%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %>
-                  </strong>
+                  <strong><%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %></strong>
                   <br>
                   <br>Please find enclosed documents relating to a Subject Access Request (SAR) made under the Data Protection Act 2018 by the above offender.
                   <br>
                   <br>
-                  <strong>
-                    This letter must not be seen by the offender. Once the parcel has been passed to the
-                  </strong>
+                  <strong>This letter must not be seen by the offender. Once the parcel has been passed to the</strong>
                   <br>
-                  <strong>
-                    offender please ensure this covering letter is destroyed securely.
-                  </strong>
+                  <strong>offender please ensure this covering letter is destroyed securely.</strong>
                   <br>
                   <br>Following inappropriate articles being found in official correspondence and subsequent security alert email issued on 5 March 2015; if you are suspicious about the content of this parcel it should be opened in the presence of the offender, contents checked and passed to them immediately.
                   <br>
@@ -184,13 +164,9 @@ class LetterTemplateSeeder
                 abbreviation: 'solicitor-acknowledgement',
                 template_type: 'acknowledgement',
                 body: <<~EOF
-                  <strong>
-                    DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  </strong>
+                  <strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <strong>
-                    <%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %>
-                  </strong>
+                  <strong><%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %></strong>
                   <br>
                   <br>Dear Sirs
                   <br>
@@ -218,13 +194,9 @@ class LetterTemplateSeeder
                 abbreviation: 'solicitor-acknowledgement-covid',
                 template_type: 'acknowledgement',
                 body: <<~EOF
-                  <strong>
-                    DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  </strong>
+                  <strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <strong>
-                    <%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %>
-                  </strong>
+                  <strong><%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %></strong>
                   <br>
                   <br>Dear Sirs
                   <br>
@@ -250,13 +222,9 @@ class LetterTemplateSeeder
                 abbreviation: 'solicitor-disclosed',
                 template_type: 'dispatch',
                 body: <<~EOF
-                  <strong>
-                    DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  </strong>
+                  <strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <strong>
-                    <%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %>
-                  </strong>
+                  <strong><%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %></strong>
                   <br>
                   <br>Dear Sirs
                   <br>
@@ -293,13 +261,9 @@ class LetterTemplateSeeder
                 abbreviation: 'solicitor-disclosed-covid',
                 template_type: 'dispatch',
                 body: <<~EOF
-                  <strong>
-                    DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  </strong>
+                  <strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <strong>
-                    <%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %>
-                  </strong>
+                  <strong><%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %></strong>
                   <br>
                   <br>Dear Sirs
                   <br>
