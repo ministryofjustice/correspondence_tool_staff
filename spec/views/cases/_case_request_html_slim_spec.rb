@@ -33,10 +33,8 @@ describe 'cases/case_request.html.slim', type: :view do
         "The first line of Lorem Ipsum, 'Lorem ipsum dolor sit amet', comes from a line in section 1.10.32."
   }
 
-  let(:empty_message) { "" }
-
   describe 'Displaying help message when the request of an offender-sar case is empty' do
-    let(:offender_sar_case) { (create :offender_sar_case, message: empty_message).decorate }
+    let(:offender_sar_case) { create :offender_sar_case, message: '' }
   
     let(:partial) do
       render partial: 'cases/case_request.html.slim',
