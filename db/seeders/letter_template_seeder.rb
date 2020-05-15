@@ -1,6 +1,7 @@
 class LetterTemplateSeeder
-  #rubocop:disable Metrics/MethodLength
+  #rubocop:disable Metrics/ClassLength
   #rubocop:disable Metrics/CyclomaticComplexity
+  #rubocop:disable Metrics/MethodLength
   def seed!
     puts "----Seeding Letter Templates----"
 
@@ -327,7 +328,7 @@ class LetterTemplateSeeder
                 EOF
                 )
   end
-
-  #rubocop:enable Metrics/MethodLength
+  #rubocop:enable Metrics/ClassLength
   #rubocop:enable Metrics/CyclomaticComplexity
+  #rubocop:enable Metrics/MethodLength
 end
