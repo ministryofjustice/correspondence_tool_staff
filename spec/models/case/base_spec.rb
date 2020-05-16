@@ -79,6 +79,47 @@ RSpec.describe Case::Base, type: :model do
     it { should validate_presence_of(:type)          }
   end
 
+  context 'an initial transition is created after any case is create' do 
+    let(:sar_case) { create :sar_case }
+    let(:offender_sar_case) { create :offender_sar_case }
+    let(:foi_case) { create :foi_case }
+    let(:ico_foi_case) { create :ico_foi_case }
+    let(:ico_sar_case) { create :ico_sar_case }
+    let(:overturned_ico_foi) { create :overturned_ico_foi }
+    let(:overturned_ico_sar) { create :overturned_ico_sar }
+
+    it 'sar_case' do 
+      expect(sar_case.transitions.size).to eq 1
+      expect(sar_case.transitions.first.event).to eq "create"
+    end
+
+    it 'offender_sar_case' do 
+      expect(offender_sar_case.transitions.size).to eq 1
+      expect(offender_sar_case.transitions.first.event).to eq "create"
+    end
+
+    it 'foi_case' do 
+      expect(foi_case.transitions.size).to eq 1
+      expect(foi_case.transitions.first.event).to eq "create"
+    end
+
+    it 'ico_foi_case' do 
+      expect(ico_foi_case.transitions.order('created_at').size).to eq 2
+      expect(ico_foi_case.transitions.first.event).to eq "create"
+      expect(ico_foi_case.transitions.second.event).not_to eq "create"
+    end
+
+    it 'overturned_ico_foi' do 
+      expect(overturned_ico_foi.transitions.size).to eq 1
+      expect(overturned_ico_foi.transitions.first.event).to eq "create"
+    end
+
+    it 'overturned_ico_sar' do 
+      expect(overturned_ico_sar.transitions.size).to eq 1
+      expect(overturned_ico_sar.transitions.first.event).to eq "create"
+    end
+  end 
+
   context 'deleting' do
     it 'is not valid without a reason' do
       expect(build(:case, deleted: true)).not_to be_valid
@@ -726,12 +767,13 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#transitions.most_recent' do
     it 'returns the one transition that has the most recent flag set to true' do
-      expect(case_being_drafted_trigger.transitions.size).to eq 4
+      expect(case_being_drafted_trigger.transitions.size).to eq 5
       expect(case_being_drafted_trigger.transitions[0].most_recent).to be false
       expect(case_being_drafted_trigger.transitions[1].most_recent).to be false
       expect(case_being_drafted_trigger.transitions[2].most_recent).to be false
-      expect(case_being_drafted_trigger.transitions[3].most_recent).to be true
-      expect(case_being_drafted_trigger.transitions.most_recent).to eq case_being_drafted_trigger.transitions[3]
+      expect(case_being_drafted_trigger.transitions[3].most_recent).to be false
+      expect(case_being_drafted_trigger.transitions[4].most_recent).to be true
+      expect(case_being_drafted_trigger.transitions.most_recent).to eq case_being_drafted_trigger.transitions[4]
     end
   end
 

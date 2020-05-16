@@ -33,6 +33,7 @@
 class Case::Base < ApplicationRecord
 
   TRIGGER_WORKFLOWS = ['trigger', 'full_approval'].freeze
+  CREATE_EVENT = 'create'.freeze 
 
   def self.searchable_fields_and_ranks
     {
@@ -350,6 +351,8 @@ class Case::Base < ApplicationRecord
   before_update :update_deadlines
   before_save :prevent_number_change,
               :trigger_reindexing
+  
+  after_create :create_init_transition
 
   # before_save do
   #   self.workflow = 'standard' if workflow.nil?
@@ -364,6 +367,20 @@ class Case::Base < ApplicationRecord
   #   pending_dacu_clearance?, etc
   ConfigurableStateMachine::Machine.states.each do |state|
     define_method("#{state}?") { current_state == state }
+  end
+
+  def create_init_transition
+    attrs = {
+      case_id: self.id,
+      event: CREATE_EVENT,
+      to_state: self.current_state,
+      to_workflow: self.workflow,
+      sort_key: CaseTransition.next_sort_key(self),
+      most_recent: true,
+      acting_user_id: self.creator.id,
+      acting_team_id: self.managing_team.id,
+    }
+    CaseTransition.create!(attrs)
   end
 
   def self.state_machine_name

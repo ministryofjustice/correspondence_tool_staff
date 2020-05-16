@@ -9,7 +9,9 @@ describe CaseTeamCollection do
       expect(kase.responding_team).to be_nil
 
       ctc = CaseTeamCollection.new(kase)
-      expect(ctc.teams).to be_empty
+      expect(ctc.teams.size).to eq 1
+      expect(kase.transitions.size).to eq 1
+      expect(ctc.teams.first.id).to eq kase.transitions.first.acting_team_id
     end
   end
 
