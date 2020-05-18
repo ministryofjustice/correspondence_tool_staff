@@ -1,4 +1,3 @@
-#rubocop:disable Metrics/ClassLength
 class LetterTemplateSeeder
   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def seed!
@@ -294,4 +293,3 @@ class LetterTemplateSeeder
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 end
-#rubocop:endble Metrics/ClassLength
