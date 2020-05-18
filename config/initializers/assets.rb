@@ -11,11 +11,4 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in app/assets folder are already added.
 # Rails.application.config.assets.precompile += %w( admin.js admin.css )
-Rails.application.config.assets.precompile += %w( 
-    ie_shame.css print.css 
-    govuk-template.css 
-    govuk-template-ie6.css 
-    govuk-template-ie7.css
-    govuk-template-ie8.css
-    govuk-template-print.css
-    fonts.css)
+Rails.application.config.assets.precompile += %w( ie_shame.css print.css )
