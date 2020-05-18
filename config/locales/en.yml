@@ -450,7 +450,7 @@ en:
         delivery_method: How and where should the information be sent?
         email: "Recipient email address"
         high_profile: High profile
-        message: Request details
+        message: Request details (optional)
         name: "Full name of the representative"
         other_subject_ids: "Police national computer number"
         postal_address: "Recipient postal address"
@@ -900,6 +900,7 @@ en:
       requester_heading: Who is making the subject access request?
       requested_info_heading: What information is being requested?
       date_received_heading: When was the SAR received?
+      request_info_hint: Use this space to store additional case information
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
