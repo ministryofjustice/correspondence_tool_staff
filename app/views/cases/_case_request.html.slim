@@ -10,6 +10,9 @@
     - if case_details.message.present?
       p.message-body
         = show_hide_message(case_details)
+    - if case_details.message.empty? && case_details.offender_sar?
+      p.message-body 
+        = t('cases.offender_sar.request_info_hint')
 
     - if case_details.attachments.request.present?
       - case_details.upload_request_groups.each do |ug|
