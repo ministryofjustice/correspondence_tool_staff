@@ -242,14 +242,6 @@ describe Case::SAR::Offender do
     end
   end
 
-  describe '#message' do
-    it 'validates presence ' do
-      kase = build :offender_sar_case, message: ''
-      expect(kase).not_to be_valid
-      expect(kase.errors[:message]).to eq ["can't be blank"]
-    end
-  end
-
   describe '#subject' do
     it 'is the same as subject full name' do
       kase = create :offender_sar_case

@@ -450,7 +450,7 @@ en:
         delivery_method: How and where should the information be sent?
         email: "Recipient email address"
         high_profile: High profile
-        message: Request details
+        message: Request details (optional)
         name: "Full name of the representative"
         other_subject_ids: "Police national computer number"
         postal_address: "Recipient postal address"
@@ -900,6 +900,7 @@ en:
       requester_heading: Who is making the subject access request?
       requested_info_heading: What information is being requested?
       date_received_heading: When was the SAR received?
+      request_info_hint: Use this space to store additional case information
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
@@ -1013,8 +1014,8 @@ en:
       heading: Join business unit
       intro:
         bullet1: all open cases and users will move to the destination business unit
-        bullet2: all members of the new business unit will be able to view closed cases
-        bullet3: all members can view performance reports for the unit up to the move
+        bullet2: all members (existing and new) of the new business unit will be able to view closed cases
+        bullet3: performance reports for the unit before the join are still available
         paragraph: "Joining with another business unit means:"
       joined_successfully: "%{team_name} has been joined with %{target_team}"
       joining_with: Joining with
@@ -1028,7 +1029,7 @@ en:
       intro:
         bullet1: all open cases and users will move with it
         bullet2: all members of the unit will be able to view closed cases
-        bullet3: all members can view performance reports for the unit up to the move
+        bullet3: performance reports for the unit both before and after the move are available
         paragraph: "Moving a business unit means:"
       moved_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
       moving_to: Moving to
