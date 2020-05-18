@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.5.1'
-
 gem 'activerecord-session_store'
 gem 'acts_as_tree', '~> 2.9'
 # Gems to help generating with Excel spreadsheets
