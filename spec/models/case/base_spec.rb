@@ -89,8 +89,13 @@ RSpec.describe Case::Base, type: :model do
     end
 
     describe "default transition" do 
-      case_types = [:sar_case, :offender_sar_case, :foi_case, :ico_foi_case, 
-      :ico_sar_case, :overturned_ico_foi, :overturned_ico_sar]
+      case_types = [:sar_case, 
+                    :offender_sar_case, 
+                    :foi_case, 
+                    :ico_foi_case, 
+                    :ico_sar_case, 
+                    :overturned_ico_foi, 
+                    :overturned_ico_sar]
       case_types.each do |case_type|
         include_examples 'case has default transition', case_type
       end
