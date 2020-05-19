@@ -110,12 +110,18 @@ FactoryBot.define do
     managers { [find_or_create(:disclosure_bmt_user, :orphan)] }
   end
 
-  factory :team_branston, parent: :managing_team do
+  factory :team_branston, parent: :business_unit do
     name { 'Branston Registry' }
     email { 'branston@localhost' }
     code { 'BRANSTON-RESPONDERS' }
     directorate { find_or_create :dacu_directorate }
-    managers { [find_or_create(:branston_user, :orphan)] }
+    responders { [find_or_create(:branston_user, :orphan)] }
+
+    after(:create) do |bu, _evaluator|
+      bu.correspondence_types = []
+      bu.correspondence_types << find_or_create(:offender_sar_correspondence_type)
+      bu.save!
+    end
   end
 
   factory :team_disclosure, aliases: [:team_dacu_disclosure], parent: :approving_team do
