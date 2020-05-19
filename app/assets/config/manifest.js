@@ -1,6 +1,4 @@
 //= link_tree ../images
-//= link_directory ../javascripts .js
-//= link_directory ../stylesheets .css
 
 //= link govuk-template.css
 //= link govuk-template-ie6.css
@@ -8,3 +6,11 @@
 //= link govuk-template-ie8.css
 //= link govuk-template-print.css
 //= link fonts.css
+
+//= link application.css
+//= link ie_shame.css
+//= link print.css
+
+//= link application.js
+//= link govuk-template.js
+//= link ie.js
