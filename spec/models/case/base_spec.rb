@@ -79,45 +79,22 @@ RSpec.describe Case::Base, type: :model do
     it { should validate_presence_of(:type)          }
   end
 
-  context 'an initial transition is created after any case is create' do 
-    let(:sar_case) { create :sar_case }
-    let(:offender_sar_case) { create :offender_sar_case }
-    let(:foi_case) { create :foi_case }
-    let(:ico_foi_case) { create :ico_foi_case }
-    let(:ico_sar_case) { create :ico_sar_case }
-    let(:overturned_ico_foi) { create :overturned_ico_foi }
-    let(:overturned_ico_sar) { create :overturned_ico_sar }
-
-    it 'sar_case' do 
-      expect(sar_case.transitions.size).to eq 1
-      expect(sar_case.transitions.first.event).to eq "create"
+  describe 'a default transition is created after a case is created' do 
+    shared_examples 'case has default transition' do |case_type|
+      let(:created_case) { create case_type } 
+      it "default transition for #{case_type}" do
+          expect(created_case.transitions.size).to be >= 1
+          expect(created_case.transitions.first.event).to eq "create"
+      end
     end
 
-    it 'offender_sar_case' do 
-      expect(offender_sar_case.transitions.size).to eq 1
-      expect(offender_sar_case.transitions.first.event).to eq "create"
-    end
-
-    it 'foi_case' do 
-      expect(foi_case.transitions.size).to eq 1
-      expect(foi_case.transitions.first.event).to eq "create"
-    end
-
-    it 'ico_foi_case' do 
-      expect(ico_foi_case.transitions.order('created_at').size).to eq 2
-      expect(ico_foi_case.transitions.first.event).to eq "create"
-      expect(ico_foi_case.transitions.second.event).not_to eq "create"
-    end
-
-    it 'overturned_ico_foi' do 
-      expect(overturned_ico_foi.transitions.size).to eq 1
-      expect(overturned_ico_foi.transitions.first.event).to eq "create"
-    end
-
-    it 'overturned_ico_sar' do 
-      expect(overturned_ico_sar.transitions.size).to eq 1
-      expect(overturned_ico_sar.transitions.first.event).to eq "create"
-    end
+    describe "default transition" do 
+      case_types = [:sar_case, :offender_sar_case, :foi_case, :ico_foi_case, 
+       :ico_sar_case, :overturned_ico_foi, :overturned_ico_sar]
+       case_types.each do |case_type|
+        include_examples 'case has default transition', case_type
+      end
+    end 
   end 
 
   context 'deleting' do
