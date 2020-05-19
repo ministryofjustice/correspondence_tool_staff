@@ -27,7 +27,6 @@ describe CasesController, type: :controller do
           .to match_array [
             CorrespondenceType.foi,
             CorrespondenceType.sar,
-            CorrespondenceType.offender_sar,
             CorrespondenceType.ico
           ]
       end
