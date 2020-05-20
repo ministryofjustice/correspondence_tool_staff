@@ -114,7 +114,7 @@ module ConfigurableStateMachine
     end
 
     def event_name(event)
-      if events.include?(event.to_sym) || event == @kase.class::CREATE_EVENT
+      if events.include?(event.to_sym)
         specific_key = "event.case/#{@kase.type_abbreviation.downcase}.#{event}"
         default_key = "event.#{event}"
         I18n.t(specific_key, default: I18n.t(default_key))
