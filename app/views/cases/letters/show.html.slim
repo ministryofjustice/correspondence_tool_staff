@@ -10,6 +10,7 @@ h1.page-heading
   span.page-heading--secondary
     = "#{@case.number}"
   span.page-heading--primary
+    - @letter.template_name[0] = @letter.template_name[0].downcase
     | Download #{@letter.template_name}
 
 hr
