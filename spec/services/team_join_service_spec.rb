@@ -115,8 +115,8 @@ describe TeamJoinService do
           # using factory :case_being_drafted, the case has TWO transitions,
           # One for the transition to drafted,
           # and one for the current _being drafted_ state (in the second, the target team is nill)
-          expect(kase.transitions.first.target_team_id).to eq service.target_team.id
-          expect(kase.transitions.second.acting_team_id).to eq service.target_team.id
+          expect(kase.transitions.second.target_team_id).to eq service.target_team.id
+          expect(kase.transitions.third.acting_team_id).to eq service.target_team.id
         end
       end
 

@@ -127,7 +127,7 @@ describe 'FOI cases factory' do
         expect(managing_assignment.state).to eq 'accepted'
         expect(managing_assignment.team).to eq team_disclosure_bmt
 
-        expect(kase.transitions.size).to eq 0
+        expect(kase.transitions.size).to eq 1
       end
     end
 
@@ -145,7 +145,7 @@ describe 'FOI cases factory' do
         expect(disclosure_assignment.state).to eq 'pending'
         expect(disclosure_assignment.user_id).to be_nil
 
-        expect(kase.transitions.size).to eq 1
+        expect(kase.transitions.size).to eq 2
         expect(flag_for_disclosure_transition).to be_present
       end
     end
@@ -160,7 +160,7 @@ describe 'FOI cases factory' do
         expect(kase.assignments.size).to eq 2
         expect(disclosure_assignment.state).to eq 'accepted'
 
-        expect(kase.transitions.size).to eq 2
+        expect(kase.transitions.size).to eq 3
         expect(flag_for_disclosure_transition).to be_present
       end
     end
@@ -178,7 +178,7 @@ describe 'FOI cases factory' do
         expect(private_office_assignment.state).to eq 'accepted'
         expect(private_office_assignment.user).to eq private_officer
 
-        expect(kase.transitions.size).to eq 3
+        expect(kase.transitions.size).to eq 4
         expect(flag_for_disclosure_transition).to be_present
         expect(flag_for_disclosure_transition.acting_team).to eq press_office
         expect(flag_for_disclosure_transition.acting_user).to eq press_officer
@@ -195,6 +195,7 @@ describe 'FOI cases factory' do
       it 'takes the case on in unassigned' do
         expect(kase.transitions.map { |t| [t.event, t.target_team&.name] })
           .to match_array [
+                ['create', nil],
                 ['flag_for_clearance', 'Disclosure'],
                 ['take_on_for_approval', 'Press Office'],
                 ['take_on_for_approval', 'Private Office'],
@@ -214,7 +215,7 @@ describe 'FOI cases factory' do
           expect(press_office_assignment).to be_present
           expect(private_office_assignment).to be_present
 
-          expect(kase.transitions.size).to eq 3
+          expect(kase.transitions.size).to eq 4
           expect(flag_for_disclosure_transition).to be_present
           expect(flag_for_disclosure_transition.acting_team).to eq team_disclosure_bmt
           expect(flag_for_disclosure_transition.acting_user).to eq manager
@@ -236,7 +237,7 @@ describe 'FOI cases factory' do
           expect(press_office_assignment).to be_present
           expect(private_office_assignment).to be_present
 
-          expect(kase.transitions.size).to eq 4
+          expect(kase.transitions.size).to eq 5
           expect(flag_for_disclosure_transition).to be_present
           expect(accept_approver_by_disclosure_transition).to be_present
           expect(accept_approver_by_disclosure_transition.acting_team)
@@ -259,7 +260,7 @@ describe 'FOI cases factory' do
           expect(press_office_assignment).to be_present
           expect(private_office_assignment).to be_present
 
-          expect(kase.transitions.size).to eq 6
+          expect(kase.transitions.size).to eq 7
           expect(accept_approver_by_disclosure_transition).to be_present
           expect(accept_approver_by_disclosure_transition.acting_user)
             .to eq disclosure_specialist
@@ -275,6 +276,7 @@ describe 'FOI cases factory' do
         it 'takes the case on in the correct state' do
           expect(kase.transitions.map { |t| [t.event, t.target_team&.name] })
             .to match_array [
+                  ['create', nil],
                   ['assign_responder', 'FOI Responding Team'],
                   ['flag_for_clearance', 'Disclosure'],
                   ['take_on_for_approval', 'Press Office'],
@@ -299,7 +301,7 @@ describe 'FOI cases factory' do
       expect(responding_assignment.team).to eq foi_responding_team
       expect(responding_assignment.user).to be_nil
 
-      expect(kase.transitions.size).to eq 1
+      expect(kase.transitions.size).to eq 2
       expect(assign_foi_responder_transition).to be_present
     end
 
@@ -313,7 +315,7 @@ describe 'FOI cases factory' do
         expect(kase.assignments.size).to eq 3
         expect(disclosure_assignment.state).to eq 'accepted'
 
-        expect(kase.transitions.size).to eq 3
+        expect(kase.transitions.size).to eq 4
         expect(flag_for_disclosure_transition).to be_present
         expect(accept_approver_by_disclosure_transition).to be_present
         expect(accept_approver_by_disclosure_transition.target_user)
@@ -332,13 +334,14 @@ describe 'FOI cases factory' do
         expect(kase.assignments.size).to eq 3
         expect(disclosure_assignment.state).to eq 'accepted'
 
-        expect(kase.transitions.size).to eq 3
+        expect(kase.transitions.size).to eq 4
         expect(flag_for_disclosure_transition).to be_present
       end
 
       it 'takes the case on in awaiting_responder' do
         expect(kase.transitions.map { |t| [t.event, t.target_team&.name] })
           .to match_array [
+                ['create', nil],
                 ['assign_responder', 'FOI Responding Team'],
                 ['flag_for_clearance', 'Disclosure'],
                 ['accept_approver_assignment', 'Disclosure'],
@@ -360,7 +363,7 @@ describe 'FOI cases factory' do
       expect(responding_assignment.team).to eq foi_responding_team
       expect(responding_assignment.user).to eq foi_responder
 
-      expect(kase.transitions.size).to eq 2
+      expect(kase.transitions.size).to eq 3
       expect(accept_responder_assignment_transition).to be_present
       expect(accept_responder_assignment_transition.acting_user)
         .to eq foi_responder
@@ -379,7 +382,7 @@ describe 'FOI cases factory' do
         expect(private_office_assignment.state).to eq 'accepted'
         expect(private_office_assignment.user).to eq private_officer
 
-        expect(kase.transitions.size).to eq 5
+        expect(kase.transitions.size).to eq 6
         expect(flag_for_disclosure_transition).to be_present
         expect(flag_for_disclosure_transition.acting_team).to eq press_office
         expect(flag_for_disclosure_transition.acting_user).to eq press_officer
@@ -396,6 +399,7 @@ describe 'FOI cases factory' do
       it 'takes the case on in drafting' do
         expect(kase.transitions.map { |t| [t.event, t.target_team&.name] })
           .to match_array [
+                ['create', nil],
                 ['assign_responder', 'FOI Responding Team'],
                 ['accept_responder_assignment', nil],
                 ['flag_for_clearance', 'Disclosure'],
@@ -417,7 +421,7 @@ describe 'FOI cases factory' do
           expect(press_office_assignment).to be_present
           expect(private_office_assignment).to be_present
 
-          expect(kase.transitions.size).to eq 5
+          expect(kase.transitions.size).to eq 6
           expect(flag_for_disclosure_transition).to be_present
           expect(flag_for_disclosure_transition.acting_team).to eq team_disclosure_bmt
           expect(flag_for_disclosure_transition.acting_user).to eq manager
@@ -439,7 +443,7 @@ describe 'FOI cases factory' do
           expect(press_office_assignment).to be_present
           expect(private_office_assignment).to be_present
 
-          expect(kase.transitions.size).to eq 6
+          expect(kase.transitions.size).to eq 7
           expect(accept_approver_by_disclosure_transition).to be_present
           expect(accept_approver_by_disclosure_transition.acting_user)
             .to eq disclosure_specialist
@@ -455,6 +459,7 @@ describe 'FOI cases factory' do
         it 'takes the case on in the correct state' do
           expect(kase.transitions.map { |t| [t.event, t.target_team&.name] })
             .to match_array [
+                  ['create', nil],
                   ['assign_responder', 'FOI Responding Team'],
                   ['flag_for_clearance', 'Disclosure'],
                   ['take_on_for_approval', 'Press Office'],
@@ -479,7 +484,7 @@ describe 'FOI cases factory' do
       expect(managing_assignment.team).to be_present
       expect(responding_assignment.team).to be_present
 
-      expect(kase.transitions.size).to eq 3
+      expect(kase.transitions.size).to eq 4
       expect(kase.transitions.last).to eq add_responses_transition
     end
 
@@ -493,7 +498,7 @@ describe 'FOI cases factory' do
         expect(kase.assignments.size).to eq 3
         expect(disclosure_assignment).to be_present
 
-        expect(kase.transitions.size).to eq 6
+        expect(kase.transitions.size).to eq 7
         expect(flag_for_disclosure_transition).to be_present
         expect(accept_approver_by_disclosure_transition).to be_present
       end
@@ -517,7 +522,7 @@ describe 'FOI cases factory' do
         expect(press_office_assignment).to be_present
         expect(private_office_assignment).to be_present
 
-        expect(kase.transitions.size).to eq 10
+        expect(kase.transitions.size).to eq 11
         expect(flag_for_disclosure_transition).to be_present
         expect(accept_approver_by_disclosure_transition).to be_present
         expect(take_on_for_press_transition).to be_present

@@ -114,7 +114,7 @@ describe CaseFlagForClearanceService do
 
         it 'adds a transition record for press office assignment' do
           service.call
-          tx = assigned_case.transitions.second
+          tx = assigned_case.transitions.third
           expect(tx.event).to eq 'take_on_for_approval'
           expect(tx.to_state).to eq 'awaiting_responder'
           expect(tx.message).to be_nil
@@ -225,7 +225,7 @@ describe CaseFlagForClearanceService do
 
         it 'adds a transition record for private office assignment' do
           service.call
-          tx = assigned_case.transitions.second
+          tx = assigned_case.transitions.third
           expect(tx.event).to eq 'take_on_for_approval'
           expect(tx.to_state).to eq 'awaiting_responder'
           expect(tx.message).to be_nil
