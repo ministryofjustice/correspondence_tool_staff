@@ -109,17 +109,17 @@ RSpec.describe BusinessUnit, type: :model do
 
     describe 'managing scope' do
       it 'returns only managing teams' do
-        expect(BusinessUnit.managing).to match_array [
-                                           managing_team,
-                                           branston_team
-                                         ]
+        expect(BusinessUnit.managing).to match_array [managing_team]
       end
     end
 
     describe 'responding scope' do
       it 'returns only responding teams' do
-        expect(BusinessUnit.responding)
-          .to match_array [foi_responding_team, sar_responding_team]
+        expect(BusinessUnit.responding).to match_array [
+                                             foi_responding_team,
+                                             sar_responding_team,
+                                             branston_team
+                                           ]
       end
     end
 
@@ -136,9 +136,12 @@ RSpec.describe BusinessUnit, type: :model do
 
     describe 'active scope' do
       it 'returns only teams that are not deactivated' do
-        expect(BusinessUnit.responding.active.count).to eq 2
+        expect(BusinessUnit.responding.active.count).to eq 3
         foi_responding_team.update_attribute(:deleted_at, Time.now)
-        expect(BusinessUnit.responding.active).to match_array [sar_responding_team]
+        expect(BusinessUnit.responding.active).to match_array [
+                                                    sar_responding_team,
+                                                    branston_team
+                                                  ]
       end
     end
   end
