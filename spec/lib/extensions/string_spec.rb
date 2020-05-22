@@ -1,7 +1,5 @@
 require "rails_helper"
 
-# require 'extensions/string'
-
 describe String do
   describe 'downcase_first' do
     it 'returns the string with the first letter in lowercase' do

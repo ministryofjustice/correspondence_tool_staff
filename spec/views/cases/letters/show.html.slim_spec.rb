@@ -5,7 +5,7 @@ describe 'cases/letters/show.html.slim', type: :view do
     (create :offender_sar_case, subject_aliases: 'John Smith',
             date_of_birth: '2019-09-01').decorate
   }
-  let!(:letter_template_acknowledgement) { create(:letter_template, :acknowledgement) }
+  let!(:letter_template_acknowledgement) { create(:letter_template, :acknowledgement, name: 'Acknowledgement letter (COVID)') }
 
   let(:branston_user)             { find_or_create :branston_user }
 
@@ -24,7 +24,7 @@ describe 'cases/letters/show.html.slim', type: :view do
       render
 
       cases_show_letter_page.load(rendered)
-      expect(cases_show_letter_page.page_heading.heading.text).to eq 'Download letter to requester 1'
+      expect(cases_show_letter_page.page_heading.heading.text).to eq 'Download acknowledgement letter (COVID)'
     end
   end
 end
