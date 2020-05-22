@@ -10,8 +10,7 @@ h1.page-heading
   span.page-heading--secondary
     = "#{@case.number}"
   span.page-heading--primary
-    - @letter.template_name[0] = @letter.template_name[0].downcase
-    | Download #{@letter.template_name}
+    | Download #{@letter.template_name.downcase}
 
 hr
 
@@ -24,12 +23,13 @@ section.letter--from-section
   p
     | Date: #{Date.today.strftime('%e %b %Y')}
 
-p
+p.recipient-address
   | #{@case.name} <br>
   - if @case.third_party_company_name.present?
     | #{@case.third_party_company_name} <br>
   | #{simple_format @case.postal_address, {}, wrapper_tag: 'span'}
 
-= raw @letter.body
+section.letter--body
+  = raw @letter.body
 
-= link_to "Save as Word", url_for(format: "docx", letter: {letter_template_id: @letter.letter_template_id} ), class: "button"
+= link_to "Save as Word", url_for(format: "docx", case_id: @case.id, type: @type, letter: {letter_template_id: @letter.letter_template_id} ), class: "save-word-document button"
