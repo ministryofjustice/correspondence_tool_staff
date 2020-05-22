@@ -133,11 +133,13 @@ feature 'viewing details of case in the system' do
       request.show_more_link.click
       expect(request.show_more_link.text).to eq 'Show less'
       expect(request).to have_collapsed_text
+      # expect(request).to have_hidden_ellipsis
       expect(request).to have_no_ellipsis
 
       request.show_more_link.click
       expect(request.show_more_link.text).to eq 'Show more'
       expect(request).to have_ellipsis
+      # expect(request).to have_hidden_collapsed_text
       expect(request).to have_no_collapsed_text
     end
   end

@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem 'activerecord-session_store'
 gem 'acts_as_tree', '~> 2.9'
@@ -30,7 +31,7 @@ gem 'govuk_notify_rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'humanize_boolean'
 gem 'jbuilder', '~> 2.10'
-gem 'jquery-rails', '~> 4.3.5'
+gem 'jquery-rails', '~> 4.4.0'
 gem 'jquery-ui-rails'
 gem 'jsonb_accessor', '~> 1.0.0.beta.1'
 gem 'kaminari'
@@ -46,7 +47,11 @@ gem 'pg_search', '~> 2.3.0'
 gem 'pry-rails'
 gem 'puma', '~> 4.3'
 gem 'pundit', '~>2.1'
-gem 'rails', '~> 5.0.7.2'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 5.2.4', '>= 5.2.4.2'
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
+gem 'sprockets', '~> 3.7.2'
 gem 'rails-data-migrations', '~> 1.2.0'
 gem 'recursive-open-struct'
 gem 'sablon'
@@ -58,7 +63,7 @@ gem 'schema_plus_enums', '~> 0.1'
 gem 'sidekiq', '~> 6.0.6'
 
 gem 'table_print'
-gem 'thor-rails'
+# gem 'thor-rails'
 gem 'timecop'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
@@ -93,7 +98,7 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
-  gem 'rspec-rails', '~> 3.9'
+  gem 'rspec-rails', '~> 4.0'
   gem 'rubocop', '~> 0.81.0', require: false
   gem 'rubocop-rspec', '~> 1.38.1', require: false
   gem 'rubocop-performance', require: false
