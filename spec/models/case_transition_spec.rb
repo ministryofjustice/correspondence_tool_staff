@@ -86,7 +86,7 @@ RSpec.describe CaseTransition, type: :model do
     end
 
     it 'limits scope to "responded" transitions' do
-      expect(CaseTransition.all.count).to eq 2
+      expect(CaseTransition.all.count).to eq 5
       expect(CaseTransition.all.responded.count).to eq 1
       expect(CaseTransition.all.responded.last).to eq responded_transition
     end
@@ -101,7 +101,7 @@ RSpec.describe CaseTransition, type: :model do
     end
 
     it 'limits scope to "further_clearance" transitions' do
-      expect(CaseTransition.all.count).to eq 2
+      expect(CaseTransition.all.count).to eq 5
       expect(CaseTransition.all.further_clearance.count).to eq 1
       expect(CaseTransition.all.further_clearance.last).to eq further_clearance_transition
     end

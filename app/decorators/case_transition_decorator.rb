@@ -14,10 +14,26 @@ class CaseTransitionDecorator < Draper::Decorator
   end
 
   def event_and_detail
-    "<strong>#{event}</strong><br>#{details}".html_safe
+    "<strong>#{event_desc}</strong><br>#{details}".html_safe
   end
 
   private
+
+  def event_desc
+    description_for_event || event_name
+  end
+
+  def description_for_event
+    specific_key_with_desc = "event.case/#{object.case.type_abbreviation.downcase}.#{object.event}__desc"
+    default_key_with_desc = "event.#{object.event}__desc"
+    I18n.t(specific_key_with_desc, default: nil) || I18n.t(default_key_with_desc, default: nil)
+  end 
+
+  def event_name
+    specific_key = "event.case/#{object.case.type_abbreviation.downcase}.#{object.event}"
+    default_key = "event.#{object.event}"
+    I18n.t(specific_key, default: I18n.t(default_key))
+  end 
 
   def event
     state_machine = object.case.state_machine

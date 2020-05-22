@@ -52,9 +52,9 @@ feature 'viewing details of case in the system' do
       expect(cases_show_page.request.message).to have_content('viewing foi details test message')
 
       expect(cases_show_page).to have_case_history
-      expect(cases_show_page.case_history.entries.size).to eq 2
+      expect(cases_show_page.case_history.entries.size).to eq 3
       expect(cases_show_page.case_history.entries.first).to have_content "Accepted by Business unit"
-      expect(cases_show_page.case_history.entries.last).to have_content "Assign responder"
+      expect(cases_show_page.case_history.entries[1]).to have_content "Assign responder"
     end
 
     scenario 'User views the case while its within "Day 3"' do
