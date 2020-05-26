@@ -58,14 +58,14 @@ describe BypassParamsManager do
   end
 
   def empty_params
-    HashWithIndifferentAccess.new(
+    ActiveSupport::HashWithIndifferentAccess.new(
       {
         other_keys: 'other_data'
       })
   end
 
   def valid_bypass_params
-    HashWithIndifferentAccess.new(
+    ActiveSupport::HashWithIndifferentAccess.new(
       {
         bypass_approval: {
         press_office_approval_required: 'false',
@@ -75,7 +75,7 @@ describe BypassParamsManager do
   end
 
   def valid_no_bypass_params
-    HashWithIndifferentAccess.new(
+    ActiveSupport::HashWithIndifferentAccess.new(
       {
         bypass_approval: {
           press_office_approval_required: 'true',
@@ -85,7 +85,7 @@ describe BypassParamsManager do
   end
 
   def invalid_message_no_bypass_params
-    HashWithIndifferentAccess.new(
+    ActiveSupport::HashWithIndifferentAccess.new(
       {
         bypass_approval: {
           press_office_approval_required: 'true',
@@ -95,7 +95,7 @@ describe BypassParamsManager do
   end
 
   def invalid_no_message_bypass_params
-    HashWithIndifferentAccess.new(
+    ActiveSupport::HashWithIndifferentAccess.new(
       {
         bypass_approval: {
           press_office_approval_required: 'false',

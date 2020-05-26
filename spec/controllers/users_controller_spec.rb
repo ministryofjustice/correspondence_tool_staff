@@ -15,7 +15,7 @@ RSpec.describe UsersController, type: :controller do
 
     it 'returns success' do
       get :show, params: {id: manager.id }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     context 'html request' do
@@ -45,7 +45,7 @@ RSpec.describe UsersController, type: :controller do
           expect(csv_case).to receive(:to_csv).and_return(['a','csv','file'])
 
           get :show, format: 'csv', params: {id: manager.id }
-          expect(response).to be_success
+          expect(response).to be_successful
 
           expect(response.headers['Content-Disposition'])
             .to eq %q{attachment; filename="disclosure-bmt_managing_user-cases-18-11-09-134822.csv"}
