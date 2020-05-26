@@ -121,9 +121,11 @@ class LetterTemplateSeeder
                 abbreviation: 'prisoner-disclosed-cover-letter',
                 template_type: 'dispatch',
                 body: <<~EOF
-                  <p><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST<br><%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %></strong>
+                  <p><strong>EO Custody Office</strong>
                   <br>
                   <br>Dear Colleague
+                  <br>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST<br><%= values.subject_full_name&.upcase %>-<%= values.prison_number&.upcase %></strong>
                   <br>
                   <br>Please find enclosed documents relating to a Subject Access Request (SAR) made under the Data Protection Act 2018 by the above offender.
                   <br>
