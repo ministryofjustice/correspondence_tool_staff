@@ -2,47 +2,6 @@
         initial_state: data_to_be_requested
         user_roles:
 
-        ########################### SAR :: STANDARD WORKFLOW :: MANAGER ########################
-          manager:
-            states:
-              data_to_be_requested:
-                mark_as_waiting_for_data:
-                  transition_to: waiting_for_data
-                add_data_received:
-                add_note_to_case:
-                send_acknowledgement_letter:
-              waiting_for_data:
-                mark_as_ready_for_vetting:
-                  transition_to: ready_for_vetting
-                add_data_received:
-                add_note_to_case:
-                send_acknowledgement_letter:
-                preview_cover_page:
-              ready_for_vetting:
-                mark_as_vetting_in_progress:
-                  transition_to: vetting_in_progress
-                add_data_received:
-                add_note_to_case:
-              vetting_in_progress:
-                mark_as_ready_to_copy:
-                  transition_to: ready_to_copy
-                add_data_received:
-                add_note_to_case:
-              ready_to_copy:
-                mark_as_ready_to_dispatch:
-                  transition_to: ready_to_dispatch
-                add_data_received:
-                add_note_to_case:
-              ready_to_dispatch:
-                close:
-                  transition_to: closed
-                add_data_received:
-                add_note_to_case:
-                send_dispatch_letter:
-              closed:
-                add_data_received:
-                add_note_to_case:
-
         ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
           responder:
             states:

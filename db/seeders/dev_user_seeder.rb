@@ -11,7 +11,7 @@ class DevUserSeeder
       'pressoffice'   => BusinessUnit.press_office,
       'privateoffice' => BusinessUnit.private_office,
       'commsandinfo'  => BusinessUnit.find_by!(name: 'Communications and Information'),
-      'branston'      => BusinessUnit.find_by!(name: 'Branston Responders'),
+      'branston'      => BusinessUnit.dacu_branston,
     }
 
     @users = {
@@ -38,7 +38,7 @@ class DevUserSeeder
       'Prescilla Offenberg'=> [{ team: 'pressoffice',    role: 'approver' }],
       'Primrose Offord'    => [{ team: 'privateoffice',  role: 'approver' }],
       'Princeton Office'   => [{ team: 'privateoffice',  role: 'approver' }],
-      'Brian Rix'          => [{ team: 'branston',       role: 'manager' }],
+      'Brian Rix'          => [{ team: 'branston',       role: 'responder' }],
       'Bonnie Raitt'       => [{ team: 'branston',       role: 'responder' }],
       'Basil Rathbone'     => [{ team: 'branston',       role: 'responder' }],
     }

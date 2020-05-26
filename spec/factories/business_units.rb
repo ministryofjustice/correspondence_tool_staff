@@ -113,7 +113,7 @@ FactoryBot.define do
   factory :team_branston, parent: :business_unit do
     name { 'Branston Registry' }
     email { 'branston@localhost' }
-    code { 'BRANSTON-RESPONDERS' }
+    code { 'BRANSTON' }
     directorate { find_or_create :dacu_directorate }
     responders { [find_or_create(:branston_user, :orphan)] }
 
