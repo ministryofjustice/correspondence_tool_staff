@@ -74,26 +74,25 @@ describe DeadlineCalculator::CalendarMonth do
 
         context 'the date of one calendar month later is non working date' do
           it 'weekend ' do
-              received_date_used = Date.today
-              while received_date_used.workday?
-                received_date_used = received_date_used.yesterday
-              end 
+            Timecop.freeze Time.local(2019, 9, 27, 13, 21, 33) do
               test_case = double('sar_case')
-              allow(test_case).to receive(:received_date).and_return(received_date_used)
+              allow(test_case).to receive(:received_date).and_return(Date.today)
               deadline_calculator_local = described_class.new test_case
 
               expect(deadline_calculator_local.external_deadline)
-                .to eq get_expected_deadline(1.month.since(received_date_used))
+                .to eq Date.parse('2019-10-28')
+            end    
           end    
           it 'bank_holiday' do
-              received_date_used = 1.month.ago(Date.parse(BankHoliday.all.second.date))
+            Timecop.freeze Time.local(2019, 9, 27, 13, 21, 33) do
               test_case = double('sar_case')
-              allow(test_case).to receive(:received_date).and_return(received_date_used)
+              allow(test_case).to receive(:received_date).and_return(Date.parse('2019-04-06'))
               deadline_calculator_local = described_class.new test_case
 
               expect(deadline_calculator_local.external_deadline)
-              .to eq get_expected_deadline(1.month.since(received_date_used))
-          end    
+              .to eq Date.parse('2019-05-07')
+            end
+          end
         end
       end
   
