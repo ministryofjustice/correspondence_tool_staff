@@ -78,6 +78,8 @@ module Cases
     def transition
       authorize @case, :transition?
 
+      # TODO - review this - why is the list of actions duplicated here?
+      # Why are we redefining the transition method?
       available_actions = %w[
         mark_as_waiting_for_data
         mark_as_ready_for_vetting
