@@ -204,7 +204,7 @@ class LetterTemplateSeeder
                     <br>
                     <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any future SARs.
                     <br>
-                    <br>Finally I would like to suggest that you do not keep this information where it can be accessed by others. It would be helpful to remind your client of this. In a prison establishment the information can be placed in stored property.
+                    <br>Finally, I would like to suggest that you do not keep this information where it can be accessed by others. It would be helpful to remind your client of this. In a prison establishment the information can be placed in stored property.
                     <br>
                     <br>Yours sincerely
                     <br>
