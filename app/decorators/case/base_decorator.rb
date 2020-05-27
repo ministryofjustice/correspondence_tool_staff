@@ -199,6 +199,10 @@ class Case::BaseDecorator < Draper::Decorator
     self.name.blank? ? self.subject : self.name
   end
 
+  def correspondence_type_slug
+    type_abbreviation.downcase.dasherize
+  end
+
   private
 
   def translation_for_case(kase, path, key, options = {})

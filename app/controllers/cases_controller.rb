@@ -27,8 +27,6 @@ class CasesController < ApplicationController
     else
       authorize @case
 
-      @correspondence_type_key = @case.type_abbreviation.downcase
-
       if flash.key?(:case_errors)
         flash[:case_errors][:message_text].each do |error|
           @case.errors.add(:message_text, error)

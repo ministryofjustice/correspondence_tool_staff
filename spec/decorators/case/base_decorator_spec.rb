@@ -459,4 +459,12 @@ describe Case::BaseDecorator, type: :model do
       end
     end
   end
+
+  describe '#correspondence_type_slug' do
+    let(:offender_sar_case) { build(:offender_sar_case).decorate }
+
+    it 'returns the type name downcase and with dashes' do
+      expect(offender_sar_case.correspondence_type_slug).to eq 'offender-sar'
+    end
+  end
 end
