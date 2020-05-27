@@ -37,4 +37,3 @@ module DeadlineCalculator
       end
     end
 end
-  
