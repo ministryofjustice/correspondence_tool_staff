@@ -197,14 +197,15 @@ class CasesController < ApplicationController
     # operation ... we don't want to possibly allow SAR or ICO types to be
     # permitted at any point.
 
-    if current_user.permitted_correspondence_types == [CorrespondenceType.offender_sar]
-      @permitted_correspondence_types = [CorrespondenceType.offender_sar]
-    else
+    @permitted_correspondence_types = []
+    if current_user.managing_teams.present?
       types = current_user.managing_teams.first.correspondence_types.menu_visible.order(:name).to_a
       types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
       types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
       types.delete(CorrespondenceType.offender_sar) unless FeatureSet.offender_sars.enabled?
-      @permitted_correspondence_types = types
+      @permitted_correspondence_types += types
+    elsif current_user.can_manage_offender_sar?
+      @permitted_correspondence_types << CorrespondenceType.offender_sar
     end
   end
 end
