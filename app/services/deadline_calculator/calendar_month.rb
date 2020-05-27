@@ -32,9 +32,9 @@ module DeadlineCalculator
         month_later
       end
   
-      def business_unit_deadline_for_date(date=nil)
-        deadline_method  = @kase.flagged? ? internal_deadline : external_deadline
+      def business_unit_deadline_for_date(*)
+        @kase.flagged? ? internal_deadline : external_deadline
       end
     end
-  end
+end
   
