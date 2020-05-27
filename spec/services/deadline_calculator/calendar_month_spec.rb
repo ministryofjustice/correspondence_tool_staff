@@ -115,4 +115,3 @@ describe DeadlineCalculator::CalendarMonth do
       end
     end
 end
-  
