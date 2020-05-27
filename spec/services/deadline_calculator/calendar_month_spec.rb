@@ -94,8 +94,7 @@ describe DeadlineCalculator::CalendarMonth do
               expect(deadline_calculator_local.external_deadline)
               .to eq get_expected_deadline(1.month.since(received_date_used))
           end    
-      end
-      
+        end
       end
   
       describe '#buiness_unit_deadline_for_date' do
