@@ -1337,7 +1337,7 @@ RSpec.describe Case::Base, type: :model do
       it 'returns business days calculator' do
         deadline_calculator = kase.deadline_calculator
         expect(deadline_calculator)
-          .to be_an_instance_of DeadlineCalculator::CalendarDays
+          .to be_an_instance_of DeadlineCalculator::CalendarMonth
         expect(deadline_calculator.kase).to eq kase
       end
     end

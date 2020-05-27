@@ -220,7 +220,7 @@ describe CSVExporter do
           'Responder' => 'sar responding user',
           'Date received' => '2018-08-30',
           'Internal deadline' => nil,
-          'External deadline' => '2018-09-29',
+          'External deadline' => '2018-10-01',
           'Date responded' => '2018-09-25',
           'Date compliant draft uploaded' => nil,
           'Trigger' => nil,
