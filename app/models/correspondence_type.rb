@@ -31,6 +31,7 @@ class CorrespondenceType < ApplicationRecord
   enum deadline_calculator_class: {
          'BusinessDays' => 'BusinessDays',
          'CalendarDays' => 'CalendarDays',
+         'CalendarMonth' => 'CalendarMonth',
        }
 
   validates_presence_of :name,

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe DeadlineCalculator::CalendarDays do
   let(:sar)                 { find_or_create :sar_correspondence_type }
-  let(:sar_case)            { create :sar_case }
+  let(:sar_case)            { create :overturned_ico_sar }
   let(:deadline_calculator) { described_class.new sar_case }
   let(:start_date)          { Date.new(2018, 6, 14) }
   let(:start_date_plus_10)  { Date.new(2018, 6, 24) }
