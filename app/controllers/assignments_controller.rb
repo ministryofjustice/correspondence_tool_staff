@@ -228,7 +228,7 @@ class AssignmentsController < ApplicationController
         :reasons_for_rejection
       )
     else
-      HashWithIndifferentAccess.new
+      ActiveSupport::HashWithIndifferentAccess.new
     end
   end
 

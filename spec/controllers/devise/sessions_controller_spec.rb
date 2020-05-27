@@ -23,7 +23,7 @@ describe Devise::SessionsController do
       it 'does not sign in' do
         @request.env["devise.mapping"] = Devise.mappings[:user]
         post :create, params: { user: {email: user.email, password: bad_pass } }
-        expect(response).to be_success
+        expect(response).to be_successful
         expect(flash[:alert]).to eq 'Invalid email or password.'
       end
 

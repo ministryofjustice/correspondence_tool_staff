@@ -2,7 +2,7 @@ module CaseStates
   extend ActiveSupport::Concern
 
   included do
-    after_update :reset_state_machine, if: :workflow_changed?
+    after_update :reset_state_machine, if: :saved_change_to_workflow?
   end
 
   def state_machine

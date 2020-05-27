@@ -15,7 +15,7 @@ describe TeamMoveService do
     )
   }
   let(:params) do
-    HashWithIndifferentAccess.new(
+    ActiveSupport::HashWithIndifferentAccess.new(
         {
             'full_name' => 'Bob Dunnit',
             'email' => 'bd@moj.com'
@@ -142,8 +142,8 @@ describe TeamMoveService do
           # using factory :case_being_drafted, the case has TWO transitions,
           # One for the transition to drafted,
           # and one for the current _being drafted_ state (in the second, the target team is nill)
-          expect(kase.transitions.first.target_team_id).to eq service.new_team.id
-          expect(kase.transitions.second.acting_team_id).to eq service.new_team.id
+          expect(kase.transitions.second.target_team_id).to eq service.new_team.id
+          expect(kase.transitions.third.acting_team_id).to eq service.new_team.id
         end
       end
 
@@ -218,7 +218,7 @@ describe TeamMoveService do
       end
 
       context 'when the team being moved is an approver team' do
-        let(:kase) { build(:responded_ico_foi_case) }
+        let(:kase) { create(:responded_ico_foi_case) }
         let(:disclosure_team) { BusinessUnit.dacu_disclosure }
         let(:business_unit) { disclosure_team }
         let(:disclosure_user) { disclosure_team.users.first }
