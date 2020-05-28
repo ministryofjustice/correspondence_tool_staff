@@ -11,7 +11,7 @@
 
 = render partial: 'shared/components/case_page_heading', locals: {kase: @case}
 
-div id="case-#{@correspondence_type_key}" class="case"
+div id="case-#{@correspondence_type_key == nil ? 'nil' : @correspondence_type_key.gsub('_', '-')}" class="case"
   section.case-info.has-actions
     h2.visually-hidden
       = "Actions you can take on this case"
