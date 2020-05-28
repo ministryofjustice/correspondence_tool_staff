@@ -33,7 +33,7 @@
 class Case::Base < ApplicationRecord
 
   TRIGGER_WORKFLOWS = ['trigger', 'full_approval'].freeze
-  CREATE_EVENT = 'create'.freeze 
+  CREATE_EVENT = 'create'.freeze
 
   def self.searchable_fields_and_ranks
     {
@@ -97,7 +97,11 @@ class Case::Base < ApplicationRecord
   scope :overturned_ico, -> { where(type: ['Case::OverturnedICO::FOI',
                                            'Case::OverturnedICO::SAR'])}
 
+  # TODO - This is really confusing naming - one is a SAR that's not Offender
+  # The other is a Case that's not an Offender SAR
+  # Change the name of the first one to :sar_non_offender to make it clearer
   scope :non_offender_sar, -> { where(type: 'Case::SAR::Standard') }
+  scope :not_offender_sar, -> { where.not(type: ['Case::SAR::Offender'] ) }
 
   scope :with_teams, -> (teams) do
     includes(:assignments)
@@ -351,7 +355,7 @@ class Case::Base < ApplicationRecord
   before_update :update_deadlines
   before_save :prevent_number_change,
               :trigger_reindexing
-  
+
   after_create :create_init_transition
 
   # before_save do

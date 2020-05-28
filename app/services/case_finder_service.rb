@@ -46,7 +46,7 @@ class CaseFinderService
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       closed_scope.where(id: case_ids).most_recent_first
     else
-      closed_scope.most_recent_first
+      closed_scope.most_recent_first.not_offender_sar
     end
   end
 
@@ -97,7 +97,7 @@ class CaseFinderService
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       open_scope.where(id: case_ids)
     else
-      open_scope
+      open_scope.not_offender_sar
     end
   end
 
