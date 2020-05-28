@@ -1,4 +1,4 @@
-FROM ruby:2.5
+FROM ruby:2.5.8
 MAINTAINER Ministry of Justice, Track a Query <correspondence@digital.justice.gov.uk>
 RUN set -ex
 

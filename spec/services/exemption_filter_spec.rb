@@ -75,7 +75,7 @@ describe ExemptionFilter do
     context 'class of returning object' do
       let(:search_query) {  search_query_for(['s22'], ['s36']) }
       it 'returns all cases with exemptions matching any of the specified abbreviations' do
-        expect(filter.call).to be_instance_of Case::Base::ActiveRecord_Relation
+        expect(filter.call.is_a?(ActiveRecord::Relation)).to be true 
       end
 
     end

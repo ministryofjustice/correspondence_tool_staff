@@ -12,12 +12,12 @@ feature 'editing teams' do
     teams_index_page.load
     business_group_row =
       teams_index_page.row_for_business_group bu.business_group.name
-    expect(business_group_row.name.text).to eq(bu.business_group.name)
+    expect(business_group_row.name.text).to have_text bu.business_group.name
     business_group_row.name.click
     expect(teams_show_page.heading)
       .to have_copy "You are viewing Business group #{bu.business_group.name}"
     directorate_row = teams_show_page.row_for_directorate bu.directorate.name
-    expect(directorate_row.name.text).to eq(bu.directorate.name)
+    expect(directorate_row.name.text).to have_text bu.directorate.name
     directorate_row.name.click
     expect(teams_show_page.heading)
       .to have_copy "You are viewing Directorate #{bu.directorate.name}"

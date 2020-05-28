@@ -411,7 +411,7 @@ RSpec.describe BusinessUnit, type: :model do
         )
       }
       let(:params) do
-        HashWithIndifferentAccess.new(
+        ActiveSupport::HashWithIndifferentAccess.new(
             {
                 'full_name' => 'Bob Dunnit',
                 'email' => 'bd@moj.com'
@@ -420,7 +420,7 @@ RSpec.describe BusinessUnit, type: :model do
       end
 
       let(:params_joe) do
-        HashWithIndifferentAccess.new(
+        ActiveSupport::HashWithIndifferentAccess.new(
             {
                 'full_name' => 'Joe Didit',
                 'email' => 'jd@moj.com'
