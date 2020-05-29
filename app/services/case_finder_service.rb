@@ -54,7 +54,7 @@ class CaseFinderService
 
   def index_cases_scope
     # effectively a nop; just return all the cases the user can view
-    scope
+    scope.not_offender_sar
   end
 
   def incoming_approving_cases_scope
@@ -109,7 +109,11 @@ class CaseFinderService
   end
 
   def in_time_cases_scope
-    scope.in_time
+    if user.responder_only?
+      scope.in_time
+    else
+      scope.in_time.not_offender_sar
+    end
   end
 
   def late_cases_scope

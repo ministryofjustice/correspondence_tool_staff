@@ -205,6 +205,10 @@ describe CaseFinderService do
                original_case: @accepted_overturned_ico_foi_original,
                original_ico_appeal: @accepted_overturned_ico_foi_original_appeal,
                identifier: '25-closed overturned ico foi'
+      @offender_sar =
+        create :offender_sar_case
+      @closed_offender_sar =
+        create :offender_sar_case, :closed
       end
     end
 
@@ -351,6 +355,8 @@ describe CaseFinderService do
                 @accepted_overturned_ico_foi_original_appeal,
                 @closed_overturned_ico_foi,
               ]
+        expect(finder.__send__(:closed_cases_scope))
+          .not_to include @offender_sar
       end
     end
 
@@ -418,8 +424,10 @@ describe CaseFinderService do
                 @accepted_overturned_ico_sar,
                 @overturned_ico_foi,
                 @awaiting_responder_overturned_ico_foi,
-                @accepted_overturned_ico_foi
+                @accepted_overturned_ico_foi,
               ]
+        expect(finder.__send__(:open_cases_scope))
+          .not_to include @offender_sar
       end
     end
 
