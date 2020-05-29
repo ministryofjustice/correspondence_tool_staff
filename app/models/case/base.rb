@@ -103,6 +103,8 @@ class Case::Base < ApplicationRecord
   scope :non_offender_sar, -> { where(type: 'Case::SAR::Standard') }
   scope :not_offender_sar, -> { where.not(type: ['Case::SAR::Offender'] ) }
 
+  scope :default_for_non_responders, -> { not_offender_sar }
+
   scope :with_teams, -> (teams) do
     includes(:assignments)
       .where(assignments: { team: teams,

@@ -12,6 +12,7 @@ describe CaseFinderService do
       Timecop.freeze Date.new(2016, 11, 25) do
         @manager               = create :manager
         @responder             = find_or_create :foi_responder
+        @branston_responder    = find_or_create :branston_user
 
         @disclosure_specialist = find_or_create :disclosure_specialist
 
@@ -400,34 +401,80 @@ describe CaseFinderService do
     end
 
     describe '#open_cases_scope' do
-      it 'returns all open cases' do
-        finder = CaseFinderService.new(@manager)
-        expect(finder.__send__(:open_cases_scope))
-          .to match_array [
-                @older_case_1,
-                @older_case_2,
-                @assigned_older_case,
-                @older_dacu_flagged_case,
-                @older_dacu_flagged_accept,
-                @case_1,
-                @case_2,
-                @newer_case_1,
-                @newer_case_2,
-                @assigned_newer_case,
-                @assigned_other_team,
-                @newer_dacu_flagged_case,
-                @newer_dacu_flagged_accept,
-                @accepted_case,
-                @approved_ico,
-                @overturned_ico_sar,
-                @awaiting_responder_overturned_ico_sar,
-                @accepted_overturned_ico_sar,
-                @overturned_ico_foi,
-                @awaiting_responder_overturned_ico_foi,
-                @accepted_overturned_ico_foi,
-              ]
-        expect(finder.__send__(:open_cases_scope))
-          .not_to include @offender_sar
+      let(:open_cases_general) {
+        [
+          @older_case_1,
+          @older_case_2,
+          @assigned_older_case,
+          @older_dacu_flagged_case,
+          @older_dacu_flagged_accept,
+          @case_1,
+          @case_2,
+          @newer_case_1,
+          @newer_case_2,
+          @assigned_newer_case,
+          @assigned_other_team,
+          @newer_dacu_flagged_case,
+          @newer_dacu_flagged_accept,
+          @accepted_case,
+          @approved_ico,
+          @overturned_ico_sar,
+          @awaiting_responder_overturned_ico_sar,
+          @accepted_overturned_ico_sar,
+          @overturned_ico_foi,
+          @awaiting_responder_overturned_ico_foi,
+          @accepted_overturned_ico_foi,
+        ]
+      }
+
+      context 'non-responder' do
+        let(:finder) { finder = CaseFinderService.new(@manager) }
+
+        it 'returns all open cases except offender sar' do
+          expect(finder.__send__(:open_cases_scope))
+            .to match_array open_cases_general
+        end
+
+        it 'does not return offender sar cases' do
+          expect(finder.__send__(:open_cases_scope))
+            .not_to include @offender_sar
+        end
+      end
+
+      context 'normal responder' do
+        let(:finder) { finder = CaseFinderService.new(@responder) }
+
+        it 'returns all correct cases for user' do
+          expect(finder.__send__(:open_cases_scope))
+            .to match_array [
+              @assigned_older_case,
+              @assigned_newer_case,
+              @awaiting_responder_overturned_ico_foi,
+              @accepted_case,
+              @accepted_overturned_ico_foi,
+              @approved_ico,
+            ]
+        end
+
+        it 'does not return offender sar cases' do
+          expect(finder.__send__(:open_cases_scope))
+            .not_to include @offender_sar
+        end
+      end
+
+      context 'branston-responder' do
+        let(:finder) { finder = CaseFinderService.new(@branston_responder) }
+
+        it 'returns all open offender sar cases' do
+          expect(finder.__send__(:open_cases_scope))
+            .to match_array [@offender_sar]
+        end
+
+        it 'does not return any non-offender sar cases' do
+          found_cases = finder.__send__(:open_cases_scope)
+          expect((found_cases & open_cases_general).empty?)
+            .to be true
+        end
       end
     end
 
