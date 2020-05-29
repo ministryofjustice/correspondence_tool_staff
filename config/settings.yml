@@ -112,7 +112,9 @@ global_navigation:
   pages:
     create_case:
       path: /cases/new
-      visibility: manager
+      visibility:
+        - manager
+        - BRANSTON
 
     incoming_cases:
       path: /cases/incoming
