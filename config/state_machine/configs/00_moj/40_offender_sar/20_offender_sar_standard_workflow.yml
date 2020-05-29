@@ -2,8 +2,8 @@
         initial_state: data_to_be_requested
         user_roles:
 
-        ########################### SAR :: STANDARD WORKFLOW :: MANAGER ########################
-          manager:
+        ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
+          responder:
             states:
               data_to_be_requested:
                 mark_as_waiting_for_data:

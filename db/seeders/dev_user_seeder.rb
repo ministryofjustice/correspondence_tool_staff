@@ -11,7 +11,7 @@ class DevUserSeeder
       'pressoffice'   => BusinessUnit.press_office,
       'privateoffice' => BusinessUnit.private_office,
       'commsandinfo'  => BusinessUnit.find_by!(name: 'Communications and Information'),
-      'branston'  => BusinessUnit.find_by!(name: 'Branston Registry'),
+      'branston'      => BusinessUnit.dacu_branston,
     }
 
     @users = {
@@ -27,18 +27,20 @@ class DevUserSeeder
       'David Attenborough' => [{ team: 'dacu',           role: 'manager',
                                  admin: true }],
       'Desi Arnaz'         => [{ team: 'dacu',           role: 'manager' }],
-      'Dave Allen'         => [{ team: 'dacu',          role: 'manager' },
-                               { team: 'dacudis',       role: 'approver' },
-                               { team: 'commsandinfo',  role: 'responder' }],
+      'Dave Allen'         => [{ team: 'dacu',           role: 'manager' },
+                               { team: 'dacudis',        role: 'approver' },
+                               { team: 'commsandinfo',   role: 'responder' }],
       'Dack Dispirito'     => [{ team: 'dacudis',        role: 'approver' }],
-      'Dasha Diss'         => [{ team: 'dacudis',       role: 'approver' },
-                               { team: 'dacu',          role: 'manager'  },
-                               { team: 'commsandinfo',  role: 'responder'  }],
+      'Dasha Diss'         => [{ team: 'dacudis',        role: 'approver' },
+                               { team: 'dacu',           role: 'manager'  },
+                               { team: 'commsandinfo',   role: 'responder'  }],
       'Preston Offman'     => [{ team: 'pressoffice',    role: 'approver' }],
       'Prescilla Offenberg'=> [{ team: 'pressoffice',    role: 'approver' }],
       'Primrose Offord'    => [{ team: 'privateoffice',  role: 'approver' }],
       'Princeton Office'   => [{ team: 'privateoffice',  role: 'approver' }],
-      'Brian Rix'          => [{ team: 'branston',  role: 'manager' }],
+      'Brian Rix'          => [{ team: 'branston',       role: 'responder' }],
+      'Bonnie Raitt'       => [{ team: 'branston',       role: 'responder' }],
+      'Basil Rathbone'     => [{ team: 'branston',       role: 'responder' }],
     }
   end
   # rubocop:enable Metrics/MethodLength

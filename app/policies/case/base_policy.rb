@@ -144,7 +144,7 @@ class Case::BasePolicy < ApplicationPolicy
   def can_add_case?
     clear_failed_checks
 
-    user.manager?
+    user.manager? || user.can_manage_offender_sar?
   end
 
   def can_assign_case?

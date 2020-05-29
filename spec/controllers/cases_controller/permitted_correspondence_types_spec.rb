@@ -34,16 +34,4 @@ describe CasesController, type: :controller do
     types = controller.__send__(:permitted_correspondence_types)
     expect(types).not_to include ico
   end
-
-  it 'does permit Offender SAR cases if feature enabled' do
-    enable_feature(:offender_sars)
-    types = controller.__send__(:permitted_correspondence_types)
-    expect(types).to include offender_sar
-  end
-
-  it 'does not permit Offender SAR cases if feature is not enabled' do
-    disable_feature(:offender_sars)
-    types = controller.__send__(:permitted_correspondence_types)
-    expect(types).not_to include offender_sar
-  end
 end

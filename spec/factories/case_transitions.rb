@@ -325,43 +325,45 @@ FactoryBot.define do
     original_final_deadline { self.case.external_deadline }
   end
 
+  # Offender SAR specific transitions below - note use of responder
+  # and not manager - single team responsible for complete case workflow
   factory :case_transition_waiting_for_data, parent: :case_transition do
     to_state { 'waiting_for_data' }
     event { 'mark_as_waiting_for_data' }
 
-    acting_team { self.case.managing_team }
-    acting_user { acting_team.managers.first }
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
   end
 
   factory :case_transition_ready_for_vetting, parent: :case_transition do
     to_state { 'ready_for_vetting' }
     event { 'mark_as_ready_for_vetting' }
 
-    acting_team { self.case.managing_team }
-    acting_user { acting_team.managers.first }
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
   end
 
   factory :case_transition_vetting_in_progress, parent: :case_transition do
     to_state { 'vetting_in_progress' }
     event { 'mark_as_vetting_in_progress' }
 
-    acting_team { self.case.managing_team }
-    acting_user { acting_team.managers.first }
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
   end
 
   factory :case_transition_ready_to_copy, parent: :case_transition do
     to_state { 'ready_to_copy' }
     event { 'mark_as_ready_to_copy' }
 
-    acting_team { self.case.managing_team }
-    acting_user { acting_team.managers.first }
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
   end
 
   factory :case_transition_ready_to_dispatch, parent: :case_transition do
     to_state { 'ready_to_dispatch' }
     event { 'mark_as_ready_to_dispatch' }
 
-    acting_team { self.case.managing_team }
-    acting_user { acting_team.managers.first }
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
   end
 end
