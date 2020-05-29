@@ -74,6 +74,22 @@
       margin-right: .5em;
     }
   }
+
+  .case-details table {
+    border-bottom: 1px solid #bfc1c3;
+
+    th {
+      font-weight: bold;
+    }
+
+    tr, th, td {
+      border: none;
+    }
+
+    .section {
+      border-top: 1px solid #bfc1c3;
+    }
+  }
 }
 
 .request--heading {
@@ -109,7 +125,6 @@
 .closed-case-heading {
   width: 80%;
 }
-
 
 .case-info {
   margin-bottom : $gutter * 2.5;
@@ -162,22 +177,4 @@
 
 td.clearance-actions {
   text-align: right;
-}
-
-#case-offender_sar {
-  table {
-    border-bottom: 1px solid #bfc1c3;
-
-    th {
-      font-weight: bold;
-    }
-
-    tr, th, td {
-      border: none;
-    }
-
-    .section {
-      border-top: 1px solid #bfc1c3;
-    }
-  }
 }
