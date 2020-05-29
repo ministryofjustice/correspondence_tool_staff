@@ -1,33 +1,33 @@
 class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
   def transition?
     clear_failed_checks
-    user_can_manage_offender_sar_cases
+    check_user_can_manage_offender_sar
   end
 
   def can_add_note_to_case?
     clear_failed_checks
-    user_can_manage_offender_sar_cases
+    check_user_can_manage_offender_sar
   end
 
   def close?
     clear_failed_checks
-    user_can_manage_offender_sar_cases
+    check_user_can_manage_offender_sar
   end
 
   def can_close_case?
     clear_failed_checks
-    user_can_manage_offender_sar_cases
+    check_user_can_manage_offender_sar
   end
 
   def show?
     clear_failed_checks
 
-    user_can_manage_offender_sar_cases
+    check_user_can_manage_offender_sar
   end
 
   def respond_and_close?
     clear_failed_checks
-    user_can_manage_offender_sar_cases
+    check_user_can_manage_offender_sar
   end
 
   def can_record_data_request?
@@ -37,15 +37,11 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
 
   def can_send_acknowledgement_letter?
     clear_failed_checks
-    user_can_manage_offender_sar_cases
+    check_user_can_manage_offender_sar
   end
 
   def can_send_dispatch_letter?
     clear_failed_checks
-    user_can_manage_offender_sar_cases
-  end
-
-  def user_can_manage_offender_sar_cases
-    user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar)
+    check_user_can_manage_offender_sar
   end
 end
