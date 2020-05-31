@@ -4,6 +4,7 @@ feature 'when extending a SAR case deadline' do
   include Features::Interactions
 
   given(:manager)             { find_or_create :disclosure_bmt_user }
+  given!(:original_deadline)  { kase.external_deadline }
   given!(:received_date)  { kase.received_date }
 
   context 'a manager' do
