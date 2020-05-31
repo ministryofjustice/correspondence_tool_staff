@@ -28,7 +28,10 @@ FactoryBot.define do
     abbreviation { 'SAR' }
     escalation_time_limit { 3 }
     internal_time_limit { 10 }
-    deadline_calculator_class { 'CalendarMonth' }
+    external_time_limit { 1 }
+    extension_time_limit { 2 }
+    extension_time_default { 1 }
+    deadline_calculator_class { 'CalendarMonths' }
     report_category_name { 'SAR report' }
 
 
@@ -40,6 +43,8 @@ FactoryBot.define do
     abbreviation { 'OFFENDER_SAR' }
     escalation_time_limit { 3 }
     internal_time_limit { 10 }
+    external_time_limit { 1 }
+    deadline_calculator_class { 'CalendarMonths' }
     report_category_name { 'Offender SAR report' }
 
 
@@ -89,6 +94,6 @@ FactoryBot.define do
   end
 
   trait :calendar_month do
-    deadline_calculator_class { 'CalendarMonth' }
+    deadline_calculator_class { 'CalendarMonths' }
   end
 end

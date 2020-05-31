@@ -18,6 +18,21 @@ describe DeadlineCalculator::BusinessDays do
       let(:fri_jun_02) { Time.utc(2017, 6, 2, 12, 0, 0) }
       let(:fri_jun_16) { Time.utc(2017, 6, 16, 12, 0, 0) }
       let(:thu_jun_15) { Time.utc(2017, 6, 15, 12, 0, 0) }
+      let(:fri_jun_30) { Time.utc(2017, 6, 30, 12, 0, 0) }
+      let(:fri_jul_14) { Time.utc(2017, 7, 14, 12, 0, 0) }
+
+
+      describe '#time_units_desc_for_deadline' do
+        it 'single' do
+          expect(deadline_calculator.time_units_desc_for_deadline)
+            .to eq "business day"
+        end
+
+        it 'plural' do
+          expect(deadline_calculator.time_units_desc_for_deadline(true))
+            .to eq "business days"
+        end
+      end
 
       describe '.escalation_deadline' do
         it 'is 3 days after created date' do
@@ -33,6 +48,24 @@ describe DeadlineCalculator::BusinessDays do
           Timecop.freeze thu_may_18 do
             expect(deadline_calculator.external_deadline)
               .to eq fri_jun_16.to_date
+          end
+        end
+      end
+
+      describe '.extension_deadline' do
+        it 'is 30 working days after received_date - not counting bank holiday Mon May 29' do
+          Timecop.freeze thu_may_18 do
+            expect(deadline_calculator.extension_deadline(10))
+              .to eq fri_jun_30.to_date
+          end
+        end
+      end
+
+      describe '.max_allowed_deadline_date' do
+        it 'is 40 working days after received_date - not counting bank holiday Mon May 29' do
+          Timecop.freeze thu_may_18 do
+            expect(deadline_calculator.max_allowed_deadline_date(20))
+              .to eq fri_jul_14.to_date
           end
         end
       end

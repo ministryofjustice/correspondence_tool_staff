@@ -250,7 +250,7 @@ module Features
       rus.upload!
     end
 
-    def extend_sar_deadline_for(kase:, num_days:, reason: 'The reason for extending')
+    def extend_sar_deadline_for(kase:, num_calendar_months:, reason: 'The reason for extending')
       cases_show_page.load(id: kase.id)
       cases_show_page.actions.extend_sar_deadline.click
 
@@ -264,7 +264,7 @@ module Features
       expected_case_history = [
         'Extended SAR deadline',
         "#{reason}",
-        " Deadline extended by #{num_days} days" # line-break character translates into a space
+        " Deadline extended by #{num_calendar_months} calendar month#{num_calendar_months > 1 ? "s" : ""}" # line-break character translates into a space
       ]
 
       expect(cases_show_page).to be_displayed

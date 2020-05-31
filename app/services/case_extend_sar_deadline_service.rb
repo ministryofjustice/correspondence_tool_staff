@@ -1,11 +1,12 @@
 class CaseExtendSARDeadlineService
   attr_reader :result, :error
 
-  def initialize(user:, kase:, extension_days:, reason:)
+  def initialize(user:, kase:, extension_period:, reason:)
     @user = user
     @case = kase
-    @extension_days = extension_days
-    @extension_deadline = new_extension_deadline(@extension_days.to_i)
+    @case = CaseExtendSARDeadlineDecorator.decorate @case
+    @extension_period = extension_period
+    @extension_deadline = new_extension_deadline(@extension_period.to_i)
     @reason = reason
     @result = :incomplete
   end
@@ -20,8 +21,8 @@ class CaseExtendSARDeadlineService
           original_final_deadline: @case.external_deadline,
           message: message
         )
-
-        @case.extend_deadline!(@extension_deadline)
+        new_extended_times = @extension_period.to_i + (@case.extended_times || 0)
+        @case.extend_deadline!(@extension_deadline, new_extended_times)
         @result = :ok
       else
         @result = :validation_error
@@ -38,15 +39,11 @@ class CaseExtendSARDeadlineService
   private
 
   def new_extension_deadline(extend_by)
-    if @case.deadline_extended?
-      @case.external_deadline + extend_by.days
-    else
-      @case.initial_deadline + extend_by.days
-    end
+    @case.deadline_calculator.extension_deadline((@case.extended_times || 0) + extend_by)
   end
 
   def message
-    "#{@reason}\nDeadline extended by #{@extension_days} days"
+    "#{@reason}\nDeadline extended by #{@extension_period} #{@case.time_unit_string(@extension_period.to_i)}"
   end
 
   def valid?
@@ -59,15 +56,16 @@ class CaseExtendSARDeadlineService
   def validate_extension_deadline
     extension_limit = @case.max_allowed_deadline_date
 
-    if @extension_days.blank?
+    if @extension_period.blank?
       @case.errors.add(
         :extension_period,
         "can't be blank"
       )
     elsif @extension_deadline > extension_limit
+
       @case.errors.add(
         :extension_period,
-        "can't be more than #{Settings.sar_extension_limit} days beyond the initial deadline"
+        "can't be more than #{@case.extension_time_limit} #{@case.time_unit_string(extension_limit)} beyond the received date"
       )
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(

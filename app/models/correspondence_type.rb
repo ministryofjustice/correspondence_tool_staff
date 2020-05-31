@@ -25,13 +25,15 @@ class CorrespondenceType < ApplicationRecord
                  default_press_officer: :string,
                  default_private_officer: :string,
                  report_category_name: [:string, default: ''],
+                 extension_time_limit: :integer,
+                 extension_time_default:  :integer,
                  show_on_menu: [:boolean, default: true]
 
 
   enum deadline_calculator_class: {
          'BusinessDays' => 'BusinessDays',
          'CalendarDays' => 'CalendarDays',
-         'CalendarMonth' => 'CalendarMonth',
+         'CalendarMonths' => 'CalendarMonths',
        }
 
   validates_presence_of :name,

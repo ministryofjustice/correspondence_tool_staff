@@ -1,29 +1,24 @@
 require 'rails_helper'
 
-def generate_start_date(month, day)
-    current_year = Date.current.year     
-    if Date.new(current_year, month, day) > Date.today
-        chosen_year = current_year-1
-    else
-        chosen_year = current_year
-    end
-    [chosen_year, Date.civil(chosen_year, month, day)]
-end
 
-def get_expected_deadline(base_date)
-    expected_deadline = base_date
-    while !expected_deadline.workday? || expected_deadline.bank_holiday?
-        expected_deadline = expected_deadline.tomorrow
-    end
-    expected_deadline
-end
-
-describe DeadlineCalculator::CalendarMonth do
+describe DeadlineCalculator::CalendarMonths do
     let(:sar)                 { find_or_create :sar_correspondence_type }
     let(:sar_case)            { create :sar_case }
     let(:deadline_calculator) { described_class.new sar_case }
-  
+
     context 'SAR case' do
+      describe '#time_units_desc_for_deadline' do
+        it 'single' do
+          expect(deadline_calculator.time_units_desc_for_deadline)
+            .to eq "calendar month"
+        end
+
+        it 'plural' do
+          expect(deadline_calculator.time_units_desc_for_deadline(true))
+            .to eq "calendar months"
+        end
+      end
+
       describe '#escalation deadline' do
         it 'is 3 calendar days after the date of creation' do
           expect(deadline_calculator.escalation_deadline)
@@ -66,6 +61,7 @@ describe DeadlineCalculator::CalendarMonth do
               it 'Testing #{received_date_used} - #{expected_deadline}' do
                 test_case = double('sar_case')
                 allow(test_case).to receive(:received_date).and_return(received_date_used)
+                allow(test_case).to receive(:correspondence_type).and_return(sar)
                 deadline_calculator_local = described_class.new test_case
                 expect(deadline_calculator_local.external_deadline).to eq expected_deadline
               end
@@ -77,6 +73,7 @@ describe DeadlineCalculator::CalendarMonth do
             Timecop.freeze Time.local(2019, 9, 27, 13, 21, 33) do
               test_case = double('sar_case')
               allow(test_case).to receive(:received_date).and_return(Date.today)
+              allow(test_case).to receive(:correspondence_type).and_return(sar)
               deadline_calculator_local = described_class.new test_case
 
               expect(deadline_calculator_local.external_deadline)
@@ -87,6 +84,7 @@ describe DeadlineCalculator::CalendarMonth do
             Timecop.freeze Time.local(2019, 9, 27, 13, 21, 33) do
               test_case = double('sar_case')
               allow(test_case).to receive(:received_date).and_return(Date.parse('2019-04-06'))
+              allow(test_case).to receive(:correspondence_type).and_return(sar)
               deadline_calculator_local = described_class.new test_case
 
               expect(deadline_calculator_local.external_deadline)
@@ -113,5 +111,46 @@ describe DeadlineCalculator::CalendarMonth do
         end
   
       end
+
+      describe '#extension_deadline' do
+        it '1 months' do
+          Timecop.freeze Time.local(2019, 8, 27, 13, 21, 33) do
+            test_case = double('sar_case')
+            allow(test_case).to receive(:received_date).and_return(Date.today)
+            allow(test_case).to receive(:correspondence_type).and_return(sar)
+            deadline_calculator_local = described_class.new test_case
+
+            expect(deadline_calculator_local.extension_deadline(1))
+              .to eq Date.parse('2019-10-28')
+          end    
+        end
+    
+        it '2 months' do
+          Timecop.freeze Time.local(2019, 9, 26, 13, 21, 33) do
+            test_case = double('sar_case')
+            allow(test_case).to receive(:received_date).and_return(Date.today)
+            allow(test_case).to receive(:correspondence_type).and_return(sar)
+            deadline_calculator_local = described_class.new test_case
+
+            expect(deadline_calculator_local.extension_deadline(2))
+              .to eq Date.parse('2019-12-27')
+          end    
+        end  
+      end
+
+      describe '#max_allowed_deadline_date' do
+        it '2 months' do
+          Timecop.freeze Time.local(2019, 10, 1, 13, 21, 33) do
+            test_case = double('sar_case')
+            allow(test_case).to receive(:received_date).and_return(Date.today)
+            allow(test_case).to receive(:correspondence_type).and_return(sar)
+            deadline_calculator_local = described_class.new test_case
+
+            expect(deadline_calculator_local.max_allowed_deadline_date)
+              .to eq Date.parse('2020-01-02')
+          end    
+        end
+      end
+
     end
 end

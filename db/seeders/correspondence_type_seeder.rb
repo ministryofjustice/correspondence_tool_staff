@@ -21,8 +21,10 @@ class CorrespondenceTypeSeeder
                 abbreviation: 'SAR',
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
-                external_time_limit: 30,
-                deadline_calculator_class: 'CalendarDays',
+                external_time_limit: 1,
+                extension_time_limit: 2, 
+                extension_time_default: 1,
+                deadline_calculator_class: 'CalendarMonths',
                 default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
                 default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
 
@@ -41,8 +43,8 @@ class CorrespondenceTypeSeeder
                 abbreviation: 'OFFENDER_SAR',
                 escalation_time_limit: 3,
                 internal_time_limit: 10,
-                external_time_limit: 30,
-                deadline_calculator_class: 'CalendarDays')
+                external_time_limit: 1,
+                deadline_calculator_class: 'CalendarMonths')
   end
   #rubocop:enable Metrics/MethodLength
 end

@@ -116,7 +116,7 @@ FactoryBot.define do
          acting_team: evaluator.managing_team,
          acting_user: evaluator.manager
 
-        kase.extend_deadline!(kase.external_deadline + 30.days)
+        kase.extend_deadline!(kase.external_deadline + 30.days,1)
       end
     end
   end

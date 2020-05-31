@@ -32,6 +32,21 @@ module DeadlineCalculator
       days_after_day_one.business_days.after(date.to_date)
     end
 
+    def extension_deadline(time_limit)
+      days_after_day_one = (time_limit + kase.correspondence_type.external_time_limit) - 1
+      days_after_day_one.business_days.after(start_date(kase.received_date))
+    end
+    
+    def max_allowed_deadline_date(time_limit=nil)
+      time_limit ||= (kase.correspondence_type.extension_time_limit || 0)
+      days_after_day_one = (time_limit + kase.correspondence_type.external_time_limit) - 1
+      days_after_day_one.business_days.after(start_date(kase.received_date))
+    end
+
+    def time_units_desc_for_deadline(plural=false)
+      plural ? "business days".freeze : "business day".freeze
+    end
+
     private
 
     def start_date(received_date)
