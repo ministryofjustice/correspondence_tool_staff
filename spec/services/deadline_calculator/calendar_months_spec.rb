@@ -14,7 +14,7 @@ describe DeadlineCalculator::CalendarMonths do
         end
 
         it 'plural' do
-          expect(deadline_calculator.time_units_desc_for_deadline(true))
+          expect(deadline_calculator.time_units_desc_for_deadline(2))
             .to eq "calendar months"
         end
       end
@@ -68,8 +68,8 @@ describe DeadlineCalculator::CalendarMonths do
             end
         end
 
-        context 'the date of one calendar month later is non working date' do
-          it 'weekend ' do
+        context 'deadline falls in non-working day based on calender month' do
+          it 'deadline falls on weekend and final_deadline should be next working day' do
             Timecop.freeze Time.local(2019, 9, 27, 13, 21, 33) do
               test_case = double('sar_case')
               allow(test_case).to receive(:received_date).and_return(Date.today)
@@ -80,7 +80,7 @@ describe DeadlineCalculator::CalendarMonths do
                 .to eq Date.parse('2019-10-28')
             end    
           end    
-          it 'bank_holiday' do
+          it 'deadline falls on bank_holiday and final_deadline should be next working day' do
             Timecop.freeze Time.local(2019, 9, 27, 13, 21, 33) do
               test_case = double('sar_case')
               allow(test_case).to receive(:received_date).and_return(Date.parse('2019-04-06'))

@@ -264,7 +264,7 @@ module Features
       expected_case_history = [
         'Extended SAR deadline',
         "#{reason}",
-        " Deadline extended by #{num_calendar_months} calendar month#{num_calendar_months > 1 ? "s" : ""}" # line-break character translates into a space
+        " Deadline extended by #{num_calendar_months == 1 ? 'one' : 'two'} calendar #{'month'.pluralize(num_calendar_months)}" # line-break character translates into a space
       ]
 
       expect(cases_show_page).to be_displayed

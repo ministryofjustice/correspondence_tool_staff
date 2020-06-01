@@ -32,7 +32,7 @@ describe CaseExtendSARDeadlineService do
             acting_team: team_disclosure_bmt,
             final_deadline: get_expected_deadline(2.month.since(sar_case.received_date)),
             original_final_deadline: initial_deadline,
-            message: "test\nDeadline extended by 1 calendar month"
+            message: "test\nDeadline extended by one calendar month"
           )
       end
 
@@ -99,7 +99,7 @@ describe CaseExtendSARDeadlineService do
 
           it {
             expect(sar_case.errors[:extension_period])
-              .to eq ["can't be more than #{max_extension_time_limit} calendar months beyond the received date"]
+              .to eq ["can't be more than two calendar months beyond the received date"]
           }
         end
 

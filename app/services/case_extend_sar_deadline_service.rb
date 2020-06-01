@@ -43,7 +43,7 @@ class CaseExtendSARDeadlineService
   end
 
   def message
-    "#{@reason}\nDeadline extended by #{@extension_period} #{@case.time_unit_string(@extension_period.to_i)}"
+    "#{@reason}\nDeadline extended by #{@case.time_period_description(@extension_period.to_i)}"
   end
 
   def valid?
@@ -62,10 +62,9 @@ class CaseExtendSARDeadlineService
         "can't be blank"
       )
     elsif @extension_deadline > extension_limit
-
       @case.errors.add(
         :extension_period,
-        "can't be more than #{@case.extension_time_limit} #{@case.time_unit_string(extension_limit)} beyond the received date"
+        "can't be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date"
       )
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(

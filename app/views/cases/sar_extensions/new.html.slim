@@ -33,15 +33,15 @@ br
         .multiple-choice
           input type="radio" value="#{@case.extension_time_default}" checked="checked" name="case[extension_period]" id="case_extension_period_#{@case.extension_time_default}"
           label for="case_extension_period_#{@case.extension_time_default}" 
-             = @case.extension_time_default.to_s + " " + @case.time_unit_string(@case.extension_time_default)
+             = @case.time_period_description(@case.extension_time_default)
         .multiple-choice
           input type="radio" value="#{@case.extension_time_limit}" name="case[extension_period]" id="case_extension_period_#{@case.extension_time_limit}"
           label for="case_extension_period_#{@case.extension_time_limit}" 
-             = @case.extension_time_limit.to_s + " " + @case.time_unit_string(@case.extension_time_limit)
+             = @case.time_period_description(@case.extension_time_limit)
   - else
     input type="hidden" value="#{@case.extension_time_default}" name="case[extension_period]"
     p
-      = t('.extend_further', time_limit: @case.extension_time_default, time_unit_string: @case.time_unit_string(@case.extension_time_default))
+      = t('.extend_further', time_period_description: @case.time_period_description(@case.extension_time_default))
 
   .form-group
     = f.text_area :reason_for_extending

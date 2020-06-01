@@ -43,8 +43,8 @@ module DeadlineCalculator
       days_after_day_one.business_days.after(start_date(kase.received_date))
     end
 
-    def time_units_desc_for_deadline(plural=false)
-      plural ? "business days".freeze : "business day".freeze
+    def time_units_desc_for_deadline(time_limit=1)
+      "business #{'day'.pluralize(time_limit)}".freeze
     end
 
     private

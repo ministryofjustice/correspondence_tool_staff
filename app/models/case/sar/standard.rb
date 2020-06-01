@@ -59,7 +59,6 @@ class Case::SAR::Standard < Case::Base
                  reply_method: :string,
                  late_team_id: :integer,
                  date_draft_compliant: :date,
-                 # The following fields are due to the need of implementation
                  # indicate whether the deadline has been extended
                  deadline_extended: [:boolean, default: false],
                  # indicate how long has been extended so far in time units
@@ -147,14 +146,14 @@ class Case::SAR::Standard < Case::Base
   def reset_deadline!
     self.update!(
       external_deadline: initial_deadline,
-      deadline_extended: false
+      deadline_extended: false,
+      extended_times: 0
     )
   end
 
-  # The deadlines are all calculated based on the date receiving the case
+  # The deadlines are all calculated based on the date case is received
   def max_allowed_deadline_date
-    time_limit = self.correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
-    deadline_calculator.max_allowed_deadline_date(time_limit)
+    deadline_calculator.max_allowed_deadline_date(max_time_limit)
   end
 
   def extension_time_limit
@@ -162,7 +161,7 @@ class Case::SAR::Standard < Case::Base
   end 
 
   def extension_time_default
-    self.correspondence_type.extension_time_default || Settings.sar_extension_default_time_default
+    self.correspondence_type.extension_time_default || Settings.sar_extension_default_time_gap
   end 
 
   def self.factory(type)
@@ -179,6 +178,10 @@ class Case::SAR::Standard < Case::Base
   end
 
   private
+
+  def max_time_limit
+    self.correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
+  end 
 
   def use_subject_as_requester
     self.name = self.subject_full_name

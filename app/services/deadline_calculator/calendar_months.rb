@@ -53,8 +53,8 @@ module DeadlineCalculator
           time_limit + kase.correspondence_type.external_time_limit, kase.received_date)
       end 
 
-      def time_units_desc_for_deadline(plural=false)
-        plural ? "calendar months".freeze : "calendar month".freeze
+      def time_units_desc_for_deadline(time_limit=1)
+        "calendar #{'month'.pluralize(time_limit)}".freeze
       end
 
       private

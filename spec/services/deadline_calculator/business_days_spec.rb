@@ -29,7 +29,7 @@ describe DeadlineCalculator::BusinessDays do
         end
 
         it 'plural' do
-          expect(deadline_calculator.time_units_desc_for_deadline(true))
+          expect(deadline_calculator.time_units_desc_for_deadline(2))
             .to eq "business days"
         end
       end

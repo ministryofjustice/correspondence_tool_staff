@@ -39,8 +39,8 @@ module DeadlineCalculator
       date + num_days.days
     end
 
-    def time_units_desc_for_deadline(plural=false)
-      plural ? "calendar days".freeze : "calendar day".freeze
+    def time_units_desc_for_deadline(time_limit=1)
+      "calendar #{'day'.pluralize(time_limit)}".freeze
     end
 
   end
