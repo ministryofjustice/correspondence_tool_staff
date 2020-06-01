@@ -106,6 +106,10 @@ class User < ApplicationRecord
     approving_team.present?
   end
 
+  def can_manage_offender_sar?
+    permitted_correspondence_types.include?(CorrespondenceType.offender_sar)
+  end
+
   def disclosure_specialist?
     approving_team == BusinessUnit.dacu_disclosure
   end

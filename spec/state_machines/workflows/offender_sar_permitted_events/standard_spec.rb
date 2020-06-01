@@ -39,8 +39,8 @@ describe ConfigurableStateMachine::Machine do
       create :offender_sar_case, with_state
     end
 
-    context 'as manager' do
-      let(:manager) { find_or_create :disclosure_bmt_user }
+    context 'as responder' do
+      let(:responder) { find_or_create :branston_user }
 
       TRANSITIONS.each do |transition|
         context "with Offender SAR in state #{transition[:state]}" do
@@ -53,7 +53,7 @@ describe ConfigurableStateMachine::Machine do
           it 'only allows permitted events' do
             permitted_events = UNIVERSAL_EVENTS + transition[:specific_events]
 
-            expect(kase.state_machine.permitted_events(manager))
+            expect(kase.state_machine.permitted_events(responder))
               .to match_array permitted_events
           end
         end

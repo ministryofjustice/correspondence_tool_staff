@@ -99,7 +99,7 @@ class DevTeamSeeder
                                                  correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
     @bu_branston  = find_or_create_business_unit(parent: @dir_dacu,
                                                  name: 'Branston Registry',
-                                                 role: 'manager',
+                                                 role: 'responder',
                                                  correspondence_type_ids: [@offender.id],
                                                  code: 'BRANSTON')
   end

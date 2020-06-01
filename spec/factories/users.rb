@@ -88,9 +88,9 @@ FactoryBot.define do
       managing_teams { [find_or_create(:team_dacu, :empty)] }
     end
 
-    factory :branston_user, parent: :manager do
+    factory :branston_user, parent: :user do
       transient do
-        identifier { 'branston registry managing user' }
+        identifier { 'branston registry responding user' }
       end
 
       full_name      { identifier }

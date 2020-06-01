@@ -237,28 +237,21 @@ RSpec.describe User, type: :model do
   describe '#permitted_correspondence_types' do
     it 'returns any correspondence types associated with users teams' do
       expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, sar, overturned_foi, overturned_sar, offender_sar])
+        .to match_array([foi, ico, sar, overturned_foi, overturned_sar])
     end
 
     it 'does not include SAR if that feature is disabled' do
       disable_feature(:sars)
 
       expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, overturned_foi, offender_sar])
+        .to match_array([foi, ico, overturned_foi])
     end
 
     it 'does not include ICO if that feature is disabled' do
       disable_feature(:ico)
 
       expect(manager.permitted_correspondence_types)
-        .to match_array([foi, sar, overturned_foi, overturned_sar, offender_sar])
-    end
-
-    it 'does not include Offender SAR if that feature is disabled' do
-      disable_feature(:offender_sars)
-
-      expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, sar, overturned_foi, overturned_sar])
+        .to match_array([foi, sar, overturned_foi, overturned_sar])
     end
   end
 
