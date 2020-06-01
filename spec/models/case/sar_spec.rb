@@ -273,10 +273,6 @@ describe Case::SAR::Standard do
 
       it 'is false when already extended equal or beyond satutory limit' do
         sar = create :approved_sar
-        #initial_deadline = DateTime.new(2019, 01, 01)
-        #allow(sar).to receive(:initial_deadline) { initial_deadline }
-
-        #sar.external_deadline = initial_deadline + max_extension.days
         sar.external_deadline = subject.max_allowed_deadline_date
 
         expect(sar.deadline_extendable?).to eq false
