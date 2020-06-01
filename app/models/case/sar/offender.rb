@@ -47,8 +47,11 @@ class Case::SAR::Offender < Case::Base
                  late_team_id: :integer
 
   enum subject_type: {
-    offender: 'offender',
-    ex_offender: 'ex_offender',
+    detainee: 'Detainee',
+    ex_detainee: 'Ex-detainee',
+    ex_offender: 'Ex-offender',
+    offender: 'Offender',
+    probation_service_user: 'Probation service user',
   }
 
   enum reply_method: {
