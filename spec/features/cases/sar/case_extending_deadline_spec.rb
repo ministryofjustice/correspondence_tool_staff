@@ -32,7 +32,7 @@ feature 'when extending a SAR case deadline' do
       # 3. Extending again does not give you any extension periods for selection
       extend_sar_deadline_for(kase: kase, num_calendar_months: 1, reason: 'Need even more time') do |page|
         expect(page).not_to have_extension_period_1_calendar_month
-        expect(page).to have_text('The deadline for this case will be extended by a further 1 calendar month.')
+        expect(page).to have_text('The deadline for this case will be extended by a further one calendar month.')
       end
 
       case_deadline_text_to_be(expected_final_extension_date)
