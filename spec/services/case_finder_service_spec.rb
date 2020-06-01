@@ -432,7 +432,7 @@ describe CaseFinderService do
       }
 
       context 'non-responder' do
-        let(:finder) { finder = CaseFinderService.new(@manager) }
+        let(:finder) { CaseFinderService.new(@manager) }
 
         it 'returns all open cases except offender sar' do
           expect(finder.__send__(:open_cases_scope))
@@ -446,7 +446,7 @@ describe CaseFinderService do
       end
 
       context 'normal responder' do
-        let(:finder) { finder = CaseFinderService.new(@responder) }
+        let(:finder) { CaseFinderService.new(@responder) }
 
         it 'returns all correct cases for user' do
           expect(finder.__send__(:open_cases_scope))
@@ -467,7 +467,7 @@ describe CaseFinderService do
       end
 
       context 'branston-responder' do
-        let(:finder) { finder = CaseFinderService.new(@branston_responder) }
+        let(:finder) { CaseFinderService.new(@branston_responder) }
 
         it 'returns all open offender sar cases' do
           expect(finder.__send__(:open_cases_scope))
