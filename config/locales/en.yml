@@ -898,7 +898,7 @@ en:
     offender_sar:
       subject_heading: Who is the subject?
       requester_heading: Who is making the subject access request?
-      requested_info_heading: What information is being requested?
+      requested_info_heading: Is there other information relevant for this request?
       date_received_heading: When was the SAR received?
       request_info_hint: Use this space to store additional case information
     remove_clearance:
