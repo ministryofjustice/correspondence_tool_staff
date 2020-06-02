@@ -5,7 +5,6 @@ describe CaseRemoveSARDeadlineExtensionService do
   let(:manager)           { find_or_create :disclosure_bmt_user }
   let(:sar_case)          { create(:sar_case, :extended_deadline_sar) }
   let(:initial_deadline)  { sar_case.initial_deadline }
-  let(:max_extension)     { Settings.sar_extension_limit.to_i }
 
   before do
     allow(sar_case.state_machine).to receive(:remove_sar_deadline_extension!)

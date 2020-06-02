@@ -256,7 +256,6 @@ describe Case::SAR::Standard do
 
   describe 'deadline' do
     subject             { create :sar_case }
-    let(:max_extension) { Settings.sar_extension_limit.to_i }
 
     describe '#deadline_extended' do
       it 'is false by default' do
@@ -266,7 +265,7 @@ describe Case::SAR::Standard do
 
     describe '#deadline_extendable?' do
       it 'is true if external_deadline is less than max possible deadline' do
-        max_statutory_deadline = subject.initial_deadline + max_extension.days
+        max_statutory_deadline =  subject.max_allowed_deadline_date
 
         expect(subject.deadline_extendable?).to eq true
         expect(subject.external_deadline).to be < max_statutory_deadline
@@ -274,10 +273,7 @@ describe Case::SAR::Standard do
 
       it 'is false when already extended equal or beyond satutory limit' do
         sar = create :approved_sar
-        initial_deadline = DateTime.new(2019, 01, 01)
-        allow(sar).to receive(:initial_deadline) { initial_deadline }
-
-        sar.external_deadline = initial_deadline + max_extension.days
+        sar.external_deadline = subject.max_allowed_deadline_date
 
         expect(sar.deadline_extendable?).to eq false
       end
@@ -303,10 +299,9 @@ describe Case::SAR::Standard do
     end
 
     describe '#max_allowed_deadline_date' do
-      it 'is 60 calendar days after the initial_deadline' do
-        max_statutory_deadline = subject.initial_deadline + 60.days
+      it 'is 3 calendar months after the received date' do
 
-        expect(subject.max_allowed_deadline_date).to eq max_statutory_deadline
+        expect(subject.max_allowed_deadline_date).to eq get_expected_deadline(3.month.since(subject.received_date))
       end
     end
 
@@ -316,14 +311,14 @@ describe Case::SAR::Standard do
       let(:new_deadline)      { DateTime.new(2019, 01, 01) }
 
       it 'sets #deadline_extended to true' do
-        expect { approved_sar.extend_deadline!(new_deadline) }.to \
+        expect { approved_sar.extend_deadline!(new_deadline, 1) }.to \
           change(approved_sar, :deadline_extended)
           .from(false)
           .to(true)
       end
 
       it 'sets new external_deadline' do
-        expect { approved_sar.extend_deadline!(new_deadline) }.to \
+        expect { approved_sar.extend_deadline!(new_deadline, 1) }.to \
           change(approved_sar, :external_deadline)
           .from(initial_deadline)
           .to(new_deadline)

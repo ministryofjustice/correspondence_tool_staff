@@ -6,17 +6,15 @@ module Cases
 
     def new
       authorize @case, :extend_sar_deadline?
-
       @case = CaseExtendSARDeadlineDecorator.decorate @case
     end
 
     def create
       authorize @case, :extend_sar_deadline?
-
       service = CaseExtendSARDeadlineService.new(
         user: current_user,
         kase: @case,
-        extension_days: params[:case][:extension_period],
+        extension_period: params[:case][:extension_period],
         reason: params[:case][:reason_for_extending]
       )
       service.call

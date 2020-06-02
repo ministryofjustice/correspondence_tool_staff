@@ -885,7 +885,7 @@ en:
         error: Unable to remove SAR deadline extension
       new:
         extension_period: How long would you like to extend by?
-        extend_further: The deadline for this case will be extended by a further %{num_days} days.
+        extend_further: The deadline for this case will be extended by a further %{time_period_description}.
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals
