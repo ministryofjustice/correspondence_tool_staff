@@ -590,7 +590,7 @@ class Case::Base < ApplicationRecord
     if responded_transitions.any?
       raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
     else
-      responding_team_assignment_date = assign_responder_transitions.last.created_at.to_date
+      responding_team_assignment_date = assign_responder_transitions.last&.created_at&.to_date || received_date
       internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
       internal_deadline < Date.today
     end
