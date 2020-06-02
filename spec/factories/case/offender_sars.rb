@@ -63,6 +63,7 @@ FactoryBot.define do
     end
 
     after(:create) do |kase|
+      create :case_transition_waiting_for_data, case: kase
       create :case_transition_ready_for_vetting, case: kase
       kase.reload
     end
@@ -74,6 +75,8 @@ FactoryBot.define do
     end
 
     after(:create) do |kase|
+      create :case_transition_waiting_for_data, case: kase
+      create :case_transition_ready_for_vetting, case: kase
       create :case_transition_vetting_in_progress, case: kase
       kase.reload
     end
@@ -85,6 +88,9 @@ FactoryBot.define do
     end
 
     after(:create) do |kase|
+      create :case_transition_waiting_for_data, case: kase
+      create :case_transition_ready_for_vetting, case: kase
+      create :case_transition_vetting_in_progress, case: kase
       create :case_transition_ready_to_copy, case: kase
       kase.reload
     end
@@ -98,6 +104,10 @@ FactoryBot.define do
     end
 
     after(:create) do |kase|
+      create :case_transition_waiting_for_data, case: kase
+      create :case_transition_ready_for_vetting, case: kase
+      create :case_transition_vetting_in_progress, case: kase
+      create :case_transition_ready_to_copy, case: kase
       create :case_transition_ready_to_dispatch, case: kase
       kase.reload
     end
@@ -112,6 +122,11 @@ FactoryBot.define do
     date_responded { 4.business_days.ago }
 
     after(:create) do |kase|
+      create :case_transition_waiting_for_data, case: kase
+      create :case_transition_ready_for_vetting, case: kase
+      create :case_transition_vetting_in_progress, case: kase
+      create :case_transition_ready_to_copy, case: kase
+      create :case_transition_ready_to_dispatch, case: kase
       create :case_transition_close, case: kase
       kase.reload
     end
