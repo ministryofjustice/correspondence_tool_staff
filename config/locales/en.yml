@@ -465,7 +465,7 @@ en:
           ex_detainee: Ex-detainee
           ex_offender: Ex-offender
           offender: Offender
-          probation_service_user: Probation service user
+          probation_service_user: "Probation service user"
         third_party: Is this information being requested on someone else's behalf?
         third_party_relationship: Relationship to the subject
         third_party_reference: Requester reference (optional)
