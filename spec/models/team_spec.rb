@@ -60,27 +60,27 @@ RSpec.describe Team, type: :model do
 
     describe 'managing scope' do
       it 'returns managing teams' do
-        expect(BusinessUnit.managing).to match_array [
-                                           managing_team,
-                                           branston_team
-                                         ]
+        expect(BusinessUnit.managing).to match_array [managing_team]
       end
     end
 
     describe 'responding scope' do
       it 'returns only responding teams' do
-        expect(BusinessUnit.responding).to match_array [responding_team,
-                                                        sar_responding_team]
+        expect(BusinessUnit.responding).to match_array [
+                                             responding_team,
+                                             sar_responding_team,
+                                             branston_team
+                                           ]
       end
     end
 
     describe 'approving scope' do
       it 'returns only approving teams' do
         expect(BusinessUnit.approving).to match_array [
-                                    BusinessUnit.press_office,
-                                    BusinessUnit.private_office,
-                                    BusinessUnit.dacu_disclosure,
-                                  ]
+                                            BusinessUnit.press_office,
+                                            BusinessUnit.private_office,
+                                            BusinessUnit.dacu_disclosure,
+                                          ]
       end
     end
   end

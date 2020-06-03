@@ -24,12 +24,24 @@ module DeadlineCalculator
       kase.received_date + kase.correspondence_type.external_time_limit.days
     end
 
+    def extension_deadline(time_limit)
+      kase.received_date + (time_limit + kase.correspondence_type.external_time_limit).days
+    end
+    
+    def max_allowed_deadline_date(time_limit=nil)
+      time_limit ||= (kase.correspondence_type.extension_time_limit || 0)
+      kase.received_date + (time_limit + kase.correspondence_type.external_time_limit).days
+    end
+
     def business_unit_deadline_for_date(date)
       deadline_method  = @kase.flagged? ? :internal_time_limit : :external_time_limit
       num_days = @kase.correspondence_type.__send__(deadline_method)
       date + num_days.days
     end
 
+    def time_units_desc_for_deadline(time_limit=1)
+      "calendar #{'day'.pluralize(time_limit)}".freeze
+    end
 
   end
 end

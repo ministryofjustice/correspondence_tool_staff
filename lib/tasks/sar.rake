@@ -34,9 +34,11 @@ namespace :sar do
           name: 'Subject Access Request',
           abbreviation: 'SAR',
           internal_time_limit: 10,
-          external_time_limit: 30,
+          external_time_limit: 1,
           escalation_time_limit: 0,
-          deadline_calculator_class: 'CalendarDays'
+          extension_time_limit: 2, 
+          extension_time_default: 1,
+          deadline_calculator_class: 'CalendarMonths'
       )
     else
       CorrespondenceType.sar

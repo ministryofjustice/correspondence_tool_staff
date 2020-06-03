@@ -143,8 +143,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   def can_add_case?
     clear_failed_checks
-
-    user.manager?
+    check_user_is_a_manager || check_user_can_manage_offender_sar
   end
 
   def can_assign_case?
@@ -302,6 +301,10 @@ class Case::BasePolicy < ApplicationPolicy
     false
   end
 
+  def can_manage_offender_sar?
+    check_user_can_manage_offender_sar
+  end
+
   private
 
   check :user_in_responding_team do
@@ -321,6 +324,9 @@ class Case::BasePolicy < ApplicationPolicy
     check_escalation_deadline_has_expired && check_case_is_in_attachable_state && check_user_is_a_responder_for_case
   end
 
+  check :user_can_manage_offender_sar do
+    user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar)
+  end
 
   check :user_is_assigned_manager_for_case do
     user == self.case.manager

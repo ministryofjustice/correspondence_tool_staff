@@ -1,17 +1,11 @@
 require 'rails_helper'
 
 feature 'When viewing an offender sar case' do
-  given(:manager)         { find_or_create :branston_user }
-  given(:managing_team)   { create :managing_team, managers: [manager] }
+  given(:responder)         { find_or_create :branston_user }
   given(:offender_sar_case) { create(:offender_sar_case).decorate }
 
-  background do
-    find_or_create :team_branston
-    login_as manager
-    cases_page.load
-  end
-
   scenario 'adding a note' do
+    login_as responder
     cases_show_page.load(id: offender_sar_case.id)
 
     expect(cases_show_page).to have_content "Add a note to this case"

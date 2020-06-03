@@ -78,6 +78,8 @@ module Cases
     def transition
       authorize @case, :transition?
 
+      # TODO - review this - why is the list of actions duplicated here?
+      # Why are we redefining the transition method?
       available_actions = %w[
         mark_as_waiting_for_data
         mark_as_ready_for_vetting
@@ -128,7 +130,7 @@ module Cases
     end
 
     def params_for_transition
-      { acting_user: current_user, acting_team: current_user.managing_teams.first }
+      { acting_user: current_user, acting_team: @case.default_managing_team }
     end
 
     def reload_case_page_on_success

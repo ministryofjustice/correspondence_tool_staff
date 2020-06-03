@@ -57,7 +57,7 @@ describe Cases::SarExtensionsController, type: :controller do
             .with(
               user: manager,
               kase: approved_sar,
-              extension_days: '11',
+              extension_period: '11',
               reason: 'need more time'
             )
         )

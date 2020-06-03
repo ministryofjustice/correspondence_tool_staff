@@ -888,7 +888,7 @@ en:
         error: Unable to remove SAR deadline extension
       new:
         extension_period: How long would you like to extend by?
-        extend_further: The deadline for this case will be extended by a further %{num_days} days.
+        extend_further: The deadline for this case will be extended by a further %{time_period_description}.
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals
@@ -901,7 +901,7 @@ en:
     offender_sar:
       subject_heading: Who is the subject?
       requester_heading: Who is making the subject access request?
-      requested_info_heading: What information is being requested?
+      requested_info_heading: Is there other information relevant for this request?
       date_received_heading: When was the SAR received?
       request_info_hint: Use this space to store additional case information
     remove_clearance:
