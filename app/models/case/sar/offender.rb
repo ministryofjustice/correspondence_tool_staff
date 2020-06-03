@@ -47,11 +47,11 @@ class Case::SAR::Offender < Case::Base
                  late_team_id: :integer
 
   enum subject_type: {
-    offender: I18n.t('helpers.label.offender_sar.subject_type.offender'),
-    ex_offender: I18n.t('helpers.label.offender_sar.subject_type.ex_offender'),
-    detainee: I18n.t('helpers.label.offender_sar.subject_type.detainee'),
-    ex_detainee: I18n.t('helpers.label.offender_sar.subject_type.ex_detainee'),
-    probation_service_user: I18n.t('helpers.label.offender_sar.subject_type.probation_service_user'),
+    offender: 'offender',
+    ex_offender: 'ex_offender',
+    detainee: 'detainee',
+    ex_detainee: 'ex_detainee',
+    probation_service_user: 'probation_service_user',
   }
 
   enum reply_method: {
