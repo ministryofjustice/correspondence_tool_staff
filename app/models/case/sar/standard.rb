@@ -177,6 +177,8 @@ class Case::SAR::Standard < Case::Base
     Case::ICO::SAR
   end
 
+  private
+
   def update_deadlines
     if changed.include?('received_date')  && !extended_for_pit?
       self.internal_deadline = deadline_calculator.internal_deadline
@@ -185,8 +187,6 @@ class Case::SAR::Standard < Case::Base
       self.deadline_extended = false
     end
   end
-
-  private
 
   def max_time_limit
     self.correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
