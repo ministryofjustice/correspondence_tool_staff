@@ -49,6 +49,9 @@ class Case::SAR::Offender < Case::Base
   enum subject_type: {
     offender: 'offender',
     ex_offender: 'ex_offender',
+    detainee: 'detainee',
+    ex_detainee: 'ex_detainee',
+    probation_service_user: 'probation_service_user',
   }
 
   enum reply_method: {
