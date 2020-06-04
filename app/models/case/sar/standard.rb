@@ -145,7 +145,7 @@ class Case::SAR::Standard < Case::Base
 
   def reset_deadline!
     self.update!(
-      external_deadline: initial_deadline,
+      external_deadline: deadline_calculator.external_deadline,
       deadline_extended: false,
       extended_times: 0
     )
@@ -175,6 +175,15 @@ class Case::SAR::Standard < Case::Base
 
   def self.ico_model
     Case::ICO::SAR
+  end
+
+  def update_deadlines
+    if changed.include?('received_date')  && !extended_for_pit?
+      self.internal_deadline = deadline_calculator.internal_deadline
+      self.external_deadline = deadline_calculator.external_deadline
+      self.extended_times = 0
+      self.deadline_extended = false
+    end
   end
 
   private
