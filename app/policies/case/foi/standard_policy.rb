@@ -8,7 +8,7 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
 
     # FOIs are visible to anyone logged in to the system
     def resolve
-      if @user.manager? || @user.responder? || @user.approver?
+      if @user.permitted_correspondence_types.include? CorrespondenceType.foi
         @scope
       else
         @scope.none

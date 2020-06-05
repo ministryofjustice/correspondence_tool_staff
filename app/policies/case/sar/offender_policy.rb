@@ -44,4 +44,23 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     clear_failed_checks
     check_user_can_manage_offender_sar
   end
+
+  class Scope
+
+    def initialize(user, scope)
+      @user  = user
+      @scope = scope
+    end
+
+    def resolve
+      if @user.responder?
+        case_ids = Assignment.with_teams(@user.responding_teams).pluck(:case_id)
+        @scope.where(id: case_ids)
+      else
+        @scope.none
+      end
+    end
+
+  end
+
 end
