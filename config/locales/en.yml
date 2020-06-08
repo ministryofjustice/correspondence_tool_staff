@@ -242,7 +242,6 @@ en:
     directorate: Director
     business_unit: Deputy director
 
-
   team_types:
     business_group: Business group
     directorate: Directorate
@@ -470,6 +469,7 @@ en:
         third_party_relationship: Relationship to the subject
         third_party_reference: Requester reference (optional)
         third_party_company_name: Company name (optional)
+        total: Total
       feedback:
         comment: Help make this service better
       search_query:

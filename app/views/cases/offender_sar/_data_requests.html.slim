@@ -38,7 +38,4 @@
 
           / The 'Total' row will only be displayed if more than one data request has been made.
           - if case_details.data_requests.many?
-            tr
-              td.total-label colspan=4 Total
-              td.total-value colspan=2
-                = case_details.data_requests.sum(:cached_num_pages)
+            = render partial: 'shared/table_total_row', locals: { case_details: @case, label_span: '4', value_span: '2' }
