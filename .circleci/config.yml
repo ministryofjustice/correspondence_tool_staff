@@ -13,9 +13,9 @@ references:
           APPLICATION_DEPLOY_NAME: pq
           RAILS_ENV: test
           RACK_ENV: test
-          PG_HOST: 127.0.0.1
+          PGHOST: 127.0.0.1
           PG_PASSWORD: ""
-          PG_USER: postgres
+          PGUSER: postgres
           POSTGRES_DB: correspondence_platform_test
 
       - image: circleci/postgres:9.5-alpine
@@ -250,7 +250,7 @@ workflows:
             - build_and_test
           filters:
             branches:
-              only: master
+              only: CT-2761-circleci
       - deploy_staging_approval:
           type: approval
           requires:
