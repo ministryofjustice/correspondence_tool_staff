@@ -12,9 +12,9 @@ class OffenderSARCaseForm
            :flag_as_high_profile,
            :id,
            :message,
-           :message,
+           :pretty_type,
            :name,
-           :name,
+           :number,
            :object,
            :other_subject_ids,
            :postal_address,
@@ -35,13 +35,19 @@ class OffenderSARCaseForm
            :third_party_company_name,
            :third_party,
            :type_abbreviation,
+           :back_link,
            to: :@case
 
-  attr_reader :case
+  attr_reader :case, :session
 
   def initialize(session)
-    @session = session
-    build_case_from_session
+    if session.is_a? Case::SAR::Offender
+      @case = session
+      @session = {}
+    else
+      @session = session
+      build_case_from_session
+    end
   end
 
   # @todo: Should these steps be defined in 'Steppable' or the controller

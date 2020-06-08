@@ -54,8 +54,11 @@ describe Case::SAR::Offender do
   describe '#subject_type' do
     context 'valid values' do
       it 'does not error' do
-        expect(build(:offender_sar_case, subject_type: 'offender')).to be_valid
+        expect(build(:offender_sar_case, subject_type: 'detainee')).to be_valid
+        expect(build(:offender_sar_case, subject_type: 'ex_detainee')).to be_valid
         expect(build(:offender_sar_case, subject_type: 'ex_offender')).to be_valid
+        expect(build(:offender_sar_case, subject_type: 'offender')).to be_valid
+        expect(build(:offender_sar_case, subject_type: 'probation_service_user')).to be_valid
       end
     end
 
@@ -239,14 +242,6 @@ describe Case::SAR::Offender do
         kase = build :offender_sar_case, third_party: false, third_party_relationship: ''
         expect(kase).to be_valid
       end
-    end
-  end
-
-  describe '#message' do
-    it 'validates presence ' do
-      kase = build :offender_sar_case, message: ''
-      expect(kase).not_to be_valid
-      expect(kase.errors[:message]).to eq ["can't be blank"]
     end
   end
 

@@ -1,5 +1,5 @@
 p.bold-medium
-  | Browse by business group
+  = t('teams.browse_by_business_group')
 
 ul.business-groups.list
   - BusinessGroup.all.order(:name).each do |bg|

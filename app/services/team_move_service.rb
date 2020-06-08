@@ -44,11 +44,19 @@ class TeamMoveService
   private
 
   def move_team!
+    keep_users_for_old_team
     copy_team_to_new_team                      # New team gets temporary name to avoid duplication validation issue
     move_associations_to_new_team
+    move_approver_assignments
     deactivate_old_team                        # Old team name gets amend to include deactivation text
     link_old_team_to_new_team
     restore_new_team_name_to_original_name     # New team gets original team name to retain consistency for the users
+    restore_users_for_old_team
+  end
+
+  def keep_users_for_old_team
+    @keep_user_roles = @team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+    @user_roles = @team.user_roles
   end
 
   def copy_team_to_new_team
@@ -66,9 +74,13 @@ class TeamMoveService
   end
 
   def move_associations_to_new_team
-    Assignment.where(case_id: @team.open_cases.ids, team_id: @team.id).update_all(team_id: @new_team.id)
+    Assignment.where(case_id: @team.assigned_open_cases.ids, team_id: @team.id).update_all(team_id: @new_team.id)
     CaseTransition.where(acting_team: @team).update_all(acting_team_id: @new_team.id)
     CaseTransition.where(target_team: @team).update_all(target_team_id: @new_team.id)
+  end
+
+  def move_approver_assignments
+    @team.assignments.approving.update_all(team_id: @new_team.id)
   end
 
   def deactivate_old_team
@@ -88,5 +100,11 @@ class TeamMoveService
     @new_team.name = @team.original_team_name
     @new_team.code = @new_team.code.sub(/-NEW$/, "") unless @team.code.blank?
     @new_team.save
+  end
+
+  def restore_users_for_old_team
+    @keep_user_roles.each do |ur|
+      TeamsUsersRole.create!(team: Team.find(ur[0]), user: User.find(ur[1]), role: ur[2])
+    end
   end
 end

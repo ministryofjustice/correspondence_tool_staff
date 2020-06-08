@@ -82,6 +82,22 @@ module PageObjects
           element :add_button, '.button-secondary'
         end
 
+        section :offender_sar_subject_details, '.section-subject-details' do
+          element :change_link, 'a'
+        end
+
+        section :offender_sar_requester_details, '.section-requester-details' do
+          element :change_link, 'a'
+        end
+
+        section :offender_sar_requested_info, '.section-requested-heading' do
+          element :change_link, 'a'
+        end
+
+        section :offender_sar_date_received, '.section-date-received' do
+          element :change_link, 'a'
+        end
+
         section :case_history,
                 PageObjects::Sections::Cases::CaseHistorySection, '#case-history'
 

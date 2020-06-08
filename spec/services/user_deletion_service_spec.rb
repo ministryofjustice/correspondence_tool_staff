@@ -99,5 +99,33 @@ describe UserDeletionService do
         end
       end
     end
+
+    context 'user is a member of one team that has incarnations' do
+      let(:target_dir) { find_or_create :directorate }
+      let(:team_move_service) { TeamMoveService.new(team, target_dir) }
+      let(:new_team) { team_move_service.new_team }
+      let(:service) { UserDeletionService.new({ id: responder.id, team_id: new_team.id }, manager) }
+      let(:responder)     { new_team.responders.first }
+
+      before(:each) do
+        team_move_service.call
+      end
+
+      it 'updates the deleted_at column' do
+        service.call
+        expect(responder.reload.deleted_at).not_to be nil
+      end
+
+      it 'returns :ok' do
+        service.call
+        expect(service.result).to eq(:ok)
+      end
+
+      it 'deletes the teams users role' do
+        expect(responder.team_roles.size).to eq 2
+        service.call
+        expect(responder.reload.team_roles.size).to eq 0
+      end
+    end
   end
 end

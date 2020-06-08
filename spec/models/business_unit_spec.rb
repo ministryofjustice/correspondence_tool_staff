@@ -109,17 +109,17 @@ RSpec.describe BusinessUnit, type: :model do
 
     describe 'managing scope' do
       it 'returns only managing teams' do
-        expect(BusinessUnit.managing).to match_array [
-                                           managing_team,
-                                           branston_team
-                                         ]
+        expect(BusinessUnit.managing).to match_array [managing_team]
       end
     end
 
     describe 'responding scope' do
       it 'returns only responding teams' do
-        expect(BusinessUnit.responding)
-          .to match_array [foi_responding_team, sar_responding_team]
+        expect(BusinessUnit.responding).to match_array [
+                                             foi_responding_team,
+                                             sar_responding_team,
+                                             branston_team
+                                           ]
       end
     end
 
@@ -131,6 +131,17 @@ RSpec.describe BusinessUnit, type: :model do
                                             BusinessUnit.dacu_disclosure,
                                             approving_team
                                           ]
+      end
+    end
+
+    describe 'active scope' do
+      it 'returns only teams that are not deactivated' do
+        expect(BusinessUnit.responding.active.count).to eq 3
+        foi_responding_team.update_attribute(:deleted_at, Time.now)
+        expect(BusinessUnit.responding.active).to match_array [
+                                                    sar_responding_team,
+                                                    branston_team
+                                                  ]
       end
     end
   end
@@ -317,5 +328,159 @@ RSpec.describe BusinessUnit, type: :model do
 
   end
 
+  describe '#previous_teams' do
+    context 'when a team has never moved' do
+      it 'returns empty array' do
+        current_team = create :business_unit
+        expect(current_team.previous_teams).to be_empty
+      end
+    end
 
+    context 'when a team has been moved once' do
+      let(:original_dir) { find_or_create :directorate }
+      let(:target_dir) { find_or_create :directorate }
+
+      let(:previous_team) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+        )
+      }
+
+      it 'returns team moved-from' do
+        service = TeamMoveService.new(previous_team, target_dir)
+        service.call
+        current_team = service.new_team
+        expect(current_team.previous_teams).to match_array [previous_team]
+      end
+    end
+
+    context 'when a team has been moved twice' do
+      let(:original_dir) { find_or_create :directorate }
+      let(:first_target_dir) { find_or_create :directorate }
+      let(:second_target_dir) { find_or_create :directorate }
+      let(:business_unit_to_move) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+        )
+      }
+
+      it 'tracks all history' do
+        first_team = business_unit_to_move
+        service = TeamMoveService.new(first_team, first_target_dir)
+        service.call
+        second_team = service.new_team
+
+        # pause momentarily to let the database catch up
+        sleep 1
+
+        service = TeamMoveService.new(second_team, second_target_dir)
+        service.call
+
+        third_team = service.new_team
+
+        expect(third_team.previous_teams).to match_array [first_team, second_team]
+      end
+    end
+
+    context 'when a team has been joined' do
+      let(:original_dir) { find_or_create :directorate }
+      let(:first_target_dir) { find_or_create :directorate }
+      let(:second_target_dir) { find_or_create :directorate }
+      let(:business_unit_to_move) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+          )
+      }
+      let(:business_unit_for_history) {
+        find_or_create(
+          :business_unit,
+          directorate: original_dir,
+          )
+      }
+      let(:responder) { create(:foi_responder, responding_teams: [business_unit_for_history]) }
+      let(:responder) { create(:foi_responder, responding_teams: [business_unit]) }
+      let(:business_unit) {
+        find_or_create(
+            :business_unit,
+            name: 'Business Unit name',
+            directorate: original_dir,
+            code: 'ABC'
+        )
+      }
+      let(:params) do
+        ActiveSupport::HashWithIndifferentAccess.new(
+            {
+                'full_name' => 'Bob Dunnit',
+                'email' => 'bd@moj.com'
+            }
+        )
+      end
+
+      let(:params_joe) do
+        ActiveSupport::HashWithIndifferentAccess.new(
+            {
+                'full_name' => 'Joe Didit',
+                'email' => 'jd@moj.com'
+            }
+        )
+      end
+
+      let(:new_user_service) { UserCreationService.new(team: business_unit, params: params)}
+
+      it 'tracks all ancestors of team' do
+        first_team = business_unit_to_move
+        service = TeamMoveService.new(first_team, first_target_dir)
+        service.call
+        second_team = service.new_team
+
+        # pause momentarily to let the database catch up
+        sleep 1
+
+        service = TeamMoveService.new(second_team, second_target_dir)
+        service.call
+
+        third_team = service.new_team
+        # create another team, with history into third team
+        fourth_team = business_unit_for_history
+        service = TeamMoveService.new(fourth_team, first_target_dir)
+        service.call
+        fifth_team = service.new_team
+
+        service = TeamJoinService.new(fifth_team, third_team)
+        service.call
+        expect(third_team.previous_teams).to match_array [first_team, second_team, fourth_team, fifth_team]
+      end
+
+      let(:joining_team) { create(:responding_team, name: "Joining Team") }
+      let(:original_target_team) { create(:responding_team, name: "Target Team") }
+
+      it 'assigns current and historic user roles for teams with history' do
+        joining_team_user = joining_team.users.first
+        original_target_team_user = original_target_team.users.first
+
+        service = TeamMoveService.new(original_target_team, first_target_dir)
+        service.call
+        target_team = service.new_team
+
+        service = TeamJoinService.new(joining_team, target_team)
+        service.call
+
+        expect(target_team.reload.responders).to match_array [joining_team_user, original_target_team_user]
+
+        expect(original_target_team_user.reload.teams).to match_array [
+          original_target_team, target_team, joining_team
+        ]
+
+        expect(joining_team_user.reload.teams).to match_array [
+          original_target_team, target_team, joining_team
+        ]
+
+        historic_teams = target_team.reload.historic_user_roles.collect {|t| t.team }.uniq
+        expect(historic_teams).to match_array [original_target_team, joining_team]
+      end
+    end
+  end
 end

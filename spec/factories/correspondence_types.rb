@@ -28,8 +28,10 @@ FactoryBot.define do
     abbreviation { 'SAR' }
     escalation_time_limit { 3 }
     internal_time_limit { 10 }
-    external_time_limit { 30 }
-    deadline_calculator_class { 'CalendarDays' }
+    external_time_limit { 1 }
+    extension_time_limit { 2 }
+    extension_time_default { 1 }
+    deadline_calculator_class { 'CalendarMonths' }
     report_category_name { 'SAR report' }
 
 
@@ -41,8 +43,8 @@ FactoryBot.define do
     abbreviation { 'OFFENDER_SAR' }
     escalation_time_limit { 3 }
     internal_time_limit { 10 }
-    external_time_limit { 30 }
-    deadline_calculator_class { 'CalendarDays' }
+    external_time_limit { 1 }
+    deadline_calculator_class { 'CalendarMonths' }
     report_category_name { 'Offender SAR report' }
 
 
@@ -72,6 +74,8 @@ FactoryBot.define do
   factory :overturned_sar_correspondence_type, parent: :sar_correspondence_type do
     name { 'Overturned ICO appeal (SAR)' }
     abbreviation { 'OVERTURNED_SAR' }
+    external_time_limit { 30 }
+    deadline_calculator_class { 'CalendarDays' }
     report_category_name { '' }
   end
 
@@ -87,5 +91,9 @@ FactoryBot.define do
 
   trait :calendar_days do
     deadline_calculator_class { 'CalendarDays' }
+  end
+
+  trait :calendar_month do
+    deadline_calculator_class { 'CalendarMonths' }
   end
 end

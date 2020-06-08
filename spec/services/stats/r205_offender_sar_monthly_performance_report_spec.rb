@@ -50,7 +50,7 @@ module Stats
       context 'unassigned cases' do
         it 'is calculated as an open case' do
           Timecop.freeze Time.new(2019, 6, 30, 12, 0, 0) do
-            pending "This fails when the analyzer runs because assign_responder_transitions is nil in business_unit_already_late?"
+            # pending "This fails when the analyzer runs because assign_responder_transitions is nil in business_unit_already_late?"
             late_unassigned_trigger_sar_case = create(
               :offender_sar_case,
               flag_as_high_profile: true,

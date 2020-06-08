@@ -221,46 +221,37 @@ RSpec.describe User, type: :model do
   end
 
   describe '#multiple_team_member?' do
+    let(:foi_responding_team) { find_or_create :foi_responding_team }
 
     it 'returns false for a user with one team' do
       expect(responder.multiple_team_member?).to be false
     end
-    it 'returns true for a user with mulitple teams' do
-      team = create :responding_team, name: 'User Creation Team'
-      existing_user = User.new(full_name: 'danny driver', email: 'dd@moj.com', password: 'theresamaynotlast')
-      existing_user.team_roles << TeamsUsersRole.new(team: team, role: 'responder')
-      team_2 = BusinessUnit.create(name: 'UCT 2', parent_id: team.parent_id, role: 'responder')
-      existing_user.team_roles << TeamsUsersRole.new(team: team_2, role: 'responder')
-      existing_user.save!
-      expect(existing_user.multiple_team_member?).to be true
+
+    it 'returns true for a user with multiple teams' do
+      expect(responder.multiple_team_member?).to be false
+      responder.team_roles << TeamsUsersRole.new(team: foi_responding_team, role: 'responder')
+      expect(responder.multiple_team_member?).to be true
     end
   end
 
   describe '#permitted_correspondence_types' do
     it 'returns any correspondence types associated with users teams' do
       expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, sar, overturned_foi, overturned_sar, offender_sar])
+        .to match_array([foi, ico, sar, overturned_foi, overturned_sar])
     end
 
     it 'does not include SAR if that feature is disabled' do
       disable_feature(:sars)
 
       expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, overturned_foi, offender_sar])
+        .to match_array([foi, ico, overturned_foi])
     end
 
     it 'does not include ICO if that feature is disabled' do
       disable_feature(:ico)
 
       expect(manager.permitted_correspondence_types)
-        .to match_array([foi, sar, overturned_foi, overturned_sar, offender_sar])
-    end
-
-    it 'does not include Offender SAR if that feature is disabled' do
-      disable_feature(:offender_sars)
-
-      expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, sar, overturned_foi, overturned_sar])
+        .to match_array([foi, sar, overturned_foi, overturned_sar])
     end
   end
 

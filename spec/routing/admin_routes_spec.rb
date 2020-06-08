@@ -28,7 +28,7 @@ describe 'admin routes', type: :routing do
       it 'loads cases' do
         login_as admin
         get '/admin/cases'
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 

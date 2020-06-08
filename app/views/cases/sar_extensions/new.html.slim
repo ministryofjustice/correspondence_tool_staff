@@ -31,17 +31,17 @@ br
         span.form-label-bold
           = t('.extension_period')
         .multiple-choice
-          input type="radio" value="30" checked="checked" name="case[extension_period]" id="case_extension_period_30"
-          label for="case_extension_period_30"
-            | 30 days
+          input type="radio" value="#{@case.extension_time_default}" checked="checked" name="case[extension_period]" id="case_extension_period_#{@case.extension_time_default}"
+          label for="case_extension_period_#{@case.extension_time_default}" 
+             = @case.time_period_description(@case.extension_time_default)
         .multiple-choice
-          input type="radio" value="60" name="case[extension_period]" id="case_extension_period_60"
-          label for="case_extension_period_60"
-            | 60 days
+          input type="radio" value="#{@case.extension_time_limit}" name="case[extension_period]" id="case_extension_period_#{@case.extension_time_limit}"
+          label for="case_extension_period_#{@case.extension_time_limit}" 
+             = @case.time_period_description(@case.extension_time_limit)
   - else
-    input type="hidden" value="30" name="case[extension_period]"
+    input type="hidden" value="#{@case.extension_time_default}" name="case[extension_period]"
     p
-      = t('.extend_further', num_days: 30)
+      = t('.extend_further', time_period_description: @case.time_period_description(@case.extension_time_default))
 
   .form-group
     = f.text_area :reason_for_extending

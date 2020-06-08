@@ -25,12 +25,15 @@ class CorrespondenceType < ApplicationRecord
                  default_press_officer: :string,
                  default_private_officer: :string,
                  report_category_name: [:string, default: ''],
+                 extension_time_limit: :integer,
+                 extension_time_default:  :integer,
                  show_on_menu: [:boolean, default: true]
 
 
   enum deadline_calculator_class: {
          'BusinessDays' => 'BusinessDays',
          'CalendarDays' => 'CalendarDays',
+         'CalendarMonths' => 'CalendarMonths',
        }
 
   validates_presence_of :name,
@@ -91,7 +94,8 @@ class CorrespondenceType < ApplicationRecord
   end
 
   def self.by_report_category
-    CorrespondenceType.properties_where_not(report_category_name: '').properties_order(:report_category_name)
+    # CorrespondenceType.properties_where_not(report_category_name: '').properties_order(:report_category_name)
+    CorrespondenceType.properties_where_not(report_category_name: '').order(Arel.sql("(correspondence_types.properties -> 'report_category_name') asc"))
   end
 
   def self.foi

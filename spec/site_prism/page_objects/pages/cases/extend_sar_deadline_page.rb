@@ -14,8 +14,8 @@ module PageObjects
 
         element :copy, '.action-copy'
 
-        element :extension_period_30_days,  '#case_extension_period_30'
-        element :extension_period_60_days,  '#case_extension_period_60'
+        element :extension_period_1_calendar_month,  '#case_extension_period_1'
+        element :extension_period_2_calendar_months,  '#case_extension_period_2'
         element :reason_for_extending,      '#case_reason_for_extending'
 
         element :submit_button, '.button'

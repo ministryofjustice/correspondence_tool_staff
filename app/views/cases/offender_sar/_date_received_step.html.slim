@@ -1,14 +1,9 @@
-= link_to "Back", "/cases/offender_sars/requested-info", class: 'govuk-back-link'
-
 - content_for :heading, flush: true
   = t('cases.offender_sar.date_received_heading')
 
-- content_for :sub_heading, flush: true
-  = t("cases.new.offender_sar.sub_heading")
-
 = render partial: 'layouts/header'
 
-= form_for @case, url: case_create_action(@case.object), as: :offender_sar do |f|
+= form_for @case, url: url, as: :offender_sar do |f|
 
   .form-group
     = f.gov_uk_date_field :received_date, { \

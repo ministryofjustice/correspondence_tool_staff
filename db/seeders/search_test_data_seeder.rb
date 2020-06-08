@@ -15,7 +15,7 @@ class SearchTestDataSeeder
 
   def create_case
     creator = User.all.sample
-    params = HashWithIndifferentAccess.new({
+    params = ActiveSupport::HashWithIndifferentAccess.new({
                type: select_type,
                name: select_name,
                email: select_email,

@@ -186,3 +186,12 @@ a.govuk-back-link {
     margin: auto;
   }
 }
+
+.confirm-and-cancel {
+  padding-top: $gutter;
+
+  a {
+    display: inline-block;
+    padding: 10px 0 0 25px;
+  }
+}

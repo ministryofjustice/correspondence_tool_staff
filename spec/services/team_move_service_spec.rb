@@ -4,6 +4,7 @@ describe TeamMoveService do
   let(:original_dir) { find_or_create :directorate }
   let(:target_dir) { find_or_create :directorate }
   let(:responder) { create(:foi_responder, responding_teams: [business_unit]) }
+
   let(:service) { TeamMoveService.new(business_unit, target_dir) }
   let(:business_unit) {
     find_or_create(
@@ -13,6 +14,16 @@ describe TeamMoveService do
         code: 'ABC'
     )
   }
+  let(:params) do
+    ActiveSupport::HashWithIndifferentAccess.new(
+        {
+            'full_name' => 'Bob Dunnit',
+            'email' => 'bd@moj.com'
+        }
+    )
+  end
+
+  let(:second_user_service) { UserCreationService.new(team: business_unit, params: params) }
   let!(:kase) {
     create(
       :case_being_drafted,
@@ -66,20 +77,20 @@ describe TeamMoveService do
         expect(service.new_team.directorate).to eq target_dir
       end
 
-      it 'moves team users to the new team, and removes them from the original team' do
+      it 'moves team users to the new team' do
         expect(business_unit.users).to match_array [responder]
         service.call
 
         expect(service.new_team.users).to match_array [responder]
-        expect(business_unit.users).to be_empty
       end
 
-      it 'moves team user_roles to the new team, and removes them from the original team' do
-        team_user_role = business_unit.user_roles.first
+      it 'does not remove them from the original team' do
+        second_user_service.call
+        retained_user_roles = business_unit.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
         service.call
-
-        expect(service.new_team.user_roles.first).to eq team_user_role
-        expect(business_unit.reload.user_roles).to be_empty
+        new_user_roles = business_unit.reload.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+        expect(new_user_roles).to include retained_user_roles[0]
+        expect(new_user_roles).to include retained_user_roles[1]
       end
 
       it 'sets old team to deleted' do
@@ -95,9 +106,26 @@ describe TeamMoveService do
         expect(service.new_team.name).to eq business_unit.original_team_name
       end
 
-      it 'moves properties to the new team'
-      it 'moves correspondence type roles to the new team'
-      it 'ensures the new team has the same code as the old team'
+      it 'moves properties to the new team' do
+        properties = business_unit.properties.pluck :id
+        service.call
+
+        expect(service.new_team.properties.pluck :id).to match_array properties
+      end
+
+      it 'moves correspondence type roles to the new team' do
+        correspondence_type_roles = business_unit.correspondence_type_roles.pluck :id
+        service.call
+
+        expect(service.new_team.correspondence_type_roles.pluck :id).to match_array correspondence_type_roles
+      end
+
+      it 'ensures the new team has the same code as the old team' do
+        code = business_unit.code
+        service.call
+
+        expect(service.new_team.code).to eq code
+      end
 
       context 'when the team being moved has open cases' do
         it 'moves open cases to the new team and removes them from the original team' do
@@ -114,8 +142,8 @@ describe TeamMoveService do
           # using factory :case_being_drafted, the case has TWO transitions,
           # One for the transition to drafted,
           # and one for the current _being drafted_ state (in the second, the target team is nill)
-          expect(kase.transitions.first.target_team_id).to eq service.new_team.id
-          expect(kase.transitions.second.acting_team_id).to eq service.new_team.id
+          expect(kase.transitions.second.target_team_id).to eq service.new_team.id
+          expect(kase.transitions.third.acting_team_id).to eq service.new_team.id
         end
       end
 
@@ -134,7 +162,7 @@ describe TeamMoveService do
           code = business_unit.code
           service.call
 
-          expect(business_unit.reload.code).to eq "#{code}-OLD"
+          expect(business_unit.reload.code).to eq "#{code}-OLD-#{business_unit.id}"
           expect(service.new_team.code).to eq code
         end
       end
@@ -162,6 +190,53 @@ describe TeamMoveService do
           service.call
 
           expect(kase.reload.approving_teams).to eq [BusinessUnit.dacu_disclosure]
+        end
+      end
+
+      context 'when the team being moved has responded cases' do
+        let(:responded_kase) {
+          create(
+            :responded_case,
+              responding_team: business_unit,
+              responder: responder
+          )
+        }
+
+        it 'moves the open and responded cases' do
+          expect(business_unit.cases).to match_array [
+            kase,
+            klosed_kase,
+            responded_kase
+          ]
+          service.call
+          expect(business_unit.cases.reload).to match_array [klosed_kase]
+          expect(service.new_team.cases).to match_array [
+            kase,
+            responded_kase
+          ]
+        end
+      end
+
+      context 'when the team being moved is an approver team' do
+        let(:kase) { create(:responded_ico_foi_case) }
+        let(:disclosure_team) { BusinessUnit.dacu_disclosure }
+        let(:business_unit) { disclosure_team }
+        let(:disclosure_user) { disclosure_team.users.first }
+
+        it 'it moves approver assignments to new team and users are preserved' do
+          create :case_transition_respond_to_ico, case: kase
+          kase.assignments.create(team: disclosure_team, user: disclosure_user, role: "approving")
+          assignments = kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure)
+
+          existing_approver_assignments_count = assignments.count
+          expect(assignments.first.user).to eq disclosure_user
+          expect(assignments.count).to eq existing_approver_assignments_count
+
+          service.call
+
+          assignments = kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure)
+          expect(assignments.first.user).to eq disclosure_user
+          expect(assignments.count).to eq existing_approver_assignments_count
         end
       end
     end

@@ -10,7 +10,8 @@ h1.page-heading
   span.page-heading--secondary
     = "#{@case.number}"
   span.page-heading--primary
-    | Download acknowledgement letter
+    - @letter.template_name[0] = @letter.template_name[0].downcase
+    | Download #{@letter.template_name}
 
 hr
 
@@ -23,24 +24,12 @@ section.letter--from-section
   p
     | Date: #{Date.today.strftime('%e %b %Y')}
 
-
 p
   | #{@case.name} <br>
-  | #{@case.third_party_company_name} <br>
+  - if @case.third_party_company_name.present?
+    | #{@case.third_party_company_name} <br>
   | #{simple_format @case.postal_address, {}, wrapper_tag: 'span'}
 
-
 = raw @letter.body
-
-p
-  | Yours sincerely
-
-
-
-p
-  | Application Team <br>
-  | Data Protection Compliance Team <br>
-  | Ministry of Justice <br>
-
 
 = link_to "Save as Word", url_for(format: "docx", letter: {letter_template_id: @letter.letter_template_id} ), class: "button"

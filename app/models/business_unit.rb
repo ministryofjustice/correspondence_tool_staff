@@ -71,11 +71,13 @@ class BusinessUnit < Team
            source: :case
 
   has_many :open_cases, -> { in_open_state }, through: :pending_accepted_assignments, source: :case
+  has_many :assigned_open_cases, -> { in_open_or_responded_state }, through: :pending_accepted_assignments, source: :case
 
 
   scope :managing, -> { where(role: 'manager') }
   scope :approving, -> { where(role: 'approver') }
   scope :responding, -> { where(role: 'responder') }
+  scope :active, -> { where(deleted_at: nil) }
 
   after_save :update_search_index
 
@@ -148,10 +150,35 @@ class BusinessUnit < Team
     users.any?
   end
 
+  def previous_team_ids
+    previous_teams.pluck :id
+  end
+
+  def previous_teams
+    teams = []
+    previous_teams = previous_incarnations(id)
+    while previous_teams.count() > 0 do
+      previous_teams.each do |previous_team|
+        teams << previous_team
+        # Add all the immediately previous incarnations of the team, remove the current
+        previous_teams = previous_teams + previous_incarnations(previous_team) - [previous_team]
+      end
+    end
+    teams
+  end
+
+  def historic_user_roles
+    TeamsUsersRole.where(team_id: previous_team_ids)
+  end
+
   private
 
+  def previous_incarnations(id)
+    Team.where(moved_to_unit_id: id)
+  end
+
   def update_search_index
-    if changed.include?('name')
+    if saved_changes.include?('name')
       SearchIndexBuNameUpdaterJob.set(wait: 10.seconds).perform_later(self.id)
     end
   end
@@ -161,11 +188,6 @@ class BusinessUnit < Team
       if open_cases.any?
         errors.add(:base, "Unable to deactivate: this business unit has open cases")
       end
-
-      if users.any?
-        errors.add(:base, "Unable to deactivate: this business unit has team members")
-      end
-
     end
   end
 

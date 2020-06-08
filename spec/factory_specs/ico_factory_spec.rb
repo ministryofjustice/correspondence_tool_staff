@@ -34,7 +34,7 @@ describe 'ICO cases factory' do
           expect(managing_assignment.team).to eq disclosure_bmt
           expect(managing_assignment.role).to eq 'managing'
 
-          expect(kase.transitions.size).to eq 1
+          expect(kase.transitions.size).to eq 2
         end
       end
     end
@@ -51,7 +51,7 @@ describe 'ICO cases factory' do
           expect(responding_assignment.user).to be_nil
           expect(responding_assignment.state).to eq 'pending'
 
-          expect(kase.transitions.size).to eq 2
+          expect(kase.transitions.size).to eq 3
           transition = kase.transitions.last
           expect(transition.event).to eq 'assign_responder'
           expect(transition.acting_team_id).to eq disclosure_bmt.id
@@ -72,7 +72,7 @@ describe 'ICO cases factory' do
         expect(responding_assignment.user).to eq responder
         expect(responding_assignment.state).to eq 'accepted'
 
-        expect(kase.transitions.size).to eq 3
+        expect(kase.transitions.size).to eq 4
         transition = kase.transitions.last
         expect(transition.event).to eq 'accept_responder_assignment'
         expect(transition.acting_team_id).to eq responding_team.id
@@ -97,7 +97,7 @@ describe 'ICO cases factory' do
         expect(approving_assignment.user).to eq disclosure_specialist
         expect(approving_assignment.state).to eq 'accepted'
 
-        expect(kase.transitions.size).to eq 4
+        expect(kase.transitions.size).to eq 5
         transition = kase.transitions.last
 
         expect(transition.event).to eq 'add_responses'
@@ -118,7 +118,7 @@ describe 'ICO cases factory' do
         expect(kase.current_state).to eq 'awaiting_dispatch'
         expect(kase.assignments.size).to eq 3
 
-        expect(kase.transitions.size).to eq 5
+        expect(kase.transitions.size).to eq 6
         transition = kase.transitions.last
         expect(transition.event).to eq 'approve'
         expect(transition.acting_team_id).to eq disclosure_team.id
@@ -139,7 +139,7 @@ describe 'ICO cases factory' do
         expect(kase.assignments.size).to eq 3
         expect(kase.date_responded).to eq Date.today
 
-        expect(kase.transitions.size).to eq 6
+        expect(kase.transitions.size).to eq 7
         transition = kase.transitions.last
         expect(transition.event).to eq 'respond'
         expect(transition.acting_team_id).to eq disclosure_team.id
@@ -176,7 +176,7 @@ describe 'ICO cases factory' do
           expect(managing_assignment.team).to eq disclosure_bmt
           expect(managing_assignment.role).to eq 'managing'
 
-          expect(kase.transitions.size).to eq 1
+          expect(kase.transitions.size).to eq 2
         end
       end
     end
@@ -193,7 +193,7 @@ describe 'ICO cases factory' do
           expect(responding_assignment.user).to be_nil
           expect(responding_assignment.state).to eq 'pending'
 
-          expect(kase.transitions.size).to eq 2
+          expect(kase.transitions.size).to eq 3
           transition = kase.transitions.last
           expect(transition.event).to eq 'assign_responder'
           expect(transition.acting_team_id).to eq disclosure_bmt.id
@@ -214,7 +214,7 @@ describe 'ICO cases factory' do
         expect(responding_assignment.user).to eq responder
         expect(responding_assignment.state).to eq 'accepted'
 
-        expect(kase.transitions.size).to eq 3
+        expect(kase.transitions.size).to eq 4
         transition = kase.transitions.last
         expect(transition.event).to eq 'accept_responder_assignment'
         expect(transition.acting_team_id).to eq responding_team.id
@@ -241,7 +241,7 @@ describe 'ICO cases factory' do
         expect(approving_assignment.user).to eq disclosure_specialist
         expect(approving_assignment.state).to eq 'accepted'
 
-        expect(kase.transitions.size).to eq 4
+        expect(kase.transitions.size).to eq 5
         transition = kase.transitions.last
         expect(transition.event).to eq 'progress_for_clearance'
         expect(transition.acting_team_id).to eq responding_team.id
@@ -261,7 +261,7 @@ describe 'ICO cases factory' do
         expect(kase.current_state).to eq 'awaiting_dispatch'
         expect(kase.assignments.size).to eq 3
 
-        expect(kase.transitions.size).to eq 5
+        expect(kase.transitions.size).to eq 6
         transition = kase.transitions.last
         expect(transition.event).to eq 'approve'
         expect(transition.acting_team_id).to eq disclosure_team.id
@@ -284,7 +284,7 @@ describe 'ICO cases factory' do
         expect(kase.current_state).to eq 'responded'
         expect(kase.assignments.size).to eq 3
 
-        expect(kase.transitions.size).to eq 6
+        expect(kase.transitions.size).to eq 7
         transition = kase.transitions.last
         expect(transition.event).to eq 'respond'
         expect(transition.acting_team_id).to eq disclosure_team.id
@@ -306,7 +306,7 @@ describe 'ICO cases factory' do
         expect(kase.current_state).to eq 'closed'
         expect(kase.assignments.size).to eq 3
 
-        expect(kase.transitions.size).to eq 7
+        expect(kase.transitions.size).to eq 8
         transition = kase.transitions.last
         expect(transition.event).to eq 'close'
         expect(transition.acting_team_id).to eq disclosure_bmt.id

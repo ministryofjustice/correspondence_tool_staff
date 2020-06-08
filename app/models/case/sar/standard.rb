@@ -59,7 +59,10 @@ class Case::SAR::Standard < Case::Base
                  reply_method: :string,
                  late_team_id: :integer,
                  date_draft_compliant: :date,
-                 deadline_extended: [:boolean, default: false]
+                 # indicate whether the deadline has been extended
+                 deadline_extended: [:boolean, default: false],
+                 # indicate how long has been extended so far in time units
+                 extended_times: :integer
 
   attr_accessor :missing_info
 
@@ -132,24 +135,34 @@ class Case::SAR::Standard < Case::Base
     end
   end
 
-  def extend_deadline!(new_deadline)
+  def extend_deadline!(new_deadline, new_extended_times)
     self.update!(
       external_deadline: new_deadline,
-      deadline_extended: true
+      deadline_extended: true,
+      extended_times: new_extended_times
     )
   end
 
   def reset_deadline!
     self.update!(
-      external_deadline: initial_deadline,
-      deadline_extended: false
+      external_deadline: deadline_calculator.external_deadline,
+      deadline_extended: false,
+      extended_times: 0
     )
   end
 
-  # SARs extensions are based on calendar days not working days
+  # The deadlines are all calculated based on the date case is received
   def max_allowed_deadline_date
-    initial_deadline + Settings.sar_extension_limit.to_i.days
+    deadline_calculator.max_allowed_deadline_date(max_time_limit)
   end
+
+  def extension_time_limit
+    self.correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
+  end 
+
+  def extension_time_default
+    self.correspondence_type.extension_time_default || Settings.sar_extension_default_time_gap
+  end 
 
   def self.factory(type)
     case type&.downcase
@@ -165,6 +178,19 @@ class Case::SAR::Standard < Case::Base
   end
 
   private
+
+  def update_deadlines
+    if changed.include?('received_date')  && !extended_for_pit?
+      self.internal_deadline = deadline_calculator.internal_deadline
+      self.external_deadline = deadline_calculator.external_deadline
+      self.extended_times = 0
+      self.deadline_extended = false
+    end
+  end
+
+  def max_time_limit
+    self.correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
+  end 
 
   def use_subject_as_requester
     self.name = self.subject_full_name

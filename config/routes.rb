@@ -73,7 +73,8 @@ Rails.application.routes.draw do
     resources :offender_sars, only: only, controller: 'offender_sar', as: :case_sar_offender do
       get 'cancel', on: :collection
       get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
-
+      get '/edit/:step', on: :member, to: 'offender_sar#edit', as: 'edit_step'
+      post '/update', on: :member, to: 'offender_sar#update', as: 'update_step'
       member do
         patch '/transitions/:transition_name', to: 'offender_sar#transition', as: :transition
       end
@@ -205,7 +206,11 @@ Rails.application.routes.draw do
     patch 'update_business_area' => 'teams#update_business_area', on: :member
     get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
     get 'move_to_directorate' => 'teams#move_to_directorate', on: :member
-    patch 'update_directorate' => 'teams#update_directorate', on: :member
+    get 'move_to_directorate_form' => 'teams#move_to_directorate_form', on: :member
+    post 'update_directorate' => 'teams#update_directorate', on: :member
+    get 'join_teams' => 'teams#join_teams', on: :member
+    get 'join_teams_form' => 'teams#join_teams_form', on: :member
+    post 'join_teams' => 'teams#join_target_team', on: :member
   end
 
   authenticated :user, ->(u) { u.admin? } do

@@ -79,6 +79,29 @@ RSpec.describe Case::Base, type: :model do
     it { should validate_presence_of(:type)          }
   end
 
+  describe 'a default transition is created after a case is created' do 
+    shared_examples 'case has default transition' do |case_type|
+      let(:created_case) { create case_type } 
+      it "default transition for #{case_type}" do
+          expect(created_case.transitions.size).to be >= 1
+          expect(created_case.transitions.first.event).to eq "create"
+      end
+    end
+
+    describe "default transition" do 
+      case_types = [:sar_case, 
+                    :offender_sar_case, 
+                    :foi_case, 
+                    :ico_foi_case, 
+                    :ico_sar_case, 
+                    :overturned_ico_foi, 
+                    :overturned_ico_sar]
+      case_types.each do |case_type|
+        include_examples 'case has default transition', case_type
+      end
+    end 
+  end 
+
   context 'deleting' do
     it 'is not valid without a reason' do
       expect(build(:case, deleted: true)).not_to be_valid
@@ -726,12 +749,13 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#transitions.most_recent' do
     it 'returns the one transition that has the most recent flag set to true' do
-      expect(case_being_drafted_trigger.transitions.size).to eq 4
+      expect(case_being_drafted_trigger.transitions.size).to eq 5
       expect(case_being_drafted_trigger.transitions[0].most_recent).to be false
       expect(case_being_drafted_trigger.transitions[1].most_recent).to be false
       expect(case_being_drafted_trigger.transitions[2].most_recent).to be false
-      expect(case_being_drafted_trigger.transitions[3].most_recent).to be true
-      expect(case_being_drafted_trigger.transitions.most_recent).to eq case_being_drafted_trigger.transitions[3]
+      expect(case_being_drafted_trigger.transitions[3].most_recent).to be false
+      expect(case_being_drafted_trigger.transitions[4].most_recent).to be true
+      expect(case_being_drafted_trigger.transitions.most_recent).to eq case_being_drafted_trigger.transitions[4]
     end
   end
 
@@ -1313,7 +1337,7 @@ RSpec.describe Case::Base, type: :model do
       it 'returns business days calculator' do
         deadline_calculator = kase.deadline_calculator
         expect(deadline_calculator)
-          .to be_an_instance_of DeadlineCalculator::CalendarDays
+          .to be_an_instance_of DeadlineCalculator::CalendarMonths
         expect(deadline_calculator.kase).to eq kase
       end
     end

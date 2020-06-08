@@ -33,7 +33,7 @@ describe 'Overturned ICO SAR cases factory' do
             expect(managing_assignment.team).to eq disclosure_bmt
             expect(managing_assignment.role).to eq 'managing'
 
-            expect(kase.transitions.size).to eq 0
+            expect(kase.transitions.size).to eq 1
           end
         end
       end
@@ -51,7 +51,7 @@ describe 'Overturned ICO SAR cases factory' do
             expect(responding_assignment.user).to be_nil
             expect(responding_assignment.state).to eq 'pending'
 
-            expect(kase.transitions.size).to eq 1
+            expect(kase.transitions.size).to eq 2
             transition = kase.transitions.last
             expect(transition.event).to eq 'assign_responder'
             expect(transition.acting_team_id).to eq disclosure_bmt.id
@@ -73,7 +73,7 @@ describe 'Overturned ICO SAR cases factory' do
           expect(responding_assignment.user).to eq responder
           expect(responding_assignment.state).to eq 'accepted'
 
-          expect(kase.transitions.size).to eq 2
+          expect(kase.transitions.size).to eq 3
           transition = kase.transitions.last
           expect(transition.event).to eq 'accept_responder_assignment'
           expect(transition.acting_team_id).to eq responding_team.id
@@ -96,7 +96,7 @@ describe 'Overturned ICO SAR cases factory' do
             expect(kase.current_state).to eq 'closed'
             expect(kase.assignments.size).to eq 2
 
-            expect(kase.transitions.size).to eq 4
+            expect(kase.transitions.size).to eq 5
             transition = kase.transitions.last
             expect(transition.event).to eq 'close'
             expect(transition.acting_team_id).to eq responding_team.id
@@ -193,8 +193,8 @@ describe 'Overturned ICO SAR cases factory' do
             expect(responding_assignment.user).to be_nil
             expect(responding_assignment.state).to eq 'pending'
 
-            expect(kase.transitions.size).to eq 3
-            transition = kase.transitions.first
+            expect(kase.transitions.size).to eq 4
+            transition = kase.transitions.second
             expect(transition.event).to eq 'assign_responder'
             expect(transition.to_state).to eq 'awaiting_responder'
             expect(transition.acting_team_id).to eq disclosure_bmt.id
@@ -202,7 +202,7 @@ describe 'Overturned ICO SAR cases factory' do
             expect(transition.target_user_id).to be_nil
             expect(transition.to_workflow).to be_nil
 
-            transition = kase.transitions.second
+            transition = kase.transitions.third
             expect(transition.event).to eq 'flag_for_clearance'
             expect(transition.to_state).to eq 'awaiting_responder'
             expect(transition.target_team_id).to eq disclosure_team.id

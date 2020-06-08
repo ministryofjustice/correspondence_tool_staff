@@ -23,6 +23,8 @@ class Case::SAR::Offender < Case::Base
     received_date
   ].freeze
 
+  include Steppable
+
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
@@ -47,6 +49,9 @@ class Case::SAR::Offender < Case::Base
   enum subject_type: {
     offender: 'offender',
     ex_offender: 'ex_offender',
+    detainee: 'detainee',
+    ex_detainee: 'ex_detainee',
+    probation_service_user: 'probation_service_user',
   }
 
   enum reply_method: {
@@ -72,7 +77,6 @@ class Case::SAR::Offender < Case::Base
   validates :third_party_relationship, presence: true, if: -> { third_party }
 
   validates :date_of_birth, presence: true
-  validates :message, presence: true
 
   validates_presence_of :email,          if: :send_by_email?
   validates_presence_of :postal_address, if: :send_by_post?
@@ -139,6 +143,10 @@ class Case::SAR::Offender < Case::Base
     self.current_state == 'data_to_be_requested'
   end
 
+  # @todo: Should these steps be defined in 'Steppable' or the controller
+  def steps
+    %w[subject-details requester-details requested-info date-received].freeze
+  end
 
   private
 

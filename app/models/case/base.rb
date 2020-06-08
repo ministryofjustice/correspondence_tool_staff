@@ -33,6 +33,7 @@
 class Case::Base < ApplicationRecord
 
   TRIGGER_WORKFLOWS = ['trigger', 'full_approval'].freeze
+  CREATE_EVENT = 'create'.freeze
 
   def self.searchable_fields_and_ranks
     {
@@ -75,10 +76,10 @@ class Case::Base < ApplicationRecord
 
   scope :by_deadline, -> {
     select("\"cases\".*, (properties ->> 'external_deadline')::timestamp with time zone, cases.id")
-      .order("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id")
+      .order(Arel.sql("(properties ->> 'external_deadline')::timestamp with time zone ASC, cases.id"))
   }
   scope :by_last_transitioned_date, -> { reorder(last_transitioned_at: :desc) }
-  scope :most_recent_first, -> {reorder("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id") }
+  scope :most_recent_first, -> {reorder(Arel.sql("(properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id")) }
 
   scope :opened, ->       { where.not(current_state: 'closed') }
   scope :not_icos, -> { where.not(type: ['Case::ICO::FOI', 'Case::ICO::SAR'] ) }
@@ -96,7 +97,13 @@ class Case::Base < ApplicationRecord
   scope :overturned_ico, -> { where(type: ['Case::OverturnedICO::FOI',
                                            'Case::OverturnedICO::SAR'])}
 
+  # TODO - This is really confusing naming - one is a SAR that's not Offender
+  # The other is a Case that's not an Offender SAR
+  # Change the name of the first one to :sar_non_offender to make it clearer
   scope :non_offender_sar, -> { where(type: 'Case::SAR::Standard') }
+  scope :not_offender_sar, -> { where.not(type: ['Case::SAR::Offender'] ) }
+
+  scope :default_for_non_responders, -> { not_offender_sar }
 
   scope :with_teams, -> (teams) do
     includes(:assignments)
@@ -116,6 +123,7 @@ class Case::Base < ApplicationRecord
   end
 
   scope :in_open_state, -> { where. not(current_state: %w[responded closed] ) }
+  scope :in_open_or_responded_state, -> { where. not(current_state: %w[closed] ) }
 
   scope :accepted, -> { joins(:assignments)
                           .where(assignments: {state: ['accepted']} ) }
@@ -350,6 +358,8 @@ class Case::Base < ApplicationRecord
   before_save :prevent_number_change,
               :trigger_reindexing
 
+  after_create :create_init_transition
+
   # before_save do
   #   self.workflow = 'standard' if workflow.nil?
   # end
@@ -363,6 +373,20 @@ class Case::Base < ApplicationRecord
   #   pending_dacu_clearance?, etc
   ConfigurableStateMachine::Machine.states.each do |state|
     define_method("#{state}?") { current_state == state }
+  end
+
+  def create_init_transition
+    attrs = {
+      case_id: self.id,
+      event: CREATE_EVENT,
+      to_state: self.current_state,
+      to_workflow: self.workflow,
+      sort_key: CaseTransition.next_sort_key(self),
+      most_recent: true,
+      acting_user_id: self.creator.id,
+      acting_team_id: self.managing_team.id,
+    }
+    CaseTransition.create!(attrs)
   end
 
   def self.state_machine_name
@@ -566,7 +590,7 @@ class Case::Base < ApplicationRecord
     if responded_transitions.any?
       raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
     else
-      responding_team_assignment_date = assign_responder_transitions.last.created_at.to_date
+      responding_team_assignment_date = assign_responder_transitions.last&.created_at&.to_date || received_date
       internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
       internal_deadline < Date.today
     end

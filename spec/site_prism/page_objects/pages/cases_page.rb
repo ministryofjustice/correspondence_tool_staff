@@ -39,6 +39,7 @@ module PageObjects
         element :message_notification, 'td[aria-label="Conversations"] img'
       end
 
+      element :remove_original_link, '.js-remove-original'
       element :new_case_button, 'a.button[href="/cases/new"]'
       section :service_feedback, PageObjects::Sections::ServiceFeedbackSection, '.feedback'
       section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
@@ -47,7 +48,7 @@ module PageObjects
 
       def case_numbers
         case_list.map do |row|
-          row.number.text.delete('Link to case')
+          row.number.text.delete('Link to case').delete("\n")
         end
       end
 

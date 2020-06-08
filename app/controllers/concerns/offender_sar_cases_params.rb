@@ -29,7 +29,7 @@ module OffenderSARCasesParams
   end
 
   # @todo: Replace with appropriate edit params
-  def edit_offender_sar_params
+  def update_offender_sar_params
     create_offender_sar_params
   end
 

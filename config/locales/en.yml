@@ -449,9 +449,10 @@ en:
       offender_sar:
         delivery_method: How and where should the information be sent?
         email: "Recipient email address"
-        message: Request details
+        high_profile: High profile
+        message: Request details (optional)
         name: "Full name of the representative"
-        other_subject_ids: "Subject's PNC or other ID numbers"
+        other_subject_ids: "Police national computer number"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
@@ -460,8 +461,11 @@ en:
         subject_aliases: "Subject's alias if applicable"
         subject_full_name: "Full name of data subject"
         subject_type:
+          detainee: Detainee
+          ex_detainee: Ex-detainee
           ex_offender: Ex-offender
           offender: Offender
+          probation_service_user: "Probation service user"
         third_party: Is this information being requested on someone else's behalf?
         third_party_relationship: Relationship to the subject
         third_party_reference: Requester reference (optional)
@@ -515,6 +519,7 @@ en:
 
   common:
     alert_banner: "This service will be down for essential maintenance during the afternoon of Wednesday 13 November. You will not have access after 13.00 on this day – the site will likely resume service after business hours. Apologies for the inconvenience."
+    choose: Choose...
     choose_file: Choose a file
     error: error
     greeting: Hello %{user}
@@ -533,8 +538,8 @@ en:
       compliant_late: Uploaded late
       compliant_unknown: Unknown draft compliancy
       create_overturned: Create an ICO Overturned case
-      data_subject: Data subject
-      data_subject_type: Type of data subject
+      data_subject: Full name of subject
+      data_subject_type: 'What is their relationship to MOJ?'
       date_draft_uploaded: Date draft uploaded
       date_ico_decision_received: Date ICO's decision was received
       date_responded: Date response sent to requester
@@ -559,7 +564,7 @@ en:
       header_subject: "Case subject, "
       late_team: Business unit responsible for late response
       name: Requester
-      other_subject_ids: "Subject's PNC or other ID numbers"
+      other_subject_ids: "Police national computer number"
       previous_case_numbers: Previous SAR cases
       prison_number: "Prison number"
       postal_address: "Requester’s postal address"
@@ -581,10 +586,10 @@ en:
       requester_type: "Type of requester"
       sar_response_address: Where the information should be sent
       status: Status
-      subject_aliases: Subject aliases
+      subject_aliases: Alias
       third_party: Information requested on someone's behalf?
-      third_party_relationship: Third party relationship
-      third_party_reference: Requester reference
+      third_party_relationship: Relationship
+      third_party_reference: Requester reference number
       third_party_company_name: Company name
       time_taken: Time taken
       time_taken_result:
@@ -756,6 +761,8 @@ en:
       heading: Edit case details
       date_draft_compliant: Date compliant draft was uploaded
       date_draft_compliant_example: "For example, 01 02 2018"
+      offender_sar:
+        sub_heading: Edit Offender SAR case
     update:
       case_error: Unable to save case updates
       case_updated: Case updated
@@ -881,7 +888,7 @@ en:
         error: Unable to remove SAR deadline extension
       new:
         extension_period: How long would you like to extend by?
-        extend_further: The deadline for this case will be extended by a further %{num_days} days.
+        extend_further: The deadline for this case will be extended by a further %{time_period_description}.
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals
@@ -894,8 +901,9 @@ en:
     offender_sar:
       subject_heading: Who is the subject?
       requester_heading: Who is making the subject access request?
-      requested_info_heading: What information is being requested?
+      requested_info_heading: Is there other information relevant for this request?
       date_received_heading: When was the SAR received?
+      request_info_hint: Use this space to store additional case information
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
@@ -980,12 +988,15 @@ en:
     download_custom:
       waiting: Your custom report will be ready soon. Try again shortly.
   teams:
+    browse_by_business_group: Browse by business group
+    business_group: Business group
     business_unit_list:
       team_members: Team members
     business_unit_detail:
       destroy: Are you sure you want to deactivate this business unit?
       team_members: Team members
       new_team_member: New team member
+    directorate: Directorate
     directorate_detail:
       destroy: Are you sure you want to deactivate this directorate?
     edit:
@@ -997,12 +1008,39 @@ en:
     deactivate_info:
       directorate: To deactivate this directorate you need to first deactivate all business units within it.
       business_unit: To deactivate this business unit you need to first deactivate all users within it.
-    move:
+    labels:
+      select_business_group: Select a business group
+      select_directorate: Select a directorate
+    join:
+      cannot_join_other_team: "%{team_name} cannot be joined with any other business unit"
+      confirm_heading: Confirm join
+      heading: Join business unit
+      intro:
+        bullet1: all open cases and users will move to the destination business unit
+        bullet2: all members (existing and new) of the new business unit will be able to view closed cases
+        bullet3: performance reports for the unit before the join are still available
+        paragraph: "Joining with another business unit means:"
+      joined_successfully: "%{team_name} has been joined with %{target_team}"
+      joining_with: Joining with
+      join_with_this_team: Join with this team
       subhead: "Business unit: %{team_name}"
+      team_your_working_with: This is the team you're working with
+      will_be_joined: "%{team_name}'s users and open cases will be joined with %{target_team_name}'s business unit"
+    move:
+      confirm_heading: Confirm move
       heading: Move business unit
+      intro:
+        bullet1: all open cases and users will move with it
+        bullet2: all members of the unit will be able to view closed cases
+        bullet3: performance reports for the unit both before and after the move are available
+        paragraph: "Moving a business unit means:"
       moved_successfully: "%{team_name} has been moved to %{destination_directorate_name}"
-      confirm_message: Are you sure you want to do this? This business unit will be deactivated to preserve its history, and a new one will be created
-
+      moving_to: Moving to
+      subhead: "Business unit: %{team_name}"
+      team_currently_located: This is where the team is currently located
+      will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_directorate_name}"
+    team: Business unit
+    unreversible: This action cannot be reversed
   users:
     new:
       create: Create user

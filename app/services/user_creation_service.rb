@@ -27,7 +27,7 @@ class UserCreationService
   def update_existing_user
     if full_names_match
       # Add user to the teams
-      @team.__send__(@role.pluralize) << @user
+      add_user_to_teams
       @team.save!
 
       # Remove soft delete if their account was previously deleted
@@ -47,12 +47,19 @@ class UserCreationService
     @user.password = SecureRandom.random_number(36**13).to_s(36)
     @user.password_confirmation = @user.password
     if @user.valid? && @team.present?
-      @team.__send__(@role.pluralize) << @user
+      add_user_to_teams
       @result = :ok
     end
   end
 
   def full_names_match
     @user.full_name.downcase == @params[:full_name].downcase
+  end
+
+  def add_user_to_teams
+    @team.__send__(@role.pluralize) << @user
+    @team.previous_teams.each do |team|
+      team.__send__(@role.pluralize) << @user
+    end
   end
 end

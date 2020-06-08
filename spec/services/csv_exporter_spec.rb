@@ -203,7 +203,7 @@ describe CSVExporter do
 
   context 'SAR' do
     it 'returns sar fields' do
-      Timecop.freeze Time.local(2018, 10, 1, 13, 21, 33) do
+      Timecop.freeze Time.local(2018, 9, 1, 13, 21, 33) do
         csv = CSVExporter.new(sar_case).to_csv
         expect(csv.size).to eq(CSVExporter::CSV_COLUMN_HEADINGS.size)
 
@@ -213,15 +213,15 @@ describe CSVExporter do
         transient_columns.each { |key| expect(result[key]).not_to be_blank }
 
         expect(result.except!(*transient_columns)).to eq({
-          'Number' => '180830001',
+          'Number' => '180731001',
           'Case type' => 'SAR',
           'Current state' => 'Closed',
           'Responding team' => 'SAR Responding Team',
           'Responder' => 'sar responding user',
-          'Date received' => '2018-08-30',
+          'Date received' => '2018-07-31',
           'Internal deadline' => nil,
-          'External deadline' => '2018-09-29',
-          'Date responded' => '2018-09-25',
+          'External deadline' => '2018-08-31',
+          'Date responded' => '2018-08-24',
           'Date compliant draft uploaded' => nil,
           'Trigger' => nil,
           'Name' => 'SAR case name',
@@ -244,12 +244,12 @@ describe CSVExporter do
           'Deletion Reason' => nil,
           'Casework officer' => nil,
           'Created by' => sar_case.creator.full_name,
-          'Date created' => '2018-09-25',
+          'Date created' => '2018-08-24',
           'Business group' => 'Responder Business Group',
           'Directorate name' => 'Responder Directorate',
           'Draft in time' => nil,
           'In target' => 'Yes',
-          'Number of days late' => 2,
+          'Number of days late' => 1,
         })
       end
     end
