@@ -329,6 +329,7 @@ describe Case::SAR::Standard do
       let(:extended_sar)      { create(:sar_case, :extended_deadline_sar) }
       let(:initial_deadline)  { extended_sar.initial_deadline }
       let(:extended_deadline) { extended_sar.external_deadline }
+      let(:reset_external_deadline) { get_expected_deadline(1.month.since(extended_sar.received_date)) }
 
       it 'sets #deadline_extended to false' do
         expect { extended_sar.reset_deadline! }.to \
@@ -337,12 +338,52 @@ describe Case::SAR::Standard do
           .to(false)
       end
 
+      it 'sets #extended_times to 0' do
+        expect { extended_sar.reset_deadline! }.to \
+          change(extended_sar, :extended_times)
+          .from(1)
+          .to(0)
+      end
+
       it 'resets external_deadline' do
         expect { extended_sar.reset_deadline! }.to \
           change(extended_sar, :external_deadline)
           .from(extended_deadline)
-          .to(initial_deadline)
+          .to(reset_external_deadline)
       end
     end
+
+    describe 'Update the deadline due to the change of received_date' do
+      let(:extended_sar)      { create(:sar_case, :extended_deadline_sar) }
+      let(:new_received_date)      { 10.days.ago(extended_sar.received_date) }
+
+      it 'Change the received date to trigger resetting the deadline' do
+        extended_sar.update!(received_date: new_received_date)
+        expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
+        expect(extended_sar.deadline_extended).to eq false
+        expect(extended_sar.extended_times).to eq 0
+      end
+    end
+
+    describe 'The external_deadline is always based on the latest received_date' do
+      let(:extended_sar)      { create(:sar_case, :extended_deadline_sar) }
+      let(:new_received_date)      { 5.days.ago(extended_sar.received_date) }
+
+      it 'external_deadline based on the latest received date after editing/extending/reseting actions' do
+        extended_sar.update!(received_date: new_received_date)
+        expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
+        expect(extended_sar.deadline_extended).to eq false
+        expect(extended_sar.extended_times).to eq 0
+        
+        extended_sar.extend_deadline!(get_expected_deadline(2.month.since(extended_sar.received_date)), 2)
+        expect(extended_sar.deadline_extended).to eq true
+        expect(extended_sar.extended_times).to eq 2
+
+        extended_sar.reset_deadline!
+        expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
+        expect(extended_sar.deadline_extended).to eq false
+        expect(extended_sar.extended_times).to eq 0
+      end
+    end 
   end
 end

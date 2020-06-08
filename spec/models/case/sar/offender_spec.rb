@@ -54,8 +54,11 @@ describe Case::SAR::Offender do
   describe '#subject_type' do
     context 'valid values' do
       it 'does not error' do
-        expect(build(:offender_sar_case, subject_type: 'offender')).to be_valid
+        expect(build(:offender_sar_case, subject_type: 'detainee')).to be_valid
+        expect(build(:offender_sar_case, subject_type: 'ex_detainee')).to be_valid
         expect(build(:offender_sar_case, subject_type: 'ex_offender')).to be_valid
+        expect(build(:offender_sar_case, subject_type: 'offender')).to be_valid
+        expect(build(:offender_sar_case, subject_type: 'probation_service_user')).to be_valid
       end
     end
 
