@@ -13,16 +13,16 @@ references:
           APPLICATION_DEPLOY_NAME: pq
           RAILS_ENV: test
           RACK_ENV: test
-          PQ_REST_API_HOST: http://localhost:8888
-          POSTGRES_PASSWORD: "secret"
-          PGUSER: postgres
+          PG_HOST: 127.0.0.1
+          PG_PASSWORD: ""
+          PG_USER: postgres
           POSTGRES_DB: correspondence_platform_test
 
-      - image: postgres:10
+      - image: circleci/postgres:9.5-alpine
         environment:
-          POSTGRES_PASSWORD: "secret"
+          PG_PASSWORD: ""
+          PG_USER: postgres
           POSTGRES_DB: correspondence_platform_test
-          POSTGRES_USER: postgres
 
   deploy_container_config: &deploy_container_config
     docker:
