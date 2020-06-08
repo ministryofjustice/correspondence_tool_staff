@@ -2,7 +2,7 @@ version: 2
 
 references:
   defaults: &defaults
-    working_directory: ~/correspondence-tool-staff
+    working_directory: ~/track-a-query
 
 # Sets up the docker images and environment variables that we use
   test_container_config: &test_container_config
@@ -16,12 +16,12 @@ references:
           PQ_REST_API_HOST: http://localhost:8888
           POSTGRES_PASSWORD: "secret"
           PGUSER: postgres
-          POSTGRES_DB: correspondence_tool_staff_test
+          POSTGRES_DB: correspondence_platform_test
 
       - image: postgres:10
         environment:
           POSTGRES_PASSWORD: "secret"
-          POSTGRES_DB: correspondence_tool_staff_test
+          POSTGRES_DB: correspondence_platform_test
           POSTGRES_USER: postgres
 
   deploy_container_config: &deploy_container_config
