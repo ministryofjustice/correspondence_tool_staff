@@ -77,11 +77,11 @@ references:
       command: |
         login="$(aws ecr get-login --region eu-west-2 --no-include-email)"
         ${login}
-        docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
-        docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}/${CIRCLE_PROJECT_REPONAME}:${CIRCLE_SHA1}"
+        docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:${CIRCLE_SHA1}"
+        docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:${CIRCLE_SHA1}"
         if [ "${CIRCLE_BRANCH}" == "master" ]; then
-          docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}/${CIRCLE_PROJECT_REPONAME}:latest"
-          docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}/${CIRCLE_PROJECT_REPONAME}:latest"
+          docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:latest"
+          docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:latest"
         fi
 
   install_bundler: &install_bundler
