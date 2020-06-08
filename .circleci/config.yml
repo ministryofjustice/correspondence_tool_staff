@@ -84,11 +84,11 @@ references:
           docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:latest"
         fi
 
-#  install_bundler: &install_bundler
-#    run:
-#      name: Install bundler
-#      command: |
-#        gem install bundler -v 2.0.2
+  install_bundler: &install_bundler
+    run:
+      name: Install bundler
+      command: |
+        gem install bundler -v 2.0.2
 
   check_bundler_version: &check_bundler_version
     run:
