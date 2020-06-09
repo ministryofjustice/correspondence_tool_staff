@@ -830,7 +830,7 @@ class Case::Base < ApplicationRecord
       errors.add(
         :received_date,
         I18n.t('activerecord.errors.models.case.attributes.received_date.past')
-      )
+      ) unless offender_sar?
     end
     errors[:received_date].any?
   end

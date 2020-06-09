@@ -237,6 +237,7 @@ RSpec.describe Case::Base, type: :model do
     let(:case_received_long_ago)    { build(:case, received_date: 370.days.ago) }
     let(:case_received_today)       { build(:case, received_date: Date.today.to_s) }
     let(:case_received_tomorrow)    { build(:case, received_date: (Date.today + 1.day).to_s) }
+    let(:old_offender_sar_case)     { build(:offender_sar_case, received_date: 370.days.ago) }
 
     it 'can be received in the past' do
       expect(case_received_yesterday).to be_valid
@@ -253,6 +254,10 @@ RSpec.describe Case::Base, type: :model do
     it 'cannot be received too far in the past' do
       expect(case_received_long_ago).to_not be_valid
       expect(case_received_long_ago.errors[:received_date]).to eq ['too far in past.']
+    end
+
+    it 'can have any received date if offender_sar_case' do
+      expect(old_offender_sar_case).to be_valid
     end
 
     context 'updating an old record' do
