@@ -176,7 +176,7 @@ references:
     run:
       name: Run feature tests
       command: |
-        bundle exec rspec features
+        bundle exec rspec spec/features
 
   deploy_to_dev: &deploy_to_dev
     run:
