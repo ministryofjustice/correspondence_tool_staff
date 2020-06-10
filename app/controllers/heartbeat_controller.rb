@@ -22,7 +22,7 @@ class HeartbeatController < ApplicationController
       sidekiq_queue: sidekiq_queue_healthy?,
     }
 
-    status = :bad_gateway unless checks.values.all?
+
     render status: status, json: {
         checks: checks
     }
