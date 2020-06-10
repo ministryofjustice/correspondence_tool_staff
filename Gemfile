@@ -51,7 +51,7 @@ gem 'pundit', '~>2.1'
 gem 'rails', '~> 5.2.4', '>= 5.2.4.2'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
-gem 'sprockets', '~> 3.7.2'
+gem 'sprockets', '~> 4.0.2'
 gem 'rails-data-migrations', '~> 1.2.0'
 gem 'recursive-open-struct'
 gem 'sablon'
