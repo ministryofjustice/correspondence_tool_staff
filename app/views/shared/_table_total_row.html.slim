@@ -1,4 +1,3 @@
 tr
-  td.total-label colspan='#{ label_span }' #{ t('total') }
-  td.total-value colspan='#{ value_span }'
-    = @case.data_requests.sum(:cached_num_pages)
+  td.total-label colspan='#{ label_span }' #{ t('helpers.label.offender_sar.total') }
+  td.total-value colspan='#{ value_span }' #{ count }

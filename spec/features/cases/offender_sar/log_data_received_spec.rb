@@ -15,8 +15,14 @@ feature 'Log data received for an Offender SAR Data Request' do
 
     # A brand new DataRequest always has 0 number of pages received
     row = cases_show_page.data_requests.rows.first
-    expect(row.pages).to have_text '0'
     expect(row.date_received).to have_text ''
+    expect(row.pages).to have_text '0'
+
+    last_row = cases_show_page.data_requests.rows.last
+    expect(last_row).not_to have_selector '.total-label'
+    expect(last_row.total_label).not_to have_text 'Total'
+    expect(last_row).not_to have_selector '.total-value'
+    expect(last_row.total_value).not_to have_text '0'
 
     click_link 'Update page count'
     expect(data_request_edit_page).to be_displayed
@@ -36,9 +42,14 @@ feature 'Log data received for an Offender SAR Data Request' do
     expect(cases_show_page.data_requests.rows.size).to eq 1 # Unchanged num DataRequest
 
     row = cases_show_page.data_requests.rows.first
-    expect(row.pages).to have_text '92'
     expect(row.date_received).to have_text '2 Mar 2012'
+    expect(row.pages).to have_text '92'
 
+    last_row = cases_show_page.data_requests.rows.last
+    expect(last_row).not_to have_selector '.total-label'
+    expect(last_row.total_label).not_to have_text 'Total'
+    expect(last_row).not_to have_selector '.total-value'
+    expect(last_row.total_value).not_to have_text '0'
 
     # Note pre-filled fields when making further update to the same Data Request
     click_link 'Update page count'

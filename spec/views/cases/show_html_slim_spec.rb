@@ -621,7 +621,7 @@ describe 'cases/show.html.slim', type: :view do
           cases_show_page.load(rendered)
           data_requests = cases_show_page.data_requests.rows
 
-          expect(data_requests.size).to eq 2
+          expect(data_requests.size).to eq 3
           expect(data_requests.first.location.text).to eq 'The Location'
           expect(data_requests.first.data.text).to eq 'Some data'
           expect(data_requests.first.date_requested.text).to eq '2 Jul 2007'
