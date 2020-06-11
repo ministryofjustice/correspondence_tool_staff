@@ -75,7 +75,7 @@ references:
     run:
       name: Configure GPG
       command: |
-        gpg --import PRIVATE_GPG_KEY.asc
+        gpg --import --batch --allow-secret-key-import PRIVATE_GPG_KEY.asc
 
   delete_gpg_key_file: &delete_gpg_key_file
     run:
@@ -87,13 +87,7 @@ references:
     run:
       name: Decrypt secrets file
       command: |
-        gpg --export-ownertrust > /tmp/ownertrust.txt
-        echo $GPG_KEY_ID:1 >> /tmp/ownertrust.txt
-        gpg --import-ownertrust /tmp/ownertrust.txt
-        gpgconf --kill gpg-agent
-        gpg-agent --daemon --allow-preset-passphrase
-        /usr/libexec/gpg-preset-passphrase --preset --passphrase $GPG_PASSPHRASE $GPG_KEY_KEYGRIP_ID
-        expect -c "spawn gpg --edit-key $ trust quit; send \"5\ry\r\"; expect eof"
+        expect -c "spawn gpg --edit-key $GPG_KEY_ID trust quit; send \"5\ry\r\"; expect eof"
         git-crypt unlock
 
   build_docker_image: &build_docker_image
@@ -258,6 +252,8 @@ jobs:
       - *update_chromedriver
       - *run_unit_tests
       - *run_feature_tests
+
+  build_and_push_to_ecr:
       - *build_docker_image
       - *push_docker_image
 
@@ -297,6 +293,7 @@ workflows:
       - deploy_to_dev:
           requires:
             - build_and_test
+            - build_and_push_to_ecr
           filters:
             branches:
               only: CT-2761-circleci
@@ -304,7 +301,7 @@ workflows:
           type: approval
           requires:
             - build_and_test
-            - deploy_to_dev
+            - build_and_push_to_ecr
           filters:
             branches:
               only: master
@@ -318,6 +315,7 @@ workflows:
       #     type: approval
       #     requires:
       #       - build_and_test
+      #       - build_and_push_to_ecr
       #       - deploy_to_dev
       #       - deploy_to_staging
       #     filters:
