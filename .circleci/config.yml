@@ -56,11 +56,17 @@ references:
           --no-progress \
           gnupg
 
+#  create_gpg_key_file:
+#    run:
+#      name: Create GPG Key file from Environment variable
+#      command: |
+#        echo -e $GPG_KEY > PRIVATE_GPG_KEY.asc
+
   configure_gpg: &configure_gpg
     run:
       name: Configure GPG
       command: |
-        echo "${GPG_PRIVATE_KEY}" | base64 -d | gpg --batch --allow-secret-key-import --import
+        "${GPG_PRIVATE_KEY}" | base64 -d | gpg --batch --allow-secret-key-import --import
 
   decrypt_secrets: &decrypt_secrets
     run:
@@ -209,6 +215,11 @@ references:
 
 jobs:
   build_and_test:
+    <<: *test_container_config
+    <<: *defaults   
+    - *restore_cache 
+
+  build_and_test_real:
     <<: *test_container_config
     <<: *defaults
     steps:
