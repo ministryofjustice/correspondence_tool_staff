@@ -237,8 +237,6 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
       - *restore_cache
       - *install_bundler
       - *check_bundler_version
@@ -260,6 +258,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: ~/repo
+      - setup_remote_docker:
+          docker_layer_caching: true          
       - *build_docker_image
       - *push_docker_image
 
