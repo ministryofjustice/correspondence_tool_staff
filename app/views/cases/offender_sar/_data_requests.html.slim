@@ -36,6 +36,5 @@
               td
                 = link_to t('cases.data_requests.index.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__action'
 
-          / The 'Total' row will only be displayed if more than one data request has been made.
           - if case_details.data_requests.many?
-            = render partial: 'shared/table_total_row', locals: { count: case_details.data_requests.sum(:cached_num_pages), label_span: '4', value_span: '2' }
+            = render partial: 'shared/table_total_row', locals: { total: case_details.data_requests.sum(:cached_num_pages), label_span: '4', value_span: '2' }

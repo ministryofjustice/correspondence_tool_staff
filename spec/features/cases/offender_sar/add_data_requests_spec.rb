@@ -51,6 +51,48 @@ feature 'Data Requests for an Offender SAR' do
     expect(last_row.total_value).to have_text '0'
   end
 
+  scenario 'total page count is correct', js: true do
+    cases_show_page.load(id: offender_sar_case.id)
+    click_on 'Record data request'
+    expect(data_request_page).to be_displayed
+
+    request_values = [
+        { location: 'HMP Leicester  ', data: ' A list of meals fed to mo  '},
+        { location: 'HMP Brixton', data: 'Latest menu from the clink by chef mo'},
+    ]
+
+    request_values.each_with_index do |request, i|
+      data_request_page.form.location[i].fill_in(with: request[:location])
+      data_request_page.form.data[i].fill_in(with: request[:data])
+    end
+
+    click_on 'Record requests'
+
+    cases_show_page.data_requests.rows[0].click_on 'Update page count'
+
+    data_request_edit_page.form.date_received_dd.fill_in(with: 11)
+    data_request_edit_page.form.date_received_mm.fill_in(with: 6)
+    data_request_edit_page.form.date_received_yyyy.fill_in(with: 2020)
+    data_request_edit_page.form.num_pages.fill_in(with: 32)
+
+    click_on 'Update data received'
+
+    last_row = cases_show_page.data_requests.rows.last
+    expect(last_row.total_value).to have_text '32'
+
+    cases_show_page.data_requests.rows[1].click_on 'Update page count'
+
+    data_request_edit_page.form.date_received_dd.fill_in(with: 11)
+    data_request_edit_page.form.date_received_mm.fill_in(with: 6)
+    data_request_edit_page.form.date_received_yyyy.fill_in(with: 2020)
+    data_request_edit_page.form.num_pages.fill_in(with: 128)
+
+    click_on 'Update data received'
+
+    last_row = cases_show_page.data_requests.rows.last
+    expect(last_row.total_value).to have_text '160'
+  end
+
   scenario 'partial data entry fails' do
     cases_show_page.load(id: offender_sar_case.id)
     click_on 'Record data request'
