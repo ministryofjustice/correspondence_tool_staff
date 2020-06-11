@@ -47,6 +47,15 @@ references:
         sudo apt-get install -y google-chrome-stable
         RAILS_ENV=test bin/rails webdrivers:chromedriver:update
 
+  install_expect: &install_expect
+    run:
+      name: Install Expect
+      command: |
+        apk add \
+          --no-cache \
+          --no-progress \
+          expect
+
   install_gpg: &install_gpg
     run:
       name: Install GPG
@@ -56,17 +65,23 @@ references:
           --no-progress \
           gnupg
 
-#  create_gpg_key_file:
-#    run:
-#      name: Create GPG Key file from Environment variable
-#      command: |
-#        echo -e $GPG_KEY > PRIVATE_GPG_KEY.asc
+  create_gpg_key_file: &create_gpg_key_file
+    run:
+      name: Create GPG Key file from Environment variable
+      command: |
+        echo -e ${GPG_PRIVATE_KEY} > PRIVATE_GPG_KEY.asc
 
   configure_gpg: &configure_gpg
     run:
       name: Configure GPG
       command: |
-        "${GPG_PRIVATE_KEY}" | base64 -d | gpg --batch --allow-secret-key-import --import
+        gpg --import PRIVATE_GPG_KEY.asc
+
+  delete_gpg_key_file: &delete_gpg_key_file
+    run:
+        name: Delete GPG Key file after import
+        command: ¬
+          rm PRIVATE_GPG_KEY.asc
 
   decrypt_secrets: &decrypt_secrets
     run:
@@ -78,6 +93,7 @@ references:
         gpgconf --kill gpg-agent
         gpg-agent --daemon --allow-preset-passphrase
         /usr/libexec/gpg-preset-passphrase --preset --passphrase $GPG_PASSPHRASE $GPG_KEY_KEYGRIP_ID
+        expect -c "spawn gpg --edit-key $ trust quit; send \"5\ry\r\"; expect eof"
         git-crypt unlock
 
   build_docker_image: &build_docker_image
@@ -253,6 +269,8 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
       - *configure_gpg
       - *decrypt_secrets
       - *deploy_to_dev
