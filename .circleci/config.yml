@@ -254,6 +254,12 @@ jobs:
       - *run_feature_tests
 
   build_and_push_to_ecr:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
       - *build_docker_image
       - *push_docker_image
 
