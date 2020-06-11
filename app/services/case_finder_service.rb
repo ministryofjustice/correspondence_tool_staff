@@ -109,11 +109,7 @@ class CaseFinderService
   end
 
   def in_time_cases_scope
-    if user.responder_only?
-      scope.in_time
-    else
-      scope.in_time
-    end
+    scope.in_time
   end
 
   def late_cases_scope
