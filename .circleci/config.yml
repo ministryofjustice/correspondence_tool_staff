@@ -87,6 +87,9 @@ references:
     run:
       name: Decrypt secrets file
       command: |
+        gpgconf --kill gpg-agent
+        gpg-agent --daemon --allow-preset-passphrase
+        /usr/libexec/gpg-preset-passphrase --preset --passphrase $GPG_PASSPHRASE $GPG_KEY_KEYGRIP_ID
         expect -c "spawn gpg --edit-key $GPG_KEY_ID trust quit; send \"5\ry\r\"; expect eof"
         git-crypt unlock
 
