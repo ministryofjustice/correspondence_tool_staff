@@ -34,7 +34,7 @@ feature 'Data Requests for an Offender SAR' do
 
     expect(cases_show_page).to be_displayed
     data_requests = cases_show_page.data_requests.rows
-    expect(data_requests.size).to eq 5
+    expect(data_requests.size).to eq 6
 
     request_values.each_with_index do |request, i|
       row = cases_show_page.data_requests.rows[i]
@@ -43,6 +43,12 @@ feature 'Data Requests for an Offender SAR' do
       expect(row.date_requested).to have_text Date.current.strftime(Settings.default_date_format)
       expect(row.pages).to have_text '0'
     end
+
+    last_row = cases_show_page.data_requests.rows.last
+    expect(last_row).to have_selector '.total-label'
+    expect(last_row.total_label).to have_text 'Total'
+    expect(last_row).to have_selector '.total-value'
+    expect(last_row.total_value).to have_text '0'
   end
 
   scenario 'partial data entry fails' do
