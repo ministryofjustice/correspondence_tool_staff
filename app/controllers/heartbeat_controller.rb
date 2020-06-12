@@ -15,16 +15,21 @@ class HeartbeatController < ApplicationController
   end
 
   def healthcheck
-    checks = {
+    all_checks = {
       database:      database_alive?,
       redis:         redis_alive?,
       sidekiq:       sidekiq_alive?,
       sidekiq_queue: sidekiq_queue_healthy?,
     }
+    key_checks = {
+      database:      database_alive?,
+      redis:         redis_alive?,
+      sidekiq:       sidekiq_alive?
+    }
 
-
+    status = :bad_gateway unless key_checks.values.all?
     render status: status, json: {
-        checks: checks
+        checks: all_checks
     }
   end
 
