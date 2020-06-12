@@ -28,7 +28,6 @@ class DataRequest < ApplicationRecord
     self.offender_sar_case
   end
 
-
   private
 
   def update_cached_attributes(new_data_request_log)

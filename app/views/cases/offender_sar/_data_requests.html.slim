@@ -8,14 +8,14 @@
         = t('cases.data_requests.index.none')
 
     - else
-      table
+      table#data-request-table
         thead
           tr
             th Location
             th Data
             th Date requested
-            th Pages
             th Date received
+            th Pages
             th
         tbody
           - case_details.data_requests.order(date_requested: :asc).each do |data_request|
@@ -28,10 +28,13 @@
                 time datetime="#{data_request.date_requested}"
                   = l data_request.date_requested, format: :default
               td
-                = data_request.cached_num_pages
-              td
                 - if data_request.cached_date_received.present?
                   time datetime="#{data_request.cached_date_received}"
                     = l data_request.cached_date_received, format: :default
               td
+                = data_request.cached_num_pages
+              td
                 = link_to t('cases.data_requests.index.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__action'
+
+          - if case_details.data_requests.many?
+            = render partial: 'shared/table_total_row', locals: { total: case_details.data_requests.sum(:cached_num_pages), label_span: '4', value_span: '2' }
