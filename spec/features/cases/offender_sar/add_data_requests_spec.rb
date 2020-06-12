@@ -93,6 +93,22 @@ feature 'Data Requests for an Offender SAR' do
     expect(last_row.total_value).to have_text '160'
   end
 
+  context 'when multiple data requests are present and have pages logged' do
+    given!(:data_request) { create(:data_request, offender_sar_case: offender_sar_case, cached_num_pages: 32) }
+    given!(:second_data_request) { create(:data_request, offender_sar_case: offender_sar_case, cached_num_pages: 32) }
+
+    scenario 'the total row displays with the correct total pages' do
+      cases_show_page.load(id: offender_sar_case.id)
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.data_requests.rows.size).to eq 3 # Unchanged num DataRequest
+
+      last_row = cases_show_page.data_requests.rows.last
+      expect(last_row).to have_selector '.total-label'
+      expect(last_row.total_label).to have_text 'Total'
+      expect(last_row).to have_selector '.total-value'
+      expect(last_row.total_value).to have_text '64'
+    end
+  end
   scenario 'partial data entry fails' do
     cases_show_page.load(id: offender_sar_case.id)
     click_on 'Record data request'
