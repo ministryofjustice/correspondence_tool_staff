@@ -97,13 +97,7 @@ class Case::Base < ApplicationRecord
   scope :overturned_ico, -> { where(type: ['Case::OverturnedICO::FOI',
                                            'Case::OverturnedICO::SAR'])}
 
-  # TODO - This is really confusing naming - one is a SAR that's not Offender
-  # The other is a Case that's not an Offender SAR
-  # Change the name of the first one to :sar_non_offender to make it clearer
   scope :non_offender_sar, -> { where(type: 'Case::SAR::Standard') }
-  scope :not_offender_sar, -> { where.not(type: ['Case::SAR::Offender'] ) }
-
-  scope :default_for_non_responders, -> { not_offender_sar }
 
   scope :with_teams, -> (teams) do
     includes(:assignments)
@@ -836,7 +830,7 @@ class Case::Base < ApplicationRecord
       errors.add(
         :received_date,
         I18n.t('activerecord.errors.models.case.attributes.received_date.past')
-      )
+      ) unless offender_sar?
     end
     errors[:received_date].any?
   end
