@@ -203,8 +203,8 @@ references:
       command: |
         setup-kube-auth
         kubectl config use-context development
-        sed -i -e s/:latest/:$CIRCLE_SHA1/ k8s-deploy/development/deployment.yaml
-        kubectl apply --record=false -f ./k8s-deploy/development/
+        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/development/deployment.yaml
+        kubectl apply --record=false -f ./config/kubernetes/development/
 
   deploy_to_staging: &deploy_to_staging
     run:
