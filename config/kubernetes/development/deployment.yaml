@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: track-a-query
 spec:
-  replicas: 2
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -103,6 +103,28 @@ spec:
                 secretKeyRef:
                   name: track-a-query-s3-output
                   key: secret_access_key
+          readinessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3000
+              httpHeaders:
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: X-Forwarded-Ssl
+                  value: "on"
+            initialDelaySeconds: 40
+            periodSeconds: 60
+          livenessProbe:
+            httpGet:
+              path: /healthcheck
+              port: 3000
+              httpHeaders:
+                - name: X-Forwarded-Proto
+                  value: https
+                - name: X-Forwarded-Ssl
+                  value: "on"
+            initialDelaySeconds: 40
+            periodSeconds: 60
         - name: jobs
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
           command: ["./config/docker/entrypoint-background-jobs.sh"]

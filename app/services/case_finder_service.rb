@@ -46,7 +46,7 @@ class CaseFinderService
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       closed_scope.where(id: case_ids).most_recent_first
     else
-      closed_scope.most_recent_first.default_for_non_responders
+      closed_scope.most_recent_first
     end
   end
 
@@ -54,7 +54,7 @@ class CaseFinderService
 
   def index_cases_scope
     # effectively a nop; just return all the cases the user can view
-    scope.default_for_non_responders
+    scope
   end
 
   def incoming_approving_cases_scope
@@ -97,7 +97,7 @@ class CaseFinderService
       case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
       open_scope.where(id: case_ids)
     else
-      open_scope.default_for_non_responders
+      open_scope
     end
   end
 
@@ -109,11 +109,7 @@ class CaseFinderService
   end
 
   def in_time_cases_scope
-    if user.responder_only?
-      scope.in_time
-    else
-      scope.in_time.default_for_non_responders
-    end
+    scope.in_time
   end
 
   def late_cases_scope
