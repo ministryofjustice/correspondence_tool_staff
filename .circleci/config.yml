@@ -212,8 +212,17 @@ references:
       command: |
         setup-kube-auth
         kubectl config use-context staging
-        sed -i -e s/:latest/:$CIRCLE_SHA1/ k8s-deploy/staging/deployment.yaml
-        kubectl apply --record=false -f ./k8s-deploy/staging/
+        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/staging/deployment.yaml
+        kubectl apply --record=false -f ./config/kubernetes/staging/
+
+  deploy_to_qa: &deploy_to_qa
+    run:
+      name: Deploy to staging environment
+      command: |
+        setup-kube-auth
+        kubectl config use-context staging
+        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/qa/deployment.yaml
+        kubectl apply --record=false -f ./config/kubernetes/qa/
 
   # deploy_to_production: &deploy_to_production
   #   run:
@@ -288,9 +297,25 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
       - *configure_gpg
       - *decrypt_secrets
       - *deploy_to_staging
+
+  deploy_to_qa:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_qa
 
 #  Workflows combine jobs to perform the actions
 
@@ -321,6 +346,20 @@ workflows:
           filters:
             branches:
               only: master
+      - deploy_qa_approval:
+          type: approval
+          requires:
+            - build_and_test
+            - build_and_push_to_ecr
+          filters:
+            branches:
+              only: master
+      - deploy_to_qa:
+          requires:
+            - deploy_qa_approval
+          filters:
+            branches:
+              only: master                           
       # - deploy_production_approval:
       #     type: approval
       #     requires:
