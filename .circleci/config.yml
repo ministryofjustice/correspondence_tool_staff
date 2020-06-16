@@ -199,7 +199,7 @@ references:
 
   deploy_to_dev: &deploy_to_dev
     run:
-      name: Deploy to dev environment
+      name: Deploy to Development environment
       command: |
         setup-kube-auth
         kubectl config use-context development
@@ -208,7 +208,7 @@ references:
 
   deploy_to_staging: &deploy_to_staging
     run:
-      name: Deploy to staging environment
+      name: Deploy to Staging environment
       command: |
         setup-kube-auth
         kubectl config use-context staging
@@ -217,12 +217,21 @@ references:
 
   deploy_to_qa: &deploy_to_qa
     run:
-      name: Deploy to staging environment
+      name: Deploy to QA environment
       command: |
         setup-kube-auth
         kubectl config use-context staging
         sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/qa/deployment.yaml
         kubectl apply --record=false -f ./config/kubernetes/qa/
+
+  deploy_to_demo: &deploy_to_demo
+    run:
+      name: Deploy to Demo environment
+      command: |
+        setup-kube-auth
+        kubectl config use-context staging
+        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/demo/deployment.yaml
+        kubectl apply --record=false -f ./config/kubernetes/demo/        
 
   # deploy_to_production: &deploy_to_production
   #   run:
@@ -317,6 +326,20 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_qa
 
+  deploy_to_demo:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_demo      
+
 #  Workflows combine jobs to perform the actions
 
 workflows:
@@ -339,13 +362,13 @@ workflows:
             - build_and_push_to_ecr
           filters:
             branches:
-              only: master
+              only: CT-2761-circleci
       - deploy_to_staging:
           requires:
             - deploy_staging_approval
           filters:
             branches:
-              only: master
+              only: CT-2761-circleci
       - deploy_qa_approval:
           type: approval
           requires:
@@ -353,13 +376,27 @@ workflows:
             - build_and_push_to_ecr
           filters:
             branches:
-              only: master
+              only: CT-2761-circleci
       - deploy_to_qa:
           requires:
             - deploy_qa_approval
           filters:
             branches:
-              only: master                           
+              only: CT-2761-circleci
+      - deploy_demo_approval:
+          type: approval
+          requires:
+            - build_and_test
+            - build_and_push_to_ecr
+          filters:
+            branches:
+              only: CT-2761-circleci              
+      - deploy_to_demo:
+          requires:
+            - deploy_demo_approval
+          filters:
+            branches:
+              only: CT-2761-circleci                                       
       # - deploy_production_approval:
       #     type: approval
       #     requires:
