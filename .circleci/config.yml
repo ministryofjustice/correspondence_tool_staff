@@ -348,6 +348,8 @@ workflows:
     jobs:
       - build_and_test
       - build_and_push_to_ecr
+        requires:
+          - build_and_test
       - deploy_to_dev:
           requires:
             - build_and_test
