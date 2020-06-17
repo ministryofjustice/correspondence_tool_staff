@@ -270,6 +270,10 @@ module CTS::Cases
       end
     end
 
+    option :non_indexed, type: :boolean,
+           desc: 'Narrow down the scope of reindex to the cases which have not been indexed yet.'
+    option :size, aliases: 's', type: :numeric, default: 5000,
+            desc: 'Number of cases to for indexes. [5000]'
     desc 'reindex', 'Reindex all the cases'
     def reindex(*_args)
       reindexer = CTS::Cases::Reindex.new(CTS, options)
