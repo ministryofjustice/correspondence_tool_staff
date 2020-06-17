@@ -19,22 +19,18 @@ module CTS::Cases
 
     def process_indexes
       if @options[:non_indexed]
-        logger.info "Start to query the cases with size #{size}."
-        puts @options
         size = @options.fetch(:size)
+        logger.info "Start to query the cases with size #{size}."
         cases = Case::Base.where("document_tsvector is NULL").limit(size)
-      else 
-        logger.info "Start to query all the cases."
-        cases = Case::Base.all
-      end
-      logger.info "Start to process the index"
-      cases.each do |kase|
-        kase.update_index
-        if @options[:non_indexed]
+        cases.each do |kase|
+          kase.update_index
           logger.info("id: #{kase.id} (#{kase.number}) has been indexed")
         end
+        cases.count
+      else 
+        logger.info "Start to query all the cases."
+        Case::Base.update_all_indexes.count
       end
-      cases.count
     end
   end
 end
