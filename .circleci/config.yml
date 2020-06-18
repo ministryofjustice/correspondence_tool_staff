@@ -284,7 +284,22 @@ jobs:
       - *build_docker_image
       - *push_docker_image
 
+# Both should be identical but different names
   deploy_to_dev:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_dev
+
+  deploy_to_dev_master:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -357,12 +372,12 @@ workflows:
       - deploy_to_dev:
           requires:
             - deploy_dev_approval
-      - deploy_to_dev:
+      - deploy_to_dev_master:
           requires:
             - build_and_push_to_ecr
           filters:
             branches:
-              ignore: master        
+              only: master        
       - deploy_staging_approval:
           type: approval
           requires:
