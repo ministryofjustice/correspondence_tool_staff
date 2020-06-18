@@ -344,18 +344,25 @@ jobs:
 
 workflows:
   version: 2
-  build_and_run_tests:
+  build_test_deploy_any_branch:
     jobs:
       - build_and_test
       - build_and_push_to_ecr:
           requires:
             - build_and_test
-      - deploy_to_dev:
+      - deploy_dev_approval:
+          type: approval
           requires:
             - build_and_push_to_ecr
           filters:
             branches:
-              only: CT-2761-circleci
+              ignore: master  
+      - deploy_to_dev:
+          requires:
+            - deploy_dev_approval
+      - deploy_to_dev:
+          requires:
+            - build_and_push_to_ecr      
       - deploy_staging_approval:
           type: approval
           requires:
@@ -395,19 +402,20 @@ workflows:
           filters:
             branches:
               only: CT-2761-circleci                                       
-      # - deploy_production_approval:
-      #     type: approval
-      #     requires:
-      #       - build_and_test
-      #       - build_and_push_to_ecr
-      #       - deploy_to_dev
-      #       - deploy_to_staging
-      #     filters:
-      #       branches:
-      #         only: master
-      # - deploy_production:
-      #     requires:
-      #       - deploy_production_approval
-      #     filters:
-      #       branches:
-      #         only: master
+      - deploy_production_approval:
+          type: approval
+          requires:
+            - build_and_test
+            - build_and_push_to_ecr
+            - deploy_to_dev
+            - deploy_to_staging
+          filters:
+            branches:
+              only: master
+      - deploy_production:
+           requires:
+            - deploy_production_approval
+           filters:
+            branches:
+              only: master
+
