@@ -19,7 +19,7 @@ module CTS::Cases
 
     def process_indexes
       if @options[:non_indexed]
-        size = @options.fetch(:size)
+        size = @options[:size]
         logger.info "Start to query the cases with size #{size}."
         cases = Case::Base.where("document_tsvector is NULL").limit(size)
         cases.each do |kase|
