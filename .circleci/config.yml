@@ -353,16 +353,16 @@ workflows:
       - deploy_dev_approval:
           type: approval
           requires:
-            - build_and_push_to_ecr
-          filters:
-            branches:
-              ignore: master  
+            - build_and_push_to_ecr  
       - deploy_to_dev:
           requires:
             - deploy_dev_approval
       - deploy_to_dev:
           requires:
-            - build_and_push_to_ecr      
+            - build_and_push_to_ecr
+          filters:
+            branches:
+              ignore: master        
       - deploy_staging_approval:
           type: approval
           requires:
