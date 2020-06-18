@@ -368,7 +368,10 @@ workflows:
       - deploy_dev_approval:
           type: approval
           requires:
-            - build_and_push_to_ecr  
+            - build_and_push_to_ecr
+          filters:
+            branches:
+              ignore: CT-2761-circleci  
       - deploy_to_dev:
           requires:
             - deploy_dev_approval
@@ -377,7 +380,7 @@ workflows:
             - build_and_push_to_ecr
           filters:
             branches:
-              only: master        
+              only: CT-2761-circleci        
       - deploy_staging_approval:
           type: approval
           requires:
@@ -407,7 +410,7 @@ workflows:
             - deploy_to_staging
           filters:
             branches:
-              only: master
+              only: CT-2761-circleci
       - deploy_production:
            requires:
             - deploy_production_approval
