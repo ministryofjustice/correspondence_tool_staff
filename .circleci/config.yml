@@ -299,7 +299,7 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_dev
 
-  deploy_to_dev_master:
+  deploy_master_to_dev:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -314,6 +314,20 @@ jobs:
       - *deploy_to_dev
 
   deploy_to_staging:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/repo
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_staging
+
+  deploy_master_to_staging:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -359,7 +373,7 @@ jobs:
 
 workflows:
   version: 2
-  build_test_deploy_any_branch:
+  build_test_deploy:
     jobs:
       - build_and_test
       - build_and_push_to_ecr:
@@ -375,7 +389,7 @@ workflows:
       - deploy_to_dev:
           requires:
             - deploy_dev_approval
-      - deploy_to_dev_master:
+      - deploy_master_to_dev:
           requires:
             - build_and_push_to_ecr
           filters:
@@ -384,10 +398,23 @@ workflows:
       - deploy_staging_approval:
           type: approval
           requires:
-            - build_and_push_to_ecr
+            - deploy_to_dev
+          filters:
+            branches:
+              ignore: CT-2761-circleci
       - deploy_to_staging:
           requires:
             - deploy_staging_approval
+      - deploy_master_staging_approval:
+          type: approval
+          requires:
+            - deploy_master_to_dev
+          filters:
+            branches:
+              only: CT-2761-circleci            
+      - deploy_master_to_staging:
+          requires:
+            - deploy_master_staging_approval         
       - deploy_qa_approval:
           type: approval
           requires:
@@ -405,8 +432,7 @@ workflows:
       - deploy_production_approval:
           type: approval
           requires:
-            - deploy_to_dev_master
-            - deploy_to_staging
+            - deploy_master_to_staging
           filters:
             branches:
               only: CT-2761-circleci
