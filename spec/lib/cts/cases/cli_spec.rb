@@ -8,6 +8,10 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
   let(:cli)              { CTS::Cases::CLI.new }
   let(:number_to_create) { 1 }
 
+  let(:cli_index) { CTS::Cases::CLI.new }
+  let(:foi_case)      { create :foi_case }
+  let(:sar_case)      { create :sar_case }
+
   before do
     allow(CTS).to receive(:info).and_return true
     allow(cli).to receive(:tp).and_return true
@@ -18,6 +22,12 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
                       creator: User.first.id,
                     }
                   )
+    allow(cli_index).to receive(:options).and_return(
+      {
+        non_indexed: true,
+        size: 2
+      }
+    )
     find_or_create :team_dacu
   end
 
@@ -37,6 +47,16 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
       cli.reindex
       expect(Case::Base).to have_received(:update_all_indexes)
     end
+
+    it 'reindexes unindexed case with specific size' do
+      allow(Case::Base).to receive_message_chain(:where, :limit).and_return([sar_case, foi_case])
+      allow(sar_case).to receive(:update_index)
+      allow(foi_case).to receive(:update_index)
+      cli_index.reindex
+      expect(sar_case).to have_received(:update_index)
+      expect(foi_case).to have_received(:update_index)
+    end
+
   end
 
   describe 'warehouse sub-command' do
