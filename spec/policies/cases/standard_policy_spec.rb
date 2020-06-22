@@ -10,10 +10,11 @@ describe Case::FOI::StandardPolicy do
 
   # Users
   let(:manager)               { managing_team.managers.first }
-  let(:responder)             { responding_team.responders.first }
+  let(:responder)             { find_or_create :responder }
   let(:press_officer)         { find_or_create :press_officer }
   let(:private_officer)       { find_or_create :private_officer }
   let(:disclosure_specialist) { dacu_disclosure.approvers.first }
+  let(:branston_user)         { find_or_create :branston_user }
 
 # Cases
   # Unflagged
@@ -107,6 +108,7 @@ describe Case::FOI::StandardPolicy do
 
   permissions :show? do
     it { should     permit(manager,               unassigned_case) }
+    it { should_not permit(branston_user,         unassigned_case) }
     it { should     permit(responder,             unassigned_case) }
     it { should     permit(disclosure_specialist, unassigned_case) }
   end
