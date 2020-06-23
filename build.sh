@@ -54,7 +54,8 @@ function _build() {
   git_fetch_url=$git_remote_url#$current_version
 
   # 5. Ensure the current checked out commit is the head of the current branch
-  if  [ $(git rev-parse HEAD) == $(git rev-parse @{u}) ]; then
+  if  [ $(git rev-parse HEAD) == $(git rev-parse @{u}) ] || [ $1 == 'circleci' ] 
+  then
     p "Building app container image from git using $short_version"
   else
     p "\e[31mFatal error: Local git branch is out of sync with origin\e[0m"
