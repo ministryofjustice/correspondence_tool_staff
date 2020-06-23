@@ -118,6 +118,13 @@ references:
           docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:latest"
           docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:latest"
         fi
+  configure_aws_profile: &configure_aws_profile
+    run:
+      name: Configure AWS CLI
+      command: |
+        aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} --profile ecr-live-1
+        aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile ecr-live-1
+        aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live-1
 
   install_bundler: &install_bundler
     run:
@@ -280,7 +287,8 @@ jobs:
       - attach_workspace:
           at: ~/repo
       - setup_remote_docker:
-          docker_layer_caching: true          
+          docker_layer_caching: true 
+      - *configure_aws_profile         
       #- *build_docker_image
       #- *push_docker_image
 
