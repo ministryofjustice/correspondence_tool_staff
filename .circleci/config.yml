@@ -93,39 +93,6 @@ references:
         expect -c "spawn gpg --edit-key $GPG_KEY_ID trust quit; send \"5\ry\r\"; expect eof"
         git-crypt unlock
 
-  build_docker_image: &build_docker_image
-    run:
-      name: Build docker image
-      command: |
-        export BUILD_DATE=$(date -Is) >> $BASH_ENV
-        source $BASH_ENV
-        docker build \
-          --build-arg APPVERSION=${CIRCLE_BUILD_NUM} \
-          --build-arg APP_GIT_COMMIT=${CIRCLE_SHA1} \
-          --build-arg APP_BUILD_DATE=${BUILD_DATE} \
-          --build-arg APP_BUILD_TAG=${CIRCLE_BRANCH} \
-          -t app .
-
-  push_docker_image: &push_docker_image
-    run:
-      name: Push docker image
-      command: |
-        login="$(aws ecr get-login --region eu-west-2 --no-include-email)"
-        ${login}
-        docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:${CIRCLE_SHA1}"
-        docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:${CIRCLE_SHA1}"
-        if [ "${CIRCLE_BRANCH}" == "master" ]; then
-          docker tag app "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:latest"
-          docker push "${ECR_ENDPOINT}/${GITHUB_TEAM_NAME_SLUG}/${ECR_FOLDER}:latest"
-        fi
-  configure_aws_profile: &configure_aws_profile
-    run:
-      name: Configure AWS CLI
-      command: |
-        aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} --profile ecr-live-1
-        aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile ecr-live-1
-        aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live-1
-
   install_bundler: &install_bundler
     run:
       name: Install bundler
@@ -137,15 +104,6 @@ references:
       name: Check the installed version of bundler
       command: |
         bundle -v
-
-  set_up_aws_cli: &set_up_aws_cli
-    run:
-      # this is needed to get a token from the cloud platform to use kubernetes
-      name: Set up AWS CLI
-      command: |
-        sudo apt-get update
-        sudo apt-get --assume-yes install python3-pip
-        sudo pip3 install awscli
 
   restore_cache: &restore_cache
     restore_cache:
@@ -204,14 +162,43 @@ references:
       command: |
         bundle exec rspec spec/features
 
+  set_up_aws_cli: &set_up_aws_cli
+    run:
+      # this is needed to get a token from the cloud platform to use kubernetes
+      name: Set up AWS CLI
+      command: |
+        sudo apt-get update
+        sudo apt-get --assume-yes install python3-pip
+        sudo pip3 install awscli
+  
+  configure_aws_profile: &configure_aws_profile
+    run:
+      name: Configure AWS CLI
+      command: |
+        aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} --profile ecr-live-1
+        aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile ecr-live-1
+        aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live-1
+  
+  build_and_push_docker_image: &build_and_push_docker_image
+    run:
+      name: Build docker image
+      command: |
+        ./build.sh
+        mkdir -p workspace
+        echo $build_tag > workspace/build_tag
+
+
   deploy_to_dev: &deploy_to_dev
     run:
       name: Deploy to Development environment
       command: |
         setup-kube-auth
-        kubectl config use-context development
-        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/development/deployment.yaml
-        kubectl apply --record=false -f ./config/kubernetes/development/
+        kubectl config use-context development        
+        tag=`cat /tmp/workspace/build_tag`
+#        ./deploy.sh $tag development
+
+#        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/development/deployment.yaml
+#        kubectl apply --record=false -f ./config/kubernetes/development/
 
   deploy_to_staging: &deploy_to_staging
     run:
@@ -285,12 +272,15 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/repo
+          at: /tmp/workspace
       - setup_remote_docker:
           docker_layer_caching: true 
-      - *configure_aws_profile         
-      #- *build_docker_image
-      #- *push_docker_image
+      - *configure_aws_profile 
+      - *build_and_push_docker_image
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - build_tag
 
 # Both should be identical but different names
   deploy_to_dev:
@@ -299,7 +289,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/repo
+          at: /tmp/workspace
       - *install_gpg
       - *install_expect
       - *create_gpg_key_file
@@ -313,7 +303,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/repo
+          at: /tmp/workspace
       - *install_gpg
       - *install_expect
       - *create_gpg_key_file
@@ -327,7 +317,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/repo
+          at: /tmp/workspace
       - *install_gpg
       - *install_expect
       - *create_gpg_key_file
@@ -341,7 +331,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/repo
+          at: /tmp/workspace
       - *install_gpg
       - *install_expect
       - *create_gpg_key_file
@@ -355,7 +345,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/repo
+          at: /tmp/workspace
       - *install_gpg
       - *install_expect
       - *create_gpg_key_file
@@ -369,7 +359,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/repo
+          at: /tmp/workspace
       - *install_gpg
       - *install_expect
       - *create_gpg_key_file
