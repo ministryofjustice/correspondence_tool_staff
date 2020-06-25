@@ -109,12 +109,13 @@ module Cases
     def update
       authorize case_type, :can_add_case?
 
-      # @case = OffenderSARCaseForm.new(@case)
       @case.assign_attributes(update_params) if update_params
       @case.current_step = params[:current_step]
 
+      # TODO - CT-2910 refactor to use `case_updater_service`
       if @case.valid? && @case.save
         flash[:notice] = "Case edited successfully"
+        @case.state_machine.edit_case!(acting_user: @user, acting_team: BusinessUnit.dacu_branston)
         redirect_to case_path(@case.id) and return
       else
         render :edit
