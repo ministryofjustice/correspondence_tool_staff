@@ -183,9 +183,9 @@ references:
     run:
       name: Build docker image
       command: |
-        ./build.sh circleci
+        . build.sh circleci
         mkdir -p workspace
-        echo $build_tag > workspace/build_tag
+        echo $BUILD_TAG > workspace/build_tag
 
 
   deploy_to_dev: &deploy_to_dev
