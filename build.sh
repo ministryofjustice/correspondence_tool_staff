@@ -45,7 +45,7 @@ function _build() {
     git status --porcelain
   fi
   p "------------------------------------------------------------------------"
-
+return 0
   # 3. Get a logged in context so we can push images to the ECR
   p "Docker login to registry (ECR)..."
   # $(aws ecr --profile "$aws_profile" get-login --no-include-email --region "$region" --profile "$aws_profile")
