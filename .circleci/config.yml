@@ -194,8 +194,8 @@ references:
       command: |
         setup-kube-auth
         kubectl config use-context development        
-        tag=`cat /tmp/workspace/build_tag`
-#        ./deploy.sh $tag development
+        build_tag=`cat /tmp/workspace/build_tag`
+#        ./deploy.sh $build_tag development circleci
 
 #        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/development/deployment.yaml
 #        kubectl apply --record=false -f ./config/kubernetes/development/
@@ -205,18 +205,22 @@ references:
       name: Deploy to Staging environment
       command: |
         setup-kube-auth
-        kubectl config use-context staging
-        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/staging/deployment.yaml
-        kubectl apply --record=false -f ./config/kubernetes/staging/
+        kubectl config use-context staging       
+        build_tag=`cat /tmp/workspace/build_tag`
+#        ./deploy.sh $build_tag staging circleci
+#        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/staging/deployment.yaml
+#        kubectl apply --record=false -f ./config/kubernetes/staging/
 
   deploy_to_qa: &deploy_to_qa
     run:
       name: Deploy to QA environment
       command: |
         setup-kube-auth
-        kubectl config use-context staging
-        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/qa/deployment.yaml
-        kubectl apply --record=false -f ./config/kubernetes/qa/
+        kubectl config use-context qa
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag qa circleci
+#        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/qa/deployment.yaml
+#        kubectl apply --record=false -f ./config/kubernetes/qa/
 
   deploy_to_demo: &deploy_to_demo
     run:
@@ -224,8 +228,8 @@ references:
       command: |
         setup-kube-auth
         kubectl config use-context staging
-        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/demo/deployment.yaml
-        kubectl apply --record=false -f ./config/kubernetes/demo/        
+#        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/demo/deployment.yaml
+#        kubectl apply --record=false -f ./config/kubernetes/demo/        
 
   # deploy_to_production: &deploy_to_production
   #   run:

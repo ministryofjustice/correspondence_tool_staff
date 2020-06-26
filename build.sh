@@ -37,7 +37,7 @@ function _build() {
   p "Build tag: $docker_build_tag"
   p "Branch: $current_branch"
   p "Registry tag: $docker_registry_tag"
-
+return 1;
   if [ -z "$(git status --porcelain)" ]; then
     p "Deploying from a clean working directory..."
   else
@@ -45,7 +45,7 @@ function _build() {
     git status --porcelain
   fi
   p "------------------------------------------------------------------------"
-return 0
+
   # 3. Get a logged in context so we can push images to the ECR
   p "Docker login to registry (ECR)..."
   # $(aws ecr --profile "$aws_profile" get-login --no-include-email --region "$region" --profile "$aws_profile")
