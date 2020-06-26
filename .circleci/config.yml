@@ -252,7 +252,6 @@ jobs:
       - *install_bundler
       - *check_bundler_version
       - *install_psql
-      - *set_up_aws_cli
       - *install_dependencies
       - *save_cache
       - *wait_for_db
