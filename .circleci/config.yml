@@ -187,7 +187,6 @@ references:
         mkdir -p workspace
         echo $BUILD_TAG > workspace/build_tag
 
-
   deploy_to_dev: &deploy_to_dev
     run:
       name: Deploy to Development environment
@@ -195,10 +194,7 @@ references:
         setup-kube-auth
         kubectl config use-context development        
         build_tag=`cat /tmp/workspace/build_tag`
-#        ./deploy.sh $build_tag development circleci
-
-#        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/development/deployment.yaml
-#        kubectl apply --record=false -f ./config/kubernetes/development/
+        ./deploy.sh $build_tag development circleci
 
   deploy_to_staging: &deploy_to_staging
     run:
@@ -207,9 +203,7 @@ references:
         setup-kube-auth
         kubectl config use-context staging       
         build_tag=`cat /tmp/workspace/build_tag`
-#        ./deploy.sh $build_tag staging circleci
-#        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/staging/deployment.yaml
-#        kubectl apply --record=false -f ./config/kubernetes/staging/
+        ./deploy.sh $build_tag staging circleci
 
   deploy_to_qa: &deploy_to_qa
     run:
@@ -219,39 +213,37 @@ references:
         kubectl config use-context qa
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag qa circleci
-#        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/qa/deployment.yaml
-#        kubectl apply --record=false -f ./config/kubernetes/qa/
 
   deploy_to_demo: &deploy_to_demo
     run:
       name: Deploy to Demo environment
       command: |
         setup-kube-auth
-        kubectl config use-context staging
-#        sed -i -e s/:latest/:$CIRCLE_SHA1/ config/kubernetes/demo/deployment.yaml
-#        kubectl apply --record=false -f ./config/kubernetes/demo/        
+        kubectl config use-context demo
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag demo circleci
 
-  # deploy_to_production: &deploy_to_production
-  #   run:
-  #     name: Deploy to production environment
-  #     command: |
-  #       setup-kube-auth
-  #       kubectl config use-context production
-  #       sed -i -e s/:latest/:$CIRCLE_SHA1/ k8s-deploy/production/deployment.yaml
-  #       kubectl apply --record=false -f ./k8s-deploy/production/
+  deploy_to_production: &deploy_to_production
+     run:
+       name: Deploy to production environment
+       command: |
+        setup-kube-auth
+        kubectl config use-context production
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag production circleci
 
 #  These are the jobs which run the steps. The jobs are used by the workflows.
 
 jobs:
-  build_and_test:
-    <<: *test_container_config
-    <<: *defaults   
-    steps:
-          - checkout
-          - setup_remote_docker:
-              docker_layer_caching: true
+#  build_and_test_fake:
+#    <<: *test_container_config
+#    <<: *defaults   
+#    steps:
+#          - checkout
+#          - setup_remote_docker:
+#              docker_layer_caching: true
 
-  build_and_test_real:
+  build_and_test:
     <<: *test_container_config
     <<: *defaults
     steps:
@@ -299,7 +291,7 @@ jobs:
       - *create_gpg_key_file
       - *configure_gpg
       - *decrypt_secrets
-      #- *deploy_to_dev
+      - *deploy_to_dev
 
   deploy_master_to_dev:
     <<: *deploy_container_config
@@ -369,7 +361,21 @@ jobs:
       - *create_gpg_key_file
       - *configure_gpg
       - *decrypt_secrets
-      - *deploy_to_demo      
+      - *deploy_to_demo
+
+  deploy_to_production:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_production       
 
 #  Workflows combine jobs to perform the actions
 
@@ -438,6 +444,6 @@ workflows:
           filters:
             branches:
               only: master
-      - deploy_production:
+      - deploy_to_production:
            requires:
             - deploy_production_approval

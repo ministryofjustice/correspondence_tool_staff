@@ -37,7 +37,7 @@ function _build() {
   p "Build tag: $docker_build_tag"
   p "Branch: $current_branch"
   p "Registry tag: $docker_registry_tag"
-return 0;
+
   if [ -z "$(git status --porcelain)" ]; then
     p "Deploying from a clean working directory..."
   else
