@@ -37,7 +37,7 @@ function _build() {
   p "Build tag: $docker_build_tag"
   p "Branch: $current_branch"
   p "Registry tag: $docker_registry_tag"
-return 1;
+return 0;
   if [ -z "$(git status --porcelain)" ]; then
     p "Deploying from a clean working directory..."
   else
@@ -61,7 +61,7 @@ return 1;
   else
     p "\e[31mFatal error: Local git branch is out of sync with origin\e[0m"
     p "\e[31mExiting... run git push to sync changes\e[0m\n"
-    return 0;
+    return 1;
   fi
 
   # 6. Build the image using the application's docker file and the git build context above
