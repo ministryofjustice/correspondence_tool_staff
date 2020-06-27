@@ -94,18 +94,26 @@ module Warehouse
         self.process_cases(Case::Base.all)
       end
 
-      def reconcile
+      def reconcile(job_size=nil)
         [
-          self.reconcile_missing_cases,
+          self.reconcile_missing_cases(job_size),
           self.reconcile_deleted_cases
         ]
       end
 
-      def reconcile_missing_cases
-        query =
-          Case::Base
-            .joins('LEFT OUTER JOIN warehouse_case_reports ON warehouse_case_reports.case_id = cases.id')
-            .where("cases.deleted = 'false' AND warehouse_case_reports.case_id IS NULL")
+      def reconcile_missing_cases(job_size=nil)
+        if job_size.nil?
+          query =
+            Case::Base
+              .joins('LEFT OUTER JOIN warehouse_case_reports ON warehouse_case_reports.case_id = cases.id')
+              .where("cases.deleted = 'false' AND warehouse_case_reports.case_id IS NULL")
+        else
+          query =
+            Case::Base
+              .joins('LEFT OUTER JOIN warehouse_case_reports ON warehouse_case_reports.case_id = cases.id')
+              .where("cases.deleted = 'false' AND warehouse_case_reports.case_id IS NULL")
+              .limit(job_size)
+        end
 
         self.process_cases(query)
       end

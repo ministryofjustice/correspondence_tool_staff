@@ -9,6 +9,7 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
   let(:number_to_create) { 1 }
 
   let(:cli_index) { CTS::Cases::CLI.new }
+  let(:cli_warehouse) { CTS::Cases::CLI.new }
   let(:foi_case)      { create :foi_case }
   let(:sar_case)      { create :sar_case }
 
@@ -28,7 +29,12 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
         size: 2
       }
     )
-    find_or_create :team_dacu
+    allow(cli_warehouse).to receive(:options).and_return(
+      {
+        size: 2
+      }
+    )
+  find_or_create :team_dacu
   end
 
 
@@ -64,6 +70,13 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
       allow(::Warehouse::CaseReport).to receive(:reconcile)
       cli.warehouse
       expect(::Warehouse::CaseReport).to have_received(:reconcile)
+    end
+
+    it 'warehouses certain amount cases specified by size option' do
+      allow(::Warehouse::CaseReport).to receive(:generate)
+      allow(Case::Base).to receive_message_chain(:join, :where, :limit, :in_batches).and_return([sar_case, foi_case])
+      cli_warehouse.warehouse
+      expect(::Warehouse::CaseReport).to have_received(:generate).twice
     end
   end
 end
