@@ -80,7 +80,7 @@ group :test do
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 4.3'
   gem 'site_prism', '= 3.1'
-  gem 'webdrivers', '~> 4.2'
+  gem 'webdrivers', '~> 4.4'
 end
 
 group :development, :test do
