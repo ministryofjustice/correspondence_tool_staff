@@ -30,9 +30,7 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
       }
     )
     allow(cli_warehouse).to receive(:options).and_return(
-      {
-        size: 2
-      }
+      { size: 2 }
     )
   find_or_create :team_dacu
   end
