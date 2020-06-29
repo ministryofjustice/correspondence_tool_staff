@@ -31,7 +31,7 @@ module Query
       limit << "LIMIT #{@limit}" if @limit.present?
 
       <<~SQL
-        WITH retrieved_cases AS (#{@retrieval_scope.select(:id).to_sql} #{limit.join(' ')})        
+        WITH retrieved_cases AS (#{@retrieval_scope.select(:id).to_sql})        
         SELECT 
           #{@columns.join(', ').chomp(',')}
         FROM 
@@ -40,6 +40,7 @@ module Query
           retrieved_cases
         ON 
           retrieved_cases.id = #{warehouse}.case_id
+        #{limit.join(' ')}
       SQL
     end
   end
