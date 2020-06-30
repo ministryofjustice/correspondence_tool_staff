@@ -33,6 +33,7 @@ describe ConfigurableStateMachine::Machine do
     UNIVERSAL_EVENTS = %i[
       add_note_to_case
       add_data_received
+      edit_case
     ].freeze
 
     def offender_sar_case(with_state:)
