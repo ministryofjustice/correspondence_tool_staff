@@ -16,12 +16,12 @@ gem 'aws-sdk', '2.7.3'
 gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git', branch: 'bundler-fix'
 gem 'business_time'
 gem 'config', '~> 2.0'
-gem 'devise', '~> 4.7.1'
+gem 'devise', '~> 4.7.2'
 gem 'draper', '4.0.1'
 gem 'dropzonejs-rails', '>= 0.8'
 gem 'foreman', '~> 0.87.1'
 gem 'factory_bot_rails', '~> 5.1.1'
-gem 'faker', '~> 2.10.2'
+gem 'faker', '~> 2.12.0'
 gem 'gov_uk_date_fields', '~> 3.1'
 gem 'govuk_template',         '~> 0.26.0'
 gem 'govuk_frontend_toolkit', '>= 9.0.0'
@@ -80,7 +80,7 @@ group :test do
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 4.3'
   gem 'site_prism', '= 3.1'
-  gem 'webdrivers', '~> 4.2'
+  gem 'webdrivers', '~> 4.4'
 end
 
 group :development, :test do
@@ -94,13 +94,13 @@ group :development, :test do
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
-  gem 'parallel_tests', '~> 2.32'
+  gem 'parallel_tests', '~> 3.0'
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 4.0'
   gem 'rubocop', '~> 0.81.0', require: false
-  gem 'rubocop-rspec', '~> 1.39.0', require: false
+  gem 'rubocop-rspec', '~> 1.40.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'

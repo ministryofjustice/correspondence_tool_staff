@@ -6,7 +6,6 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
       @scope = scope
     end
 
-    # FOIs are visible to anyone logged in to the system
     def resolve
       if @user.permitted_correspondence_types.include? CorrespondenceType.foi
         @scope
@@ -40,8 +39,7 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
   def show?
     clear_failed_checks
 
-    # FOIs should be viewable by anyone who is logged into the system.
-    true
+    @user.permitted_correspondence_types.include? CorrespondenceType.foi
   end
 
   check :case_is_not_assigned_to_press_or_private_office do
