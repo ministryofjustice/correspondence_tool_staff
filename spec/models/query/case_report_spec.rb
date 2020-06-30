@@ -89,10 +89,18 @@ RSpec.describe Query::CaseReport do
         offset: 0,
       ).query
       
+      result_set = Set.new
+      expected_result = Set.new
+
       result = ActiveRecord::Base.connection.execute(sql_query)
       expect(result.count).to eq 2
-      expect(result[0]['id']).to eq foi_case['id']
-      expect(result[1]['id']).to eq closed_case['id']
+      result_set << result[0]['id']
+      result_set << result[1]['id']
+
+      expected_result << foi_case['id']
+      expected_result << closed_case['id']
+
+      expect(result_set).to eq expected_result
 
       sql_query = described_class.new(
         retrieval_scope: external_deadline_retrieval_scope,
