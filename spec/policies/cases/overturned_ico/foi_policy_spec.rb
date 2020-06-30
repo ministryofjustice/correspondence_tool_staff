@@ -15,7 +15,7 @@ RSpec.describe Case::OverturnedICO::FOIPolicy do
 
   let(:manager)               { managing_team.managers.first }
   let(:other_manager)         { other_managing_team.managers.first }
-  let(:responder)             { responding_team.responders.first }
+  let(:responder)             { find_or_create :responder }
   let(:press_officer)         { find_or_create :press_officer }
   let(:private_officer)       { find_or_create :private_officer }
   let(:disclosure_approver)   { dacu_disclosure.approvers.first }

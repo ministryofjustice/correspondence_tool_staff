@@ -11,7 +11,7 @@ module CTS::Cases
 
     def call
       logger.info Benchmark::CAPTION
-      logger.info Benchmark.measure { @added, @deleted = Warehouse::CaseReport.reconcile }
+      logger.info Benchmark.measure { @added, @deleted = Warehouse::CaseReport.reconcile(@options[:size]) }
       logger.info "\n#{@added} cases added to warehouse\n#{@deleted} cases deleted from warehouse\n"
     end
   end

@@ -27,7 +27,7 @@ RSpec.describe OffenderSARCaseForm, type: :model do
 
   describe "#steps" do
     it "returns the list of steps" do
-      expect(case_form.steps).to eq ["subject-details", "requester-details", "requested-info", "date-received"]
+      expect(case_form.steps).to eq ["subject-details", "requester-details", "recipient-details", "requested-info", "request-details", "date-received"]
     end
   end
 
@@ -55,7 +55,11 @@ RSpec.describe OffenderSARCaseForm, type: :model do
       case_form.next_step
       expect(case_form.get_step_partial).to eq "requester_details_step"
       case_form.next_step
+      expect(case_form.get_step_partial).to eq "recipient_details_step"
+      case_form.next_step
       expect(case_form.get_step_partial).to eq "requested_info_step"
+      case_form.next_step
+      expect(case_form.get_step_partial).to eq "request_details_step"
       case_form.next_step
       expect(case_form.get_step_partial).to eq "date_received_step"
     end
