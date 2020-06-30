@@ -235,15 +235,15 @@ references:
 #  These are the jobs which run the steps. The jobs are used by the workflows.
 
 jobs:
-#  build_and_test_fake:
-#    <<: *test_container_config
-#    <<: *defaults   
-#    steps:
-#          - checkout
-#          - setup_remote_docker:
-#              docker_layer_caching: true
-
   build_and_test:
+    <<: *test_container_config
+    <<: *defaults   
+    steps:
+          - checkout
+          - setup_remote_docker:
+              docker_layer_caching: true
+
+  build_and_test_real:
     <<: *test_container_config
     <<: *defaults
     steps:
@@ -261,7 +261,23 @@ jobs:
       - *run_unit_tests
       - *run_feature_tests
 
-  build_and_push_to_ecr:
+  build_branch_and_push_to_ecr:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker:
+          docker_layer_caching: true 
+      - *configure_aws_profile 
+      - *build_and_push_docker_image
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - build_tag
+
+  build_master_and_push_to_ecr:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -278,7 +294,7 @@ jobs:
             - build_tag
 
 # Both should be identical but different names
-  deploy_to_dev:
+  deploy_branch_to_dev:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -306,7 +322,7 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_dev
 
-  deploy_to_staging:
+  deploy_branch_to_staging:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -334,7 +350,7 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_staging
 
-  deploy_to_qa:
+  deploy_branch_to_qa:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -348,7 +364,21 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_qa
 
-  deploy_to_demo:
+  deploy_master_to_qa:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_qa
+
+  deploy_branch_to_demo:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -362,7 +392,21 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_demo
 
-  deploy_to_production:
+  deploy_master_to_demo:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_demo
+
+  deploy_master_to_production:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -380,69 +424,89 @@ jobs:
 
 workflows:
   version: 2
-  build_test_deploy:
+
+  build_and_deploy_master:
     jobs:
       - build_and_test
-      - build_and_push_to_ecr:
+      - build_master_and_push_to_ecr:
           requires:
-            - build_and_test
-      - deploy_dev_approval:
-          type: approval
-          requires:
-            - build_and_push_to_ecr
+            - build_and_test   
           filters:
             branches:
-              ignore: master  
-      - deploy_to_dev:
-          requires:
-            - deploy_dev_approval
+              only: fake-master
       - deploy_master_to_dev:
           requires:
-            - build_and_push_to_ecr
-          filters:
-            branches:
-              only: master        
-      - deploy_staging_approval:
+            - build_master_and_push_to_ecr       
+      - deploy_master_to_staging_approval:
           type: approval
           requires:
-            - build_and_push_to_ecr
-          filters:
-            branches:
-              ignore: master
-      - deploy_to_staging:
-          requires:
-            - deploy_staging_approval
-      - deploy_master_staging_approval:
-          type: approval
-          requires:
-            - deploy_master_to_dev
-          filters:
-            branches:
-              only: master            
+            - deploy_master_to_dev          
       - deploy_master_to_staging:
           requires:
-            - deploy_master_staging_approval         
-      - deploy_qa_approval:
-          type: approval
-          requires:
-            - build_and_push_to_ecr
-      - deploy_to_qa:
-          requires:
-            - deploy_qa_approval
-      - deploy_demo_approval:
-          type: approval
-          requires:
-            - build_and_push_to_ecr             
-      - deploy_to_demo:
-          requires:
-            - deploy_demo_approval                                      
-      - deploy_production_approval:
+            - deploy_master_to_staging_approval 
+      - deploy_master_to_production_approval:
           type: approval
           requires:
             - deploy_master_to_staging
+      - deploy_master_to_production:
+           requires:
+            - deploy_master_to_production_approval
+
+
+      - deploy_master_to_qa_approval:
+          type: approval
+          requires:
+            - build_master_and_push_to_ecr           
+      - deploy_master_to_qa:
+          requires:
+            - deploy_master_to_qa_approval
+      - deploy_master_to_demo_approval:
+          type: approval
+          requires:
+            - build_master_and_push_to_ecr            
+      - deploy_master_to_demo:
+          requires:
+            - deploy_master_to_demo_approval
+
+  build_and_deploy_branch:
+    jobs:
+      - build_and_test
+      - build_branch_and_push_to_ecr_approval:
+          type: approval
+          requires:
+            - build_and_test
           filters:
             branches:
-              only: master
-      - deploy_to_production:
-           requires:
-            - deploy_production_approval
+              ignore: fake-master
+      - build_branch_and_push_to_ecr:
+          requires:
+            - build_branch_and_push_to_ecr_approval
+      - deploy_branch_to_dev_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr 
+      - deploy_branch_to_dev:
+          requires:
+            - deploy_branch_to_dev_approval
+      - deploy_branch_to_staging_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_staging:
+          requires:
+            - deploy_branch_to_staging_approval             
+      - deploy_branch_to_qa_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_qa:
+          requires:
+            - deploy_branch_to_qa_approval
+      - deploy_branch_to_demo_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr            
+      - deploy_branch_to_demo:
+          requires:
+            - deploy_branch_to_demo_approval                                      
+      
