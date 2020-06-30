@@ -427,7 +427,7 @@ workflows:
 
   build_and_deploy_master:
     jobs:
-      - build_and_test
+      - build_and_test:
           filters:
             branches:
               only: fake-master
@@ -470,7 +470,7 @@ workflows:
 
   build_and_deploy_branch:
     jobs:
-      - build_and_test
+      - build_and_test:
           filters:
             branches:
               ignore: fake-master
