@@ -428,12 +428,12 @@ workflows:
   build_and_deploy_master:
     jobs:
       - build_and_test
-      - build_master_and_push_to_ecr:
-          requires:
-            - build_and_test   
           filters:
             branches:
               only: fake-master
+      - build_master_and_push_to_ecr:
+          requires:
+            - build_and_test   
       - deploy_master_to_dev:
           requires:
             - build_master_and_push_to_ecr       
@@ -471,13 +471,13 @@ workflows:
   build_and_deploy_branch:
     jobs:
       - build_and_test
+          filters:
+            branches:
+              ignore: fake-master
       - build_branch_and_push_to_ecr_approval:
           type: approval
           requires:
             - build_and_test
-          filters:
-            branches:
-              ignore: fake-master
       - build_branch_and_push_to_ecr:
           requires:
             - build_branch_and_push_to_ecr_approval
