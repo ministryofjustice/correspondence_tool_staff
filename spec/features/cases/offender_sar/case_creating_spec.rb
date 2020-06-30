@@ -24,9 +24,17 @@ feature 'Offender SAR Case creation by a manager' do
 
     cases_new_offender_sar_requester_details_page.fill_in_case_details
     click_on "Continue"
+    expect(cases_new_offender_sar_recipient_details_page).to be_displayed
+
+    cases_new_offender_sar_recipient_details_page.fill_in_case_details
+    click_on "Continue"
     expect(cases_new_offender_sar_requested_info_page).to be_displayed
 
     cases_new_offender_sar_requested_info_page.fill_in_case_details
+    click_on "Continue"
+    expect(cases_new_offender_sar_request_details_page).to be_displayed
+
+    cases_new_offender_sar_request_details_page.fill_in_case_details
     click_on "Continue"
     expect(cases_new_offender_sar_date_received_page).to be_displayed
 
