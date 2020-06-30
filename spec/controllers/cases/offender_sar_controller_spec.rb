@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Cases::OffenderSarController, type: :controller do
+  let(:responder) { find_or_create :branston_user }
+
   describe 'authentication' do
     let(:params) do
       {
@@ -30,16 +32,32 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   describe '#new' do
     let(:case_types) { %w[Case::SAR::Offender] }
     let(:params) {{ correspondence_type: 'offender_sar' }}
-    let(:manager) { find_or_create :disclosure_bmt_user }
 
     before do
-      sign_in manager
+      sign_in responder
     end
 
-    it 'authorizes' do
-      expect { get :new, params: params }
-        .to require_permission(:can_add_case?)
-          .with_args(manager, Case::SAR::Offender)
+    context 'when the user is allowed to manage offender sar cases' do
+      it 'authorizes' do
+        expect { get :new, params: params }
+          .to require_permission(:can_add_case?)
+          .with_args(responder, Case::SAR::Offender)
+      end
+    end
+
+    context 'when the user is a manager for other types' do
+      let(:manager) { find_or_create :disclosure_bmt_user }
+
+      before do
+        sign_in manager
+      end
+
+      it 'redirects' do
+        get :new, params: params
+        expect(flash[:alert]).to eq 'You are not authorised to create new cases.'
+        expect(response)
+          .to redirect_to(root_path)
+      end
     end
 
     it 'renders the new template with a form object' do
@@ -70,13 +88,12 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   describe '#edit' do
     let(:offender_sar_case) { create(:offender_sar_case).decorate }
     let(:params) {{ id: offender_sar_case.id }}
-    let(:manager) { find_or_create :disclosure_bmt_user }
 
     before do
-      sign_in manager
+      sign_in responder
     end
 
-    it 'does stuff' do
+    it 'assigns and displays' do
       get :edit, params: params
       expect(response).to render_template(:edit)
       expect(assigns(:case)).to be_a Case::SAR::Offender
@@ -86,7 +103,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   describe '#update' do
     let(:offender_sar_case) { create(:offender_sar_case).decorate }
     let(:params) {{ id: offender_sar_case.id }}
-    let(:manager) { find_or_create :disclosure_bmt_user }
     let(:params) do
       {
         id: offender_sar_case.id,
@@ -108,7 +124,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
 
     before do
-      sign_in manager
+      sign_in responder
     end
 
     context 'with valid params' do
