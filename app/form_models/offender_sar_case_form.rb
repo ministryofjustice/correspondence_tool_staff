@@ -3,7 +3,7 @@ class OffenderSARCaseForm
   include Steppable
 
   delegate :creator,
-           :criminal_record_reference_number,
+           :case_reference_number,
            :date_of_birth_dd,
            :date_of_birth_mm,
            :date_of_birth_yyyy,

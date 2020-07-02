@@ -39,7 +39,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.subject_aliases.data.text).to eq 'John Smith'
       expect(partial.previous_case_numbers.data.text).to eq '54321'
       expect(partial.other_subject_ids.data.text).to eq 'ABC 123 DEF'
-      expect(partial.criminal_record_reference_number.data.text).to eq '123 ABC 456'
+      expect(partial.case_reference_number.data.text).to eq '123 ABC 456'
       expect(partial.date_of_birth.data.text).to eq '1 Sep 2019'
     end
 

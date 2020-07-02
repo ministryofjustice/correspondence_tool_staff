@@ -28,7 +28,7 @@ class Case::SAR::Offender < Case::Base
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
-                 criminal_record_reference_number: :string,
+                 case_reference_number: :string,
                  date_of_birth: :date,
                  escalation_deadline: :date,
                  external_deadline: :date,
