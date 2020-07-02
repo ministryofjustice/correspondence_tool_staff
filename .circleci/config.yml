@@ -235,14 +235,6 @@ references:
 #  These are the jobs which run the steps. The jobs are used by the workflows.
 
 jobs:
-  
-  # build_and_test_fake:
-  #   <<: *test_container_config
-  #   <<: *defaults   
-  #   steps:
-  #         - checkout
-  #         - setup_remote_docker:
-  #             docker_layer_caching: true
 
   build_and_test:
     <<: *test_container_config
