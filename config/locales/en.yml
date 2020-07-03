@@ -592,6 +592,7 @@ en:
       status: Status
       subject_aliases: Alias
       third_party: Information requested on someone's behalf?
+      third_party_name: Requester
       third_party_relationship: Relationship
       third_party_reference: Requester reference number
       third_party_company_name: Company name
