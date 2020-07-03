@@ -82,9 +82,9 @@ describe Case::SAR::Offender do
   describe '#recipient' do
     context 'valid values' do
       it 'does not error' do
-        expect(build(:offender_sar_case, recipient: 'subject')).to be_valid
-        expect(build(:offender_sar_case, recipient: 'requester')).to be_valid
-        expect(build(:offender_sar_case, recipient: 'third_party')).to be_valid
+        expect(build(:offender_sar_case, recipient: 'subject_recipient')).to be_valid
+        expect(build(:offender_sar_case, recipient: 'requester_recipient')).to be_valid
+        expect(build(:offender_sar_case, recipient: 'third_party_recipient')).to be_valid
       end
     end
 
@@ -357,7 +357,7 @@ describe Case::SAR::Offender do
 
   describe '#recipient_name' do
     it 'returns third_party_name subject not recipient recipient' do
-      kase = create :offender_sar_case, recipient: "requester"
+      kase = create :offender_sar_case, recipient: "requester_recipient"
       expect(kase.recipient_name).to eq kase.third_party_name
     end
 
@@ -369,12 +369,12 @@ describe Case::SAR::Offender do
 
   describe '#recipient_address' do
     it 'returns third_party_address if subject not recipient' do
-      kase = create :offender_sar_case, recipient: "requester"
+      kase = create :offender_sar_case, recipient: "requester_recipient"
       expect(kase.recipient_address).to eq kase.third_party_address
     end
 
     it 'returns subject_address if if subject is recipient' do
-      kase = create :offender_sar_case, recipient: "subject"
+      kase = create :offender_sar_case, recipient: "subject_recipient"
       expect(kase.recipient_address).to eq kase.subject_address
     end
   end

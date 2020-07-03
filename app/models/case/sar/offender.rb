@@ -64,9 +64,9 @@ class Case::SAR::Offender < Case::Base
   }
 
   enum recipient: {
-    subject:  'subject',
-    requester: 'requester',
-    third_party: 'third_party',
+    subject_recipient:  'subject_recipient',
+    requester_recipient: 'requester_recipient',
+    third_party_recipient: 'third_party_recipient',
   }
 
   has_paper_trail only: [
@@ -193,11 +193,11 @@ class Case::SAR::Offender < Case::Base
   end
 
   def recipient_name
-    (recipient != "subject") ? third_party_name : subject_name
+    (!subject_recipient?) ? third_party_name : subject_name
   end
 
   def recipient_address
-    (recipient != "subject") ? postal_address : subject_address
+    (!subject_recipient?) ? postal_address : subject_address
   end
 
   private

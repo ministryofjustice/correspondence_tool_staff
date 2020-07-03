@@ -30,7 +30,7 @@ FactoryBot.define do
     other_subject_ids               { 'ABC 123 DEF' }
     subject_address                 { '22 Sample Address, Test Lane, Testingington, TE57ST' }
     subject_type                    { 'offender' }
-    recipient                       { 'subject' }
+    recipient                       { 'subject_recipient' }
     third_party                     { false }
     flag_as_high_profile            { false }
     created_at                      { creation_time }
