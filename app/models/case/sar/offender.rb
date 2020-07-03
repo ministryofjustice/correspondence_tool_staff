@@ -160,9 +160,37 @@ class Case::SAR::Offender < Case::Base
     self.current_state == 'data_to_be_requested'
   end
 
-  # @todo: Should these steps be defined in 'Steppable' or the controller
-  def steps
-    %w[subject-details requester-details requested-info date-received].freeze
+  # DATA MAPPING FIELDS - NAMING THE CONCEPTS
+  def subject_name
+    subject_full_name
+  end
+
+  def subject_address
+    "Not implemented yet!" # subject_address
+  end
+
+  def third_party_name
+    "Not implemented yet!"
+  end
+
+  def third_party_address
+    postal_address
+  end
+
+  def requester_name
+    third_party ? third_party_name : subject_name
+  end
+
+  def requester_address
+    third_party ? third_party_address : subject_address
+  end
+
+  def recipient_name
+    (recipient == "subject") ? third_party_name : subject_name
+  end
+
+  def recipient_address
+    (recipient == "subject") ? postal_address : subject_address
   end
 
   private
