@@ -270,8 +270,11 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
 
   def request_details_html(kase)
     content_tag(:strong, "#{kase.subject} ", class: 'strong') +
-        content_tag(:div, kase.name, class: 'case-name-detail')
-
+        if kase.pretty_type =='OFFENDER-SAR'
+          content_tag(:div, kase.third_party_name, class: 'case-name-detail')
+        else
+          content_tag(:div, kase.name, class: 'case-name-detail')
+        end
   end
 
   # Note exceptions for FOI sub-classes because REST routes for FOI
