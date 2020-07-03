@@ -79,6 +79,32 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe '#recipient' do
+    context 'valid values' do
+      it 'does not error' do
+        expect(build(:offender_sar_case, recipient: 'subject')).to be_valid
+        expect(build(:offender_sar_case, recipient: 'requester')).to be_valid
+        expect(build(:offender_sar_case, recipient: 'third_party')).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_case, recipient: 'user')
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context 'nil' do
+      it 'errors' do
+        kase = build(:offender_sar_case, recipient: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:recipient]).to eq ["can't be blank"]
+      end
+    end
+  end
+
   # describe '#subject_address' do
   #   context 'valid values' do
   #     it 'does not error' do
@@ -331,13 +357,11 @@ describe Case::SAR::Offender do
 
   describe '#recipient_name' do
     it 'returns third_party_name subject not recipient recipient' do
-      pending "recipient doesn't exist yet"
-      kase = create :offender_sar_case, :third_party
+      kase = create :offender_sar_case, recipient: "requester"
       expect(kase.recipient_name).to eq kase.third_party_name
     end
 
     it 'returns subject_name if subject is recipient' do
-      pending "recipient doesn't exist yet"
       kase = create :offender_sar_case
       expect(kase.recipient_name).to eq kase.subject_name
     end
@@ -345,14 +369,12 @@ describe Case::SAR::Offender do
 
   describe '#recipient_address' do
     it 'returns third_party_address if subject not recipient' do
-      pending "recipient doesn't exist yet"
-      kase = create :offender_sar_case, :third_party
+      kase = create :offender_sar_case, recipient: "requester"
       expect(kase.recipient_address).to eq kase.third_party_address
     end
 
     it 'returns subject_address if if subject is recipient' do
-      pending "recipient doesn't exist yet"
-      kase = create :offender_sar_case
+      kase = create :offender_sar_case, recipient: "subject"
       expect(kase.recipient_address).to eq kase.subject_address
     end
   end
