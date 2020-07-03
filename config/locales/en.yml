@@ -139,7 +139,12 @@ en:
           attributes:
             third_party:
               inclusion: Please choose yes or no
-
+        case/offender_sar:
+          attributes:
+            third_party_company_name:
+              blank: can't be blank
+            third_party_name:
+              blank: can't be blank if company name not given
         assignment:
           attributes:
             state:
@@ -450,7 +455,7 @@ en:
         email: "Recipient email address"
         high_profile: High profile
         message: Request details (optional)
-        name: "Full name of the representative"
+        third_party_name: "Full name of the representative"
         other_subject_ids: "Police national computer number"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
@@ -468,7 +473,7 @@ en:
         third_party: Is this information being requested on someone else's behalf?
         third_party_relationship: Relationship to the subject
         third_party_reference: Requester reference (optional)
-        third_party_company_name: Company name (optional)
+        third_party_company_name: Company name (required if representative name not given)
         total: Total
       feedback:
         comment: Help make this service better
@@ -506,7 +511,6 @@ en:
         </i>
         <strong>You can't update a response after marking it as sent.</strong>
       </p>
-
 
   notices:
     case_cleared: "%{team} has been notified that the response is %{status}."

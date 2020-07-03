@@ -42,13 +42,14 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     end
 
     it 'displays third party details if present' do
-      third_party_case = (create :offender_sar_case, :third_party, name: 'Rick Westor').decorate
+      third_party_case = (create :offender_sar_case, :third_party, third_party_name: 'Rick Westor').decorate
       assign(:case, third_party_case)
       render partial: 'cases/offender_sar/case_details.html.slim', locals: {
         case_details: third_party_case,
         link_type: nil
       }
       partial = offender_sar_case_details_section(rendered).sar_basic_details
+
       expect(partial.third_party.data.text).to eq 'Yes'
       expect(partial.requester_name.data.text).to eq 'Rick Westor'
       expect(partial.third_party_reference.data.text).to eq 'FOOG1234'
