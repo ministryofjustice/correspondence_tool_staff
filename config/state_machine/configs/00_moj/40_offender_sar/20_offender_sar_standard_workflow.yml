@@ -11,6 +11,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
+                edit_case:
               waiting_for_data:
                 mark_as_ready_for_vetting:
                   transition_to: ready_for_vetting
@@ -18,28 +19,34 @@
                 add_note_to_case:
                 send_acknowledgement_letter:
                 preview_cover_page:
+                edit_case:
               ready_for_vetting:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
                 add_data_received:
                 add_note_to_case:
+                edit_case:
               vetting_in_progress:
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
                 add_data_received:
                 add_note_to_case:
+                edit_case:
               ready_to_copy:
                 mark_as_ready_to_dispatch:
                   transition_to: ready_to_dispatch
                 add_data_received:
                 add_note_to_case:
+                edit_case:
               ready_to_dispatch:
                 close:
                   transition_to: closed
                 add_data_received:
                 add_note_to_case:
                 send_dispatch_letter:
+                edit_case:
               closed:
                 add_data_received:
                 add_note_to_case:
+                edit_case:
 

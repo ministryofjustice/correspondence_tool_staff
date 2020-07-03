@@ -53,7 +53,12 @@ class OffenderSARCaseForm
 
   # @todo: Should these steps be defined in 'Steppable' or the controller
   def steps
-    %w[subject-details requester-details requested-info date-received].freeze
+    %w[subject-details
+       requester-details
+       recipient-details
+       requested-info
+       request-details
+       date-received].freeze
   end
 
   # @todo: Used in partial - should be decorator
