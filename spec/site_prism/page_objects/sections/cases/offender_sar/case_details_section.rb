@@ -30,7 +30,7 @@ module PageObjects
             element :data, 'td:first'
           end
 
-          section :external_reference, 'tr.external-reference' do
+          section :requester_reference, 'tr.external-reference' do
             element :data, 'td'
           end
 

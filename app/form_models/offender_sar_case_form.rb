@@ -34,7 +34,7 @@ class OffenderSARCaseForm
            :subject_type,
            :third_party_name,
            :third_party_relationship,
-           :external_reference,
+           :requester_reference,
            :third_party_company_name,
            :third_party,
            :type_abbreviation,

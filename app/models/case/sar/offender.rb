@@ -45,7 +45,7 @@ class Case::SAR::Offender < Case::Base
                  subject_type: :string,
                  third_party_relationship: :string,
                  third_party: :boolean,
-                 external_reference: :string,
+                 requester_reference: :string,
                  third_party_company_name: :string,
                  late_team_id: :integer,
                  third_party_name: :string

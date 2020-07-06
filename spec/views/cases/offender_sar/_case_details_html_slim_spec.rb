@@ -55,7 +55,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
 
       expect(partial.third_party.data.text).to eq 'Yes'
       expect(partial.requester_name.data.text).to eq 'Rick Westor'
-      expect(partial.external_reference.data.text).to eq 'FOOG1234'
+      expect(partial.requester_reference.data.text).to eq 'FOOG1234'
       expect(partial.third_party_company_name.data.text).to eq 'Foogle and Sons Solicitors at Law'
     end
 
