@@ -105,30 +105,6 @@ describe Case::SAR::Offender do
     end
   end
 
-  # describe '#subject_address' do
-  #   context 'valid values' do
-  #     it 'does not error' do
-  #       expect(build(:offender_sar_case, subject_address: '22 Acacia Avenue')).to be_valid
-  #     end
-  #   end
-
-  #   context 'invalid value' do
-  #     it 'errors' do
-  #       kase = build(:offender_sar_case, subject_address: '')
-  #       expect(kase).not_to be_valid
-  #       expect(kase.errors[:subject_address]).to eq ["can't be blank"]
-  #     end
-  #   end
-
-  #   context 'nil' do
-  #     it 'errors' do
-  #       kase = build(:offender_sar_case, subject_address: nil)
-  #       expect(kase).not_to be_valid
-  #       expect(kase.errors[:subject_address]).to eq ["can't be blank"]
-  #     end
-  #   end
-  # end
-
   describe '#reply_method' do
     context 'valid values' do
       it 'validates reply method' do
