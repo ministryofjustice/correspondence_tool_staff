@@ -1,3 +1,5 @@
+require 'csv'
+
 class StatsController < ApplicationController
   # @note (Mohammed Seedat): Interim solution to allow 'Closed Cases'
   #   to be considered a custom reporting option
@@ -14,19 +16,14 @@ class StatsController < ApplicationController
   def show
     report = Report.new report_type_id: params[:id]
 
-    if report.xlsx?
-      report_data = report.run
-
-      axlsx = create_spreadsheet(report_data)
-
-      send_data axlsx.to_stream.read,
-                filename: report.report_type.filename('xlsx'),
-                disposition: :attachment,
-                type: SPREADSHEET_CONTENT_TYPE
+    report.run_and_update!(user: current_user)
+    if report.etl?
+      # should display the link for downloading
+      flash[:download] = report_download_link(report.id, 'success')
+      redirect_back(fallback_location: root_path)
     else
-      report.run_and_update!(user: current_user)
-      send_data report.report_data, filename: report.report_type.filename('csv')
-    end
+      generate_final_report(report)
+    end    
   end
 
   def new
@@ -38,11 +35,18 @@ class StatsController < ApplicationController
     @report = Report.new(create_custom_params)
 
     if @report.valid?
-      if @report.xlsx?
-        generate_custom_excel_report(@report)
+
+      @report.run_and_update!(
+        user: current_user,
+        period_start: @report.period_start,
+        period_end: @report.period_end
+      )
+      if @report.etl?
+        flash[:download] = report_download_link(@report.id, 'success')
+        redirect_to new_stat_path
       else
-        generate_custom_csv_report(@report)
-      end
+        generate_final_report(@report)
+      end        
     else
       if create_custom_params[:correspondence_type].blank?
         @report.errors.add(:correspondence_type, :blank)
@@ -57,23 +61,19 @@ class StatsController < ApplicationController
 
   def download_custom
     report = Report.find(params[:id])
-    data, filename = report.report_details
-
-    if report.report_type.etl?
+    report_data, filename = report.report_details
+    if report.etl?
       return download_waiting(report) unless report.etl_ready?
       authorize report, :can_download_user_generated_report?
     end
 
-    send_data data, {
-      filename: filename,
-      disposition: :attachment
-    }
+    generate_final_report(report, report_data)
   end
 
   def download_audit
     report = Stats::R900AuditReport.new
     report.run_and_update!
-    send_data report.report_data, filename: "R900Audit.csv"
+    send_data generate_csv(report.report_data), filename: "R900Audit.csv"
   end
 
   def self.closed_cases_correspondence_type
@@ -81,6 +81,32 @@ class StatsController < ApplicationController
   end
 
   private
+
+  def generate_final_report(report, report_data=nil)
+    if report.report_format == 'xlsx'
+      csv_format = report.to_csv
+      axlsx = create_spreadsheet(csv_format)
+
+      send_data axlsx.to_stream.read,
+                filename: report.filename,
+                disposition: :attachment,
+                type: SPREADSHEET_CONTENT_TYPE
+    elsif report.report_format == 'csv'
+      csv_format = report.to_csv
+      send_data generate_csv(csv_format), filename: report.filename
+    else
+      send_data report.report_data || report_data, filename: report.filename
+    end
+  end 
+
+  def generate_csv(csv_format)
+    # Force quotes to prevent jagged rows in CSVs
+    CSV.generate(headers: true, force_quotes: true) do |csv_generator|
+      csv_format.each do |csv_row|
+        csv_generator << csv_row.map(&:value)
+      end
+    end
+  end
 
   # The plan here is/was to colour the spreadsheet titles just like the existing reports from ITG
   LIGHT_BLUE = 'c1d1f0'
@@ -103,7 +129,7 @@ class StatsController < ApplicationController
   def create_spreadsheet(report_data)
     axlsx = Axlsx::Package.new
     axlsx.workbook.add_worksheet do |sheet|
-      report_data.to_csv.each_with_index do |row, row_index|
+      report_data.each_with_index do |row, row_index|
         # data is in the 'value' property of the cells
         sheet.add_row row.map(&:value)
 
@@ -140,38 +166,6 @@ class StatsController < ApplicationController
         :period_start_dd, :period_start_mm, :period_start_yyyy,
         :period_end_dd, :period_end_mm, :period_end_yyyy,
       )
-  end
-
-  def generate_custom_excel_report(report)
-    report_data = report.run(
-      period_start: report.period_start,
-      period_end: report.period_end
-    )
-
-    send_data(
-      create_spreadsheet(report_data).to_stream.read,
-      filename: report.report_type.filename('xlsx'),
-      disposition: :attachment,
-      type: SPREADSHEET_CONTENT_TYPE
-    )
-  end
-
-  def generate_custom_csv_report(report)
-    report.run_and_update!(
-      user: current_user,
-      period_start: report.period_start,
-      period_end: report.period_end
-    )
-
-    if report.immediate_download?
-      send_data(
-        report.report_data,
-        filename: report.report_type.filename('csv')
-      )
-    else
-      flash[:download] = report_download_link(report.id, 'success')
-      redirect_to new_stat_path
-    end
   end
 
   def report_download_link(report_id, translation_key)

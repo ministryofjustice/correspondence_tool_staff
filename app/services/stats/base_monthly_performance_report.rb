@@ -1,4 +1,7 @@
 module Stats
+
+  ROWS_PER_FRAGMENT = 500 # Arbitrary value, may require experimentation
+  
   class BaseMonthlyPerformanceReport < BaseReport
 
     R005_SPECIFIC_COLUMNS = {
@@ -12,14 +15,13 @@ module Stats
     INDEXES_FOR_PERCENTAGE_COLUMNS = [1, 7, 13].freeze
 
     class << self
-      def xlsx?
-        true
+      def report_format
+        BaseReport::XLSX
       end
     end
 
     def initialize(**options)
       super(**options)
-
       @stats = StatsCollector.new(array_of_month_numbers + [:total], R005_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS))
       @superheadings = superheadings
 
@@ -37,13 +39,45 @@ module Stats
       raise '#description should be defined in sub-class of BaseMonthlyPerformanceReport'
     end
 
-    def run(*)
-      CaseSelector.new(case_scope)
-        .cases_received_in_period(@period_start, @period_end)
-        .includes(:responded_transitions, :approver_assignments, :assign_responder_transitions)
-        .each { |kase| analyse_case(kase) }
+    def process(offset, report_job_guid=nil)
+      query = CaseSelector.new(case_scope)
+      .cases_received_in_period(@period_start, @period_end)
+      .order(:id)
+      .limit(ROWS_PER_FRAGMENT)
+      .offset(offset)
+      .includes(:responded_transitions, :approver_assignments, :assign_responder_transitions) 
+      .each { |kase| analyse_case(kase) }
+      if !report_job_guid.nil?
+        redis = Redis.new
+        redis.set(report_job_guid, @stats.stats.to_json)
+      end
 
-      @stats.finalise
+    end
+
+    def run(*)
+      offset = 0 
+      if data_size > ROWS_PER_FRAGMENT
+        @job_ids = []
+        (1..num_fragments).map do |_i|
+          job_id = SecureRandom.uuid
+          PerformanceReportJob.perform_later(
+            self.class.name,
+            job_id,
+            @period_start.to_i,
+            @period_end.to_i, 
+            offset
+          )
+          @job_ids << job_id
+          offset += ROWS_PER_FRAGMENT
+        end
+        @etl = true
+        @status = WAITING
+      else
+        @etl = false
+        @status = COMPLETE
+        process(offset)
+        @stats.finalise
+      end 
     end
 
     def to_csv
@@ -64,7 +98,40 @@ module Stats
       end
     end
 
-    private
+    # def required_to_be_job
+    #   return false 
+    # end
+
+    # This function is only when the report is done via ETL (tasks)
+    def report_details(report)
+      redis = Redis.new
+      data_collector = []
+      report.job_ids.each do |job_id|
+        if redis.exists(job_id)
+          data_collector << redis.get(job_id)
+        end
+      end
+      if data_collector.count == report.job_ids.count
+        report.status = COMPLETE        
+        merge_stats(data_collector)
+        report.report_data = (@stats.stats).to_json
+        report.save!
+        report.report_data
+      else
+        nil
+      end
+    end
+
+    def data_size
+      CaseSelector.new(case_scope).cases_received_in_period(@period_start, @period_end).size.to_f
+    end
+
+    def num_fragments
+      @_num_fragments ||= 
+      begin
+        (data_size/ROWS_PER_FRAGMENT).ceil
+      end
+    end
 
     def superheadings
       [
@@ -94,6 +161,29 @@ module Stats
           result_set[:month] = Date::MONTHNAMES[month_no]
         end
       end
+    end
+
+    private
+
+    def merge_stats(data_collector)
+      merged_stats = {}
+      (array_of_month_numbers + [:total]).each do |row|
+        merged_stats[row] = {}
+      end
+      data_collector.each do |data|
+        data_object = JSON.parse(data, symbolize_names: true)
+        data_object.each do |month, stats|
+          month_key = month.to_s.to_i > 0 ? month.to_s.to_i : month
+          stats.each do |stat_item, value|
+            if !merged_stats[month_key].key?(stat_item)
+              merged_stats[month_key][stat_item] = 0
+            end
+            merged_stats[month_key][stat_item] += value
+          end
+        end 
+      end 
+      @stats.stats = merged_stats
+      @stats.finalise
     end
   end
 end

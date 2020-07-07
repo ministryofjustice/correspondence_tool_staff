@@ -78,5 +78,58 @@ module Stats
       end
     end
 
+      # this method is passed into the stats collector as a before_finalize callback and accesses the
+      # @stats variable  inside the stats collector to sum totals for directorates and business groups
+      def self.roll_up_stats_callback(stats)
+        overall_total_results = stats.stats[:total]
+        BusinessUnit.includes(:directorate, :business_group).all.each do |bu|
+          bu_results = stats.stats[bu.id]
+          directorate_results = stats.stats[bu.directorate.id]
+          business_group_results = stats.stats[bu.business_group.id]
+          bu_results.each do |key, value|
+            directorate_results[key] += value
+            business_group_results[key] += value
+            overall_total_results[key] += value
+          end
+        end
+      end
+
+      def self.populate_team_details_callback(stats)
+        # This is a hash (indexed by team id) containing a hash of team stats columns
+        # so removing the 'total' entry leaves just the team IDs
+        stats_by_team = stats.stats.except(:total)
+
+        teams = Team.includes(:team_leader, parent: :parent).find(stats_by_team.keys)
+        stats_by_team.each do |team_id, result_set|
+          team = teams.detect { |t| t.id == team_id }
+          case team.class.to_s
+          when 'BusinessUnit'
+            result_set[:business_unit] = team.name
+            result_set[:directorate] = team.parent.name
+            result_set[:business_group] = team.parent.parent.name
+          when 'Directorate'
+            result_set[:business_unit] = ''
+            result_set[:directorate] = team.name
+            result_set[:business_group] = team.parent.name
+          when 'BusinessGroup'
+            result_set[:business_unit] = ''
+            result_set[:directorate] = ''
+            result_set[:business_group] = team.name
+          else
+            raise "Invalid team type #{team.class}"
+          end
+          result_set[:deactivated] = team.deactivated
+          result_set[:responsible] = team.team_leader_name
+          result_set[:moved] = team.moved
+        end
+
+        stats.stats[:total][:business_group] = 'Total'
+        stats.stats[:total][:directorate] = ''
+        stats.stats[:total][:business_unit] = ''
+        stats.stats[:total][:responsible] = ''
+        stats.stats[:total][:deactivated] = ''
+        stats.stats[:total][:moved] = ''
+      end
+
   end
 end

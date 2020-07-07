@@ -6,7 +6,7 @@ module Stats
   # to a CSV or spreadsheet
   class StatsCollector
 
-    attr_reader :stats
+    attr_accessor :stats
 
     # intitialize with an array of row names, and a hash of column headings keyed by unique identifier
     # row names that begin with an underscore have special meaning:
@@ -75,12 +75,13 @@ module Stats
         @superheadings.each { |superheading| yield superheading }
         yield cols
         row_names.each do |row_name|
-          if row_name =~ /^_SPACER/
+          row_name_str = row_name.to_s
+          if row_name_str =~ /^_SPACER/
             row = ['']
-          elsif row_name =~ /^_/
-            row = [row_name.sub(/^_/, '')]
+          elsif row_name_str =~ /^_/
+            row = [row_name_str.sub(/^_/, '')]
           else
-            row = @row_names_as_first_column ? [row_name] : []
+            row = @row_names_as_first_column ? [row_name_str] : []
             @column_hash.keys.each { |col_key| row << value(row_name, col_key) }
           end
           yield row

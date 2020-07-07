@@ -342,6 +342,7 @@ class Case::Base < ApplicationRecord
 
   after_initialize do
     self.workflow = default_workflow if self.workflow.nil?
+    @deadline_calculator = create_deadline_calculator
   end
 
   before_create :set_initial_state,
@@ -554,7 +555,7 @@ class Case::Base < ApplicationRecord
 
   def responded_in_time?
     return false unless closed_for_reporting_purposes?
-    date_responded <= external_deadline
+    date_responded.nil? ? false : date_responded <= external_deadline
   end
 
   # Note use of +responded?+ as guard to prevent exceptions
@@ -572,7 +573,7 @@ class Case::Base < ApplicationRecord
     if responded_transitions.any?
       responding_team_assignment_date = assign_responder_transitions.last.created_at.to_date
       responding_date = responded_transitions.last.created_at.to_date
-      internal_deadline = deadline_calculator
+      internal_deadline = @deadline_calculator
                               .internal_deadline_for_date(correspondence_type, responding_team_assignment_date)
       internal_deadline >= responding_date
     else
@@ -585,7 +586,7 @@ class Case::Base < ApplicationRecord
       raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
     else
       responding_team_assignment_date = assign_responder_transitions.last&.created_at&.to_date || received_date
-      internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
+      internal_deadline = @deadline_calculator.business_unit_deadline_for_date(Date.today)
       internal_deadline < Date.today
     end
   end
@@ -671,13 +672,6 @@ class Case::Base < ApplicationRecord
 
   def is_sar?
     type_abbreviation == 'SAR'
-  end
-
-  def deadline_calculator
-    klass = DeadlineCalculator.const_get(
-      correspondence_type.deadline_calculator_class
-    )
-    klass.new(self)
   end
 
   def set_workflow!(new_workflow_name)
@@ -798,6 +792,13 @@ class Case::Base < ApplicationRecord
   end
 
   private
+
+  def create_deadline_calculator
+    klass = DeadlineCalculator.const_get(
+      correspondence_type.deadline_calculator_class
+    )
+    klass.new(self)
+  end
 
   def identifier
     name.sub(/\sname\s?\d{0,3}$/, '')
