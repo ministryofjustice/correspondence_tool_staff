@@ -58,6 +58,10 @@ module PageObjects
             element :data, 'td'
           end
 
+          section :subject_address, 'tr.subject-address' do
+            element :data, 'td'
+          end
+
           section :date_received, 'tr.date-received' do
             element :data, 'td:first'
           end
