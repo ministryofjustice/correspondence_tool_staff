@@ -24,6 +24,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
                        link_type: nil }
 
       partial = offender_sar_case_details_section(rendered).sar_basic_details
+
       expect(case_details_section(rendered).section_heading.text).to eq 'Case details'
 
       expect(partial.case_type).to have_no_sar_trigger
@@ -38,6 +39,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.subject_aliases.data.text).to eq 'John Smith'
       expect(partial.previous_case_numbers.data.text).to eq '54321'
       expect(partial.other_subject_ids.data.text).to eq 'ABC 123 DEF'
+      expect(partial.case_reference_number.data.text).to eq '123 ABC 456'
       expect(partial.date_of_birth.data.text).to eq '1 Sep 2019'
     end
 

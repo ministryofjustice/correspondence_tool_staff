@@ -27,6 +27,7 @@ function _build() {
   short_version=$(git rev-parse --short $current_branch)
 
   docker_build_tag=cts-${current_branch}-${short_version}
+  export BUILD_TAG=${docker_build_tag}
   docker_registry_tag=${docker_registry}:${docker_build_tag}
 
   # 2. Display status message - include warning if the working copy is not clean
@@ -54,12 +55,13 @@ function _build() {
   git_fetch_url=$git_remote_url#$current_version
 
   # 5. Ensure the current checked out commit is the head of the current branch
-  if  [ $(git rev-parse HEAD) == $(git rev-parse @{u}) ]; then
+  if  [ $(git rev-parse HEAD) == $(git rev-parse @{u}) ] || [ $1 == 'circleci' ] 
+  then
     p "Building app container image from git using $short_version"
   else
     p "\e[31mFatal error: Local git branch is out of sync with origin\e[0m"
     p "\e[31mExiting... run git push to sync changes\e[0m\n"
-    return 0;
+    return 1;
   fi
 
   # 6. Build the image using the application's docker file and the git build context above

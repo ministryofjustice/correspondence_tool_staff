@@ -3,6 +3,7 @@ module OffenderSARCasesParams
 
   def create_offender_sar_params
     params.require(:offender_sar).permit(
+      :case_reference_number,
       :delivery_method,
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :email,
