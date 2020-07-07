@@ -241,7 +241,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
             new_case_pit_extension_path(kase),
             id: 'action--extend-for-pit',
             class: 'button-secondary'
-
   end
 
   def action_button_for_remove_pit_extension(kase)

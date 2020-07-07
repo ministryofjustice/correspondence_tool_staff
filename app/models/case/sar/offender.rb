@@ -76,6 +76,7 @@ class Case::SAR::Offender < Case::Base
 
   # validates :third_party_name,         presence: true, if: -> { third_party }
   validates :third_party_relationship, presence: true, if: -> { third_party }
+  # validates :third_party_company_name, presence: true, if: -> { third_party }
 
   validates :date_of_birth, presence: true
 
@@ -88,7 +89,8 @@ class Case::SAR::Offender < Case::Base
 
   validate :validate_date_of_birth
   validate :validate_received_date
-  # validate :validate_third_party_names
+
+  validate :validate_third_party_names
 
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
@@ -111,7 +113,8 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_third_party_names
-    if third_party
+    # byebug
+    if third_party === true
       unless third_party_company_name.present? || third_party_name.present?
         errors.add(
             :third_party_name,
