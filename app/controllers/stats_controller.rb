@@ -84,25 +84,23 @@ class StatsController < ApplicationController
 
   def generate_final_report(report, report_data=nil)
     if report.report_format == 'xlsx'
-      csv_format = report.to_csv
-      axlsx = create_spreadsheet(csv_format)
+      axlsx = create_spreadsheet(report)
 
       send_data axlsx.to_stream.read,
                 filename: report.filename,
                 disposition: :attachment,
                 type: SPREADSHEET_CONTENT_TYPE
     elsif report.report_format == 'csv'
-      csv_format = report.to_csv
-      send_data generate_csv(csv_format), filename: report.filename
+      send_data generate_csv(report), filename: report.filename
     else
       send_data report.report_data || report_data, filename: report.filename
     end
   end 
 
-  def generate_csv(csv_format)
+  def generate_csv(report)
     # Force quotes to prevent jagged rows in CSVs
     CSV.generate(headers: true, force_quotes: true) do |csv_generator|
-      csv_format.each do |csv_row|
+      report.to_csv.each do |csv_row|
         csv_generator << csv_row.map(&:value)
       end
     end
@@ -126,10 +124,10 @@ class StatsController < ApplicationController
   # Assumes no report spans more than 26 columns
   SPREADSHEET_COLUMN_NAMES = ('A'..'Z').to_a
 
-  def create_spreadsheet(report_data)
+  def create_spreadsheet(report)
     axlsx = Axlsx::Package.new
     axlsx.workbook.add_worksheet do |sheet|
-      report_data.each_with_index do |row, row_index|
+      report.to_csv.each_with_index do |row, row_index|
         # data is in the 'value' property of the cells
         sheet.add_row row.map(&:value)
 
