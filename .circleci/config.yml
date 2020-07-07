@@ -7,15 +7,15 @@ references:
 # Sets up the docker images and environment variables that we use
   test_container_config: &test_container_config
     docker:
-      - image: circleci/ruby:2.5.1-node-browsers-legacy
+      - image: circleci/ruby:2.5.5-node-browsers-legacy
         environment:
+          GITHUB_TEAM_NAME_SLUG: pq-team
+          APPLICATION_DEPLOY_NAME: pq
           RAILS_ENV: test
           RACK_ENV: test
-          PG_HOST: 127.0.0.1
-          PG_PASSWORD: ""
-          PG_USER: postgres
-          PGUSER: postgres
           PGHOST: 127.0.0.1
+          PG_PASSWORD: ""
+          PGUSER: postgres
           POSTGRES_DB: correspondence_platform_test
 
       - image: circleci/postgres:9.5-alpine
@@ -23,21 +23,20 @@ references:
           PG_PASSWORD: ""
           PG_USER: postgres
           POSTGRES_DB: correspondence_platform_test
-          POSTGRES_USER: postgres
-          PGUSER: postgres
 
-  install_bundler: &install_bundler
-    run:
-      name: Install bundler
-      command: |
-        gem install bundler -v 1.17.1
+  deploy_container_config: &deploy_container_config
+    docker:
+      - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
 
+
+# These are defining the steps which are used below in the jobs
+  
   install_psql: &install_psql
     run:
       name: Install psql client
       command: |
          sudo apt update && sudo apt install postgresql-client
-
+  
   update_chromedriver: &update_chromedriver
     run:
       name: Update chrome and the chromedriver
@@ -48,6 +47,58 @@ references:
         sudo apt-get install -y google-chrome-stable
         RAILS_ENV=test bin/rails webdrivers:chromedriver:update
 
+  install_expect: &install_expect
+    run:
+      name: Install Expect
+      command: |
+        apk add \
+          --no-cache \
+          --no-progress \
+          expect
+
+  install_gpg: &install_gpg
+    run:
+      name: Install GPG
+      command: |
+        apk add \
+          --no-cache \
+          --no-progress \
+          gnupg
+
+  create_gpg_key_file: &create_gpg_key_file
+    run:
+      name: Create GPG Key file from Environment variable
+      command: |
+        echo -e ${GPG_PRIVATE_KEY} > PRIVATE_GPG_KEY.asc
+
+  configure_gpg: &configure_gpg
+    run:
+      name: Configure GPG
+      command: |
+        gpg --import --batch --allow-secret-key-import PRIVATE_GPG_KEY.asc
+
+  delete_gpg_key_file: &delete_gpg_key_file
+    run:
+        name: Delete GPG Key file after import
+        command: ¬
+          rm PRIVATE_GPG_KEY.asc
+
+  decrypt_secrets: &decrypt_secrets
+    run:
+      name: Decrypt secrets file
+      command: |
+        gpgconf --kill gpg-agent
+        gpg-agent --daemon --allow-preset-passphrase
+        /usr/libexec/gpg-preset-passphrase --preset --passphrase $GPG_PASSPHRASE $GPG_KEY_KEYGRIP_ID
+        expect -c "spawn gpg --edit-key $GPG_KEY_ID trust quit; send \"5\ry\r\"; expect eof"
+        git-crypt unlock
+
+  install_bundler: &install_bundler
+    run:
+      name: Install bundler
+      command: |
+        gem install bundler -v 2.0.2
+
   check_bundler_version: &check_bundler_version
     run:
       name: Check the installed version of bundler
@@ -57,22 +108,21 @@ references:
   restore_cache: &restore_cache
     restore_cache:
       keys:
-        - track-a-query-{{ checksum "Gemfile.lock" }}
+        - correspondence-tool-staff-{{ checksum "Gemfile.lock" }}
         # fallback to using the latest cache if no exact match is found
-        - track-a-query-
+        - correspondence-tool-staff-
 
   install_dependencies: &install_dependencies
     run:
       name: Install dependencies
       command: |
-        bundle install --path vendor/bundle && bundle clean
         if [ "${CIRCLE_NODE_INDEX}" == "0" ]; then
           bundle check --path vendor/bundle || bundle install --path vendor/bundle && bundle clean
         fi
 
   save_cache: &save_cache
     save_cache:
-      key: track-a-query-{{ checksum "Gemfile.lock" }}
+      key: correspondence-tool-staff-{{ checksum "Gemfile.lock" }}
       paths:
         - vendor/bundle
 
@@ -90,7 +140,7 @@ references:
   rubocop: &rubocop
     run:
       name: Run rubocop
-      command: bundler exec rubocop
+      command: bundle exec rubocop
 
   run_unit_tests: &run_unit_tests
     run:
@@ -106,50 +156,95 @@ references:
 #                   --out test_results/rspec.xml \
 #                   --format progress \
 #                   $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
+  run_feature_tests: &run_feature_tests
+    run:
+      name: Run feature tests
+      command: |
+        bundle exec rspec spec/features
 
-  # deploy_to_dev: &deploy_to_dev
-  #   run:
-  #     name: Deploy to dev environment
-  #     command: |
-  #       setup-kube-auth
-  #       kubectl config use-context development
-  #       sed -i -e s/:latest/:$CIRCLE_SHA1/ k8s-deploy/development/deployment.yaml
-  #       kubectl apply --record=false -f ./k8s-deploy/development/
+  set_up_aws_cli: &set_up_aws_cli
+    run:
+      # this is needed to get a token from the cloud platform to use kubernetes
+      name: Set up AWS CLI
+      command: |
+        sudo apt-get update
+        sudo apt-get --assume-yes install python3-pip
+        sudo pip3 install awscli
+  
+  configure_aws_profile: &configure_aws_profile
+    run:
+      name: Configure AWS CLI
+      command: |
+        aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} --profile ecr-live-1
+        aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile ecr-live-1
+        aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live-1
+  
+  build_and_push_docker_image: &build_and_push_docker_image
+    run:
+      name: Build docker image
+      command: |
+        . build.sh circleci
+        mkdir -p workspace
+        echo $BUILD_TAG > workspace/build_tag
 
-  # deploy_to_staging: &deploy_to_staging
-  #   run:
-  #     name: Deploy to staging environment
-  #     command: |
-  #       setup-kube-auth
-  #       kubectl config use-context staging
-  #       sed -i -e s/:latest/:$CIRCLE_SHA1/ k8s-deploy/staging/deployment.yaml
-  #       kubectl apply --record=false -f ./k8s-deploy/staging/
-  #
-  # deploy_to_production: &deploy_to_production
-  #   run:
-  #     name: Deploy to production environment
-  #     command: |
-  #       setup-kube-auth
-  #       kubectl config use-context production
-  #       sed -i -e s/:latest/:$CIRCLE_SHA1/ k8s-deploy/production/deployment.yaml
-  #       kubectl apply --record=false -f ./k8s-deploy/production/
+  deploy_to_dev: &deploy_to_dev
+    run:
+      name: Deploy to Development environment
+      command: |
+        setup-kube-auth
+        kubectl config use-context development        
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag development circleci
+
+  deploy_to_staging: &deploy_to_staging
+    run:
+      name: Deploy to Staging environment
+      command: |
+        setup-kube-auth
+        kubectl config use-context staging       
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag staging circleci
+
+  deploy_to_qa: &deploy_to_qa
+    run:
+      name: Deploy to QA environment
+      command: |
+        setup-kube-auth
+        kubectl config use-context qa
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag qa circleci
+
+  deploy_to_demo: &deploy_to_demo
+    run:
+      name: Deploy to Demo environment
+      command: |
+        setup-kube-auth
+        kubectl config use-context demo
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag demo circleci
+
+  deploy_to_production: &deploy_to_production
+     run:
+       name: Deploy to production environment
+       command: |
+        setup-kube-auth
+        kubectl config use-context production
+        build_tag=`cat /tmp/workspace/build_tag`
+        ./deploy.sh $build_tag production circleci
 
 #  These are the jobs which run the steps. The jobs are used by the workflows.
 
 jobs:
-  build:
+
+  build_and_test:
     <<: *test_container_config
     <<: *defaults
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - attach_workspace:
-          at: ~/repo
       - *restore_cache
       - *install_bundler
-      - *install_psql
       - *check_bundler_version
+      - *install_psql
       - *install_dependencies
       - *save_cache
       - *wait_for_db
@@ -157,43 +252,254 @@ jobs:
       - *rubocop
       - *update_chromedriver
       - *run_unit_tests
+      - *run_feature_tests
+
+  build_branch_and_push_to_ecr:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker:
+          docker_layer_caching: true 
+      - *configure_aws_profile 
+      - *build_and_push_docker_image
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - build_tag
+
+  build_master_and_push_to_ecr:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker:
+          docker_layer_caching: true 
+      - *configure_aws_profile 
+      - *build_and_push_docker_image
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - build_tag
+
+# Both should be identical but different names
+  deploy_branch_to_dev:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_dev
+
+  deploy_master_to_dev:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_dev
+
+  deploy_branch_to_staging:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_staging
+
+  deploy_master_to_staging:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_staging
+
+  deploy_branch_to_qa:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_qa
+
+  deploy_master_to_qa:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_qa
+
+  deploy_branch_to_demo:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_demo
+
+  deploy_master_to_demo:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_demo
+
+  deploy_master_to_production:
+    <<: *deploy_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
+      - *deploy_to_production       
 
 #  Workflows combine jobs to perform the actions
 
 workflows:
   version: 2
-  build_and_run_tests:
+
+  build_and_deploy_master:
     jobs:
-      - build
-      # - deploy_to_dev:
-      #     requires:
-      #       - build_and_test
-      #     filters:
-      #       branches:
-      #         only: master
-      # - deploy_staging_approval:
-      #     type: approval
-      #     requires:
-      #       - build_and_test
-      #     filters:
-      #       branches:
-      #         only: master
-      # - deploy_staging:
-      #     requires:
-      #       - deploy_staging_approval
-      #     filters:
-      #       branches:
-      #         only: master
-      # - deploy_production_approval:
-      #     type: approval
-      #     requires:
-      #       - build_and_test
-      #     filters:
-      #       branches:
-      #         only: master
-      # - deploy_production:
-      #     requires:
-      #       - deploy_production_approval
-      #     filters:
-      #       branches:
-      #         only: master
+      - build_and_test:
+          filters:
+            branches:
+              only: master
+      - build_master_and_push_to_ecr:
+          requires:
+            - build_and_test   
+      - deploy_master_to_dev:
+          requires:
+            - build_master_and_push_to_ecr       
+      - deploy_master_to_staging_approval:
+          type: approval
+          requires:
+            - deploy_master_to_dev          
+      - deploy_master_to_staging:
+          requires:
+            - deploy_master_to_staging_approval 
+      - deploy_master_to_production_approval:
+          type: approval
+          requires:
+            - deploy_master_to_staging
+      - deploy_master_to_production:
+           requires:
+            - deploy_master_to_production_approval
+
+
+      - deploy_master_to_qa_approval:
+          type: approval
+          requires:
+            - build_master_and_push_to_ecr           
+      - deploy_master_to_qa:
+          requires:
+            - deploy_master_to_qa_approval
+      - deploy_master_to_demo_approval:
+          type: approval
+          requires:
+            - build_master_and_push_to_ecr            
+      - deploy_master_to_demo:
+          requires:
+            - deploy_master_to_demo_approval
+
+  build_and_deploy_branch:
+    jobs:
+      - build_and_test:
+          filters:
+            branches:
+              ignore: master
+      - build_branch_and_push_to_ecr_approval:
+          type: approval
+          requires:
+            - build_and_test
+      - build_branch_and_push_to_ecr:
+          requires:
+            - build_branch_and_push_to_ecr_approval
+      - deploy_branch_to_dev_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr 
+      - deploy_branch_to_dev:
+          requires:
+            - deploy_branch_to_dev_approval
+      - deploy_branch_to_staging_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_staging:
+          requires:
+            - deploy_branch_to_staging_approval             
+      - deploy_branch_to_qa_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_qa:
+          requires:
+            - deploy_branch_to_qa_approval
+      - deploy_branch_to_demo_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr            
+      - deploy_branch_to_demo:
+          requires:
+            - deploy_branch_to_demo_approval                                      
+      
