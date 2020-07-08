@@ -38,8 +38,6 @@ class NextStepInfo
       raise "Unexpected next state: #{@next_state}"
     end
   end
-
-  #rubocop:disable Metrics/CyclomaticComplexity
   def translate_action_param(action_param)
     case action_param
     when 'approve'

@@ -475,7 +475,6 @@ module Stats
 
 
     # rubocop:disable Metrics/ParameterLists
-    # rubocop:disable Metrics/CyclomaticComplexity
     def create_case(received:, responded:, deadline:, team:, responder:, ident:, flagged: false, type: 'std')
       received_date = Date.parse(received)
       responded_date = responded.nil? ? nil : Date.parse(responded)
