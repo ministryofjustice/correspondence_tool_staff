@@ -74,7 +74,6 @@ class Case::SAR::Offender < Case::Base
   validates :third_party,          inclusion: { in: [true, false], message: "can't be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
 
-  # validates :third_party_name,         presence: true, if: -> { third_party }
   validates :third_party_relationship, presence: true, if: -> { third_party }
   # validates :third_party_company_name, presence: true, if: -> { third_party }
 
@@ -89,7 +88,6 @@ class Case::SAR::Offender < Case::Base
 
   validate :validate_date_of_birth
   validate :validate_received_date
-
   validate :validate_third_party_names
 
   before_validation :reassign_gov_uk_dates
@@ -113,19 +111,17 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_third_party_names
-    # byebug
-    if third_party === true
-      unless third_party_company_name.present? || third_party_name.present?
-        errors.add(
-            :third_party_name,
-            I18n.t('activerecord.errors.models.case/offender_sar.attributes.third_party_name.blank')
-        )
-        errors.add(
-            :third_party_company_name,
-            I18n.t('activerecord.errors.models.case/offender_sar.attributes.third_party_company_name.blank')
-        )
-      end
+    if third_party && third_party_company_name.blank? && third_party_name.blank?
+      errors.add(
+          :third_party_name,
+          I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_name.blank')
+      )
+      errors.add(
+          :third_party_company_name,
+          I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank')
+      )
     end
+    errors[:third_party_name].any? || errors[:third_party_company_name].any?
   end
 
   def default_managing_team

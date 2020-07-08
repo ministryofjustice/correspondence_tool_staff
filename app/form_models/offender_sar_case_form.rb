@@ -87,7 +87,7 @@ class OffenderSARCaseForm
   def valid_attributes?(params)
     params ||= ActionController::Parameters.new({}).permit!
     params = params_for_step(params, current_step)
-    check_valid_dates_for_step(current_step)
+    check_custom_validations_for_step(current_step)
     @case.valid_attributes?(params)
   end
 
@@ -97,8 +97,9 @@ class OffenderSARCaseForm
 
   private
 
-  def check_valid_dates_for_step(step)
+  def check_custom_validations_for_step(step)
     @case.validate_date_of_birth if step == "subject-details"
+    @case.validate_third_party_names if step == "requester-details"
     @case.validate_received_date if step == "date-received"
   end
 
@@ -113,7 +114,8 @@ class OffenderSARCaseForm
       set_empty_value_if_unset(params, "flag_as_high_profile")
     when "requester-details"
       set_empty_value_if_unset(params, "third_party")
-      clear_param_if_condition(params, "name", "third_party", "true")
+      clear_param_if_condition(params, "third_party_name", "third_party", "true")
+      clear_param_if_condition(params, "third_party_company_name", "third_party", "true")
       clear_param_if_condition(params, "third_party_relationship", "third_party", "true")
 
       set_empty_value_if_unset(params, "reply_method")

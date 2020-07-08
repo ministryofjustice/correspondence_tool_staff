@@ -221,8 +221,10 @@ describe Case::SAR::Offender do
     describe '#name' do
       it 'validates presence of name when third party is true' do
         kase = build :offender_sar_case, third_party: true, third_party_name: ''
+        # byebug
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_name]).to eq ["can't be blank", "can't be blank if company name not given"]
+        expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
+        expect(kase.errors[:third_party_company_name]).to eq ["can't be blank"]
       end
 
       it 'does not validates presence of name when third party is false' do

@@ -36,6 +36,11 @@ en:
         third_party: ''
       report:
         correspondence_type: Case type
+      case/sar/offender:
+        third_party_relationship: "Relationship to the subject"
+        third_party : "Information requested on someone else's behalf"
+        third_party_name : "Full name of the representative"
+        third_party_company_name : "Company name"
 
     errors:
       models:
@@ -139,8 +144,10 @@ en:
           attributes:
             third_party:
               inclusion: Please choose yes or no
-        case/offender_sar:
+        case/sar/offender:
           attributes:
+            third_party_relationship:
+              blank: can't be blank
             third_party_company_name:
               blank: can't be blank
             third_party_name:
