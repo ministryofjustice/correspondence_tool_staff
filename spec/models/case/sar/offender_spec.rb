@@ -231,6 +231,24 @@ describe Case::SAR::Offender do
       end
     end
   end
+  
+  describe '#request_dated' do
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_case, request_dated: 'wibble')
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context 'received date cannot be in future' do
+      it 'errors' do
+        kase = build(:offender_sar_case, request_dated: 1.day.from_now)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:request_dated]).to eq ["can't be in the future."]
+      end
+    end
+  end
 
   describe '#email' do
     it 'validates presence of email when reply is to be sent by email' do

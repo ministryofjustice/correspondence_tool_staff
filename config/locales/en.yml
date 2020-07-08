@@ -67,6 +67,8 @@ en:
               after_date_responded: "can't be after the date responded"
             date_of_birth:
               not_in_future: "can't be in the future."
+            request_dated:
+              not_in_future: "can't be in the future."
             postal_address:
               blank: "and email can't both be blank"
             number:
@@ -603,6 +605,8 @@ en:
         one: Information Officer
         other: Information Officers
       request: "Request"
+      request_dated: "Date on the request"
+      requester_reference: "Requester reference"
       requester_type: "Type of requester"
       sar_response_address: Where should the data be sent
       status: Status
@@ -820,6 +824,7 @@ en:
         unknown: "Unknown correspondence type \"%{type}\""
         not_authorised: "You are not authorised to create \"%{type}\" correspondences"
       date_sar_received_copy: "For example, 12 11 2007"
+      date_request_received_copy: "For example, 12 11 2007"
       date_of_birth: "Date of birth"
       date_of_birth_copy: "For example, 24 11 1992"
       external_deadline: "Final deadline"
