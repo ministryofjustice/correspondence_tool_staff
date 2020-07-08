@@ -436,7 +436,7 @@ GEM
       ffi (~> 1.0)
     recursive-open-struct (1.1.1)
     redis (4.2.1)
-    regexp_parser (1.7.0)
+    regexp_parser (1.7.1)
     request_store (1.5.0)
       rack (>= 1.4)
     responders (3.0.1)
@@ -479,7 +479,7 @@ GEM
       parser (>= 2.7.0.1)
     rubocop-performance (1.6.1)
       rubocop (>= 0.71.0)
-    rubocop-rspec (1.40.0)
+    rubocop-rspec (1.41.0)
       rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
     rubyzip (2.3.0)
@@ -666,7 +666,7 @@ DEPENDENCIES
   rspec-rails (~> 4.0)
   rubocop (~> 0.87.0)
   rubocop-performance
-  rubocop-rspec (~> 1.40.0)
+  rubocop-rspec (~> 1.41.0)
   ruby-progressbar
   rubyzip (>= 1.2.4)
   sablon
