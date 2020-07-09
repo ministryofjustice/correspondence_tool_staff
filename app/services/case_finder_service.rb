@@ -41,7 +41,7 @@ class CaseFinderService
   end
 
   def closed_cases_scope
-    scope.presented_as_closed
+    scope.presented_as_closed.most_recent_first
   end
 
   private

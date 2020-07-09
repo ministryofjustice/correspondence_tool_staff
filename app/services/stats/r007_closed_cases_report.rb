@@ -34,7 +34,7 @@ module Stats
             filepath: etl_handler.results_filepath,
             user_id: user.id,
           }.to_json
-          report.status = COMPLETE
+          report.status = Stats::BaseReport::COMPLETE
           report.filename = etl_handler.filename
           report.save!
         end
@@ -61,7 +61,7 @@ module Stats
       raise ArgumentError.new('Missing report_guid') unless args[:report_guid].present?
 
       @etl = true
-      @status = WAITING
+      @status = Stats::BaseReport::WAITING
       @job_ids = [args[:report_guid]]
       ::Warehouse::ClosedCasesCreateJob.perform_later(
         args[:report_guid],
@@ -74,7 +74,7 @@ module Stats
     def report_details(report)
       redis = Redis.new
       if redis.exists(report.guid)
-        report.status = COMPLETE
+        report.status = Stats::BaseReport::COMPLETE
         report.save!
         Redis.new.get(report.guid)
       end

@@ -71,10 +71,10 @@ module Stats
           offset += ROWS_PER_FRAGMENT
         end
         @etl = true
-        @status = WAITING
+        @status = Stats::BaseReport::WAITING
       else
         @etl = false
-        @status = COMPLETE
+        @status = Stats::BaseReport::COMPLETE
         process(offset)
         @stats.finalise
       end 
@@ -112,7 +112,7 @@ module Stats
         end
       end
       if data_collector.count == report.job_ids.count
-        report.status = COMPLETE        
+        report.status = Stats::BaseReport::COMPLETE        
         merge_stats(data_collector)
         report.report_data = (@stats.stats).to_json
         report.save!

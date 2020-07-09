@@ -41,7 +41,7 @@ class StatsController < ApplicationController
         period_start: @report.period_start,
         period_end: @report.period_end
       )
-      if @report.etl?
+      if @report.etl? || @report.persist_results?
         flash[:download] = report_download_link(@report.id, 'success')
         redirect_to new_stat_path
       else
