@@ -61,7 +61,7 @@ class StatsController < ApplicationController
 
   def download_custom
     report = Report.find(params[:id])
-    report_data, filename = report.report_details
+    report_data, _ = report.report_details
     if report.etl?
       return download_waiting(report) unless report.etl_ready?
       authorize report, :can_download_user_generated_report?

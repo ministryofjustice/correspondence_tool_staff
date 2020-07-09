@@ -41,7 +41,7 @@ class CaseFinderService
   end
 
   def closed_cases_scope
-    closed_scope = scope.presented_as_closed
+    scope.presented_as_closed
   end
 
   private
@@ -83,10 +83,10 @@ class CaseFinderService
   end
 
   def open_cases_scope
-    open_scope = scope.presented_as_open
-                   .joins(:assignments)
-                   .where(assignments: { state: ['pending', 'accepted']})
-                   .distinct('case.id')
+    scope.presented_as_open
+    .joins(:assignments)
+    .where(assignments: { state: ['pending', 'accepted']})
+    .distinct('case.id')
   end
 
   def open_flagged_for_approval_scope

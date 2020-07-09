@@ -40,7 +40,7 @@ module Stats
     end
 
     def process(offset, report_job_guid=nil)
-      query = CaseSelector.new(case_scope)
+      CaseSelector.new(case_scope)
       .cases_received_in_period(@period_start, @period_end)
       .order(:id)
       .limit(ROWS_PER_FRAGMENT)
