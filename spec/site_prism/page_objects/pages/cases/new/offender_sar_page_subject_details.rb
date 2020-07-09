@@ -26,6 +26,8 @@ module PageObjects
 
           element :date_of_birth_mm, '#offender_sar_date_of_birth_mm'
 
+          element :subject_address, '#offender_sar_subject_address'
+
           element :date_of_birth_yyyy, '#offender_sar_date_of_birth_yyyy'
 
           element :submit_button, '.button'
@@ -35,6 +37,7 @@ module PageObjects
 
             subject_full_name.set 'Sabrina Adams'
             prison_number.set kase.prison_number
+            subject_address.set kase.subject_address
             subject_aliases.set kase.subject_aliases
             previous_case_numbers.set kase.previous_case_numbers
             set_date_of_birth kase.date_of_birth
