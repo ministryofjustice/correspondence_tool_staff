@@ -78,7 +78,6 @@ RSpec.describe CasesHelper, type: :helper do
     end
   end
 
-
   describe '#action_button_for(event)' do
 
     context 'when event == :assign_responder' do
@@ -99,7 +98,6 @@ href=\"/cases/fois/#{@case.id}/close\">Close case</a>"
             )
         end
       end
-
 
       context 'case is ICO' do
         it 'generates HTML that links to the close case action' do
@@ -185,7 +183,6 @@ href="/cases/#{@case.id}/assignments/#{@assignments.first.id}/reassign_user">Cha
         end
       end
 
-
       context 'when there are two assignemnts for this users teams' do
         it 'generates a link to the select_team page' do
           @case = create(:accepted_case, :flagged)
@@ -258,7 +255,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
 
   describe '#request_details_html' do
     it 'generates html markup' do
-      kase = instance_double(Case::Base, subject: 'Once upon a time...', name: 'Ray Gunn')
+      kase = instance_double(Case::Base, subject: 'Once upon a time...', name: 'Ray Gunn', type: 'Case::FOI::Standard')
       request_details = request_details_html(kase)
       expect(request_details).to eq '<strong class="strong">Once upon a time... </strong><div class="case-name-detail">Ray Gunn</div>'
     end
@@ -343,7 +340,6 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
         expect(download_csv_link(param_path)).to eq %q{<a href="/cases/open.csv?page=3&amp;type=foi">Download cases</a>}
       end
     end
-
   end
 
   describe '#show_escalation_deadline?' do
