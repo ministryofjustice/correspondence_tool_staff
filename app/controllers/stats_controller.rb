@@ -91,9 +91,13 @@ class StatsController < ApplicationController
                 disposition: :attachment,
                 type: SPREADSHEET_CONTENT_TYPE
     elsif report.report_format == 'csv'
-      send_data generate_csv(report), filename: report.filename
+      send_data generate_csv(report), 
+                filename: report.filename, 
+                disposition: :attachment
     else
-      send_data report.report_data || report_data, filename: report.filename
+      send_data report.report_data || report_data, 
+                filename: report.filename, 
+                disposition: :attachment
     end
   end 
 

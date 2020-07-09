@@ -123,7 +123,7 @@ module Stats
       true
     end
 
-    def self.report_form
+    def self.report_format
       CSV
     end
 
@@ -135,5 +135,9 @@ module Stats
     def etl?
       self.etl || report_type.etl
     end
+
+    def report_format
+      self.class.report_format
+    end 
   end
 end

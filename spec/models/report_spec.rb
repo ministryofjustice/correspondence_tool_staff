@@ -134,10 +134,16 @@ RSpec.describe Report, type: :model do
     }
 
     let(:report) { create :r003_report }
+    let(:report_data) { {"report": 'data'} }
 
     before do
       expect(Stats::R003BusinessUnitPerformanceReport)
         .to receive(:new).with(**options).and_return(report_service)
+      allow(report_service).to receive(:etl?).and_return(false)
+      allow(report_service).to receive(:results).and_return(report_data)
+      allow(report_service).to receive(:filename).and_return(nil)
+      allow(report_service).to receive(:user).and_return(nil)
+      allow(report_service).to receive(:report_format).and_return('csv')
     end
 
     it 'saves report when ReportService.persist_results? and then runs' do
@@ -154,7 +160,7 @@ RSpec.describe Report, type: :model do
 
     it 'updates the report_data' do
       report.run_and_update!(**options)
-      expect(report.report_data).to eq "\"report\",\"data\"\n"
+      expect(report.report_data).to eq report_data.to_json
     end
   end
 
@@ -177,7 +183,7 @@ RSpec.describe Report, type: :model do
         expect(etl_report_type.etl?).to eq true
         expect(new_report).to receive(:save!)
         json = JSON.parse(new_report.report_data, symbolize_names: true)
-        expect(json[:status]).to eq Report::WAITING
+        expect(json[:status]).to eq Stats::BaseReport::WAITING
         new_report.run_and_update!(user: OpenStruct.new(id: 1), some: 'value')
       end
     end

@@ -92,7 +92,9 @@ RSpec.describe StatsController, type: :controller do
       create :r003_report, period_start: Date.yesterday, period_end: Date.today
     }
 
-    let(:dummy_report_type) { double(to_csv: []) }
+    let(:dummy_report_type) { 
+      double(to_csv: [], persist_results?: false, etl?: false, results: {}, report_format: 'csv') 
+    }
 
     it 'authorizes' do
       expect { post :create, params: params }
@@ -103,9 +105,14 @@ RSpec.describe StatsController, type: :controller do
     it 'runs the report' do
       expect(Report).to receive(:new).and_return(report)
       allow(report).to receive(:run).and_return(dummy_report_type)
+      allow(dummy_report_type).to receive(:filename).and_return("test.csv")
+      allow(dummy_report_type).to receive(:user).and_return(manager)
+      allow(dummy_report_type).to receive(:period_start).and_return(Date.yesterday)
+      allow(dummy_report_type).to receive(:period_end).and_return(Date.today)
+
       post :create, params: params
       expect(report).to have_received(:run).with(period_start: Date.yesterday,
-        period_end: Date.today)
+        period_end: Date.today, user: manager, report_guid: report.guid)
     end
 
     context 'invalid params passed in' do
@@ -221,8 +228,7 @@ RSpec.describe StatsController, type: :controller do
         }.to change(Report.all, :size).by(1)
 
         report = Report.last
-        data = JSON.parse(report.report_data, symbolize_names: true)
-        expect(data[:status]).to eq Report::WAITING
+        expect(report.status).to eq Stats::BaseReport::WAITING        
       end
     end
   end
@@ -259,7 +265,7 @@ RSpec.describe StatsController, type: :controller do
 
       it 'responds with a csv file' do
         file_options = {
-          filename: "#{report.report_type.class_name.to_s.underscore.sub('stats/', '')}.csv",
+          filename: report.filename,
           disposition: :attachment
         }
 

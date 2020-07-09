@@ -68,6 +68,8 @@ class Case::Base < ApplicationRecord
 
   attr_accessor :message_text
 
+  attr_reader :deadline_calculator
+
   acts_as_gov_uk_date :date_responded,
                       :date_draft_compliant,
                       :external_deadline,
@@ -342,7 +344,7 @@ class Case::Base < ApplicationRecord
 
   after_initialize do
     self.workflow = default_workflow if self.workflow.nil?
-    @deadline_calculator = create_deadline_calculator
+    @deadline_calculator = self.class.respond_to?(:type_abbreviation) ? create_deadline_calculator : nil
   end
 
   before_create :set_initial_state,
@@ -586,7 +588,7 @@ class Case::Base < ApplicationRecord
       raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
     else
       responding_team_assignment_date = assign_responder_transitions.last&.created_at&.to_date || received_date
-      internal_deadline = @deadline_calculator.business_unit_deadline_for_date(Date.today)
+      internal_deadline = @deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
       internal_deadline < Date.today
     end
   end
@@ -872,15 +874,15 @@ class Case::Base < ApplicationRecord
     #   days - number of days from the from_date
     #   from date - the date to calculate from, e.g. created, received, day_after_created, day_after_received, external_deadline
     #   business/calendar days - whether to calculate in business days or calendar days
-    self.escalation_deadline = deadline_calculator.escalation_deadline
-    self.internal_deadline = deadline_calculator.internal_deadline
-    self.external_deadline = deadline_calculator.external_deadline
+    self.escalation_deadline = @deadline_calculator.escalation_deadline
+    self.internal_deadline = @deadline_calculator.internal_deadline
+    self.external_deadline = @deadline_calculator.external_deadline
   end
 
   def update_deadlines
     if changed.include?('received_date')  && !extended_for_pit?
-      self.internal_deadline = deadline_calculator.internal_deadline
-      self.external_deadline = deadline_calculator.external_deadline
+      self.internal_deadline = @deadline_calculator.internal_deadline
+      self.external_deadline = @deadline_calculator.external_deadline
     end
   end
 

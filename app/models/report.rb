@@ -14,9 +14,6 @@
 #
 
 class Report < ApplicationRecord
-  # # Status names for ETL generated reports
-  # COMPLETE = 'complete'.freeze
-  # WAITING = 'waiting'.freeze
 
   jsonb_accessor :properties,
                  etl: :boolean,
@@ -34,8 +31,6 @@ class Report < ApplicationRecord
   belongs_to :report_type
   
   attr_accessor :correspondence_type
-  # attr_reader :etl_generation_status
-  # attr_reader :etl
 
   after_initialize do
     self.etl ||= self.report_type&.etl?
@@ -62,16 +57,13 @@ class Report < ApplicationRecord
     if report_service.etl?
       self.status = report_service.status
       self.job_ids = report_service.job_ids
-      # self.report_data = { status: WAITING }.to_json
     else
-      # self.report_data = generate_csv(report_service)
-      # self.report_data = report_service.to_csv
       self.report_data = report_service.results.to_json
     end
     self.etl = report_service.etl?
     self.filename = report_service.filename
-    self.user_id = report_service.user.id
-    self.report_format = report_service.class.report_format
+    self.user_id = report_service.user.nil? ? 0 : report_service.user.id
+    self.report_format = report_service.report_format
     self.period_start = report_service.period_start
     self.period_end = report_service.period_end
     self.persist_results = report_service.persist_results?

@@ -1,6 +1,6 @@
 module Stats
 
-  ROWS_PER_FRAGMENT = 500 # Arbitrary value, may require experimentation
+  ROWS_PER_FRAGMENT = 800 # Arbitrary value, may require experimentation
   
   class BaseMonthlyPerformanceReport < BaseReport
 
@@ -163,6 +163,10 @@ module Stats
       end
     end
 
+    def case_scope
+      raise 'This method should be defined in the child class'
+    end
+    
     private
 
     def merge_stats(data_collector)

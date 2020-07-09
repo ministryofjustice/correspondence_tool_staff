@@ -574,8 +574,9 @@ RSpec.describe Case::Base, type: :model do
       end
 
       before do
-        allow(kase).to receive(:deadline_calculator)
-                         .and_return(deadline_calculator)
+        allow(kase.deadline_calculator).to receive(:escalation_deadline).and_return(escalation_deadline)
+        allow(kase.deadline_calculator).to receive(:external_deadline).and_return(external_deadline)
+        allow(kase.deadline_calculator).to receive(:internal_deadline).and_return(internal_deadline)
       end
 
       it 'is called before_create' do
@@ -585,9 +586,9 @@ RSpec.describe Case::Base, type: :model do
 
       it 'sets the deadlines deadline using DeadlineCalculator' do
         kase.__send__(:set_deadlines)
-        expect(deadline_calculator).to have_received(:escalation_deadline)
-        expect(deadline_calculator).to have_received(:external_deadline)
-        expect(deadline_calculator).to have_received(:internal_deadline)
+        expect(kase.deadline_calculator).to have_received(:escalation_deadline)
+        expect(kase.deadline_calculator).to have_received(:external_deadline)
+        expect(kase.deadline_calculator).to have_received(:internal_deadline)
         expect(kase.escalation_deadline).to eq escalation_deadline
         expect(kase.external_deadline).to eq external_deadline
         expect(kase.internal_deadline).to eq internal_deadline

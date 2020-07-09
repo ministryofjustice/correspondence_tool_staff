@@ -244,7 +244,7 @@ class Case::ICO::Base < Case::Base
     # For ICOs deadlines are manually set and don't need to be automatically
     # calculated. So this method called by a before_update hook in Case::Base
     # becomes a nop.
-    self.internal_deadline ||= deadline_calculator.internal_deadline
+    self.internal_deadline ||= @deadline_calculator.internal_deadline
   end
 
   def update_deadlines
