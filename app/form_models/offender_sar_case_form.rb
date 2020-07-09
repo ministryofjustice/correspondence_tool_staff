@@ -28,6 +28,7 @@ class OffenderSARCaseForm
            :reply_method,
            :send_by_email?,
            :send_by_post?,
+           :subject_address,
            :subject_aliases,
            :subject_full_name,
            :subject_type,

@@ -460,6 +460,7 @@ en:
         subject: "Case summary"
         subject_aliases: "Subject's alias if applicable"
         subject_full_name: "Full name of data subject"
+        subject_address: "What is the location of the data subject?"
         subject_type:
           detainee: Detainee
           ex_detainee: Ex-detainee
@@ -588,6 +589,7 @@ en:
       requester_type: "Type of requester"
       sar_response_address: Where the information should be sent
       status: Status
+      subject_address: Location of data subject
       subject_aliases: Alias
       third_party: Information requested on someone's behalf?
       third_party_relationship: Relationship
