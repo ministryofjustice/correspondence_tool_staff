@@ -75,10 +75,7 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "can't be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
-
   validates :third_party_relationship, presence: true, if: -> { third_party }
-  # validates :third_party_company_name, presence: true, if: -> { third_party }
-
   validates :date_of_birth, presence: true
 
   validates_presence_of :email,          if: :send_by_email?
