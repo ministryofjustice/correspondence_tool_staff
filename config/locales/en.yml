@@ -149,7 +149,7 @@ en:
             third_party_relationship:
               blank: can't be blank
             third_party_company_name:
-              blank: can't be blank
+              blank: can't be blank if representative name not given
             third_party_name:
               blank: can't be blank if company name not given
         assignment:

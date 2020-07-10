@@ -26,6 +26,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
                                 subject: 'Case 1',
                                 trigger_case_marker: '',
                                 pretty_type: 'FOI',
+                                type: '',
                                 linked_cases: [])}
     let(:linked_case_2){ double(Case::Base, id: 2,
                                 number: '222222',
@@ -33,12 +34,14 @@ describe 'cases/linked_cases.html.slim', type: :view do
                                 name:'Hello 2',
                                 trigger_case_marker: '',
                                 pretty_type: 'FOI',
+                                type: '',
                                 linked_cases: [])}
     let(:main_case)    { double(Case::Base, id: 3,
                                 number: '333333',
                                 name:'Hello',
                                 subject: 'Case 3',
                                 pretty_type: 'FOI',
+                                type: '',
                                 trigger_case_marker: '',
                                 linked_cases: [linked_case_1,
                                                linked_case_2 ])}
