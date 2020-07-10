@@ -95,7 +95,7 @@ class StatsController < ApplicationController
                 filename: report.filename, 
                 disposition: :attachment
     else
-      send_data report.report_data || report_data, 
+      send_data report_data || report.report_data, 
                 filename: report.filename, 
                 disposition: :attachment
     end

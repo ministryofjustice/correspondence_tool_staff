@@ -984,6 +984,9 @@ en:
     common:
       period_start: Date from
       period_end: Date to
+    show:
+      success: Your report has been created.
+      waiting: Your report will be available shortly.
     create:
       success: Your custom report has been created.
       waiting: Your custom report will be available shortly.
