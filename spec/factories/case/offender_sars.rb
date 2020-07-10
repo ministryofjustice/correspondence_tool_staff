@@ -28,6 +28,8 @@ FactoryBot.define do
     previous_case_numbers           { '54321' }
     prison_number                   { '123465' }
     other_subject_ids               { 'ABC 123 DEF' }
+    case_reference_number { '123 ABC 456' }
+    subject_address                 { '22 Sample Address, Test Lane, Testingington, TE57ST' }
     subject_type                    { 'offender' }
     third_party                     { false }
     flag_as_high_profile            { false }

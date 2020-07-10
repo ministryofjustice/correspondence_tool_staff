@@ -484,4 +484,12 @@ describe Case::SAR::Offender do
       expect(kase.allow_waiting_for_data_state?).to be false
     end
   end
+
+  describe '#subject_address' do
+    it 'validates presence of subject address' do
+      kase = build :offender_sar_case, subject_address: ''
+      expect(kase).not_to be_valid
+      expect(kase.errors[:subject_address]).to eq ["can't be blank"]
+    end
+  end
 end

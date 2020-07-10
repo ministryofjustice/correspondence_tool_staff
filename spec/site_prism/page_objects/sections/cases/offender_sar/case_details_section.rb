@@ -54,6 +54,14 @@ module PageObjects
             element :data, 'td'
           end
 
+          section :case_reference_number, 'tr.case-reference-number' do
+            element :data, 'td'
+          end
+
+          section :subject_address, 'tr.subject-address' do
+            element :data, 'td'
+          end
+
           section :date_received, 'tr.date-received' do
             element :data, 'td:first'
           end

@@ -14,7 +14,9 @@
         = render partial: 'cases/offender_sar/prison_number', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/previous_case_numbers', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/other_subject_ids', locals: { case_details: case_details }
+        = render partial: 'cases/offender_sar/case_reference_number', locals: { case_details: case_details }
         = render partial: 'cases/sar/subject_type', locals: { case_details: case_details }
+        = render partial: 'cases/offender_sar/subject_address', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/high_profile_subject', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/third_party', locals: { case_details: case_details }
         - if case_details.third_party?
@@ -23,6 +25,8 @@
           = render partial: 'cases/offender_sar/third_party_company_name', locals: { case_details: case_details }
           = render partial: 'cases/offender_sar/third_party_reference', locals: { case_details: case_details }
         = render partial: 'cases/sar/response_address', locals: { case_details: case_details }
+        = render partial: 'cases/offender_sar/recipient_details', locals: { case_details: case_details }
+        = render partial: 'cases/offender_sar/request_date', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/date_received', locals: { case_details: case_details }
         = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
         - if case_details.has_date_draft_compliant?

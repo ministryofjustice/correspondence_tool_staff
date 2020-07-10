@@ -1,13 +1,20 @@
 require 'rails_helper'
 
 RSpec.describe Query::CaseReport do
+  let(:sar_case) { create :sar_case }
+  let(:foi_case) { create :foi_case }
+  let(:closed_case) { create :closed_case }
+
   before do
-    ::Warehouse::CaseReport.generate(create :sar_case)
-    ::Warehouse::CaseReport.generate(create :foi_case)
-    ::Warehouse::CaseReport.generate(create :closed_case)
+    ::Warehouse::CaseReport.generate(sar_case)
+    ::Warehouse::CaseReport.generate(foi_case)
+    ::Warehouse::CaseReport.generate(closed_case)
   end
 
   let(:default_retrieval_scope) { Case::Base.all }
+  let(:external_deadline_retrieval_scope) { 
+    Case::Base.all.select(:id).order(Arel.sql("(properties ->> 'external_deadline')::timestamp with time zone")) 
+  }
 
   describe '#initialize' do
     it 'has default attributes' do
@@ -73,6 +80,37 @@ RSpec.describe Query::CaseReport do
 
       result = ActiveRecord::Base.connection.execute(sql_query)
       expect(result.count).to eq 2
+    end
+
+    it 'uses given limit parameter with offset' do
+      sql_query = described_class.new(
+        retrieval_scope: external_deadline_retrieval_scope,
+        limit: 2,
+        offset: 0,
+      ).query
+      
+      result_set = Set.new
+      expected_result = Set.new
+
+      result = ActiveRecord::Base.connection.execute(sql_query)
+      expect(result.count).to eq 2
+      result_set << result[0]['id']
+      result_set << result[1]['id']
+
+      expected_result << foi_case['id']
+      expected_result << closed_case['id']
+
+      expect(result_set).to eq expected_result
+
+      sql_query = described_class.new(
+        retrieval_scope: external_deadline_retrieval_scope,
+        limit: 1,
+        offset: 2,
+      ).query
+
+      result = ActiveRecord::Base.connection.execute(sql_query)
+      expect(result.count).to eq 1
+      expect(result[0]['id']).to eq sar_case['id']
     end
   end
 end

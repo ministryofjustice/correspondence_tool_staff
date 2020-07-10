@@ -28,6 +28,7 @@ class Case::SAR::Offender < Case::Base
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
+                 case_reference_number: :string,
                  date_of_birth: :date,
                  escalation_deadline: :date,
                  external_deadline: :date,
@@ -37,6 +38,7 @@ class Case::SAR::Offender < Case::Base
                  previous_case_numbers: :string,
                  prison_number: :string,
                  reply_method: :string,
+                 subject_address: :string,
                  subject_aliases: :string,
                  subject_full_name: :string,
                  subject_type: :string,
@@ -81,6 +83,7 @@ class Case::SAR::Offender < Case::Base
 
   validates_presence_of :email,          if: :send_by_email?
   validates_presence_of :postal_address, if: :send_by_post?
+  validates_presence_of :subject_address
 
   validates :subject_full_name, presence: true
   validates :subject_type,      presence: true

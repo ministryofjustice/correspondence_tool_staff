@@ -281,6 +281,8 @@ module CTS::Cases
       reindexer.call
     end
 
+    option :size, aliases: 's', type: :numeric,
+            desc: 'The limit for the number of cases to be updated into warehouse.'
     desc 'warehouse', 'Warehouse all the cases (long process)'
     def warehouse(*_args)
       CTS::Cases::Warehouser.new(CTS, options).call
