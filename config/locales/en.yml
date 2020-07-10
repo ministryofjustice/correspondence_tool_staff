@@ -587,7 +587,7 @@ en:
         other: Information Officers
       request: "Request"
       requester_type: "Type of requester"
-      sar_response_address: Where the information should be sent
+      sar_response_address: Where should the data be sent
       status: Status
       subject_address: Location of data subject
       subject_aliases: Alias
