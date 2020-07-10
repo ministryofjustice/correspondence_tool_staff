@@ -135,17 +135,21 @@ describe Cases::FiltersController, type: :controller do
 
     let!(:old_deleted_kase) do
       Timecop.travel(1.day.ago) do
-        create(:case, :deleted_case)
+        create(:assigned_case, responding_team: responding_team)
       end
     end
 
-    let!(:deleted_kase) { create(:case, :deleted_case) }
+    let!(:deleted_kase) { create(:assigned_case, responding_team: responding_team) }
+
     let!(:deleted_sar_kase) { create(:sar_case, :deleted_case) }
 
     context 'as a manager' do
       before { sign_in manager }
 
       it 'retrieves only deleted cases' do
+        old_deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
+        deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
+
         get :deleted, format: :csv
         expect(assigns(:cases)).to eq([deleted_sar_kase, deleted_kase, old_deleted_kase])
       end
@@ -155,6 +159,8 @@ describe Cases::FiltersController, type: :controller do
       before { sign_in responder }
 
       it 'retrieves only deleted cases I am supposed to see' do
+        old_deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
+        deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
         get :deleted, format: :csv
         expect(assigns(:cases)).to eq([deleted_kase, old_deleted_kase])
       end

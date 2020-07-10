@@ -263,6 +263,7 @@ describe SearchQuery do
   describe '#results' do
     before :all do
       @responding_team = find_or_create :foi_responding_team
+      @sar_responder = find_or_create :sar_responder
       @setup = StandardSetup.new(only_cases: {
                                    std_draft_foi:              {},
                                    std_draft_foi_late:         {},
@@ -274,7 +275,7 @@ describe SearchQuery do
                                    ico_foi_accepted:           {responding_team: @responding_team},
                                    ico_sar_unassigned:         {},
                                    ico_sar_awaiting_responder: {responding_team: @responding_team},
-                                   ico_sar_accepted:           {responding_team: @responding_team},
+                                   ico_sar_accepted:           {responding_team: @sar_responder.responding_teams.first},
                                    ico_sar_pending_dacu:       {responding_team: @responding_team},
                                 })
       Case::Base.update_all_indexes
@@ -335,15 +336,12 @@ describe SearchQuery do
 
           context 'responder in a team that the ICO SARs are not assigned to'  do
             it 'doesnt show the ICO SAR' do
-              responder = find_or_create :sar_responder
+              # responder = find_or_create :sar_responder
               search_query = create :search_query,
-                                    user_id: responder.id,
+                                    user_id: @sar_responder.id,
                                     search_text: 'ico',
                                     filter_case_type: ['ico-appeal']
-              expect(search_query.results).to eq [@setup.ico_foi_unassigned,
-                                                  @setup.ico_foi_awaiting_responder,
-                                                  @setup.ico_foi_accepted,
-                                                 ]
+              expect(search_query.results).to eq [@setup.ico_sar_accepted                                                 ]
             end
           end
 
@@ -354,11 +352,9 @@ describe SearchQuery do
                                     user_id: responder.id,
                                     search_text: 'ico',
                                     filter_case_type: ['ico-appeal']
-              expect(search_query.results).to eq [@setup.ico_foi_unassigned,
-                                                  @setup.ico_foi_awaiting_responder,
+              expect(search_query.results).to eq [@setup.ico_foi_awaiting_responder,
                                                   @setup.ico_foi_accepted,
-                                                  @setup.ico_sar_awaiting_responder,
-                                                  @setup.ico_sar_accepted,
+                                                  @setup.ico_sar_awaiting_responder,                                                
                                                   @setup.ico_sar_pending_dacu,
                                                  ]
             end
