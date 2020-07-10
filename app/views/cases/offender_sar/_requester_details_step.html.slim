@@ -9,8 +9,8 @@
       = t('helpers.label.offender_sar.third_party')
     = f.radio_button_fieldset(:third_party, legend_options: { class: 'visually-hidden' }) do |fieldset|
       - fieldset.radio_input(true, text_method: :humanize)
-        = f.text_field :name
         = f.text_field :third_party_relationship
+        = f.text_field :third_party_name
         = f.text_field :third_party_company_name
         = f.text_field :third_party_reference
       - fieldset.radio_input(false, text_method: :humanize)
@@ -18,7 +18,6 @@
   h2.heading-medium
     = t('helpers.label.offender_sar.delivery_method')
   = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
-
 
     - fieldset.radio_input('send_by_post',
                            panel_id: 'reply_method_send_by_post_panel')

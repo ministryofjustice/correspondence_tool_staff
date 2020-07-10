@@ -22,6 +22,7 @@ module OffenderSARCasesParams
       :subject_full_name,
       :subject_type,
       :third_party,
+      :third_party_name,
       :third_party_relationship,
       :third_party_reference,
       :third_party_company_name,

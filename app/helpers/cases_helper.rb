@@ -24,7 +24,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       page_offset = Kaminari.config.default_per_page * (page.to_i - 1)
       link_to kase.__send__(field), case_path(kase.id, pos: page_offset + position)
     end
-
   end
 
   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
@@ -159,7 +158,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     link_to t('common.case.download_link_html', filename: attachment.filename),
       download_case_attachment_path(kase, attachment),
       class: 'download'
-
   end
 
   def show_remove_clearance_link(kase)
@@ -241,7 +239,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
             new_case_pit_extension_path(kase),
             id: 'action--extend-for-pit',
             class: 'button-secondary'
-
   end
 
   def action_button_for_remove_pit_extension(kase)
@@ -270,8 +267,11 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
 
   def request_details_html(kase)
     content_tag(:strong, "#{kase.subject} ", class: 'strong') +
+      if kase.type == "Case::SAR::Offender" && kase.third_party_name.present?
+        content_tag(:div, kase.third_party_name, class: 'case-name-detail')
+      else
         content_tag(:div, kase.name, class: 'case-name-detail')
-
+      end
   end
 
   # Note exceptions for FOI sub-classes because REST routes for FOI
