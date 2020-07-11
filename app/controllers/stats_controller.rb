@@ -150,9 +150,10 @@ class StatsController < ApplicationController
   def set_fields_for_custom_action
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
+    @custom_reports_offender_sar = ReportType.custom.offender_sar
     @custom_reports_closed_cases = ReportType.closed_cases_report
-    @correspondence_types = CorrespondenceType.custom_reporting_types +
-      [self.class.closed_cases_correspondence_type]
+    @correspondence_types = CorrespondenceType.custom_reporting_types & current_user.permitted_correspondence_types
+    @correspondence_types += [self.class.closed_cases_correspondence_type]
   end
 
   def authorize_user

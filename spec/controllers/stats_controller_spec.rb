@@ -3,6 +3,7 @@ require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
 
 RSpec.describe StatsController, type: :controller do
   let(:manager) { find_or_create :disclosure_bmt_user }
+  let(:branston_user) { find_or_create :branston_user }
 
   before do
     sign_in manager
@@ -37,36 +38,76 @@ RSpec.describe StatsController, type: :controller do
   end
 
   describe '#new' do
-    it 'authorizes' do
-      expect { get :new }
-        .to require_permission(:can_download_stats?)
-          .with_args(manager, Case::Base)
+
+    context 'signed in manager' do
+      before do
+        sign_in manager
+      end
+
+      it 'authorizes' do
+        expect { get :new }
+          .to require_permission(:can_download_stats?)
+            .with_args(manager, Case::Base)
+      end
+  
+      it 'sets @report' do
+        get :new
+        expect(assigns(:report)).to be_new_record
+      end
+  
+      it 'sets @custom_reports_foi' do
+        get :new
+        expect(assigns(:custom_reports_foi)).to eq ReportType.custom.foi
+      end
+  
+      it 'sets @custom_reports_sar' do
+        get :new
+        expect(assigns(:custom_reports_sar)).to eq ReportType.custom.sar
+      end
+  
+      it 'sets @correspondence_types' do
+        get :new
+        expected = %w[FOI SAR CLOSED_CASES]
+        expect(assigns(:correspondence_types).map(&:abbreviation)).to eq expected
+      end
+
+      it 'renders the template' do
+        get :new
+        expect(response).to render_template(:new)
+      end
     end
 
-    it 'sets @report' do
-      get :new
-      expect(assigns(:report)).to be_new_record
-    end
+    context 'sets @correspondence_types' do
+      before do
+        sign_in branston_user
+      end
 
-    it 'sets @custom_reports_foi' do
-      get :new
-      expect(assigns(:custom_reports_foi)).to eq ReportType.custom.foi
-    end
+      it 'authorizes' do
+        expect { get :new }
+          .to require_permission(:can_download_stats?)
+            .with_args(branston_user, Case::Base)
+      end
+  
+      it 'sets @report' do
+        get :new
+        expect(assigns(:report)).to be_new_record
+      end
+  
+      it 'sets @custom_reports_offender_sar' do
+        get :new
+        expect(assigns(:custom_reports_offender_sar)).to eq ReportType.custom.offender_sar
+      end
+  
+      it 'sets @correspondence_types' do
+        get :new
+        expected = %w[OFFENDER_SAR CLOSED_CASES]
+        expect(assigns(:correspondence_types).map(&:abbreviation)).to eq expected
+      end
 
-    it 'sets @custom_reports_sar' do
-      get :new
-      expect(assigns(:custom_reports_sar)).to eq ReportType.custom.sar
-    end
-
-    it 'sets @correspondence_types' do
-      get :new
-      expected = %w[FOI OFFENDER_SAR SAR CLOSED_CASES]
-      expect(assigns(:correspondence_types).map(&:abbreviation)).to eq expected
-    end
-
-    it 'renders the template' do
-      get :new
-      expect(response).to render_template(:new)
+      it 'renders the template' do
+        get :new
+        expect(response).to render_template(:new)
+      end
     end
   end
 
@@ -186,6 +227,11 @@ RSpec.describe StatsController, type: :controller do
       it 'sets @custom_reports_sar' do
         post :create, params: params
         expect(assigns(:custom_reports_sar)).to eq ReportType.custom.sar
+      end
+
+      it 'sets @custom_reports_offender_sar' do
+        post :create, params: params
+        expect(assigns(:custom_reports_offender_sar)).to eq ReportType.custom.offender_sar
       end
 
       it 'sets @custom_reports_closed_cases' do

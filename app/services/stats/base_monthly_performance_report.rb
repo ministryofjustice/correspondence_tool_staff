@@ -1,6 +1,6 @@
 module Stats
 
-  ROWS_PER_FRAGMENT = 200 # Arbitrary value, may require experimentation
+  ROWS_PER_FRAGMENT = 500 # Arbitrary value, may require experimentation
   
   class BaseMonthlyPerformanceReport < BaseReport
 
