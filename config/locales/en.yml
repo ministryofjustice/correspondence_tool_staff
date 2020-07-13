@@ -459,6 +459,7 @@ en:
         subject: "Case summary"
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
       offender_sar:
+        recipient_details: The information should be sent to?
         delivery_method: How and where should the information be sent?
         email: "Recipient email address"
         external_reference: Requester reference (optional)
@@ -480,6 +481,10 @@ en:
           ex_offender: Ex-offender
           offender: Offender
           probation_service_user: "Probation service user"
+        recipient:
+          subject_recipient: The data subject
+          requester_recipient: The person making the request?
+          third_party_recipient: Third party
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative"

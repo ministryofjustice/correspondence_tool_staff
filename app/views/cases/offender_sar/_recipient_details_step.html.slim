@@ -5,10 +5,27 @@
 
 = form_for @case, url: url, as: :offender_sar do |f|
 
-  p recipient details fields coming soon
-  / start remove this ! Temp hidden subject_full name field because params[:offender_sar] needs to be populated
-  = f.text_field :recipient, value: "subject_recipient"
-  / end remove this
+  h2.heading-medium
+    = t('helpers.label.offender_sar.recipient_details')
+  
+  - if @case.third_party
+    = f.radio_button_fieldset :recipient, choices: [:subject_recipient, :requester_recipient], legend_options: { class: 'visually-hidden' } do |fieldset|
+      - fieldset.radio_input('subject_recipient')
+
+      - fieldset.radio_input('requester_recipient')
+  - else
+    = f.radio_button_fieldset :recipient, choices: [:subject_recipient, :third_party_recipient], legend_options: { class: 'visually-hidden' } do |fieldset|
+      - fieldset.radio_input('subject_recipient')
+
+      - fieldset.radio_input('third_party_recipient',
+                            panel_id: 'recipient_third_party_recipient', text_method: :humanize)
+
+      - fieldset.revealing_panel(:recipient_third_party_recipient) do |panel|
+        - panel.text_field :third_party_relationship
+        - panel.text_field :third_party_name
+        - panel.text_field :third_party_company_name
+        - panel.text_field :requester_reference
+        - panel.text_area :postal_address, {rows: 4}
 
   input name="current_step" type="hidden" value=@case.current_step
 

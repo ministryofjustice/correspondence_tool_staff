@@ -17,6 +17,7 @@ class OffenderSARCaseForm
            :name,
            :number,
            :object,
+           :recipient,
            :other_subject_ids,
            :postal_address,
            :previous_case_numbers,
