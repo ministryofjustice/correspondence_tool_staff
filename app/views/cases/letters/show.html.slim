@@ -25,10 +25,10 @@ section.letter--from-section
     | Date: #{Date.today.strftime('%e %b %Y')}
 
 p
-  | #{@case.name} <br>
+  | #{@letter.letter_recipient} <br>
   - if @case.third_party_company_name.present?
     | #{@case.third_party_company_name} <br>
-  | #{simple_format @case.postal_address, {}, wrapper_tag: 'span'}
+  | #{simple_format @letter.letter_address, {}, wrapper_tag: 'span'}
 
 = raw @letter.body
 
