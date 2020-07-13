@@ -37,6 +37,7 @@ class Case::SAR::Offender < Case::Base
                  other_subject_ids: :string,
                  previous_case_numbers: :string,
                  prison_number: :string,
+                 recipient: :string,
                  reply_method: :string,
                  subject_address: :string,
                  subject_aliases: :string,
@@ -44,7 +45,7 @@ class Case::SAR::Offender < Case::Base
                  subject_type: :string,
                  third_party_relationship: :string,
                  third_party: :boolean,
-                 third_party_reference: :string,
+                 requester_reference: :string,
                  third_party_company_name: :string,
                  late_team_id: :integer,
                  third_party_name: :string
@@ -60,6 +61,12 @@ class Case::SAR::Offender < Case::Base
   enum reply_method: {
     send_by_post:  'send_by_post',
     send_by_email: 'send_by_email',
+  }
+
+  enum recipient: {
+    subject_recipient:  'subject_recipient',
+    requester_recipient: 'requester_recipient',
+    third_party_recipient: 'third_party_recipient',
   }
 
   has_paper_trail only: [
@@ -83,9 +90,9 @@ class Case::SAR::Offender < Case::Base
   validates_presence_of :subject_address
 
   validates :subject_full_name, presence: true
-  validates :subject_type,      presence: true
-  validates :reply_method,      presence: true
-
+  validates :subject_type, presence: true
+  validates :recipient, presence: true
+  validates :reply_method, presence: true
   validate :validate_date_of_birth
   validate :validate_received_date
   validate :validate_third_party_names
@@ -160,9 +167,29 @@ class Case::SAR::Offender < Case::Base
     self.current_state == 'data_to_be_requested'
   end
 
-  # @todo: Should these steps be defined in 'Steppable' or the controller
-  def steps
-    %w[subject-details requester-details requested-info date-received].freeze
+  # DATA MAPPING FIELDS - NAMING THE CONCEPTS
+  def subject_name
+    subject_full_name
+  end
+
+  def third_party_address
+    postal_address
+  end
+
+  def requester_name
+    third_party ? third_party_name : subject_name
+  end
+
+  def requester_address
+    third_party ? third_party_address : subject_address
+  end
+
+  def recipient_name
+    (!subject_recipient?) ? third_party_name : subject_name
+  end
+
+  def recipient_address
+    (!subject_recipient?) ? postal_address : subject_address
   end
 
   private
