@@ -44,6 +44,7 @@ FactoryBot.define do
     requester_reference { 'FOOG1234' }
     third_party_company_name { 'Foogle and Sons Solicitors at Law' }
     third_party_name { 'Mr J. Smith' }
+    postal_address { '22 High Street' }
   end
 
   trait :data_to_be_requested do

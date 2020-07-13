@@ -85,8 +85,7 @@ class Case::SAR::Offender < Case::Base
   validates :third_party_relationship, presence: true, if: -> { third_party }
   validates :date_of_birth, presence: true
 
-  validates_presence_of :email,          if: :send_by_email?
-  validates_presence_of :postal_address, if: :send_by_post?
+  validates_presence_of :postal_address, if: :third_party?
   validates_presence_of :subject_address
 
   validates :subject_full_name, presence: true
