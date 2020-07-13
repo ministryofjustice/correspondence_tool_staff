@@ -461,9 +461,6 @@ en:
         subject: "Case summary"
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
       offender_sar:
-        recipient_details: The information should be sent to?
-        delivery_method: How and where should the information be sent?
-        email: "Recipient email address"
         external_reference: Requester reference (optional)
         high_profile: High profile
         message: Request details (optional)
