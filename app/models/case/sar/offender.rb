@@ -172,14 +172,6 @@ class Case::SAR::Offender < Case::Base
     subject_full_name
   end
 
-  def subject_address
-    "Not implemented yet!" # subject_address
-  end
-
-  def third_party_name
-    "Not implemented yet!"
-  end
-
   def third_party_address
     postal_address
   end
