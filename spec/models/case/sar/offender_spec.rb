@@ -246,7 +246,7 @@ describe Case::SAR::Offender do
   describe 'third party details' do
     describe 'third_party_names' do
       it 'validates third party names when third party is true' do
-        kase = build :offender_sar_case, third_party: true, third_party_name: '', third_party_company_name: ''
+        kase = build :offender_sar_case, :third_party, third_party_name: '', third_party_company_name: ''
         expect(kase).not_to be_valid
         expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
         expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
@@ -292,9 +292,8 @@ describe Case::SAR::Offender do
 
   describe '#subject_address' do
     it 'returns a dummy string for now' do
-      pending "Will's PR"
       kase = create :offender_sar_case
-      expect(kase.subject_address).to eq 'Something sensible'
+      expect(kase.subject_address).to eq '22 Sample Address, Test Lane, Testingington, TE57ST'
     end
   end
 
