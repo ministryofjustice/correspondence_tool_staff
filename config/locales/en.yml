@@ -469,6 +469,7 @@ en:
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
+        recipient_details: "The information should be sent to:"
         requester_reference: Requester reference (optional)
         subject: "Case summary"
         subject_aliases: "Subject's alias if applicable"
