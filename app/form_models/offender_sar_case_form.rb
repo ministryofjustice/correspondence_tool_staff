@@ -107,8 +107,14 @@ class OffenderSARCaseForm
 
   def check_custom_validations_for_step(step)
     @case.validate_date_of_birth if step == "subject-details"
-    @case.validate_third_party_names if step == "requester-details"
-    @case.validate_recipient if step == "recipient-details"
+    if step == "requester-details"
+      @case.validate_third_party_names
+      @case.validate_third_party_relationship
+    end 
+    if step == "recipient-details"
+      @case.validate_recipient
+      @case.validate_third_party_relationship
+    end 
     @case.validate_received_date if step == "date-received"
   end
 
