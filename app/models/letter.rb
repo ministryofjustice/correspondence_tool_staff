@@ -30,7 +30,7 @@ class Letter
     @letter_template&.name
   end
 
-  def letter_recipient
+  def name
     case @letter_template.template_type
     when "dispatch"
       values.recipient_name
@@ -39,13 +39,17 @@ class Letter
     end
   end
 
-  def letter_address
+  def address
     case @letter_template.template_type
     when "dispatch"
       values.recipient_address
     when "acknowledgement"
       values.requester_address
     end
+  end
+
+  def company_name
+    values.third_party_company_name if values.third_party_company_name.present?
   end
 end
 

@@ -24,13 +24,13 @@ RSpec.describe Letter, type: :model do
     expect(letter.template_name).to eq 'Letter to Requester'
   end
 
-  describe '#letter_recipient' do
+  describe '#name' do
     context 'when letter template is acknowledgement letter' do
       context 'when subject is requester' do
         it 'returns the subject name' do
           letter = Letter.new(letter_template.id, kase)
-          expect(letter.letter_recipient).to eq kase.requester_name
-          expect(letter.letter_recipient).to eq kase.subject_name
+          expect(letter.name).to eq kase.requester_name
+          expect(letter.name).to eq kase.subject_name
         end
       end
 
@@ -38,8 +38,8 @@ RSpec.describe Letter, type: :model do
         let(:kase) { build(:offender_sar_case, :third_party, third_party_name: "Bob") }
         it 'returns the third_party name' do
           letter = Letter.new(letter_template.id, kase)
-          expect(letter.letter_recipient).to eq kase.requester_name
-          expect(letter.letter_recipient).to eq kase.third_party_name
+          expect(letter.name).to eq kase.requester_name
+          expect(letter.name).to eq kase.third_party_name
         end
       end
     end
@@ -50,8 +50,8 @@ RSpec.describe Letter, type: :model do
       context 'when subject is recipient' do
         it 'returns the subject name' do
           letter = Letter.new(letter_template.id, kase)
-          expect(letter.letter_recipient).to eq kase.recipient_name
-          expect(letter.letter_recipient).to eq kase.subject_name
+          expect(letter.name).to eq kase.recipient_name
+          expect(letter.name).to eq kase.subject_name
         end
       end
 
@@ -60,9 +60,78 @@ RSpec.describe Letter, type: :model do
 
         it 'returns the third_party name' do
           letter = Letter.new(letter_template.id, kase)
-          expect(letter.letter_recipient).to eq kase.recipient_name
-          expect(letter.letter_recipient).to eq kase.third_party_name
+          expect(letter.name).to eq kase.recipient_name
+          expect(letter.name).to eq kase.third_party_name
         end
+      end
+    end
+  end
+
+  describe '#address' do
+    context 'when letter template is acknowledgement letter' do
+      context 'when subject is requester' do
+        it 'returns the subject address' do
+          letter = Letter.new(letter_template.id, kase)
+          expect(letter.address).to eq kase.requester_address
+          expect(letter.address).to eq kase.subject_address
+        end
+      end
+
+      context 'when third party is requester' do
+        let(:kase) { build(:offender_sar_case, :third_party, postal_address: "33 High Street") }
+        it 'returns the third_party address' do
+          letter = Letter.new(letter_template.id, kase)
+          expect(letter.address).to eq kase.requester_address
+          expect(letter.address).to eq kase.third_party_address
+        end
+      end
+    end
+
+    context 'when letter template is dispatch letter' do
+      let(:letter_template) { create(:letter_template, template_type: "dispatch", name: "Letter to Recipient") }
+
+      context 'when subject is recipient' do
+        it 'returns the subject address' do
+          letter = Letter.new(letter_template.id, kase)
+          expect(letter.address).to eq kase.recipient_address
+          expect(letter.address).to eq kase.subject_address
+        end
+      end
+
+      context 'when third party is recipient' do
+        let(:kase) { build(:offender_sar_case, :third_party, postal_address: "33 High Street") }
+
+        it 'returns the third_party address' do
+          letter = Letter.new(letter_template.id, kase)
+          expect(letter.address).to eq kase.recipient_address
+          expect(letter.address).to eq kase.third_party_address
+        end
+      end
+    end
+  end
+
+  describe '#company_name' do
+    context 'when no company_name is present' do
+     let(:kase) { build(:offender_sar_case) }
+      it 'returns nil' do
+        letter = Letter.new(letter_template.id, kase)
+        expect(letter.company_name).to be_nil
+      end
+    end
+
+    context 'when company_name is blank' do
+     let(:kase) { build(:offender_sar_case, :third_party, third_party_company_name: '') }
+      it 'returns nil' do
+        letter = Letter.new(letter_template.id, kase)
+        expect(letter.company_name).to be_nil
+      end
+    end
+
+    context 'when company_name is present' do
+     let(:kase) { build(:offender_sar_case, :third_party, third_party_company_name: 'Wibble') }
+      it 'returns the company name' do
+        letter = Letter.new(letter_template.id, kase)
+        expect(letter.company_name).to eq "Wibble"
       end
     end
   end
