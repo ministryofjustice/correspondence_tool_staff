@@ -17,6 +17,7 @@ class OffenderSARCaseForm
            :name,
            :number,
            :object,
+           :recipient,
            :other_subject_ids,
            :postal_address,
            :previous_case_numbers,
@@ -106,7 +107,14 @@ class OffenderSARCaseForm
 
   def check_custom_validations_for_step(step)
     @case.validate_date_of_birth if step == "subject-details"
-    @case.validate_third_party_names if step == "requester-details"
+    if step == "requester-details"
+      @case.validate_third_party_names
+      @case.validate_third_party_relationship
+    end 
+    if step == "recipient-details"
+      @case.validate_recipient
+      @case.validate_third_party_relationship
+    end 
     @case.validate_received_date if step == "date-received"
   end
 
@@ -128,6 +136,8 @@ class OffenderSARCaseForm
       set_empty_value_if_unset(params, "reply_method")
       clear_param_if_condition(params, "email", "reply_method", "send_by_email")
       clear_param_if_condition(params, "postal_address", "reply_method", "send_by_post")
+    when "recipient-details"
+      # no tweaking needed
     when "requested-info"
       # no tweaking needed
     when "date-received"
