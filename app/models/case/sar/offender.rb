@@ -133,8 +133,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_recipient
-    if !third_party && recipient == 'third_party_recipient'
-      if third_party_company_name.blank? && third_party_name.blank?
+    if recipient == 'third_party_recipient' && third_party_company_name.blank? && third_party_name.blank?
         errors.add(
             :third_party_name,
             I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_name.blank')
@@ -143,13 +142,12 @@ class Case::SAR::Offender < Case::Base
             :third_party_company_name,
             I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank')
         )
-      end
     end
     errors[:third_party_name].any? || errors[:third_party_company_name].any?
   end
 
   def validate_third_party_relationship
-    if (third_party || recipient == 'third_party_recipient') && third_party_relationship.blank?
+    if recipient == 'third_party_recipient' && third_party_relationship.blank?
       errors.add(
           :third_party_relationship,
           I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_relationship.blank')

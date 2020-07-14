@@ -265,7 +265,7 @@ describe Case::SAR::Offender do
         expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
       end
 
-      it 'does not validate third_party names when third party is false and recipient is not third party too' do
+      it 'does not validate third_party names when ecipient is not third party too' do
         kase = build :offender_sar_case, third_party: false, third_party_name: '', 
                       third_party_company_name: '', recipient: 'subject_recipient'
         expect(kase).to be_valid
@@ -287,8 +287,7 @@ describe Case::SAR::Offender do
         expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
       end
 
-      it 'does not validates presence of third party relationship when third party is false 
-          and recipient is not third party' do
+      it 'does not validates presence of third party relationship when recipient is not third party' do
         kase = build :offender_sar_case, third_party: false, third_party_relationship: '', 
                       recipient: 'subject_recipient'
         expect(kase).to be_valid
