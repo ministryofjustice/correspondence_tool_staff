@@ -15,11 +15,11 @@ module PageObjects
           element :third_party_relationship, '#offender_sar_third_party_relationship'
           element :third_party_name, '#offender_sar_third_party_name'
           element :third_party_company_name, '#offender_sar_third_party_company_name'
-          element :email_address, '#offender_sar_email'
           element :postal_address, '#offender_sar_postal_address'
           element :submit_button, '.button'
 
           def edit_email(value)
+            byebug
             email_address.set value
           end
         end

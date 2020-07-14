@@ -24,7 +24,6 @@ class OffenderSARCaseForm
            :received_date_mm,
            :received_date_yyyy,
            :received_date,
-           :reply_method,
            :subject_address,
            :subject_aliases,
            :subject_full_name,

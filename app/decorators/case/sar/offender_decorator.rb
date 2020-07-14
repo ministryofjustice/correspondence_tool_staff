@@ -1,9 +1,4 @@
 class Case::SAR::OffenderDecorator < Case::BaseDecorator
-
-  def sar_response_address
-    object.send_by_email? ? object.email : object.postal_address
-  end
-
   def subject_type_display
     I18n.t('helpers.label.offender_sar.subject_type.' + object.subject_type)
   end
