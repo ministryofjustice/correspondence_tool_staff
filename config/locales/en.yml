@@ -463,7 +463,6 @@ en:
         email: "Recipient email address"
         external_reference: Requester reference (optional)
         high_profile: High profile
-        message: Request details (optional)
         message: Additional case information
         third_party_name: "Full name of the representative"
         other_subject_ids: "Police national computer number"
