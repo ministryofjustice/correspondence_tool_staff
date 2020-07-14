@@ -146,12 +146,15 @@ en:
               inclusion: Please choose yes or no
         case/sar/offender:
           attributes:
-            third_party_relationship:
-              blank: can't be blank
+            date_responded:
+              before_received: "can't be before date received"
+              future: "can't be in the future"
             third_party_company_name:
               blank: can't be blank if representative name not given
             third_party_name:
               blank: can't be blank if company name not given
+            third_party_relationship:
+              blank: can't be blank
         assignment:
           attributes:
             state:
