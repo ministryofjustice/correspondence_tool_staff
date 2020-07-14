@@ -136,12 +136,6 @@ class OffenderSARCaseForm
       set_empty_value_if_unset(params, "reply_method")
       clear_param_if_condition(params, "email", "reply_method", "send_by_email")
       clear_param_if_condition(params, "postal_address", "reply_method", "send_by_post")
-    when "recipient-details"
-      if !@case.third_party
-        clear_param_if_condition(params, "third_party_name", "recipient", "subject_recipient")
-        clear_param_if_condition(params, "third_party_company_name", "recipient", "subject_recipient")
-        clear_param_if_condition(params, "third_party_relationship", "recipient", "subject_recipient")
-      end
     when "requested-info"
       # no tweaking needed
     when "date-received"
