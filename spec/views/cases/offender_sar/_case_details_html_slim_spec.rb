@@ -78,6 +78,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     it 'does not display the postal address if one is not provided' do
       offender_sar_case.postal_address = nil
       offender_sar_case.email = 'john.doe@moj.com'
+      offender_sar_case.reply_method = 'send_by_email'
 
       assign(:case, offender_sar_case)
       render partial: 'cases/offender_sar/case_details.html.slim',

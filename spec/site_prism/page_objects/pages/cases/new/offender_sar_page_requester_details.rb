@@ -36,7 +36,7 @@ module PageObjects
               choose('offender_sar_reply_method_send_by_email', visible: false)
               email_address.set kase.email
             elsif kase.send_by_post?
-              choose('offender_sar_reply_method_send_by_postase.email', visible: false)
+              choose('offender_sar_reply_method_send_by_post', visible: false)
               postal_address.set kase.postal_address
             end
           end
