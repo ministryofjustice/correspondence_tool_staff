@@ -147,11 +147,11 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_third_party_relationship
-    if recipient == 'third_party_recipient' && third_party_relationship.blank?
-      errors.add(
+    if (third_party || recipient == 'third_party_recipient') && third_party_relationship.blank?
+        errors.add(
           :third_party_relationship,
           I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_relationship.blank')
-      )
+        )
     end
     errors[:third_party_relationship].any? 
   end
