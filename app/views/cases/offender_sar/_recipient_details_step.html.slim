@@ -18,13 +18,12 @@
       - fieldset.radio_input('subject_recipient')
 
       - fieldset.radio_input('third_party_recipient',
-                            panel_id: 'recipient_third_party_recipient', text_method: :humanize)
+                            panel_id: 'recipient_third_party_recipient')
 
       - fieldset.revealing_panel(:recipient_third_party_recipient) do |panel|
-        - panel.text_field :third_party_relationship
         - panel.text_field :third_party_name
         - panel.text_field :third_party_company_name
-        - panel.text_field :requester_reference
+        - panel.text_field :third_party_relationship
         - panel.text_area :postal_address, {rows: 4}
 
   input name="current_step" type="hidden" value=@case.current_step

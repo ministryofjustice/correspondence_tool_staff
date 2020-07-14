@@ -483,11 +483,11 @@ en:
           probation_service_user: "Probation service user"
         recipient:
           subject_recipient: The data subject
-          requester_recipient: The person making the request?
+          requester_recipient: The person making the request
           third_party_recipient: Third party
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
-        third_party_name: "Full name of the representative"
+        third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
       feedback:

@@ -82,7 +82,7 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "can't be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
-  validates :third_party_relationship, presence: true, if: -> { third_party }
+  validates :third_party_relationship, presence: true, if: -> { third_party || (recipient == 'third_party_recipient') }
   validates :date_of_birth, presence: true
 
   validates_presence_of :email,          if: :send_by_email?
@@ -96,6 +96,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_date_of_birth
   validate :validate_received_date
   validate :validate_third_party_names
+  validate :validate_recipient
 
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
@@ -119,6 +120,20 @@ class Case::SAR::Offender < Case::Base
 
   def validate_third_party_names
     if third_party && third_party_company_name.blank? && third_party_name.blank?
+      errors.add(
+          :third_party_name,
+          I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_name.blank')
+      )
+      errors.add(
+          :third_party_company_name,
+          I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank')
+      )
+    end
+    errors[:third_party_name].any? || errors[:third_party_company_name].any?
+  end
+
+  def validate_recipient
+    if !third_party && recipient == 'third_party_recipient' && third_party_company_name.blank? && third_party_name.blank?
       errors.add(
           :third_party_name,
           I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_name.blank')
