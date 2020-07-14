@@ -42,7 +42,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.case_reference_number.data.text).to eq '123 ABC 456'
       expect(partial.subject_address.data.text).to eq '22 Sample Address, Test Lane, Testingington, TE57ST'
       expect(partial.requester_reference.data.text).to eq '456 ABC 123'
-      expect(partial.request_dated.data.text).to eq '13 Jul 2019'
+      expect(partial.request_dated.data.text).to eq '13 Jul 2010'
       expect(partial.date_of_birth.data.text).to eq '1 Sep 2019'
     end
 

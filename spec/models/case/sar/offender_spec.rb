@@ -241,7 +241,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context 'received date cannot be in future' do
+    context 'request_dated date cannot be in future' do
       it 'errors' do
         kase = build(:offender_sar_case, request_dated: 1.day.from_now)
         expect(kase).not_to be_valid

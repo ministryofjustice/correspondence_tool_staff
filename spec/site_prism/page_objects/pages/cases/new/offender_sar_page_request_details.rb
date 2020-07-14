@@ -12,28 +12,19 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+          element :request_dated_day, '#offender_sar_request_dated_dd'
+          element :request_dated_month, '#offender_sar_request_dated_mm'
+          element :request_dated_year, '#offender_sar_request_dated_yyyy'
+          element :requester_reference, '#offender_sar_requester_reference'
 
-          # tbd
 
           def fill_in_case_details(params={})
-            # tbd
-            # kase = FactoryBot.build :offender_sar_case, params
+            kase = FactoryBot.build :offender_sar_case, params
 
-            # if kase.third_party?
-            #   choose('offender_sar_third_party_true', visible: false)
-            #   requester_full_name.set kase.name
-            #   third_party_relationship.set kase.third_party_relationship
-            # else
-            #   choose('offender_sar_third_party_false', visible: false)
-            # end
-
-            # if kase.send_by_email?
-            #   choose('offender_sar_reply_method_send_by_email', visible: false)
-            #   email_address.set kase.email
-            # elsif kase.send_by_post?
-            #   choose('offender_sar_reply_method_send_by_postase.email', visible: false)
-            #   postal_address.set kase.postal_address
-            # end
+            request_dated_day.set(kase.request_dated_dd)
+            request_dated_month.set(kase.request_dated_mm)
+            request_dated_year.set(kase.request_dated_yyyy)
+            requester_reference.set(kase.requester_reference)
           end
         end
       end
