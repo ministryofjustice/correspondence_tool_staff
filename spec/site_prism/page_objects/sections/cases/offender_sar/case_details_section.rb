@@ -66,6 +66,14 @@ module PageObjects
             element :data, 'td:first'
           end
 
+          section :request_dated, 'tr.request_dated' do
+            element :data, 'td:first'
+          end
+
+          section :requester_reference, 'tr.requester-reference' do
+            element :data, 'td'
+          end
+
           section :date_of_birth, 'tr.date-of-birth' do
             element :data, 'td'
           end

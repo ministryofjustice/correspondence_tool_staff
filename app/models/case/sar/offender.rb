@@ -20,6 +20,7 @@ class Case::SAR::Offender < Case::Base
     date_responded
     date_draft_compliant
     external_deadline
+    request_dated
     received_date
   ].freeze
 
@@ -40,6 +41,8 @@ class Case::SAR::Offender < Case::Base
                  recipient: :string,
                  reply_method: :string,
                  subject_address: :string,
+                 request_dated: :date,
+                 requester_reference: :string,
                  subject_aliases: :string,
                  subject_full_name: :string,
                  subject_type: :string,
@@ -82,7 +85,6 @@ class Case::SAR::Offender < Case::Base
 
   validates :third_party,          inclusion: { in: [true, false], message: "can't be blank" }
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
-  validates :third_party_relationship, presence: true, if: -> { third_party }
   validates :date_of_birth, presence: true
 
   validates_presence_of :email,          if: :send_by_email?
@@ -96,6 +98,10 @@ class Case::SAR::Offender < Case::Base
   validate :validate_date_of_birth
   validate :validate_received_date
   validate :validate_third_party_names
+  validate :validate_recipient
+  validate :validate_third_party_relationship
+
+  validate :validate_request_dated
 
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
@@ -116,6 +122,16 @@ class Case::SAR::Offender < Case::Base
     end
     errors[:date_of_birth].any?
   end
+  
+  def validate_request_dated
+    if request_dated.present? && self.request_dated > Date.today
+      errors.add(
+        :request_dated,
+        I18n.t('activerecord.errors.models.case.attributes.request_dated.not_in_future')
+      )
+    end
+    errors[:request_dated].any?
+  end
 
   def validate_third_party_names
     if third_party && third_party_company_name.blank? && third_party_name.blank?
@@ -129,6 +145,30 @@ class Case::SAR::Offender < Case::Base
       )
     end
     errors[:third_party_name].any? || errors[:third_party_company_name].any?
+  end
+
+  def validate_recipient
+    if recipient == 'third_party_recipient' && third_party_company_name.blank? && third_party_name.blank?
+        errors.add(
+            :third_party_name,
+            I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_name.blank')
+        )
+        errors.add(
+            :third_party_company_name,
+            I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_company_name.blank')
+        )
+    end
+    errors[:third_party_name].any? || errors[:third_party_company_name].any?
+  end
+
+  def validate_third_party_relationship
+    if (third_party || recipient == 'third_party_recipient') && third_party_relationship.blank?
+        errors.add(
+          :third_party_relationship,
+          I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_relationship.blank')
+        )
+    end
+    errors[:third_party_relationship].any? 
   end
 
   def default_managing_team

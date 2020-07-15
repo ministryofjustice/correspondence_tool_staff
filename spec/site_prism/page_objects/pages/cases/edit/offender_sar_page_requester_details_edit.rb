@@ -20,6 +20,7 @@ module PageObjects
           element :submit_button, '.button'
 
           def edit_email(value)
+            choose('offender_sar_reply_method_send_by_email', visible: false)
             email_address.set value
           end
         end
