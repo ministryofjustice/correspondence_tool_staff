@@ -29,5 +29,27 @@ class Letter
   def template_name
     @letter_template&.name
   end
+
+  def name
+    case @letter_template.template_type
+    when "dispatch"
+      values.recipient_name
+    when "acknowledgement"
+      values.requester_name
+    end
+  end
+
+  def address
+    case @letter_template.template_type
+    when "dispatch"
+      values.recipient_address
+    when "acknowledgement"
+      values.requester_address
+    end
+  end
+
+  def company_name
+    values.third_party_company_name if values.third_party_company_name.present?
+  end
 end
 
