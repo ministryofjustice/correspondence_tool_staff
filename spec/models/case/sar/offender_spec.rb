@@ -314,14 +314,22 @@ describe Case::SAR::Offender do
   end
 
   describe '#recipient_name' do
-    it 'returns third_party_name subject not recipient recipient' do
-      kase = create :offender_sar_case, recipient: "requester_recipient"
+    it 'returns third_party_name when subject not recipient' do
+      kase = create :offender_sar_case, :third_party
+      expect(kase.recipient_name).not_to eq kase.subject_name
       expect(kase.recipient_name).to eq kase.third_party_name
     end
 
     it 'returns subject_name if subject is recipient' do
       kase = create :offender_sar_case
+      expect(kase.recipient_name).not_to eq kase.third_party_name
       expect(kase.recipient_name).to eq kase.subject_name
+    end
+
+    it 'returns nothing if third party and no name supplied' do
+      kase = create :offender_sar_case, :third_party, third_party_name: ''
+
+      expect(kase.recipient_name).to eq ''
     end
   end
 
