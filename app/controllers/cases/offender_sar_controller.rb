@@ -126,8 +126,9 @@ module Cases
 
     def apply_date_workaround
       # an issue with the Gov UK Date Fields causes the fields to show up empty
-      # on edit unless you assign to the :date_of_birth field before display
+      # on edit unless you assign to the :date_of_birth, and :request_dated fields before display
       @case.date_of_birth = @case.date_of_birth
+      @case.request_dated = @case.request_dated
     end
 
     def params_for_transition

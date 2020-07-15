@@ -5,7 +5,16 @@
 
 = form_for @case, url: url, as: :offender_sar do |f|
 
-  p further request fields coming soon
+  .form-group
+
+    = f.gov_uk_date_field :request_dated, { \
+        legend_text: '',
+        form_hint_text: t('cases.new.date_request_received_copy'),
+        today_button: { class: '' } \
+      }
+
+    = f.text_field :requester_reference
+
   / start remove this ! Temp hidden subject_full name field because params[:offender_sar] needs to be populated
   = f.hidden_field :subject_full_name
   / end remove this
