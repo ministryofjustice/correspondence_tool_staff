@@ -7,7 +7,10 @@
 
     table
       tbody.sar-basic-details
+        / 1st Section
         = render partial: 'cases/shared/case_type', locals: { case_details: case_details }
+
+        / 2nd Section
         = render partial: 'cases/offender_sar/data_subject', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/subject_aliases', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/date_of_birth', locals: { case_details: case_details }
@@ -18,16 +21,26 @@
         = render partial: 'cases/sar/subject_type', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/subject_address', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/high_profile_subject', locals: { case_details: case_details }
+
+        / 3rd Section
         = render partial: 'cases/offender_sar/third_party', locals: { case_details: case_details }
+
         - if case_details.third_party?
           = render partial: 'cases/sar/third_party_relationship', locals: { case_details: case_details }
           = render partial: 'cases/offender_sar/requester_name', locals: { case_details: case_details }
           = render partial: 'cases/offender_sar/third_party_company_name', locals: { case_details: case_details }
+
         = render partial: 'cases/offender_sar/response_address', locals: { case_details: case_details }
+
+        / 4th Section
         = render partial: 'cases/offender_sar/request_dated', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/requester_reference', locals: { case_details: case_details }
+
+        / 5th Section
         = render partial: 'cases/offender_sar/date_received', locals: { case_details: case_details }
         = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
+
+        / 6th Section
         - if case_details.has_date_draft_compliant?
           = render partial: 'cases/shared/draft_compliance_details', locals: { case_details: case_details }
         - if case_details.responding_team.present?

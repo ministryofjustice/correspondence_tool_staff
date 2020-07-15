@@ -630,7 +630,6 @@ en:
       respond: Mark response as sent
       request_amends: Request amends
       upload_approve: 'Upload response and clear'
-
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
@@ -656,6 +655,8 @@ en:
     stats_custom_button: Create report
     summary_error: 'prevented this form from being submitted:'
     close: Close case
+    links:
+      change: Change
 
   admin:
     cases:
