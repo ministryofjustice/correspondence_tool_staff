@@ -26,6 +26,11 @@ class OffenderSARCaseForm
            :received_date_mm,
            :received_date_yyyy,
            :received_date,
+           :request_dated_dd,
+           :request_dated_mm,
+           :request_dated_yyyy,
+           :request_dated,
+           :requester_reference,
            :reply_method,
            :send_by_email?,
            :send_by_post?,
@@ -161,7 +166,11 @@ class OffenderSARCaseForm
     # when a new Case::SAR::Offender is being created from scratch, because the field is not
     # in the list of instance variables in the model at the point that the gov_uk_date_fields
     # is adding its magic methods. This manifests when running tests or after rails server restart
-    values = @session[:offender_sar_state] || { date_of_birth: nil }
+    values = @session[:offender_sar_state] || { date_of_birth: nil } 
+
+    # similar workaround needed for request dated
+    request_dated_exists = values.fetch('request_dated', false)
+    values['request_dated'] = nil unless request_dated_exists
 
     @case = Case::SAR::Offender.new(values).decorate
   end

@@ -20,6 +20,7 @@ class Case::SAR::Offender < Case::Base
     date_responded
     date_draft_compliant
     external_deadline
+    request_dated
     received_date
   ].freeze
 
@@ -40,6 +41,8 @@ class Case::SAR::Offender < Case::Base
                  recipient: :string,
                  reply_method: :string,
                  subject_address: :string,
+                 request_dated: :date,
+                 requester_reference: :string,
                  subject_aliases: :string,
                  subject_full_name: :string,
                  subject_type: :string,
@@ -98,6 +101,8 @@ class Case::SAR::Offender < Case::Base
   validate :validate_recipient
   validate :validate_third_party_relationship
 
+  validate :validate_request_dated
+
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
 
@@ -116,6 +121,16 @@ class Case::SAR::Offender < Case::Base
       )
     end
     errors[:date_of_birth].any?
+  end
+  
+  def validate_request_dated
+    if request_dated.present? && self.request_dated > Date.today
+      errors.add(
+        :request_dated,
+        I18n.t('activerecord.errors.models.case.attributes.request_dated.not_in_future')
+      )
+    end
+    errors[:request_dated].any?
   end
 
   def validate_third_party_names
