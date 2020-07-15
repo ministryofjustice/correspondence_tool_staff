@@ -17,7 +17,6 @@ FactoryBot.define do
     current_state                   { 'data_to_be_requested' }
     sequence(:name)                 { |n| "#{identifier} name #{n}" }
     email                           { Faker::Internet.email(name: identifier) }
-    reply_method                    { 'send_by_post' }
     sequence(:subject)              { |n| "#{identifier} subject #{n}" }
     sequence(:message)              { |n| "#{identifier} message #{n}" }
     received_date                   { Time.zone.today.to_s }
@@ -46,6 +45,8 @@ FactoryBot.define do
     requester_reference { 'FOOG1234' }
     third_party_company_name { 'Foogle and Sons Solicitors at Law' }
     third_party_name { 'Mr J. Smith' }
+    postal_address { '22 High Street' }
+    recipient { 'requester_recipient' }
   end
 
   trait :data_to_be_requested do

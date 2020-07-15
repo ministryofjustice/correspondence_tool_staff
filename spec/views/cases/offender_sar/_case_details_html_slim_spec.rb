@@ -60,37 +60,5 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.requester_reference.data.text).to eq 'FOOG1234'
       expect(partial.third_party_company_name.data.text).to eq 'Foogle and Sons Solicitors at Law'
     end
-
-    it 'does not display the email address if one is not provided' do
-      offender_sar_case.email = nil
-      offender_sar_case.postal_address = "1 High Street\nAnytown\nAT1 1AA"
-      offender_sar_case.reply_method = 'send_by_post'
-
-      assign(:case, offender_sar_case)
-      render partial: 'cases/offender_sar/case_details.html.slim',
-             locals: { case_details: offender_sar_case,
-                       link_type: nil }
-
-      partial = offender_sar_case_details_section(rendered).sar_basic_details
-
-      expect(partial).to have_response_address
-      expect(partial.response_address.data.text).to eq "1 High Street\nAnytown\nAT1 1AA"
-    end
-
-    it 'does not display the postal address if one is not provided' do
-      offender_sar_case.postal_address = nil
-      offender_sar_case.email = 'john.doe@moj.com'
-      offender_sar_case.reply_method = 'send_by_email'
-
-      assign(:case, offender_sar_case)
-      render partial: 'cases/offender_sar/case_details.html.slim',
-             locals:{ case_details: offender_sar_case,
-                      link_type: nil }
-
-      partial = offender_sar_case_details_section(rendered).sar_basic_details
-
-      expect(partial).to have_response_address
-      expect(partial.response_address.data.text).to eq 'john.doe@moj.com'
-    end
   end
 end
