@@ -360,7 +360,7 @@ en:
         upload_comment: This will be added to the converstation section of the case.
       offender_sar:
         date_of_birth: "For example, 12 11 2007"
-        message: Enter a brief summary of the case, including any details that will be useful for processing the Offender SAR.
+        message_hint: Include any details that will be useful for processing the case (optional)
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
         other_subject_ids: "You can include multiple numbers separated by a comma or a space."
         previous_case_numbers: "You can include multiple cases separated by a comma or a space."
@@ -469,7 +469,8 @@ en:
         email: "Recipient email address"
         external_reference: Requester reference (optional)
         high_profile: High profile
-        message: Request details (optional)
+        message: Additional case information
+        third_party_name: "Full name of the representative"
         other_subject_ids: "Police national computer number"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
