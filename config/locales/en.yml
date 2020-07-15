@@ -461,9 +461,6 @@ en:
         subject: "Case summary"
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
       offender_sar:
-        recipient_details: The information should be sent to?
-        delivery_method: How and where should the information be sent?
-        email: "Recipient email address"
         external_reference: Requester reference (optional)
         high_profile: High profile
         message: Additional case information
@@ -473,6 +470,7 @@ en:
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
+        recipient_details: "The information should be sent to:"
         requester_reference: Requester reference (optional)
         subject: "Case summary"
         subject_aliases: "Subject's alias if applicable"

@@ -110,59 +110,17 @@ describe Case::SAR::Offender do
     end
   end
 
-  describe '#reply_method' do
+  describe '#postal_address' do
     context 'valid values' do
-      it 'validates reply method' do
-        kase = build :offender_sar_case
-        expect(kase).to be_valid
-        expect(kase).to validate_presence_of(:reply_method)
-        expect(kase).to allow_values('send_by_email', 'send_by_post').for(:reply_method)
-      end
-
-      it 'validates when email is set' do
-        kase = build(:offender_sar_case, reply_method: 'send_by_email', email: 'foo@example.com')
-        expect(kase).to be_valid
-      end
-
       it 'validates when address is set' do
-        kase = build(:offender_sar_case, reply_method: 'send_by_post', postal_address: '22 Acacia Avenue')
+        kase = build(:offender_sar_case, :third_party, postal_address: '22 Acacia Avenue')
         expect(kase).to be_valid
       end
     end
 
-    context 'invalid value' do
-      it 'errors' do
-        expect {
-          build(:offender_sar_case, reply_method: 'wibble')
-        }.to raise_error ArgumentError
-      end
-    end
-
-    context 'nil' do
-      it 'errors' do
-        kase = build(:offender_sar_case, reply_method: nil)
-        expect(kase).not_to be_valid
-        expect(kase.errors[:reply_method]).to eq ["can't be blank"]
-      end
-    end
-
-    describe '#email' do
-      it 'validates presence of email when reply method is send by email' do
-        kase = build :offender_sar_case, reply_method: 'send_by_email', email: ''
-        expect(kase).not_to be_valid
-        expect(kase.errors[:email]).to eq ["can't be blank"]
-      end
-
-      it 'validates format of email when reply method is send by email' do
-        kase = build :offender_sar_case, reply_method: 'send_by_email', email: 'wibble'
-        expect(kase).not_to be_valid
-        expect(kase.errors[:email]).to eq ["is invalid"]
-      end
-    end
-
-    describe '#postal_address' do
-      it 'validates presence of postal address when reply method is send by post' do
-        kase = build :offender_sar_case, reply_method: 'send_by_post', postal_address: ''
+    context 'invalid values' do
+      it 'validates presence of postal address when recipient is third party' do
+        kase = build :offender_sar_case, :third_party, postal_address: ''
         expect(kase).not_to be_valid
         expect(kase.errors[:postal_address]).to eq ["can't be blank"]
       end
@@ -247,22 +205,6 @@ describe Case::SAR::Offender do
         expect(kase).not_to be_valid
         expect(kase.errors[:request_dated]).to eq ["can't be in the future."]
       end
-    end
-  end
-
-  describe '#email' do
-    it 'validates presence of email when reply is to be sent by email' do
-      kase = build :offender_sar_case, reply_method: :send_by_email, email: ''
-      expect(kase).not_to be_valid
-      expect(kase.errors[:email]).to eq ["can't be blank"]
-    end
-  end
-
-  describe '#postal_address' do
-    it 'validates presence of postal address when reply is to be sent by post' do
-      kase = build :offender_sar_case, reply_method: :send_by_post, postal_address: ''
-      expect(kase).not_to be_valid
-      expect(kase.errors[:postal_address]).to eq ["can't be blank"]
     end
   end
 
