@@ -20,6 +20,7 @@ class Case::SAR::Offender < Case::Base
     date_responded
     date_draft_compliant
     external_deadline
+    request_dated
     received_date
   ].freeze
 
@@ -38,8 +39,9 @@ class Case::SAR::Offender < Case::Base
                  previous_case_numbers: :string,
                  prison_number: :string,
                  recipient: :string,
-                 reply_method: :string,
                  subject_address: :string,
+                 request_dated: :date,
+                 requester_reference: :string,
                  subject_aliases: :string,
                  subject_full_name: :string,
                  subject_type: :string,
@@ -56,11 +58,6 @@ class Case::SAR::Offender < Case::Base
     detainee: 'detainee',
     ex_detainee: 'ex_detainee',
     probation_service_user: 'probation_service_user',
-  }
-
-  enum reply_method: {
-    send_by_post:  'send_by_post',
-    send_by_email: 'send_by_email',
   }
 
   enum recipient: {
@@ -84,19 +81,19 @@ class Case::SAR::Offender < Case::Base
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
   validates :date_of_birth, presence: true
 
-  validates_presence_of :email,          if: :send_by_email?
-  validates_presence_of :postal_address, if: :send_by_post?
+  validates_presence_of :postal_address, if: :third_party?
   validates_presence_of :subject_address
 
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
   validates :recipient, presence: true
-  validates :reply_method, presence: true
   validate :validate_date_of_birth
   validate :validate_received_date
   validate :validate_third_party_names
   validate :validate_recipient
   validate :validate_third_party_relationship
+
+  validate :validate_request_dated
 
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
@@ -116,6 +113,16 @@ class Case::SAR::Offender < Case::Base
       )
     end
     errors[:date_of_birth].any?
+  end
+  
+  def validate_request_dated
+    if request_dated.present? && self.request_dated > Date.today
+      errors.add(
+        :request_dated,
+        I18n.t('activerecord.errors.models.case.attributes.request_dated.not_in_future')
+      )
+    end
+    errors[:request_dated].any?
   end
 
   def validate_third_party_names
@@ -210,7 +217,8 @@ class Case::SAR::Offender < Case::Base
   end
 
   def recipient_name
-    (!subject_recipient?) ? third_party_name : subject_name
+    return subject_name if subject_recipient?
+    third_party_name.present? ? third_party_name : ''
   end
 
   def recipient_address
