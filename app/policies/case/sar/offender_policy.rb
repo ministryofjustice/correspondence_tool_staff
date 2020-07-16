@@ -4,6 +4,11 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_user_can_manage_offender_sar
   end
 
+  def edit?
+    clear_failed_checks
+    check_user_can_manage_offender_sar
+  end
+
   def can_add_case?
     clear_failed_checks
     check_user_can_manage_offender_sar

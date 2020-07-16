@@ -123,6 +123,19 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       }
     end
 
+    let(:same_params) {{ id: offender_sar_case.id }}
+    let(:same_params) do
+      {
+        id: offender_sar_case.id,
+        offender_sar: {
+          name: offender_sar_case.name,
+          postal_address: offender_sar_case.postal_address,
+          subject: offender_sar_case.subject,
+          message: offender_sar_case.message,
+        }
+      }
+    end
+
     before do
       sign_in responder
     end
@@ -134,12 +147,21 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       end
 
       it 'sets the flash' do
-        expect(flash[:notice]).to eq 'Case edited successfully'
+        expect(flash[:notice]).to eq 'Case updated'
       end
 
       it 'redirects to the new case assignment page' do
         expect(response)
           .to redirect_to(case_path(offender_sar_case))
+      end
+    end
+
+    context 'with valid params' do
+      it 'sets the flash' do
+        patch :update, params: same_params
+        expect(assigns(:case)).to be_a Case::SAR::Offender
+        expect(flash[:notice]).to eq nil
+        expect(flash[:alert]).to eq 'No changes were made'
       end
     end
   end
