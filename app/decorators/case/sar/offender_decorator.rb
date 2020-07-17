@@ -1,4 +1,8 @@
 class Case::SAR::OffenderDecorator < Case::BaseDecorator
+
+ include Steppable
+ include OffenderSARCaseForm
+
   def subject_type_display
     I18n.t('helpers.label.offender_sar.subject_type.' + object.subject_type)
   end
@@ -20,4 +24,5 @@ class Case::SAR::OffenderDecorator < Case::BaseDecorator
           end
     h.link_to "Back", url, class: 'govuk-back-link'
   end
+
 end
