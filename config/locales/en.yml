@@ -797,7 +797,6 @@ en:
       offender_sar:
         sub_heading: Edit Offender SAR case
     update:
-      case_error: Unable to save case updates
       case_updated: Case updated
     filters:
       index:
