@@ -1,6 +1,4 @@
 tr.response-address.section
   th = t('common.case.sar_response_address')
-
   td = get_sar_recipient_label(case_details.recipient)
-
-  td = link_to t('common.link.change'), edit_step_case_sar_offender_path(case_details, "recipient_details")
+  td = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "recipient_details")
