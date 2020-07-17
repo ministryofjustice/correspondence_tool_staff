@@ -14,6 +14,7 @@ module OffenderSARCaseForm
   def valid_attributes?(params)
     params ||= ActionController::Parameters.new({}).permit!
     params = params_for_step(params, current_step)
+    object.assign_attributes(params)
     check_custom_validations_for_step(current_step)
     object.valid_attributes?(params)
   end
@@ -40,7 +41,7 @@ module OffenderSARCaseForm
     case step
     when "subject-details"
       set_empty_value_if_unset(params, "subject_type")
-      set_empty_value_if_unset(params, "date_of_birth")
+      set_empty_value_if_unset_for_date(params, "date_of_birth")
       set_empty_value_if_unset(params, "flag_as_high_profile")
     when "requester-details"
       set_empty_value_if_unset(params, "third_party")
@@ -51,11 +52,12 @@ module OffenderSARCaseForm
       # clear_param_if_condition(params, "email", "reply_method", "send_by_email")
       clear_param_if_condition(params, "postal_address", "reply_method", "send_by_post")
     when "recipient-details"
+      set_empty_value_if_unset(params, "recipient")
       clear_param_if_condition(params, "postal_address", "third_party", "true")
     when "requested-info"
       # no tweaking needed
     when "date-received"
-      set_empty_value_if_unset(params, "received_date")
+      set_empty_value_if_unset_for_date(params, "received_date")
     end
 
     params
@@ -63,6 +65,12 @@ module OffenderSARCaseForm
 
   def set_empty_value_if_unset(params, field)
     params.merge!(field => "") unless params[field].present?
+  end
+
+  def set_empty_value_if_unset_for_date(params, field)
+    params.merge!(field => "") unless params["#{field}_yyyy"].present? && 
+                                params["#{field}_mm"].present? && 
+                                params["#{field}_dd"].present?
   end
 
   def clear_param_if_condition(params, target_field, check_field, value)
