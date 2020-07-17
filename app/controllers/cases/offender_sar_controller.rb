@@ -20,14 +20,14 @@ module Cases
       permitted_correspondence_types
       authorize case_type, :can_add_case?
 
-      @case = build_case_from_session(session)
+      @case = build_case_from_session
       @case.current_step = params[:step]
     end
 
     def create
       authorize case_type, :can_add_case?
 
-      @case = build_case_from_session(session)
+      @case = build_case_from_session
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.assign_attributes(create_params) if create_params
       @case.current_step = params[:current_step]
@@ -145,7 +145,7 @@ module Cases
 
     # @todo the following are all related to session data (case) cross different page
     # maybe worthy having another class for handling such thing together in a more abstract way
-    def build_case_from_session(seesion)
+    def build_case_from_session
       # regarding the `{ date_of_birth: nil }` below...
       # this is needed to prevent "NoMethodError undefined method `dd' for nil:NilClass"
       # when a new Case::SAR::Offender is being created from scratch, because the field is not
