@@ -1,11 +1,6 @@
 tr.response-address.section
   th = t('common.case.sar_response_address')
 
-  - if case_details.recipient == 'requester_recipient'
-    td Requester
-  - elsif case_details.recipient == 'subject_recipient'
-    td The data subject
-  - else
-    td Third party
+  td = get_sar_recipient_label(case_details.recipient)
 
   td = link_to t('common.link.change'), edit_step_case_sar_offender_path(case_details, "recipient_details")

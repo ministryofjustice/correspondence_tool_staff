@@ -19,7 +19,7 @@
         = render partial: 'cases/offender_sar/subject_address', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/high_profile_subject', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/third_party', locals: { case_details: case_details }
-        unless case_details.recipient == 'requester_recipient'
+        - unless case_details.third_party == false && case_details.recipient == 'subject_recipient'
           = render partial: 'cases/offender_sar/requester_name', locals: { case_details: case_details }
           = render partial: 'cases/offender_sar/third_party_company_name', locals: { case_details: case_details }
           = render partial: 'cases/sar/third_party_relationship', locals: { case_details: case_details }
@@ -29,6 +29,7 @@
         = render partial: 'cases/offender_sar/requester_reference', locals: { case_details: case_details }
         = render partial: 'cases/offender_sar/date_received', locals: { case_details: case_details }
         = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
+
         - if case_details.has_date_draft_compliant?
           = render partial: 'cases/shared/draft_compliance_details', locals: { case_details: case_details }
         - if case_details.responding_team.present?
