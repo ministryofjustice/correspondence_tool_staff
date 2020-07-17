@@ -29,7 +29,6 @@ module Cases
 
       @case = build_case_from_session
       @case.creator = current_user #to-do Remove when we use the case create service
-      @case.assign_attributes(create_params) if create_params
       @case.current_step = params[:current_step]
 
       if !@case.valid_attributes?(create_params)
