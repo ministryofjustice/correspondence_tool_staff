@@ -24,8 +24,7 @@ class Case::SAR::Offender < Case::Base
     received_date
   ].freeze
 
-  include Steppable
-
+  
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,

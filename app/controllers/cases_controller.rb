@@ -93,13 +93,15 @@ class CasesController < ApplicationController
   def update
     @case = Case::Base.find(params[:id])
     authorize @case
+    @case = @case.decorate
+    if self.class.method_defined?(:persist_session_data)
+      self.persist_session_data(params)
+    end
 
     service = CaseUpdaterService.new(current_user, @case, edit_params)
     service.call
 
     if service.result == :error
-      @case = @case.decorate
-      flash[:notice] = t('.case_error')
       render 'cases/edit' and return
     end
 
@@ -110,7 +112,6 @@ class CasesController < ApplicationController
     end
 
     set_permitted_events
-    @case = @case.decorate
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     redirect_to case_path(@case)
   end

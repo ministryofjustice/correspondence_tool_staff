@@ -140,6 +140,16 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       sign_in responder
     end
 
+    context 'without change anything' do
+      it 'check the flash' do
+        patch :update, params: same_params
+        expect(assigns(:case)).to be_a Case::SAR::Offender
+        expect(flash[:notice]).to eq nil
+        expect(flash[:alert]).to eq 'No changes were made'
+        expect(offender_sar_case.object.transitions.where(event: "edit_case").count).to eq 0
+      end
+    end
+
     context 'with valid params' do
       before(:each) do
         patch :update, params: params
@@ -147,6 +157,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       end
 
       it 'sets the flash' do
+        expect(offender_sar_case.object.transitions.where(event: "edit_case").count).to be >= 1
         expect(flash[:notice]).to eq 'Case updated'
       end
 
@@ -156,13 +167,5 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       end
     end
 
-    context 'with valid params' do
-      it 'sets the flash' do
-        patch :update, params: same_params
-        expect(assigns(:case)).to be_a Case::SAR::Offender
-        expect(flash[:notice]).to eq nil
-        expect(flash[:alert]).to eq 'No changes were made'
-      end
-    end
   end
 end

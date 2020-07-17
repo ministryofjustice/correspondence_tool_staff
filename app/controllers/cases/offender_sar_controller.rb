@@ -20,16 +20,16 @@ module Cases
       permitted_correspondence_types
       authorize case_type, :can_add_case?
 
-      @case = OffenderSARCaseForm.new(session)
+      @case = build_case_from_session(session)
       @case.current_step = params[:step]
     end
 
     def create
       authorize case_type, :can_add_case?
 
-      @case = OffenderSARCaseForm.new(session)
-      @case.case.creator = current_user #to-do Remove when we use the case create service
-      @case.assign_params(create_params) if create_params
+      @case = build_case_from_session(session)
+      @case.creator = current_user #to-do Remove when we use the case create service
+      @case.assign_attributes(create_params) if create_params
       @case.current_step = params[:current_step]
 
       if !@case.valid_attributes?(create_params)
@@ -37,9 +37,9 @@ module Cases
       elsif @case.valid? && @case.save
         session[:offender_sar_state] = nil
         flash[:notice] = "Case created successfully"
-        redirect_to case_path(@case.case)
+        redirect_to case_path(@case)
       else
-        @case.session_persist_state(create_params)
+        session_persist_state(create_params)
         get_next_step(@case)
         redirect_to "#{step_case_sar_offender_index_path}/#{@case.current_step}"
       end
@@ -142,5 +142,33 @@ module Cases
     def set_case_types
       @case_types = @correspondence_type.sub_classes.map(&:to_s)
     end
+
+    # @todo the following are all related to session data (case) cross different page
+    # maybe worthy having another class for handling such thing together in a more abstract way
+    def build_case_from_session(seesion)
+      # regarding the `{ date_of_birth: nil }` below...
+      # this is needed to prevent "NoMethodError undefined method `dd' for nil:NilClass"
+      # when a new Case::SAR::Offender is being created from scratch, because the field is not
+      # in the list of instance variables in the model at the point that the gov_uk_date_fields
+      # is adding its magic methods. This manifests when running tests or after rails server restart
+      values = session[:offender_sar_state] || { date_of_birth: nil }
+  
+      # similar workaround needed for request dated
+      request_dated_exists = values.fetch('request_dated', false)
+      values['request_dated'] = nil unless request_dated_exists
+  
+      Case::SAR::Offender.new(values).decorate
+    end 
+
+    def session_persist_state(params)
+      session[:offender_sar_state] ||= {}
+      params ||= {}
+      session[:offender_sar_state] = session[:offender_sar_state].merge params
+    end
+
+    def persist_session_data(params)
+        @case.current_step = params[:step]
+    end
+      
   end
 end
