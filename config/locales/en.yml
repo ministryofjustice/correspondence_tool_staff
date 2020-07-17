@@ -489,6 +489,10 @@ en:
           subject_recipient: The data subject
           requester_recipient: The person making the request
           third_party_recipient: Third party
+        recipient_type:
+          data_subject: The data subject
+          recipient: Requester
+          third_party: Third party
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative (optional)"

@@ -331,11 +331,11 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
 
   def get_sar_recipient_label(recipient)
     if recipient == 'requester_recipient'
-      'Requester'
+      t('helpers.label.offender_sar.recipient_type.recipient')
     elsif recipient == 'subject_recipient'
-      'The data subject'
+      t('helpers.label.offender_sar.recipient_type.data_subject')
     else
-      'Third party'
+      t('helpers.label.offender_sar.recipient_type.third_party')
     end
   end
 
