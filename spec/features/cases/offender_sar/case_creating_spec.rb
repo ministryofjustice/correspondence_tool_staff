@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Offender SAR Case creation by a manager' do
+feature 'Offender SAR Case creation by a manager', js: true do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
 
@@ -10,23 +10,52 @@ feature 'Offender SAR Case creation by a manager' do
     cases_page.load
   end
 
-  scenario 'creating a case that does not need clearance', js: true do
+  scenario '1 Third party requests data to be sent to the data subject' do
     when_navigate_to_offender_sar_subject_page
-
     and_fill_in_subject_details_page
-
     and_fill_in_requester_details_page
-
     and_fill_in_recipient_details_page
-
     and_fill_in_requested_info_page
-
     and_fill_in_request_details_page
-
     and_fill_in_date_received_page
-
     then_expect_cases_show_page_to_be_correct
+    then_expect_open_cases_page_to_be_correct
+  end
 
+  scenario '2 Third party requests data for themselves' do
+    when_navigate_to_offender_sar_subject_page
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page(:third_party)
+    and_fill_in_recipient_details_page(recipient: 'requester_recipient')
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_expect_cases_show_page_to_be_correct
+    then_expect_open_cases_page_to_be_correct
+  end
+
+  scenario '3 Data subject requesting their own data' do
+    when_navigate_to_offender_sar_subject_page
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page(:third_party)
+    and_fill_in_recipient_details_page(recipient: 'subject_recipient')
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_expect_cases_show_page_to_be_correct
+    then_expect_open_cases_page_to_be_correct
+  end
+
+  scenario '4 Data subject requesting data to be sent to third party' do
+    when_navigate_to_offender_sar_subject_page
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page
+    and_fill_in_recipient_details_page(:third_party)
+    
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_expect_cases_show_page_to_be_correct
     then_expect_open_cases_page_to_be_correct
   end
 
@@ -45,14 +74,14 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_new_offender_sar_requester_details_page).to be_displayed
   end
 
-  def and_fill_in_requester_details_page
-    cases_new_offender_sar_requester_details_page.fill_in_case_details
+  def and_fill_in_requester_details_page(params = nil)
+    cases_new_offender_sar_requester_details_page.fill_in_case_details(params)
     click_on "Continue"
     expect(cases_new_offender_sar_recipient_details_page).to be_displayed
   end
 
-  def and_fill_in_recipient_details_page
-    cases_new_offender_sar_recipient_details_page.fill_in_case_details
+  def and_fill_in_recipient_details_page(params = nil)
+    cases_new_offender_sar_recipient_details_page.fill_in_case_details(params)
     click_on "Continue"
     expect(cases_new_offender_sar_requested_info_page).to be_displayed
   end
