@@ -11,7 +11,7 @@ feature 'Offender SAR Case creation by a manager', js: true do
   end
 
   scenario '1 Third party requests data to be sent to the data subject' do
-    when_navigate_to_offender_sar_subject_page
+    when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page
     and_fill_in_recipient_details_page
@@ -23,7 +23,7 @@ feature 'Offender SAR Case creation by a manager', js: true do
   end
 
   scenario '2 Third party requests data for themselves' do
-    when_navigate_to_offender_sar_subject_page
+    when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page(:third_party)
     and_fill_in_recipient_details_page(recipient: 'requester_recipient')
@@ -35,7 +35,7 @@ feature 'Offender SAR Case creation by a manager', js: true do
   end
 
   scenario '3 Data subject requesting their own data' do
-    when_navigate_to_offender_sar_subject_page
+    when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page(:third_party)
     and_fill_in_recipient_details_page(recipient: 'subject_recipient')
@@ -47,11 +47,10 @@ feature 'Offender SAR Case creation by a manager', js: true do
   end
 
   scenario '4 Data subject requesting data to be sent to third party' do
-    when_navigate_to_offender_sar_subject_page
+    when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page
     and_fill_in_recipient_details_page(:third_party)
-    
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
@@ -59,7 +58,7 @@ feature 'Offender SAR Case creation by a manager', js: true do
     then_expect_open_cases_page_to_be_correct
   end
 
-  def when_navigate_to_offender_sar_subject_page
+  def when_i_navigate_to_offender_sar_subject_page
     expect(cases_page).to have_new_case_button
     cases_page.new_case_button.click
     expect(cases_new_page).to be_displayed
