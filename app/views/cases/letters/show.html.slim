@@ -17,7 +17,7 @@ hr
 
 section.letter--from-section
   p
-    | Your Reference: #{@case.third_party_reference}
+    | Your Reference: #{@case.requester_reference}
   p
     | Our Reference:  DPA #{@case.number}
 
@@ -25,10 +25,10 @@ section.letter--from-section
     | Date: #{Date.today.strftime('%e %b %Y')}
 
 p
-  | #{@case.name} <br>
-  - if @case.third_party_company_name.present?
-    | #{@case.third_party_company_name} <br>
-  | #{simple_format @case.postal_address, {}, wrapper_tag: 'span'}
+  | #{@letter.name} <br>
+  - if @letter.company_name
+    | #{@letter.company_name} <br>
+  | #{simple_format @letter.address, {}, wrapper_tag: 'span'}
 
 = raw @letter.body
 

@@ -2,41 +2,44 @@ class OffenderSARCaseForm
   include ActiveModel::Model
   include Steppable
 
-  delegate :creator,
+  delegate :back_link,
            :case_reference_number,
+           :creator,
            :date_of_birth_dd,
            :date_of_birth_mm,
            :date_of_birth_yyyy,
            :date_of_birth,
-           :email,
            :errors,
            :flag_as_high_profile,
            :id,
            :message,
-           :pretty_type,
            :name,
            :number,
            :object,
            :other_subject_ids,
            :postal_address,
+           :pretty_type,
            :previous_case_numbers,
            :prison_number,
            :received_date_dd,
            :received_date_mm,
            :received_date_yyyy,
            :received_date,
-           :reply_method,
-           :send_by_email?,
-           :send_by_post?,
+           :recipient,
+           :request_dated_dd,
+           :request_dated_mm,
+           :request_dated_yyyy,
+           :request_dated,
+           :requester_reference,
+           :subject_address,
            :subject_aliases,
            :subject_full_name,
            :subject_type,
+           :third_party_name,
            :third_party_relationship,
-           :third_party_reference,
            :third_party_company_name,
            :third_party,
            :type_abbreviation,
-           :back_link,
            to: :@case
 
   attr_reader :case, :session
@@ -92,7 +95,7 @@ class OffenderSARCaseForm
   def valid_attributes?(params)
     params ||= ActionController::Parameters.new({}).permit!
     params = params_for_step(params, current_step)
-    check_valid_dates_for_step(current_step)
+    check_custom_validations_for_step(current_step)
     @case.valid_attributes?(params)
   end
 
@@ -102,8 +105,16 @@ class OffenderSARCaseForm
 
   private
 
-  def check_valid_dates_for_step(step)
+  def check_custom_validations_for_step(step)
     @case.validate_date_of_birth if step == "subject-details"
+    if step == "requester-details"
+      @case.validate_third_party_names
+      @case.validate_third_party_relationship
+    end
+    if step == "recipient-details"
+      @case.validate_recipient
+      @case.validate_third_party_relationship
+    end
     @case.validate_received_date if step == "date-received"
   end
 
@@ -118,12 +129,14 @@ class OffenderSARCaseForm
       set_empty_value_if_unset(params, "flag_as_high_profile")
     when "requester-details"
       set_empty_value_if_unset(params, "third_party")
-      clear_param_if_condition(params, "name", "third_party", "true")
+      clear_param_if_condition(params, "third_party_name", "third_party", "true")
+      clear_param_if_condition(params, "third_party_company_name", "third_party", "true")
       clear_param_if_condition(params, "third_party_relationship", "third_party", "true")
-
-      set_empty_value_if_unset(params, "reply_method")
-      clear_param_if_condition(params, "email", "reply_method", "send_by_email")
+      # set_empty_value_if_unset(params, "reply_method")
+      # clear_param_if_condition(params, "email", "reply_method", "send_by_email")
       clear_param_if_condition(params, "postal_address", "reply_method", "send_by_post")
+    when "recipient-details"
+      clear_param_if_condition(params, "postal_address", "third_party", "true")
     when "requested-info"
       # no tweaking needed
     when "date-received"
@@ -148,6 +161,10 @@ class OffenderSARCaseForm
     # in the list of instance variables in the model at the point that the gov_uk_date_fields
     # is adding its magic methods. This manifests when running tests or after rails server restart
     values = @session[:offender_sar_state] || { date_of_birth: nil }
+
+    # similar workaround needed for request dated
+    request_dated_exists = values.fetch('request_dated', false)
+    values['request_dated'] = nil unless request_dated_exists
 
     @case = Case::SAR::Offender.new(values).decorate
   end

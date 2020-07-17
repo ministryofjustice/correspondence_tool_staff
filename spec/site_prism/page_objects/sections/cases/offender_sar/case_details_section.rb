@@ -30,7 +30,7 @@ module PageObjects
             element :data, 'td:first'
           end
 
-          section :third_party_reference, 'tr.third-party-reference' do
+          section :requester_reference, 'tr.external-reference' do
             element :data, 'td'
           end
 
@@ -58,8 +58,20 @@ module PageObjects
             element :data, 'td'
           end
 
+          section :subject_address, 'tr.subject-address' do
+            element :data, 'td'
+          end
+
           section :date_received, 'tr.date-received' do
             element :data, 'td:first'
+          end
+
+          section :request_dated, 'tr.request_dated' do
+            element :data, 'td:first'
+          end
+
+          section :requester_reference, 'tr.requester-reference' do
+            element :data, 'td'
           end
 
           section :date_of_birth, 'tr.date-of-birth' do

@@ -79,59 +79,48 @@ describe Case::SAR::Offender do
     end
   end
 
-  describe '#reply_method' do
+  describe '#recipient' do
     context 'valid values' do
-      it 'validates reply method' do
-        kase = build :offender_sar_case
-        expect(kase).to be_valid
-        expect(kase).to validate_presence_of(:reply_method)
-        expect(kase).to allow_values('send_by_email', 'send_by_post').for(:reply_method)
-      end
-
-      it 'validates when email is set' do
-        kase = build(:offender_sar_case, reply_method: 'send_by_email', email: 'foo@example.com')
-        expect(kase).to be_valid
-      end
-
-      it 'validates when address is set' do
-        kase = build(:offender_sar_case, reply_method: 'send_by_post', postal_address: '22 Acacia Avenue')
-        expect(kase).to be_valid
+      it 'does not error' do
+        expect(build(:offender_sar_case, recipient: 'subject_recipient')).to be_valid
+        expect(build(:offender_sar_case, recipient: 'requester_recipient')).to be_valid
+        expect(build(:offender_sar_case, 
+                    recipient: 'third_party_recipient', 
+                    third_party: false, 
+                    third_party_name: 'test', 
+                    third_party_relationship: 'test'
+                    )).to be_valid
       end
     end
 
     context 'invalid value' do
       it 'errors' do
         expect {
-          build(:offender_sar_case, reply_method: 'wibble')
+          build(:offender_sar_case, recipient: 'user')
         }.to raise_error ArgumentError
       end
     end
 
     context 'nil' do
       it 'errors' do
-        kase = build(:offender_sar_case, reply_method: nil)
+        kase = build(:offender_sar_case, recipient: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:reply_method]).to eq ["can't be blank"]
+        expect(kase.errors[:recipient]).to eq ["can't be blank"]
+      end
+    end
+  end
+
+  describe '#postal_address' do
+    context 'valid values' do
+      it 'validates when address is set' do
+        kase = build(:offender_sar_case, :third_party, postal_address: '22 Acacia Avenue')
+        expect(kase).to be_valid
       end
     end
 
-    describe '#email' do
-      it 'validates presence of email when reply method is send by email' do
-        kase = build :offender_sar_case, reply_method: 'send_by_email', email: ''
-        expect(kase).not_to be_valid
-        expect(kase.errors[:email]).to eq ["can't be blank"]
-      end
-
-      it 'validates format of email when reply method is send by email' do
-        kase = build :offender_sar_case, reply_method: 'send_by_email', email: 'wibble'
-        expect(kase).not_to be_valid
-        expect(kase.errors[:email]).to eq ["is invalid"]
-      end
-    end
-
-    describe '#postal_address' do
-      it 'validates presence of postal address when reply method is send by post' do
-        kase = build :offender_sar_case, reply_method: 'send_by_post', postal_address: ''
+    context 'invalid values' do
+      it 'validates presence of postal address when recipient is third party' do
+        kase = build :offender_sar_case, :third_party, postal_address: ''
         expect(kase).not_to be_valid
         expect(kase.errors[:postal_address]).to eq ["can't be blank"]
       end
@@ -200,36 +189,49 @@ describe Case::SAR::Offender do
       end
     end
   end
-
-  describe '#email' do
-    it 'validates presence of email when reply is to be sent by email' do
-      kase = build :offender_sar_case, reply_method: :send_by_email, email: ''
-      expect(kase).not_to be_valid
-      expect(kase.errors[:email]).to eq ["can't be blank"]
+  
+  describe '#request_dated' do
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_case, request_dated: 'wibble')
+        }.to raise_error ArgumentError
+      end
     end
-  end
 
-  describe '#postal_address' do
-    it 'validates presence of postal address when reply is to be sent by post' do
-      kase = build :offender_sar_case, reply_method: :send_by_post, postal_address: ''
-      expect(kase).not_to be_valid
-      expect(kase.errors[:postal_address]).to eq ["can't be blank"]
+    context 'request_dated date cannot be in future' do
+      it 'errors' do
+        kase = build(:offender_sar_case, request_dated: 1.day.from_now)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:request_dated]).to eq ["can't be in the future."]
+      end
     end
   end
 
   describe 'third party details' do
-    describe '#name' do
-      it 'validates presence of name when third party is true' do
-        kase = build :offender_sar_case, third_party: true, name: ''
+    describe 'third_party_names' do
+      it 'validates third party names when third party is true' do
+        kase = build :offender_sar_case, :third_party, third_party_name: '', third_party_company_name: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:name]).to eq ["can't be blank"]
+        expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
+        expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
       end
 
-      it 'does not validates presence of name when third party is false' do
-        kase = build :offender_sar_case, third_party: false, name: ''
+      it 'validates third party names when recipient is third party' do
+        kase = build :offender_sar_case, third_party: false, third_party_name: '', 
+                      third_party_company_name: '', recipient: 'third_party_recipient'
+        expect(kase).not_to be_valid
+        expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
+        expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+      end
+
+      it 'does not validate third_party names when ecipient is not third party too' do
+        kase = build :offender_sar_case, third_party: false, third_party_name: '', 
+                      third_party_company_name: '', recipient: 'subject_recipient'
         expect(kase).to be_valid
       end
     end
+
 
     describe 'third party relationship' do
       it 'must be present when thrid party is true' do
@@ -238,8 +240,16 @@ describe Case::SAR::Offender do
         expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
       end
 
-      it 'does not validates presence of third party relationship when third party is false' do
-        kase = build :offender_sar_case, third_party: false, third_party_relationship: ''
+      it 'must be present when third party is false but recipient is third party' do
+        kase = build :offender_sar_case, third_party: false, third_party_relationship: '', 
+                      recipient: 'third_party_recipient'
+        expect(kase).not_to be_valid
+        expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
+      end
+
+      it 'does not validates presence of third party relationship when recipient is not third party' do
+        kase = build :offender_sar_case, third_party: false, third_party_relationship: '', 
+                      recipient: 'subject_recipient'
         expect(kase).to be_valid
       end
     end
@@ -253,6 +263,88 @@ describe Case::SAR::Offender do
       expect(kase.subject).to eq 'Bob Hope'
     end
   end
+
+  describe '#subject_name' do
+    it 'is the same as subject_full_name' do
+      kase = create :offender_sar_case
+      expect(kase.subject_name).to eq kase.subject_full_name
+      kase.update_attribute(:subject_full_name, "Bob Hope")
+      expect(kase.subject_name).to eq 'Bob Hope'
+    end
+  end
+
+  describe '#subject_address' do
+    it 'returns a dummy string for now' do
+      kase = create :offender_sar_case
+      expect(kase.subject_address).to eq '22 Sample Address, Test Lane, Testingington, TE57ST'
+    end
+  end
+
+  describe '#third_party_address' do
+    it 'wraps the postal_address field' do
+      kase = create :offender_sar_case
+      expect(kase.third_party_address).to eq kase.postal_address
+      kase.update_attribute(:postal_address, '11 The Road')
+      expect(kase.third_party_address).to eq '11 The Road'
+    end
+  end
+
+  describe '#requester_name' do
+    it 'returns third_party_name if third_party request' do
+      kase = create :offender_sar_case, :third_party
+      expect(kase.requester_name).to eq kase.third_party_name
+    end
+
+    it 'returns subject_name if not third_party request' do
+      kase = create :offender_sar_case
+      expect(kase.requester_name).to eq kase.subject_name
+    end
+  end
+
+  describe '#requester_address' do
+    it 'returns third_party_address if third_party request' do
+      kase = create :offender_sar_case, :third_party
+      expect(kase.requester_address).to eq kase.third_party_address
+    end
+
+    it 'returns subject_address if not third_party request' do
+      kase = create :offender_sar_case
+      expect(kase.requester_address).to eq kase.subject_address
+    end
+  end
+
+  describe '#recipient_name' do
+    it 'returns third_party_name when subject not recipient' do
+      kase = create :offender_sar_case, :third_party
+      expect(kase.recipient_name).not_to eq kase.subject_name
+      expect(kase.recipient_name).to eq kase.third_party_name
+    end
+
+    it 'returns subject_name if subject is recipient' do
+      kase = create :offender_sar_case
+      expect(kase.recipient_name).not_to eq kase.third_party_name
+      expect(kase.recipient_name).to eq kase.subject_name
+    end
+
+    it 'returns nothing if third party and no name supplied' do
+      kase = create :offender_sar_case, :third_party, third_party_name: ''
+
+      expect(kase.recipient_name).to eq ''
+    end
+  end
+
+  describe '#recipient_address' do
+    it 'returns third_party_address if subject not recipient' do
+      kase = create :offender_sar_case, recipient: "requester_recipient"
+      expect(kase.recipient_address).to eq kase.third_party_address
+    end
+
+    it 'returns subject_address if if subject is recipient' do
+      kase = create :offender_sar_case, recipient: "subject_recipient"
+      expect(kase.recipient_address).to eq kase.subject_address
+    end
+  end
+
 
   # describe '#within_escalation_deadline?' do
   #   it 'returns false' do
@@ -303,33 +395,33 @@ describe Case::SAR::Offender do
     end
   end
 
-  # describe 'use_subject_as_requester callback' do
-  #   context 'on create' do
-  #     it 'does not change the requester when present' do
-  #       sar_case = create :sar_case, name: 'Bob', subject_full_name: 'Doug'
-  #       expect(sar_case.reload.name).to eq 'Bob'
-  #     end
+  describe 'use_subject_as_requester callback' do
+    context 'on create' do
+      it 'does not change the requester when present' do
+        offender_sar_case = create :offender_sar_case, name: 'Bob', subject_full_name: 'Doug'
+        expect(offender_sar_case.reload.name).to eq 'Bob'
+      end
 
-  #     it 'uses the subject as the requester if not present on update' do
-  #       sar_case = create :sar_case, name: '', subject_full_name: 'Doug'
-  #       expect(sar_case.reload.name).to eq 'Doug'
-  #     end
-  #   end
+      it 'uses the subject as the requester if not present on update' do
+        offender_sar_case = create :offender_sar_case, name: '', subject_full_name: 'Doug'
+        expect(offender_sar_case.reload.name).to eq 'Doug'
+      end
+    end
 
-  #   context 'on update' do
-  #     it 'does not change the requester when present' do
-  #       sar_case = create :sar_case
-  #       sar_case.update! name: 'Bob', subject_full_name: 'Doug'
-  #       expect(sar_case.name).to eq 'Bob'
-  #     end
+    context 'on update' do
+      it 'does not change the requester when present' do
+        offender_sar_case = create :offender_sar_case
+        offender_sar_case.update! name: 'Bob', subject_full_name: 'Doug'
+        expect(offender_sar_case.name).to eq 'Bob'
+      end
 
-  #     it 'uses the subject as the requester if not present on update' do
-  #       sar_case = create :sar_case
-  #       sar_case.update! name: '', subject_full_name: 'Doug'
-  #       expect(sar_case.name).to eq 'Doug'
-  #     end
-  #   end
-  # end
+      it 'uses the subject as the requester if not present on update' do
+        offender_sar_case = create :offender_sar_case
+        offender_sar_case.update! name: '', subject_full_name: 'Doug'
+        expect(offender_sar_case.name).to eq 'Doug'
+      end
+    end
+  end
 
   describe '#requires_flag_for_disclosure_specialists?' do
     it 'returns true' do
@@ -481,6 +573,14 @@ describe Case::SAR::Offender do
 
       kase.current_state = 'waiting_for_data'
       expect(kase.allow_waiting_for_data_state?).to be false
+    end
+  end
+
+  describe '#subject_address' do
+    it 'validates presence of subject address' do
+      kase = build :offender_sar_case, subject_address: ''
+      expect(kase).not_to be_valid
+      expect(kase.errors[:subject_address]).to eq ["can't be blank"]
     end
   end
 end

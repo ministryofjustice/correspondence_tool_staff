@@ -4,8 +4,9 @@
 = render partial: 'layouts/header'
 
 = form_for @case, url: url, as: :offender_sar do |f|
-
-  = f.text_area :message, { rows: 12 }
+  p.form-hint.no-space
+    = t('helpers.hint.offender_sar.message_hint')
+  = f.text_area :message, { rows: 12, label_options: { class: 'visually-hidden' } }
 
   input name="current_step" type="hidden" value=@case.current_step
 

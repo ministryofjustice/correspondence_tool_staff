@@ -26,4 +26,3 @@ module PageObjects
     end
   end
 end
-

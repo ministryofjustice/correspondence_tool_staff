@@ -17,7 +17,6 @@ FactoryBot.define do
     current_state                   { 'data_to_be_requested' }
     sequence(:name)                 { |n| "#{identifier} name #{n}" }
     email                           { Faker::Internet.email(name: identifier) }
-    reply_method                    { 'send_by_email' }
     sequence(:subject)              { |n| "#{identifier} subject #{n}" }
     sequence(:message)              { |n| "#{identifier} message #{n}" }
     received_date                   { Time.zone.today.to_s }
@@ -28,8 +27,12 @@ FactoryBot.define do
     previous_case_numbers           { '54321' }
     prison_number                   { '123465' }
     other_subject_ids               { 'ABC 123 DEF' }
-    case_reference_number { '123 ABC 456' }
+    case_reference_number           { '123 ABC 456' }
+    subject_address                 { '22 Sample Address, Test Lane, Testingington, TE57ST' }
+    request_dated                   { Date.parse('13-07-2010') }
+    requester_reference             { '456 ABC 123' }
     subject_type                    { 'offender' }
+    recipient                       { 'subject_recipient' }
     third_party                     { false }
     flag_as_high_profile            { false }
     created_at                      { creation_time }
@@ -39,8 +42,11 @@ FactoryBot.define do
   trait :third_party do
     third_party { true }
     third_party_relationship { 'Solicitor' }
-    third_party_reference { 'FOOG1234' }
+    requester_reference { 'FOOG1234' }
     third_party_company_name { 'Foogle and Sons Solicitors at Law' }
+    third_party_name { 'Mr J. Smith' }
+    postal_address { '22 High Street' }
+    recipient { 'requester_recipient' }
   end
 
   trait :data_to_be_requested do

@@ -12,16 +12,14 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-          element :subject_full_name, '#offender_sar_subject_full_name'
-          element :email_address, '#offender_sar_email'
-          element :postal_address, '#offender_sar_postal_address'
-          element :name, 'offender_sar_name'
           element :third_party_relationship, '#offender_sar_third_party_relationship'
-
+          element :third_party_name, '#offender_sar_third_party_name'
+          element :third_party_company_name, '#offender_sar_third_party_company_name'
+          element :postal_address, '#offender_sar_postal_address'
           element :submit_button, '.button'
 
-          def edit_email(value)
-            email_address.set value
+          def edit_third_party_name(value)
+            third_party_name.set value
           end
         end
       end

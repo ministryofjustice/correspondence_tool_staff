@@ -40,52 +40,25 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.previous_case_numbers.data.text).to eq '54321'
       expect(partial.other_subject_ids.data.text).to eq 'ABC 123 DEF'
       expect(partial.case_reference_number.data.text).to eq '123 ABC 456'
+      expect(partial.subject_address.data.text).to eq '22 Sample Address, Test Lane, Testingington, TE57ST'
+      expect(partial.requester_reference.data.text).to eq '456 ABC 123'
+      expect(partial.request_dated.data.text).to eq '13 Jul 2010'
       expect(partial.date_of_birth.data.text).to eq '1 Sep 2019'
     end
 
     it 'displays third party details if present' do
-      third_party_case = (create :offender_sar_case, :third_party, name: 'Rick Westor').decorate
+      third_party_case = (create :offender_sar_case, :third_party, third_party_name: 'Rick Westor').decorate
       assign(:case, third_party_case)
       render partial: 'cases/offender_sar/case_details.html.slim', locals: {
         case_details: third_party_case,
         link_type: nil
       }
       partial = offender_sar_case_details_section(rendered).sar_basic_details
+
       expect(partial.third_party.data.text).to eq 'Yes'
       expect(partial.requester_name.data.text).to eq 'Rick Westor'
-      expect(partial.third_party_reference.data.text).to eq 'FOOG1234'
+      expect(partial.requester_reference.data.text).to eq 'FOOG1234'
       expect(partial.third_party_company_name.data.text).to eq 'Foogle and Sons Solicitors at Law'
-    end
-
-    it 'does not display the email address if one is not provided' do
-      offender_sar_case.email = nil
-      offender_sar_case.postal_address = "1 High Street\nAnytown\nAT1 1AA"
-      offender_sar_case.reply_method = 'send_by_post'
-
-      assign(:case, offender_sar_case)
-      render partial: 'cases/offender_sar/case_details.html.slim',
-             locals: { case_details: offender_sar_case,
-                       link_type: nil }
-
-      partial = offender_sar_case_details_section(rendered).sar_basic_details
-
-      expect(partial).to have_response_address
-      expect(partial.response_address.data.text).to eq "1 High Street\nAnytown\nAT1 1AA"
-    end
-
-    it 'does not display the postal address if one is not provided' do
-      offender_sar_case.postal_address = nil
-      offender_sar_case.email = 'john.doe@moj.com'
-
-      assign(:case, offender_sar_case)
-      render partial: 'cases/offender_sar/case_details.html.slim',
-             locals:{ case_details: offender_sar_case,
-                      link_type: nil }
-
-      partial = offender_sar_case_details_section(rendered).sar_basic_details
-
-      expect(partial).to have_response_address
-      expect(partial.response_address.data.text).to eq 'john.doe@moj.com'
     end
   end
 end
