@@ -60,7 +60,7 @@ module Stats
     def run(**args)
       raise ArgumentError.new('Missing report_guid') unless args[:report_guid].present?
 
-      @etl = true
+      @background_job = true
       @status = Stats::BaseReport::WAITING
       @job_ids = [args[:report_guid]]
       ::Warehouse::ClosedCasesCreateJob.perform_later(

@@ -17,6 +17,7 @@ class Report < ApplicationRecord
 
   jsonb_accessor :properties,
                  etl: :boolean,
+                 background_job: boolean,
                  status: :string,
                  job_ids: [:string, array: true, default: []],
                  filename: :string,
@@ -54,13 +55,14 @@ class Report < ApplicationRecord
   def run_and_update!(**args)
     self.guid = SecureRandom.uuid
     report_service = run(report_guid: guid, **args)
-    if report_service.etl?
+    if report_service.background_job?
       self.status = report_service.status
       self.job_ids = report_service.job_ids
     else
       self.report_data = report_service.results.to_json
     end
     self.etl = report_service.etl?
+    self.background_job = report_service.background_job?
     self.filename = report_service.filename
     self.user_id = report_service.user.nil? ? 0 : report_service.user.id
     self.report_format = report_service.report_format
@@ -77,7 +79,7 @@ class Report < ApplicationRecord
   end 
 
   def report_details
-    if self.etl?
+    if self.background_job?
       report_service = report_type.class_constant.new(
         period_start: self.period_start,
         period_end: self.period_end
@@ -90,7 +92,7 @@ class Report < ApplicationRecord
     [data, self.filename]
   end
 
-  def etl_ready?
+  def ready?
     self.status == Stats::BaseReport::COMPLETE
   end
 
@@ -103,6 +105,10 @@ class Report < ApplicationRecord
   # available for download
   def etl?
     self.etl
+  end
+
+  def background_job?
+    self.background_job
   end
 
   private

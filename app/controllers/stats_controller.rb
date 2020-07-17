@@ -17,7 +17,7 @@ class StatsController < ApplicationController
     report = Report.new report_type_id: params[:id]
 
     report.run_and_update!(user: current_user)
-    if report.etl?
+    if report.background_job?
       # should display the link for downloading
       flash[:download] = report_download_link(report.id, 'success')
       redirect_back(fallback_location: root_path)
@@ -41,7 +41,7 @@ class StatsController < ApplicationController
         period_start: @report.period_start,
         period_end: @report.period_end
       )
-      if @report.etl? || @report.persist_results?
+      if @report.background_job? || @report.persist_results?
         flash[:download] = report_download_link(@report.id, 'success')
         redirect_to new_stat_path
       else
@@ -62,8 +62,8 @@ class StatsController < ApplicationController
   def download_custom
     report = Report.find(params[:id])
     report_data, _ = report.report_details
-    if report.etl?
-      return download_waiting(report) unless report.etl_ready?
+    if report.background_job?
+      return download_waiting(report) unless report.ready?
       authorize report, :can_download_user_generated_report?
     end
 

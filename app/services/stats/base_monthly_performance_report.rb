@@ -70,10 +70,10 @@ module Stats
           @job_ids << job_id
           offset += ROWS_PER_FRAGMENT
         end
-        @etl = true
+        @background_job = true
         @status = Stats::BaseReport::WAITING
       else
-        @etl = false
+        @background_job = false
         @status = Stats::BaseReport::COMPLETE
         process(offset)
         @stats.finalise

@@ -15,7 +15,7 @@ module Stats
     XLSX = 'xlsx'.freeze
     ZIP = 'zip'.freeze
 
-    attr_reader :period_start, :period_end, :user, :etl, :status, :job_ids, :filename
+    attr_reader :period_start, :period_end, :user, :etl, :background_job, :status, :job_ids, :filename
 
     def initialize(**options)
       raise 'Cannot instantiate Stats::BaseReport - use derived class instead' if self.class == BaseReport
@@ -34,7 +34,7 @@ module Stats
       @period_start = @reporting_period.period_start
       @period_end = @reporting_period.period_end
 
-      @etl = false
+      @background_job = false
       @status = nil
       @job_ids = []
       @filename = report_type.filename(self.class.report_format)
@@ -133,7 +133,11 @@ module Stats
     end
 
     def etl?
-      self.etl || report_type.etl
+      report_type.etl
+    end
+
+    def background_job?
+      self.background_job
     end
 
     def report_format
