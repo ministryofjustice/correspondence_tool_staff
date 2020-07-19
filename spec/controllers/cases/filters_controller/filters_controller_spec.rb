@@ -133,33 +133,21 @@ describe Cases::FiltersController, type: :controller do
       end
     end
 
-    let!(:old_deleted_kase) do
-      Timecop.travel(1.day.ago) do
-        create(:assigned_case, responding_team: responding_team)
-      end
-    end
-
-    let!(:deleted_kase) { create(:assigned_case, responding_team: responding_team) }
-
-    let!(:old_deleted_kase1) do
-      Timecop.travel(1.day.ago) do
-        create(:assigned_case, responding_team: responding_team)
-      end
-    end
-
-    let!(:deleted_kase1) { create(:assigned_case, responding_team: responding_team) }
-
     let!(:deleted_sar_kase) { create(:sar_case, :deleted_case) }
 
     context 'as a manager' do
       before { sign_in manager }
 
       it 'retrieves only deleted cases' do
-        old_deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
+        # Timecop.travel(1.day.ago) do
+        #   old_deleted_kase = create(:assigned_case, responding_team: responding_team)
+        #   old_deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
+        # end
+        deleted_kase = create(:assigned_case, created_at: 1.day.ago, responding_team: responding_team)    
         deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
 
         get :deleted, format: :csv
-        expect(assigns(:cases)).to eq([deleted_sar_kase, deleted_kase, old_deleted_kase])
+        expect(assigns(:cases)).to eq([deleted_sar_kase, deleted_kase])
       end
     end
 
@@ -167,10 +155,19 @@ describe Cases::FiltersController, type: :controller do
       before { sign_in responder }
 
       it 'retrieves only deleted cases I am supposed to see' do
-        old_deleted_kase1.update! deleted: true, reason_for_deletion: 'Needs to go'
-        deleted_kase1.update! deleted: true, reason_for_deletion: 'Needs to go'
+        # let!(:old_deleted_kase1) do
+        #   Timecop.travel(1.day.ago) do
+        #     create(:assigned_case, responding_team: responding_team)
+        #   end
+        # end
+    
+        # let!(:deleted_kase1) { create(:assigned_case, responding_team: responding_team) }
+        # old_deleted_kase1.update! deleted: true, reason_for_deletion: 'Needs to go'
+        # deleted_kase1.update! deleted: true, reason_for_deletion: 'Needs to go'
+        deleted_kase = create(:assigned_case, responding_team: responding_team)    
+        deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
         get :deleted, format: :csv
-        expect(assigns(:cases)).to eq([deleted_kase1, old_deleted_kase1])
+        expect(assigns(:cases)).to eq([deleted_kase])
       end
     end
   end
