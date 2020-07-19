@@ -139,10 +139,6 @@ describe Cases::FiltersController, type: :controller do
       before { sign_in manager }
 
       it 'retrieves only deleted cases' do
-        # Timecop.travel(1.day.ago) do
-        #   old_deleted_kase = create(:assigned_case, responding_team: responding_team)
-        #   old_deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
-        # end
         deleted_kase = create(:assigned_case, created_at: 1.day.ago, responding_team: responding_team)    
         deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
 
@@ -155,15 +151,6 @@ describe Cases::FiltersController, type: :controller do
       before { sign_in responder }
 
       it 'retrieves only deleted cases I am supposed to see' do
-        # let!(:old_deleted_kase1) do
-        #   Timecop.travel(1.day.ago) do
-        #     create(:assigned_case, responding_team: responding_team)
-        #   end
-        # end
-    
-        # let!(:deleted_kase1) { create(:assigned_case, responding_team: responding_team) }
-        # old_deleted_kase1.update! deleted: true, reason_for_deletion: 'Needs to go'
-        # deleted_kase1.update! deleted: true, reason_for_deletion: 'Needs to go'
         deleted_kase = create(:assigned_case, responding_team: responding_team)    
         deleted_kase.update! deleted: true, reason_for_deletion: 'Needs to go'
         get :deleted, format: :csv
