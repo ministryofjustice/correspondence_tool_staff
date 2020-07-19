@@ -134,7 +134,8 @@ RSpec.describe StatsController, type: :controller do
     }
 
     let(:dummy_report_type) { 
-      double(to_csv: [], persist_results?: false, etl?: false, results: {}, report_format: 'csv') 
+      double(to_csv: [], persist_results?: false, etl?: false, background_job?: false, 
+            results: {}, report_format: 'csv') 
     }
 
     it 'authorizes' do

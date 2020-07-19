@@ -17,7 +17,7 @@ class Report < ApplicationRecord
 
   jsonb_accessor :properties,
                  etl: :boolean,
-                 background_job: boolean,
+                 background_job: :boolean,
                  status: :string,
                  job_ids: [:string, array: true, default: []],
                  filename: :string,

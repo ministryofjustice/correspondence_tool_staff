@@ -344,7 +344,7 @@ class Case::Base < ApplicationRecord
 
   after_initialize do
     self.workflow = default_workflow if self.workflow.nil?
-    @deadline_calculator = self.class.respond_to?(:type_abbreviation) ? create_deadline_calculator : nil
+    @deadline_calculator = create_deadline_calculator
   end
 
   before_create :set_initial_state,
@@ -796,10 +796,14 @@ class Case::Base < ApplicationRecord
   private
 
   def create_deadline_calculator
-    klass = DeadlineCalculator.const_get(
-      correspondence_type.deadline_calculator_class
-    )
-    klass.new(self)
+    if self.class.respond_to?(:type_abbreviation)
+      klass = DeadlineCalculator.const_get(
+        correspondence_type.deadline_calculator_class
+      )
+      klass.new(self)
+    else
+      nil
+    end
   end
 
   def identifier

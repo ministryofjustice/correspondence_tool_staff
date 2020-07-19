@@ -130,6 +130,8 @@ RSpec.describe Report, type: :model do
         period_end: Date.today,
         run: true,
         persist_results?: true,
+        background_job?: true,
+        etl?: false,
       )
     }
 
@@ -139,7 +141,7 @@ RSpec.describe Report, type: :model do
     before do
       expect(Stats::R003BusinessUnitPerformanceReport)
         .to receive(:new).with(**options).and_return(report_service)
-      allow(report_service).to receive(:etl?).and_return(false)
+      allow(report_service).to receive(:background_job?).and_return(false)
       allow(report_service).to receive(:results).and_return(report_data)
       allow(report_service).to receive(:filename).and_return(nil)
       allow(report_service).to receive(:user).and_return(nil)

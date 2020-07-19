@@ -10,14 +10,11 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
       if @user.permitted_correspondence_types.include? CorrespondenceType.foi
         
         if @user.responder_only?
-          team_restriction_sql = "select case_id from assignments 
-          join teams_users_roles 
-          on assignments.team_id = teams_users_roles.team_id
-          where teams_users_roles.role = '%<role>s' 
-          and teams_users_roles.user_id = %<user_id>i"
-
-          @scope.where(" cases.id in 
-          (#{team_restriction_sql}) " % {role: :responder.to_s, user_id: @user.id})
+          team_restriction_sql = Assignment
+              .joins('join teams_users_roles on assignments.team_id=teams_users_roles.team_id')
+              .where('teams_users_roles': {user_id: @user.id, role: :responder.to_s})
+              .select(:case_id).distinct.to_sql          
+          @scope.where(" cases.id IN (#{team_restriction_sql}) ")
         else
           @scope
         end 

@@ -2,21 +2,21 @@ require 'rails_helper'
 
 
 class DummyWrongTestFirst
-    def initialize(**options)
-    end
+  def initialize(**options)
+  end
 end
 
 class DummyWrongTestSecond
-    def initialize()
-    end
+  def initialize()
+  end
 end
 
 class DummyReportTest
-    def initialize(**options)
-    end
+  def initialize(**options)
+  end
 
-    def process(offset, report_job_guid=nil)
-    end
+  def process(offset, report_job_guid=nil)
+  end
 end
 
 describe PerformanceReportJob, type: :job do

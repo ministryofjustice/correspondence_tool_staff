@@ -51,31 +51,15 @@ module Stats
         redis = Redis.new
         redis.set(report_job_guid, @stats.stats.to_json)
       end
-
     end
 
     def run(*)
-      offset = 0 
       if data_size > ROWS_PER_FRAGMENT
-        @job_ids = []
-        (1..num_fragments).map do |_i|
-          job_id = SecureRandom.uuid
-          PerformanceReportJob.perform_later(
-            self.class.name,
-            job_id,
-            @period_start.to_i,
-            @period_end.to_i, 
-            offset
-          )
-          @job_ids << job_id
-          offset += ROWS_PER_FRAGMENT
-        end
-        @background_job = true
-        @status = Stats::BaseReport::WAITING
+        create_background_jobs
       else
         @background_job = false
         @status = Stats::BaseReport::COMPLETE
-        process(offset)
+        process(0)
         @stats.finalise
       end 
     end
@@ -168,6 +152,25 @@ module Stats
     end
     
     private
+
+    def create_background_jobs
+      offset = 0 
+      @job_ids = []
+      (1..num_fragments).map do |_i|
+        job_id = SecureRandom.uuid
+        PerformanceReportJob.perform_later(
+          self.class.name,
+          job_id,
+          @period_start.to_i,
+          @period_end.to_i, 
+          offset
+        )
+        @job_ids << job_id
+        offset += ROWS_PER_FRAGMENT
+      end
+      @background_job = true
+      @status = Stats::BaseReport::WAITING
+    end 
 
     def merge_stats(data_collector)
       merged_stats = {}

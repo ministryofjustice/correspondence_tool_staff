@@ -82,22 +82,38 @@ class StatsController < ApplicationController
 
   private
 
-  def generate_final_report(report, report_data=nil)
-    if report.report_format == 'xlsx'
-      axlsx = create_spreadsheet(report)
+  def send_xlsx_report(report)
+    axlsx = create_spreadsheet(report)
 
-      send_data axlsx.to_stream.read,
-                filename: report.filename,
-                disposition: :attachment,
-                type: SPREADSHEET_CONTENT_TYPE
-    elsif report.report_format == 'csv'
-      send_data generate_csv(report), 
-                filename: report.filename, 
-                disposition: :attachment
+    send_data axlsx.to_stream.read,
+              filename: report.filename,
+              disposition: :attachment,
+              type: SPREADSHEET_CONTENT_TYPE
+  end
+
+  def send_csv_report(report)
+    send_data generate_csv(report),
+              filename: report.filename, 
+              disposition: :attachment
+  end 
+
+  def send_default_report(report, report_data=nil)
+    # If the data is relevant big, it will be passed as report data, otherwise the data will 
+    # be stored in report record 
+    report_data_for_generation = report_data || report.report_data
+    send_data report_data_for_generation, 
+              filename: report.filename, 
+              disposition: :attachment
+  end
+
+  def generate_final_report(report, report_data=nil)
+    case report.report_format
+    when 'xlsx'
+      send_xlsx_report(report)
+    when 'csv'
+      send_csv_report(report)
     else
-      send_data report_data || report.report_data, 
-                filename: report.filename, 
-                disposition: :attachment
+      send_default_report(report, report_data=report_data)
     end
   end 
 
@@ -147,13 +163,18 @@ class StatsController < ApplicationController
     axlsx
   end
 
+  def user_permitted_custom_report_types
+    # find out the scope of the custom report types the user can see via set intersection operation
+    @correspondence_types = CorrespondenceType.custom_reporting_types & current_user.permitted_correspondence_types
+    @correspondence_types += [self.class.closed_cases_correspondence_type]
+  end 
+  
   def set_fields_for_custom_action
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
     @custom_reports_offender_sar = ReportType.custom.offender_sar
     @custom_reports_closed_cases = ReportType.closed_cases_report
-    @correspondence_types = CorrespondenceType.custom_reporting_types & current_user.permitted_correspondence_types
-    @correspondence_types += [self.class.closed_cases_correspondence_type]
+    user_permitted_custom_report_types
   end
 
   def authorize_user
