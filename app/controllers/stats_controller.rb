@@ -113,7 +113,7 @@ class StatsController < ApplicationController
     when 'csv'
       send_csv_report(report)
     else
-      send_default_report(report, report_data=report_data)
+      send_default_report(report, report_data)
     end
   end 
 
@@ -168,7 +168,7 @@ class StatsController < ApplicationController
     @correspondence_types = CorrespondenceType.custom_reporting_types & current_user.permitted_correspondence_types
     @correspondence_types += [self.class.closed_cases_correspondence_type]
   end 
-  
+
   def set_fields_for_custom_action
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
