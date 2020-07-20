@@ -16,7 +16,6 @@
 class Report < ApplicationRecord
 
   jsonb_accessor :properties,
-                 etl: :boolean,
                  background_job: :boolean,
                  status: :string,
                  job_ids: [:string, array: true, default: []],
@@ -32,10 +31,6 @@ class Report < ApplicationRecord
   belongs_to :report_type
   
   attr_accessor :correspondence_type
-
-  after_initialize do
-    self.etl ||= self.report_type&.etl?
-  end
  
   def self.last_by_abbr(abbr)
     report_type = ReportType.find_by_abbr(abbr)
@@ -61,7 +56,6 @@ class Report < ApplicationRecord
     else
       self.report_data = report_service.results.to_json
     end
-    self.etl = report_service.etl?
     self.background_job = report_service.background_job?
     self.filename = report_service.filename
     self.user_id = report_service.user.nil? ? 0 : report_service.user.id
@@ -104,7 +98,7 @@ class Report < ApplicationRecord
   # the Warehouse, and therefore require processing before making
   # available for download
   def etl?
-    self.etl
+    self.report_type&.etl?
   end
 
   def background_job?
