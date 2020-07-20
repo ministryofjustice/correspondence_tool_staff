@@ -557,7 +557,7 @@ class Case::Base < ApplicationRecord
 
   def responded_in_time?
     return false unless closed_for_reporting_purposes?
-    date_responded.nil? ? false : date_responded <= external_deadline
+    !date_responded.nil? && date_responded <= external_deadline
   end
 
   # Note use of +responded?+ as guard to prevent exceptions
