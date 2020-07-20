@@ -14,7 +14,7 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
               .joins('join teams_users_roles on assignments.team_id=teams_users_roles.team_id')
               .where('teams_users_roles': {user_id: @user.id, role: :responder.to_s})
               .select(:case_id).distinct       
-          scopes << @scope.where(id: team_restriction)
+          @scope.where(id: team_restriction)
         else
           @scope
         end 
