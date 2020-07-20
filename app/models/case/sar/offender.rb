@@ -10,7 +10,14 @@ class Case::SAR::Offender < Case::Base
         prison_number: 'B',
         previous_case_numbers: 'B',
         subject_aliases: 'B',
-        other_subject_ids: 'B'
+        other_subject_ids: 'B',
+        case_reference_number: 'B',
+        requester_reference: 'B',
+        subject_address: 'B',
+        third_party_name: 'B',
+        third_party_company_name: 'B',
+        postal_address: 'B',
+        date_of_birth: 'B',
       })
     end
   end
