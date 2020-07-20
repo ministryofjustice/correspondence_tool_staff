@@ -19,19 +19,19 @@ class Case::SARPolicy < Case::BasePolicy
         end
 
         if @user.responder?
-          team_restriction_sql = Assignment
+          team_restriction = Assignment
               .joins('join teams_users_roles on assignments.team_id=teams_users_roles.team_id')
               .where('teams_users_roles': {user_id: @user.id, role: :responder.to_s})
-              .select(:case_id).distinct.to_sql          
-          scopes << @scope.where(" cases.id IN (#{team_restriction_sql}) " )
+              .select(:case_id).distinct       
+          scopes << @scope.where(id: team_restriction)
         end
 
         if @user.approver?
-          team_restriction_sql = Assignment
+          team_restriction = Assignment
               .joins('join teams_users_roles on assignments.team_id=teams_users_roles.team_id')
               .where('teams_users_roles': {user_id: @user.id, role: :approver.to_s})
-              .select(:case_id).distinct.to_sql          
-          scopes << @scope.where(" cases.id IN (#{team_restriction_sql}) " )
+              .select(:case_id).distinct      
+          scopes << @scope.where(id: team_restriction)
         end
 
         if scopes.any?
