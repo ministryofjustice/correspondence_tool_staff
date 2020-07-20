@@ -10,7 +10,7 @@ feature 'Offender SAR Case creation by a manager', js: true do
     cases_page.load
   end
 
-  scenario '1 Third party requests data to be sent to the data subject' do
+  scenario '1 Data subject requesting own record' do
     when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page
@@ -22,7 +22,19 @@ feature 'Offender SAR Case creation by a manager', js: true do
     then_expect_open_cases_page_to_be_correct
   end
 
-  scenario '2 Third party requests data for themselves' do
+  scenario '2 Data subject requesting data to be sent to third party' do
+    when_i_navigate_to_offender_sar_subject_page
+    and_fill_in_subject_details_page
+    and_fill_in_requester_details_page
+    and_fill_in_recipient_details_page(:third_party)
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_expect_cases_show_page_to_be_correct
+    then_expect_open_cases_page_to_be_correct
+  end
+
+  scenario '3 Solicitor requesting data subject record' do
     when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page(:third_party)
@@ -34,7 +46,7 @@ feature 'Offender SAR Case creation by a manager', js: true do
     then_expect_open_cases_page_to_be_correct
   end
 
-  scenario '3 Data subject requesting their own data' do
+  scenario '4 Solicitor requesting record to be sent to data subject' do
     when_i_navigate_to_offender_sar_subject_page
     and_fill_in_subject_details_page
     and_fill_in_requester_details_page(:third_party)
@@ -46,17 +58,6 @@ feature 'Offender SAR Case creation by a manager', js: true do
     then_expect_open_cases_page_to_be_correct
   end
 
-  scenario '4 Data subject requesting data to be sent to third party' do
-    when_i_navigate_to_offender_sar_subject_page
-    and_fill_in_subject_details_page
-    and_fill_in_requester_details_page
-    and_fill_in_recipient_details_page(:third_party)
-    and_fill_in_requested_info_page
-    and_fill_in_request_details_page
-    and_fill_in_date_received_page
-    then_expect_cases_show_page_to_be_correct
-    then_expect_open_cases_page_to_be_correct
-  end
 
   def when_i_navigate_to_offender_sar_subject_page
     expect(cases_page).to have_new_case_button
