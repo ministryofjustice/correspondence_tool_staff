@@ -1,0 +1,13 @@
+tr.request_dated.section
+  th
+    = t('common.case.request_dated')
+  td
+    = l case_details.request_dated, format: :default
+  td
+    = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "request_details")
+
+tr.requester-reference
+  th
+    = t('common.case.requester_reference')
+  td
+    = case_details.requester_reference

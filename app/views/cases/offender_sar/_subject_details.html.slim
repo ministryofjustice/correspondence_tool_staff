@@ -1,0 +1,31 @@
+tr.data-subject.section.section-subject-details
+  th = t('common.case.data_subject')
+  td = case_details.subject_full_name
+  td = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "subject_details")
+tr.subject-aliases
+  th = t('common.case.subject_aliases')
+  td = case_details.subject_aliases
+tr.date-of-birth
+  th = t('common.case.date_of_birth')
+  td = l case_details.date_of_birth, format: :default
+tr.prison-number
+  th = t('common.case.prison_number')
+  td = case_details.prison_number
+tr.previous-case-numbers
+  th = t('common.case.previous_case_numbers')
+  td = case_details.previous_case_numbers
+tr.other-subject-ids
+  th = t('common.case.other_subject_ids')
+  td = case_details.other_subject_ids
+tr.case-reference-number
+  th = t('common.case.case_reference_number')
+  td = case_details.case_reference_number
+
+= render partial: 'cases/sar/subject_type', locals: { case_details: case_details }
+
+tr.subject-address
+  th = t('common.case.subject_address')
+  td = case_details.subject_address
+tr.subject-high-priority
+  th = t('helpers.label.offender_sar.high_profile')
+  td = case_details.flag_as_high_profile.humanize

@@ -114,7 +114,7 @@ class Case::SAR::Offender < Case::Base
     end
     errors[:date_of_birth].any?
   end
-  
+
   def validate_request_dated
     if request_dated.present? && self.request_dated > Date.today
       errors.add(
@@ -160,7 +160,7 @@ class Case::SAR::Offender < Case::Base
           I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_relationship.blank')
         )
     end
-    errors[:third_party_relationship].any? 
+    errors[:third_party_relationship].any?
   end
 
   def default_managing_team
