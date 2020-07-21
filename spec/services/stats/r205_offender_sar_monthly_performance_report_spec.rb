@@ -27,17 +27,17 @@ module Stats
           @period_start = 0.business_days.after(Date.new(2018, 12, 20))
           @period_end = 0.business_days.after(Date.new(2018, 12, 31))
 
-          @sar_1 = create :accepted_sar, identifier: 'sar-1', creation_time: @period_start - 5.hours
-          @offender_sar_1 = create :offender_sar_case, :waiting_for_data, identifier: 'osar-1', creation_time: @period_start - 5.hours
+          @sar_1 = create :accepted_sar, identifier: 'sar-1', received_date: @period_start - 5.hours
+          @offender_sar_1 = create :offender_sar_case, :waiting_for_data, identifier: 'osar-1', received_date: @period_start - 5.hours
 
-          @sar_2 = create :accepted_sar, identifier: 'sar-2', creation_time: @period_start + 10.minutes
-          @offender_sar_2 = create :offender_sar_case, :closed, identifier: 'osar-2', creation_time: @period_start + 10.minutes
+          @sar_2 = create :accepted_sar, identifier: 'sar-2', received_date: @period_start + 10.minutes
+          @offender_sar_2 = create :offender_sar_case, :closed, identifier: 'osar-2', received_date: @period_start + 10.minutes
 
-          @sar_3 = create :accepted_sar, identifier: 'sar-3', creation_time: @period_start + 5.days
-          @offender_sar_3 = create :offender_sar_case, :data_to_be_requested, identifier: 'osar-3', creation_time: @period_start + 5.days
+          @sar_3 = create :accepted_sar, identifier: 'sar-3', received_date: @period_start + 5.days
+          @offender_sar_3 = create :offender_sar_case, :data_to_be_requested, identifier: 'osar-3', received_date: @period_start + 5.days
 
-          @sar_4 = create :accepted_sar, identifier: 'sar-4', creation_time: @period_end  + 61.minutes
-          @offender_sar_4 = create :offender_sar_case, :ready_to_copy, identifier: 'osar-4', creation_time: @period_end  + 61.minutes
+          @sar_4 = create :accepted_sar, identifier: 'sar-4', received_date: @period_end  + 61.minutes
+          @offender_sar_4 = create :offender_sar_case, :ready_to_copy, identifier: 'osar-4', received_date: @period_end  + 61.minutes
         end
       end
 

@@ -9,8 +9,8 @@ module Stats
     # The Cabinet Office report is one of the few to remain purely
     # in CSV format
     class << self
-      def xlsx?
-        false
+      def report_format
+        BaseReport::CSV
       end
     end
 

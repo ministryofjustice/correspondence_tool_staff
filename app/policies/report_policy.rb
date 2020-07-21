@@ -9,10 +9,9 @@ class ReportPolicy < ApplicationPolicy
   def can_download_user_generated_report?
     clear_failed_checks
 
-    begin
-      info = JSON.parse(report.report_data, symbolize_names: true)
-      info[:user_id] == user.id
-    rescue JSON::ParserError
+    if !report.user_id.nil?
+      report.user_id == user.id
+    else
       true
     end
   end

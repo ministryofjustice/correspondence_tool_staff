@@ -6,7 +6,16 @@ module Stats
     RAG_THRESHOLDS_FOI = { red: 85, amber: 90 }
     RAG_THRESHOLDS_SAR = { red: 80, amber: 85 }
 
-    attr_reader :period_start, :period_end, :user
+    # Status names for ETL generated reports
+    COMPLETE = 'complete'.freeze
+    WAITING = 'waiting'.freeze
+
+    # The format currently being supported in app
+    CSV = 'csv'.freeze
+    XLSX = 'xlsx'.freeze
+    ZIP = 'zip'.freeze
+
+    attr_reader :period_start, :period_end, :user, :etl, :background_job, :status, :job_ids, :filename
 
     def initialize(**options)
       raise 'Cannot instantiate Stats::BaseReport - use derived class instead' if self.class == BaseReport
@@ -24,6 +33,11 @@ module Stats
       @user = options[:user] # Some reports depend on the current user context e.g. Closed Cases
       @period_start = @reporting_period.period_start
       @period_end = @reporting_period.period_end
+
+      @background_job = false
+      @status = nil
+      @job_ids = []
+      @filename = report_type.filename(self.class.report_format)
     end
 
     def rag_thresholds
@@ -71,6 +85,12 @@ module Stats
       @stats.stats
     end
 
+    def set_results(stats)
+      if !@stats.nil?
+        @stats.stats = stats 
+      end
+    end
+
     # Called by the selected Report#generate_csv method.
     # Converts +@stats+ to an Array of hash-like OpenStructs for output.
     #
@@ -103,9 +123,25 @@ module Stats
       true
     end
 
+    def self.report_format
+      CSV
+    end
+
     # Instance method makes testing easier e.g. when using instance_double
     def persist_results?
-      self.class.persist_results?
+      self.etl || self.class.persist_results?
     end
+
+    def etl?
+      report_type.etl
+    end
+
+    def background_job?
+      self.background_job
+    end
+
+    def report_format
+      self.class.report_format
+    end 
   end
 end

@@ -14,10 +14,12 @@ describe 'stats/new.html.slim', type: :view do
     assign(:report, new_report)
     assign(:custom_reports_foi, reports)
     assign(:custom_reports_sar, reports)
+    assign(:custom_reports_offender_sar, reports)
     assign(:custom_reports_closed_cases, reports)
     assign(:correspondence_types, [
       CorrespondenceType.foi,
       CorrespondenceType.sar,
+      CorrespondenceType.offender_sar,
       StatsController.closed_cases_correspondence_type
     ])
 

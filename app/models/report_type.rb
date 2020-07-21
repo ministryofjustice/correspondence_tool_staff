@@ -67,7 +67,7 @@ class ReportType < ApplicationRecord
   end
 
   def file_extension
-    class_constant.xlsx? ? 'xlsx' : 'csv'
+    class_constant.report_format
   end
 
   def description

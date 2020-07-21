@@ -68,6 +68,8 @@ class Case::Base < ApplicationRecord
 
   attr_accessor :message_text
 
+  attr_reader :deadline_calculator
+
   acts_as_gov_uk_date :date_responded,
                       :date_draft_compliant,
                       :external_deadline,
@@ -342,6 +344,7 @@ class Case::Base < ApplicationRecord
 
   after_initialize do
     self.workflow = default_workflow if self.workflow.nil?
+    @deadline_calculator = create_deadline_calculator
   end
 
   before_create :set_initial_state,
@@ -554,7 +557,7 @@ class Case::Base < ApplicationRecord
 
   def responded_in_time?
     return false unless closed_for_reporting_purposes?
-    date_responded <= external_deadline
+    !date_responded.nil? && date_responded <= external_deadline
   end
 
   # Note use of +responded?+ as guard to prevent exceptions
@@ -572,7 +575,7 @@ class Case::Base < ApplicationRecord
     if responded_transitions.any?
       responding_team_assignment_date = assign_responder_transitions.last.created_at.to_date
       responding_date = responded_transitions.last.created_at.to_date
-      internal_deadline = deadline_calculator
+      internal_deadline = @deadline_calculator
                               .internal_deadline_for_date(correspondence_type, responding_team_assignment_date)
       internal_deadline >= responding_date
     else
@@ -585,7 +588,7 @@ class Case::Base < ApplicationRecord
       raise ArgumentError.new("Cannot call ##{__method__} on a case for which the response has been sent")
     else
       responding_team_assignment_date = assign_responder_transitions.last&.created_at&.to_date || received_date
-      internal_deadline = deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
+      internal_deadline = @deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
       internal_deadline < Date.today
     end
   end
@@ -671,13 +674,6 @@ class Case::Base < ApplicationRecord
 
   def is_sar?
     type_abbreviation == 'SAR'
-  end
-
-  def deadline_calculator
-    klass = DeadlineCalculator.const_get(
-      correspondence_type.deadline_calculator_class
-    )
-    klass.new(self)
   end
 
   def set_workflow!(new_workflow_name)
@@ -799,6 +795,17 @@ class Case::Base < ApplicationRecord
 
   private
 
+  def create_deadline_calculator
+    if self.class.respond_to?(:type_abbreviation)
+      klass = DeadlineCalculator.const_get(
+        correspondence_type.deadline_calculator_class
+      )
+      klass.new(self)
+    else
+      nil
+    end
+  end
+
   def identifier
     name.sub(/\sname\s?\d{0,3}$/, '')
   end
@@ -871,15 +878,15 @@ class Case::Base < ApplicationRecord
     #   days - number of days from the from_date
     #   from date - the date to calculate from, e.g. created, received, day_after_created, day_after_received, external_deadline
     #   business/calendar days - whether to calculate in business days or calendar days
-    self.escalation_deadline = deadline_calculator.escalation_deadline
-    self.internal_deadline = deadline_calculator.internal_deadline
-    self.external_deadline = deadline_calculator.external_deadline
+    self.escalation_deadline = @deadline_calculator.escalation_deadline
+    self.internal_deadline = @deadline_calculator.internal_deadline
+    self.external_deadline = @deadline_calculator.external_deadline
   end
 
   def update_deadlines
     if changed.include?('received_date')  && !extended_for_pit?
-      self.internal_deadline = deadline_calculator.internal_deadline
-      self.external_deadline = deadline_calculator.external_deadline
+      self.internal_deadline = @deadline_calculator.internal_deadline
+      self.external_deadline = @deadline_calculator.external_deadline
     end
   end
 
