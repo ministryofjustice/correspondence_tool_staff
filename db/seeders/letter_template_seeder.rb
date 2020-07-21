@@ -259,7 +259,7 @@ class LetterTemplateSeeder
       rec = LetterTemplate.find_by(abbreviation: 'solicitor-disclosed-covid')
       rec = LetterTemplate.new if rec.nil?
       rec.update!(name: 'Solicitor disclosed letter (COVID-19)',
-                  abbreviation: 'Solicitor-disclosed-covid',
+                  abbreviation: 'solicitor-disclosed-covid',
                   template_type: 'dispatch',
                   body: <<~EOF
                     <p>Dear Sirs
