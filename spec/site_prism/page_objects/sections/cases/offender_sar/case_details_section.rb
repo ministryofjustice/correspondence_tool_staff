@@ -22,11 +22,11 @@ module PageObjects
             element :data, 'td'
           end
 
-          section :requester_name, 'tr.requester-name' do
-            element :data, 'td'
+          section :third_party, 'tr.third-party' do
+            element :data, 'td:first'
           end
 
-          section :third_party, 'tr.third-party' do
+          section :third_party_name, 'tr.third-party-name' do
             element :data, 'td:first'
           end
 
