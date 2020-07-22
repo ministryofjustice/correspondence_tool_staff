@@ -16,15 +16,17 @@ feature 'Offender SAR Case creation by a manager' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'creating a case that does not need clearance' do
+  scenario 'progressing an offender sar case' do
     cases_show_page.load(id: offender_sar_case.id)
 
     expect(cases_show_page).to have_content "Mark as waiting for data"
     expect(cases_show_page).to have_content "Data to be requested"
+    expect(cases_show_page).to have_content "Send acknowledgement letter"
     click_on "Mark as waiting for data"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready for vetting"
+    expect(cases_show_page).to have_content "Send acknowledgement letter"
     click_on "Mark as ready for vetting"
 
     expect(cases_show_page).to be_displayed
@@ -40,6 +42,7 @@ feature 'Offender SAR Case creation by a manager' do
     click_on "Mark as ready to dispatch"
 
     expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Send dispatch letter"
     expect(cases_show_page).to have_content "Close case"
     click_on "Close case"
 
@@ -54,6 +57,7 @@ feature 'Offender SAR Case creation by a manager' do
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Closed"
+    expect(cases_show_page).to have_content "Send dispatch letter"
     # TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
     # expect(cases_show_page).to have_content "Was the information held?"
     # expect(cases_show_page).to have_content "Yes"
