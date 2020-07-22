@@ -351,7 +351,7 @@ workflows:
           requires:
             - deploy_master_to_staging
       - deploy_master_to_production:
-           requires:
+          requires:
             - deploy_master_to_production_approval
       - deploy_master_to_qa_approval:
           type: approval
