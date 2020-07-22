@@ -14,12 +14,12 @@
 
         = render partial: 'cases/offender_sar/requested_on_behalf', locals: { case_details: case_details }
 
-        - if case_details.third_party? && (case_details.recipient == 'requester_recipient' || case_details.recipient == 'subject_recipient')
+        - if case_details.third_party?
           = render partial: 'cases/offender_sar/third_party_details', locals: { case_details: case_details }
 
         = render partial: 'cases/offender_sar/request_recipient', locals: { case_details: case_details }
 
-        - if (not case_details.third_party) && case_details.recipient == 'third_party_recipient'
+        - if case_details.third_party_recipient?
           = render partial: 'cases/offender_sar/third_party_details', locals: { case_details: case_details }
 
         = render partial: 'cases/offender_sar/request_details', locals: { case_details: case_details }
