@@ -293,34 +293,34 @@ jobs:
   deploy_branch_to_dev: *do_dev_deployment_tasks 
   deploy_master_to_dev: *do_dev_deployment_tasks
 
-  staging_deployment_tasks: &do_staging_deployment_tasks
-    steps:
-      - *do_deployment_tasks
-      - *deploy_to_staging
+  # staging_deployment_tasks: &do_staging_deployment_tasks
+  #   steps:
+  #     - *do_deployment_tasks
+  #     - *deploy_to_staging
 
-  deploy_branch_to_staging: *do_staging_deployment_tasks
-  deploy_master_to_staging: *do_staging_deployment_tasks
+  # deploy_branch_to_staging: *do_staging_deployment_tasks
+  # deploy_master_to_staging: *do_staging_deployment_tasks
 
-  qa_deployment_tasks: &do_qa_deployment_tasks
-    steps:
-      - *do_deployment_tasks
-      - *deploy_to_qa
+  # qa_deployment_tasks: &do_qa_deployment_tasks
+  #   steps:
+  #     - *do_deployment_tasks
+  #     - *deploy_to_qa
   
-  deploy_branch_to_qa: *do_qa_deployment_tasks
-  deploy_master_to_qa: *do_qa_deployment_tasks
+  # deploy_branch_to_qa: *do_qa_deployment_tasks
+  # deploy_master_to_qa: *do_qa_deployment_tasks
 
-  demo_deployment_tasks: &do_demo_deployment_tasks
-    steps:
-      - *do_deployment_tasks
-      - *deploy_to_demo
+  # demo_deployment_tasks: &do_demo_deployment_tasks
+  #   steps:
+  #     - *do_deployment_tasks
+  #     - *deploy_to_demo
 
-  deploy_branch_to_demo: *do_demo_deployment_tasks
-  deploy_master_to_demo: *do_demo_deployment_tasks
+  # deploy_branch_to_demo: *do_demo_deployment_tasks
+  # deploy_master_to_demo: *do_demo_deployment_tasks
 
-  deploy_master_to_production:
-    steps:
-      - *do_deployment_tasks
-      - *deploy_to_production      
+  # deploy_master_to_production:
+  #   steps:
+  #     - *do_deployment_tasks
+  #     - *deploy_to_production      
 
 #  Workflows combine jobs to perform the actions
 
