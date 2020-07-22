@@ -142,25 +142,12 @@ references:
       name: Run rubocop
       command: bundle exec rubocop
 
-  run_unit_tests: &run_unit_tests
+  run_unit_and_feature_tests: &run_unit_and_feature_tests
     run:
-      name: Run unit tests
+      name: Run unit and feature tests
       command: |
-        bundle exec rspec
-# This command is from the CircleCI docs and is for running in a time
-# base system. We currenly are not using it, but here if we want to
-# implement it
-#
-# bundle exec rspec --profile 10 \
-#                   --format RspecJunitFormatter \
-#                   --out test_results/rspec.xml \
-#                   --format progress \
-#                   $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
-  run_feature_tests: &run_feature_tests
-    run:
-      name: Run feature tests
-      command: |
-        bundle exec rspec spec/features
+        bundle exec rspec 
+
 
   set_up_aws_cli: &set_up_aws_cli
     run:
@@ -251,8 +238,7 @@ jobs:
       - *set_up_the_database
       - *rubocop
       - *update_chromedriver
-      - *run_unit_tests
-      - *run_feature_tests
+      - *run_unit_and_feature_tests
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
