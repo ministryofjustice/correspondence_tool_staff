@@ -272,8 +272,7 @@ jobs:
           paths:
             - build_tag
 
-# Both should be identical but different names
-  deploy_branch_to_dev:
+  deployment_tasks: &do_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -285,119 +284,43 @@ jobs:
       - *create_gpg_key_file
       - *configure_gpg
       - *decrypt_secrets
+
+  dev_deployment_tasks: &do_dev_deployment_tasks
+    steps:
+      - *do_deployment_tasks
       - *deploy_to_dev
 
-  deploy_master_to_dev:
-    <<: *deploy_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
-      - *deploy_to_dev
+  deploy_branch_to_dev: *do_dev_deployment_tasks 
+  deploy_master_to_dev: *do_dev_deployment_tasks
 
-  deploy_branch_to_staging:
-    <<: *deploy_container_config
-    <<: *defaults
+  staging_deployment_tasks: &do_staging_deployment_tasks
     steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
+      - *do_deployment_tasks
       - *deploy_to_staging
 
-  deploy_master_to_staging:
-    <<: *deploy_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
-      - *deploy_to_staging
+  deploy_branch_to_staging: *do_staging_deployment_tasks
+  deploy_master_to_staging: *do_staging_deployment_tasks
 
-  deploy_branch_to_qa:
-    <<: *deploy_container_config
-    <<: *defaults
+  qa_deployment_tasks: &do_qa_deployment_tasks
     steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
+      - *do_deployment_tasks
       - *deploy_to_qa
+  
+  deploy_branch_to_qa: *do_qa_deployment_tasks
+  deploy_master_to_qa: *do_qa_deployment_tasks
 
-  deploy_master_to_qa:
-    <<: *deploy_container_config
-    <<: *defaults
+  demo_deployment_tasks: &do_demo_deployment_tasks
     steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
-      - *deploy_to_qa
-
-  deploy_branch_to_demo:
-    <<: *deploy_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
+      - *do_deployment_tasks
       - *deploy_to_demo
 
-  deploy_master_to_demo:
-    <<: *deploy_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
-      - *deploy_to_demo
+  deploy_branch_to_demo: *do_demo_deployment_tasks
+  deploy_master_to_demo: *do_demo_deployment_tasks
 
   deploy_master_to_production:
-    <<: *deploy_container_config
-    <<: *defaults
     steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
-      - *deploy_to_production       
+      - *do_deployment_tasks
+      - *deploy_to_production      
 
 #  Workflows combine jobs to perform the actions
 
