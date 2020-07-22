@@ -4,14 +4,14 @@
         = t4c(case_details, 'common', 'request')
       - if case_details.offender_sar?
         .change-link
-          = link_to "Change", edit_step_case_sar_offender_path(case_details, "requested_info")
+          = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "requested_info")
 
   .request--message.section-requested-info
     - if case_details.message.present?
       p.message-body
         = show_hide_message(case_details)
     - if case_details.message.empty? && case_details.offender_sar?
-      p.message-body 
+      p.message-body
         = t('cases.offender_sar.request_info_hint')
 
     - if case_details.attachments.request.present?
