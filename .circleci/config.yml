@@ -272,7 +272,7 @@ jobs:
           paths:
             - build_tag
 
-  deployment_tasks: &do_deployment_tasks
+  dev_deployment_tasks: &do_dev_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -284,44 +284,74 @@ jobs:
       - *create_gpg_key_file
       - *configure_gpg
       - *decrypt_secrets
-
-  dev_deployment_tasks: &do_dev_deployment_tasks
-    <<: *do_deployment_tasks
-    steps:
       - *deploy_to_dev
 
   deploy_branch_to_dev: *do_dev_deployment_tasks 
   deploy_master_to_dev: *do_dev_deployment_tasks
 
   staging_deployment_tasks: &do_staging_deployment_tasks
-    <<: *do_deployment_tasks
+    <<: *deploy_container_config
+    <<: *defaults
     steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
       - *deploy_to_staging
 
   deploy_branch_to_staging: *do_staging_deployment_tasks
   deploy_master_to_staging: *do_staging_deployment_tasks
 
   qa_deployment_tasks: &do_qa_deployment_tasks
-    <<: *do_deployment_tasks
+    <<: *deploy_container_config
+    <<: *defaults
     steps:
+      - checkout
       - attach_workspace:
           at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
       - *deploy_to_qa
   
   deploy_branch_to_qa: *do_qa_deployment_tasks
   deploy_master_to_qa: *do_qa_deployment_tasks
 
   demo_deployment_tasks: &do_demo_deployment_tasks
-    <<: *do_deployment_tasks
+    <<: *deploy_container_config
+    <<: *defaults
     steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
       - *deploy_to_demo
 
   deploy_branch_to_demo: *do_demo_deployment_tasks
   deploy_master_to_demo: *do_demo_deployment_tasks
 
   deploy_master_to_production:
-    <<: *do_deployment_tasks
+    <<: *deploy_container_config
+    <<: *defaults
     steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - *install_gpg
+      - *install_expect
+      - *create_gpg_key_file
+      - *configure_gpg
+      - *decrypt_secrets
       - *deploy_to_production     
 
 #Workflows combine jobs to perform the actions
