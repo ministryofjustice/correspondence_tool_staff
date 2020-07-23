@@ -33,6 +33,8 @@ class Case::SAR::Offender < Case::Base
                  date_of_birth: :date,
                  escalation_deadline: :date,
                  external_deadline: :date,
+                 flag_as_complaint: :boolean,
+                 complaint_reference: :string,
                  flag_as_high_profile: :boolean,
                  internal_deadline: :date,
                  other_subject_ids: :string,
@@ -95,6 +97,8 @@ class Case::SAR::Offender < Case::Base
 
   validate :validate_request_dated
 
+  validate :validate_complaint_reference
+
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
 
@@ -113,6 +117,16 @@ class Case::SAR::Offender < Case::Base
       )
     end
     errors[:date_of_birth].any?
+  end
+
+  def validate_complaint_reference
+    if Case::SAR::Offender.find_by(number: complaint_reference).nil?
+      errors.add(
+        :complaint_reference,
+        'Submitted reference does not relate to a case that exists.'
+      )
+    end
+    errors[:complaint_reference].any?
   end
   
   def validate_request_dated
@@ -173,6 +187,10 @@ class Case::SAR::Offender < Case::Base
 
   def offender_sar?
     true
+  end
+
+  def is_complaint?
+    flag_as_complaint
   end
 
   def responding_team

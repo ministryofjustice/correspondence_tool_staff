@@ -1,0 +1,29 @@
+.grid-row.case-linking
+  .column-full
+    h2.request--heading
+      = "Original details for complaint"
+
+    table
+      thead
+        tr
+          th
+            = 'Case no.'
+          th
+            = 'Case type'
+          th
+            = 'Request'
+      tbody
+        - complaint_case = Case::SAR::Offender.find_by(number: case_details.complaint_reference)
+        - if case_details.is_complaint?
+            tr
+              td
+                = link_to case_path(complaint_case.id) do
+                  span.visually-hidden
+                    = t('common.view_case')
+                  = case_details.complaint_reference
+              td
+                = "#{complaint_case.type_abbreviation}"
+              td
+                = request_details_html(complaint_case)
+    br
+

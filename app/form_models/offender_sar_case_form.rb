@@ -11,6 +11,8 @@ class OffenderSARCaseForm
            :date_of_birth,
            :errors,
            :flag_as_high_profile,
+           :flag_as_complaint,
+           :complaint_reference,
            :id,
            :message,
            :name,
@@ -56,7 +58,8 @@ class OffenderSARCaseForm
 
   # @todo: Should these steps be defined in 'Steppable' or the controller
   def steps
-    %w[subject-details
+    %w[complaint-details
+       subject-details
        requester-details
        recipient-details
        requested-info
@@ -106,6 +109,7 @@ class OffenderSARCaseForm
   private
 
   def check_custom_validations_for_step(step)
+    @case.validate_complaint_reference if step == "complaint-details"
     @case.validate_date_of_birth if step == "subject-details"
     if step == "requester-details"
       @case.validate_third_party_names
@@ -123,6 +127,9 @@ class OffenderSARCaseForm
     # So in each step we need to ensure default values for certain fields
     # and/or conditionally clear other fields depending on related values
     case step
+    when "complaint-details"
+      set_empty_value_if_unset(params, "flag_as_complaint")
+      set_empty_value_if_unset(params, "complaint_reference")
     when "subject-details"
       set_empty_value_if_unset(params, "subject_type")
       set_empty_value_if_unset(params, "date_of_birth")

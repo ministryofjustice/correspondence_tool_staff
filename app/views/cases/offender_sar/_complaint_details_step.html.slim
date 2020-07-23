@@ -1,0 +1,17 @@
+- content_for :heading, flush: true
+  = 'Is this a new subject access request?'
+
+= render partial: 'layouts/header'
+
+= form_for @case.object, url: url, as: :offender_sar do |f|
+  = f.radio_button_fieldset(:flag_as_complaint) do |fieldset|
+    - fieldset.radio_input('Yes, this is a new subject access request', value: 'Yes')
+    - fieldset.radio_input('No, this is a complaint regarding an existing case', 
+      panel_id: 'complaint_reference_panel', value: 'No' )
+    - fieldset.revealing_panel(:complaint_reference_panel) do |panel|
+          - panel.text_field :complaint_reference
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+    = f.submit 'Continue', class: 'button'
+  
