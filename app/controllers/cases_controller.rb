@@ -94,8 +94,8 @@ class CasesController < ApplicationController
     @case = Case::Base.find(params[:id])
     authorize @case
     @case = @case.decorate
-    if self.class.method_defined?(:persist_session_data)
-      self.persist_session_data(params)
+    if @case.respond_to?(:current_step)
+      @case.current_step = params['current_step']
     end
 
     service = CaseUpdaterService.new(current_user, @case, edit_params)

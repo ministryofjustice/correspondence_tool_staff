@@ -164,10 +164,6 @@ module Cases
       params ||= {}
       session[:offender_sar_state] = session[:offender_sar_state].merge params
     end
-
-    def persist_session_data(params)
-        @case.current_step = params[:step]
-    end
       
   end
 end

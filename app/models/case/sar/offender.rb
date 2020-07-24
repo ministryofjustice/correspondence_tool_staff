@@ -79,7 +79,6 @@ class Case::SAR::Offender < Case::Base
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
   validates :date_of_birth, presence: true
 
-  validates_presence_of :postal_address, if: :third_party?
   validates_presence_of :subject_address
 
   validates :subject_full_name, presence: true
@@ -90,6 +89,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_names
   validate :validate_recipient
   validate :validate_third_party_relationship
+  validate :validate_third_party_address
 
   validate :validate_request_dated
 
