@@ -1,10 +1,3 @@
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 9.5.19
--- Dumped by pg_dump version 9.5.19
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
@@ -354,8 +347,8 @@ CREATE TABLE public.cases (
     appeal_outcome_id integer,
     dirty boolean DEFAULT false,
     document_tsvector tsvector,
-    user_id integer DEFAULT '-100'::integer NOT NULL,
-    reason_for_deletion character varying
+    reason_for_deletion character varying,
+    user_id integer DEFAULT '-100'::integer NOT NULL
 );
 
 
@@ -703,7 +696,8 @@ CREATE TABLE public.reports (
     report_data bytea,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    guid character varying
+    guid character varying,
+    properties jsonb
 );
 
 
@@ -1598,13 +1592,6 @@ CREATE INDEX index_cases_users_transitions_trackers_on_case_id ON public.cases_u
 
 
 --
--- Name: index_cases_users_transitions_trackers_on_case_id_and_user_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_cases_users_transitions_trackers_on_case_id_and_user_id ON public.cases_users_transitions_trackers USING btree (case_id, user_id);
-
-
---
 -- Name: index_cases_users_transitions_trackers_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1983,8 +1970,10 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20180613141421'),
 ('20180620135756'),
 ('20180621094208'),
+('20180622153909'),
 ('20180705184513'),
 ('20180711151118'),
+('20180716150951'),
 ('20180717211105'),
 ('20180806100827'),
 ('20190228142249'),
@@ -1998,6 +1987,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190817185027'),
 ('20190912142741'),
 ('20191002003615'),
-('20191028094210');
+('20191028094210'),
+('20200705225914');
 
 

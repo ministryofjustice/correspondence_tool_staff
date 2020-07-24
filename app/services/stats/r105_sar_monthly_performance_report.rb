@@ -10,7 +10,7 @@ module Stats
     end
 
     def case_scope
-      Case::SAR::Standard.where(created_at: @period_start..@period_end)
+      Case::SAR::Standard.where(received_date: @period_start..@period_end)
     end
 
     def report_type

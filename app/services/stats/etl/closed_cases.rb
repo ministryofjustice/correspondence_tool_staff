@@ -77,7 +77,7 @@ module Stats
 
       def num_fragments
         @_num_fragments ||= begin
-          (::Warehouse::CaseReport.all.size.to_f/ROWS_PER_FRAGMENT).ceil
+          (@retrieval_scope.size.to_f/ROWS_PER_FRAGMENT).ceil
         end
       end
 
@@ -98,7 +98,7 @@ module Stats
       def generate_data_fragments
         offset = 0
 
-        (1..num_fragments + 1).map do |_i|
+        (1..num_fragments).map do |_i|
           data = CSV.generate(force_quotes: true) do |csv|
             Query::CaseReport.new(
               retrieval_scope: @retrieval_scope,

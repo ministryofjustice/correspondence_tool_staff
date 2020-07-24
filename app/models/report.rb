@@ -9,24 +9,29 @@
 #  report_data    :binary
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
+#  guid           :string
+#  properties     :jsonb
 #
 
-# Because run_and_update! needs to generate CSV
-require 'csv'
-
 class Report < ApplicationRecord
-  # Status names for ETL generated reports
-  COMPLETE = 'complete'.freeze
-  WAITING = 'waiting'.freeze
 
+  jsonb_accessor :properties,
+                 background_job: :boolean,
+                 status: :string,
+                 job_ids: [:string, array: true, default: []],
+                 filename: :string,
+                 persist_results: :boolean,
+                 user_id: :integer,
+                 report_format: :string
+        
   validates_presence_of :report_type_id, :period_start, :period_end
 
   acts_as_gov_uk_date :period_start, :period_end, validate_if: :period_within_acceptable_range?
 
   belongs_to :report_type
+  
   attr_accessor :correspondence_type
-  attr_reader :etl_generation_status
-
+ 
   def self.last_by_abbr(abbr)
     report_type = ReportType.find_by_abbr(abbr)
     where(report_type_id: report_type.id).order(id: :desc).limit(1).singular
@@ -45,44 +50,48 @@ class Report < ApplicationRecord
   def run_and_update!(**args)
     self.guid = SecureRandom.uuid
     report_service = run(report_guid: guid, **args)
-
-    if etl?
-      self.report_data = { status: WAITING }.to_json
+    if report_service.background_job?
+      self.status = report_service.status
+      self.job_ids = report_service.job_ids
     else
-      self.report_data = generate_csv(report_service)
+      self.report_data = report_service.results.to_json
     end
-
+    self.background_job = report_service.background_job?
+    self.filename = report_service.filename
+    self.user_id = report_service.user.nil? ? 0 : report_service.user.id
+    self.report_format = report_service.report_format
     self.period_start = report_service.period_start
     self.period_end = report_service.period_end
+    self.persist_results = report_service.persist_results?
     self.save! if report_service.persist_results?
   end
 
-  def xlsx?
-    report_type.class_constant.xlsx?
-  end
-
-  # All Cases reports e.g. Closed Cases should be downloaded
-  # immediately not via a download link
-  def immediate_download?
-    @_immediate_download ||= !self.report_type.class_constant.persist_results?
-  end
+  def to_csv
+    report_service = report_type.class_constant.new()
+    report_service.set_results(JSON.parse(self.report_data, symbolize_names: true))
+    report_service.to_csv
+  end 
 
   def report_details
-    if etl?
-      info = JSON.parse(self.report_data, symbolize_names: true)
-      data = Redis.new.get(info[:report_guid])
-      filename = info[:filename]
-      @etl_generation_status = info[:status]
+    if self.background_job?
+      report_service = report_type.class_constant.new(
+        period_start: self.period_start,
+        period_end: self.period_end
+      )
+      data = report_service.report_details(self)
     else
       data = self.report_data
-      filename = self.report_type.filename('csv')
     end
 
-    [data, filename]
+    [data, self.filename]
   end
 
-  def etl_ready?
-    @etl_generation_status == COMPLETE
+  def ready?
+    self.status == Stats::BaseReport::COMPLETE
+  end
+
+  def persist_results?
+    self.persist_results
   end
 
   # ETL (Extract Transform Load) based reports are generated using
@@ -92,17 +101,11 @@ class Report < ApplicationRecord
     self.report_type&.etl?
   end
 
+  def background_job?
+    self.background_job
+  end
 
   private
-
-  def generate_csv(report_service)
-    # Force quotes to prevent jagged rows in CSVs
-    CSV.generate(headers: true, force_quotes: true) do |csv_generator|
-      report_service.to_csv.each do |csv_row|
-        csv_generator << csv_row.map(&:value)
-      end
-    end
-  end
 
   def period_within_acceptable_range?
     i18n_prefix = 'activerecord.errors.models.report.attributes'

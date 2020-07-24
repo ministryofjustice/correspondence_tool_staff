@@ -159,10 +159,8 @@ feature "Downloading stats(csv) from the system" do
     r003 = ReportType.where(abbr:'R003').first
     stats_new_page.fill_in_form('foi', r003.id, Date.yesterday, Date.today)
     stats_new_page.submit_button.click
-    expect(page.response_headers['Content-Disposition'])
-        .to match(/filename="r003_business_unit_performance_report\.xlsx"/)
 
-    stats_new_page.load
+    expect(stats_new_page.success_message).to have_download_link
   end
 
   def create_custom_r004_report

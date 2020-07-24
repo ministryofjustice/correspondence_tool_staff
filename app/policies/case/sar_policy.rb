@@ -7,24 +7,31 @@ class Case::SARPolicy < Case::BasePolicy
       @scope = scope
     end
 
-    def resolve
-      if @user.manager?
-        @scope
-      else
-        scopes = []
+    def correspondence_type
+      CorrespondenceType.sar
+    end 
 
-        # Unfortunately neither of the scopes suggested here work with with the 'or' clause
-        # as they join across tables. It's not obvious whether a user can be both
-        # a responder and an approver which would result in an 'or' join here - but
-        # the higher level tries to do an 'or' join which rules this out anyway.
+    def resolve
+      if @user.permitted_correspondence_types.include? correspondence_type
+        scopes = []
+        if @user.manager?
+          scopes << @scope
+        end
+
         if @user.responder?
-          case_ids = Assignment.with_teams(@user.responding_teams).pluck(:case_id)
-          scopes << @scope.where(id: case_ids)
+          team_restriction = Assignment
+              .joins('join teams_users_roles on assignments.team_id=teams_users_roles.team_id')
+              .where('teams_users_roles': {user_id: @user.id, role: :responder.to_s})
+              .select(:case_id).distinct       
+          scopes << @scope.where(id: team_restriction)
         end
 
         if @user.approver?
-          case_ids = Assignment.with_teams(@user.approving_team).pluck(:case_id)
-          scopes << @scope.where(id: case_ids)
+          team_restriction = Assignment
+              .joins('join teams_users_roles on assignments.team_id=teams_users_roles.team_id')
+              .where('teams_users_roles': {user_id: @user.id, role: :approver.to_s})
+              .select(:case_id).distinct      
+          scopes << @scope.where(id: team_restriction)
         end
 
         if scopes.any?
@@ -32,9 +39,10 @@ class Case::SARPolicy < Case::BasePolicy
         else
           @scope.none
         end
+      else
+        @scope.none
       end
-    end
-
+    end   
   end
 
   def respond_and_close?

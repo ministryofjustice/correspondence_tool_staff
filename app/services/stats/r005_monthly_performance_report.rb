@@ -10,7 +10,7 @@ module Stats
     end
 
     def case_scope
-      Case::Base.standard_foi.where(created_at: @period_start..@period_end)
+      Case::Base.standard_foi.where(received_date: @period_start..@period_end)
     end
 
     def report_type

@@ -9,7 +9,7 @@ module Stats
     end
 
     def case_scope
-      Case::SAR::Offender.where(created_at: @period_start..@period_end)
+      Case::SAR::Offender.where(received_date: @period_start..@period_end)
     end
 
     def report_type

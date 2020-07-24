@@ -37,11 +37,11 @@ en:
       report:
         correspondence_type: Case type
       case/sar/offender:
-        third_party_relationship: "Relationship to the subject"
         third_party : "Information requested on someone else's behalf"
-        third_party_name : "Full name of the representative"
+        third_party_address: Address
         third_party_company_name : "Company name"
-
+        third_party_name : "Full name of the representative"
+        third_party_relationship: "Relationship to the subject"
     errors:
       models:
         business_unit:
@@ -491,6 +491,10 @@ en:
           subject_recipient: The data subject
           requester_recipient: The person making the request
           third_party_recipient: Third party
+        recipient_type:
+          data_subject: The data subject
+          recipient: Requester
+          third_party: Third party
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative (optional)"
@@ -554,26 +558,25 @@ en:
       add_note: Add a note to this case
       answered_in_time: Answered in time
       answered_late: Answered late
+      appeal_outcome: Appeal Outcome
       assign: Assign to a responder
       case-details: Case details
-      original-case-details: Original case details
+      case/ico:
+        date_responded: Date response sent to ICO
+      case_reference_number: "Case reference number"
       clear_response: Clear response
       clearance_copy: 'You are clearing the response to: '
       compliant_in_time: Uploaded in time
       compliant_late: Uploaded late
       compliant_unknown: Unknown draft compliancy
       create_overturned: Create an ICO Overturned case
-      data_subject: Full name of subject
-      data_subject_type: 'What is their relationship to MOJ?'
       date_draft_uploaded: Date draft uploaded
       date_ico_decision_received: Date ICO's decision was received
-      date_responded: Date response sent to requester
       date_of_birth: Date of birth
+      date_responded: Date response sent to requester
+      data_subject: Full name of subject
+      data_subject_type: 'What is their relationship to MOJ?'
       draft_timeliness: Draft timeliness
-      case/ico:
-        date_responded: Date response sent to ICO
-      outcome: Outcome
-      appeal_outcome: Appeal Outcome
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
       email: "Requester’s email"
@@ -581,58 +584,58 @@ en:
       extend_for_pit: Extend for Public Interest Test
       extend_sar_deadline: Extend deadline
       external_deadline: Final deadline
-      internal_deadline: Draft deadline
-      ico_case_number: ICO case reference number
-      ico_officer_name: ICO information officer handling this case
       filename: File name
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
+      internal_deadline: Draft deadline
+      ico_case_number: ICO case reference number
+      ico_officer_name: ICO information officer handling this case
       late_team: Business unit responsible for late response
       name: Requester
+      original-case-details: Original case details
       other_subject_ids: "Police national computer number"
-      case_reference_number: "Case reference number"
+      outcome: Outcome
+      postal_address: "Requester’s postal address"
       previous_case_numbers: Previous SAR cases
       prison_number: "Prison number"
-      postal_address: "Requester’s postal address"
       progress_for_clearance: "Ready for Disclosure clearance"
-      received_date: Date request received at MOJ
       reason_for_refusal: Outcome
       reassign_case: "Change team member"
-      remove_sar_deadline_extension: Remove deadline extension
+      received_date: Date request received at MOJ
       remove_link_html: |
         Remove <span class="visuallyhidden">file %{filename}</span>
       remove_linked_case_html: |
         Remove link<span class="visuallyhidden"> to %{case_number}</span>
       remove_pit_extension: Remove all Public Interest Test extensions
-      responding_team: Business unit
+      remove_sar_deadline_extension: Remove deadline extension
+      request: "Request"
+      request_amends: Request amends
+      request_dated: "Date on the request"
+      requester_reference: Requester reference
+      requester_type: "Type of requester"
+      respond: Mark response as sent
       responders:
         one: Information Officer
         other: Information Officers
-      request: "Request"
-      request_dated: "Date on the request"
-      requester_reference: "Requester reference"
-      requester_type: "Type of requester"
+      responding_team: Business unit
       sar_response_address: Where should the data be sent
       status: Status
-      subject_address: Location of data subject
+      subject_address: Location
       subject_aliases: Alias
       third_party: Information requested on someone's behalf?
-      third_party_name: Requester
-      third_party_relationship: Relationship
-      requester_reference: Requester reference number
+      third_party_address: Address
       third_party_company_name: Company name
+      third_party_name: Representative name
+      third_party_relationship: Relationship
       time_taken: Time taken
       time_taken_result:
         one: "%{count} working day"
         other: "%{count} working days"
       timeliness: Timeliness
-      upload_response: Upload response
       upload_and_redraft: Upload changes for redraft
-      who_its_with: With
-      respond: Mark response as sent
-      request_amends: Request amends
       upload_approve: 'Upload response and clear'
-
+      upload_response: Upload response
+      who_its_with: With
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
@@ -658,6 +661,8 @@ en:
     stats_custom_button: Create report
     summary_error: 'prevented this form from being submitted:'
     close: Close case
+    links:
+      change: Change
 
   admin:
     cases:
@@ -1012,6 +1017,9 @@ en:
     common:
       period_start: Date from
       period_end: Date to
+    show:
+      success: Your report has been created.
+      waiting: Your report will be available shortly.
     create:
       success: Your custom report has been created.
       waiting: Your custom report will be available shortly.

@@ -111,7 +111,7 @@ class Case::FOI::Standard < Case::Base
         acting_team_id: default_clearance_team.id
     ).last.created_at.to_date
 
-    internal_deadline = deadline_calculator.internal_deadline_for_date(
+    internal_deadline = @deadline_calculator.internal_deadline_for_date(
         correspondence_type, responding_team_assignment_date
     )
 

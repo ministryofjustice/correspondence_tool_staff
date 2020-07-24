@@ -55,21 +55,11 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_user_can_manage_offender_sar
   end
 
-  class Scope
+  class Scope < Case::SARPolicy::Scope
 
-    def initialize(user, scope)
-      @user  = user
-      @scope = scope
-    end
-
-    def resolve
-      if @user.responder?
-        case_ids = Assignment.with_teams(@user.responding_teams).pluck(:case_id)
-        @scope.where(id: case_ids)
-      else
-        @scope.none
-      end
-    end
+    def correspondence_type
+      CorrespondenceType.offender_sar
+    end 
 
   end
 

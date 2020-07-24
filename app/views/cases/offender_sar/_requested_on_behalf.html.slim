@@ -1,0 +1,7 @@
+tr.third-party.section.section-requester-details
+  th
+    = t('common.case.third_party')
+  td
+    = case_details.third_party_display
+  td
+    = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "requester_details")
