@@ -46,7 +46,6 @@
                 send_dispatch_letter:
                 edit_case:
               closed:
-                add_data_received:
                 add_note_to_case:
                 send_dispatch_letter:
                 edit_case:
