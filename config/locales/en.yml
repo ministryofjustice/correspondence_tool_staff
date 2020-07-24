@@ -157,6 +157,8 @@ en:
               blank: can't be blank if company name not given
             third_party_relationship:
               blank: can't be blank
+            third_party_address:
+              blank: can't be blank
         assignment:
           attributes:
             state:

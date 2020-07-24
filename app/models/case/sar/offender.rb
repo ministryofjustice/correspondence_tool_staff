@@ -24,7 +24,7 @@ class Case::SAR::Offender < Case::Base
     received_date
   ].freeze
 
-  
+
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
@@ -160,6 +160,16 @@ class Case::SAR::Offender < Case::Base
         )
     end
     errors[:third_party_relationship].any? 
+  end
+
+  def validate_third_party_address
+    if (third_party || recipient == 'third_party_recipient') && postal_address.blank?
+        errors.add(
+          :postal_address,
+          I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_address.blank')
+        )
+    end
+    errors[:third_party_relationship].any?
   end
 
   def default_managing_team

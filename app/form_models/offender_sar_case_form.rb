@@ -26,10 +26,12 @@ module OffenderSARCaseForm
     if step == "requester-details"
       object.validate_third_party_names
       object.validate_third_party_relationship
+      object.validate_third_party_address
     end
     if step == "recipient-details"
       object.validate_recipient
       object.validate_third_party_relationship
+      object.validate_third_party_address
     end
     object.validate_received_date if step == "date-received"
   end
@@ -68,8 +70,8 @@ module OffenderSARCaseForm
   end
 
   def set_empty_value_if_unset_for_date(params, field)
-    params.merge!(field => "") unless params["#{field}_yyyy"].present? && 
-                                params["#{field}_mm"].present? && 
+    params.merge!(field => "") unless params["#{field}_yyyy"].present? &&
+                                params["#{field}_mm"].present? &&
                                 params["#{field}_dd"].present?
   end
 
