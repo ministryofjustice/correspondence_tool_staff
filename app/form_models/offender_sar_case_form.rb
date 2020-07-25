@@ -26,12 +26,10 @@ module OffenderSARCaseForm
     if step == "requester-details"
       object.validate_third_party_names
       object.validate_third_party_relationship
-      object.validate_third_party_address
     end
     if step == "recipient-details"
       object.validate_recipient
       object.validate_third_party_relationship
-      object.validate_third_party_address
     end
     object.validate_received_date if step == "date-received"
   end
@@ -47,15 +45,13 @@ module OffenderSARCaseForm
       set_empty_value_if_unset(params, "flag_as_high_profile")
     when "requester-details"
       set_empty_value_if_unset(params, "third_party")
-      clear_param_if_condition(params, "third_party_name", "third_party", "true")
-      clear_param_if_condition(params, "third_party_company_name", "third_party", "true")
-      clear_param_if_condition(params, "third_party_relationship", "third_party", "true")
-      # set_empty_value_if_unset(params, "reply_method")
-      # clear_param_if_condition(params, "email", "reply_method", "send_by_email")
-      clear_param_if_condition(params, "postal_address", "reply_method", "send_by_post")
+      clear_param_unless_condition(params, "third_party_name", "third_party", "true")
+      clear_param_unless_condition(params, "third_party_company_name", "third_party", "true")
+      clear_param_unless_condition(params, "third_party_relationship", "third_party", "true")
+      clear_param_unless_condition(params, "postal_address", "third_party", "true")
     when "recipient-details"
       set_empty_value_if_unset(params, "recipient")
-      clear_param_if_condition(params, "postal_address", "third_party", "true")
+      clear_param_unless_condition(params, "postal_address", "recipient", "third_party_recipient")
     when "requested-info"
       # no tweaking needed
     when "date-received"
@@ -75,7 +71,7 @@ module OffenderSARCaseForm
                                 params["#{field}_dd"].present?
   end
 
-  def clear_param_if_condition(params, target_field, check_field, value)
+  def clear_param_unless_condition(params, target_field, check_field, value)
     params.delete(target_field) unless params[check_field] == value
   end
 

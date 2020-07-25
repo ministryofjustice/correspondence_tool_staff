@@ -161,16 +161,6 @@ class Case::SAR::Offender < Case::Base
     errors[:third_party_relationship].any?
   end
 
-  def validate_third_party_address
-    if (third_party || recipient == 'third_party_recipient') && postal_address.blank?
-        errors.add(
-          :postal_address,
-          I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_address.blank')
-        )
-    end
-    errors[:third_party_relationship].any?
-  end
-
   def default_managing_team
     BusinessUnit.find_by!(code: Settings.offender_sar_cases.default_managing_team)
   end
