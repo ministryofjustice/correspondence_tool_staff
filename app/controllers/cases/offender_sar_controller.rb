@@ -165,5 +165,8 @@ module Cases
       session[:offender_sar_state] = session[:offender_sar_state].merge params
     end
       
+    def preserve_step_state
+      @case.current_step = params['current_step']
+    end    
   end
 end

@@ -94,9 +94,7 @@ class CasesController < ApplicationController
     @case = Case::Base.find(params[:id])
     authorize @case
     @case = @case.decorate
-    if @case.respond_to?(:current_step)
-      @case.current_step = params['current_step']
-    end
+    preserve_step_state
 
     service = CaseUpdaterService.new(current_user, @case, edit_params)
     service.call
@@ -208,5 +206,11 @@ class CasesController < ApplicationController
     elsif policy(Case::Base).can_manage_offender_sar?
       @permitted_correspondence_types << CorrespondenceType.offender_sar
     end
+  end
+
+  def preserve_step_state
+    # this method left intentionally blank
+    # used by Steppable cases where validation fails on a particular step
+    # e.g. Offender SAR
   end
 end
