@@ -39,6 +39,20 @@ class Letter
     end
   end
 
+  def prison_numbers
+    if values.prison_number?
+      prison_num = values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip
+      case @letter_template.template_type
+      when "acknowledgement"
+        if prison_num.match?(/[ ]/)
+          " - " << values.prison_number << ' [DELETE AS APPROPRIATE]'
+        else
+          " - " << values.prison_number
+       end
+      end
+    end
+  end
+
   def address
     case @letter_template.template_type
     when "dispatch"
@@ -52,4 +66,3 @@ class Letter
     values.third_party_company_name if values.third_party_company_name.present?
   end
 end
-

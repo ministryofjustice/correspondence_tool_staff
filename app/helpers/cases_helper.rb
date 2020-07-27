@@ -338,5 +338,4 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       t('helpers.label.offender_sar.recipient_type.third_party')
     end
   end
-
 end

@@ -25,7 +25,7 @@ section.letter--from-section
     | Date: #{Date.today.strftime('%e %b %Y')}
 
 p
-  | #{@letter.name} <br>
+  | #{@letter.name}#{@letter.prison_numbers} <br>
   - if @letter.company_name
     | #{@letter.company_name} <br>
   | #{simple_format @letter.address, {}, wrapper_tag: 'span'}
