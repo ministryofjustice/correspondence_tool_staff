@@ -122,7 +122,7 @@ module Cases
       @filter_crumbs = @query.filter_crumbs
       @current_tab_name = 'all_cases'
       @can_add_case = policy(Case::Base).can_add_case?
-
+      @reports_for_open_cases = get_reports_for_open_cases
       respond_to do |format|
         format.html { render :index }
         format.csv { send_csv_cases 'open' }
@@ -181,6 +181,39 @@ module Cases
       end
 
       url_for(new_params)
+    end
+
+
+    def include_offender_sar
+      current_user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar)
+    end 
+
+    def include_foi
+      current_user.permitted_correspondence_types.include?(CorrespondenceType.foi) ||
+      current_user.permitted_correspondence_types.include?(CorrespondenceType.overturned_foi)
+    end 
+
+    def include_sar
+      current_user.permitted_correspondence_types.include?(CorrespondenceType.sar) ||
+      current_user.permitted_correspondence_types.include?(CorrespondenceType.overturned_sar)
+    end 
+
+    def get_reports_for_open_cases
+      reports = []
+      ReportType.all.each do |report_type|
+        if report_type.abbr.match(/^R30/).nil?
+          next
+        end 
+
+        if report_type.offender_sar and include_offender_sar
+          reports << report_type
+        elsif report_type.foi and include_foi
+          reports << report_type
+        elsif report_type.sar and include_sar
+          reports << report_type
+        end
+      end
+      reports
     end
   end
 end

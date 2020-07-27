@@ -18,12 +18,6 @@ module Stats
       'Includes a list of all teams and users that respond to requests for information'
     end
 
-    class << self
-      def xlsx?
-        false
-      end
-    end
-
     # Note: Does not run parent constructor
     def initialize(**)
       @result_set = [COLUMN_HEADINGS]

@@ -17,9 +17,16 @@
             strong
               = @cases.total_count
             = " #{ 'case'.pluralize(@cases.total_count)} found"
-          .download-cases-link.column-half
-            = download_csv_link(request.fullpath)
-            | &nbsp;(.csv file)
+          - if @reports_for_open_cases.nil?
+            .download-cases-link.column-half
+              = download_csv_link(request.fullpath)
+              | &nbsp;(.csv file)
+          - else
+            - @reports_for_open_cases.each do |report_type|
+              .download-cases-link
+                = download_csv_link(request.fullpath, report_type.abbr, report_type.full_name)
+                | &nbsp;(.csv' file)
+
       thead
         th scope='col'
           = t('common.case_list.number_html')

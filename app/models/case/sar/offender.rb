@@ -224,6 +224,10 @@ class Case::SAR::Offender < Case::Base
     (!subject_recipient?) ? postal_address : subject_address
   end
 
+  def page_count
+    DataRequest.where(case_id: self.id).joins(:data_request_logs).sum(:num_pages)
+  end
+
   private
 
   def set_subject
