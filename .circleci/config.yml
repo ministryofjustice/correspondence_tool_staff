@@ -142,25 +142,12 @@ references:
       name: Run rubocop
       command: bundle exec rubocop
 
-  run_unit_tests: &run_unit_tests
+  run_unit_and_feature_tests: &run_unit_and_feature_tests
     run:
-      name: Run unit tests
+      name: Run unit and feature tests
       command: |
-        bundle exec rspec
-# This command is from the CircleCI docs and is for running in a time
-# base system. We currenly are not using it, but here if we want to
-# implement it
-#
-# bundle exec rspec --profile 10 \
-#                   --format RspecJunitFormatter \
-#                   --out test_results/rspec.xml \
-#                   --format progress \
-#                   $(circleci tests glob "spec/**/*_spec.rb" | circleci tests split --split-by=timings)
-  run_feature_tests: &run_feature_tests
-    run:
-      name: Run feature tests
-      command: |
-        bundle exec rspec spec/features
+        bundle exec rspec 
+
 
   set_up_aws_cli: &set_up_aws_cli
     run:
@@ -224,9 +211,9 @@ references:
         ./deploy.sh $build_tag demo circleci
 
   deploy_to_production: &deploy_to_production
-     run:
-       name: Deploy to production environment
-       command: |
+    run:
+      name: Deploy to production environment
+      command: |
         setup-kube-auth
         kubectl config use-context production
         build_tag=`cat /tmp/workspace/build_tag`
@@ -251,8 +238,7 @@ jobs:
       - *set_up_the_database
       - *rubocop
       - *update_chromedriver
-      - *run_unit_tests
-      - *run_feature_tests
+      - *run_unit_and_feature_tests
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
@@ -286,8 +272,7 @@ jobs:
           paths:
             - build_tag
 
-# Both should be identical but different names
-  deploy_branch_to_dev:
+  dev_deployment_tasks: &do_dev_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -301,21 +286,10 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_dev
 
-  deploy_master_to_dev:
-    <<: *deploy_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
-      - *deploy_to_dev
+  deploy_branch_to_dev: *do_dev_deployment_tasks 
+  deploy_master_to_dev: *do_dev_deployment_tasks
 
-  deploy_branch_to_staging:
+  staging_deployment_tasks: &do_staging_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -329,35 +303,10 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_staging
 
-  deploy_master_to_staging:
-    <<: *deploy_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
-      - *deploy_to_staging
+  deploy_branch_to_staging: *do_staging_deployment_tasks
+  deploy_master_to_staging: *do_staging_deployment_tasks
 
-  deploy_branch_to_qa:
-    <<: *deploy_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
-      - *deploy_to_qa
-
-  deploy_master_to_qa:
+  qa_deployment_tasks: &do_qa_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -370,8 +319,11 @@ jobs:
       - *configure_gpg
       - *decrypt_secrets
       - *deploy_to_qa
+  
+  deploy_branch_to_qa: *do_qa_deployment_tasks
+  deploy_master_to_qa: *do_qa_deployment_tasks
 
-  deploy_branch_to_demo:
+  demo_deployment_tasks: &do_demo_deployment_tasks
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -385,19 +337,8 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_demo
 
-  deploy_master_to_demo:
-    <<: *deploy_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: /tmp/workspace
-      - *install_gpg
-      - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
-      - *decrypt_secrets
-      - *deploy_to_demo
+  deploy_branch_to_demo: *do_demo_deployment_tasks
+  deploy_master_to_demo: *do_demo_deployment_tasks
 
   deploy_master_to_production:
     <<: *deploy_container_config
@@ -411,9 +352,9 @@ jobs:
       - *create_gpg_key_file
       - *configure_gpg
       - *decrypt_secrets
-      - *deploy_to_production       
+      - *deploy_to_production     
 
-#  Workflows combine jobs to perform the actions
+#Workflows combine jobs to perform the actions
 
 workflows:
   version: 2
@@ -442,10 +383,8 @@ workflows:
           requires:
             - deploy_master_to_staging
       - deploy_master_to_production:
-           requires:
+          requires:
             - deploy_master_to_production_approval
-
-
       - deploy_master_to_qa_approval:
           type: approval
           requires:
