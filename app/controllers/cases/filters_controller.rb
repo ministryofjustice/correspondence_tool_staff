@@ -103,21 +103,7 @@ module Cases
           :responding_team
         )
 
-      query_list_params = search_params.merge(list_path: request.path)
-
-      service = CaseSearchService.new(
-        user: current_user,
-        query_type: :list,
-        query_params: query_list_params
-      )
-      service.call(full_list_of_cases)
-      @query = service.query
-
-      if service.error?
-        flash.now[:alert] = service.error_message
-      else
-        prepare_open_cases_collection(service)
-      end
+      call_search_service(full_list_of_cases)
 
       @filter_crumbs = @query.filter_crumbs
       @current_tab_name = 'all_cases'
@@ -144,6 +130,23 @@ module Cases
 
 
     private
+
+    def call_search_service(full_list_of_cases)
+      query_list_params = search_params.merge(list_path: request.path)
+      service = CaseSearchService.new(
+        user: current_user,
+        query_type: :list,
+        query_params: query_list_params
+      )
+      service.call(full_list_of_cases)
+      @query = service.query
+
+      if service.error?
+        flash.now[:alert] = service.error_message
+      else
+        prepare_open_cases_collection(service)
+      end
+    end
 
     def set_search_query
       service = CaseSearchService.new(
@@ -198,20 +201,30 @@ module Cases
       current_user.permitted_correspondence_types.include?(CorrespondenceType.overturned_sar)
     end 
 
+    def is_report_allowed(report_type)
+      result = report_type.offender_sar && include_offender_sar
+      if !result
+        result = report_type.foi && include_foi
+      end
+      if !result
+        result = report_type.sar && include_sar
+      end
+      result
+    end
+
+    def is_not_open_case_report(report_type)
+      report_type.abbr.match(/^R30/).nil?
+    end
+
     def get_reports_for_open_cases
       reports = []
       ReportType.all.each do |report_type|
-        if report_type.abbr.match(/^R30/).nil?
+        if is_not_open_case_report(report_type)
           next
         end 
-
-        if report_type.offender_sar and include_offender_sar
+        if is_report_allowed(report_type)
           reports << report_type
-        elsif report_type.foi and include_foi
-          reports << report_type
-        elsif report_type.sar and include_sar
-          reports << report_type
-        end
+        end 
       end
       reports
     end
