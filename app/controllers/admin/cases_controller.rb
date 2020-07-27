@@ -85,7 +85,14 @@ class Admin::CasesController < AdminController
   end
 
   def permitted_correspondence_types
-    @permitted_correspondence_types = current_user.permitted_correspondence_types
+    @permitted_correspondence_types = [
+      CorrespondenceType.foi,
+      CorrespondenceType.sar,
+      CorrespondenceType.ico,
+      CorrespondenceType.overturned_sar,
+      CorrespondenceType.overturned_foi, 
+      CorrespondenceType.offender_sar
+    ]
   end
 
   def correspondence_type_for_case
