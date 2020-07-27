@@ -14,4 +14,8 @@
   input name="current_step" type="hidden" value=@case.current_step
 
     = f.submit 'Continue', class: 'button'
+
+javascript:
+  document.getElementsByTagName('span')[4].innerText = ""; 
+  document.getElementsByTagName('label')[1].innerText = "Original case Number"
   
