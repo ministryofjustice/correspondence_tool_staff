@@ -19,9 +19,18 @@ module Cases
     def new
       permitted_correspondence_types
       authorize case_type, :can_add_case?
-
+      
       @case = OffenderSARCaseForm.new(session)
+
       @case.current_step = params[:step]
+      if @case.case.is_complaint? && params[:step] == 'subject-details'
+        flash[:notice] = "Case link created for #{@case.case.complaint_reference}" 
+      else
+        flash.clear
+      end
+    end
+
+    def update_complaint_case_with_linked_case_details(complaint_case, linked_case_reference)
     end
 
     def create

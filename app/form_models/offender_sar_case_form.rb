@@ -129,7 +129,7 @@ class OffenderSARCaseForm
     case step
     when "complaint-details"
       set_empty_value_if_unset(params, "flag_as_complaint")
-      set_empty_value_if_unset(params, "complaint_reference")
+      clear_param_if_condition(params, "complaint_reference", "flag_as_complaint", "true")
     when "subject-details"
       set_empty_value_if_unset(params, "subject_type")
       set_empty_value_if_unset(params, "date_of_birth")
@@ -173,6 +173,7 @@ class OffenderSARCaseForm
     request_dated_exists = values.fetch('request_dated', false)
     values['request_dated'] = nil unless request_dated_exists
 
+    
     @case = Case::SAR::Offender.new(values).decorate
   end
 end
