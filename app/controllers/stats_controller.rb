@@ -16,13 +16,13 @@ class StatsController < ApplicationController
   def show
     report = Report.new report_type_id: params[:id]
 
-    report_result = report.run_and_update!(user: current_user)
+    report.run_and_update!(user: current_user)
     if report.background_job?
       # should display the link for downloading
       flash[:download] = report_download_link(report.id, 'success')
       redirect_back(fallback_location: root_path)
     else
-      generate_final_report(report_result)
+      generate_final_report(report)
     end    
   end
 

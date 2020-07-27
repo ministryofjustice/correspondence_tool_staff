@@ -64,7 +64,6 @@ class Report < ApplicationRecord
     self.period_end = report_service.period_end
     self.persist_results = report_service.persist_results?
     self.save! if report_service.persist_results?
-    self if report_service.persist_results? else report_service
   end
 
   def to_csv
