@@ -144,7 +144,7 @@ references:
       command: bundle exec rubocop
 
   run_unit_and_feature_tests: &run_unit_and_feature_tests
-      run:
+    run:
       name: Run unit and feature tests
       command: |
         export PARALLEL_TEST_PROCESSORS=1
