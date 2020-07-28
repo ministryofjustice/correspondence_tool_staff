@@ -3,7 +3,6 @@ version: 2
 references:
   defaults: &defaults
     working_directory: ~/track-a-query
-    resource_class: small
 
 # Sets up the docker images and environment variables that we use
   test_container_config: &test_container_config
@@ -26,6 +25,7 @@ references:
           POSTGRES_DB: correspondence_platform_test
 
   deploy_container_config: &deploy_container_config
+    resource_class: small
     docker:
       - image: ${ECR_ENDPOINT}/cloud-platform/tools:circleci
 
