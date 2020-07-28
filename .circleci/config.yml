@@ -147,8 +147,9 @@ references:
     run:
       name: Run unit and feature tests
       command: |
-        bundle exec rspec 
-
+        rails parallel:create
+        rails parallel:load_structure 
+        rails parallel:spec
 
   set_up_aws_cli: &set_up_aws_cli
     run:
