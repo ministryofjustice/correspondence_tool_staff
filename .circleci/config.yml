@@ -147,7 +147,7 @@ references:
     run:
       name: Run unit and feature tests
       command: |
-        export PARALLEL_TEST_PROCESSORS=4
+        export PARALLEL_TEST_PROCESSORS=2
         bundle exec rails parallel:create
         bundle exec rails parallel:load_structure 
         bundle exec rails parallel:spec
@@ -228,7 +228,7 @@ jobs:
 
   build_and_test:
     <<: *test_container_config
-    resource_class: large
+    resource_class: medium
     working_directory: ~/track-a-query
     steps:
       - checkout
