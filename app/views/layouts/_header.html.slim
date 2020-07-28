@@ -4,7 +4,10 @@
       h1.page-heading
         - if content_for?(:sub_heading)
           span.page-heading--secondary
-            = yield :sub_heading
-            = ' '
+            - if @case != nil && @case.class != Case::SAR::OffenderDecorator && @case.case.is_complaint?
+              = "#{yield :sub_heading} COMPLAINT".gsub("case", "")
+            - else
+              = yield :sub_heading
+              = ' '
         span.page-heading--primary
           = yield :heading
