@@ -22,3 +22,7 @@
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'
+
+- if @case.case.is_complaint?
+  javascript:
+    document.getElementsByTagName('span')[3].innerText = "What is the date on the complaint?"; 
