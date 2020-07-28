@@ -157,6 +157,8 @@ en:
               blank: can't be blank if company name not given
             third_party_relationship:
               blank: can't be blank
+            third_party_address:
+              blank: can't be blank
         assignment:
           attributes:
             state:
@@ -797,7 +799,6 @@ en:
       offender_sar:
         sub_heading: Edit Offender SAR case
     update:
-      case_error: Unable to save case updates
       case_updated: Case updated
     filters:
       index:

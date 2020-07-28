@@ -93,13 +93,13 @@ class CasesController < ApplicationController
   def update
     @case = Case::Base.find(params[:id])
     authorize @case
+    @case = @case.decorate
+    preserve_step_state
 
     service = CaseUpdaterService.new(current_user, @case, edit_params)
     service.call
 
     if service.result == :error
-      @case = @case.decorate
-      flash[:notice] = t('.case_error')
       render 'cases/edit' and return
     end
 
@@ -110,7 +110,6 @@ class CasesController < ApplicationController
     end
 
     set_permitted_events
-    @case = @case.decorate
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     redirect_to case_path(@case)
   end
@@ -207,5 +206,11 @@ class CasesController < ApplicationController
     elsif policy(Case::Base).can_manage_offender_sar?
       @permitted_correspondence_types << CorrespondenceType.offender_sar
     end
+  end
+
+  def preserve_step_state
+    # this method left intentionally blank
+    # used by Steppable cases where validation fails on a particular step
+    # e.g. Offender SAR
   end
 end
