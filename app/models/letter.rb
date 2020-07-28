@@ -40,16 +40,13 @@ class Letter
   end
 
   def prison_numbers
+    values.prison_number
+  end
+
+  def multiple_prison_numbers?
     if values.prison_number?
-      prison_num = values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip
-      case @letter_template.template_type
-      when "acknowledgement"
-        if prison_num.match?(/[ ]/)
-          " - " << values.prison_number << ' [DELETE AS APPROPRIATE]'
-        else
-          " - " << values.prison_number
-       end
-      end
+      prison_num = values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip  #.match?(/[ ]/)
+      prison_num.match?(/[ ]/)
     end
   end
 
