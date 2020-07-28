@@ -120,7 +120,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_complaint_reference
-    if Case::SAR::Offender.find_by(number: complaint_reference).nil?
+    if Case::SAR::Offender.find_by(number: complaint_reference).nil? && flag_as_complaint == true 
       errors.add(
         :complaint_reference,
         'Submitted reference does not relate to a case that exists.'
