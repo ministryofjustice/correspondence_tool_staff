@@ -619,7 +619,7 @@ en:
         one: Information Officer
         other: Information Officers
       responding_team: Business unit
-      sar_response_address: Where should the data be sent
+      sar_response_address: Where should the data be sent?
       status: Status
       subject_address: Location
       subject_aliases: Alias
