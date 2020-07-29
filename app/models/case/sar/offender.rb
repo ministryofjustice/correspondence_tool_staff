@@ -24,7 +24,6 @@ class Case::SAR::Offender < Case::Base
     received_date
   ].freeze
 
-  include Steppable
 
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
@@ -80,7 +79,6 @@ class Case::SAR::Offender < Case::Base
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
   validates :date_of_birth, presence: true
 
-  validates_presence_of :postal_address, if: :third_party?
   validates_presence_of :subject_address
 
   validates :subject_full_name, presence: true
@@ -91,6 +89,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_names
   validate :validate_recipient
   validate :validate_third_party_relationship
+  validate :validate_third_party_address
 
   validate :validate_request_dated
 
@@ -113,7 +112,7 @@ class Case::SAR::Offender < Case::Base
     end
     errors[:date_of_birth].any?
   end
-  
+
   def validate_request_dated
     if request_dated.present? && self.request_dated > Date.today
       errors.add(
@@ -159,7 +158,17 @@ class Case::SAR::Offender < Case::Base
           I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_relationship.blank')
         )
     end
-    errors[:third_party_relationship].any? 
+    errors[:third_party_relationship].any?
+  end
+
+  def validate_third_party_address
+    if (third_party || recipient == 'third_party_recipient') && postal_address.blank?
+        errors.add(
+          :postal_address,
+          I18n.t('activerecord.errors.models.case/sar/offender.attributes.third_party_address.blank')
+        )
+    end
+    errors[:third_party_relationship].any?
   end
 
   def default_managing_team

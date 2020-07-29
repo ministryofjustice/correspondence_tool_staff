@@ -335,4 +335,15 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       kase.has_attribute?(:escalation_deadline) &&
       kase.within_escalation_deadline?
   end
+
+  def get_sar_recipient_label(recipient)
+    if recipient == 'requester_recipient'
+      t('helpers.label.offender_sar.recipient_type.recipient')
+    elsif recipient == 'subject_recipient'
+      t('helpers.label.offender_sar.recipient_type.data_subject')
+    else
+      t('helpers.label.offender_sar.recipient_type.third_party')
+    end
+  end
+
 end

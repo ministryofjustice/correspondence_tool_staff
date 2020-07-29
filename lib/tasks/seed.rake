@@ -20,7 +20,7 @@ namespace :db do
     end
 
     desc 'seeds live team and user data'
-    task :prod => [ 'db:seed:clear', 'db:seed:prod:misc', 'db:seed:prod:teams', 'db:seed:prod:users' ] do
+    task :prod => [ 'db:seed:clear', 'db:seed:prod:misc', 'db:seed:prod:teams', 'db:seed:prod:users', 'db:seed:prod:letter_templates' ] do
     end
 
     namespace :prod do
@@ -33,9 +33,6 @@ namespace :db do
         require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
         puts 'Seeding Case closure metadata'
         CaseClosure::MetadataSeeder.seed!
-        require File.join(Rails.root, 'db', 'seeders', 'letter_template_seeder')
-        puts 'Seeding Letter Templates'
-        LetterTemplateSeeder.new.seed!
       end
 
       desc 'Seed teams for production environment'
@@ -55,6 +52,12 @@ namespace :db do
       task :group_emails => :environment do
         require File.join(Rails.root, 'db', 'seeders', 'group_email_seeder')
         GroupEmailSeeder.new.seed!
+      end
+
+      desc 'Seed letter templates for production environment'
+      task letter_templates: :environment do
+        require File.join(Rails.root, 'db', 'seeders', 'letter_template_seeder')
+        LetterTemplateSeeder.new.seed!
       end
     end
 

@@ -20,7 +20,7 @@ feature 'Offender SAR Case editing by a manager' do
     click_on "Continue"
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
     expect(cases_show_page).to have_content 'Bob Hope'
-    expect(cases_show_page).to have_content 'Case edited successfully'
+    expect(cases_show_page).to have_content 'Case updated'
     expect(cases_show_page).to have_content 'Case details edited'
 
     cases_show_page.offender_sar_requester_details.change_link.click
@@ -29,7 +29,7 @@ feature 'Offender SAR Case editing by a manager' do
     click_on "Continue"
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
     expect(cases_show_page).to have_content 'Bob Hope Superstar'
-    expect(cases_show_page).to have_content 'Case edited successfully'
+    expect(cases_show_page).to have_content 'Case updated'
     expect(cases_show_page).to have_content 'Case details edited'
 
     cases_show_page.offender_sar_date_received.change_link.click
@@ -38,7 +38,7 @@ feature 'Offender SAR Case editing by a manager' do
     click_on "Continue"
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
     expect(cases_show_page).to have_content I18n.l(1.week.ago.to_date, format: :default)
-    expect(cases_show_page).to have_content 'Case edited successfully'
+    expect(cases_show_page).to have_content 'Case updated'
     expect(cases_show_page).to have_content 'Case details edited'
 
     cases_show_page.offender_sar_requested_info.change_link.click
@@ -47,7 +47,7 @@ feature 'Offender SAR Case editing by a manager' do
     click_on "Continue"
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
     expect(cases_show_page).to have_content "In a hole in the ground there lived a Hobbit."
-    expect(cases_show_page).to have_content 'Case edited successfully'
+    expect(cases_show_page).to have_content 'Case updated'
     expect(cases_show_page).to have_content 'Case details edited'
   end
 end

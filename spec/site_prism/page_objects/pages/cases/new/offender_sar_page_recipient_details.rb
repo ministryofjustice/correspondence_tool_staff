@@ -20,17 +20,17 @@ module PageObjects
           def fill_in_case_details(params={})
             kase = FactoryBot.build :offender_sar_case, params
 
-            if kase.recipient == 'subject_recipient'
-              choose('offender_sar_recipient_subject_recipient', visible: false)
+            if kase.third_party?
+              choose('offender_sar_recipient_third_party_recipient', visible: false)
+              third_party_relationship.set kase.third_party_relationship
+              third_party_name.set kase.third_party_name
+              third_party_company_name.set kase.third_party_company_name
+              postal_address.set kase.postal_address
             else
-              if kase.third_party?
-                choose('offender_sar_recipient_requester_recipient', visible: false)
-              else
-                choose('offender_sar_recipient_third_party_recipient', visible: false)
-                third_party_relationship.set kase.third_party_relationship
-                third_party_name.set kase.third_party_name
-                third_party_company_name.set kase.third_party_company_name
-                postal_address.set kase.postal_address
+              if kase.recipient == 'subject_recipient'
+                choose('offender_sar_recipient_subject_recipient', visible: false)
+              elsif kase.recipient == 'requester_recipient'
+                  choose('offender_sar_recipient_requester_recipient', visible: false)
               end
             end
           end

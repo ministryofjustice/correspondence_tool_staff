@@ -22,6 +22,8 @@ module PageObjects
 
           element :other_subject_ids, '#offender_sar_other_subject_ids'
 
+          element :case_reference_number, '#offender_sar_case_reference_number'
+
           element :date_of_birth_dd, '#offender_sar_date_of_birth_dd'
 
           element :date_of_birth_mm, '#offender_sar_date_of_birth_mm'
@@ -41,6 +43,8 @@ module PageObjects
             subject_aliases.set kase.subject_aliases
             previous_case_numbers.set kase.previous_case_numbers
             set_date_of_birth kase.date_of_birth
+            other_subject_ids.set kase.other_subject_ids
+            case_reference_number.set kase.case_reference_number
 
             choose('offender_sar_subject_type_offender', visible: false)
             choose('offender_sar_flag_as_high_profile_false', visible: false)
