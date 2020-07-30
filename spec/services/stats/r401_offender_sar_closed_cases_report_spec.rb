@@ -59,7 +59,7 @@ module Stats
 
       context '#case_scope' do
         it 'ignores any selected periods' do
-          expected = ["closed offender sar name 1", "closed offender sar1 name 2"]
+          expected = [@closed_offender_sar.name, @closed_offender_sar1.name]
           expect(@report.case_scope.map(&:name)).to match_array(expected)
         end
       end
