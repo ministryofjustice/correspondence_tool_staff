@@ -1509,6 +1509,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it 'returns correct number of days late for closed case' do
+      closed_kase.external_deadline = 3.days.before(Date.today)
       closed_kase.date_responded = Date.yesterday
       expect(closed_kase.num_days_late).to eq 2
     end
