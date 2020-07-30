@@ -15,6 +15,7 @@
 #
 
 require 'rails_helper'
+require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
 
 RSpec.describe ReportType, type: :model do
   after(:all) { ReportType.delete_all }
@@ -128,4 +129,24 @@ RSpec.describe ReportType, type: :model do
       end
     end
   end
+
+  describe '#available_standard_reports' do
+    before do
+      ReportTypeSeeder.new.seed!
+    end 
+    after do 
+      ReportType.delete_all
+    end
+
+    it 'returns all availabe standard reports' do
+      expect(ReportType.available_standard_reports)
+      .to match_array ReportType.where(abbr: ['R005', 'R105', 'R205'])
+    end
+
+    it 'returns only offender sar standard reports when the scope is offender sar' do
+      
+      expect(ReportType.available_standard_reports([CorrespondenceType.offender_sar]))
+      .to match_array ReportType.where(abbr: ['R205'])
+    end
+  end 
 end

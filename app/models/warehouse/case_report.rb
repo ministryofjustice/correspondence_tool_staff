@@ -48,7 +48,7 @@ module Warehouse
         case_report.date_compliant_draft_uploaded = kase.date_draft_compliant
         case_report.trigger = kase.flagged? ? 'Yes' : nil
         case_report.name = kase.name
-        case_report.requester_type = kase.sar? ? nil : kase.requester_type.humanize
+        case_report.requester_type = get_requester_type(kase)
         case_report.message = self.dequote_and_truncate(kase.message)
         case_report.info_held = kase.info_held_status&.name
         case_report.outcome = kase.outcome&.name
@@ -162,6 +162,17 @@ module Warehouse
 
       def humanize_boolean(boolean)
         boolean ? 'Yes' : nil
+      end
+
+      private 
+      def get_requester_type(kase)
+        if kase.offender_sar?
+          kase.third_party? ? kase.third_party_relationship : 'data subject'
+        elsif kase.sar?
+          nil
+        else
+          kase.requester_type.humanize
+        end
       end
     end
   end
