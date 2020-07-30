@@ -1,16 +1,17 @@
 require 'rails_helper'
 
-
-class DummyWrongTestFirst
-  def initialize(**options)
-  end
-end
-
-class DummyReportTest < Stats::BaseClosedCasesReport
-  def initialize(**options)
+module TestJobForCloseReport
+  class DummyWrongTestFirst
+    def initialize(**options)
+    end
   end
 
-  def process(offset, report_job_guid=nil)
+  class DummyReportTest < Stats::BaseClosedCasesReport
+    def initialize(**options)
+    end
+
+    def process(report_guid:)
+    end
   end
 end
 
@@ -41,23 +42,23 @@ describe Warehouse::ClosedCasesCreateJob, type: :job do
     end
 
     it 'logs to Rails logger if the report class is not subclass of Stats::BaseClosedCasesReport' do
-      expect(Rails.logger).to receive(:error).with("DummyWrongTestFirst: is not subclass of Stats::BaseClosedCasesReport")
-      job.perform('DummyWrongTestFirst', 'test', 0, 0, 0)
+      expect(Rails.logger).to receive(:error).with("TestJobForCloseReport::DummyWrongTestFirst: is not subclass of Stats::BaseClosedCasesReport")
+      job.perform('TestJobForCloseReport::DummyWrongTestFirst', 'test', 0, 0, 0)
     end
 
     it 'performs later' do
       perform_enqueued_jobs do
         expect_any_instance_of(described_class).to receive(:perform).with(
-            "DummyReportTest", "test", 0, 0, 0)
-        described_class.perform_later("DummyReportTest", "test", 0, 0, 0)
+            "TestJobForCloseReport::DummyReportTest", "test", 0, 0, 0)
+        described_class.perform_later("TestJobForCloseReport::DummyReportTest", "test", 0, 0, 0)
       end
     end
 
     it 'process the report job' do
-      dummyreport = DummyReportTest.new
-      allow(DummyReportTest).to receive(:new).and_return(dummyreport)
+      dummyreport = TestJobForCloseReport::DummyReportTest.new
+      allow(TestJobForCloseReport::DummyReportTest).to receive(:new).and_return(dummyreport)
       allow(dummyreport).to receive(:process)
-      job.perform("DummyReportTest", "test", user.id, 0, 0)   
+      job.perform("TestJobForCloseReport::DummyReportTest", "test", user.id, 0, 0)   
       
       expect(dummyreport).to have_received(:process)
     end
