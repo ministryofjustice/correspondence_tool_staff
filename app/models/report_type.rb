@@ -90,8 +90,6 @@ class ReportType < ApplicationRecord
     class_constant.description
   end
 
-  private 
-
   def self.get_report_categories(correspondence_types=nil)
     if correspondence_types.nil?
       REPORT_TYPE_CORRESPONDENCE_TYPE_MAP.keys()
