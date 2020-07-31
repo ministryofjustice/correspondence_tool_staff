@@ -2,6 +2,8 @@ require 'rails_helper'
 
 module Stats
   describe R006KiloMap do
+    before(:all) { create_report_type(abbr: :r006)}
+    after(:all) { DbHousekeeping.clean(seed: true) }
 
     it 'produces a kilo map as a csv' do
       dacu_disclosure = BusinessUnit.dacu_disclosure
@@ -20,7 +22,13 @@ module Stats
       map = R006KiloMap.new
       map.run
 
+      expect(map.persist_results?).to eq false
+      expect(map.report_type).to eq ReportType.r006
+
       csv_lines = map.to_csv.map { |row| row.map(&:value) }
+      
+      expect(csv_lines).to eq map.results
+
       expect(csv_lines.shift).to eq header_line.split(',')
       expect(CSV.generate_line(csv_lines.shift).chomp).to match operations_line
       expect(CSV.generate_line(csv_lines.shift).chomp).to match dacu_directorate_line
@@ -34,6 +42,9 @@ module Stats
       # expect(csv_lines.shift).to match press_office_second_user_line
       expect(CSV.generate_line(csv_lines.shift).chomp).to match private_office_line
       # expect(csv_lines.shift).to match private_office_second_user_line
+
+      map.set_results([['test']])
+      expect(map.results).to eq [['test']]
     end
 
     def header_line
