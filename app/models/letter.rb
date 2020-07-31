@@ -39,17 +39,6 @@ class Letter
     end
   end
 
-  def prison_numbers
-    values.prison_number
-  end
-
-  def multiple_prison_numbers?
-    if values.prison_number?
-      prison_num = values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip  #.match?(/[ ]/)
-      prison_num.match?(/[ ]/)
-    end
-  end
-
   def address
     case @letter_template.template_type
     when "dispatch"
