@@ -68,10 +68,13 @@ describe 'cases/searches/show.html.slim', type: :view do
   context 'found some results' do
     before :each do
       login_as create(:user)
+      create :report_type
+      stanard_report_1 = create :report_type, standard_report: true
       create :case
       assign(:query, create(:search_query, search_text: 'some search term'))
       assign(:cases,Case::Base.all.page(1).decorate)
       assign(:action_url, '/cases/search')
+      assign(:general_available_reports, [stanard_report_1])
       render
       cases_search_page.load(rendered)
     end

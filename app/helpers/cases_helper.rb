@@ -5,15 +5,15 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   def download_csv_link(full_path, csv_report=nil, download_link_name=nil)
     uri = URI(full_path)
     csv_path = "#{uri.path}.csv"
-    querys = []
+    queries = []
     if uri.query.present?
-      querys << uri.query
+      queries << uri.query
     end
     if !csv_report.blank?
-      querys << "report=#{csv_report}"
+      queries << "report=#{csv_report}"
     end
-    if !querys.empty?
-      csv_path += "?#{querys.join('&')}"
+    if !queries.empty?
+      csv_path += "?#{queries.join('&')}"
     end
     link_to download_link_name || 'Download cases', csv_path
   end

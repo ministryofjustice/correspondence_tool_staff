@@ -1,9 +1,9 @@
 require 'csv'
 
 module Stats
-  class R301OffenderSarOpenCasesReport < BaseReport
+  class R901OffenderSarCasesReport < BaseReport
 
-    COLUMN_HEADINGS = [
+    CSV_COLUMN_HEADINGS = [
         'Case number',
         'Date received at MOJ',
         'Final deadlinne', 
@@ -18,11 +18,11 @@ module Stats
     ]
 
     def self.title
-      'Open cases report for Offender SAR'
+      'Cases report for Offender SAR'
     end
 
     def self.description
-      'The list of open Offender SAR cases within allowed and filtered scope'
+      'The list of Offender SAR cases within allowed and filtered scope'
     end
 
     def initialize(**options)
@@ -31,7 +31,7 @@ module Stats
     end 
 
     def case_scope
-      @case_scope.where(type: 'Case::SAR::Offender').where("current_state != 'closed'")
+      @case_scope.where(type: 'Case::SAR::Offender')
     end
 
     def run(*)
@@ -58,7 +58,7 @@ module Stats
     end
 
     def report_type
-      ReportType.r301
+      ReportType.r901
     end
   end
 end

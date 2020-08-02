@@ -5,7 +5,7 @@ describe 'CSVGenerator' do
 
   class DummyCaseCSVExporter
 
-    COLUMN_HEADINGS = [
+    CSV_COLUMN_HEADINGS = [
       'test column'
     ]
 
@@ -26,7 +26,7 @@ describe 'CSVGenerator' do
       kase1 = double Case::Base, to_csv: k1_fields
       kase2 = double Case::Base, to_csv: k2_fields
 
-      generator = CSVGenerator.new([kase1, kase2])
+      generator = CSVGenerator.new([kase1, kase2], CSVExporter.new(nil))
       expected = ["#{CSVExporter::CSV_COLUMN_HEADINGS.join(',')}\n",
                   "#{k1_fields.join(',')}\n",
                   "#{k2_fields.join(',')}\n"]
@@ -39,7 +39,7 @@ describe 'CSVGenerator' do
       
       dummy_case_csv_exporter = DummyCaseCSVExporter.new()
       generator = CSVGenerator.new([kase1, kase2], dummy_case_csv_exporter)
-      expected = ["#{DummyCaseCSVExporter::COLUMN_HEADINGS.join(',')}\n",
+      expected = ["#{DummyCaseCSVExporter::CSV_COLUMN_HEADINGS.join(',')}\n",
                   "1\n",
                   "2\n"]
       expect(generator.to_a).to eq expected

@@ -1,16 +1,16 @@
 require 'csv'
 
 module Stats
-  class R300GeneralOpenCasesReport < BaseReport
+  class R900CasesReport < BaseReport
 
-    COLUMN_HEADINGS = CSVExporter::CSV_COLUMN_HEADINGS
+    CSV_COLUMN_HEADINGS = CSVExporter::CSV_COLUMN_HEADINGS
 
     def self.title
-      'Open cases report'
+      'General cases report'
     end
 
     def self.description
-      'The list of open within allowed and filtered scope'
+      'The list of cases within allowed and filtered scope'
     end
 
     def initialize(**options)
@@ -19,7 +19,7 @@ module Stats
     end 
 
     def case_scope
-      @case_scope.where("current_state != 'closed'")
+      @case_scope
     end
 
     def run(*)
@@ -34,7 +34,7 @@ module Stats
     end
 
     def report_type
-      ReportType.r300
+      ReportType.r900
     end
   end
 end

@@ -1,0 +1,58 @@
+require 'rails_helper'
+
+describe ReportTypePolicy::Scope do
+
+  describe 'report type scope policy' do
+    before(:all) do
+      # @responding_team              = find_or_create :foi_responding_team
+      # @responding_team_2            = create :responding_team
+      @managing_team                = create :team_dacu
+      # @dacu_disclosure              = create :team_dacu_disclosure
+
+      # @responder                    = @responding_team.responders.first
+      # @responder_2                  = @responding_team_2.responders.first
+      # @manager                      = @managing_team.managers.first
+      # @approver                     = @dacu_disclosure.approvers.first
+      @manager                        = find_or_create :disclosure_bmt_user
+      @responder                      = find_or_create :branston_user
+    
+      create :report_type
+      @report1 = create :report_type, standard_report: true, sar: true, foi: true
+      @report2 = create :report_type, custom_report: true, sar: true
+      @report3 = create :report_type, standard_report: true, foi: true
+      @report4 = create :report_type, custom_report: true, offender_sar: true
+
+      @manager.reload
+      @responder.reload
+    end
+
+    after(:all)  { DbHousekeeping.clean }
+
+
+    describe '#resolve' do
+      context 'managers' do
+        it 'returns the reports having sar and foi flags' do
+          manager_scope = Pundit.policy_scope(@manager, ReportType.all)
+          expect(manager_scope).to match_array([@report1, @report2, @report3])
+        end
+      end
+
+      context 'responders' do
+        it 'returns the reports having offender_sar flag' do
+          responder_scope = Pundit.policy_scope(@responder, ReportType.all)
+          expect(responder_scope).to match_array([@report4])
+        end
+      end
+
+      context 'user who is both manager and responder' do
+        it 'returns all the reports' do
+          @responder.team_roles << TeamsUsersRole.new(team: @managing_team,
+                                                     role: 'manager')
+          @responder.reload
+          resolved_scope = described_class.new(@responder, ReportType.all).resolve
+          expect(resolved_scope).to match_array([@report1, @report2, @report3, @report4])
+        end
+      end
+    end
+  end
+end

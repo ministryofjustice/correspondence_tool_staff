@@ -5,25 +5,17 @@ require 'csv'
 class CSVGenerator
   include Enumerable
 
-  def initialize(cases, case_csv_exporter=nil)
+  def initialize(cases, case_csv_exporter)
     @kases = cases
     @kase_csv_exporter = case_csv_exporter
   end
 
   def each
-    if @kase_csv_exporter
-      columns = @kase_csv_exporter.class::COLUMN_HEADINGS
-    else
-      columns = CSVExporter::CSV_COLUMN_HEADINGS
-    end 
+    columns = @kase_csv_exporter.class::CSV_COLUMN_HEADINGS
 
     yield CSV.generate_line columns
     @kases.each do |kase|
-      if @kase_csv_exporter
-        yield CSV.generate_line @kase_csv_exporter.analyse_case(kase)
-      else
-        yield CSV.generate_line kase.to_csv
-      end 
+      yield CSV.generate_line @kase_csv_exporter.analyse_case(kase)
     end
   end
 
