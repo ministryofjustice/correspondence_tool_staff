@@ -99,10 +99,12 @@ class ApplicationController < ActionController::Base
   end
 
   def get_avaliable_general_reports
-    @general_available_reports =  Pundit.policy_scope(current_user, get_general_reports)
+    if current_user
+      @general_available_reports =  Pundit.policy_scope(current_user, get_general_reports)
+    else
+      []
+    end
   end 
-
-  private 
 
   def get_general_reports
     ReportType.where("abbr like ? ","R90%").all
