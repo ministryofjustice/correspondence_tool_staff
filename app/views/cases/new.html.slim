@@ -15,3 +15,5 @@
 = render partial: "cases/#{@case.type_abbreviation.downcase}/new",
          locals: { kase: @case,
                    correspondence_type: @correspondence_type }
+
+= session[:offender_sar_state]
