@@ -43,6 +43,9 @@ feature 'respond to responder assignment' do
     expect(cases_show_page.notice.text).to eq "#{assigned_case.number} has been rejected."
 
     expect(assigned_case.reload.current_state).to eq 'unassigned'
+
+    click_on 'Cases'
+    expect(page).to_not have_content(assigned_case.number.to_s)
   end
 
   scenario 'kilo rejects assignment but provides no reasons for rejection' do
