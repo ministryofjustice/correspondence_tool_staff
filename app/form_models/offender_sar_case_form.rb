@@ -129,7 +129,6 @@ class OffenderSARCaseForm
     case step
     when "complaint-details"
       set_empty_value_if_unset(params, "flag_as_complaint")
-      # set_empty_value_if_unset(params, "date_of_birth")
       clear_param_if_condition(params, "complaint_reference", "flag_as_complaint", "true")
     when "subject-details"
       set_empty_value_if_unset(params, "subject_type")
@@ -154,6 +153,10 @@ class OffenderSARCaseForm
     params
   end
 
+  def set_default_date_of_birth
+    date_of_birth = Date.today.ago(20.years)
+  end
+
   def set_empty_value_if_unset(params, field)
     params.merge!(field => "") unless params[field].present?
   end
@@ -172,7 +175,9 @@ class OffenderSARCaseForm
 
     # similar workaround needed for request dated
     request_dated_exists = values.fetch('request_dated', false)
+    date_of_birth_exists = values.fetch('date_of_birth', false)
     values['request_dated'] = nil unless request_dated_exists
+    values['date_of_birth'] = nil unless request_dated_exists
 
     
     @case = Case::SAR::Offender.new(values).decorate
