@@ -83,10 +83,16 @@ class CaseFinderService
   end
 
   def open_cases_scope
-    scope.presented_as_open
-    .joins(:assignments)
-    .where(assignments: { state: ['pending', 'accepted']})
-    .distinct('case.id')
+    open_scope = scope.presented_as_open
+      .joins(:assignments)
+      .where(assignments: { state: ['pending', 'accepted']})
+      .distinct('case.id')
+    if user.responder_only?
+      case_ids = Assignment.with_teams(user.responding_teams).pluck(:case_id)
+      open_scope.where(id: case_ids)
+    else
+      open_scope
+    end
   end
 
   def open_flagged_for_approval_scope
