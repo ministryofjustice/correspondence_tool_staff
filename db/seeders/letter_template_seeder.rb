@@ -1,7 +1,7 @@
 class LetterTemplateSeeder
   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def seed!
-    puts "----Seeding Letter Templates----"
+    puts "---- Seeding Letter Templates ----"
 
     rec = LetterTemplate.find_by(abbreviation: 'prisoner-acknowledgement')
     rec = LetterTemplate.new if rec.nil?
@@ -69,12 +69,17 @@ class LetterTemplateSeeder
                 abbreviation: 'prisoner-disclosed-cover-letter',
                 template_type: 'dispatch',
                 body: <<~EOF
-                  <p><strong>[EO Custody Office]</strong>
+                  <p>EO Custody Office
+                  <br>[Address 2]
+                  <br>[Address 3]
+                  <br>[Town/City]
+                  <br>[County]
+                  <br>[Postcode]
                   <br>
                   <br>Dear Colleague
                   <br>
-                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  <br><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %></strong><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %></strong>
                   <br>
                   <br>Please find enclosed documents relating to a Subject Access Request (SAR) made under the Data Protection Act 2018 by the above offender.
                   <br>
@@ -182,10 +187,9 @@ class LetterTemplateSeeder
                 body: <<~EOF
                   <p><% if values.requester_name.present? %><%= values.requester_name %><br><% end %><% if values.third_party_company_name.present? %><%= values.third_party_company_name %><br><% end %><%= values.requester_address.gsub("\n", "<br>").html_safe %>
                   <br>
-                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  <br><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %></strong><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %>
-                  <br>
-                  <br>Dear Sirs
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %></strong>
+                  <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
                   <br>Thank you for your subject access request (SAR) dated <%= values.request_dated.strftime('%e %b %Y') %>.
                   <br>
@@ -215,10 +219,9 @@ class LetterTemplateSeeder
                 body: <<~EOF
                   <p><% if values.requester_name.present? %><%= values.requester_name %><br><% end %><% if values.third_party_company_name.present? %><%= values.third_party_company_name %><br><% end %><%= values.requester_address.gsub("\n", "<br>").html_safe %>
                   <br>
-                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  <br><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %></strong><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %>
-                  <br>
-                  <br>Dear Sirs
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %></strong>
+                  <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
                   <br>Thank you for your subject access request (SAR) dated <%= values.request_dated.strftime('%e %b %Y') %>.
                   <br>
@@ -245,11 +248,10 @@ class LetterTemplateSeeder
                 template_type: 'dispatch',
                 body: <<~EOF
                   <p><% if values.recipient_name.present? %><%= values.recipient_name %><br><% end %><% if values.third_party_company_name.present? %><%= values.third_party_company_name %><br><% end %><%= values.recipient_address.gsub("\n", "<br>").html_safe %>
+                  <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
-                  <br>Dear Sirs
-                  <br>
-                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  <br><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %></strong><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %></strong>
                   <br>
                   <br>I am writing in response to your request for information made under the Data Protection Act 1998 (DPA) for the above person.
                   <br>
@@ -285,11 +287,10 @@ class LetterTemplateSeeder
                 template_type: 'dispatch',
                 body: <<~EOF
                   <p><% if values.recipient_name.present? %><%= values.recipient_name %><br><% end %><% if values.third_party_company_name.present? %><%= values.third_party_company_name %><br><% end %><%= values.recipient_address.gsub("\n", "<br>").html_safe %>
+                  <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
-                  <p>Dear Sirs
-                  <br>
-                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST
-                  <br><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %></strong><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %></strong>
                   <br>
                   <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA).
                   <br>
