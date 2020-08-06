@@ -487,6 +487,7 @@ en:
           ex_offender: Ex-offender
           offender: Offender
           probation_service_user: "Probation service user"
+          ex_probation_service_user: "Ex-probation service user"
         recipient:
           subject_recipient: The data subject
           requester_recipient: The person making the request
