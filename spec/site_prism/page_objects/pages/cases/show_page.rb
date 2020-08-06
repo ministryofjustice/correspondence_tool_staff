@@ -98,6 +98,10 @@ module PageObjects
           element :change_link, 'a'
         end
 
+        section :offender_sar_external_deadline, '.section-external-deadline' do
+          element :change_link, 'a'
+        end
+
         section :case_history,
                 PageObjects::Sections::Cases::CaseHistorySection, '#case-history'
 
