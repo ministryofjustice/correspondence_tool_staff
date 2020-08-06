@@ -19,9 +19,25 @@ module Stats
     end
 
     class << self
-      def xlsx?
+      def persist_results?
         false
       end
+    end
+
+    def results
+      @result_set
+    end
+
+    def set_results(data)
+      @result_set = data
+    end
+
+    def report_type
+      ReportType.r006
+    end
+
+    def filename 
+      report_type.filename(self.class.report_format)
     end
 
     # Note: Does not run parent constructor
