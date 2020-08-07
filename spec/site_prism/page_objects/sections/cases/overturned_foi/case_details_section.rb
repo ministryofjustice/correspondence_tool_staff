@@ -19,7 +19,7 @@ module PageObjects
           element :delivery_method, 'tr.delivery-method td'
 
           element :date_received, 'tr.date-received td'
-          element :draft_deadline, 'tr.case-internal-deadline td'
+          element :draft_deadline, 'tr.case-internal-deadline td:first'
           element :final_deadline, 'tr.case-external-deadline td:first'
 
           element :date_responded, '.date-responded td'
