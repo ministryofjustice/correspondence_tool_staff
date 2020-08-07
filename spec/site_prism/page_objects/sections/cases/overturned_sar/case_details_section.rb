@@ -17,7 +17,7 @@ module PageObjects
           element :response_address, 'tr.response-address td'
           element :date_received, 'tr.date-received td'
           element :draft_deadline, 'tr.case-internal-deadline td'
-          element :final_deadline, 'tr.case-external-deadline td'
+          element :final_deadline, 'tr.case-external-deadline td:first'
 
           element :date_responded, '.date-responded td'
           element :timeliness, '.timeliness td'
