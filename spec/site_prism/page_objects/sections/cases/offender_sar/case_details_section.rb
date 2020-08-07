@@ -97,11 +97,11 @@ module PageObjects
 
         section :responders_details, '.responder-details' do
           section :team, '.team' do
-            element :data, 'td'
+            element :data, 'td:nth-child(2)'
           end
 
           section :name, '.responder-name' do
-            element :data, 'td'
+            element :data, 'td:nth-child(2)'
           end
         end
 
