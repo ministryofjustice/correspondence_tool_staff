@@ -17,7 +17,7 @@
             strong
               = @cases.total_count
             = " #{ 'case'.pluralize(@cases.total_count)} found"
-          - (@general_available_reports || []).each do |report_type|
+          - (@available_reports || []).each do |report_type|
             .download-cases-link
               = download_csv_link(request.fullpath, report_type.abbr)
               | &nbsp;(.csv' file)

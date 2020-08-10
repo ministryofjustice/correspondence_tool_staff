@@ -2,6 +2,7 @@ module Cases
   class FiltersController < ApplicationController
     include SetupCase
     include SearchParams
+    include AvailableCaseReports
 
     before_action :set_url, only: [:open]
     before_action :set_state_selector, only: [:open, :my_open]

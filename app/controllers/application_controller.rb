@@ -22,7 +22,6 @@ class ApplicationController < ActionController::Base
   before_action :set_global_nav, if: -> { current_user.present?  && global_nav_required? }
   before_action :add_security_headers
   before_action :set_hompepage_nav, if: -> { current_user.present?  && global_nav_required? }
-  before_action :get_avaliable_general_reports
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
@@ -96,18 +95,6 @@ class ApplicationController < ActionController::Base
     else
       send_csv_case_by_default(action_string)
     end
-  end
-
-  def get_avaliable_general_reports
-    if current_user
-      @general_available_reports =  Pundit.policy_scope(current_user, get_general_reports)
-    else
-      []
-    end
-  end 
-
-  def get_general_reports
-    ReportType.where("abbr like ? ","R90%").all
   end
 
   def send_csv_case_by_specific_report(specific_report)

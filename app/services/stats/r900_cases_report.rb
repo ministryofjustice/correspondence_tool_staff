@@ -6,7 +6,7 @@ module Stats
     CSV_COLUMN_HEADINGS = CSVExporter::CSV_COLUMN_HEADINGS
 
     def self.title
-      'General cases report'
+      'Cases report'
     end
 
     def self.description

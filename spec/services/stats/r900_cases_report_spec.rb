@@ -6,7 +6,7 @@ module Stats
 
     describe '.title' do
       it 'returns correct title' do
-        expect(described_class.title).to eq 'General cases report'
+        expect(described_class.title).to eq 'Cases report'
       end
     end
 
