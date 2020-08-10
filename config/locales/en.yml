@@ -485,6 +485,7 @@ en:
           detainee: Detainee
           ex_detainee: Ex-detainee
           ex_offender: Ex-offender
+          ex_probation_service_user: "Ex-probation service user"
           offender: Offender
           probation_service_user: "Probation service user"
         recipient:
