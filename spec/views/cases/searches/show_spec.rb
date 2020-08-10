@@ -74,7 +74,7 @@ describe 'cases/searches/show.html.slim', type: :view do
       assign(:query, create(:search_query, search_text: 'some search term'))
       assign(:cases,Case::Base.all.page(1).decorate)
       assign(:action_url, '/cases/search')
-      assign(:general_available_reports, [stanard_report_1])
+      assign(:available_reports, [stanard_report_1])
       render
       cases_search_page.load(rendered)
     end

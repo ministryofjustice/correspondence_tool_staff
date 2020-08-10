@@ -10,7 +10,7 @@ module AvailableCaseReports
     if current_user
       @available_reports = Pundit.policy_scope(current_user, get_cases_reports)
     else
-      []
+      @available_reports = []
     end
   end 
 
