@@ -1,5 +1,5 @@
 module ConfigurableStateMachine
-
+  #rubocop:disable Metrics/ClassLength
   class ConfigValidator
 
     attr_reader :errors
@@ -388,4 +388,5 @@ module ConfigurableStateMachine
     end
 
   end
+  # rubocop:enable Metrics/ClassLength
 end

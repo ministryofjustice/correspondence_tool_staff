@@ -1,5 +1,5 @@
+#rubocop:disable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength
 class LetterTemplateSeeder
-  #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def seed!
     puts "---- Seeding Letter Templates ----"
 
@@ -14,7 +14,7 @@ class LetterTemplateSeeder
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated.strftime('%e %b %Y') %>.
+                  <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %b %Y') %>.
                   <br>
                   <br>To complete the SAR, we will have to identify information from a number of business areas, including establishments. <strong>Because of this, there is very little information we can provide in response to enquiries. It would be helpful if you could limit any communication with the office during this period.</strong>
                   <br>
@@ -45,7 +45,7 @@ class LetterTemplateSeeder
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated.strftime('%e %b %Y') %>.
+                  <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %b %Y') %>.
                   <br>
                   <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty's Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
                   <br>
@@ -191,7 +191,7 @@ class LetterTemplateSeeder
                   <br><strong><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %></strong>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
-                  <br>Thank you for your subject access request (SAR) dated <%= values.request_dated.strftime('%e %b %Y') %>.
+                  <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %b %Y') %>.
                   <br>
                   <br>Please note that as your client has previously submitted a SAR and has been supplied with data, we will only be providing you with data not previously received, i.e. data from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
                   <br>
@@ -223,7 +223,7 @@ class LetterTemplateSeeder
                   <br><strong><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %></strong>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
-                  <br>Thank you for your subject access request (SAR) dated <%= values.request_dated.strftime('%e %b %Y') %>.
+                  <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %b %Y') %>.
                   <br>
                   <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty's Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
                   <br>
@@ -319,5 +319,5 @@ class LetterTemplateSeeder
                 )
 
   end
-  #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 end
+#rubocop:enable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength

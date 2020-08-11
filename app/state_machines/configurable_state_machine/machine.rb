@@ -1,4 +1,5 @@
 module ConfigurableStateMachine
+  #rubocop:disable Metrics/ClassLength
   class Machine
 
     def initialize(config:, kase:)
@@ -396,4 +397,5 @@ module ConfigurableStateMachine
       end
     end
   end
+  #rubocop:enable Metrics/ClassLength
 end
