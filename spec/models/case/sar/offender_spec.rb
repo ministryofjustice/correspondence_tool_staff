@@ -436,7 +436,7 @@ describe Case::SAR::Offender do
         subject_full_name: 'A',
         case_reference_number: 'B',
         date_of_birth: 'B',
-        name: 'B'
+        name: 'B',
         number: 'B',
         other_subject_ids: 'B',
         postal_address: 'B',
