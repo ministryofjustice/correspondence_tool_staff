@@ -11,7 +11,7 @@ class CasePrinter
     nil
   end
 
-  def generate_lines
+  def generate_lines #rubocop:disable Metrics/CyclomaticComplexity
     @lines <<  "Case id: #{@case.id}   from #{@case.name}    title: #{@case.message}"
     @lines <<  "               current_sate #{@case.current_state}"
     @lines <<  "                   workflow #{@case.workflow}"

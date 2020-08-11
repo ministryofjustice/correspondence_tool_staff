@@ -192,7 +192,7 @@ module CTS::Cases
       end
     end
 
-    def parse_options(options) # rubocop:disable Metrics/CyclomaticComplexity
+    def parse_options(options)
       @target_states = []
       @clear_cases = options.fetch(:clear, false)
       @dry_run = options.fetch(:dry_run, false)

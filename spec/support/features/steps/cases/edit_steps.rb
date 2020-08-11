@@ -164,7 +164,7 @@ def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false) # 
   end
 end
 
-def edit_ico_case_closure_step(kase:, decision_received_date: Date.today, ico_decision: 'upheld') # rubocop:disable Metrics/CyclomaticComplexity,  Metrics/MethodLength
+def edit_ico_case_closure_step(kase:, decision_received_date: Date.today, ico_decision: 'upheld') # rubocop:disable Metrics/MethodLength
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_closure
 

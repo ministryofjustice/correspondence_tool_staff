@@ -43,8 +43,6 @@ class BypassParamsManager
   def check_bypass_requested?
     !check_approval_requested?
   end
-
-  #rubocop:disable Metrics/CyclomaticComplexity
   def params_valid?
     if present? && check_approval_requested? && check_message_present?
       record_error 'Do not specify a reason for skipping further clearance if further clearance required.'

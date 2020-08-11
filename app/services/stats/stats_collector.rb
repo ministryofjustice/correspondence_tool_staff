@@ -69,7 +69,7 @@ module Stats
       # This is a lazy enumerator for each of the rows in the report.
       # so that we don't sit and timeout the browser waiting to fetch all
       # the rows from the database in a big report.
-      def each
+      def each #rubocop:disable Metrics/CyclomaticComplexity
         cols = column_names
         cols.unshift @first_column_header if @row_names_as_first_column
         @superheadings.each { |superheading| yield superheading }
