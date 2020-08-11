@@ -30,8 +30,8 @@ class DataRequestCreateService
     end
   end
 
-  def process?(location:, data:)
-    location&.strip.present? || data&.strip.present?
+  def process?(location:, request_type:)
+    location&.strip.present? || request_type&.strip.present?
   end
 
   def build_data_requests(new_data_requests)
@@ -39,13 +39,13 @@ class DataRequestCreateService
 
     new_data_requests.values.map do |data_request|
       next unless process?(
-        **data_request.to_h.symbolize_keys.slice(:location, :data)
+        **data_request.to_h.symbolize_keys.slice(:location, :request_type)
       )
 
       @case.data_requests.new(
         user: @user,
         location: data_request[:location],
-        data: data_request[:data],
+        request_type: data_request[:request_type],
         date_requested: Date.current,
       )
     end.compact

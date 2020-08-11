@@ -4,7 +4,7 @@ class DataRequest < ApplicationRecord
   has_many   :data_request_logs, after_add: :update_cached_attributes
 
   validates :location, presence: true, length: { maximum: 500 }
-  validates :data, presence: true
+  validates :request_type, presence: true
   validates :offender_sar_case, presence: true
   validates :user, presence: true
   validates :date_requested, presence: true
@@ -36,7 +36,7 @@ class DataRequest < ApplicationRecord
   end
 
   def clean_attributes
-    [:location, :data]
+    [:location, :request_type]
       .each { |f| self.send("#{f}=", self.send("#{f}")&.strip) }
       .each { |f| self.send("#{f}=", self.send("#{f}")&.upcase_first) }
   end

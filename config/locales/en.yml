@@ -409,6 +409,8 @@ en:
           closed: "Closed - %{ico_decision} by ICO"
       case:
         linked_case_number: Case number For example 170131001
+      data_request:
+        request_type: What data is needed?
       data_request_log:
         num_pages: Number of pages
       foi:
@@ -966,7 +968,7 @@ en:
         location_placeholder: Where is the data held? E.g. NPS, South East
         record_requests: Record requests
       update:
-        log_message: "%{data}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
+        log_message: "%{request_type}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
         log_pages: {
           zero: pages,
           one: page,

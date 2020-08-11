@@ -46,7 +46,7 @@ class DataRequestUpdateService
 
     # i18n-tasks-use t('cases.data_requests.update.log_message')
     I18n.t('.log_message',
-      data: @data_request.data,
+      request_type: @data_request.request_type,
       location: @data_request.location,
       date_received: @data_request.cached_date_received.strftime('%F'),
       old_pages: pages.first,

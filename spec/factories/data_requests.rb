@@ -4,7 +4,7 @@ FactoryBot.define do
     association :user
 
     location        { Faker::Company.name }
-    data            { Faker::Lorem.sentences(number: 5).join }
+    request_type    { Faker::Lorem.sentences(number: 5).join }
     date_requested  { Date.current }
   end
 end

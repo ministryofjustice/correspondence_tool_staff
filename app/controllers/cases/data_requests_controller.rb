@@ -84,7 +84,7 @@ module Cases
     end
 
     def create_params
-      params.require(:case).permit(data_requests_attributes: [:location, :data])
+      params.require(:case).permit(data_requests_attributes: [:location, :request_type])
     end
 
     def update_params

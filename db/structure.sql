@@ -521,12 +521,13 @@ CREATE TABLE public.data_requests (
     case_id integer NOT NULL,
     user_id integer NOT NULL,
     location character varying NOT NULL,
-    data text NOT NULL,
+    request_type text NOT NULL,
     date_requested date NOT NULL,
     cached_date_received date,
     cached_num_pages integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    data_request_note text DEFAULT ''::text NOT NULL
 );
 
 
@@ -1988,4 +1989,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20190912142741'),
 ('20191002003615'),
 ('20191028094210'),
-('20200705225914');
+('20200705225914'),
+('20200811151902'),
+('20200811154406');
