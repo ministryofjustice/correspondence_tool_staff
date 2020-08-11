@@ -8,7 +8,8 @@ RSpec.describe DataRequest, type: :model do
           offender_sar_case: build(:offender_sar_case),
           user: build(:user),
           location: 'X' * 500, # Max length
-          request_type: 'Please supply a huge list of misdemeanours by Miers Porgan'
+          request_type: 'Please supply a huge list of misdemeanours by Miers Porgan',
+          request_type_note: 'Here are further clarifications by Miers Porgan'
         )
       }
 
