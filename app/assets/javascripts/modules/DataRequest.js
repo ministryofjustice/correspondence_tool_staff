@@ -23,7 +23,7 @@ moj.Modules.DataRequest = {
     $formTemplate.attr('data-index', newIndex);
     $('.js-data-request__number', $formTemplate).first().text(newIndex + 1);
     $('.js-data-request__location', $formTemplate)[0].value = '';
-    $('.js-data-request__data', $formTemplate)[0].value = '';
+    $('.js-data-request__request_type', $formTemplate)[0].value = '';
 
     $('.form-control', $formTemplate).each(function rename() {
       this.name = this.name.replace(currentIndex, newIndex);

@@ -12,7 +12,7 @@ module PageObjects
 
         section :form, '#edit_case' do
           elements :location, 'input[name*="[location]"]'
-          elements :data, 'input[name*="[data]"]'
+          elements :request_type, 'input[name*="[request_type]"]'
         end
 
         element :submit_button, '.button'

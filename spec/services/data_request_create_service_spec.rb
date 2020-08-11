@@ -5,10 +5,10 @@ describe DataRequestCreateService do
   let(:offender_sar_case) { create :offender_sar_case }
   let(:data_request_attributes) {
     {
-      '0' => { location: 'The Clinic', data: 'Lots of paper please' },
-      '1' => { location: 'The House', data: 'More paper please' },
-      '2' => { location: 'A Prison', data: 'Less paper please' },
-      '3' => { location: 'The LA', data: 'All your paper please' }
+      '0' => { location: 'The Clinic', request_type: 'Lots of paper please' },
+      '1' => { location: 'The House', request_type: 'More paper please' },
+      '2' => { location: 'A Prison', request_type: 'Less paper please' },
+      '3' => { location: 'The LA', request_type: 'All your paper please' }
     }
   }
   let(:service) {
@@ -53,8 +53,8 @@ describe DataRequestCreateService do
       it 'skips any blank pairs of location/data' do
         params = data_request_attributes.clone
         params.merge!({
-          '0' => { location: nil, data: '              ' },
-          '2' => { location: '                  ', data: nil },
+          '0' => { location: nil, request_type: '              ' },
+          '2' => { location: '                  ', request_type: nil },
         })
 
         service = described_class.new(
@@ -71,7 +71,7 @@ describe DataRequestCreateService do
     context 'on failure' do
       it 'does not save DataRequest when validation errors' do
         params = data_request_attributes.clone
-        params.merge!({ '0' => { location: 'too' * 500, data: 'many' }})
+        params.merge!({ '0' => { location: 'too' * 500, request_type: 'many' }})
 
         service = described_class.new(
           kase: offender_sar_case,
@@ -107,18 +107,18 @@ describe DataRequestCreateService do
   describe '#process?' do
     it 'returns true only when one or more of the attributes is present' do
       test_cases = [
-        { expect: false, location: '', data: '' },
-        { expect: false, location: '       ', data: '' },
-        { expect: false, location: '       ', data: '     ' },
-        { expect: false, location: nil, data: '      ' },
-        { expect: false, location: '        ', data: nil },
-        { expect: true,  location: nil, data: ' Some Data      ' },
-        { expect: true,  location: ' A Location       ', data: nil },
-        { expect: true,  location: 'A Location        ', data: '  Some dat a' },
+        { expect: false, location: '', request_type: '' },
+        { expect: false, location: '       ', request_type: '' },
+        { expect: false, location: '       ', request_type: '     ' },
+        { expect: false, location: nil, request_type: '      ' },
+        { expect: false, location: '        ', request_type: nil },
+        { expect: true,  location: nil, request_type: ' Some Data      ' },
+        { expect: true,  location: ' A Location       ', request_type: nil },
+        { expect: true,  location: 'A Location        ', request_type: '  Some dat a' },
       ]
 
       test_cases.each do |params|
-        expect(service.process?(**params.slice(:location, :data))).to eq params[:expect]
+        expect(service.process?(**params.slice(:location, :request_type))).to eq params[:expect]
       end
     end
 
@@ -126,7 +126,7 @@ describe DataRequestCreateService do
     it 'returns true when location and data are both present' do
       result = service.process?(
         location: ' The Location with spaces    ',
-        data: ' The Data with spaces'
+        request_type: ' The Data with spaces'
       )
 
       expect(result).to be true
@@ -135,13 +135,13 @@ describe DataRequestCreateService do
     it 'returns true when either location and data present' do
       result = service.process?(
         location: ' The Location with spaces    ',
-        data: nil
+        request_type: nil
       )
       expect(result).to be true
 
       result = service.process?(
         location: nil,
-        data: 'This is some data  '
+        request_type: 'This is some data  '
       )
 
       expect(result).to be true
@@ -174,8 +174,8 @@ describe DataRequestCreateService do
 
     it 'generates an empty list when no DataRequest is built' do
       params = {
-        '0' => { location: nil, data: '              ' },
-        '1' => { location: '                  ', data: nil },
+        '0' => { location: nil, request_type: '              ' },
+        '1' => { location: '                  ', request_type: nil },
       }
 
       expect(service.build_data_requests(params)).to eq []

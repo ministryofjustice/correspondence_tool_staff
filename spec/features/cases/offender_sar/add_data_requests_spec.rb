@@ -14,32 +14,26 @@ feature 'Data Requests for an Offender SAR' do
     expect(data_request_page).to be_displayed
 
     request_values = [
-      { location: 'HMP Leicester  ', data: ' A list of meals fed to mo  '},
-      { location: 'HMP Brixton', data: 'Latest menu from the clink by chef mo'},
-      { location: 'HMP Bronzefield', data: ' Best time to visit mo?'},
-      { location: 'HMYP Feltham', data: 'When are you open for mo?'},
-      { location: 'Beth Centre', data: 'What is your re-offending rate for mo'},
+      { location: 'HMP Leicester  ', request_type: ' A list of meals fed to mo  '},
+      { location: 'HMP Brixton', request_type: 'Latest menu from the clink by chef mo'},
+      { location: 'HMP Bronzefield', request_type: ' Best time to visit mo?'},
     ]
-
-    # Page has 3 blank forms to fill in, add 2 more
-    click_on 'Add another data request'
-    click_on 'Add another data request'
 
     request_values.each_with_index do |request, i|
       data_request_page.form.location[i].fill_in(with: request[:location])
-      data_request_page.form.data[i].fill_in(with: request[:data])
+      data_request_page.form.request_type[i].fill_in(with: request[:request_type])
     end
 
     click_on 'Record requests'
 
     expect(cases_show_page).to be_displayed
     data_requests = cases_show_page.data_requests.rows
-    expect(data_requests.size).to eq 6
+    expect(data_requests.size).to eq 4
 
     request_values.each_with_index do |request, i|
       row = cases_show_page.data_requests.rows[i]
       expect(row.location).to have_text request[:location].strip
-      expect(row.data).to have_text request[:data].strip
+      expect(row.request_type).to have_text request[:request_type].strip
       expect(row.date_requested).to have_text Date.current.strftime(Settings.default_date_format)
       expect(row.pages).to have_text '0'
     end
@@ -68,7 +62,7 @@ feature 'Data Requests for an Offender SAR' do
     click_on 'Record data request'
 
     data_request_page.form.location[0].fill_in(with: '    ')
-    data_request_page.form.data[0].fill_in(with: '')
+    data_request_page.form.request_type[0].fill_in(with: '')
 
     click_on 'Record requests'
 

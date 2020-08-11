@@ -6,7 +6,7 @@ describe 'cases/data_requests/edit', type: :view do
       create(
         :data_request,
         location: 'HMP Leicester',
-        data: 'How many pencils were used by Dave',
+        request_type: 'How many pencils were used by Dave',
         cached_num_pages: 32,
         cached_date_received: Date.new(1972, 9, 25)
       )
@@ -25,7 +25,7 @@ describe 'cases/data_requests/edit', type: :view do
     it 'has required content' do
       expect(@page.page_heading.heading.text).to eq 'Update page count'
       expect(@page.location.text).to eq 'HMP Leicester'
-      expect(@page.data.text).to eq 'How many pencils were used by Dave'
+      expect(@page.request_type.text).to eq 'How many pencils were used by Dave'
 
       expect(@page.form.date_received_dd.value.to_i).to eq 25
       expect(@page.form.date_received_mm.value.to_i).to eq 9

@@ -6,7 +6,7 @@ describe DataRequestUpdateService do
     create(
       :data_request,
       location: 'HMP Leicester',
-      data: 'A list of all evening meals'
+      request_type: 'A list of all evening meals'
     )
   }
   let(:offender_sar_case) { create :offender_sar_case }
