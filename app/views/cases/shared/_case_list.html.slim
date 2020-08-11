@@ -20,7 +20,7 @@
           - (@available_reports || []).each do |report_type|
             .download-cases-link
               = download_csv_link(request.fullpath, report_type.abbr)
-              | &nbsp;(.csv' file)
+              | &nbsp;(.csv file)
 
       thead
         th scope='col'

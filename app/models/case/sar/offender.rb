@@ -234,7 +234,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def page_count
-    DataRequest.where(case_id: self.id).joins(:data_request_logs).sum(:num_pages)
+    DataRequest.where(case_id: self.id).sum(:cached_num_pages)
   end
 
   private

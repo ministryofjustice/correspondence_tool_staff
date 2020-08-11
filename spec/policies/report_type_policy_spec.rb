@@ -4,15 +4,8 @@ describe ReportTypePolicy::Scope do
 
   describe 'report type scope policy' do
     before(:all) do
-      # @responding_team              = find_or_create :foi_responding_team
-      # @responding_team_2            = create :responding_team
       @managing_team                = create :team_dacu
-      # @dacu_disclosure              = create :team_dacu_disclosure
 
-      # @responder                    = @responding_team.responders.first
-      # @responder_2                  = @responding_team_2.responders.first
-      # @manager                      = @managing_team.managers.first
-      # @approver                     = @dacu_disclosure.approvers.first
       @manager                        = find_or_create :disclosure_bmt_user
       @responder                      = find_or_create :branston_user
     

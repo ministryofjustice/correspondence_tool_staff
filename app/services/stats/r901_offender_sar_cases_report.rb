@@ -48,8 +48,6 @@ module Stats
         kase.page_count, 
         kase.already_late? ? 'out of time' : 'in time', 
         kase.current_state,
-        # kase.time_taken_for_sending_data, 
-        # kase.datatypes
       ]
     end
 

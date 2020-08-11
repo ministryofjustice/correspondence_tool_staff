@@ -605,22 +605,11 @@ describe Case::SAR::Offender do
       data_request = DataRequest.new(
         offender_sar_case: kase,
         user: build(:user),
-        location: 'X' * 500, # Max length
+        location: 'X' * 500, # Max length, 
+        cached_num_pages: 200,
         data: 'Please supply a huge list of misdemeanours by Miers Porgan'
       )
       data_request.save!
-      DataRequestLog.new(
-        data_request: data_request,
-        user: build(:user),
-        date_received: Date.current,
-        num_pages: 21,
-      ).save!
-      DataRequestLog.new(
-        data_request: data_request,
-        user: build(:user),
-        date_received: Date.current,
-        num_pages: 179,
-      ).save!
       expect(kase.page_count).to eq 200
     end
   end
