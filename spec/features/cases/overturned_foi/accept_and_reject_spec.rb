@@ -45,6 +45,19 @@ feature 'respond to responder assignment' do
     expect(assigned_case.reload.current_state).to eq 'unassigned'
   end
 
+  scenario 'when kilo rejects assignment, they should not see the rejected case in the "All open cases" tab' do
+    assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
+
+    choose 'Reject'
+    expect(page).
+      to have_selector('#assignment_reasons_for_rejection', visible: true)
+    fill_in 'Why are you rejecting this case?', with: 'This is not for me'
+    click_button 'Confirm'
+
+    click_on 'Cases'
+    expect(page).to_not have_content(assigned_case.number.to_s)
+  end
+
   scenario 'kilo rejects assignment but provides no reasons for rejection' do
     assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
 
