@@ -527,7 +527,7 @@ CREATE TABLE public.data_requests (
     cached_num_pages integer DEFAULT 0 NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    data_request_note text DEFAULT ''::text NOT NULL
+    request_type_note text DEFAULT ''::text NOT NULL
 );
 
 
@@ -1991,4 +1991,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20191028094210'),
 ('20200705225914'),
 ('20200811151902'),
-('20200811154406');
+('20200811154406'),
+('20200811222853');
