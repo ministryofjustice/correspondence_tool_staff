@@ -253,7 +253,7 @@ class LetterTemplateSeeder
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br><strong><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %></strong>
                   <br>
-                  <br>I am writing in response to your request for information made under the Data Protection Act 1998 (DPA) for the above person.
+                  <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA) for the above person.
                   <br>
                   <br>Enclosed is all the information related to your request that I am able to release. Some information may have been withheld and this is because the information is exempt from disclosure under the DPA. The exemptions within the DPA include information which is processed for the prevention or detection of crime or the apprehension or prosecution of offenders, and information that would identify third parties. Where we have withheld exempt information, you will see items redacted on the documents.
                   <br>
