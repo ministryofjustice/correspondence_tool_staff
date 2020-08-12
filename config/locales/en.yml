@@ -576,7 +576,7 @@ en:
       date_of_birth: Date of birth
       date_responded: Date response sent to requester
       data_subject: Full name of subject
-      data_subject_type: 'What is their relationship to MOJ?'
+      data_subject_type: Subject type
       draft_timeliness: Draft timeliness
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
@@ -619,7 +619,7 @@ en:
         one: Information Officer
         other: Information Officers
       responding_team: Business unit
-      sar_response_address: Where should the data be sent
+      sar_response_address: Where should the data be sent?
       status: Status
       subject_address: Location
       subject_aliases: Alias

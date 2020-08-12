@@ -16,8 +16,8 @@ module PageObjects
           element :ico_officer_name, 'tr.ico-officer-name td'
           element :response_address, 'tr.response-address td'
           element :date_received, 'tr.date-received td'
-          element :draft_deadline, 'tr.case-internal-deadline td'
-          element :final_deadline, 'tr.case-external-deadline td'
+          element :draft_deadline, 'tr.case-internal-deadline td:first'
+          element :final_deadline, 'tr.case-external-deadline td:first'
 
           element :date_responded, '.date-responded td'
           element :timeliness, '.timeliness td'

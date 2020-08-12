@@ -13,7 +13,6 @@
         = render partial: 'cases/shared/date_received', locals: { case_details: case_details }
         = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
 
-
       - if case_details.responding_team.present?
         = render partial: 'cases/shared/responding_team', locals: { case_details: case_details }
 

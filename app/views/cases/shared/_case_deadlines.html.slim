@@ -2,8 +2,10 @@
   tr.section.case-internal-deadline
     th = t('common.case.internal_deadline')
     td = case_details.internal_deadline
+    td = ' '
 
 - if case_details.external_deadline.present?
   tr.section.case-external-deadline
     th = t('common.case.external_deadline')
     td = case_details.external_deadline
+    td = ' '
