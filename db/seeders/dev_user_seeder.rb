@@ -45,45 +45,53 @@ class DevUserSeeder
   end
   # rubocop:enable Metrics/MethodLength
 
-
   def seed! # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
-    foi = CorrespondenceType.foi
-    @users.each do |user_name, user_info_list|
-      user_info_list.each do |user_info|
-        team_abbr = user_info[:team]
-        team = @teams[team_abbr]
-        # team_name = @teams.find { |t| t.second == team_abbr } .first
-        email = email_from_name(user_name)
-        role = user_info[:role]
+    if Rails.env.production?
+      puts ''
+      puts '=================================================================='
+      puts '***** Dev users will not be seeded in production environment *****'
+      puts '=================================================================='
+      puts ''
+      return
+    else
+      foi = CorrespondenceType.foi
+      @users.each do |user_name, user_info_list|
+        user_info_list.each do |user_info|
+          team_abbr = user_info[:team]
+          team = @teams[team_abbr]
+          # team_name = @teams.find { |t| t.second == team_abbr } .first
+          email = email_from_name(user_name)
+          role = user_info[:role]
 
-        user = User.where(email: email).first
-        if user.nil?
-          user = User.create!(full_name: user_name, email: email, password: 'correspondence')
-          puts "User #{user.full_name} created with email #{user.email}"
-        else
-          puts "User with email #{email} already exists"
-        end
-
-        tur = TeamsUsersRole.where(team_id: team.id, user_id: user.id).first
-        tur.destroy unless tur.nil?
-        TeamsUsersRole.create(user: user, team: team, role: role)
-        puts "Role #{role} added for User #{user.full_name} in team #{team.name}"
-
-        if user_info.fetch(:admin, false)
-          if user.admin?
-            puts "Admin role for user #{user_name} already exists."
+          user = User.where(email: email).first
+          if user.nil?
+            user = User.create!(full_name: user_name, email: email, password: 'correspondence')
+            puts "User #{user.full_name} created with email #{user.email}"
           else
-            puts "Making #{user_name} an admin."
-            user.team_roles.create(role: 'admin')
+            puts "User with email #{email} already exists"
           end
-        end
 
-        if team == 'pressoffice' && foi.default_press_officer.blank?
-          foi.update!(default_press_officer: email)
-        end
+          tur = TeamsUsersRole.where(team_id: team.id, user_id: user.id).first
+          tur.destroy unless tur.nil?
+          TeamsUsersRole.create(user: user, team: team, role: role)
+          puts "Role #{role} added for User #{user.full_name} in team #{team.name}"
 
-        if team == 'privateoffice' && foi.default_private_officer.blank?
-          foi.update!(default_private_officer: email)
+          if user_info.fetch(:admin, false)
+            if user.admin?
+              puts "Admin role for user #{user_name} already exists."
+            else
+              puts "Making #{user_name} an admin."
+              user.team_roles.create(role: 'admin')
+            end
+          end
+
+          if team == 'pressoffice' && foi.default_press_officer.blank?
+            foi.update!(default_press_officer: email)
+          end
+
+          if team == 'privateoffice' && foi.default_private_officer.blank?
+            foi.update!(default_private_officer: email)
+          end
         end
       end
     end
