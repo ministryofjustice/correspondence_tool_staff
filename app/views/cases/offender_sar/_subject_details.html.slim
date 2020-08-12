@@ -25,7 +25,8 @@ tr.case-reference-number
 
 tr.subject-address
   th = t('common.case.subject_address')
-  td = case_details.subject_address
+  td
+    pre = case_details.subject_address
 tr.subject-high-priority
   th = t('helpers.label.offender_sar.high_profile')
   td = case_details.flag_as_high_profile.humanize
