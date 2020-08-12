@@ -21,7 +21,7 @@ gem 'draper', '4.0.1'
 gem 'dropzonejs-rails', '>= 0.8'
 gem 'foreman', '~> 0.87.1'
 gem 'factory_bot_rails', '~> 5.1.1'
-gem 'faker', '~> 2.12.0'
+gem 'faker', '~> 2.13.0'
 gem 'gov_uk_date_fields', '~> 3.1'
 gem 'govuk_template',         '~> 0.26.0'
 gem 'govuk_frontend_toolkit', '>= 9.0.0'
@@ -33,7 +33,7 @@ gem 'humanize_boolean'
 gem 'jbuilder', '~> 2.10'
 gem 'jquery-rails', '~> 4.4.0'
 gem 'jquery-ui-rails'
-gem 'jsonb_accessor', '~> 1.0.0.beta.1'
+gem 'jsonb_accessor', '~> 1.1.0'
 gem 'kaminari'
 gem 'libreconv', '~> 0.9.5'
 gem 'logstash-event'
@@ -60,7 +60,7 @@ gem 'sentry-raven', '~> 2.12.3'
 gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
-gem 'sidekiq', '~> 6.0.6'
+gem 'sidekiq', '~> 6.1.0'
 
 gem 'table_print'
 # gem 'thor-rails'
@@ -99,8 +99,8 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 4.0'
-  gem 'rubocop', '~> 0.81.0', require: false
-  gem 'rubocop-rspec', '~> 1.40.0', require: false
+  gem 'rubocop', '~> 0.87.0', require: false
+  gem 'rubocop-rspec', '~> 1.41.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
@@ -116,7 +116,7 @@ group :development do
   gem 'listen', '~> 3.2.1'
   # Rather than use defualt ./git/hooks folder we use overcommit for easier
   # management
-  gem 'overcommit', '~> 0.52.1'
+  gem 'overcommit', '~> 0.54.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'

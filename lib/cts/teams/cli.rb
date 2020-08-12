@@ -70,7 +70,7 @@ module CTS::Teams
            desc: 'Delete the team(s) role(s).'
     option :force, aliases: :f, type: :boolean,
            desc: 'Force running, even if in prod env.'
-    def role(*args)
+    def role(*args) #rubocop:disable Metrics/CyclomaticComplexity
       teams = args.map { |a| CTS::find_team(a) }
       max_name_length = teams.pluck('max(length(name))').first
       if options[:role]
