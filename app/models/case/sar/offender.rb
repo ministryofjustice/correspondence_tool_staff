@@ -56,6 +56,7 @@ class Case::SAR::Offender < Case::Base
     detainee: 'detainee',
     ex_detainee: 'ex_detainee',
     probation_service_user: 'probation_service_user',
+    ex_probation_service_user: 'ex_probation_service_user',
   }
 
   enum recipient: {

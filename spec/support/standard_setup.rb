@@ -50,7 +50,7 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
     # Used because of some badly understood issue with Ruby class inheritance /
     # methods. The procs generated for the fixtures above require this
     # method_missing.
-    def self.method_missing(method_name, *args)
+    def self.method_missing(method_name, *args) #rubocop:disable Metrics/CyclomaticComplexity
       if @@user_teams&.key?(method_name)
         @@user_teams[method_name].call
       elsif @@users&.key?(method_name)
@@ -516,7 +516,7 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
     # users and 'create' for cases. This is used to have a standardised set of
     # users, teams and cases to work with, but without requiring
     # pre-instantiation.
-    def method_missing(method_name, *args)
+    def method_missing(method_name, *args) #rubocop:disable Metrics/CyclomaticComplexity
       if @@user_teams&.key?(method_name)
         @@user_teams[method_name].call
       elsif @@users&.key?(method_name)
@@ -533,7 +533,7 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
 
   attr_reader :cases, :user_teams, :users
 
-  def initialize(only_cases: nil)
+  def initialize(only_cases: nil) #rubocop:disable Metrics/CyclomaticComplexity
     @teams = @@teams.transform_values { |team| team.call }
     @users = @@users.transform_values { |user| user.call }
     @user_teams = @@user_teams.transform_values { |user_team| user_team.call }
@@ -560,7 +560,7 @@ class StandardSetup # rubocop:disable Metrics/ClassLength
   # Used when instantiating a StandardSetup object to pre-instantiate fixtures
   # in a before block (e.g. global_state_machine_spec.rb). This allows test to
   # run faster.
-  def method_missing(method_name, *args)
+  def method_missing(method_name, *args) #rubocop:disable Metrics/CyclomaticComplexity
     if @user_teams&.key?(method_name)
       @user_teams[method_name]
     elsif @users&.key?(method_name)

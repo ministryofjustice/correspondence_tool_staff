@@ -79,11 +79,11 @@ module PageObjects
           end
 
           section :internal_deadline, 'tr.case-internal-deadline' do
-            element :data, 'td'
+            element :data, 'td:nth-child(2)'
           end
 
           section :external_deadline, 'tr.case-external-deadline' do
-            element :data, 'td'
+            element :data, 'td:nth-child(2)'
           end
 
           section :response_address, 'tr.response-address' do
@@ -97,11 +97,11 @@ module PageObjects
 
         section :responders_details, '.responder-details' do
           section :team, '.team' do
-            element :data, 'td'
+            element :data, 'td:nth-child(2)'
           end
 
           section :name, '.responder-name' do
-            element :data, 'td'
+            element :data, 'td:nth-child(2)'
           end
         end
 
