@@ -42,7 +42,7 @@ module PageObjects
         cases_edit_offender_sar_subject_details:                 'Cases::Edit::OffenderSARPageSubjectDetails',
         cases_edit_offender_sar_requester_details:                 'Cases::Edit::OffenderSARPageRequesterDetails',
         cases_edit_offender_sar_requested_info:                 'Cases::Edit::OffenderSARPageRequestedInfo',
-        cases_edit_offender_sar_response_sent:                 'Cases::Edit::OffenderSARPageResponseSent',
+        cases_edit_offender_sar_date_responded:                 'Cases::Edit::OffenderSARPageDateResponded',
         cases_edit_offender_sar_date_received:                 'Cases::Edit::OffenderSARPageDateReceived',
         cases_new_case_link:            'Cases::NewCaseLinkPage',
         cases_edit:                     'Cases::EditPage',

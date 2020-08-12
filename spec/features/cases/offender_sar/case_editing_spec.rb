@@ -87,8 +87,8 @@ feature 'Offender SAR Case editing by a manager' do
 
   def and_i_edit_the_date_response_sent
     expect(page).to have_content('Edit case closure details')
-    cases_edit_offender_sar_response_sent_page.edit_responded_date(offender_sar_case.received_date + 5)
-    cases_edit_offender_sar_response_sent_page.continue_button.click
+    cases_edit_offender_sar_date_responded_page.edit_responded_date(offender_sar_case.received_date + 5)
+    cases_edit_offender_sar_date_responded_page.continue_button.click
   end
 
   def then_i_expect_the_new_date_to_be_reflected_on_the_case_show_page

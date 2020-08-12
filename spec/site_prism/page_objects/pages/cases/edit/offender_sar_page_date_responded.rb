@@ -2,9 +2,9 @@ module PageObjects
   module Pages
     module Cases
       module Edit
-        class OffenderSARPageResponseSent < PageObjects::Pages::Base
+        class OffenderSARPageDateResponded< PageObjects::Pages::Base
 
-          set_url '/cases/offender_sars/{id}/edit/response-sent'
+          set_url '/cases/offender_sars/{id}/edit/date_responded'
 
           section :primary_navigation,
                   PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
