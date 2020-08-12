@@ -14,9 +14,9 @@ feature 'Data Requests for an Offender SAR' do
     expect(data_request_page).to be_displayed
 
     request_values = [
-      { location: 'HMP Leicester  ', request_type: ' A list of meals fed to mo  '},
-      { location: 'HMP Brixton', request_type: 'Latest menu from the clink by chef mo'},
-      { location: 'HMP Bronzefield', request_type: ' Best time to visit mo?'},
+      { location: 'HMP Leicester  ', request_type: 'other'},
+      { location: 'HMP Brixton', request_type: 'all_prison_records'},
+      { location: 'HMP Bronzefield', request_type: 'nomis_contact_logs'},
     ]
 
     request_values.each_with_index do |request, i|

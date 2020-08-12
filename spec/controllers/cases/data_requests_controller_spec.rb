@@ -32,11 +32,11 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
             data_requests_attributes: {
               '0': {
                 location: 'Wormwood Scrubs',
-                request_type: 'Report on Mickey Spous 1972',
+                request_type: 'offender',
               },
               '1': {
                 location: 'Super Max 1',
-                request_type: 'Full list of meals served',
+                request_type: 'offender',
               },
             },
           },
@@ -102,7 +102,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
             data_requests_attributes: {
               '0': {
                 location: 'Wormwood Scrubs',
-                request_type: 'Report on Mickey Spous 1972',
+                request_type: 'offender',
               },
             },
           },

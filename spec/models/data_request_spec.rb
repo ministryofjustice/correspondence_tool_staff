@@ -8,7 +8,7 @@ RSpec.describe DataRequest, type: :model do
           offender_sar_case: build(:offender_sar_case),
           user: build(:user),
           location: 'X' * 500, # Max length
-          request_type: 'Please supply a huge list of misdemeanours by Miers Porgan',
+          request_type: 'other',
           request_type_note: 'Here are further clarifications by Miers Porgan'
         )
       }
@@ -89,26 +89,43 @@ RSpec.describe DataRequest, type: :model do
     end
   end
 
+  describe '#request_type' do
+    context 'valid values' do
+      it 'does not error' do
+        expect(build(:data_request, request_type: 'offender')).to be_valid
+        expect(build(:data_request, request_type: 'prison_and_probation_records')).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:data_request, request_type: 'user')
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context 'nil' do
+      it 'errors' do
+        kase = build(:data_request, request_type: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:request_type]).to eq ["can't be blank"]
+      end
+    end
+  end
+
   describe '#clean_attributes' do
     subject(:data_request) { build :data_request }
 
     it 'ensures string attributes do not have leading/trailing spaces' do
-      data_request.request_type = '    So much space '
       data_request.location = '  The location'
-
       data_request.send(:clean_attributes)
-
-      expect(data_request.request_type).to eq 'So much space'
       expect(data_request.location).to eq 'The location'
     end
 
     it 'ensures string attributes have the first letter capitalised' do
-      data_request.request_type = 'some DaTa'
       data_request.location = 'leicester'
-
       data_request.send(:clean_attributes)
-
-      expect(data_request.request_type).to eq 'Some DaTa'
       expect(data_request.location).to eq 'Leicester'
     end
 

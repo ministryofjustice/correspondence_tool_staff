@@ -13,6 +13,16 @@ class DataRequest < ApplicationRecord
   before_validation :set_date_requested
   before_validation :clean_attributes
 
+  enum request_type: {
+    offender: 'offender',
+    all_prison_records: 'all_prison_records',
+    all_nomis_records: 'all_nomis_records',
+    nomis_contact_logs: 'nomis_contact_logs',
+    probation_records: 'probation_records',
+    prison_and_probation_records: 'prison_and_probation_records',
+    other: 'other'
+  }
+
   def new_log
     logs.new(
       date_received: self.cached_date_received,
@@ -36,7 +46,7 @@ class DataRequest < ApplicationRecord
   end
 
   def clean_attributes
-    [:location, :request_type]
+    [:location]
       .each { |f| self.send("#{f}=", self.send("#{f}")&.strip) }
       .each { |f| self.send("#{f}=", self.send("#{f}")&.upcase_first) }
   end

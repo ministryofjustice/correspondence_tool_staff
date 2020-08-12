@@ -5,10 +5,10 @@ describe DataRequestCreateService do
   let(:offender_sar_case) { create :offender_sar_case }
   let(:data_request_attributes) {
     {
-      '0' => { location: 'The Clinic', request_type: 'Lots of paper please' },
-      '1' => { location: 'The House', request_type: 'More paper please' },
-      '2' => { location: 'A Prison', request_type: 'Less paper please' },
-      '3' => { location: 'The LA', request_type: 'All your paper please' }
+      '0' => { location: 'The Clinic', request_type: 'offender' },
+      '1' => { location: 'The House', request_type: 'offender' },
+      '2' => { location: 'A Prison', request_type: 'offender' },
+      '3' => { location: 'The LA', request_type: 'offender' }
     }
   }
   let(:service) {
@@ -71,7 +71,7 @@ describe DataRequestCreateService do
     context 'on failure' do
       it 'does not save DataRequest when validation errors' do
         params = data_request_attributes.clone
-        params.merge!({ '0' => { location: 'too' * 500, request_type: 'many' }})
+        params.merge!({ '0' => { location: 'too' * 500, request_type: 'offender' }})
 
         service = described_class.new(
           kase: offender_sar_case,
