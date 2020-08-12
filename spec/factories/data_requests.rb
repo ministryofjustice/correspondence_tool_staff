@@ -4,8 +4,26 @@ FactoryBot.define do
     association :user
 
     location        { Faker::Company.name }
-    request_type    { 'other' }
+    request_type    { 'offender' }
     date_requested  { Date.current }
+
+    trait :other do
+      request_type    { 'other' }
+      request_type_note    { 'Lorem ipsum' }
+    end
+
+    trait :with_date_range do
+      date_from { Date.new(2018, 01, 01) }
+      date_to { Date.new(2018, 12, 31) }
+    end
+
+    trait :with_date_from do
+      date_from { Date.new(2018, 01, 01) }
+    end
+
+    trait :with_date_to do
+      date_to { Date.new(2018, 12, 31) }
+    end
   end
 end
 

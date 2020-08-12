@@ -8,8 +8,8 @@ RSpec.describe DataRequest, type: :model do
           offender_sar_case: build(:offender_sar_case),
           user: build(:user),
           location: 'X' * 500, # Max length
-          request_type: 'other',
-          request_type_note: 'Here are further clarifications by Miers Porgan'
+          request_type: 'offender',
+          request_type_note: ''
         )
       }
 
@@ -75,6 +75,55 @@ RSpec.describe DataRequest, type: :model do
         data_request.cached_num_pages = 6.5
         expect(data_request.valid?).to be false
       end
+    end
+
+    context 'when request_type is other' do
+      subject(:data_request) { build(:data_request, request_type: 'other', request_type_note: nil) }
+
+      it 'ensures the note is present' do
+        expect(subject).not_to be_valid
+        expect(subject.errors[:request_type_note]).to eq ["can't be blank"]
+      end
+    end
+
+    context 'when either from or to date is set' do
+      subject(:data_request) { build(:data_request, date_from: 1.year.ago, date_to: 2.years.ago)}
+
+      it 'ensures the to date is after the from date' do
+        expect(subject).not_to be_valid
+        expect(subject.errors[:date_from]).to eq ['cannot be later than date to']
+      end
+    end
+
+    context 'with note' do
+      subject(:data_request) { build :data_request, :other }
+
+      it { should be_valid }
+      it 'has a note' do
+        expect(data_request.request_type_note).to eq 'Lorem ipsum'
+      end
+    end
+
+    context 'with date range' do
+      subject(:data_request) { build :data_request, :with_date_range }
+
+      it { should be_valid }
+      it 'has date from and to' do
+        expect(data_request.date_from).to eq Date.new(2018, 01, 01)
+        expect(data_request.date_to).to eq Date.new(2018, 12, 31)
+      end
+    end
+
+    context 'with date range' do
+      subject(:data_request) { build :data_request, :with_date_from }
+
+      it { should be_valid }
+    end
+
+    context 'with date range' do
+      subject(:data_request) { build :data_request, :with_date_to }
+
+      it { should be_valid }
     end
   end
 

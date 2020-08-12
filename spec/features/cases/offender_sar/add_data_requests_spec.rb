@@ -14,7 +14,7 @@ feature 'Data Requests for an Offender SAR' do
     expect(data_request_page).to be_displayed
 
     request_values = [
-      { location: 'HMP Leicester  ', request_type: 'other'},
+      { location: 'HMP Leicester  ', request_type: 'offender'},
       { location: 'HMP Brixton', request_type: 'all_prison_records'},
       { location: 'HMP Bronzefield', request_type: 'nomis_contact_logs'},
     ]

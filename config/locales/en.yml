@@ -172,9 +172,13 @@ en:
               invalid_url: "url is invalid for file: %{filename}"
         data_request:
           attributes:
+            date_from:
+              order: cannot be later than date to
             date_received:
               blank: must be completed
               future: cannot be in the future
+            request_type_note:
+              blank: can't be blank
         linked_case:
           missing: "doesn't exist"
           references_self: "can't link to the same case"
