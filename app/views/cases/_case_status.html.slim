@@ -16,6 +16,20 @@
         .case-status__data
           = case_details.who_its_with
 
+    - if @case.offender_sar?
+      .case-status__group.page-counts
+        .gridrow
+          .column-one-third
+            .case-status__heading.case-status__heading--pages = t('common.case.pages_received')
+            .case-status__date-value = '109'
+          .column-one-third
+            .case-status__heading.case-status__heading--pages = t('common.case.pages_exempt')
+            .case-status__date-value = '201'
+          .column-one-third
+            .case-status__heading.case-status__heading--pages = t('common.case.pages_dispatch')
+            .case-status__date-value = '999'
+
+
     - if case_details.respond_to?(:ico_reference_number)
       .case-status__group.ico-reference
         .case-status__heading
