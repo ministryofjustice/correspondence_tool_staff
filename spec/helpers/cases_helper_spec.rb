@@ -340,6 +340,19 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
         expect(download_csv_link(param_path)).to eq %q{<a href="/cases/open.csv?page=3&amp;type=foi">Download cases</a>}
       end
     end
+
+    context 'with report param' do
+      it 'returns link for csv with report param' do
+        expect(download_csv_link(param_path, 'r000')).to eq %q{<a href="/cases/open.csv?page=3&amp;type=foi&amp;report=r000">Download cases</a>}
+      end
+    end
+
+    context 'with custom link name' do
+      it 'returns link with specific name for display' do
+        expect(download_csv_link(param_path, 'r000', 'test link')).to eq %q{<a href="/cases/open.csv?page=3&amp;type=foi&amp;report=r000">test link</a>}
+      end
+    end
+
   end
 
   describe '#show_escalation_deadline?' do
