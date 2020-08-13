@@ -397,5 +397,5 @@ module ConfigurableStateMachine
       end
     end
   end
-  # rubocop:enable Metrics/ClassLength
+  #rubocop:enable Metrics/ClassLength
 end
