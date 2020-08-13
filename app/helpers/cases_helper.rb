@@ -267,8 +267,14 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
 
   def request_details_html(kase)
     content_tag(:strong, "#{kase.subject} ", class: 'strong') +
-      if kase.type == "Case::SAR::Offender" && kase.third_party_name.present?
-        content_tag(:div, kase.third_party_name, class: 'case-name-detail')
+      if kase.type == "Case::SAR::Offender"
+        if kase.third_party? && kase.third_party_company_name.present?
+          content_tag(:div, kase.third_party_company_name, class: 'case-name-detail')
+        elsif kase.third_party? && !kase.third_party_company_name.present?
+          content_tag(:div, kase.third_party_name, class: 'case-name-detail')
+        else
+          content_tag(:div, kase.subject, class: 'case-name-detail')
+        end
       else
         content_tag(:div, kase.name, class: 'case-name-detail')
       end
