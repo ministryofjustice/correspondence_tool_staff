@@ -2,13 +2,20 @@ require './lib/translate_for_case'
 
 module CasesHelper #rubocop:disable Metrics/ModuleLength
 
-  def download_csv_link(full_path)
+  def download_csv_link(full_path, csv_report=nil, download_link_name=nil)
     uri = URI(full_path)
     csv_path = "#{uri.path}.csv"
+    queries = []
     if uri.query.present?
-      csv_path += "?#{uri.query}"
+      queries << uri.query
     end
-    link_to 'Download cases', csv_path
+    if !csv_report.blank?
+      queries << "report=#{csv_report}"
+    end
+    if !queries.empty?
+      csv_path += "?#{queries.join('&')}"
+    end
+    link_to download_link_name || 'Download cases', csv_path
   end
 
   def accepted_case_attachment_types
@@ -344,5 +351,4 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       t('helpers.label.offender_sar.recipient_type.third_party')
     end
   end
-
 end

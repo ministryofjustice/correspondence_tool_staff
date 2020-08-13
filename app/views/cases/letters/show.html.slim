@@ -24,12 +24,6 @@ section.letter--from-section
   p
     | Date: #{Date.today.strftime('%e %b %Y')}
 
-p
-  | #{@letter.name} <br>
-  - if @letter.company_name
-    | #{@letter.company_name} <br>
-  | #{simple_format @letter.address, {}, wrapper_tag: 'span'}
-
 = raw @letter.body
 
 = link_to "Save as Word", url_for(format: "docx", letter: {letter_template_id: @letter.letter_template_id} ), class: "button"
