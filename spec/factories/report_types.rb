@@ -136,5 +136,29 @@ FactoryBot.define do
       sar               { false }
       offender_sar      { true }
     end
+
+    trait :r900 do
+      abbr              { 'R900' }
+      full_name         { 'Cases report' }
+      class_name        { 'Stats::R900CasesReport' }
+      custom_report     { false }
+      standard_report   { false }
+      seq_id            { 900 }
+      foi               { true }
+      sar               { true }
+      offender_sar      { false }
+    end
+
+    trait :r901 do
+      abbr              { 'R901' }
+      full_name         { 'Offender SAR cases report' }
+      class_name        { 'Stats::R901OffenderSarCasesReport' }
+      custom_report     { false }
+      standard_report   { false }
+      seq_id            { 1000 }
+      foi               { false }
+      sar               { false }
+      offender_sar      { true }
+    end
   end
 end
