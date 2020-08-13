@@ -956,7 +956,6 @@ en:
     data_requests:
       create:
         success: Data request successfully recorded
-        unprocessed: Ensure Location and Data fields are completed
       edit:
         date_received: Date received
         heading: Update page count
@@ -966,11 +965,10 @@ en:
         link: Update page count
         none: No data requests recorded
       new:
-        add_another: Add another data request
         data_placeholder: What data is needed? E.g. Executive summary
         heading: Record data request
         location_placeholder: Where is the data held? E.g. NPS, South East
-        record_requests: Record requests
+        record_request: Record request
       update:
         log_message: "%{request_type}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
         log_pages: {

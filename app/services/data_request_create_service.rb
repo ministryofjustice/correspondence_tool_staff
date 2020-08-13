@@ -1,18 +1,18 @@
 class DataRequestCreateService
-  attr_reader :result, :case, :new_data_requests
+  attr_reader :result, :case, :data_request
 
-  def initialize(kase:, user:, data_requests:)
+  def initialize(kase:, user:, data_request:)
     @result = nil
     @user = user
     @case = kase
-    @new_data_requests = build_data_requests(data_requests)
+    @data_request = build_data_request(data_request)
   end
 
   def call
     ActiveRecord::Base.transaction do
       begin
         @result = :unprocessed
-        return if @new_data_requests.empty?
+        return if @data_request.blank?
 
         @case.save!
 
@@ -30,24 +30,15 @@ class DataRequestCreateService
     end
   end
 
-  def process?(location:, request_type:)
-    location&.strip.present? || request_type&.strip.present?
-  end
+  private
 
-  def build_data_requests(new_data_requests)
-    return [] unless @case.respond_to? :data_requests
-
-    new_data_requests.values.map do |data_request|
-      next unless process?(
-        **data_request.to_h.symbolize_keys.slice(:location, :request_type)
-      )
-
-      @case.data_requests.new(
-        user: @user,
-        location: data_request[:location],
-        request_type: data_request[:request_type],
-        date_requested: Date.current,
-      )
-    end.compact
+  def build_data_request(data_request)
+    return nil unless @case.respond_to? :data_requests
+    @case.data_requests.new(
+      user: @user,
+      location: data_request[:location],
+      request_type: data_request[:request_type],
+      date_requested: Date.current,
+    )
   end
 end

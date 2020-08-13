@@ -17,10 +17,9 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       expect(assigns(:case)).to eq offender_sar_case
     end
 
-    it 'builds 3 @data_requests' do
-      data_requests = assigns(:data_requests)
-      data_requests.each { |data_request| expect(data_request).to be_a DataRequest }
-      expect(data_requests.size).to eq 3
+    it 'builds @data_request' do
+      data_request = assigns(:data_request)
+      expect(data_request).to be_a DataRequest
     end
   end
 
@@ -28,17 +27,9 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     context 'with valid params' do
       let(:params) {
         {
-          case: {
-            data_requests_attributes: {
-              '0': {
-                location: 'Wormwood Scrubs',
-                request_type: 'offender',
-              },
-              '1': {
-                location: 'Super Max 1',
-                request_type: 'offender',
-              },
-            },
+          data_request: {
+            location: 'Wormwood Scrubs',
+            request_type: 'offender'
           },
           case_id: offender_sar_case.id,
         }
@@ -46,7 +37,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
       it 'creates a new DataRequest' do
         expect { post :create, params: params }
-          .to change(DataRequest.all, :size).by 2
+          .to change(DataRequest.all, :size).by 1
         expect(response).to redirect_to case_path(offender_sar_case)
       end
     end
@@ -54,13 +45,9 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     context 'with invalid params' do
       let(:invalid_params) {
         {
-          case: {
-            data_requests_attributes: {
-              '0': {
-                location: 'A Location',
-                request_type: '',
-              },
-            },
+          data_request: {
+            location: '',
+            request_type: 'offender'
           },
           case_id: offender_sar_case.id,
         }
@@ -70,52 +57,6 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         expect { post :create, params: invalid_params }
           .to change(DataRequest.all, :size).by 0
         expect(response).to render_template(:new)
-      end
-    end
-
-    context 'with blank params' do
-      let(:blank_params) {
-        {
-          case: {
-            data_requests_attributes: {
-              '0': {
-                location: '         ',
-                request_type: nil,
-              },
-            },
-          },
-          case_id: offender_sar_case.id,
-        }
-      }
-
-      it 'does not create a new DataRequest' do
-        expect { post :create, params: blank_params }
-          .to change(DataRequest.all, :size).by 0
-        expect(response).to redirect_to new_case_data_request_path(offender_sar_case)
-      end
-    end
-
-    context 'with unknown service result' do
-      let(:params) {
-        {
-          case: {
-            data_requests_attributes: {
-              '0': {
-                location: 'Wormwood Scrubs',
-                request_type: 'offender',
-              },
-            },
-          },
-          case_id: offender_sar_case.id,
-        }
-      }
-
-      it 'raises an ArgumentError' do
-        allow_any_instance_of(DataRequestCreateService)
-          .to receive(:result).and_return(:bogus_result!)
-
-        expect { post :create, params: params }
-          .to raise_error ArgumentError, match(/Unknown result/)
       end
     end
   end
