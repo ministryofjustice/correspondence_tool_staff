@@ -2,6 +2,7 @@ module Cases
   class SearchesController < ApplicationController
     include SetupCase
     include SearchParams
+    include AvailableCaseReports
 
     def show
       set_url

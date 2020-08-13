@@ -2,6 +2,7 @@ module Cases
   class FiltersController < ApplicationController
     include SetupCase
     include SearchParams
+    include AvailableCaseReports
 
     before_action :set_url, only: [:open]
     before_action :set_state_selector, only: [:open, :my_open]
@@ -103,26 +104,11 @@ module Cases
           :responding_team
         )
 
-      query_list_params = search_params.merge(list_path: request.path)
-
-      service = CaseSearchService.new(
-        user: current_user,
-        query_type: :list,
-        query_params: query_list_params
-      )
-      service.call(full_list_of_cases)
-      @query = service.query
-
-      if service.error?
-        flash.now[:alert] = service.error_message
-      else
-        prepare_open_cases_collection(service)
-      end
+      call_search_service(full_list_of_cases)
 
       @filter_crumbs = @query.filter_crumbs
       @current_tab_name = 'all_cases'
       @can_add_case = policy(Case::Base).can_add_case?
-
       respond_to do |format|
         format.html { render :index }
         format.csv { send_csv_cases 'open' }
@@ -144,6 +130,23 @@ module Cases
 
 
     private
+
+    def call_search_service(full_list_of_cases)
+      query_list_params = search_params.merge(list_path: request.path)
+      service = CaseSearchService.new(
+        user: current_user,
+        query_type: :list,
+        query_params: query_list_params
+      )
+      service.call(full_list_of_cases)
+      @query = service.query
+
+      if service.error?
+        flash.now[:alert] = service.error_message
+      else
+        prepare_open_cases_collection(service)
+      end
+    end
 
     def set_search_query
       service = CaseSearchService.new(
@@ -182,5 +185,6 @@ module Cases
 
       url_for(new_params)
     end
+
   end
 end

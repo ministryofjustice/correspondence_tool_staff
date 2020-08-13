@@ -52,4 +52,3 @@ class Letter
     values.third_party_company_name if values.third_party_company_name.present?
   end
 end
-
