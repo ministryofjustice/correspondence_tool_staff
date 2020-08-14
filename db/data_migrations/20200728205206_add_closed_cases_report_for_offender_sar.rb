@@ -16,7 +16,7 @@ class AddClosedCasesReportForOffenderSar < ActiveRecord::DataMigration
     
     rt = ReportType.find_by(abbr: 'R007')
     if !rt.nil?
-      rt.update(full_name: 'General closed cases report')
+      rt.update(full_name: 'Closed cases report')
     end
 
     rt = ReportType.find_by(abbr: 'R005')

@@ -34,15 +34,7 @@ class ReportType < ApplicationRecord
 
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
-  # REPORT_TYPE_CORRESPONDENCE_TYPE_MAP = {
-  #   "OFFENDER_SAR": :offender_sar,
-  #   "FOI": :foi,
-  #   "OVERTURNED_FOI": :foi, 
-  #   "OVERTURNED_SAR": :sar,
-  #   "SAR": :sar
-  # }.with_indifferent_access.freeze
-
-
+  
   def class_constant
     @_class_constant ||= class_name.constantize
   end
@@ -75,13 +67,4 @@ class ReportType < ApplicationRecord
     class_constant.description
   end
 
-  # def self.get_report_categories(correspondence_types=nil)
-  #   if correspondence_types.nil?
-  #     REPORT_TYPE_CORRESPONDENCE_TYPE_MAP.keys()
-  #   else
-  #     report_categories = []
-  #     correspondence_types.each { |correspondence_type| report_categories << correspondence_type.abbreviation}
-  #     report_categories
-  #   end
-  # end
 end

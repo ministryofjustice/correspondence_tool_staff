@@ -71,8 +71,6 @@ describe 'stats/index.html.slim', type: :view do
   # +date_period+ is a Hash of :start_date and :end_date
   # +reports+ is the collection of ReportType presented in that section
   def expected_content(page_section:, date_period:, reports: [])\
-    # expect(page_section.name.text).to eq title
-
     page_section.each_with_index  do |report, index|
       reporting_period = [
         "Reporting period:",
