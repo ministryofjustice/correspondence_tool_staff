@@ -58,7 +58,9 @@ class Case::SAR::Offender < Case::Base
                  third_party: :boolean,
                  third_party_company_name: :string,
                  late_team_id: :integer,
-                 third_party_name: :string
+                 third_party_name: :string,
+                 number_dispatched_pages: :string,
+                 number_exempt_pages: :string
 
   enum subject_type: {
     offender: 'offender',

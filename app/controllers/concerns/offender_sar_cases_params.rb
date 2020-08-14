@@ -1,6 +1,7 @@
 module OffenderSARCasesParams
   extend ActiveSupport::Concern
 
+  #rubocop:disable Metrics/MethodLength
   def create_offender_sar_params
     params.require(:offender_sar).permit(
       :case_reference_number,
@@ -10,6 +11,8 @@ module OffenderSARCasesParams
       :flag_as_high_profile,
       :message,
       :name,
+      :number_dispatched_pages,
+      :number_exempt_pages,
       :other_subject_ids,
       :postal_address,
       :prison_number,
@@ -33,6 +36,7 @@ module OffenderSARCasesParams
       uploaded_request_files: [],
       )
   end
+  #rubocop:enable Metrics/MethodLength
 
   # @todo: Replace with appropriate edit params
   def update_offender_sar_params
