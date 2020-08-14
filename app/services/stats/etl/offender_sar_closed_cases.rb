@@ -14,10 +14,6 @@ module Stats
         'Date received at MOJ',
         'Date case closed', 
         'Timeliness (in time/out of time)',
-        # 'Days taken',
-        # 'Pre-vet page count',
-        # 'Number of exempt pages',
-        # 'Post-vet page count'
       ]
 
       FIELD_COLUMNS = [
