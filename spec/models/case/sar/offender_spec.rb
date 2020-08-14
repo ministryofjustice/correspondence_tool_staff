@@ -584,4 +584,35 @@ describe Case::SAR::Offender do
       expect(kase.errors[:subject_address]).to eq ["can't be blank"]
     end
   end
+
+  describe '#page_count' do
+    let(:kase) { build :offender_sar_case }
+
+    it 'no data request' do
+      expect(kase.page_count).to eq 0
+    end
+
+    it 'have data request but have not received anything yet' do
+      DataRequest.new(
+        offender_sar_case: kase,
+        user: build(:user),
+        location: 'X' * 500, # Max length
+        data: 'Please supply a huge list of misdemeanours by Miers Porgan'
+      )
+      expect(kase.page_count).to eq 0
+    end
+
+    it 'have data requests and have received 200 pages' do
+      data_request = DataRequest.new(
+        offender_sar_case: kase,
+        user: build(:user),
+        location: 'X' * 500, # Max length, 
+        cached_num_pages: 200,
+        data: 'Please supply a huge list of misdemeanours by Miers Porgan'
+      )
+      data_request.save!
+      expect(kase.page_count).to eq 200
+    end
+  end
+
 end

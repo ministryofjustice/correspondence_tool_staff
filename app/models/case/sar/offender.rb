@@ -234,6 +234,10 @@ class Case::SAR::Offender < Case::Base
     (!subject_recipient?) ? postal_address : subject_address
   end
 
+  def page_count
+    DataRequest.where(case_id: self.id).sum(:cached_num_pages)
+  end
+
   private
 
   def set_subject

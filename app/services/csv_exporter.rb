@@ -107,6 +107,11 @@ class CSVExporter
     end
   end
 
+  def analyse_case(kase)
+    @kase = kase
+    @kase.to_csv
+  end
+
   private
 
   def extension_count(kase)

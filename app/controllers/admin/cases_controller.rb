@@ -90,7 +90,8 @@ class Admin::CasesController < AdminController
       CorrespondenceType.sar,
       CorrespondenceType.ico,
       CorrespondenceType.overturned_sar,
-      CorrespondenceType.overturned_foi
+      CorrespondenceType.overturned_foi, 
+      CorrespondenceType.offender_sar
     ]
   end
 
@@ -100,7 +101,8 @@ class Admin::CasesController < AdminController
       'sar'             => CorrespondenceType.sar,
       'ico'             => CorrespondenceType.ico,
       'overturned_foi'  => CorrespondenceType.foi,
-      'overturned_sar'  => CorrespondenceType.sar
+      'overturned_sar'  => CorrespondenceType.sar, 
+      'offender_sar'    => CorrespondenceType.offender_sar
     }
     correspondence_types[@correspondence_type_key]
   end
@@ -111,7 +113,8 @@ class Admin::CasesController < AdminController
       'sar'              => 'Case::SAR::Standard',
       'ico'              => 'Case::ICO::FOI',
       'overturned_foi'   => 'Case::OverturnedICO::FOI',
-      'overturned_sar'   => 'Case::OverturnedICO::SAR'
+      'overturned_sar'   => 'Case::OverturnedICO::SAR',
+      'offender_sar'     => 'Case::SAR::Offender', 
     }
     case_classes[@correspondence_type_key]
   end
