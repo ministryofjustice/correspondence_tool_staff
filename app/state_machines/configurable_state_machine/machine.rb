@@ -136,7 +136,7 @@ module ConfigurableStateMachine
 
 
 
-    def next_state_for_event(event, params)   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+    def next_state_for_event(event, params)   #rubocop:disable Metrics/MethodLength
       user = extract_user_from_metadata(params)
       if can_trigger_event?(event_name: event, metadata: params)
         event = event.to_sym
@@ -397,5 +397,5 @@ module ConfigurableStateMachine
       end
     end
   end
-  # rubocop:enable Metrics/ClassLength
+  #rubocop:enable Metrics/ClassLength
 end

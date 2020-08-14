@@ -22,7 +22,7 @@ module CTS
         ./cts policies check 19 239 can_view_case_details
         ./cts policies check 19 239 can_view_case_details can_approve_case
     EOD
-    def check(*args)
+    def check(*args) #rubocop:disable Metrics/CyclomaticComplexity
       raise("No user provided.") if args.length == 0
       raise("No case provided.") if args.length == 1
       user = CTS::find_user(args.shift)

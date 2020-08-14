@@ -66,6 +66,7 @@ class Case::SAR::Offender < Case::Base
     detainee: 'detainee',
     ex_detainee: 'ex_detainee',
     probation_service_user: 'probation_service_user',
+    ex_probation_service_user: 'ex_probation_service_user',
   }
 
   enum recipient: {
@@ -241,6 +242,10 @@ class Case::SAR::Offender < Case::Base
 
   def recipient_address
     (!subject_recipient?) ? postal_address : subject_address
+  end
+
+  def page_count
+    DataRequest.where(case_id: self.id).sum(:cached_num_pages)
   end
 
   private

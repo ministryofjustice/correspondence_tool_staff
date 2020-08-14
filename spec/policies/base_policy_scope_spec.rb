@@ -51,7 +51,8 @@ describe Case::BasePolicy::Scope do
                                                         @unassigned_case, 
                                                         @drafting_sar_case_other_team,
                                                         @accepted_case_r2, 
-                                                        @ico_foi_case, 
+                                                        @ico_foi_case,
+                                                        @rejected_case, 
                                                         @ico_sar_case]
 
       @responder.reload

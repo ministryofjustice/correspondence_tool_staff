@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+  include AvailableCaseReports
 
   before_action :set_team, only: [:create, :new, :edit, :update, :confirm_destroy]
 

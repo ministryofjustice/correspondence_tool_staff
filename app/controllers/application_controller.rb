@@ -89,9 +89,29 @@ class ApplicationController < ActionController::Base
   end
 
   def send_csv_cases(action_string)
+    specific_report = params[:report]
+    if specific_report
+      send_csv_case_by_specific_report(specific_report)
+    else
+      send_csv_case_by_default(action_string)
+    end
+  end
+
+  def send_csv_case_by_specific_report(specific_report)
+    headers["Content-Type"] = 'text/csv; charset=utf-8'
+    report_type = ReportType.find_by_abbr(specific_report)
+    report_service_class = report_type.class_name.constantize
+    report_service = report_service_class.new(case_scope: @cases)
+    headers["Content-Disposition"] =
+      %(attachment; filename="#{report_service.filename}")
+      self.response_body = report_service.to_csv()
+  end
+
+  def send_csv_case_by_default(action_string)
     headers["Content-Type"] = 'text/csv; charset=utf-8'
     headers["Content-Disposition"] =
       %(attachment; filename="#{CSVGenerator.filename(action_string)}")
-    self.response_body = CSVGenerator.new(@cases)
+      self.response_body = CSVGenerator.new(@cases, CSVExporter.new(nil))
   end
+
 end
