@@ -144,6 +144,53 @@ describe 'cases/case_status.html.slim', type: :view do
 
     end
 
+    it 'displays the page counts for Offender Sar case' do
+      offender_sar_case = double Case::ICO::BaseDecorator,
+        status: "Needs reassigning",
+        external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
+        ico?: false,
+        internal_deadline: nil,
+        current_state: 'drafting',
+        type_abbreviation: 'ICO',
+        who_its_with: 'Branston Registry',
+        offender_sar?: true
+
+
+      render partial: 'cases/case_status.html.slim',
+             locals:{ case_details: offender_sar_case}
+
+      partial = case_status_section(rendered)
+
+      expect(partial.details.page_counts.received_label.text).to eq 'Pages received'
+      expect(partial.details.page_counts.received_number.text).to eq '109'
+      expect(partial.details.page_counts.exempt_label.text).to eq 'Exempt pages'
+      expect(partial.details.page_counts.exempt_number.text).to eq '201'
+      expect(partial.details.page_counts.dispatched_label.text).to eq 'Pages for dispatch'
+      expect(partial.details.page_counts.dispatched_number.text).to eq '999'
+
+    end
+
+    it 'does not display Page counts for non-offender SAR case' do
+      ico_case = double Case::ICO::BaseDecorator,
+        status: "Needs reassigning",
+        external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
+        ico_reference_number: '123456789ABC',
+        ico?: true,
+        internal_deadline: nil,
+        current_state: 'drafting',
+        type_abbreviation: 'ICO',
+        who_its_with: 'DACU',
+        offender_sar?: false
+
+
+      render partial: 'cases/case_status.html.slim',
+             locals:{ case_details: ico_case}
+
+      partial = case_status_section(rendered)
+
+      expect(partial.details).to have_no_page_counts
+    end
+
     let(:ico_overturned_sar) {
       double Case::OverturnedICO::SARDecorator,
         status: "Needs reassigning",
