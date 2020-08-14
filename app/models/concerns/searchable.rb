@@ -9,9 +9,10 @@ module Searchable
     pg_search_scope :search,
                     against: searchable_fields_and_ranks,
                     using: { tsearch: {
-                               any_word: true,
+                               any_word: false,
                                dictionary: 'english',
                                tsvector_column: searchable_document_tsvector,
+                               prefix: true,
                              }
                            }
   end
