@@ -156,7 +156,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(result['Date compliant draft uploaded']).to eq case_report.date_compliant_draft_uploaded
       expect(result['Trigger']).to eq case_report.trigger
       expect(result['Name']).to eq case_report.name
-      expect(result['Requester type']).to eq kase.offender_sar? ?  nil.humanize : case_report.requester_type
+      expect(result['Requester type']).to eq case_report.requester_type
       expect(result['Message']).to eq case_report.message
       expect(result['Info held']).to eq case_report.info_held
       expect(result['Outcome']).to eq case_report.outcome
