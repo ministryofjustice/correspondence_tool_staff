@@ -10,7 +10,7 @@ class StatsController < ApplicationController
   SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'.freeze
 
   def index
-    @reports = ReportType.available_standard_reports(current_user.permitted_correspondence_types)
+    @reports = Pundit.policy_scope(current_user, ReportType.where(standard_report: true).all)
   end
 
   def show
