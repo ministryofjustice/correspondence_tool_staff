@@ -612,7 +612,7 @@ class Case::Base < ApplicationRecord
   end
 
   def num_days_late
-    days = (Date.today - external_deadline).to_i
+    days = ((date_responded.nil? ? Date.today : date_responded) - external_deadline).to_i
     days > 0 ? days : nil
   end
 

@@ -10,7 +10,7 @@ class StatsController < ApplicationController
   SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'.freeze
 
   def index
-    @reports = ReportType.available_standard_reports
+    @reports = Pundit.policy_scope(current_user, ReportType.where(standard_report: true).all)
   end
 
   def show
@@ -77,7 +77,7 @@ class StatsController < ApplicationController
   end
 
   def self.closed_cases_correspondence_type
-    FauxCorrespondenceType.new('CLOSED_CASES', 'Closed cases report')
+    FauxCorrespondenceType.new('CLOSED_CASES', 'General closed cases report')
   end
 
   private

@@ -4,26 +4,17 @@ require 'csv'
 
 module Stats
   module ETL
-    describe ClosedCases do
+    describe OffenderSarClosedCases do
       let(:default_retrieval_scope) {
-        Case::Base.all
+        Case::SAR::Offender.all
       }
 
       before(:all) do
         7.times do
-          ::Warehouse::CaseReport.generate(create :foi_case)
+          ::Warehouse::CaseReport.generate(create :offender_sar_case)
         end
 
-        @etl = described_class.new(retrieval_scope: Case::Base.all)
-      end
-
-      describe '#initialize' do
-        it 'generates a single zip file from multiple csv files' do
-          fragments_dir = @etl.send(:folder)
-
-          expect(Dir["#{fragments_dir}/closed-cases.csv"].first).to be_present
-          expect(Dir["#{fragments_dir}/closed-cases.zip"].first).to be_present
-        end
+        @etl = described_class.new(retrieval_scope: Case::SAR::Offender.all)
       end
 
       describe '#heading' do
@@ -40,7 +31,11 @@ module Stats
         it 'returns list of Warehouse::CaseReport field names' do
           case_report = ::Warehouse::CaseReport.new
           @etl.send(:columns).each do |field|
-            expect(case_report).to respond_to field
+            if field == " case when number_of_days_late > 0 then 'in time' else 'out of time' end "
+              expect(case_report).to respond_to 'number_of_days_late'
+            else
+              expect(case_report).to respond_to field
+            end 
           end
         end
       end

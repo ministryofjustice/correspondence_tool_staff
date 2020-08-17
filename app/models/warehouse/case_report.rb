@@ -163,6 +163,7 @@ module Warehouse
       def humanize_boolean(boolean)
         boolean ? 'Yes' : nil
       end
+
     end
   end
 end

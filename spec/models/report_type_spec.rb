@@ -15,6 +15,7 @@
 #
 
 require 'rails_helper'
+require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
 
 RSpec.describe ReportType, type: :model do
   after(:all) { ReportType.delete_all }
@@ -128,4 +129,6 @@ RSpec.describe ReportType, type: :model do
       end
     end
   end
+  
 end
+

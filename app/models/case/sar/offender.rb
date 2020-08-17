@@ -25,6 +25,8 @@ class Case::SAR::Offender < Case::Base
     end
   end
 
+  DATA_SUBJECT_FOR_REQUESTEE_TYPE = 'data_subject'.freeze
+
   GOV_UK_DATE_FIELDS = %i[
     date_of_birth
     date_responded
@@ -249,6 +251,10 @@ class Case::SAR::Offender < Case::Base
   def page_count
     DataRequest.where(case_id: self.id).sum(:cached_num_pages)
   end
+
+  def requester_type
+    self.third_party? ? self.third_party_relationship : 'data_subject'
+  end 
 
   private
 
