@@ -85,10 +85,10 @@ describe Case::SAR::Offender do
       it 'does not error' do
         expect(build(:offender_sar_case, recipient: 'subject_recipient')).to be_valid
         expect(build(:offender_sar_case, recipient: 'requester_recipient')).to be_valid
-        expect(build(:offender_sar_case, 
-                    recipient: 'third_party_recipient', 
-                    third_party: false, 
-                    third_party_name: 'test', 
+        expect(build(:offender_sar_case,
+                    recipient: 'third_party_recipient',
+                    third_party: false,
+                    third_party_name: 'test',
                     third_party_relationship: 'test'
                     )).to be_valid
       end
@@ -190,7 +190,7 @@ describe Case::SAR::Offender do
       end
     end
   end
-  
+
   describe '#request_dated' do
     context 'invalid value' do
       it 'errors' do
@@ -219,7 +219,7 @@ describe Case::SAR::Offender do
       end
 
       it 'validates third party names when recipient is third party' do
-        kase = build :offender_sar_case, third_party: false, third_party_name: '', 
+        kase = build :offender_sar_case, third_party: false, third_party_name: '',
                       third_party_company_name: '', recipient: 'third_party_recipient'
         expect(kase).not_to be_valid
         expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
@@ -227,7 +227,7 @@ describe Case::SAR::Offender do
       end
 
       it 'does not validate third_party names when ecipient is not third party too' do
-        kase = build :offender_sar_case, third_party: false, third_party_name: '', 
+        kase = build :offender_sar_case, third_party: false, third_party_name: '',
                       third_party_company_name: '', recipient: 'subject_recipient'
         expect(kase).to be_valid
       end
@@ -242,14 +242,14 @@ describe Case::SAR::Offender do
       end
 
       it 'must be present when third party is false but recipient is third party' do
-        kase = build :offender_sar_case, third_party: false, third_party_relationship: '', 
+        kase = build :offender_sar_case, third_party: false, third_party_relationship: '',
                       recipient: 'third_party_recipient'
         expect(kase).not_to be_valid
         expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
       end
 
       it 'does not validates presence of third party relationship when recipient is not third party' do
-        kase = build :offender_sar_case, third_party: false, third_party_relationship: '', 
+        kase = build :offender_sar_case, third_party: false, third_party_relationship: '',
                       recipient: 'subject_recipient'
         expect(kase).to be_valid
       end
@@ -434,16 +434,21 @@ describe Case::SAR::Offender do
   describe '.searchable_fields_and_ranks' do
     it 'includes subject full name' do
       expect(Case::SAR::Offender.searchable_fields_and_ranks).to include({
-        message: 'D',
-        name: 'A',
-        number: 'A',
+        subject_full_name: 'A',
+        case_reference_number: 'B',
+        date_of_birth: 'B',
+        name: 'B',
+        number: 'B',
         other_subject_ids: 'B',
+        postal_address: 'B',
         previous_case_numbers: 'B',
         prison_number: 'B',
-        responding_team_name: 'B',
-        subject: 'C',
+        requester_reference: 'B',
+        subject: 'B',
+        subject_address: 'B',
         subject_aliases: 'B',
-        subject_full_name: 'A',
+        third_party_company_name: 'B',
+        third_party_name: 'B',
       })
     end
   end

@@ -5,13 +5,23 @@ class Case::SAR::Offender < Case::Base
     end
 
     def searchable_fields_and_ranks
-      super.merge({
+      {
         subject_full_name: 'A',
-        prison_number: 'B',
+        case_reference_number: 'B',
+        date_of_birth: 'B',
+        name: 'B',
+        number: 'B',
+        other_subject_ids: 'B',
+        postal_address: 'B',
         previous_case_numbers: 'B',
+        prison_number: 'B',
+        requester_reference: 'B',
+        subject: 'B',
+        subject_address: 'B',
         subject_aliases: 'B',
-        other_subject_ids: 'B'
-      })
+        third_party_company_name: 'B',
+        third_party_name: 'B',
+      }
     end
   end
 
@@ -50,7 +60,9 @@ class Case::SAR::Offender < Case::Base
                  third_party: :boolean,
                  third_party_company_name: :string,
                  late_team_id: :integer,
-                 third_party_name: :string
+                 third_party_name: :string,
+                 number_dispatched_pages: :string,
+                 number_exempt_pages: :string
 
   enum subject_type: {
     offender: 'offender',
