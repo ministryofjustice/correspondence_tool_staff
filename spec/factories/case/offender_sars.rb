@@ -35,6 +35,9 @@ FactoryBot.define do
     recipient                       { 'subject_recipient' }
     third_party                     { false }
     flag_as_high_profile            { false }
+    num_exempt_pages                { '200' }
+    num_dispatched_pages            { '555' }
+    num_pages_received              { '800' }
     created_at                      { creation_time }
     creator                         { create(:user, :orphan) }
   end
