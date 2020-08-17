@@ -3,11 +3,11 @@ require 'csv'
 module Stats
   module ETL
     class ClosedCases < BaseClosedCases
-      RESULTS_NAME = 'closed-cases'.freeze
+      RESULT_NAME = 'closed-cases'.freeze
 
 
       def result_name
-        RESULTS_NAME
+        RESULT_NAME
       end
 
       private

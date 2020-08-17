@@ -6,7 +6,6 @@ module Stats
       attr_reader :results_filepath, :retrieval_scope
 
       ROWS_PER_FRAGMENT = 1000 # Arbitrary value, may require experimentation
-      # RESULTS_NAME = 'closed-cases'.freeze
 
       # +retrieval_scope+ : ActiveQuery relation which Query::CaseReport
       # will use to ensure Warehouse retrieval is scoped for the current

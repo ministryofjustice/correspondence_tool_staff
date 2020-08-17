@@ -4,7 +4,7 @@ module Stats
   module ETL
     class OffenderSarClosedCases < BaseClosedCases
 
-      RESULTS_NAME = 'offender-sar-closed-cases'.freeze
+      RESULT_NAME = 'offender-sar-closed-cases'.freeze
 
       CSV_COLUMN_HEADINGS = [
         'Case number',
@@ -27,7 +27,7 @@ module Stats
       ]
 
       def result_name
-        RESULTS_NAME
+        RESULT_NAME
       end
 
       private
