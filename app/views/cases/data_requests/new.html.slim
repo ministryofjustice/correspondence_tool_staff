@@ -9,6 +9,8 @@
 
 - content_for :sub_heading
 
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
 span.visually-hidden
   = t('common.case.header_case_number')
   = @case.number
@@ -21,13 +23,33 @@ span.visually-hidden
       h3.page-heading--secondary.data-request__position
 
       = f.text_field :location,
-          placeholder: t('cases.data_requests.new.location_placeholder'),
           maxlength: 500,
           class: 'js-data-request__location'
 
-      = f.text_field :request_type,
-          placeholder: t('cases.data_requests.new.data_placeholder'),
-          class: 'js-data-request__request_type'
+      = f.radio_button_fieldset :request_type,
+          choices: DataRequest::request_types.keys do |fieldset|
+        - fieldset.radio_input('offender')
+        - fieldset.radio_input('all_prison_records')
+        - fieldset.radio_input('all_nomis_records')
+        - fieldset.radio_input('nomis_contact_logs')
+        - fieldset.radio_input('probation_records')
+        - fieldset.radio_input('prison_and_probation_records')
+        - fieldset.radio_input('other')
+          = f.text_area :request_type_note
+
+      = f.gov_uk_date_field :date_from, { \
+        legend_text: 'Date from',
+        form_hint_text: t('cases.new.date_sar_received_copy'),
+        today_button: { class: '' } \
+      }
+
+      br
+
+      = f.gov_uk_date_field :date_to, { \
+        legend_text: 'Date to',
+        form_hint_text: t('cases.new.date_sar_received_copy'),
+        today_button: { class: '' } \
+      }
 
     .button-holder
       = f.submit t('.record_request'), { class: 'button', role: 'button' }

@@ -15,7 +15,7 @@ module Cases
       service = DataRequestCreateService.new(
         kase: @case,
         user: current_user,
-        data_request: create_params
+        data_request_params: create_params
       )
       service.call
 
@@ -78,7 +78,14 @@ module Cases
     end
 
     def create_params
-      params.require(:data_request).permit(:location, :request_type)
+      params.require(:data_request).permit(
+        :location,
+        :request_type,
+        :request_type_note,
+        :date_from, :date_to,
+        :date_from_dd, :date_from_mm, :date_from_yyyy,
+        :date_to_dd, :date_to_mm, :date_to_yyyy,
+      )
     end
 
     def update_params

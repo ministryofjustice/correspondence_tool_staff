@@ -4,13 +4,23 @@ describe DataRequestCreateService do
   let(:user) { create :user }
   let(:offender_sar_case) { create :offender_sar_case }
   let(:data_request_attributes) {
-    { location: 'The Clinic', request_type: 'offender' }
+    {
+      location: 'The Clinic',
+      request_type: 'offender',
+      request_type_note: 'Lorem ipsum',
+      date_from_dd: "15",
+      date_from_mm: "8",
+      date_from_yyyy: "2018",
+      date_to_dd: "15",
+      date_to_mm: "8",
+      date_to_yyyy: "2019",
+    }
   }
   let(:service) {
     described_class.new(
       kase: offender_sar_case,
       user: user,
-      data_request: data_request_attributes
+      data_request_params: data_request_attributes
     )
   }
 
@@ -25,7 +35,7 @@ describe DataRequestCreateService do
       new_service = described_class.new(
         kase: create(:foi_case),
         user: user,
-        data_request: data_request_attributes
+        data_request_params: data_request_attributes
       )
 
       expect(new_service).to be_instance_of described_class
@@ -44,21 +54,15 @@ describe DataRequestCreateService do
         expect(service.result).to eq :ok
       end
 
-      it 'skips any blank pairs of location/data' do
-        params = data_request_attributes.clone
-        params.merge!({
-          '0' => { location: nil, request_type: '              ' },
-          '2' => { location: '                  ', request_type: nil },
-        })
 
-        service = described_class.new(
-          kase: offender_sar_case,
-          user: user,
-          data_request: params
-        )
-
-        expect { service.call }.to change(DataRequest.all, :size).by(1)
-        expect(service.result).to be :ok
+      it 'creates a data request with the attributes given' do
+        result = service.call
+        expect(service.data_request.persisted?).to be_truthy
+        expect(service.data_request.location).to eq 'The Clinic'
+        expect(service.data_request.request_type).to eq 'offender'
+        expect(service.data_request.request_type_note).to eq 'Lorem ipsum'
+        expect(service.data_request.date_from).to eq Date.new(2018, 8, 15)
+        expect(service.data_request.date_to).to eq Date.new(2019, 8, 15)
       end
     end
 
@@ -70,7 +74,7 @@ describe DataRequestCreateService do
         service = described_class.new(
           kase: offender_sar_case,
           user: user,
-          data_request: params
+          data_request_params: params
         )
 
         expect { service.call }.to change(DataRequest.all, :size).by(0)
@@ -82,7 +86,7 @@ describe DataRequestCreateService do
         service = described_class.new(
           kase: offender_sar_case,
           user: user,
-          data_request: {}
+          data_request_params: {}
         )
 
         expect { service.call }.to change(DataRequest.all, :size).by(0)

@@ -26,6 +26,8 @@ class DataRequest < ApplicationRecord
     other: 'other'
   }
 
+  acts_as_gov_uk_date(:date_from, :date_to)
+
   def new_log
     logs.new(
       date_received: self.cached_date_received,
