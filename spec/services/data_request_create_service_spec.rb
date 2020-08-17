@@ -56,7 +56,7 @@ describe DataRequestCreateService do
 
 
       it 'creates a data request with the attributes given' do
-        result = service.call
+        service.call
         expect(service.data_request.persisted?).to be_truthy
         expect(service.data_request.location).to eq 'The Clinic'
         expect(service.data_request.request_type).to eq 'offender'

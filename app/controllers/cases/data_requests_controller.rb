@@ -82,7 +82,6 @@ module Cases
         :location,
         :request_type,
         :request_type_note,
-        :date_from, :date_to,
         :date_from_dd, :date_from_mm, :date_from_yyyy,
         :date_to_dd, :date_to_mm, :date_to_yyyy,
       )
