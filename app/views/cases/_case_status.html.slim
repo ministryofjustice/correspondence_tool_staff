@@ -24,10 +24,16 @@
             .case-status__date-value = case_details.page_count
           .column-one-third
             .case-status__heading.case-status__heading--pages = t('common.case.pages_exempt')
-            .case-status__date-value = case_details.number_exempt_pages
+            - if case_details.number_exempt_pages?
+              .case-status__date-value = case_details.number_exempt_pages
+            - else
+              .case-status__date-value = '0'
           .column-one-third
             .case-status__heading.case-status__heading--pages = t('common.case.pages_dispatch')
-            .case-status__date-value = case_details.number_dispatched_pages
+            - if case_details.number_dispatched_pages?
+              .case-status__date-value = case_details.number_dispatched_pages
+            - else
+              .case-status__date-value = '0'
 
     - if case_details.respond_to?(:ico_reference_number)
       .case-status__group.ico-reference
