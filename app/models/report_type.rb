@@ -34,6 +34,7 @@ class ReportType < ApplicationRecord
 
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
+  
   def class_constant
     @_class_constant ||= class_name.constantize
   end
@@ -54,14 +55,6 @@ class ReportType < ApplicationRecord
     meth.to_s =~ /^r\d\d\d$/ || super
   end
 
-  def self.available_standard_reports
-    {
-      foi: self.standard.foi.order(:full_name),
-      sar: self.standard.sar.order(:full_name),
-      offender_sar: self.standard.offender_sar.order(:full_name)
-    }
-  end
-
   def default_reporting_period_text
     ReportingPeriod::Calculator.build(period_name: default_reporting_period).to_s
   end
@@ -73,4 +66,5 @@ class ReportType < ApplicationRecord
   def description
     class_constant.description
   end
+
 end

@@ -17,6 +17,13 @@ module Stats
           .to eq 'Entire list of closed cases'
       end
     end
+    
+    describe '.etl_handler' do
+      it 'returns correct etl_handler' do
+        expect(R007ClosedCasesReport.etl_handler)
+          .to eq Stats::ETL::ClosedCases
+      end
+    end
 
     describe 'reporting' do
       before(:all) do

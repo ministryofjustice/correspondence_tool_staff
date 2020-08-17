@@ -798,6 +798,7 @@ en:
       date_draft_compliant: Date compliant draft was uploaded
       date_draft_compliant_example: "For example, 01 02 2018"
       offender_sar:
+        date_responded: 'Edit case closure details'
         sub_heading: Edit Offender SAR case
     update:
       case_updated: Case updated

@@ -18,17 +18,12 @@ module PageObjects
 
         element :report_caption, 'table caption'
 
-        %i[foi sar offender_sar].each_with_index do |performance_type, i|
-          section performance_type, "section:nth-of-type(#{i + 1})" do
-            element :type_name, 'h2'
-            sections :reports, 'ul.report-list li' do
-              element :name, 'h3'
-              element :description, '.report-description'
-              element :report_period, '.report-period'
-              element :download, '.report-list-download'
-              element :download_link, '.report-list-download a'
-            end
-          end
+        sections :reports, 'ul.report-list li' do
+          element :name, 'h3'
+          element :description, '.report-description'
+          element :report_period, '.report-period'
+          element :download, '.report-list-download'
+          element :download_link, '.report-list-download a'
         end
 
         element :custom_reports, '.button'

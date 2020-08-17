@@ -3,13 +3,7 @@ require 'rails_helper'
 describe 'stats/index.html.slim', type: :view do
   let!(:time) { Time.local(2018, 10, 3) }
 
-  let(:available_reports) {
-    {
-      foi: foi_reports,
-      sar: sar_reports,
-      offender_sar: offender_sar_reports,
-    }
-  }
+  let(:available_reports)  {  foi_reports + sar_reports + offender_sar_reports }
 
   let(:foi_reports) {
     [
@@ -60,35 +54,12 @@ describe 'stats/index.html.slim', type: :view do
       end
     end
 
-    context 'for FOI reports' do
+    context 'for available reports' do
       it 'is present' do
         expected_content(
-          page_section: page.foi,
-          title: 'Standard FOI reports',
+          page_section: page.reports,
           date_period: year_to_date_period,
-          reports: foi_reports
-        )
-      end
-    end
-
-    context 'for SAR reports' do
-      it 'is present' do
-        expected_content(
-          page_section: page.sar,
-          title: 'Standard SAR reports',
-          date_period: year_to_date_period,
-          reports: sar_reports
-        )
-      end
-    end
-
-    context 'for Offender SAR reports' do
-      it 'is present' do
-        expected_content(
-          page_section: page.offender_sar,
-          title: 'Offender SAR reports',
-          date_period: year_to_date_period,
-          reports: offender_sar_reports
+          reports: available_reports
         )
       end
     end
@@ -99,10 +70,8 @@ describe 'stats/index.html.slim', type: :view do
   #
   # +date_period+ is a Hash of :start_date and :end_date
   # +reports+ is the collection of ReportType presented in that section
-  def expected_content(page_section:, title:, date_period:, reports: [])
-    expect(page_section.type_name.text).to eq title
-
-    page_section.reports.each_with_index  do |report, index|
+  def expected_content(page_section:, date_period:, reports: [])\
+    page_section.each_with_index  do |report, index|
       reporting_period = [
         "Reporting period:",
         "#{date_period[:start_date]}",

@@ -281,6 +281,12 @@ RSpec.describe StatsController, type: :controller do
   end
 
   describe '#index' do
+    before do
+      ReportTypeSeeder.new.seed!
+    end 
+    after do 
+      ReportType.delete_all
+    end
     it 'authorizes' do
       expect { get :index }
         .to require_permission(:can_download_stats?)
@@ -291,7 +297,7 @@ RSpec.describe StatsController, type: :controller do
       get :index
 
       available_standard_reports = assigns(:reports)
-      expect(available_standard_reports.keys).to match_array %i[foi sar offender_sar]
+      expect(available_standard_reports).to match_array ReportType.where(abbr: ['R005', 'R105'])
     end
 
     it 'renders the template' do
