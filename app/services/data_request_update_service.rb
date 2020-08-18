@@ -1,5 +1,5 @@
 class DataRequestUpdateService
-  attr_reader :result, :data_request, :data_request_log
+  attr_reader :result, :data_request
 
   def initialize(user:, data_request:, params:)
     @result = nil
@@ -14,8 +14,9 @@ class DataRequestUpdateService
     ActiveRecord::Base.transaction do
       begin
         @result = :unprocessed
-        @data_request_log = @data_request.data_request_logs.build(@params.merge!({ user: @user }))
-        return if unchanged?(@data_request_log)
+
+        @data_request.assign_attributes(@params.merge!(user_id: @user.id))
+        return unless @data_request.changed?
 
         @data_request.save!
 
@@ -48,7 +49,7 @@ class DataRequestUpdateService
     I18n.t('.log_message',
       request_type: @data_request.request_type,
       location: @data_request.location,
-      date_received: @data_request.cached_date_received.strftime('%F'),
+      date_received: Date.current.strftime('%F'),
       old_pages: pages.first,
       new_pages: pages.second,
       scope: scope

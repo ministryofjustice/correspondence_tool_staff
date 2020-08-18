@@ -13,12 +13,9 @@ module PageObjects
         element :location, '.data-request__location'
         element :request_type, '.data-request__request_type'
 
-        section :form, 'form#new_data_request_log' do
-          element :date_received_dd,   'input[name*="[date_received_dd]"]'
-          element :date_received_mm,   'input[name*="[date_received_mm]"]'
-          element :date_received_yyyy, 'input[name*="[date_received_yyyy]"]'
+        section :form, 'form#edit_data_request' do
 
-          element :num_pages, 'input[name*="[num_pages]"]'
+          element :cached_num_pages, 'input[name*="[cached_num_pages]"]'
         end
 
         element :submit_button, '.button'
