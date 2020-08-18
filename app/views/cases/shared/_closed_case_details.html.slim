@@ -17,6 +17,7 @@ tbody.response-details
     tr.time-taken
       th = t('common.case.time_taken')
       td = case_details.time_taken
+      td = ' '
 
   - if case_details.info_held_status.present?
     tr.info-held
