@@ -17,7 +17,7 @@ describe 'cases/data_requests/new', type: :view do
       expect(@page.page_heading.heading.text).to eq 'Record data request'
       expect(@page.form).to have_location
       expect(@page.form).to have_request_type
-      expect(@page.submit_button.value).to eq 'Record request'
+      expect(@page.form.submit_button.value).to eq 'Record request'
     end
   end
 end
