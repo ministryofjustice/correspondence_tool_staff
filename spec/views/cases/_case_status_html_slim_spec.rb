@@ -145,7 +145,7 @@ describe 'cases/case_status.html.slim', type: :view do
     end
 
     it 'displays the page counts for Offender Sar case' do
-      offender_sar_case = double Case::ICO::BaseDecorator,
+      offender_sar_case = double Case::SAR::OffenderDecorator,
         status: "Needs reassigning",
         external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
         ico?: false,
@@ -153,7 +153,10 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'ICO',
         who_its_with: 'Branston Registry',
-        offender_sar?: true
+        offender_sar?: true,
+        page_count: '500',
+        number_exempt_pages: '200',
+        number_dispatched_pages: '250'
 
 
       render partial: 'cases/case_status.html.slim',
@@ -162,11 +165,11 @@ describe 'cases/case_status.html.slim', type: :view do
       partial = case_status_section(rendered)
 
       expect(partial.details.page_counts.received_label.text).to eq 'Pages received'
-      expect(partial.details.page_counts.received_number.text).to eq '109'
+      expect(partial.details.page_counts.received_number.text).to eq '500'
       expect(partial.details.page_counts.exempt_label.text).to eq 'Exempt pages'
-      expect(partial.details.page_counts.exempt_number.text).to eq '201'
+      expect(partial.details.page_counts.exempt_number.text).to eq '200'
       expect(partial.details.page_counts.dispatched_label.text).to eq 'Pages for dispatch'
-      expect(partial.details.page_counts.dispatched_number.text).to eq '999'
+      expect(partial.details.page_counts.dispatched_number.text).to eq '250'
 
     end
 
