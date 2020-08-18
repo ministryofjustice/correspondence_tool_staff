@@ -24,7 +24,7 @@ feature 'Log data received for an Offender SAR Data Request' do
     expect(last_row).not_to have_selector '.total-value'
     expect(last_row.total_value).not_to have_text '0'
 
-    click_link 'Update page count'
+    click_link 'Edit'
     expect(data_request_edit_page).to be_displayed
 
     # Pre-fill Number of pages field with current total number of pages
@@ -42,7 +42,6 @@ feature 'Log data received for an Offender SAR Data Request' do
     expect(cases_show_page.data_requests.rows.size).to eq 1 # Unchanged num DataRequest
 
     row = cases_show_page.data_requests.rows.first
-    expect(row.date_received).to have_text '2 Mar 2012'
     expect(row.pages).to have_text '92'
 
     last_row = cases_show_page.data_requests.rows.last
@@ -52,7 +51,7 @@ feature 'Log data received for an Offender SAR Data Request' do
     expect(last_row.total_value).not_to have_text '0'
 
     # Note pre-filled fields when making further update to the same Data Request
-    click_link 'Update page count'
+    click_link 'Edit'
     expect(data_request_edit_page).to be_displayed
     expect(data_request_edit_page.form.num_pages.value).to eq '92'
     expect(data_request_edit_page.form.date_received_dd.value).to eq '2'
@@ -62,7 +61,7 @@ feature 'Log data received for an Offender SAR Data Request' do
 
   scenario 'partial data entry fails' do
     cases_show_page.load(id: offender_sar_case.id)
-    click_link 'Update page count'
+    click_link 'Edit'
 
     data_request_edit_page.form.num_pages.fill_in(with: 3)
     click_on 'Update data received'
@@ -81,7 +80,7 @@ feature 'Log data received for an Offender SAR Data Request' do
     data_request.save!
 
     cases_show_page.load(id: offender_sar_case.id)
-    click_link 'Update page count' # Still only have 1 DataRequest for this case
+    click_link 'Edit' # Still only have 1 DataRequest for this case
 
     # Same values entered as those already last saved
     data_request_edit_page.form.date_received_dd.fill_in(with: 14)
