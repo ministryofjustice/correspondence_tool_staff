@@ -77,12 +77,11 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       }
     }
 
-    it 'builds a new data_request_log with last received values' do
+    it 'builds a new data_request with last received values' do
       get :edit, params: params
 
-      expect(assigns(:data_request_log).new_record?).to eq true
-      expect(assigns(:data_request_log).num_pages).to eq 10
-      expect(assigns(:data_request_log).date_received).to eq Date.yesterday
+      expect(assigns(:data_request)).to be_a DataRequest
+      expect(assigns(:data_request).cached_num_pages).to eq 10
     end
   end
 
@@ -94,12 +93,9 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     context 'with valid params' do
       let(:params) {
         {
-          data_request_log: {
-            date_received_dd: 2,
-            date_received_mm: 8,
-            date_received_yyyy: 2012,
-            num_pages: 2,
-            location: 'not permitted during update',
+          data_request: {
+            cached_num_pages: 2,
+            location: 'HMP Brixton',
           },
           id: data_request.id,
           case_id: data_request.case_id,
@@ -115,22 +111,17 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         expect(controller).to set_flash[:notice]
       end
 
-      it 'only permits date_received and num_pages to be updated' do
-        expect(controller.send(:update_params).key?(:num_pages)).to be true
-        expect(controller.send(:update_params).key?(:date_received_dd)).to be true
-        expect(controller.send(:update_params).key?(:location)).to be false
+      it 'permits num_pages to be updated' do
+        expect(controller.send(:update_params).key?(:cached_num_pages)).to be true
       end
     end
 
     context 'with invalid params' do
       let(:params) {
         {
-          data_request_log: {
+          data_request: {
             id: data_request.id,
-            date_received_dd: 12,
-            date_received_mm: 13,
-            date_received_yyyy: 2129,
-            num_pages: -10,
+            cached_num_pages: -10,
           },
           id: data_request.id,
           case_id: data_request.case_id,
@@ -146,7 +137,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     context 'with unknown service result' do
       let(:params) {
         {
-          data_request_log: {
+          data_request: {
             id: data_request.id,
             date_received_dd: 2,
             date_received_mm: 8,

@@ -963,17 +963,15 @@ en:
       create:
         success: Data request successfully recorded
       edit:
-        date_received: Date received
         heading: Update page count
         link: Edit
-        save: Update data received
       index:
         heading: Data requested
-        link: Update page count
         none: No data requests recorded
       new:
         heading: Record data request
-        record_request: Record request
+      form:
+        record_request: Continue
       update:
         log_message: "%{request_type}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
         log_pages: {
