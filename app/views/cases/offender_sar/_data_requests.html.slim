@@ -38,3 +38,6 @@
 
           - if case_details.data_requests.many?
             = render partial: 'shared/table_total_row', locals: { total: case_details.data_requests.sum(:cached_num_pages), label_span: '4', value_span: '2' }
+
+= link_to 'Update exempt pages', "/cases/offender_sars/#{case_details.id}/edit/exempt_pages", class: 'button-tertiary'
+= link_to 'Update pages for dispatch', "/cases/offender_sars/#{case_details.id}/edit/pages_for_dispatch", class: 'button-tertiary'

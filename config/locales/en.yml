@@ -362,7 +362,9 @@ en:
         upload_comment: This will be added to the converstation section of the case.
       offender_sar:
         date_of_birth: "For example, 12 11 2007"
+        number_dispatched_pages: "Total pages for dispatch post-vetting"
         message_hint: Include any details that will be useful for processing the case (optional)
+        number_exempt_pages: "Pages removed from the SAR as exemptions"
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
         other_subject_ids: "You can include multiple numbers separated by a comma or a space."
         previous_case_numbers: "You can include multiple cases separated by a comma or a space."
@@ -501,6 +503,8 @@ en:
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
+        number_dispatched_pages: "Number of pages"
+        number_exempt_pages: "Number of pages"
       feedback:
         comment: Help make this service better
       search_query:
