@@ -982,6 +982,7 @@ en:
       edit:
         date_received: Date received
         heading: Update page count
+        link: Edit
         save: Update data received
       index:
         heading: Data requested
@@ -990,8 +991,6 @@ en:
       new:
         heading: Record data request
         record_request: Record request
-      edit:
-        link: Edit
       update:
         log_message: "%{request_type}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
         log_pages: {
