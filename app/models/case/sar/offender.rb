@@ -36,7 +36,6 @@ class Case::SAR::Offender < Case::Base
     received_date
   ].freeze
 
-
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
   jsonb_accessor :properties,
@@ -63,6 +62,9 @@ class Case::SAR::Offender < Case::Base
                  third_party_name: :string,
                  number_dispatched_pages: :string,
                  number_exempt_pages: :string
+
+  attribute :number_dispatched_pages, :string, default: '0'
+  attribute :number_exempt_pages, :string, default: '0'
 
   enum subject_type: {
     offender: 'offender',

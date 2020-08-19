@@ -608,6 +608,9 @@ en:
       original-case-details: Original case details
       other_subject_ids: "Police national computer number"
       outcome: Outcome
+      pages_exempt: Exempt pages
+      pages_dispatch: Pages for dispatch
+      pages_received: Pages received
       postal_address: "Requester’s postal address"
       previous_case_numbers: Previous SAR cases
       prison_number: "Prison number"

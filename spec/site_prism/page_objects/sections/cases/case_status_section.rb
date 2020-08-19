@@ -15,6 +15,15 @@ module PageObjects
                   '.ico-reference .case-status__heading'
           element :ico_ref_number,
                   '.ico-reference .case-status__data'
+
+          section :page_counts , '.case-status__group.page-counts' do
+            element :received_label, '.column-one-third:nth-child(1) .case-status__heading'
+            element :received_number, '.column-one-third:nth-child(1) .case-status__date-value'
+            element :exempt_label, '.column-one-third:nth-child(2) .case-status__heading'
+            element :exempt_number, '.column-one-third:nth-child(2) .case-status__date-value'
+            element :dispatched_label, '.column-one-third:nth-child(3) .case-status__heading'
+            element :dispatched_number, '.column-one-third:nth-child(3) .case-status__date-value'
+          end
         end
 
         section :deadlines , '.case-status__info.case-status__info--deadlines' do
