@@ -31,7 +31,7 @@ RSpec.describe DataRequest, type: :model do
         expect(new_data_request.date_requested).to eq Date.new(1992, 7, 11)
       end
 
-      it 'is marked in progress' do
+      it 'defaults to in progress' do
         expect(subject.completed).to eq false
         expect(subject.status).to eq 'In progress'
       end
@@ -91,7 +91,7 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
-    context 'when either from or to date is set' do
+    context 'when both from and to date is set' do
       subject(:data_request) { build(:data_request, date_from: 1.year.ago, date_to: 2.years.ago)}
 
       it 'ensures the to date is after the from date' do
@@ -201,6 +201,21 @@ RSpec.describe DataRequest, type: :model do
     it { should be_an_instance_of DataRequestLog }
     it { expect(subject.num_pages).to eq 13 }
     it { expect(subject.date_received).to eq Date.new(1982, 3, 1) }
+  end
+
+  describe '#status' do
+    context 'when data request is in progress' do
+      let!(:data_request) { build(:data_request) }
+      it 'returns completed' do
+        expect(data_request.status).to eq 'In progress'
+      end
+    end
+    context 'when data request is completed' do
+      let!(:data_request) { build(:data_request, :completed) }
+      it 'returns completed' do
+        expect(data_request.status).to eq 'Completed'
+      end
+    end
   end
 
   describe 'scope completed' do

@@ -52,13 +52,17 @@ class DataRequest < ApplicationRecord
   private
 
   def validate_from_date_before_to_date
-    if date_from.present? && date_to.present? && date_from >= date_to
+    if dates_present? && date_from > date_to
       errors.add(
         :date_from,
         I18n.t('activerecord.errors.models.data_request.attributes.date_from.order')
       )
       errors[:date_from].any?
     end
+  end
+
+  def dates_present?
+    date_from.present? && date_to.present?
   end
 
   def validate_request_type_note
@@ -77,7 +81,7 @@ class DataRequest < ApplicationRecord
   end
 
   def clean_attributes
-    [:location]
+    [:location, :request_type_note]
       .each { |f| self.send("#{f}=", self.send("#{f}")&.strip) }
       .each { |f| self.send("#{f}=", self.send("#{f}")&.upcase_first) }
   end
