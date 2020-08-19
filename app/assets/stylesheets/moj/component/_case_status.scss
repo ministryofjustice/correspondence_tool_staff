@@ -59,10 +59,32 @@
         }
       }
     }
+
+    &.page-counts {
+      margin-top: -$gutter-two-thirds;
+
+      .gridrow {
+        .column-one-third {
+          margin: $gutter-two-thirds 0 $gutter;
+          padding-left: 0;
+
+          @include media(tablet) {
+            padding: 0 $gutter;
+          }
+        }
+      }
+    }
   }
 
   &__heading {
     @include core-27();
+    line-height: 1.25em;
+
+    &--pages {
+      @include media(tablet) {
+        margin-bottom: $gutter-two-thirds;
+      }
+    }
   }
 
   &__data {
