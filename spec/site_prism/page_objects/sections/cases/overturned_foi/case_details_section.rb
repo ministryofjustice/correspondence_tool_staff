@@ -24,7 +24,7 @@ module PageObjects
 
           element :date_responded, '.date-responded td'
           element :timeliness, '.timeliness td'
-          element :time_taken, '.time-taken td'
+          element :time_taken, '.time-taken td:nth-child(2)'
 
           section :compliance_details, '.compliance-details' do
             section :compliance_date, '.compliance-date' do
