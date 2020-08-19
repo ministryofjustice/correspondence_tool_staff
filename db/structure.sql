@@ -58,13 +58,13 @@ CREATE TYPE public.cases_delivery_methods AS ENUM (
 
 
 --
--- Name: request_types; Type: TYPE; Schema: public; Owner: -
+-- Name: request_types_enum; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.request_types AS ENUM (
-    'offender',
+CREATE TYPE public.request_types_enum AS ENUM (
     'all_prison_records',
-    'all_nomis_records',
+    'security_records',
+    'nomis_records',
     'nomis_contact_logs',
     'probation_records',
     'prison_and_probation_records',
@@ -535,7 +535,7 @@ CREATE TABLE public.data_requests (
     case_id integer NOT NULL,
     user_id integer NOT NULL,
     location character varying NOT NULL,
-    request_type public.request_types NOT NULL,
+    request_type public.request_types_enum NOT NULL,
     date_requested date NOT NULL,
     cached_date_received date,
     cached_num_pages integer DEFAULT 0 NOT NULL,
@@ -2012,4 +2012,6 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200811222853'),
 ('20200812115318'),
 ('20200812142406'),
-('20200819133514');
+('20200819133514'),
+('20200819171428');
+

@@ -7,9 +7,9 @@
 
       = f.radio_button_fieldset :request_type,
           choices: DataRequest::request_types.keys do |fieldset|
-        - fieldset.radio_input('offender')
         - fieldset.radio_input('all_prison_records')
-        - fieldset.radio_input('all_nomis_records')
+        - fieldset.radio_input('security_records')
+        - fieldset.radio_input('nomis_records')
         - fieldset.radio_input('nomis_contact_logs')
         - fieldset.radio_input('probation_records')
         - fieldset.radio_input('prison_and_probation_records')

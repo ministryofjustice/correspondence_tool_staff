@@ -19,9 +19,9 @@ class DataRequest < ApplicationRecord
   scope :in_progress, -> { where(completed: false) }
 
   enum request_type: {
-    offender: 'offender',
     all_prison_records: 'all_prison_records',
-    all_nomis_records: 'all_nomis_records',
+    security_records: 'security_records',
+    nomis_records: 'nomis_records',
     nomis_contact_logs: 'nomis_contact_logs',
     probation_records: 'probation_records',
     prison_and_probation_records: 'prison_and_probation_records',

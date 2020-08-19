@@ -4,7 +4,7 @@ FactoryBot.define do
     association :user
 
     location        { Faker::Company.name }
-    request_type    { 'offender' }
+    request_type    { 'all_prison_records' }
     date_requested  { Date.current }
 
     trait :other do
