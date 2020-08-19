@@ -126,7 +126,7 @@ module PageObjects
           end
 
           section :time_taken, '.time-taken' do
-            element :data, 'td'
+            element :data, 'td:nth-child(2)'
           end
 
           section :info_held, '.info-held' do
