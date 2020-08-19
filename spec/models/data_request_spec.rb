@@ -30,6 +30,11 @@ RSpec.describe DataRequest, type: :model do
         new_data_request.save!
         expect(new_data_request.date_requested).to eq Date.new(1992, 7, 11)
       end
+
+      it 'is marked in progress' do
+        expect(subject.completed).to eq false
+        expect(subject.status).to eq 'In progress'
+      end
     end
 
     context 'validation' do
@@ -196,5 +201,23 @@ RSpec.describe DataRequest, type: :model do
     it { should be_an_instance_of DataRequestLog }
     it { expect(subject.num_pages).to eq 13 }
     it { expect(subject.date_received).to eq Date.new(1982, 3, 1) }
+  end
+
+  describe 'scope completed' do
+    let!(:data_request_in_progress) { create(:data_request) }
+    let!(:data_request_completed) { create(:data_request, :completed) }
+    it 'returns completed data requests' do
+      expect(DataRequest.completed).to match_array [data_request_completed]
+      expect(DataRequest.completed).not_to include data_request_in_progress
+    end
+  end
+
+  describe 'scope in_progress' do
+    let!(:data_request_in_progress) { create(:data_request) }
+    let!(:data_request_completed) { create(:data_request, :completed) }
+    it 'returns in progress data requests' do
+      expect(DataRequest.in_progress).to match_array [data_request_in_progress]
+      expect(DataRequest.in_progress).not_to include data_request_completed
+    end
   end
 end

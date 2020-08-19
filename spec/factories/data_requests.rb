@@ -24,6 +24,10 @@ FactoryBot.define do
     trait :with_date_to do
       date_to { Date.new(2018, 12, 31) }
     end
+
+    trait :completed do
+      completed { true }
+    end
   end
 end
 

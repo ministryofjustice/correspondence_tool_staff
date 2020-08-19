@@ -543,7 +543,8 @@ CREATE TABLE public.data_requests (
     updated_at timestamp without time zone NOT NULL,
     request_type_note text DEFAULT ''::text NOT NULL,
     date_from date,
-    date_to date
+    date_to date,
+    completed boolean DEFAULT false NOT NULL
 );
 
 
@@ -2010,4 +2011,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200811154406'),
 ('20200811222853'),
 ('20200812115318'),
-('20200812142406');
+('20200812142406'),
+('20200819133514');

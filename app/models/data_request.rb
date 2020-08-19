@@ -15,6 +15,8 @@ class DataRequest < ApplicationRecord
   before_validation :set_date_requested
   before_validation :clean_attributes
 
+  scope :completed, -> { where(completed: true) }
+  scope :in_progress, -> { where(completed: false) }
 
   enum request_type: {
     offender: 'offender',
@@ -41,6 +43,10 @@ class DataRequest < ApplicationRecord
 
   def kase
     self.offender_sar_case
+  end
+
+  def status
+    completed? ? 'Completed' : 'In progress'
   end
 
   private
