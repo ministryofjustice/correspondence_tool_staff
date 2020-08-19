@@ -41,8 +41,8 @@ feature 'Data Requests for an Offender SAR' do
 
     row = cases_show_page.data_requests.rows[0]
     expect(row.location).to have_text request_values[:location].strip
-    expect(row.request_type).to have_text request_values[:request_type].strip
-    expect(row.date_requested).to have_text Date.current.strftime(Settings.default_date_format)
+    expect(row.request_type).to have_text request_values[:request_type].strip.humanize
+    expect(row.date_from).to have_text '15 Aug 2018'
     expect(row.pages).to have_text '0'
 
     click_on 'Record data request'

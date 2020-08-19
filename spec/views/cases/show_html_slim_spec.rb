@@ -611,7 +611,8 @@ describe 'cases/show.html.slim', type: :view do
             new_offender_sar_case.data_requests.create(
               location: 'The Location',
               request_type: 'offender',
-              date_requested: Date.new(2007, 7, 2),
+              date_requested: Date.current,
+              date_from: Date.new(2007, 7, 2),
               user: manager
             )
           end
@@ -623,9 +624,9 @@ describe 'cases/show.html.slim', type: :view do
 
           expect(data_requests.size).to eq 3
           expect(data_requests.first.location.text).to eq 'The Location'
-          expect(data_requests.first.request_type.text).to eq 'offender'
-          expect(data_requests.first.date_requested.text).to eq '2 Jul 2007'
-          expect(data_requests.first.date_requested_time['datetime']).to eq '2007-07-02'
+          expect(data_requests.first.request_type.text).to eq 'Offender'
+          expect(data_requests.first.date_from.text).to eq '2 Jul 2007'
+          expect(data_requests.first.date_from_time['datetime']).to eq '2007-07-02'
           expect(data_requests.first.pages.text).to eq '0'
         end
       end

@@ -972,7 +972,6 @@ en:
         save: Update data received
       index:
         heading: Data requested
-        link: Update page count
         none: No data requests recorded
       new:
         heading: Record data request
