@@ -109,6 +109,8 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_address
 
   validate :validate_request_dated
+  validate :validate_number_dispatched_pages
+  validate :validate_number_exempt_pages
 
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
@@ -129,6 +131,27 @@ class Case::SAR::Offender < Case::Base
     end
     errors[:date_of_birth].any?
   end
+
+  def validate_number_exempt_pages
+    if number_exempt_pages.present? && string_is_not_whole_number?(number_exempt_pages)
+      errors.add(
+        :number_exempt_pages,
+        I18n.t('activerecord.errors.models.case.attributes.number_exempt_pages.not_whole_number')
+      )
+    end
+    errors[:number_exempt_pages].any?
+  end
+
+  def validate_number_dispatched_pages
+    if number_dispatched_pages.present? && string_is_not_whole_number?(number_dispatched_pages)
+      errors.add(
+        :number_dispatched_pages,
+        I18n.t('activerecord.errors.models.case.attributes.number_dispatched_pages.not_whole_number')
+      )
+    end
+    errors[:number_dispatched_pages].any?
+  end
+
 
   def validate_request_dated
     if request_dated.present? && self.request_dated > Date.today
@@ -259,6 +282,13 @@ class Case::SAR::Offender < Case::Base
   end 
 
   private
+
+  def string_is_not_whole_number?(string)
+    # Regex tests: from start of line '^' 
+    # to end of line '$' string can only
+    # contain chars in range 0-9 
+    !!(string =~ /^[0-9]+$/).nil?   
+  end
 
   def set_subject
     self.subject = subject_full_name

@@ -209,6 +209,64 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe 'number_exempt_pages' do
+    context 'invalid values' do
+      it 'errors when string represents a float' do
+        kase = build(:offender_sar_case, number_exempt_pages: "24.45")
+        expect(kase).not_to be_valid
+        expect(kase.errors[:number_exempt_pages]).to eq ['must be a whole number']
+      end
+      
+      it 'errors when string represents a word' do
+        kase = build(:offender_sar_case, number_exempt_pages: "coffee")
+        expect(kase).not_to be_valid
+        expect(kase.errors[:number_exempt_pages]).to eq ['must be a whole number']
+      end
+
+      it 'errors when string represents alphanumeric mix of chars' do
+        kase = build(:offender_sar_case, number_exempt_pages: "coffee123")
+        expect(kase).not_to be_valid
+        expect(kase.errors[:number_exempt_pages]).to eq ['must be a whole number']
+      end
+    end
+
+    context 'valid values' do
+      it 'is valid when string represents a whole number' do
+        kase = build(:offender_sar_case, number_exempt_pages: "4835")
+        expect(kase).to be_valid
+      end
+    end
+  end
+
+  describe 'number_dispatched_pages' do
+    context 'invalid values' do
+      it 'errors when string represents a float' do
+        kase = build(:offender_sar_case, number_dispatched_pages: "24.45")
+        expect(kase).not_to be_valid
+        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a whole number']
+      end
+      
+      it 'errors when string represents a word' do
+        kase = build(:offender_sar_case, number_dispatched_pages: "coffee")
+        expect(kase).not_to be_valid
+        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a whole number']
+      end
+
+      it 'errors when string represents alphanumeric mix of chars' do
+        kase = build(:offender_sar_case, number_dispatched_pages: "coffee123")
+        expect(kase).not_to be_valid
+        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a whole number']
+      end
+    end
+
+    context 'valid values' do
+      it 'is valid when string represents a whole number' do
+        kase = build(:offender_sar_case, number_dispatched_pages: "4835")
+        expect(kase).to be_valid
+      end
+    end
+  end
+
   describe 'third party details' do
     describe 'third_party_names' do
       it 'validates third party names when third party is true' do
