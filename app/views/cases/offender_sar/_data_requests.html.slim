@@ -38,7 +38,7 @@
               td
                 = data_request.cached_num_pages
               td
-                = "In progress"
+                = data_request.status
               td
                 = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__action'
 
