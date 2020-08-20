@@ -64,28 +64,14 @@ feature 'Offender SAR Case editing by a manager' do
 
   scenario 'user can edit/update exempt and pages for dispatch counts' do
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
-
-    when_i_record_some_data_requests
-    and_i_update_the_exempt_pages_count
+    when_i_update_the_exempt_pages_count
     then_i_should_see_the_updated_exempt_page_count_on_the_show_page
 
     when_i_update_the_pages_for_dispatch 
     then_i_should_see_the_pages_for_dispatch_reflected_on_the_show_page
   end
 
-  def when_i_record_some_data_requests
-    click_on 'Record data request'
-    fill_in 'case_data_requests_attributes_0_location', with: 'North East Antartica'
-    fill_in 'case_data_requests_attributes_0_data', with: 'Data on quality of snow'
-    fill_in 'case_data_requests_attributes_1_location', with: 'South East Antartica'
-    fill_in 'case_data_requests_attributes_1_data', with: 'Data on number of penguins'
-    click_on 'Record requests'
-    expect(page).to have_content('Data request successfully recorded')
-    expect(page).to have_content('North East Antartica')
-    expect(page).to have_content('South East Antartica')
-  end
-
-  def and_i_update_the_exempt_pages_count
+  def when_i_update_the_exempt_pages_count
     click_on 'Update exempt pages'
     expect(page).to have_content('Update exempt pages')
     fill_in 'offender_sar_number_exempt_pages', with: '1541'
