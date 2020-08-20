@@ -67,6 +67,10 @@ en:
               after_date_responded: "can't be after the date responded"
             date_of_birth:
               not_in_future: "can't be in the future."
+            number_dispatched_pages:
+              not_whole_number: 'must be a positive whole number'
+            number_exempt_pages:
+              not_whole_number: 'must be a positive whole number'
             request_dated:
               not_in_future: "can't be in the future."
             postal_address:
@@ -370,7 +374,9 @@ en:
         upload_comment: This will be added to the converstation section of the case.
       offender_sar:
         date_of_birth: "For example, 12 11 2007"
+        number_dispatched_pages: "Total pages for dispatch post-vetting"
         message_hint: Include any details that will be useful for processing the case (optional)
+        number_exempt_pages: "Pages removed from the SAR as exemptions"
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
         other_subject_ids: "You can include multiple numbers separated by a comma or a space."
         previous_case_numbers: "You can include multiple cases separated by a comma or a space."
@@ -513,6 +519,8 @@ en:
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
+        number_dispatched_pages: "Number of pages"
+        number_exempt_pages: "Number of pages"
       feedback:
         comment: Help make this service better
       search_query:
@@ -813,6 +821,8 @@ en:
       date_draft_compliant: Date compliant draft was uploaded
       date_draft_compliant_example: "For example, 01 02 2018"
       offender_sar:
+        number_dispatched_pages: 'Update pages for dispatch'
+        number_exempt_pages: 'Update exempt pages'
         date_responded: 'Edit case closure details'
         sub_heading: Edit Offender SAR case
     update:
