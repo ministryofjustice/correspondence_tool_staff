@@ -15,7 +15,7 @@ feature 'Data Requests for an Offender SAR' do
 
     request_values = {
       location: 'HMP Leicester  ',
-      request_type: 'offender',
+      request_type: 'all_prison_records',
       request_type_note: 'Lorem ipsum',
       date_from: Date.new(2018, 8, 15),
       date_to: Date.new(2019, 8, 15),
@@ -26,11 +26,11 @@ feature 'Data Requests for an Offender SAR' do
     data_request_page.form.set_date_from(request_values[:date_from])
     data_request_page.form.set_date_to(request_values[:date_to])
 
-    click_on 'Record request'
+    click_on 'Continue'
 
     record = DataRequest.last
     expect(record.location).to eq 'HMP Leicester'
-    expect(record.request_type).to eq 'offender'
+    expect(record.request_type).to eq 'all_prison_records'
     expect(record.request_type_note).to eq ''
     expect(record.date_from).to eq Date.new(2018, 8, 15)
     expect(record.date_to).to eq Date.new(2019, 8, 15)
@@ -49,7 +49,7 @@ feature 'Data Requests for an Offender SAR' do
     data_request_page.form.location.fill_in(with: request_values[:location])
     data_request_page.form.choose_request_type('other')
     data_request_page.form.request_type_note.fill_in(with: request_values[:request_type_note])
-    click_on 'Record request'
+    click_on 'Continue'
 
     record = DataRequest.last
     expect(record.location).to eq 'HMP Leicester'
@@ -72,7 +72,7 @@ feature 'Data Requests for an Offender SAR' do
 
     # Note only filling in Location field, ommitting corresponding Data field
     data_request_page.form.location.fill_in(with: 'HMP Brixton')
-    click_on 'Record request'
+    click_on 'Continue'
 
     expect(data_request_page).to be_displayed
     expect(data_request_page).to have_text 'error prevented this form'
@@ -85,7 +85,7 @@ feature 'Data Requests for an Offender SAR' do
     data_request_page.form.location.fill_in(with: '    ')
     data_request_page.form.request_type.fill_in(with: '')
 
-    click_on 'Record request'
+    click_on 'Continue'
 
     expect(data_request_page).to be_displayed
     expect(data_request_page).to have_text '2 errors prevented this form from being submitted'

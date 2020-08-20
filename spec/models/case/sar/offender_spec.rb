@@ -672,7 +672,7 @@ describe Case::SAR::Offender do
         offender_sar_case: kase,
         user: build(:user),
         location: 'X' * 500, # Max length
-        request_type: 'offender'
+        request_type: 'all_prison_records'
       )
       expect(kase.page_count).to eq 0
     end
@@ -683,7 +683,7 @@ describe Case::SAR::Offender do
         user: build(:user),
         location: 'X' * 500, # Max length,
         cached_num_pages: 200,
-        request_type: 'offender'
+        request_type: 'all_prison_records'
       )
       data_request.save!
       expect(kase.page_count).to eq 200
