@@ -6,14 +6,14 @@ describe DataRequestUpdateService do
     create(
       :data_request,
       location: 'HMP Leicester',
-      request_type: 'offender'
+      request_type: 'all_prison_records'
     )
   }
   let(:offender_sar_case) { create :offender_sar_case }
   let(:params) {
     {
       location: 'HMP Brixton',
-      request_type: 'offender',
+      request_type: 'all_prison_records',
       request_type_note: 'Lorem ipsum',
       date_from_dd: "15",
       date_from_mm: "8",
@@ -99,13 +99,13 @@ describe DataRequestUpdateService do
   describe '#log_message' do
     it 'creates a human readable case history message' do
       service.call
-      expect(CaseTransition.last.message).to eq "offender, HMP Brixton on #{Date.current.strftime('%F')}: changed from 0 pages to 21 pages"
+      expect(CaseTransition.last.message).to eq "all_prison_records, HMP Brixton on #{Date.current.strftime('%F')}: changed from 0 pages to 21 pages"
     end
 
     it 'uses the singular word `page` when 1 page updated' do
       service.instance_variable_set(:@params, params.merge({ cached_num_pages: 1 }))
       service.call
-      expect(CaseTransition.last.message).to eq "offender, HMP Brixton on #{Date.current.strftime('%F')}: changed from 0 pages to 1 page"
+      expect(CaseTransition.last.message).to eq "all_prison_records, HMP Brixton on #{Date.current.strftime('%F')}: changed from 0 pages to 1 page"
     end
   end
 

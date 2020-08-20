@@ -91,7 +91,8 @@ module Cases
         :request_type_note,
         :date_from_dd, :date_from_mm, :date_from_yyyy,
         :date_to_dd, :date_to_mm, :date_to_yyyy,
-        :cached_num_pages
+        :cached_num_pages,
+        :completed
       )
     end
 
