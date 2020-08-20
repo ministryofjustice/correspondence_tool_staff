@@ -6,7 +6,7 @@ describe DataRequestUpdateService do
     create(
       :data_request,
       location: 'HMP Leicester',
-      data: 'A list of all evening meals'
+      request_type: 'offender'
     )
   }
   let(:offender_sar_case) { create :offender_sar_case }
@@ -108,13 +108,13 @@ describe DataRequestUpdateService do
   describe '#log_message' do
     it 'creates a human readable case history message' do
       service.call
-      expect(CaseTransition.last.message).to eq "A list of all evening meals, HMP Leicester on 1992-12-01: changed from 0 pages to 21 pages"
+      expect(CaseTransition.last.message).to eq "offender, HMP Leicester on 1992-12-01: changed from 0 pages to 21 pages"
     end
 
     it 'uses the singular word `page` when 1 page updated' do
       service.instance_variable_set(:@params, params.merge({ num_pages: 1 }))
       service.call
-      expect(CaseTransition.last.message).to eq "A list of all evening meals, HMP Leicester on 1992-12-01: changed from 0 pages to 1 page"
+      expect(CaseTransition.last.message).to eq "offender, HMP Leicester on 1992-12-01: changed from 0 pages to 1 page"
     end
   end
 

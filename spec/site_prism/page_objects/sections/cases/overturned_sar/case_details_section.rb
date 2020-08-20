@@ -21,7 +21,7 @@ module PageObjects
 
           element :date_responded, '.date-responded td'
           element :timeliness, '.timeliness td'
-          element :time_taken, '.time-taken td'
+          element :time_taken, '.time-taken td:nth-child(2)'
 
           element :edit_case, :xpath, '//a[contains(.,"Edit case details")]'
           element :edit_case_link, :xpath, '//a[contains(.,"Edit case details")]'

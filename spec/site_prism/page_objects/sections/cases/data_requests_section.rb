@@ -9,7 +9,7 @@ module PageObjects
 
         sections :rows, 'tbody tr' do
           element :location, 'td:nth-child(1)'
-          element :data, 'td:nth-child(2)'
+          element :request_type, 'td:nth-child(2)'
           element :date_requested, 'td:nth-child(3)'
           element :date_requested_time, 'td:nth-child(3) time'
           element :date_received, 'td:nth-child(4)'

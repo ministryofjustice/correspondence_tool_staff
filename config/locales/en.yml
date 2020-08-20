@@ -176,9 +176,13 @@ en:
               invalid_url: "url is invalid for file: %{filename}"
         data_request:
           attributes:
+            date_from:
+              order: cannot be later than date to
             date_received:
               blank: must be completed
               future: cannot be in the future
+            request_type_note:
+              blank: can't be blank
         linked_case:
           missing: "doesn't exist"
           references_self: "can't link to the same case"
@@ -295,6 +299,8 @@ en:
         letter_template_id: "Choose a letter template to use:"
       bypass_approval_manager:
         press_office_approval: 'Does Press office need to clear this response?'
+      data_request:
+        request_type: What data is needed?
       offender_sar:
         info_held_status_abbreviation: Was the information held?
         flag_for_disclosure_specialists: "Flag as high profile case?"
@@ -356,6 +362,8 @@ en:
       feedback:
         comment: |
           Let us know what you were doing and what could be improved or fixed.
+      data_request:
+        location: Where is the data held?
       data_request_log:
         date_received: For example, 31 07 2019
         num_pages: Record new total number of pages
@@ -415,6 +423,10 @@ en:
           closed: "Closed - %{ico_decision} by ICO"
       case:
         linked_case_number: Case number For example 170131001
+      data_request:
+        location: Location
+        request_type: What data is needed?
+        request_type_note: Please provide more details
       data_request_log:
         num_pages: Number of pages
       foi:
@@ -963,7 +975,6 @@ en:
     data_requests:
       create:
         success: Data request successfully recorded
-        unprocessed: Ensure Location and Data fields are completed
       edit:
         date_received: Date received
         heading: Update page count
@@ -973,13 +984,10 @@ en:
         link: Update page count
         none: No data requests recorded
       new:
-        add_another: Add another data request
-        data_placeholder: What data is needed? E.g. Executive summary
         heading: Record data request
-        location_placeholder: Where is the data held? E.g. NPS, South East
-        record_requests: Record requests
+        record_request: Record request
       update:
-        log_message: "%{data}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
+        log_message: "%{request_type}, %{location} on %{date_received}: changed from %{old_pages} to %{new_pages}"
         log_pages: {
           zero: pages,
           one: page,

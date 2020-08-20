@@ -660,7 +660,7 @@ describe Case::SAR::Offender do
         offender_sar_case: kase,
         user: build(:user),
         location: 'X' * 500, # Max length
-        data: 'Please supply a huge list of misdemeanours by Miers Porgan'
+        request_type: 'offender'
       )
       expect(kase.page_count).to eq 0
     end
@@ -669,9 +669,9 @@ describe Case::SAR::Offender do
       data_request = DataRequest.new(
         offender_sar_case: kase,
         user: build(:user),
-        location: 'X' * 500, # Max length, 
+        location: 'X' * 500, # Max length,
         cached_num_pages: 200,
-        data: 'Please supply a huge list of misdemeanours by Miers Porgan'
+        request_type: 'offender'
       )
       data_request.save!
       expect(kase.page_count).to eq 200
