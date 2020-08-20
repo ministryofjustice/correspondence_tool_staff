@@ -8,7 +8,8 @@ RSpec.describe DataRequest, type: :model do
           offender_sar_case: build(:offender_sar_case),
           user: build(:user),
           location: 'X' * 500, # Max length
-          data: 'Please supply a huge list of misdemeanours by Miers Porgan'
+          request_type: 'offender',
+          request_type_note: ''
         )
       }
 
@@ -29,6 +30,11 @@ RSpec.describe DataRequest, type: :model do
         new_data_request.save!
         expect(new_data_request.date_requested).to eq Date.new(1992, 7, 11)
       end
+
+      it 'defaults to in progress' do
+        expect(subject.completed).to eq false
+        expect(subject.status).to eq 'In progress'
+      end
     end
 
     context 'validation' do
@@ -48,11 +54,11 @@ RSpec.describe DataRequest, type: :model do
         expect(data_request.valid?).to be false
       end
 
-      it 'requires data' do
+      it 'requires a request type' do
         invalid_values = ['', ' ', nil]
 
         invalid_values.each do |bad_data|
-          data_request.data = bad_data
+          data_request.request_type = bad_data
           expect(data_request.valid?).to be false
         end
       end
@@ -75,6 +81,55 @@ RSpec.describe DataRequest, type: :model do
         expect(data_request.valid?).to be false
       end
     end
+
+    context 'when request_type is other' do
+      subject(:data_request) { build(:data_request, request_type: 'other', request_type_note: nil) }
+
+      it 'ensures the note is present' do
+        expect(subject).not_to be_valid
+        expect(subject.errors[:request_type_note]).to eq ["can't be blank"]
+      end
+    end
+
+    context 'when both from and to date is set' do
+      subject(:data_request) { build(:data_request, date_from: 1.year.ago, date_to: 2.years.ago)}
+
+      it 'ensures the to date is after the from date' do
+        expect(subject).not_to be_valid
+        expect(subject.errors[:date_from]).to eq ['cannot be later than date to']
+      end
+    end
+
+    context 'with note' do
+      subject(:data_request) { build :data_request, :other }
+
+      it { should be_valid }
+      it 'has a note' do
+        expect(data_request.request_type_note).to eq 'Lorem ipsum'
+      end
+    end
+
+    context 'with date range' do
+      subject(:data_request) { build :data_request, :with_date_range }
+
+      it { should be_valid }
+      it 'has date from and to' do
+        expect(data_request.date_from).to eq Date.new(2018, 01, 01)
+        expect(data_request.date_to).to eq Date.new(2018, 12, 31)
+      end
+    end
+
+    context 'with date range' do
+      subject(:data_request) { build :data_request, :with_date_from }
+
+      it { should be_valid }
+    end
+
+    context 'with date range' do
+      subject(:data_request) { build :data_request, :with_date_to }
+
+      it { should be_valid }
+    end
   end
 
   describe '#case' do
@@ -88,26 +143,43 @@ RSpec.describe DataRequest, type: :model do
     end
   end
 
+  describe '#request_type' do
+    context 'valid values' do
+      it 'does not error' do
+        expect(build(:data_request, request_type: 'offender')).to be_valid
+        expect(build(:data_request, request_type: 'prison_and_probation_records')).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:data_request, request_type: 'user')
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context 'nil' do
+      it 'errors' do
+        kase = build(:data_request, request_type: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:request_type]).to eq ["can't be blank"]
+      end
+    end
+  end
+
   describe '#clean_attributes' do
     subject(:data_request) { build :data_request }
 
     it 'ensures string attributes do not have leading/trailing spaces' do
-      data_request.data = '    So much space '
       data_request.location = '  The location'
-
       data_request.send(:clean_attributes)
-
-      expect(data_request.data).to eq 'So much space'
       expect(data_request.location).to eq 'The location'
     end
 
     it 'ensures string attributes have the first letter capitalised' do
-      data_request.data = 'some DaTa'
       data_request.location = 'leicester'
-
       data_request.send(:clean_attributes)
-
-      expect(data_request.data).to eq 'Some DaTa'
       expect(data_request.location).to eq 'Leicester'
     end
 
@@ -129,5 +201,38 @@ RSpec.describe DataRequest, type: :model do
     it { should be_an_instance_of DataRequestLog }
     it { expect(subject.num_pages).to eq 13 }
     it { expect(subject.date_received).to eq Date.new(1982, 3, 1) }
+  end
+
+  describe '#status' do
+    context 'when data request is in progress' do
+      let!(:data_request) { build(:data_request) }
+      it 'returns completed' do
+        expect(data_request.status).to eq 'In progress'
+      end
+    end
+    context 'when data request is completed' do
+      let!(:data_request) { build(:data_request, :completed) }
+      it 'returns completed' do
+        expect(data_request.status).to eq 'Completed'
+      end
+    end
+  end
+
+  describe 'scope completed' do
+    let!(:data_request_in_progress) { create(:data_request) }
+    let!(:data_request_completed) { create(:data_request, :completed) }
+    it 'returns completed data requests' do
+      expect(DataRequest.completed).to match_array [data_request_completed]
+      expect(DataRequest.completed).not_to include data_request_in_progress
+    end
+  end
+
+  describe 'scope in_progress' do
+    let!(:data_request_in_progress) { create(:data_request) }
+    let!(:data_request_completed) { create(:data_request, :completed) }
+    it 'returns in progress data requests' do
+      expect(DataRequest.in_progress).to match_array [data_request_in_progress]
+      expect(DataRequest.in_progress).not_to include data_request_completed
+    end
   end
 end

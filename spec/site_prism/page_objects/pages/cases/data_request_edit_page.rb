@@ -11,7 +11,7 @@ module PageObjects
           PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         element :location, '.data-request__location'
-        element :data, '.data-request__data'
+        element :request_type, '.data-request__request_type'
 
         section :form, 'form#new_data_request_log' do
           element :date_received_dd,   'input[name*="[date_received_dd]"]'

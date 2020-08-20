@@ -5,7 +5,7 @@ describe 'cases/data_requests/new', type: :view do
     let(:offender_sar) { create :offender_sar_case }
 
     before do
-      2.times { offender_sar.data_requests.build }
+      assign(:data_request, offender_sar.data_requests.new)
       assign(:case, offender_sar)
 
       render
@@ -15,9 +15,9 @@ describe 'cases/data_requests/new', type: :view do
 
     it 'has required content' do
       expect(@page.page_heading.heading.text).to eq 'Record data request'
-      expect(@page.form.location.size).to eq 2
-      expect(@page.form.data.size).to eq 2
-      expect(@page.submit_button.value).to eq 'Record requests'
+      expect(@page.form).to have_location
+      expect(@page.form).to have_request_type
+      expect(@page.form.submit_button.value).to eq 'Record request'
     end
   end
 end
