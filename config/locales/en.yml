@@ -68,9 +68,9 @@ en:
             date_of_birth:
               not_in_future: "can't be in the future."
             number_dispatched_pages:
-              not_whole_number: 'must be a whole number'
+              not_whole_number: 'must be a positive whole number'
             number_exempt_pages:
-              not_whole_number: 'must be a whole number'
+              not_whole_number: 'must be a positive whole number'
             request_dated:
               not_in_future: "can't be in the future."
             postal_address:
