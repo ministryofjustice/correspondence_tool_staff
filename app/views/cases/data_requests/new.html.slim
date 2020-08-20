@@ -9,6 +9,8 @@
 
 - content_for :sub_heading
 
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
 span.visually-hidden
   = t('common.case.header_case_number')
   = @case.number
@@ -16,13 +18,38 @@ span.visually-hidden
 = render partial: 'layouts/header'
 
 .form-group.data-request
-  = form_for @case, as: :case, url: case_data_requests_path(@case), method: :post do |f|
-    = f.fields_for :data_requests, @data_requests, include_id: false do |builder|
-      = render partial: 'data_request', locals: { form: builder }
+  = form_for @data_request, as: :data_request, url: case_data_requests_path(@case), method: :post do |f|
+    .data-request__single.js-data-request__form
+      h3.page-heading--secondary.data-request__position
 
-    p
-      a.js-add-data-request.display-none href='#'
-        = t('.add_another')
+      = f.text_field :location,
+          maxlength: 500,
+          class: 'js-data-request__location'
+
+      = f.radio_button_fieldset :request_type,
+          choices: DataRequest::request_types.keys do |fieldset|
+        - fieldset.radio_input('offender')
+        - fieldset.radio_input('all_prison_records')
+        - fieldset.radio_input('all_nomis_records')
+        - fieldset.radio_input('nomis_contact_logs')
+        - fieldset.radio_input('probation_records')
+        - fieldset.radio_input('prison_and_probation_records')
+        - fieldset.radio_input('other')
+          = f.text_area :request_type_note
+
+      = f.gov_uk_date_field :date_from, { \
+        legend_text: 'Date from',
+        form_hint_text: t('cases.new.date_sar_received_copy'),
+        today_button: { class: '' } \
+      }
+
+      br
+
+      = f.gov_uk_date_field :date_to, { \
+        legend_text: 'Date to',
+        form_hint_text: t('cases.new.date_sar_received_copy'),
+        today_button: { class: '' } \
+      }
 
     .button-holder
-      = f.submit t('.record_requests'), { class: 'button', role: 'button' }
+      = f.submit t('.record_request'), { class: 'button', role: 'button' }
