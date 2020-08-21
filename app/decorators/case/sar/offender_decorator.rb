@@ -16,6 +16,11 @@ class Case::SAR::OffenderDecorator < Case::BaseDecorator
     "#{step_name}_step"
   end
 
+  def time_taken
+    days = (date_responded - received_date).to_i
+    I18n.t('common.case.offender_sar.time_taken_result', count: days)
+  end
+
   def back_link(mode, previous_step)
     url = if mode == :edit
             h.case_path(id)

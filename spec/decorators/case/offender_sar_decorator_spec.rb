@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe Case::SAR::OffenderDecorator do
-  let(:offender_sar_case) {create(:offender_sar_case).decorate }
+  let(:offender_sar_case) {build_stubbed(:offender_sar_case, date_responded: Date.new(2020,1,10), received_date: Date.new(2020,1,1)).decorate}
 
   it 'instantiates the correct decorator' do
     expect(Case::SAR::Offender.new.decorate).to be_instance_of Case::SAR::OffenderDecorator
@@ -38,6 +38,12 @@ describe Case::SAR::OffenderDecorator do
       expect(offender_sar_case.get_step_partial).to eq "request_details_step"
       offender_sar_case.next_step
       expect(offender_sar_case.get_step_partial).to eq "date_received_step"
+    end
+  end
+
+  describe "#time_taken" do
+    it "returns total number of days between date received and date responded" do
+      expect(offender_sar_case.time_taken).to eq "9 days"
     end
   end
 

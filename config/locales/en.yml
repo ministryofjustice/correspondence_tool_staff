@@ -613,6 +613,8 @@ en:
       ico_officer_name: ICO information officer handling this case
       late_team: Business unit responsible for late response
       name: Requester
+      offender_sar:
+        time_taken_result: "%{count} days"
       original-case-details: Original case details
       other_subject_ids: "Police national computer number"
       outcome: Outcome
