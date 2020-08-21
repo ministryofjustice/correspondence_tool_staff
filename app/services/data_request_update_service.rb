@@ -38,22 +38,28 @@ class DataRequestUpdateService
 
   def log_message
     scope = 'cases.data_requests.update'
+    old_pages = @old_num_pages
+    new_pages = @data_request.cached_num_pages
 
-    # Create nicely readable sentences for both old and new number of pages
-    # i18n-tasks-use t('cases.data_requests.update.log_pages')
-    pages = [@old_num_pages, @data_request.cached_num_pages].map do |n|
-      "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
+    if old_pages != new_pages
+      # Create nicely readable sentences for both old and new number of pages
+      # i18n-tasks-use t('cases.data_requests.update.log_pages')
+      pages = [old_pages, new_pages].map do |n|
+        "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
+      end
+
+      # i18n-tasks-use t('cases.data_requests.update.log_message')
+      I18n.t('.log_message_pages_changed',
+        request_type: I18n.t("cases.data_requests.index.request_type.#{data_request.request_type}"),
+        location: @data_request.location,
+        date_changed: Date.current.strftime('%F'),
+        old_pages: old_pages,
+        new_pages: new_pages,
+        scope: scope
+      )
+    else
+      ''
     end
-
-    # i18n-tasks-use t('cases.data_requests.update.log_message')
-    I18n.t('.log_message',
-      request_type: @data_request.request_type,
-      location: @data_request.location,
-      date_received: Date.current.strftime('%F'),
-      old_pages: pages.first,
-      new_pages: pages.second,
-      scope: scope
-    )
   end
 
   # Allowing a user to create a new DataRequestLog which is a duplicate of the

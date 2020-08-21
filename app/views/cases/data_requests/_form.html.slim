@@ -16,6 +16,15 @@
         - fieldset.radio_input('other')
           = f.text_area :request_type_note
 
+      = f.gov_uk_date_field :date_requested, { \
+        legend_text: 'Date requested',
+        form_hint_text: t('cases.new.date_sar_received_copy'),
+        today_button: { class: '' } \
+      }
+
+      br
+      hr
+
       = f.gov_uk_date_field :date_from, { \
         legend_text: 'Date from',
         form_hint_text: t('cases.new.date_sar_received_copy'),

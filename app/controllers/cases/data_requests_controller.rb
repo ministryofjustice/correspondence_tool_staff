@@ -50,7 +50,7 @@ module Cases
         redirect_to case_path(@case)
       when :unprocessed
         flash[:notice] = t('.unprocessed')
-        redirect_to edit_case_data_request_path(@case, @data_request)
+        redirect_to case_path(@case)
       when :error
         @data_request = service.data_request
         render :edit
@@ -79,6 +79,7 @@ module Cases
         :location,
         :request_type,
         :request_type_note,
+        :date_requested_dd, :date_requested_mm, :date_requested_yyyy,
         :date_from_dd, :date_from_mm, :date_from_yyyy,
         :date_to_dd, :date_to_mm, :date_to_yyyy,
       )
@@ -89,6 +90,7 @@ module Cases
         :location,
         :request_type,
         :request_type_note,
+        :date_requested_dd, :date_requested_mm, :date_requested_yyyy,
         :date_from_dd, :date_from_mm, :date_from_yyyy,
         :date_to_dd, :date_to_mm, :date_to_yyyy,
         :cached_num_pages,

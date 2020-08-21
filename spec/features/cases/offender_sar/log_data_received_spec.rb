@@ -67,4 +67,20 @@ feature 'Log data received for an Offender SAR Data Request' do
       expect(last_row.total_value).to have_text '64'
     end
   end
+
+  fcontext 'when marking a data request complete' do
+    scenario 'the row displays with the correct status', :js do
+      cases_show_page.load(id: offender_sar_case.id)
+      expect(cases_show_page).to be_displayed
+      expect(cases_show_page.data_requests.rows.size).to eq 1
+      click_link 'Edit'
+      expect(data_request_edit_page).to be_displayed
+      data_request_edit_page.form.mark_complete
+      click_on 'Continue'
+      expect(cases_show_page).to be_displayed
+      row = cases_show_page.data_requests.rows[0]
+      expect(row.status).to have_text 'Completed'
+
+    end
+  end
 end

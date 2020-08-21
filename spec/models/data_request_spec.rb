@@ -9,7 +9,8 @@ RSpec.describe DataRequest, type: :model do
           user: build(:user),
           location: 'X' * 500, # Max length
           request_type: 'all_prison_records',
-          request_type_note: ''
+          request_type_note: '',
+          request_dated: Date.current
         )
       }
 
@@ -235,4 +236,15 @@ RSpec.describe DataRequest, type: :model do
       expect(DataRequest.in_progress).not_to include data_request_completed
     end
   end
+
+  fdescribe '#request_date_present?' do
+    context 'when no request dates available' do
+      subject(:data_request) { build :data_request }
+      it { expect(subject.request_date_present?).to eq false }
+    end
+  end
+  describe '#request_dates_both_present?'
+  describe '#request_date_from_only?'
+  describe '#request_date_to_only?'
+  describe '#request_dates_absent?'
 end

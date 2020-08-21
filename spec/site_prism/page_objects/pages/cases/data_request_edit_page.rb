@@ -24,7 +24,20 @@ module PageObjects
           element :date_to_year, '#data_request_date_to_yyyy'
 
           element :cached_num_pages, 'input[name*="[cached_num_pages]"]'
+          element :completed, 'input[name*="[completed]"]'
+
+          def mark_complete
+            selector = "input#data_request_completed"
+
+            if Capybara.current_driver == Capybara.javascript_driver
+              find(selector, visible: false).click
+            else
+              find(selector).set(true)
+            end
+          end
         end
+
+
 
         element :submit_button, '.button'
       end
