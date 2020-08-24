@@ -23,7 +23,7 @@ module Stats
 
       FIELD_COLUMNS = [
         'number', 
-        'sar_subject_type', 
+        'sar_subject_full_name', 
         'sar_subject_type',
         'requester_type', 
         'date_received',
