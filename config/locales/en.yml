@@ -985,7 +985,7 @@ en:
       create:
         success: Data request successfully recorded
       edit:
-        heading: Update page count
+        heading: Edit data request
         link: Edit
       index:
         heading: Data requested
