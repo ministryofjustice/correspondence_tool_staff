@@ -1000,6 +1000,8 @@ en:
           other: Other
       new:
         heading: Record data request
+        date_from_copy: Request all data held from this date onward
+        date_to_copy: Request all data held up until this date
       form:
         record_request: Continue
       update:

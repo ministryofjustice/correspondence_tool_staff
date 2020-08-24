@@ -26,17 +26,17 @@
       hr
 
       = f.gov_uk_date_field :date_from, { \
-        legend_text: 'Date from',
-        form_hint_text: t('cases.new.date_sar_received_copy'),
-        today_button: { class: '' } \
+        legend_text: 'Date from (optional)',
+        form_hint_text: t('cases.data_requests.new.date_from_copy'),
+        # today_button: { class: '' } \
       }
 
       br
 
       = f.gov_uk_date_field :date_to, { \
-        legend_text: 'Date to',
-        form_hint_text: t('cases.new.date_sar_received_copy'),
-        today_button: { class: '' } \
+        legend_text: 'Date to (optional)',
+        form_hint_text: t('cases.data_requests.new.date_to_copy'),
+        # today_button: { class: '' } \
       }
 
       - if @data_request.persisted?
