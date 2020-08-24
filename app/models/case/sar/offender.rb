@@ -296,13 +296,6 @@ class Case::SAR::Offender < Case::Base
 
   private
 
-  def string_is_not_whole_number?(string)
-    # Regex tests: from start of line '^' 
-    # to end of line '$' string can only
-    # contain chars in range 0-9 
-    !!(string =~ /^[0-9]+$/).nil?   
-  end
-
   def set_subject
     self.subject = subject_full_name
   end
