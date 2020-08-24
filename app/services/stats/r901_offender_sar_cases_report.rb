@@ -13,8 +13,9 @@ module Stats
         'Page count',
         'Timeliness (in time/out of time)',
         'Case state',
-        'Times Taken',
-        'Data types'
+        'Days open',
+        'Company name', 
+        'Data requests completed?'
     ]
 
     def self.title
@@ -48,6 +49,9 @@ module Stats
         kase.page_count, 
         kase.already_late? ? 'out of time' : 'in time', 
         kase.current_state,
+        kase.num_days_taken,
+        kase.third_party_company_name,
+        kase.data_requests_completed? ? 'Yes' : 'No'
       ]
     end
 

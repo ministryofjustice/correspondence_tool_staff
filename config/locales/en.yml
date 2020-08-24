@@ -67,7 +67,7 @@ en:
               after_date_responded: "can't be after the date responded"
             date_of_birth:
               not_in_future: "can't be in the future."
-            number_dispatched_pages:
+            number_final_pages:
               not_whole_number: 'must be a positive whole number'
             number_exempt_pages:
               not_whole_number: 'must be a positive whole number'

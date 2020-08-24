@@ -72,6 +72,7 @@ CREATE TYPE public.request_types AS ENUM (
 );
 
 
+--
 -- Name: requester_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -1094,7 +1095,11 @@ CREATE TABLE public.warehouse_case_reports (
     info_held_status_id integer,
     refusal_reason_id integer,
     outcome_id integer,
-    appeal_outcome_id integer
+    appeal_outcome_id integer,
+    number_of_days_taken character varying,
+    number_of_exempt_pages character varying,
+    number_of_final_pages character varying,
+    third_party_company_name integer
 );
 
 
@@ -2012,4 +2017,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200811222853'),
 ('20200812115318'),
 ('20200812142406'),
-('20200819133514');
+('20200819133514'),
+('20200824130200');
+
+
