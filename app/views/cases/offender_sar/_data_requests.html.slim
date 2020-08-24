@@ -38,7 +38,8 @@
 
           - if case_details.data_requests.many?
             = render partial: 'shared/table_total_row', locals: { total: case_details.data_requests.sum(:cached_num_pages), label_span: '4', value_span: '2' }
-- if case_details.current_state != 'closed'
-  = action_button_for(:record_data_request)
-= link_to 'Update exempt pages', edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
-= link_to 'Update pages for dispatch', edit_step_case_sar_offender_path(case_details, 'pages_for_dispatch'), class: 'button-tertiary'
+.data-request-buttons
+  - if case_details.current_state != 'closed'
+    = action_button_for(:record_data_request)
+  = link_to 'Update exempt pages', edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
+  = link_to 'Update pages for dispatch', edit_step_case_sar_offender_path(case_details, 'pages_for_dispatch'), class: 'button-tertiary'

@@ -123,11 +123,10 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               id: 'action--remove-extended-deadline-for-sar',
               class: 'button-secondary', method: :delete
     when :record_data_request
-      btn_type = @case.current_state == 'data_to_be_requested' ? 'secondary' : 'tertiary'
       link_to 'Record data request',
               new_case_data_request_path(@case),
               id: 'action--record-data-request',
-              class: "button-#{btn_type}"
+              class: "button-tertiary"
     when :send_acknowledgement_letter
       link_to 'Send acknowledgement letter',
               new_case_letters_path(@case.id, "acknowledgement"),
