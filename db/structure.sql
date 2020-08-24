@@ -1096,10 +1096,10 @@ CREATE TABLE public.warehouse_case_reports (
     refusal_reason_id integer,
     outcome_id integer,
     appeal_outcome_id integer,
-    number_of_days_taken character varying,
-    number_of_exempt_pages character varying,
-    number_of_final_pages character varying,
-    third_party_company_name integer
+    number_of_days_taken integer,
+    number_of_exempt_pages integer,
+    number_of_final_pages integer,
+    third_party_company_name character varying
 );
 
 

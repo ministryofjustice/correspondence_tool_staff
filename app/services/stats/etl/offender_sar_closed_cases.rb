@@ -31,7 +31,7 @@ module Stats
         " case when number_of_days_late > 0 then 'in time' else 'out of time' end ", 
         'number_of_days_taken', 
         'third_party_company_name', 
-        'number_of_final_pages - number_of_exempt_pages', 
+        'number_of_final_pages::integer - number_of_exempt_pages::integer', 
         'number_of_exempt_pages', 
         'number_of_final_pages'
       ]

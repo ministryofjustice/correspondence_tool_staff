@@ -33,6 +33,9 @@ module Stats
           @etl.send(:columns).each do |field|
             if field == " case when number_of_days_late > 0 then 'in time' else 'out of time' end "
               expect(case_report).to respond_to 'number_of_days_late'
+            elsif field == "number_of_final_pages::integer - number_of_exempt_pages::integer"
+              expect(case_report).to respond_to 'number_of_final_pages'
+              expect(case_report).to respond_to 'number_of_exempt_pages'
             else
               expect(case_report).to respond_to field
             end 
