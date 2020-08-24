@@ -17,12 +17,14 @@ feature 'Data Requests for an Offender SAR' do
       location: 'HMP Leicester  ',
       request_type: 'all_prison_records',
       request_type_note: 'Lorem ipsum',
+      date_requested: Date.new(2020, 8, 15),
       date_from: Date.new(2018, 8, 15),
       date_to: Date.new(2019, 8, 15),
     }
 
     data_request_page.form.location.fill_in(with: request_values[:location])
     data_request_page.form.choose_request_type(request_values[:request_type])
+    data_request_page.form.set_date_requested(request_values[:date_requested])
     data_request_page.form.set_date_from(request_values[:date_from])
     data_request_page.form.set_date_to(request_values[:date_to])
 
@@ -42,20 +44,22 @@ feature 'Data Requests for an Offender SAR' do
     row = cases_show_page.data_requests.rows[0]
     expect(row.location).to have_text request_values[:location].strip
     expect(row.request_type).to have_text request_values[:request_type].strip.humanize
-    expect(row.date_from).to have_text '15 Aug 2018'
+    expect(row.date_requested).to have_text '15 Aug 2020'
     expect(row.pages).to have_text '0'
 
     click_on 'Record data request'
     data_request_page.form.location.fill_in(with: request_values[:location])
     data_request_page.form.choose_request_type('other')
     data_request_page.form.request_type_note.fill_in(with: request_values[:request_type_note])
+    data_request_page.form.set_date_requested(request_values[:date_requested])
     click_on 'Continue'
 
-    record = DataRequest.last
-    expect(record.location).to eq 'HMP Leicester'
-    expect(record.request_type).to eq 'other'
-    expect(record.request_type_note).to eq 'Lorem ipsum'
     expect(cases_show_page).to be_displayed
+    row = cases_show_page.data_requests.rows[1]
+    expect(row.location).to have_text 'HMP Leicester'
+    expect(row.request_type).to have_text 'Other'
+    expect(row.request_type).to have_text 'Lorem ipsum'
+    expect(row.date_requested).to have_text '15 Aug 2020'
     data_requests = cases_show_page.data_requests.rows
     expect(data_requests.size).to eq 3
 
@@ -75,7 +79,7 @@ feature 'Data Requests for an Offender SAR' do
     click_on 'Continue'
 
     expect(data_request_page).to be_displayed
-    expect(data_request_page).to have_text 'error prevented this form'
+    expect(data_request_page).to have_text 'errors prevented this form'
   end
 
   scenario 'no data entry fails' do
@@ -88,6 +92,6 @@ feature 'Data Requests for an Offender SAR' do
     click_on 'Continue'
 
     expect(data_request_page).to be_displayed
-    expect(data_request_page).to have_text '2 errors prevented this form from being submitted'
+    expect(data_request_page).to have_text '3 errors prevented this form from being submitted'
   end
 end
