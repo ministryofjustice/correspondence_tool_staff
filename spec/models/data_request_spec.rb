@@ -237,7 +237,7 @@ RSpec.describe DataRequest, type: :model do
     end
   end
 
-  fdescribe '#request_date_present?' do
+  describe '#request_date_present?' do
     context 'when no request dates available' do
       subject(:data_request) { build :data_request }
       it { expect(subject.request_date_present?).to eq false }
