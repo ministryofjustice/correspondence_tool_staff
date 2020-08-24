@@ -244,36 +244,36 @@ describe Case::SAR::Offender do
     end
   end
 
-  describe 'number_dispatched_pages' do
+  describe 'number_final_pages' do
     context 'invalid values' do
       it 'errors when string represents a float' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "24.45")
+        kase = build(:offender_sar_case, number_final_pages: "24.45")
         expect(kase).not_to be_valid
-        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a positive whole number']
+        expect(kase.errors[:number_final_pages]).to eq ['must be a positive whole number']
       end
       
       it 'errors when string represents a word' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "coffee")
+        kase = build(:offender_sar_case, number_final_pages: "coffee")
         expect(kase).not_to be_valid
-        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a positive whole number']
+        expect(kase.errors[:number_final_pages]).to eq ['must be a positive whole number']
       end
 
       it 'errors when string represents alphanumeric mix of chars' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "coffee123")
+        kase = build(:offender_sar_case, number_final_pages: "coffee123")
         expect(kase).not_to be_valid
-        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a positive whole number']
+        expect(kase.errors[:number_final_pages]).to eq ['must be a positive whole number']
       end
 
       it 'errors when string represents a negative whole number' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "-562")
+        kase = build(:offender_sar_case, number_final_pages: "-562")
         expect(kase).not_to be_valid
-        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a positive whole number']
+        expect(kase.errors[:number_final_pages]).to eq ['must be a positive whole number']
       end
     end
 
     context 'valid values' do
       it 'is valid when string represents a positive whole number' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "4835")
+        kase = build(:offender_sar_case, number_final_pages: "4835")
         expect(kase).to be_valid
       end
     end

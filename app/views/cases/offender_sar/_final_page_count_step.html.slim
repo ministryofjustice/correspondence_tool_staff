@@ -1,5 +1,5 @@
 - content_for :heading, flush: true
-    = t('cases.edit.offender_sar.number_dispatched_pages')
+    = t('cases.edit.offender_sar.number_final_pages')
 
 .grid-row
   .column-full
@@ -8,11 +8,11 @@
           = yield :heading
 
 div class="case-#{@correspondence_type_key}"
-  / NOTE: this uses the step mechanism to change the number_dispatched_pages 
+  / NOTE: this uses the step mechanism to change the number_final_pages
   / this does not appear in the list of steps for new cast creation as found in
   / OffenderSARCaseForm -> def steps method
   = form_for @case, url: case_sar_offender_path(@case), as: :offender_sar do |f|
-    = f.text_field :number_dispatched_pages, style: 'width: 10%' 
+    = f.text_field :number_final_pages, style: 'width: 10%' 
 
     input name="current_step" type="hidden" value=@case.current_step
 

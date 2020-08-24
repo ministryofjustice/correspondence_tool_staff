@@ -60,10 +60,10 @@ class Case::SAR::Offender < Case::Base
                  third_party_company_name: :string,
                  late_team_id: :integer,
                  third_party_name: :string,
-                 number_dispatched_pages: :string,
+                 number_final_pages: :string,
                  number_exempt_pages: :string
 
-  attribute :number_dispatched_pages, :string, default: '0'
+  attribute :number_final_pages, :string, default: '0'
   attribute :number_exempt_pages, :string, default: '0'
 
   enum subject_type: {
@@ -109,7 +109,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_address
 
   validate :validate_request_dated
-  validate :validate_number_dispatched_pages
+  validate :validate_number_final_pages
   validate :validate_number_exempt_pages
 
   before_validation :reassign_gov_uk_dates
@@ -142,14 +142,14 @@ class Case::SAR::Offender < Case::Base
     errors[:number_exempt_pages].any?
   end
 
-  def validate_number_dispatched_pages
-    if number_dispatched_pages.present? && string_is_not_whole_number?(number_dispatched_pages)
+  def validate_number_final_pages
+    if number_final_pages.present? && string_is_not_whole_number?(number_final_pages)
       errors.add(
-        :number_dispatched_pages,
-        I18n.t('activerecord.errors.models.case.attributes.number_dispatched_pages.not_whole_number')
+        :number_final_pages,
+        I18n.t('activerecord.errors.models.case.attributes.number_final_pages.not_whole_number')
       )
     end
-    errors[:number_dispatched_pages].any?
+    errors[:number_final_pages].any?
   end
 
 

@@ -67,7 +67,7 @@ feature 'Offender SAR Case editing by a manager' do
     when_i_update_the_exempt_pages_count
     then_i_should_see_the_updated_exempt_page_count_on_the_show_page
 
-    when_i_update_the_pages_for_dispatch 
+    when_i_update_the_number_of_final_pages
     then_i_should_see_the_pages_for_dispatch_reflected_on_the_show_page
   end
 
@@ -78,10 +78,10 @@ feature 'Offender SAR Case editing by a manager' do
     click_on 'Continue'
   end
 
-  def when_i_update_the_pages_for_dispatch
-    click_on 'Update pages for dispatch'
-    expect(page).to have_content('Update pages for dispatch')
-    fill_in 'offender_sar_number_dispatched_pages', with: '1308'
+  def when_i_update_the_number_of_final_pages
+    click_on 'Update final page count'
+    expect(page).to have_content('Update final page count')
+    fill_in 'offender_sar_number_final_pages', with: '1308'
     click_on 'Continue'
   end
 
