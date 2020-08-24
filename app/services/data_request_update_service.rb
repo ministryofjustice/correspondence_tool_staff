@@ -44,7 +44,7 @@ class DataRequestUpdateService
     if old_pages != new_pages
       # Create nicely readable sentences for both old and new number of pages
       # i18n-tasks-use t('cases.data_requests.update.log_pages')
-      pages = [old_pages, new_pages].map do |n|
+      [old_pages, new_pages].map do |n|
         "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
       end
 
