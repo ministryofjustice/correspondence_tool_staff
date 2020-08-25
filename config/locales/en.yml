@@ -288,6 +288,8 @@ en:
     confirm: Confirm
     create_case: Create case
     feedback: Send feedback
+    final_page_count: Update final page count
+    exempt_pages: Update exempt pages
     next_page_assign: Create case
     request_amends: Request amends
     save_changes: Save changes
