@@ -125,6 +125,10 @@ module PageObjects
             element :data, 'td'
           end
 
+          section :late_team, '.late-team' do
+            element :data, 'td'
+          end
+
           section :time_taken, '.time-taken' do
             element :data, 'td:nth-child(2)'
           end
