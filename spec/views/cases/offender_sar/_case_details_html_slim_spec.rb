@@ -60,5 +60,22 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.requester_reference.data.text).to eq 'FOOG1234'
       expect(partial.third_party_company_name.data.text).to eq 'Foogle and Sons Solicitors at Law'
     end
+
+    it 'does not display Business unit responsible for late response when case closed' do
+      late_closed_case = (
+        create :offender_sar_case,
+        current_state: 'closed',
+        received_date: 40.days.ago,
+        date_responded: 1.days.ago,
+        external_deadline: 40.days.ago).decorate
+      assign(:case, late_closed_case)
+      render partial: 'cases/offender_sar/case_details.html.slim', locals: {
+        case_details: late_closed_case,
+        link_type: nil
+      }
+      partial = offender_sar_case_details_section(rendered).response_details
+
+      expect(partial).not_to have_selector(".late-team")
+    end
   end
 end
