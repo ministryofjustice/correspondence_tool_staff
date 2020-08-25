@@ -29,21 +29,21 @@
                 - if data_request.other? && data_request.request_type_note.present?
                   = ": #{data_request.request_type_note}"
                 - if data_request.request_date_present?
-                  span.data-dates
+                  span.data-detail
                     br
-                    span.visuallyhidden
-                      = ': '
                     - if data_request.date_from.present?
                         time datetime="#{data_request.date_from}"
                           = l data_request.date_from, format: :default
                     - if data_request.request_dates_both_present?
                       = " - "
                     - if data_request.request_date_from_only?
-                      = " onwards"
+                      span<
+                        = t('cases.data_requests.onwards')
                     - if data_request.request_date_to_only?
-                      = "Up to "
+                      span<
+                        = t('cases.data_requests.upto')
                     - if data_request.date_to.present?
-                        time datetime="#{data_request.date_to}"
+                        time< datetime="#{data_request.date_to}"
                           = l data_request.date_to, format: :default
               td
                 - if data_request.date_requested.present?
@@ -61,8 +61,3 @@
 
 = link_to 'Update exempt pages', edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
 = link_to 'Update pages for dispatch', edit_step_case_sar_offender_path(case_details, 'pages_for_dispatch'), class: 'button-tertiary'
-
-css:
-  .data-dates {
-    color: #6f777b;
-  }

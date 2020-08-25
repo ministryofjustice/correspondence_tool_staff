@@ -257,7 +257,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
     it 'generates html markup' do
       kase = instance_double(Case::Base, subject: 'Once upon a time...', name: 'Ray Gunn', type: 'Case::FOI::Standard')
       request_details = request_details_html(kase)
-      expect(request_details).to eq '<strong class="strong">Once upon a time... </strong><div class="case-name-detail">Ray Gunn</div>'
+      expect(request_details).to eq '<strong class="strong">Once upon a time... </strong><div class="data-detail">Ray Gunn</div>'
     end
   end
 

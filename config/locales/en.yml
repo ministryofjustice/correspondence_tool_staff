@@ -987,6 +987,8 @@ en:
       edit:
         heading: Edit data request
         link: Edit
+      form:
+        record_request: Continue
       index:
         heading: Data requested
         none: No data requests recorded
@@ -1002,8 +1004,7 @@ en:
         heading: Record data request
         date_from_copy: Request all data held from this date onward
         date_to_copy: Request all data held up until this date
-      form:
-        record_request: Continue
+      onwards: "Onwards"
       update:
         log_message_pages_changed: "%{location}, %{request_type}: pages changed from %{old_pages} to %{new_pages}"
         log_pages: {
@@ -1013,7 +1014,7 @@ en:
         }
         success: Data request updated
         unprocessed: No changes made
-
+      upto: "Up to"
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness
