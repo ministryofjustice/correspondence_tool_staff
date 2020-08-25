@@ -216,7 +216,7 @@ describe Case::SAR::Offender do
         expect(kase).not_to be_valid
         expect(kase.errors[:number_exempt_pages]).to eq ['must be a positive whole number']
       end
-      
+
       it 'errors when string represents a word' do
         kase = build(:offender_sar_case, number_exempt_pages: "coffee")
         expect(kase).not_to be_valid
@@ -251,7 +251,7 @@ describe Case::SAR::Offender do
         expect(kase).not_to be_valid
         expect(kase.errors[:number_dispatched_pages]).to eq ['must be a positive whole number']
       end
-      
+
       it 'errors when string represents a word' do
         kase = build(:offender_sar_case, number_dispatched_pages: "coffee")
         expect(kase).not_to be_valid
@@ -672,7 +672,8 @@ describe Case::SAR::Offender do
         offender_sar_case: kase,
         user: build(:user),
         location: 'X' * 500, # Max length
-        request_type: 'all_prison_records'
+        request_type: 'all_prison_records',
+        date_requested: Date.current
       )
       expect(kase.page_count).to eq 0
     end
@@ -683,7 +684,8 @@ describe Case::SAR::Offender do
         user: build(:user),
         location: 'X' * 500, # Max length,
         cached_num_pages: 200,
-        request_type: 'all_prison_records'
+        request_type: 'all_prison_records',
+        date_requested: Date.current
       )
       data_request.save!
       expect(kase.page_count).to eq 200

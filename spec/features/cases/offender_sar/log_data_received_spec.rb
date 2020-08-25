@@ -15,7 +15,7 @@ feature 'Log data received for an Offender SAR Data Request' do
 
     # A brand new DataRequest always has 0 number of pages received
     row = cases_show_page.data_requests.rows.first
-    expect(row.date_from).to have_text ''
+    expect(row.date_requested).to have_text ''
     expect(row.pages).to have_text '0'
 
     last_row = cases_show_page.data_requests.rows.last

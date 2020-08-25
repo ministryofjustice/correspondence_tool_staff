@@ -29,7 +29,10 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         {
           data_request: {
             location: 'Wormwood Scrubs',
-            request_type: 'all_prison_records'
+            request_type: 'all_prison_records',
+            date_requested_dd: "15",
+            date_requested_mm: "8",
+            date_requested_yyyy: "2020",
           },
           case_id: offender_sar_case.id,
         }
@@ -47,7 +50,10 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         {
           data_request: {
             location: '',
-            request_type: 'all_prison_records'
+            request_type: 'all_prison_records',
+            date_requested_dd: "15",
+            date_requested_mm: "8",
+            date_requested_yyyy: "2020",
           },
           case_id: offender_sar_case.id,
         }

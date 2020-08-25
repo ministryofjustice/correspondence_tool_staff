@@ -10,7 +10,7 @@ RSpec.describe DataRequest, type: :model do
           location: 'X' * 500, # Max length
           request_type: 'all_prison_records',
           request_type_note: '',
-          request_dated: Date.current
+          date_requested: Date.current
         )
       }
 

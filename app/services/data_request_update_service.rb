@@ -48,7 +48,7 @@ class DataRequestUpdateService
         "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
       end
 
-      # i18n-tasks-use t('cases.data_requests.update.log_message')
+      # i18n-tasks-use t('cases.data_requests.update.log_message_pages_changed')
       I18n.t('.log_message_pages_changed',
         request_type: I18n.t("cases.data_requests.index.request_type.#{data_request.request_type}"),
         location: @data_request.location,

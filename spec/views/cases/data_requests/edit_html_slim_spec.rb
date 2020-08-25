@@ -24,9 +24,8 @@ describe 'cases/data_requests/edit', type: :view do
     end
 
     it 'has required content' do
-      expect(@page.page_heading.heading.text).to eq 'Update page count'
-      expect(@page.location.text).to eq 'HMP Leicester'
-      expect(@page.request_type.text).to eq 'all_prison_records'
+      expect(@page.page_heading.heading.text).to eq 'Edit data request'
+      expect(@page.location.text).to eq 'HMP Leicester: All prison records'
 
       expect(@page.form.date_from_day.value.to_i).to eq 15
       expect(@page.form.date_from_month.value.to_i).to eq 8
