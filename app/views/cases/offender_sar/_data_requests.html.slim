@@ -29,7 +29,7 @@
                 - if data_request.other? && data_request.request_type_note.present?
                   = ": #{data_request.request_type_note}"
                 - if data_request.request_date_present?
-                  span.data-detail
+                  span.data-detail<
                     br
                     - if data_request.date_from.present?
                         time datetime="#{data_request.date_from}"

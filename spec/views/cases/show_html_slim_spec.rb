@@ -624,7 +624,7 @@ describe 'cases/show.html.slim', type: :view do
 
           expect(data_requests.size).to eq 3
           expect(data_requests.first.location.text).to eq 'The Location'
-          expect(data_requests.first.request_type.text).to eq 'All prison records: 2 Jul 2007 onwards'
+          expect(data_requests.first.request_type.text).to eq 'All prison records 2 Jul 2007 onwards'
           expect(data_requests.first.date_requested.text).to eq '15 Aug 2020'
           expect(data_requests.first.date_requested_time['datetime']).to eq '2020-08-15'
           expect(data_requests.first.pages.text).to eq '0'
