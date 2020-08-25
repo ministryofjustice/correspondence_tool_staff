@@ -1004,7 +1004,7 @@ en:
         heading: Record data request
         date_from_copy: Request all data held from this date onward
         date_to_copy: Request all data held up until this date
-      onwards: "Onwards"
+      onwards: "onwards"
       update:
         log_message_pages_changed: "%{location}, %{request_type}: pages changed from %{old_pages} to %{new_pages}"
         log_pages: {
