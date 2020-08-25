@@ -60,11 +60,11 @@ class Case::SAR::Offender < Case::Base
                  third_party_company_name: :string,
                  late_team_id: :integer,
                  third_party_name: :string,
-                 number_final_pages: :string,
-                 number_exempt_pages: :string
+                 number_final_pages: :integer,
+                 number_exempt_pages: :integer
 
-  attribute :number_final_pages, :string, default: '0'
-  attribute :number_exempt_pages, :string, default: '0'
+  attribute :number_final_pages, :integer, default: 0
+  attribute :number_exempt_pages, :integer, default: 0
 
   enum subject_type: {
     offender: 'offender',
@@ -108,9 +108,15 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_relationship
   validate :validate_third_party_address
 
+  validates :number_final_pages,
+            numericality: { only_integer: true, greater_than: 0,
+                            message: 'must be a positive whole number' }
+
+  validates :number_exempt_pages, 
+            numericality: { only_integer: true, greater_than: 0,
+                            message: 'must be a positive whole number' }
+
   validate :validate_request_dated
-  validate :validate_number_final_pages
-  validate :validate_number_exempt_pages
 
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
@@ -131,27 +137,6 @@ class Case::SAR::Offender < Case::Base
     end
     errors[:date_of_birth].any?
   end
-
-  def validate_number_exempt_pages
-    if number_exempt_pages.present? && string_is_not_whole_number?(number_exempt_pages)
-      errors.add(
-        :number_exempt_pages,
-        I18n.t('activerecord.errors.models.case.attributes.number_exempt_pages.not_whole_number')
-      )
-    end
-    errors[:number_exempt_pages].any?
-  end
-
-  def validate_number_final_pages
-    if number_final_pages.present? && string_is_not_whole_number?(number_final_pages)
-      errors.add(
-        :number_final_pages,
-        I18n.t('activerecord.errors.models.case.attributes.number_final_pages.not_whole_number')
-      )
-    end
-    errors[:number_final_pages].any?
-  end
-
 
   def validate_request_dated
     if request_dated.present? && self.request_dated > Date.today
@@ -282,13 +267,6 @@ class Case::SAR::Offender < Case::Base
   end 
 
   private
-
-  def string_is_not_whole_number?(string)
-    # Regex tests: from start of line '^' 
-    # to end of line '$' string can only
-    # contain chars in range 0-9 
-    !!(string =~ /^[0-9]+$/).nil?   
-  end
 
   def set_subject
     self.subject = subject_full_name
