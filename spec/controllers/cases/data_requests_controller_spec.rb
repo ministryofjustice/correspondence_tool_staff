@@ -88,6 +88,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
       expect(assigns(:data_request)).to be_a DataRequest
       expect(assigns(:data_request).cached_num_pages).to eq 10
+      expect(assigns(:data_request).cached_date_received).to eq Date.yesterday
     end
   end
 

@@ -24,11 +24,9 @@
                 = data_request.location
               td
                 = t :"cases.data_requests.index.request_type.#{data_request.request_type}"
-                  /t('cases.data_requests.index.request_type[data_request.request_type]')
-                /data_request.request_type&.humanize
                 - if data_request.other? && data_request.request_type_note.present?
                   = ": #{data_request.request_type_note}"
-                - if data_request.request_date_present?
+                - if data_request.request_dates_either_present?
                   span.data-detail<
                     br
                     - if data_request.date_from.present?

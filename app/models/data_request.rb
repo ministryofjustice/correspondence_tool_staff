@@ -29,13 +29,6 @@ class DataRequest < ApplicationRecord
 
   acts_as_gov_uk_date(:date_requested, :date_from, :date_to)
 
-  def new_log
-    logs.new(
-      date_received: self.cached_date_received,
-      num_pages: self.cached_num_pages,
-    )
-  end
-
   def logs
     self.data_request_logs
   end
@@ -52,7 +45,7 @@ class DataRequest < ApplicationRecord
     request_type == 'other'
   end
 
-  def request_date_present?
+  def request_dates_either_present?
     date_from.present? || date_to.present?
   end
 

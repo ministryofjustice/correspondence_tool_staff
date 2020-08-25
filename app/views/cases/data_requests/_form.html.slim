@@ -28,7 +28,6 @@
       = f.gov_uk_date_field :date_from, { \
         legend_text: 'Date from (optional)',
         form_hint_text: t('cases.data_requests.new.date_from_copy'),
-        # today_button: { class: '' } \
       }
 
       br
@@ -36,7 +35,6 @@
       = f.gov_uk_date_field :date_to, { \
         legend_text: 'Date to (optional)',
         form_hint_text: t('cases.data_requests.new.date_to_copy'),
-        # today_button: { class: '' } \
       }
 
       - if @data_request.persisted?
