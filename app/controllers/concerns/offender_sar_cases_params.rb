@@ -11,7 +11,7 @@ module OffenderSARCasesParams
       :flag_as_high_profile,
       :message,
       :name,
-      :number_dispatched_pages,
+      :number_final_pages,
       :number_exempt_pages,
       :other_subject_ids,
       :postal_address,

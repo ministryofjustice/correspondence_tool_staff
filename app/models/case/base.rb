@@ -616,6 +616,11 @@ class Case::Base < ApplicationRecord
     days > 0 ? days : nil
   end
 
+  def num_days_taken
+    days = ((date_responded.nil? ? Date.today : date_responded) - received_date).to_i
+    days > 0 ? days : nil
+  end
+
   def current_team_and_user
     CurrentTeamAndUserService.new(self)
   end

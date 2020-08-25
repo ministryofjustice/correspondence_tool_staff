@@ -211,26 +211,8 @@ describe Case::SAR::Offender do
 
   describe 'number_exempt_pages' do
     context 'invalid values' do
-      it 'errors when string represents a float' do
-        kase = build(:offender_sar_case, number_exempt_pages: "24.45")
-        expect(kase).not_to be_valid
-        expect(kase.errors[:number_exempt_pages]).to eq ['must be a positive whole number']
-      end
-      
-      it 'errors when string represents a word' do
-        kase = build(:offender_sar_case, number_exempt_pages: "coffee")
-        expect(kase).not_to be_valid
-        expect(kase.errors[:number_exempt_pages]).to eq ['must be a positive whole number']
-      end
-
-      it 'errors when string represents alphanumeric mix of chars' do
-        kase = build(:offender_sar_case, number_exempt_pages: "coffee123")
-        expect(kase).not_to be_valid
-        expect(kase.errors[:number_exempt_pages]).to eq ['must be a positive whole number']
-      end
-
       it 'errors when string represents negative whole number' do
-        kase = build(:offender_sar_case, number_exempt_pages: "-562")
+        kase = build(:offender_sar_case, number_exempt_pages: -562)
         expect(kase).not_to be_valid
         expect(kase.errors[:number_exempt_pages]).to eq ['must be a positive whole number']
       end
@@ -238,42 +220,24 @@ describe Case::SAR::Offender do
 
     context 'valid values' do
       it 'is valid when string represents a positive whole number' do
-        kase = build(:offender_sar_case, number_exempt_pages: "4835")
+        kase = build(:offender_sar_case, number_exempt_pages: 4835)
         expect(kase).to be_valid
       end
     end
   end
 
-  describe 'number_dispatched_pages' do
+  describe 'number_final_pages' do
     context 'invalid values' do
-      it 'errors when string represents a float' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "24.45")
-        expect(kase).not_to be_valid
-        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a positive whole number']
-      end
-      
-      it 'errors when string represents a word' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "coffee")
-        expect(kase).not_to be_valid
-        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a positive whole number']
-      end
-
-      it 'errors when string represents alphanumeric mix of chars' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "coffee123")
-        expect(kase).not_to be_valid
-        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a positive whole number']
-      end
-
       it 'errors when string represents a negative whole number' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "-562")
+        kase = build(:offender_sar_case, number_final_pages: -562)
         expect(kase).not_to be_valid
-        expect(kase.errors[:number_dispatched_pages]).to eq ['must be a positive whole number']
+        expect(kase.errors[:number_final_pages]).to eq ['must be a positive whole number']
       end
     end
 
     context 'valid values' do
       it 'is valid when string represents a positive whole number' do
-        kase = build(:offender_sar_case, number_dispatched_pages: "4835")
+        kase = build(:offender_sar_case, number_final_pages: 4835)
         expect(kase).to be_valid
       end
     end
@@ -687,6 +651,76 @@ describe Case::SAR::Offender do
       )
       data_request.save!
       expect(kase.page_count).to eq 200
+    end
+  end
+
+  describe '#data_requests_completed' do
+    let(:kase) { build :offender_sar_case }
+
+    it 'no data request' do
+      expect(kase.data_requests_completed?).to eq false
+    end
+
+    it 'have data request but have not received anything yet' do
+      DataRequest.new(
+        offender_sar_case: kase,
+        user: build(:user),
+        location: 'X' * 500, # Max length
+        request_type: 'all_prison_records'
+      )
+      expect(kase.data_requests_completed?).to eq false
+    end
+
+    it 'have data requests but only received partial requests have been received' do
+      DataRequest.new(
+        offender_sar_case: kase,
+        user: build(:user),
+        location: 'test',
+        request_type: 'all_prison_records'
+      )
+      DataRequest.new(
+        offender_sar_case: kase,
+        user: build(:user),
+        location: 'test1',
+        cached_num_pages: 200,
+        request_type: 'probation_records',
+        completed: true
+      )
+      expect(kase.data_requests_completed?).to eq false
+    end
+
+    it 'have data requests and all the data have beeen received' do
+      DataRequest.new(
+        offender_sar_case: kase,
+        user: build(:user),
+        location: 'test2',
+        cached_num_pages: 200,
+        request_type: 'all_prison_records',
+        completed: true
+      ).save!
+      DataRequest.new(
+        offender_sar_case: kase,
+        user: build(:user),
+        location: 'test3',
+        cached_num_pages: 100,
+        request_type: 'all_nomis_records',
+        completed: true
+      ).save!
+      expect(kase.data_requests_completed?).to eq true
+    end
+  end
+
+  describe '#number_dispatched_pages' do
+    let(:kase) { build :offender_sar_case }
+
+    it 'no page being received yet' do
+      expect(kase.number_dispatched_pages).to eq 0
+    end
+
+    it '' do
+      kase.number_final_pages = 100
+      kase.number_exempt_pages = 90
+      expect(kase.number_dispatched_pages).to eq 10
     end
   end
 
