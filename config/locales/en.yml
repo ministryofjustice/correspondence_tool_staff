@@ -67,7 +67,7 @@ en:
               after_date_responded: "can't be after the date responded"
             date_of_birth:
               not_in_future: "can't be in the future."
-            number_dispatched_pages:
+            number_final_pages:
               not_whole_number: 'must be a positive whole number'
             number_exempt_pages:
               not_whole_number: 'must be a positive whole number'
@@ -620,8 +620,8 @@ en:
       name: Requester
       offender_sar:
         time_taken_result:
-          one: "%{count} day"
-          other: "%{count} days"
+          one: "%{count} calendar day"
+          other: "%{count} calendar days"
       original-case-details: Original case details
       other_subject_ids: "Police national computer number"
       outcome: Outcome

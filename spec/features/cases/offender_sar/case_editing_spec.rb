@@ -81,7 +81,7 @@ feature 'Offender SAR Case editing by a manager' do
   def when_i_update_the_pages_for_dispatch
     click_on 'Update pages for dispatch'
     expect(page).to have_content('Update pages for dispatch')
-    fill_in 'offender_sar_number_dispatched_pages', with: '1308'
+    fill_in 'offender_sar_number_final_pages', with: '2849'
     click_on 'Continue'
   end
 

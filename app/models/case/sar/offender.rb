@@ -60,11 +60,11 @@ class Case::SAR::Offender < Case::Base
                  third_party_company_name: :string,
                  late_team_id: :integer,
                  third_party_name: :string,
-                 number_dispatched_pages: :string,
-                 number_exempt_pages: :string
+                 number_final_pages: :integer,
+                 number_exempt_pages: :integer
 
-  attribute :number_dispatched_pages, :string, default: '0'
-  attribute :number_exempt_pages, :string, default: '0'
+  attribute :number_final_pages, :integer, default: 0
+  attribute :number_exempt_pages, :integer, default: 0
 
   enum subject_type: {
     offender: 'offender',
@@ -109,7 +109,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_address
 
   validate :validate_request_dated
-  validate :validate_number_dispatched_pages
+  validate :validate_number_final_pages
   validate :validate_number_exempt_pages
 
   before_validation :reassign_gov_uk_dates
@@ -133,7 +133,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_number_exempt_pages
-    if number_exempt_pages.present? && string_is_not_whole_number?(number_exempt_pages)
+    if number_exempt_pages.present? && number_exempt_pages < 0
       errors.add(
         :number_exempt_pages,
         I18n.t('activerecord.errors.models.case.attributes.number_exempt_pages.not_whole_number')
@@ -142,14 +142,14 @@ class Case::SAR::Offender < Case::Base
     errors[:number_exempt_pages].any?
   end
 
-  def validate_number_dispatched_pages
-    if number_dispatched_pages.present? && string_is_not_whole_number?(number_dispatched_pages)
+  def validate_number_final_pages
+    if number_final_pages.present? && number_final_pages < 0
       errors.add(
-        :number_dispatched_pages,
-        I18n.t('activerecord.errors.models.case.attributes.number_dispatched_pages.not_whole_number')
+        :number_final_pages,
+        I18n.t('activerecord.errors.models.case.attributes.number_final_pages.not_whole_number')
       )
     end
-    errors[:number_dispatched_pages].any?
+    errors[:number_final_pages].any?
   end
 
 
@@ -281,14 +281,20 @@ class Case::SAR::Offender < Case::Base
     self.third_party? ? self.third_party_relationship : 'data_subject'
   end 
 
-  private
-
-  def string_is_not_whole_number?(string)
-    # Regex tests: from start of line '^' 
-    # to end of line '$' string can only
-    # contain chars in range 0-9 
-    !!(string =~ /^[0-9]+$/).nil?   
+  def data_requests_completed?
+    data_requests = DataRequest.where(case_id: self.id)
+    unless data_requests.empty?
+      data_requests.all? { |data_item| data_item.completed }
+    else
+      false
+    end
   end
+
+  def number_dispatched_pages
+    number_final_pages - number_exempt_pages
+  end
+
+  private
 
   def set_subject
     self.subject = subject_full_name

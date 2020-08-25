@@ -84,6 +84,10 @@ module Warehouse
         case_report.draft_in_time = self.humanize_boolean(kase.within_draft_deadline?) # Draft in time
         case_report.in_target = self.humanize_boolean(kase.response_in_target?) # In Target
         case_report.number_of_days_late = kase.num_days_late # Number of days late
+        case_report.number_of_days_taken = kase.num_days_taken
+        case_report.third_party_company_name = kase.offender_sar? ? kase.third_party_company_name : nil
+        case_report.number_of_exempt_pages = kase.offender_sar? ? kase.number_exempt_pages : nil
+        case_report.number_of_final_pages = kase.offender_sar? ? kase.number_final_pages : nil
 
         case_report.save!
         case_report

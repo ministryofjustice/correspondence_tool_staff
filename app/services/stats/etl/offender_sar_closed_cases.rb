@@ -14,6 +14,11 @@ module Stats
         'Date received at MOJ',
         'Date case closed', 
         'Timeliness (in time/out of time)',
+        'No of days taken', 
+        'Company name', 
+        'Pages for dispatch',
+        'Exempt pages',
+        'Total final pages'
       ]
 
       FIELD_COLUMNS = [
@@ -24,6 +29,11 @@ module Stats
         'date_received',
         'date_responded', 
         " case when number_of_days_late > 0 then 'in time' else 'out of time' end ", 
+        'number_of_days_taken', 
+        'third_party_company_name', 
+        'number_of_final_pages::integer - number_of_exempt_pages::integer', 
+        'number_of_exempt_pages', 
+        'number_of_final_pages'
       ]
 
       def result_name

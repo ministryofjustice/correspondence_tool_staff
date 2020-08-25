@@ -580,15 +580,7 @@ describe 'cases/show.html.slim', type: :view do
         it 'shows record data request button' do
           render
           cases_show_page.load(rendered)
-          expect(cases_show_page.actions.record_data_request['class']).to match(/button-secondary/)
-        end
-
-        # Grey button once one or more data requests have been recorded
-        it 'shows tertiary button after data request is recorded' do
-          offender_sar_case.current_state = 'ready_for_vetting'
-          render
-          cases_show_page.load(rendered)
-          expect(cases_show_page.actions.record_data_request['class']).to match(/button-tertiary/)
+          expect(cases_show_page.data_request_actions.record_data_request['class']).to match(/button-tertiary/)
         end
       end
 

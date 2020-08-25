@@ -43,7 +43,7 @@ describe Case::SAR::OffenderDecorator do
 
   describe "#time_taken" do
     it "returns total number of days between date received and date responded" do
-      expect(offender_sar_case.time_taken).to eq "9 days"
+      expect(offender_sar_case.time_taken).to eq "9 calendar days"
     end
   end
 

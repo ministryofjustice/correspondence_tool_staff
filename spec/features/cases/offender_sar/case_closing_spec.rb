@@ -38,7 +38,7 @@ feature 'Closing a case' do
           expect(show_page.response_details.timeliness.data.text)
           .to eq 'Answered in time'
           expect(show_page.response_details.time_taken.data.text)
-          .to eq '5 days'
+          .to eq '5 calendar days'
         end
       end
 
@@ -63,7 +63,7 @@ feature 'Closing a case' do
           expect(show_page.response_details.timeliness.data.text)
             .to eq 'Answered late'
           expect(show_page.response_details.time_taken.data.text)
-            .to eq '35 days'
+            .to eq '35 calendar days'
         end
       end
     end

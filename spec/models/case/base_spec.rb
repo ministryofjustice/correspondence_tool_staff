@@ -1515,6 +1515,27 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe '#num_days_taken' do
+    let(:closed_kase) { create :closed_case }
+    let(:kase)  { create :case }
+
+    it 'is nil when case is received today' do
+      kase.received_date = Date.today 
+      expect(kase.num_days_taken).to be nil
+    end
+
+    it 'returns correct number of days for open case' do
+      kase.received_date = 3.days.before(Date.today)
+      expect(kase.num_days_taken).to eq 3
+    end
+
+    it 'returns correct number of days late for closed case' do
+      closed_kase.received_date = 10.days.before(Date.today)
+      closed_kase.date_responded = Date.yesterday
+      expect(closed_kase.num_days_taken).to eq 9
+    end
+  end
+
   describe 'casework officer' do
     let(:disclosure_specialist) { find_or_create :disclosure_specialist }
     let(:case_assigned_to_user) {
