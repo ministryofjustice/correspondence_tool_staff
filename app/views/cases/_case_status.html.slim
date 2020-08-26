@@ -26,7 +26,7 @@
             .case-status__heading.case-status__heading--pages = t('common.case.pages_exempt')
             .case-status__date-value = case_details.number_exempt_pages
           .column-one-third
-            .case-status__heading.case-status__heading--pages = t('common.case.pages_dispatch')
+            .case-status__heading.case-status__heading--pages = t('common.case.pages_final_count')
             .case-status__date-value = case_details.number_final_pages
 
     - if case_details.respond_to?(:ico_reference_number)
