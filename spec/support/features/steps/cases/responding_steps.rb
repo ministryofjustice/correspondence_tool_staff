@@ -87,7 +87,7 @@ def close_sar_case_step(timeliness: 'in time', tmm: false, editable: true)
     .to eq "Answered #{timeliness}"
 
   # Regex required to handle both cases of 1 or more days to respond
-  expect(show_page.response_details.time_taken.data.text).to match(/\d+ working day[s{1}]?/)
+  expect(show_page.response_details.time_taken.data.text).to match(/\d+ calendar day[s{1}]?/)
 
   if tmm
     expect(show_page.response_details.refusal_reason.data.text)
