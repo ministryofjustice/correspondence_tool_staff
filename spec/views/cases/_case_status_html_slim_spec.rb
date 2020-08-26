@@ -168,7 +168,7 @@ describe 'cases/case_status.html.slim', type: :view do
       expect(partial.details.page_counts.received_number.text).to eq '500'
       expect(partial.details.page_counts.exempt_label.text).to eq 'Exempt pages'
       expect(partial.details.page_counts.exempt_number.text).to eq '200'
-      expect(partial.details.page_counts.dispatched_label.text).to eq 'Pages for dispatch'
+      expect(partial.details.page_counts.dispatched_label.text).to eq 'Final page count'
       expect(partial.details.page_counts.dispatched_number.text).to eq '250'
 
     end

@@ -211,7 +211,7 @@ describe Case::SAR::Offender do
 
   describe 'number_exempt_pages' do
     context 'invalid values' do
-      it 'errors when string represents negative whole number' do
+      it 'errors when float is used' do
         kase = build(:offender_sar_case, number_exempt_pages: -562)
         expect(kase).not_to be_valid
         expect(kase.errors[:number_exempt_pages]).to eq ['must be a positive whole number']
