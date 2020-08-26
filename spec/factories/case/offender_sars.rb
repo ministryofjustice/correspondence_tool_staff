@@ -37,6 +37,8 @@ FactoryBot.define do
     flag_as_high_profile            { false }
     created_at                      { creation_time }
     creator                         { create(:user, :orphan) }
+    number_final_pages              { 5 }
+    number_exempt_pages             { 2 }
   end
 
   trait :third_party do
