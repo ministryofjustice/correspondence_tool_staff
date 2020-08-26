@@ -87,7 +87,11 @@ def close_sar_case_step(timeliness: 'in time', tmm: false, editable: true)
     .to eq "Answered #{timeliness}"
 
   # Regex required to handle both cases of 1 or more days to respond
-  expect(show_page.response_details.time_taken.data.text).to match(/\d+ calendar day[s{1}]?/)
+  if show_page.has_css?('.overturned-sar-basic-details')
+    expect(show_page.response_details.time_taken.data.text).to match(/\d+ working day[s{1}]?/)
+  else
+    expect(show_page.response_details.time_taken.data.text).to match(/\d+ calendar day[s{1}]?/)
+  end
 
   if tmm
     expect(show_page.response_details.refusal_reason.data.text)
@@ -97,7 +101,6 @@ def close_sar_case_step(timeliness: 'in time', tmm: false, editable: true)
   end
 
 end
-
 
 def close_ico_appeal_case_step(timeliness: 'in time', decision: 'upheld')
   cases_show_page.actions.close_case.click
