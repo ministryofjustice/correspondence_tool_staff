@@ -713,19 +713,4 @@ describe Case::SAR::Offender do
       expect(kase.data_requests_completed?).to eq true
     end
   end
-
-  describe '#number_dispatched_pages' do
-    let(:kase) { build :offender_sar_case }
-
-    it 'no page being received yet' do
-      expect(kase.number_dispatched_pages).to eq 0
-    end
-
-    it '' do
-      kase.number_final_pages = 100
-      kase.number_exempt_pages = 90
-      expect(kase.number_dispatched_pages).to eq 10
-    end
-  end
-
 end
