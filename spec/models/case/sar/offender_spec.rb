@@ -636,7 +636,8 @@ describe Case::SAR::Offender do
         offender_sar_case: kase,
         user: build(:user),
         location: 'X' * 500, # Max length
-        request_type: 'offender'
+        request_type: 'all_prison_records',
+        date_requested: Date.current
       )
       expect(kase.page_count).to eq 0
     end
@@ -647,7 +648,8 @@ describe Case::SAR::Offender do
         user: build(:user),
         location: 'X' * 500, # Max length,
         cached_num_pages: 200,
-        request_type: 'offender'
+        request_type: 'all_prison_records',
+        date_requested: Date.current
       )
       data_request.save!
       expect(kase.page_count).to eq 200
@@ -696,15 +698,17 @@ describe Case::SAR::Offender do
         location: 'test2',
         cached_num_pages: 200,
         request_type: 'all_prison_records',
-        completed: true
+        completed: true,
+        date_requested: Date.new(2020, 8, 15)
       ).save!
       DataRequest.new(
         offender_sar_case: kase,
         user: build(:user),
         location: 'test3',
         cached_num_pages: 100,
-        request_type: 'all_nomis_records',
-        completed: true
+        request_type: 'nomis_records',
+        completed: true,
+        date_requested: Date.new(2020, 8, 15)
       ).save!
       expect(kase.data_requests_completed?).to eq true
     end

@@ -6,8 +6,11 @@ describe DataRequestCreateService do
   let(:data_request_attributes) {
     {
       location: 'The Clinic',
-      request_type: 'offender',
+      request_type: 'all_prison_records',
       request_type_note: 'Lorem ipsum',
+      date_requested_dd: "15",
+      date_requested_mm: "8",
+      date_requested_yyyy: "2020",
       date_from_dd: "15",
       date_from_mm: "8",
       date_from_yyyy: "2018",
@@ -59,7 +62,7 @@ describe DataRequestCreateService do
         service.call
         expect(service.data_request.persisted?).to be_truthy
         expect(service.data_request.location).to eq 'The Clinic'
-        expect(service.data_request.request_type).to eq 'offender'
+        expect(service.data_request.request_type).to eq 'all_prison_records'
         expect(service.data_request.request_type_note).to eq 'Lorem ipsum'
         expect(service.data_request.date_from).to eq Date.new(2018, 8, 15)
         expect(service.data_request.date_to).to eq Date.new(2019, 8, 15)
@@ -69,7 +72,7 @@ describe DataRequestCreateService do
     context 'on failure' do
       it 'does not save DataRequest when validation errors' do
         params = data_request_attributes.clone
-        params.merge!({ location: 'too' * 500, request_type: 'offender' } )
+        params.merge!({ location: 'too' * 500, request_type: 'all_prison_records' } )
 
         service = described_class.new(
           kase: offender_sar_case,

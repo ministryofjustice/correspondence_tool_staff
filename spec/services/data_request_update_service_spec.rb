@@ -6,14 +6,22 @@ describe DataRequestUpdateService do
     create(
       :data_request,
       location: 'HMP Leicester',
-      request_type: 'offender'
+      request_type: 'all_prison_records'
     )
   }
   let(:offender_sar_case) { create :offender_sar_case }
   let(:params) {
     {
-      num_pages: 21,
-      date_received_dd: '1', date_received_mm: '12', date_received_yyyy: '1992',
+      location: 'HMP Brixton',
+      request_type: 'all_prison_records',
+      request_type_note: 'Lorem ipsum',
+      date_from_dd: "15",
+      date_from_mm: "8",
+      date_from_yyyy: "2018",
+      date_to_dd: "15",
+      date_to_mm: "8",
+      date_to_yyyy: "2019",
+      cached_num_pages: 21,
     }
   }
   let(:service) {
@@ -52,28 +60,19 @@ describe DataRequestUpdateService do
         expect(CaseTransition.last.event).to eq 'add_data_received'
       end
 
-      it 'creates a new log entry' do
-        expect { service.call }.to change(DataRequestLog.all, :size).by(1)
-      end
-
-      it 'updates the data request with the same values as a new DataRequestLog' do
+      it 'updates the data request values' do
         service.call
-        log = DataRequestLog.last
+        request = service.data_request
 
         # De-normalised values should match the DataRequestLog values
-        expect(data_request.cached_num_pages).to eq 21
-        expect(data_request.cached_date_received.strftime('%F')).to eq '1992-12-01'
-
-        expect(log.num_pages).to eq data_request.cached_num_pages
-        expect(log.date_received).to eq data_request.cached_date_received
-        expect(log.user).to eq user
+        expect(request.cached_num_pages).to eq 21
       end
     end
 
     context 'on failure' do
       it 'does not save DataRequest when validation errors' do
         bad_params = params.clone
-        bad_params.merge!(num_pages: -20)
+        bad_params.merge!(cached_num_pages: -20)
         service.instance_variable_set(:@params, bad_params)
         previous_cached_num_pages = data_request.cached_num_pages
         previous_cached_date_received = data_request.cached_date_received
@@ -88,14 +87,6 @@ describe DataRequestUpdateService do
 
       end
 
-      it 'does not create DataRequestLog or CaseHistory when no data' do
-        service.instance_variable_set(:@params, {})
-
-        expect { service.call }.to change(CaseTransition.all, :size).by(0)
-        expect { service.call }.to change(DataRequestLog.all, :size).by(0)
-        expect(service.result).to eq :error
-      end
-
       it 'only recovers from ActiveRecord exceptions' do
         class FakeError < ArgumentError; end
 
@@ -108,13 +99,13 @@ describe DataRequestUpdateService do
   describe '#log_message' do
     it 'creates a human readable case history message' do
       service.call
-      expect(CaseTransition.last.message).to eq "offender, HMP Leicester on 1992-12-01: changed from 0 pages to 21 pages"
+      expect(CaseTransition.last.message).to eq 'HMP Brixton, All prison records: pages changed from 0 to 21'
     end
 
     it 'uses the singular word `page` when 1 page updated' do
-      service.instance_variable_set(:@params, params.merge({ num_pages: 1 }))
+      service.instance_variable_set(:@params, params.merge({ cached_num_pages: 1 }))
       service.call
-      expect(CaseTransition.last.message).to eq "offender, HMP Leicester on 1992-12-01: changed from 0 pages to 1 page"
+      expect(CaseTransition.last.message).to eq "HMP Brixton, All prison records: pages changed from 0 to 1"
     end
   end
 
@@ -129,36 +120,6 @@ describe DataRequestUpdateService do
 
     before do
       service.instance_variable_set(:@data_request, data_request)
-    end
-
-    it 'is true when new values are same as old values' do
-      new_data_request_log = data_request.logs.build(
-        user: user,
-        num_pages: 24,
-        date_received: Date.new(2018, 1, 3),
-      )
-
-      expect(service.send(:unchanged?, new_data_request_log)).to eq true
-    end
-
-    it 'is false when number of pages is updated' do
-      new_data_request_log = data_request.logs.build(
-        user: user,
-        num_pages: 42, # Changed
-        date_received: Date.new(2018, 1, 3) # Same
-      )
-
-      expect(service.send(:unchanged?, new_data_request_log)).to eq false
-    end
-
-    it 'is false when date received is updated' do
-      new_data_request_log = data_request.logs.build(
-        user: user,
-        num_pages: 24, # Same
-        date_received: Date.new(1915, 12, 25) # Changed
-      )
-
-      expect(service.send(:unchanged?, new_data_request_log)).to eq false
     end
   end
 end

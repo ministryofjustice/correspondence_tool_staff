@@ -17,6 +17,10 @@ module PageObjects
 
           element :request_type_note, '#data_request_request_type_note'
 
+          element :date_requested_day, '#data_request_date_requested_dd'
+          element :date_requested_month, '#data_request_date_requested_mm'
+          element :date_requested_year, '#data_request_date_requested_yyyy'
+
           element :date_from_day, '#data_request_date_from_dd'
           element :date_from_month, '#data_request_date_from_mm'
           element :date_from_year, '#data_request_date_from_yyyy'
@@ -27,6 +31,12 @@ module PageObjects
 
           def choose_request_type(request_type)
             make_radio_button_choice("data_request_request_type_#{request_type}")
+          end
+
+          def set_date_requested(date_requested)
+            date_requested_day.set(date_requested.day)
+            date_requested_month.set(date_requested.month)
+            date_requested_year.set(date_requested.year)
           end
 
           def set_date_from(date_from)
