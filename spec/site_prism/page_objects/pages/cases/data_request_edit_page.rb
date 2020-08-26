@@ -13,13 +13,31 @@ module PageObjects
         element :location, '.data-request__location'
         element :request_type, '.data-request__request_type'
 
-        section :form, 'form#new_data_request_log' do
-          element :date_received_dd,   'input[name*="[date_received_dd]"]'
-          element :date_received_mm,   'input[name*="[date_received_mm]"]'
-          element :date_received_yyyy, 'input[name*="[date_received_yyyy]"]'
+        section :form, 'form#edit_data_request' do
 
-          element :num_pages, 'input[name*="[num_pages]"]'
+          element :date_from_day, '#data_request_date_from_dd'
+          element :date_from_month, '#data_request_date_from_mm'
+          element :date_from_year, '#data_request_date_from_yyyy'
+
+          element :date_to_day, '#data_request_date_to_dd'
+          element :date_to_month, '#data_request_date_to_mm'
+          element :date_to_year, '#data_request_date_to_yyyy'
+
+          element :cached_num_pages, 'input[name*="[cached_num_pages]"]'
+          element :completed, 'input[name*="[completed]"]'
+
+          def mark_complete
+            selector = "input#data_request_completed"
+
+            if Capybara.current_driver == Capybara.javascript_driver
+              find(selector, visible: false).click
+            else
+              find(selector).set(true)
+            end
+          end
         end
+
+
 
         element :submit_button, '.button'
       end

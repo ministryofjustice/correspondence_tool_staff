@@ -8,8 +8,9 @@ RSpec.describe DataRequest, type: :model do
           offender_sar_case: build(:offender_sar_case),
           user: build(:user),
           location: 'X' * 500, # Max length
-          request_type: 'offender',
-          request_type_note: ''
+          request_type: 'all_prison_records',
+          request_type_note: '',
+          date_requested: Date.current
         )
       }
 
@@ -146,7 +147,7 @@ RSpec.describe DataRequest, type: :model do
   describe '#request_type' do
     context 'valid values' do
       it 'does not error' do
-        expect(build(:data_request, request_type: 'offender')).to be_valid
+        expect(build(:data_request, request_type: 'all_prison_records')).to be_valid
         expect(build(:data_request, request_type: 'prison_and_probation_records')).to be_valid
       end
     end
@@ -189,20 +190,6 @@ RSpec.describe DataRequest, type: :model do
     end
   end
 
-  describe '#new_log' do
-    subject {
-      build(
-        :data_request,
-        cached_num_pages: 13,
-        cached_date_received: Date.new(1982, 3, 1)
-      ).new_log
-    }
-
-    it { should be_an_instance_of DataRequestLog }
-    it { expect(subject.num_pages).to eq 13 }
-    it { expect(subject.date_received).to eq Date.new(1982, 3, 1) }
-  end
-
   describe '#status' do
     context 'when data request is in progress' do
       let!(:data_request) { build(:data_request) }
@@ -233,6 +220,108 @@ RSpec.describe DataRequest, type: :model do
     it 'returns in progress data requests' do
       expect(DataRequest.in_progress).to match_array [data_request_in_progress]
       expect(DataRequest.in_progress).not_to include data_request_completed
+    end
+  end
+
+  describe '#request_dates_either_present?' do
+    context 'when no request dates available' do
+      subject(:data_request) { build :data_request }
+      it { expect(subject.request_dates_either_present?).to eq false }
+    end
+
+    context 'when from request date available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      it { expect(subject.request_dates_either_present?).to eq true }
+    end
+
+    context 'when to request date available' do
+      subject(:data_request) { build :data_request, date_to: Date.new(2019, 8, 15) }
+      it { expect(subject.request_dates_either_present?).to eq true }
+    end
+
+    context 'when both request dates available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      it { expect(subject.request_dates_either_present?).to eq true }
+    end
+  end
+
+  describe '#request_dates_both_present?' do
+    context 'when no request dates available' do
+      subject(:data_request) { build :data_request }
+      it { expect(subject.request_dates_both_present?).to eq false }
+    end
+    context 'when one request date available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      it { expect(subject.request_dates_both_present?).to eq false }
+    end
+    context 'when both request dates available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      it { expect(subject.request_dates_both_present?).to eq true }
+    end
+  end
+
+  describe '#request_date_from_only?' do
+    context 'when no request dates available' do
+      subject(:data_request) { build :data_request }
+      it { expect(subject.request_date_from_only?).to eq false }
+    end
+
+    context 'when from request date available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      it { expect(subject.request_date_from_only?).to eq true }
+    end
+
+    context 'when to request date available' do
+      subject(:data_request) { build :data_request, date_to: Date.new(2019, 8, 15) }
+      it { expect(subject.request_date_from_only?).to eq false }
+    end
+
+    context 'when both request dates available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      it { expect(subject.request_date_from_only?).to eq false }
+    end
+  end
+
+  describe '#request_date_to_only?' do
+    context 'when no request dates available' do
+      subject(:data_request) { build :data_request }
+      it { expect(subject.request_date_to_only?).to eq false }
+    end
+
+    context 'when from request date available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      it { expect(subject.request_date_to_only?).to eq false }
+    end
+
+    context 'when to request date available' do
+      subject(:data_request) { build :data_request, date_to: Date.new(2019, 8, 15) }
+      it { expect(subject.request_date_to_only?).to eq true }
+    end
+
+    context 'when both request dates available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      it { expect(subject.request_date_to_only?).to eq false }
+    end
+  end
+
+  describe '#request_dates_absent?' do
+    context 'when no request dates available' do
+      subject(:data_request) { build :data_request }
+      it { expect(subject.request_dates_absent?).to eq true }
+    end
+    context 'when from request date available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      it { expect(subject.request_dates_absent?).to eq false }
+    end
+
+    context 'when to request date available' do
+      subject(:data_request) { build :data_request, date_to: Date.new(2019, 8, 15) }
+      it { expect(subject.request_dates_absent?).to eq false }
+    end
+
+    context 'when both request dates available' do
+      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      it { expect(subject.request_dates_absent?).to eq false }
     end
   end
 end

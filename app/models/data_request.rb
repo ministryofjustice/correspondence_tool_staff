@@ -12,30 +12,22 @@ class DataRequest < ApplicationRecord
   validate :validate_request_type_note
   validate :validate_from_date_before_to_date
 
-  before_validation :set_date_requested
   before_validation :clean_attributes
 
   scope :completed, -> { where(completed: true) }
   scope :in_progress, -> { where(completed: false) }
 
   enum request_type: {
-    offender: 'offender',
     all_prison_records: 'all_prison_records',
-    all_nomis_records: 'all_nomis_records',
+    security_records: 'security_records',
+    nomis_records: 'nomis_records',
     nomis_contact_logs: 'nomis_contact_logs',
     probation_records: 'probation_records',
     prison_and_probation_records: 'prison_and_probation_records',
     other: 'other'
   }
 
-  acts_as_gov_uk_date(:date_from, :date_to)
-
-  def new_log
-    logs.new(
-      date_received: self.cached_date_received,
-      num_pages: self.cached_num_pages,
-    )
-  end
+  acts_as_gov_uk_date(:date_requested, :date_from, :date_to)
 
   def logs
     self.data_request_logs
@@ -49,10 +41,34 @@ class DataRequest < ApplicationRecord
     completed? ? 'Completed' : 'In progress'
   end
 
+  def other?
+    request_type == 'other'
+  end
+
+  def request_dates_either_present?
+    date_from.present? || date_to.present?
+  end
+
+  def request_dates_both_present?
+    date_from.present? && date_to.present?
+  end
+
+  def request_date_from_only?
+    date_from.present? && date_to.blank?
+  end
+
+  def request_date_to_only?
+    date_from.blank? && date_to.present?
+  end
+
+  def request_dates_absent?
+    date_from.blank? && date_to.blank?
+  end
+
   private
 
   def validate_from_date_before_to_date
-    if dates_present? && date_from > date_to
+    if request_dates_both_present? && date_from > date_to
       errors.add(
         :date_from,
         I18n.t('activerecord.errors.models.data_request.attributes.date_from.order')
@@ -61,9 +77,6 @@ class DataRequest < ApplicationRecord
     end
   end
 
-  def dates_present?
-    date_from.present? && date_to.present?
-  end
 
   def validate_request_type_note
     if request_type == 'other' && request_type_note.blank?
@@ -84,9 +97,5 @@ class DataRequest < ApplicationRecord
     [:location, :request_type_note]
       .each { |f| self.send("#{f}=", self.send("#{f}")&.strip) }
       .each { |f| self.send("#{f}=", self.send("#{f}")&.upcase_first) }
-  end
-
-  def set_date_requested
-    self.date_requested = Date.current if self.date_requested.blank?
   end
 end

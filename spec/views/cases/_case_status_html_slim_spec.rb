@@ -156,7 +156,7 @@ describe 'cases/case_status.html.slim', type: :view do
         offender_sar?: true,
         page_count: '500',
         number_exempt_pages: '200',
-        number_dispatched_pages: '250'
+        number_final_pages: '250'
 
 
       render partial: 'cases/case_status.html.slim',

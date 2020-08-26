@@ -1,5 +1,5 @@
 class DataRequestUpdateService
-  attr_reader :result, :data_request, :data_request_log
+  attr_reader :result, :data_request
 
   def initialize(user:, data_request:, params:)
     @result = nil
@@ -14,8 +14,9 @@ class DataRequestUpdateService
     ActiveRecord::Base.transaction do
       begin
         @result = :unprocessed
-        @data_request_log = @data_request.data_request_logs.build(@params.merge!({ user: @user }))
-        return if unchanged?(@data_request_log)
+
+        @data_request.assign_attributes(@params.merge!(user_id: @user.id))
+        return unless @data_request.changed?
 
         @data_request.save!
 
@@ -37,22 +38,28 @@ class DataRequestUpdateService
 
   def log_message
     scope = 'cases.data_requests.update'
+    old_pages = @old_num_pages
+    new_pages = @data_request.cached_num_pages
 
-    # Create nicely readable sentences for both old and new number of pages
-    # i18n-tasks-use t('cases.data_requests.update.log_pages')
-    pages = [@old_num_pages, @data_request.cached_num_pages].map do |n|
-      "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
+    if old_pages != new_pages
+      # Create nicely readable sentences for both old and new number of pages
+      # i18n-tasks-use t('cases.data_requests.update.log_pages')
+      [old_pages, new_pages].map do |n|
+        "#{n} #{I18n.t('.log_pages', scope: scope, count: n)}"
+      end
+
+      # i18n-tasks-use t('cases.data_requests.update.log_message_pages_changed')
+      I18n.t('.log_message_pages_changed',
+        request_type: I18n.t("cases.data_requests.index.request_type.#{data_request.request_type}"),
+        location: @data_request.location,
+        date_changed: Date.current.strftime('%F'),
+        old_pages: old_pages,
+        new_pages: new_pages,
+        scope: scope
+      )
+    else
+      ''
     end
-
-    # i18n-tasks-use t('cases.data_requests.update.log_message')
-    I18n.t('.log_message',
-      request_type: @data_request.request_type,
-      location: @data_request.location,
-      date_received: @data_request.cached_date_received.strftime('%F'),
-      old_pages: pages.first,
-      new_pages: pages.second,
-      scope: scope
-    )
   end
 
   # Allowing a user to create a new DataRequestLog which is a duplicate of the
