@@ -91,7 +91,7 @@ feature 'Offender SAR Case editing by a manager' do
   end
 
   def then_i_should_see_the_pages_for_dispatch_reflected_on_the_show_page 
-    expect(page).to have_content('1308')
+    expect(page).to have_content('2849')
     expect(page).to have_content('Case updated')
   end
 
