@@ -279,7 +279,7 @@ class Case::SAR::Offender < Case::Base
 
   def requester_type
     self.third_party? ? self.third_party_relationship : 'data_subject'
-  end 
+  end
 
   def data_requests_completed?
     data_requests = DataRequest.where(case_id: self.id)
@@ -288,10 +288,6 @@ class Case::SAR::Offender < Case::Base
     else
       false
     end
-  end
-
-  def number_dispatched_pages
-    number_final_pages - number_exempt_pages
   end
 
   private
