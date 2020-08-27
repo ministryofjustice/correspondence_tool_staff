@@ -91,7 +91,7 @@ module Stats
       redis = Redis.new
       data_collector = []
       report.job_ids.each do |job_id|
-        if redis.exists(job_id)
+        if redis.exists?(job_id)
           data_collector << redis.get(job_id)
         end
       end
@@ -172,20 +172,27 @@ module Stats
       @status = Stats::BaseReport::WAITING
     end 
 
-    def merge_stats(data_collector)
-      merged_stats = {}
+    def init_merged_stats
+      merged_result = {}
       (array_of_month_numbers + [:total]).each do |row|
-        merged_stats[row] = {}
+        merged_result[row] = {}
       end
+      merged_result
+    end 
+
+    def merge_stats(data_collector)
+      merged_stats = init_merged_stats()
       data_collector.each do |data|
         data_object = JSON.parse(data, symbolize_names: true)
         data_object.each do |month, stats|
           month_key = month.to_s.to_i > 0 ? month.to_s.to_i : month
           stats.each do |stat_item, value|
-            if !merged_stats[month_key].key?(stat_item)
-              merged_stats[month_key][stat_item] = 0
+            if !merged_stats[month_key].nil?
+              if !merged_stats[month_key].key?(stat_item)
+                merged_stats[month_key][stat_item] = 0
+              end
+              merged_stats[month_key][stat_item] += value
             end
-            merged_stats[month_key][stat_item] += value
           end
         end 
       end 
