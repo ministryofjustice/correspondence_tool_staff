@@ -29,6 +29,12 @@ class Case::BaseDecorator < Draper::Decorator
     I18n.t('common.case.time_taken_result', count: business_days)
   end
 
+  def calendar_days_taken
+    calendar_days = (date_responded - received_date).to_i
+    calendar_days = 1 if calendar_days == 0
+    I18n.t('common.case.sar/offender.time_taken_result', count: calendar_days)
+  end
+
   def timeliness
     if within_external_deadline?
       I18n.t('common.case.answered_in_time')
