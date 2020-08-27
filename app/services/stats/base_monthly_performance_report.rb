@@ -187,7 +187,7 @@ module Stats
         data_object.each do |month, stats|
           month_key = month.to_s.to_i > 0 ? month.to_s.to_i : month
           stats.each do |stat_item, value|
-            if !merged_stats[month_key].nil?
+            if merged_stats.key?(month_key)
               if !merged_stats[month_key].key?(stat_item)
                 merged_stats[month_key][stat_item] = 0
               end
