@@ -22,7 +22,7 @@ class Case::SAR::OffenderDecorator < Case::BaseDecorator
   end
 
   def third_party_display
-    object.third_party == true ? 'Yes' : 'No'
+    object.third_party ? 'Yes' : 'No'
   end
 
   def time_taken
