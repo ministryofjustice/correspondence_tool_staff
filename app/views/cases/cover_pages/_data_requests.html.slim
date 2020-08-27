@@ -14,6 +14,7 @@
             th Location
             th Data
             th Date requested
+            th Pages received
             th Date received
         tbody
           - case_details.data_requests.order(date_requested: :asc).each do |data_request|
@@ -21,10 +22,14 @@
               td
                 = data_request.location
               td
-                = truncate(data_request.request_type, length: 140)
+                = render "cases/offender_sar/data_request_request_type", data_request: data_request
+
               td
                 time datetime="#{data_request.date_requested}"
                   = l data_request.date_requested, format: :default
+              td
+
+
               td
                 - if data_request.cached_date_received.present?
                   time datetime="#{data_request.cached_date_received}"
