@@ -24,7 +24,7 @@ describe 'cases/cover_pages/show', type: :view do
     end
 
     it 'has required content' do
-      expect(@page.page_heading.heading.text).to eq 'SUBJECT 1-123465'
+      expect(@page.page_heading.heading.text).to eq "#{data_request.kase.subject_full_name&.upcase}-#{data_request.kase.prison_number}"
 
       row = @page.data_requests.rows[0]
       expect(row.location).to have_text 'HMP Leicester'
