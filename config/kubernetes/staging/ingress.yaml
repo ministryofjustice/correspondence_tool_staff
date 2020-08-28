@@ -3,6 +3,9 @@ kind: Ingress
 metadata:
   name: track-a-query-ingress
   namespace: track-a-query-staging
+  annotations:
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: app-secrets
 spec:
   tls:
     - hosts:
