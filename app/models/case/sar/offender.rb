@@ -109,8 +109,15 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_address
 
   validate :validate_request_dated
-  validate :validate_number_final_pages
-  validate :validate_number_exempt_pages
+
+    validates :number_final_pages,
+            numericality: { only_integer: true, greater_than: -1,
+                            message: 'must be a positive whole number' }
+
+  validates :number_exempt_pages, 
+            numericality: { only_integer: true, greater_than: -1,
+                            message: 'must be a positive whole number' }
+
 
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
@@ -131,27 +138,6 @@ class Case::SAR::Offender < Case::Base
     end
     errors[:date_of_birth].any?
   end
-
-  def validate_number_exempt_pages
-    if number_exempt_pages.present? && number_exempt_pages < 0
-      errors.add(
-        :number_exempt_pages,
-        I18n.t('activerecord.errors.models.case.attributes.number_exempt_pages.not_whole_number')
-      )
-    end
-    errors[:number_exempt_pages].any?
-  end
-
-  def validate_number_final_pages
-    if number_final_pages.present? && number_final_pages < 0
-      errors.add(
-        :number_final_pages,
-        I18n.t('activerecord.errors.models.case.attributes.number_final_pages.not_whole_number')
-      )
-    end
-    errors[:number_final_pages].any?
-  end
-
 
   def validate_request_dated
     if request_dated.present? && self.request_dated > Date.today
@@ -279,7 +265,7 @@ class Case::SAR::Offender < Case::Base
 
   def requester_type
     self.third_party? ? self.third_party_relationship : 'data_subject'
-  end 
+  end
 
   def data_requests_completed?
     data_requests = DataRequest.where(case_id: self.id)
@@ -288,10 +274,6 @@ class Case::SAR::Offender < Case::Base
     else
       false
     end
-  end
-
-  def number_dispatched_pages
-    number_final_pages - number_exempt_pages
   end
 
   private

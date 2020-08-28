@@ -211,7 +211,7 @@ describe Case::SAR::Offender do
 
   describe 'number_exempt_pages' do
     context 'invalid values' do
-      it 'errors when string represents negative whole number' do
+      it 'errors when float is used' do
         kase = build(:offender_sar_case, number_exempt_pages: -562)
         expect(kase).not_to be_valid
         expect(kase.errors[:number_exempt_pages]).to eq ['must be a positive whole number']
@@ -713,19 +713,4 @@ describe Case::SAR::Offender do
       expect(kase.data_requests_completed?).to eq true
     end
   end
-
-  describe '#number_dispatched_pages' do
-    let(:kase) { build :offender_sar_case }
-
-    it 'no page being received yet' do
-      expect(kase.number_dispatched_pages).to eq 0
-    end
-
-    it '' do
-      kase.number_final_pages = 100
-      kase.number_exempt_pages = 90
-      expect(kase.number_dispatched_pages).to eq 10
-    end
-  end
-
 end

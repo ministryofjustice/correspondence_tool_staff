@@ -6,15 +6,15 @@ module Stats
     CSV_COLUMN_HEADINGS = [
         'Case number',
         'Date received at MOJ',
-        'Final deadlinne', 
+        'Final deadline', 
         'Who is making the request?',
+        'Company name', 
         'Data subject name',
         'Subject type',
         'Page count',
         'Timeliness (in time/out of time)',
-        'Case state',
+        'Case status',
         'Days open',
-        'Company name', 
         'Data requests completed?'
     ]
 
@@ -43,14 +43,14 @@ module Stats
         kase.number, 
         kase.received_date, 
         kase.external_deadline,
-        kase.third_party? ? kase.third_party_relationship : 'data subject',
+        kase.third_party? ? kase.third_party_relationship : 'Data subject',
+        kase.third_party_company_name,
         kase.subject_full_name, 
         kase.subject_type, 
         kase.page_count, 
         kase.already_late? ? 'out of time' : 'in time', 
         kase.current_state,
         kase.num_days_taken,
-        kase.third_party_company_name,
         kase.data_requests_completed? ? 'Yes' : 'No'
       ]
     end

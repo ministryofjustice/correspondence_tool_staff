@@ -15,6 +15,7 @@ en:
     close: Case closed
     create: Case created
     destroy_case: Case deleted
+    destroy: Destroyed
     edit_case: Case details edited
     extend_for_pit: Extended for Public Interest Test (PIT)
     extend_sar_deadline: Extended SAR deadline

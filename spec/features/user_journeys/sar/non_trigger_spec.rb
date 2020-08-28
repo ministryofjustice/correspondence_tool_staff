@@ -32,7 +32,7 @@ feature 'Non-Offender SAR case that does not require clearance' do
                 user: responder,
                 do_logout: false
 
-    set_case_dates_back_by(kase, 7.business_days)
+    set_case_dates_back_by(kase, 7.days)
 
     add_message_to_case kase: kase,
                         message: 'This. Is. A. Test.',
