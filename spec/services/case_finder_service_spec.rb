@@ -600,19 +600,21 @@ describe CaseFinderService do
       @team_dacu_disclosure = find_or_create :team_dacu_disclosure
       @managing_team        = find_or_create :managing_team
 
-      @foi_case_1                       = create :assigned_case,
-                                                 creation_time: 2.business_days.ago,
-                                                 identifier: 'foi 1 case'
-      @foi_case_2                       = create :assigned_case,
-                                                 creation_time: 1.business_days.ago,
-                                                 identifier: 'foi 2 case'
-      @foi_cr_case                      = create :accepted_compliance_review,
-                                                 creation_time: 1.business_days.ago
-      @foi_tr_case                      = create :accepted_timeliness_review,
-                                                 creation_time: 1.business_days.ago
-      @awaiting_responder_ot_ico_foi    = create :awaiting_responder_ot_ico_foi,
-                                                 creation_time: 1.business_days.ago
-      @awaiting_responder_ot_ico_foi.update(escalation_deadline: 3.days.from_now)
+      Timecop.freeze(Date.new(2020, 8, 19)) do
+        @foi_case_1                       = create :assigned_case,
+                                                   creation_time: 2.business_days.ago,
+                                                   identifier: 'foi 1 case'
+        @foi_case_2                       = create :assigned_case,
+                                                   creation_time: 1.business_days.ago,
+                                                   identifier: 'foi 2 case'
+        @foi_cr_case                      = create :accepted_compliance_review,
+                                                   creation_time: 1.business_days.ago
+        @foi_tr_case                      = create :accepted_timeliness_review,
+                                                   creation_time: 1.business_days.ago
+        @awaiting_responder_ot_ico_foi    = create :awaiting_responder_ot_ico_foi,
+                                                   creation_time: 1.business_days.ago
+        @awaiting_responder_ot_ico_foi.update(escalation_deadline: 3.days.from_now)
+      end
     end
 
     after(:all) {DbHousekeeping.clean}
@@ -620,14 +622,18 @@ describe CaseFinderService do
     describe '#incoming_cases_press_office_scope' do
       it 'returns incoming non-review cases ordered by creation date descending' do
         finder = CaseFinderService.new(@press_officer)
-        expect(finder.__send__ :incoming_cases_press_office_scope)
-          .to match_array [@foi_case_2, @foi_case_1, @awaiting_responder_ot_ico_foi]
+        Timecop.freeze(Date.new(2020, 8, 19)) do
+          expect(finder.__send__ :incoming_cases_press_office_scope)
+            .to match_array [@foi_case_2, @foi_case_1, @awaiting_responder_ot_ico_foi]
+        end
       end
 
       it 'does not return internal review cases' do
         finder = CaseFinderService.new(@press_officer)
-        expect(finder.__send__ :incoming_cases_press_office_scope)
-          .to match_array [ @foi_case_1, @foi_case_2, @awaiting_responder_ot_ico_foi ]
+        Timecop.freeze(Date.new(2020, 8, 19)) do
+          expect(finder.__send__ :incoming_cases_press_office_scope)
+            .to match_array [ @foi_case_1, @foi_case_2, @awaiting_responder_ot_ico_foi ]
+        end
       end
 
       context 'internal review case has received request for further clearance' do
@@ -648,8 +654,10 @@ describe CaseFinderService do
 
         it 'does return the case' do
           finder = CaseFinderService.new(@press_officer)
-          expect(finder.__send__ :incoming_cases_press_office_scope)
-            .to match_array [ @foi_case_1, @foi_case_2, @foi_cr_case, @foi_tr_case, @awaiting_responder_ot_ico_foi ]
+          Timecop.freeze(Date.new(2020, 8, 19)) do
+            expect(finder.__send__ :incoming_cases_press_office_scope)
+              .to match_array [ @foi_case_1, @foi_case_2, @foi_cr_case, @foi_tr_case, @awaiting_responder_ot_ico_foi ]
+          end
         end
       end
     end
