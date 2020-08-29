@@ -23,26 +23,7 @@
               td
                 = data_request.location
               td
-                = t :"cases.data_requests.index.request_type.#{data_request.request_type}"
-                - if data_request.other? && data_request.request_type_note.present?
-                  = ": #{data_request.request_type_note}"
-                - if data_request.request_dates_either_present?
-                  span.data-detail<
-                    br
-                    - if data_request.date_from.present?
-                        time datetime="#{data_request.date_from}"
-                          = l data_request.date_from, format: :default
-                    - if data_request.request_dates_both_present?
-                      = " - "
-                    - if data_request.request_date_from_only?
-                      span<
-                        = t('cases.data_requests.onwards')
-                    - if data_request.request_date_to_only?
-                      span<
-                        = t('cases.data_requests.upto')
-                    - if data_request.date_to.present?
-                        time< datetime="#{data_request.date_to}"
-                          = l data_request.date_to, format: :default
+                = render "cases/offender_sar/data_request_request_type", data_request: data_request
               td
                 - if data_request.date_requested.present?
                   time datetime="#{data_request.date_requested}"
