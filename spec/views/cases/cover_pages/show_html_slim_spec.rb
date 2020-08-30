@@ -7,10 +7,11 @@ describe 'cases/cover_pages/show', type: :view do
         :data_request,
         location: 'HMP Leicester',
         request_type: 'all_prison_records',
+        date_requested: Date.new(2020, 8, 15),
         date_from: Date.new(2018, 8, 15),
         date_to: Date.new(2019, 8, 15),
         cached_num_pages: 32,
-        cached_date_received: Date.new(1972, 9, 25),
+        cached_date_received: Date.new(2020, 8, 15),
       )
     }
 
@@ -29,9 +30,9 @@ describe 'cases/cover_pages/show', type: :view do
       row = @page.data_requests.rows[0]
       expect(row.location).to have_text 'HMP Leicester'
       expect(row.request_type).to have_text 'All prison records 15 Aug 2018 -  15 Aug 2019'
-      expect(row.date_requested).to have_text '28 Aug 2020'
+      expect(row.date_requested).to have_text '15 Aug 2020'
       expect(row.pages.text).to eq ''
-      expect(row.date_received).to have_text '25 Sep 1972'
+      expect(row.date_received).to have_text '15 Aug 2020'
     end
   end
 end
