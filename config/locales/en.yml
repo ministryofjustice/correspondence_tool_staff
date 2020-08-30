@@ -575,7 +575,7 @@ en:
       case_cleared: "The response has been cleared and is ready to be sent to the ICO"
 
   common:
-    alert_banner: "This service will be down for essential maintenance during the afternoon of Wednesday 13 November. You will not have access after 13.00 on this day – the site will likely resume service after business hours. Apologies for the inconvenience."
+    alert_banner: "This service will be down for essential maintenance during the afternoon of Wednesday 2 September. You will not have access after 13.00 on this day – the site will likely resume service after business hours. Apologies for the inconvenience."
     choose: Choose...
     choose_file: Choose a file
     error: error
@@ -624,7 +624,7 @@ en:
       other_subject_ids: "Police national computer number"
       outcome: Outcome
       pages_exempt: Exempt pages
-      pages_final_count: Final page count 
+      pages_final_count: Final page count
       pages_received: Pages received
       postal_address: "Requester’s postal address"
       previous_case_numbers: Previous SAR cases
