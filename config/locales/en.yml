@@ -575,7 +575,7 @@ en:
       case_cleared: "The response has been cleared and is ready to be sent to the ICO"
 
   common:
-    alert_banner: "This service will be down for essential maintenance during the afternoon of Wednesday 2 September. You will not have access after 13.00 on this day – the site will likely resume service after business hours. Apologies for the inconvenience."
+    alert_banner: "This service will be down for essential maintenance during the afternoon of Wednesday 2 September. You will not have access after 13.00 on this day and the site will resume service after business hours. Apologies for the inconvenience."
     choose: Choose...
     choose_file: Choose a file
     error: error
