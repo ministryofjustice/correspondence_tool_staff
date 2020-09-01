@@ -7,6 +7,9 @@ module PageObjects
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+        section :page_heading,
+          PageObjects::Sections::PageHeadingSection, '.page-heading'
+
         section :data_requests,
           PageObjects::Sections::Cases::DataRequestsSection, '.data-requests'
 
