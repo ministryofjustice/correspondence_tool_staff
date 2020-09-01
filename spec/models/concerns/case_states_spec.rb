@@ -149,16 +149,20 @@ RSpec.describe Case, type: :model do
     describe '#within_external_deadline?' do
       let(:foi) { find_or_create :foi_correspondence_type }
       let(:responded_case) do
-        create :responded_case,
-               received_date: days_taken.business_days.ago,
-               date_responded: Time.first_business_day(Date.today)
+        Timecop.freeze(Date.new(2020, 8, 19)) do
+          create :responded_case,
+                 received_date: days_taken.business_days.ago,
+                 date_responded: Time.first_business_day(Date.today)
+        end
       end
 
       context 'the date responded is before the external deadline' do
         let(:days_taken) { foi.external_time_limit - 1 }
 
         it 'returns true' do
-          expect(responded_case.within_external_deadline?).to eq true
+          Timecop.freeze(Date.new(2020, 8, 19)) do
+            expect(responded_case.within_external_deadline?).to eq true
+          end
         end
       end
 
@@ -166,7 +170,9 @@ RSpec.describe Case, type: :model do
         let(:days_taken) { foi.external_time_limit - 1 }
 
         it 'returns true' do
-          expect(responded_case.within_external_deadline?).to eq true
+          Timecop.freeze(Date.new(2020, 8, 19)) do
+            expect(responded_case.within_external_deadline?).to eq true
+          end
         end
       end
 
@@ -174,7 +180,9 @@ RSpec.describe Case, type: :model do
         let(:days_taken) { foi.external_time_limit + 1 }
 
         it 'returns false' do
-          expect(responded_case.within_external_deadline?).to eq false
+          Timecop.freeze(Date.new(2020, 8, 19)) do
+            expect(responded_case.within_external_deadline?).to eq false
+          end
         end
       end
     end

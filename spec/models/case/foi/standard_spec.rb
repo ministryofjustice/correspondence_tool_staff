@@ -338,37 +338,41 @@ describe Case::FOI::Standard do
         context 'in time' do
           context 'non trigger cases' do
             it 'returns true' do
-              # given
-              kase = create_case(flagged: false,
-                                 assignment_times: [18.business_days.ago])
-              expect(kase).not_to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq 'accepted'
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: false,
+                                   assignment_times: [18.business_days.ago])
+                expect(kase).not_to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 1
+                expect(responder_assignments.first.state).to eq 'accepted'
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 18.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses')).to be_empty
+                expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 18.business_days.ago.to_date
+                expect(kase.transitions.where(event: 'add_responses')).to be_empty
 
-              # then
-              expect(kase.business_unit_already_late?).to be false
+                # then
+                expect(kase.business_unit_already_late?).to be false
+              end
             end
           end
 
           context 'trigger cases' do
             it 'returns true' do
-              # given
-              kase = create_case(flagged: true,
-                                 assignment_times: [8.business_days.ago])
-              expect(kase).to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq 'accepted'
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: true,
+                                   assignment_times: [8.business_days.ago])
+                expect(kase).to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 1
+                expect(responder_assignments.first.state).to eq 'accepted'
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 8.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses')).to be_empty
+                expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 8.business_days.ago.to_date
+                expect(kase.transitions.where(event: 'add_responses')).to be_empty
 
-              # then
-              expect(kase.business_unit_already_late?).to be false
+                # then
+                expect(kase.business_unit_already_late?).to be false
+              end
             end
           end
         end
@@ -416,41 +420,45 @@ describe Case::FOI::Standard do
         context 'in time' do
           context 'non trigger cases' do
             it 'returns true' do
-              # given
-              kase = create_case(flagged: false,
-                                 assignment_times: [30.business_days.ago, 25.business_days.ago, 18.business_days.ago])
-              expect(kase).not_to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq 'rejected'
-              expect(responder_assignments[1].state).to eq 'rejected'
-              expect(responder_assignments[2].state).to eq 'accepted'
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: false,
+                                   assignment_times: [30.business_days.ago, 25.business_days.ago, 18.business_days.ago])
+                expect(kase).not_to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 3
+                expect(responder_assignments[0].state).to eq 'rejected'
+                expect(responder_assignments[1].state).to eq 'rejected'
+                expect(responder_assignments[2].state).to eq 'accepted'
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 18.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses')).to be_empty
+                expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 18.business_days.ago.to_date
+                expect(kase.transitions.where(event: 'add_responses')).to be_empty
 
-              # then
-              expect(kase.business_unit_already_late?).to be false
+                # then
+                expect(kase.business_unit_already_late?).to be false
+              end
             end
           end
 
           context 'trigger cases' do
             it 'returns true' do
-              # given
-              kase = create_case(flagged: true,
-                                 assignment_times: [30.business_days.ago, 25.business_days.ago, 8.business_days.ago])
-              expect(kase).to be_flagged
-              responder_assignments = kase.assignments.responding.order(:id)
-              expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq 'rejected'
-              expect(responder_assignments[1].state).to eq 'rejected'
-              expect(responder_assignments[2].state).to eq 'accepted'
+              Timecop.freeze(Date.new(2020, 8, 19)) do
+                # given
+                kase = create_case(flagged: true,
+                                   assignment_times: [30.business_days.ago, 25.business_days.ago, 8.business_days.ago])
+                expect(kase).to be_flagged
+                responder_assignments = kase.assignments.responding.order(:id)
+                expect(responder_assignments.size).to eq 3
+                expect(responder_assignments[0].state).to eq 'rejected'
+                expect(responder_assignments[1].state).to eq 'rejected'
+                expect(responder_assignments[2].state).to eq 'accepted'
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 8.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses')).to be_empty
+                expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 8.business_days.ago.to_date
+                expect(kase.transitions.where(event: 'add_responses')).to be_empty
 
-              # then
-              expect(kase.business_unit_already_late?).to be false
+                # then
+                expect(kase.business_unit_already_late?).to be false
+              end
             end
           end
         end
