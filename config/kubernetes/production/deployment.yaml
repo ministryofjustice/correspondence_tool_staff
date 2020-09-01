@@ -70,12 +70,12 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: track-a-query-rds-output
+                  name: track-a-query-rds-new-output
                   key: url
             - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: track-a-query-rds-output
+                  name: track-a-query-rds-new-output
                   key: database_password
             - name: REDIS_URL
               valueFrom:
@@ -172,12 +172,12 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: track-a-query-rds-output
+                  name: track-a-query-rds-new-output
                   key: url
             - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: track-a-query-rds-output
+                  name: track-a-query-rds-new-output
                   key: database_password
             - name: REDIS_URL
               valueFrom:
@@ -252,12 +252,12 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: track-a-query-rds-output
+                  name: track-a-query-rds-new-output
                   key: url
             - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: track-a-query-rds-output
+                  name: track-a-query-rds-new-output
                   key: database_password
             - name: REDIS_URL
               valueFrom:
