@@ -11,14 +11,14 @@ module Stats
         'Data subject name',
         'Subject type',
         'Who is making the request?',
+        'Company name', 
         'Date received at MOJ',
         'Date case closed', 
         'Timeliness (in time/out of time)',
         'No of days taken', 
-        'Company name', 
         'Pages for dispatch',
         'Exempt pages',
-        'Total final pages'
+        'Final page count'
       ]
 
       FIELD_COLUMNS = [
@@ -26,11 +26,11 @@ module Stats
         'sar_subject_full_name', 
         'sar_subject_type',
         'requester_type', 
+        'third_party_company_name', 
         'date_received',
         'date_responded', 
-        " case when number_of_days_late > 0 then 'in time' else 'out of time' end ", 
+        " case when number_of_days_late > 0 then 'out of time' else 'in time' end ", 
         'number_of_days_taken', 
-        'third_party_company_name', 
         'number_of_final_pages::integer - number_of_exempt_pages::integer', 
         'number_of_exempt_pages', 
         'number_of_final_pages'

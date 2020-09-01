@@ -16,4 +16,8 @@ class Case::SAR::StandardDecorator < Case::BaseDecorator
   def third_party_display
     object.third_party == true ? 'Yes' : 'No'
   end
+
+  def time_taken
+    calendar_days_taken
+  end
 end

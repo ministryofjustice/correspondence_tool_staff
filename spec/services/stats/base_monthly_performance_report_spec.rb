@@ -24,7 +24,7 @@ module Stats
   describe BaseMonthlyPerformanceReport do
     before(:all) { create_report_type(abbr: "dummy") }
     after(:all) { DbHousekeeping.clean(seed: true) }
-
+    
     describe 'reporting' do
       before(:all) do
         @period_start = Date.new(2018, 12, 20)
@@ -122,6 +122,86 @@ module Stats
           expect(@report_another.persist_results?).to eq true
         end
       end
+
+      context '#process'do 
+        it 'more months compared iwth period stfrom stats data ' do 
+          redis_double = instance_double(Redis)
+          expect(Redis).to receive(:new).and_return(redis_double)
+      
+          allow(redis_double).to receive(:exists?).and_return(true)
+          allow(redis_double).to receive(:get).and_return(
+            '{"11":
+              {"month":0,
+                "non_trigger_performance":0,
+                "non_trigger_total":0,
+                "non_trigger_responded_in_time":0,
+                "non_trigger_responded_late":0,
+                "non_trigger_open_in_time":30,
+                "non_trigger_open_late":5,
+                "trigger_performance":0,
+                "trigger_total":0,
+                "trigger_responded_in_time":0,
+                "trigger_responded_late":0,             
+                "trigger_open_in_time":0,
+                "trigger_open_late":0,
+                "overall_performance":0,
+                "overall_total":0,
+                "overall_responded_in_time":0,
+                "overall_responded_late":0,
+                "overall_open_in_time":30,
+                "overall_open_late":5},
+              "12":
+              { "month":0,
+                "non_trigger_performance":0,
+                "non_trigger_total":0,
+                "non_trigger_responded_in_time":0,
+                "non_trigger_responded_late":0,
+                "non_trigger_open_in_time":20,
+                "non_trigger_open_late":10,
+                "trigger_performance":0,
+                "trigger_total":0,
+                "trigger_open_in_time":0,
+                "trigger_open_late":0,
+                "trigger_responded_in_time":0,
+                "trigger_responded_late":0,             
+                "overall_performance":0,
+                "overall_total":0,
+                "overall_responded_in_time":0,
+                "overall_responded_late":0,
+                "overall_open_in_time":20,
+                "overall_open_late":10},
+              "total":
+              { "month":0,
+                "non_trigger_performance":0,
+                "non_trigger_total":0,
+                "non_trigger_responded_in_time":0,
+                "non_trigger_responded_late":0,
+                "non_trigger_open_in_time":0,
+                "non_trigger_open_late":0,
+                "trigger_performance":0,
+                "trigger_total":0,
+                "trigger_open_in_time":0,
+                "trigger_open_late":0,
+                "trigger_responded_in_time":0,
+                "trigger_responded_late":0,             
+                "overall_performance":0,
+                "overall_total":0,
+                "overall_responded_in_time":0,
+                "overall_responded_late":0,
+                "overall_open_in_time":50,
+                "overall_open_late":15}}')
+          new_report = Report.new( 
+            report_type_id: find_or_create(:report_type, :r205).id ,
+            period_start: @period_start,
+            period_end: @period_end
+          )
+          new_report.job_ids = ['job1']
+          result_data = JSON.parse(@report.report_details(new_report))
+          expect(result_data.key?("12")).to eq true
+          expect(result_data.key?("total")).to eq true
+          expect(result_data.key?("11")).to eq false
+        end 
+      end 
     end  
   end
 end
