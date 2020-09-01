@@ -37,6 +37,7 @@ en:
       report:
         correspondence_type: Case type
       case/sar/offender:
+        number_final_pages: Number of pages
         third_party : "Information requested on someone else's behalf"
         third_party_address: Address
         third_party_company_name : "Company name"
@@ -377,7 +378,7 @@ en:
         upload_comment: This will be added to the converstation section of the case.
       offender_sar:
         date_of_birth: "For example, 12 11 2007"
-        number_final_pages: "Total pages for dispatch post-vetting"
+        number_final_pages: "Final page count including exempt pages"
         message_hint: Include any details that will be useful for processing the case (optional)
         number_exempt_pages: "Pages removed from the SAR as exemptions"
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
