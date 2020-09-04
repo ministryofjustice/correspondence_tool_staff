@@ -8,7 +8,11 @@ metadata:
   name: ecr-delete-untagged-images-cronjob
 spec:
   failedJobsHistoryLimit: 1
-  concurrencyPolicy: Allow
+  concurrencyPolicy: Forbid
+  schedule: "0 */2 * * 1"
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
+  suspend: false
   jobTemplate:
     metadata:
       creationTimestamp: null
@@ -29,7 +33,6 @@ spec:
 
                   if [ ${UNTAGGED_IMAGE_COUNT} -gt 0 ]; then
                     echo "Found $untagged_image_count images to delete"
-                    aws ecr batch-delete-image --region eu-west-2 --repository-name ${myrepo} --image-ids "$UNTAGGED_IMAGES_TO_DELETE" || true
                     echo "Deletion complete"
                   else
                     echo "No untagged images to delete"
@@ -38,13 +41,13 @@ spec:
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom:
                     secretKeyRef:
-                      name: ${SECRET_NAME}
+                      name: track-a-query-ecr-credentials-output
                       key: access_key_id
 
                 - name: AWS_SECRET_ACCESS_KEY
                   valueFrom:
                     secretKeyRef:
-                      name: ${SECRET_NAME}
+                      name: track-a-query-ecr-credentials-output
                       key: secret_access_key
 
                 - name: AWS_DEFAULT_REGION
@@ -54,6 +57,3 @@ spec:
               imagePullPolicy: IfNotPresent
               name: aws-cli
           restartPolicy: Never
-  schedule: "0 */6 * * *"
-  successfulJobsHistoryLimit: 3
-  suspend: false
