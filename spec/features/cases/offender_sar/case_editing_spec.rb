@@ -55,8 +55,8 @@ feature 'Offender SAR Case editing by a manager' do
     expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
 
     when_i_progress_case_to_a_closed_state
-    and_i_add_date_that_the_case_wase_responded_to
-    then_the_case_show_page_should_be_displayed 
+    and_i_add_date_that_the_case_was_responded_to
+    then_the_case_show_page_should_be_displayed
     when_i_click_the_response_sent_change_link
     and_i_edit_the_date_response_sent
     then_i_expect_the_new_date_to_be_reflected_on_the_case_show_page
@@ -90,7 +90,7 @@ feature 'Offender SAR Case editing by a manager' do
     expect(page).to have_content('Case updated')
   end
 
-  def then_i_should_see_the_pages_for_dispatch_reflected_on_the_show_page 
+  def then_i_should_see_the_pages_for_dispatch_reflected_on_the_show_page
     expect(page).to have_content('2849')
     expect(page).to have_content('Case updated')
   end
@@ -104,13 +104,13 @@ feature 'Offender SAR Case editing by a manager' do
     click_on "Close case"
   end
 
-  def and_i_add_date_that_the_case_wase_responded_to
+  def and_i_add_date_that_the_case_was_responded_to
     cases_close_page.fill_in_date_responded(offender_sar_case.received_date + 10)
     click_on "Continue"
-    click_on "Close case"
   end
 
   def then_the_case_show_page_should_be_displayed
+    expect(cases_closure_outcomes_page).not_to be_displayed
     expect(cases_show_page).to have_content "You've closed this case"
   end
 
