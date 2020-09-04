@@ -31,13 +31,13 @@ references:
 
 
 # These are defining the steps which are used below in the jobs
-  
+
   install_psql: &install_psql
     run:
       name: Install psql client
       command: |
          sudo apt update && sudo apt install postgresql-client
-  
+
   update_chromedriver: &update_chromedriver
     run:
       name: Update chrome and the chromedriver
@@ -147,10 +147,8 @@ references:
     run:
       name: Run unit and feature tests
       command: |
-        export PARALLEL_TEST_PROCESSORS=4
-        bundle exec rails parallel:create
-        bundle exec rails parallel:load_structure 
-        bundle exec rails parallel:spec
+        TESTFILES=$(circleci tests glob "spec/{controllers,decorators,factory_specs,features,form_models,helpers,jobs,lib,mailers,models,policies,routing,services,support,state_machines,validators,views}/**/*.rb" | circleci tests split --split-by=timings)
+        bundle exec rspec -- ${TESTFILES}
 
   set_up_aws_cli: &set_up_aws_cli
     run:
@@ -160,7 +158,7 @@ references:
         sudo apt-get update
         sudo apt-get --assume-yes install python3-pip
         sudo pip3 install awscli
-  
+
   configure_aws_profile: &configure_aws_profile
     run:
       name: Configure AWS CLI
@@ -168,7 +166,7 @@ references:
         aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} --profile ecr-live-1
         aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile ecr-live-1
         aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live-1
-  
+
   build_and_push_docker_image: &build_and_push_docker_image
     run:
       name: Build docker image
@@ -182,7 +180,7 @@ references:
       name: Deploy to Development environment
       command: |
         setup-kube-auth
-        kubectl config use-context development        
+        kubectl config use-context development
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag development circleci
 
@@ -191,7 +189,7 @@ references:
       name: Deploy to Staging environment
       command: |
         setup-kube-auth
-        kubectl config use-context staging       
+        kubectl config use-context staging
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag staging circleci
 
@@ -226,9 +224,9 @@ references:
 
 jobs:
 
-  build_and_test:
+  build_test_container:
     <<: *test_container_config
-    resource_class: large
+    resource_class: small
     working_directory: ~/track-a-query
     steps:
       - checkout
@@ -237,11 +235,20 @@ jobs:
       - *check_bundler_version
       - *install_psql
       - *install_dependencies
-      - *save_cache
       - *wait_for_db
       - *set_up_the_database
       - *rubocop
       - *update_chromedriver
+      - *save_cache
+
+  run_tests:
+    <<: *test_container_config
+    resource_class: small
+    working_directory: ~/track-a-query
+    parallelism: 2
+    steps:
+      - checkout
+      - *restore_cache
       - *run_unit_and_feature_tests
 
   build_branch_and_push_to_ecr:
@@ -252,8 +259,8 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker:
-          docker_layer_caching: true 
-      - *configure_aws_profile 
+          docker_layer_caching: true
+      - *configure_aws_profile
       - *build_and_push_docker_image
       - persist_to_workspace:
           root: workspace
@@ -268,8 +275,8 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker:
-          docker_layer_caching: true 
-      - *configure_aws_profile 
+          docker_layer_caching: true
+      - *configure_aws_profile
       - *build_and_push_docker_image
       - persist_to_workspace:
           root: workspace
@@ -290,7 +297,7 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_dev
 
-  deploy_branch_to_dev: *do_dev_deployment_tasks 
+  deploy_branch_to_dev: *do_dev_deployment_tasks
   deploy_master_to_dev: *do_dev_deployment_tasks
 
   staging_deployment_tasks: &do_staging_deployment_tasks
@@ -323,7 +330,7 @@ jobs:
       - *configure_gpg
       - *decrypt_secrets
       - *deploy_to_qa
-  
+
   deploy_branch_to_qa: *do_qa_deployment_tasks
   deploy_master_to_qa: *do_qa_deployment_tasks
 
@@ -356,7 +363,7 @@ jobs:
       - *create_gpg_key_file
       - *configure_gpg
       - *decrypt_secrets
-      - *deploy_to_production     
+      - *deploy_to_production
 
 #Workflows combine jobs to perform the actions
 
@@ -365,23 +372,26 @@ workflows:
 
   build_and_deploy_master:
     jobs:
-      - build_and_test:
+      - build_test_container:
           filters:
             branches:
               only: master
+      - run_tests:
+          requires:
+            - build_test_container
       - build_master_and_push_to_ecr:
           requires:
-            - build_and_test   
+            - run_tests
       - deploy_master_to_dev:
           requires:
-            - build_master_and_push_to_ecr       
+            - build_master_and_push_to_ecr
       - deploy_master_to_staging_approval:
           type: approval
           requires:
-            - deploy_master_to_dev          
+            - deploy_master_to_dev
       - deploy_master_to_staging:
           requires:
-            - deploy_master_to_staging_approval 
+            - deploy_master_to_staging_approval
       - deploy_master_to_production_approval:
           type: approval
           requires:
@@ -392,35 +402,38 @@ workflows:
       - deploy_master_to_qa_approval:
           type: approval
           requires:
-            - build_master_and_push_to_ecr           
+            - build_master_and_push_to_ecr
       - deploy_master_to_qa:
           requires:
             - deploy_master_to_qa_approval
       - deploy_master_to_demo_approval:
           type: approval
           requires:
-            - build_master_and_push_to_ecr            
+            - build_master_and_push_to_ecr
       - deploy_master_to_demo:
           requires:
             - deploy_master_to_demo_approval
 
   build_and_deploy_branch:
     jobs:
-      - build_and_test:
+      - build_test_container:
           filters:
             branches:
               ignore: master
+      - run_tests:
+          requires:
+            - build_test_container
       - build_branch_and_push_to_ecr_approval:
           type: approval
           requires:
-            - build_and_test
+            - run_tests
       - build_branch_and_push_to_ecr:
           requires:
             - build_branch_and_push_to_ecr_approval
       - deploy_branch_to_dev_approval:
           type: approval
           requires:
-            - build_branch_and_push_to_ecr 
+            - build_branch_and_push_to_ecr
       - deploy_branch_to_dev:
           requires:
             - deploy_branch_to_dev_approval
@@ -430,7 +443,7 @@ workflows:
             - build_branch_and_push_to_ecr
       - deploy_branch_to_staging:
           requires:
-            - deploy_branch_to_staging_approval             
+            - deploy_branch_to_staging_approval
       - deploy_branch_to_qa_approval:
           type: approval
           requires:
@@ -441,8 +454,8 @@ workflows:
       - deploy_branch_to_demo_approval:
           type: approval
           requires:
-            - build_branch_and_push_to_ecr            
+            - build_branch_and_push_to_ecr
       - deploy_branch_to_demo:
           requires:
-            - deploy_branch_to_demo_approval                                      
-      
+            - deploy_branch_to_demo_approval
+
