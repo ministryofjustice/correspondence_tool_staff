@@ -2,6 +2,14 @@ version: 2.1
 orbs:
   ruby: circleci/ruby@1.1.1
 
+references:
+  install_packages_for_testing: &install_packages_for_testing
+    run:
+      name: Install system packages needed for testing
+      command: |
+        sudo apt-get update
+        sudo apt-get install -y postgresql-client
+
 jobs:
   build:
     docker:
@@ -9,6 +17,7 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
+      - *install_packages_for_testing
 
   test:
     parallelism: 3
@@ -30,6 +39,7 @@ jobs:
     steps:
       - checkout
       - ruby/install-deps
+      - *install_packages_for_testing
       - run:
           name: Wait for DB
           command: dockerize -wait tcp://localhost:5432 -timeout 1m
@@ -39,6 +49,7 @@ jobs:
       # Run rspec in parallel
       - ruby/rspec-test
       - ruby/rubocop-check
+
 
 workflows:
   version: 2
