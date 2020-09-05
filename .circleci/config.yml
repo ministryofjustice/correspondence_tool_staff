@@ -6,7 +6,7 @@ orbs:
 jobs:
   build:
     docker:
-      - image: cimg/ruby:2.5.5-node-browsers-legacy
+      - image: circleci/ruby:2.5.5-node-browsers-legacy
     steps:
       - checkout
       - ruby/install-deps
@@ -17,7 +17,7 @@ jobs:
   test:
     parallelism: 3
     docker:
-      - image: cimg/ruby:2.7-node
+      - image: circleci/ruby:2.5.5-node-browsers-legacy
       - image: circleci/postgres:9.5-alpine
         environment:
           POSTGRES_USER: postgres
