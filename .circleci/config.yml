@@ -39,3 +39,12 @@ jobs:
       # Run rspec in parallel
       - ruby/rspec-test
       - ruby/rubocop-check
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
