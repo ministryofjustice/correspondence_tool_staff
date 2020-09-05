@@ -99,6 +99,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 4.0'
+  gem 'rspec_junit_formatter'
   gem 'rubocop', '~> 0.87.0', require: false
   gem 'rubocop-rspec', '~> 1.41.0', require: false
   gem 'rubocop-performance', require: false
