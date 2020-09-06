@@ -7,21 +7,7 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
     end
 
     def resolve
-      if @user.permitted_correspondence_types.include? CorrespondenceType.foi
-        
-        if @user.responder_only?
-          team_restriction = Assignment
-              .joins('join teams_users_roles on assignments.team_id=teams_users_roles.team_id')
-              .where('teams_users_roles': {user_id: @user.id, role: :responder.to_s})
-              .where.not(state: [ :rejected ] )
-              .select(:case_id).distinct       
-          @scope.where(id: team_restriction)
-        else
-          @scope
-        end 
-      else
-        @scope.none
-      end
+      @scope
     end
   end
 

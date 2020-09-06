@@ -100,9 +100,9 @@ feature 'Searching for cases' do
     let(:searcher) { responder }
     let(:search_term) { "Common text" }
 
-    scenario 'finds offender_sar_case but not FOI' do
-      expect(cases_search_page.search_results_count.text).to eq "1 case found"
-      expect(cases_search_page.case_list.count).to eq 1
+    scenario 'finds offender_sar_case and FOI' do
+      expect(cases_search_page.search_results_count.text).to eq "2 cases found"
+      expect(cases_search_page.case_list.count).to eq 2
       expect(cases_search_page.case_list.first.number).to have_text offender_sar_case.number
     end
   end

@@ -54,6 +54,13 @@ class Assignment < ApplicationRecord
   scope :flagged_for_approval, ->(teams) do
     where(team: teams, role: 'approving')
   end
+  
+  scope :team_restriction, ->(user_id, role) {
+    joins('join teams_users_roles on assignments.team_id=teams_users_roles.team_id')
+    .where('teams_users_roles': {user_id: user_id, role: role.to_s})
+    .where.not(state: [ :rejected ] )
+    .select(:case_id).distinct     
+  }
 
   # Putting a 'limit 1' here breaks the caching of Case::Base#responder_assignment
   # please treat this as a 'private' method i.e. don't use it in application code
