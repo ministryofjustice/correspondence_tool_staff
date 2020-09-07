@@ -228,7 +228,7 @@ jobs:
 
   build_and_test:
     <<: *test_container_config
-    resource_class: large
+    resource_class: small
     working_directory: ~/track-a-query
     steps:
       - checkout
