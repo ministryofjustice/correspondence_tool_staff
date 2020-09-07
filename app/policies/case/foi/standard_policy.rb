@@ -7,7 +7,11 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
     end
 
     def resolve
-      @scope
+      if @user.permitted_correspondence_types.include? CorrespondenceType.foi
+        @scope
+      else
+        @scope.none
+      end
     end
   end
 
