@@ -41,7 +41,12 @@ class CaseFinderService
   end
 
   def closed_cases_scope
-    scope.presented_as_closed.most_recent_first
+    closed_scope = scope.presented_as_closed
+    if user.responder_only?
+      closed_scope.where(id: Assignment.team_restriction(user.id, :responder)).most_recent_first
+    else
+      closed_scope.most_recent_first
+    end
   end
 
   private
@@ -83,10 +88,16 @@ class CaseFinderService
   end
 
   def open_cases_scope
-    scope.presented_as_open
+    open_scope = scope.presented_as_open
     .joins(:assignments)
     .where(assignments: { state: ['pending', 'accepted']})
     .distinct('case.id')
+
+    if user.responder_only?
+      open_scope.where(id: Assignment.team_restriction(user.id, :responder))
+    else
+      open_scope
+    end
   end
 
   def open_flagged_for_approval_scope
