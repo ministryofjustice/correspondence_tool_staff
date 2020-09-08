@@ -177,7 +177,7 @@ module Stats
     end
 
     def get_value_1_Biii
-      open_cases_received_in_period.where("properties->>'external_deadline' < ?", @period_end).count
+      open_cases_received_in_period.where("properties->>'external_deadline' < ?", Date.today).count
     end
 
     def get_value_1_C
