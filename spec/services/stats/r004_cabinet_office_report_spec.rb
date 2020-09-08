@@ -88,7 +88,7 @@ module Stats
       context '1.A' do
         it 'records the total number' do
           expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this quarter'
-          expect(@results['1.A'][:value]).to eq 82
+          expect(@results['1.A'][:value]).to eq 77
         end
       end
 
@@ -101,7 +101,7 @@ module Stats
       context '1.B' do
         it 'records  the stat' do
           expect(@results['1.B'][:desc]).to eq 'Number of requests that have been created but not closed in this quarter'
-          expect(@results['1.B'][:value]).to eq 12
+          expect(@results['1.B'][:value]).to eq 7
         end
       end
 

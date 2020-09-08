@@ -22,7 +22,7 @@ module Stats
       @superheadings = superheadings
       @report_lines = report_lines
 
-      @scope = Case::Base.where(type: CorrespondenceType.foi.sub_classes.map(&:to_s))
+      @scope = Case::Base.standard_foi
     end
 
     def self.title
