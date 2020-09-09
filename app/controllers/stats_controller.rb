@@ -163,10 +163,17 @@ class StatsController < ApplicationController
     axlsx
   end
 
+  def is_general_close_report_present?
+    close_report_scope = Pundit.policy_scope(current_user, ReportType.closed_cases_report)
+    close_report_scope.count > 0
+  end 
+
   def user_permitted_custom_report_types
     # find out the scope of the custom report types the user can see via set intersection operation
     @correspondence_types = CorrespondenceType.custom_reporting_types & current_user.permitted_correspondence_types
-    @correspondence_types += [self.class.closed_cases_correspondence_type]
+    if is_general_close_report_present?
+      @correspondence_types += [self.class.closed_cases_correspondence_type]
+    end
   end 
 
   def set_fields_for_custom_action
