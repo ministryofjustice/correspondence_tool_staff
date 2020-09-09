@@ -164,8 +164,7 @@ class StatsController < ApplicationController
   end
 
   def is_general_close_report_present?
-    close_report_scope = Pundit.policy_scope(current_user, ReportType.closed_cases_report)
-    close_report_scope.count > 0
+    Pundit.policy_scope(current_user, ReportType.closed_cases_report).present?
   end 
 
   def user_permitted_custom_report_types
