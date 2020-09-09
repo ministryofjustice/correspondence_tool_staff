@@ -68,6 +68,159 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
   end
 
+  describe '#create' do
+    before do
+      sign_in responder
+      post :create, params: params
+      expect(assigns(:case)).to be_a Case::SAR::Offender
+      expect(flash[:notice]).to eq nil
+    end
+
+    context 'partial validations' do
+      context 'for step subject-details' do
+        let(:params) do
+          {
+            current_step: 'subject-details',
+            offender_sar: {
+              subject_full_name: '',
+              subject_address: '',
+            }
+          }
+        end
+
+        it 'validates subject name and address' do
+          errors = assigns(:case).errors.messages
+          expect(errors[:subject_full_name]).to eq ["can't be blank"]
+          expect(errors[:subject_address]).to eq ["can't be blank"]
+        end
+
+        it 'sets empty values and validates' do
+          errors = assigns(:case).errors.messages
+          expect(errors[:date_of_birth]).to eq ["can't be blank"]
+          expect(errors[:subject_type]).to eq ["can't be blank"]
+          expect(errors[:flag_as_high_profile]).to eq ["can't be blank"]
+        end
+      end
+
+      context 'for step requester-details' do
+        context 'when third party absent' do
+          let(:params) do
+            {
+              current_step: 'requester-details',
+              offender_sar: {
+                third_party_relationship: '',
+                third_party_name: '',
+                third_party_company_name: '',
+                postal_address: '',
+              }
+            }
+          end
+
+          it 'requires third_party to be set' do
+            errors = assigns(:case).errors.messages
+            expect(errors[:third_party]).to eq ["can't be blank"]
+          end
+        end
+
+        context 'when third party true' do
+          let(:params) do
+            {
+              current_step: 'requester-details',
+              offender_sar: {
+                third_party: true,
+                third_party_relationship: '',
+                third_party_name: '',
+                third_party_company_name: '',
+                postal_address: '',
+              }
+            }
+          end
+
+          it 'validates requester details' do
+            errors = assigns(:case).errors.messages
+            expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
+            expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+            expect(errors[:third_party_relationship]).to eq ["can't be blank"]
+            expect(errors[:postal_address]).to eq ["can't be blank"]
+          end
+        end
+
+        context 'when third party false' do
+          let(:params) do
+            {
+              current_step: 'requester-details',
+              offender_sar: {
+                third_party: false,
+                third_party_relationship: '',
+                third_party_name: '',
+                third_party_company_name: '',
+                postal_address: '',
+              }
+            }
+          end
+
+          it 'unsets fields that should be ignored' do
+            errors = assigns(:case).errors.messages
+            expect(errors[:third_party_name]).to be_empty
+            expect(errors[:third_party_company_name]).to be_empty
+            expect(errors[:third_party_relationship]).to be_empty
+            expect(errors[:postal_address]).to be_empty
+          end
+        end
+      end
+
+      context 'for step recipient-details' do
+        context 'when third party absent' do
+          let(:params) do
+            {
+              current_step: 'recipient-details',
+              offender_sar: {
+                third_party_relationship: '',
+                third_party_name: '',
+                third_party_company_name: '',
+                postal_address: '',
+              }
+            }
+          end
+
+          it 'requires recipient to be set' do
+            errors = assigns(:case).errors.messages
+            expect(errors[:recipient]).to eq ["can't be blank"]
+          end
+        end
+
+        context 'when recipient is third party' do
+          let(:params) do
+            {
+              current_step: 'recipient-details',
+              offender_sar: {
+                recipient: 'third_party_recipient',
+                third_party_relationship: '',
+                third_party_name: '',
+                third_party_company_name: '',
+                postal_address: '',
+              }
+            }
+          end
+
+          it 'validates recipient details' do
+            errors = assigns(:case).errors.messages
+            expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
+            expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+            expect(errors[:third_party_relationship]).to eq ["can't be blank"]
+            expect(errors[:postal_address]).to eq ["can't be blank"]
+          end
+        end
+      end
+    end
+
+    context 'for step requested-info' do
+    end
+
+    context 'for step request-details'
+    context 'for step date-received'
+  end
+
   describe 'transitions' do
     OFFENDER_SAR_STATES = {
       data_to_be_requested: :mark_as_waiting_for_data,
