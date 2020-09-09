@@ -147,8 +147,10 @@ references:
     run:
       name: Run unit and feature tests
       command: |
-        bundle exec rspec 
-
+        export PARALLEL_TEST_PROCESSORS=8
+        bundle exec rails parallel:create
+        bundle exec rails parallel:load_structure 
+        bundle exec rails parallel:spec
 
   set_up_aws_cli: &set_up_aws_cli
     run:
@@ -226,7 +228,8 @@ jobs:
 
   build_and_test:
     <<: *test_container_config
-    <<: *defaults
+    resource_class: xlarge
+    working_directory: ~/track-a-query
     steps:
       - checkout
       - *restore_cache
