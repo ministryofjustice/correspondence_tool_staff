@@ -84,11 +84,12 @@ FactoryBot.define do
       abbr              { 'R007' }
       full_name         { 'Closed in last month report' }
       class_name        { 'Stats::R007ClosedCasesReport' }
-      custom_report     { true }
+      custom_report     { false }
       standard_report   { false }
       seq_id            { 500 }
-      foi               { false }
-      sar               { false }
+      foi               { true }
+      sar               { true }
+      offender_sar      { false }
       etl               { true }
     end
 
