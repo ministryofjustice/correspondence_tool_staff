@@ -35,14 +35,21 @@ module Closable
     render 'cases/closable/close'
   end
 
-  def edit_closure
-    authorize @case, :update_closure?
+  def close_case(fallback_path)
+    close_params = process_closure_params
+    service = CaseClosureService.new(@case, current_user, close_params)
+    service.call
 
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
-    @case = @case.decorate
-    @team_collection = CaseTeamCollection.new(@case)
-
-    render 'cases/closable/edit_closure'
+    if service.result == :ok
+      set_permitted_events
+      flash[:notice] = service.flash_message
+      redirect_to case_path(@case)
+    else
+      set_permitted_events
+      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+      @team_collection = CaseTeamCollection.new(@case)
+      render fallback_path
+    end
   end
 
   def closure_outcomes
@@ -57,18 +64,44 @@ module Closable
     render 'cases/closable/closure_outcomes'
   end
 
-  def respond_and_close
-    authorize @case
+  def confirm_respond
+    authorize @case, :can_respond?
 
-    @case.date_responded = nil
-    set_permitted_events
-    render 'cases/closable/close'
+    params = respond_params
+    service = MarkResponseAsSentService.new(@case, current_user, params)
+    service.call
+
+    case service.result
+    when :ok
+      flash[:notice] = t('cases.confirm_respond.success')
+      redirect_to case_path(@case)
+    when :late
+      @team_collection = CaseTeamCollection.new(@case)
+      render 'cases/ico/late_team'
+    when :error
+      set_correspondence_type(@case.type_abbreviation.downcase)
+      render 'cases/closable/respond'
+    else
+      raise 'unexpected result from MarkResponseAsSentService'
+    end
   end
 
-  def respond
-    authorize @case, :can_respond?
-    set_correspondence_type(@case.type_abbreviation.downcase)
-    render 'cases/closable/respond'
+  def edit_closure
+    authorize @case, :update_closure?
+
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+    @case = @case.decorate
+    @team_collection = CaseTeamCollection.new(@case)
+
+    render 'cases/closable/edit_closure'
+  end
+
+  def process_closure
+    authorize @case, :can_close_case?
+
+    @case = @case.decorate
+
+    close_case('cases/closable/closure_outcomes')
   end
 
   def process_date_responded
@@ -82,27 +115,11 @@ module Closable
     else
       @team_collection = CaseTeamCollection.new(@case)
       @case.update(late_team_id: @case.responding_team.id)
-      redirect_to polymorphic_path(@case, action: :closure_outcomes)
-    end
-  end
-
-  def process_closure
-    authorize @case, :can_close_case?
-
-    @case = @case.decorate
-    close_params = process_closure_params
-    service = CaseClosureService.new(@case, current_user, close_params)
-    service.call
-
-    if service.result == :ok
-      set_permitted_events
-      flash[:notice] = service.flash_message
-      redirect_to case_path(@case)
-    else
-      set_permitted_events
-      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
-      @team_collection = CaseTeamCollection.new(@case)
-      render 'cases/closable/closure_outcomes'
+      if @case.offender_sar?
+        close_case('cases/closable/close')
+      else
+        redirect_to polymorphic_path(@case, action: :closure_outcomes)
+      end
     end
   end
 
@@ -129,6 +146,20 @@ module Closable
     end
   end
 
+  def respond
+    authorize @case, :can_respond?
+    set_correspondence_type(@case.type_abbreviation.downcase)
+    render 'cases/closable/respond'
+  end
+
+  def respond_and_close
+    authorize @case
+
+    @case.date_responded = nil
+    set_permitted_events
+    render 'cases/closable/close'
+  end
+
   def update_closure
     authorize @case
 
@@ -145,28 +176,6 @@ module Closable
     else
       @case = @case.decorate
       render 'cases/closable/edit_closure'
-    end
-  end
-
-  def confirm_respond
-    authorize @case, :can_respond?
-
-    params = respond_params
-    service = MarkResponseAsSentService.new(@case, current_user, params)
-    service.call
-
-    case service.result
-    when :ok
-      flash[:notice] = t('cases.confirm_respond.success')
-      redirect_to case_path(@case)
-    when :late
-      @team_collection = CaseTeamCollection.new(@case)
-      render 'cases/ico/late_team'
-    when :error
-      set_correspondence_type(@case.type_abbreviation.downcase)
-      render 'cases/closable/respond'
-    else
-      raise 'unexpected result from MarkResponseAsSentService'
     end
   end
 
