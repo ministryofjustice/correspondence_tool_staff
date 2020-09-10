@@ -26,10 +26,7 @@ feature 'Closing a case' do
           cases_close_page.fill_in_date_responded(0.days.ago)
           cases_close_page.click_on 'Continue'
 
-          expect(cases_closure_outcomes_page).to be_displayed
-          expect(cases_closure_outcomes_page).not_to have_content("#{responder_team.name}")
-
-          cases_closure_outcomes_page.submit_button.click
+          expect(cases_closure_outcomes_page).not_to be_displayed
 
           show_page = cases_show_page.case_details
 
@@ -55,11 +52,10 @@ feature 'Closing a case' do
           cases_close_page.fill_in_date_responded(0.days.ago)
           cases_close_page.click_on 'Continue'
 
-          expect(cases_closure_outcomes_page).to be_displayed
-          expect(cases_closure_outcomes_page).not_to have_content("#{responder_team.name}")
-          cases_closure_outcomes_page.submit_button.click
+          expect(cases_closure_outcomes_page).not_to be_displayed
 
           show_page = cases_show_page.case_details
+
           expect(show_page.response_details.timeliness.data.text)
             .to eq 'Answered late'
           expect(show_page.response_details.time_taken.data.text)
