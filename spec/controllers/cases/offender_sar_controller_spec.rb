@@ -77,6 +77,8 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
 
     context 'partial validations' do
+      let(:errors) { assigns(:case).errors.messages }
+
       context 'for step subject-details' do
         let(:params) do
           {
@@ -89,12 +91,14 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         end
 
         it 'validates subject name and address' do
-          errors = assigns(:case).errors.messages
           expect(errors[:subject_full_name]).to eq ["can't be blank"]
           expect(errors[:subject_address]).to eq ["can't be blank"]
         end
 
-        it 'sets empty values and validates' do
+        # unset radio options and date fields are hard to validate
+        # so offender_sar_case_form#params_for_step
+        # contains logic to set required ones if missing
+        it 'sets empty values and validates other fields' do
           errors = assigns(:case).errors.messages
           expect(errors[:date_of_birth]).to eq ["can't be blank"]
           expect(errors[:subject_type]).to eq ["can't be blank"]
@@ -117,7 +121,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
           end
 
           it 'requires third_party to be set' do
-            errors = assigns(:case).errors.messages
             expect(errors[:third_party]).to eq ["can't be blank"]
           end
         end
@@ -137,7 +140,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
           end
 
           it 'validates requester details' do
-            errors = assigns(:case).errors.messages
             expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
             expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
             expect(errors[:third_party_relationship]).to eq ["can't be blank"]
@@ -160,7 +162,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
           end
 
           it 'unsets fields that should be ignored' do
-            errors = assigns(:case).errors.messages
             expect(errors[:third_party_name]).to be_empty
             expect(errors[:third_party_company_name]).to be_empty
             expect(errors[:third_party_relationship]).to be_empty
@@ -184,7 +185,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
           end
 
           it 'requires recipient to be set' do
-            errors = assigns(:case).errors.messages
             expect(errors[:recipient]).to eq ["can't be blank"]
           end
         end
@@ -204,7 +204,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
           end
 
           it 'validates recipient details' do
-            errors = assigns(:case).errors.messages
             expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
             expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
             expect(errors[:third_party_relationship]).to eq ["can't be blank"]
