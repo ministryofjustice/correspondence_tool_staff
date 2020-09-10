@@ -48,10 +48,10 @@ class ReportTypeSeeder
                 {abbr:'R007',
                          full_name: 'Closed cases report',
                          class_name: 'Stats::R007ClosedCasesReport',
-                         custom_report: true,
+                         custom_report: false,
                          standard_report: false,
-                         foi: false,
-                         sar: false,
+                         foi: true,
+                         sar: true,
                          seq_id: 500,
                          default_reporting_period: 'last_month'
                 },
