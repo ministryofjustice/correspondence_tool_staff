@@ -33,7 +33,7 @@
       div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
         = render partial: 'shared/dropzone_form',
                  locals: { s3_direct_post: @s3_direct_post,
-                           file_input_name: 'case_ico[uploaded_request_files][]' }
+                           file_input_name: 'ico[uploaded_request_files][]' }
 
 
 - if @case.has_date_draft_compliant?
