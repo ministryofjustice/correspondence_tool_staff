@@ -76,6 +76,11 @@ describe CaseFinderService do
           create(:case, :flagged,
                  received_date: dd(15),
                  identifier: '12-older flagged case')
+        @closed_dacu_flagged_case =
+          create(:closed_case, :flagged,
+                 received_date: dd(15),
+                 date_responded: dd(22),
+                 identifier: '00-closed flagged case')
         @newer_dacu_flagged_accept =
           create(:case, :flagged_accepted,
                  received_date: dd(17),
@@ -269,6 +274,7 @@ describe CaseFinderService do
           @newer_dacu_flagged_case,
           @newer_dacu_flagged_accept,
           @older_dacu_flagged_case,
+          @closed_dacu_flagged_case,
           @older_dacu_flagged_accept,
           @older_case_1,
           @older_case_2,
@@ -319,6 +325,7 @@ describe CaseFinderService do
                 @newer_dacu_flagged_accept,
                 @older_dacu_flagged_case,
                 @older_dacu_flagged_accept,
+                @closed_dacu_flagged_case,
                 @older_case_1,
                 @older_case_2,
                 @overturned_ico_foi_original,
@@ -352,6 +359,7 @@ describe CaseFinderService do
                 @accepted_overturned_ico_sar_original,
                 @accepted_overturned_ico_sar_original_appeal,
                 @closed_overturned_ico_sar,
+                @closed_dacu_flagged_case,
                 @overturned_ico_foi_original,
                 @overturned_ico_foi_original_appeal,
                 @awaiting_responder_overturned_ico_foi_original,
@@ -510,6 +518,7 @@ describe CaseFinderService do
                   @accepted_overturned_ico_sar,
                   @accepted_overturned_ico_sar_original,
                   @closed_overturned_ico_sar,
+                  @closed_dacu_flagged_case,
                   @overturned_ico_foi_original,
                   @overturned_ico_foi,
                   @awaiting_responder_overturned_ico_foi_original,
