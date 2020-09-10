@@ -42,6 +42,7 @@ RSpec.describe StatsController, type: :controller do
     context 'signed in manager' do
       before do
         sign_in manager
+        find_or_create :report_type, :r007
       end
 
       it 'authorizes' do
@@ -80,6 +81,7 @@ RSpec.describe StatsController, type: :controller do
     context 'sets @correspondence_types' do
       before do
         sign_in branston_user
+        find_or_create :report_type, :r007
       end
 
       it 'authorizes' do
@@ -100,7 +102,7 @@ RSpec.describe StatsController, type: :controller do
   
       it 'sets @correspondence_types' do
         get :new
-        expected = %w[OFFENDER_SAR CLOSED_CASES]
+        expected = %w[OFFENDER_SAR]
         expect(assigns(:correspondence_types).map(&:abbreviation)).to eq expected
       end
 
