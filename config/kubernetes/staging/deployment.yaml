@@ -28,6 +28,8 @@ spec:
               value: 'staging'
             - name: RAILS_ENV
               value: 'production'
+            - name: SENTRY_ENVIRONMENT
+              value: 'staging'
             - name: PROJECT
               value: 'correspondence-staff'
             - name: RAILS_SERVE_STATIC_FILES
