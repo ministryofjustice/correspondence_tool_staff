@@ -98,5 +98,17 @@ feature 'ICO case creation' do
       cases_new_ico_page.form.related_cases.linked_records.first.remove_link.click
       expect(cases_new_ico_page.form).to have_no_related_cases
     end
+
+    scenario 'creating a case with request attachments', js: true  do
+      request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
+
+      create_ico_case_step(original_case: original_foi,
+                            related_cases: [related_foi], 
+                            uploaded_request_files: [request_attachment])
+
+      new_case = Case::Base.last
+      request_attachment = new_case.attachments.request.first
+      expect(request_attachment.key).to match %{/request-1.pdf$}
+    end  
   end
 end

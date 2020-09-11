@@ -28,6 +28,8 @@ spec:
               value: 'qa'
             - name: RAILS_ENV
               value: 'production'
+            - name: SENTRY_ENVIRONMENT
+              value: 'qa'
             - name: PROJECT
               value: 'correspondence-staff'
             - name: RAILS_SERVE_STATIC_FILES
@@ -70,12 +72,12 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: app-secrets
+                  name: track-a-query-rds-output
                   key: url
             - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: app-secrets
+                  name: track-a-query-rds-output
                   key: database_password
             - name: REDIS_URL
               valueFrom:
@@ -172,12 +174,12 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: app-secrets
+                  name: track-a-query-rds-output
                   key: url
             - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: app-secrets
+                  name: track-a-query-rds-output
                   key: database_password
             - name: REDIS_URL
               valueFrom:
@@ -252,12 +254,12 @@ spec:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: app-secrets
+                  name: track-a-query-rds-output
                   key: url
             - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: app-secrets
+                  name: track-a-query-rds-output
                   key: database_password
             - name: REDIS_URL
               valueFrom:

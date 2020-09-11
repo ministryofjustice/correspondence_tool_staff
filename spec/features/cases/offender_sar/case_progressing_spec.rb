@@ -45,15 +45,12 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to have_content "Send dispatch letter"
     expect(cases_show_page).to have_content "Close case"
     click_on "Close case"
-
+    
     expect(cases_close_page).to be_displayed
     cases_close_page.fill_in_date_responded(offender_sar_case.received_date)
     click_on "Continue"
 
-    expect(cases_closure_outcomes_page).to be_displayed
-    # TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
-    # cases_closure_outcomes_page.is_info_held.yes.click
-    cases_closure_outcomes_page.submit_button.click
+    expect(cases_closure_outcomes_page).not_to be_displayed
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Closed"
