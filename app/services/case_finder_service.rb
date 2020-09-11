@@ -63,7 +63,9 @@ class CaseFinderService
     # surface miss-configuration in tests.
     scope
       .flagged_for_approval(*user.approving_team)
-      .unaccepted.by_deadline
+      .unaccepted
+      .opened
+      .by_deadline
   end
 
   def incoming_cases_press_office_scope
