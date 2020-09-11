@@ -78,6 +78,14 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
     context 'partial validations' do
       let(:errors) { assigns(:case).errors.messages }
+      let(:third_party_base_params) do
+        {
+          third_party_relationship: '',
+          third_party_name: '',
+          third_party_company_name: '',
+          postal_address: '',
+        }
+      end
 
       context 'for step subject-details' do
         let(:params) do
@@ -91,6 +99,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         end
 
         it 'validates subject name and address' do
+          remains_on_step 'subject-details'
           expect(errors[:subject_full_name]).to eq ["can't be blank"]
           expect(errors[:subject_address]).to eq ["can't be blank"]
         end
@@ -99,7 +108,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         # so offender_sar_case_form#params_for_step
         # contains logic to set required ones if missing
         it 'sets empty values and validates other fields' do
-          errors = assigns(:case).errors.messages
+          remains_on_step 'subject-details'
           expect(errors[:date_of_birth]).to eq ["can't be blank"]
           expect(errors[:subject_type]).to eq ["can't be blank"]
           expect(errors[:flag_as_high_profile]).to eq ["can't be blank"]
@@ -111,16 +120,12 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
           let(:params) do
             {
               current_step: 'requester-details',
-              offender_sar: {
-                third_party_relationship: '',
-                third_party_name: '',
-                third_party_company_name: '',
-                postal_address: '',
-              }
+              offender_sar: third_party_base_params
             }
           end
 
           it 'requires third_party to be set' do
+            remains_on_step 'requester-details'
             expect(errors[:third_party]).to eq ["can't be blank"]
           end
         end
@@ -129,21 +134,13 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
           let(:params) do
             {
               current_step: 'requester-details',
-              offender_sar: {
-                third_party: true,
-                third_party_relationship: '',
-                third_party_name: '',
-                third_party_company_name: '',
-                postal_address: '',
-              }
+              offender_sar: third_party_base_params.merge(third_party: true)
             }
           end
 
           it 'validates requester details' do
-            expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-            expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
-            expect(errors[:third_party_relationship]).to eq ["can't be blank"]
-            expect(errors[:postal_address]).to eq ["can't be blank"]
+            remains_on_step 'requester-details'
+            third_party_validations_found(errors)
           end
         end
 
@@ -151,40 +148,27 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
           let(:params) do
             {
               current_step: 'requester-details',
-              offender_sar: {
-                third_party: false,
-                third_party_relationship: '',
-                third_party_name: '',
-                third_party_company_name: '',
-                postal_address: '',
-              }
+              offender_sar: third_party_base_params.merge(third_party: false)
             }
           end
 
-          it 'unsets fields that should be ignored' do
-            expect(errors[:third_party_name]).to be_empty
-            expect(errors[:third_party_company_name]).to be_empty
-            expect(errors[:third_party_relationship]).to be_empty
-            expect(errors[:postal_address]).to be_empty
+          it 'redirects to the next step' do
+            expect(response).to be_redirect
           end
         end
       end
 
       context 'for step recipient-details' do
-        context 'when third party absent' do
+        context 'when recipient absent' do
           let(:params) do
             {
               current_step: 'recipient-details',
-              offender_sar: {
-                third_party_relationship: '',
-                third_party_name: '',
-                third_party_company_name: '',
-                postal_address: '',
-              }
+              offender_sar: third_party_base_params
             }
           end
 
           it 'requires recipient to be set' do
+            remains_on_step 'recipient-details'
             expect(errors[:recipient]).to eq ["can't be blank"]
           end
         end
@@ -193,31 +177,77 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
           let(:params) do
             {
               current_step: 'recipient-details',
-              offender_sar: {
-                recipient: 'third_party_recipient',
-                third_party_relationship: '',
-                third_party_name: '',
-                third_party_company_name: '',
-                postal_address: '',
-              }
+              offender_sar: third_party_base_params.merge(recipient: 'third_party_recipient')
             }
           end
 
           it 'validates recipient details' do
-            expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-            expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
-            expect(errors[:third_party_relationship]).to eq ["can't be blank"]
-            expect(errors[:postal_address]).to eq ["can't be blank"]
+            remains_on_step 'recipient-details'
+            third_party_validations_found(errors)
+          end
+        end
+      end
+
+      context 'for step requested-info' do
+        # no custom validations needed
+      end
+
+      context 'for step request-details' do
+        context 'when request dated in future' do
+          let(:future_date) { 1.day.from_now }
+          let(:params) do
+            {
+              current_step: 'request-details',
+              offender_sar: {
+                request_dated_dd: future_date.day,
+                request_dated_mm: future_date.month,
+                request_dated_yyyy: future_date.year,
+              }
+            }
+          end
+
+          it 'fails to be valid' do
+            remains_on_step 'request-details'
+            expect(errors[:request_dated]).to eq ["can't be in the future."]
+          end
+        end
+      end
+
+      context 'for step date-received' do
+        context 'when date missing' do
+          let(:params) do
+            {
+              current_step: 'date-received',
+              offender_sar: { dummy_field: true }
+            }
+          end
+
+          it 'requires received date to be set' do
+            remains_on_step 'date-received'
+            expect(errors[:received_date]).to eq ["can't be blank"]
+          end
+        end
+
+        context 'when date received in future' do
+          let(:future_date) { 1.day.from_now }
+          let(:params) do
+            {
+              current_step: 'date-received',
+              offender_sar: {
+                received_date_dd: future_date.day,
+                received_date_mm: future_date.month,
+                received_date_yyyy: future_date.year,
+              }
+            }
+          end
+
+          it 'fails to be valid' do
+            remains_on_step 'date-received'
+            expect(errors[:received_date]).to eq ["can't be in the future."]
           end
         end
       end
     end
-
-    context 'for step requested-info' do
-    end
-
-    context 'for step request-details'
-    context 'for step date-received'
   end
 
   describe 'transitions' do
@@ -254,7 +284,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
   describe '#update' do
     let(:offender_sar_case) { create(:offender_sar_case).decorate }
-    let(:params) {{ id: offender_sar_case.id }}
     let(:params) do
       {
         id: offender_sar_case.id,
@@ -275,7 +304,6 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       }
     end
 
-    let(:same_params) {{ id: offender_sar_case.id }}
     let(:same_params) do
       {
         id: offender_sar_case.id,
@@ -320,4 +348,20 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     end
 
   end
+
+  # Utility methods
+
+  def third_party_validations_found(errors)
+    expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
+    expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+    expect(errors[:third_party_relationship]).to eq ["can't be blank"]
+    expect(errors[:postal_address]).to eq ["can't be blank"]
+  end
+
+  def remains_on_step(step)
+    expect(response).to be_successful
+    expect(assigns(:case).current_step).to eq step
+  end
+
 end
+
