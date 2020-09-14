@@ -713,4 +713,21 @@ describe Case::SAR::Offender do
       expect(kase.data_requests_completed?).to eq true
     end
   end
+
+  describe '#ensure_third_party_states_consistent' do
+    context 'when a case is saved with third_party and third_party_recipient' do
+      let(:offender_sar_case) do
+        build(:offender_sar_case, :third_party,
+          recipient: 'third_party_recipient' # would fail validation
+        )
+      end
+
+      it 'automatically sets recipient to requester' do
+        expect(offender_sar_case).to be_valid
+        offender_sar_case.save!
+
+        expect(offender_sar_case.recipient).to eq 'requester_recipient'
+      end
+    end
+  end
 end
