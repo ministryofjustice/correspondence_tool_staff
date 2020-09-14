@@ -40,11 +40,7 @@ spec:
 
                   function delete_images() {
                     if [[ $# -ne 1 ]]; then echo "$0: wrong number of arguments"; return 1; fi
-                    local response=$(aws ecr batch-delete-image --region $region --repository-name $repo_name --image-ids "$1")
-                    local successes=$(echo $response | jq '.imageIds | length')
-                    local failures=$(echo $response | jq '.failures | length')
-                    echo "Successes: $successes"
-                    echo "Failures: $failures"                  
+                 
                   }
 
                   master_images_to_delete=$(aws ecr describe-images --region $region --repository-name $repo | jq "{imageDetails: [.imageDetails[] | select(.imageTags // [] | any(match(\"^.*master.*$\")) )] | sort_by(.imagePushedAt) | .[0:-$total_master_images_to_keep]}")                 
