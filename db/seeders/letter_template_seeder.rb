@@ -90,10 +90,10 @@ class LetterTemplateSeeder
                 template_type: 'dispatch',
                 body: <<~EOF
                   <p>
-                  <br>Dear Colleague,
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br><strong><%= values.subject_full_name&.upcase %> - <%= values.prison_number&.upcase %><% if (values.prison_number.gsub(/[,]/, ' ').squeeze(' ').strip).match?(/[ ]/) %> [DELETE AS APPROPRIATE]<% end %></strong>
+                  <br><br>Dear Colleague,
                   <br>
                   <br>Please find enclosed documents relating to a Subject Access Request (SAR) made under the Data Protection Act 2018 by the above offender.
                   <br>
