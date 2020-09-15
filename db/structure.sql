@@ -610,7 +610,8 @@ CREATE TABLE public.letter_templates (
     body character varying,
     template_type character varying,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    letter_address character varying DEFAULT ''::character varying
 );
 
 
@@ -2019,4 +2020,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200812142406'),
 ('20200819133514'),
 ('20200819171428'),
-('20200824130200');
+('20200824130200'),
+('20200914160132');
+
+

@@ -4,7 +4,7 @@ class Cases::LettersController < ApplicationController
 
   def new
     @letter = Letter.new(params[:letter_template_id])
-    @letter_templates = LetterTemplate.where(template_type: @type)
+    @letter_templates = LetterTemplate.where(template_type: @type).order(:abbreviation)
   end
 
   def show
@@ -16,7 +16,11 @@ class Cases::LettersController < ApplicationController
       format.docx do
         path = Rails.root.join('lib', 'assets', 'ims001.docx')
         template = Sablon.template(path)
-        render plain: template.render_to_string({ values: @letter.values, 'html:body': @letter.body, letter_date: @letter.letter_date })
+        render plain: template.render_to_string({ 
+          values: @letter.values, 
+          'html:body': @letter.body, 
+          letter_date: @letter.letter_date, 
+          'html:letter_address': @letter.letter_address })
       end
     end
   end
