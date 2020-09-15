@@ -3,19 +3,21 @@
 
 = link_to "Back", case_path(@case), class: 'govuk-back-link'
 
-h1.page-heading
-  span.page-heading--secondary
-    = @case.number
-  span.page-heading--primary
-    = "#{@case.subject_full_name&.upcase}-#{@case.prison_number}"
+h1.cover-sheet-heading
+  ul
+    li.cover-sheet-heading__detail
+      = @case.number
+    li.cover-sheet-heading__name
+      = @case.subject_full_name&.upcase
+    li.cover-sheet-heading__detail
+      = @case.subject_aliases&.upcase
+    li.cover-sheet-heading__detail
+      = @case.prison_number&.upcase
 
 section.case-info
   = render partial: 'cases/cover_pages/data_requests', locals: { case_details: @case }
 
 section.case-info.section--vetting
-  h2.request--heading
-    = t('cases.cover_sheet.vetting')
-
   table
     thead
       th width="50%"

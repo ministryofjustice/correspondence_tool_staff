@@ -10,3 +10,19 @@
   @include core-27();
   color: $secondary-text-colour;
 }
+
+.cover-sheet-heading {
+  margin: 15px 0 40px;
+  font-family: "nta", Arial, sans-serif;
+  font-weight: bold;
+
+  &__name {
+    font-size: 90px;
+    line-height: 100px;
+  }
+
+  &__detail {
+    font-size: 45px;
+    line-height: 60px;
+  }
+}
