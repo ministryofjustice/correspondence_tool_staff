@@ -67,7 +67,10 @@ class Report < ApplicationRecord
   end
 
   def to_csv
-    report_service = report_type.class_constant.new()
+    report_service = report_type.class_constant.new(
+      period_start: self.period_start,
+      period_end: self.period_end
+    )
     report_service.set_results(JSON.parse(self.report_data, symbolize_names: true))
     report_service.to_csv
   end 
