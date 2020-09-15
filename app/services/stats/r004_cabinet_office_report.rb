@@ -21,6 +21,8 @@ module Stats
       @first_column_heading = self.class.title
       @superheadings = superheadings
       @report_lines = report_lines
+
+      @scope = Case::Base.standard_foi
     end
 
     def self.title
@@ -165,7 +167,7 @@ module Stats
     end
 
     def get_value_1_Bi
-      open_cases_received_in_period.standard_foi.joins(:transitions).where(
+      open_cases_received_in_period.joins(:transitions).where(
         'case_transitions.event = ?',
         'extend_for_pit').group('cases.id').count.size
     end
@@ -175,11 +177,11 @@ module Stats
     end
 
     def get_value_1_Biii
-      open_cases_received_in_period.where("properties->>'external_deadline' < ?", @period_end).count
+      open_cases_received_in_period.where("properties->>'external_deadline' < ?", Date.today).count
     end
 
     def get_value_1_C
-      Case::Base.closed.where(received_date: [@period_start..@period_end]).count
+      @scope.closed.where(received_date: [@period_start..@period_end]).count
     end
 
     def get_value_1_Ci
@@ -287,15 +289,15 @@ module Stats
     end
 
     def cases_received_in_period
-      Case::Base.where(received_date: [@period_start..@period_end])
+      @scope.where(received_date: [@period_start..@period_end])
     end
 
     def open_cases_received_in_period
-      Case::Base.opened.where(received_date: [@period_start..@period_end])
+      @scope.opened.where(received_date: [@period_start..@period_end])
     end
 
     def cases_received_and_closed_in_period
-      Case::Base.closed.where(received_date: [@period_start..@period_end])
+      @scope.closed.where(received_date: [@period_start..@period_end])
     end
 
     def fully_refused_cases_received_and_closed_in_period
@@ -315,11 +317,11 @@ module Stats
     end
 
     def fully_refused_cases_received_and_closed_in_period_with_exemption(exemption)
-      fully_refused_cases_received_and_closed_in_period.joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+      fully_refused_cases_received_and_closed_in_period.left_outer_joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
     end
 
     def fully_and_part_refused_cases_received_and_closed_in_period_with_exemption(exemption)
-      fully_or_part_refused_cases_received_and_closed_in_period.joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+      fully_or_part_refused_cases_received_and_closed_in_period.left_outer_joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
     end
 
     def info_not_confirmed_cases_received_and_closed_in_period
