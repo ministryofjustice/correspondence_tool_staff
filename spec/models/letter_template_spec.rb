@@ -33,7 +33,7 @@ RSpec.describe LetterTemplate, type: :model do
     let(:letter_template) { create(:letter_template) }
     it 'renders a template' do
       values = OpenStruct.new(name: "Bob")
-      expect(letter_template.render(values))
+      expect(letter_template.render(values, letter_template, 'body'))
         .to match "Thank you for your offender subject access request, Bob"
     end
   end

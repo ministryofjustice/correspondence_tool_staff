@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Letter, type: :model do
   let(:letter_template) { create(:letter_template, name: "Letter to Requester") }
-  let(:kase) { create(:offender_sar_case, name: 'Waylon Smithers') }
+  let(:kase) { create(:offender_sar_case, name: 'Waylon Smithers', subject_address: 'address') }
 
   it 'can be created' do
     letter = Letter.new 1
@@ -17,6 +17,11 @@ RSpec.describe Letter, type: :model do
   it 'renders a case' do
     letter = Letter.new(letter_template.id, kase)
     expect(letter.body).to eq 'Thank you for your offender subject access request, Waylon Smithers'
+  end
+
+  it 'renders a letter_address' do
+    letter = Letter.new(letter_template.id, kase)
+    expect(letter.letter_address).to eq 'Testing address'
   end
 
   it 'displays the template name' do
