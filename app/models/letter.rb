@@ -15,7 +15,7 @@ class Letter
   end
 
   def body
-    @letter_template&.render(@case)
+    @letter_template&.render(@case, self, 'body')
   end
 
   def values
@@ -46,6 +46,10 @@ class Letter
     when "acknowledgement"
       values.requester_address
     end
+  end
+
+  def letter_address
+    @letter_template&.render(@case, self, 'letter_address')
   end
 
   def company_name

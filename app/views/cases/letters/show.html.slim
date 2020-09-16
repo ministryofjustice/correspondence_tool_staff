@@ -24,6 +24,8 @@ section.letter--from-section
   p
     | Date: #{Date.today.strftime('%e %B %Y')}
 
+= raw @letter.letter_address
+
 = raw @letter.body
 
 = link_to "Save as Word", url_for(format: "docx", letter: {letter_template_id: @letter.letter_template_id} ), class: "button"
