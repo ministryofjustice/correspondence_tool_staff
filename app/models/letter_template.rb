@@ -11,8 +11,8 @@ class LetterTemplate < ApplicationRecord
     LetterTemplate.template_types[type] || 'unknown'
   end
 
-  def render(values)
-    template = ERB.new(body)
+  def render(values, letter, field)
+    template = ERB.new(self.send(field))
     template.result(binding)
   end
 end
