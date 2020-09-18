@@ -280,6 +280,7 @@ en:
   date:
     formats:
       default: "%-d %b %Y"
+
   time:
     formats:
       default: "%-d %b %Y %H:%M"
@@ -305,11 +306,11 @@ en:
       bypass_approval_manager:
         press_office_approval: 'Does Press office need to clear this response?'
       data_request:
-        request_type: What data is needed?
         completed: Is this request now complete?
+        request_type: What data is needed?
       offender_sar:
-        info_held_status_abbreviation: Was the information held?
         flag_for_disclosure_specialists: "Flag as high profile case?"
+        info_held_status_abbreviation: Was the information held?
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
       assignment:
@@ -317,31 +318,31 @@ en:
         team_id: Assign to
         user_id: Choose a new team member for this case
       foi:
-        info_held_status_abbreviation: Was the information held?
-        requester_type: Requester type
-        refusal_reason_abbreviation: What was the outcome?
-        outcome_abbreviation: What was the outcome?
         appeal_outcome_name: What was the appeal outcome?
-        late_team_id: Business unit responsible for late response
         flag_for_disclosure_specialists: Flag for disclosure specialists
-        type: Type
+        info_held_status_abbreviation: Was the information held?
+        late_team_id: Business unit responsible for late response
         name: "Who is the requestor?"
+        outcome_abbreviation: What was the outcome?
+        refusal_reason_abbreviation: What was the outcome?
+        requester_type: Requester type
+        type: Type
       ico:
-        ico_decision: The original case has been
         delivery_method: How and where should the information be sent?
-        type: Original Case Type
+        ico_decision: The original case has been
         late_team_id_html: " "
+        type: Original Case Type
       overturned_foi:
         reply_method: 'How should this information be sent to the requester?'
       overturned_sar:
         reply_method: 'How should this information be sent to the requester?'
       sar:
+        flag_for_disclosure_specialists: Flag for disclosure specialist?
         late_team_id: Business unit responsible for late response
         missing_info: "Was the response asking for missing information (e.g. proof of ID) or
           clarification, i.e. a TMM?"
         reply_method_html: |
           <div class="heading-medium">Where the information should be sent</div>
-        flag_for_disclosure_specialists: Flag for disclosure specialist?
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
       offender_sar:
@@ -365,38 +366,38 @@ en:
         role: What will the business unit be responsible for?
         correspondence_type_ids: Correspondence types
     hint:
-      feedback:
-        comment: |
-          Let us know what you were doing and what could be improved or fixed.
+      case:
+        linked_case_number: " For example 170131001"
+        upload_comment: This will be added to the converstation section of the case.
       data_request:
         location: Where is the data held?
       data_request_log:
         date_received: For example, 31 07 2019
         num_pages: Record new total number of pages
-      search_query:
-        business_unit_name_filter: For example, Legal Aid Agency
-      case:
-        linked_case_number: " For example 170131001"
-        upload_comment: This will be added to the converstation section of the case.
-      offender_sar:
-        date_of_birth: "For example, 12 11 2007"
-        number_final_pages: "Final page count including exempt pages"
-        message_hint: Include any details that will be useful for processing the case (optional)
-        number_exempt_pages: "Pages removed from the SAR as exemptions"
-        case_reference_number: "You can include multiple numbers separated by a comma or a space."
-        other_subject_ids: "You can include multiple numbers separated by a comma or a space."
-        previous_case_numbers: "You can include multiple cases separated by a comma or a space."
-        prison_number: "You can include multiple numbers separated by a comma or a space."
-        subject_aliases: "You can include multiple aliases separated by a comma or a space."
-      team_property:
-        value: Please provide one area at a time and be as concise as possible
-      sar:
-        third_party_relationship: For example, solicitor, parent or guardian
+      feedback:
+        comment: |
+          Let us know what you were doing and what could be improved or fixed.
       ico:
         original_case_number_html: |
           Enter original case  reference number to link to.  For example 170131001.<br>
           We'll use the original case title for the appeal title.
         related_case_number:  Enter related case  reference number, for example 170131001.
+      offender_sar:
+        case_reference_number: "You can include multiple numbers separated by a comma or a space."
+        date_of_birth: "For example, 12 11 2007"
+        message_hint: Include any details that will be useful for processing the case (optional)
+        number_exempt_pages: "Pages removed from the SAR as exemptions"
+        number_final_pages: "Final page count including exempt pages"
+        other_subject_ids: "You can include multiple numbers separated by a comma or a space."
+        previous_case_numbers: "You can include multiple cases separated by a comma or a space."
+        prison_number: "You can include multiple numbers separated by a comma or a space."
+        subject_aliases: "You can include multiple aliases separated by a comma or a space."
+      sar:
+        third_party_relationship: For example, solicitor, parent or guardian
+      search_query:
+        business_unit_name_filter: For example, Legal Aid Agency
+      team_property:
+        value: Please provide one area at a time and be as concise as possible
     label:
       bypass_approval_manager:
         press_office_approval:
@@ -461,19 +462,19 @@ en:
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
       ico:
-        ico_officer_name: "Name of the ICO information officer who's handling this case"
-        ico_reference_number: "ICO case reference number"
-        message: "ICO's request details"
-        related_case_number: "Link a related case"
         email: "Recipient email address"
-        original_case_type:
-          Case::ICO::FOI: FOI
-          Case::ICO::SAR: SAR
-        postal_address: "Recipient postal address"
         ico_decision:
           upheld: Upheld by ICO
           overturned: Overturned by ICO
         ico_decision_comment: "Details of ICO's decision"
+        ico_officer_name: "Name of the ICO information officer who's handling this case"
+        ico_reference_number: "ICO case reference number"
+        message: "ICO's request details"
+        original_case_type:
+          Case::ICO::FOI: FOI
+          Case::ICO::SAR: SAR
+        postal_address: "Recipient postal address"
+        related_case_number: "Link a related case"
       overturned_ico: &overturned_ico
         email: "Requester's email"
         ico_officer_name: "Name of the ICO information officer who's handling this case"
@@ -494,21 +495,31 @@ en:
         subject: "Case summary"
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
       offender_sar:
+        case_reference_number: Case reference number (CRN)
         external_reference: Requester reference (optional)
         high_profile: High profile
         message: Additional case information
-        third_party_name: "Full name of the representative"
-        other_subject_ids: "Police national computer number"
+        number_dispatched_pages: "Number of pages"
+        number_exempt_pages: "Number of pages"
+        other_subject_ids: "Police national computer number (PNC)"
         postal_address: "Recipient postal address"
         previous_case_numbers: "Previous SAR cases"
         prison_number: "What is the subject's relevant prison number?"
         received_date: "Received at MOJ"
+        recipient:
+          requester_recipient: The person making the request
+          subject_recipient: The data subject
+          third_party_recipient: Third party
         recipient_details: "The information should be sent to:"
+        recipient_type:
+          data_subject: The data subject
+          recipient: Requester
+          third_party: Third party
         requester_reference: Requester reference (optional)
         subject: "Case summary"
+        subject_address: "What is the location of the data subject?"
         subject_aliases: "Subject's alias if applicable"
         subject_full_name: "Full name of data subject"
-        subject_address: "What is the location of the data subject?"
         subject_type:
           detainee: Detainee
           ex_detainee: Ex-detainee
@@ -516,21 +527,12 @@ en:
           ex_probation_service_user: "Ex-probation service user"
           offender: Offender
           probation_service_user: "Probation service user"
-        recipient:
-          subject_recipient: The data subject
-          requester_recipient: The person making the request
-          third_party_recipient: Third party
-        recipient_type:
-          data_subject: The data subject
-          recipient: Requester
-          third_party: Third party
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
+        third_party_name: "Full name of the representative"
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
-        number_dispatched_pages: "Number of pages"
-        number_exempt_pages: "Number of pages"
       feedback:
         comment: Help make this service better
       search_query:
@@ -579,11 +581,6 @@ en:
 
   common:
     alert_banner: "This service will be down for essential maintenance during the afternoon of Wednesday 2 September. You will not have access after 13.00 on this day and the site will resume service after business hours. Apologies for the inconvenience."
-    choose: Choose...
-    choose_file: Choose a file
-    error: error
-    greeting: Hello %{user}
-    view_case: "Link to case "
     case:
       actions: Actions
       add_note: Add a note to this case
@@ -594,13 +591,13 @@ en:
       case-details: Case details
       case/ico:
         date_responded: Date response sent to ICO
-      case_reference_number: "Case reference number"
       clear_response: Clear response
       clearance_copy: 'You are clearing the response to: '
       compliant_in_time: Uploaded in time
       compliant_late: Uploaded late
       compliant_unknown: Unknown draft compliancy
       create_overturned: Create an ICO Overturned case
+      crn_acronym_html: '<abbr title="Case reference number">CRN</abbr>'
       date_draft_uploaded: Date draft uploaded
       date_ico_decision_received: Date ICO's decision was received
       date_of_birth: Date of birth
@@ -624,11 +621,11 @@ en:
       late_team: Business unit responsible for late response
       name: Requester
       original-case-details: Original case details
-      other_subject_ids: "Police national computer number"
       outcome: Outcome
       pages_exempt: Exempt pages
       pages_final_count: Final page count
       pages_received: Pages received
+      pnc_acronym_html: '<abbr title="Police national computer">PNC</abbr> number'
       postal_address: "Requester’s postal address"
       previous_case_numbers: Previous SAR cases
       prison_number: "Prison number"
@@ -679,18 +676,25 @@ en:
       respond: Mark as sent to ICO
       request: "ICO's request"
     case_list:
-      view_case: "Link to case "
+      flag: 'Flag'
+      draft_deadline: Draft deadline
+      external_deadline: Final deadline
       message_notification: Conversations
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
-      type: 'Type'
-      flag: 'Flag'
       request: 'Request'
       request_detail: Request detail
-      draft_deadline: Draft deadline
-      external_deadline: Final deadline
       status: Status
+      type: 'Type'
+      view_case: "Link to case "
       who_its_with: With
+    choose: Choose...
+    choose_file: Choose a file
+    close: Close case
+    error: error
+    greeting: Hello %{user}
+    links:
+      change: Change
     new_case_button: Create case
     phase_banner: |
       This is a new service.
@@ -698,9 +702,7 @@ en:
     signout: Sign out
     stats_custom_button: Create report
     summary_error: 'prevented this form from being submitted:'
-    close: Close case
-    links:
-      change: Change
+    view_case: "Link to case "
 
   admin:
     cases:
@@ -765,10 +767,10 @@ en:
         heading: Clear response
         approve_message:
           foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
-          sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
           ico: "Once you clear this response, %{managing_team} can send the response and close the case."
           overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
           overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
+          sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
     closable:
       close:
         heading: Close case
@@ -906,7 +908,6 @@ en:
       uploaded_request_files_hint: |
         You can upload different file types such as Word, Excel,
         PDF and JPEG up to 20MB per file.
-
 
     overturned_shared:
       new_form:
@@ -1053,6 +1054,7 @@ en:
     take_case_on:
       success: Case taken on
       already_accepted: Case already accepted by %{name}
+
   feedback:
     error_html: |
       <strong>The following error(s) occurred:</strong>
@@ -1073,6 +1075,7 @@ en:
       timescale_copy: Which time period should this report cover?
     download_custom:
       waiting: Your custom report will be ready soon. Try again shortly.
+
   teams:
     browse_by_business_group: Browse by business group
     business_group: Business group
@@ -1127,6 +1130,7 @@ en:
       will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_directorate_name}"
     team: Business unit
     unreversible: This action cannot be reversed
+
   users:
     new:
       create: Create user
