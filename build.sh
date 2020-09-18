@@ -77,7 +77,7 @@ function _build() {
 
   # 7. Tag and push the image to the ECR
 
-  docker tag $docker_registry_tag
+  docker tag $docker_registry_tag $docker_registry_tag
 
   p "Beginning push to ECR..."
   docker push ${docker_registry_tag}
