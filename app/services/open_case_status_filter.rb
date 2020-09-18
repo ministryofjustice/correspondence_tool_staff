@@ -1,43 +1,45 @@
 class OpenCaseStatusFilter
   include FilterParamParsers
 
-  def self.available_open_case_statuses
-    {
-      'unassigned'                       => I18n.t('filters.open_case_statuses.unassigned'),
-      'awaiting_responder'               => I18n.t('filters.open_case_statuses.awaiting_responder'),
-      'drafting'                         => I18n.t('filters.open_case_statuses.drafting'),
-      'pending_dacu_clearance'           => I18n.t('filters.open_case_statuses.pending_dacu_clearance'),
-      'pending_press_office_clearance'   => I18n.t('filters.open_case_statuses.pending_press_office_clearance'),
-      'pending_private_office_clearance' => I18n.t('filters.open_case_statuses.pending_private_office_clearance'),
-      'awaiting_dispatch'                => I18n.t('filters.open_case_statuses.awaiting_dispatch'),
-      'responded'                        => I18n.t('filters.open_case_statuses.responded'),
-    }
-  end
+  attr_reader :available_choices
 
-  def self.available_offender_sar_case_statuses
-    {
-      'data_to_be_requested' => I18n.t('filters.offender_sar_case_statuses.data_to_be_requested'),
-      'waiting_for_data'     => I18n.t('filters.offender_sar_case_statuses.waiting_for_data'),
-      'ready_for_vetting'    => I18n.t('filters.offender_sar_case_statuses.ready_for_vetting'),
-      'vetting_in_progress'  => I18n.t('filters.offender_sar_case_statuses.vetting_in_progress'),
-      'ready_to_copy'        => I18n.t('filters.offender_sar_case_statuses.ready_to_copy'),
-      'ready_to_dispatch'    => I18n.t('filters.offender_sar_case_statuses.ready_to_dispatch'),
-      'closed'               => I18n.t('filters.offender_sar_case_statuses.closed'),
-      'destroyed'            => I18n.t('filters.offender_sar_case_statuses.destroyed'),
-    }
-  end
+  # def self.available_offender_sar_case_statuses
+  #   {
+  #     'data_to_be_requested' => I18n.t('filters.offender_sar_case_statuses.data_to_be_requested'),
+  #     'waiting_for_data'     => I18n.t('filters.offender_sar_case_statuses.waiting_for_data'),
+  #     'ready_for_vetting'    => I18n.t('filters.offender_sar_case_statuses.ready_for_vetting'),
+  #     'vetting_in_progress'  => I18n.t('filters.offender_sar_case_statuses.vetting_in_progress'),
+  #     'ready_to_copy'        => I18n.t('filters.offender_sar_case_statuses.ready_to_copy'),
+  #     'ready_to_dispatch'    => I18n.t('filters.offender_sar_case_statuses.ready_to_dispatch'),
+  #     'closed'               => I18n.t('filters.offender_sar_case_statuses.closed'),
+  #     'destroyed'            => I18n.t('filters.offender_sar_case_statuses.destroyed'),
+  #   }
+  # end
+
 
   def self.filter_attributes
-    [:filter_open_case_status, :filter_offender_sar_case_status]
+    # [:filter_open_case_status, :filter_offender_sar_case_status]
+    [:filter_open_case_status]
   end
 
   def self.process_params!(params)
     process_array_param(params, :filter_open_case_status)
   end
 
-  def initialize(query, records)
+  def self.template_name
+    return 'filter_multiple_choices'
+  end
+
+  def is_available?
+    true
+  end
+
+  def initialize(query, user, records)
     @query = query
     @records = records
+    @user = user
+
+    @available_choices = get_available_choices
   end
 
   def applied?
@@ -69,5 +71,20 @@ class OpenCaseStatusFilter
       []
     end
   end
+
+  private 
+
+  def get_available_choices
+    collected_states = []
+    user.permitted_correspondence_types.each do | correspondence_type |
+      collected_states.push(*correspondence_type.name.constantize.permitted_states)
+    end 
+    state_choices = {}
+    (collected_states.uniq - ConfigurableStateMachine::Machine.states_for_closed_cases).each do | state |
+      state_choices[state] = I18n.t("filters.open_case_statuses.#{state}")
+    end
+    state_choices
+  end
+
 end
 

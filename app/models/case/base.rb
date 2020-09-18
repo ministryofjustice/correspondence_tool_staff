@@ -390,6 +390,10 @@ class Case::Base < ApplicationRecord
     self.type_abbreviation.downcase
   end
 
+  def self.permitted_states
+    ConfigurableStateMachine::Manager.instance.permitted_states(case_type=type_abbreviation.downcase.to_sym)
+  end 
+
   def self.factory(_type)
     raise NotImplementedError.new('Case type must implement self.factory')
   end

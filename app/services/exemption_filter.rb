@@ -1,5 +1,6 @@
 class ExemptionFilter
   include FilterParamParsers
+  attr_reader :available_choices
 
   def self.filter_attributes
     [:common_exemption_ids, :exemption_ids]
@@ -10,10 +11,25 @@ class ExemptionFilter
     process_ids_param(params, 'exemption_ids')
   end
 
-  def initialize(search_query_record, arel)
+  def self.template_name
+    return 'filter_multiple_choices'
+  end
+
+  def initialize(search_query_record, user, arel)
     @arel = arel
     @query = search_query_record
     @exemption_ids = search_query_record.exemption_ids
+
+    @user = @user
+
+    @availabe_choices = {
+      :common_exemption_ids => self.class.available_common_exemptions,
+      :exemption_ids => self.class.available_exemptions
+    }
+  end
+
+  def is_available?
+    @user.permitted_correspondence_types.any? { | c_type | c_type.foi? || c_type.sar? || c_type.ico? }
   end
 
   def applied?

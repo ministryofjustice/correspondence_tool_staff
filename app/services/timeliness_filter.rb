@@ -1,12 +1,14 @@
 class TimelinessFilter
   include FilterParamParsers
 
-  def self.available_timeliness
-    {
-      'in_time' => I18n.t('filters.timeliness.in_time'),
-      'late'    => I18n.t('filters.timeliness.late'),
-    }
-  end
+  attr_reader :available_choices
+
+  # def self.available_timeliness
+  #   {
+  #     'in_time' => I18n.t('filters.timeliness.in_time'),
+  #     'late'    => I18n.t('filters.timeliness.late'),
+  #   }
+  # end
 
   def self.filter_attributes
     [:filter_timeliness]
@@ -15,10 +17,26 @@ class TimelinessFilter
   def self.process_params!(params)
     process_array_param(params, :filter_timeliness)
   end
+  
+  def self.template_name
+    return 'filter_multiple_choices'
+  end
 
-  def initialize(query, records)
+  def initialize(query, user, records)
     @query = query
     @records = records
+    @user = user
+
+    @available_choices = {
+      :filter_timeliness => {
+        'in_time' => I18n.t('filters.timeliness.in_time'),
+        'late'    => I18n.t('filters.timeliness.late'),  
+      }
+    }
+  end
+
+  def is_available?
+    true
   end
 
   def applied?

@@ -1,12 +1,12 @@
 class CaseStatusFilter
   include FilterParamParsers
 
-  def self.available_statuses
-    {
-      'open'   => I18n.t('filters.statuses.open'),
-      'closed' => I18n.t('filters.statuses.closed'),
-    }
-  end
+  # def self.available_statuses
+  #   {
+  #     'open'   => I18n.t('filters.statuses.open'),
+  #     'closed' => I18n.t('filters.statuses.closed'),
+  #   }
+  # end
 
   def self.filter_attributes
     [:filter_status]
@@ -16,9 +16,24 @@ class CaseStatusFilter
     process_array_param(params, :filter_status)
   end
 
+  def self.template_name
+    return 'filter_multiple_choices'
+  end
+
   def initialize(query, records)
     @query = query
     @records = records
+  end
+
+  def is_available?
+    true
+  end
+
+  def self.available_choices
+    {
+      'open'   => I18n.t('filters.statuses.open'),
+      'closed' => I18n.t('filters.statuses.closed'),
+    }
   end
 
   def applied?

@@ -10,6 +10,10 @@ class ExternalDeadlineFilter
 
   end
 
+  def self.template_name
+    return 'final_deadline'
+  end
+
   def self.filter_attributes
     [:external_deadline_from, :external_deadline_to]
   end
@@ -19,9 +23,14 @@ class ExternalDeadlineFilter
     process_date_param(params, 'external_deadline_to')
   end
 
-  def initialize(search_query, results)
+  def initialize(search_query, user, results)
     @search_query = search_query
     @results = results
+    @user = user
+  end
+
+  def is_available?
+    true
   end
 
   def applied?
