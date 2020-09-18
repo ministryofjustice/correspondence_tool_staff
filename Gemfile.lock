@@ -279,7 +279,7 @@ GEM
       rack (>= 1.2.1)
       rake
     jasmine-core (3.5.0)
-    jbuilder (2.10.0)
+    jbuilder (2.10.1)
       activesupport (>= 5.0.0)
     jmespath (1.4.0)
     jquery-rails (4.4.0)
