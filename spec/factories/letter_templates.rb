@@ -4,6 +4,7 @@ FactoryBot.define do
     sequence(:abbreviation) { |n| "template-#{n}" }
 
     body { "Thank you for your offender subject access request, <%= values.name %>" }
+    letter_address { "Testing <%= values.requester_address %>" }
     template_type { 'acknowledgement' }
   end
 

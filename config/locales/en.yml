@@ -156,6 +156,8 @@ en:
             date_responded:
               before_received: "can't be before date received"
               future: "can't be in the future"
+            recipient:
+              third_party: can't be third_party_recipient if third party requester
             third_party_company_name:
               blank: can't be blank if representative name not given
             third_party_name:
@@ -792,7 +794,6 @@ en:
             <li>sent the response to the person who made the request</li>
           </ul>
     cover_sheet:
-      vetting: Vetting
       vet_date: Vet date
       vet_by: By
       vetter_name: 'Name:'

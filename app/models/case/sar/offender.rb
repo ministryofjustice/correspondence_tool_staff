@@ -107,23 +107,30 @@ class Case::SAR::Offender < Case::Base
   validate :validate_recipient
   validate :validate_third_party_relationship
   validate :validate_third_party_address
-
   validate :validate_request_dated
-
-    validates :number_final_pages,
+  validates :number_final_pages,
             numericality: { only_integer: true, greater_than: -1,
                             message: 'must be a positive whole number' }
-
-  validates :number_exempt_pages, 
+  validates :number_exempt_pages,
             numericality: { only_integer: true, greater_than: -1,
                             message: 'must be a positive whole number' }
+  validate :validate_third_party_states_consistent
 
-
+  before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
   before_save :set_subject
-
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
+
+  def validate_third_party_states_consistent
+    if self.third_party && self.recipient == 'third_party_recipient'
+      errors.add(
+        :recipient,
+        I18n.t('activerecord.errors.models.case/sar/offender.attributes.recipient.third_party')
+      )
+    end
+    errors[:recipient].any?
+  end
 
   def validate_received_date
     super
@@ -284,5 +291,16 @@ class Case::SAR::Offender < Case::Base
 
   def use_subject_as_requester
     self.name = self.subject_full_name
+  end
+
+  def ensure_third_party_states_consistent
+    # It should never have both `third_party requester`
+    # AND `third_party recipient` but you can potentially get a case into
+    # this state if you go back and edit the requester step
+    # to change third_party to true
+    # If this happens, we nudge recipient to the right option, requester_recipient
+    if self.third_party && self.recipient == 'third_party_recipient'
+      self.recipient = 'requester_recipient'
+    end
   end
 end
