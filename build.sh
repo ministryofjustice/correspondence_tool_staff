@@ -64,17 +64,7 @@ function _build() {
     return 1;
   fi
 
-  # 6. Build the image using the application's docker file and the git build context above
-  docker build \
-          --build-arg VERSION_NUMBER=$docker_registry_tag \
-          --build-arg BUILD_DATE=$(date +%Y-%m-%dT%H:%M:%S%z) \
-          --build-arg COMMIT_ID=$current_version \
-          --build-arg BUILD_TAG=$docker_build_tag \
-          --pull \
-          --tag ${docker_registry_tag} \
-          --file ./Dockerfile \
-          $git_fetch_url
-
+ 
   # 7. Tag and push the image to the ECR
 
   docker tag $docker_registry_tag $docker_registry_tag
