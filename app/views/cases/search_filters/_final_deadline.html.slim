@@ -8,22 +8,22 @@ fieldset
           li.quick-link-option--first
             a { href="#"
                 aria-describeby="quick-link-label"
-                data-external-deadline-from=filter.available_deadlines[:today]
-                data-external-deadline-to=filter.available_deadlines[:today]
+                data-date-from=filter.available_choices[:today]
+                data-date-to=filter.available_choices[:today]
               }
               = "Today"
           li.quick-link-option
             a { href="#"
                 aria-describeby="quick-link-label"
-                data-external-deadline-from=filteravailable_deadlines[:today]
-                data-external-deadline-to=filter.available_deadlines[:three_days]
+                data-date-from=filter.available_choices[:today]
+                data-date-to=filter.available_choices[:three_days]
               }
               = "In the next 3 days"
           li.quick-link-option
             a { href="#"
                 aria-describeby="quick-link-label"
-                data-external-deadline-from=filter.available_deadlines[:today]
-                data-external-deadline-to=filter.available_deadlines[:ten_days]
+                data-date-from=filter.available_choices[:today]
+                data-date-to=filter.available_choices[:ten_days]
                 }
               = "In the next 10 days"
 

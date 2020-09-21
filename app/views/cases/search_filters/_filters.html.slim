@@ -1,5 +1,5 @@
 = form_for @query, url: @action_url, method: :get do |f|
-  = hidden_field_tag('search_query[filter_type]', 'final_deadline')
+  = hidden_field_tag('search_query[filter_type]', 'filter_by_condition')
   = hidden_field_tag('search_query[parent_id]', @parent_id)
 
   .case-filters.grid-row
@@ -8,13 +8,14 @@
         span.case-filters__summary.case-filters__summary--outer
           = t('filters.headings.filter_cases')
       .case-filters__container#filter-cases-accordion aria-hidden="true"
-        - @query.available_filters.each do | filter |
+        - @query.available_filters(current_user, @current_tab_name).each do | filter |
           details
             summary aria-controls="filter-#{}-content" aria-expanded="false" role="button"
               span.case-filters__summary
                 = t("filters.headings.#{filter.class.name.humanize}")
             .case-filters__content#filter-status-content aria-hidden="true"
-              = render partial: "cases/search_filters/#{filter.template_name}", locals: { f: f, filter: filter }
+              = render partial: "cases/search_filters/#{filter.class.template_name}", locals: { f: f, filter: filter }
+        input.button type="submit" value="Filter"
 
         / details
         /   summary aria-controls="filter-status-content" aria-expanded="false" role="button"

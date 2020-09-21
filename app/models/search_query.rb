@@ -24,18 +24,27 @@ class SearchQuery < ApplicationRecord
   #   ExternalDeadlineFilter,
   #   ExemptionFilter,
   # ].freeze
+  # CaseFilter::DateRespondedFilter, 
 
   FILTER_CLASSES_MAP = {
-    "open_cases" => [CaseStatusFilter,
-                    TimelinessFilter,
-                    OpenCaseStatusFilter,
-                    ExternalDeadlineFilter]
-    "closed_cases" => [DateRespondedFilter, ExemptionFilter],
-    "search_cases" => [CaseStatusFilter, CaseTypeFilter, ExemptionFilter],
-    "my_open_cases" => [OpenCaseStatusFilter]
+    "all_cases" => [
+      CaseFilter::OpenCaseStatusFilter,
+      CaseFilter::CaseTypeFilter,
+      CaseFilter::CaseTriggerFlagFilter,
+      CaseFilter::TimelinessFilter,
+      CaseFilter::ExternalDeadlineFilter],
+    "closed" => [
+      CaseFilter::ReceivedDateFilter, 
+      CaseFilter::CaseTypeFilter, 
+      CaseFilter::ExemptionFilter],
+    "my_cases" => [CaseFilter::OpenCaseStatusFilter],
+    "search_cases" => [
+      CaseFilter::CaseStatusFilter, 
+      CaseFilter::CaseTypeFilter, 
+      CaseFilter::ExemptionFilter]
   }.freeze
 
-  attr_accessor :business_unit_name_filter :filter_classes
+  attr_accessor :business_unit_name_filter
 
   belongs_to :user
   belongs_to :parent, class_name: 'SearchQuery'
@@ -54,22 +63,35 @@ class SearchQuery < ApplicationRecord
                  list_path: [:string, default: nil],
                  external_deadline_from: :date,
                  external_deadline_to: :date,
+                 received_date_from: :date,
+                 received_date_to: :date,
+                 date_responded_from: :date,
+                 date_responded_to: :date,
                  filter_sensitivity: [:string, array: true, default: []],
                  filter_case_type: [:string, array: true, default: []],
                  filter_open_case_status: [:string, array: true, default: []],
-                 filter_offender_sar_case_status: [:string, array: true, default: []],
                  filter_timeliness: [:string, array: true, default: []],
                  exemption_ids: [:integer, array: true, default: []],
                  common_exemption_ids: [:integer, array: true, default: []],
                  filter_status: [:string, array: true, default: []]
 
-  acts_as_gov_uk_date :external_deadline_from, :external_deadline_to
+  # jsonb_accessor :query,
+  #                search_text: [:string, default: nil],
+  #                list_path: [:string, default: nil],
+  #                external_deadline_from: :date,
+  #                exemption_ids: [:integer, array: true, default: []],
+  #                common_exemption_ids: [:integer, array: true, default: []],
+  #                filter_status: [:string, array: true, default: []]
+
+  acts_as_gov_uk_date :external_deadline_from, :external_deadline_to, 
+                      :received_date_from, :received_date_to, 
+                      :date_responded_from, :date_responded_to
 
   acts_as_tree
 
-  after_initialize do
-    @filter_classes = FILTER_CLASSES_MAP.to_hash.values.flatten
-  end
+  # after_initialize do
+  #   add_json_fields_from_filter_classes
+  # end
 
   def self.parent_search_query_id(case_search_service)
     if case_search_service.child?
@@ -79,8 +101,12 @@ class SearchQuery < ApplicationRecord
     end
   end
 
+  def self.filter_classes
+    FILTER_CLASSES_MAP.to_hash.values.flatten.uniq
+  end
+
   def self.filter_attributes
-    @filter_attributes ||= @filter_classes.collect_concat do |filter_class|
+    @filter_attributes ||= filter_classes.collect_concat do |filter_class|
       filter_class.filter_attributes
     end
   end
@@ -98,6 +124,16 @@ class SearchQuery < ApplicationRecord
       self.highest_position = position
     end
     save!
+  end
+
+  def add_json_fields_from_filter_classes
+    FILTER_CLASSES_MAP.each do | _, filter_classes |
+      filter_classes.each do | filter_class |
+        filter_class.filter_attributes.each do | filter_attribute |
+          self.instance_eval {store_accessor :query, filter_attribute}
+        end
+      end 
+    end
   end
 
   # Find of create a SearchQuery from the given <tt>query_params</tt>
@@ -147,7 +183,7 @@ class SearchQuery < ApplicationRecord
   # delegate :available_open_case_statuses, to: OpenCaseStatusFilter
   # delegate :available_timeliness, to: TimelinessFilter
 
-  def results(user, cases_list = nil)
+  def results(cases_list = nil)
     if root.query_type == 'search'
 
       cases_list ||= Pundit.policy_scope(user, Case::Base.all)
@@ -156,13 +192,13 @@ class SearchQuery < ApplicationRecord
       raise ArgumentError.new("cannot perform filters without list of cases")
     end
     
-    perform_filters(user, cases_list)
+    perform_filters(cases_list)
   end
 
   def filter_crumbs
     filter_crumbs = []
     applied_filters.map do |filter_class|
-      filter_class.new(self, Case::Base.none)
+      filter_class.new(self, user, Case::Base.none)
     end.each do |filter|
       filter_crumbs += filter.crumbs
     end
@@ -174,8 +210,8 @@ class SearchQuery < ApplicationRecord
   end
 
   def applied_filters
-    @filter_classes.select do |filter_class|
-      filter = filter_class.new(self, Case::Base.none)
+    self.class.filter_classes.select do |filter_class|
+      filter = filter_class.new(self, user, Case::Base.none)
       filter.applied?
     end
   end
@@ -188,10 +224,10 @@ class SearchQuery < ApplicationRecord
 
   def available_filters(user, scope_type)
     collected_filters = []
-    if FILTER_CLASSES_MAP.keys?(scope_type)
-      FILTER_CLASSES_MAP.values.each do | filter_class | 
+    if FILTER_CLASSES_MAP.to_hash.key?(scope_type)
+      FILTER_CLASSES_MAP[scope_type].each do | filter_class | 
         filter_class_instance = filter_class.new(self, user, Case::Base.none)
-        collected_filters << filter_class_instance if filter_class_instance.is_avaliable?
+        collected_filters << filter_class_instance if filter_class_instance.is_available?
       end
     end
     collected_filters
@@ -199,7 +235,7 @@ class SearchQuery < ApplicationRecord
 
   private
 
-  def perform_filters(user, cases)
+  def perform_filters(cases)
     applied_filters.reduce(cases) do |result, filter_class|
       filter_class.new(self, user, result).call
     end

@@ -1,0 +1,27 @@
+fieldset
+  .grid-row
+    .column-full
+      .js-quick-links
+        span#quick-link-label.bold-small
+           = "Due"
+        ul.quick-link-options
+          - filter.available_choices.each do | _, date_info |
+            li.quick-link-option
+              a { href="#"
+                  id="#{filter.class.date_field_name}"
+                  aria-describeby="quick-link-label"
+                  data-date-from=date_info[:from]
+                  data-date-to=date_info[:to]
+                }
+                = date_info[:name]
+
+  hr
+    .form-group
+      = f.gov_uk_date_field filter.class.date_from_field,
+              { legend_text: t('cases.searches.show.date_from'),
+                      form_hint_text: t('cases.searches.show.date_hint') }
+
+    .form-group
+      = f.gov_uk_date_field filter.class.date_to_field,
+              { legend_text: t('cases.searches.show.date_to'),
+                      form_hint_text: t('cases.searches.show.date_hint') }
