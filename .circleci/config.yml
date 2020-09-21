@@ -245,9 +245,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - setup_remote_docker:
-          docker_layer_caching: true 
-      - *configure_aws_profile 
       - *build_and_push_docker_image
       - slack/notify:
           color: '#42e2f4'
