@@ -179,6 +179,8 @@ references:
         . build.sh circleci
         mkdir -p workspace
         echo $BUILD_TAG > workspace/build_tag
+        echo "export BUILD_TAG=$BUILD_TAG >> $BASH_ENV
+        source $BASH_ENV
 
   deploy_to_dev: &deploy_to_dev
     run:
@@ -234,11 +236,7 @@ jobs:
     resource_class: small
     working_directory: ~/track-a-query
     steps:
-      - slack/notify:
-          color: '#42e2f4'
-          mentions: 'Jav'
-          message: Javid testing Circle CI Slack integration, please ignore me!
-          webhook: ${SLACK_WEBHOOK_TECH}
+      - checkout
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
@@ -251,6 +249,11 @@ jobs:
           docker_layer_caching: true 
       - *configure_aws_profile 
       - *build_and_push_docker_image
+      - slack/notify:
+          color: '#42e2f4'
+          mentions: 'Jav'
+          message: 'A new build was pushed to the Track a Query ECR - ${BUILD_TAG}' 
+          webhook: ${SLACK_WEBHOOK_TECH}
       - persist_to_workspace:
           root: workspace
           paths:
