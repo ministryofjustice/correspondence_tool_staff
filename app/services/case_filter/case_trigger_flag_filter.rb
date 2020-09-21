@@ -5,6 +5,10 @@ module CaseFilter
       def filter_attributes
         [:filter_sensitivity]
       end
+
+      def self.set_params(params)
+        params.permit(filter_sensitivity: [])
+      end  
     end
 
     def get_available_choices

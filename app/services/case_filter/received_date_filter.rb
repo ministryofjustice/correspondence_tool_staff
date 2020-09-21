@@ -1,39 +1,9 @@
 module CaseFilter
-  class ReceivedDateFilter < CaseFilterBase
+  class ReceivedDateFilter < CaseDateRangeFilterBase
 
-    def self.template_name
-      'date_range'
-    end
-    
     def self.date_field_name
       'received_date'
     end
-
-    def self.date_from_field
-      :received_date_from
-    end
-
-    def self.date_to_field
-      :received_date_to
-    end
-
-    def self.filter_attributes
-      [date_from_field, date_to_field]
-    end
-
-    def self.process_params!(params)
-      process_date_param(params, 'received_date_from')
-      process_date_param(params, 'received_date_to')
-    end
-
-    def applied?
-      @query.send(self.class.date_from_field.to_s).present? &&
-        @query.send(self.class.date_to_field.to_s).present?
-    end
-
-    def presented?
-      @query.send(self.class.date_from_field.to_s) && @query.send(self.class.date_to_field.to_s)
-    end 
 
     def available_choices
       {
@@ -56,29 +26,5 @@ module CaseFilter
 
     end
 
-    def call
-      if presented?
-        @records.where(received_date: @query.received_date_from..@query.received_date_to)
-      else
-        @records
-      end
-    end
-
-    def crumbs
-      if presented?
-        crumb_text = I18n.t 'filters.crumbs.received_date',
-                            from_date: I18n.l(@query.send(self.class.date_from_field.to_s)),
-                            to_date: I18n.l(@query.send(self.class.date_to_field.to_s))
-
-        params = {
-          self.class.date_from_field.to_s => '',
-          self.class.date_to_field.to_s   => '',
-          'parent_id'              => @query.id
-        }
-        [[crumb_text, params]]
-      else
-        []
-      end
-    end
   end
 end

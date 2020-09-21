@@ -5,6 +5,10 @@ module CaseFilter
       [:common_exemption_ids, :exemption_ids]
     end
 
+    def self.set_params(params)
+      params.permit(common_exemption_ids: [], exemption_ids: [])
+    end 
+
     def self.process_params!(params)
       process_ids_param(params, 'common_exemption_ids')
       process_ids_param(params, 'exemption_ids')

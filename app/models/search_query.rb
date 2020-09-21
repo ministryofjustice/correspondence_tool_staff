@@ -24,7 +24,6 @@ class SearchQuery < ApplicationRecord
   #   ExternalDeadlineFilter,
   #   ExemptionFilter,
   # ].freeze
-  # CaseFilter::DateRespondedFilter, 
 
   FILTER_CLASSES_MAP = {
     "all_cases" => [
@@ -35,6 +34,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::ExternalDeadlineFilter],
     "closed" => [
       CaseFilter::ReceivedDateFilter, 
+      CaseFilter::DateRespondedFilter, 
       CaseFilter::CaseTypeFilter, 
       CaseFilter::ExemptionFilter],
     "my_cases" => [CaseFilter::OpenCaseStatusFilter],

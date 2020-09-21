@@ -16,6 +16,10 @@ module CaseFilter
       def filter_attributes
         [:filter_case_type]
       end    
+
+      def self.set_params(params)
+        params.permit(filter_case_type: [])
+      end 
     end
 
     def get_available_choices

@@ -5,6 +5,10 @@ module CaseFilter
       [:filter_timeliness]
     end
 
+    def self.set_params(params)
+      params.permit(filter_timeliness: [])
+    end 
+
     def get_available_choices
       {
         :filter_timeliness => {

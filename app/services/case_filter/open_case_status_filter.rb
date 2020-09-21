@@ -5,6 +5,10 @@ module CaseFilter
       [:filter_open_case_status]
     end
 
+    def self.set_params(params)
+      params.permit(filter_open_case_status: [])
+    end 
+
     # def applied?
     #   @query.filter_open_case_status.present?
     # end

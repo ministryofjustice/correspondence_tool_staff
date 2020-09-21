@@ -7,6 +7,10 @@ module CaseFilter
       []
     end
 
+    def self.set_params(params)
+      []
+    end
+
     def self.process_params!(params)
       filter_attributes.each do | filter_attribute |
         process_array_param(params, filter_attribute)
