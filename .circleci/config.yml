@@ -1,4 +1,7 @@
-version: 2
+version: 2.1
+
+orbs:
+  slack: circleci/slack@3.4.2
 
 references:
   defaults: &defaults
@@ -228,21 +231,14 @@ jobs:
 
   build_and_test:
     <<: *test_container_config
-    resource_class: xlarge
+    resource_class: small
     working_directory: ~/track-a-query
     steps:
-      - checkout
-      - *restore_cache
-      - *install_bundler
-      - *check_bundler_version
-      - *install_psql
-      - *install_dependencies
-      - *save_cache
-      - *wait_for_db
-      - *set_up_the_database
-      - *rubocop
-      - *update_chromedriver
-      - *run_unit_and_feature_tests
+      - slack/notify:
+          color: '#42e2f4'
+          mentions: 'Jav'
+          message: Javid testing Circle CI Slack integration, please ignore me!
+          webhook: ${SLACK_WEBHOOK_TECH}
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
