@@ -3,6 +3,10 @@ module CaseFilter
     include FilterParamParsers
     attr_reader :available_choices
 
+    def self.identify
+      raise '#call should be defined in sub-class of CaseFilterBase'
+    end
+
     def self.filter_attributes
       []
     end

@@ -1,6 +1,10 @@
 module CaseFilter
   class ExemptionFilter < CaseMultiChoicesFilterBase
 
+    def self.identify
+      "filter_by_exemption_ids"
+    end
+    
     def self.filter_attributes
       [:common_exemption_ids, :exemption_ids]
     end

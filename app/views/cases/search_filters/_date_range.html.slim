@@ -3,7 +3,7 @@ fieldset
     .column-full
       .js-quick-links
         span#quick-link-label.bold-small
-           = "Due"
+           = t("filters.headings.date_headings.#{filter.class.identify}")
         ul.quick-link-options
           - filter.available_choices.each do | _, date_info |
             li.quick-link-option

@@ -1,6 +1,14 @@
 module CaseFilter
   class CaseMultiChoicesFilterBase < CaseFilterBase
 
+    def self.identify
+      if filter_attributes.empty?
+        raise '#call should be defined in sub-class of CaseFilterBase'
+      else
+        filter_attributes[0]
+      end
+    end
+
     def self.set_params(params)
       allow_params = {}
       filter_attributes.each do | filter_attribute |

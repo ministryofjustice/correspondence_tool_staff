@@ -1,14 +1,18 @@
 module CaseFilter
   class CaseDateRangeFilterBase < CaseFilterBase
 
-    def self.template_name
-      'date_range'
-    end
-    
     def self.date_field_name
       raise '#call should be defined in sub-class of CaseDateRangeFilterBase'
     end
 
+    def self.identify
+      date_field_name
+    end
+    
+    def self.template_name
+      'date_range'
+    end
+    
     def self.date_from_field
       "#{date_field_name}_from".to_sym
     end

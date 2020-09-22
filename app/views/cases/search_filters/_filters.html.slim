@@ -12,7 +12,7 @@
           details
             summary aria-controls="filter-#{}-content" aria-expanded="false" role="button"
               span.case-filters__summary
-                = t("filters.headings.#{filter.class.name.humanize}")
+                = t("filters.headings.#{filter.class.identify}")
             .case-filters__content#filter-status-content aria-hidden="true"
               = render partial: "cases/search_filters/#{filter.class.template_name}", locals: { f: f, filter: filter }
         input.button type="submit" value="Filter"

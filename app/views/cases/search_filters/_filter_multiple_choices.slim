@@ -1,5 +1,5 @@
 .state-filter
   .grid-row
     .column-half
-    - filter.class.filter_attributes.each do | filter_attribute |
-      = f.collection_check_boxes filter_attribute, filter.available_choices[filter_attribute] || [], :first, :second
+      - filter.class.filter_attributes.each do | filter_attribute |
+        = f.collection_check_boxes filter_attribute, filter.available_choices[filter_attribute] || [], :first, :second
