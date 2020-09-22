@@ -6,7 +6,6 @@ module Cases
 
     before_action :set_url, only: [:open, :closed, :my_open]
     before_action :set_state_selector, only: [:open, :my_open]
-    # before_action :set_search_query, only: [:my_open]
 
     def show
       if params[:state_selector].present?
@@ -93,12 +92,6 @@ module Cases
         prepare_open_cases_collection(service)
       end
 
-      # if download_csv_request?
-      #   @cases = unpaginated_cases
-      # else
-      #   @cases = unpaginated_cases.page(params[:page]).decorate
-      # end
-
       @filter_crumbs = @query.filter_crumbs  
       @current_tab_name = 'my_cases'
       @can_add_case = policy(Case::Base).can_add_case?
@@ -139,20 +132,6 @@ module Cases
       end
     end
 
-    # @note (mseedat-moj): Was cases#index but is not currently used
-    # def index
-    #   @cases = CaseFinderService.new(current_user)
-    #     .for_params(request.params)
-    #     .scope
-    #     .page(params[:page])
-    #     .decorate
-    #
-    #   @state_selector = StateSelector.new(params)
-    #   @current_tab_name = 'all_cases'
-    #   @can_add_case = policy(Case::Base).can_add_case?
-    # end
-
-
     private
 
     def call_search_service(full_list_of_cases)
@@ -165,16 +144,6 @@ module Cases
       service.call(full_list_of_cases)
       service
     end
-
-    # def set_search_query
-    #   service = CaseSearchService.new(
-    #     user: current_user,
-    #     query_type: :search,
-    #     query_params: search_params
-    #   )
-    #   service.call
-    #   @query = service.query
-    # end
 
     def set_state_selector
       @state_selector = StateSelector.new(params)

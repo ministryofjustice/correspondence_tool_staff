@@ -1,8 +1,0 @@
-.grid-row
-  .column-half
-    = f.collection_check_boxes :filter_case_type,
-                               @query.available_case_types(current_user),
-                               :first,
-                               :second
-  .column-half
-    = f.collection_check_boxes :filter_sensitivity, @query.available_sensitivities, :first, :second

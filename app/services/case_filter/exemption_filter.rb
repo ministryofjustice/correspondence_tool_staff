@@ -9,10 +9,6 @@ module CaseFilter
       [:common_exemption_ids, :exemption_ids]
     end
 
-    # def self.set_params(params)
-    #   params.permit(common_exemption_ids: [], exemption_ids: [])
-    # end 
-
     def self.filter_fields(filter_fields)
       filter_fields[:common_exemption_ids] = [:integer, array: true, default: []]
       filter_fields[:exemption_ids] = [:integer, array: true, default: []]
