@@ -392,7 +392,7 @@ class Case::Base < ApplicationRecord
   end
 
   def self.permitted_states
-    ConfigurableStateMachine::Manager.instance.permitted_states(case_type=type_abbreviation.downcase.to_sym)
+    ConfigurableStateMachine::Manager.instance.permitted_states(type_abbreviation.downcase.to_sym)
   end 
 
   def self.factory(_type)

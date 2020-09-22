@@ -11,16 +11,16 @@ module CaseFilter
       []
     end
 
-    def self.set_params(params)
-      []
+    def self.set_params(_)
+      raise '#call should be defined in sub-class of CaseFilterBase'
     end
 
     def self.date_fields
       []
     end
 
-    def self.filter_fields(filter_fields)
-      {}
+    def self.filter_fields(_)
+      raise '#call should be defined in sub-class of CaseFilterBase'
     end
 
     def self.process_params!(params)
