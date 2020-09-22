@@ -6,7 +6,6 @@ module CaseFilter
       filter_attributes.each do | filter_attribute |
         allow_params[filter_attribute] = []
       end
-      byebug
       params.permit(**allow_params)
     end
 

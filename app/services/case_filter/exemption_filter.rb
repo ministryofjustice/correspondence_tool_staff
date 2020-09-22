@@ -1,25 +1,31 @@
 module CaseFilter
-  class ExemptionFilter < CaseFilterBase
+  class ExemptionFilter < CaseMultiChoicesFilterBase
 
     def self.filter_attributes
       [:common_exemption_ids, :exemption_ids]
     end
 
-    def self.set_params(params)
-      params.permit(common_exemption_ids: [], exemption_ids: [])
-    end 
+    # def self.set_params(params)
+    #   params.permit(common_exemption_ids: [], exemption_ids: [])
+    # end 
+
+    def self.filter_fields(filter_fields)
+      filter_fields[:common_exemption_ids] = [:integer, array: true, default: []]
+      filter_fields[:exemption_ids] = [:integer, array: true, default: []]
+    end
 
     def self.process_params!(params)
       process_ids_param(params, 'common_exemption_ids')
       process_ids_param(params, 'exemption_ids')
     end
 
-    def initialize(search_query_record, user, records)
+    def initialize(query, user, records)
       super
-      @exemption_ids = search_query_record.exemption_ids
+      @exemption_ids = @query.exemption_ids
+      @exemption_ids += @query.common_exemption_ids || []
     end
 
-    def get_availabe_choices
+    def get_available_choices
       {
         :common_exemption_ids => self.class.available_common_exemptions,
         :exemption_ids => self.class.available_exemptions
@@ -29,10 +35,6 @@ module CaseFilter
     def is_available?
       @user.permitted_correspondence_types.any? { | c_type | ['FOI', 'OVERTURNED_FOI'].include? c_type.abbreviation }
     end
-
-    # def applied?
-    #   @query.exemption_ids.present? || @query.common_exemption_ids.present?
-    # end
 
     def call
       if @exemption_ids.any?
@@ -44,11 +46,19 @@ module CaseFilter
     end
 
     def self.available_common_exemptions
-      CaseClosure::Exemption.most_frequently_used
+      choices = {}
+      CaseClosure::Exemption.most_frequently_used.each do | item |
+        choices[item.id] = item.name
+      end
+      choices
     end
 
     def self.available_exemptions
-      CaseClosure::Metadatum.exemption_ncnd_refusal
+      choices = {}
+      CaseClosure::Metadatum.exemption_ncnd_refusal.each do | item |
+        choices[item.id] = item.name
+      end
+      choices
     end
 
     def crumbs
