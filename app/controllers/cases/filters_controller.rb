@@ -33,10 +33,11 @@ module Cases
       service = call_search_service(unpaginated_cases)
       @query = service.query
 
+      @maximum_records_for_download = 1000
       if service.error?
         flash.now[:alert] = service.error_message
       else
-        if download_csv_request?
+        if download_csv_request? and service.result_set.count < @maximum_records_for_download
           @cases = service.result_set.by_last_transitioned_date
         else
           @cases = service.result_set.by_last_transitioned_date.page(params[:page]).decorate

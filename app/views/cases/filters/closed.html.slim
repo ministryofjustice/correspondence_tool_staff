@@ -23,7 +23,8 @@ section.govuk-tabs__panel
       = @cases.total_count
     = " #{ 'case'.pluralize(@cases.total_count)} found"
   .download-cases-link
-    = link_to 'Download cases', new_stat_path(select: 'CLOSED_CASES')
+    = download_csv_link(request.fullpath,  csv_report=nil, download_link_name=(@cases.total_count > @maximum_records_for_download? 'Download cases (current page)' : nil))
+    | &nbsp;(.csv file)
 
   .grid-row
     .column-full.table-container.container
