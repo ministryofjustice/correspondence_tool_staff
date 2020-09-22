@@ -1,17 +1,9 @@
 module CaseFilter
-  class OpenCaseStatusFilter < CaseFilterBase
+  class OpenCaseStatusFilter < CaseMultiChoicesFilterBase
 
     def self.filter_attributes
       [:filter_open_case_status]
     end
-
-    def self.set_params(params)
-      params.permit(filter_open_case_status: [])
-    end 
-
-    # def applied?
-    #   @query.filter_open_case_status.present?
-    # end
 
     def call
       if @query.filter_open_case_status.any?

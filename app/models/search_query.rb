@@ -16,14 +16,7 @@
 #
 
 class SearchQuery < ApplicationRecord
-  # FILTER_CLASSES = [
-  #   CaseTypeFilter,
-  #   TimelinessFilter,
-  #   CaseStatusFilter,
-  #   OpenCaseStatusFilter,
-  #   ExternalDeadlineFilter,
-  #   ExemptionFilter,
-  # ].freeze
+  include ActiveRecord::Store
 
   FILTER_CLASSES_MAP = {
     "all_cases" => [
@@ -58,40 +51,22 @@ class SearchQuery < ApplicationRecord
       list: 'list'
   }
 
-  jsonb_accessor :query,
-                 search_text: [:string, default: nil],
-                 list_path: [:string, default: nil],
-                 external_deadline_from: :date,
-                 external_deadline_to: :date,
-                 received_date_from: :date,
-                 received_date_to: :date,
-                 date_responded_from: :date,
-                 date_responded_to: :date,
-                 filter_sensitivity: [:string, array: true, default: []],
-                 filter_case_type: [:string, array: true, default: []],
-                 filter_open_case_status: [:string, array: true, default: []],
-                 filter_timeliness: [:string, array: true, default: []],
-                 exemption_ids: [:integer, array: true, default: []],
-                 common_exemption_ids: [:integer, array: true, default: []],
-                 filter_status: [:string, array: true, default: []]
+  # Add all those properties withn query jsonb fields
+  TYPED_FILTER_FIELDS = {search_text: [:string, default: nil], list_path: [:string, default: nil]}
+  FILTER_CLASSES_MAP.to_hash.values.flatten.uniq.each do | filter_class |
+    filter_class.filter_fields(TYPED_FILTER_FIELDS)
+  end
+  jsonb_accessor(:query, **TYPED_FILTER_FIELDS)
 
-  # jsonb_accessor :query,
-  #                search_text: [:string, default: nil],
-  #                list_path: [:string, default: nil],
-  #                external_deadline_from: :date,
-  #                exemption_ids: [:integer, array: true, default: []],
-  #                common_exemption_ids: [:integer, array: true, default: []],
-  #                filter_status: [:string, array: true, default: []]
+  # Define the list of date fields
+  GOV_UK_DATE_FIELDS = CaseFilter::ReceivedDateFilter.date_fields + 
+                      CaseFilter::DateRespondedFilter.date_fields + 
+                      CaseFilter::ExternalDeadlineFilter.date_fields
 
-  acts_as_gov_uk_date :external_deadline_from, :external_deadline_to, 
-                      :received_date_from, :received_date_to, 
-                      :date_responded_from, :date_responded_to
+  acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
+
 
   acts_as_tree
-
-  # after_initialize do
-  #   add_json_fields_from_filter_classes
-  # end
 
   def self.parent_search_query_id(case_search_service)
     if case_search_service.child?
@@ -124,16 +99,6 @@ class SearchQuery < ApplicationRecord
       self.highest_position = position
     end
     save!
-  end
-
-  def add_json_fields_from_filter_classes
-    FILTER_CLASSES_MAP.each do | _, filter_classes |
-      filter_classes.each do | filter_class |
-        filter_class.filter_attributes.each do | filter_attribute |
-          self.instance_eval {store_accessor :query, filter_attribute}
-        end
-      end 
-    end
   end
 
   # Find of create a SearchQuery from the given <tt>query_params</tt>
@@ -172,16 +137,6 @@ class SearchQuery < ApplicationRecord
     end
     search_query
   end
-
-  # delegate :available_sensitivities, to: CaseTypeFilter
-  # delegate :available_case_types, to: CaseTypeFilter
-  # delegate :available_statuses, to: CaseStatusFilter
-  # delegate :available_offender_sar_case_statuses, to: OpenCaseStatusFilter
-  # delegate :available_exemptions, to: ExemptionFilter
-  # delegate :available_common_exemptions, to: ExemptionFilter
-  # delegate :available_deadlines, to: ExternalDeadlineFilter
-  # delegate :available_open_case_statuses, to: OpenCaseStatusFilter
-  # delegate :available_timeliness, to: TimelinessFilter
 
   def results(cases_list = nil)
     if root.query_type == 'search'

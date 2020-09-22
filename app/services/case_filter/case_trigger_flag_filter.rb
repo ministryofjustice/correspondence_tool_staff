@@ -1,14 +1,11 @@
 module CaseFilter
-  class CaseTriggerFlagFilter < CaseFilterBase
+  class CaseTriggerFlagFilter < CaseMultiChoicesFilterBase
 
     class << self
       def filter_attributes
         [:filter_sensitivity]
       end
 
-      def self.set_params(params)
-        params.permit(filter_sensitivity: [])
-      end  
     end
 
     def get_available_choices
@@ -19,10 +16,6 @@ module CaseFilter
         }
       }
     end
-
-    # def applied?
-    #   @query.filter_case_type.present? || @query.filter_sensitivity.present?
-    # end
 
     def is_available?
       @user.permitted_correspondence_types.any? { | c_type | ['FOI'].include? c_type.abbreviation }

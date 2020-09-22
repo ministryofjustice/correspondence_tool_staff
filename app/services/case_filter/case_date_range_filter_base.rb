@@ -28,7 +28,16 @@ module CaseFilter
         "#{date_field_name}_to_mm".to_sym,
         "#{date_field_name}_to_yyyy".to_sym
       )
-    end 
+    end
+    
+    def self.filter_fields(filter_fields)
+      filter_fields["#{date_field_name}_from".to_sym] = :date
+      filter_fields["#{date_field_name}_to".to_sym] = :date
+    end
+
+    def self.date_fields
+      [date_from_field, date_to_field]
+    end
 
     def self.filter_attributes
       [date_from_field, date_to_field]

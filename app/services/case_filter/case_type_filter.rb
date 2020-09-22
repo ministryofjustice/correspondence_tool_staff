@@ -1,5 +1,5 @@
 module CaseFilter
-  class CaseTypeFilter < CaseFilterBase
+  class CaseTypeFilter < CaseMultiChoicesFilterBase
 
     SUB_FILTER_MAP = {
       FOI: ['foi-standard',
@@ -17,9 +17,6 @@ module CaseFilter
         [:filter_case_type]
       end    
 
-      def self.set_params(params)
-        params.permit(filter_case_type: [])
-      end 
     end
 
     def get_available_choices
@@ -35,10 +32,6 @@ module CaseFilter
       end
       { :filter_case_type => types }
     end
-
-    # def applied?
-    #   @query.filter_case_type.present?
-    # end
 
     def call
       records = @records

@@ -1,13 +1,9 @@
 module CaseFilter
-  class TimelinessFilter < CaseFilterBase
+  class TimelinessFilter < CaseMultiChoicesFilterBase
 
     def self.filter_attributes
       [:filter_timeliness]
     end
-
-    def self.set_params(params)
-      params.permit(filter_timeliness: [])
-    end 
 
     def get_available_choices
       {
@@ -18,10 +14,6 @@ module CaseFilter
       }
       
     end
-
-    # def applied?
-    #   @query.filter_timeliness.present?
-    # end
 
     def call
       filter_timeliness(@records)

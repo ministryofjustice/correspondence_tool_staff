@@ -11,6 +11,14 @@ module CaseFilter
       []
     end
 
+    def self.date_fields
+      []
+    end
+
+    def self.filter_fields(filter_fields)
+      {}
+    end
+
     def self.process_params!(params)
       filter_attributes.each do | filter_attribute |
         process_array_param(params, filter_attribute)
@@ -18,7 +26,7 @@ module CaseFilter
     end
 
     def self.template_name
-      return 'filter_multiple_choices'
+      raise '#call should be defined in sub-class of CaseFilterBase'
     end
 
     def initialize(query, user, records)
