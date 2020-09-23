@@ -94,7 +94,7 @@ group :development, :test do
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
-  gem 'parallel_tests', '~> 3.0'
+  gem 'parallel_tests', '~> 3.3'
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
