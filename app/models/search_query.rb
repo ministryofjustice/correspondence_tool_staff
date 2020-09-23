@@ -33,7 +33,10 @@ class SearchQuery < ApplicationRecord
     "my_cases" => [CaseFilter::OpenCaseStatusFilter],
     "search_cases" => [
       CaseFilter::CaseStatusFilter, 
+      CaseFilter::OpenCaseStatusFilter,
       CaseFilter::CaseTypeFilter, 
+      CaseFilter::TimelinessFilter,
+      CaseFilter::ExternalDeadlineFilter,
       CaseFilter::ExemptionFilter]
   }.freeze
 
