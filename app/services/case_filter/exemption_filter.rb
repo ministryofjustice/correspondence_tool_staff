@@ -23,6 +23,7 @@ module CaseFilter
       super
       @exemption_ids = @query.exemption_ids
       @exemption_ids += @query.common_exemption_ids || []
+      @exemption_ids = @exemption_ids.uniq
     end
 
     def get_available_choices
