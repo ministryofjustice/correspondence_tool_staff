@@ -970,9 +970,9 @@ en:
     searches:
       show:
         heading: Search
-        external_deadline_from: From
-        external_deadline_to: To
-        external_deadline_hint: For example. 31 01 2017
+        date_from: From
+        date_to: To
+        date_hint: For example. 31 01 2017
     offender_sar:
       subject_heading: Who is the subject?
       requester_heading: Who is making the subject access request?
