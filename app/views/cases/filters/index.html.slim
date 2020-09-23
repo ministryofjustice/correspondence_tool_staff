@@ -23,9 +23,6 @@ section.govuk-tabs__panel
                locals: { query: @query,
                          clear_params: {} }
 
-  / - if request.path.include? '/cases/my_open'
-  /   = render partial: 'state_filter_form' unless request.path == '/cases/my_open'
-
   - if @global_nav_manager.current_page.tabs.present?
     .grid-row
       .column-full

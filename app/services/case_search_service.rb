@@ -43,6 +43,7 @@ class CaseSearchService
   def setup_search_query
     if query_params.blank?
       @query = SearchQuery.new
+      @query.user_id = @current_user.id
     else
       @query = SearchQuery.find_or_create(@query_params.merge(
           user_id: @current_user.id,
