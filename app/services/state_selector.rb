@@ -1,13 +1,11 @@
 class StateSelector
   extend ActiveModel::Naming
   include ActiveModel::Model
-  # include ActiveModel::Conversion
 
   attr_accessor :selected_states
-  # attr_reader   :available_states
 
   def initialize(params)
-    # @available_states = ConfigurableStateMachine::Machine.states.map(&:to_sym) - [:closed]
+    @available_states = ConfigurableStateMachine::Machine.states.map(&:to_sym)
     @selected_states = []
     if params[:state_selector]
       set_states_from_form_input(params)
@@ -17,12 +15,11 @@ class StateSelector
   end
 
   def method_missing(meth, *params)
-    super unless meth.in?(@selected_states)
-    # if meth.in?(@available_states)
-    #   meth.in?(@selected_states)
-    # else
-    #   super
-    # end
+    if meth.in?(@available_states)
+      meth.in?(@selected_states)
+    else
+      super
+    end
   end
 
   def states_for_url
