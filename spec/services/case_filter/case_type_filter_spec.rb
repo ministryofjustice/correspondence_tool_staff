@@ -17,6 +17,7 @@ describe CaseFilter::CaseTypeFilter do
                                  :ot_ico_foi_noff_unassigned,
                                  :ot_ico_sar_noff_unassigned,
                                ])
+    @offender_sar = create :offender_sar_case
   end
 
   after(:all) { DbHousekeeping.clean }
@@ -50,13 +51,6 @@ describe CaseFilter::CaseTypeFilter do
     end
   end
 
-  # describe '.available_sensitivities' do
-  #   subject { described_class.available_sensitivities }
-
-  #   it { should include 'non-trigger' => 'Non-trigger' }
-  #   it { should include 'trigger' => 'Trigger' }
-  # end
-
   describe '#applied?' do
     subject { case_type_filter }
 
@@ -71,132 +65,103 @@ describe CaseFilter::CaseTypeFilter do
       it { should be_applied }
     end
 
-    # context 'filter_sensitivity present' do
-    #   let(:search_query)      { create :search_query,
-    #                                    filter_sensitivity: ['trigger'] }
-    #   it { should be_applied }
-    # end
   end
 
-  # describe '#call' do
-  #   describe 'filtering for trigger cases' do
-  #     let(:search_query)      { create :search_query,
-  #                                      filter_sensitivity: ['trigger'] }
+  describe '#call' do
 
-  #     it 'returns the correct list of cases' do
-  #       results = case_type_filter.call
-  #       expect(results).to match_array [
-  #                            @setup.trig_unassigned_foi,
-  #                            @setup.ico_foi_unassigned,
-  #                            @setup.ico_sar_unassigned,
-  #                            @setup.ot_ico_foi_noff_unassigned.original_ico_appeal,
-  #                            @setup.ot_ico_sar_noff_unassigned.original_ico_appeal,
-  #                          ]
-  #     end
-  #   end
+    describe 'filtering for standard FOI cases' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['foi-standard'] }
 
-  #   describe 'filtering for non-trigger cases' do
-  #     let(:search_query)      { create :search_query,
-  #                                      filter_sensitivity: ['non-trigger'] }
+      it 'returns the correct list of cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @setup.trig_unassigned_foi,
+                             @setup.std_unassigned_foi,
+                             @setup.ico_foi_unassigned.original_case,
+                             @setup.ot_ico_foi_noff_unassigned.original_case,
+                           ]
+      end
+    end
 
-  #     it 'returns the correct list of cases' do
-  #       results = case_type_filter.call
-  #       expect(results).to match_array [
-  #                            @setup.sar_noff_unassigned,
-  #                            @setup.std_unassigned_foi,
-  #                            @setup.std_unassigned_irc,
-  #                            @setup.std_unassigned_irt,
-  #                            @setup.ico_foi_unassigned.original_case,
-  #                            @setup.ico_sar_unassigned.original_case,
-  #                            @setup.ot_ico_sar_noff_unassigned,
-  #                            @setup.ot_ico_foi_noff_unassigned,
-  #                            @setup.ot_ico_sar_noff_unassigned.original_case,
-  #                            @setup.ot_ico_foi_noff_unassigned.original_case,
-  #                          ]
-  #     end
-  #   end
+    describe 'filtering for internal review of FOI cases for compliance' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['foi-ir-compliance'] }
 
-  #   describe 'filtering for standard FOI cases' do
-  #     let(:search_query)      { create :search_query,
-  #                                      filter_case_type: ['foi-standard'] }
+      it 'returns the correct list of cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @setup.std_unassigned_irc,
+                           ]
+      end
+    end
 
-  #     it 'returns the correct list of cases' do
-  #       results = case_type_filter.call
-  #       expect(results).to match_array [
-  #                            @setup.trig_unassigned_foi,
-  #                            @setup.std_unassigned_foi,
-  #                            @setup.ico_foi_unassigned.original_case,
-  #                            @setup.ot_ico_foi_noff_unassigned.original_case,
-  #                          ]
-  #     end
-  #   end
+    describe 'filtering for internal review of FOI cases for timeliness' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['foi-ir-timeliness'] }
 
-  #   describe 'filtering for internal review of FOI cases for compliance' do
-  #     let(:search_query)      { create :search_query,
-  #                                      filter_case_type: ['foi-ir-compliance'] }
+      it 'returns the correct list of cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @setup.std_unassigned_irt,
+                           ]
+      end
+    end
 
-  #     it 'returns the correct list of cases' do
-  #       results = case_type_filter.call
-  #       expect(results).to match_array [
-  #                            @setup.std_unassigned_irc,
-  #                          ]
-  #     end
-  #   end
+    describe 'filtering for SAR cases' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['sar-non-offender'] }
 
-  #   describe 'filtering for internal review of FOI cases for timeliness' do
-  #     let(:search_query)      { create :search_query,
-  #                                      filter_case_type: ['foi-ir-timeliness'] }
+      it 'returns the correct list of cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @setup.sar_noff_unassigned,
+                             @setup.ico_sar_unassigned.original_case,
+                             @setup.ot_ico_sar_noff_unassigned.original_case,
+                           ]
+      end
+    end
 
-  #     it 'returns the correct list of cases' do
-  #       results = case_type_filter.call
-  #       expect(results).to match_array [
-  #                            @setup.std_unassigned_irt,
-  #                          ]
-  #     end
-  #   end
+    describe 'filtering for ICO cases' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['ico-appeal']}
 
-  #   describe 'filtering for SAR cases' do
-  #     let(:search_query)      { create :search_query,
-  #                                      filter_case_type: ['sar-non-offender'] }
+      it 'returns ICO FOI and ICO SAR cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @setup.ico_foi_unassigned,
+                             @setup.ico_sar_unassigned,
+                             @setup.ot_ico_foi_noff_unassigned.original_ico_appeal,
+                             @setup.ot_ico_sar_noff_unassigned.original_ico_appeal,
+                           ]
+      end
+    end
 
-  #     it 'returns the correct list of cases' do
-  #       results = case_type_filter.call
-  #       expect(results).to match_array [
-  #                            @setup.sar_noff_unassigned,
-  #                            @setup.ico_sar_unassigned.original_case,
-  #                            @setup.ot_ico_sar_noff_unassigned.original_case,
-  #                          ]
-  #     end
-  #   end
+    describe 'filtering for Overturned ICO cases' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['overturned-ico']}
 
-  #   describe 'filtering for ICO cases' do
-  #     let(:search_query)      { create :search_query,
-  #                                      filter_case_type: ['ico-appeal']}
+      it 'returns Overturned FOI and Overturned SAR cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @setup.ot_ico_foi_noff_unassigned,
+                             @setup.ot_ico_sar_noff_unassigned,
+                           ]
+      end
+    end
 
-  #     it 'returns ICO FOI and ICO SAR cases' do
-  #       results = case_type_filter.call
-  #       expect(results).to match_array [
-  #                            @setup.ico_foi_unassigned,
-  #                            @setup.ico_sar_unassigned,
-  #                            @setup.ot_ico_foi_noff_unassigned.original_ico_appeal,
-  #                            @setup.ot_ico_sar_noff_unassigned.original_ico_appeal,
-  #                          ]
-  #     end
-  #   end
+    describe 'filtering for Offender SAR cases' do
+      let(:search_query)      { create :search_query,
+                                       filter_case_type: ['offender-sar']}
 
-  #   describe 'filtering for Overturned ICO cases' do
-  #     let(:search_query)      { create :search_query,
-  #                                      filter_case_type: ['overturned-ico']}
-
-  #     it 'returns Overturned FOI and Overturned SAR cases' do
-  #       results = case_type_filter.call
-  #       expect(results).to match_array [
-  #                            @setup.ot_ico_foi_noff_unassigned,
-  #                            @setup.ot_ico_sar_noff_unassigned,
-  #                          ]
-  #     end
-  #   end
-  # end
+      it 'returns Overturned FOI and Overturned SAR cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @offender_sar
+                           ]
+      end
+    end
+  end
 
   describe '#crumbs' do
     context 'no filters selected' do
@@ -209,34 +174,8 @@ describe CaseFilter::CaseTypeFilter do
       end
     end
 
-    context 'filtering for trigger cases' do
-      # let(:search_query)      { create :search_query,
-      #                                  filter_sensitivity: ['trigger'] }
-
-      # it 'returns 1 crumb' do
-      #   expect(case_type_filter.crumbs).to have(1).item
-      # end
-
-      # it 'uses "Trigger" for the crumb text' do
-      #   expect(case_type_filter.crumbs[0].first).to eq 'Trigger'
-      # end
-
-      # describe 'params that will be submitted when clicking on the crumb' do
-      #   subject { case_type_filter.crumbs[0].second }
-
-      #   it { should eq 'filter_sensitivity' => [''],
-      #                  'parent_id'          => search_query.id }
-      # end
-
-      # context 'filtering for non-trigger cases' do
-      #   let(:search_query)      { create :search_query,
-      #                                    filter_sensitivity: ['non-trigger'] }
-
-      #   it 'uses "Trigger" for the crumb text' do
-      #     expect(case_type_filter.crumbs[0].first).to eq 'Non-trigger'
-      #   end
-      # end
-
+    context 'filtering for cases based on type' do
+ 
       context 'filtering for standard FOI cases' do
         let(:search_query)      { create :search_query,
                                          filter_case_type: ['foi-standard'] }
@@ -275,23 +214,6 @@ describe CaseFilter::CaseTypeFilter do
         end
       end
 
-      # context 'filtering for Trigger and FOI Standard cases' do
-      #   let(:search_query)      { create :search_query,
-      #                                    filter_sensitivity: ['trigger'],
-      #                                    filter_case_type: ['foi-standard'] }
-
-      #   it 'returns 2 crumbs' do
-      #     expect(case_type_filter.crumbs).to have(2).items
-      #   end
-
-      #   it 'returns a crumb for the FOI Standard filter' do
-      #     expect(case_type_filter.crumbs[0].first).to eq 'FOI - Standard'
-      #   end
-
-      #   it 'returns a crumb for the Trigger filter' do
-      #     expect(case_type_filter.crumbs[1].first).to eq 'Trigger'
-      #   end
-      # end
     end
   end
 
@@ -311,17 +233,5 @@ describe CaseFilter::CaseTypeFilter do
                            ]
     end
 
-    # it 'processes filter_sensitivity, sorting and removing blanks' do
-    #   params = { filter_sensitivity: [
-    #                '',
-    #                'trigger',
-    #                'non-trigger',
-    #              ] }
-    #   described_class.process_params!(params)
-    #   expect(params).to eq filter_sensitivity: [
-    #                       'non-trigger',
-    #                       'trigger',
-    #                     ]
-    # end
   end
 end
