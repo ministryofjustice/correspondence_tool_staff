@@ -15,7 +15,7 @@ en:
       exemptions:
         <<: *list_filter_type
       external_deadline: "Deadline %{from_date} - %{to_date}"
-      received_date: "Received Date %{from_date} - %{to_date}"
+      received_date: "Received date %{from_date} - %{to_date}"
       date_responded: "Date responded %{from_date} - %{to_date}"
       case_type:
         <<: *list_filter_type
