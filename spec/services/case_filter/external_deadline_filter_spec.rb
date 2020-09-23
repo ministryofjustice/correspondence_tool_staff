@@ -1,6 +1,8 @@
 require 'rails_helper'
 
-describe ExternalDeadlineFilter do
+describe CaseFilter::ExternalDeadlineFilter do
+
+  let(:user)               { find_or_create :disclosure_specialist_bmt }
 
   before(:all) do
     Timecop.freeze(Time.new(2018, 4, 26,14, 57, 0)) do
@@ -15,7 +17,7 @@ describe ExternalDeadlineFilter do
   describe '#applied?' do
     subject { filter }
 
-    let(:filter)  { ExternalDeadlineFilter.new(search_query, Case::Base.all) }
+    let(:filter)  { described_class.new(search_query, :user, Case::Base.all) }
 
     context 'no external_deadline present' do
       let(:search_query)      { create :search_query }
@@ -44,7 +46,7 @@ describe ExternalDeadlineFilter do
 
   describe '#call' do
     let(:arel)    { Case::Base.all }
-    let(:filter)  { ExternalDeadlineFilter.new(search_query, arel) }
+    let(:filter)  { described_class.new(search_query, :user, arel) }
 
     context 'no cases with deadline in date range' do
       let(:search_query) { create :search_query,
@@ -77,7 +79,7 @@ describe ExternalDeadlineFilter do
 
   describe '#crumbs' do
     let(:arel)          { Case::Base.all }
-    let(:filter)        { described_class.new(search_query, arel) }
+    let(:filter)        { described_class.new(search_query, user, arel) }
 
     context 'no deadline from or to selected' do
       let(:search_query)  { create :search_query,
@@ -99,7 +101,7 @@ describe ExternalDeadlineFilter do
       end
 
       it 'uses the from and to dates in the crumb text' do
-        expect(filter.crumbs[0].first).to eq '4 Dec 2017 - 25 Dec 2017'
+        expect(filter.crumbs[0].first).to eq 'Deadline 4 Dec 2017 - 25 Dec 2017'
       end
 
       describe 'params that will be submitted when clicking on the crumb' do

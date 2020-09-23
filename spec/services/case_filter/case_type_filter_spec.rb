@@ -1,6 +1,9 @@
 require "rails_helper"
 
-describe CaseTypeFilter do
+describe CaseFilter::CaseTypeFilter do
+
+  let(:user)               { find_or_create :disclosure_specialist_bmt }
+
   before :all do
     DbHousekeeping.clean
     @setup = StandardSetup.new(only_cases: [
@@ -18,12 +21,11 @@ describe CaseTypeFilter do
 
   after(:all) { DbHousekeeping.clean }
 
-  let(:case_type_filter)  { CaseTypeFilter.new search_query,
-                                               Case::Base }
+  let(:case_type_filter)  { described_class.new search_query, user, Case::Base }
 
   describe '.available_case_types' do
     let(:user) { find_or_create :disclosure_bmt_user }
-    subject    { CaseTypeFilter.available_case_types(user) }
+    subject    { described_class.available_case_types(user) }
 
     it { should include 'foi-standard'      => 'FOI - Standard' }
     it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
@@ -36,7 +38,7 @@ describe CaseTypeFilter do
       let(:foi)             { find_or_create(:foi_correspondence_type) }
       let(:responding_team) { create(:business_unit, correspondence_types: [foi]) }
       let(:user)            { create(:user, responding_teams: [responding_team]) }
-      subject    { CaseTypeFilter.available_case_types(user) }
+      subject    { described_class.available_case_types(user) }
 
       it { should include 'foi-standard' => 'FOI - Standard' }
       it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
@@ -48,7 +50,7 @@ describe CaseTypeFilter do
   end
 
   describe '.available_sensitivities' do
-    subject { CaseTypeFilter.available_sensitivities }
+    subject { described_class.available_sensitivities }
 
     it { should include 'non-trigger' => 'Non-trigger' }
     it { should include 'trigger' => 'Trigger' }
@@ -300,7 +302,7 @@ describe CaseTypeFilter do
                    'foi-ir-compliance',
                    'foi-ir-timeliness',
                  ] }
-      CaseTypeFilter.process_params!(params)
+      described_class.process_params!(params)
       expect(params).to eq filter_case_type: [
                              'foi-ir-compliance',
                              'foi-ir-timeliness',
@@ -314,7 +316,7 @@ describe CaseTypeFilter do
                    'trigger',
                    'non-trigger',
                  ] }
-      CaseTypeFilter.process_params!(params)
+      described_class.process_params!(params)
       expect(params).to eq filter_sensitivity: [
                           'non-trigger',
                           'trigger',
