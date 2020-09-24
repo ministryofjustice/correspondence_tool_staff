@@ -97,8 +97,8 @@ describe DeadlineCalculator::CalendarDays do
     it 'start date later than end day' do
       thu_may_18 = Time.utc(2017, 5, 18, 12, 0, 0)
       tue_may_23 = Time.utc(2017, 5, 23, 12, 0, 0)
-      expect(deadline_calculator.class.days_taken(tue_may_23.to_date, thu_may_18.to_date))
-        .to eq -4
+      expect(-deadline_calculator.class.days_taken(tue_may_23.to_date, thu_may_18.to_date))
+        .to eq 4
     end
   end
 
@@ -119,8 +119,8 @@ describe DeadlineCalculator::CalendarDays do
     it 'start date later than end day' do
       thu_may_18 = Time.utc(2017, 5, 18, 12, 0, 0)
       tue_may_23 = Time.utc(2017, 5, 23, 12, 0, 0)
-      expect(deadline_calculator.class.days_late(tue_may_23.to_date, thu_may_18.to_date))
-        .to eq -5
+      expect(-deadline_calculator.class.days_late(tue_may_23.to_date, thu_may_18.to_date))
+        .to eq 5
     end
   end
 
