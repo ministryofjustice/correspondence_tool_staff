@@ -6,7 +6,7 @@ module CaseFilter
         if filter_attributes.empty?
           raise '#dentify should be defined in sub-class of CaseMultiChoicesFilterBase'
         else
-          filter_attributes[0]
+          filter_attributes[0].to_s
         end
       end
 
