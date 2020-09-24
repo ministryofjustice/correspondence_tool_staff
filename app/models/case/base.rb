@@ -612,7 +612,7 @@ class Case::Base < ApplicationRecord
   end
 
   def num_days_late
-    days = calculate_business_days(external_deadline, (date_responded.nil? ? Date.today : date_responded))
+    days = calculate_business_days(external_deadline, (date_responded.nil? ? Date.today : date_responded), false)
     days > 0 ? days : nil
   end
 
@@ -958,14 +958,8 @@ class Case::Base < ApplicationRecord
     end
   end
 
-  private 
-
-  def calculate_business_days(start_date, end_date)
-    if start_date == end_date
-      0
-    else
-      start_date.business_days_until(end_date, true) 
-    end
+  def calculate_business_days(start_date, end_date, included=true)
+    start_date.business_days_until(end_date, included) 
   end
 
 end

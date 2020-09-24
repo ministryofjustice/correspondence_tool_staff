@@ -1506,7 +1506,7 @@ RSpec.describe Case::Base, type: :model do
     it 'returns correct number of days late for open case' do
       Timecop.freeze(Date.new(2020, 9, 11)) do
         kase.external_deadline = Date.new(2020, 9, 4)
-        expect(kase.num_days_late).to eq 6
+        expect(kase.num_days_late).to eq 5
       end
     end
 
@@ -1514,7 +1514,7 @@ RSpec.describe Case::Base, type: :model do
       Timecop.freeze(Date.new(2020, 9, 11)) do
         closed_kase.external_deadline = Date.new(2020, 9, 1)
         closed_kase.date_responded = Date.new(2020, 9, 10)
-        expect(closed_kase.num_days_late).to eq 8
+        expect(closed_kase.num_days_late).to eq 7
       end
     end
   end
@@ -1523,10 +1523,10 @@ RSpec.describe Case::Base, type: :model do
     let(:closed_kase) { create :closed_case }
     let(:kase)  { create :case }
 
-    it 'is nil when case is received today' do
+    it 'is 1 when case is received today' do
       Timecop.freeze(Date.new(2020, 9, 11)) do
         kase.received_date = Date.new(2020, 9, 11)
-        expect(kase.num_days_taken).to be nil
+        expect(kase.num_days_taken).to be 1
       end 
     end
 
