@@ -753,7 +753,8 @@ describe Case::SAR::Offender do
   end
   
   describe '#num_days_late' do
-    let(:closed_kase) { create :closed_case }
+  let(:kase)  { create :offender_sar_case }
+  let(:closed_kase) { create :offender_sar_case, :closed}
 
     it 'is nil when 0 days late' do
       kase.external_deadline = Date.today

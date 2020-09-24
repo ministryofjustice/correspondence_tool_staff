@@ -1520,27 +1520,24 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe '#num_days_taken' do
-    let(:closed_kase) { create :closed_case }
-    let(:kase)  { create :case }
 
     it 'is 1 when case is received today' do
       Timecop.freeze(Date.new(2020, 9, 11)) do
-        kase.received_date = Date.new(2020, 9, 11)
+        kase = build :case, received_date: Date.new(2020, 9, 11)
         expect(kase.num_days_taken).to be 1
       end 
     end
 
     it 'returns correct number of days for open case' do
       Timecop.freeze(Date.new(2020, 9, 15)) do
-        kase.received_date = Date.new(2020, 9, 11)
+        kase = build :case, received_date: Date.new(2020, 9, 11)
         expect(kase.num_days_taken).to be 3
       end 
     end
 
     it 'returns correct number of days late for closed case' do
       Timecop.freeze(Date.new(2020, 9, 15)) do
-        closed_kase.received_date = Date.new(2020, 9, 4)
-        closed_kase.date_responded = Date.new(2020, 9, 11)
+        closed_kase = build :closed_case, received_date: Date.new(2020, 9, 4), date_responded: Date.new(2020, 9, 11)
         expect(closed_kase.num_days_taken).to eq 6
       end
     end
