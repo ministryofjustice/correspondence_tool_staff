@@ -251,7 +251,7 @@ describe CSVExporter do
           'Draft in time' => nil,
           'In target' => 'Yes',
           'Number of days late' => nil,
-          'Number of days taken' => 19,
+          'Number of days taken' => 25,
         })
       end
     end
