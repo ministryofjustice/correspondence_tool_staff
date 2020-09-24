@@ -119,7 +119,7 @@ feature 'filtering by external deadline', if: working_hours do
       expect(page.filter_external_deadline_content.from_date).to eq from_date
       expect(page.filter_external_deadline_content.to_date).to eq to_date
 
-      from_to_date_text = "#{I18n.l from_date} - #{I18n.l to_date}"
+      from_to_date_text = "Deadline #{I18n.l from_date} - #{I18n.l to_date}"
       page.filter_crumb_for(from_to_date_text).click
 
       expect(page.case_numbers).to match_array case_numbers
@@ -144,7 +144,7 @@ feature 'filtering by external deadline', if: working_hours do
       expect(page.filter_external_deadline_content.from_date).to eq from_date
       expect(page.filter_external_deadline_content.to_date).to eq to_date
 
-      from_to_date_text = "#{I18n.l from_date} - #{I18n.l to_date}"
+      from_to_date_text = "Deadline #{I18n.l from_date} - #{I18n.l to_date}"
       page.filter_crumb_for(from_to_date_text).click
 
       expect(page.case_numbers).to match_array case_numbers
@@ -170,7 +170,7 @@ feature 'filtering by external deadline', if: working_hours do
       expect(page.filter_external_deadline_content.from_date).to eq from_date
       expect(page.filter_external_deadline_content.to_date).to eq to_date
 
-      from_to_date_text = "#{I18n.l from_date} - #{I18n.l to_date}"
+      from_to_date_text = "Deadline #{I18n.l from_date} - #{I18n.l to_date}"
       page.filter_crumb_for(from_to_date_text).click
 
       expect(page.case_numbers).to match_array case_numbers
@@ -194,7 +194,7 @@ feature 'filtering by external deadline', if: working_hours do
       expect(page.filter_external_deadline_content.from_date).to eq from_date
       expect(page.filter_external_deadline_content.to_date).to eq to_date
 
-      from_to_date_text = "#{I18n.l from_date} - #{I18n.l to_date}"
+      from_to_date_text = "Deadline #{I18n.l from_date} - #{I18n.l to_date}"
       page.filter_crumb_for(from_to_date_text).click
 
       expect(page.case_numbers).to match_array case_numbers

@@ -1,6 +1,6 @@
 en:
   filters:
-    case_types:
+    filter_case_type:
       foi-standard: 'FOI - Standard'
       foi-ir-compliance: 'FOI - Internal review for compliance'
       foi-ir-timeliness: 'FOI - Internal review for timeliness'
@@ -17,15 +17,15 @@ en:
       external_deadline: "Deadline %{from_date} - %{to_date}"
       received_date: "Received date %{from_date} - %{to_date}"
       date_responded: "Date responded %{from_date} - %{to_date}"
-      case_type:
+      filter_case_type:
         <<: *list_filter_type
-      open_case_status:
+      filter_open_case_status:
         <<: *list_filter_type
-      sensitivity:
+      filter_sensitivity:
         <<: *list_filter_type
-      status:
+      filter_status:
         <<: *list_filter_type
-      timeliness:
+      filter_timeliness:
         <<: *list_filter_type
     headings:
       filter_cases: Filter cases
@@ -41,7 +41,7 @@ en:
         filter_received_date: 'Received between'
         filter_date_responded: 'Responded between'
         filter_external_deadline: 'Due'
-    open_case_statuses:
+    filter_open_case_status:
       unassigned: 'Needs reassigning'
       awaiting_responder: 'To be accepted'
       drafting: 'Draft in progress'
@@ -60,12 +60,12 @@ en:
       ready_to_dispatch: Ready to dispatch
       closed: Case closed
       destroyed: Case destroyed
-    sensitivities:
+    filter_sensitivity:
       non-trigger: 'Non-trigger'
       trigger: 'Trigger'
-    statuses:
+    filter_status:
       open: 'Open'
       closed: 'Closed'
-    timeliness:
+    filter_timeliness:
       in_time: 'In time'
       late: 'Late'

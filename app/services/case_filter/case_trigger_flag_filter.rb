@@ -8,8 +8,8 @@ module CaseFilter
     def available_choices
       {
         :filter_sensitivity => {
-          'non-trigger' => I18n.t('filters.sensitivities.non-trigger'),
-          'trigger'     => I18n.t('filters.sensitivities.trigger')
+          'non-trigger' => I18n.t('filters.filter_sensitivity.non-trigger'),
+          'trigger'     => I18n.t('filters.filter_sensitivity.trigger')
         }
       }
     end
@@ -22,25 +22,6 @@ module CaseFilter
       records = @records
       records = filter_sensitivity(records)
       records
-    end
-
-    def crumbs
-      our_crumbs = []
-      if applied?
-        sensitivity_text = I18n.t(
-          "filters.sensitivities.#{@query.filter_sensitivity.first}"
-        )
-        crumb_text = I18n.t "filters.crumbs.sensitivity",
-                            count: @query.filter_sensitivity.size,
-                            first_value: sensitivity_text,
-                            remaining_values_count: @query.filter_sensitivity.count - 1
-        params = {
-          'filter_sensitivity' => [''],
-          'parent_id'          => @query.id,
-        }
-        our_crumbs << [crumb_text, params]
-      end
-      our_crumbs
     end
 
     private

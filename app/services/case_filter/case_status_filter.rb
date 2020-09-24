@@ -8,32 +8,13 @@ module CaseFilter
     def available_choices
       {
         :filter_status => 
-          {'open'   => I18n.t('filters.statuses.open'),
-          'closed' => I18n.t('filters.statuses.closed')}
+          {'open'   => I18n.t('filters.filter_status.open'),
+          'closed' => I18n.t('filters.filter_status.closed')}
       }
     end
 
     def call
       filter_status(@records)
-    end
-
-    def crumbs
-      if applied?
-        status_text = I18n.t(
-          "filters.statuses.#{@query.filter_status.first}"
-        )
-        crumb_text = I18n.t "filters.crumbs.status",
-                            count: @query.filter_status.size,
-                            first_value: status_text,
-                            remaining_values_count: @query.filter_status.count - 1
-        params = {
-          'filter_status' => [''],
-          'parent_id'     => @query.id
-        }
-        [[crumb_text, params]]
-      else
-        []
-      end
     end
 
     private

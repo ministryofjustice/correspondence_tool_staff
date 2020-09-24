@@ -12,25 +12,6 @@ module CaseFilter
       @records
     end
 
-    def crumbs
-      if applied?
-        status_text = I18n.t(
-          "filters.open_case_statuses.#{@query.filter_open_case_status.first}"
-        )
-        crumb_text = I18n.t "filters.crumbs.open_case_status",
-                            count: @query.filter_open_case_status.size,
-                            first_value: status_text,
-                            remaining_values_count: @query.filter_open_case_status.count - 1
-        params = {
-          'filter_open_case_status' => [''],
-          'parent_id'               => @query.id
-        }
-        [[crumb_text, params]]
-      else
-        []
-      end
-    end
-
     def available_choices
       collected_states = []
       @user.permitted_correspondence_types.each do | correspondence_type |
@@ -40,7 +21,7 @@ module CaseFilter
       end 
       state_choices = {}
       (collected_states.uniq - ConfigurableStateMachine::Machine.states_for_closed_cases).each do | state |
-        state_choices[state] = I18n.t("filters.open_case_statuses.#{state}")
+        state_choices[state] = I18n.t("filters.filter_open_case_status.#{state}")
       end
       { :filter_open_case_status => state_choices }
     end

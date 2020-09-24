@@ -29,5 +29,24 @@ module CaseFilter
       end
     end
 
+    def crumbs
+      our_crumbs = []
+      if applied?
+        summary_text = I18n.t(
+          "filters.#{self.class.identify}.#{@query.send(self.class.identify).first}"
+        )
+        crumb_text = I18n.t "filters.crumbs.#{self.class.identify}",
+                            count: @query.send(self.class.identify).size,
+                            first_value: summary_text,
+                            remaining_values_count: @query.send(self.class.identify).count - 1
+        params = {
+          self.class.identify  => [''],
+          'parent_id'          => @query.id,
+        }
+        our_crumbs << [crumb_text, params]
+      end
+      our_crumbs
+    end
+
   end
 end

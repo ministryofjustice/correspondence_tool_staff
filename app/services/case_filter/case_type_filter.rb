@@ -23,7 +23,7 @@ module CaseFilter
       user_types.each do | user_type |
         (SUB_FILTER_MAP[user_type] || []).each do | sub_filter |
           types.merge!(
-            sub_filter => I18n.t("filters.case_types.#{sub_filter}"),
+            sub_filter => I18n.t("filters.filter_case_type.#{sub_filter}"),
           )
         end
       end
@@ -36,25 +36,6 @@ module CaseFilter
       records = filter_case_type(records)
 
       records
-    end
-
-    def crumbs
-      our_crumbs = []
-      if applied?
-        case_type_text = I18n.t(
-          "filters.case_types.#{@query.filter_case_type.first}"
-        )
-        crumb_text = I18n.t "filters.crumbs.case_type",
-                            count: @query.filter_case_type.size,
-                            first_value: case_type_text,
-                            remaining_values_count: @query.filter_case_type.count - 1
-        params = {
-          'filter_case_type' => [''],
-          'parent_id'        => @query.id
-        }
-        our_crumbs << [crumb_text, params]
-      end
-      our_crumbs
     end
 
     private
