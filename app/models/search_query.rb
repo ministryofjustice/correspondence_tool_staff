@@ -35,6 +35,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseStatusFilter, 
       CaseFilter::OpenCaseStatusFilter,
       CaseFilter::CaseTypeFilter, 
+      CaseFilter::CaseTriggerFlagFilter,
       CaseFilter::TimelinessFilter,
       CaseFilter::ExternalDeadlineFilter,
       CaseFilter::ExemptionFilter]

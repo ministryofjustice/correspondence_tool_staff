@@ -6,7 +6,7 @@ module CaseFilter
     end
 
     def self.identify
-      date_field_name
+      "filter_#{date_field_name}"
     end
     
     def self.template_name

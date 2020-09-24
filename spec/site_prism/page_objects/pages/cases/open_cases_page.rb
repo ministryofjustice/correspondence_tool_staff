@@ -16,27 +16,33 @@ module PageObjects
 
         section :case_filters, '.case-filters > details' do
           element :filter_cases_link, '.case-filters__summary--outer'
-          element :filter_status_link, '.case-filters__container details:nth-child(1) summary'
-          element :filter_type_link, '.case-filters__container details:nth-child(2) summary'
-          element :filter_timeliness_link, '.case-filters__container details:nth-child(3) summary'
-          element :filter_deadline_link, '.case-filters__container details:nth-child(4) summary'
+          element :filter_status_link, '#filter_status_content_btn'
+          element :filter_open_status_link, '#filter_open_case_status_content_btn'
+          element :filter_type_link, '#filter_case_type_content_btn'
+          element :filter_sensitivity_link, '#filter_sensitivity_content_btn'
+          element :filter_timeliness_link, '#filter_timeliness_content_btn'
+          element :filter_external_deadline_link, '#external_deadline_content_btn'
+          element :filter_exemption_link, '#filter_exemption_content_btn'
           element :apply_filters_button, '.case-filters__container > input'
         end
 
         element :filter_cases_accordion, '.case-filters__container'
 
-section :filter_status_content,
+        section :filter_open_status_content,
                 PageObjects::Sections::Cases::OpenCaseStatusFilterPanelSection,
-                '.case-filters__container details:nth-child(1) .case-filters__content'
+                '#filter_open_case_status_content'
         section :filter_type_content,
                 PageObjects::Sections::Cases::TypeFilterPanelSection,
-                '.case-filters__container details:nth-child(2) .case-filters__content'
+                '#filter_case_type_content'
+        section :filter_sensitivity_content,
+                PageObjects::Sections::Cases::TriggerFlagFilterPanelSection,
+                '#filter_sensitivity_content'
         section :filter_timeliness_content,
                 PageObjects::Sections::Cases::TimelinessFilterPanelSection,
-                '.case-filters__container details:nth-child(3) .case-filters__content'
-        section :filter_deadline_content,
+                '#filter_timeliness_content'
+        section :filter_external_deadline_content,
                 PageObjects::Sections::Cases::DeadlineFilterPanelSection,
-                '.case-filters__container details:nth-child(4) .case-filters__content'
+                '#filter_external_deadline_content'
 
         elements :filter_crumbs, '.filter-crumb a'
 

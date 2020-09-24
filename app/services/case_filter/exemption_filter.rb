@@ -2,7 +2,7 @@ module CaseFilter
   class ExemptionFilter < CaseMultiChoicesFilterBase
 
     def self.identify
-      "filter_by_exemption_ids"
+      "filter_exemption"
     end
     
     def self.filter_attributes

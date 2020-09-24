@@ -115,18 +115,18 @@ feature 'filtering by external deadline', if: working_hours do
                                                                 @case_due_today.number
                                                             ]
 
-      page.open_filter(:deadline)
-      expect(page.filter_deadline_content.from_date).to eq from_date
-      expect(page.filter_deadline_content.to_date).to eq to_date
+      page.open_filter(:external_deadline)
+      expect(page.filter_external_deadline_content.from_date).to eq from_date
+      expect(page.filter_external_deadline_content.to_date).to eq to_date
 
       from_to_date_text = "#{I18n.l from_date} - #{I18n.l to_date}"
       page.filter_crumb_for(from_to_date_text).click
 
       expect(page.case_numbers).to match_array case_numbers
       expect(page.filter_crumb_for(from_to_date_text)).not_to be_present
-      page.open_filter(:deadline)
-      expect(page.filter_deadline_content.from_date).to be_nil
-      expect(page.filter_deadline_content.to_date).to be_nil
+      page.open_filter(:external_deadline)
+      expect(page.filter_external_deadline_content.from_date).to be_nil
+      expect(page.filter_external_deadline_content.to_date).to be_nil
     end
 
     def filter_next_three_days_and_expect_correct_results(page, case_numbers)
@@ -140,18 +140,18 @@ feature 'filtering by external deadline', if: working_hours do
                                                                 @case_due_next_3_days.number
                                                             ]
 
-      page.open_filter(:deadline)
-      expect(page.filter_deadline_content.from_date).to eq from_date
-      expect(page.filter_deadline_content.to_date).to eq to_date
+      page.open_filter(:external_deadline)
+      expect(page.filter_external_deadline_content.from_date).to eq from_date
+      expect(page.filter_external_deadline_content.to_date).to eq to_date
 
       from_to_date_text = "#{I18n.l from_date} - #{I18n.l to_date}"
       page.filter_crumb_for(from_to_date_text).click
 
       expect(page.case_numbers).to match_array case_numbers
       expect(page.filter_crumb_for(from_to_date_text)).not_to be_present
-      page.open_filter(:deadline)
-      expect(page.filter_deadline_content.from_date).to be_nil
-      expect(page.filter_deadline_content.to_date).to be_nil
+      page.open_filter(:external_deadline)
+      expect(page.filter_external_deadline_content.from_date).to be_nil
+      expect(page.filter_external_deadline_content.to_date).to be_nil
     end
 
     def filter_next_ten_days_and_expect_correct_results(page, case_numbers)
@@ -166,18 +166,18 @@ feature 'filtering by external deadline', if: working_hours do
                                                                 @case_due_next_10_days.number,
                                                             ]
 
-      page.open_filter(:deadline)
-      expect(page.filter_deadline_content.from_date).to eq from_date
-      expect(page.filter_deadline_content.to_date).to eq to_date
+      page.open_filter(:external_deadline)
+      expect(page.filter_external_deadline_content.from_date).to eq from_date
+      expect(page.filter_external_deadline_content.to_date).to eq to_date
 
       from_to_date_text = "#{I18n.l from_date} - #{I18n.l to_date}"
       page.filter_crumb_for(from_to_date_text).click
 
       expect(page.case_numbers).to match_array case_numbers
       expect(page.filter_crumb_for(from_to_date_text)).not_to be_present
-      page.open_filter(:deadline)
-      expect(page.filter_deadline_content.from_date).to be_nil
-      expect(page.filter_deadline_content.to_date).to be_nil
+      page.open_filter(:external_deadline)
+      expect(page.filter_external_deadline_content.from_date).to be_nil
+      expect(page.filter_external_deadline_content.to_date).to be_nil
     end
 
     def filter_custom_dates_and_expect_correct_results(page, case_numbers)
@@ -190,18 +190,18 @@ feature 'filtering by external deadline', if: working_hours do
                                                                 @case_due_next_10_days.number,
                                                             ]
 
-      page.open_filter(:deadline)
-      expect(page.filter_deadline_content.from_date).to eq from_date
-      expect(page.filter_deadline_content.to_date).to eq to_date
+      page.open_filter(:external_deadline)
+      expect(page.filter_external_deadline_content.from_date).to eq from_date
+      expect(page.filter_external_deadline_content.to_date).to eq to_date
 
       from_to_date_text = "#{I18n.l from_date} - #{I18n.l to_date}"
       page.filter_crumb_for(from_to_date_text).click
 
       expect(page.case_numbers).to match_array case_numbers
       expect(page.filter_crumb_for(from_to_date_text)).not_to be_present
-      page.open_filter(:deadline)
-      expect(page.filter_deadline_content.from_date).to be_nil
-      expect(page.filter_deadline_content.to_date).to be_nil
+      page.open_filter(:external_deadline)
+      expect(page.filter_external_deadline_content.from_date).to be_nil
+      expect(page.filter_external_deadline_content.to_date).to be_nil
     end
   end
 end

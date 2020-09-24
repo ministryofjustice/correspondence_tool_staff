@@ -32,15 +32,15 @@ en:
       filter_open_case_status: Filter by open status
       filter_case_type: Filter case type
       filter_timeliness: Filter by timeliness
-      external_deadline: Filter by final deadline
-      received_date: Filter by date receiving the case
-      date_responded: Filter by date responding the case
-      filter_by_exemption_ids: Filter by exemptions
+      filter_external_deadline: Filter by final deadline
+      filter_received_date: Filter by date receiving the case
+      filter_date_responded: Filter by date responding the case
+      filter_exemption: Filter by exemptions
       filter_sensitivity: Filter by sensitivity
       date_headings:
-        received_date: 'Received between'
-        date_responded: 'Responded between'
-        external_deadline: 'Due'
+        filter_received_date: 'Received between'
+        filter_date_responded: 'Responded between'
+        filter_external_deadline: 'Due'
     open_case_statuses:
       unassigned: 'Needs reassigning'
       awaiting_responder: 'To be accepted'
