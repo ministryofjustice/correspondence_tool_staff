@@ -1504,14 +1504,18 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it 'returns correct number of days late for open case' do
-      kase.external_deadline = Date.yesterday
-      expect(kase.num_days_late).to eq 1
+      Timecop.freeze(Date.new(2020, 9, 11)) do
+        kase.external_deadline = Date.new(2020, 9, 4)
+        expect(kase.num_days_late).to eq 6
+      end
     end
 
     it 'returns correct number of days late for closed case' do
-      closed_kase.external_deadline = 3.days.before(Date.today)
-      closed_kase.date_responded = Date.yesterday
-      expect(closed_kase.num_days_late).to eq 2
+      Timecop.freeze(Date.new(2020, 9, 11)) do
+        closed_kase.external_deadline = Date.new(2020, 9, 1)
+        closed_kase.date_responded = Date.new(2020, 9, 10)
+        expect(closed_kase.num_days_late).to eq 8
+      end
     end
   end
 
@@ -1520,19 +1524,25 @@ RSpec.describe Case::Base, type: :model do
     let(:kase)  { create :case }
 
     it 'is nil when case is received today' do
-      kase.received_date = Date.today 
-      expect(kase.num_days_taken).to be nil
+      Timecop.freeze(Date.new(2020, 9, 11)) do
+        kase.received_date = Date.new(2020, 9, 11)
+        expect(kase.num_days_taken).to be nil
+      end 
     end
 
     it 'returns correct number of days for open case' do
-      kase.received_date = 3.days.before(Date.today)
-      expect(kase.num_days_taken).to eq 3
+      Timecop.freeze(Date.new(2020, 9, 15)) do
+        kase.received_date = Date.new(2020, 9, 11)
+        expect(kase.num_days_taken).to be 3
+      end 
     end
 
     it 'returns correct number of days late for closed case' do
-      closed_kase.received_date = 10.days.before(Date.today)
-      closed_kase.date_responded = Date.yesterday
-      expect(closed_kase.num_days_taken).to eq 9
+      Timecop.freeze(Date.new(2020, 9, 15)) do
+        closed_kase.received_date = Date.new(2020, 9, 4)
+        closed_kase.date_responded = Date.new(2020, 9, 11)
+        expect(closed_kase.num_days_taken).to eq 6
+      end
     end
   end
 
