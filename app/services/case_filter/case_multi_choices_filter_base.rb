@@ -1,30 +1,32 @@
 module CaseFilter
   class CaseMultiChoicesFilterBase < CaseFilterBase
 
-    def self.identify
-      if filter_attributes.empty?
-        raise '#call should be defined in sub-class of CaseFilterBase'
-      else
-        filter_attributes[0]
+    class << self
+      def identify
+        if filter_attributes.empty?
+          raise '#dentify should be defined in sub-class of CaseMultiChoicesFilterBase'
+        else
+          filter_attributes[0]
+        end
       end
-    end
 
-    def self.set_params(params)
-      allow_params = {}
-      filter_attributes.each do | filter_attribute |
-        allow_params[filter_attribute] = []
+      def set_params(params)
+        allow_params = {}
+        filter_attributes.each do | filter_attribute |
+          allow_params[filter_attribute] = []
+        end
+        params.permit(**allow_params)
       end
-      params.permit(**allow_params)
-    end
 
-    def self.filter_fields(filter_fields)
-      filter_attributes.each do | filter_attribute |
-        filter_fields[filter_attribute] = [:string, array: true, default: []]
+      def filter_fields(filter_fields)
+        filter_attributes.each do | filter_attribute |
+          filter_fields[filter_attribute] = [:string, array: true, default: []]
+        end
       end
-    end
 
-    def self.template_name
-      'filter_multiple_choices'
+      def template_name
+        'filter_multiple_choices'
+      end
     end
 
   end

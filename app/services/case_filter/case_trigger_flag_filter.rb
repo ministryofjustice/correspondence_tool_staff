@@ -1,14 +1,11 @@
 module CaseFilter
   class CaseTriggerFlagFilter < CaseMultiChoicesFilterBase
 
-    class << self
-      def filter_attributes
-        [:filter_sensitivity]
-      end
-
+    def self.filter_attributes
+      [:filter_sensitivity]
     end
 
-    def get_available_choices
+    def available_choices
       {
         :filter_sensitivity => {
           'non-trigger' => I18n.t('filters.sensitivities.non-trigger'),

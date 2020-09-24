@@ -15,7 +15,7 @@
 
 = render partial: 'cases/shared/case_tabs'
 section.govuk-tabs__panel
-  - if !@query.available_filters(current_user, @current_tab_name).empty?
+  - if @query.available_filters(current_user, @current_tab_name).present?
     = render partial: 'cases/search_filters/filters'
 
     - if @query.filter_crumbs.present?

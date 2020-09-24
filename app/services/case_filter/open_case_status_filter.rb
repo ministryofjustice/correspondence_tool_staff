@@ -31,7 +31,7 @@ module CaseFilter
       end
     end
 
-    def get_available_choices
+    def available_choices
       collected_states = []
       @user.permitted_correspondence_types.each do | correspondence_type |
         correspondence_type.sub_classes.each do | sub_class|

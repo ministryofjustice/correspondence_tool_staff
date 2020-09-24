@@ -5,7 +5,7 @@ module CaseFilter
       [:filter_status]
     end
 
-    def get_available_choices
+    def available_choices
       {
         :filter_status => 
           {'open'   => I18n.t('filters.statuses.open'),

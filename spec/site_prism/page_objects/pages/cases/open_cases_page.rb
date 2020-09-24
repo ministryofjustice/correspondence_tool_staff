@@ -21,7 +21,7 @@ module PageObjects
           element :filter_type_link, '#filter_case_type_content_btn'
           element :filter_sensitivity_link, '#filter_sensitivity_content_btn'
           element :filter_timeliness_link, '#filter_timeliness_content_btn'
-          element :filter_external_deadline_link, '#external_deadline_content_btn'
+          element :filter_external_deadline_link, '#filter_external_deadline_content_btn'
           element :filter_exemption_link, '#filter_exemption_content_btn'
           element :apply_filters_button, '.case-filters__container > input'
         end

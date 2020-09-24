@@ -290,7 +290,7 @@ feature 'filters whittle down search results' do
 
       cases_search_page.filter_crumb_for('FOI - Standard').click
 
-      expect(SearchQuery.count).to eq 8
+      expect(SearchQuery.count).to eq 7
       expect(cases_search_page.filter_crumb_for('Open'               )).to be_present
       expect(cases_search_page.filter_crumb_for('FOI - Standard'     )).not_to be_present
       expect(cases_search_page.filter_crumb_for('Trigger'            )).not_to be_present
@@ -301,7 +301,7 @@ feature 'filters whittle down search results' do
       cases_search_page.filter_on('sensitivity', 'trigger')
       cases_search_page.filter_crumb_for('Open').click
 
-      expect(SearchQuery.count).to eq 10
+      expect(SearchQuery.count).to eq 8
       expect(cases_search_page.filter_crumb_for('Open'                )).not_to be_present
       expect(cases_search_page.filter_crumb_for('FOI - Standard'      )).to be_present
       expect(cases_search_page.filter_crumb_for('Trigger'             )).to be_present

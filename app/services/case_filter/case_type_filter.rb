@@ -12,14 +12,11 @@ module CaseFilter
       ICO: ['ico-appeal']
     }.with_indifferent_access.freeze
 
-    class << self
-      def filter_attributes
-        [:filter_case_type]
-      end    
+    def self.filter_attributes
+      [:filter_case_type]
+    end    
 
-    end
-
-    def get_available_choices
+    def available_choices
       user_types = @user.permitted_correspondence_types.map(&:abbreviation)
       types = {}
 

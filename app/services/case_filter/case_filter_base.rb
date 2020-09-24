@@ -3,34 +3,38 @@ module CaseFilter
     include FilterParamParsers
     attr_reader :available_choices
 
-    def self.identify
-      raise '#call should be defined in sub-class of CaseFilterBase'
-    end
+    class << self
 
-    def self.filter_attributes
-      []
-    end
-
-    def self.set_params(_)
-      raise '#call should be defined in sub-class of CaseFilterBase'
-    end
-
-    def self.date_fields
-      []
-    end
-
-    def self.filter_fields(_)
-      raise '#call should be defined in sub-class of CaseFilterBase'
-    end
-
-    def self.process_params!(params)
-      filter_attributes.each do | filter_attribute |
-        process_array_param(params, filter_attribute)
+      def identify
+        raise '#identify should be defined in sub-class of CaseFilterBase'
       end
-    end
-
-    def self.template_name
-      raise '#call should be defined in sub-class of CaseFilterBase'
+  
+      def filter_attributes
+        []
+      end
+  
+      def set_params(_)
+        raise '#set_params should be defined in sub-class of CaseFilterBase'
+      end
+  
+      def date_fields
+        []
+      end
+  
+      def filter_fields(_)
+        raise '#filter_fields should be defined in sub-class of CaseFilterBase'
+      end
+  
+      def process_params!(params)
+        filter_attributes.each do | filter_attribute |
+          process_array_param(params, filter_attribute)
+        end
+      end
+  
+      def template_name
+        raise '#template_name should be defined in sub-class of CaseFilterBase'
+      end
+    
     end
 
     def initialize(query, user, records)
@@ -38,11 +42,7 @@ module CaseFilter
       @records = records
       @user = user
 
-      @available_choices = get_available_choices
-    end
-
-    def get_available_choices
-      nil
+      @available_choices = nil
     end
 
     def is_available?

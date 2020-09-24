@@ -1,22 +1,24 @@
 module CaseFilter
   class ExemptionFilter < CaseMultiChoicesFilterBase
 
-    def self.identify
-      "filter_exemption"
-    end
+    class << self
+      def identify
+        "filter_exemption"
+      end
     
-    def self.filter_attributes
-      [:common_exemption_ids, :exemption_ids]
-    end
+      def filter_attributes
+        [:common_exemption_ids, :exemption_ids]
+      end
 
-    def self.filter_fields(filter_fields)
-      filter_fields[:common_exemption_ids] = [:integer, array: true, default: []]
-      filter_fields[:exemption_ids] = [:integer, array: true, default: []]
-    end
+      def filter_fields(filter_fields)
+        filter_fields[:common_exemption_ids] = [:integer, array: true, default: []]
+        filter_fields[:exemption_ids] = [:integer, array: true, default: []]
+      end
 
-    def self.process_params!(params)
-      process_ids_param(params, 'common_exemption_ids')
-      process_ids_param(params, 'exemption_ids')
+      def process_params!(params)
+        process_ids_param(params, 'common_exemption_ids')
+        process_ids_param(params, 'exemption_ids')
+      end
     end
 
     def initialize(query, user, records)
@@ -26,7 +28,7 @@ module CaseFilter
       @exemption_ids = @exemption_ids.uniq
     end
 
-    def get_available_choices
+    def available_choices
       {
         :common_exemption_ids => self.class.available_common_exemptions,
         :exemption_ids => self.class.available_exemptions

@@ -5,7 +5,7 @@ module CaseFilter
       [:filter_timeliness]
     end
 
-    def get_available_choices
+    def available_choices
       {
         :filter_timeliness => {
           'in_time' => I18n.t('filters.timeliness.in_time'),
