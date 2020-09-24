@@ -735,20 +735,20 @@ describe Case::SAR::Offender do
     let(:closed_kase) { create :offender_sar_case, :closed }
     let(:kase)  { create :offender_sar_case }
 
-    it 'is nil when case is received today' do
+    it 'is 1 when case is received today' do
       kase.received_date = Date.today 
-      expect(kase.num_days_taken).to be nil
+      expect(kase.num_days_taken).to be 1
     end
 
     it 'returns correct number of days for open case' do
       kase.received_date = 3.days.before(Date.today)
-      expect(kase.num_days_taken).to eq 3
+      expect(kase.num_days_taken).to eq 4
     end
 
     it 'returns correct number of days late for closed case' do
       closed_kase.received_date = 10.days.before(Date.today)
       closed_kase.date_responded = Date.yesterday
-      expect(closed_kase.num_days_taken).to eq 9
+      expect(closed_kase.num_days_taken).to eq 10
     end
   end
   

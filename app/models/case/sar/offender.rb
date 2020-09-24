@@ -266,16 +266,6 @@ class Case::SAR::Offender < Case::Base
     (!subject_recipient?) ? postal_address : subject_address
   end
 
-  def num_days_late
-    days = ((date_responded.nil? ? Date.today : date_responded) - external_deadline).to_i
-    days > 0 ? days : nil
-  end
-
-  def num_days_taken
-    days = ((date_responded.nil? ? Date.today : date_responded) - received_date).to_i
-    days > 0 ? days : nil
-  end
-
   def page_count
     DataRequest.where(case_id: self.id).sum(:cached_num_pages)
   end
