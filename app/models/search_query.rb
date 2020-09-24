@@ -186,7 +186,7 @@ class SearchQuery < ApplicationRecord
     if FILTER_CLASSES_MAP.to_hash.key?(scope_type)
       FILTER_CLASSES_MAP[scope_type].each do | filter_class | 
         filter_class_instance = filter_class.new(self, user, Case::Base.none)
-        collected_filters << filter_class_instance if filter_class_instance.is_available?
+        collected_filters << filter_class_instance if filter_class_instance.is_permitted_for_user?
       end
     end
     collected_filters

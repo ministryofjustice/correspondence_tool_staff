@@ -45,7 +45,7 @@ module CaseFilter
       @available_choices = nil
     end
 
-    def is_available?
+    def is_permitted_for_user?
       true
     end
 

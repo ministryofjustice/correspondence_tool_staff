@@ -35,7 +35,7 @@ module CaseFilter
       }
     end
 
-    def is_available?
+    def is_permitted_for_user?
       @user.permitted_correspondence_types.any? { | c_type | ['FOI', 'OVERTURNED_FOI'].include? c_type.abbreviation }
     end
 
