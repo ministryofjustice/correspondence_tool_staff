@@ -77,7 +77,12 @@ function _deploy() {
       ;;
   esac
 
- 
+  # Ensure that the git-crypt secrets are unlocked ready for deployment
+  if grep -rq "\x0GITCRYPT" config/kubernetes/$environment/secrets.yaml; then
+    p "\e[31mFatal error: repository is locked with git-crypt\e[0m"
+    p "\e[31mUnlock using 'git-crypt unlock'\e[0m\n"
+    return 1
+  fi
 
   # Confirm what's going to happen and ask for confirmation
   docker_image_tag=${docker_registry}:${image_tag}
@@ -112,6 +117,28 @@ function _deploy() {
     fi
   fi
 
-  }
+  # Set context for following operations
+  # kubectl config set-context ${context} --namespace=$namespace
+  # kubectl config use-context ${context}
+
+  # Apply image specific config
+  kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
+          webapp=${docker_image_tag} \
+          uploads=${docker_image_tag} \
+          jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+
+  # Apply non-image specific config
+  kubectl apply \
+    -f config/kubernetes/${environment}/service.yaml \
+    -f config/kubernetes/${environment}/ingress.yaml \
+    -f config/kubernetes/${environment}/secrets.yaml \
+    -n $namespace
+
+  if [ $environment == "production" ]
+    then
+      kubectl delete cronjob cronjob-delete-old-ecr-images -n $namespace --ignore-not-found=true
+      kubectl create -f config/kubernetes/${environment}/cronjob-delete-old-ecr-images.yaml -n $namespace
+    fi
+}
 
 _deploy $@

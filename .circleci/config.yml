@@ -235,16 +235,25 @@ references:
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
-#  These are the jobs which run the steps. The jobs are used by the workflows.
-
 jobs:
 
   build_and_test:
     <<: *test_container_config
-    resource_class: small
+    resource_class: xlarge
     working_directory: ~/track-a-query
     steps:
       - checkout
+      - *restore_cache
+      - *install_bundler
+      - *check_bundler_version
+      - *install_psql
+      - *install_dependencies
+      - *save_cache
+      - *wait_for_db
+      - *set_up_the_database
+      - *rubocop
+      - *update_chromedriver
+      - *run_unit_and_feature_tests
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
@@ -253,6 +262,9 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
+      - setup_remote_docker:
+          docker_layer_caching: true 
+      - *configure_aws_profile 
       - *build_and_push_docker_image
       - persist_to_workspace:
           root: workspace
@@ -375,14 +387,12 @@ jobs:
       - slack/notify:
           color: '#1d990c'
           mentions: 'staff-tools-team'
-          message: 'Deployed *${BUILD_TAG}* to *Production* (not really!)' 
+          message: 'Deployed *${BUILD_TAG}* to *Production*' 
           webhook: ${SLACK_WEBHOOK_SS_CIRCLECI}
       - slack/notify:
           color: '#1d990c'
-          message: 'Deployed *${BUILD_TAG}* to *Production* (not really!)' 
-          webhook: ${SLACK_WEBHOOK_CT}     
-
-#Workflows combine jobs to perform the actions
+          message: 'Deployed *${BUILD_TAG}* to *Production*' 
+          webhook: ${SLACK_WEBHOOK_CT}    
 
 workflows:
   version: 2
@@ -392,7 +402,7 @@ workflows:
       - build_and_test:
           filters:
             branches:
-              only: CT-2955-circleci-slack
+              only: master
       - build_master_and_push_to_ecr:
           requires:
             - build_and_test   
@@ -428,4 +438,45 @@ workflows:
           requires:
             - deploy_master_to_demo_approval
 
-  
+  build_and_deploy_branch:
+    jobs:
+      - build_and_test:
+          filters:
+            branches:
+              ignore: master
+      - build_branch_and_push_to_ecr_approval:
+          type: approval
+          requires:
+            - build_and_test
+      - build_branch_and_push_to_ecr:
+          requires:
+            - build_branch_and_push_to_ecr_approval
+      - deploy_branch_to_dev_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr 
+      - deploy_branch_to_dev:
+          requires:
+            - deploy_branch_to_dev_approval
+      - deploy_branch_to_staging_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_staging:
+          requires:
+            - deploy_branch_to_staging_approval             
+      - deploy_branch_to_qa_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_qa:
+          requires:
+            - deploy_branch_to_qa_approval
+      - deploy_branch_to_demo_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr            
+      - deploy_branch_to_demo:
+          requires:
+            - deploy_branch_to_demo_approval                                      
+      
