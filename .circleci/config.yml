@@ -188,7 +188,7 @@ references:
         kubectl config use-context development        
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag development circleci
-        echo "export BUILD_TAG=${BUILD_TAG}" >> $BASH_ENV
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
   deploy_to_staging: &deploy_to_staging
@@ -199,7 +199,7 @@ references:
         kubectl config use-context staging       
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag staging circleci
-        echo "export BUILD_TAG=${BUILD_TAG}" >> $BASH_ENV
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
   deploy_to_qa: &deploy_to_qa
@@ -210,7 +210,7 @@ references:
         kubectl config use-context qa
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag qa circleci
-        echo "export BUILD_TAG=${BUILD_TAG}" >> $BASH_ENV
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
   deploy_to_demo: &deploy_to_demo
@@ -221,7 +221,7 @@ references:
         kubectl config use-context demo
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag demo circleci
-        echo "export BUILD_TAG=${BUILD_TAG}" >> $BASH_ENV
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
   deploy_to_production: &deploy_to_production
@@ -232,7 +232,7 @@ references:
         kubectl config use-context production
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag production circleci
-        echo "export BUILD_TAG=${BUILD_TAG}" >> $BASH_ENV
+        echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
         source $BASH_ENV
 
 #  These are the jobs which run the steps. The jobs are used by the workflows.
@@ -290,7 +290,7 @@ jobs:
       - *deploy_to_dev
       - slack/notify:
           color: '#1d990c'
-          message: 'DEVELOPMENT deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Development' 
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_dev: *do_dev_deployment_tasks 
@@ -311,7 +311,7 @@ jobs:
       - *deploy_to_staging
       - slack/notify:
           color: '#1d990c'
-          message: 'STAGING deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Staging' 
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_staging: *do_staging_deployment_tasks
@@ -332,7 +332,7 @@ jobs:
       - *deploy_to_qa
       - slack/notify:
           color: '#1d990c'
-          message: 'QA deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to QA' 
           webhook: ${SLACK_WEBHOOK_CT}
   
   deploy_branch_to_qa: *do_qa_deployment_tasks
@@ -353,7 +353,7 @@ jobs:
       - *deploy_to_demo
       - slack/notify:
           color: '#1d990c'
-          message: 'DEMO deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Demo' 
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_demo: *do_demo_deployment_tasks
@@ -375,11 +375,11 @@ jobs:
       - slack/notify:
           color: '#1d990c'
           mentions: 'staff-tools-team'
-          message: 'PRODUCTION (fake) deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Production (not really!)' 
           webhook: ${SLACK_WEBHOOK_SS_CIRCLECI}
       - slack/notify:
           color: '#1d990c'
-          message: 'PRODUCTION (fake) deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Production (not really!)' 
           webhook: ${SLACK_WEBHOOK_CT}     
 
 #Workflows combine jobs to perform the actions
