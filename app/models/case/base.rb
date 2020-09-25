@@ -625,6 +625,18 @@ class Case::Base < ApplicationRecord
     days > 0 ? days : nil
   end
 
+  def num_days_taken_after_extension
+    the_date_being_extended = find_timing_for_extending_deadline
+    if the_date_being_extended.present?
+      days = @deadline_calculator.class.days_taken(
+        the_date_being_extended, 
+        (date_responded.nil? ? Date.today : date_responded))
+      days > 0 ? days : nil
+    else
+      nil
+    end
+  end
+
   def current_team_and_user
     CurrentTeamAndUserService.new(self)
   end
@@ -960,6 +972,22 @@ class Case::Base < ApplicationRecord
                         linked_case_class: linked_class_name)
       )
     end
+  end
+
+  def find_timing_for_extending_deadline
+    if potential_include_extension?
+      most_recent_extension = self.transitions
+      .where(event: ['extend_for_pit', 'extend_sar_deadline'])
+      .order(id: :desc)
+      .first
+      most_recent_extension.nil? ? nil : most_recent_extension.created_at.to_date
+    else
+      nil
+    end
+  end
+
+  def potential_include_extension?
+    self.has_pit_extension? || self.sar?
   end
 
 end

@@ -1553,6 +1553,51 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe '#num_days_taken_after_extension' do
+
+    it 'is nil when case has no extension' do
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
+        tase = create :case_being_drafted
+        expect(tase.has_pit_extension?).to be false
+        expect(tase.num_days_taken_after_extension).to be nil
+      end 
+    end
+
+    it 'is 1 when case is received today' do
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
+        tase = create :case_being_drafted, :extended_for_pit
+        expect(tase.has_pit_extension?).to be true
+        expect(tase.num_days_taken_after_extension).to be 1
+      end 
+    end
+
+    it 'returns correct number of days for open case' do
+      tase = nil
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
+        tase = create :case_being_drafted, :extended_for_pit
+        expect(tase.has_pit_extension?).to be true
+      end 
+      Timecop.freeze(Time.new(2020, 9, 15, 9, 50, 33)) do
+        expect(tase.num_days_taken_after_extension).to be 3
+      end 
+    end
+
+    it 'returns correct number of days late for closed case' do
+      closed_tase = nil
+      Timecop.freeze(Time.new(2020, 9, 4, 9, 50, 33)) do
+        closed_tase = create :closed_case, :extended_for_pit
+        expect(closed_tase.has_pit_extension?).to be true
+      end 
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
+        closed_tase.date_responded = Date.new(2020, 9, 11)
+        closed_tase.save!
+      end 
+      Timecop.freeze(Time.new(2020, 9, 15, 9, 45, 33)) do
+        expect(closed_tase.num_days_taken_after_extension).to eq 6
+      end
+    end
+  end
+
   describe 'casework officer' do
     let(:disclosure_specialist) { find_or_create :disclosure_specialist }
     let(:case_assigned_to_user) {
