@@ -1,6 +1,10 @@
 module CaseFilter
   class CaseTriggerFlagFilter < CaseMultiChoicesFilterBase
 
+    def self.identifier
+      'filter_sensitivity'
+    end
+  
     def self.filter_attributes
       [:filter_sensitivity]
     end

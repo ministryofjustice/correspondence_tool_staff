@@ -1,6 +1,10 @@
 module CaseFilter
   class TimelinessFilter < CaseMultiChoicesFilterBase
 
+    def self.identifier
+      "filter_timeliness"
+    end
+
     def self.filter_attributes
       [:filter_timeliness]
     end

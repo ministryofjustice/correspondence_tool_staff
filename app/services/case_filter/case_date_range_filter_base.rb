@@ -5,7 +5,7 @@ module CaseFilter
       raise '#call should be defined in sub-class of CaseDateRangeFilterBase'
     end
 
-    def self.identify
+    def self.identifier
       "filter_#{date_field_name}"
     end
     

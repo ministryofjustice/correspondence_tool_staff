@@ -1,6 +1,10 @@
 module CaseFilter
   class CaseStatusFilter < CaseMultiChoicesFilterBase
 
+    def self.identifier
+        'filter_status'
+    end
+    
     def self.filter_attributes
       [:filter_status]
     end

@@ -5,8 +5,8 @@ module CaseFilter
 
     class << self
 
-      def identify
-        raise '#identify should be defined in sub-class of CaseFilterBase'
+      def identifier
+        raise '#identifier should be defined in sub-class of CaseFilterBase'
       end
   
       def filter_attributes

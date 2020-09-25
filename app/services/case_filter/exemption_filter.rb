@@ -2,7 +2,7 @@ module CaseFilter
   class ExemptionFilter < CaseMultiChoicesFilterBase
 
     class << self
-      def identify
+      def identifier
         "filter_exemption"
       end
     

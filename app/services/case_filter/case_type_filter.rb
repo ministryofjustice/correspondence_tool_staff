@@ -12,6 +12,10 @@ module CaseFilter
       ICO: ['ico-appeal']
     }.with_indifferent_access.freeze
 
+    def self.identifier
+      'filter_case_type'
+    end
+
     def self.filter_attributes
       [:filter_case_type]
     end    

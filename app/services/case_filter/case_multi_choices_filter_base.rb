@@ -2,13 +2,6 @@ module CaseFilter
   class CaseMultiChoicesFilterBase < CaseFilterBase
 
     class << self
-      def identify
-        if filter_attributes.empty?
-          raise '#identify should be defined in sub-class of CaseMultiChoicesFilterBase'
-        else
-          filter_attributes.first.to_s
-        end
-      end
 
       def set_params(params)
         allow_params = {}
@@ -33,14 +26,14 @@ module CaseFilter
       our_crumbs = []
       if applied?
         summary_text = I18n.t(
-          "filters.#{self.class.identify}.#{@query.send(self.class.identify).first}"
+          "filters.#{self.class.identifier}.#{@query.send(self.class.identifier).first}"
         )
-        crumb_text = I18n.t "filters.crumbs.#{self.class.identify}",
-                            count: @query.send(self.class.identify).size,
+        crumb_text = I18n.t "filters.crumbs.#{self.class.identifier}",
+                            count: @query.send(self.class.identifier).size,
                             first_value: summary_text,
-                            remaining_values_count: @query.send(self.class.identify).count - 1
+                            remaining_values_count: @query.send(self.class.identifier).count - 1
         params = {
-          self.class.identify  => [''],
+          self.class.identifier  => [''],
           'parent_id'          => @query.id,
         }
         our_crumbs << [crumb_text, params]
