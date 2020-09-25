@@ -4,9 +4,9 @@ module CaseFilter
     class << self
       def identify
         if filter_attributes.empty?
-          raise '#dentify should be defined in sub-class of CaseMultiChoicesFilterBase'
+          raise '#identify should be defined in sub-class of CaseMultiChoicesFilterBase'
         else
-          filter_attributes[0].to_s
+          filter_attributes.first.to_s
         end
       end
 
