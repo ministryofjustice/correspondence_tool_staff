@@ -310,9 +310,9 @@ jobs:
       - *decrypt_secrets
       - *deploy_to_staging
       - slack/notify:
-        color: '#1d990c'
-        message: 'STAGING deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
-        webhook: ${SLACK_WEBHOOK_CT}
+          color: '#1d990c'
+          message: 'STAGING deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_staging: *do_staging_deployment_tasks
   deploy_master_to_staging: *do_staging_deployment_tasks
