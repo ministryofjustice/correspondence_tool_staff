@@ -117,28 +117,5 @@ function _deploy() {
     fi
   fi
 
-  # Set context for following operations
-  # kubectl config set-context ${context} --namespace=$namespace
-  # kubectl config use-context ${context}
-
-  # Apply image specific config
-  kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
-          webapp=${docker_image_tag} \
-          uploads=${docker_image_tag} \
-          jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
-
-  # Apply non-image specific config
-  kubectl apply \
-    -f config/kubernetes/${environment}/service.yaml \
-    -f config/kubernetes/${environment}/ingress.yaml \
-    -f config/kubernetes/${environment}/secrets.yaml \
-    -n $namespace
-
-  if [ $environment == "production" ]
-    then
-      kubectl delete cronjob cronjob-delete-old-ecr-images -n $namespace --ignore-not-found=true
-      kubectl create -f config/kubernetes/${environment}/cronjob-delete-old-ecr-images.yaml -n $namespace
-    fi
-  }
 
 _deploy $@
