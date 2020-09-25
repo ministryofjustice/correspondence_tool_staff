@@ -290,7 +290,7 @@ jobs:
       - *deploy_to_dev
       - slack/notify:
           color: '#1d990c'
-          message: 'DEVELOPMENT deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Development' 
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_dev: *do_dev_deployment_tasks 
@@ -311,7 +311,7 @@ jobs:
       - *deploy_to_staging
       - slack/notify:
           color: '#1d990c'
-          message: 'STAGING deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Staging' 
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_staging: *do_staging_deployment_tasks
@@ -332,7 +332,7 @@ jobs:
       - *deploy_to_qa
       - slack/notify:
           color: '#1d990c'
-          message: 'QA deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to QA' 
           webhook: ${SLACK_WEBHOOK_CT}
   
   deploy_branch_to_qa: *do_qa_deployment_tasks
@@ -353,7 +353,7 @@ jobs:
       - *deploy_to_demo
       - slack/notify:
           color: '#1d990c'
-          message: 'DEMO deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Demo' 
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_demo: *do_demo_deployment_tasks
@@ -375,11 +375,11 @@ jobs:
       - slack/notify:
           color: '#1d990c'
           mentions: 'staff-tools-team'
-          message: 'PRODUCTION (fake) deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Production (not really!)' 
           webhook: ${SLACK_WEBHOOK_SS_CIRCLECI}
       - slack/notify:
           color: '#1d990c'
-          message: 'PRODUCTION (fake) deployment done on TRACK-A-QUERY - ${BUILD_TAG}' 
+          message: 'Deployed ${BUILD_TAG} to Production (not really!)' 
           webhook: ${SLACK_WEBHOOK_CT}     
 
 #Workflows combine jobs to perform the actions
