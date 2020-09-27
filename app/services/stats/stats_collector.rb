@@ -58,10 +58,11 @@ module Stats
 
     class StatsEnumerator
       include Enumerable
+      attr_accessor :stats_row_names
 
-      def initialize(stats, stats_row_names, column_hash, first_column_header, superheadings, row_names_as_first_column)
+      def initialize(stats, column_hash, first_column_header, superheadings, row_names_as_first_column)
         @stats = stats
-        @stats_row_names = stats_row_names
+        @stats_row_names = {}
         @column_hash = column_hash
         @first_column_header = first_column_header
         @superheadings = superheadings
@@ -107,7 +108,9 @@ module Stats
     end
 
     def to_csv(first_column_header: '', superheadings: [], row_names_as_first_column: true)
-      StatsEnumerator.new(@stats, @stats_row_names, @column_hash, first_column_header, superheadings, row_names_as_first_column)
+      stats_enumerator = StatsEnumerator.new(@stats, @column_hash, first_column_header, superheadings, row_names_as_first_column)
+      stats_enumerator.stats_row_names = @stats_row_names
+      stats_enumerator
     end
 
     private

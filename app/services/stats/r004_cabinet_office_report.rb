@@ -1,4 +1,5 @@
 module Stats
+  # rubocop:disable Metrics/ClassLength
   class R004CabinetOfficeReport < BaseReport
 
     COLUMNS = {
@@ -126,7 +127,7 @@ module Stats
                             "'Exemption applied' and 'What exemption applied' selection of 'S(43) - Commercial interests'",
         '3.S44_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(44) - Prohibitions on disclosure'",
-        '_SPACER_3'   => '',
+        '_SPACER_2'   => '',
         '_USE OF SECTION 21 EXEMPTIONS' => '',
         '4.A'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" +
                             "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the ONLY exemption marked for this case",
@@ -497,3 +498,4 @@ module Stats
 
   end
 end
+# rubocop:enable Metrics/ClassLength
