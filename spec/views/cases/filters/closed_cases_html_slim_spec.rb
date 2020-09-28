@@ -23,6 +23,9 @@ describe 'cases/filters/closed.html.slim' do
     cases = Case::Base.closed.most_recent_first.page.decorate
     assign(:cases, cases)
     assign(:query, search_query)
+    assign(:action_url, '/cases/closed')
+    assign(:current_tab_name, 'closed')
+    assign(:maximum_records_for_download, 1000)
 
     render
 
@@ -55,6 +58,9 @@ describe 'cases/filters/closed.html.slim' do
     it 'renders the paginator' do
       assign(:cases, Case::Base.none.page.decorate)
       assign(:query, search_query)
+      assign(:action_url, '/cases/closed')
+      assign(:current_tab_name, 'closed')
+      assign(:maximum_records_for_download, 1000)
       render
       expect(response).to have_rendered('kaminari/_paginator')
     end
