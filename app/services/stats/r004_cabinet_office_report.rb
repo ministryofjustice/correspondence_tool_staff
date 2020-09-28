@@ -17,7 +17,6 @@ module Stats
 
     def initialize(**options)
       super
-      @stats_row_names = stats_row_names
       @stats = StatsCollector.new(report_lines.keys, COLUMNS)
       @first_column_heading = self.class.title
       @superheadings = superheadings
@@ -46,16 +45,12 @@ module Stats
       ReportType.r004
     end
 
-    def set_results(stats)
-      super
-      @stats.stats_row_names = @stats_row_names
-    end
-
     private
 
     # rubocop:disable Metrics/MethodLength
     def report_lines
       {
+        '_FOI' => '',
         '_TIMELINESS' => "",
         '1.A'         => "Total number of FOI requests received this period",
         '1.Ai'        => "Of these, number which fall fully or mostly under the Environmental Information Regulations (EIRs)",
@@ -81,51 +76,50 @@ module Stats
         '_SPACER_2'   => '',
         '_USE OF EXEMPTIONS AND EXCEPTIONS' => '',
         '_SPACER_2'   => '',
-        '_FOI' => '',
         '3.A'         => "Number of cases created and closed in this period that were fully or partly refused",
-        '3.S22_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S22'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(22) - Information intended for future publication'",
-        '3.S22A_foi'  => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S22A'      => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of S(22) - 'S(22A) - Research intended for future publication.'",
-        '3.S23_foi'   =>  "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S23'       =>  "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(23) - Information supplied by, or relating to, bodies dealing with security matters",
-        '3.S24_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S24'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(24) - National security'",
-        '3.S26_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S26'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(26) - Defence'",
-        '3.S27_foi'   =>  "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of "+
+        '3.S27'       =>  "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of "+
                             "'Exemption applied' and 'What exemption applied' selection of 'S(27) - International relations'",
-        '3.S28_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S28'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(28) - Relations within the United Kingdom'",
-        '3.S29_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S29'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(29) - The economy'",
-        '3.S30_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S30'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(30) - Investigations and proceedings conducted by public authorities",
-        '3.S31_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S31'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(31) - Law enforcement'",
-        '3.S32_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S32'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(32) - Court records, etc'",
-        '3.S33_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S33'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(33) - Audit functions'",
-        '3.S34_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S34'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(34) - Parliamentary privilege'",
-        '3.S35_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S35'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(35) - Formulation of government policy, etc'",
-        '3.S36_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S36'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(36) - Prejudice to effective conduct of public affairs'",
-        '3.S37_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S37'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(37) - Communications with Her Majesty, etc. and honours'",
-        '3.S38_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S38'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(38) - Health and safety'",
-        '3.S40_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S40'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(40) - Personal information'",
-        '3.S41_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S41'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(41) - Information provided in confidence'",
-        '3.S42_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S42'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(42) - Legal professional privilege'",
-        '3.S43_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S43'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(43) - Commercial interests'",
-        '3.S44_foi'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '3.S44'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(44) - Prohibitions on disclosure'",
         '_SPACER_2'   => '',
         '_USE OF SECTION 21 EXEMPTIONS' => '',
@@ -138,127 +132,76 @@ module Stats
                               "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " +
                               "ONLY exemption marked for this case and the case was processed OUT OF TIME against the external deadline",
         '_SPACER_3'   => '',
-        '_ICO' => '',
-        '3.S21'       => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '_ICO'        => '',
+        '_SPACER_4'   => '',
+        '_THE INFORMATION HELD FROM ORIGINAL-LINKED FOI' => '',
+        '5.Ai'        => "Number of cases created in this period that have been with marked as 'The information not held'",
+        '_SPACER_5'   => '',
+        '_OUTCOME WITH REFUSAL REASON FROM ORIGINAL-LINKED FOI' => '',
+        '6.S12'         => "Number of cases created in this period that have been with a 'reason for refusal' of " +
+                            "'S(12(1)) - Exceeded cost to investigate'",
+        '6.S14'         => "Number of cases created in this period that have been with a 'reason for refusal' of " +
+                            "'S(14(1)) - Vexatious' or 'S(14(2)) - Repeated request' ",
+        '_SPACER_6'   => '',
+        '_USE OF EXEMPTIONS AND EXCEPTIONS FROM ORIGINAL-LINKED FOI' => '',
+        '7.S21'       => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(21) - Information accessible by other means'",
-        '3.S22_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S22'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(22) - Information intended for future publication'",
-        '3.S22A_ico'  => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S22A'  => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of S(22) - 'S(22A) - Research intended for future publication.'",
-        '3.S23_ico'   =>  "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S23'   =>  "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(23) - Information supplied by, or relating to, bodies dealing with security matters",
-        '3.S24_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S24'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(24) - National security'",
-        '3.S26_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S26'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(26) - Defence'",
-        '3.S27_ico'   =>  "Number of cases created in period hat have been marked as 'Refused fully' with a 'reason for refusal' of "+
+        '7.S27'   =>  "Number of cases created in this period hat have been marked as 'Refused fully' with a 'reason for refusal' of "+
                             "'Exemption applied' and 'What exemption applied' selection of 'S(27) - International relations'",
-        '3.S28_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S28'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(28) - Relations within the United Kingdom'",
-        '3.S29_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S29'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(29) - The economy'",
-        '3.S30_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S30'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(30) - Investigations and proceedings conducted by public authorities",
-        '3.S31_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S31'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(31) - Law enforcement'",
-        '3.S32_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S32'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(32) - Court records, etc'",
-        '3.S33_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S33'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(33) - Audit functions'",
-        '3.S34_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S34'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(34) - Parliamentary privilege'",
-        '3.S35_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S35'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(35) - Formulation of government policy, etc'",
-        '3.S36_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S36'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(36) - Prejudice to effective conduct of public affairs'",
-        '3.S37_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S37'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(37) - Communications with Her Majesty, etc. and honours'",
-        '3.S38_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S38'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(38) - Health and safety'",
-        '3.S40_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S40'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(40) - Personal information'",
-        '3.S41_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S41'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(41) - Information provided in confidence'",
-        '3.S42_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S42'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(42) - Legal professional privilege'",
-        '3.S43_ico'   => "Number of cases created in period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S43'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(43) - Commercial interests'",
-        '3.S44_ico'   => "Number of cases created in period  dthat have been marked as 'Refused fully' with a 'reason for refusal' of " +
+        '7.S44'   => "Number of cases created in this period  dthat have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(44) - Prohibitions on disclosure'",
       }
     end
     # rubocop:enable Metrics/MethodLength
 
-    # rubocop:disable Metrics/MethodLength
-    def stats_row_names
-      {
-        '3.S22_foi'   => '3.S22',
-        '3.S22A_foi'  => '3.S22A',
-        '3.S23_foi'   => '3.S23',
-        '3.S24_foi'   => '3.S24',
-        '3.S26_foi'   => '3.S26',
-        '3.S26_foi'   => '3.S26',
-        '3.S28_foi'   => '3.S28',
-        '3.S29_foi'   => '3.S29',
-        '3.S29_foi'   => '3.S29',
-        '3.S31_foi'   => '3.S31',
-        '3.S32_foi'   => '3.S32',
-        '3.S33_foi'   => '3.S33',
-        '3.S34_foi'   => '3.S34',
-        '3.S35_foi'   => '3.S35',
-        '3.S36_foi'   => '3.S36',
-        '3.S37_foi'   => '3.S37',
-        '3.S38_foi'   => '3.S38',
-        '3.S40_foi'   => '3.S40',
-        '3.S41_foi'   => '3.S41',
-        '3.S42_foi'   => '3.S42',
-        '3.S43_foi'   => '3.S43',
-        '3.S44_foi'   => '3.S44',
-        '3.S22_ico'   => '3.S22',
-        '3.S22A_ico'  => '3.S22A',
-        '3.S23_ico'   => '3.S31',
-        '3.S24_ico'   => '3.S24',
-        '3.S26_ico'   => '3.S26',
-        '3.S27_ico'   => '3.S27',
-        '3.S28_ico'   => '3.S28',
-        '3.S29_ico'   => '3.S29',
-        '3.S30_ico'   => '3.S30',
-        '3.S31_ico'   => '3.S31',
-        '3.S32_ico'   => '3.S32',
-        '3.S33_ico'   => '3.S33',
-        '3.S34_ico'   => '3.S34',
-        '3.S35_ico'   => '3.S35',
-        '3.S36_ico'   => '3.S36',
-        '3.S37_ico'   => '3.S37',
-        '3.S38_ico'   => '3.S38',
-        '3.S40_ico'   => '3.S40',
-        '3.S41_ico'   => '3.S411',
-        '3.S42_ico'   => '3.S43',
-        '3.S43_ico'   => '3.S43',
-        '3.S44_ico'   => '3.S44',
-      }
-    end
-    # rubocop:enable Metrics/MethodLength
-
-    def fill_sections_with_case_type(main_body, shared_sections, case_type)
-      shared_sections.each do | section_key, value | 
-        main_body["#{section_key}_#{case_type}"] = value
-        @stats_row_names["#{section_key}_#{case_type}"] = section_key
-      end
-    end
-
     # use method missing to get values for 3_S22 - to 3_S44
     def method_missing(method_name, *args)
-      if method_name.to_s =~ /^get_value_3_S(.*)_(\w+)/
+      if method_name.to_s =~ /^get_value_3_S(.*)/
         exemption_number = "s#{$1}"
-        case $2
-        when 'foi'
-          fully_refused_with_exemption(exemption_number.downcase)
-        when 'ico'
-          fully_refused_with_exemption_ico(exemption_number.downcase)
-        else
-          super
-        end
+        fully_refused_with_exemption(exemption_number.downcase)
+      elsif method_name.to_s =~ /^get_value_7_S(.*)/
+        exemption_number = "s#{$1}"
+        fully_refused_with_exemption_ico(exemption_number.downcase)
       else
         super
       end
@@ -393,6 +336,30 @@ module Stats
     def get_value_4_C
       cases = fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21.late
       filter_cases_with_only_one_exemption(cases).count
+    end
+
+    def get_value_5_Ai
+      ifo_held_status = CaseClosure::InfoHeldStatus.not_held
+      cases_received_and_closed_in_period.where(info_held_status_id: ifo_held_status.id).count
+    end
+
+    def get_value_6_S12
+      refusal_reason = CaseClosure::RefusalReason.cost
+      cases_received_and_closed_in_period.where(refusal_reason_id: refusal_reason.id).count
+    end
+
+    def get_value_6_S14
+      num_s14_1_refusal_reason + num_s14_2_refusal_reason
+    end
+
+    def num_s14_1_refusal_reason
+      refusal_reason = CaseClosure::RefusalReason.vex
+      cases_received_and_closed_in_period.where(refusal_reason_id: refusal_reason.id).count
+    end
+
+    def num_s14_2_refusal_reason
+      refusal_reason = CaseClosure::RefusalReason.repeat
+      cases_received_and_closed_in_period.where(refusal_reason_id: refusal_reason.id).count
     end
 
     def get_value_3_S21

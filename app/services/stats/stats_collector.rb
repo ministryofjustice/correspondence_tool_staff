@@ -6,7 +6,7 @@ module Stats
   # to a CSV or spreadsheet
   class StatsCollector
 
-    attr_accessor :stats, :stats_row_names
+    attr_accessor :stats
 
     # intitialize with an array of row names, and a hash of column headings keyed by unique identifier
     # row names that begin with an underscore have special meaning:
@@ -18,7 +18,6 @@ module Stats
         before_finalise: []
       }
       @stats = {}
-      @stats_row_names = {}
       rows.each do |row|
         @stats[row] = {}
         if spacer_or_section_header?(row)
@@ -58,11 +57,9 @@ module Stats
 
     class StatsEnumerator
       include Enumerable
-      attr_accessor :stats_row_names
 
       def initialize(stats, column_hash, first_column_header, superheadings, row_names_as_first_column)
         @stats = stats
-        @stats_row_names = {}
         @column_hash = column_hash
         @first_column_header = first_column_header
         @superheadings = superheadings
@@ -79,9 +76,6 @@ module Stats
         yield cols
         row_names.each do |row_name|
           row_name_str = row_name.to_s
-          if @stats_row_names.key?(row_name_str)
-            row_name_str = @stats_row_names[row_name_str]
-          end 
           if row_name_str =~ /^_SPACER/
             row = ['']
           elsif row_name_str =~ /^_/
@@ -109,8 +103,6 @@ module Stats
 
     def to_csv(first_column_header: '', superheadings: [], row_names_as_first_column: true)
       stats_enumerator = StatsEnumerator.new(@stats, @column_hash, first_column_header, superheadings, row_names_as_first_column)
-      stats_enumerator.stats_row_names = @stats_row_names
-      stats_enumerator
     end
 
     private
