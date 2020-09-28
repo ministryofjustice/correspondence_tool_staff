@@ -17,8 +17,11 @@ ENV APP_BUILD_TAG=${BUILD_TAG}
 
 WORKDIR /usr/src/app/
 
-ENV PUMA_PORT 3000
-EXPOSE $PUMA_PORT
+COPY Gemfile* ./
+
+RUN bundle config --global frozen 1 && \
+    bundle config --path=vendor/bundle && \
+    bundle install --without development test
 
 RUN apt-get update && \
     apt-get install -y apt-transport-https && \
@@ -44,12 +47,6 @@ RUN apt-get update && \
     clamav-daemon \
     clamav-freshclam
 
-# ENV RAILS_ENV='production'
-COPY Gemfile* ./
-
-RUN bundle config --global frozen 1 && \
-    bundle install 
-
 COPY . .
 
 RUN mkdir log tmp
@@ -58,6 +55,9 @@ USER appuser
 USER 1000
 
 RUN RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> /dev/null
+
+ENV PUMA_PORT 3000
+EXPOSE $PUMA_PORT
 
 RUN chown -R appuser:appgroup ./*
 RUN chmod +x /usr/src/app/config/docker/*
