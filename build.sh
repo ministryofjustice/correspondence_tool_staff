@@ -47,7 +47,9 @@ function _build() {
   p "------------------------------------------------------------------------"
 
   # 3. Get a logged in context so we can push images to the ECR
-  e Docker build context
+  p "Docker login to registry (ECR)..."
+  # $(aws ecr --profile "$aws_profile" get-login --no-include-email --region "$region" --profile "$aws_profile")
+  # 4. Compose the URL for the remote git object we'll use as the Docker build context
   p "Using git repository as Docker context"
   git_fetch_url=$git_remote_url#$current_version
 
@@ -72,7 +74,13 @@ function _build() {
           --file ./Dockerfile \
           $git_fetch_url
 
+  # 7. Tag and push the image to the ECR
 
+  
+
+  p "Beginning push to ECR..."
+ 
+  p "...push to ECR complete"
 
   # 8. Display the tag to use for deployment
   p "Pushed to ${docker_registry_tag}"
