@@ -102,7 +102,7 @@ module Stats
     end
 
     def to_csv(first_column_header: '', superheadings: [], row_names_as_first_column: true)
-      stats_enumerator = StatsEnumerator.new(@stats, @column_hash, first_column_header, superheadings, row_names_as_first_column)
+      StatsEnumerator.new(@stats, @column_hash, first_column_header, superheadings, row_names_as_first_column)
     end
 
     private
