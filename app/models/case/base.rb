@@ -100,6 +100,7 @@ class Case::Base < ApplicationRecord
                                            'Case::OverturnedICO::SAR'])}
 
   scope :non_offender_sar, -> { where(type: 'Case::SAR::Standard') }
+  scope :offender_sar, -> { where(type: 'Case::SAR::Offender') }
 
   scope :with_teams, -> (teams) do
     includes(:assignments)
@@ -389,6 +390,10 @@ class Case::Base < ApplicationRecord
   def self.state_machine_name
     self.type_abbreviation.downcase
   end
+
+  def self.permitted_states
+    ConfigurableStateMachine::Manager.instance.permitted_states(type_abbreviation.downcase.to_sym)
+  end 
 
   def self.factory(_type)
     raise NotImplementedError.new('Case type must implement self.factory')

@@ -1,6 +1,8 @@
 require 'rails_helper'
 
-describe ExemptionFilter do
+describe CaseFilter::ExemptionFilter do
+
+  let(:user)               { find_or_create :disclosure_specialist_bmt }
 
   before(:all) do
     require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
@@ -18,7 +20,7 @@ describe ExemptionFilter do
   after(:all) { DbHousekeeping.clean }
 
   let(:arel)    { Case::Base.all }
-  let(:filter)  { ExemptionFilter.new(search_query, arel) }
+  let(:filter)  { described_class.new(search_query, user, arel) }
 
   describe '#applied?' do
     subject { filter }

@@ -1,6 +1,8 @@
 require "rails_helper"
 
-describe OpenCaseStatusFilter do
+describe CaseFilter::OpenCaseStatusFilter do
+  let(:user)               { find_or_create :disclosure_specialist_bmt }
+
   before(:all) do
     @setup = StandardSetup.new(only_cases: [
                                  :std_unassigned_foi,
@@ -26,8 +28,8 @@ describe OpenCaseStatusFilter do
     DbHousekeeping.clean
   end
 
-  let(:open_case_status_filter)  { OpenCaseStatusFilter.new search_query,
-                                                            Case::Base }
+  let(:open_case_status_filter)  { described_class.new search_query, user, Case::Base }
+
   describe '#applied?' do
     subject { open_case_status_filter }
 
