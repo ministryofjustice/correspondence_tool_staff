@@ -8,6 +8,10 @@ module ConfigurableStateMachine
       @events = nil
     end
 
+    # Ideal there shouldn't be any other definitions of states other than state machine yaml file. but 
+    # tried to remove it with a method in manager and ended up with an error below 
+    # >> Circular dependency detected while autoloading constant in one of policy ruby code
+    # Couldn't think of easy way to fix it, so just added missing states here
     def self.states
       ['unassigned',
        'awaiting_responder',
@@ -17,7 +21,17 @@ module ConfigurableStateMachine
        'pending_private_office_clearance',
        'awaiting_dispatch',
        'responded',
+       "data_to_be_requested", 
+       "waiting_for_data", 
+       "ready_for_vetting", 
+       "vetting_in_progress", 
+       "ready_to_copy", 
+       "ready_to_dispatch",
        'closed']
+    end
+
+    def self.states_for_closed_cases
+      ['closed']
     end
 
     def events

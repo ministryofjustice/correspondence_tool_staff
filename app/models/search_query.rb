@@ -16,14 +16,30 @@
 #
 
 class SearchQuery < ApplicationRecord
-  FILTER_CLASSES = [
-    CaseTypeFilter,
-    TimelinessFilter,
-    CaseStatusFilter,
-    OpenCaseStatusFilter,
-    ExternalDeadlineFilter,
-    ExemptionFilter,
-  ].freeze
+  include ActiveRecord::Store
+
+  FILTER_CLASSES_MAP = {
+    "all_cases" => [
+      CaseFilter::OpenCaseStatusFilter,
+      CaseFilter::CaseTypeFilter,
+      CaseFilter::CaseTriggerFlagFilter,
+      CaseFilter::TimelinessFilter,
+      CaseFilter::ExternalDeadlineFilter],
+    "closed" => [
+      CaseFilter::ReceivedDateFilter, 
+      CaseFilter::DateRespondedFilter, 
+      CaseFilter::CaseTypeFilter, 
+      CaseFilter::ExemptionFilter],
+    "my_cases" => [CaseFilter::OpenCaseStatusFilter],
+    "search_cases" => [
+      CaseFilter::CaseStatusFilter, 
+      CaseFilter::OpenCaseStatusFilter,
+      CaseFilter::CaseTypeFilter, 
+      CaseFilter::CaseTriggerFlagFilter,
+      CaseFilter::TimelinessFilter,
+      CaseFilter::ExternalDeadlineFilter,
+      CaseFilter::ExemptionFilter]
+  }.freeze
 
   attr_accessor :business_unit_name_filter
 
@@ -39,21 +55,20 @@ class SearchQuery < ApplicationRecord
       list: 'list'
   }
 
-  jsonb_accessor :query,
-                 search_text: [:string, default: nil],
-                 list_path: [:string, default: nil],
-                 external_deadline_from: :date,
-                 external_deadline_to: :date,
-                 filter_sensitivity: [:string, array: true, default: []],
-                 filter_case_type: [:string, array: true, default: []],
-                 filter_open_case_status: [:string, array: true, default: []],
-                 filter_offender_sar_case_status: [:string, array: true, default: []],
-                 filter_timeliness: [:string, array: true, default: []],
-                 exemption_ids: [:integer, array: true, default: []],
-                 common_exemption_ids: [:integer, array: true, default: []],
-                 filter_status: [:string, array: true, default: []]
+  # Add all those properties withn query jsonb fields
+  TYPED_FILTER_FIELDS = {search_text: [:string, default: nil], list_path: [:string, default: nil]}
+  FILTER_CLASSES_MAP.to_hash.values.flatten.uniq.each do | filter_class |
+    filter_class.filter_fields(TYPED_FILTER_FIELDS)
+  end
+  jsonb_accessor(:query, **TYPED_FILTER_FIELDS)
 
-  acts_as_gov_uk_date :external_deadline_from, :external_deadline_to
+  # Define the list of date fields
+  GOV_UK_DATE_FIELDS = CaseFilter::ReceivedDateFilter.date_fields + 
+                      CaseFilter::DateRespondedFilter.date_fields + 
+                      CaseFilter::ExternalDeadlineFilter.date_fields
+
+  acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
+
 
   acts_as_tree
 
@@ -65,8 +80,12 @@ class SearchQuery < ApplicationRecord
     end
   end
 
+  def self.filter_classes
+    FILTER_CLASSES_MAP.to_hash.values.flatten.uniq
+  end
+
   def self.filter_attributes
-    @filter_attributes ||= FILTER_CLASSES.collect_concat do |filter_class|
+    @filter_attributes ||= filter_classes.collect_concat do |filter_class|
       filter_class.filter_attributes
     end
   end
@@ -123,16 +142,6 @@ class SearchQuery < ApplicationRecord
     search_query
   end
 
-  delegate :available_sensitivities, to: CaseTypeFilter
-  delegate :available_case_types, to: CaseTypeFilter
-  delegate :available_statuses, to: CaseStatusFilter
-  delegate :available_offender_sar_case_statuses, to: OpenCaseStatusFilter
-  delegate :available_exemptions, to: ExemptionFilter
-  delegate :available_common_exemptions, to: ExemptionFilter
-  delegate :available_deadlines, to: ExternalDeadlineFilter
-  delegate :available_open_case_statuses, to: OpenCaseStatusFilter
-  delegate :available_timeliness, to: TimelinessFilter
-
   def results(cases_list = nil)
     if root.query_type == 'search'
 
@@ -141,14 +150,14 @@ class SearchQuery < ApplicationRecord
     elsif cases_list.nil?
       raise ArgumentError.new("cannot perform filters without list of cases")
     end
-
+    
     perform_filters(cases_list)
   end
 
   def filter_crumbs
     filter_crumbs = []
     applied_filters.map do |filter_class|
-      filter_class.new(self, Case::Base.none)
+      filter_class.new(self, user, Case::Base.none)
     end.each do |filter|
       filter_crumbs += filter.crumbs
     end
@@ -160,8 +169,8 @@ class SearchQuery < ApplicationRecord
   end
 
   def applied_filters
-    FILTER_CLASSES.select do |filter_class|
-      filter = filter_class.new(self, Case::Base.none)
+    self.class.filter_classes.select do |filter_class|
+      filter = filter_class.new(self, user, Case::Base.none)
       filter.applied?
     end
   end
@@ -172,11 +181,22 @@ class SearchQuery < ApplicationRecord
     end
   end
 
+  def available_filters(user, scope_type)
+    collected_filters = []
+    if FILTER_CLASSES_MAP.to_hash.key?(scope_type)
+      FILTER_CLASSES_MAP[scope_type].each do | filter_class | 
+        filter_class_instance = filter_class.new(self, user, Case::Base.none)
+        collected_filters << filter_class_instance if filter_class_instance.is_permitted_for_user?
+      end
+    end
+    collected_filters
+  end
+
   private
 
   def perform_filters(cases)
     applied_filters.reduce(cases) do |result, filter_class|
-      filter_class.new(self, result).call
+      filter_class.new(self, user, result).call
     end
   end
 end

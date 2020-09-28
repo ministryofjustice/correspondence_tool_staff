@@ -36,7 +36,7 @@ feature 'filtering cases' do
   scenario 'no checkboxes selected before filter applied', js: true do
     open_cases_page.load
     open_cases_page.case_filters.filter_cases_link.click
-    open_cases_page.case_filters.filter_status_link.click
+    open_cases_page.case_filters.filter_open_status_link.click
     open_cases_page.case_filters.apply_filters_button.click
     expect(open_cases_page.case_numbers).to match_array(all_case_numbers)
   end
@@ -44,7 +44,7 @@ feature 'filtering cases' do
   scenario 'filter just unassigned cases', js: true do
     open_cases_page.load
     open_cases_page.case_filters.filter_cases_link.click
-    open_cases_page.case_filters.filter_status_link.click
+    open_cases_page.case_filters.filter_open_status_link.click
     open_cases_page.choose_state('unassigned')
     open_cases_page.case_filters.apply_filters_button.click
 
@@ -54,7 +54,7 @@ feature 'filtering cases' do
   scenario 'filter on unassigned, drafting and awaiting_dispatch cases', js: true do
     open_cases_page.load
     open_cases_page.case_filters.filter_cases_link.click
-    open_cases_page.case_filters.filter_status_link.click
+    open_cases_page.case_filters.filter_open_status_link.click
     open_cases_page.choose_state('unassigned')
     open_cases_page.choose_state('drafting')
     open_cases_page.choose_state('awaiting_dispatch')
@@ -67,7 +67,7 @@ feature 'filtering cases' do
   scenario 'just pending dacu clearance', js: true do
     open_cases_page.load
     open_cases_page.case_filters.filter_cases_link.click
-    open_cases_page.case_filters.filter_status_link.click
+    open_cases_page.case_filters.filter_open_status_link.click
     open_cases_page.choose_state('pending_dacu_clearance')
     open_cases_page.case_filters.apply_filters_button.click
 

@@ -7,9 +7,9 @@ moj.Modules.QuickLinks = {
   bindFinalDeadlineEvents: function($quickLinks){
     $quickLinks.on('click', 'a', function(event){
       var $elem = $(this);
-      var objFromData = $elem.data('external-deadline-from');
-      var objToData = $elem.data('external-deadline-to');
-      var fieldsIDprefix = 'search_query_external_deadline';
+      var objFromData = $elem.data('date-from');
+      var objToData = $elem.data('date-to');
+      var fieldsIDprefix = 'search_query_' + this.id;
       var $parentForm = $elem.closest('form');
 
       $('#' + fieldsIDprefix + '_from_dd').val(objFromData.day);

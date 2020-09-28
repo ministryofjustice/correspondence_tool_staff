@@ -1,6 +1,6 @@
 def filter_on_type_step(page:, types: [], sensitivity: [], expected_cases:)
   page.filter_on('type', *types)
-  page.filter_on('type', *sensitivity)
+  page.filter_on('sensitivity', *sensitivity)
 
   expect(page.case_numbers).to eq expected_cases.map(&:number)
   cases_found_message = if expected_cases.count == 1
@@ -16,9 +16,10 @@ def filter_on_type_step(page:, types: [], sensitivity: [], expected_cases:)
     expect(page.filter_type_content.__send__(element_name))
       .to be_checked
   end
+  page.open_filter(:sensitivity)
   sensitivity.each do |option|
     element_name = "#{option}_checkbox"
-    expect(page.filter_type_content.__send__(element_name))
+    expect(page.filter_sensitivity_content.__send__(element_name))
       .to be_checked
   end
 

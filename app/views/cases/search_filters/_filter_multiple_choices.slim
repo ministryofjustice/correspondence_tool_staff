@@ -1,0 +1,6 @@
+.state-filter
+  .grid-row
+    .column-half
+      - filter.class.filter_attributes.each do | filter_attribute |
+        .div id="#{filter_attribute.to_s}_group"
+          = f.collection_check_boxes filter_attribute, filter.available_choices[filter_attribute] || [], :first, :second

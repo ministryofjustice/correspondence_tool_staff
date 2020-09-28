@@ -14,18 +14,14 @@
 = render partial: 'cases/shared/search_bar'
 
 = render partial: 'cases/shared/case_tabs'
-
 section.govuk-tabs__panel
-
-  - if request.path.include? '/cases/open'
+  - if @query.available_filters(current_user, @current_tab_name).present?
     = render partial: 'cases/search_filters/filters'
 
     - if @query.filter_crumbs.present?
       = render partial: 'cases/search_filters/filter_crumbs',
                locals: { query: @query,
                          clear_params: {} }
-  - else
-    = render partial: 'state_filter_form' unless request.path == '/cases/my_open'
 
   - if @global_nav_manager.current_page.tabs.present?
     .grid-row
