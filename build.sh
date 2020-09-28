@@ -78,12 +78,10 @@ function _build() {
 
   
 
-  p "Beginning push to ECR..."
- 
-  p "...push to ECR complete"
+
 
   # 8. Display the tag to use for deployment
-  p "Pushed to ${docker_registry_tag}"
+
   p "Image created with unique tag: \e[32m$docker_build_tag\e[0m\n"
 
 }

@@ -47,13 +47,8 @@ RUN apt-get update && \
 # ENV RAILS_ENV='production'
 COPY Gemfile* ./
 
-# Set this to any value ("1", "true", etc) to enable development mode.
-# e.g. docker build --build-arg development_mode=1 ...
-ARG development_mode
-
-RUN echo "development_mode=$development_mode"
 RUN bundle config --global frozen 1 && \
-    bundle install ${development:+--with="test development"}
+    bundle install 
 
 COPY . .
 
