@@ -235,7 +235,17 @@ describe CaseSearchService do
                                            parent_id: parent_search_query.id,
                                            filter_case_type: ['foi-standard'],
                                            external_deadline_from: external_deadline_from,
-                                           external_deadline_to: external_deadline_to
+                                           external_deadline_to: external_deadline_to,
+                                           received_date_from:       nil,
+                                           received_date_to:         nil,
+                                           date_responded_from:      nil,
+                                           date_responded_to:        nil,
+                                           filter_status:            [],
+                                           filter_sensitivity:      [],
+                                           filter_timeliness:       [],
+                                           exemption_ids:           [],
+                                           common_exemption_ids:    []
+                                                                  
             service.call
             expect(service.query).to eq existing_search_query
           end

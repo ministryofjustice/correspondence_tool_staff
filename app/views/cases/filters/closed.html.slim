@@ -11,6 +11,17 @@
 = render partial: 'cases/shared/case_tabs'
 
 section.govuk-tabs__panel
+  - if @query.available_filters(current_user, @current_tab_name)
+    = render partial: 'cases/search_filters/filters'
+
+    - if @query.filter_crumbs.present?
+      = render partial: 'cases/search_filters/filter_crumbs',
+               locals: { query: @query,
+                         clear_params: {} }
+  .search-results-summary.column-half
+    strong
+      = @cases.total_count
+    = " #{ 'case'.pluralize(@cases.total_count)} found"
   .download-cases-link
     = link_to 'Download cases', new_stat_path(select: 'CLOSED_CASES')
 

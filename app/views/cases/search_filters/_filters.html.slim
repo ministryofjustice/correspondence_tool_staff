@@ -1,5 +1,5 @@
 = form_for @query, url: @action_url, method: :get do |f|
-  = hidden_field_tag('search_query[filter_type]', 'final_deadline')
+  = hidden_field_tag('search_query[filter_type]', 'filter_by_condition')
   = hidden_field_tag('search_query[parent_id]', @parent_id)
 
   .case-filters.grid-row
@@ -8,35 +8,11 @@
         span.case-filters__summary.case-filters__summary--outer
           = t('filters.headings.filter_cases')
       .case-filters__container#filter-cases-accordion aria-hidden="true"
-        details
-          summary aria-controls="filter-status-content" aria-expanded="false" role="button"
-            span.case-filters__summary
-              = t('filters.headings.filter_by_status')
-          .case-filters__content#filter-status-content aria-hidden="true"
-            = render partial: 'cases/search_filters/open_case_status', locals: { f: f }
-        details
-          summary aria-controls="filter-type-content" aria-expanded="false" role="button"
-            span.case-filters__summary
-              = t('filters.headings.filter_case_type')
-          .case-filters__content aria-hidden="true"
-            = render partial: 'cases/search_filters/case_types', locals: { f: f }
-        details
-          summary aria-controls="filter-timeliness-content" aria-expanded="false" role="button"
-            span.case-filters__summary
-              = t('filters.headings.filter_by_timeliness')
-          .case-filters__content#filter-timeliness-content aria-hidden="true"
-            = render partial: 'cases/search_filters/timeliness', locals: { f: f }
-        details
-          summary aria-controls="filter-deadline-content" aria-expanded="false" role="button"
-            span.case-filters__summary
-              = t('filters.headings.filter_by_deadline')
-          .case-filters__content#filter-deadline-content aria-hidden="true"
-            = render partial: 'cases/search_filters/final_deadline', locals: { f: f }
-        - if request.path.include? '/cases/search'
+        - @query.available_filters(current_user, @current_tab_name).each do | filter |
           details
-            summary aria-controls="filter-exemptions-content" aria-expanded="false" role="button"
+            summary aria-controls="#{filter.class.identifier}_content" id="#{filter.class.identifier}_content_btn" aria-expanded="false" role="button"
               span.case-filters__summary
-                = t('filters.headings.filter_exemptions')
-            .case-filters__content.case-filters__content--exemptions#filter-exemptions-content aria-hidden="true"
-              = render partial: 'cases/search_filters/exemptions', locals: { f: f }
+                = t("filters.headings.#{filter.class.identifier}")
+            .case-filters__content class="case-filters__content--#{filter.class.identifier}" id="#{filter.class.identifier}_content" aria-hidden="true" 
+              = render partial: "cases/search_filters/#{filter.class.template_name}", locals: { f: f, filter: filter }
         input.button type="submit" value="Filter"

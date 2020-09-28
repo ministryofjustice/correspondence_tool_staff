@@ -4,9 +4,8 @@ module Cases
     include SearchParams
     include AvailableCaseReports
 
-    before_action :set_url, only: [:open]
+    before_action :set_url, only: [:open, :closed, :my_open]
     before_action :set_state_selector, only: [:open, :my_open]
-    before_action :set_search_query, only: [:closed, :my_open]
 
     def show
       if params[:state_selector].present?
@@ -29,14 +28,22 @@ module Cases
           :cases_exemptions,
           :exemptions
         )
-        .by_last_transitioned_date
+        
+      service = call_search_service(unpaginated_cases)
+      @query = service.query
 
-      if download_csv_request?
-        @cases = unpaginated_cases
+      if service.error?
+        flash.now[:alert] = service.error_message
       else
-        @cases = unpaginated_cases.page(params[:page]).decorate
+        if download_csv_request?
+          @cases = service.result_set.by_last_transitioned_date
+        else
+          @cases = service.result_set.by_last_transitioned_date.page(params[:page]).decorate
+        end
       end
 
+      @current_tab_name = 'closed'
+      @filter_crumbs = @query.filter_crumbs
       respond_to do |format|
         format.html { render :closed }
         format.csv { send_csv_cases 'closed' }
@@ -75,14 +82,16 @@ module Cases
           :responding_team,
           :approver_assignments
         )
-        .by_deadline
+      service = call_search_service(unpaginated_cases)
+      @query = service.query
 
-      if download_csv_request?
-        @cases = unpaginated_cases
+      if service.error?
+        flash.now[:alert] = service.error_message
       else
-        @cases = unpaginated_cases.page(params[:page]).decorate
+        prepare_open_cases_collection(service)
       end
 
+      @filter_crumbs = @query.filter_crumbs  
       @current_tab_name = 'my_cases'
       @can_add_case = policy(Case::Base).can_add_case?
 
@@ -104,7 +113,14 @@ module Cases
           :responding_team
         )
 
-      call_search_service(full_list_of_cases)
+      service = call_search_service(full_list_of_cases)
+      @query = service.query
+
+      if service.error?
+        flash.now[:alert] = service.error_message
+      else
+        prepare_open_cases_collection(service)
+      end
 
       @filter_crumbs = @query.filter_crumbs
       @current_tab_name = 'all_cases'
@@ -114,20 +130,6 @@ module Cases
         format.csv { send_csv_cases 'open' }
       end
     end
-
-    # @note (mseedat-moj): Was cases#index but is not currently used
-    # def index
-    #   @cases = CaseFinderService.new(current_user)
-    #     .for_params(request.params)
-    #     .scope
-    #     .page(params[:page])
-    #     .decorate
-    #
-    #   @state_selector = StateSelector.new(params)
-    #   @current_tab_name = 'all_cases'
-    #   @can_add_case = policy(Case::Base).can_add_case?
-    # end
-
 
     private
 
@@ -139,23 +141,7 @@ module Cases
         query_params: query_list_params
       )
       service.call(full_list_of_cases)
-      @query = service.query
-
-      if service.error?
-        flash.now[:alert] = service.error_message
-      else
-        prepare_open_cases_collection(service)
-      end
-    end
-
-    def set_search_query
-      service = CaseSearchService.new(
-        user: current_user,
-        query_type: :search,
-        query_params: search_params
-      )
-      service.call
-      @query = service.query
+      service
     end
 
     def set_state_selector

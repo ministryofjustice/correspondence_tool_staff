@@ -45,9 +45,9 @@ feature 'filters whittle down search results' do
                           expected_cases: [@setup.trig_responded_foi])
 
       # Now uncheck non-trigger and check trigger
-      open_cases_page.remove_filter_on('type', 'trigger')
+      open_cases_page.remove_filter_on('sensitivity', 'trigger')
       filter_on_type_step(page: open_cases_page,
-                          types: ['non_trigger'],
+                          sensitivity: ['non_trigger'],
                           expected_cases: [@setup.std_draft_foi_late,
                                            @setup.std_draft_foi])
 
@@ -65,8 +65,8 @@ feature 'filters whittle down search results' do
                           :sar_noff_draft
                         )
 
-      open_cases_page.open_filter(:type)
-      expect(open_cases_page.filter_type_content.non_trigger_checkbox)
+      open_cases_page.open_filter(:sensitivity)
+      expect(open_cases_page.filter_sensitivity_content.non_trigger_checkbox)
         .to be_checked
     end
 
@@ -113,15 +113,15 @@ feature 'filters whittle down search results' do
       expect(open_cases_page).to be_displayed
       expect(open_cases_page.case_numbers)
         .to match_array expected_case_numbers(*@open_cases.keys)
-      open_cases_page.filter_on('status', 'unassigned')
+      open_cases_page.filter_on('open_status', 'unassigned')
       expect(open_cases_page.case_numbers).to match_array expected_case_numbers(
                                                             :ot_ico_foi_noff_unassigned,
                                                             :ot_ico_sar_noff_unassigned,
                                                             :std_unassigned_irc,
                                                             :std_unassigned_irt
                                                           )
-      open_cases_page.open_filter(:status)
-      expect(open_cases_page.filter_status_content.unassigned_checkbox)
+      open_cases_page.open_filter(:open_status)
+      expect(open_cases_page.filter_open_status_content.unassigned_checkbox)
         .to be_checked
 
       open_cases_page.filter_crumb_for('Needs reassigning').click
@@ -130,8 +130,8 @@ feature 'filters whittle down search results' do
         .to match_array expected_case_numbers(*@open_cases.keys)
       expect(open_cases_page.search_results_count.text).to eq '8 cases found'
 
-      open_cases_page.open_filter(:status)
-      expect(open_cases_page.filter_status_content.unassigned_checkbox)
+      open_cases_page.open_filter(:open_status)
+      expect(open_cases_page.filter_open_status_content.unassigned_checkbox)
         .not_to be_checked
     end
   end
@@ -141,12 +141,13 @@ feature 'filters whittle down search results' do
       login_step user: @setup.disclosure_bmt_user
       expect(open_cases_page).to be_displayed
 
-      open_cases_page.filter_on('type', 'foi_standard', 'trigger')
+      open_cases_page.filter_on('sensitivity', 'trigger')
+      open_cases_page.filter_on('type', 'foi_standard')
       open_cases_page.filter_on(:timeliness, 'in_time')
-      open_cases_page.filter_on('status', 'responded')
+      open_cases_page.filter_on('open_status', 'responded')
       open_cases_page.filter_on_deadline(from: Date.today,
                                          to: 15.business_days.from_now)
-      @deadline_filter_text = "%s - %s" % [
+      @deadline_filter_text = "Deadline %s - %s" % [
         Date.today.strftime('%-d %b %Y'),
         15.business_days.from_now.strftime('%-d %b %Y')
       ]
@@ -157,7 +158,7 @@ feature 'filters whittle down search results' do
     # end
 
     scenario 'clearing individual filters', js: true do
-      expect(SearchQuery.count).to eq 5
+      expect(SearchQuery.count).to eq 6
 
       expect(open_cases_page.search_results_count.text).to eq '1 case found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
@@ -168,7 +169,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for(@deadline_filter_text).click
 
-      expect(SearchQuery.count).to eq 5
+      expect(SearchQuery.count).to eq 6
       expect(open_cases_page.search_results_count.text).to eq '1 case found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).to be_present
@@ -178,7 +179,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for('Ready to close').click
 
-      expect(SearchQuery.count).to eq 5
+      expect(SearchQuery.count).to eq 6
       expect(open_cases_page.search_results_count.text).to eq '1 case found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).to be_present
@@ -188,7 +189,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for('In time').click
 
-      expect(SearchQuery.count).to eq 5
+      expect(SearchQuery.count).to eq 6
       expect(open_cases_page.search_results_count.text).to eq '1 case found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).to be_present
@@ -198,7 +199,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for('Trigger').click
 
-      expect(SearchQuery.count).to eq 6
+      expect(SearchQuery.count).to eq 7
       expect(open_cases_page.search_results_count.text).to eq '3 cases found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).not_to be_present
@@ -208,7 +209,7 @@ feature 'filters whittle down search results' do
 
       open_cases_page.filter_crumb_for('FOI - Standard').click
 
-      expect(SearchQuery.count).to eq 7
+      expect(SearchQuery.count).to eq 8
       expect(open_cases_page.search_results_count.text).to eq '8 cases found'
       expect(open_cases_page.filter_crumb_for('FOI - Standard'     )).not_to be_present
       expect(open_cases_page.filter_crumb_for('Trigger'            )).not_to be_present
