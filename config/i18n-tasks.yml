@@ -100,7 +100,7 @@ ignore_unused:
   - 'event.*'
   - 'cases.index.*'
   - 'cases.filters.index.*'
-  - 'filters.crumbs.list_filter_type.*'
+  - 'filters.crumbs.*'
   - 'devise.*'
   - 'errors.*'
   - 'cases.new.correspondence_type_errors.*'

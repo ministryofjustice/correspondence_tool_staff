@@ -357,8 +357,7 @@ en:
         exemption_ids: All exemptions
         filter_assigned_to_ids: Matching business units
         filter_case_type: Type
-        filter_offender_sar_case_status: Branston
-        filter_open_case_status: London
+        filter_open_case_status: Status
         filter_sensitivity: Sensitivity
         filter_status: Status
         filter_timeliness: Timeliness
@@ -971,9 +970,9 @@ en:
     searches:
       show:
         heading: Search
-        external_deadline_from: From
-        external_deadline_to: To
-        external_deadline_hint: For example. 31 01 2017
+        date_from: From
+        date_to: To
+        date_hint: For example. 31 01 2017
     offender_sar:
       subject_heading: Who is the subject?
       requester_heading: Who is making the subject access request?
