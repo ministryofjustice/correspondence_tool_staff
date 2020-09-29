@@ -282,7 +282,7 @@ module CTS::Cases
     end
 
     option :scope, aliases: 'c', type: :string, default: 'all', 
-            enum: %w{all case_id_range, case_number},
+            enum: %w{all case_id_range case_number},
             desc: 'The scope of cases for this action'
     option :start, type: :numeric,
             desc: 'The start of case id for Warehouse::CaseSyncJob'
