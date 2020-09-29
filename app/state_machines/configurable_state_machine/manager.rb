@@ -35,6 +35,16 @@ module ConfigurableStateMachine
       @@instance
     end
 
+    def permitted_states(case_type=nil, org='moj')
+      collected_states = []
+      @state_machines[org].case_types.to_hash.each do | case_type_key, case_type_config|
+        if case_type.nil? || case_type_key == case_type
+          collected_states.push(*case_type_config[:permitted_states] || [])
+        end 
+      end
+      collected_states.uniq
+    end
+
     private_class_method :new
 
 

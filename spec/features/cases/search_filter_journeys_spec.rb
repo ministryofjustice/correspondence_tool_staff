@@ -152,7 +152,7 @@ feature 'filters whittle down search results' do
         .to be_present
 
       # Now uncheck non-trigger
-      cases_search_page.remove_filter_on('type', 'non_trigger')
+      cases_search_page.remove_filter_on('sensitivity', 'non_trigger')
       expect(cases_search_page.case_numbers).to match_array expected_case_numbers(
                                                               :trig_responded_foi,
                                                               :trig_closed_foi
@@ -247,22 +247,22 @@ feature 'filters whittle down search results' do
       search_for(page: open_cases_page, search_phrase: 'prison guards', num_expected_results: 9)
 
       cases_search_page.filter_on('status', 'open')
-      cases_search_page.filter_on('type', 'foi_standard', 'trigger')
-
+      cases_search_page.filter_on('type', 'foi_standard')
+      cases_search_page.filter_on('sensitivity', 'trigger')
       cases_search_page.filter_on_exemptions(common: %w{ s40 } )
 
       cases_search_page.filter_on_deadline('Today')
 
       @s40_exemption = '(s40) - Personal information'
-      @from_to_date = "#{I18n.l Date.today} - #{I18n.l Date.today}"
+      @from_to_date = "Deadline #{I18n.l Date.today} - #{I18n.l Date.today}"
     end
 
     scenario 'clearing individual filters', js: true do
-      expect(SearchQuery.count).to eq 6
+      expect(SearchQuery.count).to eq 7
 
       cases_search_page.filter_crumb_for(@from_to_date).click
 
-      expect(SearchQuery.count).to eq 6
+      expect(SearchQuery.count).to eq 7
       expect(cases_search_page.filter_crumb_for('Open'               )).to be_present
       expect(cases_search_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(cases_search_page.filter_crumb_for('Trigger'            )).to be_present
@@ -272,7 +272,7 @@ feature 'filters whittle down search results' do
 
       cases_search_page.filter_crumb_for(@s40_exemption).click
 
-      expect(SearchQuery.count).to eq 6
+      expect(SearchQuery.count).to eq 7
       expect(cases_search_page.filter_crumb_for('Open'               )).to be_present
       expect(cases_search_page.filter_crumb_for('FOI - Standard'     )).to be_present
       expect(cases_search_page.filter_crumb_for('Trigger'            )).to be_present
@@ -297,7 +297,8 @@ feature 'filters whittle down search results' do
       expect(cases_search_page.filter_crumb_for(@s40_exemption       )).not_to be_present
       expect(cases_search_page.filter_crumb_for(@from_to_date        )).not_to be_present
 
-      cases_search_page.filter_on('type', 'foi_standard', 'trigger')
+      cases_search_page.filter_on('type', 'foi_standard')
+      cases_search_page.filter_on('sensitivity', 'trigger')
       cases_search_page.filter_crumb_for('Open').click
 
       expect(SearchQuery.count).to eq 8

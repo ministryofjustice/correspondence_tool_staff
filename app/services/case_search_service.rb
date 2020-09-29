@@ -43,6 +43,7 @@ class CaseSearchService
   def setup_search_query
     if query_params.blank?
       @query = SearchQuery.new
+      @query.user_id = @current_user.id
     else
       @query = SearchQuery.find_or_create(@query_params.merge(
           user_id: @current_user.id,
@@ -68,7 +69,7 @@ class CaseSearchService
   def process_params(params)
     params[:search_text]&.strip!
 
-    SearchQuery::FILTER_CLASSES.each do |filter_class|
+    SearchQuery::filter_classes.each do |filter_class |
       filter_class.process_params!(params)
     end
     params

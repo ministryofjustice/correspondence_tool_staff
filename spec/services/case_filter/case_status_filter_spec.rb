@@ -1,6 +1,9 @@
 require "rails_helper"
 
-describe CaseStatusFilter do
+describe CaseFilter::CaseStatusFilter do
+
+  let(:user)               { find_or_create :disclosure_specialist_bmt }
+
   before :all do
     DbHousekeeping.clean
     @setup = StandardSetup.new(only_cases: [
@@ -11,8 +14,7 @@ describe CaseStatusFilter do
 
   after(:all) { DbHousekeeping.clean }
 
-  let(:case_status_filter)  { CaseStatusFilter.new search_query,
-                                                   Case::Base.all }
+  let(:case_status_filter)  { described_class.new search_query, user, Case::Base.all }
 
   describe '#applied?' do
     subject { case_status_filter }

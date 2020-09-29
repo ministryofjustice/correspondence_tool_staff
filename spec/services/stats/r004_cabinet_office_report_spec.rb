@@ -4,7 +4,7 @@ require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
 # rubocop:disable Metrics/ModuleLength
 module Stats
   describe R004CabinetOfficeReport do
-    context 'sections 1, 2, 3' do
+    context 'sections 1, 2, 3, 5, 6, 7' do
       before(:all) do
         create_report_type(abbr: :r004)
 
@@ -28,12 +28,12 @@ module Stats
           2.times { create :closed_case, :other_exceeded_cost }
           3.times { create :closed_case, :part_refused_exempt_s23 }
 
-          4.times { create :closed_case, :fully_refused_exempt_s22 }
+          3.times { create :closed_case, :fully_refused_exempt_s22 }          
           2.times { create :closed_case, :fully_refused_exempt_s23 }
           1.times { create :closed_case, :fully_refused_exempt_s24 }
           4.times { create :closed_case, :fully_refused_exempt_s26 }
 
-          3.times { create :closed_case, :fully_refused_exempt_s27 }
+          1.times { create :closed_case, :fully_refused_exempt_s27 }
           2.times { create :closed_case, :fully_refused_exempt_s28 }
           1.times { create :closed_case, :fully_refused_exempt_s29 }
           2.times { create :closed_case, :fully_refused_exempt_s30 }
@@ -53,6 +53,13 @@ module Stats
           1.times { create :closed_case, :fully_refused_exempt_s42 }
           2.times { create :closed_case, :fully_refused_exempt_s43 }
           1.times { create :closed_case, :fully_refused_exempt_s44 }
+
+          1.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s22))}        
+          2.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s27))}        
+          3.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s34))}        
+          4.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s36))}        
+          5.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s44))}        
+          6.times { create(:closed_ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s21))}        
         end
 
         # cases created more than 20 days ago still in this quarter
@@ -87,8 +94,8 @@ module Stats
 
       context '1.A' do
         it 'records the total number' do
-          expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this quarter'
-          expect(@results['1.A'][:value]).to eq 77
+          expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this period'
+          expect(@results['1.A'][:value]).to eq 95
         end
       end
 
@@ -100,7 +107,7 @@ module Stats
 
       context '1.B' do
         it 'records  the stat' do
-          expect(@results['1.B'][:desc]).to eq 'Number of requests that have been created but not closed in this quarter'
+          expect(@results['1.B'][:desc]).to eq 'Number of requests that have been created but not closed in this period'
           expect(@results['1.B'][:value]).to eq 7
         end
       end
@@ -121,22 +128,22 @@ module Stats
 
       context '1.Biii' do
         it 'records the stat' do
-          expect(@results['1.Biii'][:desc]).to eq 'Number of requests created this quarter, that are yet to be closed, that have gone over the 20 day deadline'
+          expect(@results['1.Biii'][:desc]).to eq 'Number of requests created this period, that are yet to be closed, that have gone over the 20 day deadline'
           expect(@results['1.Biii'][:value]).to eq 4
         end
       end
 
       context '1.C' do
         it 'records the stat' do
-          expect(@results['1.C'][:desc]).to eq 'Number of requests that have been created and closed within this quarter'
-          expect(@results['1.C'][:value]).to eq 70
+          expect(@results['1.C'][:desc]).to eq 'Number of requests that have been created and closed within this period'
+          expect(@results['1.C'][:value]).to eq 88
         end
       end
 
       context '1.Ci' do
         it 'records the stat' do
-          expect(@results['1.Ci'][:desc]).to eq 'Number of requests created and processed in this quarter that were within time against the external deadline'
-          expect(@results['1.Ci'][:value]).to eq 67
+          expect(@results['1.Ci'][:desc]).to eq 'Number of requests created and processed in this period that were within time against the external deadline'
+          expect(@results['1.Ci'][:value]).to eq 85
         end
       end
 
@@ -149,21 +156,21 @@ module Stats
 
       context '1.Ciii' do
         it 'is out of scope' do
-          expect(@results['1.Ciii'][:desc]).to eq 'Number of requests that have been created and closed within this quarter that were out of time against the external deadline'
+          expect(@results['1.Ciii'][:desc]).to eq 'Number of requests that have been created and closed within this period that were out of time against the external deadline'
           expect(@results['1.Ciii'][:value]).to eq 3
         end
       end
 
       context '2.A' do
         it 'replicates the figure in 1.C' do
-          expect(@results['2.A'][:desc]).to eq 'Number of requests that have been created and closed within this quarter (Replicates \'C\' above in TIMELINESS section)'
-          expect(@results['2.A'][:value]).to eq 70
+          expect(@results['2.A'][:desc]).to eq 'Number of requests that have been created and closed within this period (Replicates \'C\' above in TIMELINESS section)'
+          expect(@results['2.A'][:value]).to eq 88
         end
       end
 
       context '2.B' do
         it 'records the stat' do
-          expect(@results['2.B'][:desc]).to match(/Number of cases created and closed in this quarter .*Granted in full/)
+          expect(@results['2.B'][:desc]).to match(/Number of cases created and closed in this period .*Granted in full/)
           expect(@results['2.B'][:value]).to eq 9
         end
       end
@@ -177,50 +184,50 @@ module Stats
 
       context '2.D' do
         it 'records the stat' do
-          expect(@results['2.D'][:desc]).to match(/Number of cases created and closed in this quarter .*Refused fully.*Information not held/)
+          expect(@results['2.D'][:desc]).to match(/Number of cases created and closed in this period .*Refused fully.*Information not held/)
           expect(@results['2.D'][:value]).to eq 3
         end
       end
 
       context '2.E' do
         it 'records the stat' do
-          expect(@results['2.E'][:desc]).to match(/Number of cases created and closed in this quarter .*Refused fully.*Refused in part.* vexatious/)
+          expect(@results['2.E'][:desc]).to match(/Number of cases created and closed in this period .*Refused fully.*Refused in part.* vexatious/)
           expect(@results['2.E'][:value]).to eq 3
         end
       end
 
       context '2.F' do
         it 'records the stat' do
-          expect(@results['2.F'][:desc]).to eq "Number of cases created and closed in this quarter that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of '(s14(2)) - repeated request'"
+          expect(@results['2.F'][:desc]).to eq "Number of cases created and closed in this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of '(s14(2)) - repeated request'"
           expect(@results['2.F'][:value]).to eq 1
         end
       end
 
       context '2.G' do
         it 'records the stat' do
-          expect(@results['2.G'][:desc]).to eq "Number of cases created and closed in this quarter that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of '(s12) - exceeded cost'"
+          expect(@results['2.G'][:desc]).to eq "Number of cases created and closed in this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of '(s12) - exceeded cost'"
           expect(@results['2.G'][:value]).to eq 6
         end
       end
 
       context '2.H' do
         it 'records the stat' do
-          expect(@results['2.H'][:desc]).to eq "Number of cases created and closed in this quarter that have been marked as 'Refused in part' with a 'reason for refusal' of 'Exemption applied'"
+          expect(@results['2.H'][:desc]).to eq "Number of cases created and closed in this period that have been marked as 'Refused in part' with a 'reason for refusal' of 'Exemption applied'"
           expect(@results['2.H'][:value]).to eq 3
         end
       end
 
       context '2.I' do
         it 'records the stat' do
-          expect(@results['2.I'][:desc]).to eq "Number of cases created and closed in this quarter that have been marked as 'Refused fully' with a 'reason for refusal' of 'Exemption applied'"
-          expect(@results['2.I'][:value]).to eq 47
+          expect(@results['2.I'][:desc]).to eq "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of 'Exemption applied'"
+          expect(@results['2.I'][:value]).to eq 65
         end
       end
 
       context '3.A' do
         it 'records the stat' do
-          expect(@results['3.A'][:desc]).to eq "Number of cases created and closed in this quarter that were fully or partly refused"
-          expect(@results['3.A'][:value]).to eq 50
+          expect(@results['3.A'][:desc]).to eq "Number of cases created and closed in this period that were fully or partly refused"
+          expect(@results['3.A'][:value]).to eq 68
         end
       end
 
@@ -311,7 +318,7 @@ module Stats
       context '3.S34' do
         it 'records the stat' do
           expect(@results['3.S34'][:desc]).to match(/Refused fully.*Exemption applied.*Parliamentary privilege/)
-          expect(@results['3.S34'][:value]).to eq 2
+          expect(@results['3.S34'][:value]).to eq 5
         end
       end
 
@@ -325,7 +332,7 @@ module Stats
       context '3.S36' do
         it 'records the stat' do
           expect(@results['3.S36'][:desc]).to match(/Refused fully.*Exemption applied.*Prejudice to effective conduct of public affairs/)
-          expect(@results['3.S36'][:value]).to eq 2
+          expect(@results['3.S36'][:value]).to eq 6
         end
       end
 
@@ -374,7 +381,189 @@ module Stats
       context '3.S44' do
         it 'records the stat' do
           expect(@results['3.S44'][:desc]).to match(/Refused fully.*Exemption applied.*Prohibitions on disclosure/)
-          expect(@results['3.S44'][:value]).to eq 1
+          expect(@results['3.S44'][:value]).to eq 6
+        end
+      end
+
+      context '5.Ai' do
+        it 'records the stat' do
+          expect(@results['5.Ai'][:desc]).to match(/Number of cases created in this period .*The information not held/)
+          expect(@results['5.Ai'][:value]).to eq 3
+        end
+      end
+
+      context '6.S12' do
+        it 'records the stat' do
+          expect(@results['6.S12'][:desc]).to match(/Number of cases created in this period .*Exceeded cost to investigate/)
+          expect(@results['6.S12'][:value]).to eq 2
+        end
+      end
+
+      context '6.S14' do
+        it 'records the stat' do
+          expect(@results['6.S14'][:desc]).to match(/Number of cases created in this period .*Vexatious.*Repeated request/)
+          expect(@results['6.S14'][:value]).to eq 4
+        end
+      end
+
+      context '7.S21' do
+        it 'records the stat' do
+          expect(@results['7.S21'][:desc]).to match(/Refused fully.*Exemption applied.*Information accessible by other means/)
+          expect(@results['7.S21'][:value]).to eq 6
+        end
+      end
+
+      context '7.S22' do
+        it 'records the stat' do
+          expect(@results['7.S22'][:desc]).to match(/Refused fully.*Exemption applied.*Information intended for future publication/)
+          expect(@results['7.S22'][:value]).to eq 1
+        end
+      end
+
+      context '7.S22A' do
+        it 'records the stat' do
+          expect(@results['7.S22A'][:desc]).to match(/Refused fully.*reason for refusal.*Research intended for future publication/)
+          expect(@results['7.S22A'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S23' do
+        it 'records the stat' do
+          expect(@results['7.S23'][:desc]).to match(/Refused fully.*Exemption applied.*Information supplied by, or relating to, bodies dealing with security matters/)
+          expect(@results['7.S23'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S24' do
+        it 'records the stat' do
+          expect(@results['7.S24'][:desc]).to match(/Refused fully.*Exemption applied.*National security/)
+          expect(@results['7.S24'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S26' do
+        it 'records the stat' do
+          expect(@results['7.S26'][:desc]).to match(/Refused fully.*Exemption applied.*Defence/)
+          expect(@results['7.S26'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S27' do
+        it 'records the stat' do
+          expect(@results['7.S27'][:desc]).to match(/Refused fully.*Exemption applied.*International relations/)
+          expect(@results['7.S27'][:value]).to eq 2
+        end
+      end
+
+      context '7.S28' do
+        it 'records the stat' do
+          expect(@results['7.S28'][:desc]).to match(/Refused fully.*Exemption applied.*Relations within the United Kingdom/)
+          expect(@results['7.S28'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S29' do
+        it 'records the stat' do
+          expect(@results['7.S29'][:desc]).to match(/Refused fully.*Exemption applied.*economy/)
+          expect(@results['7.S29'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S30' do
+        it 'records the stat' do
+          expect(@results['7.S30'][:desc]).to match(/Refused fully.*Exemption applied.*public authorities/)
+          expect(@results['7.S30'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S31' do
+        it 'records the stat' do
+          expect(@results['7.S31'][:desc]).to match(/Refused fully.*Exemption applied.*Law enforcement/)
+          expect(@results['7.S31'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S32' do
+        it 'records the stat' do
+          expect(@results['7.S32'][:desc]).to match(/Refused fully.*Exemption applied.*Court records/)
+          expect(@results['7.S32'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S33' do
+        it 'records the stat' do
+          expect(@results['7.S33'][:desc]).to match(/Refused fully.*Exemption applied.*Audit functions/)
+          expect(@results['7.S33'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S34' do
+        it 'records the stat' do
+          expect(@results['7.S34'][:desc]).to match(/Refused fully.*Exemption applied.*Parliamentary privilege/)
+          expect(@results['7.S34'][:value]).to eq 3
+        end
+      end
+
+      context '7.S35' do
+        it 'records the stat' do
+          expect(@results['7.S35'][:desc]).to match(/Refused fully.*Exemption applied.*Formulation of government policy/)
+          expect(@results['7.S35'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S36' do
+        it 'records the stat' do
+          expect(@results['7.S36'][:desc]).to match(/Refused fully.*Exemption applied.*Prejudice to effective conduct of public affairs/)
+          expect(@results['7.S36'][:value]).to eq 4
+        end
+      end
+
+      context '7.S37' do
+        it 'records the stat' do
+          expect(@results['7.S37'][:desc]).to match(/Refused fully.*Exemption applied.*Communications with Her Majesty, etc. and honours/)
+          expect(@results['7.S37'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S38' do
+        it 'records the stat' do
+          expect(@results['7.S38'][:desc]).to match(/Refused fully.*Exemption applied.*Health and safety/)
+          expect(@results['7.S38'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S40' do
+        it 'records the stat' do
+          expect(@results['7.S40'][:desc]).to match(/Refused fully.*Exemption applied.*Personal information/)
+          expect(@results['7.S40'][:value]).to eq 0          
+        end
+      end
+
+      context '7.S41' do
+        it 'records the stat' do
+          expect(@results['7.S41'][:desc]).to match(/Refused fully.*Exemption applied.*Information provided in confidence/)
+          expect(@results['7.S41'][:value]).to eq 0
+        end
+      end
+
+      context '7.S42' do
+        it 'records the stat' do
+          expect(@results['7.S42'][:desc]).to match(/Refused fully.*Exemption applied.*Legal professional privilege/)
+          expect(@results['7.S42'][:value]).to eq 0
+        end
+      end
+
+      context '7.S43' do
+        it 'records the stat' do
+          expect(@results['7.S43'][:desc]).to match(/Refused fully.*Exemption applied.*Commercial interests/)
+          expect(@results['7.S43'][:value]).to eq 0
+        end
+      end
+
+      context '7.S44' do
+        it 'records the stat' do
+          expect(@results['7.S44'][:desc]).to match(/Refused fully.*Exemption applied.*Prohibitions on disclosure/)
+          expect(@results['7.S44'][:value]).to eq 5
         end
       end
     end

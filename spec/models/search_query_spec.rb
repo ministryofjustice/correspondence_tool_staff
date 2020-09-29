@@ -69,9 +69,12 @@ describe SearchQuery do
                                                  :filter_open_case_status,
                                                  :filter_sensitivity,
                                                  :filter_status,
-                                                 :filter_timeliness,
-                                                 :filter_offender_sar_case_status
-                                               ]
+                                                 :filter_timeliness, 
+                                                 :date_responded_from, 
+                                                 :date_responded_to, 
+                                                 :received_date_from, 
+                                                 :received_date_to
+                                                ]
     end
   end
 
@@ -102,6 +105,10 @@ describe SearchQuery do
           exemption_ids:          [21],
           common_exemption_ids:   [21],
           filter_status:          ['open'],
+          received_date_from:       nil,
+          received_date_to:         nil,
+          date_responded_from:      nil,
+          date_responded_to:        nil,
         )
       }
       let(:query_params) {
@@ -162,7 +169,11 @@ describe SearchQuery do
           exemption_ids:           [21],
           common_exemption_ids:    [21],
           filter_open_case_status: ['unassigned'],
-          filter_offender_sar_case_status: [],
+          received_date_from:       nil,
+          received_date_to:         nil,
+          date_responded_from:      nil,
+          date_responded_to:        nil,
+          filter_status:            [],
         )
       }
       let(:query_params) {
@@ -178,7 +189,6 @@ describe SearchQuery do
           exemption_ids:           [21],
           common_exemption_ids:    [21],
           filter_open_case_status: ['unassigned'],
-          filter_offender_sar_case_status: [],
         ).permit!
       }
 
@@ -204,7 +214,10 @@ describe SearchQuery do
                                                 :filter_sensitivity,
                                                 :filter_status,
                                                 :filter_timeliness,
-                                                :filter_offender_sar_case_status
+                                                :date_responded_from, 
+                                                :date_responded_to, 
+                                                :received_date_from, 
+                                                :received_date_to
                                               ]
     end
   end
@@ -453,29 +466,53 @@ describe SearchQuery do
   describe '#applied_filters' do
     it 'includes case type filters' do
       search_query = create :search_query, filter_case_type: ['foi-standard']
-      expect(search_query.applied_filters).to eq [CaseTypeFilter]
+      expect(search_query.applied_filters).to eq [CaseFilter::CaseTypeFilter]
     end
 
     it 'includes status filters' do
       search_query = create :search_query, filter_status: ['closed']
-      expect(search_query.applied_filters).to eq [CaseStatusFilter]
+      expect(search_query.applied_filters).to eq [CaseFilter::CaseStatusFilter]
+    end
+
+    it 'includes open status filters' do
+      search_query = create :search_query, filter_open_case_status: ['unassigned']
+      expect(search_query.applied_filters).to eq [CaseFilter::OpenCaseStatusFilter]
+    end
+
+    it 'includes trigger flag filters' do
+      search_query = create :search_query, filter_sensitivity: ['trigger']
+      expect(search_query.applied_filters).to eq [CaseFilter::CaseTriggerFlagFilter]
     end
 
     it 'includes exemption filters' do
       search_query = create :search_query, exemption_ids: [2]
-      expect(search_query.applied_filters).to eq [ExemptionFilter]
+      expect(search_query.applied_filters).to eq [CaseFilter::ExemptionFilter]
     end
 
     it 'includes external deadline filters' do
       search_query = create :search_query,
                             external_deadline_from: Date.today,
                             external_deadline_to: Date.today
-      expect(search_query.applied_filters).to eq [ExternalDeadlineFilter]
+      expect(search_query.applied_filters).to eq [CaseFilter::ExternalDeadlineFilter]
+    end
+
+    it 'includes received date filters' do
+      search_query = create :search_query,
+                            received_date_from: Date.today,
+                            received_date_to: Date.today
+      expect(search_query.applied_filters).to eq [CaseFilter::ReceivedDateFilter]
+    end
+
+    it 'includes date responded filters' do
+      search_query = create :search_query,
+                            date_responded_from: Date.today,
+                            date_responded_to: Date.today
+      expect(search_query.applied_filters).to eq [CaseFilter::DateRespondedFilter]
     end
 
     it 'includes timeliness filters' do
       search_query = create :search_query, filter_timeliness: ['in_time']
-      expect(search_query.applied_filters).to eq [TimelinessFilter]
+      expect(search_query.applied_filters).to eq [CaseFilter::TimelinessFilter]
     end
   end
 end
