@@ -34,13 +34,13 @@ references:
 
 
 # These are defining the steps which are used below in the jobs
-  
+
   install_psql: &install_psql
     run:
       name: Install psql client
       command: |
          sudo apt update && sudo apt install postgresql-client
-  
+
   update_chromedriver: &update_chromedriver
     run:
       name: Update chrome and the chromedriver
@@ -152,8 +152,27 @@ references:
       command: |
         export PARALLEL_TEST_PROCESSORS=8
         bundle exec rails parallel:create
-        bundle exec rails parallel:load_structure 
+        bundle exec rails parallel:load_structure
         bundle exec rails parallel:spec
+
+  build_and_send_veracode: &build_and_send_veracode
+    run:
+      name: Create veracode zipped file and send to veracode
+      command: |
+        gem sources --add https://gems.veracode.com
+        gem install veracode --prerelease
+        bundle exec veracode prepare
+
+        mkdir tmp/veracode
+        mv tmp/*.zip tmp/veracode
+
+        current_branch=$(git branch | grep \* | cut -d ' ' -f2)
+        current_version=$(git rev-parse $current_branch)
+        short_version=$(git rev-parse --short $current_branch)
+        ts=`date +%s`
+        build_tag=cts-${current_branch}-${short_version}-${ts}
+
+        ./veracode-scan.sh $VERACODE_API_ID $VERACODE_API_KEY "Correspondence Tool for Staff" "./tmp/veracode" $build_tag
 
   set_up_aws_cli: &set_up_aws_cli
     run:
@@ -163,7 +182,7 @@ references:
         sudo apt-get update
         sudo apt-get --assume-yes install python3-pip
         sudo pip3 install awscli
-  
+
   configure_aws_profile: &configure_aws_profile
     run:
       name: Configure AWS CLI
@@ -171,7 +190,7 @@ references:
         aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} --profile ecr-live-1
         aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile ecr-live-1
         aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live-1
-  
+
   build_and_push_docker_image: &build_and_push_docker_image
     run:
       name: Build docker image
@@ -185,7 +204,7 @@ references:
       name: Deploy to Development environment
       command: |
         setup-kube-auth
-        kubectl config use-context development        
+        kubectl config use-context development
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag development circleci
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
@@ -196,7 +215,7 @@ references:
       name: Deploy to Staging environment
       command: |
         setup-kube-auth
-        kubectl config use-context staging       
+        kubectl config use-context staging
         build_tag=`cat /tmp/workspace/build_tag`
         ./deploy.sh $build_tag staging circleci
         echo "export BUILD_TAG=${build_tag}" >> $BASH_ENV
@@ -255,6 +274,17 @@ jobs:
       - *update_chromedriver
       - *run_unit_and_feature_tests
 
+  package_and_send_to_veracode:
+    <<: *test_container_config
+    <<: *defaults
+    steps:
+      - checkout
+      - *restore_cache
+      - *install_bundler
+      - *install_dependencies
+      - *save_cache
+      - *build_and_send_veracode
+
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
     <<: *defaults
@@ -263,8 +293,8 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker:
-          docker_layer_caching: true 
-      - *configure_aws_profile 
+          docker_layer_caching: true
+      - *configure_aws_profile
       - *build_and_push_docker_image
       - persist_to_workspace:
           root: workspace
@@ -279,8 +309,8 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker:
-          docker_layer_caching: true 
-      - *configure_aws_profile 
+          docker_layer_caching: true
+      - *configure_aws_profile
       - *build_and_push_docker_image
       - persist_to_workspace:
           root: workspace
@@ -302,10 +332,10 @@ jobs:
       - *deploy_to_dev
       - slack/notify:
           color: '#1d990c'
-          message: 'Deployed *${BUILD_TAG}* to *Development*' 
+          message: 'Deployed *${BUILD_TAG}* to *Development*'
           webhook: ${SLACK_WEBHOOK_CT}
 
-  deploy_branch_to_dev: *do_dev_deployment_tasks 
+  deploy_branch_to_dev: *do_dev_deployment_tasks
   deploy_master_to_dev: *do_dev_deployment_tasks
 
   staging_deployment_tasks: &do_staging_deployment_tasks
@@ -323,7 +353,7 @@ jobs:
       - *deploy_to_staging
       - slack/notify:
           color: '#1d990c'
-          message: 'Deployed *${BUILD_TAG}* to *Staging*' 
+          message: 'Deployed *${BUILD_TAG}* to *Staging*'
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_staging: *do_staging_deployment_tasks
@@ -344,9 +374,9 @@ jobs:
       - *deploy_to_qa
       - slack/notify:
           color: '#1d990c'
-          message: 'Deployed *${BUILD_TAG}* to *QA*' 
+          message: 'Deployed *${BUILD_TAG}* to *QA*'
           webhook: ${SLACK_WEBHOOK_CT}
-  
+
   deploy_branch_to_qa: *do_qa_deployment_tasks
   deploy_master_to_qa: *do_qa_deployment_tasks
 
@@ -365,7 +395,7 @@ jobs:
       - *deploy_to_demo
       - slack/notify:
           color: '#1d990c'
-          message: 'Deployed *${BUILD_TAG}* to *Demo*' 
+          message: 'Deployed *${BUILD_TAG}* to *Demo*'
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_demo: *do_demo_deployment_tasks
@@ -387,12 +417,12 @@ jobs:
       - slack/notify:
           color: '#1d990c'
           mentions: 'staff-tools-team'
-          message: 'Deployed *${BUILD_TAG}* to *Production*' 
+          message: 'Deployed *${BUILD_TAG}* to *Production*'
           webhook: ${SLACK_WEBHOOK_SS_CIRCLECI}
       - slack/notify:
           color: '#1d990c'
-          message: 'Deployed *${BUILD_TAG}* to *Production*' 
-          webhook: ${SLACK_WEBHOOK_CT}    
+          message: 'Deployed *${BUILD_TAG}* to *Production*'
+          webhook: ${SLACK_WEBHOOK_CT}
 
 workflows:
   version: 2
@@ -405,17 +435,20 @@ workflows:
               only: master
       - build_master_and_push_to_ecr:
           requires:
-            - build_and_test   
+            - build_and_test
       - deploy_master_to_dev:
           requires:
-            - build_master_and_push_to_ecr       
+            - build_master_and_push_to_ecr
+      - package_and_send_to_veracode:
+          requires:
+            - deploy_master_to_dev
       - deploy_master_to_staging_approval:
           type: approval
           requires:
-            - deploy_master_to_dev          
+            - deploy_master_to_dev
       - deploy_master_to_staging:
           requires:
-            - deploy_master_to_staging_approval 
+            - deploy_master_to_staging_approval
       - deploy_master_to_production_approval:
           type: approval
           requires:
@@ -426,14 +459,14 @@ workflows:
       - deploy_master_to_qa_approval:
           type: approval
           requires:
-            - build_master_and_push_to_ecr           
+            - build_master_and_push_to_ecr
       - deploy_master_to_qa:
           requires:
             - deploy_master_to_qa_approval
       - deploy_master_to_demo_approval:
           type: approval
           requires:
-            - build_master_and_push_to_ecr            
+            - build_master_and_push_to_ecr
       - deploy_master_to_demo:
           requires:
             - deploy_master_to_demo_approval
@@ -444,6 +477,9 @@ workflows:
           filters:
             branches:
               ignore: master
+      - package_and_send_to_veracode:
+          requires:
+            - build_and_test
       - build_branch_and_push_to_ecr_approval:
           type: approval
           requires:
@@ -454,7 +490,7 @@ workflows:
       - deploy_branch_to_dev_approval:
           type: approval
           requires:
-            - build_branch_and_push_to_ecr 
+            - build_branch_and_push_to_ecr
       - deploy_branch_to_dev:
           requires:
             - deploy_branch_to_dev_approval
@@ -464,7 +500,7 @@ workflows:
             - build_branch_and_push_to_ecr
       - deploy_branch_to_staging:
           requires:
-            - deploy_branch_to_staging_approval             
+            - deploy_branch_to_staging_approval
       - deploy_branch_to_qa_approval:
           type: approval
           requires:
@@ -475,8 +511,8 @@ workflows:
       - deploy_branch_to_demo_approval:
           type: approval
           requires:
-            - build_branch_and_push_to_ecr            
+            - build_branch_and_push_to_ecr
       - deploy_branch_to_demo:
           requires:
-            - deploy_branch_to_demo_approval                                      
-      
+            - deploy_branch_to_demo_approval
+
