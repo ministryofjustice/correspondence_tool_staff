@@ -64,7 +64,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       get :new, params: params
       expect(response).to render_template(:new)
       expect(assigns(:case)).to be_a OffenderSARCaseForm
-      expect(assigns(:case_types)).to eq %w[Case::SAR::Offender]
+      expect(assigns(:case_types)).to match_array %w[Case::SAR::Offender Case::SAR::OffenderComplaint]
     end
   end
 

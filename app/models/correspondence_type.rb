@@ -115,6 +115,10 @@ class CorrespondenceType < ApplicationRecord
     find_by_abbreviation! 'OFFENDER_SAR'
   end
 
+  def self.offender_sar_complaint
+    find_by_abbreviation! 'OFFENDER_SAR_COMPLAINT'
+  end
+
   def self.ico
     find_by_abbreviation! 'ICO'
   end
