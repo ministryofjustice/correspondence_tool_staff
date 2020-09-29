@@ -281,6 +281,15 @@ module CTS::Cases
       reindexer.call
     end
 
+    option :scope, aliases: 'c', type: :string, default: 'all', 
+            enum: %w{all case_id_range, case_number},
+            desc: 'The scope of cases for this action'
+    option :start, type: :numeric,
+            desc: 'The start of case id for Warehouse::CaseSyncJob'
+    option :end, type: :numeric,
+            desc: 'The end of case_id for Warehouse::CaseSyncJob'
+    option :number, aliases: 'n', type: :string,
+            desc: 'The case_number of a case'
     option :size, aliases: 's', type: :numeric,
             desc: 'The limit for the number of cases to be updated into warehouse.'
     desc 'warehouse', 'Warehouse all the cases (long process)'

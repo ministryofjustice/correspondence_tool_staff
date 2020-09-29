@@ -1100,7 +1100,8 @@ CREATE TABLE public.warehouse_case_reports (
     number_of_days_taken integer,
     number_of_exempt_pages integer,
     number_of_final_pages integer,
-    third_party_company_name character varying
+    third_party_company_name character varying,
+    number_of_days_taken_after_extension integer
 );
 
 
@@ -2021,6 +2022,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200819133514'),
 ('20200819171428'),
 ('20200824130200'),
-('20200914160132');
+('20200914160132'),
+('20200925100514');
 
 

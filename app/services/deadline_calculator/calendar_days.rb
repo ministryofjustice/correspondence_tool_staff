@@ -3,6 +3,18 @@ module DeadlineCalculator
 
     attr_reader :kase
 
+    class << self
+
+      def days_taken(start_date, end_date)
+        (end_date - start_date).to_i + 1
+      end 
+  
+      def days_late(start_date, end_date)
+        (end_date - start_date).to_i
+      end 
+
+    end 
+
     def initialize(kase)
       @kase = kase
     end
