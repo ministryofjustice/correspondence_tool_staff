@@ -159,15 +159,12 @@ references:
     run:
       name: Create veracode zipped file and send to veracode
       command: |
-        pwd
         gem sources --add https://gems.veracode.com
         gem install veracode --prerelease
         bundle exec veracode prepare
 
-        ls tmp
         mkdir tmp/veracode
         mv tmp/*.zip tmp/veracode
-        ls tmp/veracode
 
         current_branch=$(git branch | grep \* | cut -d ' ' -f2)
         current_version=$(git rev-parse $current_branch)
@@ -176,9 +173,6 @@ references:
         build_tag=cts-${current_branch}-${short_version}-${ts}
 
         ./veracode-scan.sh $VERACODE_API_ID $VERACODE_API_KEY "Correspondence Tool for Staff" "./tmp/veracode" $build_tag
-        # wget https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/20.8.7.1/vosp-api-wrappers-java-20.8.7.1.jar -O VeracodeJavaAPI.jar
-        # java -jar VeracodeJavaAPI.jar -action getapplist    -vid $VERACODE_API_ID -vkey $VERACODE_API_KEY
-        # java -jar VeracodeJavaAPI.jar -action uploadandscan -vid $VERACODE_API_ID -vkey $VERACODE_API_KEY -appname "Correspondence Tool for Staff" -filepath "/home/circleci/track-a-query/tmp/*.zip" -createprofile false -version $CIRCLE_BUILD_NUM
 
   set_up_aws_cli: &set_up_aws_cli
     run:
@@ -483,7 +477,7 @@ workflows:
           filters:
             branches:
               ignore: master
-      - package_and_send_to_veracode: # remove this after testing
+      - package_and_send_to_veracode:
           requires:
             - build_and_test
       - build_branch_and_push_to_ecr_approval:
