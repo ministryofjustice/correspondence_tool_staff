@@ -1504,35 +1504,97 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it 'returns correct number of days late for open case' do
-      kase.external_deadline = Date.yesterday
-      expect(kase.num_days_late).to eq 1
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 45, 33)) do
+        tase = build :case, 
+                      created_at: Time.new(2020, 8, 1, 9, 45, 00), 
+                      received_date: Time.new(2020, 8, 1, 9, 45, 33)
+        tase.external_deadline = Time.new(2020, 9, 4, 9, 00, 33)
+        expect(tase.num_days_late).to eq 5
+      end
     end
 
     it 'returns correct number of days late for closed case' do
-      closed_kase.external_deadline = 3.days.before(Date.today)
-      closed_kase.date_responded = Date.yesterday
-      expect(closed_kase.num_days_late).to eq 2
+      Timecop.freeze(Date.new(2020, 9, 11)) do
+        closed_kase.external_deadline = Date.new(2020, 9, 1)
+        closed_kase.date_responded = Date.new(2020, 9, 10)
+        expect(closed_kase.num_days_late).to eq 7
+      end
     end
   end
 
   describe '#num_days_taken' do
-    let(:closed_kase) { create :closed_case }
-    let(:kase)  { create :case }
 
-    it 'is nil when case is received today' do
-      kase.received_date = Date.today 
-      expect(kase.num_days_taken).to be nil
+    it 'is 1 when case is received today' do
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
+        tase = build :case, 
+                      created_at: Time.new(2020, 9, 11, 9, 45, 00), 
+                      received_date: Time.new(2020, 9, 11, 9, 45, 33)
+        expect(tase.num_days_taken).to be 1
+      end 
     end
 
     it 'returns correct number of days for open case' do
-      kase.received_date = 3.days.before(Date.today)
-      expect(kase.num_days_taken).to eq 3
+      Timecop.freeze(Time.new(2020, 9, 15, 9, 50, 33)) do
+        tase = build :case, 
+                      created_at: Time.new(2020, 9, 11, 9, 45, 00), 
+                      received_date: Time.new(2020, 9, 11, 9, 45, 33)
+        expect(tase.num_days_taken).to be 3
+      end 
     end
 
     it 'returns correct number of days late for closed case' do
-      closed_kase.received_date = 10.days.before(Date.today)
-      closed_kase.date_responded = Date.yesterday
-      expect(closed_kase.num_days_taken).to eq 9
+      Timecop.freeze(Time.new(2020, 9, 15, 9, 45, 33)) do
+        closed_tase = build :closed_case, 
+                            created_at: Date.new(2020, 9, 11),
+                            received_date: Date.new(2020, 9, 4), 
+                            date_responded: Date.new(2020, 9, 11)
+        expect(closed_tase.num_days_taken).to eq 6
+      end
+    end
+  end
+
+  describe '#num_days_taken_after_extension' do
+
+    it 'is nil when case has no extension' do
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
+        tase = create :case_being_drafted
+        expect(tase.has_pit_extension?).to be false
+        expect(tase.num_days_taken_after_extension).to be nil
+      end 
+    end
+
+    it 'is 1 when case is received today' do
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
+        tase = create :case_being_drafted, :extended_for_pit
+        expect(tase.has_pit_extension?).to be true
+        expect(tase.num_days_taken_after_extension).to be 1
+      end 
+    end
+
+    it 'returns correct number of days for open case' do
+      tase = nil
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
+        tase = create :case_being_drafted, :extended_for_pit
+        expect(tase.has_pit_extension?).to be true
+      end 
+      Timecop.freeze(Time.new(2020, 9, 15, 9, 50, 33)) do
+        expect(tase.num_days_taken_after_extension).to be 3
+      end 
+    end
+
+    it 'returns correct number of days late for closed case' do
+      closed_tase = nil
+      Timecop.freeze(Time.new(2020, 9, 4, 9, 50, 33)) do
+        closed_tase = create :closed_case, :extended_for_pit
+        expect(closed_tase.has_pit_extension?).to be true
+      end 
+      Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
+        closed_tase.date_responded = Date.new(2020, 9, 11)
+        closed_tase.save!
+      end 
+      Timecop.freeze(Time.new(2020, 9, 15, 9, 45, 33)) do
+        expect(closed_tase.num_days_taken_after_extension).to eq 6
+      end
     end
   end
 
