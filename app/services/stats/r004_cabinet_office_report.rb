@@ -75,7 +75,7 @@ module Stats
         '2.I'         => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of 'Exemption applied'",
         '_SPACER_2'   => '',
         '_USE OF EXEMPTIONS AND EXCEPTIONS' => '',
-        '_SPACER_2'   => '',
+        '_SPACER_7'   => '',
         '3.A'         => "Number of cases created and closed in this period that were fully or partly refused",
         '3.S22'       => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(22) - Information intended for future publication'",
@@ -121,7 +121,7 @@ module Stats
                             "'Exemption applied' and 'What exemption applied' selection of 'S(43) - Commercial interests'",
         '3.S44'   => "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(44) - Prohibitions on disclosure'",
-        '_SPACER_2'   => '',
+        '_SPACER_8'   => '',
         '_USE OF SECTION 21 EXEMPTIONS' => '',
         '4.A'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" +
                             "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the ONLY exemption marked for this case",
