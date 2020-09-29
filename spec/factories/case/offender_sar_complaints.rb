@@ -51,7 +51,7 @@ FactoryBot.define do
     end
 
     trait :data_to_be_requested do
-      # Default state for a new offender_sar_case
+      # Default state for a new offender_sar_complaint
     end
 
     trait :waiting_for_data do

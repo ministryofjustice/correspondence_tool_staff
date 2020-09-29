@@ -58,7 +58,7 @@ FactoryBot.define do
     internal_time_limit { 10 }
     external_time_limit { 1 }
     deadline_calculator_class { 'CalendarMonths' }
-    report_category_name { 'Offender SAR report' }
+    report_category_name { 'Offender SAR Complaint report' }
 
 
     initialize_with { CorrespondenceType.find_or_create_by(name: name) }
