@@ -617,13 +617,29 @@ class Case::Base < ApplicationRecord
   end
 
   def num_days_late
-    days = ((date_responded.nil? ? Date.today : date_responded) - external_deadline).to_i
+    days = @deadline_calculator.class.days_late(
+      external_deadline, 
+      benchmark_date_value_for_days_metrics)
     days > 0 ? days : nil
   end
 
   def num_days_taken
-    days = ((date_responded.nil? ? Date.today : date_responded) - received_date).to_i
+    days = @deadline_calculator.class.days_taken(
+      received_date, 
+      benchmark_date_value_for_days_metrics)
     days > 0 ? days : nil
+  end
+
+  def num_days_taken_after_extension
+    the_date_being_extended = find_most_recent_action_timing_for_pit_extension
+    if the_date_being_extended.present?
+      days = @deadline_calculator.class.days_taken(
+        the_date_being_extended, 
+        benchmark_date_value_for_days_metrics)
+      days > 0 ? days : nil
+    else
+      nil
+    end
   end
 
   def current_team_and_user
@@ -962,5 +978,22 @@ class Case::Base < ApplicationRecord
       )
     end
   end
+
+  def find_most_recent_action_timing_for_pit_extension
+    if self.has_pit_extension?
+      most_recent_extension = self.transitions
+      .where(event: ['extend_for_pit'])
+      .order(id: :desc)
+      .first
+      most_recent_extension.nil? ? nil : most_recent_extension.created_at.to_date
+    else
+      nil
+    end
+  end
+
+  def benchmark_date_value_for_days_metrics
+    date_responded.nil? ? Date.today : date_responded
+  end
+
 end
 #rubocop:enable Metrics/ClassLength
