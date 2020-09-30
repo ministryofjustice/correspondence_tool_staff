@@ -2,14 +2,14 @@ module CaseFilter
   class CaseTypeFilter < CaseMultiChoicesFilterBase
 
     SUB_FILTER_MAP = {
-      FOI: ['foi-standard',
-            'foi-ir-compliance',
-            'foi-ir-timeliness', 
-            'overturned-ico'],
-      SAR: ['sar-non-offender', 'overturned-ico'],
-      OFFENDER_SAR: ['offender-sar'],
-      OFFENDER_SAR_COMPLAIN: ['offender-sar-complain'],
-      ICO: ['ico-appeal']
+      'foi-standard': ['FOI'],
+      'foi-ir-compliance': ['FOI'],
+      'foi-ir-timeliness': ['FOI'],
+      'sar-non-offender': ['SAR'], 
+      'ico-appeal': ['ICO'],
+      'overturned-ico': ['FOI', 'SAR'],
+      'offender-sar': ['OFFENDER_SAR'],
+      'offender-sar-complaint': ['OFFENDER_SAR_COMPLAINT'],
     }.with_indifferent_access.freeze
 
     def self.identifier
@@ -24,13 +24,14 @@ module CaseFilter
       user_types = @user.permitted_correspondence_types.map(&:abbreviation)
       types = {}
 
-      user_types.each do | user_type |
-        (SUB_FILTER_MAP[user_type] || []).each do | sub_filter |
+      SUB_FILTER_MAP.to_hash.each do | sub_filter, allowed_case_types |
+        if (user_types & allowed_case_types).present?
           types.merge!(
             sub_filter => I18n.t("filters.filter_case_type.#{sub_filter}"),
           )
         end
-      end
+      end 
+
       { :filter_case_type => types }
     end
 

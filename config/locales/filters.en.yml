@@ -28,8 +28,9 @@ en:
       filter_timeliness:
         <<: *list_filter_type
     headings:
+      filter_status: Filter by open/closed cases
       filter_cases: Filter cases
-      filter_open_case_status: Filter by open status
+      filter_open_case_status: Filter by status
       filter_case_type: Filter case type
       filter_timeliness: Filter by timeliness
       filter_external_deadline: Filter by final deadline
