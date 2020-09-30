@@ -4,39 +4,57 @@ module Stats
   
   class BaseMonthlyPerformanceReport < BaseReport
 
-    R005_SPECIFIC_COLUMNS = {
+    MONTHLY_PERFORMANCE_SPECIFIC_COLUMNS = {
       month:    'Month'
     }.freeze
 
-    R005_SPECIFIC_SUPERHEADINGS = {
+    MONTHLY_PERFORMANCE_SPECIFIC_SUPERHEADINGS = {
       month:     ''
     }.freeze
-
-    INDEXES_FOR_PERCENTAGE_COLUMNS = [1, 7, 13].freeze
 
     class << self
       def report_format
         BaseReport::XLSX
       end
+
+      def title
+        raise '#title method should be defined in sub-class of BaseMonthlyPerformanceReport'
+      end
+  
+      def description
+        raise '#description should be defined in sub-class of BaseMonthlyPerformanceReport'
+      end
+  
+      def case_analyzer
+        Stats::CaseAnalyser
+      end
+  
+      def indexes_for_percentage_columns
+        [1, 7, 13].freeze
+      end 
+  
+      def report_notes
+        ["Performance percentages =  ((responded-in time + open-in time) / total received) * 100 "]
+      end   
+
+      def start_position_for_main_body
+        2
+      end  
     end
 
     def initialize(**options)
       super(**options)
-      @stats = StatsCollector.new(array_of_month_numbers + [:total], R005_SPECIFIC_COLUMNS.merge(CaseAnalyser::COMMON_COLUMNS))
+      @stats = StatsCollector.new(array_of_month_numbers + [:total], MONTHLY_PERFORMANCE_SPECIFIC_COLUMNS.merge(self.class.case_analyzer::COMMON_COLUMNS))
       @superheadings = superheadings
 
       @stats.add_callback(:before_finalise, -> { populate_month_names_callback(@stats) })
+      add_report_callbacks
+    end
+    
+    def add_report_callbacks
       @stats.add_callback(:before_finalise, -> { Calculations::Callbacks.calculate_overall_columns(@stats) })
       @stats.add_callback(:before_finalise, -> { Calculations::Callbacks.calculate_total_columns(@stats) })
       @stats.add_callback(:before_finalise, -> { Calculations::Callbacks.calculate_percentages(@stats) })
-    end
-
-    def self.title
-      raise '#title method should be defined in sub-class of BaseMonthlyPerformanceReport'
-    end
-
-    def self.description
-      raise '#description should be defined in sub-class of BaseMonthlyPerformanceReport'
     end
 
     def process(offset, report_job_guid=nil)
@@ -73,7 +91,7 @@ module Stats
             header_cell row_index, item
             # item at index+1 is the case count - don't mark 0/0 as Red RAG rating
             # These are the positions of the items which need a RAG rating
-          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index+1] != 0
+          elsif self.class.indexes_for_percentage_columns.include?(item_index) && row[item_index+1] != 0
             OpenStruct.new value: item, rag_rating: rag_rating(item)
           else
             OpenStruct.new value: item
@@ -81,10 +99,6 @@ module Stats
         end
       end
     end
-
-    # def required_to_be_job
-    #   return false 
-    # end
 
     # This function is only when the report is done via ETL (tasks)
     def report_details(report)
@@ -120,12 +134,14 @@ module Stats
     def superheadings
       [
         ["#{self.class.title} - #{reporting_period}"],
-        R005_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).values
+        self.class.report_notes,
+        [producer_stamp],
+        MONTHLY_PERFORMANCE_SPECIFIC_SUPERHEADINGS.merge(self.class.case_analyzer::COMMON_SUPERHEADINGS).values
       ]
     end
 
     def analyse_case(kase)
-      analyser = CaseAnalyser.new(kase)
+      analyser = self.class.case_analyzer.new(kase)
       analyser.run
       column_key = analyser.result
       month = kase.received_date.month
@@ -152,6 +168,10 @@ module Stats
     end
     
     private
+
+    def producer_stamp
+      "Producted at #{Date.today.to_date.to_s}"
+    end
 
     def create_background_jobs
       offset = 0 

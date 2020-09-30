@@ -10,6 +10,12 @@ module Stats
       end
     end
 
+    describe '.case_analyzer' do
+      it 'returns correct case_analyzer' do
+        expect(R005MonthlyPerformanceReport.case_analyzer).to eq Stats::CaseAnalyser
+      end
+    end
+
     describe '.description' do
       it 'returns correct description' do
         expect(R105SarMonthlyPerformanceReport.description)
@@ -75,14 +81,16 @@ module Stats
             )
             report.run
             results = report.results
-
             expect(late_unassigned_trigger_sar_case.already_late?).to be true
             expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
             expect(report.case_scope).to include(late_unassigned_trigger_sar_case)
             expect(report.case_scope).to include(in_time_unassigned_trigger_sar_case)
+            expect(results[12][:non_trigger_open_late]).to eq(3)
+            expect(results[12][:non_trigger_performance]).to eq(0)
             expect(results[12][:trigger_open_late]).to eq(1)
             expect(results[12][:trigger_open_in_time]).to eq(1)
-            expect(results[12][:trigger_total]).to eq(2)
+            expect(results[12][:trigger_performance]).to eq(50)
+            expect(results[12][:overall_performance]).to eq(20)
           end
         end
       end
