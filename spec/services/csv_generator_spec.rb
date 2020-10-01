@@ -31,7 +31,7 @@ describe 'CSVGenerator' do
                   "#{k1_fields.join(',')}\n",
                   "#{k2_fields.join(',')}\n"]
       results = generator.to_a
-      results[0] = results[0].gsub('"', '')
+      results[0] = results[0].delete('"')
       expect(results).to eq expected
     end
 
