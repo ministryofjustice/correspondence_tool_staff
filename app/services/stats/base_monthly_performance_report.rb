@@ -37,9 +37,6 @@ module Stats
         ["Performance percentages =  ((responded-in time + open-in time) / total received) * 100 "]
       end   
 
-      def start_position_for_main_body
-        2
-      end  
     end
 
     def initialize(**options)
@@ -170,7 +167,7 @@ module Stats
     private
 
     def producer_stamp
-      "Producted at #{Date.today.to_date}"
+      "Created at #{Date.today.to_date}"
     end
 
     def create_background_jobs

@@ -32,6 +32,7 @@ module Stats
     end
 
     def add_report_callbacks
+      @stats.add_callback(:before_finalise, -> { OffenderSarCalculations::Callbacks.calculate_total_columns(@stats) })
       @stats.add_callback(:before_finalise, -> { OffenderSarCalculations::Callbacks.calculate_percentages(@stats) })
     end
   end
