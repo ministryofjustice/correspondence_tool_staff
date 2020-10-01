@@ -51,7 +51,7 @@ RSpec.describe UsersController, type: :controller do
             .to eq %q{attachment; filename="disclosure-bmt_managing_user-cases-18-11-09-134822.csv"}
           expect(response.headers['Content-Type']).to eq 'text/csv; charset=utf-8'
 
-          expect(response.body).to eq [CSVExporter::CSV_COLUMN_HEADINGS.join(','),
+          expect(response.body.gsub('"', '')).to eq [CSVExporter::CSV_COLUMN_HEADINGS.join(','),
                                        "a,csv,file\n"].join("\n")
         end
       end
