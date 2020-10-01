@@ -61,9 +61,9 @@ module Stats
 
     def header_cell row_index, item
       case row_index
-      when 0..@superheadings.count-2
+      when 0..self.class.start_position_for_main_body
         OpenStruct.new value: item
-      when @superheadings.count
+      when self.class.start_position_for_main_body + 1
         OpenStruct.new value: item, rag_rating: :blue
       else
         OpenStruct.new value: item, rag_rating: :grey
@@ -80,6 +80,10 @@ module Stats
 
     def self.report_type
       raise 'This method should be defined in the child class'
+    end
+
+    def self.start_position_for_main_body
+      0
     end
 
     def default_reporting_period
