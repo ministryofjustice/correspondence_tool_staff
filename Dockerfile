@@ -5,16 +5,6 @@ RUN set -ex
 RUN addgroup --gid 1000 --system appgroup && \
     adduser --uid 1000 --system appuser --ingroup appgroup
 
-# expect/add ping environment variables
-ARG VERSION_NUMBER
-ARG COMMIT_ID
-ARG BUILD_DATE
-ARG BUILD_TAG
-ENV VERSION_NUMBER=${VERSION_NUMBER}
-ENV APP_GIT_COMMIT=${COMMIT_ID}
-ENV APP_BUILD_DATE=${BUILD_DATE}
-ENV APP_BUILD_TAG=${BUILD_TAG}
-
 WORKDIR /usr/src/app/
 
 COPY Gemfile* ./
@@ -61,3 +51,13 @@ EXPOSE $PUMA_PORT
 
 RUN chown -R appuser:appgroup ./*
 RUN chmod +x /usr/src/app/config/docker/*
+
+# expect/add ping environment variables
+ARG VERSION_NUMBER
+ARG COMMIT_ID
+ARG BUILD_DATE
+ARG BUILD_TAG
+ENV VERSION_NUMBER=${VERSION_NUMBER}
+ENV APP_GIT_COMMIT=${COMMIT_ID}
+ENV APP_BUILD_DATE=${BUILD_DATE}
+ENV APP_BUILD_TAG=${BUILD_TAG}
