@@ -183,7 +183,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(result['Draft in time']).to eq case_report.draft_in_time
       expect(result['In target']).to eq case_report.in_target
       expect(result['Number of days late']).to eq case_report.number_of_days_late
-      expect(result['Number of days taken']).to eq case_report.number_of_days_taken
+      expect(result['Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)']).to eq case_report.number_of_days_taken
       expect(result['Number of days taken after extension']).to eq case_report.number_of_days_taken_after_extension
 
       # CSV exporter outputs dates as strings whereas
