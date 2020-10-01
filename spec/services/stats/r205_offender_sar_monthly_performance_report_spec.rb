@@ -59,6 +59,7 @@ module Stats
               :offender_sar_case,
               :closed,
             )
+            expect(responded_in_time.responded_in_time?).to be true
           end
           Timecop.freeze Time.new(2019, 6, 30, 12, 0, 0) do
             # pending "This fails when the analyzer runs because assign_responder_transitions is nil in business_unit_already_late?"
@@ -96,6 +97,7 @@ module Stats
             report.run
             results = report.results
             
+            expect(responded_late.responded_late?).to be true
             expect(late_unassigned_trigger_sar_case.already_late?).to be true
             expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
             expect(report.case_scope).to include(late_unassigned_trigger_sar_case)

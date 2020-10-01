@@ -170,7 +170,7 @@ module Stats
     private
 
     def producer_stamp
-      "Producted at #{Date.today.to_date.to_s}"
+      "Producted at #{Date.today.to_date}"
     end
 
     def create_background_jobs
