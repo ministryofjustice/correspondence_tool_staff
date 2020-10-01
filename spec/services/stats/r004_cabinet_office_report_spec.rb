@@ -387,7 +387,7 @@ module Stats
 
       context '5.Ai' do
         it 'records the stat' do
-          expect(@results['5.Ai'][:desc]).to match(/Number of cases created in this period .*The information not held/)
+          expect(@results['5.Ai'][:desc]).to match(/Number of cases created in this period .*Information not held/)
           expect(@results['5.Ai'][:value]).to eq 3
         end
       end

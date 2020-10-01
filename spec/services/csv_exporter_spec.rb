@@ -118,7 +118,7 @@ describe CSVExporter do
           'In target' => 'Yes',
           'Number of days late' => 9,
           "Number of days taken after extension" => nil,
-          'Number of days taken' => 30,
+          'Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)' => 30,
         })
       end
     end
@@ -253,7 +253,7 @@ describe CSVExporter do
           'In target' => 'Yes',
           'Number of days late' => nil,
           "Number of days taken after extension" => nil,
-          'Number of days taken' => 25,
+          'Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)' => 25,
         })
       end
     end
