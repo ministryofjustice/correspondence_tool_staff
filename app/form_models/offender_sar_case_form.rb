@@ -33,6 +33,7 @@ module OffenderSARCaseForm
       object.validate_third_party_relationship
       object.validate_third_party_address
     end
+    object.validate_request_dated if step == "request-details"
     object.validate_received_date if step == "date-received"
   end
 
@@ -47,9 +48,6 @@ module OffenderSARCaseForm
       set_empty_value_if_unset(params, "flag_as_high_profile")
     when "requester-details"
       set_empty_value_if_unset(params, "third_party")
-      clear_param_if_condition(params, "third_party_name", "third_party", "true")
-      clear_param_if_condition(params, "third_party_company_name", "third_party", "true")
-      clear_param_if_condition(params, "third_party_relationship", "third_party", "true")
     when "recipient-details"
       set_empty_value_if_unset(params, "recipient")
     when "requested-info"
@@ -70,9 +68,4 @@ module OffenderSARCaseForm
                                 params["#{field}_mm"].present? &&
                                 params["#{field}_dd"].present?
   end
-
-  def clear_param_if_condition(params, target_field, check_field, value)
-    params.delete(target_field) unless params[check_field] == value
-  end
-
 end

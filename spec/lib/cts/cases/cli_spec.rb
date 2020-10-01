@@ -9,7 +9,10 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
   let(:number_to_create) { 1 }
 
   let(:cli_index) { CTS::Cases::CLI.new }
-  let(:cli_warehouse) { CTS::Cases::CLI.new }
+  let(:cli_warehouse_all) { CTS::Cases::CLI.new }
+  let(:cli_warehouse_all_size) { CTS::Cases::CLI.new }
+  let(:cli_warehouse_case_id_range) { CTS::Cases::CLI.new }
+  let(:cli_warehouse_case_nuber) { CTS::Cases::CLI.new }
   let(:foi_case)      { create :foi_case }
   let(:sar_case)      { create :sar_case }
 
@@ -29,8 +32,17 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
         size: 2
       }
     )
-    allow(cli_warehouse).to receive(:options).and_return(
-      { size: 2 }
+    allow(cli_warehouse_all).to receive(:options).and_return(
+      { scope: 'all' }
+    )
+    allow(cli_warehouse_all_size).to receive(:options).and_return(
+      { scope: 'all', size: 2 }
+    )
+    allow(cli_warehouse_case_id_range).to receive(:options).and_return(
+      { scope: 'case_id_range', start: 2, end: 3 }
+    )
+    allow(cli_warehouse_case_nuber).to receive(:options).and_return(
+      { scope: 'case_number', number: 'test' }
     )
   find_or_create :team_dacu
   end
@@ -66,15 +78,29 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
   describe 'warehouse sub-command' do
     it 'warehouses all cases' do
       allow(::Warehouse::CaseReport).to receive(:reconcile)
-      cli.warehouse
+      cli_warehouse_all.warehouse
       expect(::Warehouse::CaseReport).to have_received(:reconcile)
     end
 
     it 'warehouses certain amount cases specified by size option' do
       allow(::Warehouse::CaseReport).to receive(:generate)
       allow(Case::Base).to receive_message_chain(:join, :where, :limit, :in_batches).and_return([sar_case, foi_case])
-      cli_warehouse.warehouse
+      cli_warehouse_all_size.warehouse
       expect(::Warehouse::CaseReport).to have_received(:generate).twice
+    end
+
+    it 'warehouses certain amount cases specified by case id range' do
+      allow(::Warehouse::CaseSyncJob).to receive(:perform_later).and_return(true)
+      allow(Case::Base).to receive_message_chain(:where).and_return([sar_case, foi_case])
+      cli_warehouse_case_id_range.warehouse
+      expect(::Warehouse::CaseSyncJob).to have_received(:perform_later).at_least(2).times
+    end
+
+    it 'warehouses certain amount cases specified by case number' do
+      allow(::Warehouse::CaseSyncJob).to receive(:perform_later).and_return(true)
+      allow(Case::Base).to receive_message_chain(:where).and_return([sar_case])
+      cli_warehouse_case_nuber.warehouse
+      expect(::Warehouse::CaseSyncJob).to have_received(:perform_later).at_least(1).times
     end
   end
 end

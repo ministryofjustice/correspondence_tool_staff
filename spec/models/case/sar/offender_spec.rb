@@ -730,4 +730,52 @@ describe Case::SAR::Offender do
       end
     end
   end
+
+  describe '#num_days_taken' do
+    let(:closed_kase) { create :offender_sar_case, :closed }
+    let(:kase)  { create :offender_sar_case }
+
+    it 'is 1 when case is received today' do
+      kase.received_date = Date.today 
+      expect(kase.num_days_taken).to be 1
+    end
+
+    it 'returns correct number of days for open case' do
+      kase.received_date = 3.days.before(Date.today)
+      expect(kase.num_days_taken).to eq 4
+    end
+
+    it 'returns correct number of days late for closed case' do
+      closed_kase.received_date = 10.days.before(Date.today)
+      closed_kase.date_responded = Date.yesterday
+      expect(closed_kase.num_days_taken).to eq 10
+    end
+  end
+  
+  describe '#num_days_late' do
+  let(:kase)  { create :offender_sar_case }
+  let(:closed_kase) { create :offender_sar_case, :closed}
+
+    it 'is nil when 0 days late' do
+      kase.external_deadline = Date.today
+      expect(kase.num_days_late).to be nil
+    end
+
+    it 'is nil when not yet late for open case' do
+      kase.external_deadline = Date.tomorrow
+      expect(kase.num_days_late).to be nil
+    end
+
+    it 'returns correct number of days late for open case' do
+      kase.external_deadline = Date.yesterday
+      expect(kase.num_days_late).to eq 1
+    end
+
+    it 'returns correct number of days late for closed case' do
+      closed_kase.external_deadline = 3.days.before(Date.today)
+      closed_kase.date_responded = Date.yesterday
+      expect(closed_kase.num_days_late).to eq 2
+    end
+  end
+  
 end

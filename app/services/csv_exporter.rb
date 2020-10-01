@@ -43,7 +43,9 @@ class CSVExporter
     'Deputy Director name',
     'Draft in time',
     'In target',
+    'Number of days taken',
     'Number of days late',
+    'Number of days taken after extension',
   ]
 
   def initialize(kase)
@@ -100,7 +102,9 @@ class CSVExporter
         # Draft Timliness related information
         humanize_boolean(@kase.within_draft_deadline?), # Draft in time
         humanize_boolean(@kase.response_in_target?), # In Target
+        @kase.num_days_taken, # Number of days taken
         @kase.num_days_late, # Number of days late
+        @kase.num_days_taken_after_extension, # Number of days late
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
