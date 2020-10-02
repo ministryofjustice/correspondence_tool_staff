@@ -13,9 +13,7 @@ module Stats
       private
 
       def columns
-        @_columns ||= begin
-          CSVExporter::CSV_COLUMN_HEADINGS.map { |f| f.parameterize.underscore }
-        end
+        @_columns ||= CSVExporter::CSV_COLUMN_FIELDS
       end
 
       def heading
