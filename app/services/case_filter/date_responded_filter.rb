@@ -27,11 +27,11 @@ module CaseFilter
     private 
 
     def beginning_of_month(bench_date, num_month_ago)
-      (Date.today - (num_month_ago + 1).months).at_beginning_of_month
+      (bench_date - (num_month_ago + 1).months).at_beginning_of_month
     end
 
     def end_of_month(bench_date, num_month_ago)
-      ((Date.today - num_month_ago.months).at_beginning_of_month)-1
+      ((bench_date - num_month_ago.months).at_beginning_of_month)-1
     end
 
   end
