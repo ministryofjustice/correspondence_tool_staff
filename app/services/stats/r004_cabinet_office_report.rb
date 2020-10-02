@@ -50,7 +50,7 @@ module Stats
     # rubocop:disable Metrics/MethodLength
     def report_lines
       {
-        '_FOI' => '',
+        '_FOI CASES'  => '',
         '_TIMELINESS' => "",
         '1.A'         => "Total number of FOI requests received this period",
         '1.Ai'        => "Of these, number which fall fully or mostly under the Environmental Information Regulations (EIRs)",
@@ -132,18 +132,19 @@ module Stats
                               "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " +
                               "ONLY exemption marked for this case and the case was processed OUT OF TIME against the external deadline",
         '_SPACER_3'   => '',
-        '_ICO'        => '',
+        '_ICO APPEAL CASES'  => '',
         '_SPACER_4'   => '',
-        '_THE INFORMATION HELD FROM ORIGINAL-LINKED FOI' => '',
-        '5.Ai'        => "Number of cases created in this period that have been with marked as 'The information not held'",
+        '_INFORMATION HELD' => '',
+        '5.Ai'        => "Number of cases created in this period that have been with marked as 'Information not held'",
         '_SPACER_5'   => '',
-        '_OUTCOME WITH REFUSAL REASON FROM ORIGINAL-LINKED FOI' => '',
+        '_REFUSAL REASON' => '',
+        '_USE OF SECTION 12/14 EXEMPTIONS' => '',
         '6.S12'         => "Number of cases created in this period that have been with a 'reason for refusal' of " +
                             "'S(12(1)) - Exceeded cost to investigate'",
         '6.S14'         => "Number of cases created in this period that have been with a 'reason for refusal' of " +
                             "'S(14(1)) - Vexatious' or 'S(14(2)) - Repeated request' ",
         '_SPACER_6'   => '',
-        '_USE OF EXEMPTIONS AND EXCEPTIONS FROM ORIGINAL-LINKED FOI' => '',
+        '_USE OF EXEMPTIONS AND EXCEPTIONS FROM ORIGINAL CASE' => '',
         '7.S21'       => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +
                             "'Exemption applied' and 'What exemption applied' selection of 'S(21) - Information accessible by other means'",
         '7.S22'   => "Number of cases created in this period that have been marked as 'Refused fully' with a 'reason for refusal' of " +

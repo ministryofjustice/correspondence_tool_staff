@@ -30,7 +30,9 @@ describe 'CSVGenerator' do
       expected = ["#{CSVExporter::CSV_COLUMN_HEADINGS.join(',')}\n",
                   "#{k1_fields.join(',')}\n",
                   "#{k2_fields.join(',')}\n"]
-      expect(generator.to_a).to eq expected
+      results = generator.to_a
+      results[0] = results[0].delete('"')
+      expect(results).to eq expected
     end
 
     it 'returns an array of arrays with injected case-csv exporter' do
