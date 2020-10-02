@@ -6,24 +6,32 @@ module CaseFilter
     end
 
     def available_choices
+      nine_months_start = beginning_of_month(Date.today, 9)
+      nine_months_end = end_of_month(Date.today, 9)
+      two_years_start = beginning_of_month(Date.today, 24)
+      two_years_end = end_of_month(Date.today, 24)
       {
         up_to_nine_month: {
-          name: 'Up to Nine month',
-          from: { day: 9.months.ago.strftime("%d"), month: 9.months.ago.strftime("%m"), year: 9.months.ago.strftime("%Y") }.to_json,
-          to: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json
+          name: '9 months ago',
+          from: { day: nine_months_start.strftime("%d"), month: nine_months_start.strftime("%m"), year: nine_months_start.strftime("%Y") }.to_json,
+          to: { day: nine_months_end.strftime("%d"), month: nine_months_end.strftime("%m"), year: nine_months_end.strftime("%Y") }.to_json
         },
-        nine_to_two_year: {
-          name: 'Nine month to 2 year',
-          from: { day: 24.months.ago.strftime("%d"), month: 24.months.ago.strftime("%m"), year: 24.months.ago.strftime("%Y") }.to_json,
-          to: { day: 9.months.ago.strftime("%d"), month: 9.months.ago.strftime("%m"), year: 9.months.ago.strftime("%Y") }.to_json,
-        },
-        two_to_eight_year: {
-          name: '2 to 8 year',
-          from: { day: 96.months.ago.strftime("%d"), month: 96.months.ago.strftime("%m"), year: 96.months.ago.strftime("%Y") }.to_json,
-          to: { day: 24.months.ago.strftime("%d"), month: 24.months.ago.strftime("%m"), year: 9.months.ago.strftime("%Y") }.to_json,
+        up_to_two_year: {
+          name: '2 years ago',
+          from: { day: two_years_start.strftime("%d"), month: two_years_start.strftime("%m"), year: two_years_start.strftime("%Y") }.to_json,
+          to: { day: two_years_end.strftime("%d"), month: two_years_end.strftime("%m"), year: two_years_end.strftime("%Y") }.to_json
         }
       }
+    end
 
+    private 
+
+    def beginning_of_month(bench_date, num_month_ago)
+      (bench_date - (num_month_ago + 1).months).at_beginning_of_month
+    end
+
+    def end_of_month(bench_date, num_month_ago)
+      ((bench_date - num_month_ago.months).at_beginning_of_month)-1
     end
 
   end
