@@ -31,7 +31,7 @@
   // Utility function to get URL Query String Parameters borrowed from
   // https://www.sitepoint.com/url-parameters-jquery/
   $.urlParam = function(name){
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    var results = new RegExp('[?&]' + name + '=([^&#]*)').exec(window.location.href);
     if (results==null){
       return null;
     }
