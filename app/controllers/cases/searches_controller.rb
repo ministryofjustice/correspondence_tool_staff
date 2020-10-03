@@ -32,6 +32,7 @@ module Cases
         @cases = unpaginated_cases.page(@page).decorate
       end
 
+      @current_tab_name = 'search_cases'
       @filter_crumbs = @query.filter_crumbs
 
       respond_to do |format|

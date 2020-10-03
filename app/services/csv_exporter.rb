@@ -43,7 +43,54 @@ class CSVExporter
     'Deputy Director name',
     'Draft in time',
     'In target',
+    'Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)',
     'Number of days late',
+    'Number of days taken after extension',
+  ]
+
+  CSV_COLUMN_FIELDS = [
+    'number',
+    'case_type',
+    'current_state',
+    'responding_team',
+    'responder',
+    'date_received',
+    'internal_deadline',
+    'external_deadline',
+    'date_responded',
+    'date_compliant_draft_uploaded',
+    'trigger',
+    'name',
+    'requester_type',
+    'message',
+    'info_held',
+    'outcome',
+    'refusal_reason',
+    'exemptions',
+    'postal_address',
+    'email',
+    'appeal_outcome',
+    'third_party',
+    'reply_method',
+    'sar_subject_type',
+    'sar_subject_full_name',
+    'business_unit_responsible_for_late_response',
+    'extended',
+    'extension_count',
+    'deletion_reason',
+    'casework_officer',
+    'created_by',
+    'date_created',
+    'business_group',
+    'directorate_name',
+    'director_general_name',
+    'director_name',
+    'deputy_director_name',
+    'draft_in_time',
+    'in_target',
+    'number_of_days_taken',
+    'number_of_days_late',
+    'number_of_days_taken_after_extension',
   ]
 
   def initialize(kase)
@@ -100,7 +147,9 @@ class CSVExporter
         # Draft Timliness related information
         humanize_boolean(@kase.within_draft_deadline?), # Draft in time
         humanize_boolean(@kase.response_in_target?), # In Target
+        @kase.num_days_taken, # Number of days taken
         @kase.num_days_late, # Number of days late
+        @kase.num_days_taken_after_extension, # Number of days late
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")

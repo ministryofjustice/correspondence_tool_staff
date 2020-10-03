@@ -239,6 +239,8 @@ describe Cases::FiltersController, type: :controller do
     gnm = instance_double GlobalNavManager, current_page_or_tab: page
     allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
     allow(cases).to receive(:includes).and_return(cases)
+    allow(cases).to receive(:size).and_return(10)
+    allow(cases).to receive(:count).and_return(10)
     allow(GlobalNavManager).to receive(:new).and_return gnm
     gnm
   end
@@ -248,6 +250,9 @@ describe Cases::FiltersController, type: :controller do
     cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
     cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
     allow(cases).to receive(:includes).and_return(cases)
+    allow(cases).to receive(:size).and_return(10)
+    allow(cases).to receive(:count).and_return(10)
+    allow(cases.by_deadline).to receive(:decorate).and_return(cases)
     page = instance_double GlobalNavManager::Page, cases: cases
     gnm = instance_double GlobalNavManager, current_page_or_tab: page
     allow(GlobalNavManager).to receive(:new).and_return gnm

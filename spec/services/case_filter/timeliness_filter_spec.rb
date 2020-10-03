@@ -1,6 +1,8 @@
 require "rails_helper"
 
-describe TimelinessFilter do
+describe CaseFilter::TimelinessFilter do
+  let(:user)               { find_or_create :disclosure_specialist_bmt }
+
   before :all do
     DbHousekeeping.clean
     @setup = StandardSetup.new(only_cases: [
@@ -11,8 +13,7 @@ describe TimelinessFilter do
 
   after(:all) { DbHousekeeping.clean }
 
-  let(:filter_service)  { described_class.new search_query,
-                                              Case::Base.all }
+  let(:filter_service)  { described_class.new search_query, user, Case::Base.all }
 
   describe '#applied?' do
     subject { filter_service }

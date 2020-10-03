@@ -5,7 +5,7 @@ describe UserActiveCaseCountService do
   let(:responding_team)   { find_or_create :foi_responding_team }
   let(:user_1)            { find_or_create :foi_responder }
   let(:user_2)            { create :foi_responder, identifier: 'foi responder 2' }
-  let(:users)             { [ user_1, user_2] }
+  let!(:users)             { [ user_1, user_2] }
   let!(:kase_1)           { create :accepted_case, responder: user_1 }
   let!(:kase_2)           { create :accepted_case, responder: user_1 }
   let!(:kase_3)           { create :accepted_case, responder: user_2 }
