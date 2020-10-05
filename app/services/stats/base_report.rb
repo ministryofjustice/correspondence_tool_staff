@@ -15,9 +15,14 @@ module Stats
     XLSX = 'xlsx'.freeze
     ZIP = 'zip'.freeze
 
+    REPORT_MAIN_BODY_START_POSITION = 0
+
     attr_reader :period_start, :period_end, :user, :etl, :background_job, :status, :job_ids, :filename
 
     def initialize(**options)
+      # As this class is the basic class for all those report classes, any actions related to setup 
+      # the format and layout and the way of collecting the data and the way of calculating the data
+      # shouldn't be included in this initialize()
       raise 'Cannot instantiate Stats::BaseReport - use derived class instead' if self.class == BaseReport
 
       @stats = nil                        # implement @stats as an instance of StatsCollector in derived class
@@ -56,9 +61,9 @@ module Stats
 
     def header_cell row_index, item
       case row_index
-      when 0
+      when 0..self.class.start_position_for_main_body
         OpenStruct.new value: item
-      when 1
+      when self.class.start_position_for_main_body + 1
         OpenStruct.new value: item, rag_rating: :blue
       else
         OpenStruct.new value: item, rag_rating: :grey
@@ -75,6 +80,10 @@ module Stats
 
     def self.report_type
       raise 'This method should be defined in the child class'
+    end
+
+    def self.start_position_for_main_body
+      0
     end
 
     def default_reporting_period

@@ -5,20 +5,13 @@ RUN set -ex
 RUN addgroup --gid 1000 --system appgroup && \
     adduser --uid 1000 --system appuser --ingroup appgroup
 
-# expect/add ping environment variables
-ARG VERSION_NUMBER
-ARG COMMIT_ID
-ARG BUILD_DATE
-ARG BUILD_TAG
-ENV VERSION_NUMBER=${VERSION_NUMBER}
-ENV APP_GIT_COMMIT=${COMMIT_ID}
-ENV APP_BUILD_DATE=${BUILD_DATE}
-ENV APP_BUILD_TAG=${BUILD_TAG}
-
 WORKDIR /usr/src/app/
 
-ENV PUMA_PORT 3000
-EXPOSE $PUMA_PORT
+COPY Gemfile* ./
+
+RUN bundle config --global frozen 1 && \
+    bundle config --path=vendor/bundle && \
+    bundle install --without development test
 
 RUN apt-get update && \
     apt-get install -y apt-transport-https && \
@@ -44,17 +37,6 @@ RUN apt-get update && \
     clamav-daemon \
     clamav-freshclam
 
-# ENV RAILS_ENV='production'
-COPY Gemfile* ./
-
-# Set this to any value ("1", "true", etc) to enable development mode.
-# e.g. docker build --build-arg development_mode=1 ...
-ARG development_mode
-
-RUN echo "development_mode=$development_mode"
-RUN bundle config --global frozen 1 && \
-    bundle install ${development:+--with="test development"}
-
 COPY . .
 
 RUN mkdir log tmp
@@ -64,5 +46,18 @@ USER 1000
 
 RUN RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> /dev/null
 
+ENV PUMA_PORT 3000
+EXPOSE $PUMA_PORT
+
 RUN chown -R appuser:appgroup ./*
 RUN chmod +x /usr/src/app/config/docker/*
+
+# expect/add ping environment variables
+ARG VERSION_NUMBER
+ARG COMMIT_ID
+ARG BUILD_DATE
+ARG BUILD_TAG
+ENV VERSION_NUMBER=${VERSION_NUMBER}
+ENV APP_GIT_COMMIT=${COMMIT_ID}
+ENV APP_BUILD_DATE=${BUILD_DATE}
+ENV APP_BUILD_TAG=${BUILD_TAG}
