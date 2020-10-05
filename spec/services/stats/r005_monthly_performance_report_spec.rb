@@ -12,6 +12,12 @@ module Stats
       end
     end
 
+    describe '.case_analyzer' do
+      it 'returns correct case_analyzer' do
+        expect(R005MonthlyPerformanceReport.case_analyzer).to eq Stats::CaseAnalyser
+      end
+    end
+
     describe '.description' do
       it 'returns correct description' do
         expect(R005MonthlyPerformanceReport.description)
@@ -58,12 +64,14 @@ module Stats
 
         expected = [
           [],
+          [],
+          [],
           (0..18).map { |c| [c, :blue] },       # Headings
           (0..18).map { |c| [c, :grey] },       # Column Names
           [],
           [],
           [[1, :red], [7, :red], [13, :red]],   # March
-          [[1, :red], [7, :green], [13, :red]], # April
+          [[1, :red], [7, :green], [13, :amber]], # April
           [],
           [[1, :red], [7, :amber], [13, :red]],   # Totals
         ]
@@ -78,22 +86,26 @@ module Stats
 
       it 'contains expected superheadings in row 2' do
         row_2 = results[1]
-        expect(row_2).to eq [''] + ['Non-trigger cases'] * 6 + ['Trigger cases'] * 6 + ['Overall'] * 6
+        row_3 = results[2]
+        row_4 = results[3]
+        expect(row_2).to eq described_class.report_notes
+        expect(row_3).to include(/.*2017-05-02/)
+        expect(row_4).to eq [''] + ['Non-trigger cases'] * 6 + ['Trigger cases'] * 6 + ['Overall'] * 6
       end
 
       it 'contains expected headings in row 3' do
-        row_3 = results[2]
-        expect(row_3[0]).to eq 'Month'
-        [1, 7, 13].each { |i| expect(row_3[i]).to eq 'Performance %' }
-        [2, 8, 14].each { |i| expect(row_3[i]).to eq 'Total received' }
-        [3, 9, 15].each { |i| expect(row_3[i]).to eq 'Responded - in time' }
-        [4, 10, 16].each { |i| expect(row_3[i]).to eq 'Responded - late' }
-        [5, 11, 17].each { |i| expect(row_3[i]).to eq 'Open - in time' }
-        [6, 12, 18].each { |i| expect(row_3[i]).to eq 'Open - late' }
+        row_5 = results[4]
+        expect(row_5[0]).to eq 'Month'
+        [1, 7, 13].each { |i| expect(row_5[i]).to eq 'Performance %' }
+        [2, 8, 14].each { |i| expect(row_5[i]).to eq 'Total received' }
+        [3, 9, 15].each { |i| expect(row_5[i]).to eq 'Responded - in time' }
+        [4, 10, 16].each { |i| expect(row_5[i]).to eq 'Responded - late' }
+        [5, 11, 17].each { |i| expect(row_5[i]).to eq 'Open - in time' }
+        [6, 12, 18].each { |i| expect(row_5[i]).to eq 'Open - late' }
       end
 
       it 'contains month names year to date in first column' do
-        expect(results[3..8].map { |m| m[0] }).to eq ['January', 'February','March','April','May','Total']
+        expect(results[5..10].map { |m| m[0] }).to eq ['January', 'February','March','April','May','Total']
       end
 
       context 'monthly figures' do
@@ -121,7 +133,7 @@ module Stats
           },
           'April' => {
             month_name:                     'April',
-            non_trigger_performance_pctg:   0.0,
+            non_trigger_performance_pctg:   66.7,
             non_trigger_total:              3,
             non_trigger_responded_in_time:  0,
             non_trigger_responded_late:     0,
@@ -133,7 +145,7 @@ module Stats
             trigger_responded_late:         0,
             trigger_open_in_time:           0,
             trigger_open_late:              0,
-            overall_performance_pctg:       75.0,
+            overall_performance_pctg:       83.3,
             overall_total:                  6,
             overall_responded_in_time:      3,
             overall_responded_late:         0,
@@ -142,7 +154,7 @@ module Stats
           },
           'Total' => {
             month_name:                     'Total',
-            non_trigger_performance_pctg:   0.0,
+            non_trigger_performance_pctg:   40.0,
             non_trigger_total:              5,
             non_trigger_responded_in_time:  0,
             non_trigger_responded_late:     0,
@@ -154,7 +166,7 @@ module Stats
             trigger_responded_late:         1,
             trigger_open_in_time:           0,
             trigger_open_late:              0,
-            overall_performance_pctg:       55.6,
+            overall_performance_pctg:       63.6,
             overall_total:                  11,
             overall_responded_in_time:      5,
             overall_responded_late:         1,
@@ -165,9 +177,9 @@ module Stats
 
         let(:month_rows) do
           {
-            'March'   => 5,
-            'April'   => 6,
-            'Total'   => 8
+            'March'   => 7,
+            'April'   => 8,
+            'Total'   => 10
           }
         end
 

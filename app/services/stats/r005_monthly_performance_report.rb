@@ -1,6 +1,9 @@
 module Stats
   class R005MonthlyPerformanceReport < BaseMonthlyPerformanceReport
 
+    # NOTES:  This name of report class is very general but actually it is only for 
+    # FOI standard case type, but possible not worthy taking time to rename it 
+
     def self.title
       'Monthly report'
     end
