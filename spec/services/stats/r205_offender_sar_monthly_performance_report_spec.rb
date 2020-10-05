@@ -10,6 +10,12 @@ module Stats
       end
     end
 
+    describe '.case_analyzer' do
+      it 'returns correct case_analyzer' do
+        expect(described_class.case_analyzer).to eq Stats::OffenderSarAnalyser
+      end
+    end
+
     describe '.description' do
       it 'returns correct description' do
         expect(described_class.description)
@@ -46,9 +52,15 @@ module Stats
         expect(report.case_scope).to match_array( [@offender_sar_2, @offender_sar_3, @offender_sar_4])
       end
 
-      # @todo(Mohammed Seedat): Business Rules for 'in time' require clarification
-      context 'unassigned cases' do
-        it 'is calculated as an open case' do
+      context 'stats values' do
+        it 'cases in different stages' do
+          Timecop.freeze Time.new(2019, 01, 30, 12, 0, 0) do
+            responded_in_time = create(
+              :offender_sar_case,
+              :closed,
+            )
+            expect(responded_in_time.responded_in_time?).to be true
+          end
           Timecop.freeze Time.new(2019, 6, 30, 12, 0, 0) do
             # pending "This fails when the analyzer runs because assign_responder_transitions is nil in business_unit_already_late?"
             late_unassigned_trigger_sar_case = create(
@@ -67,6 +79,13 @@ module Stats
               received_date: @period_start+ 1.days,
             )
 
+            responded_late = create(
+              :offender_sar_case,
+              :closed,
+              creation_time: @period_start + 1.days,
+              received_date: @period_start+ 1.days,
+            )
+
             in_time_unassigned_trigger_sar_case.update_attributes(
               external_deadline: Date.current + 10.days
             )
@@ -76,11 +95,19 @@ module Stats
               period_end: @period_end
             )
             report.run
-
+            results = report.results
+            
+            expect(responded_late.responded_late?).to be true
             expect(late_unassigned_trigger_sar_case.already_late?).to be true
             expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
             expect(report.case_scope).to include(late_unassigned_trigger_sar_case)
             expect(report.case_scope).to include(in_time_unassigned_trigger_sar_case)
+
+            expect(results[12][:overall_responded_in_time]).to eq(1)
+            expect(results[12][:overall_responded_late]).to eq(2)
+            expect(results[12][:overall_open_in_time]).to eq(1)
+            expect(results[12][:overall_open_late]).to eq(3)
+            expect(results[12][:overall_performance]).to eq(14.3)
           end
         end
       end
