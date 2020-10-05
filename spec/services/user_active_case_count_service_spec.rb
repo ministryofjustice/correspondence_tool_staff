@@ -6,10 +6,6 @@ describe UserActiveCaseCountService do
   let(:user_1)            { create :foi_responder, identifier: 'foi responder 1'}
   let(:user_2)            { create :foi_responder, identifier: 'foi responder 2' }
   let(:users)             { [ user_1, user_2] }
-  # let(:kase_1)           { create :accepted_case, responder: user_1 }
-  # let(:kase_2)           { create :accepted_case, responder: user_1 }
-  # let(:kase_3)           { create :accepted_case, responder: user_2 }
-  # let(:kase_4)           { create :closed_case, responder: user_2 }
   let(:service)           { UserActiveCaseCountService.new }
 
   describe '#case_counts_by_user' do
