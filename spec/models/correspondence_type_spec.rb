@@ -33,6 +33,20 @@ describe CorrespondenceType, type: :model do
     end
   end
 
+  describe '.offender_sar' do
+    it 'finds the Offender SAR correspondence type' do
+      offender_sar = find_or_create :offender_sar_correspondence_type
+      expect(described_class.offender_sar).to eq offender_sar
+    end
+  end
+
+  describe '.offender_sar_complaint' do
+    it 'finds the Offender SAR Complaint correspondence type' do
+      offender_sar_complaint = find_or_create :offender_sar_complaint_correspondence_type
+      expect(described_class.offender_sar_complaint).to eq offender_sar_complaint
+    end
+  end
+
   describe 'teams' do
     it 'lists teams that can handle this correspondence type' do
       ct1    = create(:correspondence_type, name: 'ct1', abbreviation: 'ct1')
@@ -84,11 +98,16 @@ describe CorrespondenceType, type: :model do
 
     it 'returns only those correspondence types where report_category_name is present' do
       expect(CorrespondenceType.all.size).to be > 2
-      expect(cts.size).to eq 3
+      expect(cts.size).to eq 4
     end
 
     it 'returns them in alphabetic order of report category name' do
-      expect(cts.map(&:report_category_name)).to eq [ 'FOI report', 'Offender SAR report', 'SAR report' ]
+      expect(cts.map(&:report_category_name)).to eq [
+        'FOI report',
+        'Offender SAR Complaint report',
+        'Offender SAR report',
+        'SAR report'
+      ]
     end
   end
 

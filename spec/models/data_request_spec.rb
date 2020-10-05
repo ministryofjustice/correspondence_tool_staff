@@ -133,17 +133,6 @@ RSpec.describe DataRequest, type: :model do
     end
   end
 
-  describe '#case' do
-    subject(:data_request) { build :data_request }
-
-    it { should be_valid }
-
-    it 'is restricted to Offender SAR at present' do
-      expect { data_request.offender_sar_case = build(:foi_case) }
-        .to raise_error ActiveRecord::AssociationTypeMismatch
-    end
-  end
-
   describe '#request_type' do
     context 'valid values' do
       it 'does not error' do

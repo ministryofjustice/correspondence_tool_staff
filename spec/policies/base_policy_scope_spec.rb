@@ -47,7 +47,7 @@ describe Case::BasePolicy::Scope do
 
       @all_cases                    = Case::Base.all
       @existing_foi_cases           = Case::FOI::Standard.all + Case::ICO::FOI.all
-      @responder_cases              = Case::Base.all - [@unassigned_sar_case, 
+      @responder_cases              = Case::Base.all - [@unassigned_sar_case,
                                                         @drafting_sar_case_other_team,
                                                         @ico_sar_case]
 
