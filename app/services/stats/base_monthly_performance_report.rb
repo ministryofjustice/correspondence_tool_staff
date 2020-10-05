@@ -34,7 +34,7 @@ module Stats
       end 
   
       def report_notes
-        ["Performance percentages =  ((responded-in time + open-in time) / total received) * 100 "]
+        ["Performance % =  ((Responded - in time + Open - in time) / Total received) * 100 "]
       end 
 
       def start_position_for_main_body

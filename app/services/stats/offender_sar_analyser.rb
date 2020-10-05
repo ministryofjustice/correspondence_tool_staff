@@ -3,21 +3,21 @@ module Stats
   class OffenderSarAnalyser
 
     COMMON_COLUMNS = {
+      overall_performance:             'Performance %',
       overall_total:                   'Total received',
       overall_responded_in_time:       'Responded - in time',
       overall_responded_late:          'Responded - late',
       overall_open_in_time:            'Open - in time',
       overall_open_late:               'Open - late',
-      overall_performance:             'Performance %',
     }.freeze
 
     COMMON_SUPERHEADINGS = {
+      overall_performance:             'Overall',
       overall_total:                   'Overall',
       overall_responded_in_time:       'Overall',
       overall_responded_late:          'Overall',
       overall_open_in_time:            'Overall',
       overall_open_late:               'Overall',
-      overall_performance:             'Overall',
     }.freeze
 
     RESPONDED_IN_TIME = :responded_in_time.freeze

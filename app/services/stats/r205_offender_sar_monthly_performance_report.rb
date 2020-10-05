@@ -11,11 +11,11 @@ module Stats
       end
   
       def indexes_for_percentage_columns
-        [6].freeze
+        [1].freeze
       end
   
       def report_notes
-        ["Performance percentages =  (responded-in time / total received) * 100 "]
+        ["Performance % =  (Responded - in time / Total received) * 100 "]
       end 
 
       def case_analyzer
