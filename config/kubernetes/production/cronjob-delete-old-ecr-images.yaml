@@ -6,7 +6,7 @@ metadata:
   name: ecr-delete-old-images-cronjob
 spec:
   concurrencyPolicy: Forbid
-  schedule: "23 * * * *"
+  schedule: "* * * * *"
   successfulJobsHistoryLimit: 3
   failedJobsHistoryLimit: 3
   suspend: false
