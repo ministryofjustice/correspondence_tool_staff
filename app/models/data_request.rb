@@ -1,5 +1,5 @@
 class DataRequest < ApplicationRecord
-  belongs_to :offender_sar_case, class_name: 'Case::SAR::Offender', foreign_key: 'case_id'
+  belongs_to :offender_sar_case, class_name: 'Case::Base', foreign_key: 'case_id'
   belongs_to :user
   has_many   :data_request_logs, after_add: :update_cached_attributes
 

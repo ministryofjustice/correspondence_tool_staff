@@ -22,7 +22,7 @@ class CorrespondenceTypeSeeder
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
                 external_time_limit: 1,
-                extension_time_limit: 2, 
+                extension_time_limit: 2,
                 extension_time_default: 1,
                 deadline_calculator_class: 'CalendarMonths',
                 default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
@@ -41,6 +41,16 @@ class CorrespondenceTypeSeeder
     rec = CorrespondenceType.new if rec.nil?
     rec.update!(name: 'Offender subject access request',
                 abbreviation: 'OFFENDER_SAR',
+                escalation_time_limit: 3,
+                internal_time_limit: 10,
+                external_time_limit: 1,
+                deadline_calculator_class: 'CalendarMonths')
+  end
+
+    rec = CorrespondenceType.find_by(abbreviation: 'OFFENDER_SAR_COMPLAINT')
+    rec = CorrespondenceType.new if rec.nil?
+    rec.update!(name: 'Offender subject access request complaint',
+                abbreviation: 'OFFENDER_SAR_COMPLAINT',
                 escalation_time_limit: 3,
                 internal_time_limit: 10,
                 external_time_limit: 1,
