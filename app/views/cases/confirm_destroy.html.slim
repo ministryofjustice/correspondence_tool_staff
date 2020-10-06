@@ -23,7 +23,7 @@
         = @case.subject
 
     p
-      = f.text_area :reason_for_deletion
+      = f.text_area :reason_for_deletion, @case.reason_for_deletion
 
     .notice
       i.icon.icon-important

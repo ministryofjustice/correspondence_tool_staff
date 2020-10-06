@@ -117,10 +117,11 @@ class CasesController < ApplicationController
   def destroy
     authorize @case
 
+    permitted_params = params.require(:case).permit(:reason_for_deletion)
     service = CaseDeletionService.new(
       current_user,
       @case,
-      params.require(:case).permit(:reason_for_deletion)
+      permitted_params
     )
     service.call
 
@@ -128,6 +129,8 @@ class CasesController < ApplicationController
       flash[:notice] = "You have deleted case #{@case.number}."
       redirect_to cases_path
     else
+      @case = @case.decorate
+      @case.assign_attributes(permitted_params)
       render 'cases/confirm_destroy'
     end
   end
