@@ -134,10 +134,12 @@ function _deploy() {
     -f config/kubernetes/${environment}/secrets.yaml \
     -n $namespace
 
-  if [ $environment == "production" ]
+  if [ $environment == "development" ]
     then
       kubectl delete cronjob cronjob-delete-old-ecr-images -n $namespace --ignore-not-found=true
-      kubectl create -f config/kubernetes/${environment}/cronjob-delete-old-ecr-images.yaml -n $namespace
+      kubectl set image -f config/kubernetes/${environment}/cronjob-delete-old-ecr-images.yaml \
+            ecr-delete-old-images=${docker_image_tag} \
+            --local --output yaml | kubectl create -n $namespace -f -
     fi
 }
 
