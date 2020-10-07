@@ -1,5 +1,4 @@
 set -e
-set -o pipefail
 
 apt-get update
 apt-get --assume-yes install python3-pip

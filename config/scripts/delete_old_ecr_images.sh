@@ -1,5 +1,4 @@
 set -e
-set -o pipefail
 
 repo=correspondence/track-a-query-ecr
 total_master_images_to_keep=10
