@@ -83,13 +83,10 @@ module Cases
 
       set_permitted_events
       if @permitted_events.include?(params[:transition_name].to_sym)
-        begin
-          @case.state_machine.send(params[:transition_name] + '!', params_for_transition)
-        rescue ConfigurableStateMachine::AlreadyUnderTargetStateError => err
-        end
+        @case.state_machine.send(params[:transition_name] + '!', params_for_transition)
         reload_case_page_on_success
       else
-        raise ArgumentError.new('Bad transition')
+        raise ArgumentError.new("Bad transition, the action #{params[:transition_name]}is not allowed.")
       end
     end
 
