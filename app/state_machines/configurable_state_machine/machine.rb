@@ -236,10 +236,19 @@ module ConfigurableStateMachine
       event = event.to_sym
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
       role =  params[:acting_team].role
-      user_role_config = extract_user_role_config(role)
+      user_role_config = @config.user_roles[role]
+      if user_role_config.nil?
+        raise InvalidEventError.new(
+                kase: @kase,
+                user: params[:acting_user],
+                event: event,
+                role: role,
+                message: "No state machine config for role #{role}"
+              )
+      end
       user = extract_user_from_metadata(params)
       state_config = user_role_config.states[@kase.current_state]
-      if state_config.nil?
+      if state_config.nil? || !state_config.to_hash.keys.include?(event)
         raise InvalidEventError.new(
                 role: role,
                 kase: @kase,
@@ -250,10 +259,9 @@ module ConfigurableStateMachine
               )
       end
       event_config = state_config[event]
-      to_state = find_destination_state(event_config: event_config, user: user)
-      validate_state_config(state_config, role, event, to_state, params)
       if can_trigger_event?(event_name: event, metadata: params)
         ActiveRecord::Base.transaction do
+          to_state = find_destination_state(event_config: event_config, user: user)
           to_workflow = find_destination_workflow(event_config: event_config, user: user)
           CaseTransition.unset_most_recent(@kase)
           write_transition(event: event, to_state: to_state, to_workflow: to_workflow, params: params)
@@ -273,44 +281,6 @@ module ConfigurableStateMachine
     end
     #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
-    def extract_user_role_config(role)
-      user_role_config = @config.user_roles[role]
-      if user_role_config.nil?
-        raise InvalidEventError.new(
-                kase: @kase,
-                user: params[:acting_user],
-                event: event,
-                role: role,
-                message: "No state machine config for role #{role}"
-              )
-      end
-      user_role_config
-    end
-
-    def validate_state_config(state_config, role, event, to_state, params)
-      if @kase.current_state == to_state
-        byebug
-        raise AlreadyUnderTargetStateError.new(
-                role: role,
-                kase: @kase,
-                user: params[:acting_user],
-                event: event,
-                target_state: to_state,
-                message: "The current case has already under the target state " +
-                         "#{@kase.current_state}"
-              )
-      end
-      if !state_config.to_hash.keys.include?(event)
-        raise InvalidEventError.new(
-                role: role,
-                kase: @kase,
-                user: params[:acting_user],
-                event: event,
-                message: "No event #{event} for role #{role} and case state " +
-                         "#{@kase.current_state}"
-              )
-      end
-    end 
 
     def extract_roles_from_metadata(metadata)
       team = extract_team_from_metadata(metadata)

@@ -42,7 +42,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       link_to link_text,
         transition_case_sar_offender_path(@case, event),
         id: "action--#{link_text.parameterize}",
-        class: 'button',
+        class: 'button state-action-button',
         method: 'patch'
     when :assign_responder
       link_to I18n.t('common.case.assign'),
