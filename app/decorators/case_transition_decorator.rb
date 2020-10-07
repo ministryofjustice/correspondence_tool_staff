@@ -45,7 +45,7 @@ class CaseTransitionDecorator < Draper::Decorator
     when 'assign_responder', 'assign_to_new_team'
       "Assigned to #{object.target_team.name}"
     when 'remove_linked_case'
-      "Removed the link to <strong>#{Case::Base.find(object.linked_case_id).number}</strong>"
+      message_base_on_linked_case
     when 'progress_for_clearance'
       "Progressed to #{object.target_team.name}"
     when 'add_responses',
@@ -65,6 +65,15 @@ class CaseTransitionDecorator < Draper::Decorator
       "#{ acting_user.full_name } re-assigned this case to <strong>#{ target_user.full_name }</strong>"
     else
       object&.message
+    end
+  end
+
+  def message_base_on_linked_case
+    if Case::Base.exists?(object.linked_case_id)
+      "Removed the link to <strong>#{Case::Base.find(object.linked_case_id).number}</strong>"
+    else
+      "Removed the link to case_id:   <strong>#{object.linked_case_id}</strong>. 
+      (NOTE: This linked case has been deleted in some point after this date, no further case detail can be provided.)"
     end
   end
 end

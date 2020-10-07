@@ -24,8 +24,8 @@ module PageObjects
           confirm_button.value
         end
 
-        def fill_in_delete_reason
-          fill_in('Reason for deletion', with: 'I want this case deleted')
+        def fill_in_delete_reason(delete_reason: 'I want this case deleted')
+          fill_in('Reason for deletion', with: delete_reason)
         end
       end
     end

@@ -180,6 +180,31 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
+    context 'Add linkage to a case' do
+      it 'returns to the number of linked case' do 
+        accepted_case = create :accepted_case, responder: dacu_user, responding_team: dacu
+        ct = create(:case_link_foi_case, case: accepted_case).decorate
+        expect(ct.event_and_detail).to eq response("Case linked", "")
+      end
+    end
+
+    context 'Remove linkage to a case' do
+      it 'returns to the number of linked case if the case exists' do 
+        accepted_case = create :accepted_case, responder: dacu_user, responding_team: dacu
+        ct = create(:case_remove_link_foi_case, case: accepted_case).decorate
+        expect(ct.event_and_detail).to eq response(
+          "Linked case removed", 
+          "Removed the link to <strong>#{accepted_case.number}</strong>")
+      end
+
+      it 'returns to id of linked case if the case has been deleted' do 
+        accepted_case = create :accepted_case, responder: dacu_user, responding_team: dacu
+        ct = create(:case_remove_link_foi_case, case: accepted_case).decorate
+        accepted_case.destroy
+        expect(ct.event_and_detail).to match(/Linked case removed.*Removed the link to case_id:.*#{accepted_case.id}/) 
+      end
+    end
+
     def response(e, d)
       "<strong>#{e}</strong><br>#{d}"
     end
