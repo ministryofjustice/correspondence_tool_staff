@@ -231,7 +231,7 @@ module ConfigurableStateMachine
     # * :acting_user (this corresponds to the current_user)
     # * :acting_team
     #
-    #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+    #rubocop:disable Metrics/MethodLength
     def trigger_event(event:, params:)
       event = event.to_sym
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
@@ -247,7 +247,6 @@ module ConfigurableStateMachine
               )
       end
       user = extract_user_from_metadata(params)
-      raise InvalidEventError.new(kase: @kase, user: params[:acting_user], event: event, role: role) if user_role_config.nil?
       state_config = user_role_config.states[@kase.current_state]
       if state_config.nil? || !state_config.to_hash.keys.include?(event)
         raise InvalidEventError.new(
@@ -280,7 +279,7 @@ module ConfigurableStateMachine
               )
       end
     end
-    #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
+    #rubocop:enable Metrics/MethodLength
 
 
     def extract_roles_from_metadata(metadata)

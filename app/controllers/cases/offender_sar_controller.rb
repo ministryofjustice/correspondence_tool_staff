@@ -81,22 +81,12 @@ module Cases
     def transition
       authorize @case, :transition?
 
-      # TODO - review this - why is the list of actions duplicated here?
-      # Why are we redefining the transition method?
-      available_actions = %w[
-        mark_as_waiting_for_data
-        mark_as_ready_for_vetting
-        mark_as_vetting_in_progress
-        mark_as_ready_to_copy
-        mark_as_ready_to_dispatch
-        close
-      ]
-
-      if available_actions.include?(params[:transition_name])
+      set_permitted_events
+      if @permitted_events.include?(params[:transition_name].to_sym)
         @case.state_machine.send(params[:transition_name] + '!', params_for_transition)
         reload_case_page_on_success
       else
-        raise ArgumentError.new('Bad transition')
+        raise ArgumentError.new("Bad transition, the action #{params[:transition_name]}is not allowed.")
       end
     end
 
@@ -104,7 +94,6 @@ module Cases
       permitted_correspondence_types
       authorize case_type, :can_add_case?
 
-      # @case = OffenderSARCaseForm.new(@case)
       @case.current_step = params[:step]
       apply_date_workaround
     end
