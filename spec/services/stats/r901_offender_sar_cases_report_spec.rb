@@ -26,7 +26,8 @@ module Stats
       it 'returns correct columns' do 
         report = described_class.new()
         offender_sar_case = create :offender_sar_case, :waiting_for_data,
-                                    subject_type: 'ex_probation_service_user'
+                                    subject_type: 'ex_probation_service_user',
+                                    subject_full_name: 'testing analyse_case'
         result = report.analyse_case(offender_sar_case)
         expect(result).to include(
           offender_sar_case.number, 
@@ -34,7 +35,7 @@ module Stats
           offender_sar_case.external_deadline,
           "Data subject", 
           nil, 
-          "Subject 1",
+          "testing analyse_case",
           "Ex-probation service user", 
           0, 
           "in time", 
