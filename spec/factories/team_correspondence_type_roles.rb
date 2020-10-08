@@ -51,5 +51,9 @@ FactoryBot.define do
     trait :offender_sar do
       correspondence_type   { find_or_create :offender_sar_correspondence_type }
     end
+
+    trait :offender_sar_complaint do
+      correspondence_type   { find_or_create :offender_sar_complaint_correspondence_type }
+    end
   end
 end

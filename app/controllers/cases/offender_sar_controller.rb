@@ -20,14 +20,14 @@ module Cases
       permitted_correspondence_types
       authorize case_type, :can_add_case?
 
-      @case = build_case_from_session
+      @case = build_case_from_session(Case::SAR::Offender)
       @case.current_step = params[:step]
     end
 
     def create
       authorize case_type, :can_add_case?
 
-      @case = build_case_from_session
+      @case = build_case_from_session(Case::SAR::Offender)
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
 
@@ -133,29 +133,29 @@ module Cases
 
     # @todo the following are all related to session data (case) cross different page
     # maybe worthy having another class for handling such thing together in a more abstract way
-    def build_case_from_session
+    def build_case_from_session(correspondence_type)
       # regarding the `{ date_of_birth: nil }` below...
       # this is needed to prevent "NoMethodError undefined method `dd' for nil:NilClass"
       # when a new Case::SAR::Offender is being created from scratch, because the field is not
       # in the list of instance variables in the model at the point that the gov_uk_date_fields
       # is adding its magic methods. This manifests when running tests or after rails server restart
       values = session[:offender_sar_state] || { date_of_birth: nil }
-  
+
       # similar workaround needed for request dated
       request_dated_exists = values.fetch('request_dated', false)
       values['request_dated'] = nil unless request_dated_exists
-  
-      Case::SAR::Offender.new(values).decorate
-    end 
+
+      correspondence_type.new(values).decorate
+    end
 
     def session_persist_state(params)
       session[:offender_sar_state] ||= {}
       params ||= {}
       session[:offender_sar_state] = session[:offender_sar_state].merge params
     end
-      
+
     def preserve_step_state
       @case.current_step = params['current_step']
-    end    
+    end
   end
 end

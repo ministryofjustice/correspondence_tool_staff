@@ -1,0 +1,38 @@
+.grid-row
+  div class="column-full #{case_details_for_link_type(link_type)}"
+    h2.request--heading
+      / i18n-tasks-use t('common.case.case-details')
+      / i18n-tasks-use t('common.case.original-case-details')
+      = translate_for_case(case_details, 'common', case_details_for_link_type(link_type))
+
+    table
+      tbody.sar-basic-details
+
+        = render partial: 'cases/shared/case_type', locals: { case_details: case_details }
+
+        = render partial: 'cases/offender_sar/subject_details', locals: { case_details: case_details }
+
+        = render partial: 'cases/offender_sar/requested_on_behalf', locals: { case_details: case_details }
+
+        - if case_details.third_party?
+          = render partial: 'cases/offender_sar/third_party_details', locals: { case_details: case_details }
+
+        = render partial: 'cases/offender_sar/request_recipient', locals: { case_details: case_details }
+
+        - if case_details.third_party_recipient?
+          = render partial: 'cases/offender_sar/third_party_details', locals: { case_details: case_details }
+
+        = render partial: 'cases/offender_sar/request_details', locals: { case_details: case_details }
+
+        = render partial: 'cases/offender_sar/date_received', locals: { case_details: case_details }
+
+        = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
+
+        - if case_details.has_date_draft_compliant?
+          = render partial: 'cases/shared/draft_compliance_details', locals: { case_details: case_details }
+
+        - if case_details.responding_team.present?
+          = render partial: 'cases/shared/responding_team', locals: { case_details: case_details }
+
+        - if case_details.closed?
+          = render partial: 'cases/shared/closed_case_details', locals: { case_details: case_details }
