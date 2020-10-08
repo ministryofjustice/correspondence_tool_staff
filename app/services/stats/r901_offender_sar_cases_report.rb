@@ -45,11 +45,11 @@ module Stats
         kase.external_deadline,
         kase.third_party? ? kase.third_party_relationship : 'Data subject',
         kase.third_party_company_name,
-        kase.subject_full_name, 
-        kase.subject_type, 
+        kase.subject_full_name,
+        I18n.t('helpers.label.offender_sar.subject_type.' + kase.subject_type),
         kase.page_count, 
         kase.already_late? ? 'out of time' : 'in time', 
-        kase.current_state,
+        kase.current_state.humanize,
         kase.num_days_taken,
         kase.data_requests_completed? ? 'Yes' : 'No'
       ]

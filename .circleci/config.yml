@@ -155,25 +155,6 @@ references:
         bundle exec rails parallel:load_structure
         bundle exec rails parallel:spec
 
-  build_and_send_veracode: &build_and_send_veracode
-    run:
-      name: Create veracode zipped file and send to veracode
-      command: |
-        gem sources --add https://gems.veracode.com
-        gem install veracode --prerelease
-        bundle exec veracode prepare
-
-        mkdir tmp/veracode
-        mv tmp/*.zip tmp/veracode
-
-        current_branch=$(git branch | grep \* | cut -d ' ' -f2)
-        current_version=$(git rev-parse $current_branch)
-        short_version=$(git rev-parse --short $current_branch)
-        ts=`date +%s`
-        build_tag=cts-${current_branch}-${short_version}-${ts}
-
-        ./veracode-scan.sh $VERACODE_API_ID $VERACODE_API_KEY "Correspondence Tool for Staff" "./tmp/veracode" $build_tag
-
   set_up_aws_cli: &set_up_aws_cli
     run:
       # this is needed to get a token from the cloud platform to use kubernetes
@@ -273,17 +254,6 @@ jobs:
       - *rubocop
       - *update_chromedriver
       - *run_unit_and_feature_tests
-
-  package_and_send_to_veracode:
-    <<: *test_container_config
-    <<: *defaults
-    steps:
-      - checkout
-      - *restore_cache
-      - *install_bundler
-      - *install_dependencies
-      - *save_cache
-      - *build_and_send_veracode
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
@@ -439,9 +409,6 @@ workflows:
       - deploy_master_to_dev:
           requires:
             - build_master_and_push_to_ecr
-      - package_and_send_to_veracode:
-          requires:
-            - deploy_master_to_dev
       - deploy_master_to_staging_approval:
           type: approval
           requires:
@@ -477,9 +444,6 @@ workflows:
           filters:
             branches:
               ignore: master
-      - package_and_send_to_veracode:
-          requires:
-            - build_and_test
       - build_branch_and_push_to_ecr_approval:
           type: approval
           requires:

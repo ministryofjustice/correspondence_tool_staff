@@ -18,6 +18,34 @@ module Stats
       end
     end
 
+    describe '#analyse_case' do 
+      before do
+        create_report_type(abbr: :r901)
+      end
+
+      it 'returns correct columns' do 
+        report = described_class.new()
+        offender_sar_case = create :offender_sar_case, :waiting_for_data,
+                                    subject_type: 'ex_probation_service_user',
+                                    subject_full_name: 'testing analyse_case'
+        result = report.analyse_case(offender_sar_case)
+        expect(result).to include(
+          offender_sar_case.number, 
+          offender_sar_case.received_date, 
+          offender_sar_case.external_deadline,
+          "Data subject", 
+          nil, 
+          "testing analyse_case",
+          "Ex-probation service user", 
+          0, 
+          "in time", 
+          "Waiting for data", 
+          1, 
+          "No"
+        )
+      end
+    end 
+
     describe '#case_scope' do
       before do
         create_report_type(abbr: :r901)
