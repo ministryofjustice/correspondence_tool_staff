@@ -5,12 +5,10 @@
 
 h1.cover-sheet-heading
   ul
-    li.cover-sheet-heading__detail
+    li.cover-sheet-heading__name
       = @case.number
     li.cover-sheet-heading__name
       = @case.subject_full_name&.upcase
-    li.cover-sheet-heading__detail
-      = @case.subject_aliases&.upcase
     li.cover-sheet-heading__detail
       = @case.prison_number&.upcase
 
