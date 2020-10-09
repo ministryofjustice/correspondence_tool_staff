@@ -16,7 +16,8 @@
   font-family: "nta", Arial, sans-serif;
   font-weight: bold;
 
-  &__name {
+  &__name,
+  &__case-number {
     font-size: 90px;
     line-height: 100px;
   }
