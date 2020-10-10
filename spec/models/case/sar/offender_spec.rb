@@ -788,14 +788,19 @@ describe Case::SAR::Offender do
     end
 
     context 'When there is more than one prison number' do
-      let(:kase)  { create :offender_sar_case, prison_number: 'A12345, B98765' }
-      let(:kase1)  { create :offender_sar_case, prison_number: '  A12345  , B98765 ' }
-      let(:kase2)  { create :offender_sar_case, prison_number: 'A12345 B98765' }
+      let(:kases)  {
+        [
+          create(:offender_sar_case, prison_number: 'A12345, B98765'),
+          create(:offender_sar_case, prison_number: '  A12345  , B98765 '),
+          create(:offender_sar_case, prison_number: 'A12345 B98765'),
+          create(:offender_sar_case, prison_number: 'A12345, B98765 A234667')
+        ]
+      }
 
       it 'returns the first prison number' do
-        expect(kase.first_prison_number).to eq 'A12345'
-        expect(kase1.first_prison_number).to eq 'A12345'
-        expect(kase2.first_prison_number).to eq 'A12345'
+        kases.each do |kase|
+          expect(kase.first_prison_number).to eq 'A12345'
+        end
       end
     end
 
@@ -812,6 +817,14 @@ describe Case::SAR::Offender do
 
       it 'returns an empty string' do
         expect(kase.first_prison_number).to eq ''
+      end
+    end
+
+    context 'When prison number is lowercase' do
+      let(:kase)  { create :offender_sar_case, prison_number: 'a12345' }
+
+      it 'returns it in uppercase' do
+        expect(kase.first_prison_number).to eq 'A12345'
       end
     end
   end

@@ -92,7 +92,7 @@ class LetterTemplateSeeder
                   <p>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
-                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number&.upcase %></strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
                   <br><br>Dear Colleague,
                   <br>
                   <br>Please find enclosed documents relating to a Subject Access Request (SAR) made under the Data Protection Act 2018 by the above offender.
@@ -217,7 +217,7 @@ class LetterTemplateSeeder
                   <p>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
-                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number&.upcase %></strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs,<% end %>
                   <br>
                   <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
@@ -254,7 +254,7 @@ class LetterTemplateSeeder
                   <p>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
-                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number&.upcase %></strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs,<% end %>
                   <br>
                   <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
@@ -289,7 +289,7 @@ class LetterTemplateSeeder
                   <p>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
-                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number&.upcase %></strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
                   <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs, <% else %>Dear <%= values.recipient_name %>, <% end %>
                   <br>
                   <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA) for the above person.
@@ -333,7 +333,7 @@ class LetterTemplateSeeder
                   <p>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
-                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number&.upcase %></strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
                   <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs, <% else %>Dear <%= values.recipient_name %>, <% end %>
                   <br>
                   <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA).
