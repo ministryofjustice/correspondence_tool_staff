@@ -66,7 +66,8 @@ describe CasesController, type: :controller do
         it 'assigns @permitted_correspondence_types' do
           expect(assigns(:permitted_correspondence_types))
             .to match_array [
-              CorrespondenceType.offender_sar
+              CorrespondenceType.offender_sar,
+              CorrespondenceType.offender_sar_complaint
             ]
           expect(assigns(:permitted_correspondence_types))
             .not_to include CorrespondenceType.foi
