@@ -3,10 +3,10 @@ module Cases
     include OffenderSARComplaintCasesParams
 
     def initialize
-      super
       @correspondence_type = CorrespondenceType.offender_sar_complaint
       @correspondence_type_key = 'offender_sar_complaint'
 
+      super
     end
 
     def new
