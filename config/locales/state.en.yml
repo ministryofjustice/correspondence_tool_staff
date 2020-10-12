@@ -15,6 +15,14 @@ en:
       ready_to_dispatch: Ready to dispatch
       vetting_in_progress: Vetting in progress
       waiting_for_data: Waiting for data
+    case/sar/offender_complaint:
+      closed: Closed
+      data_to_be_requested: Data to be requested
+      ready_for_vetting: Ready for vetting
+      ready_to_copy: Ready to copy
+      ready_to_dispatch: Ready to dispatch
+      vetting_in_progress: Vetting in progress
+      waiting_for_data: Waiting for data
     closed: Closed
     drafting: Draft in progress
     pending_dacu_clearance: Pending clearance

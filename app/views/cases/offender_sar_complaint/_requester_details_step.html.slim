@@ -1,0 +1,20 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar.requester_heading')
+
+= render partial: 'layouts/header'
+
+= form_for @case, url: url, as: :offender_sar_complaint do |f|
+  #third-party
+    h2.heading-medium
+      = t('helpers.label.offender_sar.third_party')
+    = f.radio_button_fieldset(:third_party, legend_options: { class: 'visually-hidden' }) do |fieldset|
+      - fieldset.radio_input(true, text_method: :humanize)
+        = f.text_field :third_party_relationship
+        = f.text_field :third_party_name
+        = f.text_field :third_party_company_name
+        = f.text_area  :postal_address, {rows: 4}
+      - fieldset.radio_input(false, text_method: :humanize)
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', class: 'button'

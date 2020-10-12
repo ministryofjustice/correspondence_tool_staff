@@ -1,0 +1,3 @@
+= @case.back_link(:create, @case.get_previous_step) if @case.get_previous_step
+
+= render "cases/offender_sar_complaint/#{kase.get_step_partial}", url: case_create_action(@case.object)
