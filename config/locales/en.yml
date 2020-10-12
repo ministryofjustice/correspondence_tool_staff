@@ -245,6 +245,8 @@ en:
       remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
     case/sar/offender_policy:
       <<: *case_policy
+    case/sar/offender_complaint_policy:
+      <<: *case_policy
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
