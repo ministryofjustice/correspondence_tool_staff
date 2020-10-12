@@ -98,7 +98,7 @@ FactoryBot.define do
       full_name         { 'Appeals performance report(SARs)' }
       class_name        { 'Stats::R102SarAppealsPerformanceReport' }
       custom_report     { true }
-      standard_report   { true }
+      standard_report   { false }
       seq_id            { 320 }
       foi               { false }
       sar               { true }
@@ -109,7 +109,7 @@ FactoryBot.define do
       full_name         { 'Business unit report' }
       class_name        { 'Stats::R103SarBusinessUnitPerformanceReport' }
       custom_report     { true }
-      standard_report   { true }
+      standard_report   { false }
       seq_id            { 250 }
       foi               { false }
       sar               { true }
@@ -130,7 +130,7 @@ FactoryBot.define do
       abbr              { 'R205' }
       full_name         { 'Monthly report (Offender SARs)' }
       class_name        { 'Stats::R205OffenderSarMonthlyPerformanceReport' }
-      custom_report     { false }
+      custom_report     { true }
       standard_report   { true }
       seq_id            { 600 }
       foi               { false }
