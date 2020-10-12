@@ -59,6 +59,13 @@ namespace :db do
         require File.join(Rails.root, 'db', 'seeders', 'letter_template_seeder')
         LetterTemplateSeeder.new.seed!
       end
+
+      desc 'Seed correspondence_types for production environments'
+      task :correspondence_types => :environment do
+        require File.join(Rails.root, 'db', 'seeders', 'correspondence_type_seeder')
+        puts 'Seeding Correspondence Types'
+        CorrespondenceTypeSeeder.new.seed!
+      end
     end
 
     desc 'seed development teams and users'
@@ -82,6 +89,13 @@ namespace :db do
       task letter_templates: :environment do
         require File.join(Rails.root, 'db', 'seeders', 'letter_template_seeder')
         LetterTemplateSeeder.new.seed!
+      end
+
+      desc 'Seed correspondence_types for development environments'
+      task :correspondence_types => :environment do
+        require File.join(Rails.root, 'db', 'seeders', 'correspondence_type_seeder')
+        puts 'Seeding Correspondence Types'
+        CorrespondenceTypeSeeder.new.seed!
       end
     end
 

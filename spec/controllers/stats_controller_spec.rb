@@ -50,22 +50,22 @@ RSpec.describe StatsController, type: :controller do
           .to require_permission(:can_download_stats?)
             .with_args(manager, Case::Base)
       end
-  
+
       it 'sets @report' do
         get :new
         expect(assigns(:report)).to be_new_record
       end
-  
+
       it 'sets @custom_reports_foi' do
         get :new
         expect(assigns(:custom_reports_foi)).to eq ReportType.custom.foi
       end
-  
+
       it 'sets @custom_reports_sar' do
         get :new
         expect(assigns(:custom_reports_sar)).to eq ReportType.custom.sar
       end
-  
+
       it 'sets @correspondence_types' do
         get :new
         expected = %w[FOI SAR CLOSED_CASES]
@@ -78,7 +78,7 @@ RSpec.describe StatsController, type: :controller do
       end
     end
 
-    context 'sets @correspondence_types' do
+    context 'signed in branston user' do
       before do
         sign_in branston_user
         find_or_create :report_type, :r007
@@ -89,21 +89,21 @@ RSpec.describe StatsController, type: :controller do
           .to require_permission(:can_download_stats?)
             .with_args(branston_user, Case::Base)
       end
-  
+
       it 'sets @report' do
         get :new
         expect(assigns(:report)).to be_new_record
       end
-  
+
       it 'sets @custom_reports_offender_sar' do
         get :new
         expect(assigns(:custom_reports_offender_sar)).to eq ReportType.custom.offender_sar
       end
-  
+
       it 'sets @correspondence_types' do
         get :new
-        expected = %w[OFFENDER_SAR]
-        expect(assigns(:correspondence_types).map(&:abbreviation)).to eq expected
+        expected = %w[OFFENDER_SAR OFFENDER_SAR_COMPLAINT]
+        expect(assigns(:correspondence_types).map(&:abbreviation)).to match_array expected
       end
 
       it 'renders the template' do
@@ -135,9 +135,9 @@ RSpec.describe StatsController, type: :controller do
       create :r003_report, period_start: Date.yesterday, period_end: Date.today
     }
 
-    let(:dummy_report_type) { 
-      double(to_csv: [], persist_results?: false, etl?: false, background_job?: false, 
-            results: {}, report_format: 'csv') 
+    let(:dummy_report_type) {
+      double(to_csv: [], persist_results?: false, etl?: false, background_job?: false,
+            results: {}, report_format: 'csv')
     }
 
     it 'authorizes' do
@@ -277,7 +277,7 @@ RSpec.describe StatsController, type: :controller do
         }.to change(Report.all, :size).by(1)
 
         report = Report.last
-        expect(report.status).to eq Stats::BaseReport::WAITING        
+        expect(report.status).to eq Stats::BaseReport::WAITING
       end
     end
   end
@@ -285,8 +285,8 @@ RSpec.describe StatsController, type: :controller do
   describe '#index' do
     before do
       ReportTypeSeeder.new.seed!
-    end 
-    after do 
+    end
+    after do
       ReportType.delete_all
     end
     it 'authorizes' do
