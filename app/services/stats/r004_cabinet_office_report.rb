@@ -208,21 +208,21 @@ module Stats
     end
 
     def get_value_1_Ci
-      cases_received_and_closed_in_period_responded_in_time.count - responded_in_time_with_pit_extention
+      cases_received_and_closed_in_period_responded_in_time.count - responded_in_time_with_pit_extension
     end
 
     def get_value_1_Cii
-      responded_in_time_with_pit_extention + responded_late_with_pit_extention
+      responded_in_time_with_pit_extension + responded_late_with_pit_extension
     end
 
-    def responded_in_time_with_pit_extention
+    def responded_in_time_with_pit_extension
       cases_received_and_closed_in_period_responded_in_time
         .joins(:transitions).where(
           'case_transitions.event = ?',
           'extend_for_pit').group('cases.id').count.size
     end
 
-    def responded_late_with_pit_extention
+    def responded_late_with_pit_extension
       cases_received_and_closed_in_period_responded_late
         .joins(:transitions).where(
           'case_transitions.event = ?',
@@ -230,7 +230,7 @@ module Stats
     end
 
     def get_value_1_Ciii
-      cases_received_and_closed_in_period_responded_late.count - responded_late_with_pit_extention
+      cases_received_and_closed_in_period_responded_late.count - responded_late_with_pit_extension
     end
 
     def get_value_2_A
