@@ -736,7 +736,7 @@ describe Case::SAR::Offender do
     let(:kase)  { create :offender_sar_case }
 
     it 'is 1 when case is received today' do
-      kase.received_date = Date.today 
+      kase.received_date = Date.today
       expect(kase.num_days_taken).to be 1
     end
 
@@ -751,7 +751,7 @@ describe Case::SAR::Offender do
       expect(closed_kase.num_days_taken).to eq 10
     end
   end
-  
+
   describe '#num_days_late' do
   let(:kase)  { create :offender_sar_case }
   let(:closed_kase) { create :offender_sar_case, :closed}
@@ -777,5 +777,56 @@ describe Case::SAR::Offender do
       expect(closed_kase.num_days_late).to eq 2
     end
   end
-  
+
+  describe '#first_prison_number' do
+    let(:kase)  { create :offender_sar_case }
+
+    context 'When there is just one prison number' do
+      it 'returns the prison number' do
+        expect(kase.first_prison_number).to eq '123465'
+      end
+    end
+
+    context 'When there is more than one prison number' do
+      let(:kases)  {
+        [
+          create(:offender_sar_case, prison_number: 'A12345, B98765'),
+          create(:offender_sar_case, prison_number: '  A12345  , B98765 '),
+          create(:offender_sar_case, prison_number: 'A12345 B98765'),
+          create(:offender_sar_case, prison_number: 'A12345, B98765 A234667')
+        ]
+      }
+
+      it 'returns the first prison number' do
+        kases.each do |kase|
+          expect(kase.first_prison_number).to eq 'A12345'
+        end
+      end
+    end
+
+    context 'When prison number is nil' do
+      let(:kase)  { create :offender_sar_case, prison_number: nil }
+
+      it 'returns an empty string' do
+        expect(kase.first_prison_number).to eq ''
+      end
+    end
+
+    context 'When prison number is an empty string' do
+      let(:kase)  { create :offender_sar_case, prison_number: '' }
+
+      it 'returns an empty string' do
+        expect(kase.first_prison_number).to eq ''
+      end
+    end
+
+    context 'When prison number is lowercase' do
+      let(:kase)  { create :offender_sar_case, prison_number: 'a12345' }
+
+      it 'returns it in uppercase' do
+        expect(kase.first_prison_number).to eq 'A12345'
+      end
+    end
+  end
+
 end
