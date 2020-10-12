@@ -1,0 +1,33 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar.subject_heading')
+
+= render partial: 'layouts/header'
+
+= form_for @case.object, url: url, as: :offender_sar_complaint do |f|
+  = f.text_field :subject_full_name
+
+  = f.text_field :prison_number
+
+  = f.text_field :subject_aliases
+
+  = f.text_field :previous_case_numbers
+
+  = f.text_field :other_subject_ids
+
+  = f.text_field :case_reference_number
+
+  = f.gov_uk_date_field :date_of_birth, { legend_text: t('cases.new.date_of_birth'),
+    form_hint_text: t('cases.new.date_of_birth_copy') }
+
+  = f.radio_button_fieldset :subject_type,
+    choices: Case::SAR::Offender::subject_types.keys
+
+  = f.text_area :subject_address, rows: '4'
+
+  = f.radio_button_fieldset(:flag_as_high_profile) do |fieldset|
+    - fieldset.radio_input(true, text_method: :humanize)
+    - fieldset.radio_input(false, text_method: :humanize)
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', class: 'button'

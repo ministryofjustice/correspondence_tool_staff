@@ -52,6 +52,7 @@ Rails.application.routes.draw do
       foi: 'foi_standard', # views are in /foi
       sar: 'sar_standard', # views are in /sar
       offender_sar: 'sar_offender',
+      offender_sar_complaint: 'sar_offender_complaint',
       ico: 'ico',
       ico_foi: 'ico_foi',
       ico_sar: 'ico_sar',
@@ -77,6 +78,16 @@ Rails.application.routes.draw do
       post '/update', on: :member, to: 'offender_sar#update', as: 'update_step'
       member do
         patch '/transitions/:transition_name', to: 'offender_sar#transition', as: :transition
+      end
+    end
+
+    resources :offender_sar_complaints, only: only, controller: 'offender_sar_complaint', as: :case_sar_offender_complaint do
+      get 'cancel', on: :collection
+      get '/(:step)', on: :collection, to: 'offender_sar_complaint#new', as: 'step'
+      get '/edit/:step', on: :member, to: 'offender_sar_complaint#edit', as: 'edit_step'
+      post '/update', on: :member, to: 'offender_sar_complaint#update', as: 'update_step'
+      member do
+        patch '/transitions/:transition_name', to: 'offender_sar_complaint#transition', as: :transition
       end
     end
 

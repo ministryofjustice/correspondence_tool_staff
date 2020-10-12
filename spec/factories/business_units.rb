@@ -120,6 +120,7 @@ FactoryBot.define do
     after(:create) do |bu, _evaluator|
       bu.correspondence_types = []
       bu.correspondence_types << find_or_create(:offender_sar_correspondence_type)
+      bu.correspondence_types << find_or_create(:offender_sar_complaint_correspondence_type)
       bu.save!
     end
   end
