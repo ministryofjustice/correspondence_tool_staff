@@ -10,7 +10,9 @@ h1.cover-sheet-heading
     li.cover-sheet-heading__name
       = @case.subject_full_name&.upcase
     li.cover-sheet-heading__detail
-      = @case.prison_number&.upcase
+      = @case.first_prison_number&.upcase
+    li.cover-sheet-heading__detail
+      = @case.recipient_address
 
 section.case-info
   = render partial: 'cases/cover_pages/data_requests', locals: { case_details: @case }
