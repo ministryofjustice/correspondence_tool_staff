@@ -27,14 +27,17 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready for vetting"
     expect(cases_show_page).to have_content "Send acknowledgement letter"
+    expect(cases_show_page).to have_content "Preview cover page"
     click_on "Mark as ready for vetting"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as vetting in progress"
+    expect(cases_show_page).to have_content "Preview cover page"
     click_on "Mark as vetting in progress"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready to copy"
+    expect(cases_show_page).to have_content "Preview cover page"
     click_on "Mark as ready to copy"
 
     expect(cases_show_page).to be_displayed
@@ -45,7 +48,7 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to have_content "Send dispatch letter"
     expect(cases_show_page).to have_content "Close case"
     click_on "Close case"
-    
+
     expect(cases_close_page).to be_displayed
     cases_close_page.fill_in_date_responded(offender_sar_case.received_date)
     click_on "Continue"
