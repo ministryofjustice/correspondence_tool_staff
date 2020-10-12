@@ -2,6 +2,7 @@ require 'rails_helper'
 
 module Stats
   describe R900CasesReport do
+    before(:all) { DbHousekeeping.clean(seed: true) }
     after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '.title' do
@@ -22,7 +23,7 @@ module Stats
         create_report_type(abbr: :r900)
       end
 
-      before(:all) do        
+      before(:all) do
         @sar_1 = create :accepted_sar, identifier: 'sar-1'
         @offender_sar_1 = create :offender_sar_case, :waiting_for_data, identifier: 'osar-1'
 
