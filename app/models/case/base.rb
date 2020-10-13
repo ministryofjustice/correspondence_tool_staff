@@ -393,7 +393,7 @@ class Case::Base < ApplicationRecord
 
   def self.permitted_states
     ConfigurableStateMachine::Manager.instance.permitted_states(type_abbreviation.downcase.to_sym)
-  end 
+  end
 
   def self.factory(_type)
     raise NotImplementedError.new('Case type must implement self.factory')
@@ -618,14 +618,14 @@ class Case::Base < ApplicationRecord
 
   def num_days_late
     days = @deadline_calculator.class.days_late(
-      external_deadline, 
+      external_deadline,
       benchmark_date_value_for_days_metrics)
     days > 0 ? days : nil
   end
 
   def num_days_taken
     days = @deadline_calculator.class.days_taken(
-      received_date, 
+      received_date,
       benchmark_date_value_for_days_metrics)
     days > 0 ? days : nil
   end
@@ -634,7 +634,7 @@ class Case::Base < ApplicationRecord
     the_date_being_extended = find_most_recent_action_timing_for_pit_extension
     if the_date_being_extended.present?
       days = @deadline_calculator.class.days_taken(
-        the_date_being_extended, 
+        the_date_being_extended,
         benchmark_date_value_for_days_metrics)
       days > 0 ? days : nil
     else
@@ -804,16 +804,17 @@ class Case::Base < ApplicationRecord
 
   # predicate methods
   #
-  def foi?;                 false;  end
-  def foi_standard?;        false;  end
-  def foi_ir_timeliness?;   false;  end
-  def foi_ir_compliance?;   false;  end
-  def sar?;                 false;  end
-  def ico?;                 false;  end
-  def overturned_ico?;      false;  end
-  def overturned_ico_sar?;  false;  end
-  def overturned_ico_foi?;  false;  end
-  def offender_sar?;        false;  end
+  def foi?;                    false;  end
+  def foi_standard?;           false;  end
+  def foi_ir_timeliness?;      false;  end
+  def foi_ir_compliance?;      false;  end
+  def sar?;                    false;  end
+  def ico?;                    false;  end
+  def overturned_ico?;         false;  end
+  def overturned_ico_sar?;     false;  end
+  def overturned_ico_foi?;     false;  end
+  def offender_sar?;           false;  end
+  def offender_sar_complaint?; false;  end
 
   def default_managing_team
     BusinessUnit.dacu_bmt

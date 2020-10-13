@@ -7,7 +7,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     let(:params) do
       {
         correspondence_type: 'offender_sar_complaint',
-        offender_sar: {
+        offender_sar_complaint: {
           requester_type: 'member_of_the_public',
           type: 'Offender',
           name: 'A. N. Other',
@@ -105,7 +105,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     let(:params) do
       {
         id: offender_sar_case.id,
-        offender_sar: {
+        offender_sar_complaint: {
           requester_type: 'member_of_the_public',
           type: 'Offender',
           name: 'A. N. Other',
@@ -126,7 +126,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     let(:same_params) do
       {
         id: offender_sar_case.id,
-        offender_sar: {
+        offender_sar_complaint: {
           name: offender_sar_case.name,
           postal_address: offender_sar_case.postal_address,
           subject: offender_sar_case.subject,

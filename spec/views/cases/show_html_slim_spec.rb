@@ -624,4 +624,153 @@ describe 'cases/show.html.slim', type: :view do
       end
     end
   end
+
+  describe 'offender sar complaint' do
+    let(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
+
+    before do
+      assign(:case, offender_sar_complaint)
+      setup_policies(
+        mark_as_waiting_for_data: true,
+        mark_as_ready_for_vetting: true,
+        mark_as_vetting_in_progress: true,
+        mark_as_ready_to_dispatch: true,
+        mark_as_ready_to_copy: true,
+        close: true,
+        can_add_note_to_case?: true,
+        can_record_data_request?: true,
+      )
+    end
+
+    context 'as a manager' do
+      context 'partials' do
+        before do
+          assign(:permitted_events, [:add_note_to_case])
+          assign(:filtered_permitted_events, [:add_note_to_case])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+        end
+
+        it { should_not have_rendered 'cases/_case_messages'}
+        it { should have_rendered 'cases/offender_sar/_case_notes'}
+        it { should have_rendered 'cases/offender_sar/_data_requests'}
+      end
+
+      context 'when a case just created' do
+        it 'shows mark as waiting for data' do
+          assign(:permitted_events, [:mark_as_waiting_for_data])
+          assign(:filtered_permitted_events, [:mark_as_waiting_for_data])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_mark_as_waiting_for_data
+        end
+      end
+
+      context 'when a case is waiting for data' do
+        it 'shows mark as ready for vetting' do
+          assign(:permitted_events, [:mark_as_ready_for_vetting])
+          assign(:filtered_permitted_events, [:mark_as_ready_for_vetting])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_mark_as_ready_for_vetting
+          expect(cases_show_page.data_requests.section_heading).to be_present
+        end
+      end
+
+      context 'when a case is ready for vetting' do
+        it 'shows mark as vetting in progress' do
+          assign(:permitted_events, [:mark_as_vetting_in_progress])
+          assign(:filtered_permitted_events, [:mark_as_vetting_in_progress])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_mark_as_vetting_in_progress
+        end
+      end
+
+      context 'when a case is vetting in progress' do
+        it 'shows mark as ready to dispatch' do
+          assign(:permitted_events, [:mark_as_ready_to_dispatch])
+          assign(:filtered_permitted_events, [:mark_as_ready_to_dispatch])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_mark_as_ready_to_dispatch
+        end
+      end
+
+      context 'when a case is ready to dispatch' do
+        it 'shows mark as ready to close' do
+          assign(:permitted_events, [:mark_as_ready_to_copy])
+          assign(:filtered_permitted_events, [:mark_as_ready_to_copy])
+          login_as manager
+          render
+          cases_show_page.load(rendered)
+
+          expect(cases_show_page.actions).to have_mark_as_ready_to_copy
+        end
+      end
+
+      context 'record data request' do
+        before do
+          assign(:permitted_events, [:mark_as_waiting_for_data])
+          assign(:filtered_permitted_events, [:mark_as_waiting_for_data])
+          login_as manager
+        end
+
+        # Green button when no data requests have been recorded
+        it 'shows record data request button' do
+          render
+          cases_show_page.load(rendered)
+          expect(cases_show_page.data_request_actions.record_data_request['class']).to match(/button-tertiary/)
+        end
+      end
+
+      context 'data requested section' do
+        before do
+          login_as manager
+        end
+
+        it 'shows none message when case has no data requests' do
+          assign(:case, offender_sar_complaint)
+          render
+          cases_show_page.load(rendered)
+          expect(cases_show_page.data_requests.none.text).to eq 'No data requests recorded'
+        end
+
+        it 'shows data requests as table rows' do
+          new_offender_sar_complaint = create(:offender_sar_complaint).decorate
+
+          2.times do
+            new_offender_sar_complaint.data_requests.create(
+              location: 'The Location',
+              request_type: 'all_prison_records',
+              date_requested: Date.new(2020, 8, 15),
+              date_from: Date.new(2007, 7, 2),
+              user: manager
+            )
+          end
+
+          assign(:case, new_offender_sar_complaint)
+          render
+          cases_show_page.load(rendered)
+          data_requests = cases_show_page.data_requests.rows
+
+          expect(data_requests.size).to eq 3
+          expect(data_requests.first.location.text).to eq 'The Location'
+          expect(data_requests.first.request_type.text).to eq 'All prison records 2 Jul 2007 onwards'
+          expect(data_requests.first.date_requested.text).to eq '15 Aug 2020'
+          expect(data_requests.first.date_requested_time['datetime']).to eq '2020-08-15'
+          expect(data_requests.first.pages.text).to eq '0'
+        end
+      end
+    end
+  end
 end
