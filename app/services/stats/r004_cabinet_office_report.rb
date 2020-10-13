@@ -115,7 +115,7 @@ module Stats
         '_ICO APPEAL CASES'  => '',
         '_SPACER_4'   => '',
         '_INFORMATION HELD' => '',
-        '5.Ai'        => "Number of cases created in this period that have been with marked as 'Information not held'",
+        '5.Ai'        => "Number of cases created in this period that have been marked as 'Information not held'",
         '_SPACER_5'   => '',
         '_REFUSAL REASON' => '',
         '_USE OF SECTION 12/14 EXEMPTIONS' => '',
@@ -216,6 +216,7 @@ module Stats
     end
 
     def responded_in_time_with_pit_extension
+      byebug
       cases_received_and_closed_in_period_responded_in_time
         .joins(:transitions).where(
           'case_transitions.event = ?',
@@ -223,6 +224,7 @@ module Stats
     end
 
     def responded_late_with_pit_extension
+      byebug
       cases_received_and_closed_in_period_responded_late
         .joins(:transitions).where(
           'case_transitions.event = ?',
