@@ -12,7 +12,11 @@ h1.cover-sheet-heading
     li.cover-sheet-heading__detail
       = @case.first_prison_number&.upcase
     li.cover-sheet-heading__detail
+      - if @case.recipient == 'subject_recipient'
+      - else
+        = @case.third_party_relationship + ' - '
       = @case.recipient_address
+
 
 section.case-info
   = render partial: 'cases/cover_pages/data_requests', locals: { case_details: @case }
