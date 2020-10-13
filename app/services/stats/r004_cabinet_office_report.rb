@@ -216,7 +216,6 @@ module Stats
     end
 
     def responded_in_time_with_pit_extension
-      byebug
       cases_received_and_closed_in_period_responded_in_time
         .joins(:transitions).where(
           'case_transitions.event = ?',
@@ -224,7 +223,6 @@ module Stats
     end
 
     def responded_late_with_pit_extension
-      byebug
       cases_received_and_closed_in_period_responded_late
         .joins(:transitions).where(
           'case_transitions.event = ?',
