@@ -14,11 +14,11 @@ describe ConfigurableStateMachine::Machine do
       },
       {
         state: :ready_for_vetting,
-        specific_events: [:mark_as_vetting_in_progress]
+        specific_events: [:mark_as_vetting_in_progress, :preview_cover_page]
       },
       {
         state: :vetting_in_progress,
-        specific_events: [:mark_as_ready_to_copy]
+        specific_events: [:mark_as_ready_to_copy, :preview_cover_page]
       },
       {
         state: :ready_to_copy,

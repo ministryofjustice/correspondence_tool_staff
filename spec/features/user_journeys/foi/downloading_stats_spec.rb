@@ -55,6 +55,17 @@ feature "Downloading stats(csv) from the system" do
     scenario "standard reports" do
       # Manager creates & assigns to kilo
       login_as_manager
+      all_reports = ReportType.all
+      expect(all_reports.count).to be >= 9
+      
+      abbrs = []
+      all_reports.each do | report_item |
+        abbrs << report_item.abbr
+      end
+      expect(abbrs.include?('R105')).to be true
+      expect(abbrs.include?('R004')).to be true
+      expect(abbrs.include?('R005')).to be true
+
       views_stats_home_page
       download_r105_report
       download_r004_report
