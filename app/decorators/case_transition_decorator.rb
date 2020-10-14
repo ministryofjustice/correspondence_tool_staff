@@ -72,8 +72,8 @@ class CaseTransitionDecorator < Draper::Decorator
     if Case::Base.exists?(object.linked_case_id)
       "Removed the link to <strong>#{Case::Base.find(object.linked_case_id).number}</strong>"
     else
-      "Removed the link to case_id:   <strong>#{object.linked_case_id}</strong>. 
-      (NOTE: This linked case has been deleted in some point after this date, no further case detail can be provided.)"
+      "Removed the link to case_id: <strong>#{object.linked_case_id}</strong>. 
+      (NOTE: This case was deleted after the case link was removed.)"
     end
   end
 end
