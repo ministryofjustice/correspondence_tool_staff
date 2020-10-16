@@ -206,7 +206,7 @@ class CasesController < ApplicationController
       @permitted_correspondence_types += types
     elsif policy(Case::Base).can_manage_offender_sar?
       @permitted_correspondence_types << CorrespondenceType.offender_sar
-      @permitted_correspondence_types << CorrespondenceType.offender_sar_complaint
+      @permitted_correspondence_types << CorrespondenceType.offender_sar_complaint if FeatureSet.offender_sar_complaints.enabled?
     end
   end
 

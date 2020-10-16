@@ -244,6 +244,13 @@ enabled_features:
     Host-staging: true
     Host-qa: true
     Host-prod: true
+  offender_sar_complaints:
+    Local: true
+    Host-dev: true
+    Host-demo: true
+    Host-staging: false
+    Host-qa: true
+    Host-prod: false
   ico:
     Local: true
     Host-dev: true
