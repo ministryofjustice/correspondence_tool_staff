@@ -16,7 +16,7 @@
         .case-status__data
           = case_details.who_its_with
 
-    - if case_details.offender_sar?
+    - if case_details.offender_sar? || case_details.offender_sar_complaint?
       .case-status__group.page-counts
         .gridrow
           .column-one-third

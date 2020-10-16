@@ -1,0 +1,4 @@
+tr.date-received.section.section-date-received
+  th = t('common.case.received_date')
+  td = l case_details.received_date, format: :default
+  td = link_to t('common.links.change'), edit_step_case_sar_offender_complaint_path(case_details, "date_received")

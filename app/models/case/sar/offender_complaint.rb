@@ -4,4 +4,12 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
       'OFFENDER_SAR_COMPLAINT'
     end
   end
+
+  def offender_sar_complaint?
+    true
+  end
+
+  def offender_sar?
+    false
+  end
 end
