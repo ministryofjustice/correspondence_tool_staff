@@ -1,0 +1,19 @@
+tr.third-party-name
+  th
+    = t('common.case.third_party_name')
+  td
+    = case_details.third_party_name
+
+tr.third-party-company-name
+  th
+    = t('common.case.third_party_company_name')
+  td
+    = case_details.third_party_company_name
+
+= render partial: 'cases/sar/third_party_relationship', locals: { case_details: case_details }
+
+tr.third-party-address
+  th
+    = t('common.case.third_party_address')
+  td
+    pre = case_details.third_party_address

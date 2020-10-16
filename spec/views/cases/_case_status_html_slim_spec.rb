@@ -11,7 +11,8 @@ describe 'cases/case_status.html.slim', type: :view do
       current_state: 'drafting',
       type_abbreviation: 'FOI',
       who_its_with: 'DACU',
-      offender_sar?: false
+      offender_sar?: false,
+      offender_sar_complaint?: false
 
 
     render partial: 'cases/case_status.html.slim',
@@ -43,7 +44,8 @@ describe 'cases/case_status.html.slim', type: :view do
       current_state: 'closed',
       type_abbreviation: 'FOI',
       who_its_with: '',
-      offender_sar?: false
+      offender_sar?: false,
+      offender_sar_complaint?: false
 
     render partial: 'cases/case_status.html.slim',
            locals:{ case_details: closed_case}
@@ -68,7 +70,8 @@ describe 'cases/case_status.html.slim', type: :view do
       current_state: 'drafting',
       type_abbreviation: 'FOI',
       who_its_with: 'DACU',
-      offender_sar?: false
+      offender_sar?: false,
+      offender_sar_complaint?: false
 
     render partial: 'cases/case_status.html.slim',
            locals:{ case_details: non_trigger_case}
@@ -94,7 +97,8 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'FOI',
         who_its_with: 'DACU',
-        offender_sar?: false
+        offender_sar?: false,
+        offender_sar_complaint?: false
 
       render partial: 'cases/case_status.html.slim',
              locals:{ case_details: non_trigger_case}
@@ -123,7 +127,8 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'ICO',
         who_its_with: 'DACU',
-        offender_sar?: false
+        offender_sar?: false,
+        offender_sar_complaint?: false
 
 
       render partial: 'cases/case_status.html.slim',
@@ -144,8 +149,8 @@ describe 'cases/case_status.html.slim', type: :view do
 
     end
 
-    it 'displays the page counts for Offender Sar case' do
-      offender_sar_case = double Case::SAR::OffenderDecorator,
+    it 'displays the page counts for Offender Sar cases' do
+      params = {
         status: "Needs reassigning",
         external_deadline: (DateTime.now + 10.days).strftime(Settings.default_date_format),
         ico?: false,
@@ -153,24 +158,29 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'ICO',
         who_its_with: 'Branston Registry',
-        offender_sar?: true,
+        offender_sar?: false,
+        offender_sar_complaint?: false,
         page_count: '500',
         number_exempt_pages: '200',
         number_final_pages: '250'
+      }
+      offender_sar_case = double Case::SAR::OffenderDecorator,
+                            params.merge({ offender_sar?: true })
+      offender_sar_complaint = double Case::SAR::OffenderComplaintDecorator,
+                            params.merge({ offender_sar_complaint?: true })
 
+      [offender_sar_case, offender_sar_complaint].each do |kase|
+        render partial: 'cases/case_status.html.slim',
+               locals:{ case_details: kase}
+        partial = case_status_section(rendered)
 
-      render partial: 'cases/case_status.html.slim',
-             locals:{ case_details: offender_sar_case}
-
-      partial = case_status_section(rendered)
-
-      expect(partial.details.page_counts.received_label.text).to eq 'Pages received'
-      expect(partial.details.page_counts.received_number.text).to eq '500'
-      expect(partial.details.page_counts.exempt_label.text).to eq 'Exempt pages'
-      expect(partial.details.page_counts.exempt_number.text).to eq '200'
-      expect(partial.details.page_counts.dispatched_label.text).to eq 'Final page count'
-      expect(partial.details.page_counts.dispatched_number.text).to eq '250'
-
+        expect(partial.details.page_counts.received_label.text).to eq 'Pages received'
+        expect(partial.details.page_counts.received_number.text).to eq '500'
+        expect(partial.details.page_counts.exempt_label.text).to eq 'Exempt pages'
+        expect(partial.details.page_counts.exempt_number.text).to eq '200'
+        expect(partial.details.page_counts.dispatched_label.text).to eq 'Final page count'
+        expect(partial.details.page_counts.dispatched_number.text).to eq '250'
+      end
     end
 
     it 'does not display Page counts for non-offender SAR case' do
@@ -183,7 +193,8 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'ICO',
         who_its_with: 'DACU',
-        offender_sar?: false
+        offender_sar?: false,
+        offender_sar_complaint?: false
 
 
       render partial: 'cases/case_status.html.slim',
@@ -204,7 +215,8 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'OVERTURNED_SAR',
         who_its_with: 'DACU',
-        offender_sar?: false
+        offender_sar?: false,
+        offender_sar_complaint?: false
     }
 
     it 'displays ICO case reference number for ICO overturned SAR cases' do

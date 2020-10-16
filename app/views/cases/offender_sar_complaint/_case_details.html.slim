@@ -10,21 +10,21 @@
 
         = render partial: 'cases/shared/case_type', locals: { case_details: case_details }
 
-        = render partial: 'cases/offender_sar/subject_details', locals: { case_details: case_details }
+        = render partial: 'cases/offender_sar_complaint/subject_details', locals: { case_details: case_details }
 
-        = render partial: 'cases/offender_sar/requested_on_behalf', locals: { case_details: case_details }
+        = render partial: 'cases/offender_sar_complaint/requested_on_behalf', locals: { case_details: case_details }
 
         - if case_details.third_party?
-          = render partial: 'cases/offender_sar/third_party_details', locals: { case_details: case_details }
+          = render partial: 'cases/offender_sar_complaint/third_party_details', locals: { case_details: case_details }
 
-        = render partial: 'cases/offender_sar/request_recipient', locals: { case_details: case_details }
+        = render partial: 'cases/offender_sar_complaint/request_recipient', locals: { case_details: case_details }
 
         - if case_details.third_party_recipient?
-          = render partial: 'cases/offender_sar/third_party_details', locals: { case_details: case_details }
+          = render partial: 'cases/offender_sar_complaint/third_party_details', locals: { case_details: case_details }
 
-        = render partial: 'cases/offender_sar/request_details', locals: { case_details: case_details }
+        = render partial: 'cases/offender_sar_complaint/request_details', locals: { case_details: case_details }
 
-        = render partial: 'cases/offender_sar/date_received', locals: { case_details: case_details }
+        = render partial: 'cases/offender_sar_complaint/date_received', locals: { case_details: case_details }
 
         = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
 
