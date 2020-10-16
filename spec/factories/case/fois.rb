@@ -398,7 +398,7 @@ FactoryBot.define do
       info_held_status        { find_or_create :info_status, :ncnd }
       outcome                 { nil }
       refusal_reason          { find_or_create :refusal_reason, :ncnd }
-      exemptions              { [create(:exemption, :absolute)] }
+      exemptions              { [find_or_create(:exemption, :absolute)] }
     end
 
     trait :late do

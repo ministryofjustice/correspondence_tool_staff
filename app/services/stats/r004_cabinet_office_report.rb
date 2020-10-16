@@ -388,7 +388,11 @@ module Stats
 
     def fully_refused_cases_received_and_closed_in_period
       outcome = CaseClosure::Outcome.fully_refused
-      cases_received_and_closed_in_period.where(outcome_id: outcome.id)
+      ncnd = CaseClosure::RefusalReason.ncnd
+      cases_received_and_closed_in_period
+        .where(outcome_id: outcome.id)
+        .or(cases_received_and_closed_in_period
+          .where(refusal_reason_id: ncnd.id))
     end
 
     def part_refused_cases_received_and_closed_in_period
@@ -399,7 +403,11 @@ module Stats
     def fully_or_part_refused_cases_received_and_closed_in_period
       fully_refused = CaseClosure::Outcome.fully_refused
       part_refused = CaseClosure::Outcome.part_refused
-      cases_received_and_closed_in_period.where(outcome_id: [fully_refused.id, part_refused.id])
+      ncnd = CaseClosure::RefusalReason.ncnd
+      cases_received_and_closed_in_period
+        .where(outcome_id: [fully_refused.id, part_refused.id])
+        .or(cases_received_and_closed_in_period
+          .where(refusal_reason_id: ncnd.id))
     end
 
     def part_refused_cases_closed_in_period
@@ -456,7 +464,11 @@ module Stats
     def fully_and_part_refused_cases_received_in_period_ico
       fully_refused = CaseClosure::Outcome.fully_refused
       part_refused = CaseClosure::Outcome.part_refused
-      cases_received_in_period_ico.where(outcome_id: [fully_refused.id, part_refused.id])
+      ncnd = CaseClosure::RefusalReason.ncnd
+      cases_received_in_period_ico
+        .where(outcome_id: [fully_refused.id, part_refused.id])
+        .or(cases_received_in_period_ico
+          .where(refusal_reason_id: ncnd.id))
     end
 
     def superheadings
