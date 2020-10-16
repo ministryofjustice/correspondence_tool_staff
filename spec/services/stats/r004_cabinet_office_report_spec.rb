@@ -54,6 +54,8 @@ module Stats
           2.times { create :closed_case, :fully_refused_exempt_s43 }
           1.times { create :closed_case, :fully_refused_exempt_s44 }
 
+          2.times { create :closed_case, :with_ncnd_exemption }
+
           1.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s22))}        
           2.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s27))}        
           3.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s34))}        
@@ -67,6 +69,8 @@ module Stats
 
           2.times { create(:closed_ico_foi_case, original_case: create(:closed_case, :other_vexatious))}        
           1.times { create(:closed_ico_foi_case, original_case: create(:closed_case, :other_repeat))}        
+
+          3.times { create(:closed_ico_foi_case, original_case: create(:closed_case, :with_ncnd_exemption))}        
         end
 
         # cases created more than 20 days ago still in this quarter
@@ -102,7 +106,7 @@ module Stats
       context '1.A' do
         it 'records the total number' do
           expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this period'
-          expect(@results['1.A'][:value]).to eq 103
+          expect(@results['1.A'][:value]).to eq 108
         end
       end
 
@@ -143,14 +147,14 @@ module Stats
       context '1.C' do
         it 'records the stat' do
           expect(@results['1.C'][:desc]).to eq 'Number of requests that have been created and closed within this period'
-          expect(@results['1.C'][:value]).to eq 96
+          expect(@results['1.C'][:value]).to eq 101
         end
       end
 
       context '1.Ci' do
         it 'records the stat' do
           expect(@results['1.Ci'][:desc]).to eq 'Number of requests created and processed in this period that were within time against the external deadline'
-          expect(@results['1.Ci'][:value]).to eq 91
+          expect(@results['1.Ci'][:value]).to eq 96
         end
       end
 
@@ -171,7 +175,7 @@ module Stats
       context '2.A' do
         it 'replicates the figure in 1.C' do
           expect(@results['2.A'][:desc]).to eq 'Number of requests that have been created and closed within this period (Replicates \'C\' above in TIMELINESS section)'
-          expect(@results['2.A'][:value]).to eq 96
+          expect(@results['2.A'][:value]).to eq 101
         end
       end
 
@@ -227,14 +231,14 @@ module Stats
       context '2.I' do
         it 'records the stat' do
           expect(@results['2.I'][:desc]).to eq "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of 'Exemption applied'"
-          expect(@results['2.I'][:value]).to eq 58
+          expect(@results['2.I'][:value]).to eq 63
         end
       end
 
       context '3.A' do
         it 'records the stat' do
           expect(@results['3.A'][:desc]).to eq "Number of cases created and closed in this period that were fully or partly refused"
-          expect(@results['3.A'][:value]).to eq 53
+          expect(@results['3.A'][:value]).to eq 58
         end
       end
 
