@@ -3,46 +3,47 @@
 
 = link_to "Back", case_path(@case), class: 'govuk-back-link'
 
-h1.cover-sheet-heading
-  ul
-    li.cover-sheet-heading__case-number
-      = @case.number
-    li.cover-sheet-heading__name
-      = @case.subject_full_name&.upcase
-    li.cover-sheet-heading__detail
-      = @case.first_prison_number&.upcase
-    li.cover-sheet-heading__detail
-      - if @case.recipient == 'subject_recipient'
-      - else
-        = @case.third_party_relationship + ' - '
-      = @case.recipient_address
+article.cover-sheet
+  h1.cover-sheet__heading
+    ul
+      li
+        = @case.number
+      li
+        = @case.subject_full_name&.upcase
+      li
+        = @case.first_prison_number&.upcase
 
+  p.cover-sheet__address
+    - if @case.recipient == 'subject_recipient'
+    - else
+      = @case.third_party_relationship + ' - '
+    = @case.recipient_address
 
-section.case-info
-  = render partial: 'cases/cover_pages/data_requests', locals: { case_details: @case }
+  section.cover-sheet__section
+    = render partial: 'cases/cover_pages/data_requests', locals: { case_details: @case }
 
-section.case-info.section--vetting
-  table
-    thead
-      th width="50%"
-        = t('cases.cover_sheet.vet_date')
-      th
-        = t('cases.cover_sheet.vet_by')
-    tbody
-      tr
-        td
-          = t('cases.cover_sheet.first_vet_date')
-        td
-          = t('cases.cover_sheet.vetter_name')
-      tr
-        td
-          = t('cases.cover_sheet.second_vet_date')
-        td
-          = t('cases.cover_sheet.vetter_name')
+  section.cover-sheet__section
+    table
+      thead
+        th width="50%"
+          = t('cases.cover_sheet.vet_date')
+        th
+          = t('cases.cover_sheet.vet_by')
+      tbody
+        tr
+          td
+            = t('cases.cover_sheet.first_vet_date')
+          td
+            = t('cases.cover_sheet.vetter_name')
+        tr
+          td
+            = t('cases.cover_sheet.second_vet_date')
+          td
+            = t('cases.cover_sheet.vetter_name')
 
-section.case-info.final-deadline
-  h2.request--heading.heading--final-deadline.print-large
-    = t('cases.cover_sheet.final_deadline')
-    span  #{l @case.external_deadline, format: :default}
+  section.cover-sheet__section
+    h2.request--heading.heading--final-deadline.print-large
+      = t('cases.cover_sheet.final_deadline')
+      span  #{l @case.external_deadline, format: :default}
 
-= link_to "Print cover sheet", "javascript:window.print()", class: "button btn-primary", id: "print-cover-page"
+  = link_to "Print cover sheet", "javascript:window.print()", class: "button btn-primary", id: "print-cover-page"
