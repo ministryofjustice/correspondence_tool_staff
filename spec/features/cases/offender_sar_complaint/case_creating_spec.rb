@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Offender SAR Case creation by a manager', js: true do
+feature 'offender sar complaint case creation by a manager', js: true do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
 
