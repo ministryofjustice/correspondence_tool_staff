@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Offender SAR Case creation by a manager' do
+feature 'offender sar complaint case creation by a manager' do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
   given(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
@@ -16,7 +16,7 @@ feature 'Offender SAR Case creation by a manager' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'progressing an offender sar case', js: true do
+  scenario 'progressing an offender sar complaint case', js: true do
     cases_show_page.load(id: offender_sar_complaint.id)
 
     expect(cases_show_page).to have_content "Mark as waiting for data"
@@ -58,8 +58,5 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Closed"
     expect(cases_show_page).to have_content "Send dispatch letter"
-    # TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
-    # expect(cases_show_page).to have_content "Was the information held?"
-    # expect(cases_show_page).to have_content "Yes"
   end
 end

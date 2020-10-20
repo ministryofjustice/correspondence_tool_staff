@@ -32,7 +32,7 @@ feature 'Searching for cases' do
     let(:searcher) { responder }
     let(:search_term) { offender_sar_complaint.number }
 
-    scenario 'finds offender sar case by case number' do
+    scenario 'finds offender sar complaint case by case number' do
       expect(cases_search_page.search_results_count.text).to eq "1 case found"
       expect(cases_search_page.case_list.count).to eq 1
       expect(cases_search_page.case_list.first.number).to have_text offender_sar_complaint.number
@@ -89,7 +89,7 @@ feature 'Searching for cases' do
     let(:searcher) { manager }
     let(:search_term) { "Common text" }
 
-    scenario 'finds FOI case but not offender sar case' do
+    scenario 'finds FOI case but not offender sar complaint case' do
       expect(cases_search_page.search_results_count.text).to eq "1 case found"
       expect(cases_search_page.case_list.count).to eq 1
       expect(cases_search_page.case_list.first.number).to have_text kase.number

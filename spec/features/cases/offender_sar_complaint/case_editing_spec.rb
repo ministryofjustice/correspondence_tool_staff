@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Offender SAR Case editing by a manager' do
+feature 'offender sar complaint case editing by a manager' do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
   given(:offender_sar_complaint) { create :offender_sar_complaint, :third_party, received_date: 2.weeks.ago.to_date }
@@ -11,7 +11,7 @@ feature 'Offender SAR Case editing by a manager' do
     cases_show_page.load(id: offender_sar_complaint.id)
   end
 
-  scenario 'editing an offender SAR case' do
+  scenario 'editing an offender sar complaint case' do
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
     cases_show_page.offender_sar_subject_details.change_link.click
     expect(cases_edit_offender_sar_complaint_subject_details_page).to be_displayed

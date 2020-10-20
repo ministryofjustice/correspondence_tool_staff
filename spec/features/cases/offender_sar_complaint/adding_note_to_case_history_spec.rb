@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'When viewing an offender sar case' do
+feature 'When viewing an offender sar complaint case' do
   given(:responder)         { find_or_create :branston_user }
   given(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
 
