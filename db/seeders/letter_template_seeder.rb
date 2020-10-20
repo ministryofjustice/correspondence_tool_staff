@@ -263,9 +263,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty's Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
                   <br>
-                  <br>Should you require a copy of any other personal information held by the MoJ we advise you to contact your key worker within the prison who can provide support regarding the disclosure of routine information that does not need to be provided through a formal SAR.
-                  <br>
-                  <br>After the COVID-19 pandemic or as soon as reasonably practicable (based on Government and Public Health England guidance), we will revert to the provision of full services. We apologise for any inconvenience the reduced but pragmatic service may cause you. 
+                  <br>Should you require a copy of any other personal information held by the MoJ, we invite you to submit a new SAR once the COVID-19 pandemic is over. Unfortunately, we are unable to advise when this will be at present but will be reviewing the position in October 2020.
                   <br>
                   <br>Yours sincerely
                   <br>
