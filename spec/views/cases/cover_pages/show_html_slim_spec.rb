@@ -28,7 +28,7 @@ describe 'cases/cover_pages/show', type: :view do
       expect(@page.page_heading.subject_full_name.text).to eq "#{data_request.kase.subject_full_name&.upcase}"
       expect(@page.page_heading.case_number.text).to eq data_request.kase.number
       expect(@page.page_heading.prison_number.text).to eq data_request.kase.first_prison_number&.upcase
-      expect(@page.covere_sheet_address.text).to eq data_request.kase.recipient_address
+      expect(@page.cover_sheet_address.text).to eq data_request.kase.recipient_address
 
       row = @page.data_requests.rows[0]
       expect(row.location).to have_text 'HMP Leicester'
