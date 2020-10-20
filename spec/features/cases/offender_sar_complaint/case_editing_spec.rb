@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Offender SAR Case editing by a manager' do
+feature 'offender sar complaint case editing by a manager' do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
   given(:offender_sar_complaint) { create :offender_sar_complaint, :third_party, received_date: 2.weeks.ago.to_date }
@@ -11,9 +11,8 @@ feature 'Offender SAR Case editing by a manager' do
     cases_show_page.load(id: offender_sar_complaint.id)
   end
 
-  scenario 'editing an offender SAR case' do
+  scenario 'editing an offender sar complaint case' do
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
-
     cases_show_page.offender_sar_subject_details.change_link.click
     expect(cases_edit_offender_sar_complaint_subject_details_page).to be_displayed
     cases_edit_offender_sar_complaint_subject_details_page.edit_name 'Bob Hope'
@@ -52,7 +51,6 @@ feature 'Offender SAR Case editing by a manager' do
   end
 
   scenario 'user can edit the date a case was closed' do
-    pending 'Closed cases not working yet'
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
 
     when_i_progress_case_to_a_closed_state
@@ -122,8 +120,8 @@ feature 'Offender SAR Case editing by a manager' do
 
   def and_i_edit_the_date_response_sent
     expect(page).to have_content('Edit case closure details')
-    cases_edit_offender_sar_date_responded_page.edit_responded_date(offender_sar_complaint.received_date + 5)
-    cases_edit_offender_sar_date_responded_page.continue_button.click
+    cases_edit_offender_sar_complaint_date_responded_page.edit_responded_date(offender_sar_complaint.received_date + 5)
+    cases_edit_offender_sar_complaint_date_responded_page.continue_button.click
   end
 
   def then_i_expect_the_new_date_to_be_reflected_on_the_case_show_page

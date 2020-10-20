@@ -44,13 +44,13 @@ module OffenderSARComplaintCasesParams
   end
 
   def process_offender_sar_closure_params
-    params.require(:offender_sar).permit(
+    params.require(:offender_sar_complaint).permit(
       :info_held_status_abbreviation,
     )
   end
 
   def respond_offender_sar_params
-    params.require(:offender_sar).permit(
+    params.require(:offender_sar_complaint).permit(
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
