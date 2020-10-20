@@ -14,7 +14,7 @@ module PageObjects
           element :prison_number, 'li:nth-child(3)'
         end
 
-        element :covere_sheet_address, '.cover-sheet__address'
+        element :cover_sheet_address, '.cover-sheet__address'
 
         section :data_requests,
           PageObjects::Sections::Cases::DataRequestsSection, '.data-requests'
