@@ -73,6 +73,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               class: 'button'
     when :reassign_user
       path = nil
+      return '' unless @assignments.present?
       if @assignments.size > 1
         path = select_team_case_assignments_path(@case, assignment_ids: @assignments.map(&:id).join('+'))
       else
