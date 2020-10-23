@@ -193,6 +193,14 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
                )
         end
       end
+
+      context 'when there are no assignments for this users teams' do
+        it 'returns an empty string' do
+          @case = create(:accepted_case)
+          @assignments = []
+          expect(action_button_for(:reassign_user)).to eq('')
+        end
+      end
     end
 
     context 'when event == :upload_response_and_approve' do
