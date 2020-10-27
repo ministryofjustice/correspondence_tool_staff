@@ -19,20 +19,34 @@ class DatabaseDumper
   end
 
   def run
-    # dump_schema_screenshot
-    dump_local_database
+    created_at = Time.now.strftime('%Y%m%d-%H%M%S')
+    dirname = "./dumps_#{@tag}"
+    FileUtils.mkpath(dirname)
+
+    dump_schema_snapshot(dirname)
+    dump_data_models_snapshot(dirname)
+    dump_local_database(dirname)
     @outcome_files
   end
 
   private
 
-  def dump_local_database
+  def dump_schema_snapshot(dirname)
+    filename = "#{dirname}/#{@tag}_database_schema_snapshot.sql"
+    command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -s -f #{filename}"
+    result = system command_line
+    raise 'Unable to execute pg_dump command' unless result == true
+    filename
+  end
+
+  def dump_data_models_snapshot(dirname)
+    
+  end
+
+  def dump_local_database(dirname)
     require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_anonymizer')
     require File.join(Rails.root, 'lib', 'tasks', 'rake_task_helpers', 'dumper_utils')
 
-    created_at = Time.now.strftime('%Y%m%d-%H%M%S')
-    dirname = "./dumps_#{@tag}"
-    FileUtils.mkpath(dirname)
     base_file_name = "#{dirname}/#{@tag}_#{created_at}"
     @anonymizer = DatabaseAnonymizer.new()
     
