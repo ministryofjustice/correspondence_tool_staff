@@ -18,7 +18,7 @@ module S3BucketHelper
 
     def put_object(key, body, metadata: nil)
       client.put_object({
-        bucket: credentials.bucket,
+        bucket: @credentials.bucket,
         key: key,
         acl: 'private',
         body: body,
@@ -28,7 +28,7 @@ module S3BucketHelper
 
     def get_object(key, **args)
       client.get_object(
-        {bucket: credentials.bucket, key: key},
+        {bucket: @credentials.bucket, key: key},
         **args
       )
     end
@@ -38,13 +38,13 @@ module S3BucketHelper
     end
 
     def bucket
-      @bucket ||= Aws::S3::Bucket.new(credentials.bucket, { client: client })
+      @bucket ||= Aws::S3::Bucket.new(@credentials.bucket, { client: client })
     end
 
     def client
       @client ||= Aws::S3::Client.new(
-        access_key_id: credentials.access_key_id,
-        secret_access_key: credentials.secret_access_key
+        access_key_id: @credentials.access_key_id,
+        secret_access_key: @credentials.secret_access_key
       )
     end
 

@@ -1,23 +1,20 @@
 
-# This taks is to provide the following 3 functions
-# - dumper dump clear DB as compressed-sql files from remote env to local  
-#   the assumption for use this command to do this is to run it on your local env and you need to have the 
-#   the permission to access those environment and it is via kubectl exec command
-#   This part is based on the existing codes with  changes from ssh to kubectl exec command
-# - anonymizer: dump anonymised db as compressed-sql files against local db from remote env or local db with options to upload 
-#   to s3 buckets 
-#   This part is not take environment as the input, if you want to run it on remote pod but from local env please use other 
-#   facilities to run it e.g. kubectl exec
+# This taks is to provide the following functions
+# - anonymizer: dump anonymised db as compressed-sql files against the database the app is connecting to currently
+#   This part doesn't assume where the command is run (cloud or local env) with opition of uploading to s3 bucket
 # 
 #   The process of db anoymizer is below
-#     - dump the basic data out of target database 
+#     - validate (?)
+#     - create the snapshot of current db structure and the snapshot of the 
 #     - dump the data out of db per table base
 #       - check whether this table is within the tables which require anonymised
 #       - if does, then call anon
 #       - compress the outcome 
-#       - if the env is remote, then upload into s3 bucket.
-# - bucket_downloader
-#   Download the  
+#       -  upload into s3 bucket.
+# - s3 bucket related tasks
+#   -- List all the files under certain key path
+#   -- Download the files under certain key path
+#   -- Delete the files under certain key path
 # - restorer 
 #    restore the sql files into target db (non-prod env) 
 #    -- drop the schema at target table
@@ -36,41 +33,29 @@
 #      calculate the hash value/ md5_sum values based on the content of current and latest copy
 #      if different, then die out 
 #      The only way which can fix this problem is to run separated task to update the copy in the cloud
-require 'open3'
-# require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
+# - wrapper:  
+#   This task is to wrap the above tasks into a task to export data from live and anonymize it 
 
+require File.join(Rails.root, 'lib', 'tasks', 'rake_task_helpers', 'dumper_utils')
 
 namespace :db do
   namespace :dump  do
 
     desc 'Help text for rake db:dump:* tasks'
     task :help do
-      puts 'rake db:dump:<environment> will produce an SQL dump of the database from the '.yellow
-      puts 'rake db:dump:anonymized will process anonymisation again the database the current env/pod connects with '.yellow
-      puts 'rake db:dump:download will download'.yellow
+      puts 'rake db:dump:prod will produce an SQL dump of the database from the '.yellow
+      puts 'rake db:dump:local will dump and anonymize again the database the current env/pod connects with '.yellow
+      puts 'rake db:dump:list_s3_dumps will list all the files under dumps folder'.yellow
+      puts 'rake db:dump:delete_s3_dumps will delete all the files under dumps folder'.yellow
+      puts 'rake db:dump:copy_s3_dump will download all the files under dumps folder'.yellow
+      puts 'rake db:dump:decompress will decompress alt the gz files under dumps folder'.yellow
       puts 'rake db:dump:restore will process restore '.yellow
-      # puts 'rake db:dump:<environment> will produce an SQL dump of the database from the '.yellow
-      # puts ' specified environment (prod, demo, staging).'.yellow
-      # puts ' '
-      # puts 'SSH username:'.yellow
-      # puts 'The ssh username used to connect to the remote server must be specified in the'.yellow
-      # puts 'CTS_SSH_USER environment variable.'.yellow
-      # puts ' '
-      # puts 'Hostname:'.yellow
-      # puts 'The hostname or IP address can be specified as a parameter, for example'.yellow
-      # puts ' '
-      # puts '   rake db:dump:demo[123.202.5.66]'.yellow
-      # puts ' '
-      # puts 'or the following hostnames will be assumed if none specified:'.yellow
-      # puts '  prod      prod.cts'.yellow
-      # puts '  demo      demo.cts'.yellow
-      # puts '  staging   stage.cts'.yellow
     end
 
 
     desc 'makes a sql dump of the production database and copies to the local machine'
     task :prod, [:host] do |_task, args|
-      # require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
+      require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
       safeguard
       chosen_first_pod = get_first_pod("production")
       raise "Cannot find the available pod from this env" unless chosen_first_pod.present?
@@ -78,8 +63,8 @@ namespace :db do
       prefix_command = "kubectl exec -it #{chosen_first_pod} -n track-a-query-production -c webapp "
       dump_files = DatabaseDumper.new(true).run
       dump_files.each do | compressed_file |
-        download_compressed_file(compressed_file, "track-a-query-production", chosen_first_pod)
-        remove_files_on_container(compressed_file, prefix_command: prefix_command)
+        DumperUtils.download_compressed_file(compressed_file, "track-a-query-production", chosen_first_pod)
+        DumperUtils.remove_files_on_container(compressed_file, prefix_command: prefix_command)
       end
     end
 
@@ -96,34 +81,87 @@ namespace :db do
     # end
 
     desc 'makes an anonymised dump of the local database'
-    task :local, [:anonymized] => :environment do |_task, args|
+    task :local, [:anonymized, :tag, :storage] => :environment do |_task, args|
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
-      raise "Second argument must be 'anon' or 'clear', is: #{args[:anonymized]}" unless args[:anonymized].in?(%w( anon clear ))
-      ShellSpinner 'exporting unanonymised database data' do
-        DatabaseDumper.new(args[:anonymized] == 'anon').run
+      raise "first argument must be 'anon' or 'clear', is: #{args[:anonymized]}" unless args[:anonymized].in?(%w( anon clear ))
+      args.with_defaults(:tag => "latest")
+      args.with_defaults(:storage => "bucket")
+      raise "third argument must be 'bucket' or 'local', is: #{args[:storage]}" unless args[:storage].in?(%w( bucket local ))
+      puts 'exporting unanonymised database data'
+      DatabaseDumper.new(args[:anonymized] == 'anon', args[:tag], args[:storage]).run
+    end
+
+    desc 'List s3 database dump files'
+    task :list_s3_dumps, [:tag] => :environment do |_task, args|
+      args.with_defaults(:tag => "latest")
+      puts "Listing dump files in s3 with tag of #{args[:tag]}"
+      s3_bucket = S3BucketHelper::S3Bucket.new(ENV["AWS_ACCESS_KEY_ID"], ENV["AWS_SECRET_ACCESS_KEY"])
+      dump_files = s3_bucket.list("dumps/#{args[:tag]}")
+      dump_files.sort_by(&:last_modified).reverse.map do |object|
+        puts "Key: #{object.key}"
+        puts "Last modified: #{object.last_modified.iso8601}"
+        puts "Size: #{number_to_human_size(object.content_length)}"
+        puts '-----------------------------------------------------'
       end
     end
+
+    desc 'Delete all but latest s3 database dump files'
+    task :delete_s3_dumps, [:tag] => :environment do |_task, args|
+      args.with_defaults(:tag => "latest")
+      puts "Delete dump files in s3 with tag of #{args[:tag]}"
+      s3_bucket = S3BucketHelper::S3Bucket.new(ENV["AWS_ACCESS_KEY_ID"], ENV["AWS_SECRET_ACCESS_KEY"])
+      dump_files = s3_bucket.list("dumps/#{args[:tag]}")
+      dump_files.sort_by(&:last_modified).map do |object|
+        print "Deleting #{object.key}..."
+        object.delete
+        puts 'done'.green
+      end
+    end
+
+    desc 'Copy s3 bucket dump file locally and decompress'
+    task :copy_s3_dump, [:tag] => :environment do |_task, args|
+      args.with_defaults(:tag => "latest")
+      dirname = Rails.root.join("dumps_#{args[:tag]}")
+      FileUtils.mkpath(dirname)
+      s3_bucket = S3Bucket.new()
+      shell_working "Copying S3 files under dumps/#{args[:tag]} to local folder #{dirname}" do
+        dump_files = s3_bucket.list("dumps/#{args[:tag]}")
+        dump_files.map do |dump_file|
+          local_filename = Rails.root.join("dumps_#{args[:tag]}", dump_file.key.split(File::Separator).last)
+          File.open(local_filename, 'wb') do |file|
+            s3_bucket.get_object(dump_file.key, target: file)
+          end
+        end 
+      end
+      
+      DumperUtils.shell_working "Decompress all those sql files from local folder #{dirname}" do
+        Dir.glob("#{dirname}/*.gz").sort.map do | local_filename |
+          DumperUtils.decompress_file(local_filename)
+        end
+      end
+    end    
+
+    desc 'Decompress downloaded files'
+    task :decompress, [:tag] => :environment do |_task, args|
+      args.with_defaults(:tag => "latest")
+      dirname = Rails.root.join("dumps_#{args[:tag]}")      
+      DumperUtils.shell_working "Decompress all those sql files from local folder #{dirname}" do
+        Dir.glob("#{dirname}/*.gz").sort.map do | local_filename |
+          DumperUtils.decompress_file(local_filename)
+        end
+      end
+    end    
 
     private
 
     def safeguard
       puts 'Are you sure you need to do this data dump?'
       puts ''
-      question_user('is the issue covered with existing feature tests? ')
-      question_user('can you track problem through Kibana? ')
-      question_user('can you recreate the problem locally? ')
-      question_user('can you recreate the problem on staging with an anonymised dump? ')
+      DumperUtils.question_user('is the issue covered with existing feature tests? ')
+      DumperUtils.question_user('can you track problem through Kibana? ')
+      DumperUtils.question_user('can you recreate the problem locally? ')
+      DumperUtils.question_user('can you recreate the problem on staging with an anonymised dump? ')
       confirm_data_dump
-      verify_password
-    end
-
-    def question_user(query)
-      print query
-      input = STDIN.gets.chomp
-      unless(input.downcase.start_with?('n')) || input.nil?
-        puts 'exiting'
-        exit
-      end
     end
 
     def confirm_data_dump
@@ -133,6 +171,8 @@ namespace :db do
     end
 
     def get_first_pod(working_env)
+      require 'open3'
+
       pod_name = nil
       output = Open3.popen3("kubectl get pods -n track-a-query-development") { |stdin, stdout, stderr, wait_thr| stdout.read }
       if output.present?
@@ -143,14 +183,36 @@ namespace :db do
       end
       pod_name
     end
-
   end
 
   namespace :restore do
+
     desc 'Loads an SQL dump of the database created by db:dump:<env> rake task to the local database'
-    task :local, [:file] => :environment do |_task, args|
+    task :local, [:tag] => :environment do |_task, args|      
+      safeguard
+      args.with_defaults(:tag => "latest")
+      dirname = Rails.root.join("dumps_#{args[:tag]}")
+
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_loader')
-      DatabaseLoader.new('local', args[:file]).run
+      env = ENV['ENV'] || 'local'
+      raise "This task is not allowed on non-prod environment." unless env != 'prod'
+      DatabaseLoader.new(env, dirname).run
+    end
+
+    private
+
+    def safeguard
+      puts 'Are you sure you need to retore a dump of database into the current database the app is connecting to?'
+      puts 'Precondition: a dump of entire database has been done before carryihng this task'
+      puts 'NOTES: rstoring process will destroy the previous data entirely, backup the data first if there is need'
+      DumperUtils.question_user('are you sure the environment the task is take is not production env? ')
+      confirm_data_restore
+    end
+
+    def confirm_data_restore
+      print "If you are still certain that you need to restore the data from dump files please confirm y/n "
+      input = STDIN.gets.chomp
+      exit unless(input.downcase.start_with?('y')) || input.nil?
     end
 
   end
