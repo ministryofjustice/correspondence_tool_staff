@@ -22,6 +22,7 @@ class ClosedCaseValidator < ActiveModel::Validator
                          :validate_exemptions,
                          :validate_late_team_id ],
     'OFFENDER_SAR' =>   [:validate_date_responded],
+    'OFFENDER_SAR_COMPLAINT' =>   [:validate_date_responded],
   }
   # Validations applicable to cases that are being processed for closure.
   #
@@ -35,6 +36,7 @@ class ClosedCaseValidator < ActiveModel::Validator
                            :validate_date_responded],
     'OVERTURNED_FOI'=>    [],
     'OFFENDER_SAR'  =>    [],
+    'OFFENDER_SAR_COMPLAINT'  =>    [],
   }
 
   class << self

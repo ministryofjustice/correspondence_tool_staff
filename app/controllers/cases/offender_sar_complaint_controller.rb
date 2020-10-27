@@ -57,6 +57,9 @@ module Cases
       create_offender_sar_complaint_params
     end
 
+    def respond_offender_sar_params
+      create_offender_sar_complaint_params
+    end
 
   end
 end

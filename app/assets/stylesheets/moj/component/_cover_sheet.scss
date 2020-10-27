@@ -1,0 +1,19 @@
+.cover-sheet {
+
+  &__heading {
+    margin: 15px 0 20px;
+    font-family: "nta", Arial, sans-serif;
+    font-weight: bold;
+    font-size: 80px;
+    line-height: 80px;
+  }
+
+  &__address {
+    font-size: 28px;
+    line-height: 28px;
+  }
+
+  &__section {
+    margin: 20px 0 0;
+  }
+}
