@@ -116,9 +116,8 @@ class DatabaseAnonymizer
         offset = @max_num_of_records_per_group * counter
         limit = @max_num_of_records_per_group
         klass.offset(offset).limit(limit).order(klass.primary_key.to_sym).each do | record |
-          # insert_statement = raw_sql_from_record(record) + ';'
-          insert_statement = raw_sql_from_record(record)
-          fp.puts insert_statement
+          sql_statement = raw_sql_from_record(record)
+          fp.puts sql_statement
         end
 
         sql_settings_end(fp)

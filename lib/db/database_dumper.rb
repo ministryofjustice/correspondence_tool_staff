@@ -40,13 +40,27 @@ class DatabaseDumper
   end
 
   def dump_data_models_snapshot(dirname)
-    
+    activerecord_models = {}
+    Rails.application.eager_load! unless Rails.configuration.cache_classes
+    ActiveRecord::Base.descendants.each do | activerecord_model |
+      begin
+        model_key = activerecord_model.name
+        activerecord_models[model_key] = {
+          "table_name" => activerecord_model.table_name, 
+          "attributes" => activerecord_model.new.attributes.keys
+        }  
+      rescue NotImplementedError  => err
+      end
+    end
+    File.open("#{dirname}/#{@tag}_activerecord_models_snapshot.json", "w") do |f|
+      f.write(JSON.pretty_generate(activerecord_models))
+    end
   end
 
   def dump_local_database(dirname)
     require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_anonymizer')
     require File.join(Rails.root, 'lib', 'tasks', 'rake_task_helpers', 'dumper_utils')
-
+    created_at = Time.now.strftime('%Y%m%d-%H%M%S')
     base_file_name = "#{dirname}/#{@tag}_#{created_at}"
     @anonymizer = DatabaseAnonymizer.new()
     
