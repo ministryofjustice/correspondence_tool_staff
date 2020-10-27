@@ -215,7 +215,7 @@ class DatabaseAnonymizer
   end
 
   def anonymize_case_overturnedico_foi(kase)
-    kase.ico_officer_name = Faker::Name.name unless ase.ico_officer_name.blank?
+    kase.ico_officer_name = Faker::Name.name unless kase.ico_officer_name.blank?
   end
 
   def anonymize_case_overturnedico_sar(kase)
