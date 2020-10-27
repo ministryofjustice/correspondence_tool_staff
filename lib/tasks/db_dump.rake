@@ -54,7 +54,7 @@ namespace :db do
 
 
     desc 'makes a sql dump of the production database and copies to the local machine'
-    task :prod, [:host] do |_task, args|
+    task :prod do |_task|
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
       safeguard
       chosen_first_pod = get_first_pod("production")
@@ -174,7 +174,7 @@ namespace :db do
       require 'open3'
 
       pod_name = nil
-      output = Open3.popen3("kubectl get pods -n track-a-query-development") { |stdin, stdout, stderr, wait_thr| stdout.read }
+      output = Open3.popen3("kubectl get pods -n track-a-query-#{working_env}") { |_, stdout, _, _| stdout.read }
       if output.present?
         output_lines = output.split('\n')
         if output_lines.count >= 2

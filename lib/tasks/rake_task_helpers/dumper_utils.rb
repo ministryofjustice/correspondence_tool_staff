@@ -1,6 +1,6 @@
 module DumperUtils
 
-  def self.shell_working message = 'working', &block
+  def self.shell_working message = 'working'
     ShellSpinner message do
       yield
     end

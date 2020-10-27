@@ -19,7 +19,6 @@ class DatabaseDumper
   end
 
   def run
-    created_at = Time.now.strftime('%Y%m%d-%H%M%S')
     dirname = "./dumps_#{@tag}"
     FileUtils.mkpath(dirname)
 
@@ -49,7 +48,8 @@ class DatabaseDumper
           "table_name" => activerecord_model.table_name, 
           "attributes" => activerecord_model.new.attributes.keys
         }  
-      rescue NotImplementedError  => err
+      rescue NotImplementedError
+        false
       end
     end
     File.open("#{dirname}/#{@tag}_activerecord_models_snapshot.json", "w") do |f|
@@ -127,7 +127,7 @@ class DatabaseDumper
     "#{filename}.sql"
   end
 
-  def upload_to_s3(upload_files, table_name, created_at)
+  def upload_to_s3(compressed_files, table_name, created_at)
     if @s3_bucket
       compressed_files.each do | upload_file |
         @s3_bucket.put_object(

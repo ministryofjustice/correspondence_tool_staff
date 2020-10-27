@@ -21,7 +21,7 @@ class DatabaseAnonymizer
       if data.nil?
         '\N'
       elsif data.is_a? String
-        data.inspect.gsub('"', '')
+        data.inspect.delete('"', '')
       else
         data
       end
@@ -82,7 +82,7 @@ class DatabaseAnonymizer
 
     def add_values(attribute_names)
       attrs = {}
-      @record.class.column_names.each do |name|
+      attribute_names.each do |name|
         attrs[@table[name]] = @record._read_attribute(name)
       end
       attrs
@@ -101,10 +101,9 @@ class DatabaseAnonymizer
 
   def anonymise_class(klass, filename)
     files = []
-    counter = 0
     number_of_groups = cal_number_of_groups(klass)
 
-    number_of_groups.times do | number |
+    number_of_groups.times do | counter |
       number_file = "%.#{number_of_groups.to_s.length}i" % ( counter + 1 )
       full_path_filename = File.expand_path("#{filename}.#{number_file}.sql")
       File.open(full_path_filename, 'a') do |fp|
@@ -122,7 +121,6 @@ class DatabaseAnonymizer
 
         sql_settings_end(fp)
       end
-      counter += 1      
     end
     files
   end
@@ -148,7 +146,7 @@ class DatabaseAnonymizer
     fp.puts '\.'
     fp.puts "\n"
     fp.puts "\n"
-end
+  end
 
   # The key function for producing the insert sqls 
   def raw_sql_from_record(record)
@@ -179,7 +177,8 @@ end
     # anonymize some fields only relevent to specific case type
     begin
       self.send("anonymize_#{kase.class.name.parameterize.underscore}", kase)
-    rescue => exception
+    rescue NoMethodError
+      false
     end
 
     # update the search index in the record
@@ -190,7 +189,8 @@ end
   def anonymize_case_sar_standard(kase)
     kase.subject_full_name = Faker::Name.name
   end
-
+  
+  # rubocop:disable Metrics/CyclomaticComplexity
   def anonymize_case_sar_offender(kase)
     kase.subject_address = fake_address unless kase.subject_address.blank?
     kase.subject_full_name = Faker::Name.name
@@ -202,6 +202,7 @@ end
     kase.third_party_name = Faker::Name.name unless kase.third_party_name.blank?
     kase.third_party_company_name = Faker::Company.name unless kase.third_party_company_name.blank?
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def anonymize_case_ico_foi(kase)
     kase.ico_officer_name = Faker::Name.name unless kase.ico_officer_name.blank?
@@ -234,6 +235,7 @@ end
   # The approach is to anonymize this table anyway, it wil cause the inconsistences between this 
   # table and other main entries table, which can be fixed later by triggering the syncing process manually
   # after dumping the anonymized data into target database
+  # rubocop:disable Metrics/CyclomaticComplexity
   def anonymize_warehouse_case_reports(kase)
     kase.name = Faker::Name.name unless kase.name.blank?
     kase.email = Faker::Internet.email(name:kase.name) unless kase.email.blank?
@@ -248,6 +250,7 @@ end
     kase.message = Faker::Lorem.paragraph unless kase.message.blank?
     kase
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
 
   def anonymize_teams(team)
     team.email = Faker::Internet.email(name:team.name) unless team.email.blank?
@@ -271,7 +274,7 @@ end
     ca
   end
 
-  def initial_letters(phrase)
+  def initial_letters(*)
     # words = phrase.split(' ')
     # "[#{words[0..9].map{ |w| w.first.upcase }.join('')}]"
     "[#{Faker::Name.name}]"
