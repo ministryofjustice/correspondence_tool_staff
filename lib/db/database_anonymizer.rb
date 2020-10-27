@@ -16,16 +16,19 @@ class DatabaseAnonymizer
     end
 
     private 
-    
+    # The reason for disabling the checking is that 
+    # 'delete' being suggest doesn't remove double quotes I need 
+    # rubocop:disable Performance/StringReplacement
     def process_value(data)
       if data.nil?
         '\N'
       elsif data.is_a? String
-        data.inspect.delete('"', '')
+        data.inspect.gsub('"', '')
       else
         data
       end
     end
+    # rubocop:enable Performance/StringReplacement
 
     def extract_data
       attrs = {}
