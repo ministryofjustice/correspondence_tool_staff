@@ -31,7 +31,7 @@ class DatabaseDumper
   private
 
   def dump_schema_snapshot(dirname)
-    filename = "#{dirname}/#{@tag}_database_schema_snapshot.sql"
+    filename = "#{dirname}/#{@tag}_database_schema_snapshot.snap"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -s -f #{filename}"
     result = system command_line
     raise 'Unable to execute pg_dump command' unless result == true
