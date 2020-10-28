@@ -117,12 +117,15 @@ class DatabaseAnonymizer
 
         offset = @max_num_of_records_per_group * counter
         limit = @max_num_of_records_per_group
+        last_primary_value = 0
         klass.offset(offset).limit(limit).order(klass.primary_key.to_sym).each do | record |
           sql_statement = raw_sql_from_record(record)
           fp.puts sql_statement
+
+          last_primary_value = record._read_attribute(Case::Base.primary_key)
         end
 
-        sql_settings_end(fp)
+        sql_settings_end(fp, klass, last_primary_value: last_primary_value)
       end
     end
     files
@@ -145,8 +148,14 @@ class DatabaseAnonymizer
     fp.puts "COPY #{class_model.table_name} ( #{class_model.column_names.join(", ")} ) FROM stdin;"
   end
 
-  def sql_settings_end(fp)
+  def sql_settings_end(fp, class_model, last_primary_value: nil)
     fp.puts '\.'
+    fp.puts "\n"
+    fp.puts "\n"
+
+    if last_primary_value.present? && class_model.sequence_name.present?
+      fp.puts "SELECT pg_catalog.setval('#{class_model.sequence_name}', #{last_primary_value}, true);"
+    end
     fp.puts "\n"
     fp.puts "\n"
   end
@@ -171,7 +180,7 @@ class DatabaseAnonymizer
 
   # Anonymize Cases table including all those case types
   def anonymize_cases(kase)
-    kase.name = Faker::Name.name unless kase.class unless kase.class.name.start_with?("Case::ICO")
+    kase.name = Faker::Name.name unless kase.class.name.start_with?("Case::ICO")
     kase.subject = initial_letters(kase.subject) + Faker::Company.catch_phrase unless kase.class.name.start_with?("Case::ICO")
     kase.email = Faker::Internet.email(name:kase.name)
     kase.message = Faker::Lorem.paragraph unless kase.message.blank?
