@@ -13,7 +13,6 @@ namespace :complaints do
         csv << ["ReqNo", "DPARefNo", "Exist?", ]
         CSV.foreach(args[:file], headers: true) do |row|
           puts "Checking #{row['DPARefNo']}"
-          offender_sar_number = row['DPARefNo']
           offender = Case::SAR::Offender.find_by_number("MIG#{row['DPARefNo']}")
           csv << [row["ReqNo"], row["DPARefNo"], (offender.present? ? "Y" : "N")]
           counter += 1 unless offender.present?
