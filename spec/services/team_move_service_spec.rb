@@ -239,6 +239,24 @@ describe TeamMoveService do
           expect(assignments.count).to eq existing_approver_assignments_count
         end
       end
+
+      context 'when the team being moved has invalid team roles' do
+        let(:disclosure_team) { BusinessUnit.dacu_disclosure }
+        let(:new_user) { create(:user) }
+        let(:business_unit) { disclosure_team }
+
+        it 'restores all valid users for old team' do
+          # add a defective user role and a valid user role
+          disclosure_team.user_roles << TeamsUsersRole.new(user_id: nil, role: "responder")
+          disclosure_team.user_roles << TeamsUsersRole.new(user_id: new_user.id, role: "responder")
+          user_count = disclosure_team.users.count
+
+          service.call
+
+          expect(disclosure_team.reload.users.count).to eq user_count
+          expect(disclosure_team.reload.users.last).to eq new_user
+        end
+      end
     end
   end
 end
