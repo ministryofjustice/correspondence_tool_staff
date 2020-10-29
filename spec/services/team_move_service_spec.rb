@@ -231,12 +231,16 @@ describe TeamMoveService do
           existing_approver_assignments_count = assignments.count
           expect(assignments.first.user).to eq disclosure_user
           expect(assignments.count).to eq existing_approver_assignments_count
+          expect(disclosure_user.approving_team).to eq business_unit
 
           service.call
 
+          disclosure_user.reload
           assignments = kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure)
           expect(assignments.first.user).to eq disclosure_user
           expect(assignments.count).to eq existing_approver_assignments_count
+          expect(disclosure_user.teams).to eq [business_unit, service.new_team]
+          expect(disclosure_user.approving_team).to eq service.new_team
         end
       end
 

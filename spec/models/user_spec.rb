@@ -118,6 +118,19 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe 'has_one: approving_team' do
+    it "returns the first active approving team" do
+      current_approving_team = approver.approving_team
+      new_team = create :business_unit, correspondence_type_ids: [foi.id]   
+      approver.team_roles << TeamsUsersRole.new(team: new_team, role: 'approver')
+      approver.reload
+      current_approving_team.deleted_at = Time.now
+      current_approving_team.save!
+      approver.reload
+      expect(approver.approving_team).to eq new_team
+    end
+  end
+
   describe '#roles' do
     it 'returns the roles given users' do
       expect(manager.roles).to eq ['manager']
