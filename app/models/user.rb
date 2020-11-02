@@ -59,7 +59,7 @@ class User < ApplicationRecord
            -> { responder_roles  },
            class_name: 'TeamsUsersRole'
   has_one :approving_team_roles,
-           -> { approver_roles  },
+           -> { active_approver_roles  },
            class_name: 'TeamsUsersRole'
   has_many :managing_teams, through: :managing_team_roles, source: :team
   has_many :responding_teams, through: :responding_team_roles, source: :team
