@@ -503,7 +503,7 @@ control aspects of the build. The available build arguments are:
   to generate a PDF preview (libreoffice).
 
 #### Generating Documentation
-
+ 
 You can generate documentation for the project with:
 
 ```

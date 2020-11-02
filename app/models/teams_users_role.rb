@@ -21,4 +21,5 @@ class TeamsUsersRole < ApplicationRecord
   scope :manager_roles,   -> { where(role: :manager)  }
   scope :responder_roles, -> { where(role: :responder) }
   scope :approver_roles,  -> { where(role: :approver) }
+  scope :active_approver_roles,  -> { where(role: :approver).joins(:team).where("teams": {deleted_at: nil}) }
 end
