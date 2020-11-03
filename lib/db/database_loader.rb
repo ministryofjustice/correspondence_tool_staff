@@ -1,25 +1,18 @@
 class DatabaseLoader
 
-  def initialize(env, file)
+  def initialize(env, folder_for_load)
     @env = env
-    @file = file
-    raise "Only 'local' evironment is currently supported" unless @env == 'local'
+    @db_connection_url = ENV['DATABASE_URL'] || 'postgres://localhost/correspondence_platform_development'
+    @folder_for_load = folder_for_load
+    raise "This task is not allowed on non-prod environment." unless @env != 'prod'
   end
 
   def run
-    unzipped_file_name = unzip_file
-    updated_file_name = add_role(unzipped_file_name)
     drop_and_recreate_database
-    load_database(updated_file_name)
+    load_database
   end
 
   private
-
-  def unzip_file
-    puts "Unzipping file #{@file}"
-    system "gunzip #{@file}"
-    @file.sub(/\.gz$/, '')
-  end
 
   def add_role(filename)
     system "sed -e $'1i\\\nCREATE ROLE correspondence_staff;\n' -i .bak #{filename}"
@@ -35,15 +28,11 @@ class DatabaseLoader
     puts "Database created"
   end
 
-  def load_database(updated_file_name)
-    database_url = 'postgres://localhost/correspondence_platform_development'
-    command = "psql #{database_url } < #{updated_file_name}"
-    puts "Executing: #{command}"
-    result = system command
-    if result == true
-      puts 'Database successfully loaded'
-    else
-      puts 'Error loading database'
+  def load_database
+    puts "#{@folder_for_load}/*.sql"
+    Dir.glob("#{@folder_for_load}/*.sql").sort.map do | local_filename |
+      result = system "psql #{@db_connection_url} -f #{local_filename}"
+      raise "Failed to load #{local_filename} into the database!" unless result == true
     end
   end
 end
