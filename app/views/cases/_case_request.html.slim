@@ -2,7 +2,7 @@
   .grid-row.section-requested-heading
       h2.request--heading
         = t4c(case_details, 'common', 'request')
-      - if case_details.offender_sar?
+      - if case_details.offender_sar_standard?
         .change-link
           = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "requested_info")
 
