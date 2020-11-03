@@ -31,24 +31,29 @@ module Stats
         @period_end = Date.new(2018, 12, 31)
         @user = create :branston_user
 
-        @closed_offender_sar = 
+        @closed_offender_sar =
             create :offender_sar_case, :closed,
             identifier: 'closed offender sar',
             received_date: @period_end - 1.hours
-        
-        @closed_offender_sar1 = 
+
+        @closed_offender_sar1 =
             create :offender_sar_case, :closed,
             identifier: 'closed offender sar1',
             received_date: @period_start
 
-        @closed_sar = 
+        @closed_offender_complaint =
+            create :offender_sar_complaint, :closed,
+            identifier: 'closed offender sar complaint',
+            received_date: @period_end - 1.hours
+
+        @closed_sar =
             create :closed_sar,
             identifier: 'closed sar'
 
-        @closed_foi = 
+        @closed_foi =
             create :closed_case,
             identifier: 'closed foi'
-            
+
 
         @report = R401OffenderSarClosedCasesReport.new(
           user: @user,
@@ -59,7 +64,7 @@ module Stats
 
       context '#case_scope' do
         it 'ignores any selected periods' do
-          expected = [@closed_offender_sar.name, @closed_offender_sar1.name]
+          expected = [@closed_offender_sar.name, @closed_offender_sar1.name, @closed_offender_complaint.name]
           expect(@report.case_scope.map(&:name)).to match_array(expected)
         end
       end
