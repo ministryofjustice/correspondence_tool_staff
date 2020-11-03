@@ -106,7 +106,7 @@ module Stats
       context '1.A' do
         it 'records the total number' do
           expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this period'
-          expect(@results['1.A'][:value]).to eq 108
+          expect(@results['1.A'][:value]).to eq 100
         end
       end
 
@@ -147,14 +147,14 @@ module Stats
       context '1.C' do
         it 'records the stat' do
           expect(@results['1.C'][:desc]).to eq 'Number of requests that have been created and closed within this period'
-          expect(@results['1.C'][:value]).to eq 101
+          expect(@results['1.C'][:value]).to eq 93
         end
       end
 
       context '1.Ci' do
         it 'records the stat' do
           expect(@results['1.Ci'][:desc]).to eq 'Number of requests created and processed in this period that were within time against the external deadline'
-          expect(@results['1.Ci'][:value]).to eq 96
+          expect(@results['1.Ci'][:value]).to eq 88
         end
       end
 
@@ -175,7 +175,7 @@ module Stats
       context '2.A' do
         it 'replicates the figure in 1.C' do
           expect(@results['2.A'][:desc]).to eq 'Number of requests that have been created and closed within this period (Replicates \'C\' above in TIMELINESS section)'
-          expect(@results['2.A'][:value]).to eq 101
+          expect(@results['2.A'][:value]).to eq 93
         end
       end
 
@@ -231,13 +231,13 @@ module Stats
       context '2.I' do
         it 'records the stat' do
           expect(@results['2.I'][:desc]).to eq "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of 'Exemption applied'"
-          expect(@results['2.I'][:value]).to eq 63
+          expect(@results['2.I'][:value]).to eq 55
         end
       end
 
       context '3.A' do
         it 'records the stat' do
-          expect(@results['3.A'][:desc]).to eq "Number of cases created and closed in this period that were fully or partly refused"
+          expect(@results['3.A'][:desc]).to eq "Number of cases created and closed in this period that were fully or partly refused. = 2.H + 2.I"
           expect(@results['3.A'][:value]).to eq 58
         end
       end
