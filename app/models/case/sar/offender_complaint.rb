@@ -10,6 +10,10 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   end
 
   def offender_sar?
+    true
+  end
+
+  def offender_sar_standard?
     false
   end
 end

@@ -51,6 +51,29 @@ describe Case::SAR::Offender do
     end
   end
 
+  describe 'predicate methods' do
+    describe '#offender_sar?' do
+      it 'is a sort of offender_sar' do
+        kase = build :offender_sar_case
+        expect(kase.offender_sar?).to be true
+      end
+    end
+
+    describe '#offender_sar_standard?' do
+      it 'is offender_sar standard' do
+        kase = build :offender_sar_case
+        expect(kase.offender_sar_standard?).to be true
+      end
+    end
+
+    describe '#offender_sar_complaint?' do
+      it 'is not an offender_sar complaint' do
+        kase = build :offender_sar_case
+        expect(kase.offender_sar_complaint?).to be false
+      end
+    end
+  end
+
   describe '#subject_type' do
     context 'valid values' do
       it 'does not error' do
@@ -828,5 +851,4 @@ describe Case::SAR::Offender do
       end
     end
   end
-
 end

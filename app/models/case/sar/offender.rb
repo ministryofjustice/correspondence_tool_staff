@@ -216,6 +216,14 @@ class Case::SAR::Offender < Case::Base
     true
   end
 
+  def offender_sar_standard?
+    true
+  end
+
+  def offender_sar_complaint?
+    false
+  end
+
   def responding_team
     managing_team # both responding and managing - Branston are the only team who work on offender SARs
   end
