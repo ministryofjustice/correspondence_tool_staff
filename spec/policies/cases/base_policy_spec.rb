@@ -21,6 +21,7 @@ describe Case::BasePolicy do
     @private_officer               = find_or_create :private_officer
     @co_approver                   = create :approver,
                                             approving_team: @dacu_disclosure
+    @branston_user                 = create :branston_user
 
     @new_case                   = create :case
     @accepted_case              = create :accepted_case
@@ -67,6 +68,8 @@ describe Case::BasePolicy do
                                              approving_team: @dacu_disclosure,
                                              approver: @disclosure_specialist,
                                              responder: @responder
+    @offender_sar_case             = create :offender_sar_case
+    @offender_sar_complaint        = create :offender_sar_complaint
 
 
     @pending_dacu_clearance_press_case =
@@ -97,6 +100,7 @@ describe Case::BasePolicy do
   let(:another_press_officer) { @another_press_officer }
   let(:private_officer)   { @private_officer }
   let(:co_approver)       { @co_approver }
+  let(:branston_user)     { @branston_user }
 
   let(:new_case)                { @new_case }
   let(:accepted_case)           { @accepted_case }
@@ -130,6 +134,9 @@ describe Case::BasePolicy do
 
   let(:pending_dacu_clearance_press_case) { @pending_dacu_clearance_press_case }
   let(:pending_press_private_clearance_case) { @pending_press_private_clearance_case }
+
+  let(:offender_sar_case) { @offender_sar_case }
+  let(:offender_sar_complaint) { @offender_sar_complaint }
 
   after(:each) do |example|
     if example.exception
@@ -607,5 +614,43 @@ describe Case::BasePolicy do
 
   permissions :can_record_data_request? do
     it { should_not permit(manager, unassigned_case) }
+  end
+
+  permissions :can_manage_offender_sar? do
+    it { should_not permit(manager,               unassigned_case) }
+    it { should_not permit(manager,               unassigned_flagged_case) }
+    it { should_not permit(manager,               assigned_case) }
+    it { should_not permit(manager,               assigned_flagged_case) }
+    it { should_not permit(manager,               case_with_response) }
+    it { should_not permit(manager,               case_with_response_flagged) }
+    it { should_not permit(manager,               responded_case) }
+    it { should_not permit(manager,               closed_case) }
+    it { should_not permit(manager,               offender_sar_case) }
+    it { should_not permit(manager,               offender_sar_complaint) }
+
+    it { should_not permit(disclosure_specialist, unassigned_case) }
+    it { should_not permit(disclosure_specialist, unassigned_flagged_case) }
+    it { should_not permit(disclosure_specialist, assigned_case) }
+    it { should_not permit(disclosure_specialist, assigned_flagged_case) }
+    it { should_not permit(disclosure_specialist, case_with_response) }
+    it { should_not permit(disclosure_specialist, case_with_response_flagged) }
+    it { should_not permit(disclosure_specialist, responded_case) }
+    it { should_not permit(disclosure_specialist, closed_case) }
+    it { should_not permit(disclosure_specialist, offender_sar_case) }
+    it { should_not permit(disclosure_specialist, offender_sar_complaint) }
+
+    it { should_not permit(responder,             unassigned_case) }
+    it { should_not permit(responder,             unassigned_flagged_case) }
+    it { should_not permit(responder,             assigned_case) }
+    it { should_not permit(responder,             assigned_flagged_case) }
+    it { should_not permit(responder,             case_with_response) }
+    it { should_not permit(responder,             case_with_response_flagged) }
+    it { should_not permit(responder,             responded_case) }
+    it { should_not permit(responder,             closed_case) }
+    it { should_not permit(responder,             offender_sar_case) }
+    it { should_not permit(responder,             offender_sar_complaint) }
+
+    it { should permit(branston_user,             offender_sar_case) }
+    it { should permit(branston_user,             offender_sar_complaint) }
   end
 end

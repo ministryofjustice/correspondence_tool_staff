@@ -100,7 +100,7 @@ class Case::Base < ApplicationRecord
                                            'Case::OverturnedICO::SAR'])}
 
   scope :non_offender_sar, -> { where(type: 'Case::SAR::Standard') }
-  scope :offender_sar, -> { where(type: 'Case::SAR::Offender') }
+  scope :offender_sar, -> { where(type: 'Case::SAR::Offender').or(Case::Base.where(type: 'Case::SAR::OffenderComplaint')) }
 
   scope :with_teams, -> (teams) do
     includes(:assignments)
