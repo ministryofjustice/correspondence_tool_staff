@@ -4,6 +4,7 @@ describe ReportTypePolicy::Scope do
 
   describe 'report type scope policy' do
     before(:all) do
+      DbHousekeeping.clean(seed: true)
       @managing_team                = create :team_dacu
 
       @manager                        = find_or_create :disclosure_bmt_user
