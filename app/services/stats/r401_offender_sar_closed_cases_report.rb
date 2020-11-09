@@ -15,13 +15,13 @@ module Stats
     end
 
     def case_scope
-      CaseFinderService.new(@user).closed_cases_scope.where(type: 'Case::SAR::Offender')
+      CaseFinderService.new(@user).closed_cases_scope.where("type LIKE 'Case::SAR::Offender%'")
     end
 
     def report_type
       ReportType.r401
     end
-  
+
   end
 end
 
