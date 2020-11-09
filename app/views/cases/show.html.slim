@@ -57,7 +57,7 @@ div id="case-#{@correspondence_type_key}" class="case"
   - if @case.respond_to?(:ico_decision) && @case.ico_decision.present?
     = render partial: 'cases/ico/ico_final_decision', locals: {case_details: @case}
 
-  - if @case.offender_sar? || @case.offender_sar_complaint?
+  - if @case.offender_sar?
     section.case-info
       = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case }
 
@@ -80,7 +80,7 @@ div id="case-#{@correspondence_type_key}" class="case"
     section.case-info
       = render partial: 'cases/case_attachments', locals: {case_details: @case}
 
-  - if !@case.offender_sar? && !@case.offender_sar_complaint?
+  - if !@case.offender_sar?
     section#messages-section.case-info
       = render partial: 'cases/case_messages', locals: { case_details: @case }
 
@@ -88,7 +88,7 @@ div id="case-#{@correspondence_type_key}" class="case"
     section.case-info.has-page-break
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
-  - if @case.offender_sar? || @case.offender_sar_complaint?
+  - if @case.offender_sar?
     section.notes-section
       = render partial: 'cases/offender_sar/case_notes', locals: { case_details: @case }
 

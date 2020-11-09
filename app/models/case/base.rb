@@ -814,6 +814,7 @@ class Case::Base < ApplicationRecord
   def overturned_ico_sar?;     false;  end
   def overturned_ico_foi?;     false;  end
   def offender_sar?;           false;  end
+  def offender_sar_standard?;  false;  end
   def offender_sar_complaint?; false;  end
 
   def default_managing_team
@@ -864,7 +865,7 @@ class Case::Base < ApplicationRecord
       errors.add(
         :received_date,
         I18n.t('activerecord.errors.models.case.attributes.received_date.past')
-      ) unless offender_sar? || offender_sar_complaint?
+      ) unless offender_sar?
     end
     errors[:received_date].any?
   end
