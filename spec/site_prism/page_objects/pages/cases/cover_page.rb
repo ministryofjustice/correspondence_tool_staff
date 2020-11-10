@@ -8,12 +8,13 @@ module PageObjects
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
         section :page_heading,
-          PageObjects::Sections::PageHeadingSection, '.cover-sheet-heading' do
+          PageObjects::Sections::PageHeadingSection, '.cover-sheet__heading' do
           element :case_number, 'li:first-child'
-          element :subject_full_name, '.cover-sheet-heading__name'
-          element :aliases, 'li:nth-child(3)'
-          element :prison_number, 'li:nth-child(4)'
+          element :subject_full_name, 'li:nth-child(2)'
+          element :prison_number, 'li:nth-child(3)'
         end
+
+        element :cover_sheet_address, '.cover-sheet__address'
 
         section :data_requests,
           PageObjects::Sections::Cases::DataRequestsSection, '.data-requests'

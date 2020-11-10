@@ -52,6 +52,7 @@ module Stats
       {
         '_FOI CASES'  => '',
         '_TIMELINESS' => "",
+        '_THE CASES UNDER SECTION 4 ARE EXCLUDED' => "",
         '1.A'         => "Total number of FOI requests received this period",
         '1.Ai'        => "Of these, number which fall fully or mostly under the Environmental Information Regulations (EIRs)",
         '1.B'         => "Number of requests that have been created but not closed in this period",
@@ -64,6 +65,7 @@ module Stats
         '1.Ciii'      => "Number of requests that have been created and closed within this period that were out of time against the external deadline",
         '_SPACER_1'   => "",
         '_OUTCOMES'   => "",
+        '_THE CASES UNDER SECTION 4 ARE EXCLUDED ' => "",
         '2.A'         => "Number of requests that have been created and closed within this period (Replicates 'C' above in TIMELINESS section)",
         '2.B'         => "Number of cases created and closed in this period that have been marked as 'Granted in full'",
         '2.C'         => "Number of cases created and closed in this period that have been marked as 'Clarification required - S1(3)'",
@@ -76,7 +78,7 @@ module Stats
         '_SPACER_2'   => '',
         '_USE OF EXEMPTIONS AND EXCEPTIONS' => '',
         '_SPACER_7'   => '',
-        '3.A'         => "Number of cases created and closed in this period that were fully or partly refused",
+        '3.A'         => "Number of cases created and closed in this period that were fully or partly refused. = 2.H + 2.I",
         '_USE OF THE FOLLOWING EXEMPTIONS LISTED AT PART II OF THE FOI ACT' => '',
         '_Number of cases created and closed in this period that have been marked as refused fully or refused in part with the exemption of ' => '', 
         '3.S22'       => "S(22) - Information intended for future publication",
@@ -177,8 +179,27 @@ module Stats
       end
     end
 
+    def cases_with_only_one_exemption
+      @scope
+        .joins(:exemptions)
+        .select('cases.id')
+        .group('cases.id')
+        .having("count(cases_exemptions.id) = ?", 1)
+    end 
+
+    def scope_with_exemption_s21_only(scope)
+      exemption = CaseClosure::Exemption.__send__('s21')
+      scope
+        .where(id: cases_with_only_one_exemption)
+        .joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+    end
+
+    def scope_with_pit_extension(scope)
+      scope.where("properties->>'has_pit_extension'::text = ?", true.to_s)
+    end
+
     def get_value_1_A
-      cases_received_in_period.count
+      cases_received_in_period.count - scope_with_exemption_s21_only(cases_received_in_period).count
     end
 
     def get_value_1_Ai
@@ -190,9 +211,7 @@ module Stats
     end
 
     def get_value_1_Bi
-      open_cases_received_in_period.joins(:transitions).where(
-        'case_transitions.event = ?',
-        'extend_for_pit').group('cases.id').count.size
+      scope_with_pit_extension(open_cases_received_in_period).count
     end
 
     def get_value_1_Bii
@@ -204,33 +223,31 @@ module Stats
     end
 
     def get_value_1_C
-      @scope.closed.where(received_date: [@period_start..@period_end]).count
+      closed_cases_received_in_period.count - scope_with_exemption_s21_only(closed_cases_received_in_period).count
     end
 
     def get_value_1_Ci
-      cases_received_and_closed_in_period_responded_in_time.count - responded_in_time_with_pit_extension
+      (cases_received_and_closed_in_period_responded_in_time.count - scope_with_exemption_s21_only(cases_received_and_closed_in_period_responded_in_time).count) - 
+      (responded_in_time_with_pit_extension.count - scope_with_exemption_s21_only(responded_in_time_with_pit_extension).count)
     end
 
     def get_value_1_Cii
-      responded_in_time_with_pit_extension + responded_late_with_pit_extension
+      responded_in_time_with_pit_extension.count + responded_late_with_pit_extension.count -
+      scope_with_exemption_s21_only(responded_in_time_with_pit_extension).count -
+      scope_with_exemption_s21_only(responded_late_with_pit_extension).count
     end
 
     def responded_in_time_with_pit_extension
-      cases_received_and_closed_in_period_responded_in_time
-        .joins(:transitions).where(
-          'case_transitions.event = ?',
-          'extend_for_pit').group('cases.id').count.size
+      scope_with_pit_extension(cases_received_and_closed_in_period_responded_in_time)
     end
 
     def responded_late_with_pit_extension
-      cases_received_and_closed_in_period_responded_late
-        .joins(:transitions).where(
-          'case_transitions.event = ?',
-          'extend_for_pit').group('cases.id').count.size
+      scope_with_pit_extension(cases_received_and_closed_in_period_responded_late)
     end
 
     def get_value_1_Ciii
-      cases_received_and_closed_in_period_responded_late.count - responded_late_with_pit_extension
+      (cases_received_and_closed_in_period_responded_late.count - scope_with_exemption_s21_only(cases_received_and_closed_in_period_responded_late).count ) - 
+      (responded_late_with_pit_extension.count - scope_with_exemption_s21_only(responded_late_with_pit_extension).count)
     end
 
     def get_value_2_A
@@ -286,32 +303,31 @@ module Stats
     def get_value_2_H
       # part refused_cases with an exemption - just count number of part refused cases, because each
       # part refused case must have at least on exemption
-      part_refused_cases_closed_in_period.count - num_s12_part_refused_with_exemptions
+      part_refused_cases_closed_in_period.count - num_s12_part_refused_with_exemptions - 
+      scope_with_exemption_s21_only(part_refused_cases_closed_in_period).count
     end
 
     def get_value_2_I
       # fully refused_cases with an exemption - just count number of fully refused cases, because each
       # fully refused case must have at least on exemption
-      fully_refused_cases_received_and_closed_in_period.count - num_s12_fully_refused_with_exemptions
+      fully_refused_cases_received_and_closed_in_period.count - num_s12_fully_refused_with_exemptions -
+      scope_with_exemption_s21_only(fully_refused_cases_received_and_closed_in_period).count
     end
 
     def get_value_3_A
-      @stats.stats['2.H'][:value] + @stats.stats['2.I'][:value] - get_value_4_A
+      @stats.stats['2.H'][:value] + @stats.stats['2.I'][:value]
     end
 
     def get_value_4_A
-      cases = fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21
-      filter_cases_with_only_one_exemption(cases).count
+      fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21.count
     end
 
     def get_value_4_B
-      cases = fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21.in_time
-      filter_cases_with_only_one_exemption(cases).count
+      fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21.in_time.count
     end
 
     def get_value_4_C
-      cases = fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21.late
-      filter_cases_with_only_one_exemption(cases).count
+      fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21.late.count
     end
 
     def get_value_5_Ai
@@ -363,10 +379,7 @@ module Stats
     def fully_and_part_refused_cases_recevied_and_closed_in_period_with_exemption_s21
       exemption = CaseClosure::Exemption.__send__('s21')
       fully_and_part_refused_cases_received_and_closed_in_period_with_exemption(exemption)
-    end
-
-    def filter_cases_with_only_one_exemption(cases)
-      cases.select { |kase| kase.exemptions.count == 1 }
+        .where(id: cases_with_only_one_exemption)
     end
 
     def fully_and_part_refused_with_exemption(exemption_number)
@@ -380,6 +393,10 @@ module Stats
 
     def open_cases_received_in_period
       @scope.opened.where(received_date: [@period_start..@period_end])
+    end
+
+    def closed_cases_received_in_period
+      @scope.closed.where(received_date: [@period_start..@period_end])
     end
 
     def cases_received_and_closed_in_period
