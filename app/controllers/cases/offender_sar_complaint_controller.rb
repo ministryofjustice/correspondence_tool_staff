@@ -3,10 +3,9 @@ module Cases
     include OffenderSARComplaintCasesParams
 
     def initialize
+      super
       @correspondence_type = CorrespondenceType.offender_sar_complaint
       @correspondence_type_key = 'offender_sar_complaint'
-
-      super
     end
 
     def new
@@ -27,7 +26,7 @@ module Cases
       if !@case.valid_attributes?(create_params)
         render :new
       elsif @case.valid? && @case.save
-        session[:offender_sar_state] = nil
+        session[session_state] = nil
         flash[:notice] = "Case created successfully"
         redirect_to case_path(@case)
       else
@@ -36,6 +35,8 @@ module Cases
         redirect_to "#{step_case_sar_offender_complaint_index_path}/#{@case.current_step}"
       end
     end
+
+    private
 
     def set_case_types
       @case_types = ["Case::SAR::OffenderComplaint"]
@@ -61,5 +62,8 @@ module Cases
       create_offender_sar_complaint_params
     end
 
+    def session_state
+      "#{@correspondence_type_key}_state".to_sym
+    end
   end
 end
