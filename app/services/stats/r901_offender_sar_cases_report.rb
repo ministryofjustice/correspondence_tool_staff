@@ -32,7 +32,7 @@ module Stats
     end
 
     def case_scope
-      @case_scope.where(type: 'Case::SAR::Offender').or(@case_scope.where(type: 'Case::SAR::OffenderComplaint'))
+      @case_scope.where(type: ['Case::SAR::Offender', 'Case::SAR::OffenderComplaint'])
     end
 
     def run(*)
