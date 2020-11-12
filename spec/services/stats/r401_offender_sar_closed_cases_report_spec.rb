@@ -41,11 +41,6 @@ module Stats
             identifier: 'closed offender sar1',
             received_date: @period_start
 
-        @closed_offender_complaint =
-            create :offender_sar_complaint, :closed,
-            identifier: 'closed offender sar complaint',
-            received_date: @period_end - 1.hours
-
         @closed_sar =
             create :closed_sar,
             identifier: 'closed sar'
@@ -64,7 +59,7 @@ module Stats
 
       context '#case_scope' do
         it 'ignores any selected periods' do
-          expected = [@closed_offender_sar.name, @closed_offender_sar1.name, @closed_offender_complaint.name]
+          expected = [@closed_offender_sar.name, @closed_offender_sar1.name]
           expect(@report.case_scope.map(&:name)).to match_array(expected)
         end
       end
