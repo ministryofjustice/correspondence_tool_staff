@@ -61,8 +61,7 @@ div id="case-#{@correspondence_type_key}" class="case"
     section.case-info
       = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case }
 
-  - unless @case.offender_sar?
-    = render partial: 'shared/components/case_linked_cases'
+  = render partial: 'shared/components/case_linked_cases'
 
   - unless @case.overturned_ico?
     section.case-info

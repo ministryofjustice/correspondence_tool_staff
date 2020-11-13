@@ -1,0 +1,18 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar.request_details_heading')
+
+= render partial: 'layouts/header'
+= render partial: "cases/offender_sar/case_details",
+          locals: {case_details: Case::Base.find_by_id(@case.original_case.id).decorate, link_type: nil}
+
+= form_for @case, url: url, as: :offender_sar_complaint do |f|
+
+  .form-group
+
+    #js-offender-sar-confirm-actions
+      = f.radio_button_fieldset :original_case_number, choices: [:yes, :no], inline: true
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', class: 'button'
+

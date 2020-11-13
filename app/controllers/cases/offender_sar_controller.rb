@@ -10,24 +10,22 @@ module Cases
     ]
 
     def initialize
+      super
       @correspondence_type = CorrespondenceType.offender_sar
       @correspondence_type_key = 'offender_sar'
-
-      super
+      @case_route_url = 'step_case_sar_offender_index_path'
     end
 
     def new
       permitted_correspondence_types
       authorize case_type, :can_add_case?
-
-      @case = build_case_from_session(Case::SAR::Offender)
+      @case = build_case_from_session(self.case_type)
       @case.current_step = params[:step]
     end
 
     def create
       authorize case_type, :can_add_case?
-
-      @case = build_case_from_session(Case::SAR::Offender)
+      @case = build_case_from_session(self.case_type)
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
 
@@ -38,9 +36,11 @@ module Cases
         flash[:notice] = "Case created successfully"
         redirect_to case_path(@case)
       else
-        session_persist_state(create_params)
+        copy_params = create_params
+        copy_params = @case.process_params_after_step(copy_params)
+        session_persist_state(copy_params)
         get_next_step(@case)
-        redirect_to "#{step_case_sar_offender_index_path}/#{@case.current_step}"
+        redirect_to "#{self.send(@case_route_url)}/#{@case.current_step}"
       end
     end
 
@@ -134,24 +134,25 @@ module Cases
     # @todo the following are all related to session data (case) cross different page
     # maybe worthy having another class for handling such thing together in a more abstract way
     def build_case_from_session(correspondence_type)
+      session_key = "#{@correspondence_type_key}_state".to_sym
       # regarding the `{ date_of_birth: nil }` below...
       # this is needed to prevent "NoMethodError undefined method `dd' for nil:NilClass"
       # when a new Case::SAR::Offender is being created from scratch, because the field is not
       # in the list of instance variables in the model at the point that the gov_uk_date_fields
       # is adding its magic methods. This manifests when running tests or after rails server restart
-      values = session[:offender_sar_state] || { date_of_birth: nil }
+      values = session[session_key] || { date_of_birth: nil }
 
       # similar workaround needed for request dated
       request_dated_exists = values.fetch('request_dated', false)
       values['request_dated'] = nil unless request_dated_exists
-
       correspondence_type.new(values).decorate
     end
 
     def session_persist_state(params)
-      session[:offender_sar_state] ||= {}
+      session_key = "#{@correspondence_type_key}_state".to_sym
+      session[session_key] ||= {}
       params ||= {}
-      session[:offender_sar_state] = session[:offender_sar_state].merge params
+      session[session_key] = session[session_key].merge params
     end
 
     def preserve_step_state

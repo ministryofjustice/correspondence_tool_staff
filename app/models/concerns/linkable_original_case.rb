@@ -25,6 +25,10 @@ module LinkableOriginalCase
     self.original_case&.id
   end
 
+  def original_case_number
+    self.original_case&.number
+  end
+
   private
 
   def validate_original_case
