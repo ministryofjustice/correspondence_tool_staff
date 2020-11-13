@@ -63,14 +63,11 @@ module Stats
 
         @sar_4 = create :accepted_sar, identifier: 'sar-4'
         @offender_sar_4 = create :offender_sar_case, :ready_to_copy, identifier: 'osar-4'
-
-        @sar_5 = create :accepted_sar, identifier: 'sar-5'
-        @offender_sar_5 = create :offender_sar_complaint, identifier: 'osar-5'
       end
 
       it 'returns only Offender SAR cases with initial scope of nil' do
         report = described_class.new()
-        expect(report.case_scope).to match_array( [@offender_sar_1, @offender_sar_2, @offender_sar_3, @offender_sar_4, @offender_sar_5])
+        expect(report.case_scope).to match_array( [@offender_sar_1, @offender_sar_2, @offender_sar_3, @offender_sar_4])
       end
 
       it 'returns only Offender SAR cases with initial scope of ready-to-copy cases being asked' do
