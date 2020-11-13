@@ -29,6 +29,9 @@ module Stats
       end
 
       before(:all) do
+        require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+        CaseClosure::MetadataSeeder.seed!
+  
         Timecop.freeze Time.new(2019, 6, 30, 12, 0, 0) do
           @period_start = 0.business_days.after(Date.new(2018, 12, 20))
           @period_end = 0.business_days.after(Date.new(2018, 12, 31))
@@ -42,8 +45,12 @@ module Stats
           @sar_3 = create :accepted_sar, identifier: 'sar-3', creation_time: @period_start + 5.days
           @foi_3 = create :accepted_case, identifier: 'foi-3', creation_time: @period_start + 5.days
 
-          @sar_4 = create :accepted_sar, identifier: 'sar-4', creation_time: @period_end  + 61.minutes
-          @foi_4 = create :accepted_case, identifier: 'foi-4', creation_time: @period_end  + 61.minutes
+          @sar_4 = create :closed_sar, identifier: 'sar-4', creation_time: @period_start, 
+                          received_date: @period_start + 1.days, date_responded: @period_end
+          @foi_4 = create :closed_case, identifier: 'foi-4', creation_time: @period_start
+
+          @sar_5 = create :closed_sar, :clarification_required, identifier: 'sar-tmm', creation_time: @period_start, 
+                          received_date: @period_start + 1.days, date_responded: @period_end
         end
       end
 
@@ -85,12 +92,12 @@ module Stats
             expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
             expect(report.case_scope).to include(late_unassigned_trigger_sar_case)
             expect(report.case_scope).to include(in_time_unassigned_trigger_sar_case)
-            expect(results[12][:non_trigger_open_late]).to eq(3)
-            expect(results[12][:non_trigger_performance]).to eq(0)
+            expect(results[12][:non_trigger_open_late]).to eq(2)
+            expect(results[12][:non_trigger_performance]).to eq(33.3)
             expect(results[12][:trigger_open_late]).to eq(1)
             expect(results[12][:trigger_open_in_time]).to eq(1)
             expect(results[12][:trigger_performance]).to eq(50)
-            expect(results[12][:overall_performance]).to eq(20)
+            expect(results[12][:overall_performance]).to eq(40)
           end
         end
       end
