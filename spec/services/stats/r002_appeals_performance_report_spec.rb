@@ -222,8 +222,6 @@ module Stats # rubocop:disable Metrics/ModuleLength
 
       it 'should produce rag ratings' do
         Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-
-          actual_lines = report_csv.map { |row| row.map(&:value) }
           rag_ratings = report_csv.map do |row|
             row.map.with_index { |item, index| [index, item.rag_rating] if item.rag_rating }.compact
           end
