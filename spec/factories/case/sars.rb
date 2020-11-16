@@ -259,7 +259,7 @@ FactoryBot.define do
   end
 
   trait :clarification_required do
-    refusal_reason              { find_or_create :refusal_reason, :tmm }
+    refusal_reason              { find_or_create :refusal_reason, :sar_tmm }
     missing_info                { true }
     message                     { 'info held other, clarification required' }
   end
