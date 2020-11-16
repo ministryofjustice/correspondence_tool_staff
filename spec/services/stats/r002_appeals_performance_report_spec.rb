@@ -65,16 +65,6 @@ module Stats # rubocop:disable Metrics/ModuleLength
 
         create_ico(type: :sar, received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded late')
         create_ico(type: :sar, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded late')
-        # create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - open late')
-        # create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - open late')
-        # create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - open in time')
-        # create_ico(type: :sar, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded in time')
-        # create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico sar for team b - open late')
-        # create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'ico sar for team b - open in time')
-        # create_ico(type: :sar, received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico sar for team b - responded in time')
-        # create_ico(type: :sar, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'ico sar for team c - responded late')
-        # create_ico(type: :sar, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'ico sar for team c - responded in time')
-        # create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'ico sar for team d - open in time')
       end
 
       ###############
