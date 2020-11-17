@@ -15,6 +15,7 @@ class ReportTypePolicy < ApplicationPolicy
       @scope = scope
     end
 
+    #rubocop:disable Metrics/CyclomaticComplexity
     # Solve the scope by go through each allowed correspondence_type the user being allowed to see
     def resolve
       scopes = []
@@ -26,6 +27,7 @@ class ReportTypePolicy < ApplicationPolicy
       scopes << @scope.where(offender_sar_complaint: true) if @user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar_complaint)
       scopes.reduce { |memo, scope| memo.or(scope) }
     end
+    #rubocop:enable Metrics/CyclomaticComplexity
 
   end
 
