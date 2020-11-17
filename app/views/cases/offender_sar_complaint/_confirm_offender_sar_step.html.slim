@@ -1,9 +1,13 @@
 - content_for :heading, flush: true
-  = t('cases.offender_sar.request_details_heading')
+  = t('cases.offender_sar_complaint.check_sar_details_heading')
 
 = render partial: 'layouts/header'
-= render partial: "cases/offender_sar/case_details",
-          locals: {case_details: Case::Base.find_by_id(@case.original_case.id).decorate, link_type: nil}
+
+section.case-info
+  = render partial: "cases/offender_sar/case_details",
+            locals: {case_details: Case::Base.find_by_id(@case.original_case.id).decorate, link_type: nil, can_be_edit: false}
+section.case-info
+  = render partial: 'cases/offender_sar/data_requests', locals: { case_details: Case::Base.find_by_id(@case.original_case.id).decorate, can_be_edit: false }
 
 = form_for @case, url: url, as: :offender_sar_complaint do |f|
 
@@ -13,6 +17,6 @@
       = f.radio_button_fieldset :original_case_number, choices: [:yes, :no], inline: true
 
   input name="current_step" type="hidden" value=@case.current_step
-
-  = f.submit 'Continue', class: 'button'
+  
+  = f.submit 'Continue', class: 'button', id: 'btn-offender-sar-complaint-continue', disabled: true
 

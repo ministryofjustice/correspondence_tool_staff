@@ -40,6 +40,7 @@
 .data-request-buttons
   - if case_details.current_state != 'closed'
     = action_button_for(:record_data_request)
-  = link_to I18n.t('button.exempt_pages'), edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
-  = link_to I18n.t('button.final_page_count'), edit_step_case_sar_offender_path(case_details, 'final_page_count'), class: 'button-tertiary'
+  - if can_be_edit
+    = link_to I18n.t('button.exempt_pages'), edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
+    = link_to I18n.t('button.final_page_count'), edit_step_case_sar_offender_path(case_details, 'final_page_count'), class: 'button-tertiary'
 

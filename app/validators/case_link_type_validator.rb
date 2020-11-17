@@ -34,7 +34,6 @@ class CaseLinkTypeValidator < ActiveModel::Validator
                                         'Case::ICO::FOI'],
       'Case::SAR::Offender'         => ['Case::SAR::Offender',
                                         'Case::SAR::OffenderComplaint'],
-      'Case::SAR::Offender'         => ['Case::SAR::OffenderComplaint'],
     },
     original: {
       'Case::ICO::FOI'            => ['Case::FOI::Standard'],

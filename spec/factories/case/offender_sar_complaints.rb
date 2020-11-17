@@ -15,6 +15,7 @@ FactoryBot.define do
     end
 
     current_state                   { 'data_to_be_requested' }
+    association :original_case, factory: [:offender_sar_case, :closed]
     sequence(:name)                 { |n| "#{identifier} name #{n}" }
     email                           { Faker::Internet.email(name: identifier) }
     sequence(:subject)              { |n| "#{identifier} subject #{n}" }

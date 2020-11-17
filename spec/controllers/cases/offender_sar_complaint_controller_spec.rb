@@ -67,6 +67,206 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     end
   end
 
+  describe '#create' do
+    before do
+      sign_in responder
+      post :create, params: params
+      expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
+      expect(flash[:notice]).to eq nil
+    end
+
+    context 'partial validations' do
+      let(:errors) { assigns(:case).errors.messages }
+      let(:complaint) { create(:offender_sar_complaint) }
+      let(:foi) { create(:closed_case) }
+      let(:offender_sar_base_params) do
+        {
+          third_party_relationship: '',
+          third_party_name: '',
+          third_party_company_name: '',
+          postal_address: '',
+        }
+      end
+
+      context 'for step link-offender-sar-case' do
+        context 'when original sar case number absent' do
+          let(:params) do
+            {
+              current_step: 'link-offender-sar-case',
+              offender_sar_complaint: offender_sar_base_params
+            }
+          end
+  
+          it 'requires original case number to be set' do
+            remains_on_step 'link-offender-sar-case'
+            expect(errors[:original_case_number]).to eq ["can't be blank"]
+          end
+        end
+
+        context 'when the original case is case out of permission e.g. FOI' do
+          let(:params) do
+            {
+              current_step: 'link-offender-sar-case',
+              offender_sar_complaint: offender_sar_base_params.merge(original_case_number: foi.number)
+            }
+          end
+  
+          it 'The user needs to be allowed to view the original case' do
+            remains_on_step 'link-offender-sar-case'
+            expect(errors[:original_case_number]).to eq ["can't be authorised to link this case"]
+          end
+        end
+
+        context 'when the original case is wrong type ' do
+          let(:params) do
+            {
+              current_step: 'link-offender-sar-case',
+              offender_sar_complaint: offender_sar_base_params.merge(original_case_number: complaint.number)
+            }
+          end
+  
+          it 'requires the original case is the type allowed for complaint case' do
+            remains_on_step 'link-offender-sar-case'
+            expect(errors[:original_case]).to eq ["can't link a Complaint case to a Complaint as a original case"]
+          end
+        end
+      end
+  
+      context 'for step requester-details' do
+        context 'when third party absent' do
+          let(:params) do
+            {
+              current_step: 'requester-details',
+              offender_sar_complaint: offender_sar_base_params
+            }
+          end
+
+          it 'requires third_party to be set' do
+            remains_on_step 'requester-details'
+            expect(errors[:third_party]).to eq ["can't be blank"]
+          end
+        end
+
+        context 'when third party true' do
+          let(:params) do
+            {
+              current_step: 'requester-details',
+              offender_sar_complaint: offender_sar_base_params.merge(third_party: true)
+            }
+          end
+
+          it 'validates requester details' do
+            remains_on_step 'requester-details'
+            third_party_validations_found(errors)
+          end
+        end
+
+        context 'when third party false' do
+          let(:params) do
+            {
+              current_step: 'requester-details',
+              offender_sar_complaint: offender_sar_base_params.merge(third_party: false)
+            }
+          end
+
+          it 'redirects to the next step' do
+            expect(response).to be_redirect
+          end
+        end
+      end
+
+      context 'for step recipient-details' do
+        context 'when recipient absent' do
+          let(:params) do
+            {
+              current_step: 'recipient-details',
+              offender_sar_complaint: offender_sar_base_params
+            }
+          end
+
+          it 'requires recipient to be set' do
+            remains_on_step 'recipient-details'
+            expect(errors[:recipient]).to eq ["can't be blank"]
+          end
+        end
+
+        context 'when recipient is third party' do
+          let(:params) do
+            {
+              current_step: 'recipient-details',
+              offender_sar_complaint: offender_sar_base_params.merge(recipient: 'third_party_recipient')
+            }
+          end
+
+          it 'validates recipient details' do
+            remains_on_step 'recipient-details'
+            third_party_validations_found(errors)
+          end
+        end
+      end
+
+      context 'for step requested-info' do
+        # no custom validations needed
+      end
+
+      context 'for step request-details' do
+        context 'when request dated in future' do
+          let(:future_date) { 1.day.from_now }
+          let(:params) do
+            {
+              current_step: 'request-details',
+              offender_sar_complaint: {
+                request_dated_dd: future_date.day,
+                request_dated_mm: future_date.month,
+                request_dated_yyyy: future_date.year,
+              }
+            }
+          end
+
+          it 'fails to be valid' do
+            remains_on_step 'request-details'
+            expect(errors[:request_dated]).to eq ["can't be in the future."]
+          end
+        end
+      end
+
+      context 'for step date-received' do
+        context 'when date missing' do
+          let(:params) do
+            {
+              current_step: 'date-received',
+              offender_sar_complaint: { dummy_field: true }
+            }
+          end
+
+          it 'requires received date to be set' do
+            remains_on_step 'date-received'
+            expect(errors[:received_date]).to eq ["can't be blank"]
+          end
+        end
+
+        context 'when date received in future' do
+          let(:future_date) { 1.day.from_now }
+          let(:params) do
+            {
+              current_step: 'date-received',
+              offender_sar_complaint: {
+                received_date_dd: future_date.day,
+                received_date_mm: future_date.month,
+                received_date_yyyy: future_date.year,
+              }
+            }
+          end
+
+          it 'fails to be valid' do
+            remains_on_step 'date-received'
+            expect(errors[:received_date]).to eq ["can't be in the future."]
+          end
+        end
+      end
+    end
+  end
+
   describe 'transitions' do
     OFFENDER_SAR_COMPLAINT_STATES = {
       data_to_be_requested: :mark_as_waiting_for_data,
@@ -167,4 +367,19 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     end
 
   end
+
+  # Utility methods
+
+  def third_party_validations_found(errors)
+    expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
+    expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+    expect(errors[:third_party_relationship]).to eq ["can't be blank"]
+    expect(errors[:postal_address]).to eq ["can't be blank"]
+  end
+
+  def remains_on_step(step)
+    expect(response).to be_successful
+    expect(assigns(:case).current_step).to eq step
+  end
+
 end

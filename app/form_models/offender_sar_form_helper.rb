@@ -7,7 +7,7 @@ module OffenderSARFormHelper
 
   def valid_attributes?(params)
     params ||= ActionController::Parameters.new({}).permit!
-    validate_method_name = "validate_#{current_step.gsub('-', '_')}"
+    validate_method_name = "validate_#{current_step.tr('-', '_')}"
     if respond_to?(validate_method_name, params)
       send(validate_method_name, params)
     end
@@ -16,7 +16,7 @@ module OffenderSARFormHelper
 
   def process_params_after_step(params)
     params ||= ActionController::Parameters.new({}).permit!
-    params_after_step_method_name = "params_after_step_#{self.current_step.gsub('-', '_')}"
+    params_after_step_method_name = "params_after_step_#{self.current_step.tr('-', '_')}"
     if respond_to?(params_after_step_method_name, params)
       params = send(params_after_step_method_name, params)
     end
@@ -52,6 +52,11 @@ module OffenderSARFormHelper
     object.validate_recipient
     object.validate_third_party_relationship
     object.validate_third_party_address
+  end
+
+  def validate_request_details(params)
+    object.assign_attributes(params)
+    object.validate_request_dated
   end
 
   def validate_date_received(params)

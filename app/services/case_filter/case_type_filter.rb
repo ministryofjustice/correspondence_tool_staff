@@ -58,13 +58,14 @@ module CaseFilter
     def filter_case_type(records) # rubocop:disable Metrics/CyclomaticComplexity
       filters = @query.filter_case_type.map do |filter|
         case filter
-        when 'foi-standard'      then records.standard_foi
-        when 'foi-ir-compliance' then records.internal_review_compliance
-        when 'foi-ir-timeliness' then records.internal_review_timeliness
-        when 'sar-non-offender'  then records.non_offender_sar
-        when 'ico-appeal'        then records.ico_appeal
-        when 'overturned-ico'    then records.overturned_ico
-        when 'offender-sar'    then records.offender_sar
+        when 'foi-standard'           then records.standard_foi
+        when 'foi-ir-compliance'      then records.internal_review_compliance
+        when 'foi-ir-timeliness'      then records.internal_review_timeliness
+        when 'sar-non-offender'       then records.non_offender_sar
+        when 'ico-appeal'             then records.ico_appeal
+        when 'overturned-ico'         then records.overturned_ico
+        when 'offender-sar'           then records.offender_sar
+        when 'offender-sar-complaint' then records.offender_sar_complaint
         else
           raise NameError.new("unknown case type filter '#{filter}")
         end

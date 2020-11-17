@@ -4,23 +4,22 @@ module OffenderSARComplaintCaseForm
   include OffenderSARFormHelper
 
   STEPS = %w[link-offender-sar-case
-    confirm-offender-sar
-    requester-details
-    recipient-details
-    requested-info
-    request-details
-    date-received].freeze
+             confirm-offender-sar
+             requester-details
+             recipient-details
+             requested-info
+             request-details
+             date-received].freeze
 
   # @todo: Should these steps be defined in 'Steppable' or the controller
   def steps
     STEPS
   end
 
-
   private
 
   def validate_link_offender_sar_case(params)
-    original_case_number = params[:original_case_number].strip
+    original_case_number = (params[:original_case_number] || '').strip
     case_link = LinkedCase.new(
       linked_case_number: original_case_number,
       type: :original
@@ -28,18 +27,20 @@ module OffenderSARComplaintCaseForm
     if case_link.valid?
       original_case = case_link.linked_case
       if not Pundit.policy(object.creator, original_case).show?
-        @linked_case_error = helpers.translate_for_case(
-          "Case::SAR::OffenderComplaint",
-          'activerecord.errors.models',
-          "original_case_number.not_authorised",
-          {}
-        )
+        add_errors_for_original_case(
+          I18n.t('activerecord.errors.models.case/sar/offender_complaint.original_case_number.not_authorised'))
       else
         object.original_case_id = original_case.id
+        object.validate_original_case
+        object.validate_original_case_not_already_related
       end
     else
-      @linked_case_error = case_link.errors.details[:linked_case_number].first[:error]
+      add_errors_for_original_case(case_link.errors[:linked_case_number].join(". "))
     end
+  end
+
+  def add_errors_for_original_case(message)
+    object.errors.add(:original_case_number, message)
   end
 
   def params_after_step_link_offender_sar_case(params)

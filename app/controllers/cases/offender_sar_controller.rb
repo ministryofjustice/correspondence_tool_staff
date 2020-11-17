@@ -13,7 +13,6 @@ module Cases
       super
       @correspondence_type = CorrespondenceType.offender_sar
       @correspondence_type_key = 'offender_sar'
-      @case_route_url = 'step_case_sar_offender_index_path'
     end
 
     def new
@@ -32,7 +31,7 @@ module Cases
       if !@case.valid_attributes?(create_params)
         render :new
       elsif @case.valid? && @case.save
-        session[:offender_sar_state] = nil
+        session[session_state] = nil
         flash[:notice] = "Case created successfully"
         redirect_to case_path(@case)
       else
@@ -40,7 +39,7 @@ module Cases
         copy_params = @case.process_params_after_step(copy_params)
         session_persist_state(copy_params)
         get_next_step(@case)
-        redirect_to "#{self.send(@case_route_url)}/#{@case.current_step}"
+        redirect_to "#{@case.case_route_path}/#{@case.current_step}"
       end
     end
 
@@ -73,7 +72,7 @@ module Cases
     end
 
     def cancel
-      session[:offender_sar_state] = nil
+      session[session_state] = nil
       redirect_to new_case_sar_offender_path
     end
 
@@ -134,13 +133,12 @@ module Cases
     # @todo the following are all related to session data (case) cross different page
     # maybe worthy having another class for handling such thing together in a more abstract way
     def build_case_from_session(correspondence_type)
-      session_key = "#{@correspondence_type_key}_state".to_sym
       # regarding the `{ date_of_birth: nil }` below...
       # this is needed to prevent "NoMethodError undefined method `dd' for nil:NilClass"
       # when a new Case::SAR::Offender is being created from scratch, because the field is not
       # in the list of instance variables in the model at the point that the gov_uk_date_fields
       # is adding its magic methods. This manifests when running tests or after rails server restart
-      values = session[session_key] || { date_of_birth: nil }
+      values = session[session_state] || { date_of_birth: nil }
 
       # similar workaround needed for request dated
       request_dated_exists = values.fetch('request_dated', false)
@@ -149,14 +147,18 @@ module Cases
     end
 
     def session_persist_state(params)
-      session_key = "#{@correspondence_type_key}_state".to_sym
-      session[session_key] ||= {}
+      session[session_state] ||= {}
       params ||= {}
-      session[session_key] = session[session_key].merge params
+      session[session_state] = session[session_state].merge params
     end
 
     def preserve_step_state
       @case.current_step = params['current_step']
     end
+
+    def session_state
+      "#{@correspondence_type_key}_state".to_sym
+    end
+
   end
 end

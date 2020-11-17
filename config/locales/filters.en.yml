@@ -8,6 +8,7 @@ en:
       ico-appeal: 'ICO appeals'
       overturned-ico: 'ICO overturned'
       offender-sar: 'Offender SAR'
+      offender-sar-complaint: 'Offender Complaint'
     crumbs:
       list_filter_type: &list_filter_type
         one: "%{first_value}"

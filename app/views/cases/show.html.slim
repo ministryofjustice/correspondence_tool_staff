@@ -59,7 +59,7 @@ div id="case-#{@correspondence_type_key}" class="case"
 
   - if @case.offender_sar? || @case.offender_sar_complaint?
     section.case-info
-      = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case }
+      = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, can_be_edit: true}
 
   = render partial: 'shared/components/case_linked_cases'
 
@@ -69,7 +69,7 @@ div id="case-#{@correspondence_type_key}" class="case"
 
   section.case-info
     = render partial: "cases/#{@case.type_abbreviation.parameterize.underscore}/case_details",
-             locals: {case_details: @case, link_type: nil}
+             locals: {case_details: @case, link_type: nil, can_be_edit: true}
 
   - if !@case.offender_sar? && !@case.offender_sar_complaint?
     section.case-info

@@ -579,4 +579,68 @@ describe Case::SAR::OffenderComplaint do
       end
     end
   end
+
+  describe 'original_case association' do
+    it { should have_one(:original_case)
+                  .through(:original_case_link)
+                  .source(:linked_case) }
+
+    it 'Valiates that the complaint can link to a offender sar case as original case' do
+      linked_case = create(:offender_sar_case, :closed)
+      complaint = build(:offender_sar_complaint, original_case: linked_case)
+      expect(complaint).to be_valid
+      expect(complaint.original_case).to eq linked_case
+    end
+
+    it 'validates that the case can be associated as an original case' do
+      linked_case = create(:offender_sar_complaint, :closed)
+      complaint = build(:offender_sar_complaint, original_case: linked_case)
+      expect(complaint).not_to be_valid
+      expect(complaint.errors[:original_case])
+        .to eq ["can't link a Complaint case to a Complaint as a original case"]
+    end
+
+    it "validates that a case isn't both original and related" do
+      offender_sar = create(:offender_sar_case)
+      complaint = build(:offender_sar_complaint, original_case: offender_sar, related_cases: [offender_sar])
+      expect(complaint).not_to be_valid
+      expect(complaint.errors[:linked_cases])
+        .to eq ['already linked as the original case']
+    end
+
+    it 'validates that original case is present' do
+      complaint = create(:offender_sar_complaint)
+      complaint.original_case = nil
+      complaint.valid?
+      expect(complaint.errors[:original_case]).to eq ["can't be blank"]
+    end
+  end
+
+  describe 'original_case_link association' do
+    it { should have_one(:original_case_link)
+                  .class_name('LinkedCase')
+                  .with_foreign_key('case_id') }
+  end
+
+  describe '#original_case_id' do
+    it 'finds case and assigns to original_case' do
+      offender_sar = create(:offender_sar_case)
+      complaint = build(:offender_sar_complaint, original_case: nil)
+      complaint.original_case_id = offender_sar.id
+      expect(complaint).to be_valid
+      expect(complaint.original_case).to eq offender_sar
+    end
+  end
+
+  describe 'case_links association' do
+    it 'validates that the offender sar cannot be in related cases' do
+      offender_sar = create(:offender_sar_case)
+      complaint = build(:offender_sar_complaint, related_cases: [offender_sar])
+      complaint.valid?
+      expect(complaint).not_to be_valid
+      expect(complaint.errors[:related_cases])
+      .to eq ["can't link a Complaint case to a Offender SAR as a related case"]
+    end
+  end
+
 end

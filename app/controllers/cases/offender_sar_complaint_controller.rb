@@ -1,5 +1,6 @@
 module Cases
   class OffenderSarComplaintController < OffenderSarController
+
     include OffenderSARComplaintCasesParams
 
     def initialize
@@ -7,7 +8,7 @@ module Cases
 
       @correspondence_type = CorrespondenceType.offender_sar_complaint
       @correspondence_type_key = 'offender_sar_complaint'
-      @case_route_url = 'step_case_sar_offender_complaint_index_path'
+      # @case_route_url = 'step_case_sar_offender_complaint_index_path'
     end
 
     def set_case_types
@@ -30,8 +31,12 @@ module Cases
       create_offender_sar_complaint_params
     end
 
-    def respond_offender_sar_params
-      create_offender_sar_complaint_params
+    def process_closure_params
+      process_offender_sar_complaint_closure_params
+    end
+
+    def process_date_responded_params
+      respond_offender_sar_complaint_params
     end
 
   end

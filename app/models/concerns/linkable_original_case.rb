@@ -29,8 +29,6 @@ module LinkableOriginalCase
     self.original_case&.number
   end
 
-  private
-
   def validate_original_case
     if self.original_case
       validate_case_link(:original, original_case, :original_case)

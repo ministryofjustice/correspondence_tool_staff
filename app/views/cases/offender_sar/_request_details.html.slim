@@ -3,8 +3,9 @@ tr.request_dated.section
     = t('common.case.request_dated')
   td
     = l(case_details.request_dated, format: :default) if case_details.request_dated.present?
-  td
-    = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "request_details")
+  - if can_be_edit
+    td
+      = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "request_details")
 
 tr.requester-reference
   th

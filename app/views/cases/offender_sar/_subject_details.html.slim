@@ -1,7 +1,8 @@
 tr.data-subject.section.section-subject-details
   th = t('common.case.data_subject')
   td = case_details.subject_full_name
-  td = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "subject_details")
+  - if can_be_edit
+    td = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "subject_details")
 tr.prison-number
   th = t('common.case.prison_number')
   td = case_details.prison_number

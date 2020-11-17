@@ -2,6 +2,8 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
 
   include LinkableOriginalCase
 
+  validates_presence_of :original_case
+
   class << self
     def type_abbreviation
       'OFFENDER_SAR_COMPLAINT'
