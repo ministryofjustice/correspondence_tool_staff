@@ -24,7 +24,7 @@ module Stats
 
     def case_ids
       ir_case_ids = CaseSelector.new(Case::FOI::InternalReview.all).ids_for_period_appeals(@period_start, @period_end)
-      ico_case_ids = CaseSelector.new(Case::ICO::Base.all).ids_for_period_appeals(@period_start, @period_end)
+      ico_case_ids = CaseSelector.new(Case::ICO::FOI.all).ids_for_period_appeals(@period_start, @period_end)
       ir_case_ids + ico_case_ids
     end
 
