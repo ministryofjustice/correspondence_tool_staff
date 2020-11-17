@@ -58,7 +58,7 @@ module Stats
         @responder_c = create :responder, responding_teams: [@team_c]
         @responder_d = create :responder, responding_teams: [@team_d]
 
-        @tmm = create :refusal_reason, :tmm
+        @sar_tmm = create :refusal_reason, :sar_tmm
         @vex = create :refusal_reason, :vex
 
         # create cases based on today's date of 30/6/2017
@@ -76,9 +76,9 @@ module Stats
         create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time')
 
         # create some SAR TMM cases which should be ignored
-        create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, type: :tmm, ident: 'case for team a - responded late')
-        create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, type: :tmm, ident: 'case for team a - responded late')
-        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, type: :tmm, ident: 'case for team a - responded in time')
+        create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, type: :sar_tmm, ident: 'case for team a - responded late')
+        create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, type: :sar_tmm, ident: 'case for team a - responded late')
+        create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, type: :sar_tmm, ident: 'case for team a - responded in time')
 
         # create some FOI cases which should be ignored
         create :closed_case
@@ -109,7 +109,7 @@ module Stats
           end
 
           it 'excludes TMM cases' do
-            expect(@scope.map(&:refusal_reason_id)).not_to include(@tmm.id)
+            expect(@scope.map(&:refusal_reason_id)).not_to include(@sar_tmm.id)
           end
 
         end
