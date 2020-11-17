@@ -9,13 +9,13 @@ class ReportTypePolicy < ApplicationPolicy
   # PolicyScopes
   class Scope
     attr_reader :user, :scope
-  
+
     def initialize(user, scope)
       @user  = user
       @scope = scope
     end
 
-    # Solve the scope by go through each allowed correspondence_type the user being allowed to see  
+    # Solve the scope by go through each allowed correspondence_type the user being allowed to see
     def resolve
       scopes = []
       scopes << @scope.where(sar: true) if @user.permitted_correspondence_types.include?(CorrespondenceType.overturned_sar)
@@ -23,6 +23,7 @@ class ReportTypePolicy < ApplicationPolicy
       scopes << @scope.where(foi: true) if @user.permitted_correspondence_types.include?(CorrespondenceType.foi)
       scopes << @scope.where(foi: true) if @user.permitted_correspondence_types.include?(CorrespondenceType.overturned_foi)
       scopes << @scope.where(offender_sar: true) if @user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar)
+      scopes << @scope.where(offender_sar_complaint: true) if @user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar_complaint)
       scopes.reduce { |memo, scope| memo.or(scope) }
     end
 
