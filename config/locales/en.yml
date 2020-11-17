@@ -996,7 +996,7 @@ en:
       date_received_heading: When was the SAR received?
       request_info_hint: Use this space to store additional case information
     offender_sar_complaint:
-      link_offender_sar_heading: Link SRR case
+      link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
     remove_clearance:
       heading: 'Remove Clearance'
