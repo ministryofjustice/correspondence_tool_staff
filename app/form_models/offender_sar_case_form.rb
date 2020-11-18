@@ -3,7 +3,6 @@ module OffenderSARCaseForm
 
   include OffenderSARFormHelper
 
-  # @todo: Should these steps be defined in 'Steppable' or the controller
   def steps
     %w[subject-details
        requester-details

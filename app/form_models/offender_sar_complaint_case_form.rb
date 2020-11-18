@@ -11,7 +11,6 @@ module OffenderSARComplaintCaseForm
              request-details
              date-received].freeze
 
-  # @todo: Should these steps be defined in 'Steppable' or the controller
   def steps
     STEPS
   end

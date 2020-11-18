@@ -8,7 +8,6 @@ moj.Modules.OffenderComplaintConfirmAction = {
 
   init: function () {
     var self = this;
-    //Bind events
     self.$complaintConfirmChoices.on('change', ':radio', function(){
       self.enableContinueBtn();
     });
