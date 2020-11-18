@@ -585,7 +585,7 @@ describe Case::SAR::OffenderComplaint do
                   .through(:original_case_link)
                   .source(:linked_case) }
 
-    it 'Valiates that the complaint can link to a offender sar case as original case' do
+    it 'Validates that the complaint can link to a offender sar case as original case' do
       linked_case = create(:offender_sar_case, :closed)
       complaint = build(:offender_sar_complaint, original_case: linked_case)
       expect(complaint).to be_valid

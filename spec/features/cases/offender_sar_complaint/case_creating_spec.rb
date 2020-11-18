@@ -12,7 +12,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   end
 
   scenario '1 find the original offender sar case' do
-    when_i_navigate_to_offender_sar_compplaint_subject_page
+    when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
     and_fill_in_requester_details_page
     and_fill_in_recipient_details_page
@@ -24,7 +24,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   end
 
   scenario '2 Data subject requesting data to be sent to third party' do
-    when_i_navigate_to_offender_sar_compplaint_subject_page
+    when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
     and_fill_in_requester_details_page
     and_fill_in_recipient_details_page(:third_party)
@@ -36,7 +36,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   end
 
  scenario '3 Solicitor requesting data subject record' do
-    when_i_navigate_to_offender_sar_compplaint_subject_page
+    when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
     and_fill_in_requester_details_page(:third_party)
     and_fill_in_recipient_details_page(recipient: 'requester_recipient')
@@ -48,7 +48,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
  end
 
   scenario '4 Solicitor requesting record to be sent to data subject' do
-    when_i_navigate_to_offender_sar_compplaint_subject_page
+    when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
     and_fill_in_requester_details_page(:third_party)
     and_fill_in_recipient_details_page(recipient: 'subject_recipient')
@@ -60,7 +60,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   end
 
   scenario '5 Copy the third part details from linked offender sar case' do
-    when_i_navigate_to_offender_sar_compplaint_subject_page
+    when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
     click_on "Continue"
     click_on "Continue"
@@ -109,7 +109,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect_to_have_correct_sending_address
   end
 
-  def when_i_navigate_to_offender_sar_compplaint_subject_page
+  def when_i_navigate_to_offender_sar_complaint_subject_page
     expect(cases_page).to have_new_case_button
     cases_page.new_case_button.click
     expect(cases_new_page).to be_displayed
