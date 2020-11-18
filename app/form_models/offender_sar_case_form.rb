@@ -1,8 +1,6 @@
 module OffenderSARCaseForm
   extend ActiveSupport::Concern
 
-  include OffenderSARFormHelper
-
   def steps
     %w[subject-details
        requester-details
