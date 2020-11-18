@@ -1,13 +1,13 @@
 - content_for :heading, flush: true
   = t('cases.offender_sar_complaint.check_sar_details_heading')
-
+- linked_offender_sar_case = Case::Base.find_by_id(@case.original_case.id).decorate
 = render partial: 'layouts/header'
 
 section.case-info
   = render partial: "cases/offender_sar/case_details",
-            locals: {case_details: Case::Base.find_by_id(@case.original_case.id).decorate, link_type: nil, can_be_edit: false}
+            locals: {case_details: linked_offender_sar_case, link_type: nil, can_be_edit: false}
 section.case-info
-  = render partial: 'cases/offender_sar/data_requests', locals: { case_details: Case::Base.find_by_id(@case.original_case.id).decorate, can_be_edit: false }
+  = render partial: 'cases/offender_sar/data_requests', locals: { case_details: linked_offender_sar_case, can_be_edit: false }
 
 = form_for @case, url: url, as: :offender_sar_complaint do |f|
 
