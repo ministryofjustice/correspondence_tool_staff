@@ -5,9 +5,9 @@
 
 section.case-info
   = render partial: "cases/offender_sar/case_details",
-            locals: {case_details: linked_offender_sar_case, link_type: nil, can_be_edit: false}
+            locals: {case_details: linked_offender_sar_case, link_type: nil, allow_editing: false}
 section.case-info
-  = render partial: 'cases/offender_sar/data_requests', locals: { case_details: linked_offender_sar_case, can_be_edit: false }
+  = render partial: 'cases/offender_sar/data_requests', locals: { case_details: linked_offender_sar_case, allow_editing: false }
 
 = form_for @case, url: url, as: :offender_sar_complaint do |f|
 

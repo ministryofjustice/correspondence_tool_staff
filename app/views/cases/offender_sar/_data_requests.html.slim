@@ -32,16 +32,16 @@
                 = data_request.cached_num_pages
               td
                 = data_request.status
-              - if can_be_edit
+              - if allow_editing
                 td
                   = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__action'
 
           - if case_details.data_requests.many?
             = render partial: 'shared/table_total_row', locals: { total: case_details.data_requests.sum(:cached_num_pages), label_span: '3', value_span: '3' }
 .data-request-buttons
-  - if case_details.current_state != 'closed' && can_be_edit
+  - if case_details.current_state != 'closed' && allow_editing
     = action_button_for(:record_data_request)
-  - if can_be_edit
+  - if allow_editing
     = link_to I18n.t('button.exempt_pages'), edit_step_case_sar_offender_path(case_details, 'exempt_pages'), class: 'button-tertiary'
     = link_to I18n.t('button.final_page_count'), edit_step_case_sar_offender_path(case_details, 'final_page_count'), class: 'button-tertiary'
 
