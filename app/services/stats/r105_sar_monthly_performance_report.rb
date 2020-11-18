@@ -10,9 +10,9 @@ module Stats
     end
 
     def case_scope
-      tmm = CaseClosure::RefusalReason.tmm
+      sar_tmm = CaseClosure::RefusalReason.sar_tmm
       Case::SAR::Standard
-        .where('refusal_reason_id IS NULL OR refusal_reason_id != ?', tmm.id)
+        .where('refusal_reason_id IS NULL OR refusal_reason_id != ?', sar_tmm.id)
         .where(received_date: @period_start..@period_end)
     end
 
