@@ -18,10 +18,10 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    describe '#offender_sar_standard?' do
+    describe '#offender_sar?' do
       it 'is offender_sar standard' do
         kase = build :offender_sar_complaint
-        expect(kase.offender_sar_standard?).to be false
+        expect(kase.offender_sar?).to be false
       end
     end
 

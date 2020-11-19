@@ -216,7 +216,7 @@ class Case::SAR::Offender < Case::Base
     true
   end
 
-  def offender_sar_standard?
+  def offender_sar?
     true
   end
 

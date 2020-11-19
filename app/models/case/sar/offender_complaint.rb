@@ -13,7 +13,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     true
   end
 
-  def offender_sar_standard?
+  def offender_sar?
     false
   end
 end
