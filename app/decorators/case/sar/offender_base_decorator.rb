@@ -3,12 +3,12 @@ class Case::SAR::OffenderBaseDecorator < Case::BaseDecorator
   include Steppable
  
   def back_link(mode, previous_step)
-  url = if mode == :edit
-          h.case_path(id)
-        else
-          "#{case_route_path}/#{previous_step}"
-        end
-  h.link_to "Back", url, class: 'govuk-back-link'
+    url = if mode == :edit
+            h.case_path(id)
+          else
+            "#{case_route_path}/#{previous_step}"
+          end
+    h.link_to "Back", url, class: 'govuk-back-link'
   end
  
   def get_step_partial
@@ -29,7 +29,7 @@ class Case::SAR::OffenderBaseDecorator < Case::BaseDecorator
   end
 
   def case_route_path
-  raise "Need to be implemented in the sub class"
+    raise "Need to be implemented in the sub class"
   end
 
 end

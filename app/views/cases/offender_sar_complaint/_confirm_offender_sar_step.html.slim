@@ -1,6 +1,6 @@
 - content_for :heading, flush: true
   = t('cases.offender_sar_complaint.check_sar_details_heading')
-- linked_offender_sar_case = Case::Base.find_by_id(@case.original_case.id).decorate
+- linked_offender_sar_case = @case.original_case.decorate
 = render partial: 'layouts/header'
 
 section.case-info
