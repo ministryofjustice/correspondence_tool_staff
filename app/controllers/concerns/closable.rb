@@ -115,7 +115,7 @@ module Closable
     else
       @team_collection = CaseTeamCollection.new(@case)
       @case.update(late_team_id: @case.responding_team.id)
-      if @case.offender_sar?
+      if @case.type_of_offender_sar?
         close_case('cases/closable/close')
       else
         redirect_to polymorphic_path(@case, action: :closure_outcomes)

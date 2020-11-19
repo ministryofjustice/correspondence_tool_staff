@@ -212,7 +212,7 @@ class Case::SAR::Offender < Case::Base
     CurrentTeamAndUser::SAR::Offender.new(self)
   end
 
-  def offender_sar?
+  def type_of_offender_sar?
     true
   end
 

@@ -11,10 +11,10 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe 'predicate methods' do
-    describe '#offender_sar?' do
+    describe '#type_of_offender_sar?' do
       it 'is a sort of offender_sar' do
         kase = build :offender_sar_complaint
-        expect(kase.offender_sar?).to be true
+        expect(kase.type_of_offender_sar?).to be true
       end
     end
 
