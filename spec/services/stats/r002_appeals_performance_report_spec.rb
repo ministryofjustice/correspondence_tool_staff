@@ -65,16 +65,6 @@ module Stats # rubocop:disable Metrics/ModuleLength
 
         create_ico(type: :sar, received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded late')
         create_ico(type: :sar, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded late')
-        create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - open late')
-        create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - open late')
-        create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - open in time')
-        create_ico(type: :sar, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded in time')
-        create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico sar for team b - open late')
-        create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'ico sar for team b - open in time')
-        create_ico(type: :sar, received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico sar for team b - responded in time')
-        create_ico(type: :sar, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'ico sar for team c - responded late')
-        create_ico(type: :sar, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'ico sar for team c - responded in time')
-        create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'ico sar for team d - open in time')
       end
 
       ###############
@@ -129,11 +119,11 @@ module Stats # rubocop:disable Metrics/ModuleLength
             ir_appeal_open_in_time:        2,
             ir_appeal_open_late:           3,
             ico_appeal_performance:        28.6,
-            ico_appeal_total:              18,
-            ico_appeal_responded_in_time:  4,
-            ico_appeal_responded_late:     4,
-            ico_appeal_open_in_time:       4,
-            ico_appeal_open_late:          6,
+            ico_appeal_total:              9,
+            ico_appeal_responded_in_time:  2,
+            ico_appeal_responded_late:     2,
+            ico_appeal_open_in_time:       2,
+            ico_appeal_open_late:          3,
           })
       end
 
@@ -153,10 +143,10 @@ module Stats # rubocop:disable Metrics/ModuleLength
             ir_appeal_open_in_time:        1,
             ir_appeal_open_late:           0,
             ico_appeal_performance:        50.0,
-            ico_appeal_total:              6,
-            ico_appeal_responded_in_time:  2,
-            ico_appeal_responded_late:     2,
-            ico_appeal_open_in_time:       2,
+            ico_appeal_total:              3,
+            ico_appeal_responded_in_time:  1,
+            ico_appeal_responded_late:     1,
+            ico_appeal_open_in_time:       1,
             ico_appeal_open_late:          0,
           })
       end
@@ -177,9 +167,9 @@ module Stats # rubocop:disable Metrics/ModuleLength
             ir_appeal_open_in_time:        0,
             ir_appeal_open_late:           0,
             ico_appeal_performance:        50.0,
-            ico_appeal_total:              4,
-            ico_appeal_responded_in_time:  2,
-            ico_appeal_responded_late:     2,
+            ico_appeal_total:              2,
+            ico_appeal_responded_in_time:  1,
+            ico_appeal_responded_late:     1,
             ico_appeal_open_in_time:       0,
             ico_appeal_open_late:          0,
           })
@@ -201,16 +191,16 @@ module Stats # rubocop:disable Metrics/ModuleLength
             Appeals report (FOI) - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
-            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,28.6,18,4,4,4,6
-            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,20.0,12,2,4,2,4
-            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,20.0,12,2,4,2,4
-            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,50.0,6,2,0,2,2
-            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,50.0,6,2,0,2,2
-            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,50.0,6,2,2,2,0
-            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,50.0,6,2,2,2,0
-            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,50.0,4,2,2,0,0
-            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,2,0,0,2,0
-            Total,"","","",33.3,12,3,3,3,3,33.3,24,6,6,6,6
+            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3,28.6,9,2,2,2,3
+            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2,20.0,6,1,2,1,2
+            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2,20.0,6,1,2,1,2
+            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1,50.0,3,1,0,1,1
+            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1,50.0,3,1,0,1,1
+            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0,50.0,3,1,1,1,0
+            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0,50.0,3,1,1,1,0
+            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,50.0,2,1,1,0,0
+            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0,0.0,1,0,0,1,0
+            Total,"","","",33.3,12,3,3,3,3,33.3,12,3,3,3,3
           EOCSV
           actual_lines = report_csv.map { |row| row.map(&:value) }
           expected_lines = expected_text.split("\n")
@@ -221,25 +211,26 @@ module Stats # rubocop:disable Metrics/ModuleLength
       end
 
       it 'should produce rag ratings' do
-        rag_ratings = report_csv.map do |row|
-          row.map.with_index { |item, index| [index, item.rag_rating] if item.rag_rating }.compact
+        Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
+          rag_ratings = report_csv.map do |row|
+            row.map.with_index { |item, index| [index, item.rag_rating] if item.rag_rating }.compact
+          end
+          expect(rag_ratings).to eq([
+            [],
+            (0..15).map { |x| [x, :blue] },
+            (0..15).map { |x| [x, :grey] },
+            [[4, :red], [10, :red]],
+            [[4, :red], [10, :red]],
+            [[4, :red], [10, :red]],
+            [[4, :red], [10, :red]],
+            [[4, :red], [10, :red]],
+            [[4, :red], [10, :red]],
+            [[4, :red], [10, :red]],
+            [[4, :red], [10, :red]],
+            [[4, :red], [10, :red]],
+            [[4, :red], [10, :red]],
+          ])
         end
-
-        expect(rag_ratings).to eq([
-          [],
-          (0..15).map { |x| [x, :blue] },
-          (0..15).map { |x| [x, :grey] },
-          [[4, :red], [10, :red]],
-          [[4, :red], [10, :red]],
-          [[4, :red], [10, :red]],
-          [[4, :red], [10, :red]],
-          [[4, :red], [10, :red]],
-          [[4, :red], [10, :red]],
-          [[4, :red], [10, :red]],
-          [[10, :red]],
-          [[4, :red], [10, :red]],
-          [[4, :red], [10, :red]],
-        ])
       end
     end
 

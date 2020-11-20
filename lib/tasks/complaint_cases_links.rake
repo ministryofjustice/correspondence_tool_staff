@@ -7,17 +7,20 @@ namespace :complaints do
     task :check, [:file] => :environment do |_task, args|
       raise "Must specify the csv file containing the list of complaint cases" if args[:file].blank?    
       raise "The file doesn't exist" if !File.file?(args[:file])
-      result_file = "#{args[:file].delete("csv")}_checking_result.csv"
+      result_file = "#{args[:file].delete(".csv")}_checking_result.csv"
       counter = 1
       CSV.open(result_file, "wb") do |csv|
-        csv << ["ReqNo", "DPARefNo", "Exist?", ]
+        csv << ["ReqNo", "DPARefNo", "Exist?", "case_id"]
         CSV.foreach(args[:file], headers: true) do |row|
           puts "Checking #{row['DPARefNo']}"
           offender = Case::SAR::Offender.find_by_number("MIG#{row['DPARefNo']}")
           if offender.nil?
             offender = Case::SAR::Offender.find_by_number("#{row['DPARefNo']}")
           end
-          csv << [row["ReqNo"], row["DPARefNo"], (offender.present? ? "Y" : "N")]
+          csv << [row["ReqNo"], 
+                  row["DPARefNo"], 
+                  (offender.present? ? "Y" : "N"), 
+                  (offender.present? ? offender.id : "")]
           counter += 1 unless offender.present?
         end  
       end
