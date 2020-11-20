@@ -11,7 +11,7 @@ describe 'cases/case_status.html.slim', type: :view do
       current_state: 'drafting',
       type_abbreviation: 'FOI',
       who_its_with: 'DACU',
-      type_of_offender_sar?: false,
+      type_of_offender_sar?: false
 
 
     render partial: 'cases/case_status.html.slim',
@@ -43,7 +43,7 @@ describe 'cases/case_status.html.slim', type: :view do
       current_state: 'closed',
       type_abbreviation: 'FOI',
       who_its_with: '',
-      type_of_offender_sar?: false,
+      type_of_offender_sar?: false
 
     render partial: 'cases/case_status.html.slim',
            locals:{ case_details: closed_case}
@@ -68,7 +68,7 @@ describe 'cases/case_status.html.slim', type: :view do
       current_state: 'drafting',
       type_abbreviation: 'FOI',
       who_its_with: 'DACU',
-      type_of_offender_sar?: false,
+      type_of_offender_sar?: false
 
     render partial: 'cases/case_status.html.slim',
            locals:{ case_details: non_trigger_case}
@@ -94,7 +94,7 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'FOI',
         who_its_with: 'DACU',
-        type_of_offender_sar?: false,
+        type_of_offender_sar?: false
 
       render partial: 'cases/case_status.html.slim',
              locals:{ case_details: non_trigger_case}
@@ -123,7 +123,7 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'ICO',
         who_its_with: 'DACU',
-        type_of_offender_sar?: false,
+        type_of_offender_sar?: false
 
 
       render partial: 'cases/case_status.html.slim',
@@ -188,7 +188,7 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'ICO',
         who_its_with: 'DACU',
-        type_of_offender_sar?: false,
+        type_of_offender_sar?: false
 
 
       render partial: 'cases/case_status.html.slim',
@@ -209,7 +209,7 @@ describe 'cases/case_status.html.slim', type: :view do
         current_state: 'drafting',
         type_abbreviation: 'OVERTURNED_SAR',
         who_its_with: 'DACU',
-        type_of_offender_sar?: false,
+        type_of_offender_sar?: false
       }
 
     it 'displays ICO case reference number for ICO overturned SAR cases' do
