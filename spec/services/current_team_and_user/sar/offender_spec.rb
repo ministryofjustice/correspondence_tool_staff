@@ -35,4 +35,22 @@ describe 'CurrentTeamAndUserSAROffenderService' do
            )
     end
   end
+
+  context 'offender sar complaint unassigned' do
+    let(:kase)  { create :offender_sar_complaint }
+    it 'returns the correct team and user' do
+      expect(kase.current_state).to eq 'to_be_assessed'
+      expect(service.team).to eq team_branston
+      expect(service.user).to be_nil
+    end
+  end
+
+  context 'offender sar complaint assigned' do
+    let(:kase)  { create :accepted_complaint_case }
+    it 'returns the correct team and user' do
+      expect(kase.current_state).to eq 'to_be_assessed'
+      expect(service.team).to eq team_branston
+      expect(service.user).to eq team_branston.users.first
+    end
+  end
 end

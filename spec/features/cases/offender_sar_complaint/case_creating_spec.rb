@@ -158,7 +158,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to be_displayed(id: (offender_sar_case || offender_sar).id)
     expect(cases_show_page.case_history.entries.first)
       .to have_content I18n.t(
-        'common.case/offender_sar.complaint_case_link_message', 
+        'common.case/offender_sar.complaint_case_link_message',
         creation_date: Date.today)
   end
 
@@ -170,7 +170,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
       click_on "Closed cases"
     end
     click_link link_case.number
-    expect(cases_show_page).to be_displayed 
+    expect(cases_show_page).to be_displayed
     click_on "Start complaint"
   end
 
@@ -197,7 +197,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_new_offender_sar_complaint_confirm_case_page).to be_displayed
     cases_new_offender_sar_complaint_confirm_case_page.confirm_yes
     click_on "Continue"
-  end 
+  end
 
   def and_fill_in_requester_details_page(params = nil)
     cases_new_offender_sar_complaint_requester_details_page.fill_in_case_details(params)
@@ -248,7 +248,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   def then_expect_open_cases_page_to_be_correct(offender_sar_case: nil)
     click_on "Cases"
     expect(open_cases_page).to be_displayed
-    expect(cases_page).to have_content "Branston Registry"
+    expect(cases_page).to have_content "branston registry responding user"
     expect(open_cases_page).to have_content (offender_sar_case || offender_sar).subject
   end
 
