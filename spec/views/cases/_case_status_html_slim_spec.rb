@@ -210,7 +210,7 @@ describe 'cases/case_status.html.slim', type: :view do
         type_abbreviation: 'OVERTURNED_SAR',
         who_its_with: 'DACU',
         type_of_offender_sar?: false
-      }
+    }
 
     it 'displays ICO case reference number for ICO overturned SAR cases' do
       render partial: 'cases/case_status.html.slim',
