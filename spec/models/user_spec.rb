@@ -158,6 +158,31 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '#case_team' do
+    
+    context 'user is in one of the teams associated with the case' do
+      it 'returns the team link to user and case both' do
+        kase = create :pending_dacu_clearance_case
+        new_team = create :business_unit, correspondence_type_ids: [foi.id]
+        check_user = kase.responder
+        check_user.team_roles << TeamsUsersRole.new(team: new_team, role: 'approver')
+        check_user.reload  
+        expect(check_user.case_team(kase)).to eq kase.responding_team
+      end
+    end
+
+    context 'user is not in the teams associated with the case' do
+      it 'returns the team only link to the user ' do
+        kase = create :pending_dacu_clearance_case
+        new_team = create :business_unit, correspondence_type_ids: [foi.id]
+        check_user = create(:user)
+        check_user.team_roles << TeamsUsersRole.new(team: new_team, role: 'approver')
+        check_user.reload  
+        expect(check_user.case_team(kase)).to eq new_team
+      end
+    end
+
+  end
 
   describe '#roles_for_case' do
     context 'user has just one role for a case' do

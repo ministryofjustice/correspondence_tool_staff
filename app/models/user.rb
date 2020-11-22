@@ -130,6 +130,17 @@ class User < ApplicationRecord
     self.teams_for_case(kase).first
   end
 
+  def case_team(kase)
+    # need to sort with manager first so that if we are both manager and something else, we don't
+    # try to execute the action with our lower authority (which might fail)
+    if teams_for_case(kase).any?
+      case_teams = teams_for_case(kase)
+    else
+      case_teams = teams
+    end
+    self.class.sort_teams_by_roles(case_teams).first
+  end
+
   # Note: Role Weightings can be very different depending on the event
   def self.sort_teams_by_roles(teams, role_weightings = ROLE_WEIGHTINGS)
     teams.sort do |a, b|
