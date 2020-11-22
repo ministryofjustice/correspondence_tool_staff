@@ -23,6 +23,9 @@ en:
       ready_to_dispatch: Ready to dispatch
       vetting_in_progress: Vetting in progress
       waiting_for_data: Waiting for data
+      to_be_assessed: To be assessed
+      data_review_to_be_required: Date review is required
+      response_to_be_required: Response is required
     closed: Closed
     drafting: Draft in progress
     pending_dacu_clearance: Pending clearance

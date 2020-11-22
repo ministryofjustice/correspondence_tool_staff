@@ -21,12 +21,15 @@ module ConfigurableStateMachine
        'pending_private_office_clearance',
        'awaiting_dispatch',
        'responded',
-       "data_to_be_requested", 
-       "waiting_for_data", 
-       "ready_for_vetting", 
-       "vetting_in_progress", 
-       "ready_to_copy", 
-       "ready_to_dispatch",
+       'data_to_be_requested', 
+       'waiting_for_data', 
+       'ready_for_vetting', 
+       'vetting_in_progress', 
+       'ready_to_copy', 
+       'ready_to_dispatch',
+       'to_be_assessed',
+       'data_review_to_be_required',
+       'response_to_be_required', 
        'closed']
     end
 
