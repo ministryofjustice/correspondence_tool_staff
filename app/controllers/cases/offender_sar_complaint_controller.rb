@@ -10,6 +10,14 @@ module Cases
       @correspondence_type_key = 'offender_sar_complaint'
     end
 
+    def start_complaint
+      params.merge!(:current_step => "link-offender-sar-case")
+      params.merge!(:commit => true)
+      params[@correspondence_type_key] = {}
+      params[@correspondence_type_key].merge!("original_case_number" => params["number"])
+      create
+    end
+
     def set_case_types
       @case_types = ["Case::SAR::OffenderComplaint"]
     end

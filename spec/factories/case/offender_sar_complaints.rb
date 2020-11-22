@@ -37,7 +37,7 @@ FactoryBot.define do
     third_party                     { false }
     flag_as_high_profile            { false }
     created_at                      { creation_time }
-    creator                         { create(:user, :orphan) }
+    creator                         { responder }
     number_final_pages              { 5 }
     number_exempt_pages             { 2 }
 
@@ -136,7 +136,7 @@ FactoryBot.define do
         create :case_transition_vetting_in_progress, case: kase
         create :case_transition_ready_to_copy, case: kase
         create :case_transition_ready_to_dispatch, case: kase
-        create :case_transition_close, case: kase
+        create :case_transition_closed_for_offender_sar_type, case: kase
         kase.reload
       end
     end

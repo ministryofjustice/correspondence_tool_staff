@@ -367,6 +367,14 @@ FactoryBot.define do
     acting_user { acting_team.responders.first }
   end
 
+  factory :case_transition_closed_for_offender_sar_type, parent: :case_transition do
+    to_state { 'closed' }
+    event { 'close' }
+
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
+  end
+
   factory :case_link_foi_case, parent: :case_transition do
     association :case, factory: [:case]
     to_state  { 'drafting' }

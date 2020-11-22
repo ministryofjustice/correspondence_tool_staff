@@ -55,6 +55,15 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     check_user_can_manage_offender_sar
   end
 
+  def can_start_to_complain?
+    clear_failed_checks
+    check_user_can_manage_offender_complaint
+  end
+
+  check :user_can_manage_offender_complaint do
+    user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar_complaint)
+  end
+
   class Scope < Case::SARPolicy::Scope
 
     def correspondence_type
