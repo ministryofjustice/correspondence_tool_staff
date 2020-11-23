@@ -9,7 +9,7 @@ describe Case::SAR::OffenderComplaintDecorator do
 
   describe "#current_step" do
     it "returns the first step by default" do
-      expect(offender_sar_complaint.current_step).to eq "subject-details"
+      expect(offender_sar_complaint.current_step).to eq "link-offender-sar-case"
     end
   end
 
@@ -17,17 +17,19 @@ describe Case::SAR::OffenderComplaintDecorator do
     it "causes #current_step to return the next step" do
       offender_sar_complaint.next_step
 
-      expect(offender_sar_complaint.current_step).to eq "requester-details"
+      expect(offender_sar_complaint.current_step).to eq "confirm-offender-sar"
     end
   end
 
   describe "#get_step_partial" do
     it "returns the first step as default filename" do
-      expect(offender_sar_complaint.get_step_partial).to eq "subject_details_step"
+      expect(offender_sar_complaint.get_step_partial).to eq "link_offender_sar_case_step"
     end
 
     it "returns each subsequent step as a partial filename" do
-      expect(offender_sar_complaint.get_step_partial).to eq "subject_details_step"
+      expect(offender_sar_complaint.get_step_partial).to eq "link_offender_sar_case_step"
+      offender_sar_complaint.next_step
+      expect(offender_sar_complaint.get_step_partial).to eq "confirm_offender_sar_step"
       offender_sar_complaint.next_step
       expect(offender_sar_complaint.get_step_partial).to eq "requester_details_step"
       offender_sar_complaint.next_step

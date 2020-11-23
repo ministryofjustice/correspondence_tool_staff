@@ -168,6 +168,14 @@ en:
               blank: can't be blank
             third_party_address:
               blank: can't be blank
+        case/sar/offender_complaint:
+          attributes:
+            linked_cases: 
+              original_case_already_related: already linked as the original case
+          original_case_number: 
+            blank: "Enter original case number"
+            not_authorised: can't be authorised to link this case
+            wrong_type: Original case must be Offender SAR
         assignment:
           attributes:
             state:
@@ -351,6 +359,8 @@ en:
         third_party: Is the information being requested on someone's behalf?
       offender_sar:
         third_party: Please choose yes or no
+      offender_sar_complaint:
+        original_case_number: Is this the correct case?
       report:
         correspondence_type: Which type of cases do you want to report on?
         report_type_id: What should this report cover?
@@ -1024,6 +1034,9 @@ en:
       request_details_heading: What is the date on the request?
       date_received_heading: When was the SAR received?
       request_info_hint: Use this space to store additional case information
+    offender_sar_complaint:
+      link_offender_sar_heading: Link SAR case
+      check_sar_details_heading: Check details of the SAR
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
@@ -1072,6 +1085,7 @@ en:
       Case::SAR::Offender: Offender SAR
       Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
       Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
+      Case::SAR::OffenderComplaint: Complaint
 
   assignments:
     accept:

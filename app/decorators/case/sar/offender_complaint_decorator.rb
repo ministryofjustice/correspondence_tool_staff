@@ -1,15 +1,9 @@
-class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderDecorator
+class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
 
-  include Steppable
   include OffenderSARComplaintCaseForm
 
-  def back_link(mode, previous_step)
-   url = if mode == :edit
-           h.case_path(id)
-         else
-           "#{h.step_case_sar_offender_complaint_index_path}/#{previous_step}"
-         end
-   h.link_to "Back", url, class: 'govuk-back-link'
+  def case_route_path
+    h.step_case_sar_offender_complaint_index_path
   end
 
 end

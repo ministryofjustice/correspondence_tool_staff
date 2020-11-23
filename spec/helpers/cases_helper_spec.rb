@@ -365,10 +365,11 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
 
   describe '#show_escalation_deadline?' do
     class MockCase
-      def initialize(has_attribute:, within_escalation_deadline:, is_offender_sar:)
+      def initialize(has_attribute:, within_escalation_deadline:, is_offender_sar:, is_offender_sar_complaint:)
         @has_attribute = has_attribute
         @within_escalation_deadline = within_escalation_deadline
         @is_offender_sar = is_offender_sar
+        @is_offender_sar_complaint = is_offender_sar_complaint
       end
 
       def has_attribute?(_attr_name)
@@ -380,7 +381,11 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       end
 
       def type_of_offender_sar?
-        @is_offender_sar
+        @is_offender_sar || @is_offender_sar_complaint
+      end
+      
+      def offender_sar_complaint?
+        @is_offender_sar_complaint
       end
     end
 
@@ -390,6 +395,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
           has_attribute: false,
           within_escalation_deadline: true,
           is_offender_sar: false,
+          is_offender_sar_complaint: false,
         )
         expect(show_escalation_deadline?(kase)).to eq false
       end
@@ -399,6 +405,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
           has_attribute: true,
           within_escalation_deadline: false,
           is_offender_sar: false,
+          is_offender_sar_complaint: false,
         )
         expect(show_escalation_deadline?(kase)).to eq false
       end
@@ -408,6 +415,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
           has_attribute: true,
           within_escalation_deadline: true,
           is_offender_sar: false,
+          is_offender_sar_complaint: false,
         )
         expect(show_escalation_deadline?(kase)).to eq true
       end
@@ -419,6 +427,19 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
           has_attribute: true,
           within_escalation_deadline: true,
           is_offender_sar: true,
+          is_offender_sar_complaint: false,
+        )
+        expect(show_escalation_deadline?(kase)).to eq false
+      end
+    end
+    
+    context 'when case is an Offender SAR Complaint' do
+      it 'is always false' do
+        kase = MockCase.new(
+          has_attribute: true,
+          within_escalation_deadline: true,
+          is_offender_sar: false,
+          is_offender_sar_complaint: true,
         )
         expect(show_escalation_deadline?(kase)).to eq false
       end

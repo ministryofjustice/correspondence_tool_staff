@@ -59,10 +59,9 @@ div id="case-#{@correspondence_type_key}" class="case"
 
   - if @case.type_of_offender_sar?
     section.case-info
-      = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case }
+      = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, allow_editing: true}
 
-  - unless @case.type_of_offender_sar?
-    = render partial: 'shared/components/case_linked_cases'
+  = render partial: 'shared/components/case_linked_cases'
 
   - unless @case.overturned_ico?
     section.case-info
@@ -70,7 +69,7 @@ div id="case-#{@correspondence_type_key}" class="case"
 
   section.case-info
     = render partial: "cases/#{@case.type_abbreviation.parameterize.underscore}/case_details",
-             locals: {case_details: @case, link_type: nil}
+             locals: {case_details: @case, link_type: nil, allow_editing: true}
 
   - if !@case.type_of_offender_sar?
     section.case-info

@@ -10,24 +10,21 @@ module Cases
     ]
 
     def initialize
+      super
       @correspondence_type = CorrespondenceType.offender_sar
       @correspondence_type_key = 'offender_sar'
-
-      super
     end
 
     def new
       permitted_correspondence_types
       authorize case_type, :can_add_case?
-
-      @case = build_case_from_session(Case::SAR::Offender)
+      @case = build_case_from_session(case_type)
       @case.current_step = params[:step]
     end
 
     def create
       authorize case_type, :can_add_case?
-
-      @case = build_case_from_session(Case::SAR::Offender)
+      @case = build_case_from_session(case_type)
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
 
@@ -38,9 +35,11 @@ module Cases
         flash[:notice] = "Case created successfully"
         redirect_to case_path(@case)
       else
-        session_persist_state(create_params)
+        copy_params = create_params
+        copy_params = @case.process_params_after_step(copy_params)
+        session_persist_state(copy_params)
         get_next_step(@case)
-        redirect_to "#{step_case_sar_offender_index_path}/#{@case.current_step}"
+        redirect_to "#{@case.case_route_path}/#{@case.current_step}"
       end
     end
 
@@ -144,7 +143,6 @@ module Cases
       # similar workaround needed for request dated
       request_dated_exists = values.fetch('request_dated', false)
       values['request_dated'] = nil unless request_dated_exists
-
       correspondence_type.new(values).decorate
     end
 

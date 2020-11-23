@@ -359,11 +359,6 @@ class Case::Base < ApplicationRecord
 
   after_create :create_init_transition
 
-  # before_save do
-  #   self.workflow = 'standard' if workflow.nil?
-  # end
-
-
   delegate :available_events, to: :state_machine
 
   include CaseStates

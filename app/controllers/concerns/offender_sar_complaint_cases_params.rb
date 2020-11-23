@@ -33,23 +33,25 @@ module OffenderSARComplaintCasesParams
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :request_dated_dd, :request_dated_mm, :request_dated_yyyy,
       :requester_reference,
+      :original_case_number,
+      :original_case_id,
       uploaded_request_files: [],
       )
   end
   #rubocop:enable Metrics/MethodLength
 
   # @todo: Replace with appropriate edit params
-  def update_offender_sar_params
-    create_offender_sar_params
+  def update_offender_sar_complaint_params
+    create_offender_sar_complaint_params
   end
 
-  def process_offender_sar_closure_params
+  def process_offender_sar_complaint_closure_params
     params.require(:offender_sar_complaint).permit(
       :info_held_status_abbreviation,
     )
   end
 
-  def respond_offender_sar_params
+  def respond_offender_sar_complaint_params
     params.require(:offender_sar_complaint).permit(
       :date_responded_dd,
       :date_responded_mm,

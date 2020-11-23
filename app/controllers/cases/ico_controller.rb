@@ -87,19 +87,6 @@ module Cases
 
     private
 
-    def determine_overturned_ico_class(original_appeal_id)
-      original_appeal_case = Case::ICO::Base.find original_appeal_id
-
-      case original_appeal_case.type
-      when 'Case::ICO::FOI'
-        Case::OverturnedICO::FOI
-      when 'Case::ICO::SAR'
-        Case::OverturnedICO::SAR
-      else
-        raise ArgumentError.new 'Invalid case type for original ICO appeal'
-      end
-    end
-
     def record_late_team_params(correspondence_type)
       if correspondence_type == 'ICO'
         record_late_team_ico_params

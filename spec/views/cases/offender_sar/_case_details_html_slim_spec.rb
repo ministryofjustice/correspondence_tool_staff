@@ -21,7 +21,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       assign(:case, offender_sar_case)
       render partial: 'cases/offender_sar/case_details.html.slim',
              locals: { case_details: offender_sar_case,
-                       link_type: nil }
+                       link_type: nil, allow_editing: true}
 
       partial = offender_sar_case_details_section(rendered).sar_basic_details
 
@@ -51,7 +51,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       assign(:case, third_party_case)
       render partial: 'cases/offender_sar/case_details.html.slim', locals: {
         case_details: third_party_case,
-        link_type: nil
+        link_type: nil, 
+        allow_editing: true
       }
       partial = offender_sar_case_details_section(rendered).sar_basic_details
 
@@ -71,7 +72,8 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       assign(:case, late_closed_case)
       render partial: 'cases/offender_sar/case_details.html.slim', locals: {
         case_details: late_closed_case,
-        link_type: nil
+        link_type: nil,
+        allow_editing: true
       }
       partial = offender_sar_case_details_section(rendered).response_details
 
