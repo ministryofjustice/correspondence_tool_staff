@@ -15,6 +15,7 @@ describe 'stats/new.html.slim', type: :view do
     assign(:custom_reports_foi, reports)
     assign(:custom_reports_sar, reports)
     assign(:custom_reports_offender_sar, reports)
+    assign(:custom_reports_offender_sar_complaint, reports)
     assign(:custom_reports_closed_cases, reports)
     assign(:correspondence_types, [
       CorrespondenceType.foi,

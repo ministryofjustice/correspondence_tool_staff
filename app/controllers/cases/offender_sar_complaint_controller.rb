@@ -10,6 +10,8 @@ module Cases
       @correspondence_type_key = 'offender_sar_complaint'
     end
 
+    private
+
     def set_case_types
       @case_types = ["Case::SAR::OffenderComplaint"]
     end
@@ -38,5 +40,8 @@ module Cases
       respond_offender_sar_complaint_params
     end
 
+    def session_state
+      "#{@correspondence_type_key}_state".to_sym
+    end
   end
 end

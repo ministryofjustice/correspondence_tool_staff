@@ -217,6 +217,12 @@ describe CaseFinderService do
       @closed_offender_sar =
         create :offender_sar_case, :closed,
                identifier: '27-closed offender sar'
+      @offender_sar_complaint =
+        create :offender_sar_complaint,
+               identifier: '28-offender sar complaint'
+      @closed_offender_sar_complaint =
+        create :offender_sar_complaint, :closed,
+               identifier: '29-closed offender sar complaint'
       end
     end
 
@@ -339,6 +345,8 @@ describe CaseFinderService do
               ]
         expect(finder.__send__(:index_cases_scope))
           .not_to include @offender_sar
+        expect(finder.__send__(:index_cases_scope))
+          .not_to include @offender_sar_complaint
       end
     end
 
@@ -370,6 +378,8 @@ describe CaseFinderService do
               ]
         expect(finder.__send__(:closed_cases_scope))
           .not_to include @offender_sar
+        expect(finder.__send__(:index_cases_scope))
+          .not_to include @offender_sar_complaint
       end
     end
 
@@ -450,6 +460,8 @@ describe CaseFinderService do
         it 'does not return offender sar cases' do
           expect(finder.__send__(:open_cases_scope))
             .not_to include @offender_sar
+          expect(finder.__send__(:index_cases_scope))
+            .not_to include @offender_sar_complaint
         end
       end
 
@@ -471,6 +483,8 @@ describe CaseFinderService do
         it 'does not return offender sar cases' do
           expect(finder.__send__(:open_cases_scope))
             .not_to include @offender_sar
+          expect(finder.__send__(:index_cases_scope))
+            .not_to include @offender_sar_complaint
         end
       end
 
@@ -479,7 +493,7 @@ describe CaseFinderService do
 
         it 'returns all open offender sar cases' do
           expect(finder.__send__(:open_cases_scope))
-            .to match_array [@offender_sar]
+            .to match_array [@offender_sar, @offender_sar_complaint]
         end
 
         it 'does not return any non-offender sar cases' do
@@ -530,6 +544,8 @@ describe CaseFinderService do
 
           expect(finder.__send__(:in_time_cases_scope))
               .not_to include @offender_sar
+          expect(finder.__send__(:index_cases_scope))
+              .not_to include @offender_sar_complaint
         end
       end
     end
@@ -554,6 +570,8 @@ describe CaseFinderService do
                 ]
           expect(finder.__send__(:late_cases_scope))
               .not_to include @offender_sar
+          expect(finder.__send__(:index_cases_scope))
+              .not_to include @offender_sar_complaint
         end
       end
     end
@@ -602,6 +620,8 @@ describe CaseFinderService do
           ]
           expect(finder.__send__(:open_cases_scope))
               .not_to include @offender_sar
+          expect(finder.__send__(:index_cases_scope))
+              .not_to include @offender_sar_complaint
         end
       end
     end

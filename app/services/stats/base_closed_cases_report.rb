@@ -23,7 +23,7 @@ module Stats
 
     def process(report_guid:)
       @period_end ||= Date.today
-      scope =case_scope
+      scope = case_scope
           .where(received_date: [@period_start..@period_end])
           .order(received_date: :asc)
 
@@ -84,7 +84,7 @@ module Stats
         redis.get(report.guid)
       end
     end
-  
+
   end
 end
 

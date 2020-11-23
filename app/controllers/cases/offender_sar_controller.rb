@@ -149,7 +149,7 @@ module Cases
     def session_persist_state(params)
       session[session_state] ||= {}
       params ||= {}
-      session[session_state] = session[session_state].merge params
+      session[session_state].merge! params
     end
 
     def preserve_step_state
@@ -159,6 +159,5 @@ module Cases
     def session_state
       "#{@correspondence_type_key}_state".to_sym
     end
-
   end
 end

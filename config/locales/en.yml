@@ -546,6 +546,45 @@ en:
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
+      offender_sar_complaint:
+        case_reference_number: Case reference number (CRN)
+        external_reference: Requester reference (optional)
+        high_profile: High profile
+        message: Additional case information
+        number_dispatched_pages: "Number of pages"
+        number_exempt_pages: "Number of pages"
+        other_subject_ids: "Police national computer number (PNC)"
+        postal_address: "Recipient postal address"
+        previous_case_numbers: "Previous SAR cases"
+        prison_number: "What is the subject's relevant prison number?"
+        received_date: "Received at MOJ"
+        recipient:
+          requester_recipient: The person making the request
+          subject_recipient: The data subject
+          third_party_recipient: Third party
+        recipient_details: "The information should be sent to:"
+        recipient_type:
+          data_subject: The data subject
+          recipient: Requester
+          third_party: Third party
+        requester_reference: Requester reference (optional)
+        subject: "Case summary"
+        subject_address: "What is the location of the data subject?"
+        subject_aliases: "Subject's alias if applicable"
+        subject_full_name: "Full name of data subject"
+        subject_type:
+          detainee: Detainee
+          ex_detainee: Ex-detainee
+          ex_offender: Ex-offender
+          ex_probation_service_user: "Ex-probation service user"
+          offender: Offender
+          probation_service_user: "Probation service user"
+        third_party: Is this information being requested on someone else's behalf?
+        third_party_company_name: Company name (optional)
+        third_party_name: "Full name of the representative"
+        third_party_name: "Full name of the representative (optional)"
+        third_party_relationship: Relationship to the subject
+        total: Total
       feedback:
         comment: Help make this service better
       search_query:

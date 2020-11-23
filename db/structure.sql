@@ -681,7 +681,8 @@ CREATE TABLE public.report_types (
     standard_report boolean DEFAULT false NOT NULL,
     default_reporting_period character varying DEFAULT 'year_to_date'::character varying,
     etl boolean DEFAULT false,
-    offender_sar boolean DEFAULT false
+    offender_sar boolean DEFAULT false,
+    offender_sar_complaint boolean DEFAULT false
 );
 
 
@@ -2023,6 +2024,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200819171428'),
 ('20200824130200'),
 ('20200914160132'),
-('20200925100514');
+('20200925100514'),
+('20201113130611');
 
 
