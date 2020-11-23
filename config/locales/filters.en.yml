@@ -63,8 +63,8 @@ en:
       closed: Case closed
       destroyed: Case destroyed
       to_be_assessed: To be assessed     
-      data_review_to_be_required: Date review is required
-      response_to_be_required: Response is required
+      data_review_required: Data review is required
+      response_required: Response is required
     filter_sensitivity:
       non-trigger: 'Non-trigger'
       trigger: 'Trigger'

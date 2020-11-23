@@ -28,8 +28,8 @@ module ConfigurableStateMachine
        'ready_to_copy', 
        'ready_to_dispatch',
        'to_be_assessed',
-       'data_review_to_be_required',
-       'response_to_be_required', 
+       'data_review_required',
+       'response_required', 
        'closed']
     end
 

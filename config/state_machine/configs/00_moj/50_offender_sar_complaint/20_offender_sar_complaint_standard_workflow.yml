@@ -7,20 +7,20 @@
             states:
               to_be_assessed:
                 mark_as_require_data_review:
-                  transition_to: data_review_to_be_required
+                  transition_to: data_review_required
                 mark_as_data_to_be_requested:
                   transition_to: data_to_be_requested
                 mark_as_require_response:
-                  transition_to: response_to_be_required
+                  transition_to: response_required
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
                 edit_case:
-              data_review_to_be_required:
+              data_review_required:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
                 mark_as_require_response:
-                  transition_to: response_to_be_required
+                  transition_to: response_required
                 add_data_received:
                 add_note_to_case:
                 edit_case:
@@ -35,7 +35,7 @@
                 mark_as_ready_for_vetting:
                   transition_to: ready_for_vetting
                 mark_as_require_response:
-                  transition_to: response_to_be_required
+                  transition_to: response_required
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
@@ -52,7 +52,7 @@
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
                 mark_as_require_data_review:
-                  transition_to: data_review_to_be_required
+                  transition_to: data_review_required
                 add_data_received:
                 add_note_to_case:
                 preview_cover_page:
@@ -61,7 +61,7 @@
                 mark_as_ready_to_dispatch:
                   transition_to: ready_to_dispatch
                 mark_as_require_response:
-                  transition_to: response_to_be_required
+                  transition_to: response_required
                 add_data_received:
                 add_note_to_case:
                 edit_case:
@@ -72,7 +72,7 @@
                 add_note_to_case:
                 send_dispatch_letter:
                 edit_case:
-              response_to_be_required:
+              response_required:
                 close:
                   transition_to: closed
                 add_data_received:
