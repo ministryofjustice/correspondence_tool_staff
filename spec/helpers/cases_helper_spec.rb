@@ -381,7 +381,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       end
 
       def type_of_offender_sar?
-        @is_offender_sar
+        @is_offender_sar || @is_offender_sar_complaint
       end
       
       def offender_sar_complaint?
