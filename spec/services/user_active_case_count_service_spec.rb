@@ -16,7 +16,6 @@ describe UserActiveCaseCountService do
   let!(:kase_4)           { create :closed_case, responder: user_2 }
   let(:service)           { UserActiveCaseCountService.new }
 
-
   describe '#case_counts_by_user' do
     it 'returns number of cases indexed by user id' do
       expect(Case::Base.all.count).to eq 4

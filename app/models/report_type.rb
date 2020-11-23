@@ -30,11 +30,12 @@ class ReportType < ApplicationRecord
   scope :foi, -> { where( foi: true ) }
   scope :sar, -> { where( sar: true ) }
   scope :offender_sar, -> { where( offender_sar: true ) }
+  scope :offender_sar_complaint, -> { where( offender_sar_complaint: true ) }
   scope :closed_cases_report, -> { where(abbr: 'R007') }
 
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
-  
+
   def class_constant
     @_class_constant ||= class_name.constantize
   end

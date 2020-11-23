@@ -1,5 +1,5 @@
 tbody.responder-details
-  - if !case_details.offender_sar?
+  - if !case_details.type_of_offender_sar?
     tr.team
       th = t('common.case.responding_team')
       td = case_details.responding_team.name

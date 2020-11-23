@@ -21,7 +21,7 @@ module Stats
     def report_type
       ReportType.r401
     end
-  
+
   end
 end
 

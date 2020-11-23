@@ -46,5 +46,8 @@ module Cases
       respond_offender_sar_complaint_params
     end
 
+    def session_state
+      "#{@correspondence_type_key}_state".to_sym
+    end
   end
 end

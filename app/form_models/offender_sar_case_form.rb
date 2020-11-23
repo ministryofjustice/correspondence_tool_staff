@@ -1,6 +1,8 @@
 module OffenderSARCaseForm
   extend ActiveSupport::Concern
 
+  include OffenderFormValidators
+
   def steps
     %w[subject-details
        requester-details

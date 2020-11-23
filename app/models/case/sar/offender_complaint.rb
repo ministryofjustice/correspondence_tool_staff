@@ -15,6 +15,10 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     true
   end
 
+  def type_of_offender_sar?
+    true
+  end
+
   def offender_sar?
     false
   end

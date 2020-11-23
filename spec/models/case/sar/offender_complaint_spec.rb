@@ -10,6 +10,29 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
+  describe 'predicate methods' do
+    describe '#type_of_offender_sar?' do
+      it 'is a sort of offender_sar' do
+        kase = build :offender_sar_complaint
+        expect(kase.type_of_offender_sar?).to be true
+      end
+    end
+
+    describe '#offender_sar?' do
+      it 'is offender_sar standard' do
+        kase = build :offender_sar_complaint
+        expect(kase.offender_sar?).to be false
+      end
+    end
+
+    describe '#offender_sar_complaint?' do
+      it 'is not an offender_sar complaint' do
+        kase = build :offender_sar_complaint
+        expect(kase.offender_sar_complaint?).to be true
+      end
+    end
+  end
+
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 

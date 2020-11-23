@@ -86,9 +86,9 @@ module Warehouse
         case_report.number_of_days_late = kase.num_days_late # Number of days late
         case_report.number_of_days_taken = kase.num_days_taken
         case_report.number_of_days_taken_after_extension = kase.num_days_taken_after_extension
-        case_report.third_party_company_name = kase.offender_sar? ? kase.third_party_company_name : nil
-        case_report.number_of_exempt_pages = kase.offender_sar? ? kase.number_exempt_pages : nil
-        case_report.number_of_final_pages = kase.offender_sar? ? kase.number_final_pages : nil
+        case_report.third_party_company_name = kase.type_of_offender_sar? ? kase.third_party_company_name : nil
+        case_report.number_of_exempt_pages = kase.type_of_offender_sar? ? kase.number_exempt_pages : nil
+        case_report.number_of_final_pages = kase.type_of_offender_sar? ? kase.number_final_pages : nil
 
         case_report.save!
         case_report

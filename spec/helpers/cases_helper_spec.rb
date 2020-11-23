@@ -380,8 +380,12 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
         @within_escalation_deadline
       end
 
-      def offender_sar?
-        @is_offender_sar
+      def type_of_offender_sar?
+        @is_offender_sar || @is_offender_sar_complaint
+      end
+      
+      def offender_sar_complaint?
+        @is_offender_sar_complaint
       end
       
       def offender_sar_complaint?
