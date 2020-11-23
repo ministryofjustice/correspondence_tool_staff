@@ -23,7 +23,7 @@ class StatsController < ApplicationController
       redirect_back(fallback_location: root_path)
     else
       generate_final_report(report)
-    end    
+    end
   end
 
   def new
@@ -46,7 +46,7 @@ class StatsController < ApplicationController
         redirect_to new_stat_path
       else
         generate_final_report(@report)
-      end        
+      end
     else
       if create_custom_params[:correspondence_type].blank?
         @report.errors.add(:correspondence_type, :blank)
@@ -93,16 +93,16 @@ class StatsController < ApplicationController
 
   def send_csv_report(report)
     send_data generate_csv(report),
-              filename: report.filename, 
+              filename: report.filename,
               disposition: :attachment
-  end 
+  end
 
   def send_default_report(report, report_data=nil)
-    # If the data is relevant big, it will be passed as report data, otherwise the data will 
-    # be stored in report record 
+    # If the data is relevant big, it will be passed as report data, otherwise the data will
+    # be stored in report record
     report_data_for_generation = report_data || report.report_data
-    send_data report_data_for_generation, 
-              filename: report.filename, 
+    send_data report_data_for_generation,
+              filename: report.filename,
               disposition: :attachment
   end
 
@@ -115,7 +115,7 @@ class StatsController < ApplicationController
     else
       send_default_report(report, report_data)
     end
-  end 
+  end
 
   def generate_csv(report)
     # Force quotes to prevent jagged rows in CSVs
@@ -165,7 +165,7 @@ class StatsController < ApplicationController
 
   def is_general_closed_report_present?
     Pundit.policy_scope(current_user, ReportType.closed_cases_report).present?
-  end 
+  end
 
   def user_permitted_custom_report_types
     # find out the scope of the custom report types the user can see via set intersection operation
@@ -173,12 +173,13 @@ class StatsController < ApplicationController
     if is_general_closed_report_present?
       @correspondence_types << self.class.closed_cases_correspondence_type
     end
-  end 
+  end
 
   def set_fields_for_custom_action
     @custom_reports_foi = ReportType.custom.foi
     @custom_reports_sar = ReportType.custom.sar
     @custom_reports_offender_sar = ReportType.custom.offender_sar
+    @custom_reports_offender_sar_complaint = ReportType.custom.offender_sar_complaint
     @custom_reports_closed_cases = ReportType.closed_cases_report
     user_permitted_custom_report_types
   end

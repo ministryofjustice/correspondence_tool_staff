@@ -34,7 +34,7 @@ module Cases
       if !@case.valid_attributes?(create_params)
         render :new
       elsif @case.valid? && @case.save
-        session[:offender_sar_state] = nil
+        session[session_state] = nil
         flash[:notice] = "Case created successfully"
         redirect_to case_path(@case)
       else
@@ -73,7 +73,7 @@ module Cases
     end
 
     def cancel
-      session[:offender_sar_state] = nil
+      session[session_state] = nil
       redirect_to new_case_sar_offender_path
     end
 
@@ -139,7 +139,7 @@ module Cases
       # when a new Case::SAR::Offender is being created from scratch, because the field is not
       # in the list of instance variables in the model at the point that the gov_uk_date_fields
       # is adding its magic methods. This manifests when running tests or after rails server restart
-      values = session[:offender_sar_state] || { date_of_birth: nil }
+      values = session[session_state] || { date_of_birth: nil }
 
       # similar workaround needed for request dated
       request_dated_exists = values.fetch('request_dated', false)
@@ -149,13 +149,17 @@ module Cases
     end
 
     def session_persist_state(params)
-      session[:offender_sar_state] ||= {}
+      session[session_state] ||= {}
       params ||= {}
-      session[:offender_sar_state] = session[:offender_sar_state].merge params
+      session[session_state].merge! params
     end
 
     def preserve_step_state
       @case.current_step = params['current_step']
+    end
+
+    def session_state
+      "#{@correspondence_type_key}_state".to_sym
     end
   end
 end

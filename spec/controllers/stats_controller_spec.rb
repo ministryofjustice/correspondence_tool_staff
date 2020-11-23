@@ -100,6 +100,11 @@ RSpec.describe StatsController, type: :controller do
         expect(assigns(:custom_reports_offender_sar)).to eq ReportType.custom.offender_sar
       end
 
+      it 'sets @custom_reports_offender_sar_complaint' do
+        get :new
+        expect(assigns(:custom_reports_offender_sar_complaint)).to eq ReportType.custom.offender_sar_complaint
+      end
+
       it 'sets @correspondence_types' do
         get :new
         expected = %w[OFFENDER_SAR OFFENDER_SAR_COMPLAINT]
@@ -235,6 +240,11 @@ RSpec.describe StatsController, type: :controller do
       it 'sets @custom_reports_offender_sar' do
         post :create, params: params
         expect(assigns(:custom_reports_offender_sar)).to eq ReportType.custom.offender_sar
+      end
+
+      it 'sets @custom_reports_offender_sar_complaint' do
+        post :create, params: params
+        expect(assigns(:custom_reports_offender_sar_complaint)).to eq ReportType.custom.offender_sar_complaint
       end
 
       it 'sets @custom_reports_closed_cases' do
