@@ -1,10 +1,29 @@
       standard:
-        initial_state: data_to_be_requested
+        initial_state: to_be_assessed
         user_roles:
 
-        ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
+        ########################### OFFENDER SAR COMPLAINT :: STANDARD WORKFLOW :: RESPONDER ########################
           responder:
             states:
+              to_be_assessed:
+                mark_as_require_data_review:
+                  transition_to: data_review_required
+                mark_as_data_to_be_requested:
+                  transition_to: data_to_be_requested
+                mark_as_require_response:
+                  transition_to: response_required
+                add_data_received:
+                add_note_to_case:
+                send_acknowledgement_letter:
+                edit_case:
+              data_review_required:
+                mark_as_vetting_in_progress:
+                  transition_to: vetting_in_progress
+                mark_as_require_response:
+                  transition_to: response_required
+                add_data_received:
+                add_note_to_case:
+                edit_case:
               data_to_be_requested:
                 mark_as_waiting_for_data:
                   transition_to: waiting_for_data
@@ -15,6 +34,8 @@
               waiting_for_data:
                 mark_as_ready_for_vetting:
                   transition_to: ready_for_vetting
+                mark_as_require_response:
+                  transition_to: response_required
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
@@ -30,6 +51,8 @@
               vetting_in_progress:
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
+                mark_as_require_data_review:
+                  transition_to: data_review_required
                 add_data_received:
                 add_note_to_case:
                 preview_cover_page:
@@ -37,6 +60,8 @@
               ready_to_copy:
                 mark_as_ready_to_dispatch:
                   transition_to: ready_to_dispatch
+                mark_as_require_response:
+                  transition_to: response_required
                 add_data_received:
                 add_note_to_case:
                 edit_case:
@@ -46,6 +71,12 @@
                 add_data_received:
                 add_note_to_case:
                 send_dispatch_letter:
+                edit_case:
+              response_required:
+                close:
+                  transition_to: closed
+                add_data_received:
+                add_note_to_case:
                 edit_case:
               closed:
                 add_note_to_case:

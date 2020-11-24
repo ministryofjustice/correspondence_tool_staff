@@ -12,10 +12,13 @@
       - responder
 
     permitted_states:
+      - to_be_assessed
+      - data_review_required
       - data_to_be_requested
       - waiting_for_data
       - ready_for_vetting
       - vetting_in_progress
       - ready_to_copy
       - ready_to_dispatch
+      - response_required
       - closed

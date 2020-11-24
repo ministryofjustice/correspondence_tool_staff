@@ -44,6 +44,12 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
         id: "action--#{link_text.parameterize}",
         class: 'button state-action-button',
         method: 'patch'
+    when :start_complaint
+      link_to I18n.t('common.case/offender_sar.start_complaint'),
+              start_complaint_case_sar_offender_complaint_index_path(@case.number),
+              id: 'action--start-complaint',
+              class: 'button',
+              method: 'post'
     when :assign_responder
       link_to I18n.t('common.case.assign'),
               new_case_assignment_path(@case),

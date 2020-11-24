@@ -1,6 +1,6 @@
 module OffenderSARComplaintCaseForm
   extend ActiveSupport::Concern
-
+  
   include OffenderFormValidators
 
   STEPS = %w[link-offender-sar-case

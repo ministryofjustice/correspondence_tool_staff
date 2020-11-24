@@ -62,6 +62,9 @@ en:
       ready_to_dispatch: Ready to dispatch
       closed: Case closed
       destroyed: Case destroyed
+      to_be_assessed: To be assessed     
+      data_review_required: Data review is required
+      response_required: Response is required
     filter_sensitivity:
       non-trigger: 'Non-trigger'
       trigger: 'Trigger'

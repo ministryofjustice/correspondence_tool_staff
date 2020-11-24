@@ -727,6 +727,9 @@ en:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
       request: "ICO's request"
+    case/offender_sar:
+      start_complaint: Start complaint
+      complaint_case_link_message: Complaint started for this case on %{creation_date}
     case_list:
       flag: 'Flag'
       draft_deadline: Draft deadline

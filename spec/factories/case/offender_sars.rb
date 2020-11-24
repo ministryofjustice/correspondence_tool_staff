@@ -136,7 +136,7 @@ FactoryBot.define do
       create :case_transition_vetting_in_progress, case: kase
       create :case_transition_ready_to_copy, case: kase
       create :case_transition_ready_to_dispatch, case: kase
-      create :case_transition_close, case: kase
+      create :case_transition_closed_for_offender_sar_type, case: kase
       kase.reload
     end
   end
