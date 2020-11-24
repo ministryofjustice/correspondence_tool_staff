@@ -84,6 +84,7 @@ Rails.application.routes.draw do
     resources :offender_sar_complaints, only: only, controller: 'offender_sar_complaint', as: :case_sar_offender_complaint do
       get 'cancel', on: :collection
       get '/(:step)', on: :collection, to: 'offender_sar_complaint#new', as: 'step'
+      post '/offender_sar/(:number)', on: :collection, to: 'offender_sar_complaint#start_complaint', as: 'start_complaint'
       get '/edit/:step', on: :member, to: 'offender_sar_complaint#edit', as: 'edit_step'
       post '/update', on: :member, to: 'offender_sar_complaint#update', as: 'update_step'
       member do

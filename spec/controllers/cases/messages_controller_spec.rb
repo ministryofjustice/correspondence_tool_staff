@@ -53,10 +53,6 @@ RSpec.describe Cases::MessagesController, type: :controller do
         expect(response).to redirect_to(responder_root_path)
       end
 
-      it "sets the case team correctly" do
-        post :create , params: params
-        expect(controller.send(:case_team).name).to eq('FOI Responding Team')
-      end
     end
 
     context "as a manager" do
@@ -73,10 +69,6 @@ RSpec.describe Cases::MessagesController, type: :controller do
         expect(response).to redirect_to(case_path(closed_case, anchor: 'messages-section'))
       end
 
-      it "sets the case team correctly" do
-        post :create , params: params
-        expect(controller.send(:case_team).name).to eq('Disclosure BMT')
-      end
     end
 
     context "as a approver" do
@@ -99,10 +91,6 @@ RSpec.describe Cases::MessagesController, type: :controller do
         expect(response).to redirect_to(case_path(flagged_case, anchor: 'messages-section'))
       end
 
-      it "sets the case team correctly" do
-        post :create , params: params
-        expect(controller.send(:case_team).name).to match(/Approving Team/)
-      end
     end
 
     context "message is blank, (user type doesn't matter)" do

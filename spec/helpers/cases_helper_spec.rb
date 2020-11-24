@@ -387,6 +387,10 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       def offender_sar_complaint?
         @is_offender_sar_complaint
       end
+      
+      def offender_sar_complaint?
+        @is_offender_sar_complaint
+      end
     end
 
     context 'when case is not an Offender SAR' do

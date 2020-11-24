@@ -52,3 +52,6 @@ en:
     mark_as_ready_to_copy__desc: Case is ready to copy
     mark_as_ready_to_dispatch: Mark as ready to dispatch
     mark_as_ready_to_dispatch__desc: Case is ready to dispatch
+    mark_as_data_to_be_requested: Requires data
+    mark_as_require_data_review: Requires data review
+    mark_as_require_response: Requires response
