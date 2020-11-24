@@ -139,7 +139,7 @@ class Workflows::Predicates
     responder_is_member_of_assigned_team? && @kase.outside_escalation_deadline?
   end
 
-  def can_start_to_complain?
+  def can_start_complaint?
     @kase.offender_sar? && (@kase.already_late? || @kase.current_state == 'closed')
   end
 

@@ -13,7 +13,7 @@
                 send_acknowledgement_letter:
                 edit_case:
                 start_complaint:
-                  if: Workflows::Predicates#can_start_to_complain?
+                  if: Workflows::Predicates#can_start_complaint?
               waiting_for_data:
                 mark_as_ready_for_vetting:
                   transition_to: ready_for_vetting
@@ -23,7 +23,7 @@
                 preview_cover_page:
                 edit_case:
                 start_complaint:
-                  if: Workflows::Predicates#can_start_to_complain?
+                  if: Workflows::Predicates#can_start_complaint?
               ready_for_vetting:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
@@ -32,7 +32,7 @@
                 preview_cover_page:
                 edit_case:
                 start_complaint:
-                  if: Workflows::Predicates#can_start_to_complain?
+                  if: Workflows::Predicates#can_start_complaint?
               vetting_in_progress:
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
@@ -41,7 +41,7 @@
                 preview_cover_page:
                 edit_case:
                 start_complaint:
-                  if: Workflows::Predicates#can_start_to_complain?
+                  if: Workflows::Predicates#can_start_complaint?
               ready_to_copy:
                 mark_as_ready_to_dispatch:
                   transition_to: ready_to_dispatch
@@ -49,7 +49,7 @@
                 add_note_to_case:
                 edit_case:
                 start_complaint:
-                  if: Workflows::Predicates#can_start_to_complain?
+                  if: Workflows::Predicates#can_start_complaint?
               ready_to_dispatch:
                 close:
                   transition_to: closed
@@ -58,11 +58,11 @@
                 send_dispatch_letter:
                 edit_case:
                 start_complaint:
-                  if: Workflows::Predicates#can_start_to_complain?
+                  if: Workflows::Predicates#can_start_complaint?
               closed:
                 add_note_to_case:
                 send_dispatch_letter:
                 edit_case:
                 start_complaint:
-                  if: Workflows::Predicates#can_start_to_complain?
+                  if: Workflows::Predicates#can_start_complaint?
 
