@@ -212,7 +212,9 @@ module Stats
       describe '#to_csv' do
         let(:report_csv) do
           Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-            report = R003BusinessUnitPerformanceReport.new; report.run; report.to_csv
+            d1 = Date.new(2017, 6, 4)
+            d2 = Date.new(2017, 6, 30)  
+            report = R003BusinessUnitPerformanceReport.new(period_start: d1, period_end: d2); report.run; report.to_csv
           end
         end
 
@@ -220,14 +222,13 @@ module Stats
           rag_ratings = report_csv.map do |row|
             row.map.with_index { |item, index| [index, item.rag_rating] if item.rag_rating }.compact
           end
-
           expect(rag_ratings).to eq([
               [],
               (0..23).map { |x| [x, :blue] },
               (0..23).map { |x| [x, :grey] },
               [[6, :red], [12, :red], [18, :red]],
-              [[6, :red], [12, :red], [18, :red]],
-              [[6, :red], [12, :red], [18, :red]],
+              [[6, :red], [12, :green], [18, :red]],
+              [[6, :red], [12, :green], [18, :red]],
               [[6, :red], [12, :red], [18, :red]],
               [[6, :red], [12, :red], [18, :red]],
               [[6, :red], [18, :red]],
@@ -240,7 +241,7 @@ module Stats
               [[6, :red], [12, :red], [18, :red]],
             ])
 
-        end
+          end
 
         it 'outputs results as a csv lines' do
           super_header = %q{"","","","","","",} +
@@ -252,12 +253,12 @@ module Stats
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
           expected_text = <<~EOCSV
-          Business unit report (FOIs) - 1 Jan 2017 to 30 Jun 2017
+          Business unit report (FOIs) - 4 Jun 2017 to 30 Jun 2017
           #{super_header}
           #{header}
-          BGAB,"","",#{@bizgrp_ab.team_lead},"","",28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4
-          BGAB,DRA,"",#{@dir_a.team_lead},"","",20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
-          BGAB,DRA,RTA,#{@team_a.team_lead},"","",20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2
+          BGAB,"","",#{@bizgrp_ab.team_lead},"","",33.3,8,2,1,2,3,50.0,4,1,0,2,1,37.5,12,3,1,4,4
+          BGAB,DRA,"",#{@dir_a.team_lead},"","",25.0,5,1,1,1,2,100.0,2,1,0,1,0,40.0,7,2,1,2,2
+          BGAB,DRA,RTA,#{@team_a.team_lead},"","",25.0,5,1,1,1,2,100.0,2,1,0,1,0,40.0,7,2,1,2,2
           BGAB,DRB,"",#{@dir_b.team_lead},"","",50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
           BGAB,DRB,RTB,#{@team_b.team_lead},"","",50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
           BGCD,"","",#{@bizgrp_cd.team_lead},"","",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
@@ -267,7 +268,7 @@ module Stats
           BGDoom,"","",#{@bizgrp_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
           BGDoom,DRDoom,"",#{@dir_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
           BGDoom,DRDoom,Doomed,#{@team_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
-          Total,"","","","","",40.0,13,4,3,3,3,33.3,5,1,1,2,1,38.5,18,5,4,5,4
+          Total,"","","","","",44.4,12,4,2,3,3,50.0,4,1,0,2,1,45.5,16,5,2,5,4
           EOCSV
           actual_lines = report_csv.map { |row| row.map(&:value) }
           expected_lines = expected_text.split("\n")
@@ -296,8 +297,7 @@ module Stats
       describe '#results' do
         before do
           Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-            # report = R003BusinessUnitPerformanceReport.new
-            report = R003BusinessUnitPerformanceReport.new(period_start: Date.today.beginning_of_year, period_end: Date.today, generate_bu_columns: true)
+            report = R003BusinessUnitPerformanceReport.new(period_start: Date.new(2017, 6, 2), period_end: Date.today, generate_bu_columns: true)
             report.run
             @results = report.results
           end
@@ -316,28 +316,28 @@ module Stats
               responsible:                   @bizgrp_ab.team_lead,
               deactivated:                   "",
               moved:                         "",
-              non_trigger_performance:       28.6,
-              non_trigger_total:             9,
+              non_trigger_performance:       33.3,
+              non_trigger_total:             8,
               non_trigger_responded_in_time: 2,
-              non_trigger_responded_late:    2,
+              non_trigger_responded_late:    1,
               non_trigger_open_in_time:      2,
               non_trigger_open_late:         3,
-              trigger_performance:           33.3,
-              trigger_total:                 5,
+              trigger_performance:           50.0,
+              trigger_total:                 4,
               trigger_responded_in_time:     1,
-              trigger_responded_late:        1,
+              trigger_responded_late:        0,
               trigger_open_in_time:          2,
               trigger_open_late:             1,
-              overall_performance:           30.0,
-              overall_total:                 14,
+              overall_performance:           37.5,
+              overall_total:                 12,
               overall_responded_in_time:     3,
-              overall_responded_late:        3,
+              overall_responded_late:        1,
               overall_open_in_time:          4,
               overall_open_late:             4,
               bu_performance:                0.0,
-              bu_total:                      14,
+              bu_total:                      12,
               bu_responded_in_time:          0,
-              bu_responded_late:             6,
+              bu_responded_late:             4,
               bu_open_in_time:               0,
               bu_open_late:                  8
             })
@@ -430,24 +430,24 @@ module Stats
               %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
               %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
             expected_text = <<~EOCSV
-              Business unit report (FOIs) - 1 Jan 2017 to 30 Jun 2017
+              Business unit report (FOIs) - 5 Jun 2017 to 30 Jun 2017
               #{super_header}
               #{header}
-              BGAB,"","",#{@bizgrp_ab.team_lead},"","",28.6,9,2,2,2,3,33.3,5,1,1,2,1,30.0,14,3,3,4,4,0.0,14,0,6,0,8
-              BGAB,DRA,"",#{@dir_a.team_lead},"","",20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2,0.0,9,0,5,0,4
-              BGAB,DRA,RTA,#{@team_a.team_lead},"","",20.0,6,1,2,1,2,50.0,3,1,1,1,0,28.6,9,2,3,2,2,0.0,9,0,5,0,4
+              BGAB,"","",#{@bizgrp_ab.team_lead},"","",40.0,7,2,0,2,3,50.0,4,1,0,2,1,42.9,11,3,0,4,4,0.0,11,0,3,0,8
+              BGAB,DRA,"",#{@dir_a.team_lead},"","",33.3,4,1,0,1,2,100.0,2,1,0,1,0,50.0,6,2,0,2,2,0.0,6,0,2,0,4
+              BGAB,DRA,RTA,#{@team_a.team_lead},"","",33.3,4,1,0,1,2,100.0,2,1,0,1,0,50.0,6,2,0,2,2,0.0,6,0,2,0,4
               BGAB,DRB,"",#{@dir_b.team_lead},"","",50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
               BGAB,DRB,RTB,#{@team_b.team_lead},"","",50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
-              BGCD,"","",#{@bizgrp_cd.team_lead},"","",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
-              BGCD,DRCD,"",#{@dir_cd.team_lead},"","",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0,0.0,3,0,2,0,1
-              BGCD,DRCD,RTC,#{@team_c.team_lead},"","",50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0,0.0,2,0,2,0,0
+              BGCD,"","",#{@bizgrp_cd.team_lead},"","",100.0,2,1,0,1,0,0.0,0,0,0,0,0,100.0,2,1,0,1,0,0.0,2,0,1,0,1
+              BGCD,DRCD,"",#{@dir_cd.team_lead},"","",100.0,2,1,0,1,0,0.0,0,0,0,0,0,100.0,2,1,0,1,0,0.0,2,0,1,0,1
+              BGCD,DRCD,RTC,#{@team_c.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
               BGCD,DRCD,RTD,#{@team_d.team_lead},"","",0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
               BGDoom,"","",#{@bizgrp_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
               BGDoom,DRDoom,"",#{@dir_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
               BGDoom,DRDoom,Doomed,#{@team_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
-              Total,"","","","","",40.0,13,4,3,3,3,33.3,5,1,1,2,1,38.5,18,5,4,5,4,0.0,18,0,9,0,9
+              Total,"","","","","",57.1,10,4,0,3,3,50.0,4,1,0,2,1,55.6,14,5,0,5,4,0.0,14,0,5,0,9
             EOCSV
-            report = R003BusinessUnitPerformanceReport.new(period_start: Date.today.beginning_of_year, period_end: Date.today, generate_bu_columns: true)
+            report = R003BusinessUnitPerformanceReport.new(period_start: Date.new(2017, 6, 5), period_end: Date.today, generate_bu_columns: true)
             report.run
             actual_lines = report.to_csv.map { |row| row.map(&:value) }
             expected_lines = expected_text.split("\n")
@@ -490,7 +490,7 @@ module Stats
             :accepted_compliance_review
           end
 
-        kase = create factory, responding_team: team, responder: responder, identifier: ident
+        kase = create factory, responding_team: team, responder: responder, identifier: ident, received_date: received_date
         kase.external_deadline = Date.parse(deadline)
         if flagged == true
           CaseFlagForClearanceService.new(user: kase.managing_team.users.first, kase: kase, team: @team_dacu_disclosure).call
