@@ -240,8 +240,7 @@ module Stats
               [[6, :green], [18, :green]],
               [[6, :red], [12, :red], [18, :red]],
             ])
-
-          end
+        end
 
         it 'outputs results as a csv lines' do
           super_header = %q{"","","","","","",} +

@@ -1,9 +1,9 @@
 require 'rails_helper'
 
+# rubocop:disable Metrics/ModuleLength
 module Stats
   describe R103SarBusinessUnitPerformanceReport do
 
-    Team.all.map(&:destroy)
     before(:all) { 
       create_report_type(abbr: :r103)
 
@@ -56,6 +56,7 @@ module Stats
       Team.where('name like ?','%Responder%').destroy_all
 
     }
+
     after(:all) { DbHousekeeping.clean(seed: true) }
 
     context 'date management, titles, description, etc' do
@@ -332,3 +333,4 @@ module Stats
 
   end
 end
+# rubocop:enable Metrics/ModuleLength
