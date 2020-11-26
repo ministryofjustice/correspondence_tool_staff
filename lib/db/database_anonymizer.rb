@@ -192,9 +192,6 @@ class DatabaseAnonymizer
     rescue NoMethodError
       false
     end
-
-    # update the search index in the record
-    kase.update_index
     kase
   end
 
