@@ -100,7 +100,7 @@ namespace :db do
       dump_files.sort_by(&:last_modified).reverse.map do |object|
         puts "Key: #{object.key}"
         puts "Last modified: #{object.last_modified.iso8601}"
-        puts "Size: #{number_to_human_size(object.content_length)}"
+        puts "Size: #{helper.number_to_human_size(object.content_length)}"
         puts '-----------------------------------------------------'
       end
     end
@@ -127,7 +127,7 @@ namespace :db do
       shell_working "Copying S3 files under dumps/#{args[:tag]} to local folder #{dirname}" do
         dump_files = s3_bucket.list("dumps/#{args[:tag]}")
         dump_files.map do |dump_file|
-          local_filename = Rails.root.join("dumps_#{args[:tag]}", dump_file.key.split(File::Separator).last)
+          local_filename = Rails.root.join("dumps_#{args[:tag]}_from_bucket", dump_file.key.split(File::Separator).last)
           File.open(local_filename, 'wb') do |file|
             s3_bucket.get_object(dump_file.key, target: file)
           end
