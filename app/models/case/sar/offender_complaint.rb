@@ -7,15 +7,24 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
 
   jsonb_accessor :properties,
                  complaint_type: :string,
+                 complaint_subtype: :string,
                  priority: :string
 
   validates :complaint_type, presence: true
+  validates :complaint_subtype, presence: true
   validates :priority, presence: true
 
   enum complaint_type: {
     standard:  'standard',
     ico: 'ico',
     litigation: 'litigation',
+  }
+
+  enum complaint_subtype: {
+    missing_data:  'missing_data',
+    inaccurate_data: 'inaccurate_data',
+    redacted_data: 'redacted_data',
+    timeliness: 'timeliness',
   }
 
   enum priority: {
