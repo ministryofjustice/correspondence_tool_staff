@@ -5,6 +5,16 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validates_presence_of :original_case
   after_create :stamp_on_original_case
 
+  jsonb_accessor :properties,
+                 complaint_type: :string,
+  validates :complaint_type, presence: true
+
+  enum complaint_type: {
+    standard:  'standard',
+    ico: 'ico',
+    litigation: 'litigation',
+  }
+
   class << self
     def type_abbreviation
       'OFFENDER_SAR_COMPLAINT'

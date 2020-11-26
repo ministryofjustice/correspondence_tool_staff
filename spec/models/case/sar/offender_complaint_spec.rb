@@ -44,6 +44,32 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
+  describe '#complaint_type' do
+    context 'validates that type is not blank' do
+      it 'errors' do
+        kase = build(:offender_sar_complaint, complaint_type: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:complaint_type]).to eq ["can't be blank"]
+      end
+    end
+
+    context 'valid values' do
+      it 'does not error' do
+        expect(build(:offender_sar_complaint, complaint_type: 'standard')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_type: 'ico')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_type: 'litigation')).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_complaint, complaint_type: 'wibble')
+        }.to raise_error ArgumentError
+      end
+    end
+  end
+
   describe '#subject_type' do
     context 'valid values' do
       it 'does not error' do
