@@ -130,8 +130,9 @@ class DatabaseDumper
   def upload_to_s3(compressed_files, table_name, created_at)
     if @s3_bucket
       compressed_files.each do | upload_file |
+        actual_upload_file_name = File.basename(upload_file)
         @s3_bucket.put_object(
-          "dumps/#{@tag}/#{upload_file}", 
+          "dumps/#{@tag}/#{actual_upload_file_name}", 
           File.read(upload_file), 
           metadata: { "table" => table_name, "created_at" => created_at.to_s}
         )
