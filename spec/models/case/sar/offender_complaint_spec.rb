@@ -70,6 +70,31 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
+  describe '#priority' do
+    context 'validates that priority is not blank' do
+      it 'errors' do
+        kase = build(:offender_sar_complaint, priority: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:priority]).to eq ["can't be blank"]
+      end
+    end
+
+    context 'valid values' do
+      it 'does not error' do
+        expect(build(:offender_sar_complaint, priority: 'normal')).to be_valid
+        expect(build(:offender_sar_complaint, priority: 'high')).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_complaint, priority: 'enormous')
+        }.to raise_error ArgumentError
+      end
+    end
+  end
+
   describe '#subject_type' do
     context 'valid values' do
       it 'does not error' do

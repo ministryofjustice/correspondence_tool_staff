@@ -35,6 +35,7 @@ FactoryBot.define do
     subject_type                    { 'offender' }
     recipient                       { 'subject_recipient' }
     complaint_type                  { 'standard' }
+    priority                        { 'normal' }
     third_party                     { false }
     flag_as_high_profile            { false }
     created_at                      { creation_time }
