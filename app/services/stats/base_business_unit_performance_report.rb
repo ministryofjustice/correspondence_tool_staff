@@ -80,7 +80,7 @@ module Stats
 
     def run(*)
       CaseSelector.new(case_scope)
-        .cases_for_period(@period_start, @period_end)
+        .cases_received_in_period(@period_start, @period_end)
         .reject { |kase| kase.unassigned? }.each do |kase|
         analyse_case(kase)
       end
