@@ -223,18 +223,26 @@ namespace :db do
   namespace :restore do
 
     desc 'Loads an SQL dump of the database created by db:dump:<env> rake task to the local database'
-    task :local, [:dir] => :environment do |_task, args|      
-      safeguard
-      args.with_defaults(:dir => "dumps_latest")
-      dirname = Rails.root.join(args[:dir])
-
-      require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_loader')
-      env = ENV['ENV'] || 'local'
-      raise "This task is not allowed on non-prod environment." unless env != 'prod'
-      DatabaseLoader.new(env, dirname).run
+    task :local, [:dir] => :environment do |_task, args|
+      if is_on_production?
+        puts "Cannot run this command on production environment!"
+      else
+        safeguard
+        args.with_defaults(:dir => "dumps_latest")
+        dirname = Rails.root.join(args[:dir])
+  
+        require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_loader')
+        env = ENV['ENV'] || 'local'
+        raise "This task is not allowed on non-prod environment." unless env != 'prod'
+        DatabaseLoader.new(env, dirname).run
+      end    
     end
 
     private
+
+    def is_on_production?
+      ENV['ENV'].present? && ENV['ENV'] == 'prod'
+    end
 
     def safeguard
       puts 'Are you sure you need to retore a dump of database into the current database the app is connecting to?'
