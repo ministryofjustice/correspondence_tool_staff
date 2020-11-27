@@ -237,7 +237,7 @@ class DatabaseAnonymizer
   
   # Anonymize case_transition table
   def anonymize_case_transitions(ct)
-    ct.message = initial_letters(ct.message) + "\n\n" + Faker::Lorem.paragraph unless ct.message.nil?
+    ct.message = initial_letters(ct.message) + "\n\n" + Faker::Lorem.paragraph unless ct.message.blank?
     ct
   end
 
