@@ -81,36 +81,64 @@ namespace :db do
     # end
 
     desc 'makes an anonymised dump of the local database'
-    task :local, [:anonymized, :tag, :storage] => :environment do |_task, args|
+    task :local, [:anonymized, :tag, :storage, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
       raise "first argument must be 'anon' or 'clear', is: #{args[:anonymized]}" unless args[:anonymized].in?(%w( anon clear ))
       args.with_defaults(:tag => "latest")
       args.with_defaults(:storage => "bucket")
+      args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
+      args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
+      args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
+
       raise "third argument must be 'bucket' or 'local', is: #{args[:storage]}" unless args[:storage].in?(%w( bucket local ))
       puts 'exporting unanonymised database data'
-      DatabaseDumper.new(args[:anonymized] == 'anon', args[:tag], args[:storage]).run
+      DatabaseDumper.new(
+        args[:anonymized] == 'anon', 
+        args[:tag], 
+        args[:storage] == 'bucket', 
+        args[:bucket_key_id], 
+        args[:bucket_access_key],
+        bucket: args[:bucket]).run
     end
 
     desc 'List s3 database dump files'
-    task :list_s3_dumps, [:tag] => :environment do |_task, args|
+    task :list_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
+      include ActionController
       args.with_defaults(:tag => "latest")
-      puts "Listing dump files in s3 with tag of #{args[:tag]}"
-      s3_bucket = S3BucketHelper::S3Bucket.new(ENV["AWS_ACCESS_KEY_ID"], ENV["AWS_SECRET_ACCESS_KEY"])
+      args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
+      args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
+      args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
+      puts "Listing dump files in s3 with tag of #{args[:tag]} from bucket #{args[:bucket]}"
+      s3_bucket = S3BucketHelper::S3Bucket.new(
+        args[:bucket_key_id], 
+        args[:bucket_access_key],
+        bucket: args[:bucket])
       dump_files = s3_bucket.list("dumps/#{args[:tag]}")
       dump_files.sort_by(&:last_modified).reverse.map do |object|
         puts "Key: #{object.key}"
         puts "Last modified: #{object.last_modified.iso8601}"
-        puts "Size: #{helper.number_to_human_size(object.content_length)}"
+        puts "Size: #{ActionController::Base.helpers.number_to_human_size(object.content_length)}"
         puts '-----------------------------------------------------'
       end
     end
 
     desc 'Delete all but latest s3 database dump files'
-    task :delete_s3_dumps, [:tag] => :environment do |_task, args|
+    task :delete_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       args.with_defaults(:tag => "latest")
-      puts "Delete dump files in s3 with tag of #{args[:tag]}"
-      s3_bucket = S3BucketHelper::S3Bucket.new(ENV["AWS_ACCESS_KEY_ID"], ENV["AWS_SECRET_ACCESS_KEY"])
+      args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
+      args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
+      args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
+      puts "Delete dump files in s3 with tag of #{args[:bucket]}"
+      s3_bucket = S3BucketHelper::S3Bucket.new(
+        args[:bucket_key_id], 
+        args[:bucket_access_key],
+        bucket: args[:bucket])
+      DumperUtils.question_user('Are you sure the folder under the bucket is not the folder of storing important user files? Please check the following files carefully. ')
       dump_files = s3_bucket.list("dumps/#{args[:tag]}")
+      dump_files.sort_by(&:last_modified).reverse.map do |object|
+        puts "Key: #{object.key}"
+      end
+      confirm_delete_dumps_file
       dump_files.sort_by(&:last_modified).map do |object|
         print "Deleting #{object.key}..."
         object.delete
@@ -119,15 +147,22 @@ namespace :db do
     end
 
     desc 'Copy s3 bucket dump file locally and decompress'
-    task :copy_s3_dump, [:tag] => :environment do |_task, args|
+    task :copy_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       args.with_defaults(:tag => "latest")
-      dirname = Rails.root.join("dumps_#{args[:tag]}")
+      args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
+      args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
+      args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
+      dir_name_base = "dumps_#{args[:tag]}_from_#{args[:bucket]}"
+      dirname = Rails.root.join(dir_name_base)
       FileUtils.mkpath(dirname)
-      s3_bucket = S3Bucket.new()
-      shell_working "Copying S3 files under dumps/#{args[:tag]} to local folder #{dirname}" do
+      s3_bucket = S3BucketHelper::S3Bucket.new(
+        args[:bucket_key_id], 
+        args[:bucket_access_key],
+        bucket: args[:bucket])
+      DumperUtils.shell_working "Copying S3 files under dumps/#{args[:tag]} to local folder #{dirname}" do
         dump_files = s3_bucket.list("dumps/#{args[:tag]}")
         dump_files.map do |dump_file|
-          local_filename = Rails.root.join("dumps_#{args[:tag]}_from_bucket", dump_file.key.split(File::Separator).last)
+          local_filename = Rails.root.join(dir_name_base, dump_file.key.split(File::Separator).last)
           File.open(local_filename, 'wb') do |file|
             s3_bucket.get_object(dump_file.key, target: file)
           end
@@ -170,6 +205,12 @@ namespace :db do
       exit unless(input.downcase.start_with?('y')) || input.nil?
     end
 
+    def confirm_delete_dumps_file
+      print "If you are still certain that you need to delete the files, please confirm Y/n?"
+      input = STDIN.gets.chomp
+      exit unless(input.start_with?('Y')) || input.nil?
+    end
+
     def get_first_pod(working_env)
       require 'open3'
 
@@ -188,10 +229,10 @@ namespace :db do
   namespace :restore do
 
     desc 'Loads an SQL dump of the database created by db:dump:<env> rake task to the local database'
-    task :local, [:tag] => :environment do |_task, args|      
+    task :local, [:dir] => :environment do |_task, args|      
       safeguard
-      args.with_defaults(:tag => "latest")
-      dirname = Rails.root.join("dumps_#{args[:tag]}")
+      args.with_defaults(:dir => "dumps_latest")
+      dirname = Rails.root.join(args[:dir])
 
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_loader')
       env = ENV['ENV'] || 'local'
@@ -205,14 +246,14 @@ namespace :db do
       puts 'Are you sure you need to retore a dump of database into the current database the app is connecting to?'
       puts 'Precondition: a dump of entire database has been done before carryihng this task'
       puts 'NOTES: rstoring process will destroy the previous data entirely, backup the data first if there is need'
-      DumperUtils.question_user('are you sure the environment the task is take is not production env? ')
+      DumperUtils.question_user('Are you sure the current environment is not production? ')
       confirm_data_restore
     end
 
     def confirm_data_restore
-      print "If you are still certain that you need to restore the data from dump files please confirm y/n "
+      print "If you are still certain that you need to restore the data from dump files please confirm Y/n "
       input = STDIN.gets.chomp
-      exit unless(input.downcase.start_with?('y')) || input.nil?
+      exit unless(input.start_with?('Y')) || input.nil?
     end
 
   end
