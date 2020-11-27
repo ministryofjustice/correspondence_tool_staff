@@ -214,7 +214,9 @@ module Stats
           Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
             d1 = Date.new(2017, 6, 4)
             d2 = Date.new(2017, 6, 30)  
-            report = R003BusinessUnitPerformanceReport.new(period_start: d1, period_end: d2); report.run; report.to_csv
+            report = R003BusinessUnitPerformanceReport.new(period_start: d1, period_end: d2)
+            report.run 
+            report.to_csv
           end
         end
 

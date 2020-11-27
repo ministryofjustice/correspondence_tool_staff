@@ -310,7 +310,7 @@ module Stats
         factory = :accepted_sar
         kase = create factory, responding_team: team, responder: responder, identifier: ident, received_date: received_date
         kase.external_deadline = Date.parse(deadline)
-        if flagged == true
+        if flagged
           CaseFlagForClearanceService.new(user: kase.managing_team.users.first, kase: kase, team: @team_dacu_disclosure).call
         end
         unless responded_date.nil?
@@ -321,13 +321,11 @@ module Stats
         end
       end
 
-
       if type.present?
         refusal_reason = CaseClosure::RefusalReason.__send__(type)
         kase.refusal_reason = refusal_reason
       end
       kase.save!
-      kase
     end
     #rubocop:enable Metrics/ParameterLists
 
