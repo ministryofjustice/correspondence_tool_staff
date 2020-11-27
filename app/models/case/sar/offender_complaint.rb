@@ -32,6 +32,16 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     high: 'high',
   }
 
+  # CT-3165 WIP REQUIRED FOR VALIDATIONS
+  #         REMOVE ONCE UX IS COMPLETED
+  before_validation :set_types
+  def set_types
+    self.complaint_type = 'standard'
+    self.complaint_subtype = 'missing_data'
+    self.priority = 'normal'
+  end
+  # CT-3165 END REMOVE ONCE UX IS COMPLETED
+
   class << self
     def type_abbreviation
       'OFFENDER_SAR_COMPLAINT'
