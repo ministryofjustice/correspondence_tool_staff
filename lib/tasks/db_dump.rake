@@ -91,10 +91,7 @@ namespace :db do
       is_store_to_s3_bucket = args[:storage] == 'bucket'
       s3_bucket = nil
       if is_store_to_s3_bucket
-        args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
-        args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
-        args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
-        s3_bucket = S3BucketHelper::S3Bucket.new(args[:bucket_key_id], args[:bucket_access_key], bucket: args[:bucket])
+        s3_bucket = init_s3_bucket(args)
       end
       puts 'exporting unanonymised database data'
       DatabaseDumper.new(
@@ -108,14 +105,8 @@ namespace :db do
     task :list_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       include ActionController
       args.with_defaults(:tag => "latest")
-      args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
-      args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
-      args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
+      s3_bucket = init_s3_bucket(args)
       puts "Listing dump files in s3 with tag of #{args[:tag]} from bucket #{args[:bucket]}"
-      s3_bucket = S3BucketHelper::S3Bucket.new(
-        args[:bucket_key_id], 
-        args[:bucket_access_key],
-        bucket: args[:bucket])
       dump_files = s3_bucket.list("dumps/#{args[:tag]}")
       dump_files.sort_by(&:last_modified).reverse.map do |object|
         puts "Key: #{object.key}"
@@ -128,14 +119,8 @@ namespace :db do
     desc 'Delete all but latest s3 database dump files'
     task :delete_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       args.with_defaults(:tag => "latest")
-      args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
-      args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
-      args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
+      s3_bucket = init_s3_bucket(args)
       puts "Delete dump files in s3 with tag of #{args[:bucket]}"
-      s3_bucket = S3BucketHelper::S3Bucket.new(
-        args[:bucket_key_id], 
-        args[:bucket_access_key],
-        bucket: args[:bucket])
       DumperUtils.question_user(
         'Are you sure the folder under the bucket is not the folder of storing important user files? Please check the following files carefully. ')
       dump_files = s3_bucket.list("dumps/#{args[:tag]}")
@@ -153,16 +138,10 @@ namespace :db do
     desc 'Copy s3 bucket dump file locally and decompress'
     task :copy_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       args.with_defaults(:tag => "latest")
-      args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
-      args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
-      args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
+      s3_bucket = init_s3_bucket(args)
       dir_name_base = "dumps_#{args[:tag]}_from_#{args[:bucket]}"
       dirname = Rails.root.join(dir_name_base)
       FileUtils.mkpath(dirname)
-      s3_bucket = S3BucketHelper::S3Bucket.new(
-        args[:bucket_key_id], 
-        args[:bucket_access_key],
-        bucket: args[:bucket])
       DumperUtils.shell_working "Copying S3 files under dumps/#{args[:tag]} to local folder #{dirname}" do
         dump_files = s3_bucket.list("dumps/#{args[:tag]}")
         dump_files.map do |dump_file|
@@ -227,6 +206,17 @@ namespace :db do
         end 
       end
       pod_name
+    end
+
+    def init_s3_bucket(args)
+      args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
+      args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
+      args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
+      s3_bucket = S3BucketHelper::S3Bucket.new(
+        args[:bucket_key_id], 
+        args[:bucket_access_key],
+        bucket: args[:bucket])
+      s3_bucket
     end
   end
 
