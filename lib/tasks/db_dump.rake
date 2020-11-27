@@ -86,19 +86,22 @@ namespace :db do
       raise "first argument must be 'anon' or 'clear', is: #{args[:anonymized]}" unless args[:anonymized].in?(%w( anon clear ))
       args.with_defaults(:tag => "latest")
       args.with_defaults(:storage => "bucket")
-      args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
-      args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
-      args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
-
       raise "third argument must be 'bucket' or 'local', is: #{args[:storage]}" unless args[:storage].in?(%w( bucket local ))
+
+      is_store_to_s3_bucket = args[:storage] == 'bucket'
+      s3_bucket = nil
+      if is_store_to_s3_bucket
+        args.with_defaults(:bucket_key_id => ENV["AWS_ACCESS_KEY_ID"])
+        args.with_defaults(:bucket_access_key => ENV["AWS_SECRET_ACCESS_KEY"])
+        args.with_defaults(:bucket => Settings.case_uploads_s3_bucket)
+        s3_bucket = S3BucketHelper::S3Bucket.new(args[:bucket_key_id], args[:bucket_access_key], bucket: args[:bucket])
+      end
       puts 'exporting unanonymised database data'
       DatabaseDumper.new(
         args[:anonymized] == 'anon', 
         args[:tag], 
-        args[:storage] == 'bucket', 
-        args[:bucket_key_id], 
-        args[:bucket_access_key],
-        bucket: args[:bucket]).run
+        is_store_to_s3_bucket,
+        s3_bucket: s3_bucket).run
     end
 
     desc 'List s3 database dump files'
@@ -133,7 +136,8 @@ namespace :db do
         args[:bucket_key_id], 
         args[:bucket_access_key],
         bucket: args[:bucket])
-      DumperUtils.question_user('Are you sure the folder under the bucket is not the folder of storing important user files? Please check the following files carefully. ')
+      DumperUtils.question_user(
+        'Are you sure the folder under the bucket is not the folder of storing important user files? Please check the following files carefully. ')
       dump_files = s3_bucket.list("dumps/#{args[:tag]}")
       dump_files.sort_by(&:last_modified).reverse.map do |object|
         puts "Key: #{object.key}"

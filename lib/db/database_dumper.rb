@@ -9,11 +9,11 @@ class DatabaseDumper
 
   TABLES_TO_BE_EXCLUDED = ["reports", "search_queries", "sessions", "versions"]
 
-  def initialize(anonymize, tag, is_store_to_s3_bucket, bucket_access_id, bucket_access_key, bucket)
+  def initialize(anonymize, tag, is_store_to_s3_bucket, s3_bucket: nil)
     @anonymize = anonymize
     @anonymizer = nil
     @db_connection_url = ENV['DATABASE_URL'] || 'postgres://localhost/correspondence_platform_development'
-    @s3_bucket = S3BucketHelper::S3Bucket.new(bucket_access_id, bucket_access_key, bucket: bucket)
+    @s3_bucket = s3_bucket
     @outcome_files = []
     @tag = tag
     @is_store_to_s3_bucket = is_store_to_s3_bucket
@@ -76,13 +76,13 @@ class DatabaseDumper
       end
 
       puts "exporting data #{table_name}"
-      dump_single_table(table_name, base_file_name, counter, created_at)
+      dump_single_table(table_name, base_file_name, counter)
       counter += 1
     end 
     @outcome_files << dump_post_data_tables("#{base_file_name}_#{counter}")
   end  
 
-  def dump_single_table(table_name, base_file_name, counter, time_stamp)
+  def dump_single_table(table_name, base_file_name, counter)
     outcome_from_single_tables = []
     table_base_name = "#{base_file_name}_#{counter >= 10 ? counter.to_s : '0'+counter.to_s}_#{table_name}"
     if require_to_be_anonymised?(table_name)
@@ -131,11 +131,11 @@ class DatabaseDumper
       Dir.glob("#{dirname}/*.*").sort.map do | upload_file |
         print "Uploading #{upload_file}..."
         actual_upload_file_name = File.basename(upload_file)
-        @s3_bucket.put_object(
-          "dumps/#{@tag}/#{actual_upload_file_name}", 
-          File.read(upload_file), 
-          metadata: {"created_at" => Date.today.to_s}
-        )
+        # @s3_bucket.put_object(
+        #   "dumps/#{@tag}/#{actual_upload_file_name}", 
+        #   File.read(upload_file), 
+        #   metadata: {"created_at" => Date.today.to_s}
+        # )
         puts 'done'.green
       end
     end
