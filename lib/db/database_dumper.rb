@@ -131,11 +131,11 @@ class DatabaseDumper
       Dir.glob("#{dirname}/*.*").sort.map do | upload_file |
         print "Uploading #{upload_file}..."
         actual_upload_file_name = File.basename(upload_file)
-        # @s3_bucket.put_object(
-        #   "dumps/#{@tag}/#{actual_upload_file_name}", 
-        #   File.read(upload_file), 
-        #   metadata: {"created_at" => Date.today.to_s}
-        # )
+        @s3_bucket.put_object(
+          "dumps/#{@tag}/#{actual_upload_file_name}", 
+          File.read(upload_file), 
+          metadata: {"created_at" => Date.today.to_s}
+        )
         puts 'done'.green
       end
     end
