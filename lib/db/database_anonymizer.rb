@@ -171,18 +171,22 @@ class DatabaseAnonymizer
   #
 
   def anonymize_users(user)
-    unless user.email =~ /@digital.justice.gov.uk$/
+    unless allow_to_be_reserved?(user.email)
       user.full_name = Faker::Name.unique.name
       user.email = Faker::Internet.email(name: user.full_name)
     end
     user
   end
 
+  def allow_to_be_reserved?(email)
+    email =~ /@digital.justice.gov.uk$/ || email =~ /@justice.gov.uk$/
+  end
+
   # Anonymize Cases table including all those case types
   def anonymize_cases(kase)
     kase.name = Faker::Name.name unless kase.class.name.start_with?("Case::ICO")
     kase.subject = initial_letters(kase.subject) + Faker::Company.catch_phrase unless kase.class.name.start_with?("Case::ICO")
-    kase.email = Faker::Internet.email(name:kase.name)
+    kase.email = Faker::Internet.email(name:kase.name) unless kase.email.blank?
     kase.message = Faker::Lorem.paragraph unless kase.message.blank?
     kase.postal_address = fake_address unless kase.postal_address.blank?
 
@@ -192,9 +196,6 @@ class DatabaseAnonymizer
     rescue NoMethodError
       false
     end
-
-    # update the search index in the record
-    kase.update_index
     kase
   end
 
@@ -205,7 +206,7 @@ class DatabaseAnonymizer
   # rubocop:disable Metrics/CyclomaticComplexity
   def anonymize_case_sar_offender(kase)
     kase.subject_address = fake_address unless kase.subject_address.blank?
-    kase.subject_full_name = Faker::Name.name
+    kase.subject_full_name = Faker::Name.name unless kase.subject_full_name.blank?
     kase.subject_aliases = Faker::Name.name unless kase.subject_aliases.blank?
     kase.case_reference_number = Faker::Code.asin unless kase.case_reference_number.blank?
     kase.other_subject_ids = fake_subject_ids(kase.other_subject_ids) unless kase.other_subject_ids.blank?
@@ -236,7 +237,7 @@ class DatabaseAnonymizer
   
   # Anonymize case_transition table
   def anonymize_case_transitions(ct)
-    ct.message = initial_letters(ct.message) + "\n\n" + Faker::Lorem.paragraph unless ct.message.nil?
+    ct.message = initial_letters(ct.message) + "\n\n" + Faker::Lorem.paragraph unless ct.message.blank?
     ct
   end
 
@@ -276,7 +277,7 @@ class DatabaseAnonymizer
   end
 
   def anonymize_data_requests(data_request)
-    data_request.request_type_note = Faker::Lorem.sentence
+    data_request.request_type_note = Faker::Lorem.sentence unless data_request.request_type_note.blank?
     data_request
   end
 
