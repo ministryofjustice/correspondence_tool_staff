@@ -23,6 +23,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
+    then_expect_case_in_my_open_cases
   end
 
   scenario '2 Data subject requesting data to be sent to third party' do
@@ -37,9 +38,10 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_expect_cases_show_page_to_be_correct_for_data_subject_sending_data_to_third_party
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
+    then_expect_case_in_my_open_cases
   end
 
- scenario '3 Solicitor requesting data subject record' do
+  scenario '3 Solicitor requesting data subject record' do
     when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
     and_fill_in_requester_details_page(:third_party)
@@ -51,7 +53,8 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_subject_record
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
- end
+    then_expect_case_in_my_open_cases
+  end
 
   scenario '4 Solicitor requesting record to be sent to data subject' do
     when_i_navigate_to_offender_sar_complaint_subject_page
@@ -65,6 +68,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
+    then_expect_case_in_my_open_cases
   end
 
   scenario '5 Copy the third part details from linked offender sar case' do
@@ -79,6 +83,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_expect_cases_show_page_to_have_same_third_party_detail
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
+    then_expect_case_in_my_open_cases
   end
 
   scenario '6 Create the complaint case from closed offender sar case' do
@@ -92,6 +97,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_basic_details_of_show_page_are_correct
     then_expect_cases_show_page_to_have_same_third_party_detail
     then_expect_open_cases_page_to_be_correct
+    then_expect_case_in_my_open_cases
   end
 
   scenario '7 Create the complaint case from open late offender sar case' do
@@ -107,6 +113,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     then_expect_linked_original_case_has_stamp_for_linkage(offender_sar_case: offender_sar_open_late)
     then_expect_open_cases_page_to_be_correct(offender_sar_case: offender_sar_open_late)
+    then_expect_case_in_my_open_cases
   end
 
   scenario '8 Create the complaint case from open late offender sar case' do
@@ -235,6 +242,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   def then_basic_details_of_show_page_are_correct(offender_sar_case: nil)
     linked_case = (offender_sar_case ||  offender_sar)
     expect(cases_show_page).to be_displayed
+    expect_the_case_to_be_assigned_to_me
     expect(cases_show_page).to have_content "OFFENDER-SAR-COMPLAINT"
     expect(cases_show_page).to have_content "Case created successfully"
     expect(cases_show_page.page_heading).to have_content linked_case.subject
@@ -248,7 +256,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   def then_expect_open_cases_page_to_be_correct(offender_sar_case: nil)
     click_on "Cases"
     expect(open_cases_page).to be_displayed
-    expect(cases_page).to have_content "branston registry responding user"
+    expect(open_cases_page).to have_content "branston registry responding user"
     expect(open_cases_page).to have_content (offender_sar_case || offender_sar).subject
   end
 
@@ -257,6 +265,21 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to have_content "Company name Foogle and Sons Solicitors at Law"
     expect(cases_show_page).to have_content "Relationship Solicitor"
     expect(cases_show_page).to have_content "Address\n22 High Street"
+  end
+
+  def expect_the_case_to_be_assigned_to_me
+    expect(cases_show_page.case_history).to have_content "Assign responder"
+    expect(cases_show_page.case_history).to have_content "Assigned to Branston Registr"
+    expect(cases_show_page).to have_content "With\nbranston registry responding user"
+  end
+
+  def then_expect_case_in_my_open_cases
+    complaint_case = Case::Base.offender_sar_complaint.last
+    click_on "My open cases"
+    expect(my_open_cases_page).to be_displayed
+    row = my_open_cases_page.row_for_case_number(complaint_case.number)
+    expect(row).to have_content complaint_case.number
+    expect(row).to have_content 'branston registry responding user'
   end
 end
 

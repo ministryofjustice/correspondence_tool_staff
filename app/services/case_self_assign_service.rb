@@ -15,7 +15,6 @@ class CaseSelfAssignService
       if @assignment.valid?
         managing_team = @user.responding_teams.first
         @case.state_machine.assign_responder! acting_user: @user, acting_team: managing_team, target_team: target_team
-        @assignment.case.state_machine.accept_approver_assignment!(acting_user: @user, acting_team: target_team)
         @assignment.accepted!
         @assignment.save!
         @result = :ok
