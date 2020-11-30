@@ -10,11 +10,11 @@ describe CaseSelfAssignService, type: :service do
                                    user: responder }
   let(:new_assignment) { instance_double Assignment }
 
-describe '#initialize' do
+  describe '#initialize' do
     it 'defaults result to incomplete' do
       expect(service.result).to eq :incomplete
     end
-end
+  end
 
   describe '#call' do
     before do
