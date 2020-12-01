@@ -131,23 +131,6 @@ FactoryBot.define do
       end
     end
 
-    # trait :ready_to_dispatch do
-    #   date_responded { Date.today }
-    #   info_held_status { find_or_create :info_status, :held }
-    #   transient do
-    #     identifier { 'Ready to dispatch Offender SAR' }
-    #   end
-
-    #   after(:create) do |kase|
-    #     create :case_transition_waiting_for_data, case: kase
-    #     create :case_transition_ready_for_vetting, case: kase
-    #     create :case_transition_vetting_in_progress, case: kase
-    #     create :case_transition_ready_to_copy, case: kase
-    #     create :case_transition_ready_to_dispatch, case: kase
-    #     kase.reload
-    #   end
-    # end
-
     trait :response_required do
       transient do
         identifier { 'Responde required - Complaint' }
