@@ -561,7 +561,11 @@ describe Case::SAR::OffenderComplaint do
   describe '#allow_waiting_for_data_state?' do
     it 'is true when the current state is data_to_be_requested only' do
       kase = build :offender_sar_complaint
-      expect(kase.current_state).to eq 'data_to_be_requested'
+
+      expect(kase.current_state).to eq 'to_be_assessed'
+      expect(kase.allow_waiting_for_data_state?).to be false
+
+      kase.current_state = 'data_to_be_requested'
       expect(kase.allow_waiting_for_data_state?).to be true
 
       kase.current_state = 'waiting_for_data'

@@ -1,6 +1,7 @@
 #  This class is to provide easy functin to get the data out of environent and anonymize them
 #  initial plan is to not provide clear option
 #
+require File.join(Rails.root, 'lib', 'tasks', 'rake_task_helpers', 'dumper_utils')
 
 class DatabaseDumper
 
@@ -8,14 +9,14 @@ class DatabaseDumper
 
   TABLES_TO_BE_EXCLUDED = ["reports", "search_queries", "sessions", "versions"]
 
-  def initialize(anonymize, tag, where_to_stored)
+  def initialize(anonymize, tag, is_store_to_s3_bucket, s3_bucket: nil)
     @anonymize = anonymize
     @anonymizer = nil
     @db_connection_url = ENV['DATABASE_URL'] || 'postgres://localhost/correspondence_platform_development'
-    @s3_bucket = S3BucketHelper::S3Bucket.new(ENV["AWS_ACCESS_KEY_ID"], ENV["AWS_SECRET_ACCESS_KEY"])
+    @s3_bucket = s3_bucket
     @outcome_files = []
     @tag = tag
-    @where_to_stored = where_to_stored
+    @is_store_to_s3_bucket = is_store_to_s3_bucket
   end
 
   def run
@@ -25,6 +26,9 @@ class DatabaseDumper
     dump_schema_snapshot(dirname)
     dump_data_models_snapshot(dirname)
     dump_local_database(dirname)
+    if @is_store_to_s3_bucket && @s3_bucket
+      upload_to_s3(dirname)
+    end
     @outcome_files
   end
 
@@ -72,13 +76,13 @@ class DatabaseDumper
       end
 
       puts "exporting data #{table_name}"
-      dump_single_table(table_name, base_file_name, counter, created_at)
+      dump_single_table(table_name, base_file_name, counter)
       counter += 1
     end 
     @outcome_files << dump_post_data_tables("#{base_file_name}_#{counter}")
   end  
 
-  def dump_single_table(table_name, base_file_name, counter, time_stamp)
+  def dump_single_table(table_name, base_file_name, counter)
     outcome_from_single_tables = []
     table_base_name = "#{base_file_name}_#{counter >= 10 ? counter.to_s : '0'+counter.to_s}_#{table_name}"
     if require_to_be_anonymised?(table_name)
@@ -87,16 +91,11 @@ class DatabaseDumper
     else
       outcome_from_single_tables << dump_single_clear_table(table_name, table_base_name)      
     end
-    compressed_files = compresssed_files(outcome_from_single_tables)
-    if @where_to_stored == 'bucket'
-      upload_to_s3(compressed_files, table_name, time_stamp)
-    end
+    compresssed_files(outcome_from_single_tables)
   end
 
   def compresssed_files(files)
-    results = []
-    files.each { | filename | results << DumperUtils.compress_file(filename) }
-    results
+    files.each { | filename | DumperUtils.compress_file(filename) }
   end
 
   def require_to_be_anonymised?(table_name)
@@ -127,14 +126,17 @@ class DatabaseDumper
     "#{filename}.sql"
   end
 
-  def upload_to_s3(compressed_files, table_name, created_at)
-    if @s3_bucket
-      compressed_files.each do | upload_file |
+  def upload_to_s3(dirname)
+    DumperUtils.shell_working "Upload files under dumps/#{dirname} to bucket." do
+      Dir.glob("#{dirname}/*.*").sort.map do | upload_file |
+        print "Uploading #{upload_file}..."
+        actual_upload_file_name = File.basename(upload_file)
         @s3_bucket.put_object(
-          "dumps/#{@tag}/#{upload_file}", 
+          "dumps/#{@tag}/#{actual_upload_file_name}", 
           File.read(upload_file), 
-          metadata: { "table" => table_name, "created_at" => created_at.to_s}
+          metadata: {"created_at" => Date.today.to_s}
         )
+        puts 'done'.green
       end
     end
   end 

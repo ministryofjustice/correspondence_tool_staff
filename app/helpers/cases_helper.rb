@@ -51,6 +51,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               class: 'button',
               method: 'post'
     when :assign_responder
+      return '' if @case.type_of_offender_sar?
       link_to I18n.t('common.case.assign'),
               new_case_assignment_path(@case),
               id: 'action--assign-to-responder',

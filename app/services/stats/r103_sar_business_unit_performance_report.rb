@@ -11,7 +11,13 @@ module Stats
 
     def case_scope
       sar_tmm = CaseClosure::RefusalReason.sar_tmm
-      Case::SAR::Standard.where('refusal_reason_id IS NULL OR refusal_reason_id != ?', sar_tmm.id)
+      Case::SAR::Standard
+        .includes(:assign_responder_transitions,
+                  :responded_transitions,
+                  :responder_assignment,
+                  :responding_team,
+                  :approver_assignments)
+        .where('refusal_reason_id IS NULL OR refusal_reason_id != ?', sar_tmm.id)
     end
 
     def report_type
