@@ -22,7 +22,11 @@ module Steppable
   end
 
   def get_next_step
-    steps[steps.index(current_step) + 1]
+    if current_step == steps.last
+      current_step
+    else
+      steps[steps.index(current_step) + 1]
+    end
   end
 
   def get_previous_step
