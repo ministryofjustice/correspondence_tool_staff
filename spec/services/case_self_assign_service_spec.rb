@@ -54,15 +54,6 @@ describe CaseSelfAssignService, type: :service do
         service.call
       end
 
-      it 'triggers an accept_approver_assignment! event' do
-        expect(unassigned_case.state_machine)
-            .to receive(:accept_approver_assignment!)
-                    .with(
-                        acting_user: responder,
-                        acting_team: team)
-        service.call
-      end
-
       it 'saves the assignment' do
         service.call
         expect(service.assignment).to eq new_assignment
