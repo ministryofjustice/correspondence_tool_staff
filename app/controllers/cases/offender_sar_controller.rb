@@ -31,6 +31,7 @@ module Cases
       if !@case.valid_attributes?(create_params)
         render :new
       elsif @case.valid? && @case.save
+        assign_case_to_creator if @case.offender_sar_complaint?
         session[session_state] = nil
         flash[:notice] = "Case created successfully"
         redirect_to case_path(@case)
@@ -98,6 +99,14 @@ module Cases
     end
 
     private
+
+    def assign_case_to_creator
+      assign_service = CaseSelfAssignService
+                              .new kase: @case,
+                                   role: 'responding',
+                                   user: current_user
+      assign_service.call
+    end
 
     def apply_date_workaround
       # an issue with the Gov UK Date Fields causes the fields to show up empty

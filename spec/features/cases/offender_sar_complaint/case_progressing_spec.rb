@@ -19,6 +19,9 @@ feature 'offender sar complaint case creation by a manager' do
   scenario 'progressing an offender sar complaint case', js: true do
     cases_show_page.load(id: offender_sar_complaint.id)
 
+    expect(cases_show_page).to have_content "Requires data"
+    click_on "Requires data"
+
     expect(cases_show_page).to have_content "Mark as waiting for data"
     expect(cases_show_page).to have_content "Data to be requested"
     expect(cases_show_page).to have_content "Send acknowledgement letter"
