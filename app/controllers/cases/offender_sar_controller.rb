@@ -28,7 +28,7 @@ module Cases
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
       if steps_are_completed? 
-        if @case.valid?
+        if @case.valid_attributes?(create_params) && @case.valid?
           create_case
         else
           render :new
@@ -111,6 +111,7 @@ module Cases
     end
 
     def create_case
+      @case.save
       session[session_state] = nil
       flash[:notice] = "Case created successfully"
       redirect_to case_path(@case)
