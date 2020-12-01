@@ -7,7 +7,7 @@ module CurrentTeamAndUser
         @case = kase
         @dts = DefaultTeamService.new(@case)
         @team = @case.managing_team
-        @user = nil
+        @user = @case&.responder_assignment&.user
       end
 
     end

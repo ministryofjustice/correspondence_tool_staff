@@ -188,5 +188,32 @@ FactoryBot.define do
         kase.reload
       end
     end
+
+
+    trait :_transition_to_accepted do
+      after(:create) do |kase, evaluator|
+        kase.responder_assignment.update_attribute :user, evaluator.responder
+        kase.responder_assignment.accepted!
+        create :case_transition_accept_responder_assignment,
+               case: kase,
+               acting_team: kase.responding_team,
+               acting_user: kase.responder,
+               created_at: evaluator.creation_time
+      end
+    end
+
   end
+
+  factory :accepted_complaint_case, parent: :offender_sar_complaint do
+    transient do
+      identifier { "accepted case" }
+    end
+
+    after(:create) do |kase, evaluator|
+      kase.assignments.create(team: kase.responding_team, role: 'responding')
+      kase.responder_assignment.update_attribute :user, evaluator.responder
+      kase.responder_assignment.accepted!
+    end
+  end
+
 end
