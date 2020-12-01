@@ -6,11 +6,11 @@ module S3BucketHelper
 
   class S3Bucket
 
-    def initialize(access_key_id, secret_access_key)
+    def initialize(access_key_id, secret_access_key, bucket: nil)
       @credentials = Credentials.new(
         access_key_id,
         secret_access_key,
-        Settings.case_uploads_s3_bucket
+        bucket || Settings.case_uploads_s3_bucket
       )
     end
 
