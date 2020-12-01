@@ -14,7 +14,7 @@ feature 'Generate an acknowledgement letter by a responder' do
     scenario 'when the case has just been created' do
       cases_show_page.load(id: offender_sar_complaint.id)
       expect(cases_show_page).to be_displayed
-      expect(cases_show_page).to have_content "Data to be requested"
+      expect(cases_show_page).to have_content "To be assessed"
       expect(cases_show_page).to have_content "Send acknowledgement letter"
     end
 

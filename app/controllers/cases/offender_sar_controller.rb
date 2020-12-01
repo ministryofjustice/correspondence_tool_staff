@@ -98,6 +98,7 @@ module Cases
 
     private
 
+<<<<<<< HEAD
     def steps_are_completed?
       @case.current_step == @case.steps.last
     end
@@ -115,6 +116,14 @@ module Cases
       session[session_state] = nil
       flash[:notice] = "Case created successfully"
       redirect_to case_path(@case)
+=======
+    def assign_case_to_creator
+      assign_service = CaseSelfAssignService
+                              .new kase: @case,
+                                   role: 'responding',
+                                   user: current_user
+      assign_service.call
+>>>>>>> master
     end
 
     def apply_date_workaround

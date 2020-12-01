@@ -96,6 +96,7 @@ feature 'offender sar complaint case editing by a manager' do
   end
 
   def when_i_progress_case_to_a_closed_state
+    click_on "Requires data"
     click_on "Mark as waiting for data"
     click_on "Mark as ready for vetting"
     click_on "Mark as vetting in progress"
