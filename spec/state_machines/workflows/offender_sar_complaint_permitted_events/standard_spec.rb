@@ -10,13 +10,16 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_require_data_review, 
           :mark_as_data_to_be_requested,
           :mark_as_require_response, 
-          :send_acknowledgement_letter]
+          :send_acknowledgement_letter,
+          :accept_approver_assignment, 
+          :assign_responder]
       },
       {
         state: :data_review_required, 
         specific_events: [
           :mark_as_vetting_in_progress, 
-          :mark_as_require_response]
+          :mark_as_require_response 
+          :send_acknowledgement_letter]
       },
       {
         state: :data_to_be_requested,
