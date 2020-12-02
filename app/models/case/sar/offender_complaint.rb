@@ -5,6 +5,43 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validates_presence_of :original_case
   after_create :stamp_on_original_case
 
+  jsonb_accessor :properties,
+                 complaint_type: :string,
+                 complaint_subtype: :string,
+                 priority: :string
+
+  validates :complaint_type, presence: true
+  validates :complaint_subtype, presence: true
+  validates :priority, presence: true
+
+  enum complaint_type: {
+    standard:  'standard',
+    ico: 'ico',
+    litigation: 'litigation',
+  }
+
+  enum complaint_subtype: {
+    missing_data:  'missing_data',
+    inaccurate_data: 'inaccurate_data',
+    redacted_data: 'redacted_data',
+    timeliness: 'timeliness',
+  }
+
+  enum priority: {
+    normal:  'normal',
+    high: 'high',
+  }
+
+  # CT-3165 WIP REQUIRED FOR VALIDATIONS
+  #         REMOVE ONCE UX IS COMPLETED
+  before_validation :set_types
+  def set_types
+    self.complaint_type = 'standard'
+    self.complaint_subtype = 'missing_data'
+    self.priority = 'normal'
+  end
+  # CT-3165 END REMOVE ONCE UX IS COMPLETED
+
   class << self
     def type_abbreviation
       'OFFENDER_SAR_COMPLAINT'
@@ -23,14 +60,14 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     false
   end
 
-  private 
+  private
 
   def stamp_on_original_case
     self.original_case.state_machine.add_note_to_case!(
       acting_user: self.creator,
       acting_team: self.creator.case_team(self.original_case),
       message: I18n.t(
-        'common.case/offender_sar.complaint_case_link_message', 
+        'common.case/offender_sar.complaint_case_link_message',
         creation_date: self.created_at.to_date))
   end
 
