@@ -44,6 +44,87 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
+  describe '#complaint_type' do
+    context 'validates that complaint type is not blank' do
+      it 'errors' do
+        pending 'removal of the "set_type" validation hack'
+        kase = build(:offender_sar_complaint, complaint_type: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:complaint_type]).to eq ["can't be blank"]
+      end
+    end
+
+    context 'valid values' do
+      it 'does not error' do
+        expect(build(:offender_sar_complaint, complaint_type: 'standard')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_type: 'ico')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_type: 'litigation')).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_complaint, complaint_type: 'wibble')
+        }.to raise_error ArgumentError
+      end
+    end
+  end
+
+  describe '#priority' do
+    context 'validates that priority is not blank' do
+      it 'errors' do
+        pending 'removal of the "set_type" validation hack'
+        kase = build(:offender_sar_complaint, priority: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:priority]).to eq ["can't be blank"]
+      end
+    end
+
+    context 'valid values' do
+      it 'does not error' do
+        expect(build(:offender_sar_complaint, priority: 'normal')).to be_valid
+        expect(build(:offender_sar_complaint, priority: 'high')).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_complaint, priority: 'enormous')
+        }.to raise_error ArgumentError
+      end
+    end
+  end
+
+  describe '#complaint_subtype' do
+    context 'validates that complaint_subtype is not blank' do
+      it 'errors' do
+        pending 'removal of the "set_type" validation hack'
+        kase = build(:offender_sar_complaint, complaint_subtype: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:complaint_subtype]).to eq ["can't be blank"]
+      end
+    end
+
+    context 'valid values' do
+      it 'does not error' do
+        expect(build(:offender_sar_complaint, complaint_subtype: 'missing_data')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_subtype: 'inaccurate_data')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_subtype: 'redacted_data')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_subtype: 'timeliness')).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:offender_sar_complaint, complaint_subtype: 'purple')
+        }.to raise_error ArgumentError
+      end
+    end
+  end
+
   describe '#subject_type' do
     context 'valid values' do
       it 'does not error' do
