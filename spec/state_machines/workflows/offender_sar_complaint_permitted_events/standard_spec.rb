@@ -18,7 +18,7 @@ describe ConfigurableStateMachine::Machine do
         state: :data_review_required, 
         specific_events: [
           :mark_as_vetting_in_progress, 
-          :mark_as_require_response 
+          :mark_as_require_response,
           :send_acknowledgement_letter]
       },
       {
