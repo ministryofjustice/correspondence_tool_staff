@@ -166,7 +166,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page.case_history.entries.first)
       .to have_content I18n.t(
         'common.case/offender_sar.complaint_case_link_message',
-        creation_date: Date.today)
+        received_date: Date.today)
   end
 
   def when_i_navigate_to_offender_sar_subject_page_and_start_complaint(offender_sar_case: nil)

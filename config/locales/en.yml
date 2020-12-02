@@ -729,7 +729,7 @@ en:
       request: "ICO's request"
     case/offender_sar:
       start_complaint: Start complaint
-      complaint_case_link_message: Complaint started for this case on %{creation_date}
+      complaint_case_link_message: Complaint received for this case on %{received_date}
     case_list:
       flag: 'Flag'
       draft_deadline: Draft deadline

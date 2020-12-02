@@ -140,7 +140,7 @@ class Workflows::Predicates
   end
 
   def can_start_complaint?
-    @kase.offender_sar? && (@kase.already_late? || @kase.current_state == 'closed')
+    FeatureSet.offender_sar_complaints.enabled? && @kase.offender_sar? && (@kase.already_late? || @kase.current_state == 'closed')
   end
 
   private

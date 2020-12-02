@@ -67,8 +67,8 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
       acting_user: self.creator,
       acting_team: self.creator.case_team(self.original_case),
       message: I18n.t(
-        'common.case/offender_sar.complaint_case_link_message',
-        creation_date: self.created_at.to_date))
+        'common.case/offender_sar.complaint_case_link_message', 
+        received_date: self.received_date.to_date))
   end
 
 end
