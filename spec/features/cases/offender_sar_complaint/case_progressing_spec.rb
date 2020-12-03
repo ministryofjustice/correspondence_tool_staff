@@ -16,16 +16,16 @@ feature 'offender sar complaint case creation by a manager' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  context 'Standard complaint case', js: true do
+  context 'Standard offender sar complaint case', js: true do
 
-    scenario 'progressing an complaint case - routine 1' do
+    scenario 'progressing an offender sar complaint case - scenario 1' do
       to_be_assessed
       requires_data_review
       requires_response
       close_case
     end
 
-    scenario 'progressing an complaint case - routine 2' do
+    scenario 'progressing an offender sar complaint case - scenario 2' do
       to_be_assessed
       requires_data_review
       vetting_in_progress
@@ -34,13 +34,13 @@ feature 'offender sar complaint case creation by a manager' do
       close_case
     end
 
-    scenario 'progressing an complaint case - routine 3' do
+    scenario 'progressing an offender sar complaint case - scenario 3' do
       to_be_assessed
       requires_response
       close_case
     end
 
-    scenario 'progressing an complaint case - routine 4' do
+    scenario 'progressing an offender sar complaint case - scenario 4' do
       to_be_assessed
       requires_data
       waiting_for_data
@@ -48,7 +48,7 @@ feature 'offender sar complaint case creation by a manager' do
       close_case
     end
 
-    scenario 'progressing an complaint case - routine 5' do
+    scenario 'progressing an offender sar complaint case - scenario 5' do
       to_be_assessed
       requires_data
       waiting_for_data

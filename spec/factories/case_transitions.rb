@@ -325,8 +325,9 @@ FactoryBot.define do
     original_final_deadline { self.case.external_deadline }
   end
 
-  # Offender SAR specific transitions below - note use of responder
-  # and not manager - single team responsible for complete case workflow
+  # Offender SAR and Offender SAR Complaint specific transitions below 
+  # - note use of responder and not manager 
+  # - single team responsible for complete case workflow
   factory :case_transition_data_to_be_requested, parent: :case_transition do
     to_state { 'data_to_be_requested' }
     event { 'mark_as_data_to_be_requested' }

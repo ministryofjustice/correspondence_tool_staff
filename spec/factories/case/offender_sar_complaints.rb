@@ -68,7 +68,7 @@ FactoryBot.define do
 
     trait :data_to_be_requested do
       transient do
-        identifier { 'Data to be requested - Complaint' }
+        identifier { 'Data to be requested - Offender SAR Complaint' }
       end
 
       after(:create) do |kase|
@@ -79,7 +79,7 @@ FactoryBot.define do
 
     trait :waiting_for_data do
       transient do
-        identifier { 'Waiting for data - Complaint' }
+        identifier { 'Waiting for data - Offender SAR Complaint' }
       end
 
       after(:create) do |kase|
@@ -91,7 +91,7 @@ FactoryBot.define do
 
     trait :ready_for_vetting do
       transient do
-        identifier { 'Ready for vetting - Complaint' }
+        identifier { 'Ready for vetting - Offender SAR Complaint' }
       end
 
       after(:create) do |kase|
@@ -104,7 +104,7 @@ FactoryBot.define do
 
     trait :vetting_in_progress do
       transient do
-        identifier { 'Vetting in progress - Complaint' }
+        identifier { 'Vetting in progress - Offender SAR Complaint' }
       end
 
       after(:create) do |kase|
@@ -118,7 +118,7 @@ FactoryBot.define do
 
     trait :ready_to_copy do
       transient do
-        identifier { 'Ready to close - Complaint' }
+        identifier { 'Ready to close - Offender SAR Complaint' }
       end
 
       after(:create) do |kase|
@@ -133,7 +133,7 @@ FactoryBot.define do
 
     trait :response_required do
       transient do
-        identifier { 'Responde required - Complaint' }
+        identifier { 'Response required - Offender SAR Complaint' }
       end
 
       received_date  { 22.business_days.ago }
