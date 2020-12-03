@@ -35,6 +35,12 @@ module PageObjects
               choose('offender_sar_complaint_complaint_subtype_timeliness', visible: false)
             end
 
+            if kase.normal_priority?
+              choose('offender_sar_complaint_priority_normal_priority', visible: false)
+            elsif kase.high_priority?
+              choose('offender_sar_complaint_priority_standard_priority', visible: false)
+            end
+
           end
 
         end
