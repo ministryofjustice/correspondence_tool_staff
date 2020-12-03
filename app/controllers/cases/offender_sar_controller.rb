@@ -27,20 +27,18 @@ module Cases
       @case = build_case_from_session(case_type)
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
-
-      if !@case.valid_attributes?(create_params)
-        render :new
-      elsif @case.valid? && @case.save
-        assign_case_to_creator if @case.offender_sar_complaint?
-        session[session_state] = nil
-        flash[:notice] = "Case created successfully"
-        redirect_to case_path(@case)
+      if steps_are_completed? 
+        if @case.valid_attributes?(create_params) && @case.valid?
+          create_case
+        else
+          render :new
+        end
       else
-        copy_params = create_params
-        copy_params = @case.process_params_after_step(copy_params)
-        session_persist_state(copy_params)
-        get_next_step(@case)
-        redirect_to "#{@case.case_route_path}/#{@case.current_step}"
+        if @case.valid_attributes?(create_params)
+          go_next_step
+        else
+          render :new
+        end
       end
     end
 
@@ -99,6 +97,26 @@ module Cases
     end
 
     private
+
+    def steps_are_completed?
+      @case.current_step == @case.steps.last
+    end
+
+    def go_next_step
+      copy_params = create_params
+      copy_params = @case.process_params_after_step(copy_params)
+      session_persist_state(copy_params)
+      get_next_step(@case)
+      redirect_to "#{@case.case_route_path}/#{@case.current_step}"
+    end
+
+    def create_case
+      @case.save
+      assign_case_to_creator if @case.offender_sar_complaint?
+      session[session_state] = nil
+      flash[:notice] = "Case created successfully"
+      redirect_to case_path(@case)
+    end
 
     def assign_case_to_creator
       assign_service = CaseSelfAssignService
