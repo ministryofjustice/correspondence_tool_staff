@@ -28,8 +28,9 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   }
 
   enum priority: {
-    normal:  'normal',
-    high: 'high',
+    normal: 'normal', # to be removed in next PR - required for migration
+    normal_priority: 'normal_priority',
+    high_priority: 'high_priority',
   }
 
   # CT-3165 WIP REQUIRED FOR VALIDATIONS
@@ -38,7 +39,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   def set_types
     self.complaint_type = 'standard'
     self.complaint_subtype = 'missing_data'
-    self.priority = 'normal'
+    self.priority = 'normal_priority'
   end
   # CT-3165 END REMOVE ONCE UX IS COMPLETED
 
@@ -67,7 +68,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
       acting_user: self.creator,
       acting_team: self.creator.case_team(self.original_case),
       message: I18n.t(
-        'common.case/offender_sar.complaint_case_link_message', 
+        'common.case/offender_sar.complaint_case_link_message',
         received_date: self.received_date.to_date))
   end
 

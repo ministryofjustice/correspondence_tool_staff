@@ -83,8 +83,8 @@ describe Case::SAR::OffenderComplaint do
 
     context 'valid values' do
       it 'does not error' do
-        expect(build(:offender_sar_complaint, priority: 'normal')).to be_valid
-        expect(build(:offender_sar_complaint, priority: 'high')).to be_valid
+        expect(build(:offender_sar_complaint, priority: 'normal_priority')).to be_valid
+        expect(build(:offender_sar_complaint, priority: 'high_priority')).to be_valid
       end
     end
 
