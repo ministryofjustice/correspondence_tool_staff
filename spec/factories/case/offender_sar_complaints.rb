@@ -155,7 +155,7 @@ FactoryBot.define do
 
     trait :closed do
       transient do
-        identifier { 'Closed - Complaint' }
+        identifier { 'Closed - Offender SAR Complaint' }
       end
 
       received_date  { 22.business_days.ago }
