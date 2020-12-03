@@ -24,6 +24,17 @@ module PageObjects
             elsif kase.litigation?
               choose('offender_sar_complaint_complaint_type_litigation', visible: false)
             end
+
+            if kase.missing_data?
+              choose('offender_sar_complaint_complaint_subtype_missing_data', visible: false)
+            elsif kase.inaccurate_data?
+              choose('offender_sar_complaint_complaint_subtype_inaccurate_data', visible: false)
+            elsif kase.redacted_data?
+              choose('offender_sar_complaint_complaint_subtype_redacted_data', visible: false)
+            elsif kase.timeliness?
+              choose('offender_sar_complaint_complaint_subtype_timeliness', visible: false)
+            end
+
           end
 
         end

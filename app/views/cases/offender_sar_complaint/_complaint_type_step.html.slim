@@ -8,6 +8,9 @@
   = f.radio_button_fieldset :complaint_type,
     choices: Case::SAR::OffenderComplaint::complaint_types.keys
 
+  = f.radio_button_fieldset :complaint_subtype,
+    choices: Case::SAR::OffenderComplaint::complaint_subtypes.keys
+
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'
