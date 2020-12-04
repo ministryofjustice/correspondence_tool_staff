@@ -15,13 +15,13 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validates :priority, presence: true
 
   enum complaint_type: {
-    standard:  'standard',
+    standard: 'standard',
     ico: 'ico',
     litigation: 'litigation',
   }
 
   enum complaint_subtype: {
-    missing_data:  'missing_data',
+    missing_data: 'missing_data',
     inaccurate_data: 'inaccurate_data',
     redacted_data: 'redacted_data',
     timeliness: 'timeliness',
