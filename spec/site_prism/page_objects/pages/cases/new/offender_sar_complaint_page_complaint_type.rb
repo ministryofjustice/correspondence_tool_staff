@@ -46,9 +46,9 @@ module PageObjects
 
           def fill_in_priority(kase)
             if kase.normal_priority?
-              choose('offender_sar_complaint_priority_normal_priority', visible: false)
+              choose('offender_sar_complaint_priority_normal', visible: false)
             elsif kase.high_priority?
-              choose('offender_sar_complaint_priority_standard_priority', visible: false)
+              choose('offender_sar_complaint_priority_standard', visible: false)
             end
           end
 

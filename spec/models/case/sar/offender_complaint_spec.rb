@@ -95,6 +95,24 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
+  describe '#normal_priority?' do
+    it 'delegates to normal?' do
+      kase = build(:offender_sar_complaint, priority: 'normal')
+      expect(kase.normal_priority?).to be true
+      kase.high!
+      expect(kase.normal_priority?).to be false
+    end
+  end
+
+  describe '#high_priority?' do
+    it 'delegates to high?' do
+      kase = build(:offender_sar_complaint, priority: 'high')
+      expect(kase.high_priority?).to be true
+      kase.normal!
+      expect(kase.high_priority?).to be false
+    end
+  end
+
   describe '#complaint_subtype' do
     context 'validates that complaint_subtype is not blank' do
       it 'errors' do

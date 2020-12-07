@@ -267,7 +267,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to have_content linked_case.subject_address
     expect(cases_show_page).to have_content "Standard"
     expect(cases_show_page).to have_content "Missing data"
-    expect(cases_show_page).to have_content "Normal priority"
+    expect(cases_show_page).to have_content "Normal"
   end
 
   def then_expect_open_cases_page_to_be_correct(offender_sar_case: nil)

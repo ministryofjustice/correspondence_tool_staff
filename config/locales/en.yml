@@ -650,6 +650,7 @@ en:
       clearance_copy: 'You are clearing the response to: '
       complaint_type: What sort of complaint is this?
       complaint_subtype: What is the nature of the complaint?
+      priority: Priority
       compliant_in_time: Uploaded in time
       compliant_late: Uploaded late
       compliant_unknown: Unknown draft compliancy

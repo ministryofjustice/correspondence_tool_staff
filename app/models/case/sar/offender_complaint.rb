@@ -50,6 +50,14 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     false
   end
 
+  def normal_priority?
+    normal?
+  end
+
+  def high_priority?
+    high?
+  end
+
   private
 
   def stamp_on_original_case
