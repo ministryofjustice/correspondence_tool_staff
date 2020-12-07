@@ -14,6 +14,10 @@
   = f.radio_button_fieldset :priority,
     choices: Case::SAR::OffenderComplaint::priorities.keys
 
+  / TODO required to enable create_params - remove as part of
+  / https://dsdmoj.atlassian.net/browse/CT-3166
+  = f.hidden_field :third_party_relationship
+
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'

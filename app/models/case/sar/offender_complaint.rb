@@ -32,16 +32,6 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     high: 'high',
   }
 
-  # CT-3165 WIP REQUIRED FOR VALIDATIONS
-  #         REMOVE ONCE UX IS COMPLETED
-  before_validation :set_types
-  def set_types
-    self.complaint_type = 'standard'
-    self.complaint_subtype = 'missing_data'
-    self.priority = 'normal'
-  end
-  # CT-3165 END REMOVE ONCE UX IS COMPLETED
-
   class << self
     def type_abbreviation
       'OFFENDER_SAR_COMPLAINT'
@@ -67,7 +57,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
       acting_user: self.creator,
       acting_team: self.creator.case_team(self.original_case),
       message: I18n.t(
-        'common.case/offender_sar.complaint_case_link_message', 
+        'common.case/offender_sar.complaint_case_link_message',
         received_date: self.received_date.to_date))
   end
 

@@ -5,6 +5,8 @@ module OffenderSARComplaintCasesParams
   def create_offender_sar_complaint_params
     params.require(:offender_sar_complaint).permit(
       :case_reference_number,
+      :complaint_type,
+      :complaint_subtype,
       :delivery_method,
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :requester_reference,
@@ -15,6 +17,7 @@ module OffenderSARComplaintCasesParams
       :number_exempt_pages,
       :other_subject_ids,
       :postal_address,
+      :priority,
       :prison_number,
       :previous_case_numbers,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
