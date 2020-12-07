@@ -140,8 +140,7 @@ FactoryBot.define do
         identifier { 'Response required - Offender SAR Complaint' }
       end
 
-      received_date  { 22.business_days.ago }
-      date_responded { 4.business_days.ago }
+      date_responded { received_date + 20.day }
 
       after(:create) do |kase|
         create :case_transition_data_to_be_requested, case: kase

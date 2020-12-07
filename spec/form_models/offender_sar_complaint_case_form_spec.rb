@@ -16,7 +16,8 @@ RSpec.describe OffenderSARComplaintCaseForm do
         "recipient-details", 
         "requested-info", 
         "request-details", 
-        "date-received"]
+        "date-received", 
+        "set-deadline"]
     end
   end
 
