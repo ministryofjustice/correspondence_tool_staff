@@ -17,6 +17,12 @@ module PageObjects
           def fill_in_case_details(params={})
             kase = FactoryBot.build :offender_sar_complaint, params
 
+            fill_in_complaint_type(kase)
+            fill_in_complaint_subtype(kase)
+            fill_in_priority(kase)
+          end
+
+          def fill_in_complaint_type(kase)
             if kase.standard?
               choose('offender_sar_complaint_complaint_type_standard', visible: false)
             elsif kase.ico?
@@ -24,7 +30,9 @@ module PageObjects
             elsif kase.litigation?
               choose('offender_sar_complaint_complaint_type_litigation', visible: false)
             end
+          end
 
+          def fill_in_complaint_subtype(kase)
             if kase.missing_data?
               choose('offender_sar_complaint_complaint_subtype_missing_data', visible: false)
             elsif kase.inaccurate_data?
@@ -34,13 +42,14 @@ module PageObjects
             elsif kase.timeliness?
               choose('offender_sar_complaint_complaint_subtype_timeliness', visible: false)
             end
+          end
 
+          def fill_in_priority(kase)
             if kase.normal_priority?
               choose('offender_sar_complaint_priority_normal_priority', visible: false)
             elsif kase.high_priority?
               choose('offender_sar_complaint_priority_standard_priority', visible: false)
             end
-
           end
 
         end
