@@ -76,7 +76,7 @@ module OffenderSARComplaintCaseForm
   end
 
   def params_after_step_date_received(params)
-    if [nil, "standard", "ico"].include? (params["complaint_type"])
+    if [nil, "standard", "ico"].include? params["complaint_type"]
       params.merge!(external_deadline: object.deadline_calculator.external_deadline)
     end
     params

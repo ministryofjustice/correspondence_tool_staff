@@ -62,9 +62,19 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   end
 
   def validate_external_deadline
+    validate_external_deadline_required
+    validate_external_deadline_within_valid_range
+  end
+
+  private
+
+  def validate_external_deadline_required
     if require_external_deadline? && external_deadline.blank?
       errors.add(:external_deadline, :blank)
     end
+  end
+
+  def validate_external_deadline_within_valid_range
     if received_date.present? && external_deadline.present? && external_deadline < received_date
       errors.add(:external_deadline, :before_received)
     end
@@ -72,8 +82,6 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
       errors.add(:external_deadline, :past)
     end
   end
-
-  private
 
   def require_external_deadline?
     received_date.present? && complaint_type.present? && (["standard", "ico"].include? complaint_type)
