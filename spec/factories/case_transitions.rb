@@ -325,8 +325,17 @@ FactoryBot.define do
     original_final_deadline { self.case.external_deadline }
   end
 
-  # Offender SAR specific transitions below - note use of responder
-  # and not manager - single team responsible for complete case workflow
+  # Offender SAR and Offender SAR Complaint specific transitions below 
+  # - note use of responder and not manager 
+  # - single team responsible for complete case workflow
+  factory :case_transition_data_to_be_requested, parent: :case_transition do
+    to_state { 'data_to_be_requested' }
+    event { 'mark_as_data_to_be_requested' }
+
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
+  end
+
   factory :case_transition_waiting_for_data, parent: :case_transition do
     to_state { 'waiting_for_data' }
     event { 'mark_as_waiting_for_data' }
@@ -370,6 +379,22 @@ FactoryBot.define do
   factory :case_transition_closed_for_offender_sar_type, parent: :case_transition do
     to_state { 'closed' }
     event { 'close' }
+
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
+  end
+
+  factory :case_transition_data_review_required, parent: :case_transition do
+    to_state { 'data_review_required' }
+    event { 'mark_as_require_data_review' }
+
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
+  end
+
+  factory :case_transition_response_required, parent: :case_transition do
+    to_state { 'response_required' }
+    event { 'mark_as_require_response' }
 
     acting_team { self.case.responding_team }
     acting_user { acting_team.responders.first }

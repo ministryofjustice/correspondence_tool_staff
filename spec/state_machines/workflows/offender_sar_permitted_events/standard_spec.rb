@@ -28,6 +28,10 @@ describe ConfigurableStateMachine::Machine do
         state: :ready_to_dispatch,
         specific_events: [:close, :send_dispatch_letter]
       },
+      {
+        state: :closed,
+        full_events: [:add_note_to_case, :edit_case, :send_dispatch_letter, :start_complaint]
+      },
     ].freeze
 
     UNIVERSAL_EVENTS = %i[
@@ -52,11 +56,23 @@ describe ConfigurableStateMachine::Machine do
           end
 
           it 'only allows permitted events' do
-            permitted_events = UNIVERSAL_EVENTS + transition[:specific_events]
+            permitted_events = (transition[:full_events] || UNIVERSAL_EVENTS) + 
+                                (transition[:specific_events] || [])
 
             expect(kase.state_machine.permitted_events(responder))
               .to match_array permitted_events
           end
+
+          it "allow start_complaints when the case is open late or closed" do
+            if transition[:state] != 'closed'
+              kase.external_deadline = Date.today - 1.days
+              kase.save!
+            end
+
+            expect(kase.state_machine.permitted_events(responder))
+              .to include :start_complaint
+          end
+
         end
       end
     end
