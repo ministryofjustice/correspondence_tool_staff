@@ -89,10 +89,8 @@ class CorrespondenceTypeSeeder
                 report_category_name: 'Offender SAR Complaint', 
                 escalation_time_limit: 3,
                 internal_time_limit: 10,
-                external_time_limit: 1,
-                extension_time_limit: 2, 
-                extension_time_default: 1, 
-                deadline_calculator_class: 'CalendarMonths')
+                external_time_limit: 20,
+                deadline_calculator_class: 'BusinessDays')
   end
   #rubocop:enable Metrics/MethodLength
   #rubocop:enable Metrics/CyclomaticComplexity

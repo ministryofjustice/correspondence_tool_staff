@@ -19,6 +19,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
     then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
     then_expect_linked_original_case_has_stamp_for_linkage
@@ -34,6 +35,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
     then_expect_cases_show_page_to_be_correct_for_data_subject_sending_data_to_third_party
     then_expect_linked_original_case_has_stamp_for_linkage
@@ -49,6 +51,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_subject_record
     then_expect_linked_original_case_has_stamp_for_linkage
@@ -64,6 +67,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     then_expect_linked_original_case_has_stamp_for_linkage
@@ -79,6 +83,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
     then_expect_cases_show_page_to_have_same_third_party_detail
     then_expect_linked_original_case_has_stamp_for_linkage
@@ -94,6 +99,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
     then_expect_cases_show_page_to_have_same_third_party_detail
     then_expect_open_cases_page_to_be_correct
@@ -109,6 +115,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct(offender_sar_case: offender_sar_open_late)
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     then_expect_linked_original_case_has_stamp_for_linkage(offender_sar_case: offender_sar_open_late)
@@ -119,6 +126,24 @@ feature 'offender sar complaint case creation by a manager', js: true do
   scenario '8 Create the complaint case from open late offender sar case' do
     offender_sar_open_in_time = create(:offender_sar_case, :third_party)
     then_expect_no_button_for_creating_complaint_case(offender_sar_open_in_time)
+  end
+
+  scenario '9 Check the deadline will be prefilled when complaint_type is standard' do
+    Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
+      when_i_navigate_to_offender_sar_complaint_subject_page
+      and_choose_original_offender_sar_case_and_confirm
+      and_fill_in_requester_details_page
+      and_fill_in_recipient_details_page
+      and_fill_in_requested_info_page
+      and_fill_in_request_details_page
+      and_fill_in_date_received_page
+      and_fill_and_check_external_deadline_is_prefilled(16, 6, 2017)
+      then_basic_details_of_show_page_are_correct
+      then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
+      then_expect_linked_original_case_has_stamp_for_linkage
+      then_expect_open_cases_page_to_be_correct
+      then_expect_case_in_my_open_cases
+    end
   end
 
   def then_expect_no_button_for_creating_complaint_case(offender_sar_case)
@@ -236,6 +261,19 @@ feature 'offender sar complaint case creation by a manager', js: true do
 
   def and_fill_in_date_received_page
     cases_new_offender_sar_complaint_date_received_page.fill_in_case_details
+    click_on "Continue"
+  end
+
+  def and_fill_in_external_deadline_page
+    cases_new_offender_sar_complaint_external_deadline_page.fill_in_case_details
+    click_on "Continue"
+  end
+
+  def and_fill_and_check_external_deadline_is_prefilled(day, month, year)
+    cases_new_offender_sar_complaint_external_deadline_page.fill_in_case_details
+    expect(cases_new_offender_sar_complaint_external_deadline_page.external_deadline_day.value).to eq day.to_s
+    expect(cases_new_offender_sar_complaint_external_deadline_page.external_deadline_month.value).to eq month.to_s
+    expect(cases_new_offender_sar_complaint_external_deadline_page.external_deadline_year.value).to eq year.to_s
     click_on "Continue"
   end
 

@@ -9,7 +9,8 @@ module OffenderSARComplaintCaseForm
              recipient-details
              requested-info
              request-details
-             date-received].freeze
+             date-received
+             set-deadline].freeze
 
   def steps
     STEPS
@@ -72,6 +73,19 @@ module OffenderSARComplaintCaseForm
       params[single_field] = object.original_case.send(single_field)
     end 
     params
+  end
+
+  def params_after_step_date_received(params)
+    if [nil, "standard", "ico"].include? (params["complaint_type"])
+      params.merge!(external_deadline: object.deadline_calculator.external_deadline)
+    end
+    params
+  end
+
+  def validate_set_deadline(params)
+    set_empty_value_if_unset_for_date(params, "external_deadline")
+    object.assign_attributes(params)
+    object.validate_external_deadline
   end
 
 end

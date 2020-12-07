@@ -41,6 +41,7 @@ FactoryBot.define do
     flag_as_high_profile            { false }
     created_at                      { creation_time }
     creator                         { responder }
+    external_deadline               { Time.zone.today + 20.day }
     number_final_pages              { 5 }
     number_exempt_pages             { 2 }
 

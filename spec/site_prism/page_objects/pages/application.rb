@@ -52,6 +52,8 @@ module PageObjects
         cases_new_offender_sar_complaint_requested_info:     'Cases::New::OffenderSARComplaintPageRequestedInfo',
         cases_new_offender_sar_complaint_request_details:    'Cases::New::OffenderSARComplaintPageRequestDetails',
         cases_new_offender_sar_complaint_date_received:      'Cases::New::OffenderSARComplaintPageDateReceived',
+        cases_new_offender_sar_complaint_external_deadline:  'Cases::New::OffenderSARComplaintPageExternalDeadline',
+
         cases_edit_offender_sar_complaint_subject_details:   'Cases::Edit::OffenderSARComplaintPageSubjectDetails',
         cases_edit_offender_sar_complaint_requester_details: 'Cases::Edit::OffenderSARComplaintPageRequesterDetails',
         cases_edit_offender_sar_complaint_requested_info:    'Cases::Edit::OffenderSARComplaintPageRequestedInfo',
