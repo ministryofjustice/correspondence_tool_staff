@@ -1,7 +1,7 @@
 module OffenderFormValidators
   extend ActiveSupport::Concern
 
-  private 
+  private
 
   def validate_subject_details(params)
     set_empty_value_if_unset(params, "subject_type")
@@ -9,6 +9,13 @@ module OffenderFormValidators
     set_empty_value_if_unset(params, "flag_as_high_profile")
     object.assign_attributes(params)
     object.validate_date_of_birth
+  end
+
+  def validate_complaint_type(params)
+    set_empty_value_if_unset(params, "complaint_type")
+    set_empty_value_if_unset(params, "complaint_subtype")
+    set_empty_value_if_unset(params, "priority")
+    object.assign_attributes(params)
   end
 
   def validate_requester_details(params)

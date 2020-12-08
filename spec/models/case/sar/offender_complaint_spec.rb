@@ -47,7 +47,6 @@ describe Case::SAR::OffenderComplaint do
   describe '#complaint_type' do
     context 'validates that complaint type is not blank' do
       it 'errors' do
-        pending 'removal of the "set_type" validation hack'
         kase = build(:offender_sar_complaint, complaint_type: nil)
         expect(kase).not_to be_valid
         expect(kase.errors[:complaint_type]).to eq ["can't be blank"]
@@ -74,7 +73,6 @@ describe Case::SAR::OffenderComplaint do
   describe '#priority' do
     context 'validates that priority is not blank' do
       it 'errors' do
-        pending 'removal of the "set_type" validation hack'
         kase = build(:offender_sar_complaint, priority: nil)
         expect(kase).not_to be_valid
         expect(kase.errors[:priority]).to eq ["can't be blank"]
@@ -97,10 +95,27 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
+  describe '#normal_priority?' do
+    it 'delegates to normal?' do
+      kase = build(:offender_sar_complaint, priority: 'normal')
+      expect(kase.normal_priority?).to be true
+      kase.high!
+      expect(kase.normal_priority?).to be false
+    end
+  end
+
+  describe '#high_priority?' do
+    it 'delegates to high?' do
+      kase = build(:offender_sar_complaint, priority: 'high')
+      expect(kase.high_priority?).to be true
+      kase.normal!
+      expect(kase.high_priority?).to be false
+    end
+  end
+
   describe '#complaint_subtype' do
     context 'validates that complaint_subtype is not blank' do
       it 'errors' do
-        pending 'removal of the "set_type" validation hack'
         kase = build(:offender_sar_complaint, complaint_subtype: nil)
         expect(kase).not_to be_valid
         expect(kase.errors[:complaint_subtype]).to eq ["can't be blank"]
