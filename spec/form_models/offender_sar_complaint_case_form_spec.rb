@@ -10,12 +10,13 @@ RSpec.describe OffenderSARComplaintCaseForm do
   describe "#steps" do
     it "returns the list of steps" do
       expect(case_form.steps).to eq [
-        "link-offender-sar-case", 
-        "confirm-offender-sar", 
-        "requester-details", 
-        "recipient-details", 
-        "requested-info", 
-        "request-details", 
+        "link-offender-sar-case",
+        "confirm-offender-sar",
+        "complaint-type",
+        "requester-details",
+        "recipient-details",
+        "requested-info",
+        "request-details",
         "date-received"]
     end
   end

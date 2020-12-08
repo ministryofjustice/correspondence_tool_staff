@@ -31,6 +31,8 @@ describe Case::SAR::OffenderComplaintDecorator do
       offender_sar_complaint.next_step
       expect(offender_sar_complaint.get_step_partial).to eq "confirm_offender_sar_step"
       offender_sar_complaint.next_step
+      expect(offender_sar_complaint.get_step_partial).to eq "complaint_type_step"
+      offender_sar_complaint.next_step
       expect(offender_sar_complaint.get_step_partial).to eq "requester_details_step"
       offender_sar_complaint.next_step
       expect(offender_sar_complaint.get_step_partial).to eq "recipient_details_step"

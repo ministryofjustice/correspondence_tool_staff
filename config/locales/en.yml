@@ -170,9 +170,9 @@ en:
               blank: can't be blank
         case/sar/offender_complaint:
           attributes:
-            linked_cases: 
+            linked_cases:
               original_case_already_related: already linked as the original case
-          original_case_number: 
+          original_case_number:
             blank: "Enter original case number"
             not_authorised: can't be authorised to link this case
             wrong_type: Original case must be Offender SAR
@@ -361,6 +361,9 @@ en:
         third_party: Please choose yes or no
       offender_sar_complaint:
         original_case_number: Is this the correct case?
+        complaint_type: What sort of complaint is this?
+        complaint_subtype: What is the nature of the complaint?
+        priority: Choose a priority level
       report:
         correspondence_type: Which type of cases do you want to report on?
         report_type_id: What should this report cover?
@@ -645,6 +648,9 @@ en:
         date_responded: Date response sent to ICO
       clear_response: Clear response
       clearance_copy: 'You are clearing the response to: '
+      complaint_type: What sort of complaint is this?
+      complaint_subtype: What is the nature of the complaint?
+      priority: Priority
       compliant_in_time: Uploaded in time
       compliant_late: Uploaded late
       compliant_unknown: Unknown draft compliancy
