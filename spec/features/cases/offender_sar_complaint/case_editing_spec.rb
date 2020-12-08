@@ -101,7 +101,7 @@ feature 'offender sar complaint case editing by a manager' do
     click_on "Mark as ready for vetting"
     click_on "Mark as vetting in progress"
     click_on "Mark as ready to copy"
-    click_on "Mark as ready to dispatch"
+    click_on "Requires response"
     click_on "Close case"
   end
 

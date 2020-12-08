@@ -16,7 +16,7 @@ feature 'Closing a case' do
       context 'responded-to in time' do
         given!(:fully_granted_case) {
           create :offender_sar_complaint,
-          :ready_to_dispatch,
+          :response_required,
           received_date: 5.days.ago }
 
         scenario 'Offender sar team has responded and a responder closes the case', js:true do
@@ -42,7 +42,7 @@ feature 'Closing a case' do
       context 'responded-to late' do
         given!(:fully_granted_case) {
           create :offender_sar_complaint,
-          :ready_to_dispatch,
+          :response_required,
           received_date: 35.days.ago }
 
         scenario 'the case is responded-to late', js: true do
@@ -69,7 +69,7 @@ feature 'Closing a case' do
   private
 
   def close_case(kase)
-    expect(cases_page.case_list.last.status.text).to eq 'Ready to dispatch'
+    expect(cases_page.case_list.last.status.text).to eq 'Response is required'
     click_link kase.number
     expect(cases_show_page.actions).
       to have_link('Close case', href: "/cases/offender_sar_complaints/#{kase.id}/close")

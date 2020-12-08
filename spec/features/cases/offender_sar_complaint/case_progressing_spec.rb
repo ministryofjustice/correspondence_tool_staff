@@ -16,40 +16,126 @@ feature 'offender sar complaint case creation by a manager' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'progressing an offender sar complaint case', js: true do
-    cases_show_page.load(id: offender_sar_complaint.id)
+  context 'Standard offender sar complaint case', js: true do
 
+    scenario 'progressing an offender sar complaint case - scenario 1' do
+      to_be_assessed
+      requires_data_review
+      requires_response
+      close_case
+    end
+
+    scenario 'progressing an offender sar complaint case - scenario 2' do
+      to_be_assessed
+      requires_data_review
+      vetting_in_progress
+      ready_to_copy
+      requires_response
+      close_case
+    end
+
+    scenario 'progressing an offender sar complaint case - scenario 3' do
+      to_be_assessed
+      requires_response
+      close_case
+    end
+
+    scenario 'progressing an offender sar complaint case - scenario 4' do
+      to_be_assessed
+      requires_data
+      waiting_for_data
+      requires_response
+      close_case
+    end
+
+    scenario 'progressing an offender sar complaint case - scenario 5' do
+      to_be_assessed
+      requires_data
+      waiting_for_data
+      ready_for_vetting
+      vetting_in_progress
+      ready_to_copy
+      requires_response
+      close_case
+    end
+
+  end
+
+
+  private 
+
+  def to_be_assessed
+    cases_show_page.load(id: offender_sar_complaint.id)
     expect(cases_show_page).to have_content "Requires data"
+    expect(cases_show_page).to have_content "Requires data review"
+    expect(cases_show_page).to have_content "Requires response"
+    expect(cases_show_page).to have_content "To be assessed"
+    expect(cases_show_page).to have_content "Send acknowledgement letter"
+  end 
+
+  def requires_data_review
+    click_on "Requires data review"
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as vetting in progress"
+    expect(cases_show_page).to have_content "Requires response"
+    expect(cases_show_page).to have_content "Send acknowledgement letter"
+  end 
+
+  def requires_data
     click_on "Requires data"
 
+    expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as waiting for data"
     expect(cases_show_page).to have_content "Data to be requested"
     expect(cases_show_page).to have_content "Send acknowledgement letter"
+  end 
+
+  def waiting_for_data
     click_on "Mark as waiting for data"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready for vetting"
-    expect(cases_show_page).to have_content "Send acknowledgement letter"
+    expect(cases_show_page).to have_content "Requires response"
     expect(cases_show_page).to have_content "Preview cover page"
+    expect(cases_show_page).to have_content "Waiting for data"
+  end
+
+  def ready_for_vetting
     click_on "Mark as ready for vetting"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as vetting in progress"
     expect(cases_show_page).to have_content "Preview cover page"
+    expect(cases_show_page).to have_content "Ready for vetting"
+  end
+
+  def vetting_in_progress
     click_on "Mark as vetting in progress"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready to copy"
     expect(cases_show_page).to have_content "Preview cover page"
+    expect(cases_show_page).to have_content "Vetting in progress"
+  end 
+
+  def ready_to_copy
     click_on "Mark as ready to copy"
 
     expect(cases_show_page).to be_displayed
-    expect(cases_show_page).to have_content "Mark as ready to dispatch"
-    click_on "Mark as ready to dispatch"
+    expect(cases_show_page).to have_content "Requires response"
+    expect(cases_show_page).to have_content "Ready to copy"
+  end
+
+  def requires_response
+    click_on "Requires response"
 
     expect(cases_show_page).to be_displayed
-    expect(cases_show_page).to have_content "Send dispatch letter"
-    expect(cases_show_page).to have_content "Close case"
+    expect(cases_show_page).to have_content "Close"
+    expect(cases_show_page).to have_content "Response is required"
+  end
+
+  def close_case
     click_on "Close case"
 
     expect(cases_close_page).to be_displayed
