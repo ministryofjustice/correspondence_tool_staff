@@ -16,6 +16,12 @@ module OffenderFormValidators
     set_empty_value_if_unset(params, "complaint_subtype")
     set_empty_value_if_unset(params, "priority")
     object.assign_attributes(params)
+    object.validate_ico_contact_name
+    object.validate_ico_contact_details
+    object.validate_ico_reference
+    object.validate_gld_contact_name
+    object.validate_gld_contact_details
+    object.validate_gld_reference
   end
 
   def validate_requester_details(params)

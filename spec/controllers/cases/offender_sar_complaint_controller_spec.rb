@@ -96,7 +96,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
               offender_sar_complaint: offender_sar_base_params
             }
           end
-  
+
           it 'requires original case number to be set' do
             remains_on_step 'link-offender-sar-case'
             expect(errors[:original_case_number]).to eq ["can't be blank"]
@@ -110,7 +110,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
               offender_sar_complaint: offender_sar_base_params.merge(original_case_number: foi.number)
             }
           end
-  
+
           it 'The user needs to be allowed to view the original case' do
             remains_on_step 'link-offender-sar-case'
             expect(errors[:original_case_number]).to eq ["can't be authorised to link this case"]
@@ -124,14 +124,92 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
               offender_sar_complaint: offender_sar_base_params.merge(original_case_number: complaint.number)
             }
           end
-  
+
           it 'requires the original case is the type allowed for complaint case' do
             remains_on_step 'link-offender-sar-case'
             expect(errors[:original_case]).to eq ["can't link a Complaint case to a Complaint as a original case"]
           end
         end
       end
-  
+
+      context 'for step complaint-type' do
+        let(:params) do
+          {
+            current_step: 'complaint-type',
+            offender_sar_complaint: offender_sar_base_params
+          }
+        end
+
+        context 'when complaint-type absent' do
+          context 'when complaint-type absent' do
+            it 'requires complaint-type to be set' do
+              remains_on_step 'complaint-type'
+              expect(errors[:complaint_type]).to eq ["can't be blank"]
+            end
+          end
+          context 'when complaint-type present' do
+            context 'when ico' do
+              let(:params) do
+                {
+                  current_step: 'complaint-type',
+                  offender_sar_complaint: offender_sar_base_params.merge(complaint_type: 'ico_complaint')
+                }
+              end
+
+              it 'requires ico contact name' do
+                expect(errors[:ico_contact_name]).to eq ["can't be blank"]
+              end
+
+              it 'requires ico contact phone or email' do
+                expect(errors[:ico_contact_email]).to eq ["can't be blank if ICO contact phone not given"]
+                expect(errors[:ico_contact_phone]).to eq ["can't be blank if ICO contact email not given"]
+              end
+
+              it 'requires ico reference' do
+                expect(errors[:ico_reference]).to eq ["can't be blank"]
+              end
+
+            end
+
+            context 'when litigation' do
+              let(:params) do
+                {
+                  current_step: 'complaint-type',
+                  offender_sar_complaint: offender_sar_base_params.merge(complaint_type: 'litigation')
+                }
+              end
+
+              it 'requires gld contact name' do
+                expect(errors[:gld_contact_name]).to eq ["can't be blank"]
+              end
+
+              it 'requires gld contact phone or email' do
+                expect(errors[:gld_contact_email]).to eq ["can't be blank if GLD contact phone not given"]
+                expect(errors[:gld_contact_phone]).to eq ["can't be blank if GLD contact email not given"]
+              end
+
+              it 'requires gld reference' do
+                expect(errors[:gld_reference]).to eq ["can't be blank"]
+              end
+            end
+          end
+        end
+
+        context 'when complaint-subtype absent' do
+          it 'requires complaint-subtype to be set' do
+            remains_on_step 'complaint-type'
+            expect(errors[:complaint_subtype]).to eq ["can't be blank"]
+          end
+        end
+
+        context 'when priority absent' do
+          it 'requires priority to be set' do
+            remains_on_step 'complaint-type'
+            expect(errors[:priority]).to eq ["can't be blank"]
+          end
+        end
+      end
+
       context 'for step requester-details' do
         context 'when third party absent' do
           let(:params) do

@@ -56,7 +56,7 @@ describe Case::SAR::OffenderComplaint do
     context 'valid values' do
       it 'does not error' do
         expect(build(:offender_sar_complaint, complaint_type: 'standard')).to be_valid
-        expect(build(:offender_sar_complaint, complaint_type: 'ico')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_type: 'ico_complaint')).to be_valid
         expect(build(:offender_sar_complaint, complaint_type: 'litigation')).to be_valid
       end
     end
@@ -593,6 +593,23 @@ describe Case::SAR::OffenderComplaint do
       kase = build :offender_sar_complaint, subject_address: ''
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_address]).to eq ["can't be blank"]
+    end
+  end
+
+  describe 'ico details' do
+    describe '#ico_contact_name' do
+      it 'must be present when ico is true' do
+        kase = build :offender_sar_complaint, complaint_type: 'ico_complaint', ico_contact_name: ''
+        expect(kase).not_to be_valid
+        expect(kase.errors[:ico_contact_name]).to eq ["can't be blank"]
+      end
+
+      it 'is not required when litigation or standard complaint' do
+        kase1 = build :offender_sar_complaint, complaint_type: 'standard', ico_contact_name: ''
+        kase2 = build :offender_sar_complaint, complaint_type: 'litigation', ico_contact_name: ''
+        expect(kase1).to be_valid
+        expect(kase2).to be_valid
+      end
     end
   end
 

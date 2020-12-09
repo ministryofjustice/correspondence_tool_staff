@@ -43,6 +43,16 @@ en:
         third_party_company_name : "Company name"
         third_party_name : "Full name of the representative"
         third_party_relationship: "Relationship to the subject"
+      case/sar/offender_complaint:
+        ico_contact_name: ICO contact name
+        ico_contact_email: ICO contact email
+        ico_contact_phone: ICO contact phone
+        ico_reference: ICO reference number
+        gld_contact_name: GLD contact name
+        gld_contact_email: GLD contact email
+        gld_contact_phone: GLD contact phone
+        gld_reference: GLD reference number
+
     errors:
       models:
         business_unit:
@@ -170,6 +180,22 @@ en:
               blank: can't be blank
         case/sar/offender_complaint:
           attributes:
+            ico_contact_name:
+              blank: can't be blank
+            ico_contact_email:
+              blank: can't be blank if ICO contact phone not given
+            ico_contact_phone:
+              blank: can't be blank if ICO contact email not given
+            ico_reference:
+              blank: can't be blank
+            gld_contact_name:
+              blank: can't be blank
+            gld_contact_email:
+              blank: can't be blank if GLD contact phone not given
+            gld_contact_phone:
+              blank: can't be blank if GLD contact email not given
+            gld_reference:
+              blank: can't be blank
             linked_cases:
               original_case_already_related: already linked as the original case
           original_case_number:
@@ -551,6 +577,8 @@ en:
         total: Total
       offender_sar_complaint:
         case_reference_number: Case reference number (CRN)
+        complaint_type:
+          ico_complaint: ICO
         external_reference: Requester reference (optional)
         high_profile: High profile
         message: Additional case information
