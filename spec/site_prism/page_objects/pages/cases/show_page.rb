@@ -89,6 +89,10 @@ module PageObjects
           element :change_link, 'a'
         end
 
+        section :offender_sar_complaint_type, '.section-complaint-type' do
+          element :change_link, 'a'
+        end
+
         section :offender_sar_requester_details, '.section-requester-details' do
           element :change_link, 'a'
         end
@@ -104,6 +108,17 @@ module PageObjects
         section :offender_sar_external_deadline, '.section-external-deadline' do
           element :change_link, 'a'
         end
+
+        element :offender_sar_complaint_subtype, '.section-complaint-subtype'
+        element :offender_sar_complaint_priority, '.section-complaint-priority'
+        element :offender_sar_complaint_ico_contact_name, '.section-ico-contact-name'
+        element :offender_sar_complaint_ico_contact_email, '.section-ico-contact-email'
+        element :offender_sar_complaint_ico_contact_phone, '.section-ico-contact-phone'
+        element :offender_sar_complaint_ico_reference, '.section-ico-reference'
+        element :offender_sar_complaint_gld_contact_name, '.section-gld-contact-name'
+        element :offender_sar_complaint_gld_contact_email, '.section-gld-contact-email'
+        element :offender_sar_complaint_gld_contact_phone, '.section-gld-contact-phone'
+        element :offender_sar_complaint_gld_reference, '.section-gld-reference'
 
         section :case_history,
                 PageObjects::Sections::Cases::CaseHistorySection, '#case-history'

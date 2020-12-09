@@ -21,6 +21,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_request_details_page
     and_fill_in_date_received_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -37,6 +38,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_request_details_page
     and_fill_in_date_received_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_data_subject_sending_data_to_third_party
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -53,6 +55,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_request_details_page
     and_fill_in_date_received_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_subject_record
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -69,6 +72,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_request_details_page
     and_fill_in_date_received_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -85,6 +89,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_request_details_page
     and_fill_in_date_received_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_have_same_third_party_detail
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -101,6 +106,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_request_details_page
     and_fill_in_date_received_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_have_same_third_party_detail
     then_expect_open_cases_page_to_be_correct
     then_expect_case_in_my_open_cases
@@ -117,6 +123,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_request_details_page
     and_fill_in_date_received_page
     then_basic_details_of_show_page_are_correct(offender_sar_case: offender_sar_open_late)
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     then_expect_linked_original_case_has_stamp_for_linkage(offender_sar_case: offender_sar_open_late)
     then_expect_open_cases_page_to_be_correct(offender_sar_case: offender_sar_open_late)
@@ -126,6 +133,40 @@ feature 'offender sar complaint case creation by a manager', js: true do
   scenario '8 Create the complaint case from open late offender sar case' do
     offender_sar_open_in_time = create(:offender_sar_case, :third_party)
     then_expect_no_button_for_creating_complaint_case(offender_sar_open_in_time)
+  end
+
+  scenario '9 when complaint is an ICO complaint' do
+    when_i_navigate_to_offender_sar_complaint_subject_page
+    and_choose_original_offender_sar_case_and_confirm
+    and_fill_in_complaint_type_page(complaint_type: 'ico_complaint')
+    and_fill_in_requester_details_page
+    and_fill_in_recipient_details_page
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_ico
+    then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
+    then_expect_linked_original_case_has_stamp_for_linkage
+    then_expect_open_cases_page_to_be_correct
+    then_expect_case_in_my_open_cases
+  end
+
+  scenario '10 when complaint is a litigation complaint' do
+    when_i_navigate_to_offender_sar_complaint_subject_page
+    and_choose_original_offender_sar_case_and_confirm
+    and_fill_in_complaint_type_page(complaint_type: 'litigation')
+    and_fill_in_requester_details_page
+    and_fill_in_recipient_details_page
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_litigation
+    then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
+    then_expect_linked_original_case_has_stamp_for_linkage
+    then_expect_open_cases_page_to_be_correct
+    then_expect_case_in_my_open_cases
   end
 
   def then_expect_no_button_for_creating_complaint_case(offender_sar_case)
@@ -265,9 +306,28 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to have_content linked_case.prison_number
     expect(cases_show_page).to have_content linked_case.subject_type.humanize
     expect(cases_show_page).to have_content linked_case.subject_address
-    expect(cases_show_page).to have_content "Standard"
     expect(cases_show_page).to have_content "Missing data"
     expect(cases_show_page).to have_content "Normal"
+  end
+
+  def then_expect_case_show_page_to_show_standard
+    expect(cases_show_page).to have_content "Standard"
+  end
+
+  def then_expect_case_show_page_to_show_ico
+    expect(cases_show_page.offender_sar_complaint_type).to have_content 'ICO'
+    expect(cases_show_page.offender_sar_complaint_ico_contact_name).to have_content 'Jane Doe ICO'
+    expect(cases_show_page.offender_sar_complaint_ico_contact_email).to have_content 'jane_doe_ico@example.com'
+    expect(cases_show_page.offender_sar_complaint_ico_contact_phone).to have_content '01234 567 9876'
+    expect(cases_show_page.offender_sar_complaint_ico_reference).to have_content 'ICOREF001Z'
+  end
+
+  def then_expect_case_show_page_to_show_litigation
+    expect(cases_show_page.offender_sar_complaint_type).to have_content 'Litigation'
+    expect(cases_show_page.offender_sar_complaint_gld_contact_name).to have_content 'Priya Singh Litigation'
+    expect(cases_show_page.offender_sar_complaint_gld_contact_email).to have_content 'priya_singh_litigation@example.com'
+    expect(cases_show_page.offender_sar_complaint_gld_contact_phone).to have_content '01234 824 9876'
+    expect(cases_show_page.offender_sar_complaint_gld_reference).to have_content 'LITREF732K'
   end
 
   def then_expect_open_cases_page_to_be_correct(offender_sar_case: nil)

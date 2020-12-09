@@ -1,17 +1,59 @@
-tr.complaint-type.section
+tr.complaint-type.section.section-complaint-type
   th
     = t('common.case.complaint_type')
   td
-    = case_details.complaint_type.humanize
+    = case_details.complaint_type
   td
     = link_to t('common.links.change'), edit_step_case_sar_offender_complaint_path(case_details, "complaint_type")
-tr.complaint-type
+tr.complaint-type.section-complaint-subtype
   th
     = t('common.case.complaint_subtype')
   td
     = case_details.complaint_subtype.humanize
-tr.complaint-type
+tr.complaint-type.section-complaint-priority
   th
     = t('common.case.priority')
   td
     = case_details.priority.humanize
+- if case_details.ico_complaint?
+  tr.complaint-type.section-ico-contact-name
+    th
+      = t('common.case.ico_contact_name')
+    td
+      = case_details.ico_contact_name
+  tr.complaint-type.section-ico-contact-email
+    th
+      = t('common.case.ico_contact_email')
+    td
+      = case_details.ico_contact_email
+  tr.complaint-type.section-ico-contact-phone
+    th
+      = t('common.case.ico_contact_phone')
+    td
+      = case_details.ico_contact_phone
+  tr.complaint-type.section-ico-reference
+    th
+      = t('common.case.ico_reference')
+    td
+      = case_details.ico_reference
+- if case_details.litigation?
+  tr.complaint-type.section-gld-contact-name
+    th
+      = t('common.case.gld_contact_name')
+    td
+      = case_details.gld_contact_name
+  tr.complaint-type.section-gld-contact-email
+    th
+      = t('common.case.gld_contact_email')
+    td
+      = case_details.gld_contact_email
+  tr.complaint-type.section-gld-contact-phone
+    th
+      = t('common.case.gld_contact_phone')
+    td
+      = case_details.gld_contact_phone
+  tr.complaint-type.section-gld-reference
+    th
+      = t('common.case.gld_reference')
+    td
+      = case_details.gld_reference

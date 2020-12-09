@@ -6,4 +6,9 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
     h.step_case_sar_offender_complaint_index_path
   end
 
+  def complaint_type
+    return 'ICO' if object.complaint_type == 'ico_complaint'
+    object.complaint_type.humanize
+  end
+
 end

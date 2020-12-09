@@ -699,9 +699,17 @@ en:
       extend_sar_deadline: Extend deadline
       external_deadline: Final deadline
       filename: File name
+      gld_contact_name: GLD contact name
+      gld_contact_email: GLD contact email
+      gld_contact_phone: GLD contact phone
+      gld_reference: GLD reference
       header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
       internal_deadline: Draft deadline
+      ico_contact_name: ICO contact name
+      ico_contact_email: ICO contact email
+      ico_contact_phone: ICO contact phone
+      ico_reference: ICO reference
       ico_case_number: ICO case reference number
       ico_officer_name: ICO information officer handling this case
       late_team: Business unit responsible for late response
