@@ -172,7 +172,10 @@ en:
           attributes:
             linked_cases:
               original_case_already_related: already linked as the original case
-          original_case_number:
+            external_deadline:
+              before_received: "cannot be before date received"
+              past: cannot be in the past
+          original_case_number: 
             blank: "Enter original case number"
             not_authorised: can't be authorised to link this case
             wrong_type: Original case must be Offender SAR
@@ -935,6 +938,7 @@ en:
         unknown: "Unknown correspondence type \"%{type}\""
         not_authorised: "You are not authorised to create \"%{type}\" correspondences"
       date_sar_received_copy: "For example, 12 11 2007"
+      date_complaint_external_deadline: "For example, 12 11 2007"
       date_request_received_copy: "For example, 12 11 2007"
       date_of_birth: "Date of birth"
       date_of_birth_copy: "For example, 24 11 1992"
@@ -1046,6 +1050,7 @@ en:
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
+      external_deadline_heading: Set a deadline for this complaint
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'

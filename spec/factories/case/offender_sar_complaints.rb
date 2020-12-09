@@ -41,6 +41,7 @@ FactoryBot.define do
     flag_as_high_profile            { false }
     created_at                      { creation_time }
     creator                         { responder }
+    external_deadline               { Time.zone.today + 20.day }
     number_final_pages              { 5 }
     number_exempt_pages             { 2 }
 
@@ -139,10 +140,8 @@ FactoryBot.define do
         identifier { 'Response required - Offender SAR Complaint' }
       end
 
-      received_date  { 22.business_days.ago }
-      date_responded { 4.business_days.ago }
-
       after(:create) do |kase|
+        kase.date_responded = kase.received_date + 20.day
         create :case_transition_data_to_be_requested, case: kase
         create :case_transition_waiting_for_data, case: kase
         create :case_transition_ready_for_vetting, case: kase

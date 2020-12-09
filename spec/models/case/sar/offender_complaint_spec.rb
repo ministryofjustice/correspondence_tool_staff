@@ -766,4 +766,40 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
+  describe 'external_deadline attribute' do
+    it "is assignable by year, month and day" do
+      offender_sar = create(:offender_sar_case)
+      complaint = build(:offender_sar_complaint, original_case: offender_sar)
+      complaint.external_deadline_yyyy = '2018'
+      complaint.external_deadline_mm   = '1'
+      complaint.external_deadline_dd   = '12'
+      expect(complaint.external_deadline).to eq Date.new(2018, 1, 12)
+    end
+
+    it 'cannot be before than received_date' do
+      offender_sar = create(:offender_sar_case)
+      complaint = create(:offender_sar_complaint, 
+                        original_case: offender_sar, 
+                        received_date: Date.today - 10)
+      complaint.valid?
+      expect(complaint).to be_valid
+      complaint.external_deadline = complaint.received_date - 1.day
+      complaint.valid?
+      expect(complaint.errors[:external_deadline])
+        .to eq ['cannot be before date received']
+    end
+
+    it 'cannot be past day for new record' do
+      offender_sar = create(:offender_sar_case)
+      complaint = build(:offender_sar_complaint, 
+                        original_case: offender_sar, 
+                        received_date: Date.today - 10.day, 
+                        external_deadline: Date.today - 1.day)
+      complaint.valid?
+      expect(complaint).not_to be_valid
+      expect(complaint.errors[:external_deadline])
+        .to eq ['cannot be in the past']
+    end
+  end
+
 end

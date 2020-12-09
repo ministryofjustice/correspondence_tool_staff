@@ -13,6 +13,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validates :complaint_type, presence: true
   validates :complaint_subtype, presence: true
   validates :priority, presence: true
+  validate :validate_external_deadline
 
   enum complaint_type: {
     standard: 'standard',
@@ -50,6 +51,11 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     false
   end
 
+  def validate_external_deadline
+    validate_external_deadline_required
+    validate_external_deadline_within_valid_range
+  end
+  
   def normal_priority?
     normal?
   end
@@ -60,6 +66,25 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
 
   private
 
+  def validate_external_deadline_required
+    if require_external_deadline? && external_deadline.blank?
+      errors.add(:external_deadline, :blank)
+    end
+  end
+
+  def validate_external_deadline_within_valid_range
+    if received_date.present? && external_deadline.present? && external_deadline < received_date
+      errors.add(:external_deadline, :before_received)
+    end
+    if external_deadline.present? && external_deadline < Date.today && self.new_record?
+      errors.add(:external_deadline, :past)
+    end
+  end
+
+  def require_external_deadline?
+    received_date.present? && complaint_type.present? && (["standard", "ico"].include? complaint_type)
+  end
+
   def stamp_on_original_case
     self.original_case.state_machine.add_note_to_case!(
       acting_user: self.creator,
@@ -69,4 +94,17 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
         received_date: self.received_date.to_date))
   end
 
+  def set_deadlines
+    # For this case type's deadlines are manually set and don't need to be automatically
+    # calculated. So this method called by a before_update hook in Case::Base
+    # becomes a nop.
+    nil
+  end
+
+  def update_deadlines
+    # For this case type's deadlines are manually set and don't need to be automatically
+    # calculated. So this method called by a before_update hook in Case::Base
+    # becomes a nop.
+    nil
+  end
 end

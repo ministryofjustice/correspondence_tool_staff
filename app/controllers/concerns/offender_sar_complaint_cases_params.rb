@@ -7,8 +7,6 @@ module OffenderSARComplaintCasesParams
       :case_reference_number,
       :complaint_type,
       :complaint_subtype,
-      :delivery_method,
-      :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :requester_reference,
       :flag_as_high_profile,
       :message,
@@ -38,7 +36,7 @@ module OffenderSARComplaintCasesParams
       :requester_reference,
       :original_case_number,
       :original_case_id,
-      uploaded_request_files: [],
+      :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
       )
   end
   #rubocop:enable Metrics/MethodLength
