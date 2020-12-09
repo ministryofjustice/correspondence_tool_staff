@@ -2,7 +2,7 @@ require 'rails_helper'
 
 module Stats
   describe R901OffenderSarCasesReport do
-    # before(:all) { DbHousekeeping.clean(seed: true) }
+    before(:all) { DbHousekeeping.clean(seed: true) }
     after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '.title' do

@@ -1,0 +1,17 @@
+tr.complaint-type.section
+  th
+    = t('common.case.complaint_type')
+  td
+    = case_details.complaint_type.humanize
+  td
+    = link_to t('common.links.change'), edit_step_case_sar_offender_complaint_path(case_details, "complaint_type")
+tr.complaint-type
+  th
+    = t('common.case.complaint_subtype')
+  td
+    = case_details.complaint_subtype.humanize
+tr.complaint-type
+  th
+    = t('common.case.priority')
+  td
+    = case_details.priority.humanize

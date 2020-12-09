@@ -12,6 +12,7 @@ RSpec.describe OffenderSARComplaintCaseForm do
       expect(case_form.steps).to eq [
         "link-offender-sar-case", 
         "confirm-offender-sar", 
+        "complaint-type",
         "requester-details", 
         "recipient-details", 
         "requested-info", 

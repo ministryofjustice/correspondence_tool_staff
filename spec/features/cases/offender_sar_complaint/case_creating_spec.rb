@@ -14,6 +14,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   scenario '1 find the original offender sar case' do
     when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
+    and_fill_in_complaint_type_page
     and_fill_in_requester_details_page
     and_fill_in_recipient_details_page
     and_fill_in_requested_info_page
@@ -30,6 +31,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   scenario '2 Data subject requesting data to be sent to third party' do
     when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
+    and_fill_in_complaint_type_page
     and_fill_in_requester_details_page
     and_fill_in_recipient_details_page(:third_party)
     and_fill_in_requested_info_page
@@ -46,6 +48,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   scenario '3 Solicitor requesting data subject record' do
     when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
+    and_fill_in_complaint_type_page
     and_fill_in_requester_details_page(:third_party)
     and_fill_in_recipient_details_page(recipient: 'requester_recipient')
     and_fill_in_requested_info_page
@@ -62,6 +65,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   scenario '4 Solicitor requesting record to be sent to data subject' do
     when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
+    and_fill_in_complaint_type_page
     and_fill_in_requester_details_page(:third_party)
     and_fill_in_recipient_details_page(recipient: 'subject_recipient')
     and_fill_in_requested_info_page
@@ -78,6 +82,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   scenario '5 Copy the third part details from linked offender sar case' do
     when_i_navigate_to_offender_sar_complaint_subject_page
     and_choose_original_offender_sar_case_and_confirm
+    and_fill_in_complaint_type_page
     click_on "Continue"
     click_on "Continue"
     and_fill_in_requested_info_page
@@ -94,6 +99,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   scenario '6 Create the complaint case from closed offender sar case' do
     when_i_navigate_to_offender_sar_subject_page_and_start_complaint
     and_confirm_offender_sar_case
+    and_fill_in_complaint_type_page
     click_on "Continue"
     click_on "Continue"
     and_fill_in_requested_info_page
@@ -110,6 +116,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     offender_sar_open_late = create(:offender_sar_case, :third_party, received_date: Date.new(2017, 1, 4))
     when_i_navigate_to_offender_sar_subject_page_and_start_complaint(offender_sar_case: offender_sar_open_late)
     and_confirm_offender_sar_case
+    and_fill_in_complaint_type_page
     and_fill_in_requester_details_page(:third_party)
     and_fill_in_recipient_details_page(recipient: 'subject_recipient')
     and_fill_in_requested_info_page
@@ -231,7 +238,14 @@ feature 'offender sar complaint case creation by a manager', js: true do
     click_on "Continue"
   end
 
+  def and_fill_in_complaint_type_page(params = nil)
+    expect(cases_new_offender_sar_complaint_complaint_type_page).to be_displayed
+    cases_new_offender_sar_complaint_complaint_type_page.fill_in_case_details(params)
+    click_on "Continue"
+  end
+
   def and_fill_in_requester_details_page(params = nil)
+    expect(cases_new_offender_sar_complaint_requester_details_page).to be_displayed
     cases_new_offender_sar_complaint_requester_details_page.fill_in_case_details(params)
     click_on "Continue"
     expect(cases_new_offender_sar_complaint_recipient_details_page).to have_content "Create OFFENDER-SAR-COMPLAINT case"
@@ -289,6 +303,9 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to have_content linked_case.prison_number
     expect(cases_show_page).to have_content linked_case.subject_type.humanize
     expect(cases_show_page).to have_content linked_case.subject_address
+    expect(cases_show_page).to have_content "Standard"
+    expect(cases_show_page).to have_content "Missing data"
+    expect(cases_show_page).to have_content "Normal"
   end
 
   def then_expect_open_cases_page_to_be_correct(offender_sar_case: nil)

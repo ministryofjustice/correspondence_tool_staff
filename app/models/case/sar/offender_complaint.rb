@@ -16,13 +16,13 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validate :validate_external_deadline
 
   enum complaint_type: {
-    standard:  'standard',
+    standard: 'standard',
     ico: 'ico',
     litigation: 'litigation',
   }
 
   enum complaint_subtype: {
-    missing_data:  'missing_data',
+    missing_data: 'missing_data',
     inaccurate_data: 'inaccurate_data',
     redacted_data: 'redacted_data',
     timeliness: 'timeliness',
@@ -32,16 +32,6 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     normal:  'normal',
     high: 'high',
   }
-
-  # CT-3165 WIP REQUIRED FOR VALIDATIONS
-  #         REMOVE ONCE UX IS COMPLETED
-  before_validation :set_types
-  def set_types
-    self.complaint_type = 'standard'
-    self.complaint_subtype = 'missing_data'
-    self.priority = 'normal'
-  end
-  # CT-3165 END REMOVE ONCE UX IS COMPLETED
 
   class << self
     def type_abbreviation
@@ -64,6 +54,14 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   def validate_external_deadline
     validate_external_deadline_required
     validate_external_deadline_within_valid_range
+  end
+  
+  def normal_priority?
+    normal?
+  end
+
+  def high_priority?
+    high?
   end
 
   private
@@ -92,7 +90,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
       acting_user: self.creator,
       acting_team: self.creator.case_team(self.original_case),
       message: I18n.t(
-        'common.case/offender_sar.complaint_case_link_message', 
+        'common.case/offender_sar.complaint_case_link_message',
         received_date: self.received_date.to_date))
   end
 

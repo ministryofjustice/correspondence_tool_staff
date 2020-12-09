@@ -12,6 +12,8 @@
 
         = render partial: 'cases/offender_sar_complaint/subject_details', locals: { case_details: case_details }
 
+        = render partial: 'cases/offender_sar_complaint/complaint_type', locals: { case_details: case_details }
+
         = render partial: 'cases/offender_sar_complaint/requested_on_behalf', locals: { case_details: case_details }
 
         - if case_details.third_party?
