@@ -139,6 +139,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
       when_i_navigate_to_offender_sar_complaint_subject_page
       and_choose_original_offender_sar_case_and_confirm
+      and_fill_in_complaint_type_page
       and_fill_in_requester_details_page
       and_fill_in_recipient_details_page
       and_fill_in_requested_info_page
