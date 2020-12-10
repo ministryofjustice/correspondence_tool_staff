@@ -116,7 +116,7 @@ feature 'ICO case creation' do
       expect(cases_new_ico_page.form).to have_no_related_cases
     end
 
-    scenario 'creating a ico-foi case with request attachments', js: true  do
+    scenario 'creating an ICO appeal linking to FOI case with request attachments', js: true  do
       request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
 
       create_ico_case_step(original_case: original_foi,
@@ -128,7 +128,7 @@ feature 'ICO case creation' do
       expect(request_attachment.key).to match %{/request-1.pdf$}
     end  
 
-    scenario 'creating a ico-sar case with request attachments', js: true  do
+    scenario 'creating an ICO appeal linking to SAR case with request attachments', js: true  do
       request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
 
       create_ico_case_step(original_case: original_sar,
