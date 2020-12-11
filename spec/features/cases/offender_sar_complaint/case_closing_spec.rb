@@ -46,6 +46,8 @@ feature 'Closing a case' do
           received_date: 35.days.ago }
 
         scenario 'the case is responded-to late', js: true do
+          fully_granted_case.external_deadline = 30.days.ago
+          fully_granted_case.save!
           open_cases_page.load(timeliness: 'late')
           close_case(fully_granted_case)
 

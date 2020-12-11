@@ -56,8 +56,8 @@ FactoryBot.define do
     abbreviation { 'OFFENDER_SAR_COMPLAINT' }
     escalation_time_limit { 3 }
     internal_time_limit { 10 }
-    external_time_limit { 1 }
-    deadline_calculator_class { 'CalendarMonths' }
+    external_time_limit { 20 }
+    deadline_calculator_class { 'BusinessDays' }
     report_category_name { 'Offender SAR Complaint report' }
     show_on_menu { false }
 
