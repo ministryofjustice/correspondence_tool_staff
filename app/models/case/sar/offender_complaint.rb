@@ -16,9 +16,9 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validate :validate_external_deadline
 
   enum complaint_type: {
-    standard: 'standard',
-    ico: 'ico',
-    litigation: 'litigation',
+    standard_complaint: 'standard',
+    ico_complaint: 'ico',
+    litigation_complaint: 'litigation',
   }
 
   enum complaint_subtype: {
@@ -62,6 +62,10 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
 
   def high_priority?
     high?
+  end
+
+  def assigned?
+    Assignment.where(case_id: self.id, role: 'responding').count > 0
   end
 
   private

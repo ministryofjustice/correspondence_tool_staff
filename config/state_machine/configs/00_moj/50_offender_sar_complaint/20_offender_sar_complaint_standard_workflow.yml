@@ -16,13 +16,17 @@
                 add_note_to_case:
                 send_acknowledgement_letter:
                 edit_case:
-                assign_responder:
-                accept_approver_assignment:
+                assign_to_team_member:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_assigned?
               data_review_required:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
                 mark_as_require_response:
                   transition_to: response_required
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
@@ -30,6 +34,8 @@
               data_to_be_requested:
                 mark_as_waiting_for_data:
                   transition_to: waiting_for_data
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
@@ -39,6 +45,8 @@
                   transition_to: ready_for_vetting
                 mark_as_require_response:
                   transition_to: response_required
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
@@ -47,6 +55,8 @@
               ready_for_vetting:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_data_received:
                 add_note_to_case:
                 preview_cover_page:
@@ -54,6 +64,8 @@
               vetting_in_progress:
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_data_received:
                 add_note_to_case:
                 preview_cover_page:
@@ -61,19 +73,16 @@
               ready_to_copy:
                 mark_as_require_response:
                   transition_to: response_required
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_data_received:
                 add_note_to_case:
-                edit_case:
-              ready_to_dispatch:
-                close:
-                  transition_to: closed
-                add_data_received:
-                add_note_to_case:
-                send_dispatch_letter:
                 edit_case:
               response_required:
                 close:
                   transition_to: closed
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_data_received:
                 add_note_to_case:
                 edit_case:

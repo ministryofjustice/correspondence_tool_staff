@@ -6,13 +6,13 @@
 = form_for @case.object, url: url, as: :offender_sar_complaint do |f|
 
   = f.radio_button_fieldset :complaint_type,
-    choices: Case::SAR::OffenderComplaint::complaint_types.keys
+    choices: Case::SAR::OffenderComplaint::complaint_types.values
 
   = f.radio_button_fieldset :complaint_subtype,
-    choices: Case::SAR::OffenderComplaint::complaint_subtypes.keys
+    choices: Case::SAR::OffenderComplaint::complaint_subtypes.values
 
   = f.radio_button_fieldset :priority,
-    choices: Case::SAR::OffenderComplaint::priorities.keys
+    choices: Case::SAR::OffenderComplaint::priorities.values
 
   / TODO required to enable create_params - remove as part of
   / https://dsdmoj.atlassian.net/browse/CT-3166
