@@ -310,8 +310,7 @@ class AssignmentsController < ApplicationController
   end
 
   def set_team_users
-    # @assignment.team.users.order(:full_name)
-    current_user.case_team(@case).users.order(:full_name)
+    @assignment.team.users.order(:full_name)
   end
 
   def validate_response
