@@ -151,6 +151,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
     then_expect_case_show_page_to_show_ico
     then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
@@ -168,6 +169,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_requested_info_page
     and_fill_in_request_details_page
     and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
     then_expect_case_show_page_to_show_litigation
     then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
