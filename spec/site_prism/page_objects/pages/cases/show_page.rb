@@ -28,6 +28,7 @@ module PageObjects
           element :upload_approve, '#action--upload-approve'
           element :upload_redraft, '#action--upload-redraft'
           element :reassign_user, '#action--reassign-case'
+          element :assign_to_team_member, '#action--assign-to-team-member'
           element :mark_as_sent_and_close, '#action--mark-response-as-sent-and-close'
           element :progress_to_disclosure, '#action--progress-for-clearance'
           element :extend_sar_deadline, '#action--extend-deadline-for-sar'

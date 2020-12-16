@@ -10,9 +10,7 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_require_data_review, 
           :mark_as_data_to_be_requested,
           :mark_as_require_response, 
-          :send_acknowledgement_letter,
-          :accept_approver_assignment, 
-          :assign_responder]
+          :send_acknowledgement_letter]
       },
       {
         state: :data_review_required, 
@@ -66,10 +64,11 @@ describe ConfigurableStateMachine::Machine do
       add_note_to_case
       add_data_received
       edit_case
+      reassign_user
     ].freeze
 
     def offender_sar_complaint(with_state:)
-      create :offender_sar_complaint, with_state
+      create :accepted_complaint_case, with_state
     end
 
     context 'as responder' do

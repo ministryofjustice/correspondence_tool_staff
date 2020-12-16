@@ -76,5 +76,34 @@ RSpec.describe AssignmentsController, type: :controller do
         expect(response).to redirect_to case_path(id: accepted_ico_foi_case.id)
       end
     end
+
+    context 'offender sar complaint case' do
+      let(:accepted_complaint_case) { create :accepted_complaint_case }
+      let(:responding_team)         { accepted_complaint_case.responding_team }
+      let(:responder)               { responding_team.responders.first }
+      let(:another_responder)       { create :responder, responding_teams: [responding_team] }
+      let(:assignment)              { accepted_complaint_case.responder_assignment }
+      let(:params)                  { { case_id: accepted_complaint_case.id,
+                                        id: assignment.id,
+                                        assignment: {
+                                          user_id: another_responder.id
+                                        }
+                                      } }
+
+      it 'calls UserReassignmentService' do
+        patch :execute_reassign_user, params: params
+        expect(UserReassignmentService).to have_received(:new).with(
+                                             acting_user: responder,
+                                             target_user: another_responder,
+                                             assignment: assignment
+                                           )
+        expect(service).to have_received(:call)
+      end
+
+      it 'redirects to new_user_session_path' do
+        patch :execute_reassign_user, params: params
+        expect(response).to redirect_to case_path(id: accepted_complaint_case.id)
+      end
+    end
   end
 end

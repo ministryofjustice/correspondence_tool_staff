@@ -34,7 +34,7 @@ FactoryBot.define do
     requester_reference             { '456 ABC 123' }
     subject_type                    { 'offender' }
     recipient                       { 'subject_recipient' }
-    complaint_type                  { 'standard' }
+    complaint_type                  { 'standard_complaint' }
     complaint_subtype               { 'missing_data' }
     priority                        { 'normal' }
     third_party                     { false }

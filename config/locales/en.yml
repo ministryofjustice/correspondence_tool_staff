@@ -236,6 +236,7 @@ en:
       update?: You are not authorised to edit this case.
       update_closure?: You are not authorised to edit this case.
       upload_responses?: You are not authorised to upload a response for this case.
+      can_assign_to_team_member?: You are not authorised to assign the responder to this case.
     case/ico/foi_policy:
       <<: *case_policy
       can_close_case?: You are not authorised to close this case
@@ -1119,6 +1120,9 @@ en:
     reassign_user:
       heading: Change team member
       action: Change team member
+    assign_to_team_member:
+      heading: Assign to a responder
+      action: Assign responder
     select_team:
       heading: Select team
     take_case_on:

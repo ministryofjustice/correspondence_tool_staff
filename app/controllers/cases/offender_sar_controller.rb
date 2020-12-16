@@ -119,7 +119,7 @@ module Cases
     end
 
     def assign_case_to_creator
-      assign_service = CaseSelfAssignService
+      assign_service = CaseAssignToTeamMemberService
                               .new kase: @case,
                                    role: 'responding',
                                    user: current_user
