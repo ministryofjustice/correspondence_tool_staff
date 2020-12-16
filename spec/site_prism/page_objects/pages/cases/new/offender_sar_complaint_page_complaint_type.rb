@@ -33,7 +33,7 @@ module PageObjects
           end
 
           def fill_in_complaint_type(kase)
-            if kase.standard?
+            if kase.standard_complaint?
               choose('offender_sar_complaint_complaint_type_standard', visible: false)
             elsif kase.ico_complaint?
               choose('offender_sar_complaint_complaint_type_ico_complaint', visible: false)
@@ -41,7 +41,7 @@ module PageObjects
               ico_contact_email.set 'jane_doe_ico@example.com'
               ico_contact_phone.set '01234 567 9876'
               ico_reference.set 'ICOREF001Z'
-            elsif kase.litigation?
+            elsif kase.litigation_complaint?
               choose('offender_sar_complaint_complaint_type_litigation', visible: false)
               gld_contact_name.set 'Priya Singh Litigation'
               gld_contact_email.set 'priya_singh_litigation@example.com'

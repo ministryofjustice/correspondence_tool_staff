@@ -92,6 +92,7 @@ module PageObjects
         password:                       'PasswordPage',
         request_amends:                 'Cases::RequestAmendsPage',
         reassign_user:                  'Assignments::ReassignUserPage',
+        assign_to_team_member:          'Assignments::AssignToTeamMemberPage',
         stats_index:                    'Stats::IndexPage',
         stats_new:                      'Stats::NewPage',
         teams_new:                      'Teams::NewPage',

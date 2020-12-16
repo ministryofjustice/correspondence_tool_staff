@@ -19,6 +19,5 @@
       - ready_for_vetting
       - vetting_in_progress
       - ready_to_copy
-      - ready_to_dispatch
       - response_required
       - closed

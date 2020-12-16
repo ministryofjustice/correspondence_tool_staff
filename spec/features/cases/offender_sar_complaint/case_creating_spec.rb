@@ -387,7 +387,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
 
   def expect_the_case_to_be_assigned_to_me
     expect(cases_show_page.case_history).to have_content "Assign responder"
-    expect(cases_show_page.case_history).to have_content "Assigned to Branston Registr"
+    expect(cases_show_page.case_history).to have_content "Self-assigned this case to branston registry responding user"
     expect(cases_show_page).to have_content "With\nbranston registry responding user"
   end
 

@@ -40,6 +40,7 @@ class CaseTransitionDecorator < Draper::Decorator
     state_machine.event_name(object.event)
   end
 
+  #rubocop:disable Metrics/CyclomaticComplexity
   def details
     case object.event
     when 'assign_responder', 'assign_to_new_team'
@@ -59,13 +60,30 @@ class CaseTransitionDecorator < Draper::Decorator
          'upload_response_and_approve',
          'upload_response_approve_and_bypass'
         object.message
+    when 'assign_to_team_member'
+      construct_message_for_assign_to_team_member
     when 'reassign_user'
-      target_user = User.find(object.target_user_id)
-      acting_user = User.find(object.acting_user_id)
-      "#{ acting_user.full_name } re-assigned this case to <strong>#{ target_user.full_name }</strong>"
+      construct_message_for_reassign_user
     else
       object&.message
     end
+  end
+  #rubocop:enable Metrics/CyclomaticComplexity
+
+  def construct_message_for_assign_to_team_member
+    target_user = User.find(object.target_user_id)
+    acting_user = User.find(object.acting_user_id)
+    if target_user == acting_user
+      "Self-assigned this case to <strong>#{ target_user.full_name }</strong>"
+    else
+      "#{ acting_user.full_name } assigned this case to <strong>#{ target_user.full_name }</strong>"
+    end
+  end
+
+  def construct_message_for_reassign_user
+    target_user = User.find(object.target_user_id)
+    acting_user = User.find(object.acting_user_id)
+    "#{ acting_user.full_name } re-assigned this case to <strong>#{ target_user.full_name }</strong>"
   end
 
   def message_base_on_linked_case

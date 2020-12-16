@@ -19,10 +19,10 @@
       = f.text_field :gld_reference
 
   = f.radio_button_fieldset :complaint_subtype,
-    choices: Case::SAR::OffenderComplaint::complaint_subtypes.keys
+    choices: Case::SAR::OffenderComplaint::complaint_subtypes.values
 
   = f.radio_button_fieldset :priority,
-    choices: Case::SAR::OffenderComplaint::priorities.keys
+    choices: Case::SAR::OffenderComplaint::priorities.values
 
   input name="current_step" type="hidden" value=@case.current_step
 
