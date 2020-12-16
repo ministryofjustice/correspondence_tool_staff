@@ -26,7 +26,8 @@ module CaseFilter
       our_crumbs = []
       if applied?
         summary_text = I18n.t(
-          "filters.#{self.class.identifier}.#{@query.send(self.class.identifier).first}"
+          "filters.#{self.class.identifier}.#{@query.send(self.class.identifier).first}", 
+          default: "#{@query.send(self.class.identifier).first.humanize}"
         )
         crumb_text = I18n.t "filters.crumbs.#{self.class.identifier}",
                             count: @query.send(self.class.identifier).size,

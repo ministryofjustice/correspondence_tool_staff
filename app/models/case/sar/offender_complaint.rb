@@ -16,9 +16,9 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validate :validate_external_deadline
 
   enum complaint_type: {
-    standard: 'standard',
-    ico: 'ico',
-    litigation: 'litigation',
+    standard: 'Standard',
+    ico: 'ICO',
+    litigation: 'Litigation',
   }
 
   enum complaint_subtype: {

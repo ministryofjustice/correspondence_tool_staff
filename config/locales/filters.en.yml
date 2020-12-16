@@ -28,6 +28,12 @@ en:
         <<: *list_filter_type
       filter_timeliness:
         <<: *list_filter_type
+      filter_complaint_type:
+        <<: *list_filter_type
+      filter_complaint_subtype:
+        <<: *list_filter_type
+      filter_complaint_priority:
+        <<: *list_filter_type
     headings:
       filter_status: Filter by open/closed cases
       filter_cases: Filter cases
@@ -39,6 +45,9 @@ en:
       filter_date_responded: Filter by date of case response
       filter_exemption: Filter by exemptions
       filter_sensitivity: Filter by sensitivity
+      filter_complaint_type: Filter by complaint ype
+      filter_complaint_subtype: Filter by complaint sub type
+      filter_complaint_priority: Filter by sensitivity
       date_headings:
         filter_received_date: 'Received between'
         filter_date_responded: 'Responded between'

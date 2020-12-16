@@ -24,13 +24,21 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseTypeFilter,
       CaseFilter::CaseTriggerFlagFilter,
       CaseFilter::TimelinessFilter,
-      CaseFilter::ExternalDeadlineFilter],
+      CaseFilter::ExternalDeadlineFilter, 
+      CaseFilter::CaseComplaintTypeFilter, 
+      CaseFilter::CaseComplaintPriorityFilter],
     "closed" => [
       CaseFilter::ReceivedDateFilter, 
       CaseFilter::DateRespondedFilter, 
       CaseFilter::CaseTypeFilter, 
-      CaseFilter::ExemptionFilter],
-    "my_cases" => [CaseFilter::OpenCaseStatusFilter],
+      CaseFilter::ExemptionFilter, 
+      CaseFilter::CaseComplaintTypeFilter,
+      CaseFilter::CaseComplaintSubtypeFilter, 
+      CaseFilter::CaseComplaintPriorityFilter],
+    "my_cases" => [
+      CaseFilter::OpenCaseStatusFilter, 
+      CaseFilter::CaseComplaintTypeFilter,
+      CaseFilter::CaseComplaintPriorityFilter],
     "search_cases" => [
       CaseFilter::CaseStatusFilter, 
       CaseFilter::OpenCaseStatusFilter,
@@ -38,7 +46,10 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseTriggerFlagFilter,
       CaseFilter::TimelinessFilter,
       CaseFilter::ExternalDeadlineFilter,
-      CaseFilter::ExemptionFilter]
+      CaseFilter::ExemptionFilter, 
+      CaseFilter::CaseComplaintTypeFilter,
+      CaseFilter::CaseComplaintSubtypeFilter, 
+      CaseFilter::CaseComplaintPriorityFilter]
   }.freeze
 
   attr_accessor :business_unit_name_filter
