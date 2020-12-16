@@ -6,4 +6,10 @@ class Case::SAR::OffenderComplaintPolicy < Case::SAR::OffenderPolicy
     end
 
   end
+
+  def can_assign_to_team_member?
+    clear_failed_checks
+    check_can_trigger_event(:assign_to_team_member) && !self.case.assigned?
+  end
+
 end

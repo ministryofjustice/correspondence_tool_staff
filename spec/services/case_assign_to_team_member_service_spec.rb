@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-describe CaseSelfAssignService, type: :service do
+describe CaseAssignToTeamMemberService, type: :service do
   let(:team) { find_or_create :team_branston }
   let(:unassigned_case) { find_or_create :offender_sar_complaint }
   let(:responder) { find_or_create :branston_user }
-  let(:service)           { CaseSelfAssignService
+  let(:service)           { CaseAssignToTeamMemberService
                               .new kase: unassigned_case,
                                    role: 'responding',
                                    user: responder }
@@ -44,13 +44,14 @@ describe CaseSelfAssignService, type: :service do
         expect(service.result).to eq :ok
       end
 
-      it 'triggers an assign_responder! event' do
+      it 'triggers an assign_to_team_member! event' do
         expect(unassigned_case.state_machine)
-            .to receive(:assign_responder!)
+            .to receive(:assign_to_team_member!)
                     .with(
                         acting_user: responder,
                         acting_team: responder.responding_teams.first,
-                        target_team: team)
+                        target_team: team, 
+                        target_user: responder)
         service.call
       end
 

@@ -1,7 +1,10 @@
+#rubocop:disable Metrics/ClassLength
 class AssignmentsController < ApplicationController
   before_action :set_case, only: [
     :assign_to_team,
     :new,
+    :assign_to_team_member,
+    :execute_assign_to_team_member, 
     :select_team,
     :take_case_on,
   ]
@@ -201,7 +204,36 @@ class AssignmentsController < ApplicationController
 
   end
 
+  def assign_to_team_member
+    authorize @case, :can_assign_to_team_member?
+    @team_users = set_team_members.decorate
+    @assignment = @case.assignments.new
+  end 
+
+  def execute_assign_to_team_member
+    authorize @case, :can_assign_to_team_member?
+    target_user = User.find(assign_to_team_member_params[:user_id])
+    service = CaseAssignToTeamMemberService
+                .new kase: @case,
+                  role: 'responding',
+                  user: current_user,
+                  target_user: target_user
+
+    service.call
+    @assignment = service.assignment
+    if service.result == :ok
+      flash[:notice] = "Case assigned to #{@assignment.user.full_name}"
+      redirect_to case_path @case.id
+    else
+      render :new
+    end
+  end
+
   private
+
+  def set_team_members
+    current_user.case_team(@case).users.order(:full_name)
+  end
 
   def set_business_units
     correspondence_type = @case.correspondence_type_for_business_unit_assignment
@@ -242,7 +274,12 @@ class AssignmentsController < ApplicationController
     params.require(:assignment).permit(
       :user_id
     )
+  end
 
+  def assign_to_team_member_params
+    params.require(:assignment).permit(
+      :user_id
+    )
   end
 
   def set_case_and_assignment
@@ -314,3 +351,4 @@ class AssignmentsController < ApplicationController
     end
   end
 end
+#rubocop:enable Metrics/ClassLength
