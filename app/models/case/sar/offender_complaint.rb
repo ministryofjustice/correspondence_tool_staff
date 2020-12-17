@@ -86,7 +86,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   end
 
   def require_external_deadline?
-    received_date.present? && complaint_type.present? && (["standard", "ico"].include? complaint_type)
+    received_date.present?
   end
 
   def stamp_on_original_case

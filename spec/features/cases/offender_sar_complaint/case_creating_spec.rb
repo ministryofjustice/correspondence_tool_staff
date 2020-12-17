@@ -154,6 +154,44 @@ feature 'offender sar complaint case creation by a manager', js: true do
     end
   end
 
+  scenario '10 Check the deadline will be not prefilled when complaint_type is ico' do
+    Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
+      when_i_navigate_to_offender_sar_complaint_subject_page
+      and_choose_original_offender_sar_case_and_confirm
+      and_fill_in_complaint_type_page({"complaint_type": 'ico_complaint'})
+      and_fill_in_requester_details_page
+      and_fill_in_recipient_details_page
+      and_fill_in_requested_info_page
+      and_fill_in_request_details_page
+      and_fill_in_date_received_page
+      and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline:  Date.today + 10.day)
+      then_basic_details_of_show_page_are_correct(complaint_type: "Ico")
+      then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
+      then_expect_linked_original_case_has_stamp_for_linkage
+      then_expect_open_cases_page_to_be_correct
+      then_expect_case_in_my_open_cases
+    end
+  end
+
+  scenario '11 Check the deadline will be not prefilled when complaint_type is litigation' do
+    Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
+      when_i_navigate_to_offender_sar_complaint_subject_page
+      and_choose_original_offender_sar_case_and_confirm
+      and_fill_in_complaint_type_page({"complaint_type": 'litigation_complaint'})
+      and_fill_in_requester_details_page
+      and_fill_in_recipient_details_page
+      and_fill_in_requested_info_page
+      and_fill_in_request_details_page
+      and_fill_in_date_received_page
+      and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline:  Date.today + 10.day)
+      then_basic_details_of_show_page_are_correct(complaint_type: "Litigation")
+      then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
+      then_expect_linked_original_case_has_stamp_for_linkage
+      then_expect_open_cases_page_to_be_correct
+      then_expect_case_in_my_open_cases
+    end
+  end
+
   def then_expect_no_button_for_creating_complaint_case(offender_sar_case)
     click_on "Cases"
     open_cases_page.load
@@ -284,15 +322,15 @@ feature 'offender sar complaint case creation by a manager', js: true do
     click_on "Continue"
   end
 
-  def and_fill_and_check_external_deadline_is_prefilled(day, month, year)
-    cases_new_offender_sar_complaint_external_deadline_page.fill_in_case_details
+  def and_fill_and_check_external_deadline_is_prefilled(day, month, year, external_deadline: nil)
     expect(cases_new_offender_sar_complaint_external_deadline_page.external_deadline_day.value).to eq day.to_s
     expect(cases_new_offender_sar_complaint_external_deadline_page.external_deadline_month.value).to eq month.to_s
     expect(cases_new_offender_sar_complaint_external_deadline_page.external_deadline_year.value).to eq year.to_s
+    cases_new_offender_sar_complaint_external_deadline_page.fill_in_case_details(external_deadline: external_deadline)
     click_on "Continue"
   end
 
-  def then_basic_details_of_show_page_are_correct(offender_sar_case: nil)
+  def then_basic_details_of_show_page_are_correct(offender_sar_case: nil, complaint_type: "Standard")
     linked_case = (offender_sar_case ||  offender_sar)
     expect(cases_show_page).to be_displayed
     expect_the_case_to_be_assigned_to_me
@@ -304,7 +342,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to have_content linked_case.prison_number
     expect(cases_show_page).to have_content linked_case.subject_type.humanize
     expect(cases_show_page).to have_content linked_case.subject_address
-    expect(cases_show_page).to have_content "Standard"
+    expect(cases_show_page).to have_content complaint_type
     expect(cases_show_page).to have_content "Missing data"
     expect(cases_show_page).to have_content "Normal"
   end
