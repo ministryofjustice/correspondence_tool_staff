@@ -76,13 +76,9 @@ describe ConfigurableStateMachine::Machine do
 
       TRANSITIONS.each do |transition|
         context "with Offender SAR Complaint in state #{transition[:state]}" do
-          let(:kase) { offender_sar_complaint with_state: transition[:state] }
-
-          before do
-            expect(kase.current_state.to_sym).to eq transition[:state]
-          end
-
           it 'only allows permitted events' do
+            kase = create :accepted_complaint_case, transition[:state]
+            expect(kase.current_state.to_sym).to eq transition[:state]
             permitted_events = (transition[:full_events] || UNIVERSAL_EVENTS) + 
                                 (transition[:specific_events] || [])
 
