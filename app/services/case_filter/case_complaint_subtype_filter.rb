@@ -23,7 +23,7 @@ module CaseFilter
 
     def call
       records = @records
-      records = filter_complaint_priority(records)
+      records = filter_complaint_subtype(records)
       records
     end
 

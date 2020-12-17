@@ -27,7 +27,7 @@ module CaseFilter
       if applied?
         summary_text = I18n.t(
           "filters.#{self.class.identifier}.#{@query.send(self.class.identifier).first}", 
-          default: "#{@query.send(self.class.identifier).first.humanize}"
+          default: "#{get_default_text_for_summary}"
         )
         crumb_text = I18n.t "filters.crumbs.#{self.class.identifier}",
                             count: @query.send(self.class.identifier).size,
@@ -40,6 +40,14 @@ module CaseFilter
         our_crumbs << [crumb_text, params]
       end
       our_crumbs
+    end
+
+    private 
+
+    def get_default_text_for_summary
+      if available_choices.present?
+        available_choices[self.class.identifier.to_sym][@query.send(self.class.identifier).first]
+      end
     end
 
   end

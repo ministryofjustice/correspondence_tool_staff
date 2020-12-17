@@ -40,7 +40,7 @@ describe CaseFilter::CaseComplaintTypeFilter do
 
     context 'filter_case_complaint_type present' do
       let(:search_query)      { create :search_query,
-                                       filter_complaint_ype: ['standard_complaint'] }
+                                       filter_complaint_type: ['standard_complaint'] }
       it { should be_applied }
     end
 
@@ -50,22 +50,20 @@ describe CaseFilter::CaseComplaintTypeFilter do
 
     describe 'filtering for standard complaint cases' do
       let(:search_query)      { create :search_query,
-                                       filter_complaint_ype: ['standard_complaint'] }
+                                       filter_complaint_type: ['standard_complaint'] }
 
       it 'returns the correct list of cases' do
         results = case_complaint_type_filter.call
         expect(results).to match_array [
                             @offender_sar_complaint_standard,
                             @offender_sar_complaint_standard1,
-                            @offender_sar_complaint_ico,
-                            @offender_sar_complaint_litigation
                            ]
       end
     end
 
     describe 'filtering for ico complaint cases' do
       let(:search_query)      { create :search_query,
-                                       filter_complaint_ype: ['ico_complaint'] }
+                                       filter_complaint_type: ['ico_complaint'] }
 
       it 'returns the correct list of cases' do
         results = case_complaint_type_filter.call
@@ -77,7 +75,7 @@ describe CaseFilter::CaseComplaintTypeFilter do
 
     describe 'filtering for litigation complaint cases' do
       let(:search_query)      { create :search_query,
-                                       filter_complaint_ype: ['litigation_complaint'] }
+                                       filter_complaint_type: ['litigation_complaint'] }
 
       it 'returns the correct list of cases' do
         results = case_complaint_type_filter.call
@@ -92,7 +90,7 @@ describe CaseFilter::CaseComplaintTypeFilter do
   describe '#crumbs' do
     context 'no filters selected' do
       let(:search_query)      { create :search_query,
-                                       filter_complaint_ype: []}
+                                       filter_complaint_type: []}
 
       it 'returns no crumbs' do
         expect(case_complaint_type_filter.crumbs).to be_empty
@@ -103,7 +101,7 @@ describe CaseFilter::CaseComplaintTypeFilter do
  
       context 'filtering for one complaint type' do
         let(:search_query)      { create :search_query,
-                                         filter_complaint_ype: ['standard_complaint'] }
+                                         filter_complaint_type: ['standard_complaint'] }
 
         it 'returns 1 crumb' do
           expect(case_complaint_type_filter.crumbs).to have(1).item
@@ -116,21 +114,17 @@ describe CaseFilter::CaseComplaintTypeFilter do
         describe 'params that will be submitted when clicking on the crumb' do
           subject { case_complaint_type_filter.crumbs[0].second }
 
-          it { should eq 'filter_complaint_ype' => [''],
+          it { should eq 'filter_complaint_type' => [''],
                          'parent_id'          => search_query.id }
         end
       end
 
       context 'filtering for more than one type' do
         let(:search_query)      { create :search_query,
-                                         filter_case_type: ['ico_complaint', 'litigation_complaint'] }
+                                         filter_complaint_type: ['ico_complaint', 'litigation_complaint'] }
 
-        it 'returns 2 crumb' do
-          expect(case_complaint_type_filter.crumbs).to have(2).item
-        end
-
-        it 'uses "FOI - Standard" for the crumb text' do
-          expect(case_complaint_type_filter.crumbs[0].first).to eq 'Complaint - ICO + 1'
+        it 'uses "Complaint - ICO" for the crumb text' do
+          expect(case_complaint_type_filter.crumbs[0].first).to eq 'Complaint - ICO + 1 more'
         end
 
       end
@@ -139,17 +133,17 @@ describe CaseFilter::CaseComplaintTypeFilter do
   end
 
   describe '.process_params!' do
-    it 'processes filter_case_type, sorting and removing blanks' do
-      params = { filter_case_type: [
+    it 'processes filter_complaint_type, sorting and removing blanks' do
+      params = { filter_complaint_type: [
                    '',
                    'standard_complaint',
                    'ico_complaint',
                    'litigation_complaint',
                  ] }
       described_class.process_params!(params)
-      expect(params).to eq filter_case_type: [
-                             'litigation_complaint',
+      expect(params).to eq filter_complaint_type: [
                              'ico_complaint',
+                             'litigation_complaint',
                              'standard_complaint',
                            ]
     end
