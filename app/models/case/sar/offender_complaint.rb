@@ -66,7 +66,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     validate_external_deadline_required
     validate_external_deadline_within_valid_range
   end
-  
+
   def normal_priority?
     normal?
   end
@@ -110,7 +110,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   end
 
   def validate_gld_contact_name
-    if litigation? && gld_contact_name.blank?
+    if litigation_complaint? && gld_contact_name.blank?
       errors.add(
         :gld_contact_name,
         I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.gld_contact_name.blank')
@@ -120,7 +120,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   end
 
   def validate_gld_contact_details
-    if litigation? && gld_contact_email.blank? && gld_contact_phone.blank?
+    if litigation_complaint? && gld_contact_email.blank? && gld_contact_phone.blank?
       errors.add(
           :gld_contact_email,
           I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.gld_contact_email.blank')
@@ -134,7 +134,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   end
 
   def validate_gld_reference
-    if litigation? && gld_reference.blank?
+    if litigation_complaint? && gld_reference.blank?
       errors.add(
         :gld_reference,
         I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.gld_reference.blank')
