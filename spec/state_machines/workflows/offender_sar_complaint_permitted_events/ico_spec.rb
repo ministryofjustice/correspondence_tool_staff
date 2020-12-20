@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe ConfigurableStateMachine::Machine do
-  describe 'with standard workflow Offender SAR Complaint case' do
+  describe 'with ico workflow Offender SAR Complaint case' do
 
     TRANSITIONS = [
       {
@@ -67,22 +67,16 @@ describe ConfigurableStateMachine::Machine do
       reassign_user
     ].freeze
 
-    def offender_sar_complaint(with_state:)
-      create :accepted_complaint_case, with_state
-    end
-
     context 'as responder' do
       let(:responder) { find_or_create :branston_user }
 
       TRANSITIONS.each do |transition|
         context "with Offender SAR Complaint in state #{transition[:state]}" do
-          let(:kase) { offender_sar_complaint with_state: transition[:state] }
-
-          before do
-            expect(kase.current_state.to_sym).to eq transition[:state]
-          end
 
           it 'only allows permitted events' do
+            kase = create :accepted_complaint_case, transition[:state], complaint_type: 'ico_complaint' 
+            expect(kase.current_state.to_sym).to eq transition[:state]
+
             permitted_events = (transition[:full_events] || UNIVERSAL_EVENTS) + 
                                 (transition[:specific_events] || [])
 
