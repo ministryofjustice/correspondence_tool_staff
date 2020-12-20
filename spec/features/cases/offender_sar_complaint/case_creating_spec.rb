@@ -297,15 +297,15 @@ feature 'offender sar complaint case creation by a manager', js: true do
     # In order to get good coverage for the combination of complaint_type, complaint_subtype, priority
     # without going through the whole sample space, a simple approatch is to pick up the choice randomly
     actual_params = params || {}
-    @chosen_complaint_type = actual_params["complaint_type"] || 
+    @chosen_complaint_type = actual_params[:complaint_type] || 
                 Case::SAR::OffenderComplaint.complaint_types.keys().sample(1)[0]
-    @chosen_complaint_subtype = actual_params["complaint_subtype"] || 
+    @chosen_complaint_subtype = actual_params[:complaint_subtype] || 
                 Case::SAR::OffenderComplaint.complaint_subtypes.keys().sample(1)[0]
-    @chosen_complaint_priority = actual_params["priority"] || 
+    @chosen_complaint_priority = actual_params[:priority] || 
                 Case::SAR::OffenderComplaint.priorities.keys().sample(1)[0]
-    actual_params["complaint_type"] = @chosen_complaint_type
-    actual_params["complaint_subtype"] = @chosen_complaint_subtype
-    actual_params["priority"] = @chosen_complaint_priority
+    actual_params[:complaint_type] = @chosen_complaint_type
+    actual_params[:complaint_subtype] = @chosen_complaint_subtype
+    actual_params[:priority] = @chosen_complaint_priority
     actual_params
   end
 
