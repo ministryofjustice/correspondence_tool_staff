@@ -153,10 +153,6 @@ feature 'filters whittle down search results' do
       ]
     end
 
-    # def date_range_text(start_date = Date.today, end_date = Date.today)
-    #   "#{start_date.strftime('%d %b %Y')} - #{end_date.strftime('%d %b %Y')}"
-    # end
-
     scenario 'clearing individual filters', js: true do
       expect(SearchQuery.count).to eq 6
 

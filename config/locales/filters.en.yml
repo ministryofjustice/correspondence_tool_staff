@@ -43,6 +43,13 @@ en:
         filter_received_date: 'Received between'
         filter_date_responded: 'Responded between'
         filter_external_deadline: 'Due'
+    filter_open_case_status:
+      pending_dacu_clearance: 'Pending clearance - Disclosure'
+      pending_press_office_clearance: 'Pending clearance - Press office'
+      pending_private_office_clearance: 'Pending clearance - Private office'
+      awaiting_dispatch: 'Ready to send'
+      responded: 'Ready to close'
+      destroyed: Case destroyed
     filter_sensitivity:
       non-trigger: 'Non-trigger'
       trigger: 'Trigger'
