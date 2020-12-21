@@ -2,7 +2,6 @@ require 'rails_helper'
 
 module Stats
   describe R401OffenderSarClosedCasesReport do
-    before(:all) { create_report_type(abbr: :r401)}
     after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '.title' do
@@ -27,6 +26,9 @@ module Stats
 
     describe 'reporting' do
       before(:all) do
+        DbHousekeeping.clean(seed: true) 
+        create_report_type(abbr: :r401)
+
         @period_start = Date.new(2018, 12, 20)
         @period_end = Date.new(2018, 12, 31)
         @user = create :branston_user

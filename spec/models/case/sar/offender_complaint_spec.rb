@@ -55,9 +55,9 @@ describe Case::SAR::OffenderComplaint do
 
     context 'valid values' do
       it 'does not error' do
-        expect(build(:offender_sar_complaint, complaint_type: 'standard')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_type: 'standard_complaint')).to be_valid
         expect(build(:offender_sar_complaint, complaint_type: 'ico_complaint')).to be_valid
-        expect(build(:offender_sar_complaint, complaint_type: 'litigation')).to be_valid
+        expect(build(:offender_sar_complaint, complaint_type: 'litigation_complaint')).to be_valid
       end
     end
 

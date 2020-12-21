@@ -66,7 +66,7 @@ module PageObjects
             if kase.normal_priority?
               choose('offender_sar_complaint_priority_normal', visible: false)
             elsif kase.high_priority?
-              choose('offender_sar_complaint_priority_standard', visible: false)
+              choose('offender_sar_complaint_priority_high', visible: false)
             end
           end
 

@@ -89,6 +89,17 @@ FactoryBot.define do
       end
     end
 
+    trait :waiting do
+      transient do
+        identifier { 'Waiting - Offender SAR Complaint' }
+      end
+
+      after(:create) do |kase|
+        create :case_transition_waiting, case: kase
+        kase.reload
+      end
+    end
+
     trait :waiting_for_data do
       transient do
         identifier { 'Waiting for data - Offender SAR Complaint' }
