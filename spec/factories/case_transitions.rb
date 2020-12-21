@@ -328,6 +328,14 @@ FactoryBot.define do
   # Offender SAR and Offender SAR Complaint specific transitions below 
   # - note use of responder and not manager 
   # - single team responsible for complete case workflow
+  factory :case_transition_waiting, parent: :case_transition do
+    to_state { 'waiting' }
+    event { 'mark_as_waiting' }
+
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
+  end
+
   factory :case_transition_data_to_be_requested, parent: :case_transition do
     to_state { 'data_to_be_requested' }
     event { 'mark_as_data_to_be_requested' }
