@@ -45,6 +45,7 @@ en:
       respond: Response sent to ICO
     mark_as_waiting_for_data: Mark as waiting for data
     mark_as_waiting_for_data__desc: Case is waiting for data
+    mark_as_waiting: Mark as waiting
     mark_as_ready_for_vetting: Mark as ready for vetting
     mark_as_ready_for_vetting__desc: Case is ready for vetting
     mark_as_vetting_in_progress: Mark as vetting in progress
