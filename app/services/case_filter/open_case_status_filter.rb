@@ -1,3 +1,5 @@
+require './lib/translate_for_case'
+
 module CaseFilter
   class OpenCaseStatusFilter < CaseMultiChoicesFilterBase
 
@@ -17,17 +19,22 @@ module CaseFilter
     end
 
     def available_choices
-      collected_states = []
+      state_choices = {}
       @user.permitted_correspondence_types.each do | correspondence_type |
         correspondence_type.sub_classes.each do | sub_class|
-          collected_states.push(*sub_class.permitted_states)
+          (sub_class.permitted_states - ConfigurableStateMachine::Machine.states_for_closed_cases).map do | state |
+            state_choices[state] =  get_tranlation_of_state_for_filter(sub_class, state)
+            # TranslateForCase.translate(sub_class, 'state', state)
+          end
         end 
       end 
-      state_choices = {}
-      (collected_states.uniq - ConfigurableStateMachine::Machine.states_for_closed_cases).each do | state |
-        state_choices[state] = I18n.t("filters.filter_open_case_status.#{state}")
-      end
       { :filter_open_case_status => state_choices }
+    end
+
+    private
+
+    def get_tranlation_of_state_for_filter(sub_class, state)
+      I18n.t("filters.filter_open_case_status.#{state}", default: nil) ||  TranslateForCase.translate(sub_class, 'state', state)
     end
 
   end

@@ -29,6 +29,14 @@ class Workflows::Predicates
     end
   end
 
+  def is_litigation_complaint?
+    @kase.litigation_complaint?
+  end
+
+  def is_not_litigation_complaint?
+    !@kase.litigation_complaint?
+  end
+
   def responder_is_member_of_assigned_team_and_not_overturned?
     responder_is_member_of_assigned_team? && not_overturned?
   end
