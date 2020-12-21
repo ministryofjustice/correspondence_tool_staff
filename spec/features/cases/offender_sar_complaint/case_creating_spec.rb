@@ -313,28 +313,28 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_new_offender_sar_complaint_requester_details_page).to be_displayed
     cases_new_offender_sar_complaint_requester_details_page.fill_in_case_details(params)
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_recipient_details_page).to have_content "Offender SAR Complaint"
+    expect(cases_new_offender_sar_complaint_recipient_details_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
     expect(cases_new_offender_sar_complaint_recipient_details_page).to be_displayed
   end
 
   def and_fill_in_recipient_details_page(params = nil)
     cases_new_offender_sar_complaint_recipient_details_page.fill_in_case_details(params)
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_requested_info_page).to have_content "Offender SAR Complaint"
+    expect(cases_new_offender_sar_complaint_requested_info_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
     expect(cases_new_offender_sar_complaint_requested_info_page).to be_displayed
   end
 
   def and_fill_in_requested_info_page
     cases_new_offender_sar_complaint_requested_info_page.fill_in_case_details
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_request_details_page).to have_content "Offender SAR Complaint"
+    expect(cases_new_offender_sar_complaint_request_details_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
     expect(cases_new_offender_sar_complaint_request_details_page).to be_displayed
   end
 
   def and_fill_in_request_details_page
     cases_new_offender_sar_complaint_request_details_page.fill_in_case_details
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_date_received_page).to have_content "Offender SAR Complaint"
+    expect(cases_new_offender_sar_complaint_date_received_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
     expect(cases_new_offender_sar_complaint_date_received_page).to be_displayed
   end
 
@@ -364,7 +364,6 @@ feature 'offender sar complaint case creation by a manager', js: true do
     linked_case = (offender_sar_case ||  offender_sar)
     expect(cases_show_page).to be_displayed
     expect_the_case_to_be_assigned_to_me
-    expect(cases_show_page).to have_content "OFFENDER-SAR-COMPLAINT"
     expect(cases_show_page).to have_content "Case created successfully"
     expect(cases_show_page.page_heading).to have_content linked_case.subject
     expect(cases_show_page).to have_content linked_case.subject_full_name
