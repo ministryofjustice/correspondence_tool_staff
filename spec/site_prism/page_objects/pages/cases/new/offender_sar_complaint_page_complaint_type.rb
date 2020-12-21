@@ -24,11 +24,11 @@ module PageObjects
 
           def fill_in_complaint_type(kase)
             if kase.standard_complaint?
-              choose('offender_sar_complaint_complaint_type_standard', visible: false)
+              choose('offender_sar_complaint_complaint_type_standard_complaint', visible: false)
             elsif kase.ico_complaint?
-              choose('offender_sar_complaint_complaint_type_ico', visible: false)
+              choose('offender_sar_complaint_complaint_type_ico_complaint', visible: false)
             elsif kase.litigation_complaint?
-              choose('offender_sar_complaint_complaint_type_litigation', visible: false)
+              choose('offender_sar_complaint_complaint_type_litigation_complaint', visible: false)
             end
           end
 
