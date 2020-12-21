@@ -28,7 +28,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(case_details_section(rendered).section_heading.text).to eq 'Case details'
 
       expect(partial.case_type).to have_no_sar_trigger
-      expect(partial.case_type.data.text).to eq "OFFENDER-SAR  "
+      expect(partial.case_type.data.text).to eq "Offender SAR  "
       expect(partial.date_received.data.text)
           .to eq offender_sar_case.received_date.strftime(Settings.default_date_format)
       expect(partial.external_deadline.data.text)
