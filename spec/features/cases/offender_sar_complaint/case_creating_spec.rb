@@ -165,7 +165,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
       and_fill_in_request_details_page
       and_fill_in_date_received_page
       and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline:  Date.today + 10.day)
-      then_basic_details_of_show_page_are_correct(complaint_type: "Ico")
+      then_basic_details_of_show_page_are_correct(complaint_type: "ICO")
       then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
       then_expect_linked_original_case_has_stamp_for_linkage
       then_expect_open_cases_page_to_be_correct
@@ -342,7 +342,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to have_content linked_case.prison_number
     expect(cases_show_page).to have_content linked_case.subject_type.humanize
     expect(cases_show_page).to have_content linked_case.subject_address
-    expect(cases_show_page).to have_content complaint_type
+    expect(cases_show_page).to have_content "Complaint - #{complaint_type}"
     expect(cases_show_page).to have_content "Missing data"
     expect(cases_show_page).to have_content "Normal"
   end

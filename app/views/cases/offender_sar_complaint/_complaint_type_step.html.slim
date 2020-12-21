@@ -6,7 +6,7 @@
 = form_for @case.object, url: url, as: :offender_sar_complaint do |f|
 
   = f.radio_button_fieldset :complaint_type,
-    choices: Case::SAR::OffenderComplaint::complaint_types.values
+    choices: Case::SAR::OffenderComplaint::complaint_types, text_method: :second, value_method: :first
 
   = f.radio_button_fieldset :complaint_subtype,
     choices: Case::SAR::OffenderComplaint::complaint_subtypes.values

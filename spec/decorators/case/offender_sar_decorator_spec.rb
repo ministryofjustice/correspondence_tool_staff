@@ -47,4 +47,10 @@ describe Case::SAR::OffenderDecorator do
     end
   end
 
+  describe '#type_printer' do
+    it 'pretty prints Case' do
+      expect(offender_sar_case.pretty_type).to eq 'Offender SAR'
+    end
+  end
+
 end
