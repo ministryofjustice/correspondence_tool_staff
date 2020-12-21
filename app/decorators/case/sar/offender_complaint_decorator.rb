@@ -3,7 +3,11 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
   include OffenderSARComplaintCaseForm
 
   def pretty_type
-    "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[object.complaint_type]}"
+    if object.complaint_type.present?
+      "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[object.complaint_type]}"
+    else
+      "Offender SAR Complaint"
+    end
   end
 
   def case_route_path

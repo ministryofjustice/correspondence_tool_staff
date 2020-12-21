@@ -266,21 +266,21 @@ feature 'offender sar complaint case creation by a manager', js: true do
     cases_page.new_case_button.click
     expect(cases_new_page).to be_displayed
     cases_new_page.create_link_for_correspondence('OFFENDER-SAR-COMPLAINT').click
-    expect(cases_new_offender_sar_complaint_link_offender_sar_page).to have_content "Create OFFENDER-SAR-COMPLAINT case"
+    expect(cases_new_offender_sar_complaint_link_offender_sar_page).to have_content "Create Offender SAR Complaint case"
     expect(cases_new_offender_sar_complaint_link_offender_sar_page).to be_displayed
   end
 
   def and_choose_original_offender_sar_case_and_confirm
     cases_new_offender_sar_complaint_link_offender_sar_page.fill_in_original_case_number(offender_sar.number)
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_confirm_case_page).to have_content "Create OFFENDER-SAR-COMPLAINT case"
+    expect(cases_new_offender_sar_complaint_confirm_case_page).to have_content "Create Offender SAR Complaint case"
     expect(cases_new_offender_sar_complaint_confirm_case_page).to be_displayed
     cases_new_offender_sar_complaint_confirm_case_page.confirm_yes
     click_on "Continue"
   end
 
   def and_confirm_offender_sar_case
-    expect(cases_new_offender_sar_complaint_confirm_case_page).to have_content "Create OFFENDER-SAR-COMPLAINT case"
+    expect(cases_new_offender_sar_complaint_confirm_case_page).to have_content "Create Offender SAR Complaint case"
     expect(cases_new_offender_sar_complaint_confirm_case_page).to be_displayed
     cases_new_offender_sar_complaint_confirm_case_page.confirm_yes
     click_on "Continue"
@@ -313,28 +313,28 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_new_offender_sar_complaint_requester_details_page).to be_displayed
     cases_new_offender_sar_complaint_requester_details_page.fill_in_case_details(params)
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_recipient_details_page).to have_content "Create OFFENDER-SAR-COMPLAINT case"
+    expect(cases_new_offender_sar_complaint_recipient_details_page).to have_content "Offender SAR Complaint"
     expect(cases_new_offender_sar_complaint_recipient_details_page).to be_displayed
   end
 
   def and_fill_in_recipient_details_page(params = nil)
     cases_new_offender_sar_complaint_recipient_details_page.fill_in_case_details(params)
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_requested_info_page).to have_content "Create OFFENDER-SAR-COMPLAINT case"
+    expect(cases_new_offender_sar_complaint_requested_info_page).to have_content "Offender SAR Complaint"
     expect(cases_new_offender_sar_complaint_requested_info_page).to be_displayed
   end
 
   def and_fill_in_requested_info_page
     cases_new_offender_sar_complaint_requested_info_page.fill_in_case_details
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_request_details_page).to have_content "Create OFFENDER-SAR-COMPLAINT case"
+    expect(cases_new_offender_sar_complaint_request_details_page).to have_content "Offender SAR Complaint"
     expect(cases_new_offender_sar_complaint_request_details_page).to be_displayed
   end
 
   def and_fill_in_request_details_page
     cases_new_offender_sar_complaint_request_details_page.fill_in_case_details
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_date_received_page).to have_content "Create OFFENDER-SAR-COMPLAINT case"
+    expect(cases_new_offender_sar_complaint_date_received_page).to have_content "Offender SAR Complaint"
     expect(cases_new_offender_sar_complaint_date_received_page).to be_displayed
   end
 
