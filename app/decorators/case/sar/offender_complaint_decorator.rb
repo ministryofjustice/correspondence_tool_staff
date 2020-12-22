@@ -7,8 +7,7 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
   end
 
   def complaint_type
-    return 'ICO' if object.complaint_type == 'ico_complaint'
-    object.complaint_type.humanize
+    h.t "helpers.label.offender_sar_complaint.complaint_type.#{object.complaint_type}"
   end
 
 end

@@ -6,13 +6,13 @@
 = form_for @case.object, url: url, as: :offender_sar_complaint do |f|
 
   = f.radio_button_fieldset(:complaint_type) do |fieldset|
-    - fieldset.radio_input('standard', text_method: :humanize)
-    - fieldset.radio_input('ico_complaint', label: 'ICO')
+    - fieldset.radio_input('standard_complaint')
+    - fieldset.radio_input('ico_complaint')
       = f.text_field :ico_contact_name
       = f.text_field :ico_contact_email
       = f.text_field :ico_contact_phone
       = f.text_field :ico_reference
-    - fieldset.radio_input('litigation', text_method: :humanize)
+    - fieldset.radio_input('litigation_complaint')
       = f.text_field :gld_contact_name
       = f.text_field :gld_contact_email
       = f.text_field :gld_contact_phone

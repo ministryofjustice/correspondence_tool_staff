@@ -201,7 +201,7 @@ en:
             external_deadline:
               before_received: "cannot be before date received"
               past: cannot be in the past
-          original_case_number: 
+          original_case_number:
             blank: "Enter original case number"
             not_authorised: can't be authorised to link this case
             wrong_type: Original case must be Offender SAR
@@ -582,7 +582,9 @@ en:
       offender_sar_complaint:
         case_reference_number: Case reference number (CRN)
         complaint_type:
+          litigation_complaint: Litigation
           ico_complaint: ICO
+          standard_complaint: Standard
         external_reference: Requester reference (optional)
         high_profile: High profile
         message: Additional case information
