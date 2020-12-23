@@ -121,13 +121,26 @@ RSpec.describe User, type: :model do
   describe 'has_one: approving_team' do
     it "returns the first active approving team" do
       current_approving_team = approver.approving_team
-      new_team = create :business_unit, correspondence_type_ids: [foi.id]   
+      new_team = create :business_unit, correspondence_type_ids: [foi.id]
       approver.team_roles << TeamsUsersRole.new(team: new_team, role: 'approver')
       approver.reload
       current_approving_team.deleted_at = Time.now
       current_approving_team.save!
       approver.reload
       expect(approver.approving_team).to eq new_team
+    end
+  end
+
+  describe 'has_many: managing_teams' do
+    it "returns active managing teams" do
+      current_managing_team = manager.managing_teams.first
+      new_team = create :managing_team, correspondence_type_ids: [foi.id]
+      manager.team_roles << TeamsUsersRole.new(team: new_team, role: 'manager')
+      manager.reload
+      current_managing_team.deleted_at = Time.now
+      current_managing_team.save!
+      manager.reload
+      expect(manager.managing_teams.first).to eq new_team
     end
   end
 
@@ -159,14 +172,14 @@ RSpec.describe User, type: :model do
   end
 
   describe '#case_team' do
-    
+
     context 'user is in one of the teams associated with the case' do
       it 'returns the team link to user and case both' do
         kase = create :pending_dacu_clearance_case
         new_team = create :business_unit, correspondence_type_ids: [foi.id]
         check_user = kase.responder
         check_user.team_roles << TeamsUsersRole.new(team: new_team, role: 'approver')
-        check_user.reload  
+        check_user.reload
         expect(check_user.case_team(kase)).to eq kase.responding_team
       end
     end
@@ -177,7 +190,7 @@ RSpec.describe User, type: :model do
         new_team = create :business_unit, correspondence_type_ids: [foi.id]
         check_user = create(:user)
         check_user.team_roles << TeamsUsersRole.new(team: new_team, role: 'approver')
-        check_user.reload  
+        check_user.reload
         expect(check_user.case_team(kase)).to eq new_team
       end
     end
