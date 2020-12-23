@@ -358,28 +358,28 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_new_offender_sar_complaint_requester_details_page).to be_displayed
     cases_new_offender_sar_complaint_requester_details_page.fill_in_case_details(params)
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_recipient_details_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
+    expect(cases_new_offender_sar_complaint_recipient_details_page).to have_content "Complaint - #{target_case.complaint_type}"
     expect(cases_new_offender_sar_complaint_recipient_details_page).to be_displayed
   end
 
   def and_fill_in_recipient_details_page(params = nil)
     cases_new_offender_sar_complaint_recipient_details_page.fill_in_case_details(params)
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_requested_info_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
+    expect(cases_new_offender_sar_complaint_requested_info_page).to have_content "Complaint - #{target_case.complaint_type}"
     expect(cases_new_offender_sar_complaint_requested_info_page).to be_displayed
   end
 
   def and_fill_in_requested_info_page
     cases_new_offender_sar_complaint_requested_info_page.fill_in_case_details
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_request_details_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
+    expect(cases_new_offender_sar_complaint_request_details_page).to have_content "Complaint - #{target_case.complaint_type}"
     expect(cases_new_offender_sar_complaint_request_details_page).to be_displayed
   end
 
   def and_fill_in_request_details_page
     cases_new_offender_sar_complaint_request_details_page.fill_in_case_details
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_date_received_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
+    expect(cases_new_offender_sar_complaint_date_received_page).to have_content "Complaint - #{target_case.complaint_type}"
     expect(cases_new_offender_sar_complaint_date_received_page).to be_displayed
   end
 

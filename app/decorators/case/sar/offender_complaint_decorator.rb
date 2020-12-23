@@ -4,7 +4,7 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
 
   def pretty_type
     if object.complaint_type.present?
-      "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[object.complaint_type]}"
+      "Complaint - #{complaint_type}"
     else
       "Offender SAR Complaint"
     end
