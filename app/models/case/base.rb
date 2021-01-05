@@ -155,6 +155,20 @@ class Case::Base < ApplicationRecord
     )
   }
 
+  scope :high_profile, -> {
+    where(
+      "properties->>'flag_as_high_profile'::text = ? ",
+      true.to_s
+    )
+  }
+
+  scope :not_high_profile, -> {
+    where(
+      "properties->>'flag_as_high_profile'::text = ? ",
+      false.to_s
+    )
+  }
+
   scope :appeal, -> { where('type=? OR type=?', 'Case::FOI::TimelinessReview', 'Case::FOI::ComplianceReview' )}
 
   scope :with_exemptions, ->(exemption_ids) { includes(:cases_exemptions).where(cases_exemptions: {exemption_id: exemption_ids} ) }

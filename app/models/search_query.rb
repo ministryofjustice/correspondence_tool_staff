@@ -25,6 +25,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseTriggerFlagFilter,
       CaseFilter::TimelinessFilter,
       CaseFilter::ExternalDeadlineFilter, 
+      CaseFilter::CaseHighProfileFilter,       
       CaseFilter::CaseComplaintTypeFilter, 
       CaseFilter::CaseComplaintPriorityFilter],
     "closed" => [
@@ -32,6 +33,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::DateRespondedFilter, 
       CaseFilter::CaseTypeFilter, 
       CaseFilter::ExemptionFilter, 
+      CaseFilter::CaseHighProfileFilter,       
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter, 
       CaseFilter::CaseComplaintPriorityFilter],
@@ -47,6 +49,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::TimelinessFilter,
       CaseFilter::ExternalDeadlineFilter,
       CaseFilter::ExemptionFilter, 
+      CaseFilter::CaseHighProfileFilter,       
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter, 
       CaseFilter::CaseComplaintPriorityFilter]

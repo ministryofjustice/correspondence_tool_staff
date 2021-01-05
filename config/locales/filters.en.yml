@@ -34,6 +34,8 @@ en:
         <<: *list_filter_type
       filter_complaint_priority:
         <<: *list_filter_type
+      filter_high_profile:
+        <<: *list_filter_type
     headings:
       filter_status: Filter by open/closed cases
       filter_cases: Filter cases
@@ -45,9 +47,10 @@ en:
       filter_date_responded: Filter by date of case response
       filter_exemption: Filter by exemptions
       filter_sensitivity: Filter by sensitivity
-      filter_complaint_type: Filter by complaint ype
+      filter_complaint_type: Filter by complaint type
       filter_complaint_subtype: Filter by complaint sub type
-      filter_complaint_priority: Filter by sensitivity
+      filter_complaint_priority: Filter by priority
+      filter_high_profile: Filter by sensitivity
       date_headings:
         filter_received_date: 'Received between'
         filter_date_responded: 'Responded between'
@@ -62,6 +65,9 @@ en:
     filter_sensitivity:
       non-trigger: 'Non-trigger'
       trigger: 'Trigger'
+    filter_high_profile:
+      high-profile: High profile 
+      not-high-profile: Not high profile 
     filter_status:
       open: 'Open'
       closed: 'Closed'

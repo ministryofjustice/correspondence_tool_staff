@@ -70,7 +70,7 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
       end
     end
 
-    context 'filtering for cases based one type' do
+    context 'filtering for cases' do
  
       context 'filtering for one complaint subtype' do
         let(:search_query)      { create :search_query,

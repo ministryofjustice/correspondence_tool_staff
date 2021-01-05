@@ -83,7 +83,7 @@ describe CaseFilter::CaseComplaintPriorityFilter do
       end
     end
 
-    context 'filtering for cases based one type' do
+    context 'filtering for cases' do
  
       context 'filtering for one complaint type' do
         let(:search_query)      { create :search_query,
