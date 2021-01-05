@@ -9,7 +9,6 @@ class CaseExtendForPITService
     @result = :incomplete
   end
 
-  # causes many existing test failures
   def call
     ActiveRecord::Base.transaction do
       if validate_params
