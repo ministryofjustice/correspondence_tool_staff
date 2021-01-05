@@ -126,13 +126,11 @@ class User < ApplicationRecord
     kase.teams & teams
   end
 
-  def team_for_case(kase)
-    self.teams_for_case(kase).first
-  end
-
   def case_team(kase)
     # need to sort with manager first so that if we are both manager and something else, we don't
     # try to execute the action with our lower authority (which might fail)
+    # When designing the state flow,  the permission for each state and actions should follow the 
+    # hierarchy of roles which is manager - approver - responder
     if teams_for_case(kase).any?
       case_teams = teams_for_case(kase)
     else
