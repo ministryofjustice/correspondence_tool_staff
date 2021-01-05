@@ -7,7 +7,6 @@ class CaseRemovePITExtensionService
     @result = :incomplete
   end
 
-  # causes many existing test failures
   def call
     ActiveRecord::Base.transaction do
       @case.state_machine.remove_pit_extension!(
