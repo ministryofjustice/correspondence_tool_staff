@@ -1073,24 +1073,19 @@ RSpec.describe Case::Base, type: :model do
         end
       end
 
-      # TODO (Mohammed Seedat): An approver for a case_being_drafted in trigger
-      # workflow cannot extend_for_pit. This test works because
-      # CaseExtendForPITService executes the state transition setting
-      # acting_team = BusinessUnit.dacu_bmt
-      context 'case has been extended for pit' do
+      context 'FOI case has been extended for pit as manager' do
         it 'does not update deadlines' do
-          approver = find_or_create :disclosure_specialist
           kase = nil
 
           Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
             kase = create :case_being_drafted,
               :flagged_accepted,
-              approver: approver,
+              approver: manager,
               received_date: Date.today,
               created_at: DateTime.now
 
             CaseExtendForPITService.new(
-              approver,
+              manager,
               kase,
               kase.external_deadline + 15.days,
               'Testing updates'
