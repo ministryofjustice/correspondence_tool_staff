@@ -201,7 +201,7 @@ GEM
       i18n (>= 1.6, < 2)
     faraday (0.17.3)
       multipart-post (>= 1.2, < 3)
-    ffi (1.12.2)
+    ffi (1.14.2)
     foreman (0.87.1)
     formatador (0.2.5)
     globalid (0.4.2)
@@ -310,7 +310,7 @@ GEM
     launchy (2.5.0)
       addressable (~> 2.7)
     libreconv (0.9.5)
-    listen (3.2.1)
+    listen (3.4.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     lograge (0.11.2)
@@ -642,7 +642,7 @@ DEPENDENCIES
   kaminari
   launchy
   libreconv (~> 0.9.5)
-  listen (~> 3.2.1)
+  listen (~> 3.4.0)
   lograge
   logstash-event
   loofah (>= 2.3.1)
