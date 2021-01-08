@@ -1,6 +1,6 @@
 moj.Modules.QuickLinks = {
   init: function (){
-    var $quickLinks = $('.quick-link-option--first, .quick-link-option');
+    var $quickLinks = $('.js-quick-links .quick-link-option');
      this.bindFinalDeadlineEvents($quickLinks);
   },
 
@@ -9,7 +9,7 @@ moj.Modules.QuickLinks = {
       var $elem = $(this);
       var objFromData = $elem.data('date-from');
       var objToData = $elem.data('date-to');
-      var fieldsIDprefix = 'search_query_' + this.id;
+      var fieldsIDprefix = 'search_query_' + $elem.data('target-id');
       var $parentForm = $elem.closest('form');
 
       $('#' + fieldsIDprefix + '_from_dd').val(objFromData.day);

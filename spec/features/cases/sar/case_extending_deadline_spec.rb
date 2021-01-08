@@ -113,4 +113,43 @@ feature 'when extending a SAR case deadline' do
       expect(cases_show_page.alert.text).to eq('SAR deadline cannot be extended')
     end
   end
+
+  context 'multiple roles' do
+    given!(:multi_roles) { find_or_create :disclosure_specialist }
+    given!(:kase) {
+      create :accepted_sar,
+      :flagged_accepted,
+      approver: multi_roles
+    }
+
+    scenario 'a user who is approver and responder can extend a SAR deadline' do
+      multi_roles.team_roles << TeamsUsersRole.new(team: kase.responding_team, role: 'responder')
+      multi_roles.reload  
+      login_as multi_roles
+      
+      cases_show_page.load(id: kase.id)
+
+      extend_sar_deadline_for(kase: kase, num_calendar_months: 1) do |page|
+        page.extension_period_1_calendar_month.click
+      end
+
+      case_deadline_text_to_be(get_expected_deadline(2.month.since(received_date)).strftime('%-d %b %Y'))
+    end
+
+    scenario 'a user who is manager, approver and responder can extend a SAR deadline' do
+      multi_roles.team_roles << TeamsUsersRole.new(team: kase.responding_team, role: 'responder')
+      multi_roles.team_roles << TeamsUsersRole.new(team: manager.teams.first, role: 'manager')
+      multi_roles.reload  
+      login_as multi_roles
+      
+      cases_show_page.load(id: kase.id)
+
+      extend_sar_deadline_for(kase: kase, num_calendar_months: 1) do |page|
+        page.extension_period_1_calendar_month.click
+      end
+
+      case_deadline_text_to_be(get_expected_deadline(2.month.since(received_date)).strftime('%-d %b %Y'))
+    end
+
+  end
 end
