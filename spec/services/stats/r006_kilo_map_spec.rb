@@ -2,7 +2,11 @@ require 'rails_helper'
 
 module Stats
   describe R006KiloMap do
-    before(:all) { create_report_type(abbr: :r006)}
+    before(:all) do
+      DbHousekeeping.clean(seed: true)
+      create_report_type(abbr: :r006)
+    end
+
     after(:all) { DbHousekeeping.clean(seed: true) }
 
     it 'produces a kilo map as a csv' do

@@ -8,7 +8,7 @@ fieldset
           - filter.available_choices.each do | _, date_info |
             li.quick-link-option
               a { href="#"
-                  id="#{filter.class.date_field_name}"
+                  data-target-id="#{filter.class.date_field_name}"
                   aria-describeby="quick-link-label"
                   data-date-from=date_info[:from]
                   data-date-to=date_info[:to]
