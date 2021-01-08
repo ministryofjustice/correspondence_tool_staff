@@ -24,7 +24,6 @@ module CaseFilter
         correspondence_type.sub_classes.each do | sub_class|
           (sub_class.permitted_states - ConfigurableStateMachine::Machine.states_for_closed_cases).map do | state |
             state_choices[state] =  get_tranlation_of_state_for_filter(sub_class, state)
-            # TranslateForCase.translate(sub_class, 'state', state)
           end
         end 
       end 
