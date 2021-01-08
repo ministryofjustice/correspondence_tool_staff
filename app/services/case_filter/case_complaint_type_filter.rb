@@ -11,8 +11,8 @@ module CaseFilter
 
     def available_choices
       priorities = {}
-      Case::SAR::OffenderComplaint.complaint_types.map  do |key, value| 
-        priorities[key] = "Complaint - #{value}"
+      Case::SAR::OffenderComplaint.complaint_types.map  do |key, _| 
+        priorities[key] = "Complaint - #{complaint_type_text(key)}"
       end
       { :filter_complaint_type => priorities}
     end
@@ -28,6 +28,10 @@ module CaseFilter
     end
 
     private
+
+    def complaint_type_text(value)
+      I18n.t "helpers.label.offender_sar_complaint.complaint_type.#{value}"
+    end
 
     def filter_complaint_type(records)
       if @query.filter_complaint_type.present?
