@@ -596,6 +596,23 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
+  describe 'ico details' do
+    describe '#ico_contact_name' do
+      it 'must be present when ico is true' do
+        kase = build :offender_sar_complaint, complaint_type: 'ico_complaint', ico_contact_name: ''
+        expect(kase).not_to be_valid
+        expect(kase.errors[:ico_contact_name]).to eq ["can't be blank"]
+      end
+
+      it 'is not required when litigation or standard complaint' do
+        kase1 = build :offender_sar_complaint, complaint_type: 'standard_complaint', ico_contact_name: ''
+        kase2 = build :offender_sar_complaint, complaint_type: 'litigation_complaint', ico_contact_name: ''
+        expect(kase1).to be_valid
+        expect(kase2).to be_valid
+      end
+    end
+  end
+
   describe '#page_count' do
     let(:kase) { build :offender_sar_complaint }
 
@@ -778,8 +795,8 @@ describe Case::SAR::OffenderComplaint do
 
     it 'cannot be before than received_date' do
       offender_sar = create(:offender_sar_case)
-      complaint = create(:offender_sar_complaint, 
-                        original_case: offender_sar, 
+      complaint = create(:offender_sar_complaint,
+                        original_case: offender_sar,
                         received_date: Date.today - 10)
       complaint.valid?
       expect(complaint).to be_valid
@@ -791,9 +808,9 @@ describe Case::SAR::OffenderComplaint do
 
     it 'cannot be past day for new record' do
       offender_sar = create(:offender_sar_case)
-      complaint = build(:offender_sar_complaint, 
-                        original_case: offender_sar, 
-                        received_date: Date.today - 10.day, 
+      complaint = build(:offender_sar_complaint,
+                        original_case: offender_sar,
+                        received_date: Date.today - 10.day,
                         external_deadline: Date.today - 1.day)
       complaint.valid?
       expect(complaint).not_to be_valid

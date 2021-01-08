@@ -4,17 +4,16 @@ feature 'offender sar complaint case creation by a manager', js: true do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
   given(:offender_sar) { create :offender_sar_case, :third_party, :closed}
+  given(:complaint_type) { 'standard_complaint' }
+  given(:complaint_subtype) { Case::SAR::OffenderComplaint.complaint_subtypes.keys().sample }
+  given(:complaint_priority) { Case::SAR::OffenderComplaint.priorities.keys().sample }
+  given(:default_params) { { complaint_type: complaint_type, complaint_subtype: complaint_subtype, priority: complaint_priority } }
+  given(:target_case) { build(:offender_sar_complaint, default_params).decorate }
 
   background do
     find_or_create :team_branston
     login_as manager
     cases_page.load
-  end
-
-  before :all do
-    @chosen_complaint_type = "standard_complaint" 
-    @chosen_complaint_subtype = "missing_data"
-    @chosen_complaint_priority = "normal"
   end
 
   scenario '1 find the original offender sar case' do
@@ -28,6 +27,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_date_received_page
     and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -45,6 +45,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_date_received_page
     and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_data_subject_sending_data_to_third_party
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -62,6 +63,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_date_received_page
     and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_subject_record
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -79,6 +81,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_date_received_page
     and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -96,6 +99,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_date_received_page
     and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_have_same_third_party_detail
     then_expect_linked_original_case_has_stamp_for_linkage
     then_expect_open_cases_page_to_be_correct
@@ -113,6 +117,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_date_received_page
     and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_have_same_third_party_detail
     then_expect_open_cases_page_to_be_correct
     then_expect_case_in_my_open_cases
@@ -130,6 +135,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     and_fill_in_date_received_page
     and_fill_in_external_deadline_page
     then_basic_details_of_show_page_are_correct(offender_sar_case: offender_sar_open_late)
+    then_expect_case_show_page_to_show_standard
     then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     then_expect_linked_original_case_has_stamp_for_linkage(offender_sar_case: offender_sar_open_late)
     then_expect_open_cases_page_to_be_correct(offender_sar_case: offender_sar_open_late)
@@ -141,19 +147,22 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_expect_no_button_for_creating_complaint_case(offender_sar_open_in_time)
   end
 
-  scenario '9 Check the deadline will be prefilled when complaint_type is standard' do
-    Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
-      @chosen_complaint_type = 'standard_complaint'
+
+  context 'when complaint is an ICO complaint' do
+    let(:complaint_type) { 'ico_complaint' }
+
+    scenario '9 when complaint is an ICO complaint' do
       when_i_navigate_to_offender_sar_complaint_subject_page
       and_choose_original_offender_sar_case_and_confirm
-      and_fill_in_complaint_type_page({"complaint_type": @chosen_complaint_type})
+      and_fill_in_complaint_type_page
       and_fill_in_requester_details_page
       and_fill_in_recipient_details_page
       and_fill_in_requested_info_page
       and_fill_in_request_details_page
       and_fill_in_date_received_page
-      and_fill_and_check_external_deadline_is_prefilled(16, 6, 2017)
+      and_fill_in_external_deadline_page
       then_basic_details_of_show_page_are_correct
+      then_expect_case_show_page_to_show_ico
       then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
       then_expect_linked_original_case_has_stamp_for_linkage
       then_expect_open_cases_page_to_be_correct
@@ -161,19 +170,21 @@ feature 'offender sar complaint case creation by a manager', js: true do
     end
   end
 
-  scenario '10 Check the deadline will be not prefilled when complaint_type is ico' do
-    Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
-      @chosen_complaint_type = 'ico_complaint'
+  context 'when complaint is a litigation complaint' do
+    let(:complaint_type) { 'litigation_complaint' }
+
+    scenario '10 when complaint is a litigation complaint' do
       when_i_navigate_to_offender_sar_complaint_subject_page
       and_choose_original_offender_sar_case_and_confirm
-      and_fill_in_complaint_type_page({"complaint_type": @chosen_complaint_type})
+      and_fill_in_complaint_type_page
       and_fill_in_requester_details_page
       and_fill_in_recipient_details_page
       and_fill_in_requested_info_page
       and_fill_in_request_details_page
       and_fill_in_date_received_page
-      and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline:  Date.today + 10.day)
+      and_fill_in_external_deadline_page
       then_basic_details_of_show_page_are_correct
+      then_expect_case_show_page_to_show_litigation
       then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
       then_expect_linked_original_case_has_stamp_for_linkage
       then_expect_open_cases_page_to_be_correct
@@ -181,23 +192,74 @@ feature 'offender sar complaint case creation by a manager', js: true do
     end
   end
 
-  scenario '11 Check the deadline will be not prefilled when complaint_type is litigation' do
-    Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
-      @chosen_complaint_type = 'litigation_complaint'
-      when_i_navigate_to_offender_sar_complaint_subject_page
-      and_choose_original_offender_sar_case_and_confirm
-      and_fill_in_complaint_type_page({"complaint_type": @chosen_complaint_type})
-      and_fill_in_requester_details_page
-      and_fill_in_recipient_details_page
-      and_fill_in_requested_info_page
-      and_fill_in_request_details_page
-      and_fill_in_date_received_page
-      and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline:  Date.today + 10.day)
-      then_basic_details_of_show_page_are_correct
-      then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
-      then_expect_linked_original_case_has_stamp_for_linkage
-      then_expect_open_cases_page_to_be_correct
-      then_expect_case_in_my_open_cases
+
+  context 'standard' do
+    let(:complaint_type) { 'standard_complaint' }
+
+    scenario '11 Check the deadline will be prefilled when complaint_type is standard' do
+      Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
+        when_i_navigate_to_offender_sar_complaint_subject_page
+        and_choose_original_offender_sar_case_and_confirm
+        and_fill_in_complaint_type_page
+        and_fill_in_requester_details_page
+        and_fill_in_recipient_details_page
+        and_fill_in_requested_info_page
+        and_fill_in_request_details_page
+        and_fill_in_date_received_page
+        and_fill_and_check_external_deadline_is_prefilled(16, 6, 2017)
+        then_basic_details_of_show_page_are_correct
+        then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
+        then_expect_linked_original_case_has_stamp_for_linkage
+        then_expect_open_cases_page_to_be_correct
+        then_expect_case_in_my_open_cases
+      end
+    end
+  end
+
+  context 'ICO' do
+    let(:complaint_type) { 'ico_complaint' }
+
+    scenario '10 Check the deadline will be not prefilled when complaint_type is ico' do
+      Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
+        when_i_navigate_to_offender_sar_complaint_subject_page
+        and_choose_original_offender_sar_case_and_confirm
+        and_fill_in_complaint_type_page
+        and_fill_in_requester_details_page
+        and_fill_in_recipient_details_page
+        and_fill_in_requested_info_page
+        and_fill_in_request_details_page
+        and_fill_in_date_received_page
+        and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline:  Date.today + 10.day)
+        then_basic_details_of_show_page_are_correct
+        then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
+        then_expect_linked_original_case_has_stamp_for_linkage
+        then_expect_open_cases_page_to_be_correct
+        then_expect_case_in_my_open_cases
+      end
+    end
+  end
+
+  context 'litigation' do
+    let(:complaint_type) { 'litigation_complaint' }
+
+    scenario '11 Check the deadline will be not prefilled when complaint_type is litigation' do
+      Timecop.freeze Time.utc(2017, 5, 18, 12, 0, 0) do
+        @chosen_complaint_type = 'litigation_complaint'
+        when_i_navigate_to_offender_sar_complaint_subject_page
+        and_choose_original_offender_sar_case_and_confirm
+        and_fill_in_complaint_type_page
+        and_fill_in_requester_details_page
+        and_fill_in_recipient_details_page
+        and_fill_in_requested_info_page
+        and_fill_in_request_details_page
+        and_fill_in_date_received_page
+        and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline:  Date.today + 10.day)
+        then_basic_details_of_show_page_are_correct
+        then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
+        then_expect_linked_original_case_has_stamp_for_linkage
+        then_expect_open_cases_page_to_be_correct
+        then_expect_case_in_my_open_cases
+      end
     end
   end
 
@@ -286,55 +348,38 @@ feature 'offender sar complaint case creation by a manager', js: true do
     click_on "Continue"
   end
 
-  def and_fill_in_complaint_type_page(params = nil)
+  def and_fill_in_complaint_type_page
     expect(cases_new_offender_sar_complaint_complaint_type_page).to be_displayed
-    actual_params = generate_options_on_complaint_type_page(params)
-    cases_new_offender_sar_complaint_complaint_type_page.fill_in_case_details(actual_params)
+    cases_new_offender_sar_complaint_complaint_type_page.fill_in_case_details(default_params)
     click_on "Continue"
-  end
-
-  def generate_options_on_complaint_type_page(params)
-    # In order to get good coverage for the combination of complaint_type, complaint_subtype, priority
-    # without going through the whole sample space, a simple approatch is to pick up the choice randomly
-    actual_params = params || {}
-    @chosen_complaint_type = actual_params[:complaint_type] || 
-                Case::SAR::OffenderComplaint.complaint_types.keys().sample(1)[0]
-    @chosen_complaint_subtype = actual_params[:complaint_subtype] || 
-                Case::SAR::OffenderComplaint.complaint_subtypes.keys().sample(1)[0]
-    @chosen_complaint_priority = actual_params[:priority] || 
-                Case::SAR::OffenderComplaint.priorities.keys().sample(1)[0]
-    actual_params[:complaint_type] = @chosen_complaint_type
-    actual_params[:complaint_subtype] = @chosen_complaint_subtype
-    actual_params[:priority] = @chosen_complaint_priority
-    actual_params
   end
 
   def and_fill_in_requester_details_page(params = nil)
     expect(cases_new_offender_sar_complaint_requester_details_page).to be_displayed
     cases_new_offender_sar_complaint_requester_details_page.fill_in_case_details(params)
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_recipient_details_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
+    expect(cases_new_offender_sar_complaint_recipient_details_page).to have_content "Complaint - #{target_case.complaint_type}"
     expect(cases_new_offender_sar_complaint_recipient_details_page).to be_displayed
   end
 
   def and_fill_in_recipient_details_page(params = nil)
     cases_new_offender_sar_complaint_recipient_details_page.fill_in_case_details(params)
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_requested_info_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
+    expect(cases_new_offender_sar_complaint_requested_info_page).to have_content "Complaint - #{target_case.complaint_type}"
     expect(cases_new_offender_sar_complaint_requested_info_page).to be_displayed
   end
 
   def and_fill_in_requested_info_page
     cases_new_offender_sar_complaint_requested_info_page.fill_in_case_details
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_request_details_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
+    expect(cases_new_offender_sar_complaint_request_details_page).to have_content "Complaint - #{target_case.complaint_type}"
     expect(cases_new_offender_sar_complaint_request_details_page).to be_displayed
   end
 
   def and_fill_in_request_details_page
     cases_new_offender_sar_complaint_request_details_page.fill_in_case_details
     click_on "Continue"
-    expect(cases_new_offender_sar_complaint_date_received_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
+    expect(cases_new_offender_sar_complaint_date_received_page).to have_content "Complaint - #{target_case.complaint_type}"
     expect(cases_new_offender_sar_complaint_date_received_page).to be_displayed
   end
 
@@ -346,7 +391,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   def and_fill_in_external_deadline_page
     if @chosen_complaint_type == 'standard_complaint'
       cases_new_offender_sar_complaint_external_deadline_page.fill_in_case_details
-    else 
+    else
       cases_new_offender_sar_complaint_external_deadline_page.fill_in_case_details(external_deadline:  Date.today + 10.day)
     end
     click_on "Continue"
@@ -371,9 +416,29 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to have_content linked_case.prison_number
     expect(cases_show_page).to have_content linked_case.subject_type.humanize
     expect(cases_show_page).to have_content linked_case.subject_address
-    expect(cases_show_page).to have_content "Complaint - #{Case::SAR::OffenderComplaint.complaint_types[@chosen_complaint_type]}"
-    expect(cases_show_page).to have_content @chosen_complaint_subtype.humanize
-    expect(cases_show_page).to have_content @chosen_complaint_priority.humanize
+    expect(cases_show_page).to have_content target_case.complaint_type
+    expect(cases_show_page).to have_content target_case.complaint_subtype.humanize
+    expect(cases_show_page).to have_content target_case.priority.humanize
+  end
+
+  def then_expect_case_show_page_to_show_standard
+    expect(cases_show_page.offender_sar_complaint_type).to have_content 'Standard'
+  end
+
+  def then_expect_case_show_page_to_show_ico
+    expect(cases_show_page.offender_sar_complaint_type).to have_content 'ICO'
+    expect(cases_show_page.offender_sar_complaint_ico_contact_name).to have_content 'Jane Doe ICO'
+    expect(cases_show_page.offender_sar_complaint_ico_contact_email).to have_content 'jane_doe_ico@example.com'
+    expect(cases_show_page.offender_sar_complaint_ico_contact_phone).to have_content '01234 567 9876'
+    expect(cases_show_page.offender_sar_complaint_ico_reference).to have_content 'ICOREF001Z'
+  end
+
+  def then_expect_case_show_page_to_show_litigation
+    expect(cases_show_page.offender_sar_complaint_type).to have_content 'Litigation'
+    expect(cases_show_page.offender_sar_complaint_gld_contact_name).to have_content 'Priya Singh Litigation'
+    expect(cases_show_page.offender_sar_complaint_gld_contact_email).to have_content 'priya_singh_litigation@example.com'
+    expect(cases_show_page.offender_sar_complaint_gld_contact_phone).to have_content '01234 824 9876'
+    expect(cases_show_page.offender_sar_complaint_gld_reference).to have_content 'LITREF732K'
   end
 
   def then_expect_open_cases_page_to_be_correct(offender_sar_case: nil)

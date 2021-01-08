@@ -16,7 +16,7 @@ class CaseExtendSARDeadlineService
       if valid?
         @case.state_machine.extend_sar_deadline!(
           acting_user: @user,
-          acting_team: @user.team_for_case(@case),
+          acting_team: @user.case_team(@case),
           final_deadline: @extension_deadline,
           original_final_deadline: @case.external_deadline,
           message: message

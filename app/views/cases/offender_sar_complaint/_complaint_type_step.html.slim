@@ -5,18 +5,24 @@
 
 = form_for @case.object, url: url, as: :offender_sar_complaint do |f|
 
-  = f.radio_button_fieldset :complaint_type,
-    choices: Case::SAR::OffenderComplaint::complaint_types, text_method: :second, value_method: :first
+  = f.radio_button_fieldset(:complaint_type) do |fieldset|
+    - fieldset.radio_input('standard_complaint')
+    - fieldset.radio_input('ico_complaint')
+      = f.text_field :ico_contact_name
+      = f.text_field :ico_contact_email
+      = f.text_field :ico_contact_phone
+      = f.text_field :ico_reference
+    - fieldset.radio_input('litigation_complaint')
+      = f.text_field :gld_contact_name
+      = f.text_field :gld_contact_email
+      = f.text_field :gld_contact_phone
+      = f.text_field :gld_reference
 
   = f.radio_button_fieldset :complaint_subtype,
     choices: Case::SAR::OffenderComplaint::complaint_subtypes.values
 
   = f.radio_button_fieldset :priority,
     choices: Case::SAR::OffenderComplaint::priorities.values
-
-  / TODO required to enable create_params - remove as part of
-  / https://dsdmoj.atlassian.net/browse/CT-3166
-  = f.hidden_field :third_party_relationship
 
   input name="current_step" type="hidden" value=@case.current_step
 
