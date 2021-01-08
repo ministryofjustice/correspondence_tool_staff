@@ -8,17 +8,28 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   jsonb_accessor :properties,
                  complaint_type: :string,
                  complaint_subtype: :string,
+                 ico_contact_name: :string,
+                 ico_contact_email: :string,
+                 ico_contact_phone: :string,
+                 ico_reference: :string,
+                 gld_contact_name: :string,
+                 gld_contact_email: :string,
+                 gld_contact_phone: :string,
+                 gld_reference: :string,
                  priority: :string
 
   validates :complaint_type, presence: true
   validates :complaint_subtype, presence: true
   validates :priority, presence: true
+  validate :validate_ico_contact_name
+  validate :validate_ico_contact_details
+  validate :validate_ico_reference
   validate :validate_external_deadline
 
   enum complaint_type: {
-    standard_complaint: 'Standard',
-    ico_complaint: 'ICO',
-    litigation_complaint: 'Litigation',
+    standard_complaint: 'standard_complaint',
+    ico_complaint: 'ico_complaint',
+    litigation_complaint: 'litigation',
   }
 
   enum complaint_subtype: {
@@ -55,13 +66,81 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     validate_external_deadline_required
     validate_external_deadline_within_valid_range
   end
-  
+
   def normal_priority?
     normal?
   end
 
   def high_priority?
     high?
+  end
+
+  def validate_ico_contact_name
+    if ico_complaint? && ico_contact_name.blank?
+      errors.add(
+        :ico_contact_name,
+        I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.ico_contact_name.blank')
+      )
+    end
+    errors[:ico_contact_name].any?
+  end
+
+  def validate_ico_contact_details
+    if ico_complaint? && ico_contact_email.blank? && ico_contact_phone.blank?
+      errors.add(
+          :ico_contact_email,
+          I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.ico_contact_email.blank')
+      )
+      errors.add(
+          :ico_contact_phone,
+          I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.ico_contact_phone.blank')
+      )
+    end
+    errors[:ico_contact_email].any? || errors[:ico_contact_phone].any?
+  end
+
+  def validate_ico_reference
+    if ico_complaint? && ico_reference.blank?
+      errors.add(
+        :ico_reference,
+        I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.ico_reference.blank')
+      )
+    end
+    errors[:ico_reference].any?
+  end
+
+  def validate_gld_contact_name
+    if litigation_complaint? && gld_contact_name.blank?
+      errors.add(
+        :gld_contact_name,
+        I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.gld_contact_name.blank')
+      )
+    end
+    errors[:gld_contact_name].any?
+  end
+
+  def validate_gld_contact_details
+    if litigation_complaint? && gld_contact_email.blank? && gld_contact_phone.blank?
+      errors.add(
+          :gld_contact_email,
+          I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.gld_contact_email.blank')
+      )
+      errors.add(
+          :gld_contact_phone,
+          I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.gld_contact_phone.blank')
+      )
+    end
+    errors[:gld_contact_email].any? || errors[:gld_contact_phone].any?
+  end
+
+  def validate_gld_reference
+    if litigation_complaint? && gld_reference.blank?
+      errors.add(
+        :gld_reference,
+        I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.gld_reference.blank')
+      )
+    end
+    errors[:gld_reference].any?
   end
 
   def assigned?

@@ -37,6 +37,14 @@ FactoryBot.define do
     complaint_type                  { 'standard_complaint' }
     complaint_subtype               { 'missing_data' }
     priority                        { 'normal' }
+    ico_contact_name                { 'Bob ico contact' }
+    ico_contact_email               { 'bob-ico-contact@example.com' }
+    ico_contact_phone               { '020 123 4567' }
+    ico_reference                   { 'ico-ref-001' }
+    gld_contact_name                { 'Jha gld contact' }
+    gld_contact_email               { 'jha-gld-contact@example.com' }
+    gld_contact_phone               { '020 456 1234' }
+    gld_reference                   { 'gld-ref-001' }
     third_party                     { false }
     flag_as_high_profile            { false }
     created_at                      { creation_time }

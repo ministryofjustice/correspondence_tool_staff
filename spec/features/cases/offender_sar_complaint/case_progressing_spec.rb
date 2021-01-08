@@ -2,7 +2,6 @@ require 'rails_helper'
 
 feature 'offender sar complaint case creation by a manager' do
   given(:manager)         { find_or_create :branston_user }
-  given(:managing_team)   { create :managing_team, managers: [manager] }
 
   background do
     find_or_create :team_branston
@@ -15,11 +14,11 @@ feature 'offender sar complaint case creation by a manager' do
   end
 
   context 'Standard offender sar complaint case', js: true do
+    let(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
 
-    before :each do 
-      @offender_sar_complaint = create(:offender_sar_complaint).decorate
+    before :each do
       cases_page.load
-      cases_show_page.load(id: @offender_sar_complaint.id)
+      cases_show_page.load(id: offender_sar_complaint.id)
     end
 
     scenario 'progressing an offender sar complaint case - scenario 1' do
@@ -66,11 +65,11 @@ feature 'offender sar complaint case creation by a manager' do
   end
 
   context 'ICO offender sar complaint case', js: true do
+    let(:offender_sar_complaint) { create(:offender_sar_complaint, complaint_type: "ico_complaint").decorate }
 
-    before :each do 
-      @offender_sar_complaint = create(:offender_sar_complaint, complaint_type: "ico_complaint").decorate
+    before :each do
       cases_page.load
-      cases_show_page.load(id: @offender_sar_complaint.id)
+      cases_show_page.load(id: offender_sar_complaint.id)
     end
 
     scenario 'progressing an offender sar complaint case - scenario 1' do
@@ -117,11 +116,11 @@ feature 'offender sar complaint case creation by a manager' do
   end
 
   context 'Litigation offender sar complaint case', js: true do
+    let(:offender_sar_complaint) { create(:offender_sar_complaint, complaint_type: "litigation_complaint").decorate }
 
-    before :each do 
-      @offender_sar_complaint = create(:offender_sar_complaint, complaint_type: "litigation_complaint").decorate
+    before :each do
       cases_page.load
-      cases_show_page.load(id: @offender_sar_complaint.id)
+      cases_show_page.load(id: offender_sar_complaint.id)
     end
 
     scenario 'progressing an offender sar complaint case - scenario 1' do
@@ -170,7 +169,7 @@ feature 'offender sar complaint case creation by a manager' do
 
   end
 
-  private 
+  private
 
   def to_be_assessed
     expect(cases_show_page).to have_content "Requires data"
@@ -178,7 +177,7 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to have_content "Requires response"
     expect(cases_show_page).to have_content "To be assessed"
     expect(cases_show_page).to have_content "Send acknowledgement letter"
-  end 
+  end
 
   def waiting
     click_on "Mark as waiting"
@@ -186,20 +185,20 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Requires data"
     expect(cases_show_page).to have_content "Send acknowledgement letter"
-  end 
+  end
 
   def requires_data_review
     click_on "Requires data review"
 
     expect(cases_show_page).to be_displayed
-    if @offender_sar_complaint.complaint_type == 'litigation_complaint'
+    if offender_sar_complaint.complaint_type == 'Litigation'
       expect(cases_show_page).to have_content "Mark as ready to copy"
-    else      
+    else
       expect(cases_show_page).to have_content "Mark as vetting in progress"
     end
     expect(cases_show_page).to have_content "Requires response"
     expect(cases_show_page).to have_content "Send acknowledgement letter"
-  end 
+  end
 
   def requires_data
     click_on "Requires data"
@@ -208,14 +207,14 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to have_content "Mark as waiting for data"
     expect(cases_show_page).to have_content "Data to be requested"
     expect(cases_show_page).to have_content "Send acknowledgement letter"
-  end 
+  end
 
   def waiting_for_data
     click_on "Mark as waiting for data"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready for vetting"
-    if @offender_sar_complaint.complaint_type != 'litigation_complaint'
+    if offender_sar_complaint.complaint_type != 'Litigation'
       expect(cases_show_page).to have_content "Requires response"
     end
     expect(cases_show_page).to have_content "Preview cover page"
@@ -237,13 +236,13 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to have_content "Mark as ready to copy"
     expect(cases_show_page).to have_content "Preview cover page"
     expect(cases_show_page).to have_content "Vetting in progress"
-  end 
+  end
 
   def ready_to_copy
     click_on "Mark as ready to copy"
 
     expect(cases_show_page).to be_displayed
-    if @offender_sar_complaint.complaint_type == 'litigation_complaint'
+    if offender_sar_complaint.complaint_type == 'Litigation'
       expect(cases_show_page).to have_content "Mark as ready to dispatch"
     else
       expect(cases_show_page).to have_content "Requires response"
