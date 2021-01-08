@@ -53,7 +53,7 @@ class User < ApplicationRecord
   has_many :team_roles, class_name: 'TeamsUsersRole'
   has_many :teams, through: :team_roles
   has_many :managing_team_roles,
-           -> { manager_roles },
+           -> { active_manager_roles },
            class_name: 'TeamsUsersRole'
   has_many :responding_team_roles,
            -> { responder_roles  },
