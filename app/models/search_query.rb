@@ -27,6 +27,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::ExternalDeadlineFilter, 
       CaseFilter::CaseHighProfileFilter,       
       CaseFilter::CaseComplaintTypeFilter, 
+      CaseFilter::CaseComplaintSubtypeFilter, 
       CaseFilter::CaseComplaintPriorityFilter],
     "closed" => [
       CaseFilter::ReceivedDateFilter, 
@@ -40,6 +41,7 @@ class SearchQuery < ApplicationRecord
     "my_cases" => [
       CaseFilter::OpenCaseStatusFilter, 
       CaseFilter::CaseComplaintTypeFilter,
+      CaseFilter::CaseComplaintSubtypeFilter, 
       CaseFilter::CaseComplaintPriorityFilter],
     "search_cases" => [
       CaseFilter::CaseStatusFilter, 
