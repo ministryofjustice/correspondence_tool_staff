@@ -947,6 +947,8 @@ en:
         number_exempt_pages: 'Update exempt pages'
         date_responded: 'Edit case closure details'
         sub_heading: Edit Offender SAR case
+      offender_sar_complaint:
+        sub_heading: Edit Complaint case
     update:
       case_updated: Case updated
     filters:

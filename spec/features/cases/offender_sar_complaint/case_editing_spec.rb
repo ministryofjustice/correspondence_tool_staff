@@ -4,6 +4,12 @@ feature 'offender sar complaint case editing by a manager' do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
   given(:offender_sar_complaint) { create :offender_sar_complaint, :third_party, received_date: 2.weeks.ago.to_date }
+  given(:offender_sar_ico_complaint) { 
+    create :offender_sar_complaint, :third_party, 
+            received_date: 2.weeks.ago.to_date, complaint_type: 'ico_complaint' }
+  given(:offender_sar_litigation_complaint) { 
+    create :offender_sar_complaint, :third_party, 
+            received_date: 2.weeks.ago.to_date, complaint_type: 'litigation_complaint' }
 
   background do
     find_or_create :team_branston
@@ -71,6 +77,35 @@ feature 'offender sar complaint case editing by a manager' do
     then_i_should_see_the_pages_for_dispatch_reflected_on_the_show_page
   end
 
+  scenario 'user can edit the external deadline for standard complaint case' do
+    expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
+
+    new_external_deadline = offender_sar_complaint.received_date + 21
+    when_i_click_external_deadline_change_link
+    and_i_edit_the_external_deadline(new_external_deadline)
+    then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(new_external_deadline)
+  end
+
+  scenario 'user can edit the external deadline for ico complaint case' do
+    cases_show_page.load(id: offender_sar_ico_complaint.id)
+    expect(cases_show_page).to be_displayed(id: offender_sar_ico_complaint.id)
+
+    new_external_deadline = offender_sar_ico_complaint.received_date + 22
+    when_i_click_external_deadline_change_link
+    and_i_edit_the_external_deadline(new_external_deadline)
+    then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(new_external_deadline)
+  end
+
+  scenario 'user can edit the external deadline for ico complaint case' do
+    cases_show_page.load(id: offender_sar_litigation_complaint.id)
+    expect(cases_show_page).to be_displayed(id: offender_sar_litigation_complaint.id)
+
+    new_external_deadline = offender_sar_ico_complaint.received_date + 24
+    when_i_click_the_response_sent_change_link
+    and_i_edit_the_external_deadline(new_external_deadline)
+    then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(new_external_deadline)
+  end
+
   def when_i_update_the_exempt_pages_count
     click_on 'Update exempt pages'
     expect(page).to have_content('Update exempt pages')
@@ -128,4 +163,18 @@ feature 'offender sar complaint case editing by a manager' do
   def then_i_expect_the_new_date_to_be_reflected_on_the_case_show_page
     expect(cases_show_page).to have_content(I18n.l(offender_sar_complaint.received_date + 5, format: :default))
   end
+
+  def when_i_click_external_deadline_change_link
+    cases_show_page.offender_sar_external_deadline.change_link.click
+  end
+
+  def and_i_edit_the_external_deadline(external_deadline)
+    cases_edit_offender_sar_complaint_external_deadline_page.edit_external_deadline(external_deadline)
+    cases_edit_offender_sar_complaint_external_deadline_page.continue_button.click
+  end
+
+  def then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(external_deadline)
+    expect(cases_show_page).to have_content(I18n.l(external_deadline, format: :default))
+  end
+
 end
