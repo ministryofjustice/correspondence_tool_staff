@@ -59,6 +59,8 @@ module PageObjects
               choose('offender_sar_complaint_complaint_subtype_redacted_data', visible: false)
             elsif kase.timeliness?
               choose('offender_sar_complaint_complaint_subtype_timeliness', visible: false)
+            elsif kase.not_applicable?
+              choose('offender_sar_complaint_complaint_subtype_not_applicable', visible: false)
             end
           end
 
