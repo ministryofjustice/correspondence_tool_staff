@@ -131,6 +131,7 @@ module Cases
       # on edit unless you assign to the :date_of_birth, and :request_dated fields before display
       @case.date_of_birth = @case.date_of_birth
       @case.request_dated = @case.request_dated
+      @case.external_deadline = @case.external_deadline
     end
 
     def params_for_transition

@@ -60,6 +60,7 @@ module PageObjects
         cases_edit_offender_sar_complaint_requested_info:    'Cases::Edit::OffenderSARComplaintPageRequestedInfo',
         cases_edit_offender_sar_complaint_date_responded:    'Cases::Edit::OffenderSARComplaintPageDateResponded',
         cases_edit_offender_sar_complaint_date_received:     'Cases::Edit::OffenderSARComplaintPageDateReceived',
+        cases_edit_offender_sar_complaint_external_deadline:     'Cases::Edit::OffenderSARComplaintPageExternalDeadline',
 
         cases_new_case_link:            'Cases::NewCaseLinkPage',
         cases_edit:                     'Cases::EditPage',
