@@ -37,6 +37,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     inaccurate_data: 'inaccurate_data',
     redacted_data: 'redacted_data',
     timeliness: 'timeliness',
+    not_applicable: 'not_applicable'
   }
 
   enum priority: {
