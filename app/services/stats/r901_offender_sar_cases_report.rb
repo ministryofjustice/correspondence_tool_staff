@@ -5,6 +5,8 @@ module Stats
 
     CSV_COLUMN_HEADINGS = [
         'Case number',
+        'Case type',
+        'Nature of the complaint', 
         'Date received at MOJ',
         'Final deadline',
         'Who is making the request?',
@@ -19,16 +21,16 @@ module Stats
     ]
 
     def self.title
-      'Cases report for Offender SAR'
+      'Cases report for Offender SAR and Complaint'
     end
 
     def self.description
-      'The list of Offender SAR cases within allowed and filtered scope'
+      'The list of Offender SAR and Complaint cases within allowed and filtered scope'
     end
 
     def initialize(**options)
       super(**options)
-      @case_scope = options[:case_scope] || Case::Base.offender_sar.all
+      @case_scope = options[:case_scope] || basic_scope
     end
 
     def case_scope
@@ -41,6 +43,8 @@ module Stats
     def analyse_case(kase)
       [
         kase.number,
+        case_type(kase), 
+        complaint_subtype_for_report(kase),
         kase.received_date,
         kase.external_deadline,
         kase.third_party? ? kase.third_party_relationship : 'Data subject',
@@ -62,5 +66,21 @@ module Stats
     def report_type
       ReportType.r901
     end
+
+    private 
+
+    def basic_scope
+      # As the Complaint class is inheried from Offender, so the following will return both type cases
+      # which may cause issue in the future if we change the hierarchy of offender related classes
+      Case::SAR::Offender.all
+    end
+
+    def complaint_subtype_for_report(kase)
+      kase.offender_sar_complaint? ? kase.complaint_subtype.humanize : ""
+    end
+
+    def case_type(kase)
+      kase.offender_sar_complaint? ? "Offender SAR Complaint" : kase.decorate.pretty_type
+    end 
   end
 end
