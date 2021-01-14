@@ -43,7 +43,7 @@ module Stats
     def analyse_case(kase)
       [
         kase.number,
-        case_type(kase), 
+        case_type(kase),
         complaint_subtype_for_report(kase),
         kase.received_date,
         kase.external_deadline,
@@ -80,7 +80,7 @@ module Stats
     end
 
     def case_type(kase)
-      kase.offender_sar_complaint? ? "Offender SAR Complaint" : kase.decorate.pretty_type
+      kase.decorate.pretty_type
     end 
   end
 end
