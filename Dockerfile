@@ -30,7 +30,7 @@ RUN apt-get update && \
     apt-get install -y less \
     nodejs \
     runit \
-    postgresql-client-12.3 \
+    postgresql-client-12 \
     zip \
     libreoffice \
     clamav \
