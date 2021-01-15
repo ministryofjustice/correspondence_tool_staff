@@ -55,7 +55,7 @@ module Stats
         result = report.analyse_case(offender_sar_complaint)
         expect(result).to include(
           offender_sar_complaint.number,
-          "Offender SAR Complaint", 
+          offender_sar_complaint.decorate.pretty_type, 
           offender_sar_complaint.complaint_subtype.humanize,
           offender_sar_complaint.received_date,
           offender_sar_complaint.external_deadline,
