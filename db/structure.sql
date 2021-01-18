@@ -1,6 +1,5 @@
 SET statement_timeout = 0;
 SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -8,6 +7,20 @@ SET check_function_bodies = false;
 SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
+
+--
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
 
 --
 -- Name: citext; Type: EXTENSION; Schema: -; Owner: -
@@ -123,7 +136,7 @@ CREATE TYPE public.user_role AS ENUM (
 
 SET default_tablespace = '';
 
-SET default_table_access_method = heap;
+SET default_with_oids = false;
 
 --
 -- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: -
@@ -1098,175 +1111,175 @@ CREATE TABLE public.warehouse_case_reports (
 
 
 --
--- Name: assignments id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.assignments ALTER COLUMN id SET DEFAULT nextval('public.assignments_id_seq'::regclass);
 
 
 --
--- Name: case_attachments id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.case_attachments ALTER COLUMN id SET DEFAULT nextval('public.case_attachments_id_seq'::regclass);
 
 
 --
--- Name: case_closure_metadata id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.case_closure_metadata ALTER COLUMN id SET DEFAULT nextval('public.case_closure_metadata_id_seq'::regclass);
 
 
 --
--- Name: case_number_counters id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.case_number_counters ALTER COLUMN id SET DEFAULT nextval('public.case_number_counters_id_seq'::regclass);
 
 
 --
--- Name: case_transitions id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.case_transitions ALTER COLUMN id SET DEFAULT nextval('public.case_transitions_id_seq'::regclass);
 
 
 --
--- Name: cases id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cases ALTER COLUMN id SET DEFAULT nextval('public.cases_id_seq'::regclass);
 
 
 --
--- Name: cases_exemptions id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cases_exemptions ALTER COLUMN id SET DEFAULT nextval('public.cases_exemptions_id_seq'::regclass);
 
 
 --
--- Name: cases_users_transitions_trackers id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cases_users_transitions_trackers ALTER COLUMN id SET DEFAULT nextval('public.cases_users_transitions_trackers_id_seq'::regclass);
 
 
 --
--- Name: correspondence_types id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.correspondence_types ALTER COLUMN id SET DEFAULT nextval('public.correspondence_types_id_seq'::regclass);
 
 
 --
--- Name: data_request_logs id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.data_request_logs ALTER COLUMN id SET DEFAULT nextval('public.data_request_logs_id_seq'::regclass);
 
 
 --
--- Name: data_requests id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.data_requests ALTER COLUMN id SET DEFAULT nextval('public.data_requests_id_seq'::regclass);
 
 
 --
--- Name: feedback id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.feedback ALTER COLUMN id SET DEFAULT nextval('public.feedback_id_seq'::regclass);
 
 
 --
--- Name: letter_templates id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.letter_templates ALTER COLUMN id SET DEFAULT nextval('public.letter_templates_id_seq'::regclass);
 
 
 --
--- Name: linked_cases id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.linked_cases ALTER COLUMN id SET DEFAULT nextval('public.linked_cases_id_seq'::regclass);
 
 
 --
--- Name: report_types id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.report_types ALTER COLUMN id SET DEFAULT nextval('public.report_types_id_seq'::regclass);
 
 
 --
--- Name: reports id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reports ALTER COLUMN id SET DEFAULT nextval('public.reports_id_seq'::regclass);
 
 
 --
--- Name: search_queries id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.search_queries ALTER COLUMN id SET DEFAULT nextval('public.search_queries_id_seq'::regclass);
 
 
 --
--- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.sessions_id_seq'::regclass);
 
 
 --
--- Name: team_correspondence_type_roles id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.team_correspondence_type_roles ALTER COLUMN id SET DEFAULT nextval('public.team_correspondence_type_roles_id_seq'::regclass);
 
 
 --
--- Name: team_properties id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.team_properties ALTER COLUMN id SET DEFAULT nextval('public.team_properties_id_seq'::regclass);
 
 
 --
--- Name: teams id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.teams ALTER COLUMN id SET DEFAULT nextval('public.teams_id_seq'::regclass);
 
 
 --
--- Name: teams_users_roles id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.teams_users_roles ALTER COLUMN id SET DEFAULT nextval('public.teams_users_roles_id_seq'::regclass);
 
 
 --
--- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
--- Name: versions id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.versions ALTER COLUMN id SET DEFAULT nextval('public.versions_id_seq'::regclass);
 
 
 --
--- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.ar_internal_metadata
@@ -1274,7 +1287,7 @@ ALTER TABLE ONLY public.ar_internal_metadata
 
 
 --
--- Name: assignments assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: assignments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.assignments
@@ -1282,7 +1295,7 @@ ALTER TABLE ONLY public.assignments
 
 
 --
--- Name: case_attachments case_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: case_attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.case_attachments
@@ -1290,7 +1303,7 @@ ALTER TABLE ONLY public.case_attachments
 
 
 --
--- Name: case_closure_metadata case_closure_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: case_closure_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.case_closure_metadata
@@ -1298,7 +1311,7 @@ ALTER TABLE ONLY public.case_closure_metadata
 
 
 --
--- Name: case_number_counters case_number_counters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: case_number_counters_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.case_number_counters
@@ -1306,7 +1319,7 @@ ALTER TABLE ONLY public.case_number_counters
 
 
 --
--- Name: case_transitions case_transitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: case_transitions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.case_transitions
@@ -1314,7 +1327,7 @@ ALTER TABLE ONLY public.case_transitions
 
 
 --
--- Name: cases_exemptions cases_exemptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: cases_exemptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cases_exemptions
@@ -1322,7 +1335,7 @@ ALTER TABLE ONLY public.cases_exemptions
 
 
 --
--- Name: cases cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cases
@@ -1330,7 +1343,7 @@ ALTER TABLE ONLY public.cases
 
 
 --
--- Name: cases_users_transitions_trackers cases_users_transitions_trackers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: cases_users_transitions_trackers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cases_users_transitions_trackers
@@ -1338,7 +1351,7 @@ ALTER TABLE ONLY public.cases_users_transitions_trackers
 
 
 --
--- Name: correspondence_types correspondence_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: correspondence_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.correspondence_types
@@ -1346,7 +1359,7 @@ ALTER TABLE ONLY public.correspondence_types
 
 
 --
--- Name: data_migrations data_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: data_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.data_migrations
@@ -1354,7 +1367,7 @@ ALTER TABLE ONLY public.data_migrations
 
 
 --
--- Name: data_request_logs data_request_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: data_request_logs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.data_request_logs
@@ -1362,7 +1375,7 @@ ALTER TABLE ONLY public.data_request_logs
 
 
 --
--- Name: data_requests data_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: data_requests_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.data_requests
@@ -1370,7 +1383,7 @@ ALTER TABLE ONLY public.data_requests
 
 
 --
--- Name: feedback feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: feedback_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.feedback
@@ -1378,7 +1391,7 @@ ALTER TABLE ONLY public.feedback
 
 
 --
--- Name: letter_templates letter_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: letter_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.letter_templates
@@ -1386,7 +1399,7 @@ ALTER TABLE ONLY public.letter_templates
 
 
 --
--- Name: linked_cases linked_cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: linked_cases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.linked_cases
@@ -1394,7 +1407,7 @@ ALTER TABLE ONLY public.linked_cases
 
 
 --
--- Name: report_types report_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: report_types_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.report_types
@@ -1402,7 +1415,7 @@ ALTER TABLE ONLY public.report_types
 
 
 --
--- Name: reports reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.reports
@@ -1410,7 +1423,7 @@ ALTER TABLE ONLY public.reports
 
 
 --
--- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.schema_migrations
@@ -1418,7 +1431,7 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
--- Name: search_queries search_queries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: search_queries_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.search_queries
@@ -1426,7 +1439,7 @@ ALTER TABLE ONLY public.search_queries
 
 
 --
--- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.sessions
@@ -1434,7 +1447,7 @@ ALTER TABLE ONLY public.sessions
 
 
 --
--- Name: team_correspondence_type_roles team_correspondence_type_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: team_correspondence_type_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.team_correspondence_type_roles
@@ -1442,7 +1455,7 @@ ALTER TABLE ONLY public.team_correspondence_type_roles
 
 
 --
--- Name: team_properties team_properties_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: team_properties_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.team_properties
@@ -1450,7 +1463,7 @@ ALTER TABLE ONLY public.team_properties
 
 
 --
--- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: teams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.teams
@@ -1458,7 +1471,7 @@ ALTER TABLE ONLY public.teams
 
 
 --
--- Name: teams_users_roles teams_users_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: teams_users_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.teams_users_roles
@@ -1466,7 +1479,7 @@ ALTER TABLE ONLY public.teams_users_roles
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.users
@@ -1474,7 +1487,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: versions versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: versions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.versions
@@ -1482,7 +1495,7 @@ ALTER TABLE ONLY public.versions
 
 
 --
--- Name: warehouse_case_reports warehouse_case_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: warehouse_case_reports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.warehouse_case_reports
@@ -1833,7 +1846,7 @@ CREATE INDEX index_warehouse_case_reports_on_case_id ON public.warehouse_case_re
 
 
 --
--- Name: data_request_logs fk_rails_274490f7ec; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fk_rails_274490f7ec; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.data_request_logs
@@ -1841,7 +1854,7 @@ ALTER TABLE ONLY public.data_request_logs
 
 
 --
--- Name: warehouse_case_reports fk_rails_2a80c865a7; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fk_rails_2a80c865a7; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.warehouse_case_reports
@@ -1849,7 +1862,7 @@ ALTER TABLE ONLY public.warehouse_case_reports
 
 
 --
--- Name: cases fk_rails_5b2f8d9aa6; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fk_rails_5b2f8d9aa6; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.cases
@@ -1857,7 +1870,7 @@ ALTER TABLE ONLY public.cases
 
 
 --
--- Name: data_requests fk_rails_8ea0aff84a; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fk_rails_8ea0aff84a; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.data_requests
@@ -1865,7 +1878,7 @@ ALTER TABLE ONLY public.data_requests
 
 
 --
--- Name: data_request_logs fk_rails_fc711a84cc; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: fk_rails_fc711a84cc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.data_request_logs
@@ -2018,5 +2031,3 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200925100514'),
 ('20201113130611'),
 ('20210115230915');
-
-
