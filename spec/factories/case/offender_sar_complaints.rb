@@ -225,7 +225,7 @@ FactoryBot.define do
 
     complaint_type { 'ico_complaint' }
 
-    after(:create) do |kase, evaluator|
+    after(:create) do |kase, _|
       appeal_outcome = find_or_create(:appeal_outcome, :upheld)
       kase.appeal_outcome_id = appeal_outcome.id
       kase.save!
@@ -239,7 +239,7 @@ FactoryBot.define do
 
     complaint_type { 'litigation_complaint' }
 
-    after(:create) do |kase, evaluator|
+    after(:create) do |kase, _|
       kase.cost_paid = Faker::Number.between(from: 0.0, to: 1000000.0).round(2)
       kase.settlement_cost_paid = Faker::Number.between(from: 0.0, to: 1000000.0).round(2)
       kase.save!
