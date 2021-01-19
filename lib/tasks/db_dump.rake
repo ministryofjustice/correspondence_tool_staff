@@ -89,16 +89,15 @@ namespace :db do
       raise "third argument must be 'bucket' or 'local', is: #{args[:storage]}" unless args[:storage].in?(%w( bucket local ))
 
       is_store_to_s3_bucket = args[:storage] == 'bucket'
-      s3_bucket = nil
-      if is_store_to_s3_bucket
-        s3_bucket = init_s3_bucket(args)
-      end
       puts 'exporting unanonymised database data'
-      DatabaseDumper.new(
+      dumper = DatabaseDumper.new(
         args[:anonymized] == 'anon', 
         args[:tag], 
-        is_store_to_s3_bucket,
-        s3_bucket: s3_bucket).run
+        is_store_to_s3_bucket)
+      if is_store_to_s3_bucket
+        dumper.set_up_bucket(args)
+      end
+      dumper.run
     end
 
     desc 'List s3 database dump files'
@@ -250,6 +249,7 @@ namespace :db do
       puts 'NOTES: rstoring process will destroy the previous data entirely, backup the data first if there is need'
       DumperUtils.question_user('Are you sure the current environment is not production? ')
       confirm_data_restore
+      puts 'After action: you may need to restart your app server instance in order to making it work properly'
     end
 
     def confirm_data_restore

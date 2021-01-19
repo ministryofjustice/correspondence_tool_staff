@@ -5,7 +5,7 @@ require File.join(Rails.root, 'lib', 'tasks', 'rake_task_helpers', 'dumper_utils
 
 class DatabaseDumper
 
-  attr_reader :outcome_files
+  attr_reader :outcome_files, :bucket_key_id, :bucket_access_key, :bucket
 
   TABLES_TO_BE_EXCLUDED = ["reports", "search_queries", "sessions", "versions"]
 
@@ -32,7 +32,21 @@ class DatabaseDumper
     @outcome_files
   end
 
+  def set_up_bucket(args)
+    @bucket_key_id = args[:bucket_key_id] || ENV["AWS_ACCESS_KEY_ID"]
+    @bucket_access_key = args[:bucket_access_key] || ENV["AWS_SECRET_ACCESS_KEY"]
+    @bucket = args[:bucket] || Settings.case_uploads_s3_bucket
+    init_s3_bucket
+  end 
+
   private
+
+  def init_s3_bucket
+    @s3_bucket = S3BucketHelper::S3Bucket.new(
+      @bucket_key_id, 
+      @bucket_access_key,
+      bucket: @bucket)
+  end
 
   def dump_schema_snapshot(dirname)
     filename = "#{dirname}/#{@tag}_database_schema_snapshot.snap"
@@ -127,16 +141,27 @@ class DatabaseDumper
   end
 
   def upload_to_s3(dirname)
-    DumperUtils.shell_working "Upload files under dumps/#{dirname} to bucket." do
-      Dir.glob("#{dirname}/*.*").sort.map do | upload_file |
-        print "Uploading #{upload_file}..."
-        actual_upload_file_name = File.basename(upload_file)
-        @s3_bucket.put_object(
-          "dumps/#{@tag}/#{actual_upload_file_name}", 
-          File.read(upload_file), 
-          metadata: {"created_at" => Date.today.to_s}
-        )
-        puts 'done'.green
+    puts "Upload files under #{dirname} to bucket."
+    Dir.glob("#{dirname}/*.*").sort.map do | upload_file |
+      DumperUtils.shell_working "Uploading #{upload_file} to bucket." do
+        begin 
+          retries ||= 0
+          actual_upload_file_name = File.basename(upload_file)
+          response = @s3_bucket.put_object(
+            "dumps/#{@tag}/#{actual_upload_file_name}", 
+            File.read(upload_file), 
+            metadata: {"created_at" => Date.today.to_s}
+          )
+          if respondse && response['ETag'].present?
+            puts 'done'.green
+          else
+            puts "Failed to upload this file, the response is #{response}"
+            raise "Failed to upload #{upload_file}, will try again!"
+          end
+        rescue
+          init_s3_bucket
+          retry if (retries += 1) < 2
+        end
       end
     end
   end 
