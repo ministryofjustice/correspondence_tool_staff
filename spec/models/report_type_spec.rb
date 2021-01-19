@@ -49,10 +49,6 @@ RSpec.describe ReportType, type: :model do
 
   describe 'foi scope' do
 
-    # before do
-    #   ReportType.destroy_all
-    # end
-
     it 'returns only reports associated with fois' do
       create :report_type
       custom_report_1 = create :report_type, foi: true
