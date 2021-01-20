@@ -195,4 +195,12 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     # becomes a nop.
     nil
   end
+
+  def set_number
+    if self.original_case.present?
+      self.number = "Q#{self.original_case.number}"
+    else
+      next_number
+    end
+  end
 end
