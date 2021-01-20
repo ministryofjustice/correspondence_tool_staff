@@ -42,8 +42,8 @@ module Stats
         'number_of_exempt_pages',
         'number_of_final_pages', 
         'appeal_outcome', 
-        'cost_paid', 
-        'settlement_cost_paid'
+        'totoal_cost', 
+        'settlement_cost'
       ]
 
       def result_name

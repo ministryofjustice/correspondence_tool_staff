@@ -17,8 +17,8 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
                  gld_contact_phone: :string,
                  gld_reference: :string,
                  priority: :string, 
-                 cost_paid: :decimal, 
-                 settlement_cost_paid: :decimal
+                 totoal_cost: :decimal, 
+                 settlement_cost: :decimal
 
   validates :complaint_type, presence: true
   validates :complaint_subtype, presence: true

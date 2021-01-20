@@ -1105,8 +1105,8 @@ CREATE TABLE public.warehouse_case_reports (
     number_of_days_taken_after_extension integer,
     complaint_subtype character varying,
     priority character varying,
-    cost_paid numeric(10,2),
-    settlement_cost_paid numeric(10,2)
+    totoal_cost numeric(10,2),
+    settlement_cost numeric(10,2)
 );
 
 
