@@ -93,7 +93,7 @@ module Warehouse
         # The fields for offender sar complaint case
         case_report.complaint_subtype = kase.offender_sar_complaint? ? kase.complaint_subtype.humanize : nil
         case_report.priority = kase.offender_sar_complaint? ? kase.priority.humanize : nil
-        case_report.totoal_cost = kase.offender_sar_complaint? ? kase.totoal_cost : nil
+        case_report.total_cost = kase.offender_sar_complaint? ? kase.total_cost : nil
         case_report.settlement_cost = kase.offender_sar_complaint? ? kase.settlement_cost : nil
 
         case_report.save!

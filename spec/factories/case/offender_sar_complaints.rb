@@ -240,7 +240,7 @@ FactoryBot.define do
     complaint_type { 'litigation_complaint' }
 
     after(:create) do |kase, _|
-      kase.totoal_cost = Faker::Number.between(from: 0.0, to: 1000000.0).round(2)
+      kase.total_cost = Faker::Number.between(from: 0.0, to: 1000000.0).round(2)
       kase.settlement_cost = Faker::Number.between(from: 0.0, to: 1000000.0).round(2)
       kase.save!
     end

@@ -42,7 +42,7 @@ module Stats
         'number_of_exempt_pages',
         'number_of_final_pages', 
         'appeal_outcome', 
-        'totoal_cost', 
+        'total_cost', 
         'settlement_cost'
       ]
 
