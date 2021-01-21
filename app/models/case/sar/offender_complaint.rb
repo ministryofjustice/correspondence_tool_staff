@@ -199,8 +199,6 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
       next_number
     end
   end
-
-  private 
   
   def next_number_from_original_case
     # It should be rarely multiple persons are tryniig to create a new complaint 
