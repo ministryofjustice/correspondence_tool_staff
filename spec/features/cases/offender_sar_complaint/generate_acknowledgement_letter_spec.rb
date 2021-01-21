@@ -33,16 +33,9 @@ feature 'Generate an acknowledgement letter by a responder' do
       expect(cases_show_letter_page).to be_displayed
       expect(cases_show_letter_page).to have_content "Thank you for your offender subject access request, Bob"
 
-      Dir.glob("#{Rails.root}/*.docx").sort.map do | local_filename |
-        puts "#{local_filename}"
-      end
-
       click_on "Save as Word"
       expect(cases_show_letter_page).to be_displayed
-      sleep 2
-      Dir.glob("#{Rails.root}/*.docx").sort.map do | local_filename |
-        puts "#{local_filename}"
-      end
+      sleep 1
       output_files = Dir["#{Rails.root}/acknowledgement.docx"]
       expect(output_files.length).to eq 1
       File.delete(output_files.first)
