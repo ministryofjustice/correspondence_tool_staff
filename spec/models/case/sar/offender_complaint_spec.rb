@@ -819,10 +819,16 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
-  describe '#case number' do
-    it "Take the original case's number with 'Q' as the prefix" do 
+  describe '#case number' do    
+    it "'Q' + original_case.number if one complaint" do 
       complaint = create(:offender_sar_complaint)
       expect(complaint.number).to eq "Q#{complaint.original_case.number}"
+    end
+
+    it "'Q' + original_case.number + '-' + sequence number if multi-complaints" do 
+      complaint = create(:offender_sar_complaint)
+      complaint1 = create(:offender_sar_complaint, original_case: complaint.original_case)
+      expect(complaint1.number).to eq "Q#{complaint.original_case.number}-001"
     end
   end
 end
