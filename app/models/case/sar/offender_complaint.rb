@@ -198,9 +198,27 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
 
   def set_number
     if self.original_case.present?
-      self.number = "Q#{self.original_case.number}"
+      self.number = next_number_from_original_case
     else
       next_number
     end
   end
+  
+  def next_number_from_original_case
+    # It should be rare that multiple persons are trying to create a new complaint 
+    # against the same original case and submit nearly at the same time. So IMO (yikang)
+    # it is not worth trying to track the counter per cases level at DB like case number for other types, 
+    # simple appoach here is to try 2 times only if the case number somehow is duplicated by any chance
+    begin
+      retries ||= 0
+      counter = self.original_case.case_links.count
+      counter_str = counter > 0 ? "-#{counter.to_s.rjust(3, "0")}" : ""
+      new_case_number = "Q#{self.original_case.number}#{counter_str}"
+      raise "Duplicate case number, please try again " unless Case::Base.find_by_number(new_case_number).blank?
+      new_case_number
+    rescue
+      retry if (retries += 1) < 3
+    end
+  end
+
 end
