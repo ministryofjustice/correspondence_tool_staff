@@ -20,18 +20,9 @@ class DatabaseLoader
     filename
   end
 
-  # def drop_and_recreate_database
-  #   ENV['DISABLE_DATABASE_ENVIRONMENT_CHECK'] = '1'
-  #   Rake::Task['db:drop'].invoke
-  #   puts "Database dropped"
-  #   Rake::Task['db:create'].invoke
-  #   puts "Database created"
-  # end
-
   def drop_and_recreate_database
     # The following way for resetting the db has no need to stop the app server instances 
     # but after the restoring, you may need to restart the instances in order to clear up the cache.
-    ENV['DISABLE_DATABASE_ENVIRONMENT_CHECK'] = '1'
     result = system "psql #{@db_connection_url} -c \"drop schema public cascade;\""
     raise "Failed to drop the database!" unless result == true
     result = system "psql #{@db_connection_url} -c \"create schema public;;\""
