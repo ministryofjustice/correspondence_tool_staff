@@ -218,4 +218,31 @@ FactoryBot.define do
     end
   end
 
+  factory :closed_ico_complaint, parent: :offender_sar_complaint, traits: [:closed]do
+    transient do
+      identifier { "closed offender sar ico-complaint case" }
+    end
+
+    complaint_type { 'ico_complaint' }
+
+    after(:create) do |kase, _|
+      appeal_outcome = find_or_create(:appeal_outcome, :upheld)
+      kase.appeal_outcome_id = appeal_outcome.id
+      kase.save!
+    end
+  end
+
+  factory :closed_litigation_complaint, parent: :offender_sar_complaint, traits: [:closed] do
+    transient do
+      identifier { "closed offender sar litigation-complaint case" }
+    end
+
+    complaint_type { 'litigation_complaint' }
+
+    after(:create) do |kase, _|
+      kase.total_cost = Faker::Number.between(from: 0.0, to: 1000000.0).round(2)
+      kase.settlement_cost = Faker::Number.between(from: 0.0, to: 1000000.0).round(2)
+      kase.save!
+    end
+  end
 end

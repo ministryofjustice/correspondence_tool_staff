@@ -397,4 +397,27 @@ FactoryBot.define do
     end
   end
 
+  factory :offender_complaint_appeal_outcome, class: CaseClosure::OffenderComplaintAppealOutcome do
+    subtype { nil }
+
+    trait :upheld do
+      name                        { 'Complaint upheld' }
+      abbreviation                { 'upheld' }
+      sequence_id                 { 800 }
+    end
+
+    trait :not_upheld do
+      name                        { 'Complaint not upheld' }
+      abbreviation                { 'not_upheld' }
+      sequence_id                 { 810 }
+    end
+
+    trait :not_response_received do
+      name                      { 'No ICO response received' }
+      abbreviation              { 'not_response_received' }
+      sequence_id               { 820 }
+    end
+
+  end
+
 end

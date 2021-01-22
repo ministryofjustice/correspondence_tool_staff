@@ -8,6 +8,8 @@ module Stats
 
       CSV_COLUMN_HEADINGS = [
         'Case number',
+        'Case type', 
+        'Nature of complaint', 
         'Data subject name',
         'Subject type',
         'Who is making the request?',
@@ -18,11 +20,16 @@ module Stats
         'No of days taken',
         'Pages for dispatch',
         'Exempt pages',
-        'Final page count'
+        'Final page count',
+        'Outcome of complaint', 
+        'Cost paid', 
+        'Settlement paid'
       ]
 
       FIELD_COLUMNS = [
         'number',
+        'case_type', 
+        'complaint_subtype',
         'sar_subject_full_name',
         'sar_subject_type',
         'requester_type',
@@ -33,7 +40,10 @@ module Stats
         'number_of_days_taken',
         'number_of_final_pages::integer - number_of_exempt_pages::integer',
         'number_of_exempt_pages',
-        'number_of_final_pages'
+        'number_of_final_pages', 
+        'appeal_outcome', 
+        'total_cost', 
+        'settlement_cost'
       ]
 
       def result_name
