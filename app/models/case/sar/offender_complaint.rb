@@ -201,10 +201,10 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   end
   
   def next_number_from_original_case
-    # It should be rarely multiple persons are tryniig to create a new complaint 
+    # It should be rare that multiple persons are trying to create a new complaint 
     # against the same original case and submit nearly at the same time. So IMO (yikang)
-    # it is not worthying to track the counter per cases level at DB like case number for other types, 
-    # simple appoach here is to try 2 times only if the case number somehow is duplicate by any chance
+    # it is not worth trying to track the counter per cases level at DB like case number for other types, 
+    # simple appoach here is to try 2 times only if the case number somehow is duplicated by any chance
     begin
       retries ||= 0
       counter = self.original_case.case_links.count
