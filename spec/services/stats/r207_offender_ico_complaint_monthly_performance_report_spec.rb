@@ -19,7 +19,7 @@ module Stats
     describe '.description' do
       it 'returns correct description' do
         expect(described_class.description)
-          .to eq 'Includes performance data about Offender ICO complaint requests we received and responded to from the beginning of the year by month.'
+          .to eq 'Includes performance data about ICO Offender complaint requests we received and responded to from the beginning of the year by month.'
       end
     end
 

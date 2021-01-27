@@ -7,7 +7,7 @@ module Stats
       end
 
       def description
-        'Includes performance data about Offender standard complaint requests we received and responded to from the beginning of the year by month.'
+        'Includes performance data about standard Offender complaint requests we received and responded to from the beginning of the year by month.'
       end
     end
 
