@@ -16,7 +16,7 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :data_review_required, 
         specific_events: [
-          :mark_as_ready_to_copy, 
+          :mark_as_vetting_in_progress, 
           :mark_as_require_response,
           :send_acknowledgement_letter]
       },
@@ -66,7 +66,7 @@ describe ConfigurableStateMachine::Machine do
       },
       {
         state: :closed,
-        full_events: [:add_note_to_case, :edit_case, :send_dispatch_letter]
+        full_events: [:add_note_to_case, :edit_case, :send_dispatch_letter, :reopen]
       },
     ].freeze
 

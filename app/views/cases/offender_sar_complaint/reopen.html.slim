@@ -1,0 +1,15 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar_complaint.reopen_reset_external_deadline_heading')
+
+= render partial: 'layouts/header'
+
+= form_for @case, url: confirm_reopen_case_sar_offender_complaint_path(@case), as: :offender_sar_complaint do |f|
+
+  .form-group
+    = f.gov_uk_date_field :external_deadline, { \
+        legend_text: '',
+        form_hint_text: t('cases.new.date_complaint_external_deadline'),
+        today_button: { class: '' } \
+      }
+
+  = f.submit 'Confirm', class: 'button'

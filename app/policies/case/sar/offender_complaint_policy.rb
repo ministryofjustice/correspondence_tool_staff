@@ -12,4 +12,9 @@ class Case::SAR::OffenderComplaintPolicy < Case::SAR::OffenderPolicy
     check_can_trigger_event(:assign_to_team_member) && !self.case.assigned?
   end
 
+  def can_be_reopened?
+    clear_failed_checks
+    check_can_trigger_event(:reopen) && self.case.closed?
+  end
+
 end
