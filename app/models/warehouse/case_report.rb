@@ -90,6 +90,12 @@ module Warehouse
         case_report.number_of_exempt_pages = kase.type_of_offender_sar? ? kase.number_exempt_pages : nil
         case_report.number_of_final_pages = kase.type_of_offender_sar? ? kase.number_final_pages : nil
 
+        # The fields for offender sar complaint case
+        case_report.complaint_subtype = kase.offender_sar_complaint? ? kase.complaint_subtype.humanize : nil
+        case_report.priority = kase.offender_sar_complaint? ? kase.priority.humanize : nil
+        case_report.total_cost = kase.offender_sar_complaint? ? kase.total_cost : nil
+        case_report.settlement_cost = kase.offender_sar_complaint? ? kase.settlement_cost : nil
+
         case_report.save!
         case_report
       end

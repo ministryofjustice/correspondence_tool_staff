@@ -13,6 +13,7 @@ namespace :complaints do
       CSV.open(result_file, "wb") do |csv|
         csv << ["ReqNo", 
                 "DPARefNo", 
+                "offender_case_number",
                 "Exist?", 
                 "case_id", 
                 "subject_type", 
@@ -25,12 +26,10 @@ namespace :complaints do
                 "flag_as_high_profile"]
         CSV.foreach(args[:file], headers: true) do |row|
           puts "Checking #{row['DPARefNo']}"
-          offender = Case::SAR::Offender.find_by_number("MIG#{row['DPARefNo']}")
-          if offender.nil?
-            offender = Case::SAR::Offender.find_by_number("#{row['DPARefNo']}")
-          end
+          offender = locate_offender_sar_case(row['DPARefNo'])
           csv << [row["ReqNo"], 
                   row["DPARefNo"], 
+                  (offender.present? ? offender.number : ""), 
                   (offender.present? ? "Y" : "N"), 
                   (offender.present? ? offender.id : ""), 
                   (offender.present? ? offender.subject_type : ""),
@@ -46,5 +45,20 @@ namespace :complaints do
       end
       puts "Totally #{counter} complaints cases couldn't find the linked offender SAR case."
     end
+
+    private 
+
+    def locate_offender_sar_case(dpa_ref_no)
+      offender = Case::SAR::Offender.find_by_number("MIG#{dpa_ref_no}")
+      if offender.nil?
+        offender = Case::SAR::Offender.find_by_number(dpa_ref_no)
+      end
+      if offender.nil? && dpa_ref_no.length > 5
+        offenders = Case::SAR::Offender.where("number like ? ", "%#{dpa_ref_no}")
+        offender = offenders.first unless offenders.count > 1
+      end
+      offender
+    end
+
   end
 end

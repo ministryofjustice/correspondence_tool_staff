@@ -7,6 +7,7 @@ module CaseClosure
       seed_refusal_reasons(verbose)
       seed_exemptions(verbose)
       implement_oct_2017_changes(verbose)
+      implement_jan_2021_changes(verbose)
     end
 
     def self.unseed!
@@ -336,6 +337,17 @@ module CaseClosure
       # update description of refusal reason s12(2)
       cost = CaseClosure::RefusalReason.find_by_abbreviation('cost')
       cost.update!(name: '(s12(2)) - Exceeded cost to investigate') unless cost.nil?
+    end
+
+    def self.implement_jan_2021_changes(verbose)
+      puts 'Updating Case Closure data inline with January 2021 changes' if verbose
+      CaseClosure::MetadataSeeder.insert_appeal_outcome_records_for_offender_sar_complaint
+    end
+
+    def self.insert_appeal_outcome_records_for_offender_sar_complaint
+      OffenderComplaintAppealOutcome.find_or_create_by!(subtype: nil, name: 'Complaint upheld', abbreviation: 'upheld', sequence_id: 800)
+      OffenderComplaintAppealOutcome.find_or_create_by!(subtype: nil, name: 'Complaint not upheld', abbreviation: 'not_upheld', sequence_id: 810)
+      OffenderComplaintAppealOutcome.find_or_create_by!(subtype: nil, name: 'No ICO response received', abbreviation: 'not_response_received', sequence_id: 820)
     end
 
   end
