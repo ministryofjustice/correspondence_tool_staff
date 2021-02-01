@@ -82,7 +82,7 @@ RSpec.describe Query::CaseReport do
       expect(result.count).to eq 2
     end
 
-    it 'uses given limit parameter with offset' do
+    xit 'uses given limit parameter with offset' do
       sql_query = described_class.new(
         retrieval_scope: external_deadline_retrieval_scope,
         limit: 2,
