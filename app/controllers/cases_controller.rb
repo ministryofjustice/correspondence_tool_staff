@@ -96,7 +96,7 @@ class CasesController < ApplicationController
     @case = @case.decorate
     preserve_step_state
 
-    service = CaseUpdaterService.new(current_user, @case, edit_params)
+    service = case_updater_service.new(current_user, @case, edit_params)
     service.call
 
     if service.result == :error
@@ -113,6 +113,7 @@ class CasesController < ApplicationController
     @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
     redirect_to case_path(@case)
   end
+
 
   def destroy
     authorize @case
@@ -145,6 +146,10 @@ class CasesController < ApplicationController
 
 
   protected
+
+  def case_updater_service
+    CaseUpdaterService
+  end
 
   def case_type
     raise NotImplementedError

@@ -14,6 +14,7 @@ module Cases
       @correspondence_type_key = 'offender_sar_complaint'
     end
 
+
     def start_complaint
       params.merge!(:current_step => "link-offender-sar-case")
       params.merge!(:commit => true)
@@ -102,6 +103,12 @@ module Cases
 
     def session_state
       "#{@correspondence_type_key}_state".to_sym
+    end
+
+    def case_updater_service
+      # overides base class method to utilise specific
+      # service in complaint case updates
+      ComplaintCaseUpdaterService
     end
   end
 end
