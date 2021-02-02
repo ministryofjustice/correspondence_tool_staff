@@ -120,6 +120,44 @@ feature 'offender sar complaint case editing by a manager' do
     click_on 'Continue'
   end
 
+  scenario 'user can edit the the complaint type and and sub type' do
+    expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
+    when_i_progress_the_case_status_passed_the_initial_state
+    when_i_update_the_complaint_type_and_subtype 
+    then_i_expect_the_case_status_to_be_reset_to_the_inital_case_state
+  end
+
+  def when_i_progress_the_case_status_passed_the_initial_state
+    click_on "Requires data"
+    click_on "Mark as waiting for data"
+    click_on "Mark as ready for vetting"
+    click_on "Mark as vetting in progress"
+  end
+
+  def when_i_update_the_complaint_type_and_subtype
+    complaint_type_update_options = { 
+      name: 'ICO Person',
+      email: 'test@email.com', 
+      phone: '123456789',
+      reference: 'REF123456'
+    }
+
+    within '.section-complaint-type' do
+      click_on 'Change'
+    end
+
+    cases_edit_offender_sar_complaint_type_page.edit_complaint_type(
+      'ico',
+      complaint_type_update_options
+    )
+
+    click_on "Continue"
+  end
+
+  def then_i_expect_the_case_status_to_be_reset_to_the_inital_case_state
+    expect(cases_show_page).to have_content "To be assessed"
+  end
+
   def then_i_should_see_the_updated_exempt_page_count_on_the_show_page
     expect(page).to have_content('1541')
     expect(page).to have_content('Case updated')

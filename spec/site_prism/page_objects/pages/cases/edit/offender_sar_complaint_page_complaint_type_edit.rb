@@ -2,7 +2,7 @@ module PageObjects
   module Pages
     module Cases
       module Edit
-        class OffenderSARComplaintPageRequestedInfo < PageObjects::Pages::Base
+        class OffenderSARComplaintPageComplaintType< PageObjects::Pages::Base
 
           set_url '/cases/offender_sar_complaints/{id}/edit/complaint_type'
 
