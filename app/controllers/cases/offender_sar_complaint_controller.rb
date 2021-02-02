@@ -24,16 +24,32 @@ module Cases
 
     def reopen
       authorize @case, :can_be_reopened?
-      if request.get?
-        if @case.standard_complaint?
-          @case.received_date = Date.today
-          @case.object.external_deadline = @case.object.deadline_calculator.external_deadline
-        end
-        render :reopen
-      else
-        confirm_reopen
+      if @case.standard_complaint?
+        @case.received_date = Date.today
+        @case.object.external_deadline = @case.object.deadline_calculator.external_deadline
       end
+      render :reopen
     end 
+
+    def confirm_reopen
+      authorize @case, :can_be_reopened?
+
+      @case.assign_attributes(reopen_offender_sar_complaint_params)
+      if @case.valid?
+        service = CaseReopenService.new(
+          current_user,
+          @case,
+          reopen_offender_sar_complaint_params
+        )
+        service.call
+    
+        if service.result == :ok
+          flash[:notice] = "You have reopened case #{@case.number}."
+          redirect_to case_path(@case) and return 
+        end
+      end
+      render :reopen
+    end
 
     def set_case_types
       @case_types = ["Case::SAR::OffenderComplaint"]
@@ -65,26 +81,6 @@ module Cases
 
     def session_state
       "#{@correspondence_type_key}_state".to_sym
-    end
-
-    private 
-
-    def confirm_reopen
-      @case.assign_attributes(reopen_offender_sar_complaint_params)
-      if @case.valid?
-        service = CaseReopenService.new(
-          current_user,
-          @case,
-          reopen_offender_sar_complaint_params
-        )
-        service.call
-    
-        if service.result == :ok
-          flash[:notice] = "You have reopened case #{@case.number}."
-          redirect_to case_path(@case) and return 
-        end
-      end
-      render :reopen
     end
 
   end
