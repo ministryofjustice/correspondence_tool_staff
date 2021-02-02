@@ -180,7 +180,7 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       ready_to_dispatch
       close_case
-      reopen
+      reopen_with_checking_deadline
     end
 
   end
@@ -301,5 +301,21 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to have_content "Requires response"
     expect(cases_show_page).to have_content "To be assessed"
     expect(cases_show_page).to have_content (Date.today + 20.days).strftime("%d %b %Y")
-  end 
+  end
+  
+  def reopen_with_checking_deadline
+    click_on "Reopen"
+    expect(cases_edit_offender_sar_complaint_reopen_page).to be_displayed
+    click_on "Confirm"
+    expect(cases_edit_offender_sar_complaint_reopen_page).to have_content "can't be blank"
+
+    cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(Date.today + 30.days)
+    click_on "Confirm"
+
+    expect(cases_show_page).to have_content "Requires data"
+    expect(cases_show_page).to have_content "Requires data review"
+    expect(cases_show_page).to have_content "Requires response"
+    expect(cases_show_page).to have_content "To be assessed"
+    expect(cases_show_page).to have_content (Date.today + 30.days).strftime("%d %b %Y")
+  end
 end
