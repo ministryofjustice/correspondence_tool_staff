@@ -36,11 +36,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_assigned?
               data_review_required:
                 mark_as_vetting_in_progress:
-                  if: Workflows::Predicates#is_not_litigation_complaint?
                   transition_to: vetting_in_progress
-                mark_as_ready_to_copy:
-                  if: Workflows::Predicates#is_litigation_complaint?
-                  transition_to: ready_to_copy
                 mark_as_require_response:
                   transition_to: response_required
                 assign_to_team_member:
@@ -136,6 +132,8 @@
                 add_note_to_case:
                 edit_case:
               closed:
+                reopen: 
+                  transition_to: to_be_assessed
                 add_note_to_case:
                 send_dispatch_letter:
                 edit_case:

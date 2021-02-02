@@ -57,3 +57,5 @@ en:
     mark_as_data_to_be_requested: Requires data
     mark_as_require_data_review: Requires data review
     mark_as_require_response: Requires response
+    reopen: Reopen
+    reopen__desc: Case reopened
