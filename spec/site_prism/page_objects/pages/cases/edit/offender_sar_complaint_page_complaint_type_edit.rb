@@ -20,7 +20,7 @@ module PageObjects
           element :ico_contact_phone, '#offender_sar_complaint_ico_contact_phone'
           element :ico_contact_reference, '#offender_sar_complaint_ico_reference'
 
-          element :gld_radio_button, '#offender_sar_complaint_complaint_type_gld_complaint'
+          element :gld_radio_button, '#offender_sar_complaint_complaint_type_litigation_complaint'
           element :gld_contact_name, '#offender_sar_complaint_gld_contact_name'
           element :gld_contact_email, '#offender_sar_complaint_gld_contact_email'
           element :gld_contact_phone, '#offender_sar_complaint_gld_contact_phone'
