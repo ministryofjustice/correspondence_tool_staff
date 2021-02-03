@@ -15,45 +15,60 @@ tr.complaint-type.section-complaint-priority
     = t('common.case.priority')
   td
     = case_details.priority.humanize
-- if case_details.ico_complaint?
-  tr.complaint-type.section-ico-contact-name
-    th
-      = t('common.case.ico_contact_name')
-    td
-      = case_details.ico_contact_name
-  tr.complaint-type.section-ico-contact-email
-    th
-      = t('common.case.ico_contact_email')
-    td
-      = case_details.ico_contact_email
-  tr.complaint-type.section-ico-contact-phone
-    th
-      = t('common.case.ico_contact_phone')
-    td
-      = case_details.ico_contact_phone
-  tr.complaint-type.section-ico-reference
-    th
-      = t('common.case.ico_reference')
-    td
-      = case_details.ico_reference
-- if case_details.litigation_complaint?
-  tr.complaint-type.section-gld-contact-name
-    th
-      = t('common.case.gld_contact_name')
-    td
-      = case_details.gld_contact_name
-  tr.complaint-type.section-gld-contact-email
-    th
-      = t('common.case.gld_contact_email')
-    td
-      = case_details.gld_contact_email
-  tr.complaint-type.section-gld-contact-phone
-    th
-      = t('common.case.gld_contact_phone')
-    td
-      = case_details.gld_contact_phone
-  tr.complaint-type.section-gld-reference
-    th
-      = t('common.case.gld_reference')
-    td
-      = case_details.gld_reference
+
+- if case_details.litigation_complaint? || case_details.ico_complaint? 
+  - if case_details.ico_contact_name.present?
+    tr.complaint-type.section-ico-contact-name
+      th
+        = t('common.case.ico_contact_name')
+      td
+        = case_details.ico_contact_name
+
+  - if case_details.ico_contact_email.present?
+    tr.complaint-type.section-ico-contact-email
+      th
+        = t('common.case.ico_contact_email')
+      td
+        = case_details.ico_contact_email
+
+  - if case_details.ico_contact_phone.present?
+    tr.complaint-type.section-ico-contact-phone
+      th
+        = t('common.case.ico_contact_phone')
+      td
+        = case_details.ico_contact_phone
+
+  - if case_details.ico_reference.present?
+    tr.complaint-type.section-ico-reference
+      th
+        = t('common.case.ico_reference')
+      td
+        = case_details.ico_reference
+
+  - if case_details.gld_contact_name.present?
+    tr.complaint-type.section-gld-contact-name
+      th
+        = t('common.case.gld_contact_name')
+      td
+        = case_details.gld_contact_name
+
+  - if case_details.gld_contact_email.present?
+    tr.complaint-type.section-gld-contact-email
+      th
+        = t('common.case.gld_contact_email')
+      td
+        = case_details.gld_contact_email
+
+  - if case_details.gld_contact_email.present?
+    tr.complaint-type.section-gld-contact-phone
+      th
+        = t('common.case.gld_contact_phone')
+      td
+        = case_details.gld_contact_phone
+
+  - if case_details.gld_reference.present?
+    tr.complaint-type.section-gld-reference
+      th
+        = t('common.case.gld_reference')
+      td
+        = case_details.gld_reference
