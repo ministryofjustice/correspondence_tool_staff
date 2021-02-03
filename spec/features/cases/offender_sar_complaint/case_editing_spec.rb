@@ -117,6 +117,10 @@ feature 'offender sar complaint case editing by a manager' do
     and_i_update_the_complaint_type_to_litigation
     then_i_expect_the_case_status_to_be_reset_to_the_inital_case_state
     and_i_expect_the_ico_and_litigation_details_to_be_visible
+
+    when_i_progress_the_case_status_past_the_initial_state
+    and_i_update_the_litigation_details_but_not_the_type
+    then_i_expect_the_case_status_to_be_the_same
   end
 
   def and_i_expect_the_ico_contact_details_to_be_visible
@@ -132,6 +136,26 @@ feature 'offender sar complaint case editing by a manager' do
     expect(cases_edit_offender_sar_complaint_type_page).to have_content 'test2@email.com'
     expect(cases_edit_offender_sar_complaint_type_page).to have_content '2345670'
     expect(cases_edit_offender_sar_complaint_type_page).to have_content 'REF123607'
+  end
+
+  def and_i_update_the_litigation_details_but_not_the_type
+    complaint_type_update_options = { 
+      name: 'Another Litigation Person',
+      email: 'test3@email.com', 
+      phone: '098673234',
+      reference: 'REF756790567'
+    }
+
+    within '.section-complaint-type' do
+      click_on 'Change'
+    end
+
+    cases_edit_offender_sar_complaint_type_page.edit_complaint_type(
+      'litigation',
+      complaint_type_update_options
+    )
+
+    click_on "Continue"
   end
 
   def when_i_update_the_exempt_pages_count
@@ -198,6 +222,10 @@ feature 'offender sar complaint case editing by a manager' do
 
   def then_i_expect_the_case_status_to_be_reset_to_the_inital_case_state
     expect(cases_show_page).to have_content "To be assessed"
+  end
+
+  def then_i_expect_the_case_status_to_be_the_same 
+    expect(cases_show_page).to have_content "Vetting in progress"
   end
 
   def then_i_should_see_the_updated_exempt_page_count_on_the_show_page
