@@ -1118,6 +1118,8 @@ en:
       outcome:
         heading: Confirm the outcome
         title: Was the case successful?
+      received_date:
+        heading: When was the complaint received?
       reopen_reset_external_deadline_heading: 'Reopen: set a new deadline'
     remove_clearance:
       heading: 'Remove Clearance'
