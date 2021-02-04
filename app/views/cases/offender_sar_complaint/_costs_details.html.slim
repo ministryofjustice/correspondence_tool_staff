@@ -1,7 +1,7 @@
 - if (case_details.total_cost || 0) > 0 || (case_details.settlement_cost || 0) > 0
   tr.costs.section.section-costs
     th
-      = t('common.case.settlement_cost')
+      = t('cases.offender_sar_complaint.settlement_cost')
     td
       = case_details.settlement_cost
     td
@@ -9,6 +9,6 @@
 
   tr.settlement-cost
     th
-      = t('common.case.total_cost')
+      = t('cases.offender_sar_complaint.total_cost')
     td
       = case_details.total_cost

@@ -1110,6 +1110,8 @@ en:
       approval_flags_heading: Confirm levels of approval
       complaint_types_heading: Choose complaint type
       costs_heading: Confirm costs for this case
+      settlement_cost: Settlement cost
+      total_cost: Total cost
       appeal_outcome:
         heading: Choose ICO appeal outcome
         title: ICO appeal outcome
