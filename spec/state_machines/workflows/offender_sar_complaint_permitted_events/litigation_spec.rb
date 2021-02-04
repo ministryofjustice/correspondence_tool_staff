@@ -67,7 +67,7 @@ describe ConfigurableStateMachine::Machine do
           :send_dispatch_letter, 
           :add_complaint_costs, 
           :add_complaint_outcome, 
-          :add_litigation_approval_flags]
+          :add_approval_flags_for_litigation]
       },
       {
         state: :closed,
@@ -77,7 +77,7 @@ describe ConfigurableStateMachine::Machine do
           :send_dispatch_letter, 
           :add_complaint_costs, 
           :add_complaint_outcome, 
-          :add_litigation_approval_flags, 
+          :add_approval_flags_for_litigation, 
           :reopen]
       },
     ].freeze

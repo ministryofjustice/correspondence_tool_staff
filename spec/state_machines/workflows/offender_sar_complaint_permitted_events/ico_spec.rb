@@ -56,7 +56,7 @@ describe ConfigurableStateMachine::Machine do
           :close, 
           :send_dispatch_letter, 
           :add_complaint_appeal_outcome, 
-          :add_ico_approval_flags]
+          :add_approval_flags_for_ico]
       },
       {
         state: :closed,
@@ -65,7 +65,7 @@ describe ConfigurableStateMachine::Machine do
           :edit_case, 
           :send_dispatch_letter, 
           :add_complaint_appeal_outcome, 
-          :add_ico_approval_flags, 
+          :add_approval_flags_for_ico, 
           :reopen]
       },
     ].freeze

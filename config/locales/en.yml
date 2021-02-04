@@ -788,8 +788,8 @@ en:
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
     case/offender_sar_complaint:
-      add_ico_approval_flags: Add approval
-      add_litigation_approval_flags: Add approval
+      add_approval_flags_for_ico: Add approval
+      add_approval_flags_for_litigation: Add approval
       add_complaint_appeal_outcome: Add outcome
       add_complaint_outcome: Add outcome
       add_complaint_costs: Add costs

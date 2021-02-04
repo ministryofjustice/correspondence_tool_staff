@@ -53,7 +53,7 @@ module ConfigurableStateMachine
     def permitted_events(current_user_or_id)
       user = current_user_or_id.instance_of?(User) ? current_user_or_id : User.find(current_user_or_id)
       events = permitted_events_for_role_and_user(user: user, state: @kase.current_state)
-      events.flatten.uniq
+      events.flatten.uniq.sort
     end
 
     # determines whether or not an event can be triggered

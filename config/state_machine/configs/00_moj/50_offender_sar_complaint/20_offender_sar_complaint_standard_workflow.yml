@@ -121,9 +121,9 @@
                 add_note_to_case:
                 edit_case:
               response_required:
-                add_ico_approval_flags:
+                add_approval_flags_for_ico:
                   if: Workflows::Predicates#is_ico_complaint_and_no_approval_flag?
-                add_litigation_approval_flags:
+                add_approval_flags_for_litigation:
                   if: Workflows::Predicates#is_litigation_complaint_and_no_approval_flag?
                 add_complaint_appeal_outcome:
                   if: Workflows::Predicates#is_ico_complaint_and_no_appeal_outcome?
@@ -142,9 +142,9 @@
                 add_note_to_case:
                 edit_case:
               closed:
-                add_ico_approval_flags:
+                add_approval_flags_for_ico:
                   if: Workflows::Predicates#is_ico_complaint_and_no_approval_flag?
-                add_litigation_approval_flags:
+                add_approval_flags_for_litigation:
                   if: Workflows::Predicates#is_litigation_complaint_and_no_approval_flag?
                 add_complaint_appeal_outcome:
                   if: Workflows::Predicates#is_ico_complaint_and_no_appeal_outcome?
