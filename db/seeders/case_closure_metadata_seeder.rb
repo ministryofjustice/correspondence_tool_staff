@@ -8,6 +8,7 @@ module CaseClosure
       seed_exemptions(verbose)
       implement_oct_2017_changes(verbose)
       implement_jan_2021_changes(verbose)
+      implement_feb_2021_changes(verbose)
     end
 
     def self.unseed!
@@ -348,6 +349,31 @@ module CaseClosure
       OffenderComplaintAppealOutcome.find_or_create_by!(subtype: nil, name: 'Complaint upheld', abbreviation: 'upheld', sequence_id: 800)
       OffenderComplaintAppealOutcome.find_or_create_by!(subtype: nil, name: 'Complaint not upheld', abbreviation: 'not_upheld', sequence_id: 810)
       OffenderComplaintAppealOutcome.find_or_create_by!(subtype: nil, name: 'No ICO response received', abbreviation: 'not_response_received', sequence_id: 820)
+    end
+
+    def self.implement_feb_2021_changes(verbose)
+      puts 'Updating Case Closure data inline with February 2021 changes' if verbose
+      CaseClosure::MetadataSeeder.insert_outcome_records_for_offender_sar_complaint
+      CaseClosure::MetadataSeeder.insert_approval_flags_records_for_offender_sar_complaint
+    end
+
+    def self.insert_outcome_records_for_offender_sar_complaint
+      OffenderComplaintOutcome.find_or_create_by!(subtype: nil, name: 'Yes', abbreviation: 'succeeded', sequence_id: 900)
+      OffenderComplaintOutcome.find_or_create_by!(subtype: nil, name: 'No', abbreviation: 'not_succeeded', sequence_id: 910)
+      OffenderComplaintOutcome.find_or_create_by!(subtype: nil, name: 'Settled', abbreviation: 'settled', sequence_id: 920)
+    end
+
+    def self.insert_approval_flags_records_for_offender_sar_complaint
+      OffenderComplaintApprovalFlag::ICOApprovalFlag.find_or_create_by!(
+        subtype: nil, name: 'Has this had Branston operations approval?', abbreviation: 'first_approval', sequence_id: 1000)
+      OffenderComplaintApprovalFlag::ICOApprovalFlag.find_or_create_by!(
+        subtype: nil, name: 'Has this had deputy director information services approval?', abbreviation: 'second_approval', sequence_id: 1010)
+      OffenderComplaintApprovalFlag::ICOApprovalFlag.find_or_create_by!(
+        subtype: nil, name: 'No approval needed', abbreviation: 'not_approval_required', sequence_id: 1020)
+
+      OffenderComplaintApprovalFlag::LitigationApprovalFlag.find_or_create_by!(
+        subtype: nil, name: 'Has this had fee approval?', abbreviation: 'fee_approval', sequence_id: 1300)
+      
     end
 
   end

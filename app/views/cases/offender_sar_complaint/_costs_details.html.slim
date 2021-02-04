@@ -1,0 +1,14 @@
+- if (case_details.total_cost || 0) > 0 || (case_details.settlement_cost || 0) > 0
+  tr.costs.section.section-costs
+    th
+      = t('common.case.settlement_cost')
+    td
+      = case_details.settlement_cost
+    td
+      = link_to t('common.links.change'), edit_step_case_sar_offender_complaint_path(case_details, "costs")
+
+  tr.settlement-cost
+    th
+      = t('common.case.total_cost')
+    td
+      = case_details.total_cost

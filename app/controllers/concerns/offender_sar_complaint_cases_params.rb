@@ -45,6 +45,11 @@ module OffenderSARComplaintCasesParams
       :original_case_number,
       :original_case_id,
       :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
+      :appeal_outcome_id,
+      :outcome_id,
+      :total_cost, 
+      :settlement_cost,
+      approval_flag_ids: [],
       )
   end
   #rubocop:enable Metrics/MethodLength
@@ -67,4 +72,5 @@ module OffenderSARComplaintCasesParams
       :date_responded_yyyy,
       )
   end
+
 end

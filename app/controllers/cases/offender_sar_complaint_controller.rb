@@ -31,7 +31,7 @@ module Cases
     end
 
     def edit_params
-      create_offender_sar_complaint_params
+      clean_approval_empty_choie(create_offender_sar_complaint_params)
     end
 
     def update_params
@@ -49,5 +49,15 @@ module Cases
     def session_state
       "#{@correspondence_type_key}_state".to_sym
     end
+
+    private 
+
+    def clean_approval_empty_choie(permitted_params)
+      if permitted_params["approval_flag_ids"].present?
+        permitted_params["approval_flag_ids"].delete("")
+      end
+      permitted_params
+    end
+
   end
 end

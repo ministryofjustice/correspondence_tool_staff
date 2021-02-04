@@ -394,6 +394,8 @@ en:
         complaint_type: What sort of complaint is this?
         complaint_subtype: What is the nature of the complaint?
         priority: Choose a priority level
+        approval_flag_ids: Approval options
+        outcome_id: Was the case successful?
       report:
         correspondence_type: Which type of cases do you want to report on?
         report_type_id: What should this report cover?
@@ -626,6 +628,8 @@ en:
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
+        settlement_cost: Enter settlement cost
+        total_cost: Enter total costs
       feedback:
         comment: Help make this service better
       search_query:
@@ -782,6 +786,12 @@ en:
     case/offender_sar:
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
+    case/offender_sar_complaint:
+      add_ico_approval_flags: Add approval
+      add_litigation_approval_flags: Add approval
+      add_complaint_appeal_outcome: Add outcome
+      add_complaint_outcome: Add outcome
+      add_complaint_costs: Add costs
     case_list:
       flag: 'Flag'
       draft_deadline: Draft deadline
@@ -1096,6 +1106,15 @@ en:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
       external_deadline_heading: Set a deadline for this complaint
+      approval_flags_heading: Confirm levels of approval
+      complaint_types_heading: Choose complaint type
+      costs_heading: Confirm costs for this case
+      appeal_outcome:
+        heading: Choose ICO appeal outcome
+        title: ICO appeal outcome
+      outcome:
+        heading: Confirm the outcome
+        title: Was the case successful?
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'

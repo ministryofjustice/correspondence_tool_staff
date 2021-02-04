@@ -125,6 +125,16 @@
                 add_note_to_case:
                 edit_case:
               response_required:
+                add_ico_approval_flags:
+                  if: Workflows::Predicates#is_ico_complaint_and_no_approval_flag?
+                add_litigation_approval_flags:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_approval_flag?
+                add_complaint_appeal_outcome:
+                  if: Workflows::Predicates#is_ico_complaint_and_no_appeal_outcome?
+                add_complaint_outcome:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_outcome?
+                add_complaint_costs:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_costs?
                 close:
                   transition_to: closed
                 assign_to_team_member:
@@ -136,7 +146,16 @@
                 add_note_to_case:
                 edit_case:
               closed:
+                add_ico_approval_flags:
+                  if: Workflows::Predicates#is_ico_complaint_and_no_approval_flag?
+                add_litigation_approval_flags:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_approval_flag?
+                add_complaint_appeal_outcome:
+                  if: Workflows::Predicates#is_ico_complaint_and_no_appeal_outcome?
+                add_complaint_outcome:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_outcome?
+                add_complaint_costs:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_costs?
                 add_note_to_case:
                 send_dispatch_letter:
                 edit_case:
-
