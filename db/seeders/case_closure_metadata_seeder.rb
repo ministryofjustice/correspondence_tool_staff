@@ -359,9 +359,9 @@ module CaseClosure
     end
 
     def self.insert_outcome_records_for_offender_sar_complaint
-      OffenderComplaintOutcome.find_or_create_by!(subtype: nil, name: 'Yes', abbreviation: 'succeeded', sequence_id: 900)
-      OffenderComplaintOutcome.find_or_create_by!(subtype: nil, name: 'No', abbreviation: 'not_succeeded', sequence_id: 910)
-      OffenderComplaintOutcome.find_or_create_by!(subtype: nil, name: 'Settled', abbreviation: 'settled', sequence_id: 920)
+      OffenderComplaintOutcome.find_or_create_by!(subtype: nil, name: 'Claim was successful', abbreviation: 'succeeded', sequence_id: 900)
+      OffenderComplaintOutcome.find_or_create_by!(subtype: nil, name: 'Claim was not successful', abbreviation: 'not_succeeded', sequence_id: 910)
+      OffenderComplaintOutcome.find_or_create_by!(subtype: nil, name: 'Claim was settled', abbreviation: 'settled', sequence_id: 920)
     end
 
     def self.insert_approval_flags_records_for_offender_sar_complaint
