@@ -49,30 +49,6 @@ module Cases
       end       
     end
 
-    def update
-      @case = Case::Base.find(params[:id])
-      authorize @case
-      @case = @case.decorate
-      preserve_step_state
-
-      service = ComplaintCaseUpdaterService.new(current_user, @case, edit_params)
-      service.call
-
-      if service.result == :error
-        render 'cases/edit' and return
-      end
-
-      if service.result == :ok
-        flash[:notice] = t('cases.update.case_updated')
-      elsif service.result == :no_changes
-        flash[:alert] = "No changes were made"
-      end
-
-      set_permitted_events
-      @case_transitions = @case.transitions.case_history.order(id: :desc).decorate
-      redirect_to case_path(@case)
-    end
-
     def set_case_types
       @case_types = ["Case::SAR::OffenderComplaint"]
     end
