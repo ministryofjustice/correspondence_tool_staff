@@ -396,7 +396,7 @@ en:
         complaint_subtype: What is the nature of the complaint?
         priority: Choose a priority level
         approval_flag_ids: Approval options
-        outcome_id: Was the case successful?
+        outcome_id: Was the claim successful?
       report:
         correspondence_type: Which type of cases do you want to report on?
         report_type_id: What should this report cover?
