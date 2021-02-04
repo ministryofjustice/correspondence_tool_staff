@@ -363,8 +363,8 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
   end
 
   describe '#edit' do
-    let(:offender_sar_case) { create(:offender_sar_case).decorate }
-    let(:params) {{ id: offender_sar_case.id }}
+    let(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
+    let(:params) {{ id: offender_sar_complaint.id }}
 
     before do
       sign_in responder
@@ -373,16 +373,16 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     it 'assigns and displays' do
       get :edit, params: params
       expect(response).to render_template(:edit)
-      expect(assigns(:case)).to be_a Case::SAR::Offender
+      expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
     end
   end
 
   describe '#update' do
-    let(:offender_sar_case) { create(:offender_sar_case).decorate }
-    let(:params) {{ id: offender_sar_case.id }}
+    let(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
+    let(:params) {{ id: offender_sar_complaint.id }}
     let(:params) do
       {
-        id: offender_sar_case.id,
+        id: offender_sar_complaint.id,
         offender_sar_complaint: {
           requester_type: 'member_of_the_public',
           type: 'Offender',
@@ -400,15 +400,15 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
       }
     end
 
-    let(:same_params) {{ id: offender_sar_case.id }}
+    let(:same_params) {{ id: offender_sar_complaint.id }}
     let(:same_params) do
       {
-        id: offender_sar_case.id,
+        id: offender_sar_complaint.id,
         offender_sar_complaint: {
-          name: offender_sar_case.name,
-          postal_address: offender_sar_case.postal_address,
-          subject: offender_sar_case.subject,
-          message: offender_sar_case.message,
+          name: offender_sar_complaint.name,
+          postal_address: offender_sar_complaint.postal_address,
+          subject: offender_sar_complaint.subject,
+          message: offender_sar_complaint.message,
         }
       }
     end
@@ -420,27 +420,27 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     context 'without change anything' do
       it 'check the flash' do
         patch :update, params: same_params
-        expect(assigns(:case)).to be_a Case::SAR::Offender
+        expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
         expect(flash[:notice]).to eq nil
         expect(flash[:alert]).to eq 'No changes were made'
-        expect(offender_sar_case.object.transitions.where(event: "edit_case").count).to eq 0
+        expect(offender_sar_complaint.object.transitions.where(event: "edit_case").count).to eq 0
       end
     end
 
     context 'with valid params' do
       before(:each) do
         patch :update, params: params
-        expect(assigns(:case)).to be_a Case::SAR::Offender
+        expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
       end
 
       it 'sets the flash' do
-        expect(offender_sar_case.object.transitions.where(event: "edit_case").count).to be >= 1
+        expect(offender_sar_complaint.object.transitions.where(event: "edit_case").count).to be >= 1
         expect(flash[:notice]).to eq 'Case updated'
       end
 
       it 'redirects to the new case assignment page' do
         expect(response)
-          .to redirect_to(case_path(offender_sar_case))
+          .to redirect_to(case_path(offender_sar_complaint))
       end
     end
 
