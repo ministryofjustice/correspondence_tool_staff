@@ -1,4 +1,5 @@
 module CaseClosure
+  #rubocop:disable Metrics/ClassLength
   class MetadataSeeder
 
     def self.seed!(verbose: false)
@@ -377,4 +378,5 @@ module CaseClosure
     end
 
   end
+  #rubocop:enable Metrics/ClassLength
 end
