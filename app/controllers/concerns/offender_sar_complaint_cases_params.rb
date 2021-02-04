@@ -73,4 +73,11 @@ module OffenderSARComplaintCasesParams
       )
   end
 
+  def reopen_offender_sar_complaint_params
+    params.require(:offender_sar_complaint).permit(
+      :external_deadline_dd,
+      :external_deadline_mm,
+      :external_deadline_yyyy,
+      )
+  end
 end

@@ -43,9 +43,9 @@ gem 'mechanize', '>= 2.7.5'
 gem 'mimetype-fu', '~> 0.1.2'
 gem 'paper_trail', '~> 10.3'
 gem 'pg', '~> 1.2'
-gem 'pg_search', '~> 2.3.0'
+gem 'pg_search', '~> 2.3.5'
 gem 'pry-rails'
-gem 'puma', '~> 4.3'
+gem 'puma', '~> 5.1'
 gem 'pundit', '~>2.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.4'
@@ -94,13 +94,13 @@ group :development, :test do
   gem 'colorize'
   gem 'guard-jasmine'
   gem 'launchy'
-  gem 'parallel_tests', '~> 3.0'
+  gem 'parallel_tests', '~> 3.4'
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 4.0'
   gem 'rubocop', '~> 0.87.0', require: false
-  gem 'rubocop-rspec', '~> 1.41.0', require: false
+  gem 'rubocop-rspec', '~> 1.44.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
@@ -113,7 +113,7 @@ group :development do
   gem 'guard-brakeman'
   gem 'guard-rspec'
   gem 'guard-rubocop'
-  gem 'listen', '~> 3.2.1'
+  gem 'listen', '~> 3.4.1'
   # Rather than use defualt ./git/hooks folder we use overcommit for easier
   # management
   gem 'overcommit', '~> 0.54.0'

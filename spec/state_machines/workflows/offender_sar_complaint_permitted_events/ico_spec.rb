@@ -65,7 +65,8 @@ describe ConfigurableStateMachine::Machine do
           :edit_case, 
           :send_dispatch_letter, 
           :add_complaint_appeal_outcome, 
-          :add_ico_approval_flags]
+          :add_ico_approval_flags, 
+          :reopen]
       },
     ].freeze
 

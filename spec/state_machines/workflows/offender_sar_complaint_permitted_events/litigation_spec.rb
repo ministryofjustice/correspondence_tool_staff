@@ -16,7 +16,7 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :data_review_required, 
         specific_events: [
-          :mark_as_ready_to_copy, 
+          :mark_as_vetting_in_progress, 
           :mark_as_require_response,
           :send_acknowledgement_letter]
       },
@@ -77,7 +77,8 @@ describe ConfigurableStateMachine::Machine do
           :send_dispatch_letter, 
           :add_complaint_costs, 
           :add_complaint_outcome, 
-          :add_litigation_approval_flags]
+          :add_litigation_approval_flags, 
+          :reopen]
       },
     ].freeze
 

@@ -26,6 +26,7 @@ feature 'offender sar complaint case creation by a manager' do
       requires_data_review
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 2' do
@@ -35,12 +36,14 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 3' do
       to_be_assessed
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 4' do
@@ -49,6 +52,7 @@ feature 'offender sar complaint case creation by a manager' do
       waiting_for_data
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 5' do
@@ -60,6 +64,7 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       requires_response
       close_case
+      reopen
     end
 
   end
@@ -77,6 +82,7 @@ feature 'offender sar complaint case creation by a manager' do
       requires_data_review
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 2' do
@@ -86,12 +92,14 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 3' do
       to_be_assessed
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 4' do
@@ -100,6 +108,7 @@ feature 'offender sar complaint case creation by a manager' do
       waiting_for_data
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 5' do
@@ -111,6 +120,7 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       requires_response
       close_case
+      reopen
     end
 
   end
@@ -128,20 +138,24 @@ feature 'offender sar complaint case creation by a manager' do
       requires_data_review
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 2' do
       to_be_assessed
       requires_data_review
+      vetting_in_progress
       ready_to_copy
       ready_to_dispatch
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 3' do
       to_be_assessed
       requires_response
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 4' do
@@ -153,6 +167,7 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       ready_to_dispatch
       close_case
+      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 5' do
@@ -165,6 +180,7 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       ready_to_dispatch
       close_case
+      reopen
     end
 
   end
@@ -191,11 +207,7 @@ feature 'offender sar complaint case creation by a manager' do
     click_on "Requires data review"
 
     expect(cases_show_page).to be_displayed
-    if offender_sar_complaint.complaint_type == 'Litigation'
-      expect(cases_show_page).to have_content "Mark as ready to copy"
-    else
-      expect(cases_show_page).to have_content "Mark as vetting in progress"
-    end
+    expect(cases_show_page).to have_content "Mark as vetting in progress"
     expect(cases_show_page).to have_content "Requires response"
     expect(cases_show_page).to have_content "Send acknowledgement letter"
   end
@@ -286,6 +298,7 @@ feature 'offender sar complaint case creation by a manager' do
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Closed"
+    expect(cases_show_page).to have_content "Reopen"
     expect(cases_show_page).to have_content "Send dispatch letter"
     if offender_sar_complaint.complaint_type == 'Litigation'
       expect(cases_show_page).to have_content "Add approval"
@@ -298,4 +311,16 @@ feature 'offender sar complaint case creation by a manager' do
       expect(cases_show_page).to have_content "Add outcome"
     end 
   end
+
+  def reopen
+    click_on "Reopen"
+    cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(Date.today + 20.days)
+    click_on "Confirm"
+
+    expect(cases_show_page).to have_content "Requires data"
+    expect(cases_show_page).to have_content "Requires data review"
+    expect(cases_show_page).to have_content "Requires response"
+    expect(cases_show_page).to have_content "To be assessed"
+    expect(cases_show_page).to have_content (Date.today + 20.days).strftime("%d %b %Y")
+  end 
 end
