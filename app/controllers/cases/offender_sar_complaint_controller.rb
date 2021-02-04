@@ -61,7 +61,7 @@ module Cases
     end
 
     def edit_params
-      clean_approval_empty_choice(create_offender_sar_complaint_params)
+      clean_empty_approval_flags(create_offender_sar_complaint_params)
     end
 
     def update_params
@@ -82,7 +82,7 @@ module Cases
 
     private 
 
-    def clean_approval_empty_choice(permitted_params)
+    def clean_empty_approval_flags(permitted_params)
       if permitted_params["approval_flag_ids"].present?
         permitted_params["approval_flag_ids"].delete("")
       end
