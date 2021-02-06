@@ -39,11 +39,21 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     # Offender SAR case state transitions e.g. mark as ready for vetting
     when /mark_as_([a-zA-Z]*)/
       link_text = t("event.#{event}")
+      if @case.offender_sar? 
+        action_url = transition_case_sar_offender_path(@case, event)
+      else
+        action_url = transition_case_sar_offender_complaint_path(@case, event)
+      end
       link_to link_text,
-        transition_case_sar_offender_path(@case, event),
+        action_url,
         id: "action--#{link_text.parameterize}",
         class: 'button state-action-button',
         method: 'patch'
+    when :reopen 
+      link_to I18n.t("event.#{event}"),
+              reopen_case_sar_offender_complaint_path(@case),
+              id: 'action--reopen-complaint',
+              class: 'button'
     when :start_complaint
       link_to I18n.t('common.case/offender_sar.start_complaint'),
               start_complaint_case_sar_offender_complaint_index_path(@case.number),
