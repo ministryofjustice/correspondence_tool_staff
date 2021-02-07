@@ -42,7 +42,7 @@ module Stats
           0,
           "in time",
           "Waiting for data",
-          1,
+          offender_sar_case.num_days_taken,
           "No"
         )
       end
@@ -66,7 +66,7 @@ module Stats
           0,
           "in time",
           "Waiting for data",
-          1,
+          offender_sar_complaint.num_days_taken,
           "No"
         )
       end
