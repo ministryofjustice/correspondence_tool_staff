@@ -1,8 +1,6 @@
 class ComplaintCaseUpdaterService < CaseUpdaterService
   attr_reader :result
 
-  INITAL_CASE_STATUS = 'to_be_assessed'
-
   def call
     reset_status_on_complaint_type_change
     super
@@ -17,7 +15,7 @@ class ComplaintCaseUpdaterService < CaseUpdaterService
   end
 
   def reset_case_status_to_default_state
-      @kase.current_state = INITAL_CASE_STATUS
+    @kase.current_state = @kase.state_machine.initial_state 
   end
 
   def current_case_type_doesnt_match_selected_case_type
