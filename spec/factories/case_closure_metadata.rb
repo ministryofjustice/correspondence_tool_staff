@@ -443,7 +443,7 @@ FactoryBot.define do
 
   end
 
-  factory :offender_ico_complaint_approval_flag, class: CaseClosure::OffenderComplaintApprovalFlag::ICOApprovalFlag do
+  factory :offender_ico_complaint_approval_flag, class: CaseClosure::ApprovalFlag::ICOOffenderComplaint do
     subtype { nil }
 
     trait :first_approval do
@@ -458,15 +458,15 @@ FactoryBot.define do
       sequence_id                 { 1010 }
     end
 
-    trait :not_approval_required do
+    trait :no_approval_required do
       name                      { 'No approval needed' }
-      abbreviation              { 'not_approval_required' }
+      abbreviation              { 'no_approval_required' }
       sequence_id               { 1020 }
     end
 
   end
 
-  factory :offender_litigation_complaint_approval_flag, class: CaseClosure::OffenderComplaintApprovalFlag::LitigationApprovalFlag do
+  factory :offender_litigation_complaint_approval_flag, class: CaseClosure::ApprovalFlag::LitigationOffenderComplaint do
     subtype { nil }
 
     trait :fee_approval do

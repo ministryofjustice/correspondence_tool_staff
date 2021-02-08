@@ -6,12 +6,12 @@
 = form_for @case.object, url: url, as: :offender_sar_complaint do |f|
   - if @case.ico_complaint?
     = f.collection_check_boxes :approval_flag_ids,
-                                CaseClosure::OffenderComplaintApprovalFlag::ICOApprovalFlag.active,
+                                CaseClosure::ApprovalFlag::ICOOffenderComplaint.active,
                                 :id,
                                 :name
   - if @case.litigation_complaint?
     = f.collection_check_boxes :approval_flag_ids,
-                                CaseClosure::OffenderComplaintApprovalFlag::LitigationApprovalFlag.active,
+                                CaseClosure::ApprovalFlag::LitigationOffenderComplaint.active,
                                 :id,
                                 :name
                                 

@@ -120,15 +120,15 @@ feature 'offender sar complaint case editing by a manager' do
 
     when_i_click_add_approval_button
     and_i_tick_some_of_approval_options(
-      true, [CaseClosure::OffenderComplaintApprovalFlag::ICOApprovalFlag.first_approval.id])
+      true, [CaseClosure::ApprovalFlag::ICOOffenderComplaint.first_approval.id])
     then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
-      CaseClosure::OffenderComplaintApprovalFlag::ICOApprovalFlag.first_approval.name)
+      CaseClosure::ApprovalFlag::ICOOffenderComplaint.first_approval.name)
 
     when_i_click_approval_flags_change_link
     and_i_tick_some_of_approval_options(
-      true, [CaseClosure::OffenderComplaintApprovalFlag::ICOApprovalFlag.second_approval.id])
+      true, [CaseClosure::ApprovalFlag::ICOOffenderComplaint.second_approval.id])
     then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
-      CaseClosure::OffenderComplaintApprovalFlag::ICOApprovalFlag.second_approval.name)
+      CaseClosure::ApprovalFlag::ICOOffenderComplaint.second_approval.name)
   end
 
   scenario 'user can add/edit approvals for litigation complaint case', js: true do
@@ -141,15 +141,15 @@ feature 'offender sar complaint case editing by a manager' do
 
     when_i_click_add_approval_button
     and_i_tick_some_of_approval_options(
-      false, [CaseClosure::OffenderComplaintApprovalFlag::LitigationApprovalFlag.fee_approval.id])
+      false, [CaseClosure::ApprovalFlag::LitigationOffenderComplaint.fee_approval.id])
     then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
-      CaseClosure::OffenderComplaintApprovalFlag::LitigationApprovalFlag.fee_approval.name)
+      CaseClosure::ApprovalFlag::LitigationOffenderComplaint.fee_approval.name)
 
     when_i_click_approval_flags_change_link
     and_i_untick_some_of_approval_options(
-      false, [CaseClosure::OffenderComplaintApprovalFlag::LitigationApprovalFlag.fee_approval.id])
+      false, [CaseClosure::ApprovalFlag::LitigationOffenderComplaint.fee_approval.id])
     then_i_expect_result_removed_from_the_case_show_page(
-      CaseClosure::OffenderComplaintApprovalFlag::LitigationApprovalFlag.fee_approval.name)
+      CaseClosure::ApprovalFlag::LitigationOffenderComplaint.fee_approval.name)
   end
 
   scenario 'user can add/edit appeal_outcome for ico complaint case', js: true do

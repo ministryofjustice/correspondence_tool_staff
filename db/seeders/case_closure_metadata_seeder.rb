@@ -365,14 +365,14 @@ module CaseClosure
     end
 
     def self.insert_approval_flags_records_for_offender_sar_complaint
-      OffenderComplaintApprovalFlag::ICOApprovalFlag.find_or_create_by!(
+      ApprovalFlag::ICOOffenderComplaint.find_or_create_by!(
         subtype: nil, name: 'Has this had Branston operations approval?', abbreviation: 'first_approval', sequence_id: 1000)
-      OffenderComplaintApprovalFlag::ICOApprovalFlag.find_or_create_by!(
+      ApprovalFlag::ICOOffenderComplaint.find_or_create_by!(
         subtype: nil, name: 'Has this had deputy director information services approval?', abbreviation: 'second_approval', sequence_id: 1010)
-      OffenderComplaintApprovalFlag::ICOApprovalFlag.find_or_create_by!(
-        subtype: nil, name: 'No approval needed', abbreviation: 'not_approval_required', sequence_id: 1020)
+      ApprovalFlag::ICOOffenderComplaint.find_or_create_by!(
+        subtype: nil, name: 'No approval needed', abbreviation: 'no_approval_required', sequence_id: 1020)
 
-      OffenderComplaintApprovalFlag::LitigationApprovalFlag.find_or_create_by!(
+      ApprovalFlag::LitigationOffenderComplaint.find_or_create_by!(
         subtype: nil, name: 'Has this had fee approval?', abbreviation: 'fee_approval', sequence_id: 1300)
       
     end

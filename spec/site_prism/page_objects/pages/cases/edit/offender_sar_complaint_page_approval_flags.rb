@@ -38,9 +38,9 @@ module PageObjects
 
           def complete_approval_flags(is_ico)
             if is_ico
-              CaseClosure::OffenderComplaintApprovalFlag::ICOApprovalFlag.active
+              CaseClosure::ApprovalFlag::ICOOffenderComplaint.active
             else
-              CaseClosure::OffenderComplaintApprovalFlag::LitigationApprovalFlag.active
+              CaseClosure::ApprovalFlag::LitigationOffenderComplaint.active
             end
           end
         end

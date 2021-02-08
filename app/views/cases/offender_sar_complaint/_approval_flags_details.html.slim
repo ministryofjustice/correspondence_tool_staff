@@ -1,5 +1,5 @@
 - if case_details.approval_flag_ids.present?
-  - flags = (case_details.ico_complaint? ? CaseClosure::OffenderComplaintApprovalFlag::ICOApprovalFlag.active : CaseClosure::OffenderComplaintApprovalFlag::LitigationApprovalFlag.active)
+  - flags = (case_details.ico_complaint? ? CaseClosure::ApprovalFlag::ICOOffenderComplaint.active : CaseClosure::ApprovalFlag::LitigationOffenderComplaint.active)
   - first_flag = flags.first
   - flags.each do |flag|
     - if flag == first_flag
