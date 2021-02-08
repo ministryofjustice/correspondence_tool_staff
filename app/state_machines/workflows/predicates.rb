@@ -54,7 +54,7 @@ class Workflows::Predicates
   end
 
   def is_litigation_complaint_and_no_costs?
-    @kase.litigation_complaint? && (@kase.total_cost || 0) == 0 && (@kase.settlement_cost || 0) == 0
+    @kase.litigation_complaint? && !@kase.has_costs?
   end
 
   def responder_is_member_of_assigned_team_and_not_overturned?

@@ -158,6 +158,10 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     CaseClosure::Metadatum.where(id: approval_flag_ids)
   end
 
+  def has_costs?
+    has_settlement_cost? || has_total_cost?
+  end 
+
   private
 
   def validate_external_deadline_required
@@ -225,6 +229,14 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     rescue
       retry if (retries += 1) < 3
     end
+  end
+
+  def has_settlement_cost?
+    self.settlement_cost.present? && self.settlement_cost > 0
+  end
+
+  def has_total_cost?
+    self.total_cost.present? && self.total_cost > 0
   end
 
 end
