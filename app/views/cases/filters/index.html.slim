@@ -39,9 +39,10 @@ section.govuk-tabs__panel
       = render partial: 'cases/shared/case_list'
 
     - else
-      .download-cases-link
-        = download_csv_link(request.fullpath)
-        | &nbsp;(.csv file)
+      - (@available_reports || []).each do |report_type|
+        .download-cases-link
+          = download_csv_link(request.fullpath, report_type.abbr)
+          | &nbsp;(.csv file)
       .grid-row
         .column-full.table-container.container
           table.report.table-font-xsmall
