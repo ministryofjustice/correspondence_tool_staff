@@ -7,8 +7,10 @@ module Stats
         'Case number',
         'Case type',
         'Nature of the complaint', 
+        'Priority', 
         'Date received at MOJ',
         'Final deadline',
+        'Who is dealing with this case', 
         'Who is making the request?',
         'Company name',
         'Data subject name',
@@ -45,8 +47,10 @@ module Stats
         kase.number,
         case_type(kase),
         complaint_subtype_for_report(kase),
+        kase.offender_sar_complaint? ? kase.priority.humanize : '', 
         kase.received_date,
         kase.external_deadline,
+        kase.responder.present? ? kase.responder.full_name : '', 
         kase.third_party? ? kase.third_party_relationship : 'Data subject',
         kase.third_party_company_name,
         kase.subject_full_name,
@@ -82,5 +86,6 @@ module Stats
     def case_type(kase)
       kase.decorate.pretty_type
     end 
+
   end
 end
