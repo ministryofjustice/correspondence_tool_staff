@@ -314,14 +314,15 @@ feature 'offender sar complaint case creation by a manager' do
 
   def reopen
     click_on "Reopen"
-    cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(Date.today + 20.days)
+    new_deadline = Date.today + 20.days
+    cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(new_deadline)
     click_on "Confirm"
 
     expect(cases_show_page).to have_content "Requires data"
     expect(cases_show_page).to have_content "Requires data review"
     expect(cases_show_page).to have_content "Requires response"
     expect(cases_show_page).to have_content "To be assessed"
-    expect(cases_show_page).to have_content (Date.today + 20.days).strftime("%d %b %Y")
+    expect(cases_show_page).to have_content "#{new_deadline.day} #{new_deadline.strftime("%b %Y")}"
   end
   
   def reopen_with_checking_deadline
