@@ -12,9 +12,14 @@ feature 'offender sar complaint case editing by a manager' do
             received_date: 2.weeks.ago.to_date, complaint_type: 'litigation_complaint' }
 
   background do
+    CaseClosure::MetadataSeeder.seed!
     find_or_create :team_branston
     login_as manager
     cases_show_page.load(id: offender_sar_complaint.id)
+  end
+
+  after(:all) do
+    CaseClosure::MetadataSeeder.unseed!
   end
 
   scenario 'editing an offender sar complaint case' do
@@ -106,6 +111,103 @@ feature 'offender sar complaint case editing by a manager' do
     then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(new_external_deadline)
   end
 
+  scenario 'user can add/edit approvals for ico complaint case', js: true do
+    cases_show_page.load(id: offender_sar_ico_complaint.id)
+    expect(cases_show_page).to be_displayed(id: offender_sar_ico_complaint.id)
+    click_on 'Requires response'
+    expect(cases_show_page).to have_content('Add approval')
+    expect(cases_show_page).to have_content('Add outcome')
+
+    when_i_click_add_approval_button
+    and_i_tick_some_of_approval_options(
+      true, [CaseClosure::ApprovalFlag::ICOOffenderComplaint.first_approval.id])
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
+      CaseClosure::ApprovalFlag::ICOOffenderComplaint.first_approval.name)
+
+    when_i_click_approval_flags_change_link
+    and_i_tick_some_of_approval_options(
+      true, [CaseClosure::ApprovalFlag::ICOOffenderComplaint.second_approval.id])
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
+      CaseClosure::ApprovalFlag::ICOOffenderComplaint.second_approval.name)
+  end
+
+  scenario 'user can add/edit approvals for litigation complaint case', js: true do
+    cases_show_page.load(id: offender_sar_litigation_complaint.id)
+    expect(cases_show_page).to be_displayed(id: offender_sar_litigation_complaint.id)
+    click_on 'Requires response'
+    expect(cases_show_page).to have_content('Add approval')
+    expect(cases_show_page).to have_content('Add outcome')
+    expect(cases_show_page).to have_content('Add costs')
+
+    when_i_click_add_approval_button
+    and_i_tick_some_of_approval_options(
+      false, [CaseClosure::ApprovalFlag::LitigationOffenderComplaint.fee_approval.id])
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
+      CaseClosure::ApprovalFlag::LitigationOffenderComplaint.fee_approval.name)
+
+    when_i_click_approval_flags_change_link
+    and_i_untick_some_of_approval_options(
+      false, [CaseClosure::ApprovalFlag::LitigationOffenderComplaint.fee_approval.id])
+    then_i_expect_result_removed_from_the_case_show_page(
+      CaseClosure::ApprovalFlag::LitigationOffenderComplaint.fee_approval.name)
+  end
+
+  scenario 'user can add/edit appeal_outcome for ico complaint case', js: true do
+    cases_show_page.load(id: offender_sar_ico_complaint.id)
+    expect(cases_show_page).to be_displayed(id: offender_sar_ico_complaint.id)
+    click_on 'Requires response'
+    expect(cases_show_page).to have_content('Add approval')
+    expect(cases_show_page).to have_content('Add outcome')
+
+    when_i_click_add_appeal_outcome
+    and_i_tick_appeal_outcome(CaseClosure::OffenderComplaintAppealOutcome.upheld)
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
+      CaseClosure::OffenderComplaintAppealOutcome.upheld.name)
+
+    when_i_click_appeal_outcome_change_link
+    and_i_tick_appeal_outcome(CaseClosure::OffenderComplaintAppealOutcome.not_upheld)
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
+      CaseClosure::OffenderComplaintAppealOutcome.not_upheld.name)
+  end
+
+  scenario 'user can add/edit outcome for litigation complaint case', js: true do
+    cases_show_page.load(id: offender_sar_litigation_complaint.id)
+    expect(cases_show_page).to be_displayed(id: offender_sar_litigation_complaint.id)
+    click_on 'Requires response'
+    expect(cases_show_page).to have_content('Add approval')
+    expect(cases_show_page).to have_content('Add outcome')
+    expect(cases_show_page).to have_content('Add costs')
+
+    when_i_click_add_outcome
+    and_i_tick_outcome(CaseClosure::OffenderComplaintOutcome.not_succeeded)
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
+      CaseClosure::OffenderComplaintOutcome.not_succeeded.name)
+
+    when_i_click_outcome_change_link
+    and_i_tick_outcome(CaseClosure::OffenderComplaintOutcome.succeeded)
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
+      CaseClosure::OffenderComplaintOutcome.succeeded.name)
+  end
+
+  scenario 'user can add/edit costs for litigation complaint case', js: true do
+    cases_show_page.load(id: offender_sar_litigation_complaint.id)
+    expect(cases_show_page).to be_displayed(id: offender_sar_litigation_complaint.id)
+    click_on 'Requires response'
+    expect(cases_show_page).to have_content('Add approval')
+    expect(cases_show_page).to have_content('Add outcome')
+    expect(cases_show_page).to have_content('Add costs')
+
+    when_i_click_add_costs
+    and_i_fill_in_costs(11111.11, 22222.22)
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page("11111.11")
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page("22222.22")
+
+    when_i_click_costs_change_link
+    and_i_fill_in_costs(12345.67, 8901234.55)
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page("12345.67")
+    then_i_expect_the_result_to_be_reflected_on_the_case_show_page("8901234.55")
+  end
+
   def when_i_update_the_exempt_pages_count
     click_on 'Update exempt pages'
     expect(page).to have_content('Update exempt pages')
@@ -175,6 +277,85 @@ feature 'offender sar complaint case editing by a manager' do
 
   def then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(external_deadline)
     expect(cases_show_page).to have_content(I18n.l(external_deadline, format: :default))
+  end
+
+  def when_i_click_add_approval_button
+    click_on "Add approval"
+  end
+
+  def and_i_tick_some_of_approval_options(is_ico, choices)
+    expect(cases_edit_offender_sar_complaint_approval_flags_page).to be_displayed
+    cases_edit_offender_sar_complaint_approval_flags_page.choose_approval_flags(is_ico, choices)
+
+    click_on 'Continue'
+  end
+
+  def and_i_untick_some_of_approval_options(is_ico, choices)
+    expect(cases_edit_offender_sar_complaint_approval_flags_page).to be_displayed
+    cases_edit_offender_sar_complaint_approval_flags_page.unchoose_approval_flags(is_ico, choices)
+
+    click_on 'Continue'
+  end
+
+  def then_i_expect_the_result_to_be_reflected_on_the_case_show_page(content)
+    expect(cases_show_page).to have_content content
+  end
+
+  def then_i_expect_the_result_to_be_reflected_on_the_case_show_page(content)
+    expect(cases_show_page).to have_content content
+  end
+
+  def then_i_expect_result_removed_from_the_case_show_page(content)
+    expect(cases_show_page).to_not have_content content
+  end
+
+  def when_i_click_approval_flags_change_link
+    cases_show_page.offender_sar_complaint_approval_flags.change_link.click
+  end
+
+  def when_i_click_add_appeal_outcome
+    click_on "Add outcome"
+  end
+
+  def and_i_tick_appeal_outcome(choice)
+    expect(cases_edit_offender_sar_complaint_appeal_outcome_page).to be_displayed
+    cases_edit_offender_sar_complaint_appeal_outcome_page.choose_appeal_outcome(choice)
+
+    click_on 'Continue'
+  end
+
+  def when_i_click_appeal_outcome_change_link
+    cases_show_page.offender_sar_complaint_appeal_outcome.change_link.click
+  end
+
+  def when_i_click_add_outcome
+    click_on "Add outcome"
+  end
+
+  def and_i_tick_outcome(choice)
+    expect(cases_edit_offender_sar_complaint_outcome_page).to be_displayed
+    cases_edit_offender_sar_complaint_outcome_page.choose_outcome(choice)
+
+    click_on 'Continue'
+  end
+
+  def when_i_click_outcome_change_link
+    cases_show_page.offender_sar_complaint_outcome.change_link.click
+  end
+
+  def when_i_click_add_costs
+    click_on "Add costs"
+  end
+
+  def and_i_fill_in_costs(cost1, cost2)
+    expect(cases_edit_offender_sar_complaint_costs_page).to be_displayed
+    cases_edit_offender_sar_complaint_costs_page.fill_in_costs(cost1, cost2)
+
+    click_on 'Continue'
+  end
+
+  def when_i_click_costs_change_link
+    cases_show_page.offender_sar_complaint_costs.change_link.click
   end
 
 end

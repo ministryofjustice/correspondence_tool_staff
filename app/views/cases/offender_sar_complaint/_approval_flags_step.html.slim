@@ -1,0 +1,20 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar_complaint.approval_flags_heading')
+
+= render partial: 'layouts/header'
+
+= form_for @case.object, url: url, as: :offender_sar_complaint do |f|
+  - if @case.ico_complaint?
+    = f.collection_check_boxes :approval_flag_ids,
+                                CaseClosure::ApprovalFlag::ICOOffenderComplaint.active,
+                                :id,
+                                :name
+  - if @case.litigation_complaint?
+    = f.collection_check_boxes :approval_flag_ids,
+                                CaseClosure::ApprovalFlag::LitigationOffenderComplaint.active,
+                                :id,
+                                :name
+                                
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', class: 'button'

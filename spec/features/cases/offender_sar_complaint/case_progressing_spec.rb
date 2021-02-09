@@ -267,6 +267,17 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Close"
     expect(cases_show_page).to have_content "Response is required"
+
+    if offender_sar_complaint.complaint_type == 'Litigation'
+      expect(cases_show_page).to have_content "Add approval"
+      expect(cases_show_page).to have_content "Add outcome"
+      expect(cases_show_page).to have_content "Add costs"
+    end 
+
+    if offender_sar_complaint.complaint_type == 'ICO'
+      expect(cases_show_page).to have_content "Add approval"
+      expect(cases_show_page).to have_content "Add outcome"
+    end 
   end
 
   def ready_to_dispatch
@@ -289,6 +300,16 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to have_content "Closed"
     expect(cases_show_page).to have_content "Reopen"
     expect(cases_show_page).to have_content "Send dispatch letter"
+    if offender_sar_complaint.complaint_type == 'Litigation'
+      expect(cases_show_page).to have_content "Add approval"
+      expect(cases_show_page).to have_content "Add outcome"
+      expect(cases_show_page).to have_content "Add costs"
+    end 
+
+    if offender_sar_complaint.complaint_type == 'ICO'
+      expect(cases_show_page).to have_content "Add approval"
+      expect(cases_show_page).to have_content "Add outcome"
+    end 
   end
 
   def reopen

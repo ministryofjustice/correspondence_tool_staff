@@ -1,0 +1,24 @@
+- if case_details.approval_flag_ids.present?
+  - flags = (case_details.ico_complaint? ? CaseClosure::ApprovalFlag::ICOOffenderComplaint.active : CaseClosure::ApprovalFlag::LitigationOffenderComplaint.active)
+  - first_flag = flags.first
+  - flags.each do |flag|
+    - if flag == first_flag
+      tr.approval-flags.section.section-approval-flags
+        th
+          = flag.name
+        td
+          - if case_details.approval_flag_ids.include?(flag.id)
+            = "Yes"
+          - else 
+            = "No"
+        td
+          = link_to t('common.links.change'), edit_step_case_sar_offender_complaint_path(case_details, "approval_flags")
+    - else 
+      tr.approval-flags
+        th
+          = flag.name
+        td
+          - if case_details.approval_flag_ids.include?(flag.id)
+            = "Yes"
+          - else 
+            = "No"

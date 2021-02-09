@@ -37,6 +37,26 @@ class Workflows::Predicates
     !@kase.litigation_complaint?
   end
 
+  def is_ico_complaint_and_no_approval_flag?
+    @kase.ico_complaint? && @kase.approval_flag_ids.empty?
+  end
+
+  def is_litigation_complaint_and_no_approval_flag?
+    @kase.litigation_complaint? && @kase.approval_flag_ids.empty?
+  end
+
+  def is_ico_complaint_and_no_appeal_outcome?
+    @kase.ico_complaint? && @kase.appeal_outcome_id.blank?
+  end
+
+  def is_litigation_complaint_and_no_outcome?
+    @kase.litigation_complaint? && @kase.outcome_id.blank?
+  end
+
+  def is_litigation_complaint_and_no_costs?
+    @kase.litigation_complaint? && !@kase.has_costs?
+  end
+
   def responder_is_member_of_assigned_team_and_not_overturned?
     responder_is_member_of_assigned_team? && not_overturned?
   end

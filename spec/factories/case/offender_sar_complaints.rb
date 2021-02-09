@@ -52,6 +52,8 @@ FactoryBot.define do
     external_deadline               { Time.zone.today + 20.day }
     number_final_pages              { 5 }
     number_exempt_pages             { 2 }
+    settlement_cost                 { 0 }
+    total_cost                      { 0 }
 
     trait :third_party_complaint do
       third_party { true }

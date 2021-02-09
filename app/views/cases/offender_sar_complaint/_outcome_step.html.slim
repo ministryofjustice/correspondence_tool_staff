@@ -1,0 +1,13 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar_complaint.outcome.heading')
+
+= render partial: 'layouts/header'
+
+= form_for @case.object, url: url, as: :offender_sar_complaint do |f|
+
+  = f.radio_button_fieldset :outcome_id,
+    choices: CaseClosure::OffenderComplaintOutcome.active, value_method: :id, text_method: :name
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', class: 'button'

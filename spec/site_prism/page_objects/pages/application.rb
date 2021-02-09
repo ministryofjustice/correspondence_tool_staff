@@ -61,6 +61,11 @@ module PageObjects
         cases_edit_offender_sar_complaint_date_responded:    'Cases::Edit::OffenderSARComplaintPageDateResponded',
         cases_edit_offender_sar_complaint_date_received:     'Cases::Edit::OffenderSARComplaintPageDateReceived',
         cases_edit_offender_sar_complaint_external_deadline: 'Cases::Edit::OffenderSARComplaintPageExternalDeadline',
+        cases_edit_offender_sar_complaint_appeal_outcome:    'Cases::Edit::OffenderSARComplaintPageAppealOutcome',
+        cases_edit_offender_sar_complaint_outcome:           'Cases::Edit::OffenderSARComplaintPageOutcome',
+        cases_edit_offender_sar_complaint_costs:             'Cases::Edit::OffenderSARComplaintPageCosts',
+        cases_edit_offender_sar_complaint_approval_flags:    'Cases::Edit::OffenderSARComplaintPageApprovalFlags',
+        cases_edit_offender_sar_complaint_external_deadline: 'Cases::Edit::OffenderSARComplaintPageExternalDeadline',
         cases_edit_offender_sar_complaint_reopen:            'Cases::Edit::OffenderSARComplaintPageReopen',
 
         cases_new_case_link:            'Cases::NewCaseLinkPage',

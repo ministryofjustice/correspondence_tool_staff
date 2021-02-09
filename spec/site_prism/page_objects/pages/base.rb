@@ -10,18 +10,22 @@ module PageObjects
       end
 
       def make_check_box_choice(choice_id)
-        if Capybara.current_driver == Capybara.javascript_driver
+        if !find("input##{choice_id}", visible: false).checked?
+          if Capybara.current_driver == Capybara.javascript_driver
           find("input##{choice_id}", visible: false).click
-        else
-          find("input##{choice_id}").set(true)
+          else
+            find("input##{choice_id}").set(true)
+          end
         end
       end
 
       def remove_check_box_choice(choice_id)
-        if Capybara.current_driver == Capybara.javascript_driver
-          find("input##{choice_id}", visible: false).click
-        else
-          find("input##{choice_id}").set(false)
+        if find("input##{choice_id}", visible: false).checked?
+          if Capybara.current_driver == Capybara.javascript_driver
+            find("input##{choice_id}", visible: false).click
+          else
+            find("input##{choice_id}").set(false)
+          end
         end
       end
 

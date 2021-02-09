@@ -831,4 +831,27 @@ describe Case::SAR::OffenderComplaint do
       expect(complaint1.number).to eq "Q#{complaint.original_case.number}-001"
     end
   end
+
+  describe '#has_costs?' do    
+    it "has no costs" do 
+      complaint = create(:offender_sar_complaint)
+      expect(complaint.has_costs?).to eq false
+    end
+
+    it "has settlement cost" do 
+      complaint = create(:offender_sar_complaint, settlement_cost: 123)
+      expect(complaint.has_costs?).to eq true
+    end
+
+    it "has total cost" do 
+      complaint = create(:offender_sar_complaint, total_cost: 456)
+      expect(complaint.has_costs?).to eq true
+    end
+
+    it "has both costs" do 
+      complaint = create(:offender_sar_complaint, settlement_cost: 123.12, total_cost: 456.55)
+      expect(complaint.has_costs?).to eq true
+    end
+  end
+
 end

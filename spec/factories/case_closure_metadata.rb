@@ -397,6 +397,29 @@ FactoryBot.define do
     end
   end
 
+  factory :offender_complaint_outcome, class: CaseClosure::OffenderComplaintOutcome do
+    subtype { nil }
+
+    trait :succeeded do
+      name                        { 'Yes' }
+      abbreviation                { 'succeeded' }
+      sequence_id                 { 900 }
+    end
+
+    trait :not_succeeded do
+      name                        { 'No' }
+      abbreviation                { 'not_succeeded' }
+      sequence_id                 { 910 }
+    end
+
+    trait :settled do
+      name                      { 'Settled' }
+      abbreviation              { 'settled' }
+      sequence_id               { 920 }
+    end
+
+  end
+
   factory :offender_complaint_appeal_outcome, class: CaseClosure::OffenderComplaintAppealOutcome do
     subtype { nil }
 
@@ -416,6 +439,40 @@ FactoryBot.define do
       name                      { 'No ICO response received' }
       abbreviation              { 'not_response_received' }
       sequence_id               { 820 }
+    end
+
+  end
+
+  factory :offender_ico_complaint_approval_flag, class: CaseClosure::ApprovalFlag::ICOOffenderComplaint do
+    subtype { nil }
+
+    trait :first_approval do
+      name                        { 'Has this had Branston operations approval?' }
+      abbreviation                { 'first_approval' }
+      sequence_id                 { 1000 }
+    end
+
+    trait :second_approval do
+      name                        { 'Has this had deputy director information services approval?' }
+      abbreviation                { 'second_approval' }
+      sequence_id                 { 1010 }
+    end
+
+    trait :no_approval_required do
+      name                      { 'No approval needed' }
+      abbreviation              { 'no_approval_required' }
+      sequence_id               { 1020 }
+    end
+
+  end
+
+  factory :offender_litigation_complaint_approval_flag, class: CaseClosure::ApprovalFlag::LitigationOffenderComplaint do
+    subtype { nil }
+
+    trait :fee_approval do
+      name                        { 'Has this had fee approval?' }
+      abbreviation                { 'fee_approval' }
+      sequence_id                 { 1100 }
     end
 
   end

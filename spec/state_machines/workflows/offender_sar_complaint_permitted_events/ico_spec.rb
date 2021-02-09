@@ -52,11 +52,21 @@ describe ConfigurableStateMachine::Machine do
       },
       {
         state: :response_required,
-        specific_events: [:close, :send_dispatch_letter]
+        specific_events: [
+          :close, 
+          :send_dispatch_letter, 
+          :add_complaint_appeal_outcome, 
+          :add_approval_flags_for_ico]
       },
       {
         state: :closed,
-        full_events: [:add_note_to_case, :edit_case, :send_dispatch_letter, :reopen]
+        full_events: [
+          :add_note_to_case, 
+          :edit_case, 
+          :send_dispatch_letter, 
+          :add_complaint_appeal_outcome, 
+          :add_approval_flags_for_ico, 
+          :reopen]
       },
     ].freeze
 

@@ -60,6 +60,22 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               id: 'action--start-complaint',
               class: 'button',
               method: 'post'
+    when :add_approval_flags_for_ico
+      link_to I18n.t('common.case/offender_sar_complaint.add_approval_flags_for_ico'),
+              edit_step_case_sar_offender_complaint_path(@case, "approval_flags"),
+              id: 'action--add_approval_flags_for_ico',
+              class: 'button'
+    when :add_approval_flags_for_litigation
+      link_to I18n.t('common.case/offender_sar_complaint.add_approval_flags_for_litigation'),
+              edit_step_case_sar_offender_complaint_path(@case, "approval_flags"),
+              id: 'action--add_approval_flags_for_litigation',
+              class: 'button'
+    when /add_complaint_([a-zA-Z]*)/
+      page_name = event.to_s.gsub("add_complaint_", "")
+      link_to I18n.t("common.case/offender_sar_complaint.#{event}"),
+              edit_step_case_sar_offender_complaint_path(@case, page_name),
+              id: "action--add_complaint_#{page_name}",
+              class: 'button'
     when :assign_responder
       link_to I18n.t('common.case.assign'),
               new_case_assignment_path(@case),
