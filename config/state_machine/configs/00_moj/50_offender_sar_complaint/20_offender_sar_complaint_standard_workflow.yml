@@ -23,6 +23,8 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_assigned?
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               waiting:
                 mark_as_data_to_be_requested:
                   transition_to: data_to_be_requested
@@ -34,6 +36,8 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_assigned?
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               data_review_required:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
@@ -47,6 +51,8 @@
                 add_note_to_case:
                 send_acknowledgement_letter:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               data_to_be_requested:
                 mark_as_waiting_for_data:
                   transition_to: waiting_for_data
@@ -58,6 +64,8 @@
                 add_note_to_case:
                 send_acknowledgement_letter:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               waiting_for_data:
                 mark_as_ready_for_vetting:
                   transition_to: ready_for_vetting
@@ -73,6 +81,8 @@
                 send_acknowledgement_letter:
                 preview_cover_page:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               ready_for_vetting:
                 mark_as_vetting_in_progress:
                   transition_to: vetting_in_progress
@@ -95,6 +105,8 @@
                 add_note_to_case:
                 preview_cover_page:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               ready_to_copy:
                 mark_as_require_response:
                   if: Workflows::Predicates#is_not_litigation_complaint?
@@ -109,6 +121,8 @@
                 add_data_received:
                 add_note_to_case:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               ready_to_dispatch:
                 close:
                   transition_to: closed
@@ -120,6 +134,8 @@
                 add_data_received:
                 add_note_to_case:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               response_required:
                 close:
                   transition_to: closed
@@ -131,10 +147,14 @@
                 add_data_received:
                 add_note_to_case:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               closed:
                 reopen: 
                   transition_to: to_be_assessed
                 add_note_to_case:
                 send_dispatch_letter:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
 
