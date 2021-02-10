@@ -94,6 +94,8 @@
                 add_note_to_case:
                 preview_cover_page:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
               vetting_in_progress:
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
