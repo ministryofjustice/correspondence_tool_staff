@@ -16,7 +16,6 @@ tr.complaint-type.section-complaint-priority
   td
     = case_details.priority.humanize
 
-- if case_details.litigation_complaint? || case_details.ico_complaint? 
   - if case_details.ico_contact_name.present?
     tr.complaint-type.section-ico-contact-name
       th
