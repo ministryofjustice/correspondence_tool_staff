@@ -11,62 +11,92 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_data_to_be_requested,
           :mark_as_require_response, 
           :mark_as_waiting,
-          :send_acknowledgement_letter]
+          :send_acknowledgement_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :data_review_required, 
         specific_events: [
           :mark_as_vetting_in_progress, 
           :mark_as_require_response,
-          :send_acknowledgement_letter]
+          :send_acknowledgement_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :waiting, 
         specific_events: [
           :mark_as_data_to_be_requested, 
-          :send_acknowledgement_letter]
+          :send_acknowledgement_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :data_to_be_requested,
         specific_events: [
           :mark_as_waiting_for_data, 
-          :send_acknowledgement_letter]
+          :send_acknowledgement_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :waiting_for_data,
         specific_events: [
           :mark_as_ready_for_vetting,
           :send_acknowledgement_letter, 
-          :preview_cover_page]
+          :preview_cover_page,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :ready_for_vetting,
         specific_events: [
           :mark_as_vetting_in_progress, 
-          :preview_cover_page]
+          :preview_cover_page,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :vetting_in_progress,
         specific_events: [
           :mark_as_ready_to_copy, 
-          :preview_cover_page]
+          :preview_cover_page,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :ready_to_copy,
         specific_events: [
-          :mark_as_ready_to_dispatch]
+          :mark_as_ready_to_dispatch,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :ready_to_dispatch,
-        specific_events: [:close, :send_dispatch_letter]
+        specific_events: [
+          :close, 
+          :send_dispatch_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :response_required,
-        specific_events: [:close, :send_dispatch_letter]
+        specific_events: [
+          :close, 
+          :send_dispatch_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :closed,
-        full_events: [:add_note_to_case, :edit_case, :send_dispatch_letter, :reopen]
+        full_events: [
+          :add_note_to_case, 
+          :edit_case, 
+          :send_dispatch_letter, 
+          :reopen, 
+          :reset_to_initial_state
+        ]
       },
     ].freeze
 
