@@ -26,7 +26,6 @@ feature 'offender sar complaint case creation by a manager' do
       requires_data_review
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 2' do
@@ -36,14 +35,12 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 3' do
       to_be_assessed
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 4' do
@@ -52,7 +49,6 @@ feature 'offender sar complaint case creation by a manager' do
       waiting_for_data
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 5' do
@@ -64,7 +60,6 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       requires_response
       close_case
-      reopen
     end
 
   end
@@ -82,7 +77,6 @@ feature 'offender sar complaint case creation by a manager' do
       requires_data_review
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 2' do
@@ -92,14 +86,12 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 3' do
       to_be_assessed
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 4' do
@@ -108,7 +100,6 @@ feature 'offender sar complaint case creation by a manager' do
       waiting_for_data
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 5' do
@@ -120,7 +111,6 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       requires_response
       close_case
-      reopen
     end
 
   end
@@ -138,7 +128,6 @@ feature 'offender sar complaint case creation by a manager' do
       requires_data_review
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 2' do
@@ -148,14 +137,12 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       ready_to_dispatch
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 3' do
       to_be_assessed
       requires_response
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 4' do
@@ -167,7 +154,6 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       ready_to_dispatch
       close_case
-      reopen
     end
 
     scenario 'progressing an offender sar complaint case - scenario 5' do
@@ -180,7 +166,6 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       ready_to_dispatch
       close_case
-      reopen_with_checking_deadline
     end
 
   end
@@ -298,7 +283,6 @@ feature 'offender sar complaint case creation by a manager' do
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Closed"
-    expect(cases_show_page).to have_content "Reopen"
     expect(cases_show_page).to have_content "Send dispatch letter"
     if offender_sar_complaint.complaint_type == 'Litigation'
       expect(cases_show_page).to have_content "Add approval"
@@ -312,33 +296,36 @@ feature 'offender sar complaint case creation by a manager' do
     end 
   end
 
-  def reopen
-    click_on "Reopen"
-    new_deadline = Date.today + 20.days
-    cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(new_deadline)
-    click_on "Confirm"
+  # Commented the following codes because of the removal of reopen features 2021-02-10
+  # If after 3 months, those comments are stil here, then you delete them along other codes
+  # completely
+  # def reopen
+  #   click_on "Reopen"
+  #   new_deadline = Date.today + 20.days
+  #   cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(new_deadline)
+  #   click_on "Confirm"
 
-    expect(cases_show_page).to have_content "Requires data"
-    expect(cases_show_page).to have_content "Requires data review"
-    expect(cases_show_page).to have_content "Requires response"
-    expect(cases_show_page).to have_content "To be assessed"
-    expect(cases_show_page).to have_content "#{new_deadline.day} #{new_deadline.strftime("%b %Y")}"
-  end
+  #   expect(cases_show_page).to have_content "Requires data"
+  #   expect(cases_show_page).to have_content "Requires data review"
+  #   expect(cases_show_page).to have_content "Requires response"
+  #   expect(cases_show_page).to have_content "To be assessed"
+  #   expect(cases_show_page).to have_content "#{new_deadline.day} #{new_deadline.strftime("%b %Y")}"
+  # end
   
-  def reopen_with_checking_deadline
-    click_on "Reopen"
-    expect(cases_edit_offender_sar_complaint_reopen_page).to be_displayed
-    click_on "Confirm"
-    expect(cases_edit_offender_sar_complaint_reopen_page).to have_content "can't be blank"
+  # def reopen_with_checking_deadline
+  #   click_on "Reopen"
+  #   expect(cases_edit_offender_sar_complaint_reopen_page).to be_displayed
+  #   click_on "Confirm"
+  #   expect(cases_edit_offender_sar_complaint_reopen_page).to have_content "can't be blank"
 
-    new_deadline = Date.today + 30.days
-    cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(new_deadline)
-    click_on "Confirm"
+  #   new_deadline = Date.today + 30.days
+  #   cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(new_deadline)
+  #   click_on "Confirm"
 
-    expect(cases_show_page).to have_content "Requires data"
-    expect(cases_show_page).to have_content "Requires data review"
-    expect(cases_show_page).to have_content "Requires response"
-    expect(cases_show_page).to have_content "To be assessed"
-    expect(cases_show_page).to have_content "#{new_deadline.day} #{new_deadline.strftime("%b %Y")}"
-  end
+  #   expect(cases_show_page).to have_content "Requires data"
+  #   expect(cases_show_page).to have_content "Requires data review"
+  #   expect(cases_show_page).to have_content "Requires response"
+  #   expect(cases_show_page).to have_content "To be assessed"
+  #   expect(cases_show_page).to have_content "#{new_deadline.day} #{new_deadline.strftime("%b %Y")}"
+  # end
 end

@@ -152,8 +152,6 @@
                   if: Workflows::Predicates#is_litigation_complaint_and_no_outcome?
                 add_complaint_costs:
                   if: Workflows::Predicates#is_litigation_complaint_and_no_costs?
-                reopen: 
-                  transition_to: to_be_assessed
                 add_note_to_case:
                 send_dispatch_letter:
                 edit_case:

@@ -56,7 +56,7 @@ describe ConfigurableStateMachine::Machine do
       },
       {
         state: :closed,
-        full_events: [:add_note_to_case, :edit_case, :send_dispatch_letter, :reopen]
+        full_events: [:add_note_to_case, :edit_case, :send_dispatch_letter]
       },
     ].freeze
 
