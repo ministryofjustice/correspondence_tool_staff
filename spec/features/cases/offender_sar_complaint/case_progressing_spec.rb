@@ -296,36 +296,5 @@ feature 'offender sar complaint case creation by a manager' do
     end 
   end
 
-  # Commented the following codes because of the removal of reopen features 2021-02-10
-  # If after 3 months, those comments are stil here, then you delete them along other codes
-  # completely
-  # def reopen
-  #   click_on "Reopen"
-  #   new_deadline = Date.today + 20.days
-  #   cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(new_deadline)
-  #   click_on "Confirm"
-
-  #   expect(cases_show_page).to have_content "Requires data"
-  #   expect(cases_show_page).to have_content "Requires data review"
-  #   expect(cases_show_page).to have_content "Requires response"
-  #   expect(cases_show_page).to have_content "To be assessed"
-  #   expect(cases_show_page).to have_content "#{new_deadline.day} #{new_deadline.strftime("%b %Y")}"
-  # end
-  
-  # def reopen_with_checking_deadline
-  #   click_on "Reopen"
-  #   expect(cases_edit_offender_sar_complaint_reopen_page).to be_displayed
-  #   click_on "Confirm"
-  #   expect(cases_edit_offender_sar_complaint_reopen_page).to have_content "can't be blank"
-
-  #   new_deadline = Date.today + 30.days
-  #   cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(new_deadline)
-  #   click_on "Confirm"
-
-  #   expect(cases_show_page).to have_content "Requires data"
-  #   expect(cases_show_page).to have_content "Requires data review"
-  #   expect(cases_show_page).to have_content "Requires response"
-  #   expect(cases_show_page).to have_content "To be assessed"
-  #   expect(cases_show_page).to have_content "#{new_deadline.day} #{new_deadline.strftime("%b %Y")}"
-  # end
 end
+
