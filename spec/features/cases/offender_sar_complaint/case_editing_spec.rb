@@ -111,6 +111,268 @@ feature 'offender sar complaint case editing by a manager' do
     then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(new_external_deadline)
   end
 
+  scenario 'user can edit the the complaint type and and sub type' do
+    expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
+    when_i_progress_the_case_status_past_the_initial_state
+    when_i_update_the_complaint_type_to_ico 
+    then_i_expect_the_case_status_to_be_reset_to_the_inital_case_state
+    and_i_expect_the_ico_contact_details_to_be_visible
+    
+    when_i_progress_the_case_status_past_the_initial_state
+    and_i_update_the_complaint_type_to_litigation
+    then_i_expect_the_case_status_to_be_reset_to_the_inital_case_state
+    and_i_expect_the_ico_and_litigation_details_to_be_visible
+
+    when_i_progress_the_case_status_past_the_initial_state
+    and_i_update_the_litigation_details_but_not_the_type
+    then_i_expect_the_case_status_to_be_the_same
+  end
+
+  def and_i_expect_the_ico_contact_details_to_be_visible
+    expect(cases_show_page).to have_content 'ICO Person'
+    expect(cases_show_page).to have_content 'test@email.com'
+    expect(cases_show_page).to have_content '123456789'
+    expect(cases_show_page).to have_content 'REF123456'
+  end
+
+  def and_i_expect_the_ico_and_litigation_details_to_be_visible
+    and_i_expect_the_ico_contact_details_to_be_visible
+    expect(cases_edit_offender_sar_complaint_type_page).to have_content 'Litigation Person'
+    expect(cases_edit_offender_sar_complaint_type_page).to have_content 'test2@email.com'
+    expect(cases_edit_offender_sar_complaint_type_page).to have_content '2345670'
+    expect(cases_edit_offender_sar_complaint_type_page).to have_content 'REF123607'
+  end
+
+  def and_i_update_the_litigation_details_but_not_the_type
+    complaint_type_update_options = { 
+      name: 'Another Litigation Person',
+      email: 'test3@email.com', 
+      phone: '098673234',
+      reference: 'REF756790567'
+    }
+
+    within '.section-complaint-type' do
+      click_on 'Change'
+    end
+
+    cases_edit_offender_sar_complaint_type_page.edit_complaint_type(
+      'litigation',
+      complaint_type_update_options
+    )
+
+    click_on "Continue"
+  end
+
+  def when_i_update_the_exempt_pages_count
+    click_on 'Update exempt pages'
+    expect(page).to have_content('Update exempt pages')
+    fill_in 'offender_sar_complaint_number_exempt_pages', with: '1541'
+    click_on 'Continue'
+  end
+
+  def when_i_update_the_number_of_final_pages
+    click_on 'Update final page count'
+    expect(page).to have_content('Update final page count')
+    fill_in 'offender_sar_complaint_number_final_pages', with: '2849'
+    click_on 'Continue'
+  end
+
+
+  def when_i_progress_the_case_status_past_the_initial_state
+    click_on "Requires data"
+    click_on "Mark as waiting for data"
+    click_on "Mark as ready for vetting"
+    click_on "Mark as vetting in progress"
+  end
+
+  def and_i_update_the_complaint_type_to_litigation
+    complaint_type_update_options = { 
+      name: 'Litigation Person',
+      email: 'test2@email.com', 
+      phone: '2345670',
+      reference: 'REF123607'
+    }
+
+    within '.section-complaint-type' do
+      click_on 'Change'
+    end
+
+    cases_edit_offender_sar_complaint_type_page.edit_complaint_type(
+      'litigation',
+      complaint_type_update_options
+    )
+
+    click_on "Continue"
+  end
+
+  def when_i_update_the_complaint_type_to_ico
+    complaint_type_update_options = { 
+      name: 'ICO Person',
+      email: 'test@email.com', 
+      phone: '123456789',
+      reference: 'REF123456'
+    }
+
+    within '.section-complaint-type' do
+      click_on 'Change'
+    end
+
+    cases_edit_offender_sar_complaint_type_page.edit_complaint_type(
+      'ico',
+      complaint_type_update_options
+    )
+
+    click_on "Continue"
+  end
+
+  def then_i_expect_the_case_status_to_be_reset_to_the_inital_case_state
+    expect(cases_show_page).to have_content "To be assessed"
+  end
+
+  def then_i_expect_the_case_status_to_be_the_same 
+    expect(cases_show_page).to have_content "Vetting in progress"
+  end
+
+  def then_i_should_see_the_updated_exempt_page_count_on_the_show_page
+    expect(page).to have_content('1541')
+    expect(page).to have_content('Case updated')
+  end
+
+  def then_i_should_see_the_pages_for_dispatch_reflected_on_the_show_page
+    expect(page).to have_content('2849')
+    expect(page).to have_content('Case updated')
+  end
+
+  def when_i_progress_case_to_a_closed_state
+    click_on "Requires data"
+    click_on "Mark as waiting for data"
+    click_on "Mark as ready for vetting"
+    click_on "Mark as vetting in progress"
+    click_on "Mark as ready to copy"
+    click_on "Requires response"
+    click_on "Close case"
+  end
+
+  def and_i_add_date_that_the_case_was_responded_to
+    cases_close_page.fill_in_date_responded(offender_sar_complaint.received_date + 10)
+    click_on "Continue"
+  end
+
+  def then_the_case_show_page_should_be_displayed
+    expect(cases_closure_outcomes_page).not_to be_displayed
+    expect(cases_show_page).to have_content "You've closed this case"
+  end
+
+  def when_i_click_the_response_sent_change_link
+    cases_show_page.offender_sar_external_deadline.change_link.click
+  end
+
+  def and_i_edit_the_date_response_sent
+    expect(page).to have_content('Edit case closure details')
+    cases_edit_offender_sar_complaint_date_responded_page.edit_responded_date(offender_sar_complaint.received_date + 5)
+    cases_edit_offender_sar_complaint_date_responded_page.continue_button.click
+  end
+
+  def then_i_expect_the_new_date_to_be_reflected_on_the_case_show_page
+    expect(cases_show_page).to have_content(I18n.l(offender_sar_complaint.received_date + 5, format: :default))
+  end
+
+  def when_i_click_external_deadline_change_link
+    cases_show_page.offender_sar_external_deadline.change_link.click
+  end
+
+  def and_i_edit_the_external_deadline(external_deadline)
+    cases_edit_offender_sar_complaint_external_deadline_page.edit_external_deadline(external_deadline)
+    cases_edit_offender_sar_complaint_external_deadline_page.continue_button.click
+  end
+
+  def then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(external_deadline)
+    expect(cases_show_page).to have_content(I18n.l(external_deadline, format: :default))
+  end
+
+  def when_i_update_the_exempt_pages_count
+    click_on 'Update exempt pages'
+    expect(page).to have_content('Update exempt pages')
+    fill_in 'offender_sar_complaint_number_exempt_pages', with: '1541'
+    click_on 'Continue'
+  end
+
+  def when_i_update_the_number_of_final_pages
+    click_on 'Update final page count'
+    expect(page).to have_content('Update final page count')
+    fill_in 'offender_sar_complaint_number_final_pages', with: '2849'
+    click_on 'Continue'
+  end
+
+
+  def when_i_progress_the_case_status_past_the_initial_state
+    click_on "Requires data"
+    click_on "Mark as waiting for data"
+    click_on "Mark as ready for vetting"
+    click_on "Mark as vetting in progress"
+  end
+
+  def then_i_expect_the_case_status_to_be_reset_to_the_inital_case_state
+    expect(cases_show_page).to have_content "To be assessed"
+  end
+
+  def then_i_should_see_the_updated_exempt_page_count_on_the_show_page
+    expect(page).to have_content('1541')
+    expect(page).to have_content('Case updated')
+  end
+
+  def then_i_should_see_the_pages_for_dispatch_reflected_on_the_show_page
+    expect(page).to have_content('2849')
+    expect(page).to have_content('Case updated')
+  end
+
+  def when_i_progress_case_to_a_closed_state
+    click_on "Requires data"
+    click_on "Mark as waiting for data"
+    click_on "Mark as ready for vetting"
+    click_on "Mark as vetting in progress"
+    click_on "Mark as ready to copy"
+    click_on "Requires response"
+    click_on "Close case"
+  end
+
+  def and_i_add_date_that_the_case_was_responded_to
+    cases_close_page.fill_in_date_responded(offender_sar_complaint.received_date + 10)
+    click_on "Continue"
+  end
+
+  def then_the_case_show_page_should_be_displayed
+    expect(cases_closure_outcomes_page).not_to be_displayed
+    expect(cases_show_page).to have_content "You've closed this case"
+  end
+
+  def when_i_click_the_response_sent_change_link
+    cases_show_page.offender_sar_external_deadline.change_link.click
+  end
+
+  def and_i_edit_the_date_response_sent
+    expect(page).to have_content('Edit case closure details')
+    cases_edit_offender_sar_complaint_date_responded_page.edit_responded_date(offender_sar_complaint.received_date + 5)
+    cases_edit_offender_sar_complaint_date_responded_page.continue_button.click
+  end
+
+  def then_i_expect_the_new_date_to_be_reflected_on_the_case_show_page
+    expect(cases_show_page).to have_content(I18n.l(offender_sar_complaint.received_date + 5, format: :default))
+  end
+
+  def when_i_click_external_deadline_change_link
+    cases_show_page.offender_sar_external_deadline.change_link.click
+  end
+
+  def and_i_edit_the_external_deadline(external_deadline)
+    cases_edit_offender_sar_complaint_external_deadline_page.edit_external_deadline(external_deadline)
+    cases_edit_offender_sar_complaint_external_deadline_page.continue_button.click
+  end
+
+  def then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(external_deadline)
+    expect(cases_show_page).to have_content(I18n.l(external_deadline, format: :default))
+  end
+
   scenario 'user can add/edit approvals for ico complaint case', js: true do
     cases_show_page.load(id: offender_sar_ico_complaint.id)
     expect(cases_show_page).to be_displayed(id: offender_sar_ico_complaint.id)
@@ -220,6 +482,17 @@ feature 'offender sar complaint case editing by a manager' do
     expect(page).to have_content('Update final page count')
     fill_in 'offender_sar_complaint_number_final_pages', with: '2849'
     click_on 'Continue'
+  end
+
+  def when_i_progress_the_case_status_past_the_initial_state
+    click_on "Requires data"
+    click_on "Mark as waiting for data"
+    click_on "Mark as ready for vetting"
+    click_on "Mark as vetting in progress"
+  end
+
+  def then_i_expect_the_case_status_to_be_reset_to_the_inital_case_state
+    expect(cases_show_page).to have_content "To be assessed"
   end
 
   def then_i_should_see_the_updated_exempt_page_count_on_the_show_page

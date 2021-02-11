@@ -57,5 +57,6 @@ en:
     mark_as_data_to_be_requested: Requires data
     mark_as_require_data_review: Requires data review
     mark_as_require_response: Requires response
+    reset_to_initial_state: Case type changed, and status reset
     reopen: Reopen
     reopen__desc: Case reopened
