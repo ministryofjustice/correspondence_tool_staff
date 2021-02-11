@@ -26,5 +26,4 @@ class CaseUpdaterService
 
     end
   end
-
 end
