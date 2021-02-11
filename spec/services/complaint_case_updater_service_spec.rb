@@ -12,7 +12,7 @@ describe ComplaintCaseUpdaterService do
       @service = ComplaintCaseUpdaterService.new(user, kase, params)
     end
 
-    context 'when the case type the case state is updated' do
+    context 'when the case type is changed' do
       let(:params) { 
         {
           "complaint_type"=>"litigation_complaint", 
@@ -20,7 +20,7 @@ describe ComplaintCaseUpdaterService do
         }
       }
 
-      it 'also resets the case status to to_be_assessed' do
+      it 'the case status to is resent to to_be_assessed' do
         @service.call
 
         expect(kase.current_state).to eq 'to_be_assessed'
