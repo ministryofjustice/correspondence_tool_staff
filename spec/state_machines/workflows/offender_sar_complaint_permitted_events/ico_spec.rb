@@ -10,20 +10,26 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_require_data_review, 
           :mark_as_data_to_be_requested,
           :mark_as_require_response, 
-          :send_acknowledgement_letter]
+          :send_acknowledgement_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :data_review_required, 
         specific_events: [
           :mark_as_vetting_in_progress, 
           :mark_as_require_response,
-          :send_acknowledgement_letter]
+          :send_acknowledgement_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :data_to_be_requested,
         specific_events: [
           :mark_as_waiting_for_data, 
-          :send_acknowledgement_letter]
+          :send_acknowledgement_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :waiting_for_data,
@@ -31,24 +37,32 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_ready_for_vetting,
           :mark_as_require_response, 
           :send_acknowledgement_letter, 
-          :preview_cover_page]
+          :preview_cover_page,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :ready_for_vetting,
         specific_events: [
           :mark_as_vetting_in_progress, 
-          :preview_cover_page]
+          :preview_cover_page,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :vetting_in_progress,
         specific_events: [
           :mark_as_ready_to_copy, 
-          :preview_cover_page]
+          :preview_cover_page,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :ready_to_copy,
         specific_events: [
-          :mark_as_require_response]
+          :mark_as_require_response,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :response_required,
@@ -56,7 +70,9 @@ describe ConfigurableStateMachine::Machine do
           :close, 
           :send_dispatch_letter, 
           :add_complaint_appeal_outcome, 
-          :add_approval_flags_for_ico]
+          :add_approval_flags_for_ico,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :closed,
@@ -66,7 +82,9 @@ describe ConfigurableStateMachine::Machine do
           :send_dispatch_letter, 
           :add_complaint_appeal_outcome, 
           :add_approval_flags_for_ico, 
-          :reopen]
+          :reopen,
+          :reset_to_initial_state
+        ]
       },
     ].freeze
 
