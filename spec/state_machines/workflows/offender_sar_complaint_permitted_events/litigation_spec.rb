@@ -86,7 +86,6 @@ describe ConfigurableStateMachine::Machine do
           :close, 
           :send_dispatch_letter,
           :reset_to_initial_state,
-          :send_dispatch_letter, 
           :add_complaint_costs, 
           :add_complaint_outcome, 
           :add_approval_flags_for_litigation]
@@ -98,7 +97,6 @@ describe ConfigurableStateMachine::Machine do
           :add_note_to_case, 
           :edit_case, 
           :send_dispatch_letter, 
-          :reopen, 
           :reset_to_initial_state,
           :add_complaint_costs, 
           :add_complaint_outcome, 
