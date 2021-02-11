@@ -82,7 +82,6 @@ describe ConfigurableStateMachine::Machine do
           :send_dispatch_letter, 
           :add_complaint_appeal_outcome, 
           :add_approval_flags_for_ico, 
-          :reopen,
           :reset_to_initial_state
         ]
       },

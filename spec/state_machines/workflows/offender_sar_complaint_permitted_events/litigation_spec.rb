@@ -100,8 +100,7 @@ describe ConfigurableStateMachine::Machine do
           :reset_to_initial_state,
           :add_complaint_costs, 
           :add_complaint_outcome, 
-          :add_approval_flags_for_litigation, 
-          :reopen]
+          :add_approval_flags_for_litigation]
       },
     ].freeze
 
