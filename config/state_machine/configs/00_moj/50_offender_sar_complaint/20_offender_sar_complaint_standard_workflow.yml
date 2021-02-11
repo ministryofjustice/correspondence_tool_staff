@@ -139,6 +139,16 @@
                 reset_to_initial_state:
                   transition_to: to_be_assessed
               response_required:
+                add_approval_flags_for_ico:
+                  if: Workflows::Predicates#is_ico_complaint_and_no_approval_flag?
+                add_approval_flags_for_litigation:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_approval_flag?
+                add_complaint_appeal_outcome:
+                  if: Workflows::Predicates#is_ico_complaint_and_no_appeal_outcome?
+                add_complaint_outcome:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_outcome?
+                add_complaint_costs:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_costs?
                 close:
                   transition_to: closed
                 assign_to_team_member:
@@ -152,6 +162,16 @@
                 reset_to_initial_state:
                   transition_to: to_be_assessed
               closed:
+                add_approval_flags_for_ico:
+                  if: Workflows::Predicates#is_ico_complaint_and_no_approval_flag?
+                add_approval_flags_for_litigation:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_approval_flag?
+                add_complaint_appeal_outcome:
+                  if: Workflows::Predicates#is_ico_complaint_and_no_appeal_outcome?
+                add_complaint_outcome:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_outcome?
+                add_complaint_costs:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_costs?
                 reopen: 
                   transition_to: to_be_assessed
                 add_note_to_case:

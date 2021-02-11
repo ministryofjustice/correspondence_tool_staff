@@ -180,7 +180,7 @@ feature 'offender sar complaint case creation by a manager' do
       ready_to_copy
       ready_to_dispatch
       close_case
-      reopen
+      reopen_with_checking_deadline
     end
 
   end
@@ -267,6 +267,17 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Close"
     expect(cases_show_page).to have_content "Response is required"
+
+    if offender_sar_complaint.complaint_type == 'Litigation'
+      expect(cases_show_page).to have_content "Add approval"
+      expect(cases_show_page).to have_content "Add outcome"
+      expect(cases_show_page).to have_content "Add costs"
+    end 
+
+    if offender_sar_complaint.complaint_type == 'ICO'
+      expect(cases_show_page).to have_content "Add approval"
+      expect(cases_show_page).to have_content "Add outcome"
+    end 
   end
 
   def ready_to_dispatch
@@ -289,17 +300,45 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to have_content "Closed"
     expect(cases_show_page).to have_content "Reopen"
     expect(cases_show_page).to have_content "Send dispatch letter"
+    if offender_sar_complaint.complaint_type == 'Litigation'
+      expect(cases_show_page).to have_content "Add approval"
+      expect(cases_show_page).to have_content "Add outcome"
+      expect(cases_show_page).to have_content "Add costs"
+    end 
+
+    if offender_sar_complaint.complaint_type == 'ICO'
+      expect(cases_show_page).to have_content "Add approval"
+      expect(cases_show_page).to have_content "Add outcome"
+    end 
   end
 
   def reopen
     click_on "Reopen"
-    cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(Date.today + 20.days)
+    new_deadline = Date.today + 20.days
+    cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(new_deadline)
     click_on "Confirm"
 
     expect(cases_show_page).to have_content "Requires data"
     expect(cases_show_page).to have_content "Requires data review"
     expect(cases_show_page).to have_content "Requires response"
     expect(cases_show_page).to have_content "To be assessed"
-    expect(cases_show_page).to have_content (Date.today + 20.days).strftime("%-d %b %Y")
-  end 
+    expect(cases_show_page).to have_content "#{new_deadline.day} #{new_deadline.strftime("%b %Y")}"
+  end
+  
+  def reopen_with_checking_deadline
+    click_on "Reopen"
+    expect(cases_edit_offender_sar_complaint_reopen_page).to be_displayed
+    click_on "Confirm"
+    expect(cases_edit_offender_sar_complaint_reopen_page).to have_content "can't be blank"
+
+    new_deadline = Date.today + 30.days
+    cases_edit_offender_sar_complaint_reopen_page.fill_in_external_deadline(new_deadline)
+    click_on "Confirm"
+
+    expect(cases_show_page).to have_content "Requires data"
+    expect(cases_show_page).to have_content "Requires data review"
+    expect(cases_show_page).to have_content "Requires response"
+    expect(cases_show_page).to have_content "To be assessed"
+    expect(cases_show_page).to have_content "#{new_deadline.day} #{new_deadline.strftime("%b %Y")}"
+  end
 end

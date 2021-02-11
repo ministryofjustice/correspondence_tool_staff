@@ -18,7 +18,8 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
                  gld_reference: :string,
                  priority: :string, 
                  total_cost: :decimal, 
-                 settlement_cost: :decimal
+                 settlement_cost: :decimal,
+                 approval_flag_ids: [:integer, array: true, default: []]
 
   validates :complaint_type, presence: true
   validates :complaint_subtype, presence: true
@@ -29,6 +30,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validate :validate_external_deadline
 
   belongs_to :appeal_outcome, class_name: 'CaseClosure::OffenderComplaintAppealOutcome'
+  belongs_to :outcome, class_name: 'CaseClosure::OffenderComplaintOutcome'
 
   enum complaint_type: {
     standard_complaint: 'standard_complaint',
@@ -152,6 +154,14 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     Assignment.where(case_id: self.id, role: 'responding').count > 0
   end
 
+  def approval_flags
+    CaseClosure::Metadatum.where(id: approval_flag_ids)
+  end
+
+  def has_costs?
+    has_settlement_cost? || has_total_cost?
+  end 
+
   private
 
   def validate_external_deadline_required
@@ -219,6 +229,14 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     rescue
       retry if (retries += 1) < 3
     end
+  end
+
+  def has_settlement_cost?
+    self.settlement_cost.present? && self.settlement_cost > 0
+  end
+
+  def has_total_cost?
+    self.total_cost.present? && self.total_cost > 0
   end
 
 end

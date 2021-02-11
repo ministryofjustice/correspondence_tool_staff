@@ -110,6 +110,22 @@ module PageObjects
           element :change_link, 'a'
         end
 
+        section :offender_sar_complaint_approval_flags, '.section-approval-flags' do
+          element :change_link, 'a'
+        end
+
+        section :offender_sar_complaint_appeal_outcome, '.section-appeal-outcome' do
+          element :change_link, 'a'
+        end
+
+        section :offender_sar_complaint_outcome, '.section-outcome' do
+          element :change_link, 'a'
+        end
+
+        section :offender_sar_complaint_costs, '.section-costs' do
+          element :change_link, 'a'
+        end
+
         element :offender_sar_complaint_subtype, '.section-complaint-subtype'
         element :offender_sar_complaint_priority, '.section-complaint-priority'
         element :offender_sar_complaint_ico_contact_name, '.section-ico-contact-name'

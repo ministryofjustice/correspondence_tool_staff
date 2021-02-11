@@ -24,12 +24,12 @@ tbody.response-details
       th = "Was the information held?"
       td = case_details.info_held_status.name
 
-  - if case_details.appeal_outcome.present?
+  - if case_details.appeal_outcome.present? && !case_details.type_of_offender_sar?
     tr.appeal_outcome
       th = t('common.case.appeal_outcome')
       td = case_details.appeal_outcome.name
 
-  - if case_details.outcome.present?
+  - if case_details.outcome.present? && !case_details.type_of_offender_sar?
     tr.outcome
       th = t('common.case.outcome')
       td = case_details.outcome.name

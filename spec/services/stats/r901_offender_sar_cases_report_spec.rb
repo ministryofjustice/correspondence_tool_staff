@@ -33,8 +33,10 @@ module Stats
           offender_sar_case.number,
           offender_sar_case.decorate.pretty_type, 
           "",
+          "", 
           offender_sar_case.received_date,
           offender_sar_case.external_deadline,
+          "", 
           "Data subject",
           nil,
           "testing analyse_case",
@@ -42,14 +44,14 @@ module Stats
           0,
           "in time",
           "Waiting for data",
-          1,
+          offender_sar_case.num_days_taken,
           "No"
         )
       end
 
       it 'returns correct columns for offender sar complaint' do
         report = described_class.new()
-        offender_sar_complaint = create :offender_sar_complaint, :waiting_for_data, 
+        offender_sar_complaint = create :accepted_complaint_case, :waiting_for_data, 
                                     subject_type: 'ex_probation_service_user',
                                     subject_full_name: 'testing analyse_complaint_case'
         result = report.analyse_case(offender_sar_complaint)
@@ -57,8 +59,10 @@ module Stats
           offender_sar_complaint.number,
           offender_sar_complaint.decorate.pretty_type, 
           offender_sar_complaint.complaint_subtype.humanize,
+          "Normal", 
           offender_sar_complaint.received_date,
           offender_sar_complaint.external_deadline,
+          offender_sar_complaint.responder.full_name, 
           "Data subject",
           nil,
           "testing analyse_complaint_case",
@@ -66,7 +70,7 @@ module Stats
           0,
           "in time",
           "Waiting for data",
-          1,
+          offender_sar_complaint.num_days_taken,
           "No"
         )
       end

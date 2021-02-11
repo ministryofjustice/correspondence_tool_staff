@@ -85,8 +85,12 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :close, 
           :send_dispatch_letter,
-          :reset_to_initial_state
-        ]
+          :reset_to_initial_state,
+          :send_dispatch_letter, 
+          :add_complaint_costs, 
+          :add_complaint_outcome, 
+          :add_approval_flags_for_litigation]
+
       },
       {
         state: :closed,
@@ -95,8 +99,11 @@ describe ConfigurableStateMachine::Machine do
           :edit_case, 
           :send_dispatch_letter, 
           :reopen, 
-          :reset_to_initial_state
-        ]
+          :reset_to_initial_state,
+          :add_complaint_costs, 
+          :add_complaint_outcome, 
+          :add_approval_flags_for_litigation, 
+          :reopen]
       },
     ].freeze
 

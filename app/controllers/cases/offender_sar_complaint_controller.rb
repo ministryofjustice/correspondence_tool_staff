@@ -26,27 +26,30 @@ module Cases
     def reopen
       authorize @case, :can_be_reopened?
       if @case.standard_complaint?
+        @case.received_date = Date.today
         @case.object.external_deadline = @case.object.deadline_calculator.external_deadline
       end
-      render :reopen      
+      render :reopen
     end 
 
     def confirm_reopen
       authorize @case, :can_be_reopened?
-      service = CaseReopenService.new(
-        current_user,
-        @case,
-        reopen_offender_sar_complaint_params
-      )
-      service.call
-  
-      if service.result == :ok
-        flash[:notice] = "You have reopened case #{@case.number}."
-        redirect_to case_path(@case)
-      else
-        @case.assign_attributes(reopen_offender_sar_complaint_params)
-        render :reopen
-      end       
+
+      @case.assign_attributes(reopen_offender_sar_complaint_params)
+      if @case.valid?
+        service = CaseReopenService.new(
+          current_user,
+          @case,
+          reopen_offender_sar_complaint_params
+        )
+        service.call
+    
+        if service.result == :ok
+          flash[:notice] = "You have reopened case #{@case.number}."
+          redirect_to case_path(@case) and return 
+        end
+      end
+      render :reopen
     end
 
     def set_case_types
@@ -62,7 +65,7 @@ module Cases
     end
 
     def edit_params
-      create_offender_sar_complaint_params
+      clean_empty_approval_flags(create_offender_sar_complaint_params)
     end
 
     def update_params
@@ -81,10 +84,21 @@ module Cases
       "#{@correspondence_type_key}_state".to_sym
     end
 
+
     def case_updater_service
       # overides base class method to utilise specific
       # service in complaint case updates
       ComplaintCaseUpdaterService
     end
+
+    private 
+
+    def clean_empty_approval_flags(permitted_params)
+      if permitted_params["approval_flag_ids"].present?
+        permitted_params["approval_flag_ids"].delete("")
+      end
+      permitted_params
+    end
+
   end
 end

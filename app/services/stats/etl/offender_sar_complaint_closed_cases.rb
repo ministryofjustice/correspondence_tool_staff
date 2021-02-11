@@ -21,7 +21,8 @@ module Stats
         'Pages for dispatch',
         'Exempt pages',
         'Final page count',
-        'Outcome of complaint', 
+        'Outcome of ICO complaint', 
+        'Outcome of litigation complaint', 
         'Cost paid', 
         'Settlement paid'
       ]
@@ -42,6 +43,7 @@ module Stats
         'number_of_exempt_pages',
         'number_of_final_pages', 
         'appeal_outcome', 
+        'outcome', 
         'total_cost', 
         'settlement_cost'
       ]
