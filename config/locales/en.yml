@@ -1108,7 +1108,7 @@ en:
       check_sar_details_heading: Check details of the SAR
       external_deadline_heading: Set a deadline for this complaint
       approval_flags_heading: Confirm levels of approval
-      complaint_types_heading: Choose complaint type
+      complaint_types_heading: What is the complaint type?
       costs_heading: Confirm costs for this case
       settlement_cost: Settlement cost
       total_cost: Total cost
@@ -1119,8 +1119,10 @@ en:
         heading: Confirm the outcome
         title: Was the case successful?
       received_date:
-        heading: When was the complaint received?
+        heading: When was the complaint received at MOJ?
       reopen_reset_external_deadline_heading: 'Reopen: set a new deadline'
+      recipient_details_heading: Where should the complaint response be sent?
+      requester_heading: Who is making the complaint?
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
