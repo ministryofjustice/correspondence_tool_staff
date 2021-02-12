@@ -14,6 +14,8 @@
     = t('common.case.header_case_number')
   = "#{@case.number} - #{@case.pretty_type}"
 
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
 = render partial: 'layouts/header'
 
 div class="case-#{@correspondence_type_key}"
