@@ -621,7 +621,7 @@ DEPENDENCIES
   caxlsx_rails
   codeclimate-test-reporter (~> 1.0)
   colorize
-  config (~> 2.0)
+  config (~> 2.2)
   devise (~> 4.7.2)
   draper (= 4.0.1)
   dropzonejs-rails (>= 0.8)
