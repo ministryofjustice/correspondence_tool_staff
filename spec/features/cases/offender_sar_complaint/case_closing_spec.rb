@@ -23,6 +23,7 @@ feature 'Closing a case' do
           open_cases_page.load
           close_case(fully_granted_case)
 
+          expect(cases_close_page).to have_link('Back', href: "/cases/#{fully_granted_case.id}")
           cases_close_page.fill_in_date_responded(0.days.ago)
           cases_close_page.click_on 'Continue'
 
@@ -51,6 +52,7 @@ feature 'Closing a case' do
           open_cases_page.load(timeliness: 'late')
           close_case(fully_granted_case)
 
+          expect(cases_close_page).to have_link('Back', href: "/cases/#{fully_granted_case.id}")
           cases_close_page.fill_in_date_responded(0.days.ago)
           cases_close_page.click_on 'Continue'
 
