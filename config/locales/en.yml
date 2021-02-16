@@ -1123,6 +1123,7 @@ en:
       reopen_reset_external_deadline_heading: 'Reopen: set a new deadline'
       recipient_details_heading: Where should the complaint response be sent?
       requester_heading: Who is making the complaint?
+      request_details_heading: What is the date on the complaint?
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
