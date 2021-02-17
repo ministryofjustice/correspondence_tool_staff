@@ -28,7 +28,8 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseHighProfileFilter,       
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
-      CaseFilter::CaseComplaintPriorityFilter],
+      CaseFilter::CaseComplaintPriorityFilter,
+      CaseFilter::CaseworkerFilter],
     "closed" => [
       CaseFilter::ReceivedDateFilter, 
       CaseFilter::DateRespondedFilter, 
