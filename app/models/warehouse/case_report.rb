@@ -184,7 +184,7 @@ module Warehouse
           case_report.outcome = kase.original_case.outcome&.name
           case_report.refusal_reason = kase.original_case.refusal_reason&.name
           case_report.exemptions = self.exemptions(kase.original_case)
-          case_report.appeal_outcome = kase.decorate.ico_decision
+          case_report.appeal_outcome = kase.decorate.pretty_ico_decision
         else
           case_report.info_held_status_id = kase.info_held_status&.id
           case_report.refusal_reason_id =  kase.refusal_reason&.id

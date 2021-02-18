@@ -32,17 +32,17 @@ describe Case::ICO::BaseDecorator do
     end
   end
 
-  describe '#ico_decision' do
+  describe '#pretty_ico_decision' do
 
     it 'returns upheld descrption' do
       closed_ico_foi_case.object.date_ico_decision_received = Date.new(2017, 8, 13)
-      expect(closed_ico_foi_case.ico_decision)
+      expect(closed_ico_foi_case.pretty_ico_decision)
           .to eq 'Upheld by ICO'
     end
 
     it 'returns overturned descrption' do
       closed_overturned_foi_case.object.date_ico_decision_received = Date.new(2017, 8, 13)
-      expect(closed_overturned_foi_case.ico_decision)
+      expect(closed_overturned_foi_case.pretty_ico_decision)
           .to eq "Overturned by ICO"
     end
   end

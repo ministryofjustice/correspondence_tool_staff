@@ -21,7 +21,7 @@ class Case::ICO::BaseDecorator < Case::BaseDecorator
     end.render.html_safe
   end
 
-  def ico_decision
+  def pretty_ico_decision
     if object.ico_decision.present?
       "#{object.ico_decision.capitalize} by ICO"
     else

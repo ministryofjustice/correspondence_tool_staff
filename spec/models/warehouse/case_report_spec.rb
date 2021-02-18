@@ -148,7 +148,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(original_case_result['Outcome']).to eq case_report.outcome
       expect(original_case_result['Refusal reason']).to eq case_report.refusal_reason
       expect(original_case_result['Exemptions']).to eq case_report.exemptions
-      expect(case_report.appeal_outcome).to eq kase.decorate.ico_decision
+      expect(case_report.appeal_outcome).to eq kase.decorate.pretty_ico_decision
     else 
       expect(result['Info held']).to eq case_report.info_held
       expect(result['Outcome']).to eq case_report.outcome
