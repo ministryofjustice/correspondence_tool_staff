@@ -36,6 +36,8 @@ en:
         <<: *list_filter_type
       filter_high_profile:
         <<: *list_filter_type
+      filter_caseworker:
+        <<: *list_filter_type
     headings:
       filter_status: Filter by open/closed cases
       filter_cases: Filter cases
@@ -51,6 +53,7 @@ en:
       filter_complaint_subtype: Filter by complaint sub type
       filter_complaint_priority: Filter by priority
       filter_high_profile: Filter by sensitivity
+      filter_caseworker: Filter by complaint caseworker
       date_headings:
         filter_received_date: 'Received between'
         filter_date_responded: 'Responded between'
@@ -74,3 +77,5 @@ en:
     filter_timeliness:
       in_time: 'In time'
       late: 'Late'
+    filter_caseworker:
+      not_assigned: Not assigned yet
