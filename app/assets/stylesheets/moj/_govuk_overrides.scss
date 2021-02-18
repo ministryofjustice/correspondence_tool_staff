@@ -48,3 +48,10 @@ legend .heading-small{
 .form-control-1-1 {
   width: 100%;
 }
+
+@include media(mobile) {
+  #search_query_search_text { 
+    width: calc(100% - 12px)
+  }
+  #search-button { margin: 10px 0 0 0; width: 100%;} 
+}
