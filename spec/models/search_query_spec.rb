@@ -74,6 +74,7 @@ describe SearchQuery do
                                                  :filter_complaint_type,
                                                  :filter_complaint_priority, 
                                                  :filter_complaint_subtype, 
+                                                 :filter_caseworker,
                                                  :date_responded_from, 
                                                  :date_responded_to, 
                                                  :received_date_from, 
@@ -221,7 +222,8 @@ describe SearchQuery do
                                                 :filter_high_profile,
                                                 :filter_complaint_type,
                                                 :filter_complaint_priority, 
-                                                :filter_complaint_subtype, 
+                                                :filter_complaint_subtype,
+                                                :filter_caseworker,
                                                 :date_responded_from, 
                                                 :date_responded_to, 
                                                 :received_date_from, 
@@ -582,7 +584,8 @@ describe SearchQuery do
           CaseFilter::CaseHighProfileFilter,       
           CaseFilter::CaseComplaintTypeFilter,
           CaseFilter::CaseComplaintSubtypeFilter,
-          CaseFilter::CaseComplaintPriorityFilter, 
+          CaseFilter::CaseComplaintPriorityFilter,
+          CaseFilter::CaseworkerFilter
         ]
       end
 

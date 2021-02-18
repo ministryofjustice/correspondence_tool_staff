@@ -125,6 +125,8 @@ class Case::Base < ApplicationRecord
 
   scope :accepted, -> { joins(:assignments)
                           .where(assignments: {state: ['accepted']} ) }
+  scope :accepted_responding, -> { joins(:assignments)
+                                    .where(assignments: {state: ['accepted'], role: 'responding'} ) }
   scope :unaccepted, -> { joins(:assignments)
                             .where.not(assignments: {state: 'accepted'} ) }
   scope :pending_accepted, -> { joins(:assignments).where(assignments: {state: %w[pending accepted] } ) }
