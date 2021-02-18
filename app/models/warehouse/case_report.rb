@@ -169,6 +169,7 @@ module Warehouse
         boolean ? 'Yes' : nil
       end
 
+      #rubocop:disable Metrics/CyclomaticComplexity
       def generate_case_closure_details_for_report(kase, case_report)
         # Based on decison from London team, for ICO cases, the closure details 
         # should be pulled out from related original case (FOI) except its own 
@@ -196,6 +197,7 @@ module Warehouse
           case_report.appeal_outcome = kase.appeal_outcome&.name
         end 
       end
+      #rubocop:enable Metrics/CyclomaticComplexity
 
       def exemptions(kase)
         kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
