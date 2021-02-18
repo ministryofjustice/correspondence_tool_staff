@@ -95,6 +95,18 @@ class ReportTypeSeeder
                          default_reporting_period: 'year_to_date',
                          offender_sar_complaint: true,
                          etl: false},
+                {abbr: 'R208',
+                         full_name: 'Monthly report (Complaint - Litigation)',
+                         class_name: 'Stats::R208OffenderLitigationComplaintMonthlyPerformanceReport',
+                         custom_report: true,
+                         standard_report: true,
+                         foi: false,
+                         sar: false,
+                         offender_sar: false,
+                         seq_id: 1400,
+                         default_reporting_period: 'year_to_date',
+                         offender_sar_complaint: true,
+                         etl: false},
   ]
 
   def seed!(verbose: false)
