@@ -30,11 +30,7 @@ module Warehouse
         case_report.director_general_name_property_id = kase.responding_team&.business_group&.properties&.lead&.singular_or_nil&.id # Director General name
         case_report.director_name_property_id = kase.responding_team&.directorate&.properties&.lead&.singular_or_nil&.id # Director name
         case_report.deputy_director_name_property_id = kase.responding_team&.properties&.lead&.singular_or_nil&.id # Deputy Director name
-        case_report.info_held_status_id = kase.info_held_status&.id
-        case_report.refusal_reason_id = kase.refusal_reason&.id
-        case_report.outcome_id = kase.outcome&.id
-        case_report.appeal_outcome_id = kase.appeal_outcome&.id
-
+        
         # Report fields - for output
         case_report.number = kase.number
         case_report.case_type = kase.decorate.pretty_type
@@ -50,13 +46,11 @@ module Warehouse
         case_report.name = kase.name
         case_report.requester_type = kase.sar? ? nil : kase.requester_type.humanize
         case_report.message = self.dequote_and_truncate(kase.message)
-        case_report.info_held = kase.info_held_status&.name
-        case_report.outcome = kase.outcome&.name
-        case_report.refusal_reason = kase.refusal_reason&.name
-        case_report.exemptions = kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
+        
+        self.generate_case_closure_details_for_report(kase, case_report)
+
         case_report.postal_address = kase.postal_address
         case_report.email = kase.email
-        case_report.appeal_outcome = kase.appeal_outcome&.name
         case_report.third_party = kase.respond_to?(:third_party) ? self.humanize_boolean(kase.third_party) : nil
         case_report.reply_method = kase.respond_to?(:reply_method) ? kase.reply_method.humanize : nil
         case_report.sar_subject_type = kase.respond_to?(:subject_type) ? kase.subject_type.humanize : nil
@@ -173,6 +167,38 @@ module Warehouse
 
       def humanize_boolean(boolean)
         boolean ? 'Yes' : nil
+      end
+
+      def generate_case_closure_details_for_report(kase, case_report)
+        # Based on decison from London team, for ICO cases, the closure details 
+        # should be pulled out from related original case (FOI) except its own 
+        # ico_decision should be treated as appeal outcome.
+        case_report.appeal_outcome_id = kase.appeal_outcome&.id
+        if kase.ico?
+          case_report.info_held_status_id = kase.original_case.info_held_status&.id
+          case_report.refusal_reason_id = kase.original_case.refusal_reason&.id
+          case_report.outcome_id = kase.original_case.outcome&.id
+  
+          case_report.info_held = kase.original_case.info_held_status&.name 
+          case_report.outcome = kase.original_case.outcome&.name
+          case_report.refusal_reason = kase.original_case.refusal_reason&.name
+          case_report.exemptions = self.exemptions(kase.original_case)
+          case_report.appeal_outcome = kase.decorate.ico_decision
+        else
+          case_report.info_held_status_id = kase.info_held_status&.id
+          case_report.refusal_reason_id =  kase.refusal_reason&.id
+          case_report.outcome_id = kase.outcome&.id
+  
+          case_report.info_held = kase.info_held_status&.name
+          case_report.outcome = kase.outcome&.name
+          case_report.refusal_reason = kase.refusal_reason&.name
+          case_report.exemptions = self.exemptions(kase)
+          case_report.appeal_outcome = kase.appeal_outcome&.name
+        end 
+      end
+
+      def exemptions(kase)
+        kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
       end
 
     end

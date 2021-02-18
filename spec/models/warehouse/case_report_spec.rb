@@ -140,6 +140,24 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
     end
   end
 
+  def compare_closuredetails(kase, result, case_report)
+    if kase.ico?
+      original_case_csv_row = CSVExporter.new(kase.original_case).to_csv
+      original_case_result = CSVExporter::CSV_COLUMN_HEADINGS.zip(original_case_csv_row).to_h  
+      expect(original_case_result['Info held']).to eq case_report.info_held
+      expect(original_case_result['Outcome']).to eq case_report.outcome
+      expect(original_case_result['Refusal reason']).to eq case_report.refusal_reason
+      expect(original_case_result['Exemptions']).to eq case_report.exemptions
+      expect(case_report.appeal_outcome).to eq kase.decorate.ico_decision
+    else 
+      expect(result['Info held']).to eq case_report.info_held
+      expect(result['Outcome']).to eq case_report.outcome
+      expect(result['Refusal reason']).to eq case_report.refusal_reason
+      expect(result['Exemptions']).to eq case_report.exemptions
+      expect(result['Appeal outcome']).to eq case_report.appeal_outcome
+    end 
+  end
+
   # Compares CSVExporter output with CaseReport output
   #rubocop:disable Metrics/MethodLength
   def compare_output(kase)
@@ -158,13 +176,11 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(result['Name']).to eq case_report.name
       expect(result['Requester type']).to eq case_report.requester_type
       expect(result['Message']).to eq case_report.message
-      expect(result['Info held']).to eq case_report.info_held
-      expect(result['Outcome']).to eq case_report.outcome
-      expect(result['Refusal reason']).to eq case_report.refusal_reason
-      expect(result['Exemptions']).to eq case_report.exemptions
+      
+      compare_closuredetails(kase, result, case_report)
+
       expect(result['Postal address']).to eq case_report.postal_address
       expect(result['Email']).to eq case_report.email
-      expect(result['Appeal outcome']).to eq case_report.appeal_outcome
       expect(result['Third party']).to eq case_report.third_party
       expect(result['Reply method']).to eq case_report.reply_method
       expect(result['SAR Subject type']).to eq case_report.sar_subject_type
@@ -195,5 +211,6 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(result['Date created']).to eq case_report.date_created&.strftime('%F')
     end
     #rubocop:enable Metrics/MethodLength
+
   end
 end
