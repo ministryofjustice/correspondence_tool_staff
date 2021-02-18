@@ -36,30 +36,30 @@ module Stats
           @sar_1 = create :accepted_sar, identifier: 'sar-1', received_date: @period_start - 5.hours
           @ostandard_complaint_1 = create :offender_sar_complaint, :waiting_for_data, 
                                           complaint_type: 'standard_complaint', 
-                                          identifier: 'oscomplint-1', 
+                                          identifier: 'ostandard_complaint-1', 
                                           received_date: @period_start - 5.hours
 
           @sar_2 = create :accepted_sar, identifier: 'sar-2', received_date: @period_start + 10.minutes
           @ostandard_complaint_2 = create :offender_sar_complaint, :closed, 
                                           complaint_type: 'standard_complaint', 
-                                          identifier: 'oscomplint-2', 
+                                          identifier: 'ostandard_complaint-2', 
                                           received_date: @period_start + 10.minutes
 
           @sar_3 = create :accepted_sar, identifier: 'sar-3', received_date: @period_start + 5.days
           @ostandard_complaint_3 = create :offender_sar_complaint, :data_to_be_requested, 
                                           complaint_type: 'standard_complaint', 
-                                          identifier: 'oscomplint-3', 
+                                          identifier: 'ostandard_complaint-3', 
                                           received_date: @period_start + 5.days
 
           @sar_4 = create :accepted_sar, identifier: 'sar-4', received_date: @period_start  + 61.minutes
           @ostandard_complaint_4 = create :offender_sar_complaint, :ready_to_copy, 
                                           complaint_type: 'standard_complaint', 
-                                          identifier: 'oscomplint-4', 
+                                          identifier: 'ostandard_complaint-4', 
                                           received_date: @period_start  + 61.minutes
         end
       end
 
-      it 'returns only Offender SAR cases within the selected period' do
+      it 'returns only standard Offender SAR complaints within the selected period' do
         report = described_class.new(period_start: @period_start, period_end: @period_end)
         expect(report.case_scope).to match_array( [@ostandard_complaint_2, @ostandard_complaint_3, @ostandard_complaint_4])
       end

@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 module Stats
-  describe R207OffenderICOComplaintMonthlyPerformanceReport do
+  describe R208OffenderLitigationComplaintMonthlyPerformanceReport do
     after(:all) { DbHousekeeping.clean(seed: true) }
 
     describe '.title' do
@@ -19,7 +19,7 @@ module Stats
     describe '.description' do
       it 'returns correct description' do
         expect(described_class.description)
-          .to eq 'Includes performance data about ICO Offender complaint requests we received and responded to from the beginning of the year by month.'
+          .to eq 'Includes performance data about litigation Offender complaint requests we received and responded to from the beginning of the year by month.'
       end
     end
 
@@ -34,34 +34,34 @@ module Stats
           @period_end = 0.business_days.after(Date.new(2019, 6, 01))
 
           @sar_1 = create :accepted_sar, identifier: 'sar-1', received_date: @period_start - 5.hours
-          @oico_complaint_1 = create :offender_sar_complaint, :waiting_for_data, 
-                                      complaint_type: 'ico_complaint', 
-                                      identifier: 'ico_complaint-1', 
+          @olitigation_complaint_1 = create :offender_sar_complaint, :waiting_for_data, 
+                                      complaint_type: 'litigation_complaint', 
+                                      identifier: 'litigation_complaint-1', 
                                       received_date: @period_start - 5.hours
 
           @sar_2 = create :accepted_sar, identifier: 'sar-2', received_date: @period_start + 10.minutes
-          @oico_complaint_2 = create :offender_sar_complaint, :closed, 
-                                      complaint_type: 'ico_complaint', 
-                                      identifier: 'ico_mcomplaint-2', 
+          @olitigation_complaint_2 = create :offender_sar_complaint, :closed, 
+                                      complaint_type: 'litigation_complaint', 
+                                      identifier: 'litigation_complaint-2', 
                                       received_date: @period_start + 10.minutes
 
           @sar_3 = create :accepted_sar, identifier: 'sar-3', received_date: @period_start + 5.days
-          @oico_complaint_3 = create :offender_sar_complaint, :data_to_be_requested, 
-                                      complaint_type: 'ico_complaint', 
-                                      identifier: 'ico_complaint-3', 
+          @olitigation_complaint_3 = create :offender_sar_complaint, :data_to_be_requested, 
+                                      complaint_type: 'litigation_complaint', 
+                                      identifier: 'litigation_complaint-3', 
                                       received_date: @period_start + 5.days
 
           @sar_4 = create :accepted_sar, identifier: 'sar-4', received_date: @period_start  + 61.minutes
-          @oico_complaint_4 = create :offender_sar_complaint, :ready_to_copy, 
-                                      complaint_type: 'ico_complaint', 
-                                      identifier: 'ico_complaint-4', 
+          @olitigation_complaint_4 = create :offender_sar_complaint, :ready_to_copy, 
+                                      complaint_type: 'litigation_complaint', 
+                                      identifier: 'litigation_complaint-4', 
                                       received_date: @period_start  + 61.minutes
         end
       end
 
       it 'returns only Offender SAR cases within the selected period' do
         report = described_class.new(period_start: @period_start, period_end: @period_end)
-        expect(report.case_scope).to match_array( [@oico_complaint_2, @oico_complaint_3, @oico_complaint_4])
+        expect(report.case_scope).to match_array( [@olitigation_complaint_2, @olitigation_complaint_3, @olitigation_complaint_4])
       end
 
       context 'stats values' do
@@ -71,22 +71,22 @@ module Stats
             responded_late = create(
               :offender_sar_complaint,
               :closed,
-              complaint_type: 'ico_complaint'
+              complaint_type: 'litigation_complaint'
             )
           end
           Timecop.freeze Time.new(2019, 6, 30, 12, 0, 0) do
             late_open_case = create(
               :offender_sar_complaint,
-              complaint_type: 'ico_complaint', 
-              identifier: 'oicomplaint-late-1',
+              complaint_type: 'litigation_complaint', 
+              identifier: 'oscomplaint-late-1',
               creation_time: @period_start + 1.days,
               received_date: @period_start+ 1.days
             )
 
             in_time_open_case = create(
               :offender_sar_complaint,
-              complaint_type: "ico_complaint", 
-              identifier: 'oicomplaint-in-time-2',
+              complaint_type: "litigation_complaint", 
+              identifier: 'oscomplaint-in-time-2',
               creation_time: @period_start + 1.days,
               received_date: @period_start+ 1.days,
             )
@@ -94,7 +94,7 @@ module Stats
             responded_in_time = create(
               :offender_sar_complaint,
               :closed,
-              complaint_type: "ico_complaint", 
+              complaint_type: "litigation_complaint", 
               creation_time: @period_start + 1.days,
               received_date: @period_start+ 1.days,
             )
