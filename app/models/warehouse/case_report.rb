@@ -37,6 +37,10 @@ module Warehouse
         case_report.director_general_name_property_id = kase.responding_team&.business_group&.properties&.lead&.singular_or_nil&.id # Director General name
         case_report.director_name_property_id = kase.responding_team&.directorate&.properties&.lead&.singular_or_nil&.id # Director name
         case_report.deputy_director_name_property_id = kase.responding_team&.properties&.lead&.singular_or_nil&.id # Deputy Director name
+        case_report.info_held_status_id = kase.info_held_status&.id
+        case_report.refusal_reason_id = kase.refusal_reason&.id
+        case_report.outcome_id = kase.outcome&.id
+        case_report.appeal_outcome_id = kase.appeal_outcome&.id
         
         # Report fields - for output
         case_report.number = kase.number
@@ -54,19 +58,14 @@ module Warehouse
         case_report.requester_type = kase.sar? ? nil : kase.requester_type.humanize
         case_report.message = self.dequote_and_truncate(kase.message)
         
-        case_report.info_held_status_id = kase.info_held_status&.id
-        case_report.refusal_reason_id = kase.refusal_reason&.id
-        case_report.outcome_id = kase.outcome&.id
-        case_report.appeal_outcome_id = kase.appeal_outcome&.id
-
         case_report.info_held = kase.info_held_status&.name
         case_report.outcome = kase.outcome&.name
         case_report.refusal_reason = kase.refusal_reason&.name
         case_report.exemptions = self.exemptions(kase)
-        case_report.appeal_outcome = kase.appeal_outcome&.name
 
         case_report.postal_address = kase.postal_address
         case_report.email = kase.email
+        case_report.appeal_outcome = kase.appeal_outcome&.name
         case_report.third_party = kase.respond_to?(:third_party) ? self.humanize_boolean(kase.third_party) : nil
         case_report.reply_method = kase.respond_to?(:reply_method) ? kase.reply_method.humanize : nil
         case_report.sar_subject_type = kase.respond_to?(:subject_type) ? kase.subject_type.humanize : nil
