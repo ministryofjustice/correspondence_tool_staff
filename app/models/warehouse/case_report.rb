@@ -6,7 +6,7 @@ module Warehouse
 
     CASE_BATCH_SIZE = 500
 
-    CLASS_CASE_REPORT_DATA_PROCESS = {
+    CLASS_CASE_REPORT_DATA_PROCESSES = {
       "Case::SAR::Offender" => ['process_offender_sar'], 
       "Case::SAR::OffenderComplaint" => ['process_offender_sar', 'process_offender_sar_complaint'], 
       "Case::ICO::FOI" => ['process_ico'],
@@ -178,7 +178,7 @@ module Warehouse
       end
 
       def process_class_related_process(kase, case_report)
-        (CLASS_CASE_REPORT_DATA_PROCESS[kase.class.name] || []).each do | process_function_name |
+        (CLASS_CASE_REPORT_DATA_PROCESSES[kase.class.name] || []).each do | process_function_name |
           self.send(process_function_name, kase, case_report)
         end
       end
