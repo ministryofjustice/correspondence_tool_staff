@@ -6,6 +6,13 @@ module Warehouse
 
     CASE_BATCH_SIZE = 500
 
+    CLASS_CASE_REPORT_DATA_PROCESSES = {
+      "Case::SAR::Offender" => ['process_offender_sar'], 
+      "Case::SAR::OffenderComplaint" => ['process_offender_sar', 'process_offender_sar_complaint'], 
+      "Case::ICO::FOI" => ['process_ico'],
+      "Case::ICO::SAR" => ['process_ico']    
+    }
+
     # Class methods to allow this class to be used in async jobs
     class << self
       def for(kase)
@@ -34,7 +41,7 @@ module Warehouse
         case_report.refusal_reason_id = kase.refusal_reason&.id
         case_report.outcome_id = kase.outcome&.id
         case_report.appeal_outcome_id = kase.appeal_outcome&.id
-
+        
         # Report fields - for output
         case_report.number = kase.number
         case_report.case_type = kase.decorate.pretty_type
@@ -50,10 +57,12 @@ module Warehouse
         case_report.name = kase.name
         case_report.requester_type = kase.sar? ? nil : kase.requester_type.humanize
         case_report.message = self.dequote_and_truncate(kase.message)
+        
         case_report.info_held = kase.info_held_status&.name
         case_report.outcome = kase.outcome&.name
         case_report.refusal_reason = kase.refusal_reason&.name
-        case_report.exemptions = kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
+        case_report.exemptions = self.exemptions(kase)
+
         case_report.postal_address = kase.postal_address
         case_report.email = kase.email
         case_report.appeal_outcome = kase.appeal_outcome&.name
@@ -86,16 +95,8 @@ module Warehouse
         case_report.number_of_days_late = kase.num_days_late # Number of days late
         case_report.number_of_days_taken = kase.num_days_taken
         case_report.number_of_days_taken_after_extension = kase.num_days_taken_after_extension
-        case_report.third_party_company_name = kase.type_of_offender_sar? ? kase.third_party_company_name : nil
-        case_report.number_of_exempt_pages = kase.type_of_offender_sar? ? kase.number_exempt_pages : nil
-        case_report.number_of_final_pages = kase.type_of_offender_sar? ? kase.number_final_pages : nil
 
-        # The fields for offender sar complaint case
-        case_report.complaint_subtype = kase.offender_sar_complaint? ? kase.complaint_subtype.humanize : nil
-        case_report.priority = kase.offender_sar_complaint? ? kase.priority.humanize : nil
-        case_report.total_cost = kase.offender_sar_complaint? ? kase.total_cost : nil
-        case_report.settlement_cost = kase.offender_sar_complaint? ? kase.settlement_cost : nil
-
+        process_class_related_process(kase,case_report)
         case_report.save!
         case_report
       end
@@ -173,6 +174,41 @@ module Warehouse
 
       def humanize_boolean(boolean)
         boolean ? 'Yes' : nil
+      end
+
+      def process_class_related_process(kase, case_report)
+        (CLASS_CASE_REPORT_DATA_PROCESSES[kase.class.name] || []).each do | process_function_name |
+          self.send(process_function_name, kase, case_report)
+        end
+      end
+
+      def process_offender_sar(kase, case_report)
+        case_report.third_party_company_name = kase.third_party_company_name
+        case_report.number_of_exempt_pages = kase.number_exempt_pages
+        case_report.number_of_final_pages = kase.number_final_pages
+      end 
+
+      def process_offender_sar_complaint(kase, case_report)
+        case_report.complaint_subtype = kase.complaint_subtype.humanize
+        case_report.priority = kase.priority.humanize
+        case_report.total_cost = kase.total_cost
+        case_report.settlement_cost = kase.settlement_cost
+      end 
+
+      def process_ico(kase, case_report)
+        case_report.info_held_status_id = kase.original_case.info_held_status&.id
+        case_report.refusal_reason_id = kase.original_case.refusal_reason&.id
+        case_report.outcome_id = kase.original_case.outcome&.id
+
+        case_report.info_held = kase.original_case.info_held_status&.name 
+        case_report.outcome = kase.original_case.outcome&.name
+        case_report.refusal_reason = kase.original_case.refusal_reason&.name
+        case_report.exemptions = self.exemptions(kase.original_case)
+        case_report.appeal_outcome = kase.decorate.pretty_ico_decision
+      end
+
+      def exemptions(kase)
+        kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
       end
 
     end
