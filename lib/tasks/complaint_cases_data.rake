@@ -1,4 +1,5 @@
 require 'csv'
+require 'json'
 
 namespace :complaints do
   namespace :links do
@@ -58,6 +59,58 @@ namespace :complaints do
         offender = offenders.first unless offenders.count > 1
       end
       offender
+    end
+
+  end
+
+  namespace :validation do 
+
+    desc "Validate whether the migrated complaint pass the validation of Complaint Model."
+    task :validate, [:file] => :environment do |_task, args|
+      raise "Must specify the csv file for outputing the result " if args[:file].blank?
+      counter = 0
+
+      CSV.open(args[:file], "wb") do |csv|
+        csv << ["offender_case_number", "errors"]
+        counter = 0
+        query = <<-SQL
+                  SELECT cases.*, linked_cases.linked_case_id
+                  FROM cases join linked_cases on cases.id = linked_cases.case_id 
+                  WHERE cases.type = 'Case::SAR::OffenderComplaint' and linked_cases.type='original'
+                SQL
+        records_array = ActiveRecord::Base.connection.execute(query)
+        records_array.each do | record |
+          puts "Checking complaint #{record["number"]}"
+          begin
+            complaint = fake_offender_complaint_data_object(record)
+            if !complaint.valid?
+              counter += 1
+              csv << [record["number"], complaint.errors.full_messages]
+            end              
+          rescue => exception            
+            counter += 1
+            csv << [record["number"], exception.message]
+          end
+        end
+      end 
+      puts "Totally #{counter} complaints cases couldn't pass the validation."
+
+    end
+
+    private 
+    
+    def fake_offender_complaint_data_object(record)
+      record.delete("id")
+      record.delete("document_tsvector")
+      properties = JSON.parse(record["properties"])
+      record.delete("properties")
+      original_case = Case::Base.find(record['linked_case_id'])
+      record["original_case"] = original_case
+      record.delete('linked_case_id')
+      properties.each do | key, value |
+        record[key] = value
+      end
+      Case::SAR::OffenderComplaint.new(record)
     end
 
   end
