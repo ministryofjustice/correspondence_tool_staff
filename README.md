@@ -521,18 +521,18 @@ open doc/index.html
 For our deploy process please see the our [confluence page](https://dsdmoj.atlassian.net/wiki/spaces/CD/pages/164660145/Manual+-+Development+and+Release+Process)
 
 
-### Keeping secrets and sensitive information secure
+## Keeping secrets and sensitive information secure
 
-#### Uninstall overcommit
+### Uninstall overcommit
 
-If you have installed overcommit in the past, the you need to uninstall it in order to get git-secrets' hooks work properly, the steps 
+If you have installed overcommit in the past, then you need to uninstall it in order to get git-secrets' hooks work properly, the steps are:-
 
 Uninstall the gem
 
     $ gem uninstall overcommit
 
 Remove the rules from .git/config file under [overcommit] section
-Remove the following hooks from ./git/hooks 
+Remove the following hooks from ./git/hooks (Do check them before deleting them)
 ```
 commit-msg		
 post-commit		
@@ -545,9 +545,8 @@ post-merge
 pre-commit		
 pre-rebase
 ```
-If you feel unease to remove them, do check them before deleteing them. 
 
-#### git-secrets
+### git-secrets
 
 To prevent the commitment of secrets and credentials into git repositories we use awslabs / git-secrets (https://github.com/awslabs/git-secrets)
 
@@ -565,7 +564,7 @@ A 'canary' string has been added to the first line of the secrets.yaml files on 
 
     $ git secrets --add --literal '#WARNING_Secrets_Are_Not_Encrypted!'
 
-**Please note** please make sure use --literal with exact string, forget to use this flag and change any bit of the string will cause the checking for this file skippped 
+**Please note** please make sure use --literal with exact string, forget to use this flag and change any bit of the string will cause the checking for those files skippped 
 
 Finally checking the installation result:-
 First, check the hooks, open your local repository .git/hooks/, a few new hooks should have installed: pre-commit, commit-msg, prepare-commit-msg, each file should look something like this:
@@ -580,7 +579,7 @@ Second, check the .git/config, a new section called [secrets] should have been a
 When committing a branch change git-secrets scans the whole repository for a specific set of strings.  In this case, the 'canary' string (described above) has been placed in all the secrets files. So, if the encrypted secrets files are unlocked, you will be warned before pushing the branch.
 
 
-#### git-crypt
+### git-crypt
 
 The tool is used for encryping sensitive information such as secrets or keys information
 e.g. 
