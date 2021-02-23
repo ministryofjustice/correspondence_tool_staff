@@ -18,7 +18,7 @@ module Stats
     end
 
     def report_type
-      ReportType.r207
+      ReportType.r208
     end
 
   end

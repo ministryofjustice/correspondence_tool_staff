@@ -25,7 +25,7 @@ module Stats
 
     describe '#case_scope' do
       before do
-        create_report_type(abbr: :r207)
+        create_report_type(abbr: :r208)
       end
 
       before(:all) do
