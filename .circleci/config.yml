@@ -25,6 +25,7 @@ references:
       - image: circleci/postgres:12.3-postgis
         environment:
           PG_PASSWORD: ""
+          POSTGRES_HOST_AUTH_METHOD: trust
           PG_USER: postgres
           POSTGRES_DB: correspondence_platform_test
 
