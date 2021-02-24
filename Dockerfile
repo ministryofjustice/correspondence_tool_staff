@@ -1,4 +1,5 @@
 FROM ruby:2.7.2
+
 LABEL key="Ministry of Justice, Track a Query <correspondence@digital.justice.gov.uk>"
 RUN set -ex
 
