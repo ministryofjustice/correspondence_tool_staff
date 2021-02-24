@@ -57,5 +57,5 @@ en:
     mark_as_require_data_review: Requires data review
     mark_as_require_response: Requires response
     reset_to_initial_state: Case type changed, and status reset
-    mark_as_legal_proceedings_ongoing: Mark as legal proceedings ongoing
+    mark_as_legal_proceedings_ongoing: Mark as ongoing legal case
     mark_as_legal_proceedings_ongoing__desc: Legal proceedings is ongoing

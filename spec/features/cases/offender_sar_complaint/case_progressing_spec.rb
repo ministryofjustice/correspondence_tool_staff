@@ -255,11 +255,11 @@ feature 'offender sar complaint case creation by a manager' do
     click_on "Mark as ready to dispatch"
 
     expect(cases_show_page).to be_displayed
-    expect(cases_show_page).to have_content "Mark as legal proceedings ongoing"
+    expect(cases_show_page).to have_content "Mark as ongoing legal case"
   end
 
   def legal_proceedings_ongoing
-    click_on "Mark as legal proceedings ongoing"
+    click_on "Mark as ongoing legal case"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Close"
