@@ -1,5 +1,5 @@
-FROM ruby:2.5.8
-MAINTAINER Ministry of Justice, Track a Query <correspondence@digital.justice.gov.uk>
+FROM ruby:2.7.1
+LABEL key="Ministry of Justice, Track a Query <correspondence@digital.justice.gov.uk>"
 RUN set -ex
 
 RUN addgroup --gid 1000 --system appgroup && \

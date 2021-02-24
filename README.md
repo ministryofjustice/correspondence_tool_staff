@@ -84,7 +84,7 @@ $ rbenv rehash
 Follow the instructions printed out from the `rbenv init` command and update your `~/.bash_profile` file accordingly, then start a new terminal and navigate to the repo directory.
 
 ```
-$ gem install bundler -v 1.17.1
+$ gem install bundler -v 2.2.11
 ```
 
 ##### Installing Latest XCode Stand-Alone Command-Line Tools
