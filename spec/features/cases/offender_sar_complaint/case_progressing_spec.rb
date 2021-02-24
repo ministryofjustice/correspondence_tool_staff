@@ -127,6 +127,7 @@ feature 'offender sar complaint case creation by a manager' do
       to_be_assessed
       requires_data_review
       requires_response
+      legal_proceedings_ongoing
       close_case
     end
 
@@ -136,12 +137,14 @@ feature 'offender sar complaint case creation by a manager' do
       vetting_in_progress
       ready_to_copy
       ready_to_dispatch
+      legal_proceedings_ongoing
       close_case
     end
 
     scenario 'progressing an offender sar complaint case - scenario 3' do
       to_be_assessed
       requires_response
+      legal_proceedings_ongoing
       close_case
     end
 
@@ -153,18 +156,7 @@ feature 'offender sar complaint case creation by a manager' do
       vetting_in_progress
       ready_to_copy
       ready_to_dispatch
-      close_case
-    end
-
-    scenario 'progressing an offender sar complaint case - scenario 5' do
-      to_be_assessed
-      waiting
-      requires_data
-      waiting_for_data
-      ready_for_vetting
-      vetting_in_progress
-      ready_to_copy
-      ready_to_dispatch
+      legal_proceedings_ongoing
       close_case
     end
 
@@ -253,12 +245,6 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to have_content "Close"
     expect(cases_show_page).to have_content "Response is required"
 
-    if offender_sar_complaint.complaint_type == 'Litigation'
-      expect(cases_show_page).to have_content "Add approval"
-      expect(cases_show_page).to have_content "Add outcome"
-      expect(cases_show_page).to have_content "Add costs"
-    end 
-
     if offender_sar_complaint.complaint_type == 'ICO'
       expect(cases_show_page).to have_content "Add approval"
       expect(cases_show_page).to have_content "Add outcome"
@@ -269,7 +255,20 @@ feature 'offender sar complaint case creation by a manager' do
     click_on "Mark as ready to dispatch"
 
     expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as legal proceedings ongoing"
+  end
+
+  def legal_proceedings_ongoing
+    click_on "Mark as legal proceedings ongoing"
+
+    expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Close"
+
+    if offender_sar_complaint.complaint_type == 'Litigation'
+      expect(cases_show_page).to have_content "Add approval"
+      expect(cases_show_page).to have_content "Add outcome"
+      expect(cases_show_page).to have_content "Add costs"
+    end 
   end
 
   def close_case

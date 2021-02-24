@@ -49,11 +49,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
         id: "action--#{link_text.parameterize}",
         class: 'button state-action-button',
         method: 'patch'
-    when :reopen 
-      link_to I18n.t("event.#{event}"),
-              reopen_case_sar_offender_complaint_path(@case),
-              id: 'action--reopen-complaint',
-              class: 'button'
     when :start_complaint
       link_to I18n.t('common.case/offender_sar.start_complaint'),
               start_complaint_case_sar_offender_complaint_index_path(@case.number),
@@ -103,7 +98,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               id: 'action--create-overturned',
               class: 'button'
     when :respond
-      #url = @case.foi? ? respond_case_ico_foi_path(@case) : polymorphic_path(@case, action: :respond)
       link_to translate_for_case(@case, "common", 'respond'),
               polymorphic_path(@case, action: :respond),
               id: 'action--mark-response-as-sent',
