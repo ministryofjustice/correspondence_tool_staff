@@ -13,6 +13,10 @@ Rails.application.configure do
       Bullet.add_whitelist :type => :n_plus_one_query,
                            :class_name => klass.name,
                            :association => :original_case
+      # Basically the same thing as above, but one link further down
+      Bullet.add_whitelist :type => :n_plus_one_query,
+                           :class_name => klass.name,
+                           :association => :original_case_link
     end
     Bullet.add_whitelist :type => :n_plus_one_query,
                          :class_name => 'LinkedCase',
@@ -25,11 +29,11 @@ Rails.application.configure do
                          :association => :case
 
     Bullet.add_whitelist :type => :n_plus_one_query,
-                         :class_name => 'Case::OverturnedICO::FOI',
-                         :association => :original_case_link
-    Bullet.add_whitelist :type => :n_plus_one_query,
-                         :class_name => 'Case::OverturnedICO::SAR',
-                         :association => :original_case_link
+                         :class_name => 'Case::ICO::FOI',
+                         :association => :responder_assignment
+    # Bullet.add_whitelist :type => :n_plus_one_query,
+    #                      :class_name => 'Case::OverturnedICO::SAR',
+    #                      :association => :original_case_link
     # searches are also a challenge...
     [:responder, :message_transitions, :responding_team, :approver_assignments, :managing_team].each do |assoc|
       [Case::FOI::TimelinessReview, Case::FOI::ComplianceReview,
