@@ -26,11 +26,14 @@ describe 'cases/filters/incoming.html.slim', type: :view do
                                           params: {}}
 
   before do
+    DbHousekeeping.clean(seed: true)
     assign(:homepage_nav_manager, GlobalNavManager.new(disclosure_specialist,
                                                      request,
                                                      Settings.homepage_navigation.pages))
     allow(controller).to receive(:current_user).and_return(disclosure_specialist)
   end
+  
+  after(:all) { DbHousekeeping.clean(seed: true) }
 
   it 'displays the cases given it' do
     case1
