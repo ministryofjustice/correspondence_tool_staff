@@ -7,11 +7,14 @@ RUN addgroup --gid 1000 --system appgroup && \
 
 WORKDIR /usr/src/app/
 
+RUN gem install bundler:2.2.11
+
 COPY Gemfile* ./
 
-RUN bundle config --global frozen 1 && \
-    bundle config --path=vendor/bundle && \
-    bundle install --without development test
+RUN bundle config set --global frozen 1 && \
+    bundle config set path vendor/bundle && \
+    bundle config set without 'development test' && \
+    bundle install
 
 RUN apt-get update && \
     apt-get install -y apt-transport-https && \
