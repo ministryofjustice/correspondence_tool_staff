@@ -84,8 +84,12 @@ namespace :complaints do
           begin
             complaint = fake_offender_complaint_data_object(record)
             if !complaint.valid?
-              counter += 1
-              csv << [record["number"], complaint.errors.full_messages]
+              errors = complaint.errors.full_messages.clone
+              errors.delete("External deadline cannot be in the past")
+              if errors.present?
+                counter += 1
+                csv << [record["number"], complaint.errors.full_messages]
+              end
             end              
           rescue => exception            
             counter += 1
