@@ -628,3 +628,40 @@ or `#security` in MOJ Slack.
 
 1. **closed**
    The kilo has marked the case as closed.
+
+# How to upgrade Ruby 2.5.x to Ruby 2.7.x on local environment 
+
+1. Checkout the branch e.g master if the upgrade feature has merged, with ruby version defined as 2.7.2 in .ruby-version
+
+2. Install Ruby 2.7.2
+
+```
+$ rbenv install
+```
+it should pick up the version defined in .ruby-version 
+
+If you get error somehow telling you not being able to find available stable relesae 2.7.2, you could try the following commands
+
+```
+$ brew unlink ruby-build
+$ brew install --HEAD ruby-build 
+```
+
+if you run following command, you should be able to see 2.7.2
+```
+$ rbenv install --list-all
+```
+after this, you can run `rbenv install` comand to continue the process.
+
+3. Update the gem system 
+```
+$ gem update --system
+```
+
+4. Install bundle 2.2.11 and install those gems 
+```
+$ gem install bundler -v 2.2.11
+$ bundler install
+```
+
+5. run `rails s` check the app
