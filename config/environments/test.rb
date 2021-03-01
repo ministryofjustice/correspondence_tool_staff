@@ -13,7 +13,6 @@ Rails.application.configure do
       Bullet.add_whitelist :type => :n_plus_one_query,
                            :class_name => klass.name,
                            :association => :original_case
-      # Basically the same thing as above, but one link further down
       Bullet.add_whitelist :type => :n_plus_one_query,
                            :class_name => klass.name,
                            :association => :original_case_link
