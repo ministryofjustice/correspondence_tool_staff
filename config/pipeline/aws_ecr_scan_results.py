@@ -39,21 +39,17 @@ class ECRScanChecker:
         print("ECR image scans complete")
 
     def wait_for_scan_completion(self, image, tag):
-        try:
-            waiter = self.aws_ecr_client.get_waiter('image_scan_complete')
-            waiter.wait(
-                repositoryName=image,
-                imageId={
-                    'imageTag': tag
-                },
-                WaiterConfig={
-                    'Delay': 5,
-                    'MaxAttempts': 60
-                }
-            )
-        except:
-            print("No ECR image scan results for image {0}, tag {1}".format(
-                image, tag))
+        waiter = self.aws_ecr_client.get_waiter('image_scan_complete')
+        waiter.wait(
+            repositoryName=image,
+            imageId={
+                'imageTag': tag
+            },
+            WaiterConfig={
+                'Delay': 5,
+                'MaxAttempts': 60
+            }
+        )
 
     def recursive_check_make_report(self, tag):
         print("Checking ECR scan results...")
