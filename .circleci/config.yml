@@ -431,6 +431,7 @@ workflows:
   build_and_deploy_branch:
     jobs:
       - build_branch_and_push_to_ecr_approval:
+          type: approval
           filters:
             branches:
               ignore: master
