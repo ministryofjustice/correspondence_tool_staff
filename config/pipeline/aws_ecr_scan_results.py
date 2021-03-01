@@ -19,9 +19,8 @@ class ECRScanChecker:
         self.aws_ecr_client = boto3.client(
             'ecr',
             region_name='eu-west-2',
-            aws_access_key_id=self.aws_iam_session['Credentials']['AccessKeyId'],
-            aws_secret_access_key=self.aws_iam_session['Credentials']['SecretAccessKey'],
-            aws_session_token=self.aws_iam_session['Credentials']['SessionToken'])
+            aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+            aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY')
         self.images_to_check = self.get_repositories(search_term)
 
 
