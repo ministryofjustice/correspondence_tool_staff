@@ -71,7 +71,7 @@ namespace :complaints do
       counter = 0
 
       CSV.open(args[:file], "wb") do |csv|
-        csv << ["offender_case_number", "errors"]
+        csv << ["complaint_case_number", "errors"]
         counter = 0
         query = <<-SQL
                   SELECT cases.*, linked_cases.linked_case_id
