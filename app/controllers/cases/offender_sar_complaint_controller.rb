@@ -65,7 +65,11 @@ module Cases
     end
 
     def edit_params
-      clean_empty_approval_flags(create_offender_sar_complaint_params)
+      if params[:offender_sar_complaint].present?
+        clean_empty_approval_flags(create_offender_sar_complaint_params)
+      else
+        {}
+      end
     end
 
     def update_params

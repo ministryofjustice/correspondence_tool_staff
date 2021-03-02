@@ -422,6 +422,10 @@ feature 'offender sar complaint case editing by a manager' do
     expect(cases_show_page).to have_content('Add outcome')
 
     when_i_click_add_appeal_outcome
+    and_i_not_tick_appeal_outcome
+    expect(cases_show_page).to have_content('Add outcome')
+
+    when_i_click_add_appeal_outcome
     and_i_tick_appeal_outcome(CaseClosure::OffenderComplaintAppealOutcome.upheld)
     then_i_expect_the_result_to_be_reflected_on_the_case_show_page(
       CaseClosure::OffenderComplaintAppealOutcome.upheld.name)
@@ -439,6 +443,10 @@ feature 'offender sar complaint case editing by a manager' do
     expect(cases_show_page).to have_content('Add approval')
     expect(cases_show_page).to have_content('Add outcome')
     expect(cases_show_page).to have_content('Add costs')
+
+    when_i_click_add_outcome
+    and_i_not_tick_outcome
+    expect(cases_show_page).to have_content('Add outcome')
 
     when_i_click_add_outcome
     and_i_tick_outcome(CaseClosure::OffenderComplaintOutcome.not_succeeded)
@@ -597,6 +605,10 @@ feature 'offender sar complaint case editing by a manager' do
     click_on 'Continue'
   end
 
+  def and_i_not_tick_appeal_outcome
+    and_i_tick_appeal_outcome(nil)
+  end 
+
   def when_i_click_appeal_outcome_change_link
     cases_show_page.offender_sar_complaint_appeal_outcome.change_link.click
   end
@@ -611,6 +623,10 @@ feature 'offender sar complaint case editing by a manager' do
 
     click_on 'Continue'
   end
+
+  def and_i_not_tick_outcome
+    and_i_tick_outcome(nil)
+  end 
 
   def when_i_click_outcome_change_link
     cases_show_page.offender_sar_complaint_outcome.change_link.click
