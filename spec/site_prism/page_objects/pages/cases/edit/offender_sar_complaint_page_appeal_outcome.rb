@@ -15,7 +15,9 @@ module PageObjects
           element :submit_button, '.button'
 
           def choose_appeal_outcome(appeal_outcome_choice)
-            choose("offender_sar_complaint_appeal_outcome_id_#{appeal_outcome_choice.id}", visible: false)
+            if appeal_outcome_choice.present?
+              choose("offender_sar_complaint_appeal_outcome_id_#{appeal_outcome_choice.id}", visible: false)
+            end
           end
         end
       end

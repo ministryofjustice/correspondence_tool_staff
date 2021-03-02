@@ -71,7 +71,7 @@ namespace :complaints do
       counter = 0
 
       CSV.open(args[:file], "wb") do |csv|
-        csv << ["offender_case_number", "errors"]
+        csv << ["complaint_case_number", "errors"]
         counter = 0
         query = <<-SQL
                   SELECT cases.*, linked_cases.linked_case_id
@@ -84,8 +84,12 @@ namespace :complaints do
           begin
             complaint = fake_offender_complaint_data_object(record)
             if !complaint.valid?
-              counter += 1
-              csv << [record["number"], complaint.errors.full_messages]
+              errors = complaint.errors.full_messages.clone
+              errors.delete("External deadline cannot be in the past")
+              if errors.present?
+                counter += 1
+                csv << [record["number"], complaint.errors.full_messages]
+              end
             end              
           rescue => exception            
             counter += 1
