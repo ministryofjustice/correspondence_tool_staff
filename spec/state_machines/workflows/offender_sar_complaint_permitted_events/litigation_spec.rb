@@ -74,7 +74,6 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :response_required,
         specific_events: [
-          :close, 
           :send_dispatch_letter,
           :reset_to_initial_state,
           :mark_as_legal_proceedings_ongoing,

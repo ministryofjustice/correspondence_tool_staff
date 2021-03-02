@@ -132,6 +132,7 @@
                   if: Workflows::Predicates#is_litigation_complaint?
                   transition_to: legal_proceedings_ongoing
                 close:
+                  if: Workflows::Predicates#is_not_litigation_complaint?
                   transition_to: closed
                 assign_to_team_member:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?

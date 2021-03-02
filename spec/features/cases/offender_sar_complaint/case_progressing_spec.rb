@@ -242,12 +242,18 @@ feature 'offender sar complaint case creation by a manager' do
     click_on "Requires response"
 
     expect(cases_show_page).to be_displayed
-    expect(cases_show_page).to have_content "Close"
     expect(cases_show_page).to have_content "Response is required"
 
     if offender_sar_complaint.complaint_type == 'ICO'
+      expect(cases_show_page).to have_content "Close"
       expect(cases_show_page).to have_content "Add approval"
       expect(cases_show_page).to have_content "Add outcome"
+    end 
+    if offender_sar_complaint.complaint_type == 'Standard'
+      expect(cases_show_page).to have_content "Close"
+    end 
+    if offender_sar_complaint.complaint_type == 'Litigation'
+      expect(cases_show_page).to have_content "Mark as ongoing legal case"
     end 
   end
 
