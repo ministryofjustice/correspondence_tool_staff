@@ -25,7 +25,7 @@ class CaseTransitionDecorator < Draper::Decorator
 
   def description_for_event
     specific_key_with_desc = "event.case/#{object.case.type_abbreviation.downcase}.#{object.event}__desc"
-    default_key_with_desc = "event.#{object.event}__desc"
+    default_key_with_desc = "event.#{object.event}_desc"
     I18n.t(specific_key_with_desc, default: nil) || I18n.t(default_key_with_desc, default: nil)
   end 
 
