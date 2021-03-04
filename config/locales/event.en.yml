@@ -58,4 +58,4 @@ en:
     mark_as_require_response: Requires response
     reset_to_initial_state: Case type changed, and status reset
     mark_as_legal_proceedings_ongoing: Mark as ongoing legal case
-    mark_as_legal_proceedings_ongoing_desc: Legal proceedings is ongoing
+    mark_as_legal_proceedings_ongoing_desc: Legal proceedings ongoing
