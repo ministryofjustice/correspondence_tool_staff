@@ -384,6 +384,14 @@ FactoryBot.define do
     acting_user { acting_team.responders.first }
   end
 
+  factory :case_transition_legal_proceedings_ongoing, parent: :case_transition do
+    to_state { 'legal_proceedings_ongoing' }
+    event { 'mark_as_legal_proceedings_ongoing' }
+
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
+  end
+
   factory :case_transition_closed_for_offender_sar_type, parent: :case_transition do
     to_state { 'closed' }
     event { 'close' }

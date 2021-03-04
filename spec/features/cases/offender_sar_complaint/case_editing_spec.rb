@@ -397,6 +397,7 @@ feature 'offender sar complaint case editing by a manager' do
     cases_show_page.load(id: offender_sar_litigation_complaint.id)
     expect(cases_show_page).to be_displayed(id: offender_sar_litigation_complaint.id)
     click_on 'Requires response'
+    click_on 'Mark as ongoing legal case'
     expect(cases_show_page).to have_content('Add approval')
     expect(cases_show_page).to have_content('Add outcome')
     expect(cases_show_page).to have_content('Add costs')
@@ -440,6 +441,7 @@ feature 'offender sar complaint case editing by a manager' do
     cases_show_page.load(id: offender_sar_litigation_complaint.id)
     expect(cases_show_page).to be_displayed(id: offender_sar_litigation_complaint.id)
     click_on 'Requires response'
+    click_on 'Mark as ongoing legal case'
     expect(cases_show_page).to have_content('Add approval')
     expect(cases_show_page).to have_content('Add outcome')
     expect(cases_show_page).to have_content('Add costs')
@@ -463,6 +465,7 @@ feature 'offender sar complaint case editing by a manager' do
     cases_show_page.load(id: offender_sar_litigation_complaint.id)
     expect(cases_show_page).to be_displayed(id: offender_sar_litigation_complaint.id)
     click_on 'Requires response'
+    click_on 'Mark as ongoing legal case'
     expect(cases_show_page).to have_content('Add approval')
     expect(cases_show_page).to have_content('Add outcome')
     expect(cases_show_page).to have_content('Add costs')

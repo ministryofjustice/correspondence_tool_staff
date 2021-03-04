@@ -10,7 +10,6 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_require_data_review, 
           :mark_as_data_to_be_requested,
           :mark_as_require_response, 
-          :mark_as_waiting,
           :send_acknowledgement_letter,
           :reset_to_initial_state
         ]
@@ -20,14 +19,6 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :mark_as_vetting_in_progress, 
           :mark_as_require_response,
-          :send_acknowledgement_letter,
-          :reset_to_initial_state
-        ]
-      },
-      {
-        state: :waiting, 
-        specific_events: [
-          :mark_as_data_to_be_requested, 
           :send_acknowledgement_letter,
           :reset_to_initial_state
         ]
@@ -75,21 +66,29 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :ready_to_dispatch,
         specific_events: [
-          :close, 
           :send_dispatch_letter,
-          :reset_to_initial_state
+          :reset_to_initial_state,
+          :mark_as_legal_proceedings_ongoing
         ]
       },
       {
         state: :response_required,
+        specific_events: [
+          :send_dispatch_letter,
+          :reset_to_initial_state,
+          :mark_as_legal_proceedings_ongoing,
+        ]
+      },
+      {
+        state: :legal_proceedings_ongoing,
         specific_events: [
           :close, 
           :send_dispatch_letter,
           :reset_to_initial_state,
           :add_complaint_costs, 
           :add_complaint_outcome, 
-          :add_approval_flags_for_litigation]
-
+          :add_approval_flags_for_litigation
+        ]
       },
       {
         state: :closed,
