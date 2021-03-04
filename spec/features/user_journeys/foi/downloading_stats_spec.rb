@@ -30,6 +30,7 @@ feature "Downloading stats(csv) from the system" do
   given(:kase)      { create :case }
 
   before(:all) do
+    DbHousekeeping.clean
     CaseClosure::MetadataSeeder.seed!(verbose: false)
     all_reports = ReportType.all
 
