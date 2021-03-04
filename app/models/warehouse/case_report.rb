@@ -45,7 +45,7 @@ module Warehouse
         # Report fields - for output
         case_report.number = kase.number
         case_report.case_type = kase.decorate.pretty_type
-        case_report.current_state = I18n.t("helpers.label.state_selector.#{kase.current_state}")
+        case_report.current_state = kase.decorate.status
         case_report.responding_team = kase.responding_team&.name
         case_report.responder = kase.responder&.full_name
         case_report.date_received = kase.received_date
