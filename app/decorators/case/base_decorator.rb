@@ -182,7 +182,7 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def admin_internal_deadline
-    object.internal_deadline.strftime('%Y-%m-%d')
+    object.internal_deadline.present? ? object.internal_deadline.strftime('%Y-%m-%d') : ''
   end
 
   def pretty_type
