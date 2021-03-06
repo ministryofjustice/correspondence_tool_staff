@@ -18,4 +18,8 @@ class Case::SAR::OffenderComplaintDecorator < Case::SAR::OffenderBaseDecorator
     h.t "helpers.label.offender_sar_complaint.complaint_type.#{object.complaint_type}"
   end
 
+  def highted_flag
+    object.normal? ? "" : object.priority.humanize 
+  end
+
 end

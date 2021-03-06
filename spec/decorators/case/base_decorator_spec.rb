@@ -181,6 +181,22 @@ describe Case::BaseDecorator, type: :model do
     end
   end
 
+  describe '#highted_flag' do
+    context 'unflagged case' do
+      it 'returns space' do
+        unflagged_case = create(:case).decorate
+        expect(unflagged_case.highted_flag).to eq ' '
+      end
+    end
+
+    context 'flagged case' do
+      it 'returns the Trigger case badge' do
+        flagged_case = create(:case, :flagged).decorate
+        expect(flagged_case.highted_flag)
+          .to eq '<div class="foi-trigger"><span class="visually-hidden">This is a </span>Trigger<span class="visually-hidden"> case</span></div>'
+      end
+    end
+  end
 
   describe '#internal_deadline' do
     context 'unflagged case' do
