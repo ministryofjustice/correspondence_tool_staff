@@ -1,8 +1,8 @@
 require 'rails_helper'
 
-feature 'Log data received for an Offender SAR Data Request' do
+feature 'Log data received for an Offender SAR complaint Data Request' do
   given!(:manager) { find_or_create :branston_user }
-  given!(:offender_sar_complaint) { create(:offender_sar_complaint) }
+  given!(:offender_sar_complaint) { create(:offender_sar_complaint, :data_to_be_requested) }
   given!(:data_request) { create(:data_request, offender_sar_case: offender_sar_complaint) }
 
   background do
