@@ -16,8 +16,15 @@ module PageObjects
 
           element :submit_button, '.button'
 
+          sections :back_links, '.govuk-back-link' do
+          end
+  
           def confirm_yes
             choose('offender_sar_complaint_original_case_number_yes', visible: false)
+          end
+
+          def find_first_back_link
+            find(".govuk-back-link", match: :first)
           end
         end
       end

@@ -15,10 +15,7 @@
 
     = f.text_field :requester_reference
 
-  / start remove this ! Temp hidden subject_full name field because params[:offender_sar] needs to be populated
-  = f.hidden_field :subject_full_name
-  / end remove this
-
   input name="current_step" type="hidden" value=@case.current_step
+  input name="flag_for_creation_from_sar_page" type="hidden" value= @creation_optional_flags[:flag_for_creation_from_sar_page]
 
   = f.submit 'Continue', class: 'button'

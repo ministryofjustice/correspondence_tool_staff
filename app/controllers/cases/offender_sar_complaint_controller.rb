@@ -12,11 +12,12 @@ module Cases
 
       @correspondence_type = CorrespondenceType.offender_sar_complaint
       @correspondence_type_key = 'offender_sar_complaint'
+      @creation_optional_flags = {:flag_for_creation_from_sar_page => 0 }
     end
 
 
     def start_complaint
-      params.merge!(:current_step => "link-offender-sar-case")
+      params.merge!(:current_step => "link-offender-sar-case", :flag_for_creation_from_sar_page => true)
       params.merge!(:commit => true)
       params[@correspondence_type_key] = {}
       params[@correspondence_type_key].merge!("original_case_number" => params["number"])
@@ -104,5 +105,12 @@ module Cases
       permitted_params
     end
 
+    def back_link_url
+      if has_optional_flags? && @case.current_step == 'confirm-offender-sar'
+        case_path @case.original_case.id
+      else
+        super
+      end
+    end
   end
 end
