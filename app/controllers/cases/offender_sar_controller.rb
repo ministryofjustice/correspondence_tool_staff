@@ -193,7 +193,7 @@ module Cases
     end
 
     def load_optional_flags_from_params
-      @creation_optional_flags.each do |key, value|
+      @creation_optional_flags.each do |key, _|
         @creation_optional_flags[key] = params[key]
       end
     end
