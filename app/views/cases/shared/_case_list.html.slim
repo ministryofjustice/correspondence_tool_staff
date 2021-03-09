@@ -50,7 +50,7 @@
                 = t('common.case_list.view_case')
               = case_link_with_hash(kase, :number, @page, position)
             td aria-label="#{t('common.case_list.flag')}"
-              = kase.trigger_case_marker
+              = kase.highlight_flag
             td aria-label="#{t('common.case_list.type')}"
               = "#{kase.pretty_type} "
             td aria-label="#{t('common.case_list.request_detail')}"

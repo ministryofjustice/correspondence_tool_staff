@@ -78,6 +78,10 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
+  def highlight_flag
+    trigger_case_marker
+  end
+
   def external_deadline
     I18n.l(object.external_deadline, format: :default)
   end
