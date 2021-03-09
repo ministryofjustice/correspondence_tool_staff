@@ -78,7 +78,7 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
-  def highted_flag
+  def highlight_flag
     trigger_case_marker
   end
 
