@@ -425,6 +425,7 @@ feature 'offender sar complaint case editing by a manager' do
     when_i_click_add_appeal_outcome
     and_i_not_tick_appeal_outcome
     expect(cases_show_page).to have_content('Add outcome')
+    expect(cases_show_page).to have_content 'No changes were made'
 
     when_i_click_add_appeal_outcome
     and_i_tick_appeal_outcome(CaseClosure::OffenderComplaintAppealOutcome.upheld)
@@ -449,6 +450,7 @@ feature 'offender sar complaint case editing by a manager' do
     when_i_click_add_outcome
     and_i_not_tick_outcome
     expect(cases_show_page).to have_content('Add outcome')
+    expect(cases_show_page).to have_content 'No changes were made'
 
     when_i_click_add_outcome
     and_i_tick_outcome(CaseClosure::OffenderComplaintOutcome.not_succeeded)
@@ -469,6 +471,10 @@ feature 'offender sar complaint case editing by a manager' do
     expect(cases_show_page).to have_content('Add approval')
     expect(cases_show_page).to have_content('Add outcome')
     expect(cases_show_page).to have_content('Add costs')
+
+    when_i_click_add_costs
+    click_on 'Continue'
+    expect(cases_show_page).to have_content 'No changes were made'
 
     when_i_click_add_costs
     and_i_fill_in_costs(11111.11, 22222.22)
