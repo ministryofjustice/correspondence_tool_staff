@@ -378,6 +378,8 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
   end
 
   describe '#update' do
+    let(:errors) { assigns(:case).errors.messages }  
+
     let(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
     let(:params) {{ id: offender_sar_complaint.id }}
     let(:params) do
@@ -413,6 +415,34 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
       }
     end
 
+    let(:litigation_complaint) { create(:offender_sar_complaint, complaint_type: 'litigation_complaint').decorate }
+    let(:invalid_litigation_params) {{ id: litigation_complaint.id }}
+    let(:invalid_litigation_params) do
+      {
+        id: litigation_complaint.id,
+        offender_sar_complaint: {
+          gld_contact_name: "",
+          gld_contact_email: "",
+          gld_contact_phone: "",
+          gld_reference: "",
+        }
+      }
+    end
+
+    let(:ico_complaint) { create(:offender_sar_complaint, complaint_type: 'ico_complaint').decorate }
+    let(:invalid_ico_params) {{ id: ico_complaint.id }}
+    let(:invalid_ico_params) do
+      {
+        id: ico_complaint.id,
+        offender_sar_complaint: {
+          ico_contact_name: "",
+          ico_contact_email: "",
+          ico_contact_phone: "",
+          ico_reference: "",
+        }
+      }
+    end
+
     before do
       sign_in responder
     end
@@ -424,6 +454,30 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         expect(flash[:notice]).to eq nil
         expect(flash[:alert]).to eq 'No changes were made'
         expect(offender_sar_complaint.object.transitions.where(event: "edit_case").count).to eq 0
+      end
+    end
+
+    context 'with invalid params for litigation complaint' do
+      it 'check the errors' do
+        patch :update, params: invalid_litigation_params
+        expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
+        expect(errors[:gld_contact_name]).to eq ["can't be blank"]
+        expect(errors[:gld_contact_email]).to eq ["can't be blank if GLD contact phone not given"]
+        expect(errors[:gld_contact_phone]).to eq ["can't be blank if GLD contact email not given"]
+        expect(errors[:gld_reference]).to eq ["can't be blank"]
+        expect(litigation_complaint.object.transitions.where(event: "edit_case").count).to eq 0
+      end
+    end
+
+    context 'with invalid params for ico complaint' do
+      it 'check the errors' do
+        patch :update, params: invalid_ico_params
+        expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
+        expect(errors[:ico_contact_name]).to eq ["can't be blank"]
+        expect(errors[:ico_contact_email]).to eq ["can't be blank if ICO contact phone not given"]
+        expect(errors[:ico_contact_phone]).to eq ["can't be blank if ICO contact email not given"]
+        expect(errors[:ico_reference]).to eq ["can't be blank"]
+        expect(ico_complaint.object.transitions.where(event: "edit_case").count).to eq 0
       end
     end
 
