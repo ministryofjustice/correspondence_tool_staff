@@ -19,6 +19,7 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :mark_as_vetting_in_progress, 
           :mark_as_require_response,
+          :add_data_received,
           :send_acknowledgement_letter,
           :reset_to_initial_state
         ]
@@ -28,6 +29,7 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :mark_as_waiting_for_data, 
           :send_acknowledgement_letter,
+          :add_data_received,
           :reset_to_initial_state
         ]
       },
@@ -37,6 +39,7 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_ready_for_vetting,
           :send_acknowledgement_letter, 
           :preview_cover_page,
+          :add_data_received,
           :reset_to_initial_state
         ]
       },
@@ -45,6 +48,7 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :mark_as_vetting_in_progress, 
           :preview_cover_page,
+          :add_data_received,
           :reset_to_initial_state
         ]
       },
@@ -53,6 +57,7 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :mark_as_ready_to_copy, 
           :preview_cover_page,
+          :add_data_received,
           :reset_to_initial_state
         ]
       },
@@ -60,6 +65,7 @@ describe ConfigurableStateMachine::Machine do
         state: :ready_to_copy,
         specific_events: [
           :mark_as_ready_to_dispatch,
+          :add_data_received,
           :reset_to_initial_state
         ]
       },
@@ -68,6 +74,7 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :send_dispatch_letter,
           :reset_to_initial_state,
+          :add_data_received,
           :mark_as_legal_proceedings_ongoing
         ]
       },
@@ -76,6 +83,7 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :send_dispatch_letter,
           :reset_to_initial_state,
+          :add_data_received,
           :mark_as_legal_proceedings_ongoing,
         ]
       },
@@ -86,6 +94,7 @@ describe ConfigurableStateMachine::Machine do
           :send_dispatch_letter,
           :reset_to_initial_state,
           :add_complaint_costs, 
+          :add_data_received,
           :add_complaint_outcome, 
           :add_approval_flags_for_litigation
         ]
@@ -105,7 +114,6 @@ describe ConfigurableStateMachine::Machine do
 
     UNIVERSAL_EVENTS_LITIGATION = %i[
       add_note_to_case
-      add_data_received
       edit_case
       reassign_user
     ].freeze

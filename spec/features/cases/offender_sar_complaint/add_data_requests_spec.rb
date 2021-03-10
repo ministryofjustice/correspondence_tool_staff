@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Data Requests for an Offender SAR' do
+feature 'Data Requests for an Offender SAR complaint' do
   given(:manager) { find_or_create :branston_user }
   given(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
 
@@ -10,6 +10,17 @@ feature 'Data Requests for an Offender SAR' do
 
   scenario 'successfully add 2 new requests', js: true do
     cases_show_page.load(id: offender_sar_complaint.id)
+
+    expect(cases_show_page).to_not have_content "Record data request"
+    expect(cases_show_page).to_not have_content "Update exempt pages"
+    expect(cases_show_page).to_not have_content "Update final page count"
+
+    click_on 'Requires data'
+
+    expect(cases_show_page).to have_content "Record data request"
+    expect(cases_show_page).to have_content "Update exempt pages"
+    expect(cases_show_page).to have_content "Update final page count"
+
     click_on 'Record data request'
     expect(data_request_page).to be_displayed
 
@@ -72,6 +83,7 @@ feature 'Data Requests for an Offender SAR' do
 
   scenario 'partial data entry fails' do
     cases_show_page.load(id: offender_sar_complaint.id)
+    click_on 'Requires data'
     click_on 'Record data request'
 
     # Note only filling in Location field, ommitting corresponding Data field
@@ -84,6 +96,7 @@ feature 'Data Requests for an Offender SAR' do
 
   scenario 'no data entry fails' do
     cases_show_page.load(id: offender_sar_complaint.id)
+    click_on 'Requires data'
     click_on 'Record data request'
 
     data_request_page.form.location.fill_in(with: '    ')
