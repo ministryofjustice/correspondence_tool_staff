@@ -5,14 +5,14 @@ RUN set -ex
 RUN addgroup --gid 1000 --system appgroup && \
     adduser --uid 1000 --system appuser --ingroup appgroup
 
+RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base
+
 WORKDIR /usr/src/app/
 
 RUN apk -U upgrade
-RUN apk add git
+#RUN apk add git
 
 COPY Gemfile* ./
-
-RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base
 
 #RUN gem install bundler -v '~> 2.2.13'
 
