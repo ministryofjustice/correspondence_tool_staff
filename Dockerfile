@@ -1,5 +1,4 @@
-FROM ruby:2.7.2
-
+FROM ruby:2.7.2-alpine
 LABEL key="Ministry of Justice, Track a Query <correspondence@digital.justice.gov.uk>"
 RUN set -ex
 
@@ -8,59 +7,18 @@ RUN addgroup --gid 1000 --system appgroup && \
 
 WORKDIR /usr/src/app/
 
-RUN gem install bundler:2.2.11
+RUN apk -U upgrade
+RUN apk add git
 
 COPY Gemfile* ./
 
+RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base
+
+#RUN gem install bundler -v '~> 2.2.13'
+
 RUN bundle config set --global frozen 1 && \
     bundle config set without 'development test' && \
-    bundle install
+    bundle install  
 
-RUN apt-get update && \
-    apt-get install -y apt-transport-https && \
-    rm -rf /var/lib/apt/lists/*
 
-# Add the PostgreSQL PGP key to verify their Debian packages.
-# It should be the same key as https://www.postgresql.org/media/keys/ACCC4CF8.asc
-RUN apt-key adv --batch --no-tty --keyserver hkp://ipv4.pool.sks-keyservers.net --recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
 
-# Add PostgreSQL repo to sources
-RUN . /etc/os-release ; release="${VERSION#* (}" ; release="${release%)}" ; \
-    echo "deb https://apt.postgresql.org/pub/repos/apt/ $release-pgdg main" > /etc/apt/sources.list.d/pgdg.list
-
-RUN echo "Installing libraries..."
-RUN apt-get update && \
-    apt-get install -y less \
-    nodejs \
-    runit \
-    postgresql-client-12 \
-    zip \
-    libreoffice \
-    clamav \
-    clamav-daemon \
-    clamav-freshclam
-
-COPY . .
-
-RUN mkdir log tmp
-RUN chown -R appuser:appgroup /usr/src/app/
-USER appuser
-USER 1000
-
-RUN RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> /dev/null
-
-ENV PUMA_PORT 3000
-EXPOSE $PUMA_PORT
-
-RUN chown -R appuser:appgroup ./*
-RUN chmod +x /usr/src/app/config/docker/*
-
-# expect/add ping environment variables
-ARG VERSION_NUMBER
-ARG COMMIT_ID
-ARG BUILD_DATE
-ARG BUILD_TAG
-ENV VERSION_NUMBER=${VERSION_NUMBER}
-ENV APP_GIT_COMMIT=${COMMIT_ID}
-ENV APP_BUILD_DATE=${BUILD_DATE}
-ENV APP_BUILD_TAG=${BUILD_TAG}
