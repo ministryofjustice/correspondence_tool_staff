@@ -91,4 +91,15 @@ describe Case::SAR::OffenderComplaintDecorator do
     end
   end
 
+  describe '#highlight_flag' do
+    it 'returns blank string when priority is normal' do
+      expect(offender_sar_complaint.highlight_flag).to eq ''
+    end
+
+    it 'returns string of "High" when priority is high' do
+      offender_sar_complaint.priority = 'high'
+      expect(offender_sar_complaint.highlight_flag).to eq 'High'
+    end
+  end
+
 end
