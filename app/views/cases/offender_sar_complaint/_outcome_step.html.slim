@@ -8,6 +8,4 @@
   = f.radio_button_fieldset :outcome_id,
     choices: CaseClosure::OffenderComplaintOutcome.active, value_method: :id, text_method: :name
 
-  input name="current_step" type="hidden" value=@case.current_step
-
   = f.submit 'Continue', class: 'button'
