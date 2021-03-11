@@ -36,12 +36,6 @@ references:
 
 # These are defining the steps which are used below in the jobs
 
-  install_psql: &install_psql
-    run:
-      name: Install psql client
-      command: |
-         sudo apt update && sudo apt install postgresql-client
-
   update_chromedriver: &update_chromedriver
     run:
       name: Update chrome and the chromedriver
@@ -60,15 +54,6 @@ references:
           --no-cache \
           --no-progress \
           expect
-
-  install_gpg: &install_gpg
-    run:
-      name: Install GPG
-      command: |
-        apk add \
-          --no-cache \
-          --no-progress \
-          gnupg
 
   create_gpg_key_file: &create_gpg_key_file
     run:
@@ -156,15 +141,6 @@ references:
         bundle exec rails parallel:load_structure
         bundle exec rails parallel:spec
 
-  set_up_aws_cli: &set_up_aws_cli
-    run:
-      # this is needed to get a token from the cloud platform to use kubernetes
-      name: Set up AWS CLI
-      command: |
-        sudo apt-get update
-        sudo apt-get --assume-yes install python3-pip
-        sudo pip3 install awscli
-
   configure_aws_profile: &configure_aws_profile
     run:
       name: Configure AWS CLI
@@ -248,7 +224,6 @@ jobs:
       - *restore_cache
       - *install_bundler
       - *check_bundler_version
-      - *install_psql
       - *install_dependencies
       - *save_cache
       - *wait_for_db
@@ -296,7 +271,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - *install_gpg
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
@@ -317,7 +291,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - *install_gpg
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
@@ -338,7 +311,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - *install_gpg
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
@@ -359,7 +331,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - *install_gpg
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
@@ -380,7 +351,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - *install_gpg
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
