@@ -33,9 +33,12 @@ references:
     docker:
       - image: ministryofjustice/cloud-platform-tools:1.29
 
-
-# These are defining the steps which are used below in the jobs
-
+  install_psql: &install_psql
+    run:
+      name: Install psql client
+      command: |
+         sudo apt update && sudo apt install postgresql-client
+  
   update_chromedriver: &update_chromedriver
     run:
       name: Update chrome and the chromedriver
@@ -224,6 +227,7 @@ jobs:
       - *restore_cache
       - *install_bundler
       - *check_bundler_version
+      - *install_psql
       - *install_dependencies
       - *save_cache
       - *wait_for_db
