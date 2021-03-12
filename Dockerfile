@@ -5,20 +5,44 @@ RUN set -ex
 RUN addgroup --gid 1000 --system appgroup && \
     adduser --uid 1000 --system appuser --ingroup appgroup
 
-RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base
+# Some app dependencies
+RUN apk add libreoffice clamav clamav-daemon freshclam
+
+# Note: .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base - these help with bundle install issues and also install Git
+RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base git
 
 WORKDIR /usr/src/app/
 
 RUN apk -U upgrade
-#RUN apk add git
 
 COPY Gemfile* ./
 
-#RUN gem install bundler -v '~> 2.2.13'
+RUN gem install bundler -v '~> 2.2.13'
 
 RUN bundle config set --global frozen 1 && \
     bundle config set without 'development test' && \
     bundle install  
 
+COPY . .
 
+RUN mkdir log tmp
+RUN chown -R appuser:appgroup /usr/src/app/
+USER appuser
+USER 1000
+
+ENV PUMA_PORT 3000
+EXPOSE $PUMA_PORT
+
+RUN chown -R appuser:appgroup ./*
+RUN chmod +x /usr/src/app/config/docker/*
+
+# expect/add ping environment variables
+ARG VERSION_NUMBER
+ARG COMMIT_ID
+ARG BUILD_DATE
+ARG BUILD_TAG
+ENV VERSION_NUMBER=${VERSION_NUMBER}
+ENV APP_GIT_COMMIT=${COMMIT_ID}
+ENV APP_BUILD_DATE=${BUILD_DATE}
+ENV APP_BUILD_TAG=${BUILD_TAG}
 
