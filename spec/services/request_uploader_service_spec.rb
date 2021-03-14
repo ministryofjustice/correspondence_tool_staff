@@ -31,6 +31,8 @@ describe RequestUploaderService do
     ActiveJob::Base.queue_adapter = :test
     allow(S3Uploader).to receive(:new).and_return(uploader)
   end
+  
+  after(:all) { DbHousekeeping.clean(seed: true) }
 
   describe '#upload!' do
     context 'action upload' do
