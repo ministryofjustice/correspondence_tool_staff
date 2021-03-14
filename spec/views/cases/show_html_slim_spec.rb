@@ -37,6 +37,7 @@ describe 'cases/show.html.slim', type: :view do
       :close,
       :can_add_note_to_case?,
       :can_record_data_request?,
+      :can_upload_request_attachment?
     ]
 
     if (policies.keys - policy_names).any?
