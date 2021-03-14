@@ -12,7 +12,6 @@
                   transition_to: data_to_be_requested
                 mark_as_require_response:
                   transition_to: response_required
-                add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
                 edit_case:
