@@ -10,7 +10,7 @@ describe S3Uploader do
   let(:destination_key)    { "#{kase.id}/responses/#{upload_group}/#{filename}" }
   let(:destination_path)   { "correspondence-staff-case-uploads-testing/#{destination_key}" }
   let(:uploads_object)     { instance_double(Aws::S3::Object, 'uploads_object') }
-  let(:public_url)         { "#{CASE_UPLOADS_S3_BUCKET.url}/#{URI.encode(destination_key)}" }
+  let(:public_url)         { URI.join(CASE_UPLOADS_S3_BUCKET.url, destination_key) }
   let(:destination_object) { instance_double Aws::S3::Object, 'destination_object', public_url: public_url }
   let(:leftover_files)     { [] }
   let(:state_machine)      { double CaseStateMachine }

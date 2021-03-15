@@ -6,10 +6,10 @@ feature 'downloading a response from response details' do
 
   given(:response) { build :case_response, user_id: responder.id }
   given(:presigned_url) do
-    URI.encode("#{CASE_UPLOADS_S3_BUCKET.url}/#{response.key}&temporary")
+    URI.join(CASE_UPLOADS_S3_BUCKET.url, "#{response.key}&temporary")
   end
   given(:presigned_view_url) do
-    URI.encode("#{CASE_UPLOADS_S3_BUCKET.url}/#{response.preview_key}&temporary")
+    URI.join(CASE_UPLOADS_S3_BUCKET.url, "#{response.preview_key}&temporary")
   end
 
   def stub_s3_response_object(response, url)
