@@ -16,7 +16,7 @@ class Admin::DashboardController < AdminController
   def list_queries
     @queries = SearchQuery
                  .roots
-                 .list
+                 .list_query_type
                  .order(id: :desc)
                  .includes(:user)
                  .limit(100)

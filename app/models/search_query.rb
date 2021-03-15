@@ -64,13 +64,13 @@ class SearchQuery < ApplicationRecord
   belongs_to :parent, class_name: 'SearchQuery'
   has_many   :children, class_name: 'SearchQuery'
 
-  validates_presence_of :search_text, if: :search?
+  validates_presence_of :search_text, if: :search_query_type?
 
   enum query_type: {
       search: 'search',
       filter: 'filter',
       list: 'list'
-  }
+  },  _suffix: true
 
   # Add all those properties withn query jsonb fields
   TYPED_FILTER_FIELDS = {search_text: [:string, default: nil], list_path: [:string, default: nil]}
