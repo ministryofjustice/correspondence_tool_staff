@@ -84,7 +84,7 @@ section.govuk-tabs__panel
                       = t('.view_case')
                     = link_to kase.number, case_path(kase.id)
                   td aria-label="#{t('.flag')}"
-                    = kase.trigger_case_marker
+                    = kase.highlight_flag
                   td aria-label="#{t('.type')}"
                     = "#{kase.pretty_type} "
                   td aria-label="#{t('.request_detail')}"

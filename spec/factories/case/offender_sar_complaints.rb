@@ -91,17 +91,6 @@ FactoryBot.define do
       end
     end
 
-    trait :waiting do
-      transient do
-        identifier { 'Waiting - Offender SAR Complaint' }
-      end
-
-      after(:create) do |kase|
-        create :case_transition_waiting, case: kase
-        kase.reload
-      end
-    end
-
     trait :waiting_for_data do
       transient do
         identifier { 'Waiting for data - Offender SAR Complaint' }
@@ -152,6 +141,39 @@ FactoryBot.define do
         create :case_transition_ready_for_vetting, case: kase
         create :case_transition_vetting_in_progress, case: kase
         create :case_transition_ready_to_copy, case: kase
+        kase.reload
+      end
+    end
+
+    trait :ready_to_dispatch do
+      transient do
+        identifier { 'Ready to dispatch - Offender SAR Complaint' }
+      end
+  
+      after(:create) do |kase|
+        create :case_transition_data_to_be_requested, case: kase
+        create :case_transition_waiting_for_data, case: kase
+        create :case_transition_ready_for_vetting, case: kase
+        create :case_transition_vetting_in_progress, case: kase
+        create :case_transition_ready_to_copy, case: kase
+        create :case_transition_ready_to_dispatch, case: kase
+        kase.reload
+      end
+    end
+    
+    trait :legal_proceedings_ongoing do
+      transient do
+        identifier { 'Legal proceedings ongoing - Offender SAR Complaint' }
+      end
+  
+      after(:create) do |kase|
+        create :case_transition_data_to_be_requested, case: kase
+        create :case_transition_waiting_for_data, case: kase
+        create :case_transition_ready_for_vetting, case: kase
+        create :case_transition_vetting_in_progress, case: kase
+        create :case_transition_ready_to_copy, case: kase
+        create :case_transition_ready_to_dispatch, case: kase
+        create :case_transition_legal_proceedings_ongoing, case: kase
         kase.reload
       end
     end

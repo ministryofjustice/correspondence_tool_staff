@@ -17,13 +17,17 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :mark_as_vetting_in_progress, 
           :mark_as_require_response,
-          :send_acknowledgement_letter, :reset_to_initial_state]
+          :send_acknowledgement_letter, 
+          :add_data_received,
+          :reset_to_initial_state]
       },
       {
         state: :data_to_be_requested,
         specific_events: [
           :mark_as_waiting_for_data, 
-          :send_acknowledgement_letter, :reset_to_initial_state]
+          :send_acknowledgement_letter, 
+          :add_data_received,
+          :reset_to_initial_state]
       },
       {
         state: :waiting_for_data,
@@ -31,29 +35,34 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_ready_for_vetting,
           :mark_as_require_response, 
           :send_acknowledgement_letter, 
-          :preview_cover_page, :reset_to_initial_state]
+          :preview_cover_page, 
+          :reset_to_initial_state, 
+          :add_data_received]
       },
       {
         state: :ready_for_vetting,
         specific_events: [
           :mark_as_vetting_in_progress, 
           :preview_cover_page, 
-          :reset_to_initial_state]
+          :reset_to_initial_state, 
+          :add_data_received]
       },
       {
         state: :vetting_in_progress,
         specific_events: [
           :mark_as_ready_to_copy, 
-          :preview_cover_page, :reset_to_initial_state]
+          :preview_cover_page, 
+          :reset_to_initial_state, 
+          :add_data_received]
       },
       {
         state: :ready_to_copy,
         specific_events: [
-          :mark_as_require_response, :reset_to_initial_state]
+          :mark_as_require_response, :reset_to_initial_state, :add_data_received]
       },
       {
         state: :response_required,
-        specific_events: [:close, :send_dispatch_letter, :reset_to_initial_state]
+        specific_events: [:close, :send_dispatch_letter, :reset_to_initial_state, :add_data_received]
       },
       {
         state: :closed,
@@ -63,7 +72,6 @@ describe ConfigurableStateMachine::Machine do
 
     UNIVERSAL_EVENTS_STANDARD = %i[
       add_note_to_case
-      add_data_received
       edit_case
       reassign_user
     ].freeze

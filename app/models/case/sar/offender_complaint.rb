@@ -27,6 +27,9 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
   validate :validate_ico_contact_name
   validate :validate_ico_contact_details
   validate :validate_ico_reference
+  validate :validate_gld_contact_name
+  validate :validate_gld_contact_details
+  validate :validate_gld_reference
   validate :validate_external_deadline
 
   belongs_to :appeal_outcome, class_name: 'CaseClosure::OffenderComplaintAppealOutcome'

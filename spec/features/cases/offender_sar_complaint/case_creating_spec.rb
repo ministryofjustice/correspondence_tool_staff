@@ -142,11 +142,16 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_expect_case_in_my_open_cases
   end
 
-  scenario '8 Create the complaint case from open late offender sar case' do
+  scenario '8 Create the complaint case from open in time offender sar case' do
     offender_sar_open_in_time = create(:offender_sar_case, :third_party)
     then_expect_no_button_for_creating_complaint_case(offender_sar_open_in_time)
   end
 
+  scenario '9 back to offender sar case page when creating complaint from its page ' do
+    when_i_navigate_to_offender_sar_subject_page_and_start_complaint
+    and_click_back_link
+    then_expect_back_to_offender_sar_page_again
+  end
 
   context 'when complaint is an ICO complaint' do
     let(:complaint_type) { 'ico_complaint' }
@@ -337,6 +342,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     click_on "Continue"
     expect(cases_new_offender_sar_complaint_confirm_case_page).to have_content "Create Offender SAR Complaint case"
     expect(cases_new_offender_sar_complaint_confirm_case_page).to be_displayed
+    expect(cases_new_offender_sar_complaint_confirm_case_page.back_links.size).to eq 2
     cases_new_offender_sar_complaint_confirm_case_page.confirm_yes
     click_on "Continue"
   end
@@ -468,6 +474,16 @@ feature 'offender sar complaint case creation by a manager', js: true do
     row = my_open_cases_page.row_for_case_number(complaint_case.number)
     expect(row).to have_content complaint_case.number
     expect(row).to have_content 'branston registry responding user'
+  end
+
+  def and_click_back_link
+    cases_new_offender_sar_complaint_confirm_case_page.find_first_back_link.click
+  end
+
+  def then_expect_back_to_offender_sar_page_again
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content offender_sar.number
+    expect(cases_show_page).to have_content "Start complaint"
   end
 end
 

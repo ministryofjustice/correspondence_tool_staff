@@ -10,25 +10,8 @@
                   transition_to: data_review_required
                 mark_as_data_to_be_requested:
                   transition_to: data_to_be_requested
-                mark_as_waiting:
-                  if: Workflows::Predicates#is_litigation_complaint?
-                  transition_to: waiting
                 mark_as_require_response:
                   transition_to: response_required
-                add_data_received:
-                add_note_to_case:
-                send_acknowledgement_letter:
-                edit_case:
-                assign_to_team_member:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?
-                reassign_user:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_assigned?
-                reset_to_initial_state:
-                  transition_to: to_be_assessed
-              waiting:
-                mark_as_data_to_be_requested:
-                  transition_to: data_to_be_requested
-                add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
                 edit_case:
@@ -126,8 +109,9 @@
                 reset_to_initial_state:
                   transition_to: to_be_assessed
               ready_to_dispatch:
-                close:
-                  transition_to: closed
+                mark_as_legal_proceedings_ongoing:
+                  if: Workflows::Predicates#is_litigation_complaint?
+                  transition_to: legal_proceedings_ongoing
                 assign_to_team_member:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?
                 reassign_user:
@@ -141,15 +125,13 @@
               response_required:
                 add_approval_flags_for_ico:
                   if: Workflows::Predicates#is_ico_complaint_and_no_approval_flag?
-                add_approval_flags_for_litigation:
-                  if: Workflows::Predicates#is_litigation_complaint_and_no_approval_flag?
                 add_complaint_appeal_outcome:
                   if: Workflows::Predicates#is_ico_complaint_and_no_appeal_outcome?
-                add_complaint_outcome:
-                  if: Workflows::Predicates#is_litigation_complaint_and_no_outcome?
-                add_complaint_costs:
-                  if: Workflows::Predicates#is_litigation_complaint_and_no_costs?
+                mark_as_legal_proceedings_ongoing:
+                  if: Workflows::Predicates#is_litigation_complaint?
+                  transition_to: legal_proceedings_ongoing
                 close:
+                  if: Workflows::Predicates#is_not_litigation_complaint?
                   transition_to: closed
                 assign_to_team_member:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?
@@ -159,6 +141,25 @@
                 add_data_received:
                 add_note_to_case:
                 edit_case:
+                reset_to_initial_state:
+                  transition_to: to_be_assessed
+              legal_proceedings_ongoing:
+                add_approval_flags_for_litigation:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_approval_flag?
+                add_complaint_outcome:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_outcome?
+                add_complaint_costs:
+                  if: Workflows::Predicates#is_litigation_complaint_and_no_costs?
+                close:
+                  transition_to: closed
+                add_data_received:
+                add_note_to_case:
+                send_dispatch_letter:
+                edit_case:
+                assign_to_team_member:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_assigned?
                 reset_to_initial_state:
                   transition_to: to_be_assessed
               closed:

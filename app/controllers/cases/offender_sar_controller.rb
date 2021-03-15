@@ -13,6 +13,7 @@ module Cases
       super
       @correspondence_type = CorrespondenceType.offender_sar
       @correspondence_type_key = 'offender_sar'
+      @creation_optional_flags = {}
     end
 
     def new
@@ -20,6 +21,8 @@ module Cases
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
       @case.current_step = params[:step]
+      load_optional_flags_from_params
+      @back_link = back_link_url
     end
 
     def create
@@ -27,6 +30,7 @@ module Cases
       @case = build_case_from_session(case_type)
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
+      load_optional_flags_from_params
       if steps_are_completed? 
         if @case.valid_attributes?(create_params) && @case.valid?
           create_case
@@ -107,7 +111,7 @@ module Cases
       copy_params = @case.process_params_after_step(copy_params)
       session_persist_state(copy_params)
       get_next_step(@case)
-      redirect_to "#{@case.case_route_path}/#{@case.current_step}"
+      redirect_to "#{@case.case_route_path}/#{@case.current_step}#{build_url_params_from_flags}"
     end
 
     def create_case
@@ -187,5 +191,28 @@ module Cases
     def session_state
       "#{@correspondence_type_key}_state".to_sym
     end
+
+    def load_optional_flags_from_params
+      @creation_optional_flags.each do |key, _|
+        @creation_optional_flags[key] = params[key]
+      end
+    end
+
+    def build_url_params_from_flags
+      if has_optional_flags?
+        "?#{@creation_optional_flags.to_param}"
+      else
+        ""
+      end
+    end
+
+    def has_optional_flags?
+      @creation_optional_flags.present? && @creation_optional_flags.values.all? {|x| x.present?}
+    end
+  
+    def back_link_url
+      "#{@case.case_route_path}/#{@case.get_previous_step}#{build_url_params_from_flags}"
+    end
+
   end
 end
