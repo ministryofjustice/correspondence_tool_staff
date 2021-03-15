@@ -674,6 +674,7 @@ en:
     closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
     request_uploaded: You have uploaded the request files for this case.
+    no_request_uploaded: No changes were made.
     progress_for_clearance: The Disclosure team has been notified this case is ready for clearance
     case/ico:
       case_cleared: "The response has been cleared and is ready to be sent to the ICO"

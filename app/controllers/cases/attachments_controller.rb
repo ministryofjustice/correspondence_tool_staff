@@ -44,17 +44,20 @@ module Cases
       )
       service.upload!
 
-      if service.result == :error
+      case service.result
+      when :ok
+        flash[:notice] = t('notices.request_uploaded')
+        redirect_to case_path @case
+      when :blank
+        flash[:alert] = t('notices.no_request_uploaded')
+        redirect_to case_path @case
+      else 
         @s3_direct_post = S3Uploader.for(@case, 'requests')
         @case = @case.decorate
         flash.now[:alert] = service.error_message
         render :new
-      else
-        if service.result == :ok
-          flash[:notice] = t('notices.request_uploaded')
-        end
-        redirect_to case_path @case
       end
+
     end 
 
     private

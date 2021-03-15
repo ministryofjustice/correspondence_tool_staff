@@ -30,7 +30,7 @@ span.visually-hidden
               locals: { s3_direct_post: @s3_direct_post,
                         file_input_name: 'uploaded_request_files[]' }
         .form-group
-          label.form_label
+          label.form_label for="message-form"
             | <strong>Add message (optional)</strong>
           .message-form
             = text_area_tag(:upload_comment, nil, rows: 4, class: 'form-control')
