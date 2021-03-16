@@ -1,4 +1,4 @@
-class CreateCaseTransitions < ActiveRecord::Migration
+class CreateCaseTransitions < ActiveRecord::Migration[5.1]
   def change
     create_table :case_transitions do |t|
       t.string :event
