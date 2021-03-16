@@ -8,7 +8,7 @@ RUN addgroup --gid 1000 --system appgroup && \
 # Some app dependencies
 RUN apk add libreoffice clamav clamav-daemon freshclam
 
-# Note: .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base - these help with bundle install issues and also install Git
+# Note: .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base - these help with bundle install issues
 RUN apk add --no-cache --virtual .ruby-gemdeps libc-dev gcc libxml2-dev libxslt-dev make  postgresql-dev build-base git
 
 WORKDIR /usr/src/app/
