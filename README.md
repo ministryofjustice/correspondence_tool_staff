@@ -502,6 +502,13 @@ control aspects of the build. The available build arguments are:
   These are required to scan the uploaded files for viruses (clamav & Co.) and
   to generate a PDF preview (libreoffice).
 
+
+  ```
+      clamav clamav-daemon clamav-freshclam libreoffice
+  ```
+
+  Required to run Puma with ExecJS
+
 #### Generating Documentation
  
 You can generate documentation for the project with:
