@@ -11,7 +11,7 @@ class PopulateFullApprovalWorkflow < ActiveRecord::Migration[5.0]
 
     has_many :approving_teams,
              -> { where("state != 'rejected'") },
-             class_name: BusinessUnit,
+             class_name: 'BusinessUnit',
              through: :approver_assignments,
              source: :team
 
