@@ -504,10 +504,17 @@ control aspects of the build. The available build arguments are:
 
 
   ```
-      clamav clamav-daemon clamav-freshclam libreoffice
+      nodejs
   ```
 
   Required to run Puma with ExecJS
+
+
+  ```
+      zip
+  ```
+
+  Required to run closed case reports
 
 #### Generating Documentation
  
