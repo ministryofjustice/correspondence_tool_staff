@@ -100,7 +100,7 @@ group :development, :test do
   gem 'pry'
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
-  gem 'rspec-rails', '~> 4.0'
+  gem 'rspec-rails', '~> 5.0'
   gem 'rubocop', '~> 0.87.0', require: false
   gem 'rubocop-rspec', '~> 1.44.0', require: false
   gem 'rubocop-performance', require: false
