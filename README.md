@@ -502,6 +502,20 @@ control aspects of the build. The available build arguments are:
   These are required to scan the uploaded files for viruses (clamav & Co.) and
   to generate a PDF preview (libreoffice).
 
+
+  ```
+      nodejs
+  ```
+
+  Required to run Puma with ExecJS
+
+
+  ```
+      zip
+  ```
+
+  Required to run closed case reports
+
 #### Generating Documentation
  
 You can generate documentation for the project with:

@@ -116,7 +116,7 @@ module Stats
             deactivated:                   '',
             moved:                         '',
             responsible:                   @bizgrp_ab.team_lead,
-            ico_appeal_performance:        28.6,
+            ico_appeal_performance:        44.4,
             ico_appeal_total:              9,
             ico_appeal_responded_in_time:  2,
             ico_appeal_responded_late:     2,
@@ -134,7 +134,7 @@ module Stats
             deactivated:                   '',
             moved:                         '',
             responsible:                   @bizgrp_cd.team_lead,
-            ico_appeal_performance:        50.0,
+            ico_appeal_performance:        66.7,
             ico_appeal_total:              3,
             ico_appeal_responded_in_time:  1,
             ico_appeal_responded_late:     1,
@@ -173,16 +173,16 @@ module Stats
             SAR Appeal performance stats - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
-            BGAB,"","",#{@bizgrp_ab.team_lead},28.6,9,2,2,2,3
-            BGAB,DRA,"",#{@dir_a.team_lead},20.0,6,1,2,1,2
-            BGAB,DRA,RTA,#{@team_a.team_lead},20.0,6,1,2,1,2
-            BGAB,DRB,"",#{@dir_b.team_lead},50.0,3,1,0,1,1
-            BGAB,DRB,RTB,#{@team_b.team_lead},50.0,3,1,0,1,1
-            BGCD,"","",#{@bizgrp_cd.team_lead},50.0,3,1,1,1,0
-            BGCD,DRCD,"",#{@dir_cd.team_lead},50.0,3,1,1,1,0
+            BGAB,"","",#{@bizgrp_ab.team_lead},44.4,9,2,2,2,3
+            BGAB,DRA,"",#{@dir_a.team_lead},33.3,6,1,2,1,2
+            BGAB,DRA,RTA,#{@team_a.team_lead},33.3,6,1,2,1,2
+            BGAB,DRB,"",#{@dir_b.team_lead},66.7,3,1,0,1,1
+            BGAB,DRB,RTB,#{@team_b.team_lead},66.7,3,1,0,1,1
+            BGCD,"","",#{@bizgrp_cd.team_lead},66.7,3,1,1,1,0
+            BGCD,DRCD,"",#{@dir_cd.team_lead},66.7,3,1,1,1,0
             BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0
-            BGCD,DRCD,RTD,#{@team_d.team_lead},0.0,1,0,0,1,0
-            Total,"","","",33.3,12,3,3,3,3
+            BGCD,DRCD,RTD,#{@team_d.team_lead},100.0,1,0,0,1,0
+            Total,"","","",50.0,12,3,3,3,3
           EOCSV
           report = R102SarAppealsPerformanceReport.new
           report.run
