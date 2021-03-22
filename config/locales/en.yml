@@ -111,7 +111,7 @@ en:
             blank: "Enter original case number"
             missing: "Original case not found"
             not_authorised: "Not authorised to view case"
-            wrong_type: "Original case must be one of the [%{case_types}] "
+            wrong_type: "Original case must be one of the [%{case_types}]."
           related_case_number:
             already_linked: "Case is already linked"
             blank: "Enter related case number"
