@@ -111,7 +111,7 @@ en:
             blank: "Enter original case number"
             missing: "Original case not found"
             not_authorised: "Not authorised to view case"
-            wrong_type: "Original case must be FOI or SAR"
+            wrong_type: "Original case must be one of the [%{case_types}] "
           related_case_number:
             already_linked: "Case is already linked"
             blank: "Enter related case number"
@@ -493,6 +493,11 @@ en:
         completed: "Yes, all data received"
       data_request_log:
         num_pages: Number of pages
+      types:
+        Case::FOI::Standard: FOI
+        Case::FOI::TimelinessReview: FOI - Internal review for timeliness
+        Case::FOI::ComplianceReview: FOI - Internal review for compliance
+        Case::SAR::Standard: SAR - Non-offender 
       foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity

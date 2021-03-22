@@ -1,4 +1,7 @@
 class CaseLinkTypeValidator < ActiveModel::Validator
+
+  attr_accessor :error_message
+
   ALLOWED_LINKS_BY_TYPE = {
     related: {
       'Case::FOI::Standard'         => ['Case::FOI::Standard',
@@ -36,8 +39,14 @@ class CaseLinkTypeValidator < ActiveModel::Validator
                                         'Case::SAR::OffenderComplaint'],
     },
     original: {
-      'Case::ICO::FOI'            => ['Case::FOI::Standard'],
+      'Case::ICO::FOI'            => ['Case::FOI::Standard', 
+                                      'Case::FOI::TimelinessReview', 
+                                      'Case::FOI::ComplianceReview'],
       'Case::ICO::SAR'            => ['Case::SAR::Standard'],
+      'Case::ICO::Base'           => ['Case::FOI::Standard', 
+                                      'Case::FOI::TimelinessReview', 
+                                      'Case::FOI::ComplianceReview',
+                                      'Case::SAR::Standard'],
       'Case::OverturnedICO::SAR'  => ['Case::SAR::Standard'],
       'Case::OverturnedICO::FOI'  => ['Case::FOI::Standard'],
       'Case::SAR::OffenderComplaint'  => ['Case::SAR::Offender'],

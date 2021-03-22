@@ -55,9 +55,9 @@ module Stats
           1.times { create :closed_case, :fully_refused_exempt_s44 }
 
           2.times { create :closed_case, :with_ncnd_exemption }
-
-          1.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s22))}        
-          2.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s27))}        
+          
+          1.times { create(:ico_foi_case, original_case: create(:closed_foi_ir_compliance, :fully_refused_exempt_s22))}        
+          2.times { create(:ico_foi_case, original_case: create(:closed_foi_ir_compliance, :fully_refused_exempt_s27))}        
           3.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s34))}        
           4.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s36))}        
           2.times { create(:ico_foi_case, original_case: create(:closed_case, :fully_refused_exempt_s44))}        
@@ -182,7 +182,7 @@ module Stats
       context '2.B' do
         it 'records the stat' do
           expect(@results['2.B'][:desc]).to match(/Number of cases created and closed in this period .*Granted in full/)
-          expect(@results['2.B'][:value]).to eq 9
+          expect(@results['2.B'][:value]).to eq 12
         end
       end
 
@@ -231,21 +231,21 @@ module Stats
       context '2.I' do
         it 'records the stat' do
           expect(@results['2.I'][:desc]).to eq "Number of cases created and closed in this period that have been marked as 'Refused fully' with a 'reason for refusal' of 'Exemption applied'"
-          expect(@results['2.I'][:value]).to eq 55
+          expect(@results['2.I'][:value]).to eq 52
         end
       end
 
       context '3.A' do
         it 'records the stat' do
           expect(@results['3.A'][:desc]).to eq "Number of cases created and closed in this period that were fully or partly refused. = 2.H + 2.I"
-          expect(@results['3.A'][:value]).to eq 58
+          expect(@results['3.A'][:value]).to eq 55
         end
       end
 
       context '3.S22' do
         it 'records the stat' do
           expect(@results['3.S22'][:desc]).to match(/Information intended for future publication/)
-          expect(@results['3.S22'][:value]).to eq 4
+          expect(@results['3.S22'][:value]).to eq 3
         end
       end
 
@@ -280,7 +280,7 @@ module Stats
       context '3.S27' do
         it 'records the stat' do
           expect(@results['3.S27'][:desc]).to match(/International relations/)
-          expect(@results['3.S27'][:value]).to eq 3
+          expect(@results['3.S27'][:value]).to eq 1
         end
       end
 
