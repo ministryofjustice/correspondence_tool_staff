@@ -72,6 +72,8 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+# Alpine does not include zoneinfo files (probably) - it asked for tinfo-data, so bundle the tzinfo-data gem
+gem 'tzinfo-data'
 
 group :test do
   gem 'capybara', '~> 3.29.0'
@@ -121,6 +123,3 @@ group :development do
   gem 'web-console'
   gem 'yard'
 end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
