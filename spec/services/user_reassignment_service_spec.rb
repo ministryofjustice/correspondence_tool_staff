@@ -105,7 +105,7 @@ describe UserReassignmentService do
 
       it 'should not send email' do
         service.call
-        expect(service.result).to eq :ok
+        expect(service.result).to eq :no_changes
       end
     end
 
