@@ -3,6 +3,7 @@ en:
   page_title:
     admin_case_creation: Admin case creation - Track-a-query
     admin_case_list: Admin case list - Track-a-query
+    admin_user_list: Admin user list - Track-a-query
     all_cases: All open cases - Track-a-query
     all_new_cases: All new cases - Track-a-query
     approve_page: Clearing response - %{case_number} - Track-a-query
