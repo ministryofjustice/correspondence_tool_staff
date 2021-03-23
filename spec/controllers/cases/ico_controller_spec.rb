@@ -356,7 +356,7 @@ RSpec.describe Cases::IcoController, type: :controller do
             .to eq 'Original case not found'
         end
 
-        it "doesn't allow linking of case that isn't an FOI or SAR" do
+        it "doesn't allow linking of case that isn't an FOI or SAR or FOI internal review" do
           offender_sar = create(:offender_sar_case)
           new_linked_cases_for_request(original_case_number: offender_sar.number)
 
