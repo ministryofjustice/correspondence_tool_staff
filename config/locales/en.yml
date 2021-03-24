@@ -678,6 +678,8 @@ en:
     case_closed: "You've closed this case"
     closure_details_updated: You have updated the closure details for this case.
     response_uploaded: You have uploaded the response for this case.
+    request_uploaded: You have uploaded the request files for this case.
+    no_request_uploaded: No changes were made.
     progress_for_clearance: The Disclosure team has been notified this case is ready for clearance
     case/ico:
       case_cleared: "The response has been cleared and is ready to be sent to the ICO"
@@ -1130,6 +1132,11 @@ en:
       requester_heading: Who is making the complaint?
       request_details_heading: What is the date on the complaint?
       requested_info_heading: Is there other information relevant to this complaint?
+    attachments:
+      upload_request_files_heading: Upload request files
+      upload_hint_copy: |
+        You can upload different file types such as Word, Excel,
+        PDF and JPEG up to 20MB per file.
     remove_clearance:
       heading: 'Remove Clearance'
       explanation: 'You are removing clearance level of Disclosure for the case:'
@@ -1179,7 +1186,6 @@ en:
       Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
       Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
       Case::SAR::OffenderComplaint: Complaint
-
   assignments:
     accept:
       success: Case taken on
