@@ -128,8 +128,13 @@ module ICOCasesParams
   end
 
   def validate_ico_original_case(original_case)
-    if not original_case.class.in? [Case::FOI::Standard, Case::SAR::Standard]
-      @linked_case_error = ico_error('original_case_number', :wrong_type)
+    linkable = CaseLinkTypeValidator.classes_can_be_linked_with_type?(
+      klass: 'Case::ICO::Base',
+      linked_klass: original_case.class.to_s,
+      type: 'original'
+    )
+    if not linkable
+      @linked_case_error = ico_original_case_error('Case::ICO::Base')
       false
     elsif not policy(original_case).show?
       @linked_case_error = ico_error('original_case_number', :not_authorised)
@@ -190,6 +195,15 @@ module ICOCasesParams
       "#{attribute}.#{error}",
       options
     )
+  end
+
+  def ico_original_case_error(ico_class_name)
+    allowed_case_class_names = []
+    CaseLinkTypeValidator::ALLOWED_LINKS_BY_TYPE["original"][ico_class_name].each do | class_name |
+      allowed_case_class_names <<  I18n.t("helpers.label.types.#{class_name}")
+    end
+    I18n.t('activerecord.errors.models.case/ico.original_case_number.wrong_type', 
+      case_types: allowed_case_class_names.join(", "))
   end
 
   def respond_ico_params

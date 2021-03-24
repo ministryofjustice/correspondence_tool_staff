@@ -1076,4 +1076,25 @@ FactoryBot.define do
       debug { true }
     end
   end
+
+  factory :closed_foi_ir_compliance, parent: :closed_case, class: Case::FOI::ComplianceReview do
+    after(:create) do |kase|
+      foi_case = create :closed_case
+      kase.extend_pit_deadline!(13.business_days.from_now)
+      @case_link = LinkedCase.new(linked_case_number: foi_case.number)
+      kase.related_case_links << @case_link
+      kase.reload
+    end
+  end
+
+  factory :closed_foi_ir_timeliness, parent: :closed_case, class: Case::FOI::TimelinessReview do
+    after(:create) do |kase|
+      foi_case = create :closed_case
+      kase.extend_pit_deadline!(13.business_days.from_now)
+      @case_link = LinkedCase.new(linked_case_number: foi_case.number)
+      kase.related_case_links << @case_link
+      kase.reload
+    end
+  end
+
 end
