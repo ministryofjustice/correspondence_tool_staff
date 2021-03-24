@@ -158,7 +158,7 @@ Rails.application.routes.draw do
     resources :messages, only: [:create]
     resources :notes, only: [:create]
 
-    resources :attachments, only: [:show, :destroy] do
+    resources :attachments, only: [:show, :destroy, :new, :create] do
       get 'download', on: :member
     end
 

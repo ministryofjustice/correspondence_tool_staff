@@ -24,7 +24,8 @@ describe 'assignments/edit.html.slim', type: :view do
     allow_case_policies_in_view awaiting_responder_case,
                                 :can_add_message_to_case?,
                                 :request_further_clearance?,
-                                :destroy_case_link?
+                                :destroy_case_link?,
+                                :can_upload_request_attachment?
     disallow_case_policies_in_view awaiting_responder_case,
                                    :new_case_link?,
                                    :destroy_case_link?,
@@ -81,7 +82,8 @@ describe 'assignments/edit.html.slim', type: :view do
       allow_case_policies_in_view awaiting_responder_case,
                                   :can_add_message_to_case?,
                                   :request_further_clearance?,
-                                  :destroy_case_link?
+                                  :destroy_case_link?,
+                                  :can_upload_request_attachment?
       disallow_case_policies_in_view awaiting_responder_case,
                                      :new_case_link?,
                                      :destroy_case_link?,
@@ -142,7 +144,8 @@ describe 'assignments/edit.html.slim', type: :view do
       allow_case_policies_in_view awaiting_responder_case,
                                   :can_add_message_to_case?,
                                   :request_further_clearance?,
-                                  :destroy_case_link?
+                                  :destroy_case_link?,
+                                  :can_upload_request_attachment?
       disallow_case_policies_in_view awaiting_responder_case,
                                      :new_case_link?,
                                      :destroy_case_link?,
@@ -204,7 +207,8 @@ describe 'assignments/edit.html.slim', type: :view do
       allow_case_policies_in_view ovt_foi_case,
                                   :can_add_message_to_case?,
                                   :request_further_clearance?,
-                                  :destroy_case_link?
+                                  :destroy_case_link?,
+                                  :can_upload_request_attachment?
       disallow_case_policies_in_view ovt_foi_case,
                                      :new_case_link?,
                                      :destroy_case_link?,

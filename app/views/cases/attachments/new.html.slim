@@ -1,0 +1,37 @@
+- content_for :page_title do
+  = t('page_title.add_request_attachment_page', case_number: @case.number)
+
+= GovukElementsErrorsHelper.error_summary @case,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+- content_for :heading
+  = t('cases.attachments.upload_request_files_heading')
+
+- content_for :sub_heading
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+
+= form_for @case, as: :case_attachment, url: case_attachments_path(@case), method: :post do |f|
+  .form-group
+    .grid-row
+      .column-two-thirds
+        p.form-hint
+          = t('cases.attachments.upload_hint_copy')
+    .grid-row
+      section.case-main
+        = render partial: 'shared/dropzone_form',
+              locals: { s3_direct_post: @s3_direct_post,
+                        file_input_name: 'uploaded_request_files[]' }
+        .form-group
+          label.form_label for="upload_comment"
+            | <strong>Add message (optional)</strong>
+          .message-form
+            = text_area_tag(:upload_comment, nil, rows: 4, class: 'form-control')
+    = f.submit 'Confirm', class: 'button'
