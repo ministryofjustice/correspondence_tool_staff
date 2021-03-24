@@ -196,10 +196,18 @@ class AssignmentsController < ApplicationController
               .new(target_user: target_user,
                    acting_user: current_user,
                    assignment: @assignment)
-
-    if urs.call == :ok
+    
+    case urs.call
+    when :ok
       flash[:notice] = "Case re-assigned to #{@assignment.user.full_name}"
       redirect_to case_path(@case)
+    when :no_changes
+      flash[:alert] = 'No changes were made'
+      redirect_to case_path(@case)
+    else 
+      @case = @case.decorate
+      flash.now[:alert] = service.error_message
+      render :reassign_user
     end
 
   end
@@ -212,20 +220,25 @@ class AssignmentsController < ApplicationController
 
   def execute_assign_to_team_member
     authorize @case, :can_assign_to_team_member?
-    target_user = User.find(assign_to_team_member_params[:user_id])
-    service = CaseAssignToTeamMemberService
-                .new kase: @case,
-                  role: 'responding',
-                  user: current_user,
-                  target_user: target_user
-
-    service.call
-    @assignment = service.assignment
-    if service.result == :ok
-      flash[:notice] = "Case assigned to #{@assignment.user.full_name}"
-      redirect_to case_path @case.id
+    if assign_to_team_member_params.blank?
+      flash[:alert] = 'No changes were made'
+      redirect_to case_path(@case)
     else
-      render :new
+      target_user = User.find(assign_to_team_member_params[:user_id])
+      service = CaseAssignToTeamMemberService
+                  .new kase: @case,
+                    role: 'responding',
+                    user: current_user,
+                    target_user: target_user
+
+      service.call
+      @assignment = service.assignment
+      if service.result == :ok
+        flash[:notice] = "Case assigned to #{@assignment.user.full_name}"
+        redirect_to case_path @case.id
+      else
+        render :assign_to_team_member
+      end
     end
   end
 
@@ -277,9 +290,13 @@ class AssignmentsController < ApplicationController
   end
 
   def assign_to_team_member_params
-    params.require(:assignment).permit(
-      :user_id
-    )
+    if params[:assignment].present?
+      params.require(:assignment).permit(
+        :user_id
+      )
+    else
+      nil
+    end
   end
 
   def set_case_and_assignment
