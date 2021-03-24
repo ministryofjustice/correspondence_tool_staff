@@ -356,13 +356,13 @@ RSpec.describe Cases::IcoController, type: :controller do
             .to eq 'Original case not found'
         end
 
-        it "doesn't allow linking of case that isn't an FOI or SAR" do
-          foi_irt = create(:closed_timeliness_review)
-          new_linked_cases_for_request(original_case_number: foi_irt.number)
+        it "doesn't allow linking of case that isn't an FOI or SAR or FOI internal review" do
+          offender_sar = create(:offender_sar_case)
+          new_linked_cases_for_request(original_case_number: offender_sar.number)
 
           expect(response).to have_http_status 400
           expect(json_response['linked_case_error'])
-            .to eq 'Original case must be FOI or SAR'
+            .to eq 'Original case must be one of the [FOI, FOI - Internal review for timeliness, FOI - Internal review for compliance, SAR - Non-offender].'
         end
 
         context 'as a user only allowed to view FOI cases' do

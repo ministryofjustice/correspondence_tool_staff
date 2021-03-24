@@ -73,6 +73,7 @@ module PageObjects
         cases_edit:                     'Cases::EditPage',
         cases_edit_ico:                 'Cases::Edit::ICOPage',
         cases_edit_closure:             'Cases::EditClosurePage',
+        cases_upload_requests:          'Cases::UploadRequestsPage',
         cases_upload_responses:         'Cases::UploadResponsesPage',
         cases_upload_response_and_approve:
           'Cases::UploadResponseAndApprovePage',

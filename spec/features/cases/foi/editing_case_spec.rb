@@ -48,4 +48,21 @@ feature 'Editing a case' do
     expect(cases_show_page.alert.text).to eq 'No changes were made'
   end
 
+  scenario 'Uploading new request files', js: true do
+    kase =  create :accepted_case, :sent_by_post, received_date: 2.days.ago
+    open_cases_page.load
+    click_link kase.number
+    expect(cases_show_page).to be_displayed
+    click_link 'Upload request files'
+    expect(cases_upload_requests_page).to be_displayed
+
+    request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
+    cases_upload_requests_page.drop_in_dropzone(request_attachment)
+    cases_upload_requests_page.upload_requests_button.click
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content(I18n.t("notices.request_uploaded"))
+    request_attachment = kase.attachments.request.first
+    expect(request_attachment.key).to match %{/request-1.pdf$}    
+  end
+
 end

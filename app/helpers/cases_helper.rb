@@ -159,6 +159,11 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               new_case_data_request_path(@case),
               id: 'action--record-data-request',
               class: "button-tertiary"
+    when :upload_request_files
+      link_to 'Upload request files',
+              new_case_attachment_path(@case),
+              id: 'action--upload-request-files',
+              class: "button-tertiary"
     when :send_acknowledgement_letter
       link_to 'Send acknowledgement letter',
               new_case_letters_path(@case.id, "acknowledgement"),
