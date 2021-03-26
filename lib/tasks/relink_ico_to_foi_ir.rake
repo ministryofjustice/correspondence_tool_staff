@@ -22,13 +22,13 @@ namespace :ico_appeal do
         puts ico_appeal_foi_ids_map
       end
       counter = 0
-      ico_appeal_cases = Case::ICO::Base.all
+      ico_appeal_cases = Case::ICO::FOI.all
       ico_appeal_cases.each do | ico_appeal |
         puts "Checking ico appeal #{ico_appeal.number}"
         foi_ir_id = find_related_foi_ir_case_id(ico_appeal, ico_appeal_foi_ids_map)
         if foi_ir_id.present?
           foi_ir_case = Case::Base.find(foi_ir_id)
-          clear_up_old_links(ico_appeal, 'related')
+          clear_up_old_related_link(ico_appeal.id, foi_ir_id)
           clear_up_old_links(ico_appeal, 'original')
           create_new_original_case_link(ico_appeal, foi_ir_case)
           counter += 1
@@ -156,6 +156,13 @@ namespace :ico_appeal do
 
     def clear_up_old_links(ico_appeal, link_type)
       case_linkage_records = LinkedCase.where(type: link_type, case_id: ico_appeal.id)
+      case_linkage_records.each do | case_linkage_record |
+        case_linkage_record.destroy()
+      end
+    end
+
+    def clear_up_old_related_link(ico_appeal_id, foi_ir_id)
+      case_linkage_records = LinkedCase.where(type: 'related', case_id: ico_appeal_id, linked_case_id: foi_ir_id)
       case_linkage_records.each do | case_linkage_record |
         case_linkage_record.destroy()
       end
