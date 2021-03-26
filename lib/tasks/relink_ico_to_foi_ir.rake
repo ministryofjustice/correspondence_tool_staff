@@ -22,7 +22,7 @@ namespace :ico_appeal do
         puts ico_appeal_foi_ids_map
       end
       counter = 0
-      ico_appeal_cases = Case::ICO::Base.where(id: [15283])
+      ico_appeal_cases = Case::ICO::Base.all
       ico_appeal_cases.each do | ico_appeal |
         puts "Checking ico appeal #{ico_appeal.number}"
         foi_ir_id = find_related_foi_ir_case_id(ico_appeal, ico_appeal_foi_ids_map)
