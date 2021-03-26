@@ -127,19 +127,19 @@ module Stats
               responsible:                   @bizgrp_ab.team_lead,
               deactivated:                   "",
               moved:                         "",
-              non_trigger_performance:       28.6,
+              non_trigger_performance:       44.4,
               non_trigger_total:             9,
               non_trigger_responded_in_time: 2,
               non_trigger_responded_late:    2,
               non_trigger_open_in_time:      2,
               non_trigger_open_late:         3,
-              trigger_performance:           33.3,
+              trigger_performance:           60.0,
               trigger_total:                 5,
               trigger_responded_in_time:     1,
               trigger_responded_late:        1,
               trigger_open_in_time:          2,
               trigger_open_late:             1,
-              overall_performance:           30.0,
+              overall_performance:           50.0,
               overall_total:                 14,
               overall_responded_in_time:     3,
               overall_responded_late:        3,
@@ -157,7 +157,7 @@ module Stats
               responsible:                   @bizgrp_cd.team_lead,
               deactivated:                   "",
               moved:                         "",
-              non_trigger_performance:       50.0,
+              non_trigger_performance:       66.7,
               non_trigger_total:             3,
               non_trigger_responded_in_time: 1,
               non_trigger_responded_late:    1,
@@ -169,7 +169,7 @@ module Stats
               trigger_responded_late:        0,
               trigger_open_in_time:          0,
               trigger_open_late:             0,
-              overall_performance:           50.0,
+              overall_performance:           66.7,
               overall_total:                 3,
               overall_responded_in_time:     1,
               overall_responded_late:        1,
@@ -236,7 +236,7 @@ module Stats
               [[6, :red], [18, :red]],
               [[6, :red], [18, :red]],
               [[6, :red], [18, :red]],
-              [[6, :red], [18, :red]],
+              [[6, :green], [18, :green]],
               [[6, :green], [18, :green]],
               [[6, :green], [18, :green]],
               [[6, :green], [18, :green]],
@@ -257,19 +257,19 @@ module Stats
           Business unit report (FOIs) - 4 Jun 2017 to 30 Jun 2017
           #{super_header}
           #{header}
-          BGAB,"","",#{@bizgrp_ab.team_lead},"","",33.3,8,2,1,2,3,50.0,4,1,0,2,1,37.5,12,3,1,4,4
-          BGAB,DRA,"",#{@dir_a.team_lead},"","",25.0,5,1,1,1,2,100.0,2,1,0,1,0,40.0,7,2,1,2,2
-          BGAB,DRA,RTA,#{@team_a.team_lead},"","",25.0,5,1,1,1,2,100.0,2,1,0,1,0,40.0,7,2,1,2,2
-          BGAB,DRB,"",#{@dir_b.team_lead},"","",50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
-          BGAB,DRB,RTB,#{@team_b.team_lead},"","",50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2
-          BGCD,"","",#{@bizgrp_cd.team_lead},"","",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
-          BGCD,DRCD,"",#{@dir_cd.team_lead},"","",50.0,3,1,1,1,0,0.0,0,0,0,0,0,50.0,3,1,1,1,0
+          BGAB,"","",#{@bizgrp_ab.team_lead},"","",50.0,8,2,1,2,3,75.0,4,1,0,2,1,58.3,12,3,1,4,4
+          BGAB,DRA,"",#{@dir_a.team_lead},"","",40.0,5,1,1,1,2,100.0,2,1,0,1,0,57.1,7,2,1,2,2
+          BGAB,DRA,RTA,#{@team_a.team_lead},"","",40.0,5,1,1,1,2,100.0,2,1,0,1,0,57.1,7,2,1,2,2
+          BGAB,DRB,"",#{@dir_b.team_lead},"","",66.7,3,1,0,1,1,50.0,2,0,0,1,1,60.0,5,1,0,2,2
+          BGAB,DRB,RTB,#{@team_b.team_lead},"","",66.7,3,1,0,1,1,50.0,2,0,0,1,1,60.0,5,1,0,2,2
+          BGCD,"","",#{@bizgrp_cd.team_lead},"","",66.7,3,1,1,1,0,0.0,0,0,0,0,0,66.7,3,1,1,1,0
+          BGCD,DRCD,"",#{@dir_cd.team_lead},"","",66.7,3,1,1,1,0,0.0,0,0,0,0,0,66.7,3,1,1,1,0
           BGCD,DRCD,RTC,#{@team_c.team_lead},"","",50.0,2,1,1,0,0,0.0,0,0,0,0,0,50.0,2,1,1,0,0
-          BGCD,DRCD,RTD,#{@team_d.team_lead},"","",0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0
+          BGCD,DRCD,RTD,#{@team_d.team_lead},"","",100.0,1,0,0,1,0,0.0,0,0,0,0,0,100.0,1,0,0,1,0
           BGDoom,"","",#{@bizgrp_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
           BGDoom,DRDoom,"",#{@dir_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
           BGDoom,DRDoom,Doomed,#{@team_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0
-          Total,"","","","","",44.4,12,4,2,3,3,50.0,4,1,0,2,1,45.5,16,5,2,5,4
+          Total,"","","","","",58.3,12,4,2,3,3,75.0,4,1,0,2,1,62.5,16,5,2,5,4
           EOCSV
           actual_lines = report_csv.map { |row| row.map(&:value) }
           expected_lines = expected_text.split("\n")
@@ -317,19 +317,19 @@ module Stats
               responsible:                   @bizgrp_ab.team_lead,
               deactivated:                   "",
               moved:                         "",
-              non_trigger_performance:       33.3,
+              non_trigger_performance:       50.0,
               non_trigger_total:             8,
               non_trigger_responded_in_time: 2,
               non_trigger_responded_late:    1,
               non_trigger_open_in_time:      2,
               non_trigger_open_late:         3,
-              trigger_performance:           50.0,
+              trigger_performance:           75.0,
               trigger_total:                 4,
               trigger_responded_in_time:     1,
               trigger_responded_late:        0,
               trigger_open_in_time:          2,
               trigger_open_late:             1,
-              overall_performance:           37.5,
+              overall_performance:           58.3,
               overall_total:                 12,
               overall_responded_in_time:     3,
               overall_responded_late:        1,
@@ -353,7 +353,7 @@ module Stats
               responsible:                   @bizgrp_cd.team_lead,
               deactivated:                   "",
               moved:                         "",
-              non_trigger_performance:       50.0,
+              non_trigger_performance:       66.7,
               non_trigger_total:             3,
               non_trigger_responded_in_time: 1,
               non_trigger_responded_late:    1,
@@ -365,7 +365,7 @@ module Stats
               trigger_responded_late:        0,
               trigger_open_in_time:          0,
               trigger_open_late:             0,
-              overall_performance:           50.0,
+              overall_performance:           66.7,
               overall_total:                 3,
               overall_responded_in_time:     1,
               overall_responded_late:        1,
@@ -434,19 +434,19 @@ module Stats
               Business unit report (FOIs) - 5 Jun 2017 to 30 Jun 2017
               #{super_header}
               #{header}
-              BGAB,"","",#{@bizgrp_ab.team_lead},"","",40.0,7,2,0,2,3,50.0,4,1,0,2,1,42.9,11,3,0,4,4,0.0,11,0,3,0,8
-              BGAB,DRA,"",#{@dir_a.team_lead},"","",33.3,4,1,0,1,2,100.0,2,1,0,1,0,50.0,6,2,0,2,2,0.0,6,0,2,0,4
-              BGAB,DRA,RTA,#{@team_a.team_lead},"","",33.3,4,1,0,1,2,100.0,2,1,0,1,0,50.0,6,2,0,2,2,0.0,6,0,2,0,4
-              BGAB,DRB,"",#{@dir_b.team_lead},"","",50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
-              BGAB,DRB,RTB,#{@team_b.team_lead},"","",50.0,3,1,0,1,1,0.0,2,0,0,1,1,33.3,5,1,0,2,2,0.0,5,0,1,0,4
+              BGAB,"","",#{@bizgrp_ab.team_lead},"","",57.1,7,2,0,2,3,75.0,4,1,0,2,1,63.6,11,3,0,4,4,0.0,11,0,3,0,8
+              BGAB,DRA,"",#{@dir_a.team_lead},"","",50.0,4,1,0,1,2,100.0,2,1,0,1,0,66.7,6,2,0,2,2,0.0,6,0,2,0,4
+              BGAB,DRA,RTA,#{@team_a.team_lead},"","",50.0,4,1,0,1,2,100.0,2,1,0,1,0,66.7,6,2,0,2,2,0.0,6,0,2,0,4
+              BGAB,DRB,"",#{@dir_b.team_lead},"","",66.7,3,1,0,1,1,50.0,2,0,0,1,1,60.0,5,1,0,2,2,0.0,5,0,1,0,4
+              BGAB,DRB,RTB,#{@team_b.team_lead},"","",66.7,3,1,0,1,1,50.0,2,0,0,1,1,60.0,5,1,0,2,2,0.0,5,0,1,0,4
               BGCD,"","",#{@bizgrp_cd.team_lead},"","",100.0,2,1,0,1,0,0.0,0,0,0,0,0,100.0,2,1,0,1,0,0.0,2,0,1,0,1
               BGCD,DRCD,"",#{@dir_cd.team_lead},"","",100.0,2,1,0,1,0,0.0,0,0,0,0,0,100.0,2,1,0,1,0,0.0,2,0,1,0,1
               BGCD,DRCD,RTC,#{@team_c.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
-              BGCD,DRCD,RTD,#{@team_d.team_lead},"","",0.0,1,0,0,1,0,0.0,0,0,0,0,0,0.0,1,0,0,1,0,0.0,1,0,0,0,1
+              BGCD,DRCD,RTD,#{@team_d.team_lead},"","",100.0,1,0,0,1,0,0.0,0,0,0,0,0,100.0,1,0,0,1,0,0.0,1,0,0,0,1
               BGDoom,"","",#{@bizgrp_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
               BGDoom,DRDoom,"",#{@dir_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
               BGDoom,DRDoom,Doomed,#{@team_e.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
-              Total,"","","","","",57.1,10,4,0,3,3,50.0,4,1,0,2,1,55.6,14,5,0,5,4,0.0,14,0,5,0,9
+              Total,"","","","","",70.0,10,4,0,3,3,75.0,4,1,0,2,1,71.4,14,5,0,5,4,0.0,14,0,5,0,9
             EOCSV
             report = R003BusinessUnitPerformanceReport.new(period_start: Date.new(2017, 6, 5), period_end: Date.today, generate_bu_columns: true)
             report.run
