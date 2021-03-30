@@ -1,3 +1,6 @@
+- content_for :page_title do
+  - t("page_title.edit_#{@team_type}", team_name: @team.name)
+
 - content_for :heading
   = t('.edit', team_type: @team.pretty_type)
 
@@ -9,4 +12,3 @@
 
 = form_for @team, as: :team, url: team_path(@team) do |f|
   = render partial: 'form.html.slim', locals: {form: f}
-

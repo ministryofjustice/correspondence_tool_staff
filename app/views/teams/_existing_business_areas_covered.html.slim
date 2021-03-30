@@ -1,3 +1,6 @@
+- content_for :page_title do
+  - t("page_title.edit_#{@team_type}_areas", team_name: @team.name)
+
 - areas.each do | area |
   .grid-row id="area-#{area.id}"
     .column-two-thirds.business-areas--details
