@@ -21,6 +21,7 @@ en:
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query
     edit_org_entity: Edit %{team_type} - %{team_name} - Track-a-query
     edit_case_page: Editing a case - %{case_number} - Track-a-query
+    edit_user_page: Edit team member - %{team_name} - Track-a-query
     extend_sar_deadline: Extend deadline for SAR - %{case_number}
     forgot_password: Forgot your password - Track-a-query
     join_team_page: Joining a business unit - %{team_name} - Track-a-query
@@ -32,6 +33,7 @@ en:
     bu_areas: Areas covered for %{team_name} - Track-a-query
     new_letter_page: Generate a letter - Track-a-query
     new_org_entity: New %{team_type} - Track-a-query
+    new_user_page: New team member - %{team_name} - Track-a-query
     pit_extension_page: Extend for Public Interest Test (PIT) - %{case_number} - Track-a-query
     preview_cover_page: Preview cover page - %{case_number} - Track-a-query
     reassign_user_page: Change team member - %{case_number} - Track-a-query
