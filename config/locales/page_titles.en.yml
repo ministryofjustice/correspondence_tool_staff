@@ -23,6 +23,7 @@ en:
     edit_case_page: Editing a case - %{case_number} - Track-a-query
     extend_sar_deadline: Extend deadline for SAR - %{case_number}
     forgot_password: Forgot your password - Track-a-query
+    join_team_page: Joining a business unit - %{team_name} - Track-a-query
     linking_case_page: Linking to an existing case - %{case_number} - Track-a-query
     login: Login - Track-a-query
     mark_as_sent_page: Marking response as sent - %{case_number} - Track-a-query
@@ -46,6 +47,7 @@ en:
     show_letter_page: Viewing generated letter - %{case_number} - Track-a-query
     stats: Performance Reports - Track-a-query
     upload_responses_page: Uploading a response - %{case_number} - Track-a-query
+    user_detail_page: Open cases - %{full_name} - Track-a-query
     move_team_page: Moving a business unit - %{team_name} - Track-a-query
     add_request_attachment_page: Upload new files for this request
   
