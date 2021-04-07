@@ -19,6 +19,7 @@ en:
     data_request_edit_page: Update page count
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query
+    edit_org_entity: Edit %{team_type} - %{team_name} - Track-a-query
     edit_case_page: Editing a case - %{case_number} - Track-a-query
     extend_sar_deadline: Extend deadline for SAR - %{case_number}
     forgot_password: Forgot your password - Track-a-query
@@ -27,7 +28,9 @@ en:
     mark_as_sent_page: Marking response as sent - %{case_number} - Track-a-query
     marking_response_as_sent: Mark response as sent
     my_cases: My open cases - Track-a-query
+    bu_areas: Areas covered for %{team_name} - Track-a-query
     new_letter_page: Generate a letter - Track-a-query
+    new_org_entity: New %{team_type} - Track-a-query
     pit_extension_page: Extend for Public Interest Test (PIT) - %{case_number} - Track-a-query
     preview_cover_page: Preview cover page - %{case_number} - Track-a-query
     reassign_user_page: Change team member - %{case_number} - Track-a-query
@@ -38,6 +41,7 @@ en:
     settings_business_group: Business group - %{business_group} - Track-a-query
     settings_business_unit: Business unit - %{business_group} - %{directorate} - %{business_unit} - Track-a-query
     settings_directorate: Directorate - %{business_group} - %{directorate} - Track-a-query
+    settings_directorate_branston: Directorate - Branston - Track-a-query
     show_case_page: Viewing case details - %{case_number} - Track-a-query
     show_letter_page: Viewing generated letter - %{case_number} - Track-a-query
     stats: Performance Reports - Track-a-query
