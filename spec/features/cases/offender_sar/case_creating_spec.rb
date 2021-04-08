@@ -98,6 +98,7 @@ feature 'Offender SAR Case creation by a manager', js: true do
 
   def and_fill_in_subject_details_page
     cases_new_offender_sar_subject_details_page.fill_in_case_details
+    scroll_to cases_new_offender_sar_subject_details_page.submit_button
     click_on "Continue"
     expect(cases_new_offender_sar_requester_details_page).to be_displayed
   end
