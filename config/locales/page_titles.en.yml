@@ -44,7 +44,7 @@ en:
     settings_business_group: Business group - %{business_group} - Track-a-query
     settings_business_unit: Business unit - %{business_group} - %{directorate} - %{business_unit} - Track-a-query
     settings_directorate: Directorate - %{business_group} - %{directorate} - Track-a-query
-    settings_directorate_branston: Directorate - Branston - Track-a-query
+    settings_directorate_branston: Business units - Branston - Track-a-query
     show_case_page: Viewing case details - %{case_number} - Track-a-query
     show_letter_page: Viewing generated letter - %{case_number} - Track-a-query
     stats: Performance Reports - Track-a-query
