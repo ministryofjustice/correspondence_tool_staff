@@ -13,19 +13,19 @@ module PageObjects
         element :lead, '#team_team_lead'
 
         #Business Group
-        element :business_group_label, 'label[for="team_name_business_group"]'
-        element :business_group_email_label, 'label[for="team_email_business_group_email"]'
-        element :director_general_label, 'label[for="team_team_lead_director_general"]'
+        element :business_group_label, 'label[for="team_name"]'
+        element :business_group_email_label, 'label[for="team_email"]'
+        element :director_general_label, 'label[for="team_team_lead"]'
 
         #Directorate
-        element :directorate_label, 'label[for="team_name_directorate"]'
-        element :directorate_email_label, 'label[for="team_email_directorate_email"]'
-        element :director_label, 'label[for="team_team_lead_director"]'
+        element :directorate_label, 'label[for="team_name"]'
+        element :directorate_email_label, 'label[for="team_email"]'
+        element :director_label, 'label[for="team_team_lead"]'
 
         #Business Unit
-        element :business_unit_label, 'label[for="team_name_business_unit"]'
-        element :business_unit_email_label, 'label[for="team_email_business_unit_email"]'
-        element :deputy_director_label, 'label[for="team_team_lead_deputy_director"]'
+        element :business_unit_label, 'label[for="team_name"]'
+        element :business_unit_email_label, 'label[for="team_email"]'
+        element :deputy_director_label, 'label[for="team_team_lead"]'
 
         element :responding_role_option, :xpath, '//input[@value="responder"]//..'
         element :approving_role_option, :xpath, '//input[@value="approver"]//..'
