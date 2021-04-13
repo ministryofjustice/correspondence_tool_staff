@@ -1,3 +1,6 @@
+- content_for :page_title do
+  = t('page_title.user_detail_page', full_name: @user.full_name)
+
 - content_for :heading
   = @user.full_name
 
