@@ -367,7 +367,7 @@ GEM
       activerecord (>= 5.2)
       request_store (~> 1.1)
     parallel (1.20.1)
-    parallel_tests (3.5.2)
+    parallel_tests (3.7.0)
       parallel
     parser (3.0.0.0)
       ast (~> 2.4.1)
@@ -656,7 +656,7 @@ DEPENDENCIES
   mechanize (>= 2.7.7)
   mimetype-fu (~> 0.1.2)
   paper_trail (~> 11.1)
-  parallel_tests (~> 3.4)
+  parallel_tests (~> 3.7)
   pg (~> 1.2)
   pg_search (~> 2.3.5)
   pry
