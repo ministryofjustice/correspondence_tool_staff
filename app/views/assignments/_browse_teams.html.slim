@@ -1,4 +1,4 @@
-p.bold-medium
+h2.heading-medium
   = t('teams.browse_by_business_group')
 
 ul.business-groups.list
@@ -16,7 +16,7 @@ ul.business-groups.list
       = all_option_for_new_team(kase, assignment, params)
 
 - if params[:business_group_id] || params[:show_all]
-  p.bold-medium
+  h2.bold-medium
     = filtered_group_heading(params)
 
 - if defined?(@business_units)
