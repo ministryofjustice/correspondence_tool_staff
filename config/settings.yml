@@ -248,9 +248,9 @@ enabled_features:
     Local: true
     Host-dev: true
     Host-demo: true
-    Host-staging: false
+    Host-staging: true
     Host-qa: true
-    Host-prod: false
+    Host-prod: true
   ico:
     Local: true
     Host-dev: true

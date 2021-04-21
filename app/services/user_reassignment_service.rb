@@ -16,19 +16,22 @@ class UserReassignmentService
   end
 
   def call
-    ActiveRecord::Base.transaction do
-      #Add an entry in transitions table
-      @kase.state_machine.reassign_user!(target_user: @target_user,
-                                         target_team: @target_team,
-                                         acting_user: @acting_user,
-                                         acting_team: @acting_team)
+    if @target_user.id == @assignment.user_id 
+      @result = :no_changes
+    else 
+      ActiveRecord::Base.transaction do
+        #Add an entry in transitions table
+        @kase.state_machine.reassign_user!(target_user: @target_user,
+                                          target_team: @target_team,
+                                          acting_user: @acting_user,
+                                          acting_team: @acting_team)
 
-      #Update the assignment
-      @assignment.update(user_id: @target_user.id)
+        #Update the assignment
+        @assignment.update(user_id: @target_user.id)
 
-      @result = :ok
+        @result = :ok
+      end
     end
-    
     @result
   rescue => err
     Rails.logger.error err.to_s

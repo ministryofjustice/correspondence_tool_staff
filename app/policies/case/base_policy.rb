@@ -224,6 +224,10 @@ class Case::BasePolicy < ApplicationPolicy
     end
   end
 
+  def can_upload_request_attachment?
+    edit?
+  end
+
   def can_respond?
     clear_failed_checks
     self.case.awaiting_dispatch? &&

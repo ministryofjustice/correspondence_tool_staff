@@ -43,7 +43,7 @@ feature 'Closing a case' do
         given!(:fully_granted_case) {
           create :offender_sar_case,
           :ready_to_dispatch,
-          received_date: 35.days.ago }
+          received_date: 60.days.ago }
 
         scenario 'the case is responded-to late', js: true do
           open_cases_page.load(timeliness: 'late')
@@ -59,7 +59,7 @@ feature 'Closing a case' do
           expect(show_page.response_details.timeliness.data.text)
             .to eq 'Answered late'
           expect(show_page.response_details.time_taken.data.text)
-            .to eq '35 calendar days'
+            .to eq '60 calendar days'
         end
       end
     end

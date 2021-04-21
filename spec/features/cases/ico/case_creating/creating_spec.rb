@@ -7,8 +7,10 @@ feature 'ICO case creation' do
   given(:manager)                     { find_or_create :disclosure_bmt_user }
   given(:managing_team)               { create :managing_team, managers: [manager] }
   given(:original_foi)                { create :closed_case }
+  given(:original_foi_ir_timeless)    { create :closed_foi_ir_timeliness }
+  given(:original_foi_ir_compliance)  { create :closed_foi_ir_compliance }
   given(:original_sar)                { create :closed_sar }
-  given(:related_sar)                { create :closed_sar }
+  given(:related_sar)                 { create :closed_sar }
   given(:related_foi)                 { create :closed_case }
   given(:another_related_foi)         { create :closed_case }
   given(:related_timeliness_review)   { create :closed_timeliness_review }
@@ -17,6 +19,8 @@ feature 'ICO case creation' do
   background do
     responding_team
     find_or_create :team_dacu_disclosure
+    original_foi_ir_timeless
+    original_foi_ir_compliance
     original_foi
     related_foi
     another_related_foi
@@ -55,6 +59,34 @@ feature 'ICO case creation' do
       expect(cases_new_ico_page.form).to have_no_original_case_number_error
       expect(cases_new_ico_page.form.original_case.linked_records.first.link)
         .to have_copy original_sar.number
+    end
+
+    scenario ' - linking Original FOI - Internal review for timeliness case', js: true do
+      cases_new_ico_page.load
+
+      cases_new_ico_page.form.original_case_number.set ''
+      cases_new_ico_page.form.link_original_case.click
+      expect(cases_new_ico_page.form.original_case_number_error.text)
+        .to eq 'Enter original case number'
+      cases_new_ico_page.form.original_case_number.set original_foi_ir_timeless.number
+      cases_new_ico_page.form.link_original_case.click
+      expect(cases_new_ico_page.form).to have_no_original_case_number_error
+      expect(cases_new_ico_page.form.original_case.linked_records.first.link)
+        .to have_copy original_foi_ir_timeless.number
+    end
+
+    scenario ' - linking Original FOI - Internal review for compliance case', js: true do
+      cases_new_ico_page.load
+
+      cases_new_ico_page.form.original_case_number.set ''
+      cases_new_ico_page.form.link_original_case.click
+      expect(cases_new_ico_page.form.original_case_number_error.text)
+        .to eq 'Enter original case number'
+      cases_new_ico_page.form.original_case_number.set original_foi_ir_compliance.number
+      cases_new_ico_page.form.link_original_case.click
+      expect(cases_new_ico_page.form).to have_no_original_case_number_error
+      expect(cases_new_ico_page.form.original_case.linked_records.first.link)
+        .to have_copy original_foi_ir_compliance.number
     end
 
     scenario ' - removing Original case', js: true do

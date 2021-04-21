@@ -72,9 +72,18 @@ module Stats
     end
 
     def self.calculate_bu_overall_performance(row)
-      value = row[:trigger_responded_in_time] + row[:non_trigger_responded_in_time]
-      total = row[:non_trigger_responded_in_time] + row[:non_trigger_responded_late] + row[:non_trigger_open_late] +
-        row[:trigger_responded_in_time] + row[:trigger_responded_late] + row[:trigger_open_late]
+      value = row[:trigger_responded_in_time] + 
+              row[:trigger_open_in_time] + 
+              row[:non_trigger_responded_in_time] + 
+              row[:non_trigger_open_in_time]
+      total = row[:non_trigger_responded_in_time] + 
+              row[:non_trigger_responded_late] + 
+              row[:non_trigger_open_late] +
+              row[:non_trigger_open_in_time] + 
+              row[:trigger_responded_in_time] + 
+              row[:trigger_responded_late] + 
+              row[:trigger_open_late] + 
+              row[:trigger_open_in_time]
       calculate_percentage(value, total)
     end
 
@@ -100,15 +109,21 @@ module Stats
     end
 
     def self.calculate_bu_non_trigger(row)
-      calculate_percentage(row[:non_trigger_responded_in_time], row[:non_trigger_responded_in_time] + row[:non_trigger_responded_late] + row[:non_trigger_open_late])
+      calculate_percentage(
+        row[:non_trigger_responded_in_time] + row[:non_trigger_open_in_time], 
+        row[:non_trigger_responded_in_time] + row[:non_trigger_responded_late] + row[:non_trigger_open_late] + row[:non_trigger_open_in_time])
     end
 
     def self.calculate_bu_trigger(row)
-      calculate_percentage(row[:trigger_responded_in_time], row[:trigger_responded_in_time] + row[:trigger_responded_late] + row[:trigger_open_late])
+      calculate_percentage(
+        row[:trigger_responded_in_time] + row[:trigger_open_in_time], 
+        row[:trigger_responded_in_time] + row[:trigger_responded_late] + row[:trigger_open_late] + row[:trigger_open_in_time])
     end
 
     def self.calculate_bu(row)
-      calculate_percentage(row[:bu_responded_in_time], row[:bu_responded_in_time] + row[:bu_responded_late] + row[:bu_open_late])
+      calculate_percentage(
+        row[:bu_responded_in_time] + row[:bu_open_in_time], 
+        row[:bu_responded_in_time] + row[:bu_responded_late] + row[:bu_open_late] + row[:bu_open_in_time])
     end
 
     def self.calculate_percentage(value, total)

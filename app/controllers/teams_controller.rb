@@ -40,6 +40,7 @@ class TeamsController < ApplicationController
   def edit
     authorize @team
     @action_copy = get_action_text(for_creation: false)
+    @team_type = params[:team_type]
   end
 
   def update

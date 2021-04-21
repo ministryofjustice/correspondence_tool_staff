@@ -1,9 +1,9 @@
 
-= form.text_field :name, label_options: { value: @team.pretty_type}
+= form.text_field :name, label_options: { value: @team.pretty_type, for: "team_name"}
 
-= form.text_field :email, label_options: { value: "#{@team.pretty_type} email" }
+= form.text_field :email, label_options: { value: "#{@team.pretty_type} email", for: 'team_email' }
 
-= form.text_field :team_lead, label_options: { value: @team.pretty_team_lead_title }
+= form.text_field :team_lead, label_options: { value: @team.pretty_team_lead_title, for: 'team_team_lead' }
 
 - if @team.is_a?(BusinessUnit)
 
