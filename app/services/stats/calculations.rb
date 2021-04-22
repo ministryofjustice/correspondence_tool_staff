@@ -128,7 +128,7 @@ module Stats
 
     def self.calculate_percentage(value, total)
       if total == 0
-        0.0
+        nil
       else
         ((value / total.to_f) * 100).round(1)
       end
