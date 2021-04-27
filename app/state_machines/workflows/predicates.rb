@@ -66,7 +66,7 @@ class Workflows::Predicates
   end
 
   def user_is_approver?
-    "approver".in?@user.roles
+    "approver".in? @user.roles
   end
 
   def user_is_approver_on_case?
