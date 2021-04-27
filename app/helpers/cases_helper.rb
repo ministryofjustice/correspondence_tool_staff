@@ -139,6 +139,11 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               polymorphic_path(@case, action: :close),
               id: 'action--close-case',
               class: 'button', method: :get
+    when :send_back 
+      link_to I18n.t("event.#{event}"),
+              send_back_case_foi_path(@case),
+              id: 'action--send-back',
+              class: 'button'
     when :progress_for_clearance
       link_to I18n.t('common.case.progress_for_clearance'),
               progress_for_clearance_case_path(@case),
