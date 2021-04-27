@@ -98,6 +98,8 @@
                 remove_linked_case:
                 unassign_from_user:
                   transition_to: awaiting_responder
+                send_back:
+                  transition_to: pending_dacu_clearance
 
               closed:
                 add_message_to_case:
@@ -202,7 +204,7 @@
 
               awaiting_dispatch:
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_approver?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:
@@ -217,12 +219,10 @@
 
               responded:
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_approver?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 remove_linked_case:
-                send_back:
-                  transition_to: pending_dacu_clearance
 
               closed:
                 add_message_to_case:

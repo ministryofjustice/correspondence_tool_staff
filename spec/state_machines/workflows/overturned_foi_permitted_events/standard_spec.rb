@@ -88,6 +88,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :destroy_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
+                                                                      :send_back,
                                                                       :unassign_from_user]
         end
       end
@@ -331,10 +332,8 @@ describe ConfigurableStateMachine::Machine do
             expect(k.class).to eq Case::OverturnedICO::FOI
             expect(k.workflow).to eq 'standard'
             expect(k.current_state).to eq 'responded'
-            expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
-                                                                         :link_a_case,
-                                                                         :remove_linked_case,
-                                                                         :send_back]
+            expect(k.state_machine.permitted_events(approver.id)).to eq [:link_a_case,
+                                                                         :remove_linked_case]
           end
         end
 
