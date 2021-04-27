@@ -202,7 +202,7 @@
 
               awaiting_dispatch:
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_approver_on_case?
+                  if: Workflows::Predicates#user_is_approver?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:
@@ -212,13 +212,17 @@
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
                   switch_workflow: full_approval
+                send_back:
+                  transition_to: pending_dacu_clearance
 
               responded:
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_approver_on_case?
+                  if: Workflows::Predicates#user_is_approver?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 remove_linked_case:
+                send_back:
+                  transition_to: pending_dacu_clearance
 
               closed:
                 add_message_to_case:

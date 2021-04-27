@@ -65,6 +65,10 @@ class Workflows::Predicates
     @kase.responder == @user
   end
 
+  def user_is_approver?
+    "approver".in?@user.roles
+  end
+
   def user_is_approver_on_case?
     @user.in?(@kase.approvers)
   end

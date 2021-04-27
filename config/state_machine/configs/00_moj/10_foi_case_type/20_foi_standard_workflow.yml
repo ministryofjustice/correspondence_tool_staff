@@ -176,13 +176,15 @@
 
               responded:
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                  if: Workflows::Predicates#user_is_approver?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
+                send_back:
+                  transition_to: awaiting_dispatch
 
               closed:
                 add_message_to_case:
