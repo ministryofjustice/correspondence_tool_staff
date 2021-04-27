@@ -330,7 +330,7 @@ en:
 
   button:
     add_to_case_history: Add to case history
-    assign: Assign to this unit
+    assign: Assign to %{business_unit_name}
     move: Move to this directorate
     confirm: Confirm
     create_case: Create case

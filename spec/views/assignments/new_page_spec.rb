@@ -63,7 +63,7 @@ describe 'assignments/new.html.slim', type: :view do
 
         expect(page_team.deputy_director.text).to eq bu.team_lead
 
-        expect(page_team.assign_link.text).to eq "Assign to this unit"
+        expect(page_team.assign_link.text).to eq "Assign to #{bu.name}"
         expect(page_team.assign_link[:href])
             .to eq assign_to_responder_team_case_assignments_path(
               unassigned_case,
