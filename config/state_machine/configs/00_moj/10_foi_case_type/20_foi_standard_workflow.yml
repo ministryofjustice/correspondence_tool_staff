@@ -88,7 +88,7 @@
                 unassign_from_user:
                   transition_to: awaiting_responder
                 send_back:
-                  transition_to: awaiting_dispatch
+                  transition_to: drafting
 
               closed:
                 add_message_to_case:

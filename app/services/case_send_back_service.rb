@@ -28,19 +28,13 @@ class CaseSendBackService
       if @comment.present?
         @kase.state_machine.add_message_to_case!(
           acting_user: @user,
-          acting_team: @user.approving_team,
+          acting_team: @user.case_team(@kase),
           message: @comment)
       end
       @kase.state_machine.send_back!(
         acting_user: @user, 
-        acting_team: @user.approving_team,
+        acting_team: @user.case_team(@kase),
       )
-      if @kase.requires_clearance?
-        assignment = @kase.approver_assignments
-                       .with_teams(@user.approving_team)
-                       .singular
-        assignment.update!(approved: false)
-      end
     end
   end
 

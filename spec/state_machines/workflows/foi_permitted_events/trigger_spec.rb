@@ -89,6 +89,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :link_a_case,
                                                                       :remove_linked_case,
                                                                       :request_further_clearance,
+                                                                      :send_back,
                                                                       :unassign_from_user]
         end
       end

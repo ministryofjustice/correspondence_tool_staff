@@ -85,6 +85,8 @@
                   switch_workflow: full_approval
                 unassign_from_user:
                   transition_to: awaiting_responder
+                send_back:
+                  transition_to: drafting
 
               responded:
                 add_message_to_case:
@@ -99,7 +101,7 @@
                 unassign_from_user:
                   transition_to: awaiting_responder
                 send_back:
-                  transition_to: pending_dacu_clearance
+                  transition_to: drafting
 
               closed:
                 add_message_to_case:
@@ -215,7 +217,7 @@
                   if: Case::BasePolicy#can_take_on_for_approval?
                   switch_workflow: full_approval
                 send_back:
-                  transition_to: pending_dacu_clearance
+                  transition_to: drafting
 
               responded:
                 add_message_to_case:
