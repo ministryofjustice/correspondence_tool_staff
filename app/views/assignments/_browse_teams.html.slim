@@ -1,4 +1,4 @@
-p.bold-medium
+h2.heading-medium
   = t('teams.browse_by_business_group')
 
 ul.business-groups.list
@@ -16,7 +16,7 @@ ul.business-groups.list
       = all_option_for_new_team(kase, assignment, params)
 
 - if params[:business_group_id] || params[:show_all]
-  p.bold-medium
+  h2.bold-medium
     = filtered_group_heading(params)
 
 - if defined?(@business_units)
@@ -30,9 +30,9 @@ ul.business-groups.list
           = render partial: 'shared/areas_covered_list', locals: { team: team }
         .team-actions
           - if assignment.new_record?
-            = link_to t('button.assign'),
+            = link_to t('button.assign', business_unit_name: team.name),
                 assign_to_responder_team_case_assignments_path(case_id: kase.id,
                           team_id: team.id), class: 'button'
           - else
-            = link_to t('button.assign'),
+            = link_to t('button.assign', business_unit_name: team.name),
                 execute_assign_to_new_team_case_assignment_path(kase.id, assignment.id, team_id: team.id), class: 'button', method: :patch
