@@ -452,8 +452,6 @@ en:
       team_property:
         value: Please provide one area at a time and be as concise as possible
     label:
-      add_to_conversation: Add to conversation
-      add_note: Add a note to this case
       bypass_approval_manager:
         press_office_approval:
           true_html: 'Yes'
@@ -484,6 +482,8 @@ en:
           responded: Closed - awaiting ICO decision
           closed: "Closed - %{ico_decision} by ICO"
       case:
+        add_to_conversation: Add to conversation
+        add_note: Add a note to this case
         linked_case_number: Case number For example 170131001
       data_request:
         location: Location
