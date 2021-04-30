@@ -452,6 +452,8 @@ en:
       team_property:
         value: Please provide one area at a time and be as concise as possible
     label:
+      add_to_conversation: Add to conversation
+      add_note: Add a note to this case
       bypass_approval_manager:
         press_office_approval:
           true_html: 'Yes'
@@ -688,7 +690,6 @@ en:
     alert_banner_html: "This service will be down for essential maintenance during the afternoon of Wednesday 14th April. You will not have access after 13.00 on this day and the site will resume service after business hours. Please contact <a href='mailto:correspondence@digital.justice.gov.uk'>correspondence@digital.justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
     case:
       actions: Actions
-      add_note: Add a note to this case
       answered_in_time: Answered in time
       answered_late: Answered late
       appeal_outcome: Appeal Outcome

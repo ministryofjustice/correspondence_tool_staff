@@ -2,9 +2,11 @@
   = form_for case_details, as: :case, url: case_notes_path(case_details), method: :post, class: "message-form" do |f|
     .message-form data-ws-case-id="#{case_details.id}"
 
-      h2.request--heading
-        = t('common.case.add_note')
       = GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-      = f.text_area :message_text, required: true
+      .form-group
+	      h3.request--heading
+	      	label for="case_message_text"
+	      	  = t('common.case.add_note')
+	      textarea#case_message_text.form-control name="case[message_text]"
       = f.submit t('button.add_to_case_history'), class: 'button'
