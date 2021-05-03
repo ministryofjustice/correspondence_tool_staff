@@ -57,7 +57,7 @@ RSpec.describe Case, type: :model do
       end
     end
 
-    describe '#remove_response' do
+    describe '#remove_response from FOI case' do
 
       let(:kase) { create :case_with_response, responder: responder }
       let(:attachment) { kase.attachments.first }
@@ -98,6 +98,34 @@ RSpec.describe Case, type: :model do
           expect(kase.current_state).to eq 'awaiting_dispatch'
           kase.remove_response(responder, attachment)
           expect(kase.current_state).to eq 'awaiting_dispatch'
+        end
+      end
+    end
+
+    describe '#remove_response from SAR case' do
+
+      let(:kase) { create :case_sar_with_response, responding_team: responding_team, responder: responder }
+      let(:attachment) { kase.attachments.first }
+
+      context 'two attachments' do
+        before(:each) do
+          kase.attachments << build(:correspondence_response, type: 'response')
+          allow(attachment).to receive(:remove_from_storage_bucket)
+        end
+
+        it 'removes attachments' do
+          expect(kase.attachments.size).to eq 2
+          kase.remove_response(responder, attachment)
+          expect(kase.attachments.size).to eq 1
+        end
+
+        it 'does not change the state' do
+          expect(kase.attachments.size).to eq 2
+          kase.remove_response(responder, attachment)
+          expect(kase.current_state).to eq 'drafting'
+          expect(kase.attachments.size).to eq 1
+          kase.remove_response(responder, kase.attachments.first)
+          expect(kase.current_state).to eq 'drafting'
         end
       end
     end

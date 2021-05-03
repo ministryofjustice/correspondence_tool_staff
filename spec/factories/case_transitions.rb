@@ -142,6 +142,15 @@ FactoryBot.define do
     acting_user { acting_team.responders.first }
   end
 
+  factory :case_transition_add_responses_without_state_change, parent: :case_transition do
+    to_state  { self.case.current_state }
+    filenames { ['file1.pdf', 'file2.pdf'] }
+    event     { 'add_responses' }
+
+    acting_team { case_responding_team_or_foi_responding_team }
+    acting_user { acting_team.responders.first }
+  end
+
   factory :case_transition_progress_for_clearance, parent: :case_transition do
     association :case, factory: [:sar_case, :flagged]
     event       { 'progress_for_clearance' }

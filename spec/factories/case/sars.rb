@@ -165,6 +165,24 @@ FactoryBot.define do
     end
   end
 
+  factory :case_sar_with_response, parent: :accepted_sar do
+    transient do
+      identifier { "case with response" }
+      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+    end
+
+    after(:create) do |kase, evaluator|
+      kase.attachments.push(*evaluator.responses)
+
+      create :case_transition_add_responses_without_state_change,
+             case: kase,
+             acting_team: kase.responding_team,
+             acting_user: kase.responder,
+             filenames: [evaluator.responses.map(&:filename)]
+      kase.reload
+    end
+  end
+
   factory :pending_dacu_clearance_sar, parent: :accepted_sar do
     transient do
       flag_for_disclosure { :accepted }

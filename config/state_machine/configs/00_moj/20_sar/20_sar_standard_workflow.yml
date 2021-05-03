@@ -92,6 +92,10 @@
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
+                add_responses:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                remove_response:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 respond_and_close:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   transition_to: closed
