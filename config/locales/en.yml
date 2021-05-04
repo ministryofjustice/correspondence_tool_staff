@@ -945,7 +945,7 @@ en:
     index: &cases_list
       heading_all_cases: Cases
       heading_my_cases: My open cases
-      view_case: "Link to case "
+      view_case: "Case number "
       message_notification: Conversations
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
@@ -978,10 +978,10 @@ en:
         number: Case number
         number_html: 'Case <abbr title="number">No.</abbr>'
         name-subject: Name/Subject
-        view_case: Link to case
+        view_case: Case number
       incoming:
         heading: New cases
-        view_case: Link to case
+        view_case: Case number
         number: Case number
         number_html: 'Case <abbr title="number">No.</abbr>'
         request: Request
