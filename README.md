@@ -516,6 +516,12 @@ control aspects of the build. The available build arguments are:
 
   Required to run closed case reports
 
+  ```
+  	postgresql-client-12.6-r0
+ ```
+
+ Required for debugging database by developers within the running container - app will work without this.
+
 #### Generating Documentation
  
 You can generate documentation for the project with:

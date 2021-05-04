@@ -482,6 +482,8 @@ en:
           responded: Closed - awaiting ICO decision
           closed: "Closed - %{ico_decision} by ICO"
       case:
+        add_to_conversation: Add to conversation
+        add_note: Add a note to this case
         linked_case_number: Case number For example 170131001
       data_request:
         location: Location
@@ -688,7 +690,6 @@ en:
     alert_banner_html: "This service will be down for essential maintenance during the afternoon of Wednesday 14th April. You will not have access after 13.00 on this day and the site will resume service after business hours. Please contact <a href='mailto:correspondence@digital.justice.gov.uk'>correspondence@digital.justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
     case:
       actions: Actions
-      add_note: Add a note to this case
       answered_in_time: Answered in time
       answered_late: Answered late
       appeal_outcome: Appeal Outcome

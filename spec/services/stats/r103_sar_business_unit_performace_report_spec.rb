@@ -152,7 +152,7 @@ module Stats
                 non_trigger_responded_late:    1,
                 non_trigger_open_in_time:      2,
                 non_trigger_open_late:         3,
-                trigger_performance:           0.0,
+                trigger_performance:           nil,
                 trigger_total:                 0,
                 trigger_responded_in_time:     0,
                 trigger_responded_late:        0,
@@ -188,7 +188,7 @@ module Stats
                 non_trigger_responded_late:    1,
                 non_trigger_open_in_time:      1,
                 non_trigger_open_late:         0,
-                trigger_performance:           0.0,
+                trigger_performance:           nil,
                 trigger_total:                 0,
                 trigger_responded_in_time:     0,
                 trigger_responded_late:        0,
@@ -224,7 +224,7 @@ module Stats
                 non_trigger_responded_late:    1,
                 non_trigger_open_in_time:      0,
                 non_trigger_open_late:         0,
-                trigger_performance:           0.0,
+                trigger_performance:           nil,
                 trigger_total:                 0,
                 trigger_responded_in_time:     0,
                 trigger_responded_late:        0,
@@ -263,16 +263,16 @@ module Stats
                 Business unit report (SARs) - 5 Jun 2017 to 30 Jun 2017
                 #{super_header}
                 #{header}
-                BGAB,"","",#{@bizgrp_ab.team_lead},"","",57.1,7,2,0,2,3,0.0,0,0,0,0,0,57.1,7,2,0,2,3,100.0,7,0,0,7,0
-                BGAB,DRA,"",#{@dir_a.team_lead},"","",50.0,4,1,0,1,2,0.0,0,0,0,0,0,50.0,4,1,0,1,2,100.0,4,0,0,4,0
-                BGAB,DRA,RTA,#{@team_a.team_lead},"","",50.0,4,1,0,1,2,0.0,0,0,0,0,0,50.0,4,1,0,1,2,100.0,4,0,0,4,0
-                BGAB,DRB,"",#{@dir_b.team_lead},"","",66.7,3,1,0,1,1,0.0,0,0,0,0,0,66.7,3,1,0,1,1,100.0,3,0,0,3,0
-                BGAB,DRB,RTB,#{@team_b.team_lead},"","",66.7,3,1,0,1,1,0.0,0,0,0,0,0,66.7,3,1,0,1,1,100.0,3,0,0,3,0
-                BGCD,"","",#{@bizgrp_cd.team_lead},"","",100.0,2,1,0,1,0,0.0,0,0,0,0,0,100.0,2,1,0,1,0,100.0,2,0,0,2,0
-                BGCD,DRCD,"",#{@dir_cd.team_lead},"","",100.0,2,1,0,1,0,0.0,0,0,0,0,0,100.0,2,1,0,1,0,100.0,2,0,0,2,0
-                BGCD,DRCD,RTC,#{@team_c.team_lead},"","",100.0,1,1,0,0,0,0.0,0,0,0,0,0,100.0,1,1,0,0,0,100.0,1,0,0,1,0
-                BGCD,DRCD,RTD,#{@team_d.team_lead},"","",100.0,1,0,0,1,0,0.0,0,0,0,0,0,100.0,1,0,0,1,0,100.0,1,0,0,1,0
-                Total,"","","","","",66.7,9,3,0,3,3,0.0,0,0,0,0,0,66.7,9,3,0,3,3,100.0,9,0,0,9,0
+                BGAB,"","",#{@bizgrp_ab.team_lead},"","",57.1,7,2,0,2,3,,0,0,0,0,0,57.1,7,2,0,2,3,100.0,7,0,0,7,0
+                BGAB,DRA,"",#{@dir_a.team_lead},"","",50.0,4,1,0,1,2,,0,0,0,0,0,50.0,4,1,0,1,2,100.0,4,0,0,4,0
+                BGAB,DRA,RTA,#{@team_a.team_lead},"","",50.0,4,1,0,1,2,,0,0,0,0,0,50.0,4,1,0,1,2,100.0,4,0,0,4,0
+                BGAB,DRB,"",#{@dir_b.team_lead},"","",66.7,3,1,0,1,1,,0,0,0,0,0,66.7,3,1,0,1,1,100.0,3,0,0,3,0
+                BGAB,DRB,RTB,#{@team_b.team_lead},"","",66.7,3,1,0,1,1,,0,0,0,0,0,66.7,3,1,0,1,1,100.0,3,0,0,3,0
+                BGCD,"","",#{@bizgrp_cd.team_lead},"","",100.0,2,1,0,1,0,,0,0,0,0,0,100.0,2,1,0,1,0,100.0,2,0,0,2,0
+                BGCD,DRCD,"",#{@dir_cd.team_lead},"","",100.0,2,1,0,1,0,,0,0,0,0,0,100.0,2,1,0,1,0,100.0,2,0,0,2,0
+                BGCD,DRCD,RTC,#{@team_c.team_lead},"","",100.0,1,1,0,0,0,,0,0,0,0,0,100.0,1,1,0,0,0,100.0,1,0,0,1,0
+                BGCD,DRCD,RTD,#{@team_d.team_lead},"","",100.0,1,0,0,1,0,,0,0,0,0,0,100.0,1,0,0,1,0,100.0,1,0,0,1,0
+                Total,"","","","","",66.7,9,3,0,3,3,,0,0,0,0,0,66.7,9,3,0,3,3,100.0,9,0,0,9,0
               EOCSV
               report = R103SarBusinessUnitPerformanceReport.new(period_start: Date.new(2017, 6, 5), period_end: Date.today, generate_bu_columns: true)
               report.run
