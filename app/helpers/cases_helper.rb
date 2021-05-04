@@ -25,11 +25,19 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   def case_link_with_hash(kase, field, page, position)
     page = 1 if page.blank?
     if position.nil?
-      link_to kase.__send__(field), case_path(kase.id)
+      link_to 
+        content_tag(:span, 
+          t('common.case_list.view_case'), 
+          class: 'visually-hidden') + kase.__send__(field), 
+        case_path(kase.id, pos: page_offset + position)
     else
       position += 1
       page_offset = Kaminari.config.default_per_page * (page.to_i - 1)
-      link_to kase.__send__(field), case_path(kase.id, pos: page_offset + position)
+      link_to 
+        content_tag(:span, 
+          t('common.case_list.view_case'), 
+          class: 'visually-hidden') + kase.__send__(field), 
+        case_path(kase.id, pos: page_offset + position)
     end
   end
 

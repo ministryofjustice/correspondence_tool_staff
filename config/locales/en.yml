@@ -812,7 +812,7 @@ en:
       request_detail: Request detail
       status: Status
       type: 'Type'
-      view_case: "Link to case "
+      view_case: "Case number "
       who_its_with: With
     choose: Choose...
     choose_file: Choose a file
@@ -828,7 +828,7 @@ en:
     signout: Sign out
     stats_custom_button: Create report
     summary_error: 'prevented this form from being submitted:'
-    view_case: "Link to case "
+    view_case: "Case number "
 
   admin:
     cases:
