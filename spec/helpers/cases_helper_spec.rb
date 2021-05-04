@@ -275,14 +275,14 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
     context 'query hash instance variable exists' do
       context 'page parameters exists' do
         it 'shows link with hash and position parameters' do
-          expected_link = "<a href=\"/cases/25?pos=35\">180425001</a>"
+          expected_link = "<a href=\"/cases/25?pos=35\"><span class=\"visually-hidden\">Case number </span>180425001</a>"
           expect(case_link_with_hash(kase, :number, 2, 14)).to eq expected_link
         end
       end
 
       context 'page number does not exist' do
         it 'shows link with hash and position parameters based on page 1' do
-          expected_link = "<a href=\"/cases/25?pos=15\">180425001</a>"
+          expected_link = "<a href=\"/cases/25?pos=15\"><span class=\"visually-hidden\">Case number </span>180425001</a>"
           expect(case_link_with_hash(kase, :number, '', 14)).to eq expected_link
         end
       end
