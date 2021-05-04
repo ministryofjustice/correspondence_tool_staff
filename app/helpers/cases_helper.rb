@@ -32,7 +32,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     page = 1 if page.blank?
     
     if position.nil?
-      link_to span + case_number, case_path(kase.id, pos: page_offset + position)
+      link_to span + case_number, case_path(kase.id)
     else
       position += 1
       page_offset = Kaminari.config.default_per_page * (page.to_i - 1)
