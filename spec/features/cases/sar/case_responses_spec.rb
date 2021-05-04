@@ -3,7 +3,6 @@ require 'rails_helper'
 feature 'Upload response' do
   given(:responder)      { find_or_create(:sar_responder) }
   given(:kase)           { create(:accepted_sar) }
-  # given(:approved_case ) { create(:approved_sar) }
   given(:responder_teammate) do
     create :responder, responding_teams: responder.responding_teams
   end
