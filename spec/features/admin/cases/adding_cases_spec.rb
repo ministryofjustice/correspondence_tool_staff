@@ -15,7 +15,7 @@ feature 'adding cases' do
   before do
     CTS.class_eval { @dacu_manager = nil; @dacu_team = nil }
     find_or_create :team_dacu
-
+    create_deactivated_responding_teams(Team.count)
     login_as admin
   end
 
@@ -291,5 +291,9 @@ feature 'adding cases' do
     admin_cases_new_ico_page.submit_button.click
     expect(admin_cases_page).to be_displayed
     expect(admin_cases_page.case_list.count).to eq 2
+  end
+
+  def create_deactivated_responding_teams(numbers)
+    numbers.times { |_| (create :team).update!(deleted_at: Time.now) }
   end
 end
