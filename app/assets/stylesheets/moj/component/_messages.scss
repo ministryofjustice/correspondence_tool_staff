@@ -299,13 +299,14 @@
   padding-right: $gutter-half;
   padding-bottom: $gutter;
   padding-top: $gutter-half;
+  margin-top: $gutter;
   background-color: $grey-4;
-  label {
-    @include visually-hidden();
-  }
   textarea {
     width: 100%;
     background-color: #FFFFFF;
+  }
+  .button-secondary {
+    margin: 0;
   }
 }
 
