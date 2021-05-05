@@ -22,15 +22,19 @@ namespace :ico_appeal do
         puts ico_appeal_foi_ids_map
       end
       counter = 0
-      ico_appeal_cases = Case::ICO::Base.all
+      ico_appeal_cases = Case::ICO::FOI.all
       ico_appeal_cases.each do | ico_appeal |
         puts "Checking ico appeal #{ico_appeal.number}"
         foi_ir_id = find_related_foi_ir_case_id(ico_appeal, ico_appeal_foi_ids_map)
         if foi_ir_id.present?
           foi_ir_case = Case::Base.find(foi_ir_id)
-          clear_up_old_links(ico_appeal, 'related')
+          existing_original_case_id = ico_appeal.original_case.id
+          clear_up_old_related_link(ico_appeal.id, foi_ir_id)
           clear_up_old_links(ico_appeal, 'original')
-          create_new_original_case_link(ico_appeal, foi_ir_case)
+          create_new_case_link(ico_appeal, foi_ir_case.id, 'original')
+          if existing_original_case_id != foi_ir_id
+            create_new_case_link(ico_appeal, existing_original_case_id, 'related')
+          end
           counter += 1
           puts "Updated ico appeal #{ico_appeal.number}'s original case to #{foi_ir_case.number}."
         end
@@ -161,8 +165,15 @@ namespace :ico_appeal do
       end
     end
 
-    def create_new_original_case_link(ico_appeal, foi_ir_case)
-      new_original_case_link =LinkedCase.new(case_id: ico_appeal.id, linked_case_id: foi_ir_case.id, type: :original)
+    def clear_up_old_related_link(ico_appeal_id, foi_ir_id)
+      case_linkage_records = LinkedCase.where(type: 'related', case_id: ico_appeal_id, linked_case_id: foi_ir_id)
+      case_linkage_records.each do | case_linkage_record |
+        case_linkage_record.destroy()
+      end
+    end
+
+    def create_new_case_link(ico_appeal, link_case_id, link_type)
+      new_original_case_link = LinkedCase.new(case_id: ico_appeal.id, linked_case_id: link_case_id, type: link_type.to_sym)
       new_original_case_link.save!
     end
   end
