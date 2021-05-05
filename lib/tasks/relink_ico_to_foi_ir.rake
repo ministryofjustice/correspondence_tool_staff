@@ -173,7 +173,7 @@ namespace :ico_appeal do
     end
 
     def create_new_case_link(ico_appeal, link_case_id, link_type)
-      new_original_case_link =LinkedCase.new(case_id: ico_appeal.id, linked_case_id: link_case_id, type: link_type.to_sym)
+      new_original_case_link = LinkedCase.new(case_id: ico_appeal.id, linked_case_id: link_case_id, type: link_type.to_sym)
       new_original_case_link.save!
     end
   end
