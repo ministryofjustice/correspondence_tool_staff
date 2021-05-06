@@ -70,7 +70,8 @@ class Case::SAR::StandardPolicy < Case::BasePolicy
   
   def upload_responses?
     clear_failed_checks
-    check_can_trigger_event(:add_responses)
+    check(:user_is_a_manager_for_case) && 
+      check_can_trigger_event(:add_responses)
   end
 
   check :responding_team_is_linked_to_case do

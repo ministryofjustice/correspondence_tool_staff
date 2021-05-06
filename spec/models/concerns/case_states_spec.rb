@@ -104,7 +104,7 @@ RSpec.describe Case, type: :model do
 
     describe '#remove_response from SAR case' do
 
-      let(:kase) { create :case_sar_with_response, responding_team: responding_team, responder: responder }
+      let(:kase) { create :closed_sar_with_response, managing_team: managing_team, manager: manager }
       let(:attachment) { kase.attachments.first }
 
       context 'two attachments' do
@@ -115,17 +115,17 @@ RSpec.describe Case, type: :model do
 
         it 'removes attachments' do
           expect(kase.attachments.size).to eq 2
-          kase.remove_response(responder, attachment)
+          kase.remove_response(manager, attachment)
           expect(kase.attachments.size).to eq 1
         end
 
         it 'does not change the state' do
           expect(kase.attachments.size).to eq 2
-          kase.remove_response(responder, attachment)
-          expect(kase.current_state).to eq 'drafting'
+          kase.remove_response(manager, attachment)
+          expect(kase.current_state).to eq 'closed'
           expect(kase.attachments.size).to eq 1
-          kase.remove_response(responder, kase.attachments.first)
-          expect(kase.current_state).to eq 'drafting'
+          kase.remove_response(manager, kase.attachments.first)
+          expect(kase.current_state).to eq 'closed'
         end
       end
     end

@@ -17,7 +17,7 @@ module Cases
     def destroy
       authorize @case, :can_remove_attachment?
 
-      @case.remove_response(current_user, @attachment, current_user.case_team(@case))
+      @case.remove_response(current_user, @attachment)
 
       if @case.attachments.empty? && request.format == :js
         render :js => "window.location = '#{case_path(@case)}'"

@@ -1,50 +1,53 @@
 require 'rails_helper'
 
 feature 'Upload response' do
-  given(:responder)      { find_or_create(:sar_responder) }
-  given(:kase)           { create(:accepted_sar) }
-  given(:responder_teammate) do
-    create :responder, responding_teams: responder.responding_teams
+  given(:unassigned_manager) { create(:manager) }
+  given(:tmm_kase)           { create(:closed_sar, :clarification_required) }
+  given(:kase)           { create(:closed_sar) }
+  given(:responder)      { tmm_kase.responding_team.users.first }
+  given(:manager)      { tmm_kase.managing_team.users.first  }  
+  given(:manager_teammate) do
+    create :manager, managing_teams: manager.managing_teams
   end
 
-  context 'as the assigned responder' do
-    background do
+  context 'Upload response for tmm sar case' do
+    scenario 'as the assigned manager' do
+      login_as manager
+      cases_show_page.load(id: tmm_kase.id)
+      cases_show_page.actions.upload_response.click
+      expect(cases_upload_responses_page).to be_displayed
+    end
+
+    scenario 'as a manager on the same team' do
+      login_as manager_teammate
+      cases_show_page.load(id: tmm_kase.id)
+      cases_show_page.actions.upload_response.click
+      expect(cases_upload_responses_page).to be_displayed
+    end
+
+    scenario "as a manager that isn't assigned to the case" do
+      login_as unassigned_manager
+      cases_show_page.load(id: tmm_kase.id)
+      expect(cases_show_page).not_to have_link('Upload response')
+    end
+
+    scenario "as an assigned responder" do
       login_as responder
-    end
-
-    scenario 'clicking link on case detail page goes to upload page' do
-      cases_show_page.load(id: kase.id)
-
-      cases_show_page.actions.upload_response.click
-
-      expect(cases_upload_responses_page).to be_displayed
+      cases_show_page.load(id: tmm_kase.id)
+      expect(cases_show_page).not_to have_link('Upload response')
     end
   end
 
-  context 'as a responder on the same team' do
-    background do
-      login_as responder_teammate
-    end
-
-    scenario 'clicking link on case detail page goes to upload page' do
+  context 'Upload response for non-tmm sar case' do
+    scenario 'as the assigned manager' do
+      login_as manager
       cases_show_page.load(id: kase.id)
-
-      cases_show_page.actions.upload_response.click
-
-      expect(cases_upload_responses_page).to be_displayed
-    end
-  end
-
-  context "as a responder that isn't assigned to the case" do
-    given(:unassigned_responder) { create(:responder) }
-
-    background do
-      login_as unassigned_responder
+      expect(cases_show_page).not_to have_link('Upload response')
     end
 
-    scenario "link to case upload page isn't visible on detail page" do
+    scenario "as an assigned responder" do
+      login_as responder
       cases_show_page.load(id: kase.id)
-
       expect(cases_show_page).not_to have_link('Upload response')
     end
   end
