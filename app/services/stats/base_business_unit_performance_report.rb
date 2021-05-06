@@ -5,6 +5,8 @@ module Stats
       business_group:                  'Business group',
       directorate:                     'Directorate',
       business_unit:                   'Business unit',
+      business_unit_id:                'Business unit ID',
+      previous_business_unit_id:       'Previous business unit ID',
       responsible:                     'Responsible',
       deactivated:                     'Deactivated',
       moved:                           'Moved to',
@@ -23,6 +25,8 @@ module Stats
       business_group:                  '',
       directorate:                     '',
       business_unit:                   '',
+      business_unit_id:                '',
+      previous_business_unit_id:       '',
       responsible:                     '',
       deactivated:                     '',
       moved:                           '',
@@ -87,7 +91,7 @@ module Stats
       @stats.finalise
     end
 
-    INDEXES_FOR_PERCENTAGE_COLUMNS = [6, 12, 18]
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [8, 14, 20]
 
     # This method needs to return a grid of 'cells' with value and rag_rating properties
     def to_csv
