@@ -17,7 +17,7 @@ module Stats
         @team_dacu_bmt = find_or_create :team_disclosure_bmt
         @team_a = create :business_unit, name: 'RTA', directorate: @dir_a
         @team_b = create :business_unit, name: 'RTB', directorate: @dir_b
-        @team_c = create :business_unit, name: 'RTC', directorate: @dir_cd
+        @team_c = create :business_unit, name: 'RTC', directorate: @dir_cd, moved_to_unit_id: 8
         @team_d = create :business_unit, name: 'RTD', directorate: @dir_cd
 
         @responder_a = create :responder, responding_teams: [@team_a]
@@ -113,6 +113,8 @@ module Stats
             business_group:                @bizgrp_ab.name,
             directorate:                   '',
             business_unit:                 '',
+            business_unit_id:              nil,
+            previous_business_unit_id:     nil,
             deactivated:                   '',
             moved:                         '',
             responsible:                   @bizgrp_ab.team_lead,
@@ -131,6 +133,8 @@ module Stats
             business_group:                @bizgrp_cd.name,
             directorate:                   '',
             business_unit:                 '',
+            business_unit_id:              nil,
+            previous_business_unit_id:     nil,
             deactivated:                   '',
             moved:                         '',
             responsible:                   @bizgrp_cd.team_lead,
@@ -149,6 +153,8 @@ module Stats
             business_group:                @bizgrp_cd.name,
             directorate:                   @dir_cd.name,
             business_unit:                 @team_c.name,
+            business_unit_id:              @team_c.id,
+            previous_business_unit_id:     @team_c.moved_to_unit_id,
             deactivated:                   '',
             moved:                         '',
             responsible:                   @team_c.team_lead,
