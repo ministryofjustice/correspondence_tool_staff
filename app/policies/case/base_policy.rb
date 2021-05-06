@@ -220,8 +220,6 @@ class Case::BasePolicy < ApplicationPolicy
       when 'awaiting_dispatch'
         user.responding_teams.include?(self.case.responding_team) &&
             self.case.assignments.approving.approved.none?
-      when 'drafting'
-        user.responding_teams.include?(self.case.responding_team)
       else false
     end
   end
