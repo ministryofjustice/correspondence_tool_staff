@@ -160,31 +160,50 @@ module Stats
         team = teams.detect { |t| t.id == team_id }
         case team.class.to_s
         when 'BusinessUnit'
-          result_set[:business_unit] = team.name
-          result_set[:business_unit_id] = team.id
-          result_set[:previous_business_unit_id] = team.moved_to_unit_id
-          result_set[:directorate] = team.parent.name
-          result_set[:business_group] = team.parent.parent.name
+          business_unit_result_setter(result_set, team)
         when 'Directorate'
-          result_set[:business_unit] = ''
-          result_set[:business_unit_id] = nil
-          result_set[:previous_business_unit_id] = nil 
-          result_set[:directorate] = team.name
-          result_set[:business_group] = team.parent.name
+          directorate_result_setter(result_set, team)
         when 'BusinessGroup'
-          result_set[:business_unit] = ''
-          result_set[:business_unit_id] = nil
-          result_set[:previous_business_unit_id] = nil 
-          result_set[:directorate] = ''
-          result_set[:business_group] = team.name
+          business_group_result_setter(result_set, team)
         else
           raise "Invalid team type #{team.class}"
         end
-        result_set[:deactivated] = team.deactivated
-        result_set[:responsible] = team.team_leader_name
-        result_set[:moved] = team.moved
+        default_results_setter(result_set, team)
       end
+      stats_total_setter(stats)
+    end
 
+    def self.business_unit_result_setter(result_set, team)
+      result_set[:business_unit] = team.name
+      result_set[:business_unit_id] = team.id
+      result_set[:previous_business_unit_id] = team.moved_to_unit_id
+      result_set[:directorate] = team.parent.name
+      result_set[:business_group] = team.parent.parent.name
+    end
+
+    def self.directorate_result_setter(result_set, team)
+      result_set[:business_unit] = ''
+      result_set[:business_unit_id] = nil
+      result_set[:previous_business_unit_id] = nil 
+      result_set[:directorate] = team.name
+      result_set[:business_group] = team.parent.name
+    end
+
+    def self.business_group_result_setter(result_set, team)
+      result_set[:business_unit] = ''
+      result_set[:business_unit_id] = nil
+      result_set[:previous_business_unit_id] = nil 
+      result_set[:directorate] = ''
+      result_set[:business_group] = team.name
+    end
+
+    def self.default_results_setter(result_set, team)
+      result_set[:deactivated] = team.deactivated
+      result_set[:responsible] = team.team_leader_name
+      result_set[:moved] = team.moved
+    end
+
+    def self.stats_total_setter(stats)
       stats.stats[:total][:business_group] = 'Total'
       stats.stats[:total][:directorate] = ''
       stats.stats[:total][:business_unit] = ''
@@ -194,6 +213,5 @@ module Stats
       stats.stats[:total][:deactivated] = ''
       stats.stats[:total][:moved] = ''
     end
-
   end
 end
