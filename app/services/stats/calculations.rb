@@ -176,7 +176,7 @@ module Stats
     def self.business_unit_result_setter(result_set, team)
       result_set[:business_unit] = team.name
       result_set[:business_unit_id] = team.id
-      result_set[:previous_business_unit_id] = team.moved_to_unit_id
+      result_set[:new_business_unit_id] = team.moved_to_unit_id
       result_set[:directorate] = team.parent.name
       result_set[:business_group] = team.parent.parent.name
     end
@@ -184,7 +184,7 @@ module Stats
     def self.directorate_result_setter(result_set, team)
       result_set[:business_unit] = ''
       result_set[:business_unit_id] = nil
-      result_set[:previous_business_unit_id] = nil 
+      result_set[:new_business_unit_id] = nil 
       result_set[:directorate] = team.name
       result_set[:business_group] = team.parent.name
     end
@@ -192,7 +192,7 @@ module Stats
     def self.business_group_result_setter(result_set, team)
       result_set[:business_unit] = ''
       result_set[:business_unit_id] = nil
-      result_set[:previous_business_unit_id] = nil 
+      result_set[:new_business_unit_id] = nil 
       result_set[:directorate] = ''
       result_set[:business_group] = team.name
     end
@@ -208,7 +208,7 @@ module Stats
       stats.stats[:total][:directorate] = ''
       stats.stats[:total][:business_unit] = ''
       stats.stats[:total][:business_unit_id] = nil
-      stats.stats[:total][:previous_business_unit_id] = nil 
+      stats.stats[:total][:new_business_unit_id] = nil 
       stats.stats[:total][:responsible] = ''
       stats.stats[:total][:deactivated] = ''
       stats.stats[:total][:moved] = ''

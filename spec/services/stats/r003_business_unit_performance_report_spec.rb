@@ -125,7 +125,7 @@ module Stats
               directorate:                   '',
               business_unit:                 '',
               business_unit_id:              nil,
-              previous_business_unit_id:     nil,
+              new_business_unit_id:     nil,
               responsible:                   @bizgrp_ab.team_lead,
               deactivated:                   "",
               moved:                         "",
@@ -157,7 +157,7 @@ module Stats
               directorate:                   '',
               business_unit:                 '',
               business_unit_id:              nil,
-              previous_business_unit_id:     nil,
+              new_business_unit_id:     nil,
               responsible:                   @bizgrp_cd.team_lead,
               deactivated:                   "",
               moved:                         "",
@@ -189,7 +189,7 @@ module Stats
               directorate:                   @dir_cd.name,
               business_unit:                 @team_c.name,
               business_unit_id:              @team_c.id,
-              previous_business_unit_id:     @team_c.moved_to_unit_id,
+              new_business_unit_id:     @team_c.moved_to_unit_id,
               responsible:                   @team_c.team_lead,
               deactivated:                   "",
               moved:                         "",
@@ -258,7 +258,7 @@ module Stats
             %q{Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,} +
             %q{Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,} +
             %q{Overall,Overall,Overall,Overall,Overall,Overall}
-          header = %q{Business group,Directorate,Business unit,Business unit ID,Previous business unit ID,Responsible,Deactivated,Moved to,} +
+          header = %q{Business group,Directorate,Business unit,Business unit ID,New business unit ID,Responsible,Deactivated,Moved to,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
@@ -324,7 +324,7 @@ module Stats
               directorate:                   '',
               business_unit:                 '',
               business_unit_id:              nil,
-              previous_business_unit_id:     nil,
+              new_business_unit_id:     nil,
               responsible:                   @bizgrp_ab.team_lead,
               deactivated:                   "",
               moved:                         "",
@@ -362,7 +362,7 @@ module Stats
               directorate:                   '',
               business_unit:                 '',
               business_unit_id:              nil,
-              previous_business_unit_id:     nil,
+              new_business_unit_id:     nil,
               responsible:                   @bizgrp_cd.team_lead,
               deactivated:                   "",
               moved:                         "",
@@ -400,7 +400,7 @@ module Stats
               directorate:                   @dir_cd.name,
               business_unit:                 @team_c.name,
               business_unit_id:              @team_c.id,
-              previous_business_unit_id:     @team_c.moved_to_unit_id,
+              new_business_unit_id:     @team_c.moved_to_unit_id,
               responsible:                   @team_c.team_lead,
               deactivated:                   "",
               moved:                         "",
@@ -440,7 +440,7 @@ module Stats
               %q{Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,} +
               %q{Overall,Overall,Overall,Overall,Overall,Overall,} +
               %q{Business unit,Business unit,Business unit,Business unit,Business unit,Business unit}
-            header = %q{Business group,Directorate,Business unit,Business unit ID,Previous business unit ID,Responsible,Deactivated,Moved to,} +
+            header = %q{Business group,Directorate,Business unit,Business unit ID,New business unit ID,Responsible,Deactivated,Moved to,} +
               %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
               %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
               %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
