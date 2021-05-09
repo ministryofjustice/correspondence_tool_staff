@@ -32,7 +32,7 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
 
   def can_send_back?
     clear_failed_checks
-    check_can_trigger_event(:send_back)
+    check_user_is_a_manager_for_case && check_can_trigger_event(:send_back)
   end
 
   def response_approve?
