@@ -18,6 +18,7 @@ module PageObjects
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         section :actions, '.button-holder' do
+          element :send_back, '#action--send-back'
           element :assign_to_new_team, '#action--assign-new-team'
           element :upload_response, '#action--upload-response'
           element :create_overturned, '#action--create-overturned'
