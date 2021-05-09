@@ -3,12 +3,19 @@ class Workflows::Hooks
   def initialize(user:, kase:, metadata:)
     @user = user
     @kase = kase
+
+    # data structure for storing extra data, it can be used 
+    # for external caller to pass some extra information or 
+    # extra flags: 
+    #  - disable_hook: turn off the trigger of sending email
     @metadata = metadata
   end
 
   def notify_responder_message_received
-    if @user != @kase.responder_assignment&.user
-      NotifyResponderService.new(@kase, 'Message received').call
+    if !is_hook_disabled?
+      if @user != @kase.responder_assignment&.user
+        NotifyResponderService.new(@kase, 'Message received').call
+      end
     end
   end
 
@@ -46,5 +53,11 @@ class Workflows::Hooks
                      .first
 
     ActionNotificationsMailer.ready_for_press_or_private_review(assignment)
+  end
+
+  private 
+  
+  def is_hook_disabled?
+    @metadata[:disable_hook]
   end
 end
