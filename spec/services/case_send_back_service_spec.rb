@@ -34,7 +34,7 @@ describe CaseSendBackService do
       end
 
       it 'a trigger foi case' do
-        kase = create :responded_case, :trigger
+        kase = create :responded_case, :flagged
         user = kase.managing_team.users.first
         team = kase.managing_team
         service = CaseSendBackService.new(user: user, kase: kase, comment: "send back")
@@ -63,7 +63,6 @@ describe CaseSendBackService do
       it 'raises an error when it saves' do
         kase = create :accepted_case
         user = kase.managing_team.users.first
-        team = kase.managing_team
         service = CaseSendBackService.new(user: user, kase: kase, comment: "send back")
         expect(service.result).to eq :incomplete
 

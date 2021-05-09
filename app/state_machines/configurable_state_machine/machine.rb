@@ -410,8 +410,6 @@ module ConfigurableStateMachine
       end
     end
 
-    private 
-  
     def clear_params_for_transition(params)
       cloned_params = params.clone
       %i{ acting_user acting_team target_user target_team num_attachments disable_hook }.each do |key|
