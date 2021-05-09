@@ -89,6 +89,7 @@
                   transition_to: awaiting_responder
                 send_back:
                   transition_to: drafting
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
 
               closed:
                 add_message_to_case:
