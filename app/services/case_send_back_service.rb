@@ -29,7 +29,8 @@ class CaseSendBackService
         @kase.state_machine.add_message_to_case!(
           acting_user: @user,
           acting_team: @user.case_team(@kase),
-          message: @comment)
+          message: @comment, 
+          disable_hook: true)
       end
       @kase.state_machine.send_back!(
         acting_user: @user, 
