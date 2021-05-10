@@ -101,26 +101,26 @@ describe DeadlineCalculator::BusinessDays do
     context 'received on a Saturday' do
 
       let(:sat_jul_01) { Date.new(2017, 7, 1) }
-      let(:wed_jul_05) { Date.new(2017, 7, 5) }
-      let(:fri_jul_14) { Date.new(2017, 7, 14) }
-      let(:fri_jul_28) { Date.new(2017, 7, 28) }
+      let(:thu_jul_06) { Date.new(2017, 7, 6) }
+      let(:mon_jul_17) { Date.new(2017, 7, 17) }
+      let(:mon_jul_31) { Date.new(2017, 7, 31) }
       let(:sat_may_01) { Date.new(2021, 5, 1) }
-      let(:tue_jun_03) { Date.new(2021, 6, 1) }
-      let(:mon_may_17) { Date.new(2021, 5, 17) }
-      let(:thu_may_06) { Date.new(2021, 5, 06) }
+      let(:wed_jun_02) { Date.new(2021, 6, 2) }
+      let(:tue_may_18) { Date.new(2021, 5, 18) }
+      let(:fri_may_07) { Date.new(2021, 5, 07) }
 
       describe '.escalation_deadline' do
         it 'is 3 days after first working day after received date' do
           Timecop.freeze sat_jul_01 do
             expect(deadline_calculator.escalation_deadline)
-              .to eq wed_jul_05.to_date
+              .to eq thu_jul_06.to_date
           end
         end
 
         it 'is 3 days after first working day after received date - not counting bank holiday Mon May 03' do
           Timecop.freeze sat_may_01 do
             expect(deadline_calculator.escalation_deadline)
-              .to eq thu_may_06.to_date
+              .to eq fri_may_07.to_date
           end
         end
       end
@@ -129,14 +129,14 @@ describe DeadlineCalculator::BusinessDays do
         it 'is 20 working days first working day after received date' do
           Timecop.freeze sat_jul_01 do
             expect(deadline_calculator.external_deadline)
-              .to eq fri_jul_28.to_date
+              .to eq mon_jul_31.to_date
           end
         end
 
         it 'is 20 working days first working day after received date - not counting bank holiday Mon May 03' do
           Timecop.freeze sat_may_01 do
             expect(deadline_calculator.external_deadline)
-              .to eq tue_jun_03.to_date
+              .to eq wed_jun_02.to_date
           end
         end
       end
@@ -145,14 +145,14 @@ describe DeadlineCalculator::BusinessDays do
         it 'is 10 working days first working day after received date' do
           Timecop.freeze sat_jul_01 do
             expect(deadline_calculator.internal_deadline)
-              .to eq fri_jul_14.to_date
+              .to eq mon_jul_17.to_date
           end
         end
 
         it 'is 10 working days first working day after received date' do
           Timecop.freeze sat_may_01 do
             expect(deadline_calculator.internal_deadline)
-              .to eq mon_may_17.to_date
+              .to eq tue_may_18.to_date
           end
         end
       end
