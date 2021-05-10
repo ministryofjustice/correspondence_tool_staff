@@ -61,7 +61,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
         main_case.linked_cases.each_with_index do | linked_case, index|
           row = partial.linked_records[index]
-          expect(row.link.text).to eq "Link to case #{linked_case.number}"
+          expect(row.link.text).to eq "Case number #{linked_case.number}"
           expect(row.link['href']).to eq case_path(linked_case.id)
           expect(row.case_type.text).to eq 'FOI '
           expect(row.request.text)
@@ -85,7 +85,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
         main_case.linked_cases.each_with_index do | linked_case, index|
           row = partial.linked_records[index]
-          expect(row.link.text).to eq "Link to case #{linked_case.number}"
+          expect(row.link.text).to eq "Case number #{linked_case.number}"
           expect(row.link['href']).to eq case_path(linked_case.id)
           expect(row.case_type.text).to eq 'FOI '
           expect(row.request.text)
