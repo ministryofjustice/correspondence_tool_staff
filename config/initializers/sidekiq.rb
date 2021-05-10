@@ -13,7 +13,6 @@ end
 # and forcing a new sign in for every page
 #
 require "sidekiq/web"
-Sidekiq::Web.set(:sessions, { domain: ".example.com" })
 
 # Requirement since Sidekiq 5+
 Sidekiq::Extensions.enable_delay!
