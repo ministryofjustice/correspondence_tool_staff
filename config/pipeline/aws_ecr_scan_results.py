@@ -52,9 +52,9 @@ class ECRScanChecker:
         )
 
     def recursive_check_make_report(self, tag):
-        print("Checking ECR scan results...")   
+        print("Checking ECR scan results...")
         for image in self.images_to_check:
-            try:    
+            try:
                 findings = self.get_ecr_scan_findings(image, tag)[
                     "imageScanFindings"]
                 if findings["findings"] != []:
