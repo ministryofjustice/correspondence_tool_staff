@@ -156,7 +156,10 @@ references:
     run:
       name: Build docker image
       command: |
-        python3 config/pipeline/aws_ecr_scan_results.py --search track-a-query-ecr --tag cts-master-dc9dccfe --slack_webhook ${SLACK_WEBHOOK_CT}
+        . build.sh circleci
+        mkdir -p workspace
+        echo $BUILD_TAG > workspace/build_tag
+        python3 config/pipeline/aws_ecr_scan_results.py --search track-a-query-ecr --tag $BUILD_TAG --slack_webhook ${SLACK_WEBHOOK_CT}
 
   deploy_to_dev: &deploy_to_dev
     run:
@@ -217,11 +220,21 @@ jobs:
 
   build_and_test:
     <<: *test_container_config
-    resource_class: small
+    resource_class: xlarge
     working_directory: ~/track-a-query
     steps:
       - checkout
-
+      - *restore_cache
+      - *install_bundler
+      - *check_bundler_version
+      - *install_psql
+      - *install_dependencies
+      - *save_cache
+      - *wait_for_db
+      - *set_up_the_database
+      - *rubocop
+      - *update_chromedriver
+      - *run_unit_and_feature_tests
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config

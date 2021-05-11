@@ -77,7 +77,6 @@ class ECRScanChecker:
                         result = "<{3}|{0} - {1} {2}>\n".format(
                             severity, cve, description, link)
                         self.report += result
-                    print(self.report)
             except:
                 print("Unable to get ECR image scan results for image tag {0}".format(tag))
 
