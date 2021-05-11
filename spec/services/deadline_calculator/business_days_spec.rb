@@ -112,15 +112,6 @@ describe DeadlineCalculator::BusinessDays do
       describe '.escalation_deadline' do
         it 'is 3 days after first working day after received date' do
           Timecop.freeze sat_jul_01 do
-            start_date = foi_case.received_date
-            count = 0
-            while start_date != deadline_calculator.escalation_deadline
-              if start_date.workday?
-                count += 1
-              end
-              start_date += 1
-            end
-            expect(count).to eq 3
             expect(deadline_calculator.escalation_deadline)
               .to eq thu_jul_06.to_date
           end
@@ -128,15 +119,6 @@ describe DeadlineCalculator::BusinessDays do
 
         it 'is 3 days after first working day after received date - not counting bank holiday Mon May 03' do
           Timecop.freeze sat_may_01 do
-            start_date = sat_may_01
-            count = 0
-            while start_date != fri_may_07
-              if start_date.workday?
-                count += 1
-              end
-              start_date = start_date.tomorrow
-            end
-            expect(count).to eq 3
             expect(deadline_calculator.escalation_deadline)
               .to eq fri_may_07.to_date
           end
@@ -153,15 +135,6 @@ describe DeadlineCalculator::BusinessDays do
 
         it 'is 20 working days first working day after received date - not counting bank holiday Mon May 03' do
           Timecop.freeze sat_may_01 do
-            start_date = sat_may_01
-            count = 0
-            while start_date != wed_jun_02
-              if start_date.workday?
-                count += 1
-              end
-              start_date = start_date.tomorrow
-            end
-            expect(count).to eq 20
             expect(deadline_calculator.external_deadline)
               .to eq wed_jun_02.to_date
           end
