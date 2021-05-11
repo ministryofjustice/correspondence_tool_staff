@@ -54,7 +54,6 @@ class ECRScanChecker:
     def recursive_check_make_report(self, tag):
         print("Checking ECR scan results...")   
         for image in self.images_to_check:
-            try:
                 findings = self.get_ecr_scan_findings(image, tag)[
                     "imageScanFindings"]
                 if findings["findings"] != []:
@@ -78,9 +77,6 @@ class ECRScanChecker:
                             severity, cve, description, link)
                         self.report += result
                     print(self.report)
-            except:
-                print("Unable to get ECR image scan results for image {0}, tag {1}".format(
-                    image, tag))
 
     def get_ecr_scan_findings(self, image, tag):
         response = self.aws_ecr_client.describe_image_scan_findings(
