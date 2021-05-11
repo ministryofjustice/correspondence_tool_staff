@@ -112,9 +112,9 @@ describe DeadlineCalculator::BusinessDays do
       describe '.escalation_deadline' do
         it 'is 3 days after first working day after received date' do
           Timecop.freeze sat_jul_01 do
-            start_date = sat_jul_01
+            start_date = foi_case.received_date
             count = 0
-            while start_date != thu_jul_06
+            while start_date != deadline_calculator.escalation_deadline
               if start_date.workday?
                 count += 1
               end
