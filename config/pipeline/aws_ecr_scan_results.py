@@ -57,7 +57,7 @@ class ECRScanChecker:
                 findings = self.get_ecr_scan_findings(image, tag)[
                     "imageScanFindings"]
                 if findings["findings"] != []:
-                    job_link_tag = "{0} <{1}|{2}>".format(
+                    job_link_tag = "<{0}|{1}>".format(
                         os.getenv('CIRCLE_BUILD_URL', ""), tag)
                     counts = findings["findingSeverityCounts"]
                     title = ":warning: AWS ECR Scan found results for {1}:{2}...\n".format(
@@ -73,7 +73,7 @@ class ECRScanChecker:
                             description = finding["description"]
 
                         link = finding["uri"]
-                        result = "<{4}|{1} - {2} - {3}>\n".format(
+                        result = "<{3}|{0} - {1} - {2}>\n".format(
                             severity, cve, description, link)
                         self.report += result
                     print(self.report)
