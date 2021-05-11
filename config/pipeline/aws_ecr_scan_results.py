@@ -60,7 +60,7 @@ class ECRScanChecker:
                     job_link_tag = "<{0}|{1}>".format(
                         os.getenv('CIRCLE_BUILD_URL', ""), tag)
                     counts = findings["findingSeverityCounts"]
-                    title = ":warning: AWS ECR Scan found results for {0}:{1}...\n".format(
+                    title = ":warning: AWS ECR Scan found results for {0} : {1} ...\n".format(
                         job_link_tag, counts)
                     self.report = title
 
@@ -73,7 +73,7 @@ class ECRScanChecker:
                             description = finding["description"]
 
                         link = finding["uri"]
-                        result = "<{3}|{0} - {1} - {2}>\n".format(
+                        result = "<{3}|{0} - {1} {2}>\n".format(
                             severity, cve, description, link)
                         self.report += result
                     print(self.report)
