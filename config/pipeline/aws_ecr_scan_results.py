@@ -58,30 +58,27 @@ class ECRScanChecker:
                 findings = self.get_ecr_scan_findings(image, tag)[
                     "imageScanFindings"]
                 if findings["findings"] != []:
-
+                    job_link_tag = "<{0}|{1}>".format(
+                        os.getenv('CIRCLE_BUILD_URL', ""), tag)
                     counts = findings["findingSeverityCounts"]
-                    title = "\n\n:warning: *AWS ECR Scan found results for {}:* \n".format(
-                        image)
-                    severity_counts = "Severity finding counts:\n{}\nDisplaying the first {} in order of severity\n\n".format(
-                        counts, self.report_limit)
-                    self.report = title + severity_counts
+                    title = ":warning: AWS ECR Scan found results for {0} : {1} ...\n".format(
+                        job_link_tag, counts)
+                    self.report = title
 
                     for finding in findings["findings"]:
                         cve = finding["name"]
                         severity = finding["severity"]
 
-                        description = "None"
+                        description = ""
                         if "description" in finding:
                             description = finding["description"]
 
                         link = finding["uri"]
-                        result = "*Image:* {0} \n**Tag:* {1} \n*Severity:* {2} \n*CVE:* {3} \n*Description:* {4} \n*Link:* {5}\n\n".format(
-                            image, tag, severity, cve, description, link)
+                        result = "<{3}|{0} - {1} {2}>\n".format(
+                            severity, cve, description, link)
                         self.report += result
-                    print(self.report)
             except:
-                print("Unable to get ECR image scan results for image {0}, tag {1}".format(
-                    image, tag))
+                print("Unable to get ECR image scan results for image tag {0}".format(tag))
 
     def get_ecr_scan_findings(self, image, tag):
         response = self.aws_ecr_client.describe_image_scan_findings(
@@ -94,11 +91,7 @@ class ECRScanChecker:
         return response
 
     def post_to_slack(self, slack_webhook):
-        if self.report != "":
-            branch_info = "*Github Branch:* {0}\n*CircleCI Job Link:* {1}\n\n".format(
-                os.getenv('CIRCLE_BRANCH', ""),
-                os.getenv('CIRCLE_BUILD_URL', ""))
-            self.report += branch_info
+        if self.report != "": 
             print(self.report)
 
             post_data = json.dumps({"text": self.report})
