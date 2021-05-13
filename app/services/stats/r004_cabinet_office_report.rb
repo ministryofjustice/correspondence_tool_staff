@@ -219,7 +219,11 @@ module Stats
     end
 
     def get_value_1_Biii
-      open_cases_received_in_period.where("properties->>'external_deadline' < ?", Date.today).count
+      open_late_cases_received_in_period.count - scope_with_pit_extension(open_late_cases_received_in_period).count
+    end
+
+    def open_late_cases_received_in_period
+      open_cases_received_in_period.where("properties->>'external_deadline' < ?", Date.today)
     end
 
     def get_value_1_C
