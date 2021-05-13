@@ -62,7 +62,9 @@ module DeadlineCalculator
     private
 
     def start_date(received_date)
-      date = received_date + 1
+      actual_received_date = received_date
+      actual_received_date += 1 until actual_received_date.workday?
+      date = actual_received_date + 1
       date += 1 until date.workday?
       date
     end
