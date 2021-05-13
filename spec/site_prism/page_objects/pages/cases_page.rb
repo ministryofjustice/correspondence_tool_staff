@@ -48,7 +48,7 @@ module PageObjects
 
       def case_numbers
         case_list.map do |row|
-          row.number.text.delete('Link to case').delete("\n")
+          row.number.text.delete('Case number').delete("\n")
         end
       end
 
@@ -60,7 +60,7 @@ module PageObjects
         begin
           Capybara.ignore_hidden_elements = false
           case_list.find { |row|
-            row.number.text == "Link to case #{number}"
+            row.number.text == "Case number #{number}"
           }
         ensure
           Capybara.ignore_hidden_elements = true

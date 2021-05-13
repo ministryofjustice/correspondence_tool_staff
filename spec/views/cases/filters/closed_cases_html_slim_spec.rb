@@ -38,12 +38,12 @@ describe 'cases/filters/closed.html.slim' do
     expect(page.closed_case_report.table_body.closed_case_rows.size).to eq 2
 
     row = page.closed_case_report.table_body.closed_case_rows.first
-    expect(row.case_number.text).to eq "Link to case #{case_1.number}"
+    expect(row.case_number.text).to eq "Case number #{case_1.number}"
     expect(row.subject_name.name.text).to eq case_1.name
     expect(row.subject_name.subject.text).to eq case_1.subject
 
     row = page.closed_case_report.table_body.closed_case_rows.last
-    expect(row.case_number.text).to eq "Link to case #{case_2.number}"
+    expect(row.case_number.text).to eq "Case number #{case_2.number}"
     expect(row.subject_name.name.text).to eq case_2.name
     expect(row.subject_name.subject.text).to eq case_2.subject
 
