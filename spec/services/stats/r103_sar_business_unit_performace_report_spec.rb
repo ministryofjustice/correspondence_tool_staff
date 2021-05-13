@@ -15,7 +15,7 @@ module Stats
 
       @team_a = create :business_unit, name: 'RTA', directorate: @dir_a
       @team_b = create :business_unit, name: 'RTB', directorate: @dir_b
-      @team_c = create :business_unit, name: 'RTC', directorate: @dir_cd
+      @team_c = create :business_unit, name: 'RTC', directorate: @dir_cd, moved_to_unit_id: 10
       @team_d = create :business_unit, name: 'RTD', directorate: @dir_cd
       @team_dacu_disclosure = find_or_create :team_dacu_disclosure
 
@@ -143,6 +143,8 @@ module Stats
                 business_group:                @bizgrp_ab.name,
                 directorate:                   '',
                 business_unit:                 '',
+                business_unit_id:              nil,
+                new_business_unit_id:     nil,
                 responsible:                   @bizgrp_ab.team_lead,
                 deactivated:                   "",
                 moved:                         "",
@@ -179,6 +181,8 @@ module Stats
                 business_group:                @bizgrp_cd.name,
                 directorate:                   '',
                 business_unit:                 '',
+                business_unit_id:              nil,
+                new_business_unit_id:     nil,
                 responsible:                   @bizgrp_cd.team_lead,
                 deactivated:                   "",
                 moved:                         "",
@@ -215,6 +219,8 @@ module Stats
                 business_group:                @bizgrp_cd.name,
                 directorate:                   @dir_cd.name,
                 business_unit:                 @team_c.name,
+                business_unit_id:              @team_c.id,
+                new_business_unit_id:     @team_c.moved_to_unit_id,
                 responsible:                   @team_c.team_lead,
                 deactivated:                   "",
                 moved:                         "",
@@ -249,12 +255,12 @@ module Stats
         describe '#to_csv' do
           it 'outputs results as a csv lines' do
             Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
-              super_header = %q{"","","","","","",} +
+              super_header = %q{"","","","","","","","",} +
                 %q{Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,Non-trigger cases,} +
                 %q{Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,Trigger cases,} +
                 %q{Overall,Overall,Overall,Overall,Overall,Overall,} +
                 %q{Business unit,Business unit,Business unit,Business unit,Business unit,Business unit}
-              header = %q{Business group,Directorate,Business unit,Responsible,Deactivated,Moved to,} +
+              header = %q{Business group,Directorate,Business unit,Business unit ID,New business unit ID,Responsible,Deactivated,Moved to,} +
                 %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
                 %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
                 %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
@@ -263,16 +269,16 @@ module Stats
                 Business unit report (SARs) - 5 Jun 2017 to 30 Jun 2017
                 #{super_header}
                 #{header}
-                BGAB,"","",#{@bizgrp_ab.team_lead},"","",57.1,7,2,0,2,3,,0,0,0,0,0,57.1,7,2,0,2,3,100.0,7,0,0,7,0
-                BGAB,DRA,"",#{@dir_a.team_lead},"","",50.0,4,1,0,1,2,,0,0,0,0,0,50.0,4,1,0,1,2,100.0,4,0,0,4,0
-                BGAB,DRA,RTA,#{@team_a.team_lead},"","",50.0,4,1,0,1,2,,0,0,0,0,0,50.0,4,1,0,1,2,100.0,4,0,0,4,0
-                BGAB,DRB,"",#{@dir_b.team_lead},"","",66.7,3,1,0,1,1,,0,0,0,0,0,66.7,3,1,0,1,1,100.0,3,0,0,3,0
-                BGAB,DRB,RTB,#{@team_b.team_lead},"","",66.7,3,1,0,1,1,,0,0,0,0,0,66.7,3,1,0,1,1,100.0,3,0,0,3,0
-                BGCD,"","",#{@bizgrp_cd.team_lead},"","",100.0,2,1,0,1,0,,0,0,0,0,0,100.0,2,1,0,1,0,100.0,2,0,0,2,0
-                BGCD,DRCD,"",#{@dir_cd.team_lead},"","",100.0,2,1,0,1,0,,0,0,0,0,0,100.0,2,1,0,1,0,100.0,2,0,0,2,0
-                BGCD,DRCD,RTC,#{@team_c.team_lead},"","",100.0,1,1,0,0,0,,0,0,0,0,0,100.0,1,1,0,0,0,100.0,1,0,0,1,0
-                BGCD,DRCD,RTD,#{@team_d.team_lead},"","",100.0,1,0,0,1,0,,0,0,0,0,0,100.0,1,0,0,1,0,100.0,1,0,0,1,0
-                Total,"","","","","",66.7,9,3,0,3,3,,0,0,0,0,0,66.7,9,3,0,3,3,100.0,9,0,0,9,0
+                BGAB,"","",,,#{@bizgrp_ab.team_lead},"","",57.1,7,2,0,2,3,,0,0,0,0,0,57.1,7,2,0,2,3,100.0,7,0,0,7,0
+                BGAB,DRA,"",,,#{@dir_a.team_lead},"","",50.0,4,1,0,1,2,,0,0,0,0,0,50.0,4,1,0,1,2,100.0,4,0,0,4,0
+                BGAB,DRA,RTA,#{@team_a.id},,#{@team_a.team_lead},"","",50.0,4,1,0,1,2,,0,0,0,0,0,50.0,4,1,0,1,2,100.0,4,0,0,4,0
+                BGAB,DRB,"",,,#{@dir_b.team_lead},"","",66.7,3,1,0,1,1,,0,0,0,0,0,66.7,3,1,0,1,1,100.0,3,0,0,3,0
+                BGAB,DRB,RTB,#{@team_b.id},,#{@team_b.team_lead},"","",66.7,3,1,0,1,1,,0,0,0,0,0,66.7,3,1,0,1,1,100.0,3,0,0,3,0
+                BGCD,"","",,,#{@bizgrp_cd.team_lead},"","",100.0,2,1,0,1,0,,0,0,0,0,0,100.0,2,1,0,1,0,100.0,2,0,0,2,0
+                BGCD,DRCD,"",,,#{@dir_cd.team_lead},"","",100.0,2,1,0,1,0,,0,0,0,0,0,100.0,2,1,0,1,0,100.0,2,0,0,2,0
+                BGCD,DRCD,RTC,#{@team_c.id},#{@team_c.moved_to_unit_id},#{@team_c.team_lead},"","",100.0,1,1,0,0,0,,0,0,0,0,0,100.0,1,1,0,0,0,100.0,1,0,0,1,0
+                BGCD,DRCD,RTD,#{@team_d.id},,#{@team_d.team_lead},"","",100.0,1,0,0,1,0,,0,0,0,0,0,100.0,1,0,0,1,0,100.0,1,0,0,1,0
+                Total,"","",,,"","","",66.7,9,3,0,3,3,,0,0,0,0,0,66.7,9,3,0,3,3,100.0,9,0,0,9,0
               EOCSV
               report = R103SarBusinessUnitPerformanceReport.new(period_start: Date.new(2017, 6, 5), period_end: Date.today, generate_bu_columns: true)
               report.run
