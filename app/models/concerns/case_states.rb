@@ -30,10 +30,11 @@ module CaseStates
     state_machine.accept_responder_assignment!(acting_user: current_user, acting_team: responding_team)
   end
 
-  def remove_response(current_user, attachment)
+  def remove_response(current_user, attachment, acting_team: nil)
     attachment.destroy!
+    acting_team = acting_team || current_user.case_team(self)
     state_machine.remove_response! acting_user: current_user,
-                                   acting_team: responding_team,
+                                   acting_team: acting_team,
                                    filenames: attachment.filename,
                                    num_attachments: self.reload.attachments.size
   end
