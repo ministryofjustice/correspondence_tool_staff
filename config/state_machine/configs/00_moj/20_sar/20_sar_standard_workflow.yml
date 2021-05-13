@@ -62,6 +62,10 @@
 
               closed:
                 add_message_to_case:
+                add_responses:
+                  if: Workflows::Predicates#is_tmm_case?
+                remove_response:
+                  if: Workflows::Predicates#is_tmm_case?
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
