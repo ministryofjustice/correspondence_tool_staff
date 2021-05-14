@@ -69,12 +69,12 @@ class Workflows::Predicates
     @kase.responder == @user
   end
 
-  def user_is_approver?
-    "approver".in? @user.roles
-  end
-
   def user_is_approver_on_case?
     @user.in?(@kase.approvers)
+  end
+
+  def user_is_a_manager_for_case?
+    @user.in? @kase.managing_team.users
   end
 
   def user_is_in_approving_team_for_case?

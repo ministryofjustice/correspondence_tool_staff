@@ -87,14 +87,15 @@ describe ConfigurableStateMachine::Machine do
           expect(k.class).to eq Case::FOI::Standard
           expect(k.workflow).to eq 'standard'
           expect(k.current_state).to eq 'responded'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :close,
-                                                                      :destroy_case,
-                                                                      :edit_case,
-                                                                      :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :send_back, 
-                                                                      :unassign_from_user]
+          expect(k.state_machine.permitted_events(k.managing_team.users.first.id))
+            .to eq [:add_message_to_case,
+                    :close,
+                    :destroy_case,
+                    :edit_case,
+                    :link_a_case,
+                    :remove_linked_case,
+                    :send_back, 
+                    :unassign_from_user]
         end
       end
 
