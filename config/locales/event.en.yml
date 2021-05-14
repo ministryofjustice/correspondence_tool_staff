@@ -59,3 +59,5 @@ en:
     reset_to_initial_state: Case type changed, and status reset
     mark_as_legal_proceedings_ongoing: Mark as ongoing legal case
     mark_as_legal_proceedings_ongoing_desc: Legal proceedings ongoing
+    send_back: Send back
+    send_back_desc: Case was sent back for change

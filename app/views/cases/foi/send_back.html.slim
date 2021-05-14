@@ -1,0 +1,14 @@
+- content_for :heading, flush: true
+  = t('cases.foi.send_back_heading')
+
+= render partial: 'layouts/header'
+
+= form_for @case, url: send_back_case_foi_path(@case), as: :foi do |f|
+
+  .form-group
+    label.form_label for="extra_comment"
+            | <strong>Add message (optional)</strong>
+            .message-form
+              = text_area_tag(:extra_comment, nil, rows: 4, class: 'form-control')
+
+  = f.submit 'Confirm', class: 'button'

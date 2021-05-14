@@ -73,6 +73,10 @@ class Workflows::Predicates
     @user.in?(@kase.approvers)
   end
 
+  def user_is_a_manager_for_case?
+    @user.in? @kase.managing_team.users
+  end
+
   def user_is_in_approving_team_for_case?
     @user.in?(@kase.approving_team_users)
   end

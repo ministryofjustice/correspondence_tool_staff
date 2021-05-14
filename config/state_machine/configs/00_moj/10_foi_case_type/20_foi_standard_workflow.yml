@@ -87,6 +87,10 @@
                 remove_linked_case:
                 unassign_from_user:
                   transition_to: awaiting_responder
+                send_back:
+                  if: Workflows::Predicates#user_is_a_manager_for_case?
+                  transition_to: drafting
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
 
               closed:
                 add_message_to_case:
@@ -176,7 +180,7 @@
 
               responded:
                 add_message_to_case:
-                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                  if: Workflows::Predicates#user_is_approver_on_case?
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 link_a_case:
                 reassign_user:

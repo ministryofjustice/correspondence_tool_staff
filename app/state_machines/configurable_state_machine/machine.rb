@@ -393,11 +393,7 @@ module ConfigurableStateMachine
         target_user_id: params[:target_user]&.id,
         target_team_id: params[:target_team]&.id,
       }
-      cloned_params = params.clone
-      %i{ acting_user acting_team target_user target_team num_attachments }.each do |key|
-        cloned_params.delete(key)
-      end
-      @kase.transitions.create!(attrs.merge(cloned_params))
+      @kase.transitions.create!(attrs.merge(clear_params_for_transition(params)))
     end
 
     def gather_all_events
@@ -413,6 +409,15 @@ module ConfigurableStateMachine
         events.flatten.uniq.sort
       end
     end
+
+    def clear_params_for_transition(params)
+      cloned_params = params.clone
+      %i{ acting_user acting_team target_user target_team num_attachments disable_hook }.each do |key|
+        cloned_params.delete(key)
+      end
+      cloned_params
+    end
+  
   end
   #rubocop:enable Metrics/ClassLength
 end
