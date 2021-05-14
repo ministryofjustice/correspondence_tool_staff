@@ -171,15 +171,16 @@ class DatabaseAnonymizer
   #
 
   def anonymize_users(user)
-    unless allow_to_be_reserved?(user.email)
+    unless allow_to_be_reserved?(user)
       user.full_name = Faker::Name.unique.name
       user.email = Faker::Internet.email(name: user.full_name)
     end
     user
   end
 
-  def allow_to_be_reserved?(email)
-    email =~ /@digital.justice.gov.uk$/ || email =~ /@justice.gov.uk$/
+  def allow_to_be_reserved?(user)
+    (user.email =~ /@digital.justice.gov.uk$/ || user.email =~ /@justice.gov.uk$/) &&
+      user.roles.include?("admin")
   end
 
   # Anonymize Cases table including all those case types
@@ -214,6 +215,20 @@ class DatabaseAnonymizer
     kase.requester_reference = "F" + Faker::Invoice.reference unless kase.requester_reference.blank?
     kase.third_party_name = Faker::Name.name unless kase.third_party_name.blank?
     kase.third_party_company_name = Faker::Company.name unless kase.third_party_company_name.blank?
+  end
+  # rubocop:enable Metrics/CyclomaticComplexity
+
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def anonymize_case_sar_offendercomplaint(kase)
+    anonymize_case_sar_offender(kase)
+    kase.ico_contact_name = Faker::Name.name unless kase.ico_contact_name.blank?
+    kase.ico_contact_email = Faker::Internet.email(name:kase.name) unless kase.ico_contact_email.blank?
+    kase.ico_contact_phone = Faker::PhoneNumber.cell_phone unless kase.ico_contact_phone.blank?
+    kase.ico_reference = "ICOF" + Faker::Invoice.reference unless kase.ico_reference.blank?
+    kase.gld_contact_name = Faker::Name.name unless kase.gld_contact_name.blank?
+    kase.gld_contact_email = Faker::Internet.email(name:kase.name) unless kase.gld_contact_email.blank?
+    kase.gld_contact_phone = Faker::PhoneNumber.cell_phone unless kase.gld_contact_phone.blank?
+    kase.gld_reference = "GLDF" + Faker::Invoice.reference unless kase.gld_reference.blank?
   end
   # rubocop:enable Metrics/CyclomaticComplexity
 
