@@ -85,11 +85,13 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_sar, :flagged_accepted
           expect(k.current_state).to eq 'closed'
           expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
+                                                                      :add_responses,
                                                                       :assign_to_new_team,
                                                                       :destroy_case,
                                                                       :edit_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
+                                                                      :remove_response,
                                                                       :update_closure]
         end
       end
