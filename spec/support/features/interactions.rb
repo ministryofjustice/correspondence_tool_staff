@@ -7,8 +7,13 @@ module Features
                                    responding_team:,
                                    flag_for_disclosure: false)
       login_step user: user
-
-      kase = create_foi_case_auto_flagged_step type: type.to_s.demodulize.downcase
+      
+      if type == Case::FOI::Standard
+        kase = create_foi_case_step type: type.to_s.demodulize.downcase,
+                                    flag_for_disclosure: flag_for_disclosure
+      else
+        kase = create_foi_case_auto_flagged_step type: type.to_s.demodulize.downcase
+      end
 
       assign_case_step business_unit: responding_team
       logout_step
