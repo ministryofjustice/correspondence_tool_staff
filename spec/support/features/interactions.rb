@@ -8,8 +8,8 @@ module Features
                                    flag_for_disclosure: false)
       login_step user: user
 
-      kase = create_foi_case_step type: type.to_s.demodulize.downcase,
-                                  flag_for_disclosure: flag_for_disclosure
+      kase = create_foi_case_auto_flagged_step type: type.to_s.demodulize.downcase
+
       assign_case_step business_unit: responding_team
       logout_step
       kase

@@ -62,6 +62,7 @@ module PageObjects
 
           def fill_in_case_details(params={})
             type = params.delete(:type) || 'standard'
+            flag_for_disclosure_specialists = params.delete(:flag_for_disclosure_specialists)
             kase = FactoryBot.build :case, params
 
             set_received_date(kase.received_date)
@@ -85,8 +86,9 @@ module PageObjects
             choose_foi_type(type)
 
             choose_type_of_requester(kase.requester_type)
-
-            determine_flag_for_disclosure_specialist kase
+            if flag_for_disclosure_specialists
+              determine_flag_for_disclosure_specialist kase
+            end
             kase
           end
 
