@@ -5,5 +5,5 @@
 = f.email_field :email
 .button-holder
   = f.submit submit_button_text, {class: 'button'}
-  - if user.id
+  - if user.id && policy(user).destroy?
     = unassign_or_deactivate_link(user, team)
