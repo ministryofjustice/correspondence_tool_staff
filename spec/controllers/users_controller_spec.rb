@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
   let(:manager) { find_or_create :disclosure_bmt_user }
+  let(:team_admin) { find_or_create :team_admin }
   let(:dacu)    { find_or_create :team_dacu }
 
   describe 'GET show' do
@@ -231,8 +232,8 @@ RSpec.describe UsersController, type: :controller do
       }
     end
 
-    context 'signed in as manager' do
-      before(:each) { sign_in manager }
+    context 'signed in as team_admin' do
+      before(:each) { sign_in team_admin }
 
       it 'calls user deletion service' do
         service = double(UserDeletionService)
@@ -296,6 +297,23 @@ RSpec.describe UsersController, type: :controller do
         end
       end
     end
+
+    context 'signed in as manager' do
+
+      before(:each) do
+        sign_in responder
+        delete :destroy, params: params
+      end
+
+      it 'displays a flash notice' do
+        expect(flash['alert']).to eq 'You are not authorised to deactivate users'
+      end
+
+      it 'redirects to root' do
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
     context 'signed in as non-manager' do
 
       before(:each) do
