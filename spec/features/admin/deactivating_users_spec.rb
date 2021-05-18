@@ -1,14 +1,18 @@
 require 'rails_helper'
 
 feature 'deactivating users' do
-  given!(:manager)        { find_or_create :disclosure_bmt_user }
+  given!(:team_admin)        { find_or_create :team_admin }
   given!(:responder)      { create :responder, responding_teams: [bu] }
   given!(:user_with_cases){ find_or_create :foi_responder }
   given!(:live_case)      { create :accepted_case }
   given!(:bu)             { find_or_create :foi_responding_team }
 
-  scenario 'manager deactivates a responder with no live cases' do
-    login_as manager
+  before do
+    bu.team_admins << team_admin
+  end
+
+  scenario 'user manaing team members deactivates a responder with no live cases' do
+    login_as team_admin
 
     teams_show_page.load(id: bu.id)
     information_officer = teams_show_page.row_for_information_officer(responder.email)
@@ -27,8 +31,8 @@ feature 'deactivating users' do
     expect(login_page.error_message).to have_content 'Invalid email or password.'
   end
 
-  scenario 'manager deactivates responder with live cases' do
-    login_as manager
+  scenario 'user manaing team members deactivates responder with live cases' do
+    login_as team_admin
 
     teams_show_page.load(id: bu.id)
     information_officer = teams_show_page.row_for_information_officer(user_with_cases.email)
