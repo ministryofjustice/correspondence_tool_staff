@@ -37,4 +37,11 @@ feature 'FOI Case creation by a manager' do
     request_attachment = new_case.attachments.request.first
     expect(request_attachment.key).to match %{/request-1.pdf$}
   end
+
+  scenario 'non-standard cases are auto-flagged for disclosure specialists', js: true do
+    create_foi_case_auto_flagged_step type: 'compliancereview'
+
+    new_case = Case::Base.last
+    expect(new_case.flagged_for_disclosure_specialist_clearance?).to be true
+  end
 end

@@ -6,6 +6,9 @@ moj.Modules.CaseCreation = {
 
   $deliveryMethodFields : $('#delivery-method-fields'),
 
+  $foiCaseTypeFields: $('#foi_type_standard').closest('.form-group'),
+  $flagForDisclosureSpecialists: $('#foi_flag_for_disclosure_specialists_yes').closest('.form-group'),
+
   $originalCaseFields: $('#js-search-for-case .js-original-case'),
   $originalCaseInput: $('#ico_original_case_number'),
   $relatedCaseInput: $('#ico_related_case_number'),
@@ -24,6 +27,8 @@ moj.Modules.CaseCreation = {
 
     self.initialiseICOCaseLinking(self);
 
+    self.initialiseFoiType(self);
+
   },
 
   initialiseDeliveryMethod: function (self) {
@@ -35,6 +40,23 @@ moj.Modules.CaseCreation = {
         self.showHideDeliveryMethodFields();
       });
     }
+  },
+
+  initialiseFoiType: function(self) {
+    //Bind events
+    self.$foiCaseTypeFields.on('change', ':radio', function (event) {
+      event.preventDefault();
+
+      var shouldHideFoiFlagFields = (event.target.id == 'foi_type_standard') ? false : true;
+      
+      if (shouldHideFoiFlagFields) {
+        $('#foi_flag_for_disclosure_specialists_yes').prop('checked', true);
+        self.$flagForDisclosureSpecialists.hide();
+      } else {
+        $('#foi_flag_for_disclosure_specialists_yes').prop('checked', false);
+        self.$flagForDisclosureSpecialists.show();
+      }
+    });
   },
 
   showHideDeliveryMethodFields: function () {
