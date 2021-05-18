@@ -28,6 +28,45 @@ def create_foi_case_step(type: 'standard',
   Case::Base.find(kase_id)
 end
 
+def create_foi_case_auto_flagged_step(type: 'standard',
+                                      delivery_method: :sent_by_email,
+                                      uploaded_request_files: [])
+
+  # Assume we are on a case listing page
+  expect(cases_page).to have_new_case_button
+  cases_page.new_case_button.click
+
+  expect(cases_new_page).to be_displayed
+
+  cases_new_page.create_link_for_correspondence('FOI').click
+  expect(cases_new_foi_page).to be_displayed
+
+  2.times do
+    cases_new_foi_page.fill_in_case_details(
+      type: 'standard',
+      delivery_method: delivery_method,
+      uploaded_request_files: uploaded_request_files,
+    )
+    expect(cases_new_foi_page).to have_content("Flag for disclosure specialists")
+
+    cases_new_foi_page.fill_in_case_details(
+      type: type,
+      delivery_method: delivery_method,
+      uploaded_request_files: uploaded_request_files,
+      flag_for_disclosure_specialists: false
+    )
+
+    expect(cases_new_foi_page).to_not have_content("Flag for disclosure specialists")
+  end
+
+  click_button 'Create case'
+
+  # Return the case we created using the params of the current  path
+  kase_id = Rails.application.routes.recognize_path(current_path)[:case_id]
+  Case::Base.find(kase_id)
+end
+
+
 def create_ico_case_step(original_case:, related_cases: [], uploaded_request_files: [])
   # Assume we are on a case listing page
   expect(cases_page).to have_new_case_button
