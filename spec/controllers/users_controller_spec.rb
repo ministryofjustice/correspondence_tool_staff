@@ -299,18 +299,68 @@ RSpec.describe UsersController, type: :controller do
     end
 
     context 'signed in as manager' do
+      before(:each) { sign_in manager }
 
-      before(:each) do
-        sign_in responder
+      it 'calls user deletion service' do
+        service = double(UserDeletionService)
+        expect(UserDeletionService).to receive(:new).and_return(service)
+        expect(service).to receive(:call)
+        expect(service).to receive(:result).and_return(:ok)
         delete :destroy, params: params
       end
 
-      it 'displays a flash notice' do
-        expect(flash['alert']).to eq 'You are not authorised to deactivate users'
+      context 'response :ok' do
+        before(:each) do
+          service = double(UserDeletionService)
+          expect(UserDeletionService).to receive(:new).and_return(service)
+          expect(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:ok)
+          delete :destroy, params: params
+        end
+
+        it 'displays a flash notice' do
+          expect(flash[:notice]).to eq I18n.t('devise.registrations.destroyed')
+        end
+
+        it 'redirects to team path' do
+          expect(response).to redirect_to(team_path(team))
+        end
       end
 
-      it 'redirects to root' do
-        expect(response).to redirect_to(root_path)
+      context 'response :has_live_cases' do
+        before(:each) do
+          service = double(UserDeletionService)
+          expect(UserDeletionService).to receive(:new).and_return(service)
+          expect(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:has_live_cases)
+          delete :destroy, params: params
+        end
+
+        it 'displays a flash notice' do
+          expect(flash[:alert]).to eq I18n.t('devise.registrations.has_live_cases')
+        end
+
+        it 'redirects to team path' do
+          expect(response).to redirect_to(team_path(team))
+        end
+      end
+
+      context 'response :error' do
+        before(:each) do
+          service = double(UserDeletionService)
+          expect(UserDeletionService).to receive(:new).and_return(service)
+          expect(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:error)
+          delete :destroy, params: params
+        end
+
+        it 'displays a flash notice' do
+          expect(flash[:alert]).to eq I18n.t('devise.registrations.error')
+        end
+
+        it 'redirects to team path' do
+          expect(response).to redirect_to(team_path(team))
+        end
       end
     end
 

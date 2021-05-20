@@ -11,7 +11,7 @@ describe UserPolicy do
 
   permissions :destroy? do
     it { should     permit(team_admin,  Team.first)  }
-    it { should_not permit(manager,     Team.first)  }
+    it { should     permit(manager,     Team.first)  }
     it { should_not permit(responder,   Team.first) }
     it { should_not permit(approver,    Team.first) }
   end

@@ -10,7 +10,7 @@ class UserPolicy < ApplicationPolicy
 
   def destroy?
     clear_failed_checks
-    check_user_is_a_team_admin
+    check_user_is_a_manager || check_user_is_a_team_admin
   end
 
   check :user_is_a_team_admin do
