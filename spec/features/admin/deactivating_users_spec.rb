@@ -12,7 +12,7 @@ feature 'deactivating users' do
     bu.team_admins << team_admin
   end
 
-  scenario 'user manaing team members deactivates a responder with no live cases' do
+  scenario 'manager deactivates a responder with no live cases' do
     login_as manager
 
     teams_show_page.load(id: bu.id)
@@ -32,7 +32,7 @@ feature 'deactivating users' do
     expect(login_page.error_message).to have_content 'Invalid email or password.'
   end
 
-  scenario 'user manaing team members deactivates responder with live cases' do
+  scenario 'manager deactivates responder with live cases' do
     login_as manager
 
     teams_show_page.load(id: bu.id)
