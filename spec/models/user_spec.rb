@@ -192,7 +192,6 @@ RSpec.describe User, type: :model do
     context 'user is in one of the teams associated with the case' do
       it 'returns the team link to user and case both' do
         kase = create :accepted_case
-        new_team = create :business_unit, correspondence_type_ids: [foi.id]
         check_user = kase.responder
         check_user.team_roles << TeamsUsersRole.new(team: kase.managing_team, role: 'manager')
         check_user.reload
@@ -203,7 +202,6 @@ RSpec.describe User, type: :model do
     context 'user is in one of the teams associated with the case' do
       it 'returns the team link to user and case both' do
         kase = create :pending_dacu_clearance_case
-        new_team = create :business_unit, correspondence_type_ids: [foi.id]
         check_user = kase.responder
         approving_team = kase.approving_teams.first
         check_user.team_roles << TeamsUsersRole.new(team: kase.approving_teams.first, role: 'approver')

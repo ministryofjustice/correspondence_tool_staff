@@ -244,7 +244,6 @@ module ConfigurableStateMachine
       if state_config.nil? || !state_config.to_hash.keys.include?(event)
         return false
       end
-      event_config = state_config[event]
       if !can_trigger_event?(
             event_name: event, 
             metadata: {:acting_user => user, :acting_team => acting_team},
