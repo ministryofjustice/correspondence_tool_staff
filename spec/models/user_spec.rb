@@ -187,6 +187,34 @@ RSpec.describe User, type: :model do
 
   end
 
+  describe '#case_team_for_event' do
+
+    context 'user is in one of the teams associated with the case' do
+      it 'returns the team link to user and case both' do
+        kase = create :accepted_case
+        new_team = create :business_unit, correspondence_type_ids: [foi.id]
+        check_user = kase.responder
+        check_user.team_roles << TeamsUsersRole.new(team: kase.managing_team, role: 'manager')
+        check_user.reload
+        expect(check_user.case_team_for_event(kase, 'add_responses')).to eq kase.responding_team
+      end
+    end
+
+    context 'user is in one of the teams associated with the case' do
+      it 'returns the team link to user and case both' do
+        kase = create :pending_dacu_clearance_case
+        new_team = create :business_unit, correspondence_type_ids: [foi.id]
+        check_user = kase.responder
+        approving_team = kase.approving_teams.first
+        check_user.team_roles << TeamsUsersRole.new(team: kase.approving_teams.first, role: 'approver')
+        check_user.reload
+        expect(check_user.teams_for_case(kase)).to match_array [approving_team, kase.responding_team]
+        expect(check_user.case_team_for_event(kase, 'reassign_user')).to eq approving_team
+      end
+    end
+
+  end
+
   describe '#roles_for_case' do
     context 'user has just one role for a case' do
       it 'returns an array of one role' do
