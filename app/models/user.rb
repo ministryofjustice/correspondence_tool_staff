@@ -140,9 +140,9 @@ class User < ApplicationRecord
   end
 
   def case_team_for_event(kase, event)
-    # Return the team which have the permission for performing the even for 
+    # Return the team which have the permission for performing the event for 
     # a particular kase under current state. If multiple teams are found 
-    # the team with highest authroity will be returned
+    # the team with highest authority will be returned
     available_teams = kase.state_machine.teams_that_can_trigger_event_on_case(
       event_name: event, 
       user: self)
