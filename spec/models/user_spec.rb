@@ -199,8 +199,8 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context 'user is in one of the teams associated with the case' do
-      it 'returns the team link to user and case both' do
+    context 'user is in multiple teams associated with the case' do
+      it 'returns the team link having highest authority to user and case both' do
         kase = create :pending_dacu_clearance_case
         check_user = kase.responder
         approving_team = kase.approving_teams.first
