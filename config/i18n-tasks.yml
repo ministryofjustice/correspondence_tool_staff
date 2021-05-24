@@ -114,6 +114,7 @@ ignore_unused:
   - 'common.case.request'
   - 'nav.pages.teams.*'
   - 'teams.deactivate_info.*'
+  - 'teams.business_group_detail.destroy'
   - 'teams.directorate_detail.destroy'
   - 'teams.business_unit_detail.destroy'
   - users.show.heading_all_cases
