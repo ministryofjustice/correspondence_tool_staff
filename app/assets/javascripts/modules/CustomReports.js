@@ -34,6 +34,13 @@ moj.Modules.CustomReports = {
         $('input[type="hidden"]', this).each(function() {
           $(this).prop('disabled', true);
         });
+
+        // Radios have the same name, so if a hidden radio is checked
+        // it will break the keyboard tabbing - since the keyboard
+        // tabbing defaults to the selected radio
+        $('input[type="radio"]', this).each(function() {
+          $(this).prop('checked', false);
+        });
       });
 
       var selected = $('input:checked', this.$correspondenceTypes);
