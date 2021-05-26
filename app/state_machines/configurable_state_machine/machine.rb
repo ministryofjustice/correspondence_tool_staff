@@ -139,13 +139,6 @@ module ConfigurableStateMachine
       end
     end
 
-    # def get_next_target_state_for_event(event_name, metadata)
-    #   target_states = get_event_target_states!(event_name)
-    #   target_states.find do |target_state|
-    #     call_guards_for_target_state(target_state, metadata)
-    #   end
-    # end
-
     def call_guards_for_target_state(target_state, metadata)
       guards = target_state[:guards]
       guards.blank? ||
@@ -190,6 +183,16 @@ module ConfigurableStateMachine
       end
     end
 
+    def teams_that_can_trigger_event_on_case(event_name:, user:)
+      available_teams = []
+      user.teams_for_case(@kase).each do | team |
+        if can_trigger_event_for_the_case?(event_name: event_name, acting_team: team, user: user) 
+          available_teams << team
+        end
+      end
+      available_teams
+    end
+
     private
 
     def first_role_that_can_trigger_event_on_case(event_name:, metadata:, user:)
@@ -228,6 +231,26 @@ module ConfigurableStateMachine
       elsif config.if.nil? || predicate_is_true?(predicate: config.if, user: user)
         config
       end
+    end
+
+    def can_trigger_event_for_the_case?(event_name:, acting_team:, user:)
+      event = event_name.to_sym
+      role =  acting_team.role
+      user_role_config = @config.user_roles[role]
+      if user_role_config.nil?
+        return false
+      end
+      state_config = user_role_config.states[@kase.current_state]
+      if state_config.nil? || !state_config.to_hash.keys.include?(event)
+        return false
+      end
+      if !can_trigger_event?(
+            event_name: event, 
+            metadata: {:acting_user => user, :acting_team => acting_team},
+            roles: [role])
+        return false
+      end
+      return true
     end
 
     # in a transaction, write the case transition record, and transition the case

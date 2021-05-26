@@ -72,7 +72,7 @@ class ResponseUploaderService
       case @action
       when 'upload', 'upload-flagged'
         @case.state_machine.add_responses!(acting_user: @current_user,
-                                           acting_team: @current_user.case_team(@case),
+                                           acting_team: @current_user.case_team_for_event(@case, 'add_responses'),
                                            filenames: filenames,
                                            message: @case.upload_comment)
       when 'upload-approve'

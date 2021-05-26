@@ -76,6 +76,9 @@ module ConfigurableStateMachine
                                   transition_to: 'ready_to_send',
                                   after_transition: 'Workflows::Hooks#notify_responder_message_received'
                               },
+                              reassign_responder: {
+                                transition_to: 'awaiting_responder'
+                              },
                               add_response: nil
                           },
                           awaiting_dispatch: {
@@ -112,7 +115,9 @@ module ConfigurableStateMachine
                               add_message_to_case: {
                                   if: 'Case::FOI::StandardPolicy#can_add_message_to_case?',
                                   after_transition: 'Workflows::Hooks#notify_responder_message_received'
-                              }
+                              },
+                              reassign_team_member: nil, 
+                              add_response: nil
                           }
                       }
                   }
@@ -126,6 +131,7 @@ module ConfigurableStateMachine
     before(:all) do
       @managing_team      = create :managing_team
       @unassigned_case    = create :case
+      @accepted_case      = create :accepted_case, :flagged_accepted
       @manager            = create :manager, managing_teams: [@managing_team]
       @approver           = create :approver
       @manager_approver   = create :manager_approver
@@ -439,6 +445,61 @@ module ConfigurableStateMachine
       end
     end
 
+    describe 'teams_that_can_trigger_event_on_case' do
+
+      before(:each) { @policy = double Case::FOI::StandardPolicy }
+
+      context 'user has single role for the case' do
+        it 'return empty when user has no right for an event' do
+          machine = Machine.new(config: config, kase: @unassigned_case)
+          expect(machine.teams_that_can_trigger_event_on_case(
+              event_name: :add_response,
+              user: @responder)
+          ).to eq []
+        end
+
+        it 'return the team involved when user has right for an event' do
+          machine = Machine.new(config: config, kase: @accepted_case)
+          expect(machine.teams_that_can_trigger_event_on_case(
+              event_name: :add_response,
+              user: @responder)
+          ).to eq [@accepted_case.responding_team]
+        end
+      end
+
+      context 'user has multi roles for the case' do
+        it 'return the team only involved for a particular event' do
+          machine = Machine.new(config: config, kase: @accepted_case)
+          manager = @accepted_case.managing_team.users.first
+          @accepted_case.approving_teams.first.user_roles << TeamsUsersRole.new(user_id: manager.id, role: "approver")
+          @accepted_case.approving_teams.reload
+          manager.reload
+          expect(machine.teams_that_can_trigger_event_on_case(
+              event_name: :reassign_responder,
+              user: manager)
+          ).to eq [@accepted_case.managing_team]
+        end
+
+        it 'return all the teams which have the right for a particular event ' do
+          machine = Machine.new(config: config, kase: @accepted_case)
+          manager = @accepted_case.managing_team.users.first
+          responding_team = @accepted_case.responding_team
+          responding_team.user_roles << TeamsUsersRole.new(user_id: manager.id, role: "approver")
+          responding_team.reload
+          manager.reload
+          expect(machine.teams_that_can_trigger_event_on_case(
+              event_name: :reassign_team_member,
+              user: manager)
+          ).to match_array [responding_team]
+          expect(machine.teams_that_can_trigger_event_on_case(
+              event_name: :add_response,
+              user: manager)
+          ).to eq [@accepted_case.managing_team, responding_team]
+        end
+      end
+
+    end
+
     describe '#method_missing' do
       it 'intercepts bang methods and triggers them as events' do
         user = double User
@@ -624,6 +685,8 @@ module ConfigurableStateMachine
             edit_case
             flag_for_clearance
             flag_for_press
+            reassign_responder
+            reassign_team_member
             remove_response
             unflag_for_clearance
           }
