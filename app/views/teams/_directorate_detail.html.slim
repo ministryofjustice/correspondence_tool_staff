@@ -19,6 +19,12 @@ p
 .grid-row
   .column-full
     = link_to 'Add new business unit', new_team_path(team_type: 'bu', parent_id: @team.id), class: 'button'
+
+p 
+p
+- if Pundit.policy(current_user, @team).move?
+  p = link_to "Move directorate", move_to_business_group_team_path(@team.id), id: 'move-team-link'
+
 hr
 
 = show_deactivate_link_or_info(current_user, @team)

@@ -332,6 +332,7 @@ en:
     add_to_case_history: Add to case history
     assign: Assign to %{business_unit_name}
     move: Move to this directorate
+    move_directorate: Move to this business group
     confirm: Confirm
     create_case: Create case
     feedback: Send feedback
@@ -1290,6 +1291,24 @@ en:
       will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_directorate_name}"
     team: Business unit
     unreversible: This action cannot be reversed
+  directorates:
+    move:
+      confirm_heading: Confirm move
+      heading: Move directorate
+      intro:
+        bullet1: all business unites will move with it
+        bullet2: all open cases and users under each business unit will move with it
+        bullet3: all members under each business unit will be able to view closed cases
+        bullet4: performance reports for the unit both before and after the move are available
+        paragraph: "Moving a directorate means:"
+      moved_successfully: "%{team_name} has been moved to %{destination_business_group_name}"
+      moving_to: Moving to
+      subhead: "Directorate: %{team_name}"
+      team_currently_located: This is where the team is currently located
+      will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_business_group_name}"
+      error: "Failed to move this directorate due to reason: #{reason}"
+    unreversible: This action cannot be reversed
+
 
   users:
     new:

@@ -114,6 +114,7 @@ module PageObjects
         teams_join:                     'Teams::JoinTeamPage',
         teams_join_form:                'Teams::JoinTeamFormPage',
         teams_show:                     'Teams::ShowPage',
+        directorates_move:              'Teams::MoveToBusinessGroupPage',
         users_index:                    'Users::IndexPage',
         users_new:                      'Users::NewPage',
         users_show:                     'Users::ShowPage',

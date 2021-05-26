@@ -1,0 +1,39 @@
+- content_for :page_title do
+  = t('page_title.move_directorate_page', team_name: @team.name)
+
+- content_for :heading
+  = t('directorates.move.confirm_heading')
+
+= move_to_business_group_back_link(@team)
+
+= render partial: 'layouts/header'
+
+h2.heading-medium
+  = @team.name
+dl
+  div
+    dt
+      = t('teams.business_group')
+    dd
+      = @team.business_group.name
+  div
+    dt
+      = t('teams.directorate')
+    dd
+      = @team.name
+
+h2.heading-medium
+  = t('directorates.move.moving_to')
+dl
+  div
+    dt
+      = t('teams.business_group')
+    dd
+      = @business_group.name
+
+
+= form_tag update_business_group_team_path(@team)
+  = hidden_field_tag :business_group_id, @business_group.id
+  p.confirm-and-cancel
+    = submit_tag "Confirm", class: 'update-business-group-button button'
+    = move_to_business_group_cancel_link(@team)

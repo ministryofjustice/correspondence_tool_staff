@@ -14,7 +14,10 @@ class TeamsController < ApplicationController
                                   :update,
                                   :update_business_area,
                                   :update_business_area_form,
-                                  :update_directorate]
+                                  :update_directorate,
+                                  :move_to_business_group,
+                                  :move_to_business_group_form,
+                                  :update_business_group]
 
   before_action :set_areas, only: [:business_areas_covered,
                                    :create_business_areas_covered]
@@ -154,9 +157,36 @@ class TeamsController < ApplicationController
     set_directorates if params[:business_group_id]
   end
 
+  def move_to_business_group
+    authorize @team, :move?
+  end
+
+  def move_to_business_group_form
+    authorize @team, :move?
+    @business_group = BusinessGroup.find(params[:business_group_id])
+  end
+
   def move_to_directorate_form
     authorize @team, :move?
     @directorate = Directorate.find(params[:directorate_id])
+  end
+
+
+  def update_business_group
+    authorize @team, :move?
+    @business_group = BusinessGroup.find(params[:business_group_id])
+    service = DirectorateMoveService.new(@team, @business_group)
+    service.call
+    case service.result
+    when :ok
+      flash[:notice] = I18n.t('directorates.move.moved_successfully',
+                        team_name: service.new_directorate.name,
+                        destination_business_group_name: @business_group.name)
+      redirect_to team_path(service.new_directorate)
+    else
+      flash[:alert] = I18n.t('directorates.move.error', reason: service.error_message)
+      redirect_to team_path(@team)
+    end
   end
 
   def update_directorate

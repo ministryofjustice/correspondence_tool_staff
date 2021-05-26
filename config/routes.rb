@@ -226,9 +226,12 @@ Rails.application.routes.draw do
     delete 'destroy_business_area' => 'teams#destroy_business_area', on: :member
     patch 'update_business_area' => 'teams#update_business_area', on: :member
     get 'update_business_area_form' => 'teams#update_business_area_form', on: :member
+    get 'move_to_business_group' => 'teams#move_to_business_group', on: :member
+    get 'move_to_business_group_form' => 'teams#move_to_business_group_form', on: :member
     get 'move_to_directorate' => 'teams#move_to_directorate', on: :member
     get 'move_to_directorate_form' => 'teams#move_to_directorate_form', on: :member
     post 'update_directorate' => 'teams#update_directorate', on: :member
+    post 'update_business_group' => 'teams#update_business_group', on: :member
     get 'join_teams' => 'teams#join_teams', on: :member
     get 'join_teams_form' => 'teams#join_teams_form', on: :member
     post 'join_teams' => 'teams#join_target_team', on: :member

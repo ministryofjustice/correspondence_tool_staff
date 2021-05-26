@@ -128,7 +128,26 @@ RSpec.describe TeamsHelper, type: :helper do
     end
   end
 
-  describe "move_to_directorate_cancel_link" do
-    let(:business_unit) { create :business_unit }
+  describe "move_to_business_group_back_link" do
+    let(:directorate) { create :directorate }
+    context "given a directorate" do
+      it "returns a link to the move to business groups page" do
+        expect(move_to_business_group_back_link(directorate)).to eq(
+          link_to "Back", move_to_business_group_back_url(directorate), class: 'govuk-back-link'
+        )
+      end
+    end
   end
+
+  describe "move_to_business_group_cancel_link" do
+    let(:directorate) { create :directorate }
+    context "given a team" do
+      it "returns a link to the move to directorate teams page" do
+        expect(move_to_business_group_cancel_link(directorate)).to eq(
+          link_to "Cancel", move_to_business_group_back_url(directorate)
+        )
+      end
+    end
+  end
+
 end
