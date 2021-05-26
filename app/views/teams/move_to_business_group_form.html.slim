@@ -31,6 +31,8 @@ dl
     dd
       = @business_group.name
 
+p
+  = t('directorates.move.will_be_moved', team_name: @team.name, target_business_group_name: @business_group.name)
 
 = form_tag update_business_group_team_path(@team)
   = hidden_field_tag :business_group_id, @business_group.id

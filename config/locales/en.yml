@@ -1308,7 +1308,7 @@ en:
       moving_to: Moving to
       subhead: "Directorate: %{team_name}"
       team_currently_located: This is where the team is currently located
-      will_be_moved: "%{team_name}'s users and open cases will be moved to %{target_business_group_name}"
+      will_be_moved: "The users and open cases assigned to the business units under %{team_name} will be moved to %{target_business_group_name}"
       error: "Failed to move this directorate due to reason: #{reason}"
     unreversible: This action cannot be reversed
 
