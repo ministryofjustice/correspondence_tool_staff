@@ -66,6 +66,16 @@ FactoryBot.define do
     end
   end
 
+  factory :team_for_admin_users, parent: :business_unit do
+    sequence(:name) { |n| "Team-admin Team #{n}" }
+    directorate { find_or_create :directorate, name: 'Management Directorate' }
+    role { 'team_admin' }
+    team_admins { [create(:responder, :orphan)] }
+
+    after(:create) do |team, evaluator|
+    end
+  end
+
   factory :responding_team, parent: :business_unit do
     sequence(:name) { |n| "Responding Team #{n}" }
     responders { [create(:responder, :orphan)] }
