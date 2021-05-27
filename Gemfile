@@ -48,7 +48,7 @@ gem 'pry-rails'
 gem 'puma', '~> 5.1'
 gem 'pundit', '~>2.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.5'
+gem 'rails', '~> 5.2.6'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'sprockets', '~> 3.7.2'
