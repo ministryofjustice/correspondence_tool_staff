@@ -81,6 +81,11 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :fois, only: only, controller: 'foi', as: :case_foi do
+      get '/send_back', on: :member, to: 'foi#send_back', as: 'send_back'
+      patch '/send_back', on: :member, to: 'foi#confirm_send_back', as: 'confirm_send_back'
+    end
+
     resources :offender_sar_complaints, only: only, controller: 'offender_sar_complaint', as: :case_sar_offender_complaint do
       get 'cancel', on: :collection
       get '/(:step)', on: :collection, to: 'offender_sar_complaint#new', as: 'step'

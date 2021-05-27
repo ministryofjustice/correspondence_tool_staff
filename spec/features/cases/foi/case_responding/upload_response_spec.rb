@@ -29,6 +29,34 @@ feature 'Upload response' do
 
   end
 
+  scenario 'upload a response as the responder but also a member of managing team', js: true do
+    kase = create :accepted_case, :flagged_accepted
+
+    managing_team = kase.managing_team
+    responder.team_roles << TeamsUsersRole.new(team: managing_team, role: 'manager')
+    responder.reload
+
+    login_as responder
+    cases_show_page.load(id: kase.id)
+    cases_show_page.actions.upload_response.click
+
+    expect(cases_upload_responses_page).to be_displayed
+    
+    upload_file = "#{Faker::Internet.slug}.jpg"
+    cases_upload_responses_page.upload_file(
+      kase: kase,
+      file_path: upload_file
+    )
+
+    cases_upload_responses_page.upload_response_button.click
+
+    cases_show_page.load(id: kase.id)
+    expect(cases_show_page.case_attachments[0].collection[0].filename.text)
+      .to eq upload_file
+    expect(cases_show_page.case_status.details.copy.text).to eq 'Pending clearance'
+    expect(cases_show_page.case_status.details.who_its_with.text).to eq kase.approving_teams.first.name
+  end
+
   context 'as a responder on the same team' do
     background do
       login_as responder_teammate

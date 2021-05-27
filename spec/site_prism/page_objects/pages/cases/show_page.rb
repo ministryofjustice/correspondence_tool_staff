@@ -18,6 +18,7 @@ module PageObjects
                 PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         section :actions, '.button-holder' do
+          element :send_back, '#action--send-back'
           element :assign_to_new_team, '#action--assign-new-team'
           element :upload_response, '#action--upload-response'
           element :create_overturned, '#action--create-overturned'
@@ -83,7 +84,7 @@ module PageObjects
 
         section :new_message, '.message-form' do
           element :input, 'textarea'
-          element :add_button, '.button-secondary'
+          element :add_button, '.button'
         end
 
         section :offender_sar_subject_details, '.section-subject-details' do

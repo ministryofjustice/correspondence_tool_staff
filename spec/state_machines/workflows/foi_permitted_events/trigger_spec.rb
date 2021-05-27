@@ -77,34 +77,68 @@ describe ConfigurableStateMachine::Machine do
       end
 
       context 'awaiting_dispatch' do
-        it 'shows events' do
+        it 'shows events - not member of case managing team' do
           k = create :case_with_response, :flagged, :dacu_disclosure
 
           expect(k.current_state).to eq 'awaiting_dispatch'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :destroy_case,
-                                                                      :edit_case,
-                                                                      :extend_for_pit,
-                                                                      :flag_for_clearance,
-                                                                      :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :request_further_clearance,
-                                                                      :unassign_from_user]
+          expect(k.state_machine.permitted_events(manager.id))
+            .to eq [:add_message_to_case,
+                    :destroy_case,
+                    :edit_case,
+                    :extend_for_pit,
+                    :flag_for_clearance,
+                    :link_a_case,
+                    :remove_linked_case,
+                    :request_further_clearance,
+                    :unassign_from_user]
+        end
+
+        it 'shows events - member of case managing team' do
+          k = create :case_with_response, :flagged, :dacu_disclosure
+
+          expect(k.current_state).to eq 'awaiting_dispatch'
+          expect(k.state_machine.permitted_events(k.managing_team.users.first.id))
+            .to eq [:add_message_to_case,
+                    :destroy_case,
+                    :edit_case,
+                    :extend_for_pit,
+                    :flag_for_clearance,
+                    :link_a_case,
+                    :remove_linked_case,
+                    :request_further_clearance,
+                    :send_back,
+                    :unassign_from_user]
         end
       end
 
       context 'responded' do
-        it 'shows events' do
+        it 'shows events - not member of case managing team' do
           k = create :responded_case, :flagged, :dacu_disclosure
 
           expect(k.current_state).to eq 'responded'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :close,
-                                                                      :destroy_case,
-                                                                      :edit_case,
-                                                                      :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :unassign_from_user]
+          expect(k.state_machine.permitted_events(manager.id))
+          .to eq [:add_message_to_case,
+                  :close,
+                  :destroy_case,
+                  :edit_case,
+                  :link_a_case,
+                  :remove_linked_case,
+                  :unassign_from_user]
+        end
+
+        it 'shows events - member of case managing team' do
+          k = create :responded_case, :flagged, :dacu_disclosure
+
+          expect(k.current_state).to eq 'responded'
+          expect(k.state_machine.permitted_events(k.managing_team.users.first.id))
+          .to eq [:add_message_to_case,
+                  :close,
+                  :destroy_case,
+                  :edit_case,
+                  :link_a_case,
+                  :remove_linked_case,
+                  :send_back, 
+                  :unassign_from_user]
         end
       end
 
@@ -473,7 +507,8 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,
                                                                        :reassign_user,
-                                                                       :remove_linked_case]
+                                                                       :remove_linked_case, 
+                                                                       :send_back]
         end
       end
 

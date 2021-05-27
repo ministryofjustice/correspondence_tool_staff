@@ -63,6 +63,17 @@ class Case::SAR::StandardPolicy < Case::BasePolicy
     check_can_trigger_event(:remove_sar_deadline_extension)
   end
 
+  def can_remove_attachment?
+    clear_failed_checks
+    check_can_trigger_event(:remove_response)
+  end
+  
+  def upload_responses?
+    clear_failed_checks
+    check(:user_is_a_manager_for_case) && 
+      check_can_trigger_event(:add_responses)
+  end
+
   check :responding_team_is_linked_to_case do
     self.case.linked_cases.detect do |kase|
       kase.responding_team.in? user.responding_teams

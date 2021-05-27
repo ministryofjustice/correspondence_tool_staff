@@ -499,7 +499,7 @@ en:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
         Case::FOI::ComplianceReview: FOI - Internal review for compliance
-        Case::SAR::Standard: SAR - Non-offender 
+        Case::SAR::Standard: SAR - Non-offender
       foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity
@@ -1078,6 +1078,7 @@ en:
       close_form:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
+      send_back_heading: 'Send case back for change'
     sar:
       new_form_common:
         dropzone: "Requestor's proof of ID and other documents"
@@ -1238,6 +1239,8 @@ en:
   teams:
     browse_by_business_group: Browse by business group
     business_group: Business group
+    business_group_detail:
+      destroy: Are you sure you want to deactivate this business group?
     business_unit_list:
       team_members: Team members
     business_unit_detail:
@@ -1256,6 +1259,7 @@ en:
     deactivate_info:
       directorate: To deactivate this directorate you need to first deactivate all business units within it.
       business_unit: To deactivate this business unit you need to first deactivate all users within it.
+      business_group: To deactivate this business group you need to first deactivate all directorates within it.
     labels:
       select_business_group: Select a business group
       select_directorate: Select a directorate

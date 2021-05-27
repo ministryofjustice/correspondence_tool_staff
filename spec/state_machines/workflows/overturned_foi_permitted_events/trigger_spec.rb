@@ -60,7 +60,7 @@ describe ConfigurableStateMachine::Machine do
       end
 
       context 'awaiting_dispatch' do
-        it 'shows events' do
+        it 'shows events - not member of case managing team' do
           k = create :with_response_ot_ico_foi, :flagged_accepted
           expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'awaiting_dispatch'
@@ -72,6 +72,22 @@ describe ConfigurableStateMachine::Machine do
                                                                       :remove_linked_case,
                                                                       :request_further_clearance,
                                                                       :unassign_from_user]
+        end
+
+        it 'shows events - member of case managing team' do
+          k = create :with_response_ot_ico_foi, :flagged_accepted
+          expect(k.workflow).to eq 'trigger'
+          expect(k.current_state).to eq 'awaiting_dispatch'
+          expect(k.state_machine.permitted_events(k.managing_team.users.first.id))
+            .to eq [:add_message_to_case,
+                    :destroy_case,
+                    :extend_for_pit,
+                    :flag_for_clearance,
+                    :link_a_case,
+                    :remove_linked_case,
+                    :request_further_clearance,
+                    :send_back,
+                    :unassign_from_user]
         end
       end
 
@@ -91,7 +107,7 @@ describe ConfigurableStateMachine::Machine do
       end
 
       context 'responded' do
-        it 'shows events' do
+        it 'shows events - not member of case managing team' do
           k = create :responded_ot_ico_foi, :flagged_accepted
           expect(k.workflow).to eq 'trigger'
           expect(k.current_state).to eq 'responded'
@@ -101,6 +117,20 @@ describe ConfigurableStateMachine::Machine do
                                                                       :link_a_case,
                                                                       :remove_linked_case,
                                                                       :unassign_from_user]
+        end
+
+        it 'shows events - member of case managing team' do
+          k = create :responded_ot_ico_foi, :flagged_accepted
+          expect(k.workflow).to eq 'trigger'
+          expect(k.current_state).to eq 'responded'
+          expect(k.state_machine.permitted_events(k.managing_team.users.first.id))
+            .to eq [:add_message_to_case,
+                    :close,
+                    :destroy_case,
+                    :link_a_case,
+                    :remove_linked_case,
+                    :send_back,
+                    :unassign_from_user]
         end
       end
 
@@ -298,7 +328,7 @@ describe ConfigurableStateMachine::Machine do
 
 
     context 'approver' do
-      context 'unassigned approver' do
+      context 'assigned approver' do
         let(:approver) { find_or_create :disclosure_specialist }
 
         context 'unassigned state' do
@@ -355,7 +385,8 @@ describe ConfigurableStateMachine::Machine do
             expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
                                                                           :link_a_case,
                                                                           :reassign_user,
-                                                                          :remove_linked_case]
+                                                                          :remove_linked_case, 
+                                                                          :send_back]
           end
         end
 

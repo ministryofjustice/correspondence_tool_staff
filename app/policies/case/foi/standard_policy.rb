@@ -30,6 +30,11 @@ class Case::FOI::StandardPolicy < Case::BasePolicy
             check_user_is_private_office_approver)
   end
 
+  def can_send_back?
+    clear_failed_checks
+    check_can_trigger_event(:send_back)
+  end
+
   def response_approve?
     clear_failed_checks
     check_case_requires_clearance &&

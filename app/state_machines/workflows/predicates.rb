@@ -21,6 +21,10 @@ class Workflows::Predicates
     end
   end
 
+  def is_tmm_case?
+    @kase.sar? && @kase.refusal_reason == CaseClosure::RefusalReason.sar_tmm
+  end
+
   def responder_is_member_of_assigned_team_and_not_assigned?
     if @kase.responding_team && !@kase.assigned?
       @kase.responding_team.users.include?(@user)
@@ -67,6 +71,10 @@ class Workflows::Predicates
 
   def user_is_approver_on_case?
     @user.in?(@kase.approvers)
+  end
+
+  def user_is_a_manager_for_case?
+    @user.in? @kase.managing_team.users
   end
 
   def user_is_in_approving_team_for_case?
