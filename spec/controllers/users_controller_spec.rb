@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe UsersController, type: :controller do
   let(:manager) { find_or_create :disclosure_bmt_user }
+  let(:team_admin) { find_or_create :team_admin }
   let(:dacu)    { find_or_create :team_dacu }
 
   describe 'GET show' do
@@ -231,6 +232,72 @@ RSpec.describe UsersController, type: :controller do
       }
     end
 
+    context 'signed in as team_admin' do
+      before(:each) { sign_in team_admin }
+
+      it 'calls user deletion service' do
+        service = double(UserDeletionService)
+        expect(UserDeletionService).to receive(:new).and_return(service)
+        expect(service).to receive(:call)
+        expect(service).to receive(:result).and_return(:ok)
+        delete :destroy, params: params
+      end
+
+      context 'response :ok' do
+        before(:each) do
+          service = double(UserDeletionService)
+          expect(UserDeletionService).to receive(:new).and_return(service)
+          expect(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:ok)
+          delete :destroy, params: params
+        end
+
+        it 'displays a flash notice' do
+          expect(flash[:notice]).to eq I18n.t('devise.registrations.destroyed')
+        end
+
+        it 'redirects to team path' do
+          expect(response).to redirect_to(team_path(team))
+        end
+      end
+
+      context 'response :has_live_cases' do
+        before(:each) do
+          service = double(UserDeletionService)
+          expect(UserDeletionService).to receive(:new).and_return(service)
+          expect(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:has_live_cases)
+          delete :destroy, params: params
+        end
+
+        it 'displays a flash notice' do
+          expect(flash[:alert]).to eq I18n.t('devise.registrations.has_live_cases')
+        end
+
+        it 'redirects to team path' do
+          expect(response).to redirect_to(team_path(team))
+        end
+      end
+
+      context 'response :error' do
+        before(:each) do
+          service = double(UserDeletionService)
+          expect(UserDeletionService).to receive(:new).and_return(service)
+          expect(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:error)
+          delete :destroy, params: params
+        end
+
+        it 'displays a flash notice' do
+          expect(flash[:alert]).to eq I18n.t('devise.registrations.error')
+        end
+
+        it 'redirects to team path' do
+          expect(response).to redirect_to(team_path(team))
+        end
+      end
+    end
+
     context 'signed in as manager' do
       before(:each) { sign_in manager }
 
@@ -296,6 +363,7 @@ RSpec.describe UsersController, type: :controller do
         end
       end
     end
+
     context 'signed in as non-manager' do
 
       before(:each) do
