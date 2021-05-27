@@ -32,13 +32,13 @@ module PageObjects
 
         def case_numbers
           case_list.map do |row|
-            row.number.text.delete('Link to case').delete("\n")
+            row.number.text.delete('Case number').delete("\n")
           end
         end
 
         def row_for_case_number(number)
           case_list.find do |row|
-            row.number.text.delete('Link to case').delete("\n") == number
+            row.number.text.delete('Case number').delete("\n") == number
           end
         end
       end

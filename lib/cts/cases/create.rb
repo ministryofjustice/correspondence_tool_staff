@@ -450,7 +450,7 @@ module CTS::Cases
         elsif options.key?(:responder)
           responder.responding_teams.first
         else
-          BusinessUnit.includes(:responders).responding.sample
+          BusinessUnit.includes(:responders).responding.active.sample
         end
       end
 

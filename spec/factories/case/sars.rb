@@ -258,6 +258,24 @@ FactoryBot.define do
     end
   end
 
+  factory :closed_sar_with_response, parent: :closed_sar do
+    transient do
+      identifier { "closed sar case with response" }
+      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+    end
+
+    after(:create) do |kase, evaluator|
+      kase.attachments.push(*evaluator.responses)
+
+      create :case_transition_add_responses_without_state_change_for_sar,
+             case: kase,
+             acting_team: kase.managing_team,
+             acting_user: kase.manager,
+             filenames: [evaluator.responses.map(&:filename)]
+      kase.reload
+    end
+  end
+
   trait :clarification_required do
     refusal_reason              { find_or_create :refusal_reason, :sar_tmm }
     missing_info                { true }

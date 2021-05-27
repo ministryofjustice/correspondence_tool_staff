@@ -11,5 +11,9 @@ h2.request--heading Conversation
 - if policy(case_details).can_add_message_to_case?
   = form_for case_details, as: :case, url: case_messages_path(case_details), method: :post, class: "message-form" do |f|
     .message-form data-ws-case-id="#{case_details.id}"
-      = f.text_area :message_text
-      = f.submit "Add message", class: 'button-secondary'
+      .form-group
+	      h3.request--heading
+	      	label for="case_message_text"
+	      	  = t('helpers.label.case.add_to_conversation')
+	      textarea#case_message_text.form-control name="case[message_text]"
+      = f.submit "Add message", class: 'button'

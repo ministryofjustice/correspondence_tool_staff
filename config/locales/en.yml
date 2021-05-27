@@ -482,6 +482,8 @@ en:
           responded: Closed - awaiting ICO decision
           closed: "Closed - %{ico_decision} by ICO"
       case:
+        add_to_conversation: Add to conversation
+        add_note: Add a note to this case
         linked_case_number: Case number For example 170131001
       data_request:
         location: Location
@@ -497,7 +499,7 @@ en:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
         Case::FOI::ComplianceReview: FOI - Internal review for compliance
-        Case::SAR::Standard: SAR - Non-offender 
+        Case::SAR::Standard: SAR - Non-offender
       foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity
@@ -688,7 +690,6 @@ en:
     alert_banner_html: "This service will be down for essential maintenance during the afternoon of Wednesday 14th April. You will not have access after 13.00 on this day and the site will resume service after business hours. Please contact <a href='mailto:correspondence@digital.justice.gov.uk'>correspondence@digital.justice.gov.uk</a> if you have any queries. Apologies for the inconvenience."
     case:
       actions: Actions
-      add_note: Add a note to this case
       answered_in_time: Answered in time
       answered_late: Answered late
       appeal_outcome: Appeal Outcome
@@ -811,7 +812,7 @@ en:
       request_detail: Request detail
       status: Status
       type: 'Type'
-      view_case: "Link to case "
+      view_case: "Case number "
       who_its_with: With
     choose: Choose...
     choose_file: Choose a file
@@ -827,7 +828,7 @@ en:
     signout: Sign out
     stats_custom_button: Create report
     summary_error: 'prevented this form from being submitted:'
-    view_case: "Link to case "
+    view_case: "Case number "
 
   admin:
     cases:
@@ -944,7 +945,7 @@ en:
     index: &cases_list
       heading_all_cases: Cases
       heading_my_cases: My open cases
-      view_case: "Link to case "
+      view_case: "Case number "
       message_notification: Conversations
       number: Case number
       number_html: 'Case <abbr title="number">No.</abbr>'
@@ -977,10 +978,10 @@ en:
         number: Case number
         number_html: 'Case <abbr title="number">No.</abbr>'
         name-subject: Name/Subject
-        view_case: Link to case
+        view_case: Case number
       incoming:
         heading: New cases
-        view_case: Link to case
+        view_case: Case number
         number: Case number
         number_html: 'Case <abbr title="number">No.</abbr>'
         request: Request
@@ -1077,6 +1078,7 @@ en:
       close_form:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
+      send_back_heading: 'Send case back for change'
     sar:
       new_form_common:
         dropzone: "Requestor's proof of ID and other documents"
@@ -1237,6 +1239,8 @@ en:
   teams:
     browse_by_business_group: Browse by business group
     business_group: Business group
+    business_group_detail:
+      destroy: Are you sure you want to deactivate this business group?
     business_unit_list:
       team_members: Team members
     business_unit_detail:
@@ -1255,6 +1259,7 @@ en:
     deactivate_info:
       directorate: To deactivate this directorate you need to first deactivate all business units within it.
       business_unit: To deactivate this business unit you need to first deactivate all users within it.
+      business_group: To deactivate this business group you need to first deactivate all directorates within it.
     labels:
       select_business_group: Select a business group
       select_directorate: Select a directorate

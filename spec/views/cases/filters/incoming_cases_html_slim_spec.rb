@@ -50,7 +50,7 @@ describe 'cases/filters/incoming.html.slim', type: :view do
     incoming_cases_page.load(rendered)
 
     first_case = incoming_cases_page.case_list[0]
-    expect(first_case.number.text).to eq "Link to case #{case1.number}"
+    expect(first_case.number.text).to eq "Case number #{case1.number}"
     expect(first_case.request.name.text).to eq 'Joe Smith | Member of the public'
     expect(first_case.request.subject.text).to eq 'Prison Reform'
     expect(first_case.request.message.text).to eq 'message number 1'
@@ -58,7 +58,7 @@ describe 'cases/filters/incoming.html.slim', type: :view do
     expect(first_case.actions.de_escalate_link.text).to eq 'De-escalate'
 
     second_case = incoming_cases_page.case_list[1]
-    expect(second_case.number.text).to eq "Link to case #{case2.number}"
+    expect(second_case.number.text).to eq "Case number #{case2.number}"
     expect(second_case.request.name.text).to eq 'Jane Doe | Member of the public'
     expect(second_case.request.subject.text).to eq 'Court Reform'
     expect(second_case.request.message.text).to eq 'message number 2'
@@ -66,7 +66,7 @@ describe 'cases/filters/incoming.html.slim', type: :view do
     expect(second_case.actions.de_escalate_link.text).to eq 'De-escalate'
 
     third_case = incoming_cases_page.case_list[2]
-    expect(third_case.number.text).to eq "Link to case #{further_clearance_case.number}"
+    expect(third_case.number.text).to eq "Case number #{further_clearance_case.number}"
     expect(third_case.request.name.text).to eq 'Questioning Jim | Member of the public'
     expect(third_case.request.subject.text).to eq 'Reform Reform'
     expect(third_case.request.message.text).to eq 'message number 3'

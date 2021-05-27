@@ -83,6 +83,7 @@ module PageObjects
         cases_respond:                  'Cases::RespondPage',
         cases_search:                   'Cases::SearchPage',
         cases_show:                     'Cases::ShowPage',
+        case_send_back:                 'Cases::SendBackPage',
         cases_cover:                    'Cases::CoverPage',
         closed_cases:                   'Cases::ClosedCasesPage',
         confirm_destroy:                'Cases::ConfirmDestroyPage',

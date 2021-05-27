@@ -1,5 +1,20 @@
 require 'rails_helper'
 
+feature 'deactivating business groups' do
+  given(:bg)             { create :business_group, name: "Group1" }
+  given(:manager)         { create :manager }
+
+  scenario 'manager deactivates a business group with no active children' do
+    login_as manager
+
+    teams_show_page.load(id: bg.id)
+    teams_show_page.deactivate_team_link.click
+
+    expect(teams_show_page.flash_notice.text).to eq(
+    "#{bg.name} business group has now been deactivated")
+  end
+end
+
 feature 'deactivating directorates' do
   given(:dir)             { create :dacu_directorate, name: "dir1" }
   given(:active_dir)      { create :dacu_directorate, name: "directorate"}

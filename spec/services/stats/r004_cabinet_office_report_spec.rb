@@ -74,6 +74,11 @@ module Stats
         end
 
         # cases created more than 20 days ago still in this quarter
+        Timecop.freeze @frozen_time - 60.days do
+          2.times { create :case, :extended_for_pit}
+        end
+
+        # cases created more than 20 days ago still in this quarter
         Timecop.freeze @frozen_time - 30.days do
           3.times { create :case }
           2.times { create :closed_case }
@@ -106,7 +111,7 @@ module Stats
       context '1.A' do
         it 'records the total number' do
           expect(@results['1.A'][:desc]).to eq 'Total number of FOI requests received this period'
-          expect(@results['1.A'][:value]).to eq 100
+          expect(@results['1.A'][:value]).to eq 102
         end
       end
 
@@ -119,14 +124,14 @@ module Stats
       context '1.B' do
         it 'records  the stat' do
           expect(@results['1.B'][:desc]).to eq 'Number of requests that have been created but not closed in this period'
-          expect(@results['1.B'][:value]).to eq 7
+          expect(@results['1.B'][:value]).to eq 9
         end
       end
 
       context '1.Bi' do
         it 'records the stat' do
           expect(@results['1.Bi'][:desc]).to eq 'Number of requests where the 20 working day deadline for response has been extended as permitted in legislation'
-          expect(@results['1.Bi'][:value]).to eq 1
+          expect(@results['1.Bi'][:value]).to eq 3
         end
       end
 

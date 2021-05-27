@@ -3,6 +3,8 @@ module Cases
     include NewCase
     include FOICasesParams
 
+    before_action -> { set_case(params[:id]) }, only: [:send_back, :confirm_send_back]
+
     def initialize
       @correspondence_type = CorrespondenceType.foi
       @correspondence_type_key = 'foi'
@@ -10,6 +12,34 @@ module Cases
       super
     end
 
+    def send_back
+      authorize @case, :can_send_back?
+    
+      set_permitted_events
+      render 'cases/foi/send_back'
+    end
+
+    def confirm_send_back
+      authorize @case, :can_send_back?
+      set_permitted_events
+
+      service = CaseSendBackService.new(
+        user: current_user,
+        kase: @case,
+        comment: params[:extra_comment]
+      )
+      result = service.call
+
+      if result == :ok
+        flash[:notice] = "The case has been sent back to responder for change."
+        redirect_to case_path(@case)
+      else
+        @case = @case.decorate
+        flash[:error] = service.error_message
+        render :send_back
+      end
+    end
+  
     def new
       permitted_correspondence_types
       new_case_for @correspondence_type

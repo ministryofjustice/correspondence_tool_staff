@@ -85,6 +85,10 @@
                   switch_workflow: full_approval
                 unassign_from_user:
                   transition_to: awaiting_responder
+                send_back:
+                  if: Workflows::Predicates#user_is_a_manager_for_case?
+                  transition_to: drafting
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
 
               responded:
                 add_message_to_case:
@@ -98,6 +102,10 @@
                 remove_linked_case:
                 unassign_from_user:
                   transition_to: awaiting_responder
+                send_back:
+                  if: Workflows::Predicates#user_is_a_manager_for_case?
+                  transition_to: drafting
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
 
               closed:
                 add_message_to_case:
@@ -212,6 +220,10 @@
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
                   switch_workflow: full_approval
+                send_back:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  transition_to: drafting
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
 
               responded:
                 add_message_to_case:

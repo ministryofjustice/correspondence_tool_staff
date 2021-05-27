@@ -88,6 +88,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :destroy_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
+                                                                      :send_back,
                                                                       :unassign_from_user]
         end
       end
