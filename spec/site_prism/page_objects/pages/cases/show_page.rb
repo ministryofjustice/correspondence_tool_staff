@@ -84,7 +84,7 @@ module PageObjects
 
         section :new_message, '.message-form' do
           element :input, 'textarea'
-          element :add_button, '.button-secondary'
+          element :add_button, '.button'
         end
 
         section :offender_sar_subject_details, '.section-subject-details' do
