@@ -59,3 +59,22 @@ legend .heading-small{
 .case-info .request { 
   max-width: 700px;
 }
+
+// Make font sizes adjustable
+@include media (tablet) {
+  main, .section-tabs ul a {
+    font-size: 115%;
+  }
+
+  .form-label, .form-label-bold, .heading-small, .bold-small, .feedback .form-label  {
+    font-size: 110%;
+  }
+
+  .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint,   {
+    font-size: 100%;
+  }
+
+  #footer .footer-meta .footer-meta-inner {
+    width: 74%;
+  }
+}
