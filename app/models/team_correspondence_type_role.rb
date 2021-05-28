@@ -38,7 +38,8 @@ class TeamCorrespondenceTypeRole < ApplicationRecord
         edit: false,
         manage: false,
         respond: false,
-        approve: false
+        approve: false, 
+        administer_team: false
     }
     roles.each { |role| params[role.to_sym] = true }
     params
@@ -54,6 +55,8 @@ class TeamCorrespondenceTypeRole < ApplicationRecord
       [:view, :respond]
     when 'approver'
       [:view, :approve]
+    when 'team_admin'
+      [:view, :administer_team]
     end
   end
 
