@@ -16,7 +16,7 @@
 
 class BusinessUnit < Team
 
-  VALID_ROLES = %w{ responder approver manager }.freeze
+  VALID_ROLES = %w{ responder approver manager team_admin}.freeze
   validates :parent_id, presence: true
   validates_presence_of :correspondence_type_roles
 
@@ -38,9 +38,15 @@ class BusinessUnit < Team
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
 
-  has_many :managers, through: :manager_user_roles, source: :user
+  has_many :team_admin_user_roles,
+           -> { team_admin_roles  },
+           class_name: 'TeamsUsersRole',
+           foreign_key: :team_id
+
+           has_many :managers, through: :manager_user_roles, source: :user
   has_many :responders, through: :responder_user_roles, source: :user
   has_many :approvers, through: :approver_user_roles, source: :user
+  has_many :team_admins, through: :team_admin_user_roles, source: :user
   has_many :correspondence_type_roles,
            -> { distinct },
            foreign_key: :team_id,

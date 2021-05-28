@@ -109,6 +109,7 @@ global_navigation:
     approver: /cases/open
     manager: /cases/open
     responder: /cases/open
+    team_admin: /teams
 
   pages:
     create_case:
