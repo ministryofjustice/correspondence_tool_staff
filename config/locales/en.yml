@@ -1299,7 +1299,7 @@ en:
       confirm_heading: Confirm move
       heading: Move directorate
       intro:
-        bullet1: all business unites will move with it
+        bullet1: all business units will move with it
         bullet2: all open cases and users under each business unit will move with it
         bullet3: all members under each business unit will be able to view closed cases
         bullet4: performance reports for the unit both before and after the move are available
