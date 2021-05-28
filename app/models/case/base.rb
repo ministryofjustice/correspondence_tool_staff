@@ -1024,12 +1024,9 @@ class Case::Base < ApplicationRecord
     # When the related cases are managed by collections way, the after_destroy callback 
     # won't be called as the object is deleted directly. We introduce this call back 
     # to make sure the reverse link is removed.
-    begin
-      reverse_links = LinkedCase.where(case_id: related_case.id, linked_case_id: self.id)    
-      reverse_links.each do | reverse_link |
-        reverse_link.delete
-      end
-    rescue
+    reverse_links = LinkedCase.where(case_id: related_case.id, linked_case_id: self.id)    
+    reverse_links.each do | reverse_link |
+      reverse_link.delete
     end
   end
 

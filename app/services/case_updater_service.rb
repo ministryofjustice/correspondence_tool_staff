@@ -31,7 +31,7 @@ class CaseUpdaterService
           @result = :no_changes
         end
       end
-    rescue Exception => error
+    rescue StandardError => error
       @error_message = error.message
       @result = :error
     end
