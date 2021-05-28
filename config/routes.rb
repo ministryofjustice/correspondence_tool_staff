@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     root to: redirect(gnav.default_urls.approver), as: :approver_root
   end
 
+  authenticated :user, -> (u) { u.team_admin?}  do
+    root to: redirect(gnav.default_urls.team_admin), as: :team_admin_root
+  end
+
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end

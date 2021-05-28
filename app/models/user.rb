@@ -61,6 +61,10 @@ class User < ApplicationRecord
   has_one :approving_team_roles,
            -> { active_approver_roles  },
            class_name: 'TeamsUsersRole'
+  has_one :team_admin_team_roles,
+           -> { team_admin_roles  },
+           class_name: 'TeamsUsersRole'
+  has_many :team_admin_teams, through: :team_admin_team_roles, source: :team
   has_many :managing_teams, through: :managing_team_roles, source: :team
   has_many :responding_teams, through: :responding_team_roles, source: :team
   has_many :data_requests
@@ -92,6 +96,10 @@ class User < ApplicationRecord
 
   def manager?
     managing_teams.any?
+  end
+
+  def team_admin?
+    team_admin_teams.any?
   end
 
   def responder?

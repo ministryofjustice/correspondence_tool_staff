@@ -8,7 +8,7 @@
 - if @team.is_a?(BusinessUnit)
 
   -if @team.new_record?
-    = form.radio_button_fieldset :role, choices: [:responder, :approver, :manager], inline: true
+    = form.radio_button_fieldset :role, choices: [:responder, :approver, :manager, :team_admin], inline: true
 
   #correspondence-type-radios
     = form.collection_check_boxes :correspondence_type_ids,
