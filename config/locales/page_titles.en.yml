@@ -50,7 +50,9 @@ en:
     stats: Performance Reports - Track-a-query
     upload_responses_page: Uploading a response - %{case_number} - Track-a-query
     user_detail_page: Open cases - %{full_name} - Track-a-query
-    move_team_page: Moving a business unit - %{team_name} - Track-a-query
-    move_directorate_page: Moving a directorate - %{team_name} - Track-a-query
+    move_team_page: Move a business unit - %{team_name} - Track-a-query
+    confirm_move_team_page: Confirm Move business unit - %{team_name} - Track-a-query
+    move_directorate_page: Move a directorate - %{team_name} - Track-a-query
+    confirm_move_directorate_page: Confirm Move directorate - %{team_name} - Track-a-query
     add_request_attachment_page: Upload new files for this request
   
