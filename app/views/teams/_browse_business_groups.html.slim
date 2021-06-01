@@ -26,6 +26,6 @@ ul.teams
         - if business_group.name == @team.business_group.name
           = t('teams.move.team_currently_located')
         - else
-          = link_to t('button.move_directorate'),
+          = link_to t('button.move_directorate', business_group: business_group.name),
               move_to_business_group_form_team_path(@team, business_group_id: business_group.id),
               class: 'button'

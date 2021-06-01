@@ -28,6 +28,6 @@ describe 'teams/move_to_business_group.html.slim', type: :view do
     dir = page.find_row("New business group")
     expect(dir).to be_present
     expect(dir.business_group_details.text).to eq "New business group"
-    expect(dir.move_to_business_group_link.text).to eq "Move to this business group"
+    expect(dir.move_to_business_group_link.text).to eq "Move to New business group"
   end
 end

@@ -24,7 +24,7 @@ describe 'teams/move_to_directorate.html.slim', type: :view do
     dir = page.find_row("DACU Directorate")
     expect(dir).to be_present
     expect(dir.directorate_details.text).to eq "DACU Directorate"
-    expect(dir.move_to_directorate_link.text).to eq "Move to this directorate"
+    expect(dir.move_to_directorate_link.text).to eq "Move to DACU Directorate"
 
     dir = page.find_row("Origin Directorate")
     expect(dir).to be_present

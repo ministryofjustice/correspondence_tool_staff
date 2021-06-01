@@ -37,6 +37,6 @@ div.bg-selector
           - if directorate == @team.directorate
             = t('directorates.move.team_currently_located')
           - else
-            = link_to t('button.move'),
+            = link_to t('button.move', directorate: directorate.name),
                 move_to_directorate_form_team_path(@team, directorate_id: directorate.id),
                 class: 'button'

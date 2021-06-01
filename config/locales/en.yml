@@ -331,8 +331,8 @@ en:
   button:
     add_to_case_history: Add to case history
     assign: Assign to %{business_unit_name}
-    move: Move to this directorate
-    move_directorate: Move to this business group
+    move: Move to %{directorate}
+    move_directorate: Move to %{business_group}
     confirm: Confirm
     create_case: Create case
     feedback: Send feedback
