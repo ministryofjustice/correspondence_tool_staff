@@ -6,7 +6,7 @@ namespace :cases do
   namespace :pit_extension do 
 
     desc "Add the pit extension flag if the case has been extended and the flag is missing"
-    task :perform, [] => :environment do |_task, args|
+    task :perform, [] => :environment do |_task, _|
       counter = 0
       records = get_records_having_extension_events
       records.each do | record |
