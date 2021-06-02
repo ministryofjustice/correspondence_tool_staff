@@ -61,20 +61,46 @@ legend .heading-small{
 }
 
 // Make font sizes adjustable
-@include media (tablet) {
-  main, .section-tabs ul a {
-    font-size: 115%;
-  }
+main, .form-label, .form-label-bold, .heading-small, .bold-small, .form-control, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, #footer .footer-meta .footer-meta-inner, .search-results-summary strong {
+  font-size: 100%;
+}
 
-  .form-label, .form-label-bold, .heading-small, .bold-small, .feedback .form-label  {
+.table-font-xsmall th {
+  font-size: 90%;  
+}
+
+.form-group {
+  margin-bottom: 2em;
+}
+
+.form-date .form-group {
+  width: 2.5em;
+}
+
+.form-date .form-group-year {
+  width: 3.5em; 
+}
+
+table td, table th {
+  font-size: 100%;
+}
+@include media (tablet) {
+
+  .search-results-summary strong, .form-label, .form-label-bold, .heading-small, .bold-small,  .form-control, table td, table th  {
     font-size: 110%;
   }
 
-  .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint,   {
+  main, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, .table-font-xsmall th  {
     font-size: 100%;
   }
 
   #footer .footer-meta .footer-meta-inner {
     width: 74%;
   }
+
+  .form-group {
+    margin-bottom: 2em;
+  }
 }
+
+// End making font sizes adjustable

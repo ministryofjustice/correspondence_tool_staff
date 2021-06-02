@@ -9,7 +9,6 @@
 // Responsive tables code
 @media screen and (max-width: 1024px) {
   table.report {
-    @include core-16();
     border: 0;
     tr {
       border-bottom: 3px solid #ddd;
@@ -95,7 +94,7 @@
 }
 
 .request--heading {
-  @include bold-24();
+  font-size: 120%;
 
   margin-top: 0;
   margin-bottom: $gutter-half;
@@ -111,7 +110,7 @@
   padding: 1em;
   margin-bottom: $gutter;
   & > p {
-    @include core-19();
+    font-size: 110%;
     @include pre-wrap();
   }
 }
