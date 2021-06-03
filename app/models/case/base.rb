@@ -349,7 +349,7 @@ class Case::Base < ApplicationRecord
   has_many :related_cases,
            through: :related_case_links,
            source: :linked_case,
-           :after_remove => :delete_reverse_links
+           after_remove: :delete_reverse_links
 
   has_many :original_case_links,
            -> { original },
@@ -359,7 +359,7 @@ class Case::Base < ApplicationRecord
   has_many :original_cases,
            through: :original_case_links,
            source: :linked_case,
-           :after_remove => :delete_reverse_links
+           after_remove: :delete_reverse_links
 
   has_many :original_appeal_and_related_case_links,
            -> { related_and_appeal },
