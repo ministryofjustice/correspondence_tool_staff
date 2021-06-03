@@ -322,7 +322,7 @@ feature 'Closing a case' do
     expect(cases_page.case_list.last.status.text).to eq 'Ready to close'
     click_link kase.number
 
-    expect(cases_show_page.actions).
+    expect(cases_show_page).
       to have_link('Close case', href: close_case_foi_standard_path(kase))
     click_link 'Close case'
 

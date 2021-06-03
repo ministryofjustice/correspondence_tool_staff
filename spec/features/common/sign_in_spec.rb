@@ -14,7 +14,7 @@ feature "Signing in" do
     expect(login_page).to have_user_card
     expect(login_page.user_card.greetings).to have_content(responder.full_name)
 
-    expect(login_page.user_card).to have_link('Sign out', href: destroy_user_session_path)
+    expect(login_page.user_card.has_link?('Sign out', href: destroy_user_session_path)).to eq true
 
   end
 

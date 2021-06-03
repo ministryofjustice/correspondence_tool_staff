@@ -76,8 +76,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
         allow_editing: true
       }
       partial = offender_sar_case_details_section(rendered).response_details
-
-      expect(partial).not_to have_selector(".late-team")
+      expect(partial.has_selector?(".late-team")).to eq false
     end
   end
 end

@@ -283,8 +283,8 @@ feature 'Closing a case' do
     expect(cases_page.case_list.first.status.text).to eq 'Ready to close'
     click_link kase.number
 
-    expect(cases_show_page.actions).
-      to have_link('Close case', href: close_case_overturned_ico_foi_path(kase))
+    expect(cases_show_page).
+      to have_link('Close case', :href => close_case_overturned_ico_foi_path(kase))
     click_link 'Close case'
 
     expect(cases_close_page).to have_case_attachments

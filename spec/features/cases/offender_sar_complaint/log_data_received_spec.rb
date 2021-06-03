@@ -19,9 +19,9 @@ feature 'Log data received for an Offender SAR complaint Data Request' do
     expect(row.pages).to have_text '0'
 
     last_row = cases_show_page.data_requests.rows.last
-    expect(last_row).not_to have_selector '.total-label'
+    expect(last_row.has_selector?('.total-label')).to eq false
     expect(last_row.total_label).not_to have_text 'Total'
-    expect(last_row).not_to have_selector '.total-value'
+    expect(last_row.has_selector?('.total-value')).to eq false
     expect(last_row.total_value).not_to have_text '0'
 
     click_link 'Edit'
@@ -42,9 +42,9 @@ feature 'Log data received for an Offender SAR complaint Data Request' do
     expect(row.pages).to have_text '92'
 
     last_row = cases_show_page.data_requests.rows.last
-    expect(last_row).not_to have_selector '.total-label'
+    expect(last_row.has_selector?('.total-label')).to eq false
     expect(last_row.total_label).not_to have_text 'Total'
-    expect(last_row).not_to have_selector '.total-value'
+    expect(last_row.has_selector?('.total-value')).to eq false
     expect(last_row.total_value).not_to have_text '0'
 
     # Note pre-filled fields when making further update to the same Data Request
@@ -61,9 +61,9 @@ feature 'Log data received for an Offender SAR complaint Data Request' do
       expect(cases_show_page).to be_displayed
       expect(cases_show_page.data_requests.rows.size).to eq 3 # Unchanged num DataRequest
       last_row = cases_show_page.data_requests.rows.last
-      expect(last_row).to have_selector '.total-label'
+      expect(last_row.has_selector?('.total-label')).to eq true
       expect(last_row.total_label).to have_text 'Total'
-      expect(last_row).to have_selector '.total-value'
+      expect(last_row.has_selector?('.total-value')).to eq true
       expect(last_row.total_value).to have_text '64'
     end
   end

@@ -67,42 +67,40 @@ describe 'cases/overturned_shared/_new.html.slim' do
 
   describe "requester's email" do
     it "populates from the case" do
-      expect(partial).to have_field("Requester's email",
-                                    with: overturned_foi.email,
-                                    type: :email)
+      expect(partial.has_field?("Requester's email",
+        with: overturned_foi.email,
+        type: :email)).to eq true
     end
   end
 
   describe "requester's postal address" do
     it "populates from the case" do
-      expect(partial).to have_field("Requester's postal address",
-                                    with: overturned_foi.postal_address,
-                                    type: :textarea)
+      expect(partial.has_field?("Requester's postal address",
+        with: overturned_foi.postal_address,
+        type: :textarea)).to eq true
     end
   end
 
   describe "reply method" do
     it "populates from the case" do
-      expect(partial).to have_checked_field("By email")
+      expect(partial.has_checked_field?("By email")).to eq true
     end
   end
 
   describe 'ico officer name' do
     it 'populates from the case' do
-      expect(partial)
-        .to have_field(
-              "Name of the ICO information officer who's handling this case",
-              with: overturned_foi.ico_officer_name,
-              type: :text
-            )
+      expect(partial.has_field?(
+        "Name of the ICO information officer who's handling this case",
+        with: overturned_foi.ico_officer_name,
+        type: :text
+      )).to eq true
     end
   end
 
   describe 'back to case details link' do
     it 'exists on the page' do
-      expect(partial)
-        .to have_link('Back to case details',
-                      href: "/cases/#{ico_appeal.id}")
+      expect(partial.has_link?('Back to case details', href: "/cases/#{ico_appeal.id}"))
+        .to eq true
     end
 
   end

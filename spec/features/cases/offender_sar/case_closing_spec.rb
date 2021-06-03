@@ -71,7 +71,7 @@ feature 'Closing a case' do
   def close_case(kase)
     expect(cases_page.case_list.last.status.text).to eq 'Ready to dispatch'
     click_link kase.number
-    expect(cases_show_page.actions).
+    expect(cases_show_page).
       to have_link('Close case', href: "/cases/offender_sars/#{kase.id}/close")
     click_link 'Close case'
   end
