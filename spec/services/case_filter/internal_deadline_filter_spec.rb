@@ -113,7 +113,7 @@ describe CaseFilter::InternalDeadlineFilter do
     end
   end
 
-  describe '.process_params!' do
+  describe '#process_params!' do
     describe 'when processing internal_deadline_from' do
       it 'converts dates from govuk date fields' do
         params = {
