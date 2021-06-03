@@ -15,7 +15,7 @@ class CaseUpdaterService
       ActiveRecord::Base.transaction do
         # There is extra checking for linked cases as those changes won't appear in the 
         # case's changed_attributes, has to be checked separately
-        linked_cases_changed = has_linked_cases_changed?
+        linked_cases_changed = have_linked_cases_changed?
         @kase.assign_attributes(@params)
         # properties is JSON object, if one of keys was not included 
         # but later this key with value of nil is added, 
@@ -39,23 +39,23 @@ class CaseUpdaterService
 
   private
 
-  def has_linked_cases_changed?
-    return has_original_case_changed? || has_related_cases_changed?
+  def have_linked_cases_changed?
+    return have_original_case_changed? || have_related_cases_changed?
   end
 
-  def has_original_case_changed?
+  def have_original_case_changed?
     return (@kase.respond_to? :original_case_ids) && 
             @params[:original_case_ids].present? && 
-            !two_arrays_is_equal?(@kase.original_case_ids, @params[:original_case_ids])
+            !two_arrays_are_equal?(@kase.original_case_ids, @params[:original_case_ids])
   end
 
-  def has_related_cases_changed?
+  def have_related_cases_changed?
     return (@kase.respond_to? :related_case_ids) &&
             @params[:related_case_ids].present? && 
-            !two_arrays_is_equal?(@kase.related_case_ids, @params[:related_case_ids])
+            !two_arrays_are_equal?(@kase.related_case_ids, @params[:related_case_ids])
   end
 
-  def two_arrays_is_equal?(array1, array2)
+  def two_arrays_are_equal?(array1, array2)
     return Set.new(array1.map(&:to_s)) == Set.new(array2.map(&:to_s))
   end
 end
