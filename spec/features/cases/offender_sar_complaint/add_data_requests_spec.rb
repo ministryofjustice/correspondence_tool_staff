@@ -75,8 +75,6 @@ feature 'Data Requests for an Offender SAR complaint' do
     expect(data_requests.size).to eq 3
 
     last_row = cases_show_page.data_requests.rows.last
-    byebug
-    # expect(last_row).to have_selector '.total-label'
     expect(last_row.has_selector?('.total-label')).to eq true
     expect(last_row.total_label.has_text?('Total')).to eq true
     expect(last_row.has_selector?('.total-value')).to eq true
