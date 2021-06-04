@@ -17,11 +17,11 @@ gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git'
 gem 'business_time'
 gem 'config', '~> 3.1'
 gem 'devise', '~> 4.8.0'
-gem 'draper', '4.0.1'
+gem 'draper', '4.0.2'
 gem 'dropzonejs-rails', '>= 0.8'
 gem 'foreman', '~> 0.87.1'
-gem 'factory_bot_rails', '~> 5.1.1'
-gem 'faker', '~> 2.17.0'
+gem 'factory_bot_rails', '~> 6.2.0'
+gem 'faker', '~> 2.18.0'
 gem 'gov_uk_date_fields', '~> 3.1'
 gem 'govuk_template',         '~> 0.26.0'
 gem 'govuk_frontend_toolkit', '>= 9.0.0'
@@ -76,7 +76,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'tzinfo-data'
 
 group :test do
-  gem 'capybara', '~> 3.29.0'
+  gem 'capybara', '~> 3.35.2'
   gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.30'
   gem 'rails-controller-testing', require: false
@@ -101,7 +101,7 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 0.87.0', require: false
+  gem 'rubocop', '~> 0.93.1', require: false
   gem 'rubocop-rspec', '~> 1.44.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
