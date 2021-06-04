@@ -1,3 +1,5 @@
+= link_to "Back", team_path(@team), class: 'govuk-back-link'
+
 - content_for :page_title do
   = t('page_title.move_directorate_page', team_name: @team.name)
 
@@ -11,3 +13,4 @@
 
 = render partial: 'browse_business_groups'
 
+= link_to "Back", team_path(@team), class: 'govuk-back-link'
