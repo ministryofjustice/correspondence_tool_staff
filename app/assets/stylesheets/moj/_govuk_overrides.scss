@@ -106,6 +106,15 @@ table td, table th {
 // End making font sizes adjustable
 
 // Open case list table scrollable to support large fonts
-.open-cases-table-container { 
+.open-cases-table-container {
   overflow: scroll;
+}
+
+// Fix mobile view issue on open cases table
+@include media(tablet) {
+  .open-cases-table-container {
+    td {
+      min-height: 1em;
+    }
+  }
 }
