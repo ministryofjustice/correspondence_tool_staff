@@ -178,6 +178,7 @@ class Case::Base < ApplicationRecord
   scope :internal_review_compliance, -> { where(type: 'Case::FOI::ComplianceReview')}
   scope :internal_review_timeliness, -> { where(type: 'Case::FOI::TimelinessReview')}
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
+  scope :internal_deadline_within, -> (from_date, to_date) { where("properties->>'internal_deadline' BETWEEN ? AND ?", from_date, to_date) }
 
   validates :creator, presence: true
   scope :soft_deleted, -> { where(deleted: true) }
@@ -348,7 +349,18 @@ class Case::Base < ApplicationRecord
            foreign_key: :case_id
   has_many :related_cases,
            through: :related_case_links,
-           source: :linked_case
+           source: :linked_case,
+           after_remove: :delete_reverse_links
+
+  has_many :original_case_links,
+           -> { original },
+           class_name: 'LinkedCase',
+           foreign_key: :case_id
+
+  has_many :original_cases,
+           through: :original_case_links,
+           source: :linked_case,
+           after_remove: :delete_reverse_links
 
   has_many :original_appeal_and_related_case_links,
            -> { related_and_appeal },
@@ -1007,6 +1019,16 @@ class Case::Base < ApplicationRecord
 
   def benchmark_date_value_for_days_metrics
     date_responded.nil? ? Date.today : date_responded
+  end
+
+  def delete_reverse_links(related_case)
+    # When the related cases are managed by collections way, the after_destroy callback 
+    # won't be called as the object is deleted directly. We introduce this call back 
+    # to make sure the reverse link is removed.
+    reverse_links = LinkedCase.where(case_id: related_case.id, linked_case_id: self.id)    
+    reverse_links.each do | reverse_link |
+      reverse_link.delete
+    end
   end
 
 end

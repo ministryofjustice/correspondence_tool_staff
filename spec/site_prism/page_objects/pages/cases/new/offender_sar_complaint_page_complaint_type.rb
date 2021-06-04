@@ -51,16 +51,12 @@ module PageObjects
           end
 
           def fill_in_complaint_subtype(kase)
-            if kase.missing_data?
-              choose('offender_sar_complaint_complaint_subtype_missing_data', visible: false)
-            elsif kase.inaccurate_data?
-              choose('offender_sar_complaint_complaint_subtype_inaccurate_data', visible: false)
-            elsif kase.redacted_data?
-              choose('offender_sar_complaint_complaint_subtype_redacted_data', visible: false)
-            elsif kase.timeliness?
-              choose('offender_sar_complaint_complaint_subtype_timeliness', visible: false)
-            elsif kase.not_applicable?
-              choose('offender_sar_complaint_complaint_subtype_not_applicable', visible: false)
+            possible_subtypes = Case::SAR::OffenderComplaint.complaint_subtypes.keys()
+
+            possible_subtypes.each do |subtype|
+              if kase.send((subtype + '?').to_sym)
+                choose("offender_sar_complaint_complaint_subtype_#{subtype}", visible: false)
+              end
             end
           end
 
