@@ -165,6 +165,15 @@ describe 'FOI cases factory' do
       end
     end
 
+    context 'sent_by_post' do
+      let(:kase) { create :foi_case, :case_sent_by_post }
+
+      it 'creates a FOI case that has been sent by post' do
+        expect(kase.delivery_method).to eq 'sent_by_post'
+        expect(kase.uploaded_request_files.present?).to eq true
+      end
+    end
+
     context 'taken_on_by_press' do
       let(:kase) { create :foi_case, :taken_on_by_press }
 

@@ -47,7 +47,7 @@ FactoryBot.define do
     highest_position { 3 }
   end
 
-  trait :list do
+  trait :simple_list do
     search_text { nil }
     query_type { 'list' }
     list_path { '/cases/open' }

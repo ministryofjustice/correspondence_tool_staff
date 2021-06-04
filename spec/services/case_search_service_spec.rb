@@ -353,7 +353,7 @@ describe CaseSearchService do
     end
 
     context 'filtering on list results' do
-      let!(:parent_search_query)   { create :search_query, :list }
+      let!(:parent_search_query)   { create :search_query, :simple_list }
       let(:service)                { CaseSearchService.new(user: user,
                                                            query_type: :list,
                                                            query_params: params) }

@@ -988,13 +988,13 @@ FactoryBot.define do
     taken_on_by_private
   end
 
-  trait :sent_by_post do
+  trait :case_sent_by_post do
     delivery_method { :sent_by_post }
     uploaded_request_files { ["#{Faker::Internet.slug}.pdf"] }
     creator { create :manager }
   end
 
-  trait :sent_by_email do
+  trait :case_sent_by_email do
     delivery_method { :sent_by_email }
   end
 

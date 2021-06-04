@@ -49,7 +49,7 @@ feature 'Editing a case' do
   end
 
   scenario 'Uploading new request files', js: true do
-    kase =  create :accepted_case, :sent_by_post, received_date: 2.days.ago
+    kase =  create :accepted_case, :case_sent_by_post, received_date: 2.days.ago
     open_cases_page.load
     click_link kase.number
     expect(cases_show_page).to be_displayed

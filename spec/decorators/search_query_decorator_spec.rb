@@ -19,7 +19,7 @@ describe SearchQueryDecorator, type: :model do
 
   context 'list_query' do
 
-    let(:query) { create(:search_query, :list) }
+    let(:query) { create(:search_query, :simple_list) }
     let(:decorated_query) { SearchQueryDecorator.decorate(query) }
 
     it 'should display the query details' do

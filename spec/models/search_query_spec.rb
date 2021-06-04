@@ -445,7 +445,7 @@ describe SearchQuery do
         cases_list = Case::Base.where(id: [@setup.std_draft_foi.id,
                                            @setup.std_draft_irt.id])
 
-        search_query = create :search_query, :list,
+        search_query = create :search_query, :simple_list,
                               user_id: user.id,
                               filter_case_type: ['foi-standard']
         expect(search_query.results(cases_list)).to eq [@setup.std_draft_foi]
@@ -454,7 +454,7 @@ describe SearchQuery do
 
     context 'no list of cases provided' do
       it 'uses the list of cases if provided' do
-        search_query = create :search_query, :list,
+        search_query = create :search_query, :simple_list,
                               user_id: user.id,
                               filter_case_type: ['foi-standard']
         expect { search_query.results }.to raise_error(ArgumentError)

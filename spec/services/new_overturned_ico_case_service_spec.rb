@@ -131,7 +131,7 @@ describe NewOverturnedIcoCaseService do
         end
 
         context 'original case sent by post' do
-          let(:original_case)       { create :foi_case, :sent_by_post }
+          let(:original_case)       { create :foi_case, :case_sent_by_post }
 
           it 'sets the reply method and postal address' do
             expect(service.overturned_ico_case.reply_method).to eq 'send_by_post'

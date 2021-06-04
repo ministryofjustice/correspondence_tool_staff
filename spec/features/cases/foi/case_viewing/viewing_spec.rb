@@ -74,7 +74,7 @@ feature 'viewing details of case in the system' do
   context 'FOI case with both full case details and attachment' do
     given(:request_file) { "#{Faker::Internet.slug}.pdf" }
     given(:foi) do
-      create :accepted_case, :sent_by_post,
+      create :accepted_case, :case_sent_by_post,
              requester_type: :journalist,
              name: 'Freddie FOI',
              email: 'freddie.foi@testing.digital.justice.gov.uk',

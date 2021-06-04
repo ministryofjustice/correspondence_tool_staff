@@ -112,7 +112,7 @@ describe 'cases/case_request.html.slim', type: :view do
   end
 
   describe 'displays request attachments for postal FOI' do
-    let(:sent_by_post) { create :case, :sent_by_post }
+    let(:sent_by_post) { create :case, :case_sent_by_post }
     let(:decorated_case) do
       sent_by_post.decorate.tap do |c|
         allow(c).to receive(:message_extract).and_return([sent_by_post.message, ''])
