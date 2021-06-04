@@ -286,8 +286,7 @@ class DatabaseAnonymizer
   end
   
   def anonymize_team_properties(tp)
-    tp.key = Faker::Name.name
-    tp.value = Faker::Lorem.sentence
+    tp.value = Faker::Name.name
     tp
   end
 
