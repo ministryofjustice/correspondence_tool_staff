@@ -25,6 +25,7 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseTriggerFlagFilter,
       CaseFilter::TimelinessFilter,
       CaseFilter::ExternalDeadlineFilter, 
+      CaseFilter::InternalDeadlineFilter, 
       CaseFilter::CaseHighProfileFilter,       
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
@@ -81,8 +82,9 @@ class SearchQuery < ApplicationRecord
 
   # Define the list of date fields
   GOV_UK_DATE_FIELDS = CaseFilter::ReceivedDateFilter.date_fields + 
-                      CaseFilter::DateRespondedFilter.date_fields + 
-                      CaseFilter::ExternalDeadlineFilter.date_fields
+                        CaseFilter::DateRespondedFilter.date_fields + 
+                        CaseFilter::ExternalDeadlineFilter.date_fields +
+                        CaseFilter::InternalDeadlineFilter.date_fields
 
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 

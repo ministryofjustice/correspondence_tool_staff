@@ -177,16 +177,27 @@ moj.Modules.CaseCreation = {
     // Hide the table if there is no other rows
     if ($tbody.children().length === 0) {
       $otherCasesSection.remove();
+      // Add empty of element for indicating all related cases have been removed
+      $('<input>').attr({
+        type: 'hidden',
+        id: 'ico_related_case_ids_',
+        name: 'ico[related_case_ids][]'
+      }).appendTo(moj.Modules.CaseCreation.relatedCaseReport);
     }
   },
 
   removeOriginalCase: function (event,self) {
     event.preventDefault();
     self.originalCaseReport.innerHTML = '';
-
     self.toggleFields(self);
-
     self.$originalCaseInput.focus();
+    // Add empty of element for indicating original cases has been removed
+    $('<input>').attr({
+      type: 'hidden',
+      id: 'ico_original_case_ids_',
+      name: 'ico[original_case_ids][]'
+    }).appendTo(self.originalCaseReport);
+
   },
 
   showRelatedCaseField: function (self) {

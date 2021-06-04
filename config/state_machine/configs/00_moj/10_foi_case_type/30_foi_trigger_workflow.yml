@@ -76,6 +76,10 @@
                   if: Workflows::Predicates#not_overturned?
                 extend_for_pit:
                 flag_for_clearance:
+                  # This even defined here is purely because of current implementation for 
+                  # request_further_clearance for non-triggered case otherwise, such event
+                  # shouldn't need to be defined for triggered case
+                  transition_to_using: Workflows::Conditionals#next_state_for_non_trigger
                 link_a_case:
                 remove_linked_case:
                 remove_pit_extension:

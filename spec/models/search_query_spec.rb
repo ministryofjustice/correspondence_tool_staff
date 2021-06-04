@@ -65,6 +65,8 @@ describe SearchQuery do
                                                  :exemption_ids,
                                                  :external_deadline_from,
                                                  :external_deadline_to,
+                                                 :internal_deadline_from,
+                                                 :internal_deadline_to,
                                                  :filter_case_type,
                                                  :filter_open_case_status,
                                                  :filter_sensitivity,
@@ -106,6 +108,8 @@ describe SearchQuery do
           filter_sensitivity:     ['trigger'],
           external_deadline_from: Date.new(2018, 5, 20),
           external_deadline_to:   Date.new(2018, 5, 30),
+          internal_deadline_from: nil,
+          internal_deadline_to:   nil,
           filter_timeliness:      ['in-time'],
           exemption_ids:          [21],
           common_exemption_ids:   [21],
@@ -170,6 +174,8 @@ describe SearchQuery do
           filter_sensitivity:      ['trigger'],
           external_deadline_from:  Date.new(2018, 5, 20),
           external_deadline_to:    Date.new(2018, 5, 30),
+          internal_deadline_from:  nil,
+          internal_deadline_to:    nil,
           filter_timeliness:       ['in-time'],
           exemption_ids:           [21],
           common_exemption_ids:    [21],
@@ -214,6 +220,8 @@ describe SearchQuery do
                                                 :exemption_ids,
                                                 :external_deadline_from,
                                                 :external_deadline_to,
+                                                :internal_deadline_from,
+                                                :internal_deadline_to,
                                                 :filter_case_type,
                                                 :filter_open_case_status,
                                                 :filter_sensitivity,
@@ -537,6 +545,7 @@ describe SearchQuery do
           CaseFilter::CaseTriggerFlagFilter,
           CaseFilter::TimelinessFilter,
           CaseFilter::ExternalDeadlineFilter, 
+          CaseFilter::InternalDeadlineFilter, 
         ]
       end
 
