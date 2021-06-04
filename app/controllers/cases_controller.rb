@@ -100,6 +100,12 @@ class CasesController < ApplicationController
     service.call
 
     if service.result == :error
+      @case = @case.decorate
+      @case_types = @correspondence_type.sub_classes.map(&:to_s)
+      @s3_direct_post = S3Uploader.for(@case, 'requests')
+      if service.error_message.present?
+        flash[:alert] = service.error_message
+      end
       render 'cases/edit' and return
     end
 
