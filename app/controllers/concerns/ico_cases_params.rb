@@ -25,7 +25,20 @@ module ICOCasesParams
   end
 
   def edit_ico_params
-    create_ico_params
+    case_params = params.require(:ico)
+
+    case_params.permit(
+      :ico_officer_name,
+      :ico_reference_number,
+      :message,
+      :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
+      :internal_deadline_dd, :internal_deadline_mm, :internal_deadline_yyyy,
+      :date_draft_compliant_dd, :date_draft_compliant_mm, :date_draft_compliant_yyyy,
+      related_case_ids: [],
+      original_case_ids: [],
+      uploaded_request_files: [],
+    )
   end
 
   def record_late_team_ico_params
