@@ -1,9 +1,12 @@
 //= link_tree ../images
-//= link_tree ../javascripts .js
-//= link_tree ../stylesheets .scss
-//= link_tree ../stylesheets .css
-//= link_tree ../stylesheets .sass
-//= link ../stylesheets/ie_shame.css
-//= link ../stylesheets/print.css.scss
-//= link ../stylesheets/moj/_buttons.scss
-//= link ../stylesheets/application.css.scss
+//= link ie_shame.css
+//= link application.css
+//= link print.css
+//= link application.js
+//= link govuk-template.css
+//= link govuk-template-ie6.css
+//= link govuk-template-ie7.css
+//= link govuk-template-ie8.css
+//= link govuk-template-print.css
+//= link fonts.css
+
