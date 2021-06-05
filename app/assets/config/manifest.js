@@ -1,6 +1,9 @@
 //= link_tree ../images
 //= link_tree ../javascripts .js
+//= link_tree ../stylesheets .scss
 //= link_tree ../stylesheets .css
-//= link ../stylesheets/application.css.scss
+//= link_tree ../stylesheets .sass
 //= link ../stylesheets/ie_shame.css
 //= link ../stylesheets/print.css.scss
+//= link ../stylesheets/moj/_buttons.scss
+//= link ../stylesheets/application.css.scss
