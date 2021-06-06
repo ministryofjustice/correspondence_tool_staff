@@ -7,6 +7,6 @@
 }
 
 .page-heading--secondary {
-  @include core-27();
+  font-size: 120%;
   color: $secondary-text-colour;
 }

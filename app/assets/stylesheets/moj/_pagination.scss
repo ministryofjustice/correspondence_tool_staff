@@ -62,10 +62,6 @@
 }
 
 .pagination-next-prev{
-  @include core-27();
+  font-size: 120%;
   text-decoration: none;
-}
-
-.pagination-pages {
-  @include core-16();
 }

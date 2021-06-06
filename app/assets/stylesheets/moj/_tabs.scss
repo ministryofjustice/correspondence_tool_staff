@@ -36,7 +36,7 @@
     }
 
     a {
-      @include core-19;
+      font-size: 110%;
       font-weight: bold;
       display: block;
       overflow: hidden;
@@ -55,7 +55,7 @@
       }
 
       @include media(mobile) {
-        @include core-16;
+        font-size: 100%;
         border-bottom: 1px solid $border-colour;
         width: 98.5%;
         @include calc(width, "100% - 10px");

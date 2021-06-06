@@ -9,7 +9,7 @@
 
 
 .table-caption {
-  @include bold-24;
+  font-size: 120%;
   float: left;
   margin-top: $gutter;
 }
@@ -24,24 +24,6 @@
 .notice-summary{
   @extend .error-summary;
   border-color: $button-colour;
-}
-
-.question {
-  h2 {
-    @include bold-24;
-  }
-
-  .form-label{
-    font-weight: bold;
-  }
-
-  select.form-control{
-    width: 80%;
-  }
-
-  p {
-    padding-right: $gutter;
-  }
 }
 
 .case_name {
@@ -93,7 +75,8 @@ strong.normal-weight {
 }
 
 .case-attachments--primary {
-  @include bold-24();
+  font-size: 120%;
+  font-weight: bold;
 
   margin-top: 0;
   margin-bottom: 0;
@@ -105,7 +88,7 @@ strong.normal-weight {
 }
 
 .case-attachments--secondary {
-  @include core-19();
+  font-size: 110%;
   display: block
 }
 
@@ -144,16 +127,17 @@ table caption{
 }
 
 .table-captions {
-  @include bold-24();
+  font-size: 120%;
+  font-weight: bold;
   margin-bottom: $gutter-half;
 }
 
 .search-results-summary {
-  @include core-19();
+  font-size: 110%;
   margin-top: $gutter-half;
   margin-bottom: $gutter;
   strong {
-    @include bold-24();
+    font-size: 120%;
   }
 }
 
