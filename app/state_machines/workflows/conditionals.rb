@@ -32,4 +32,14 @@ class Workflows::Conditionals
     end
   end
 
+  def next_state_for_non_trigger
+    # This function should be only called when the mananger require further clearance on 
+    # a non-triggered case whose current state is 'awaiting_dispatch'.
+    if @kase.current_state == 'awaiting_dispatch'
+      'pending_dacu_clearance'
+    else
+      @kase.current_state
+    end
+  end
+
 end
