@@ -32,24 +32,21 @@ RUN chown -R appuser:appgroup /usr/src/app/
 USER appuser
 USER 1000
 
-# RUN RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> tmp/error.log
-# RUN RAILS_ENV=production bundle exec rake assets:clean SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> tmp/error.log
-# RUN RAILS_ENV=production bundle exec rake assets:precompile SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> tmp/error.log
-# RUN RAILS_ENV=production bundle exec rake assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> tmp/error.log
+RUN RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> tmp/error.log
 
-# ENV PUMA_PORT 3000
-# EXPOSE $PUMA_PORT
+ENV PUMA_PORT 3000
+EXPOSE $PUMA_PORT
 
-# RUN chown -R appuser:appgroup ./*
-# RUN chmod +x /usr/src/app/config/docker/*
+RUN chown -R appuser:appgroup ./*
+RUN chmod +x /usr/src/app/config/docker/*
 
-# # expect/add ping environment variables
-# ARG VERSION_NUMBER
-# ARG COMMIT_ID
-# ARG BUILD_DATE
-# ARG BUILD_TAG
-# ENV VERSION_NUMBER=${VERSION_NUMBER}
-# ENV APP_GIT_COMMIT=${COMMIT_ID}
-# ENV APP_BUILD_DATE=${BUILD_DATE}
-# ENV APP_BUILD_TAG=${BUILD_TAG}
+# expect/add ping environment variables
+ARG VERSION_NUMBER
+ARG COMMIT_ID
+ARG BUILD_DATE
+ARG BUILD_TAG
+ENV VERSION_NUMBER=${VERSION_NUMBER}
+ENV APP_GIT_COMMIT=${COMMIT_ID}
+ENV APP_BUILD_DATE=${BUILD_DATE}
+ENV APP_BUILD_TAG=${BUILD_TAG}
 
