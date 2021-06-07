@@ -18,7 +18,7 @@ ul.teams
   - BusinessGroup.all.where.not(name: '').order(:name).each do |business_group|
     li.team
       .team-details
-        h3
+        h2
           .team-unit-name
             = business_group.name
 
