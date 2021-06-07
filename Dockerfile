@@ -32,7 +32,7 @@ RUN chown -R appuser:appgroup /usr/src/app/
 USER appuser
 USER 1000
 
-RUN RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> /dev/null
+RUN RAILS_ENV=production bundle exec rake assets:clean assets:precompile assets:non_digested SECRET_KEY_BASE=required_but_does_not_matter_for_assets 2> tmp/error.log
 
 ENV PUMA_PORT 3000
 EXPOSE $PUMA_PORT
