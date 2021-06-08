@@ -99,7 +99,7 @@ GEM
       debug_inspector (>= 0.0.1)
     bootsnap (1.7.5)
       msgpack (~> 1.0)
-    brakeman (5.0.1)
+    brakeman (5.0.2)
     browser_sync_rails (0.1.1)
       rails
     builder (3.2.4)
@@ -270,7 +270,7 @@ GEM
       rubocop (< 2.0)
     highline (2.0.3)
     htmlentities (4.3.4)
-    http-cookie (1.0.3)
+    http-cookie (1.0.4)
       domain_name (~> 0.5)
     humanize_boolean (0.0.2)
       i18n
@@ -333,7 +333,7 @@ GEM
       railties (>= 4)
       request_store (~> 1.0)
     logstash-event (1.2.02)
-    loofah (2.9.1)
+    loofah (2.10.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.2.8)
