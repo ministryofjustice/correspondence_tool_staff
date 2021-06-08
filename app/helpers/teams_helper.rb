@@ -50,4 +50,16 @@ module TeamsHelper
   def move_to_directorate_back_url(team)
     move_to_directorate_team_path(team, business_group_id: team.business_group.id, directorate_id: team.directorate.id)
   end
+
+  def move_to_business_group_back_link(team)
+    link_to "Back", move_to_business_group_back_url(team), class: 'govuk-back-link'
+  end
+
+  def move_to_business_group_cancel_link(team)
+    link_to "Cancel", move_to_business_group_back_url(team)
+  end
+
+  def move_to_business_group_back_url(team)
+    move_to_business_group_team_path(team, business_group_id: team.business_group.id)
+  end
 end

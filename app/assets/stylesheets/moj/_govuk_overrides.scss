@@ -59,3 +59,62 @@ legend .heading-small{
 .case-info .request { 
   max-width: 700px;
 }
+
+// Make font sizes adjustable
+main, .form-label, .form-label-bold, .heading-small, .bold-small, .form-control, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, #footer .footer-meta .footer-meta-inner, .search-results-summary strong {
+  font-size: 100%;
+}
+
+.table-font-xsmall th {
+  font-size: 90%;  
+}
+
+.form-group {
+  margin-bottom: 2em;
+}
+
+.form-date .form-group {
+  width: 2.5em;
+}
+
+.form-date .form-group-year {
+  width: 3.5em; 
+}
+
+table td, table th {
+  font-size: 100%;
+}
+@include media (tablet) {
+
+  .search-results-summary strong, .form-label, .form-label-bold, .heading-small, .bold-small,  .form-control, table td, table th  {
+    font-size: 110%;
+  }
+
+  main, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, .table-font-xsmall th  {
+    font-size: 100%;
+  }
+
+  #footer .footer-meta .footer-meta-inner {
+    width: 74%;
+  }
+
+  .form-group {
+    margin-bottom: 2em;
+  }
+}
+
+// End making font sizes adjustable
+
+// Open case list table scrollable to support large fonts
+.open-cases-table-container {
+  overflow: scroll;
+}
+
+// Fix mobile view issue on open cases table
+@include media(tablet) {
+  .open-cases-table-container {
+    td {
+      min-height: 1em;
+    }
+  }
+}

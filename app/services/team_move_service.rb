@@ -17,12 +17,13 @@ class TeamMoveService
     end
   end
 
-  attr_reader :result, :new_team
+  attr_reader :result, :new_team, :error_message
 
   def initialize(team, directorate)
     @team = team
     @directorate = directorate
     @result = :incomplete
+    @error_message = nil
 
     raise TeamNotBusinessUnitError.new unless @team.is_a? BusinessUnit
     raise InvalidDirectorateError.new unless @directorate.is_a? Directorate
@@ -30,14 +31,15 @@ class TeamMoveService
   end
 
   def call
-    ActiveRecord::Base.transaction do
-      begin
+    begin
+      ActiveRecord::Base.transaction do
         move_team!
         @result = :ok
-      rescue
-        @team.reload
-        @result = :error
       end
+    rescue RuntimeError => err
+      @team.reload
+      @result = :error
+      @error_message = err.message
     end
   end
 
