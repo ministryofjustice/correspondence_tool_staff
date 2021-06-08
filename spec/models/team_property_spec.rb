@@ -34,6 +34,12 @@ describe TeamProperty do
     end
 
     context 'uniqueness of lead key by team' do
+      before(:each) do
+        TeamProperty.where(team_id: 33).each do | item | 
+          item.destroy
+        end
+      end
+  
       it 'does not error if one lead key created per team' do
         tp = TeamProperty.new(team_id: 33, key: 'lead', value: 'xxxx')
         expect(tp).to be_valid
