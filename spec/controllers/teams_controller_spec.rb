@@ -698,6 +698,110 @@ RSpec.describe TeamsController, type: :controller do
 
   end
 
+  describe "#move_to_business_group" do
+    before do
+      sign_in manager
+    end
+
+    let(:params) {
+      {
+          id: directorate.id
+      }
+    }
+
+    it 'authorises' do
+      expect{
+        get :move_to_business_group, params: params
+      }.to require_permission(:move?)
+               .with_args(manager, directorate)
+    end
+
+    it 'assigns @team' do
+      get :move_to_business_group, params: params
+      expect(assigns(:team)).to eq directorate
+    end
+
+    it 'renders the right template' do
+      get :move_to_business_group, params: params
+      expect(response).to render_template('teams/move_to_business_group')
+    end
+
+  end
+
+  describe "GET #move_to_business_group_form" do
+    let(:destination_business_group)     { find_or_create :business_group, name: 'Destination Business Group' }
+    before do
+      sign_in manager
+    end
+
+    context "with a bussiness group selected" do
+      let(:params) {
+        {
+            id: directorate.id,
+            business_group_id: destination_business_group.id
+        }
+      }
+      it 'assigns @directorate' do
+        get :move_to_business_group_form, params: params
+        expect(assigns(:business_group)).to eq destination_business_group
+      end
+
+      it 'authorises' do
+        expect{
+          get :move_to_business_group_form, params: params
+        }.to require_permission(:move?)
+                 .with_args(manager, directorate)
+      end
+
+      it 'assigns @team' do
+        get :move_to_business_group_form, params: params
+        expect(assigns(:team)).to eq directorate
+      end
+    end
+  end
+
+  describe "PATCH #update_business_group" do
+    let(:destination_business_group)     { find_or_create :business_group, name: 'Destination Business Group' }
+    let(:params) {
+      {
+          id: directorate.id,
+          business_group_id: destination_business_group.id
+      }
+    }
+
+    before do
+      sign_in manager
+    end
+
+    it 'authorises' do
+      expect{
+        patch :update_business_group, params: params
+      }.to require_permission(:move?)
+               .with_args(manager, directorate)
+    end
+
+    it 'assigns @team' do
+      patch :update_business_group, params: params
+      expect(assigns(:team)).to eq directorate
+    end
+
+    it 'redirects away from team' do
+      patch :update_business_group, params: params
+      expect(response).not_to redirect_to(team_path(directorate))
+      expect(response).to redirect_to(team_path(Directorate.last))
+      expect(flash[:notice]).to have_content 'has been moved to'
+    end
+
+    it 'updates the area' do
+      old_parent = directorate.parent
+      patch :update_business_group, params: params
+      new_directorate = Directorate.last
+      expect(new_directorate.parent).not_to eq old_parent
+      expect(new_directorate.parent).to eq destination_business_group
+    end
+
+  end
+
   describe "#join_teams" do
     before do
       sign_in manager

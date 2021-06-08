@@ -1,0 +1,31 @@
+p
+  = t('directorates.move.intro.paragraph')
+
+ul.list.list-bullet
+  li
+    = t('directorates.move.intro.bullet1')
+  li
+    = t('directorates.move.intro.bullet2')
+  li
+    = t('directorates.move.intro.bullet3')
+  li
+    = t('directorates.move.intro.bullet4')
+
+p
+  = t('directorates.unreversible')
+
+ul.teams
+  - BusinessGroup.all.where.not(name: '').order(:name).each do |business_group|
+    li.team
+      .team-details
+        h2
+          .team-unit-name
+            = business_group.name
+
+      .team-actions
+        - if business_group.name == @team.business_group.name
+          = t('teams.move.team_currently_located')
+        - else
+          = link_to t('button.move_directorate', business_group: business_group.name),
+              move_to_business_group_form_team_path(@team, business_group_id: business_group.id),
+              class: 'button'

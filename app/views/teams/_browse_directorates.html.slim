@@ -29,14 +29,14 @@ div.bg-selector
     - @directorates.each do |directorate|
       li.team
         .team-details
-          h3
+          h2
             .team-unit-name
               = directorate.name
 
         .team-actions
           - if directorate == @team.directorate
-            = t('teams.move.team_currently_located')
+            = t('directorates.move.team_currently_located')
           - else
-            = link_to t('button.move'),
+            = link_to t('button.move', directorate: directorate.name),
                 move_to_directorate_form_team_path(@team, directorate_id: directorate.id),
                 class: 'button'
