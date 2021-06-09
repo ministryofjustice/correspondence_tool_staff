@@ -399,4 +399,10 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       t('helpers.label.offender_sar.recipient_type.third_party')
     end
   end
+
+  def choose_cover_page_id_number(prison_number, pnc_number)
+    return pnc_number&.upcase if prison_number.nil?
+    return pnc_number&.upcase if prison_number.empty?
+    prison_number&.upcase
+  end
 end
