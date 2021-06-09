@@ -449,4 +449,25 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       end
     end
   end
+
+  describe '#choose_cover_page_id_number' do
+
+    it 'returns upcased PNC number when there is no prison number or it is a blank string' do
+      prison_number = ''
+      prison_number_2 = nil
+      pnc_number = 'PncTest1'
+
+      output = choose_cover_page_id_number(prison_number, pnc_number)
+      output_2 = choose_cover_page_id_number(prison_number_2, pnc_number)
+      expect(output).to eq 'PNCTEST1'
+      expect(output_2).to eq 'PNCTEST1'
+    end
+  
+    it 'returns upcased prison number when if it is not blank or empty' do
+      prison_number = 'PrisonNum1'
+      pnc_number = 'PncTest1'
+      output = choose_cover_page_id_number(prison_number, pnc_number)
+      expect(output).to eq 'PRISONNUM1'
+    end
+  end
 end

@@ -11,9 +11,7 @@ article.cover-sheet
       li
         = @case.subject_full_name&.upcase
       li
-        = @case.first_prison_number&.upcase
-      li
-        = @case.other_subject_ids&.upcase 
+        = choose_cover_page_id_number(@case.first_prison_number, @case.other_subject_ids)
 
   p.cover-sheet__address
     - if @case.recipient == 'subject_recipient'
