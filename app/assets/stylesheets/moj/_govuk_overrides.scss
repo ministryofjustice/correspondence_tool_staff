@@ -110,11 +110,12 @@ table td, table th {
   overflow: scroll;
 }
 
-// Fix mobile view issue on open cases table
-@include media(tablet) {
-  .open-cases-table-container {
-    td {
-      min-height: 1em;
-    }
+// Fix mobile view issue on open cases table and long strings
+@include media(mobile) {
+  td {
+    min-height: 1em;
+    word-break: break-word;
+    hyphens: auto;
+    overflow-wrap: break-word;
   }
 }
