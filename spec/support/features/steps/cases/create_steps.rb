@@ -181,12 +181,12 @@ def create_overturned_ico_case_step(params={}) # rubocop:disable Metrics/MethodL
   form.final_deadline.month.set(final_deadline.month)
   form.final_deadline.year.set(final_deadline.year)
 
-  expect(form).to have_checked_field('By email', visible: false)
-  expect(form).to have_field(
-                    "Name of the ICO information officer who's handling this case",
-                    with: ico_case.ico_officer_name,
-                    type: :text
-                  )
+  expect(form.has_checked_field?('By email', visible: false)).to eq true
+  expect(form.has_field?(
+    "Name of the ICO information officer who's handling this case",
+    with: ico_case.ico_officer_name,
+    type: :text
+  )).to eq true
 
   if form.has_flag_for_disclosure_specialists?
     form.choose_flag_for_disclosure_specialists(flagged ? 'yes' : 'no',

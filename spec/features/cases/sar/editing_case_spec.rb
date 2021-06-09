@@ -35,7 +35,7 @@ feature 'Editing a SAR case' do
   end
 
   scenario 'Uploading new request files', js: true do
-    kase =  create :accepted_sar, :sent_by_post, received_date: 2.days.ago
+    kase =  create :accepted_sar, :case_sent_by_post, received_date: 2.days.ago
     open_cases_page.load
     click_link kase.number
     expect(cases_show_page).to be_displayed

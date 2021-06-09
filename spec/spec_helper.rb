@@ -17,7 +17,7 @@
 require 'devise'
 require 'capybara/rspec'
 require 'pundit/rspec'
-require 'aws-sdk'
+require 'aws-sdk-s3'
 
 # Required or we'll get errors when we try to pre-sign S# direct uploads.
 ENV['AWS_ACCESS_KEY_ID']     = 'test_access_key_id'

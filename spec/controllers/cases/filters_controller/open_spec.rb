@@ -13,10 +13,10 @@ describe Cases::FiltersController, type: :controller do
   }
 
   let(:search_query) {
-    create :search_query, :list, filter_case_type: ['foi-standard']
+    create :search_query, :simple_list, filter_case_type: ['foi-standard']
   }
 
-  let(:parent_search_query) { create :search_query, :list }
+  let(:parent_search_query) { create :search_query, :simple_list }
 
   let(:case_search_service) {
     instance_double CaseSearchService,
