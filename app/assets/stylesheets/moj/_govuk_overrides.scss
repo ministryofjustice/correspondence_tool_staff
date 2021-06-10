@@ -61,7 +61,7 @@ legend .heading-small{
 }
 
 // Make font sizes adjustable
-main, .form-label, .form-label-bold, .heading-small, .bold-small, .form-control, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, #footer .footer-meta .footer-meta-inner, .search-results-summary strong {
+main, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-small, .form-control, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, #footer .footer-meta .footer-meta-inner, .search-results-summary strong {
   font-size: 100%;
 }
 
@@ -84,9 +84,15 @@ main, .form-label, .form-label-bold, .heading-small, .bold-small, .form-control,
 table td, table th {
   font-size: 100%;
 }
+
+// Fix empty cell layout issue on wrapped table view
+td {
+    min-height: 1em;
+}
+
 @include media (tablet) {
 
-  .search-results-summary strong, .form-label, .form-label-bold, .heading-small, .bold-small,  .form-control, table td, table th  {
+  .search-results-summary strong, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-small,  .form-control, table td, table th  {
     font-size: 110%;
   }
 
@@ -110,10 +116,9 @@ table td, table th {
   overflow: scroll;
 }
 
-// Fix mobile view issue on open cases table and long strings
+// Fix mobile view issue on table long strings
 @include media(mobile) {
   td {
-    min-height: 1em;
     word-break: break-word;
     hyphens: auto;
     overflow-wrap: break-word;
