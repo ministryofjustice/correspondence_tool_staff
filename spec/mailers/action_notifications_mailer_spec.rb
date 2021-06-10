@@ -207,6 +207,20 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         end
       end
 
+      context 'send back' do
+        let(:mail) { described_class.notify_information_officers(approved_case, 'Responses have been sent back')}
+
+        it 'sets the template' do
+          expect(mail.govuk_notify_template)
+            .to eq '51ddb4e1-477d-496f-a131-e500c0bc351e'
+        end
+
+        it 'personalises the email' do
+          allow(CaseNumberCounter).to receive(:next_for_date).and_return(333)
+          expect(mail.govuk_notify_personalisation)
+            .to include(case_abbr: "FOI")
+        end
+      end
 
       context 'message' do
         let(:mail) { described_class.notify_information_officers(approved_case, 'Message received')}
