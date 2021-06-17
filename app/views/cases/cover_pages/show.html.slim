@@ -9,7 +9,7 @@ article.cover-sheet
       li
         = @case.number
       li
-        = @case.subject_full_name&.upcase
+        = @case.subject_full_name
       li
         = choose_cover_page_id_number(@case.first_prison_number, @case.other_subject_ids)
 

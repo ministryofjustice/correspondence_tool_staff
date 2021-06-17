@@ -6,31 +6,58 @@ describe ConfigurableStateMachine::Machine do
     TRANSITIONS = [
       {
         state: :data_to_be_requested,
-        specific_events: [:mark_as_waiting_for_data, :send_acknowledgement_letter]
+        specific_events: [
+          :preview_cover_page, 
+          :mark_as_waiting_for_data,
+          :send_acknowledgement_letter
+        ]
       },
       {
         state: :waiting_for_data,
-        specific_events: [:mark_as_ready_for_vetting, :send_acknowledgement_letter, :preview_cover_page]
+        specific_events: [
+          :preview_cover_page, 
+          :mark_as_ready_for_vetting,
+          :send_acknowledgement_letter,
+        ]
       },
       {
         state: :ready_for_vetting,
-        specific_events: [:mark_as_vetting_in_progress, :preview_cover_page]
+        specific_events: [
+          :preview_cover_page, 
+          :mark_as_vetting_in_progress,
+        ]
       },
       {
         state: :vetting_in_progress,
-        specific_events: [:mark_as_ready_to_copy, :preview_cover_page]
+        specific_events: [
+          :mark_as_ready_to_copy,
+          :preview_cover_page
+        ]
       },
       {
         state: :ready_to_copy,
-        specific_events: [:mark_as_ready_to_dispatch]
+        specific_events: [
+          :preview_cover_page, 
+          :mark_as_ready_to_dispatch
+        ]
       },
       {
         state: :ready_to_dispatch,
-        specific_events: [:close, :send_dispatch_letter]
+        specific_events: [
+          :preview_cover_page, 
+          :close,
+          :send_dispatch_letter
+        ]
       },
       {
         state: :closed,
-        full_events: [:add_note_to_case, :edit_case, :send_dispatch_letter, :start_complaint]
+        full_events: [
+          :preview_cover_page, 
+          :add_note_to_case,
+          :edit_case,
+          :send_dispatch_letter,
+          :start_complaint
+        ]
       },
     ].freeze
 
