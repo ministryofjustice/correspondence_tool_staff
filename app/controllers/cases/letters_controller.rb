@@ -14,13 +14,18 @@ class Cases::LettersController < ApplicationController
     respond_to do |format|
       format.html
       format.docx do
-        path = Rails.root.join('lib', 'assets', 'ims001.docx')
-        template = Sablon.template(path)
-        render plain: template.render_to_string({ 
+
+        template_data = {          
           values: @letter.values, 
           'html:body': @letter.body, 
           letter_date: @letter.letter_date, 
-          'html:letter_address': @letter.letter_address })
+          requester_reference: @letter.values.requester_reference,
+          'html:letter_address': @letter.letter_address
+        }
+
+        path = Rails.root.join('lib', 'assets', 'ims001.docx')
+        template = Sablon.template(path)
+        render plain: template.render_to_string(template_data)
       end
     end
   end

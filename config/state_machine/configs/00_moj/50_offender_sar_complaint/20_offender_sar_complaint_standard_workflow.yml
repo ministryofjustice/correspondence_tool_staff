@@ -14,6 +14,7 @@
                   transition_to: response_required
                 add_note_to_case:
                 send_acknowledgement_letter:
+                preview_cover_page:
                 edit_case:
                 assign_to_team_member:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?
@@ -33,6 +34,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
+                preview_cover_page:
                 edit_case:
                 reset_to_initial_state:
                   transition_to: to_be_assessed
@@ -46,6 +48,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
+                preview_cover_page:
                 edit_case:
                 reset_to_initial_state:
                   transition_to: to_be_assessed
@@ -105,6 +108,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 add_data_received:
                 add_note_to_case:
+                preview_cover_page:
                 edit_case:
                 reset_to_initial_state:
                   transition_to: to_be_assessed
@@ -119,6 +123,7 @@
                 send_dispatch_letter:
                 add_data_received:
                 add_note_to_case:
+                preview_cover_page:
                 edit_case:
                 reset_to_initial_state:
                   transition_to: to_be_assessed
@@ -140,6 +145,7 @@
                 send_dispatch_letter:
                 add_data_received:
                 add_note_to_case:
+                preview_cover_page:
                 edit_case:
                 reset_to_initial_state:
                   transition_to: to_be_assessed
@@ -155,6 +161,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_dispatch_letter:
+                preview_cover_page:
                 edit_case:
                 assign_to_team_member:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_assigned?
@@ -175,6 +182,7 @@
                   if: Workflows::Predicates#is_litigation_complaint_and_no_costs?
                 add_note_to_case:
                 send_dispatch_letter:
+                preview_cover_page:
                 edit_case:
                 reset_to_initial_state:
                   transition_to: to_be_assessed

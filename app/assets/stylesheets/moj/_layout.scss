@@ -112,6 +112,7 @@
   & > p {
     font-size: 110%;
     @include pre-wrap();
+    hyphens: auto;
   }
 }
 
