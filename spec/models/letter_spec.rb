@@ -140,4 +140,15 @@ RSpec.describe Letter, type: :model do
       end
     end
   end
+
+  describe '#format_address' do
+    let(:kase_two) { create(:offender_sar_case, name: 'Waylon Smithers', 
+                        subject_address: '22 Sample Address, Test Lane, Testingington, TE57ST') }
+
+    it 'formats address into new lines' do
+      letter = Letter.new(letter_template.id, kase_two)
+      address_with_newlines = letter.address
+      expect(address_with_newlines).to eq "22 Sample Address\nTest Lane\nTestingington\nTE57ST"
+    end
+  end
 end
