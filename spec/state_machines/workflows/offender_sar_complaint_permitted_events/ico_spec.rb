@@ -7,6 +7,7 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :to_be_assessed,
         specific_events: [
+          :preview_cover_page, 
           :mark_as_require_data_review, 
           :mark_as_data_to_be_requested,
           :mark_as_require_response, 
@@ -17,6 +18,7 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :data_review_required, 
         specific_events: [
+          :preview_cover_page, 
           :mark_as_vetting_in_progress, 
           :mark_as_require_response,
           :send_acknowledgement_letter,
@@ -27,6 +29,7 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :data_to_be_requested,
         specific_events: [
+          :preview_cover_page, 
           :mark_as_waiting_for_data, 
           :send_acknowledgement_letter,
           :add_data_received,
@@ -65,6 +68,7 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :ready_to_copy,
         specific_events: [
+          :preview_cover_page, 
           :mark_as_require_response,
           :add_data_received,
           :reset_to_initial_state
@@ -74,6 +78,7 @@ describe ConfigurableStateMachine::Machine do
         state: :response_required,
         specific_events: [
           :close, 
+          :preview_cover_page, 
           :send_dispatch_letter, 
           :add_complaint_appeal_outcome, 
           :add_data_received,
@@ -84,6 +89,7 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :closed,
         full_events: [
+          :preview_cover_page, 
           :add_note_to_case, 
           :edit_case, 
           :send_dispatch_letter, 
