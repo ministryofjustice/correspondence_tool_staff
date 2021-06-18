@@ -92,8 +92,8 @@ describe HostEnv do
 
   describe '5 cloud platform infrastructure environments' do
     before(:each) do
-      k8s_settings = YAML.load_file("config/kubernetes/#{namespace}/deployment.yaml")
-      @envvars = k8s_settings.dig('spec', 'template', 'spec', 'containers')[0]['env']
+      k8s_settings = YAML.load_file("config/kubernetes/#{namespace}/configmap.yaml")
+      @envvars = k8s_settings.dig('data','env')
     end
 
     context '1. demo server' do
