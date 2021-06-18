@@ -257,9 +257,5 @@ describe HostEnv do
       expect(@envvars['RAILS_ENV']).to eq ENV['RAILS_ENV']
       expect(@envvars['ENV']).to eq ENV['ENV']
     end
-
-    def env_value_for(name:)
-      @envvars.find { |envvar| envvar['name'] == name.upcase }['value']
-    end
   end
 end
