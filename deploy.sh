@@ -121,6 +121,10 @@ function _deploy() {
   # kubectl config set-context ${context} --namespace=$namespace
   # kubectl config use-context ${context}
 
+  # Apply config map updates
+  kubectl apply \
+    -f config/kubernetes/${environment}/config_map.yaml -n $namespace
+
   # Apply image specific config
   kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
           webapp=${docker_image_tag} \
