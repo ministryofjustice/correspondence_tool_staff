@@ -401,8 +401,18 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   def choose_cover_page_id_number(prison_number, pnc_number)
-    return pnc_number&.upcase if prison_number.nil?
-    return pnc_number&.upcase if prison_number.empty?
-    prison_number&.upcase
+    prison_number = get_first_number_in_string(prison_number) 
+    pnc_number = get_first_number_in_string(pnc_number)
+
+    return pnc_number if prison_number.nil?
+    return pnc_number if prison_number.empty?
+
+    prison_number
+  end
+
+  private 
+  def get_first_number_in_string(number_string)
+    return number_string.split(",").first&.upcase if number_string&.include?(",")
+    number_string&.upcase
   end
 end
