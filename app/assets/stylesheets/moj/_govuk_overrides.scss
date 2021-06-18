@@ -81,7 +81,7 @@ main, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-smal
   width: 3.5em; 
 }
 
-table td, table th {
+table td, table th, .error-message {
   font-size: 100%;
 }
 
@@ -90,9 +90,14 @@ td {
     min-height: 1em;
 }
 
+// Separate radios on small font size view
+.multiple-choice label {
+  min-height: 20px;
+}
+
 @include media (tablet) {
 
-  .search-results-summary strong, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-small,  .form-control, table td, table th  {
+  .search-results-summary strong, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-small,  .form-control, table td, table th, .error-message  {
     font-size: 110%;
   }
 
@@ -112,7 +117,7 @@ td {
 // End making font sizes adjustable
 
 // Open case list table scrollable to support large fonts
-.open-cases-table-container {
+.cases-table-container {
   overflow: scroll;
 }
 
