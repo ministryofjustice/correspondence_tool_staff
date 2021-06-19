@@ -463,9 +463,23 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       expect(output_2).to eq 'PNCTEST1'
     end
   
-    it 'returns upcased prison number when if it is not blank or empty' do
+    it 'returns upcased prison number if it is not blank or empty' do
       prison_number = 'PrisonNum1'
       pnc_number = 'PncTest1'
+      output = choose_cover_page_id_number(prison_number, pnc_number)
+      expect(output).to eq 'PRISONNUM1'
+    end
+
+    it 'only returns the first pnc number if more than one is available' do
+      prison_number = ''
+      pnc_number = 'PncTest1, PncTest2, PncTest3'
+      output = choose_cover_page_id_number(prison_number, pnc_number)
+      expect(output).to eq 'PNCTEST1'
+    end
+
+    it 'only returns the first prison number if more than one is available' do
+      prison_number = 'PrisonNum1, PrisonNum2, PrisonNum3'
+      pnc_number = 'PncTest1, PncTest2, PncTest3'
       output = choose_cover_page_id_number(prison_number, pnc_number)
       expect(output).to eq 'PRISONNUM1'
     end

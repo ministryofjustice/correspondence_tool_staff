@@ -2,6 +2,10 @@
   @include button($grey-3);
   margin-right: $gutter;
   margin-top: $gutter;
+
+  &.de-escalate-link {
+    white-space: nowrap;
+  }
 }
 
 .button-tertiary{
