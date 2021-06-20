@@ -22,5 +22,5 @@ spec:
       - path: /
         backend:
           serviceName: track-a-query-metabase-service
-          servicePort: 80
+          servicePort: 3000
 
