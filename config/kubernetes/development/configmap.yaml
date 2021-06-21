@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  ENV: 'dev'
+  RAILS_ENV: 'production'
+  RAILS_SERVE_STATIC_FILES: 'true'
+  SENTRY_ENVIRONMENT: 'development'
+kind: ConfigMap
+metadata:
+  name: environment-variables
+  
