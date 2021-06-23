@@ -21,6 +21,11 @@
   }
 }
 
+.error-summary {
+  margin-top: 0;
+  margin-bottom: 50px;
+}
+
 .notice-summary{
   @extend .error-summary;
   border-color: $button-colour;

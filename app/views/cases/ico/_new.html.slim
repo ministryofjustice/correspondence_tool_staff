@@ -1,5 +1,8 @@
 = render partial: 'layouts/header'
 
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+        
 = form_for kase, as: :ico, url: case_ico_index_path(kase) do |f|
   = hidden_field_tag 'correspondence_type', @correspondence_type_key
 
