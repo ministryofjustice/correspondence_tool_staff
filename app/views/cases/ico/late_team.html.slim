@@ -6,11 +6,6 @@
     .column-two-thirds
       = 'Who was responsible for the late response?'
 
-= GovukElementsErrorsHelper.error_summary @case.object,
-        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
-        ""
-
-
 - content_for :sub_heading
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -18,6 +13,9 @@ span.visually-hidden
 
 = render partial: 'layouts/header'
 
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+        ""
 div class="case-#{@case.type_abbreviation.downcase}"
   = form_for @case, as: "#{@case.type_abbreviation.downcase}", url: record_late_team_case_ico_path do |f|
 

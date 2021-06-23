@@ -1,15 +1,12 @@
 - content_for :page_title do
   = t('page_title.create_case_page',case_type: @case.type_abbreviation)
 
-//= GovukElementsErrorsHelper.error_summary @case.object,
-        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 - content_for :heading
   = t('.heading')
 
 - content_for :sub_heading
   = t4c(@case, '', 'sub_heading', case_type: @case.pretty_type)
 
-= render partial: "cases/#{@case.type_abbreviation.downcase}/new",
+= rende r partial: "cases/#{@case.type_abbreviation.downcase}/new",
          locals: { kase: @case,
                    correspondence_type: @correspondence_type }

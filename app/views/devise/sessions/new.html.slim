@@ -11,12 +11,12 @@
       = "If you do not have another web browser, email the support team: "
       = mail_to 'correspondence@digital.justice.gov.uk', 'correspondence@digital.justice.gov.uk'
 
-= GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", ""
-
 - content_for :heading
   = t('devise.users.sign_in.title')
 
 = render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", ""
 
 .grid-row
   .column-full
