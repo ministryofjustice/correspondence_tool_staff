@@ -7,6 +7,6 @@
 - content_for :sub_heading
   = t4c(@case, '', 'sub_heading', case_type: @case.pretty_type)
 
-= rende r partial: "cases/#{@case.type_abbreviation.downcase}/new",
+= render partial: "cases/#{@case.type_abbreviation.downcase}/new",
          locals: { kase: @case,
                    correspondence_type: @correspondence_type }
