@@ -1,11 +1,10 @@
 - content_for :heading, flush: true
     = t('cases.edit.offender_sar.number_exempt_pages')
 
-.grid-row
-  .column-full
-      h1.page-heading
-        span.page-heading--primary
-          = yield :heading
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 div class="case-#{@correspondence_type_key}"
   / NOTE: this uses the step mechanism to change the  number_exempt_pages
