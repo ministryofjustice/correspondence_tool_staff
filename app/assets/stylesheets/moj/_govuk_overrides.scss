@@ -61,7 +61,7 @@ legend .heading-small{
 }
 
 // Make font sizes adjustable
-main, .form-label, .form-label-bold, .heading-small, .bold-small, .form-control, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, #footer .footer-meta .footer-meta-inner, .search-results-summary strong {
+main, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-small, .form-control, .table-font-xsmall td, .phase-banner p, #footer .footer-meta, #footer .footer-meta .copyright, #footer .footer-meta .footer-meta-inner .open-government-licence p, .form-hint, #footer .footer-meta .footer-meta-inner, .search-results-summary strong {
   font-size: 100%;
 }
 
@@ -81,12 +81,23 @@ main, .form-label, .form-label-bold, .heading-small, .bold-small, .form-control,
   width: 3.5em; 
 }
 
-table td, table th {
+table td, table th, .error-message {
   font-size: 100%;
 }
+
+// Fix empty cell layout issue on wrapped table view
+td {
+    min-height: 1em;
+}
+
+// Separate radios on small font size view
+.multiple-choice label {
+  min-height: 20px;
+}
+
 @include media (tablet) {
 
-  .search-results-summary strong, .form-label, .form-label-bold, .heading-small, .bold-small,  .form-control, table td, table th  {
+  .search-results-summary strong, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-small,  .form-control, table td, table th, .error-message  {
     font-size: 110%;
   }
 
@@ -106,15 +117,15 @@ table td, table th {
 // End making font sizes adjustable
 
 // Open case list table scrollable to support large fonts
-.open-cases-table-container {
+.cases-table-container {
   overflow: scroll;
 }
 
-// Fix mobile view issue on open cases table
-@include media(tablet) {
-  .open-cases-table-container {
-    td {
-      min-height: 1em;
-    }
+// Fix mobile view issue on table long strings
+@include media(mobile) {
+  td {
+    word-break: break-word;
+    hyphens: auto;
+    overflow-wrap: break-word;
   }
 }

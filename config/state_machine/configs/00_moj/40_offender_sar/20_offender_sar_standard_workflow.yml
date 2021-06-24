@@ -11,6 +11,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
+                preview_cover_page:
                 edit_case:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
@@ -47,6 +48,7 @@
                   transition_to: ready_to_dispatch
                 add_data_received:
                 add_note_to_case:
+                preview_cover_page:
                 edit_case:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
@@ -56,12 +58,14 @@
                 add_data_received:
                 add_note_to_case:
                 send_dispatch_letter:
+                preview_cover_page:
                 edit_case:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               closed:
                 add_note_to_case:
                 send_dispatch_letter:
+                preview_cover_page:
                 edit_case:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?

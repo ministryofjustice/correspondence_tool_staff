@@ -23,6 +23,10 @@ class Workflows::Hooks
     NotifyResponderService.new(@kase, 'Redraft requested').call
   end
 
+  def notify_responder_responses_sent_back
+    NotifyResponderService.new(@kase, 'Responses have been sent back').call
+  end
+
   def notify_responder_ready_to_send
     NotifyResponderService.new(@kase, 'Ready to send').call if @kase.awaiting_dispatch?
   end

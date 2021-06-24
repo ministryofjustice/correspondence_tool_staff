@@ -14,7 +14,7 @@
       border-bottom: 3px solid #ddd;
       display: block;
       margin-bottom: .625em;
-      td {
+      td, th {
         border-bottom: 1px solid #ddd;
         display: block;
         text-align: right;
@@ -23,14 +23,11 @@
         border-bottom: 0;
       }
       th, td {
-        br {
-          display: none;
-        }
         padding: 15px;
       }
     }
 
-    tbody tr td:first-child {
+    tbody tr td:first-child, tbody tr th {
       background-color: $border-colour;
       font-weight: 700;
       a {
@@ -112,6 +109,7 @@
   & > p {
     font-size: 110%;
     @include pre-wrap();
+    hyphens: auto;
   }
 }
 

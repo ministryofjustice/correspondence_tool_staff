@@ -10,7 +10,10 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_require_data_review, 
           :mark_as_data_to_be_requested,
           :mark_as_require_response, 
-          :send_acknowledgement_letter, :reset_to_initial_state]
+          :preview_cover_page, 
+          :send_acknowledgement_letter,
+          :reset_to_initial_state
+        ]
       },
       {
         state: :data_review_required, 
@@ -18,16 +21,20 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_vetting_in_progress, 
           :mark_as_require_response,
           :send_acknowledgement_letter, 
+          :preview_cover_page, 
           :add_data_received,
-          :reset_to_initial_state]
+          :reset_to_initial_state
+        ]
       },
       {
         state: :data_to_be_requested,
         specific_events: [
           :mark_as_waiting_for_data, 
           :send_acknowledgement_letter, 
+          :preview_cover_page, 
           :add_data_received,
-          :reset_to_initial_state]
+          :reset_to_initial_state
+        ]
       },
       {
         state: :waiting_for_data,
@@ -37,7 +44,8 @@ describe ConfigurableStateMachine::Machine do
           :send_acknowledgement_letter, 
           :preview_cover_page, 
           :reset_to_initial_state, 
-          :add_data_received]
+          :add_data_received
+        ]
       },
       {
         state: :ready_for_vetting,
@@ -45,7 +53,8 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_vetting_in_progress, 
           :preview_cover_page, 
           :reset_to_initial_state, 
-          :add_data_received]
+          :add_data_received
+        ]
       },
       {
         state: :vetting_in_progress,
@@ -53,20 +62,37 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_ready_to_copy, 
           :preview_cover_page, 
           :reset_to_initial_state, 
-          :add_data_received]
+          :add_data_received
+        ]
       },
       {
         state: :ready_to_copy,
         specific_events: [
-          :mark_as_require_response, :reset_to_initial_state, :add_data_received]
+          :preview_cover_page, 
+          :mark_as_require_response,
+          :reset_to_initial_state,
+          :add_data_received
+        ]
       },
       {
         state: :response_required,
-        specific_events: [:close, :send_dispatch_letter, :reset_to_initial_state, :add_data_received]
+        specific_events: [
+          :preview_cover_page, 
+          :close,
+          :send_dispatch_letter,
+          :reset_to_initial_state,
+          :add_data_received
+        ]
       },
       {
         state: :closed,
-        full_events: [:add_note_to_case, :edit_case, :send_dispatch_letter, :reset_to_initial_state]
+        full_events: [
+          :preview_cover_page, 
+          :add_note_to_case,
+          :edit_case,
+          :send_dispatch_letter,
+          :reset_to_initial_state
+        ]
       },
     ].freeze
 
