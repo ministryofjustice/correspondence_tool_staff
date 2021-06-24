@@ -11,7 +11,7 @@ A simple application to allow internal staff users to answer correspondence.
 
 ### Working on the Code
 
-Work should be based off of, and PRed to, the master branch. We use the GitHub
+Work should be based off of, and PRed to, the main branch. We use the GitHub
 PR approval process so once your PR is ready you'll need to have one person
 approve it, and the CI tests passing, before it can be merged. Feel free to use
 the issue tags on your PR to indicate if it is a WIP or if it is ready for
