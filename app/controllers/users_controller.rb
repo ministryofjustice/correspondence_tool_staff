@@ -3,6 +3,12 @@ class UsersController < ApplicationController
 
   before_action :set_team, only: [:create, :new, :edit, :update, :confirm_destroy]
 
+  def index
+    @users = User.all
+                 .order(:full_name)
+                 .page(params[:page]).per(100)
+                 .decorate  end
+
   def show
     @user = User.find params[:id]
     unpaginated_cases = UserActiveCaseCountService.new.active_cases_for_user(@user)

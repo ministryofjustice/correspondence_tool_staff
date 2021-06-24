@@ -1,0 +1,35 @@
+- content_for :page_title do
+  - t('page_title.admin_user_list')
+
+- content_for :heading
+  = "User list"
+
+= render partial: 'layouts/header'
+= link_to "Choose user", '#', id: 'open-link'
+#dialog-content
+  h2 hi from the page
+  = link_to "this", "that"
+
+- @users.each do |user|
+  hr
+  .user
+    = user.full_name
+    = user.email
+    .action
+      = link_to "Use this user", edit_user_path(user)
+link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+script src="https://code.jquery.com/jquery-1.12.4.js"
+script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+
+javascript:
+  $link = $("#open-link")
+  $dialog = $("#dialog-content").dialog({
+      autoOpen: false,
+      height: 400,
+      width: 350,
+      modal: true,
+      close: function() {}
+    })
+  $link.button().on( "click", function() {
+      $dialog.dialog( "open" );
+    });
