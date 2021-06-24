@@ -220,7 +220,7 @@ Rails.application.routes.draw do
     get :download_audit, on: :collection
   end
 
-  resource :users
+  resources :users
 
   resources :teams do
     resources :users do
