@@ -26,6 +26,7 @@
     choices: Case::SAR::Offender::subject_types.keys
 
   = f.text_area :subject_address, rows: '4'
+  = link_to "Choose address", '#', id: 'open-link'
 
   = f.radio_button_fieldset(:flag_as_high_profile) do |fieldset|
     - fieldset.radio_input(true, text_method: :humanize)
@@ -34,3 +35,32 @@
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'
+
+
+#dialog-content
+  #remote-content
+
+link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+script src="https://code.jquery.com/jquery-1.12.4.js"
+script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+
+
+javascript:
+  $link = $("#open-link")
+  $remote_content = $("#remote-content")
+  $dialog = $("#dialog-content").dialog({
+    autoOpen: false,
+    height: 400,
+    width: 350,
+    modal: true,
+    close: function() {}
+  })
+  $link.on( "click", function(e) {
+    e.preventDefault();
+    $dialog.dialog( "open" );
+    $remote_content.load("/users")
+  });
+  document.body.addEventListener("ajax:success", (event) => {
+    const [data, status, xhr] = event.detail;
+    $remote_content.load(data)
+  });
