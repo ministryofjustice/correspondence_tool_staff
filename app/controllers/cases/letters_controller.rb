@@ -9,6 +9,7 @@ class Cases::LettersController < ApplicationController
 
   def show
     letter_template_id = letter_params[:letter_template_id]
+    letter_template = LetterTemplate.find(letter_template_id)
     @letter = Letter.new(letter_template_id, @case)
 
     respond_to do |format|
@@ -17,13 +18,14 @@ class Cases::LettersController < ApplicationController
 
         template_data = {          
           values: @letter.values, 
+          recipient: @letter.name,
           'html:body': @letter.body, 
           letter_date: @letter.letter_date, 
           requester_reference: @letter.values.requester_reference,
           'html:letter_address': @letter.letter_address
         }
 
-        path = Rails.root.join('lib', 'assets', 'ims001.docx')
+        path = Rails.root.join('lib', 'assets', letter_template.base_template_file_ref)
         template = Sablon.template(path)
         render plain: template.render_to_string(template_data)
       end
