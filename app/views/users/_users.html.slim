@@ -1,9 +1,8 @@
-- content_for :page_title do
-  - t('page_title.admin_user_list')
 
 form data-remote="true" action="/users"
-  input type="text" name="q" placeholder="Search for a user"
+  input type="text" name="q"
   input type="submit" value="Search"
+
 
 - @users.each do |user|
   hr
