@@ -16,8 +16,6 @@
 
 = render partial: 'layouts/header'
 
-= GovukElementsErrorsHelper.error_summary resource, "Message to alert the user to a problem goes here", ""
-
 .grid-row
   .column-full
     = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
