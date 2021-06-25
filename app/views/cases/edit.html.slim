@@ -9,7 +9,4 @@
 
 = render partial: 'layouts/header' unless @case.type_of_offender_sar?
 
-= GovukElementsErrorsHelper.error_summary @case,
-        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 = render partial: "cases/#{@case.type_abbreviation.downcase}/edit", locals: { kase: @case }
