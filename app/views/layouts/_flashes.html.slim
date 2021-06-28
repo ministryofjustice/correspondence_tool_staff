@@ -1,7 +1,7 @@
 .grid-row
   .column-two-thirds
     - flash.each do |key, value|
-      - if key == "alert" && (!user_signed_in? || @query)
+      - if key == "alert"
         .error-summary(role="group" aria-labelledby="error-summary-heading" tabindex='-1')
           h2.heading-medium.error-summary-heading(id= 'error-summary-heading')
             = value
