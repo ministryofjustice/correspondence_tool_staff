@@ -375,6 +375,40 @@ class LetterTemplateSeeder
                 EOF
                 )
 
+    rec = LetterTemplate.find_by(abbreviation: 'complaint-acknowledgement')
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: 'Complaint acknowledgement letter',
+                abbreviation: 'complaint-acknowledgement',
+                template_type: 'acknowledgement',
+                body: <<~EOF
+                  <p>
+                  <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% else %>Dear<% end %>
+                  <br>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
+                  <br>
+                  <br>Thank you for your letter/email dated <%= values.request_dated&.strftime('%e %B %Y') %>.
+                  <br>
+                  <br>I note the contents and will be looking into your concerns.
+                  <br>
+                  <br>I will be in contact with you further once I have completed my enquiries. To complete the enquiries I may have to contact other business areas and as such it would be helpful if you could limit any communication with the office during this period.
+                  <br>
+                  <br>Yours sincerely
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>DPA Team Manager
+                  <br>Offender Subject Access Request Team
+                  <br>Ministry of Justice
+                  </p>
+                EOF
+                )
+    rec.update!(letter_address: <<~EOF
+                  #{solictor_receiver}
+                  <br>#{address}
+                EOF
+                )
   end
 end
 #rubocop:enable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength
