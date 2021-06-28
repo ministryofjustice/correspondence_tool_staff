@@ -1,9 +1,6 @@
 - content_for :page_title do
   = t('page_title.add_request_attachment_page', case_number: @case.number)
 
-= GovukElementsErrorsHelper.error_summary @case,
-  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 - content_for :heading
   = t('cases.attachments.upload_request_files_heading')
 
@@ -17,6 +14,8 @@ span.visually-hidden
 
 = render partial: 'layouts/header'
 
+= GovukElementsErrorsHelper.error_summary @case,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for @case, as: :case_attachment, url: case_attachments_path(@case), method: :post do |f|
   .form-group

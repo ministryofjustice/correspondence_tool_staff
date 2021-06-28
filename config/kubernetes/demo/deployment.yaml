@@ -24,51 +24,6 @@ spec:
             - containerPort: 3000
           command: ["./config/docker/entrypoint-webapp.sh"]
           env:
-            - name: ENV
-              value: 'demo'
-            - name: RAILS_ENV
-              value: 'production'
-            - name: SENTRY_ENVIRONMENT
-              value: 'demo'
-            - name: PROJECT
-              value: 'correspondence-staff'
-            - name: RAILS_SERVE_STATIC_FILES
-              value: 'true'
-            - name: GA_TRACKING_ID
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: GA_TRACKING_ID
-            - name: SETTINGS__CTS_EMAIL_URL
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__CTS_EMAIL_URL
-            - name: SETTINGS__GOVUK_NOTIFY_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__GOVUK_NOTIFY_API_KEY
-            - name: SETTINGS__SMOKE_TESTS__USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__SMOKE_TESTS__USERNAME
-            - name: SETTINGS__SMOKE_TESTS__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__SMOKE_TESTS__PASSWORD
-            - name: SECRET_KEY_BASE
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SECRET_KEY_BASE
-            - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SENTRY_DSN
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -104,6 +59,11 @@ spec:
                 secretKeyRef:
                   name: track-a-query-s3-output
                   key: secret_access_key
+          envFrom:
+            - configMapRef:
+                name: environment-variables
+            - secretRef:
+                name: app-secrets
           readinessProbe:
             httpGet:
               path: /healthcheck
@@ -130,47 +90,6 @@ spec:
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
           command: ["./config/docker/entrypoint-background-jobs.sh"]
           env:
-            - name: ENV
-              value: 'demo'
-            - name: RAILS_ENV
-              value: 'production'
-            - name: PROJECT
-              value: 'correspondence-staff-jobs'
-            - name: GA_TRACKING_ID
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: GA_TRACKING_ID
-            - name: SETTINGS__CTS_EMAIL_URL
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__CTS_EMAIL_URL
-            - name: SETTINGS__GOVUK_NOTIFY_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__GOVUK_NOTIFY_API_KEY
-            - name: SETTINGS__SMOKE_TESTS__USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__SMOKE_TESTS__USERNAME
-            - name: SETTINGS__SMOKE_TESTS__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__SMOKE_TESTS__PASSWORD
-            - name: SECRET_KEY_BASE
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SECRET_KEY_BASE
-            - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SENTRY_DSN
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -206,51 +125,15 @@ spec:
                 secretKeyRef:
                   name: track-a-query-s3-output
                   key: secret_access_key
+          envFrom:
+            - configMapRef:
+                name: environment-variables
+            - secretRef:
+                name: app-secrets
         - name: uploads
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
           command: ["./config/docker/entrypoint-uploads.sh"]
           env:
-            - name: ENV
-              value: 'demo'
-            - name: RAILS_ENV
-              value: 'production'
-            - name: PROJECT
-              value: 'correspondence-staff-uploads'
-            - name: GA_TRACKING_ID
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: GA_TRACKING_ID
-            - name: SETTINGS__CTS_EMAIL_URL
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__CTS_EMAIL_URL
-            - name: SETTINGS__GOVUK_NOTIFY_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__GOVUK_NOTIFY_API_KEY
-            - name: SETTINGS__SMOKE_TESTS__USERNAME
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__SMOKE_TESTS__USERNAME
-            - name: SETTINGS__SMOKE_TESTS__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SETTINGS__SMOKE_TESTS__PASSWORD
-            - name: SECRET_KEY_BASE
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SECRET_KEY_BASE
-            - name: SENTRY_DSN
-              valueFrom:
-                secretKeyRef:
-                  name: app-secrets
-                  key: SENTRY_DSN
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -286,3 +169,8 @@ spec:
                 secretKeyRef:
                   name: track-a-query-s3-output
                   key: secret_access_key
+          envFrom:
+            - configMapRef:
+                name: environment-variables
+            - secretRef:
+                name: app-secrets

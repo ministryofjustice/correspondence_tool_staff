@@ -1,9 +1,6 @@
 - content_for :page_title do
   = t("page_title.bu_areas", team_name: @team.name)
 
-= GovukElementsErrorsHelper.error_summary @team,
-        "#{pluralize(@team.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 - content_for :heading
   = "Areas covered"
 
@@ -11,6 +8,9 @@
   = sub_heading_for_teams(@creating_team)
 
 = render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @team,
+        "#{pluralize(@team.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for [@team, @team.areas.new],
         url: create_areas_covered_by_team_path(@team.id),

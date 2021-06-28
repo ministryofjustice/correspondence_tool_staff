@@ -8,3 +8,4 @@
             = ' '
         span.page-heading--primary
           = yield :heading
+= render partial: 'layouts/flashes' unless flash.empty?

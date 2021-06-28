@@ -1,13 +1,12 @@
 - content_for :page_title do
   - t('page_title.forgot_password')
 
-= GovukElementsErrorsHelper.error_summary resource, "You need to fix the errors on this page before continuing", ""
-
 - content_for :heading
   = t('devise.users.password.edit.title')
 
 = render partial: 'layouts/header'
 
+= GovukElementsErrorsHelper.error_summary resource, "You need to fix the errors on this page before continuing", ""
 
 = form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
   = f.hidden_field :reset_password_token
