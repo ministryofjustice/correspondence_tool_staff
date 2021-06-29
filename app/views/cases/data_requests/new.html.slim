@@ -1,9 +1,6 @@
 - content_for :page_title do
   = t('page_title.data_request_page', case_number: @case.number)
 
-= GovukElementsErrorsHelper.error_summary @case,
-  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 - content_for :heading
   = t('.heading')
 
@@ -16,6 +13,9 @@ span.visually-hidden
   = @case.number
 
 = render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 .form-group.data-request
   = form_for @data_request, as: :data_request, url: case_data_requests_path(@case), method: :post do |f|

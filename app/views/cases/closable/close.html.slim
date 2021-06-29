@@ -1,8 +1,6 @@
 - content_for :page_title do
   = t('page_title.close_case_page', case_number: @case.number)
 
-= GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
-
 - content_for :heading
   - if @case.ico?
     = "What was the ICO's decision?"
@@ -17,6 +15,8 @@
 = link_to("Back", case_path(@case), class: 'govuk-back-link')
 
 = render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
 
 div class="case-#{@correspondence_type_key}"
   = render partial: "cases/shared/date_responded_form", locals: { kase: @case, submit_button: t('.submit')}

@@ -9,6 +9,9 @@
 
 = render partial: 'layouts/header'
 
+= GovukElementsErrorsHelper.error_summary @case,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
 div
   = t('cases.remove_clearance.explanation')
   br

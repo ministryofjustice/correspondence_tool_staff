@@ -1,5 +1,8 @@
 = render partial: 'layouts/header'
 
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
 = form_for kase.object, as: :sar, url: case_create_action(kase.object)  do |f|
   = render partial: 'cases/sar/new_form_common', locals: { f: f, dropzone: true, kase: kase }
 
