@@ -90,7 +90,7 @@ class UserSeeder
     kilo_email = normalize_email(kilo_email, kilo_name)
     user = User.find_by(email: kilo_email)
     if user.nil?
-      user = User.create!(full_name: kilo_name, email: kilo_email, password: '7DvUVgRx7eoxQ3NTKc897BJtExBwCTFunT')
+      user = User.create!(full_name: kilo_name, email: kilo_email, password: SecureRandom.random_number(36**13).to_s(36))
       puts "Created user #{user.full_name} - #{user.email}"
     end
 
