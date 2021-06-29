@@ -1,0 +1,13 @@
+
+form data-remote="true" action="/users"
+  input type="text" name="q"
+  input type="submit" value="Search"
+
+
+- @users.each do |user|
+  hr
+  .user
+    = user.full_name
+    = user.email
+    .action
+      = link_to "Use this user", edit_user_path(user)
