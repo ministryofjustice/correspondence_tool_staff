@@ -382,7 +382,7 @@ class LetterTemplateSeeder
                 template_type: 'acknowledgement',
                 body: <<~EOF
                   <p>
-                  <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% else %>Dear<% end %>
+                  <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% else %><br><br>Dear<% end %>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
