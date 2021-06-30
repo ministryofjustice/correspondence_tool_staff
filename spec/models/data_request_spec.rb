@@ -135,9 +135,21 @@ RSpec.describe DataRequest, type: :model do
 
   describe '#request_type' do
     context 'valid values' do
-      it 'does not error' do
+      it 'does not error' do    
         expect(build(:data_request, request_type: 'all_prison_records')).to be_valid
-        expect(build(:data_request, request_type: 'prison_and_probation_records')).to be_valid
+        expect(build(:data_request, request_type: 'security_records')).to be_valid
+        expect(build(:data_request, request_type: 'nomis_records')).to be_valid
+        expect(build(:data_request, request_type: 'nomis_other')).to be_valid
+        expect(build(:data_request, request_type: 'nomis_contact_logs')).to be_valid
+        expect(build(:data_request, request_type: 'probation_records')).to be_valid
+        expect(build(:data_request, request_type: 'cctv_and_bwcf')).to be_valid
+        expect(build(:data_request, request_type: 'telephone_recordings')).to be_valid
+        expect(build(:data_request, request_type: 'telephone_pin_logs')).to be_valid
+        expect(build(:data_request, request_type: 'probation_archive')).to be_valid
+        expect(build(:data_request, request_type: 'mappa')).to be_valid
+        expect(build(:data_request, request_type: 'pdp')).to be_valid
+        expect(build(:data_request, request_type: 'court')).to be_valid
+        expect(build(:data_request, request_type: 'other', request_type_note: 'test')).to be_valid
       end
     end
 

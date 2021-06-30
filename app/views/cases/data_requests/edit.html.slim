@@ -20,8 +20,8 @@ span.visually-hidden
 .grid-row.data-request
   .column-full
 
-    h2.data-request__location.lede= @data_request.location + ": #{t(:"cases.data_requests.index.request_type.#{@data_request.request_type}")}"
-
+    h2.data-request__location.lede= @data_request.location  + ':'
+    h2.data-request__location.lede= t :"helpers.label.data_request.request_type.#{@data_request.request_type}"
     hr
 
     .form-group

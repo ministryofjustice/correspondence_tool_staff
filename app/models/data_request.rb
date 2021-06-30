@@ -21,13 +21,20 @@ class DataRequest < ApplicationRecord
     all_prison_records: 'all_prison_records',
     security_records: 'security_records',
     nomis_records: 'nomis_records',
+    nomis_other: 'nomis_other',
     nomis_contact_logs: 'nomis_contact_logs',
     probation_records: 'probation_records',
-    prison_and_probation_records: 'prison_and_probation_records',
+    cctv_and_bwcf: 'cctv_and_bwcf',
+    telephone_recordings: 'telephone_recordings',
+    telephone_pin_logs: 'telephone_pin_logs',
+    probation_archieve: 'probation_archive',
+    mappa: 'mappa',
+    pdp: 'PDPTdd',
+    court: 'court',
     other: 'other'
   }
 
-  acts_as_gov_uk_date(:date_requested, :date_from, :date_to)
+  acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
 
   def logs
     self.data_request_logs
