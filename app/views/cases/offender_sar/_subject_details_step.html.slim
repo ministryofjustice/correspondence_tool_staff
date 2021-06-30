@@ -26,7 +26,7 @@
     choices: Case::SAR::Offender::subject_types.keys
 
   = f.text_area :subject_address, rows: '4'
-  = link_to "Choose address", '#', id: 'open-link'
+  button#open-link "Choose address"
 
   = f.radio_button_fieldset(:flag_as_high_profile) do |fieldset|
     - fieldset.radio_input(true, text_method: :humanize)
