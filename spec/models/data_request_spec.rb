@@ -135,7 +135,7 @@ RSpec.describe DataRequest, type: :model do
 
   describe '#request_type' do
     context 'valid values' do
-      it 'does not error' do    
+      it 'does not error' do
         expect(build(:data_request, request_type: 'all_prison_records')).to be_valid
         expect(build(:data_request, request_type: 'security_records')).to be_valid
         expect(build(:data_request, request_type: 'nomis_records')).to be_valid
