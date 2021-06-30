@@ -59,6 +59,7 @@ javascript:
     e.preventDefault();
     $dialog.dialog( "open" );
     $remote_content.load("/users")
+    $('dialog-content').attr('aria-modal','true');
   });
   document.body.addEventListener("ajax:success", (event) => {
     const [data, status, xhr] = event.detail;
