@@ -43,6 +43,7 @@ namespace :db do
     enum_types = %w(
       attachment_type
       cases_delivery_methods
+      requester_type
       request_types_enum
       request_types_enum
       search_query_type
