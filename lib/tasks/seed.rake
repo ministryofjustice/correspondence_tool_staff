@@ -74,51 +74,29 @@ namespace :db do
     namespace :dev do
       desc 'Seed teams for dev environment'
       task teams: :environment do
-        if is_on_production?
-          puts "Cannot run this command on production environment!"
-        else          
-          require File.join(Rails.root, 'db', 'seeders', 'dev_team_seeder')
-          DevTeamSeeder.new.seed!
-        end
+        require File.join(Rails.root, 'db', 'seeders', 'dev_team_seeder')
+        DevTeamSeeder.new.seed!
       end
 
       desc 'Seed users, teams, roles for dev environemnt'
       task users: :environment do
-        if is_on_production?
-          puts "Cannot run this command on production environment!"
-        else          
-          require File.join(Rails.root, 'db', 'seeders', 'dev_user_seeder')
-          DevUserSeeder.new.seed!
-        end
+
+        require File.join(Rails.root, 'db', 'seeders', 'dev_user_seeder')
+        DevUserSeeder.new.seed!
       end
 
       desc 'Seed letter templates for dev environment'
       task letter_templates: :environment do
-        if is_on_production?
-          puts "Cannot run this command on production environment!"
-        else          
-          require File.join(Rails.root, 'db', 'seeders', 'letter_template_seeder')
-          LetterTemplateSeeder.new.seed!
-        end
+        require File.join(Rails.root, 'db', 'seeders', 'letter_template_seeder')
+        LetterTemplateSeeder.new.seed!
       end
 
       desc 'Seed correspondence_types for development environments'
       task :correspondence_types => :environment do
-        if is_on_production?
-          puts "Cannot run this command on production environment!"
-        else          
-          require File.join(Rails.root, 'db', 'seeders', 'correspondence_type_seeder')
-          puts 'Seeding Correspondence Types'
-          CorrespondenceTypeSeeder.new.seed!
-        end
+        require File.join(Rails.root, 'db', 'seeders', 'correspondence_type_seeder')
+        puts 'Seeding Correspondence Types'
+        CorrespondenceTypeSeeder.new.seed!
       end
-
-      private
-
-      def is_on_production?
-        ENV['ENV'].present? && ENV['ENV'] == 'prod'
-      end
-  
     end
 
   end

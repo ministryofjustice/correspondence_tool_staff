@@ -24,6 +24,8 @@ namespace :db do
       Rake::Task['db:clear'].invoke
       Rake::Task['db:structure_load'].invoke
       Rake::Task['data:migrate'].invoke
+      Rake::Task['db:seed:dev:teams'].invoke
+      Rake::Task['db:seed:dev:users'].invoke
     end
   end
   
