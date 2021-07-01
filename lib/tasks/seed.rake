@@ -33,9 +33,6 @@ namespace :db do
         require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
         puts 'Seeding Case closure metadata'
         CaseClosure::MetadataSeeder.seed!
-        require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
-        puts 'Seeding report types'
-        ReportTypeSeeder.new.seed!
       end
 
       desc 'Seed teams for production environment'
