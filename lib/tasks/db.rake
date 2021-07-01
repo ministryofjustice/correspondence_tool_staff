@@ -12,10 +12,16 @@ namespace :db do
   end
 
   desc 'Clear the database, run migrations and basic seeds (not users, teams, roles)'
-  task :reseed => :clear do
+  task :reseed => :environment do
     if is_on_production?
       puts "Cannot run this command on production environment!"
-    else          
+    else
+      if ENV['ENV'].present?
+        print "Are you sure to reset the database into initial state: no cases with default users and teams? Y/n "
+        input = STDIN.gets.chomp
+        exit unless(input.start_with?('Y')) || input.nil?
+      end
+      Rake::Task['db:clear'].invoke
       Rake::Task['db:structure_load'].invoke
       Rake::Task['data:migrate'].invoke
     end
