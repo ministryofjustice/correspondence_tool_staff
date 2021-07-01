@@ -74,29 +74,51 @@ namespace :db do
     namespace :dev do
       desc 'Seed teams for dev environment'
       task teams: :environment do
-        require File.join(Rails.root, 'db', 'seeders', 'dev_team_seeder')
-        DevTeamSeeder.new.seed!
+        if is_on_production?
+          puts "Cannot run this command on production environment!"
+        else          
+          require File.join(Rails.root, 'db', 'seeders', 'dev_team_seeder')
+          DevTeamSeeder.new.seed!
+        end
       end
 
       desc 'Seed users, teams, roles for dev environemnt'
       task users: :environment do
-
-        require File.join(Rails.root, 'db', 'seeders', 'dev_user_seeder')
-        DevUserSeeder.new.seed!
+        if is_on_production?
+          puts "Cannot run this command on production environment!"
+        else          
+          require File.join(Rails.root, 'db', 'seeders', 'dev_user_seeder')
+          DevUserSeeder.new.seed!
+        end
       end
 
       desc 'Seed letter templates for dev environment'
       task letter_templates: :environment do
-        require File.join(Rails.root, 'db', 'seeders', 'letter_template_seeder')
-        LetterTemplateSeeder.new.seed!
+        if is_on_production?
+          puts "Cannot run this command on production environment!"
+        else          
+          require File.join(Rails.root, 'db', 'seeders', 'letter_template_seeder')
+          LetterTemplateSeeder.new.seed!
+        end
       end
 
       desc 'Seed correspondence_types for development environments'
       task :correspondence_types => :environment do
-        require File.join(Rails.root, 'db', 'seeders', 'correspondence_type_seeder')
-        puts 'Seeding Correspondence Types'
-        CorrespondenceTypeSeeder.new.seed!
+        if is_on_production?
+          puts "Cannot run this command on production environment!"
+        else          
+          require File.join(Rails.root, 'db', 'seeders', 'correspondence_type_seeder')
+          puts 'Seeding Correspondence Types'
+          CorrespondenceTypeSeeder.new.seed!
+        end
       end
+
+      private
+
+      def is_on_production?
+        ENV['ENV'].present? && ENV['ENV'] == 'prod'
+      end
+  
     end
 
   end
