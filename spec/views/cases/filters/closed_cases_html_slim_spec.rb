@@ -31,7 +31,7 @@ describe 'cases/filters/closed.html.slim' do
 
     closed_cases_page.load(rendered)
     page = closed_cases_page
-    sleep(3)
+    
     expect(page.page_heading.heading.text).to eq 'Closed cases'
     expect(page.page_heading).to have_no_sub_heading
 
