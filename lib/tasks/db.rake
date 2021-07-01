@@ -19,13 +19,9 @@ namespace :db do
       safeguard_question
       Rake::Task['db:clear'].invoke
       Rake::Task['db:structure_load'].invoke
-      Rake::Task['db:seed:prod:misc'].invoke
-      Rake::Task['db:seed:prod:letter_templates'].invoke
-
+      Rake::Task['data:migrate'].invoke
       Rake::Task['db:seed:dev:teams'].invoke
       Rake::Task['db:seed:dev:users'].invoke
-
-      Rake::Task['data:migrate'].invoke
     end
   end
   
