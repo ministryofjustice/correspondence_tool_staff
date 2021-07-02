@@ -55,13 +55,19 @@ javascript:
     modal: true,
     close: function() {}
   })
+  // $dialog.data("uiDialog")._focusTabbable = function(){};
   $link.on( "click", function(e) {
     e.preventDefault();
-    $dialog.dialog( "open" );
-    $remote_content.load("/users")
-    $('dialog-content').attr('aria-modal','true');
+    
+    $remote_content.load("/users", function() {
+      $dialog.dialog( "open" );
+      $('#popup-search').focus();
+    });
+    $('#dialog-content').parent().attr('aria-modal','true');
   });
-  document.body.addEventListener("ajax:success", (event) => {
+  /*document.body.addEventListener("ajax:success", (event) => {
     const [data, status, xhr] = event.detail;
-    $remote_content.load(data)
-  });
+    //$remote_content.load(data)
+    
+    
+  });*/
