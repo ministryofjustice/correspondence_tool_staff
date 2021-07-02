@@ -194,6 +194,8 @@ The `db:reseed` rake task will:
  - clear the database  by dropping all the tables and enum types
  - load the structure.sql
  - run all the data migrations
+ - create sample users and teams
+The password of each user will be generated randomly but setting up a value for environment variable DEV_PASSWORD beforehand will give you the choice of a known password. This command also can be run on non-production cloud env if you want to clear up the database into a inital state.
 
 This will have the effect of setting up a standard set of teams, users, reports, correspondence types, etc.  The `db:reseed` can be used at any point you want reset the database without
 having to close down all clients using the database.
