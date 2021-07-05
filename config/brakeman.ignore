@@ -121,26 +121,6 @@
       "note": ""
     },
     {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "7a37fb95c5cd8c5d93b1ac95817aa23d44b12dd4c5152a175c3a840cc8b2ca27",
-      "check_name": "SendFile",
-      "message": "Parameter value used in file name",
-      "file": "app/controllers/case_attachments_controller.rb",
-      "line": 11,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "send_file(download_to_tmpfile(Case::Base.find(params[:case_id]).attachments.find(params[:id]).preview_key), :type => File.mime_type?(Case.find(params[:case_id]).attachments.find(params[:id]).preview_key), :disposition => \"inline\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "CaseAttachmentsController",
-        "method": "show"
-      },
-      "user_input": "params[:id]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "7deee4778c3cd3f054cede4dad522b916477f952f87fce91034f809ace2a9e46",
