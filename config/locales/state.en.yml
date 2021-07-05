@@ -25,7 +25,7 @@ en:
       vetting_in_progress: Vetting in progress
       waiting_for_data: Waiting for data
       to_be_assessed: To be assessed
-      data_review_required: Date review is required
+      data_review_required: Data review is required
       response_required: Response is required
     closed: Closed
     drafting: Draft in progress

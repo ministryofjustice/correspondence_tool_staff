@@ -502,7 +502,7 @@ module CTS::Cases
       user = User.create!(
         full_name: name,
         email: Faker::Internet.email(name: name),
-        password: 'correspondence'
+        password: SecureRandom.random_number(36**13).to_s(36)
       )
 
       TeamsUsersRole.create(
