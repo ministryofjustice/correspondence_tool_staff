@@ -68,7 +68,7 @@ namespace :db do
     if ENV['ENV'].present?
       print "Are you sure to reset the database into initial state: no cases with default users and teams? Y/n "
       input = STDIN.gets.chomp
-      exit unless(input.start_with?('Y')) || input.nil?
+      exit unless input.start_with?('Y') || input.nil?
     end
   end
 
