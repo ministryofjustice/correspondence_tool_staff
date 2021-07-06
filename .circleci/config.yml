@@ -119,7 +119,7 @@ references:
       command: |
         if [ "${CIRCLE_NODE_INDEX}" == "0" ]; then
           bundle config set --local path 'vendor/bundle'
-          bundle check vendor/bundle || bundle install vendor/bundle && bundle clean
+          bundle check || bundle install && bundle clean
         fi
 
   save_cache: &save_cache
