@@ -11,7 +11,9 @@ module Cases
 
     def show
       tmpfile_path = download_to_tmpfile(@attachment.preview_key)
-      send_file tmpfile_path, type: File.mime_type?(@attachment.preview_key), disposition: 'inline'
+
+      mime_type = Rack::Mime.mime_type(File.extname @attachment.preview_key)
+      send_file tmpfile_path, type: mime_type, disposition: 'inline'
     end
 
     def destroy

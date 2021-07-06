@@ -121,26 +121,6 @@
       "note": ""
     },
     {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "7a37fb95c5cd8c5d93b1ac95817aa23d44b12dd4c5152a175c3a840cc8b2ca27",
-      "check_name": "SendFile",
-      "message": "Parameter value used in file name",
-      "file": "app/controllers/case_attachments_controller.rb",
-      "line": 11,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "send_file(download_to_tmpfile(Case::Base.find(params[:case_id]).attachments.find(params[:id]).preview_key), :type => File.mime_type?(Case.find(params[:case_id]).attachments.find(params[:id]).preview_key), :disposition => \"inline\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "CaseAttachmentsController",
-        "method": "show"
-      },
-      "user_input": "params[:id]",
-      "confidence": "Weak",
-      "note": ""
-    },
-    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "7deee4778c3cd3f054cede4dad522b916477f952f87fce91034f809ace2a9e46",
@@ -158,6 +138,26 @@
       },
       "user_input": "@file",
       "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "9863a606e5d2068ebfaa1bc610802142c2fadabee0fee58bf3980c34747ff58c",
+      "check_name": "SendFile",
+      "message": "Parameter value used in file name",
+      "file": "app/controllers/cases/attachments_controller.rb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "send_file(download_to_tmpfile(Case::Base.find(params[:case_id]).attachments.find(params[:id]).preview_key), :type => Rack::Mime.mime_type(File.extname(Case::Base.find(params[:case_id]).attachments.find(params[:id]).preview_key)), :disposition => \"inline\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::AttachmentsController",
+        "method": "show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
       "note": ""
     },
     {
@@ -221,6 +221,6 @@
       "note": ""
     }
   ],
-  "updated": "2017-09-05 16:41:15 +0100",
-  "brakeman_version": "3.5.0"
+  "updated": "2021-07-06 12:03:57 +0100",
+  "brakeman_version": "5.0.2"
 }
