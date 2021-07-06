@@ -77,12 +77,12 @@ gem 'tzinfo-data'
 
 group :test do
   gem 'capybara', '~> 3.35.2'
-  gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.30'
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 4.3'
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 4.5'
+  gem 'simplecov'
 end
 
 group :development, :test do

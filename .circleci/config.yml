@@ -49,6 +49,15 @@ references:
         sudo apt-get install -y google-chrome-stable
         RAILS_ENV=test bin/rails webdrivers:chromedriver:update
 
+  setup_test_reporter: &setup_test_reporter
+    run:
+      name: Setup Code Climate test-reporter
+      command: |
+        mkdir -p tmp/
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./tmp/cc-test-reporter
+        ./tmp/cc-test-reporter before-build
+
   install_expect: &install_expect
     run:
       name: Install Expect
@@ -144,6 +153,14 @@ references:
         bundle exec rails parallel:load_structure
         bundle exec rails parallel:spec
 
+  upload_test_coverage: &upload_test_coverage
+    run:
+      name: Upload the test coverage into codeclimate
+      command: |
+        ./tmp/cc-test-reporter format-coverage -t simplecov -o ./tmp/codeclimate.app.json coverage/app/.resultset.json
+        ./tmp/cc-test-reporter sum-coverage ./codeclimate.*.json -p 2 -o tmp/codeclimate.total.json
+        ./tmp/cc-test-reporter upload-coverage -i tmp/codeclimate.total.json
+
   configure_aws_profile: &configure_aws_profile
     run:
       name: Configure AWS CLI
@@ -234,7 +251,9 @@ jobs:
       - *set_up_the_database
       - *rubocop
       - *update_chromedriver
+      - *setup_test_reporter
       - *run_unit_and_feature_tests
+      - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
