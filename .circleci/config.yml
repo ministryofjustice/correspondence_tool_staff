@@ -53,10 +53,9 @@ references:
     run:
       name: Setup Code Climate test-reporter
       command: |
-        mkdir -p tmp/
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
-        chmod +x ./tmp/cc-test-reporter
-        ./tmp/cc-test-reporter before-build
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
 
   install_expect: &install_expect
     run:
@@ -157,9 +156,8 @@ references:
     run:
       name: Upload the test coverage into codeclimate
       command: |
-        ./tmp/cc-test-reporter format-coverage -t simplecov -o "./tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
-        ./tmp/cc-test-reporter sum-coverage ./tmp/coverage/codeclimate.*.json -p 2 -o tmp/codeclimate.total.json
-        ./tmp/cc-test-reporter upload-coverage -i tmp/codeclimate.total.json
+        ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+        ./cc-test-reporter sum-coverage --output - codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -        
 
   configure_aws_profile: &configure_aws_profile
     run:
