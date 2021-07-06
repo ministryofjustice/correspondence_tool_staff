@@ -45,8 +45,12 @@ class DevUserSeeder
   end
   # rubocop:enable Metrics/MethodLength
 
-  def seed! # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
-    if Rails.env.production?
+  def is_on_production?
+    ENV['ENV'].present? && ENV['ENV'] == 'prod'
+  end
+
+  def seed! # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity  
+    if is_on_production?
       puts ''
       puts '=================================================================='
       puts '***** Dev users will not be seeded in production environment *****'

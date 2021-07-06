@@ -44,35 +44,37 @@ class DevTeamSeeder
     @sar      = CorrespondenceType.sar
     @ico      = CorrespondenceType.ico
     @offender = CorrespondenceType.offender_sar
+    @overturned_sar = CorrespondenceType.overturned_sar
+    @offender_complaint = CorrespondenceType.offender_sar_complaint
 
     @bu_dacu_bmt  = find_or_create_business_unit(parent: @dir_dacu,
                                                  name: 'Disclosure BMT',
                                                  code: Settings.foi_cases.default_managing_team,
                                                  role: 'manager',
-                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id, @overturned_sar.id])
     @bu_dacu_dis  = find_or_create_business_unit(parent: @dir_dacu,
                                                  name: 'Disclosure',
                                                  code: Settings.foi_cases.default_clearance_team,
                                                  role: 'approver',
-                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id, @overturned_sar.id])
     @bu_private   = find_or_create_business_unit(parent: @dir_private,
                                                  name: 'Private Office',
                                                  code: Settings.private_office_team_code,
                                                  role: 'approver',
-                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id, @overturned_sar.id])
     @bu_press     = find_or_create_business_unit(parent: @dir_press,
                                                  name: 'Press Office',
                                                  code: Settings.press_office_team_code,
                                                  role: 'approver',
-                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id, @overturned_sar.id])
     @bu_laa       = find_or_create_business_unit(parent: @dir_laa,
                                                  name: 'Legal Aid Agency (LAA)',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id, @overturned_sar.id])
     @bu_hr        = find_or_create_business_unit(parent: @dir_hr,
                                                  name: 'MoJ Human Resources (MoJ HR)',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id, @overturned_sar.id])
     @bu_hmctsne   = find_or_create_business_unit(parent: @dir_rsus,
                                                  name: 'North East Regional Support Unit (NE RSU)',
                                                  role: 'responder',
@@ -80,27 +82,27 @@ class DevTeamSeeder
     @bu_prop      = find_or_create_business_unit(parent: @dir_prop,
                                                  name: 'HMCTS Property Directorate',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id, @overturned_sar.id])
     @bu_utiac     = find_or_create_business_unit(parent: @dir_trib,
                                                  name: 'Upper Tribunal Asylum Chamber',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id, @overturned_sar.id])
     @bu_utl       = find_or_create_business_unit(parent: @dir_trib,
                                                  name: 'Upper Tribunal Lands (UT Lands)',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @overturned_sar.id])
     @bu_uttc      = find_or_create_business_unit(parent: @dir_trib,
                                                  name: 'Upper Tibunal - Tax & Chancery Chamber',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @overturned_sar.id])
     @bu_candi     = find_or_create_business_unit(parent: @dir_candi,
                                                  name: 'Communications and Information',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id])
+                                                 correspondence_type_ids: [@foi.id, @sar.id, @ico.id, @overturned_sar.id])
     @bu_branston  = find_or_create_business_unit(parent: @dir_dacu,
                                                  name: 'Branston Registry',
                                                  role: 'responder',
-                                                 correspondence_type_ids: [@offender.id],
+                                                 correspondence_type_ids: [@offender.id, @offender_complaint.id],
                                                  code: 'BRANSTON')
   end
   #rubocop:enable Metrics/MethodLength
@@ -207,23 +209,6 @@ class DevTeamSeeder
   def add_allocatable
     [ @bu_laa, @bu_hmctsne, @bu_hr ].each do |business_unit|
       TeamProperty.find_or_create_by!(team_id: business_unit.id, key: 'can_allocate', value: 'FOI')
-    end
-  end
-
-  def clear_database
-    tables = %w(
-      assignments
-      case_attachments
-      case_transitions
-      cases
-      cases_exemptions
-      team_properties
-      teams
-      teams_users_roles
-      users
-    )
-    tables.each do |table|
-      ActiveRecord::Base.connection.execute("DELETE FROM #{table}")
     end
   end
 
