@@ -491,6 +491,7 @@ en:
         request_type:
           nomis_records: NOMIS records
           nomis_contact_logs: NOMIS contact logs
+          nomis_other: NOMIS other
           cctv_and_bwcf: CCTV & BWCF
           telephone_pin_logs: Telephone PIN logs
           mappa: MAPPA
