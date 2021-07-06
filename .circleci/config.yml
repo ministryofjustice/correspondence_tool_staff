@@ -157,8 +157,8 @@ references:
     run:
       name: Upload the test coverage into codeclimate
       command: |
-        ./tmp/cc-test-reporter format-coverage -t simplecov -o ./tmp/codeclimate.app.json coverage/app/.resultset.json
-        ./tmp/cc-test-reporter sum-coverage ./codeclimate.*.json -p 2 -o tmp/codeclimate.total.json
+        ./tmp/cc-test-reporter format-coverage -t simplecov -o "./tmp/coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+        ./tmp/cc-test-reporter sum-coverage ./tmp/coverage/codeclimate.*.json -p 2 -o tmp/codeclimate.total.json
         ./tmp/cc-test-reporter upload-coverage -i tmp/codeclimate.total.json
 
   configure_aws_profile: &configure_aws_profile
