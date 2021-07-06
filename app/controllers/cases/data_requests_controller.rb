@@ -93,6 +93,7 @@ module Cases
         :date_from_dd, :date_from_mm, :date_from_yyyy,
         :date_to_dd, :date_to_mm, :date_to_yyyy,
         :cached_num_pages,
+        :cached_date_received_dd, :cached_date_received_mm, :cached_date_received_yyyy,
         :completed
       )
     end
