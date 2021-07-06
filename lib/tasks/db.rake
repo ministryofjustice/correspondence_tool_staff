@@ -49,7 +49,7 @@ namespace :db do
       cases_delivery_methods
       requester_type
       request_types_enum
-      request_types_enum
+      request_types
       search_query_type
       state
       team_roles
