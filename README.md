@@ -1,5 +1,4 @@
 # Correspondence Tools - Staff
-[![Build Status](https://semaphoreci.com/api/v1/correspondence-tool/correspondence_tool_staff-4/branches/master/badge.svg)](https://semaphoreci.com/correspondence-tool/correspondence_tool_staff-4)
 [![Code Climate](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/gpa.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
 [![Test Coverage](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/coverage.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/coverage)
 [![Issue Count](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/issue_count.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
