@@ -118,7 +118,8 @@ references:
       name: Install dependencies
       command: |
         if [ "${CIRCLE_NODE_INDEX}" == "0" ]; then
-          bundle check --local path vendor/bundle || bundle install --local path vendor/bundle && bundle clean
+          bundle config set --local path 'vendor/bundle'
+          bundle check vendor/bundle || bundle install vendor/bundle && bundle clean
         fi
 
   save_cache: &save_cache
