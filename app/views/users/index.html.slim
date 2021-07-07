@@ -2,8 +2,8 @@
   - t('page_title.admin_user_list')
 
 form data-remote="true" action="/users"
-  input type="text" name="q" id="popup-search" placeholder="Search for a user"
-  input type="submit" value="Search"
+  input#popup-search type="text" name="q" 
+  input#popup-search-button type="submit" value="Search"
 
 - @users.each do |user|
   hr
