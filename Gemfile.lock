@@ -497,7 +497,7 @@ GEM
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.4)
     rubyntlm (0.6.3)
-    rubyzip (2.3.0)
+    rubyzip (2.3.2)
     sablon (0.3.2)
       nokogiri (>= 1.8.5)
       rubyzip (>= 1.1.1)
