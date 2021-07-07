@@ -61,7 +61,8 @@ javascript:
     
     $remote_content.load("/users", function() {
       $dialog.dialog( "open" );
-      $('#popup-search').focus();
+      setTimeout("$('#popup-search-button').focus();",1);
+      setTimeout("$('#popup-search').focus();",2);
     });
     $('#dialog-content').parent().attr('aria-modal','true');
   });
