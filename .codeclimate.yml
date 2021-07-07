@@ -18,23 +18,8 @@ plugins:
   fixme:
     enabled: true
   rubocop:
-    enabled: false
-    channel: "rubocop-0-93"
-ratings:
-  paths:
-  - Gemfile.lock
-  - "**.erb"
-  - "**.haml"
-  - "**.rb"
-  - "**.rhtml"
-  - "**.slim"
-  - "**.coffee"
-  - "**.inc"
-  - "**.js"
-  - "**.jsx"
-  - "**.module"
-  - "**.php"
-  - "**.py"
+    enabled: true
+    channel: "rubocop-0-92"
 exclude_paths:
 - config/
 - db/
