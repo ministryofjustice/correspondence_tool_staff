@@ -40,7 +40,6 @@ gem 'logstash-event'
 gem 'lograge'
 gem 'loofah', '>= 2.3.1'
 gem 'mechanize', '>= 2.7.7'
-gem 'mimetype-fu', '~> 0.1.2'
 gem 'paper_trail', '~> 12.0'
 gem 'pg', '~> 1.2'
 gem 'pg_search', '~> 2.3.5'
@@ -101,8 +100,8 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.9'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 0.93.1', require: false
-  gem 'rubocop-rspec', '~> 1.44.0', require: false
+  gem 'rubocop', '~> 1.18.0', require: false
+  gem 'rubocop-rspec', '~> 2.4.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
