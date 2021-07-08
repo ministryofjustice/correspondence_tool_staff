@@ -369,7 +369,7 @@ RSpec.describe User, type: :model do
     context 'long non-blackilsted password' do
       it 'does not error and changes the encrypted password' do
       original_encrypted_password = user.encrypted_password
-        user.password = '102pettyfrance'
+        user.password = SecureRandom.random_number(36**13).to_s(36)
         user.save
         expect(user).to be_valid
         expect(user.encrypted_password).not_to eq original_encrypted_password

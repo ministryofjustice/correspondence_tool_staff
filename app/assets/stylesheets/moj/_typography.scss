@@ -15,10 +15,15 @@
 }
 
 .error-summary,.notice-summary {
-  h1{
+  h2 {
     margin-top: 0;
     margin-bottom: 0;
   }
+}
+
+.error-summary {
+  margin-top: 0;
+  margin-bottom: 50px;
 }
 
 .notice-summary{

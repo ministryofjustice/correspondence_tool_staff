@@ -190,7 +190,7 @@ namespace :db do
     def confirm_delete_dumps_file
       print "If you are still certain that you need to delete the files, please confirm Y/n?"
       input = STDIN.gets.chomp
-      exit unless(input.start_with?('Y')) || input.nil?
+      exit unless input.start_with?('Y') || input.nil?
     end
 
     def get_first_pod(working_env)
@@ -255,7 +255,7 @@ namespace :db do
     def confirm_data_restore
       print "If you are still certain that you need to restore the data from dump files please confirm Y/n "
       input = STDIN.gets.chomp
-      exit unless(input.start_with?('Y')) || input.nil?
+      exit unless input.start_with?('Y') || input.nil?
     end
 
   end

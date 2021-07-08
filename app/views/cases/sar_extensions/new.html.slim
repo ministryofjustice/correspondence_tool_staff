@@ -1,11 +1,6 @@
 - content_for :page_title do
   = t('page_title.extend_sar_deadline', case_number: @case.number)
 
-
-= GovukElementsErrorsHelper.error_summary @case.object,
-    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
-    ""
-
 - content_for :heading
   = t('common.case.extend_sar_deadline')
 
@@ -15,7 +10,10 @@
   = @case.number
 
 = render partial: 'layouts/header'
-br
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+    "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
 
 div.action-copy
   p

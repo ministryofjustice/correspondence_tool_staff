@@ -7,6 +7,9 @@
         span.page-heading--primary
           = yield :heading
 
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+        
 div class="case-#{@correspondence_type_key}"
   / NOTE: this uses the step mechanism to change the number_final_pages
   / this does not appear in the list of steps for new cast creation as found in
