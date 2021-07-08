@@ -1,4 +1,4 @@
-                = t :"cases.data_requests.index.request_type.#{data_request.request_type}"
+                = t :"helpers.label.data_request.request_type.#{data_request.request_type}"
                 - if data_request.other? && data_request.request_type_note.present?
                   = ": #{data_request.request_type_note}"
                 - if data_request.request_dates_either_present?
