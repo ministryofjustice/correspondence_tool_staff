@@ -21,7 +21,6 @@ references:
           PG_PASSWORD: ""
           PGUSER: postgres
           POSTGRES_DB: correspondence_platform_test
-          CC_TEST_REPORTER_ID: a386933e6d978aa2b47937e85028be665c15fac925d8c854a75d489b8507e39a
 
       - image: circleci/postgres:12.3-postgis
         environment:
