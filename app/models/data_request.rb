@@ -29,7 +29,7 @@ class DataRequest < ApplicationRecord
     telephone_pin_logs: 'telephone_pin_logs',
     probation_archive: 'probation_archive',
     mappa: 'mappa',
-    pdp: 'PDPTdd',
+    pdp: 'pdp',
     court: 'court',
     other: 'other'
   }
