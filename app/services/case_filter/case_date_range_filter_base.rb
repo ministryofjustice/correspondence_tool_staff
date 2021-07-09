@@ -70,7 +70,9 @@ module CaseFilter
       if presented?
         from_date = @query.send(self.class.date_from_field)
         to_date = @query.send(self.class.date_to_field)
-        @records.where("#{self.class.date_field_name} BETWEEN ? AND ?", from_date, to_date)
+        date_field_name = ActiveRecord::Base.sanitize_sql(self.class.date_field_name) 
+        sql = "#{date_field_name} BETWEEN ? AND ?"
+        @records.where([sql, from_date, to_date])
       else
         @records
       end
