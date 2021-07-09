@@ -42,14 +42,15 @@ class Letter
   def address
     case @letter_template.template_type
     when "dispatch"
-      values.recipient_address
+      format_address(values.recipient_address)
     when "acknowledgement"
       format_address(values.requester_address)
     end
   end
 
   def letter_address
-    @letter_template&.render(@case, self, 'letter_address')
+    letter_address = @letter_template&.render(@case, self, 'letter_address')
+    format_letter_address(letter_address)
   end
 
   def company_name
@@ -61,6 +62,14 @@ class Letter
   def format_address(address)
     if address.include?(",")
       address.split(',').map{|word| word.strip }.join("\n") 
+    else
+      address
+    end
+  end
+
+  def format_letter_address(address)
+    if address.include?(",")
+      address.split(',').map{|word| word.strip }.join("<br>") 
     else
       address
     end
