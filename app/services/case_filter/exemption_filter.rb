@@ -85,8 +85,9 @@ module CaseFilter
     private
 
     def ids_of_cases_with_all_exemptions
-      sql = "select case_id from cases_exemptions where exemption_id in (#{@exemption_ids.join(',')}) group by case_id having count(*) >= #{@exemption_ids.size}"
-      CaseExemption.find_by_sql(sql).map(&:case_id)
+      sql = "select case_id from cases_exemptions where exemption_id in (?) group by case_id having count(*) >= ?"
+
+      CaseExemption.find_by_sql([sql, @exemption_ids, @exemption_ids.count]).map(&:case_id)
     end
   end
 end
