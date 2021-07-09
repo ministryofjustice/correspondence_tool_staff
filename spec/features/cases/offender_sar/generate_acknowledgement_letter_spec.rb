@@ -25,8 +25,8 @@ feature 'Generate an acknowledgement letter by a responder' do
       expect(cases_show_page).to have_content "Send acknowledgement letter"
       click_on "Send acknowledgement letter"
 
+      sleep(5)
       expect(cases_new_letter_page).to be_displayed
-
       cases_new_letter_page.new_letter.first_option.click
       click_on "Continue"
 
