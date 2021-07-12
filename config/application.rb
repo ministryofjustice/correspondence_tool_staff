@@ -24,6 +24,8 @@ module CorrespondencePlatform
     # -- all .rb files in that directory are automatically loaded.
 
     config.ga_tracking_id = (ENV['GA_TRACKING_ID'] || '')
+    config.metabase_secret_key = ENV['METABASE_SECRET_KEY']
+    config.metabase_site_url = ENV['METABASE_SITE_URL']
 
     ActionView::Base.default_form_builder = GovukElementsFormBuilder::FormBuilder
 

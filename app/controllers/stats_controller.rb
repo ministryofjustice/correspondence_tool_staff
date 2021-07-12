@@ -1,4 +1,5 @@
 require 'csv'
+require 'jwt'
 
 class StatsController < ApplicationController
   # @note (Mohammed Seedat): Interim solution to allow 'Closed Cases'
@@ -9,7 +10,28 @@ class StatsController < ApplicationController
 
   SPREADSHEET_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'.freeze
 
-  def index
+  def index    
+    payload = {
+      :resource => {:question => 26},
+      :params => {
+        
+      },
+      :exp => Time.now.to_i + (60 * 10) # 10 minute expiration
+    }
+    token = JWT.encode payload, Rails.configuration.metabase_secret_key
+    @iframe_url = Rails.configuration.metabase_site_url + "/embed/question/" + token + "#bordered=true&titled=true"
+
+
+    payload = {
+      :resource => {:question => 2},
+      :params => {
+        
+      },
+      :exp => Time.now.to_i + (60 * 10) # 10 minute expiration
+    }
+    token = JWT.encode payload, Rails.configuration.metabase_secret_key
+    @iframe_url1 = Rails.configuration.metabase_site_url + "/embed/question/" + token + "#bordered=true&titled=true"
+
     @reports = Pundit.policy_scope(current_user, ReportType.where(standard_report: true).all)
   end
 

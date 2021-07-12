@@ -8,6 +8,7 @@ module Searchable
 
     pg_search_scope :search,
                     against: searchable_fields_and_ranks,
+                    order_within_rank: "cases.created_at DESC",
                     using: { tsearch: {
                                any_word: false,
                                dictionary: 'english',
