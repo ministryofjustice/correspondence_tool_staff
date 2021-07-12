@@ -60,6 +60,7 @@ gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
 gem 'sidekiq', '~> 6.2.1'
+gem 'jwt'
 
 gem 'table_print'
 # gem 'thor-rails'

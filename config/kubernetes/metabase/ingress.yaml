@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: track-a-query-metabase-ingress
+  namespace: track-a-query-metabase
+  annotations:
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location = /.well-known/security.txt {
+        return 301 https://raw.githubusercontent.com/ministryofjustice/security-guidance/main/contact/vulnerability-disclosure-security.txt;
+      }
+      location ~* \.(php|cgi)$ {
+        deny all; access_log off;
+      }
+spec:
+  tls:
+  - hosts:
+    - track-a-query-metabase.apps.live-1.cloud-platform.service.justice.gov.uk
+  rules:
+  - host: track-a-query-metabase.apps.live-1.cloud-platform.service.justice.gov.uk
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: track-a-query-metabase-service
+          servicePort: 3000
+

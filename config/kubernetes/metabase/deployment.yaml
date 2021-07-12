@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: track-a-query-metabase-deployment
+  namespace: track-a-query-metabase
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: track-a-query-metabase-webapp
+  template:
+    metadata:
+      labels:
+        app: track-a-query-metabase-webapp
+        tier: frontend
+    spec:
+      containers:
+        - name: webapp
+          image: metabase/metabase:latest
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: MB_DB_TYPE
+            value: "postgres"
+          - name: MB_DB_CONNECTION_URI
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-metabase-rds-output
+                key: url
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 120
+            timeoutSeconds: 5
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 30
+            timeoutSeconds: 3
+            periodSeconds: 5
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+          

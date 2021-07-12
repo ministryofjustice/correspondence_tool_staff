@@ -15,6 +15,9 @@
 
 hr
 
+= raw '<iframe src="' + @iframe_url + '" frameborder="0" width="800" height="600" allowtransparency></iframe>'
+= raw '<iframe src="' + @iframe_url1 + '" frameborder="0" width="800" height="600" allowtransparency></iframe>'
+
 = render partial: 'stats/report', locals: {                                    \
     correspondence_type: 'Standard reports',                               \
     reports: @reports,                                                   \

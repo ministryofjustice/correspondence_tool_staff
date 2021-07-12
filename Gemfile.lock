@@ -658,6 +658,7 @@ DEPENDENCIES
   jquery-rails (~> 4.4.0)
   jquery-ui-rails
   jsonb_accessor (~> 1.3.2)
+  jwt
   kaminari
   launchy
   libreconv (~> 0.9.5)
