@@ -50,14 +50,11 @@ class Letter
 
   def letter_address
     letter_address = @letter_template&.render(@case, self, 'letter_address')
-    format_letter_address(letter_address)
   end
 
   def company_name
     values.third_party_company_name if values.third_party_company_name.present?
   end
-
-  private
 
   def format_address(address)
     if address.include?(",")
@@ -66,6 +63,8 @@ class Letter
       address
     end
   end
+
+  private
 
   def format_letter_address(address)
     if address.include?(",")
