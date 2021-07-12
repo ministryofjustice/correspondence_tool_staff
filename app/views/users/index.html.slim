@@ -1,6 +1,3 @@
-- content_for :page_title do
-  - t('page_title.admin_user_list')
-
 form data-remote="true" action="/users"
   input#popup-search type="text" name="q" 
   input#popup-search-button type="submit" value="Search"
@@ -11,4 +8,5 @@ form data-remote="true" action="/users"
     = user.full_name
     = user.email
     .action
-      = link_to "Use this user", edit_user_path(user)
+      button type="button" onclick="fill_in_address('28 GT road')"
+        =  "Use this user"
