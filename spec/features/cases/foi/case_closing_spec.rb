@@ -112,7 +112,7 @@ feature 'Closing a case' do
       expect(cases_show_page).to have_content("You've closed this case")
       expect(cases_show_page.actions).to have_content("Assign to another team")
       expect(cases_show_page.actions).to have_content("Delete case")
-
+      sleep(1)
       show_page = cases_show_page.case_details.response_details
       expect(show_page.date_responded.data.text)
           .to eq 2.business_days.ago.strftime(Settings.default_date_format)
