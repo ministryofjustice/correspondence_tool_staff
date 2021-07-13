@@ -7,6 +7,18 @@
 }
 // End Customisations to Gov UK Elements
 
+.list-lines {
+  margin: $gutter-half 0 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+    margin: $gutter-half 0 0;
+    padding: $gutter-half 0 0;
+    border-top: 1px solid $grey-3;
+
+  }
+}
 
 .table-caption {
   font-size: 120%;
