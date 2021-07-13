@@ -49,7 +49,7 @@ class Letter
   end
 
   def letter_address
-    letter_address = @letter_template&.render(@case, self, 'letter_address')
+    @letter_template&.render(@case, self, 'letter_address')
   end
 
   def company_name
