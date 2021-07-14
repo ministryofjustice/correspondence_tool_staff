@@ -81,7 +81,7 @@ group :test do
   gem 'shoulda-matchers', '~> 4.3'
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 4.5'
-  gem 'simplecov', '~> 0.17.1'
+  gem 'simplecov', '~> 0.21.2'
 end
 
 group :development, :test do
