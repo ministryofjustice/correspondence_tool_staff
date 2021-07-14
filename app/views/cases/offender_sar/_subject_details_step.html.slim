@@ -62,8 +62,9 @@ javascript:
     
     $remote_content.load("/users", function() {
       $dialog.dialog( "open" );
-      setTimeout("$('#popup-search-button').focus();",1);
-      setTimeout("$('#popup-search').focus();",2);
+      setTimeout("$('#popup-search-button').focus();",1); // fix voiceover focus issue
+      setTimeout("$('#popup-search').focus();",2); // fix voiceover focus issue
+      console.log('initial load');
     });
     $('#dialog-content').parent().attr('aria-modal','true');
     $('#dialog-content').parent().removeAttr('aria-describedby','');
@@ -75,7 +76,12 @@ javascript:
     
   });*/
   function fill_in_address(address){
+    console.log('fill_in_address');
     $dialog.dialog('close');
     $('#offender_sar_subject_address').val(address);
+  }
+  function search_results_loaded() { // To refocus on Search for NVDA after popup re-renders
+    console.log('results loaded');
+    $('#popup-search-button').focus(); // fix NVDA focus issue after search
   }
   
