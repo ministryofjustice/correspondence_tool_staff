@@ -12,11 +12,13 @@
       = t('admin.cases.index.subheadings.number_of_cases_created_over_past_week')
 
     table
-      tr
-        th
-          = t('admin.cases.index.date')
-        th
-          = t('admin.cases.index.no_of_cases')
+      thead
+        tr
+          th
+            = t('admin.cases.index.date')
+          th
+            = t('admin.cases.index.no_of_cases')
+      tbody
       - @dates.each do |date, count|
         tr
           td = date.strftime('%a %d %b %Y')
@@ -36,12 +38,6 @@
       = t('admin.cases.index.subheadings.existing_cases')
 
     table.report.table-font-xsmall
-      colgroup
-        col
-        col
-        col
-        col
-
       thead
         th scope='col'
           = t('.id')
