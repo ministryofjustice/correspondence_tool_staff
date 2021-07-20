@@ -63,14 +63,4 @@ class Letter
       address
     end
   end
-
-  private
-
-  def format_letter_address(address)
-    if address.include?(",")
-      address.split(',').map{|word| word.strip }.join("<br>") 
-    else
-      address
-    end
-  end
 end
