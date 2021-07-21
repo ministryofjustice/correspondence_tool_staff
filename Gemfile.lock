@@ -438,7 +438,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.19.0, < 2.0)
     rainbow (3.0.0)
-    rake (13.0.3)
+    rake (13.0.6)
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
@@ -551,7 +551,7 @@ GEM
     slim (4.1.0)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
-    slim-rails (3.2.0)
+    slim-rails (3.3.0)
       actionpack (>= 3.1)
       railties (>= 3.1)
       slim (>= 3.0, < 5.0)
@@ -696,7 +696,7 @@ DEPENDENCIES
   sidekiq (~> 6.2.1)
   simplecov (~> 0.17.1)
   site_prism (= 3.1)
-  slim-rails (~> 3.2)
+  slim-rails (~> 3.3)
   spring
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.1)
