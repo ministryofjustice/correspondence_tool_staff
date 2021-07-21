@@ -1,6 +1,6 @@
 h2.heading-medium
   = t('teams.browse_by_business_group')
-- console
+
 ul.business-groups.list
   - BusinessGroup.all.order(:name).each do |bg|
     li.business-group
