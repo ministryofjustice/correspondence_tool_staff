@@ -49,27 +49,16 @@ class Letter
   end
 
   def letter_address
-    letter_address = @letter_template&.render(@case, self, 'letter_address')
-    format_letter_address(letter_address)
+    @letter_template&.render(@case, self, 'letter_address')
   end
 
   def company_name
     values.third_party_company_name if values.third_party_company_name.present?
   end
 
-  private
-
   def format_address(address)
     if address.include?(",")
       address.split(',').map{|word| word.strip }.join("\n") 
-    else
-      address
-    end
-  end
-
-  def format_letter_address(address)
-    if address.include?(",")
-      address.split(',').map{|word| word.strip }.join("<br>") 
     else
       address
     end

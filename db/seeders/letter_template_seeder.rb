@@ -120,7 +120,7 @@ class LetterTemplateSeeder
                 )
     rec.update!(letter_address: <<~EOF
                   EO Custody Office
-                  <br><%= values.subject_address.gsub("\n", "<br>").html_safe %>
+                  <br><%= letter.format_address(values.subject_address).gsub("\n", "<br>").html_safe %>
                 EOF
                 )
 
