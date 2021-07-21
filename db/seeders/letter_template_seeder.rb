@@ -7,7 +7,7 @@ class LetterTemplateSeeder
         <%= letter.name %><% if values.prison_number.present? %> - <%= values.first_prison_number %><% end %>
     EOF
     solictor_receiver = <<~EOF
-      <% if letter.name.present? %><%= letter.name %><br><% end %><% if values.third_party_company_name.present? %><%= values.third_party_company_name %><% end %>
+      <% if letter.name.present? %><%= letter.name %><% end %><% if values.third_party_company_name.present? %><%= values.third_party_company_name %><% end %>
     EOF
     address = <<~EOF
       <%= letter.address.gsub("\n", "<br>").html_safe %>

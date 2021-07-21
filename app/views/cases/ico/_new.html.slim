@@ -1,3 +1,6 @@
+- content_for :page_title do
+  = t("page_title.create_case_page.ico")
+
 = render partial: 'layouts/header'
 
 = GovukElementsErrorsHelper.error_summary @case.object,
