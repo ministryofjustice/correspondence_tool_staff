@@ -42,7 +42,7 @@ class Letter
   def address
     case @letter_template.template_type
     when "dispatch"
-      values.recipient_address
+      format_address(values.recipient_address)
     when "acknowledgement"
       format_address(values.requester_address)
     end
@@ -55,8 +55,6 @@ class Letter
   def company_name
     values.third_party_company_name if values.third_party_company_name.present?
   end
-
-  private
 
   def format_address(address)
     if address.include?(",")
