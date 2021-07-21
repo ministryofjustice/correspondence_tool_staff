@@ -84,7 +84,7 @@ RSpec.describe UsersController, type: :controller do
                                .and_return(7271817273818812)
       post :create, params: params
       user = User.last
-      expect(user.valid_password?('1zln6qk2ncs')).to be true
+      expect(user.valid_password?(SecureRandom.random_number(36**13).to_s(36))).to be true
     end
 
     it 'adds the user to the specified team' do

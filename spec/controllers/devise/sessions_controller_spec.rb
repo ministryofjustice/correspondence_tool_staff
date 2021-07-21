@@ -5,7 +5,7 @@ describe Devise::SessionsController do
   describe 'signing in' do
 
     let(:email)                 { 'abc@moj.com' }
-    let(:password)              { '102PettyFrance'  }
+    let(:password)              { SecureRandom.random_number(36**13).to_s(36)  }
     let(:bad_pass)              { 'xxx' }
     let(:user)                  { create :user, email: email, password: password }
     let(:bad_user)              { create :user, email: email, password: password, failed_attempts: 3 }

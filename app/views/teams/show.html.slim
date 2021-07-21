@@ -1,6 +1,3 @@
-= GovukElementsErrorsHelper.error_summary @team,
-        "#{pluralize(@team.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 - content_for :heading
   = @team.name
 
@@ -10,6 +7,9 @@
   = @team.pretty_type
 
 = render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @team,
+        "#{pluralize(@team.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 - if @team.is_a?(BusinessUnit)
   = render partial: 'business_unit_detail', locals: {team: @team}

@@ -3,6 +3,9 @@
 
 = render partial: 'layouts/header'
 
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+        
 = form_for @case, url: url, as: :offender_sar_complaint do |f|
 
   .form-group

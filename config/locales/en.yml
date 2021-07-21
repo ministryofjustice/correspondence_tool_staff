@@ -284,8 +284,10 @@ en:
       remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
     case/sar/offender_policy:
       <<: *case_policy
+      can_record_data_request?: You cannot edit data request once the case has been closed.
     case/sar/offender_complaint_policy:
       <<: *case_policy
+      can_record_data_request?: You cannot edit data request once the case has been closed.
     team_policy:
       index?: 'You are not authorised to view a list of teams'
       show?: 'You are not authorised to view this team'
@@ -389,8 +391,6 @@ en:
           <div class="heading-medium">Where the information should be sent</div>
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
-      offender_sar:
-        third_party: Please choose yes or no
       offender_sar_complaint:
         original_case_number: Is this the correct case?
         complaint_type: What sort of complaint is this?
@@ -491,6 +491,18 @@ en:
         request_type:
           nomis_records: NOMIS records
           nomis_contact_logs: NOMIS contact logs
+          nomis_other: NOMIS other
+          cctv_and_bwcf: CCTV & BWCF
+          court: Court
+          telephone_pin_logs: Telephone PIN logs
+          telephone_recordings: Telephone recordings
+          mappa: MAPPA
+          pdp: PDP
+          all_prison_records: All prison records
+          security_records: Security records
+          probation_records: Probation records
+          probation_archive: Probation archive
+          other: Other
         request_type_note: Please provide more details
         cached_num_pages: Number of pages received
         completed: "Yes, all data received"
@@ -590,7 +602,6 @@ en:
           probation_service_user: "Probation service user"
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
-        third_party_name: "Full name of the representative"
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
@@ -633,7 +644,6 @@ en:
           probation_service_user: "Probation service user"
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
-        third_party_name: "Full name of the representative"
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
@@ -862,7 +872,6 @@ en:
         Case::SAR::Standard: SAR
         Case::ICO::FOI: ICO FOI Appeal
         Case::ICO::SAR: ICO SAR Appeal
-        Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
         Case::OverturnedICO::FOI: Overturned ICO appeal for FOI
       new:
         create: Create
@@ -1155,14 +1164,6 @@ en:
       index:
         heading: Data requested
         none: No data requests recorded
-        request_type:
-          all_prison_records: All prison records
-          security_records: Security records
-          nomis_records: NOMIS records
-          nomis_contact_logs: NOMIS contact logs
-          probation_records: Probation records
-          prison_and_probation_records: Prison and probation records
-          other: Other
       new:
         heading: Record data request
         date_from_copy: Request all data held from this date onward

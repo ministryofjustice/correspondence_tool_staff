@@ -9,6 +9,8 @@ h1.page-heading
   span.page-heading--primary
     = "Send #{@type} letter"
 
+= render partial: 'layouts/flashes' unless flash.empty?
+
 = form_for @letter, url: case_letters_path(@case.id, @type), method: :get do |f|
   = f.radio_button_fieldset :letter_template_id, choices: @letter_templates, text_method: :name, value_method: :id
   = f.submit "Continue", {class: 'button'}
