@@ -211,7 +211,11 @@ module Cases
     end
   
     def back_link_url
-      "#{@case.case_route_path}/#{@case.get_previous_step}#{build_url_params_from_flags}"
+      if @case.get_previous_step.nil?        
+        new_case_path
+      else
+        "#{@case.case_route_path}/#{@case.get_previous_step}#{build_url_params_from_flags}"
+      end
     end
 
   end
