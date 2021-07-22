@@ -340,12 +340,6 @@ feature 'offender sar complaint case editing by a manager' do
       click_on 'Change'
     end
 
-    cases_edit_offender_sar_complaint_type_page.edit_complaint_type('ico', {})
-
-    click_on "Continue"
-    expect(cases_edit_offender_sar_complaint_page).to be_displayed
-    expect(cases_edit_offender_sar_complaint_type_page).to have_content("ICO contact name can't be blank")
-
     cases_edit_offender_sar_complaint_type_page.edit_complaint_type(
       'ico',
       complaint_type_update_options
