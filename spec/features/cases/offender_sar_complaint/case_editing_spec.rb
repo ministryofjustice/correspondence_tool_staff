@@ -26,6 +26,14 @@ feature 'offender sar complaint case editing by a manager' do
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
     cases_show_page.offender_sar_subject_details.change_link.click
     expect(cases_edit_offender_sar_complaint_subject_details_page).to be_displayed
+
+    cases_edit_offender_sar_complaint_subject_details_page.edit_name ''
+    click_on "Continue"
+    expect(cases_edit_offender_sar_complaint_page).to be_displayed
+    expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("Full name of data subject")
+    expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("What is the location of the data subject?")
+    expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("Subject full name can't be blank")
+
     cases_edit_offender_sar_complaint_subject_details_page.edit_name 'Bob Hope'
     click_on "Continue"
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
@@ -111,7 +119,7 @@ feature 'offender sar complaint case editing by a manager' do
     then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(new_external_deadline)
   end
 
-  scenario 'user can edit the the complaint type and and sub type' do
+  scenario 'user can edit the the complaint type and and sub type', js: true do
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
     when_i_progress_the_case_status_past_the_initial_state
     when_i_update_the_complaint_type_to_ico 
@@ -331,6 +339,12 @@ feature 'offender sar complaint case editing by a manager' do
     within '.section-complaint-type' do
       click_on 'Change'
     end
+
+    cases_edit_offender_sar_complaint_type_page.edit_complaint_type('ico', {})
+
+    click_on "Continue"
+    expect(cases_edit_offender_sar_complaint_page).to be_displayed
+    expect(cases_edit_offender_sar_complaint_type_page).to have_content("ICO contact name can't be blank")
 
     cases_edit_offender_sar_complaint_type_page.edit_complaint_type(
       'ico',
