@@ -119,7 +119,7 @@ feature 'offender sar complaint case editing by a manager' do
     then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(new_external_deadline)
   end
 
-  scenario 'user can edit the the complaint type and and sub type', js: true do
+  scenario 'user can edit the the complaint type and and sub type' do
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
     when_i_progress_the_case_status_past_the_initial_state
     when_i_update_the_complaint_type_to_ico 
