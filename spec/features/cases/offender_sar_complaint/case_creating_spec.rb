@@ -153,6 +153,12 @@ feature 'offender sar complaint case creation by a manager', js: true do
     then_expect_back_to_offender_sar_page_again
   end
 
+  scenario '10 back to case choice page when creating complaint from choice page ' do
+    when_i_navigate_to_offender_sar_complaint_subject_page
+    and_click_back_link
+    expect(cases_new_page).to be_displayed
+  end
+
   context 'when complaint is an ICO complaint' do
     let(:complaint_type) { 'ico_complaint' }
 
