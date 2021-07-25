@@ -45,16 +45,23 @@ CREATE TYPE public.cases_delivery_methods AS ENUM (
 
 
 --
--- Name: request_types_enum; Type: TYPE; Schema: public; Owner: -
+-- Name: request_types; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.request_types_enum AS ENUM (
+CREATE TYPE public.request_types AS ENUM (
     'all_prison_records',
     'security_records',
     'nomis_records',
+    'nomis_other',
     'nomis_contact_logs',
     'probation_records',
-    'prison_and_probation_records',
+    'cctv_and_bwcf',
+    'telephone_recordings',
+    'telephone_pin_logs',
+    'probation_archive',
+    'mappa',
+    'pdp',
+    'court',
     'other'
 );
 
@@ -524,7 +531,7 @@ CREATE TABLE public.data_requests (
     case_id integer NOT NULL,
     user_id integer NOT NULL,
     location character varying NOT NULL,
-    request_type public.request_types_enum NOT NULL,
+    request_type public.request_types NOT NULL,
     date_requested date NOT NULL,
     cached_date_received date,
     cached_num_pages integer DEFAULT 0 NOT NULL,
@@ -599,7 +606,8 @@ CREATE TABLE public.letter_templates (
     template_type character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    letter_address character varying DEFAULT ''::character varying
+    letter_address character varying DEFAULT ''::character varying,
+    base_template_file_ref character varying DEFAULT 'ims001.docx'::character varying
 );
 
 
@@ -651,6 +659,284 @@ CREATE SEQUENCE public.linked_cases_id_seq
 --
 
 ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
+
+
+--
+-- Name: warehouse_case_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.warehouse_case_reports (
+    case_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    creator_id integer,
+    responding_team_id integer,
+    responder_id integer,
+    casework_officer_user_id integer,
+    business_group_id integer,
+    directorate_id integer,
+    director_general_name_property_id integer,
+    director_name_property_id integer,
+    deputy_director_name_property_id integer,
+    number character varying,
+    case_type character varying,
+    current_state character varying,
+    responding_team character varying,
+    responder character varying,
+    date_received date,
+    internal_deadline date,
+    external_deadline date,
+    date_responded date,
+    date_compliant_draft_uploaded date,
+    trigger character varying,
+    name character varying,
+    requester_type character varying,
+    message character varying,
+    info_held character varying,
+    outcome character varying,
+    refusal_reason character varying,
+    exemptions character varying,
+    postal_address character varying,
+    email character varying,
+    appeal_outcome character varying,
+    third_party character varying,
+    reply_method character varying,
+    sar_subject_type character varying,
+    sar_subject_full_name character varying,
+    business_unit_responsible_for_late_response character varying,
+    extended character varying,
+    extension_count integer,
+    deletion_reason character varying,
+    casework_officer character varying,
+    created_by character varying,
+    date_created timestamp without time zone,
+    business_group character varying,
+    directorate_name character varying,
+    director_general_name character varying,
+    director_name character varying,
+    deputy_director_name character varying,
+    draft_in_time character varying,
+    in_target character varying,
+    number_of_days_late integer,
+    info_held_status_id integer,
+    refusal_reason_id integer,
+    outcome_id integer,
+    appeal_outcome_id integer,
+    number_of_days_taken integer,
+    number_of_exempt_pages integer,
+    number_of_final_pages integer,
+    third_party_company_name character varying,
+    number_of_days_taken_after_extension integer,
+    complaint_subtype character varying,
+    priority character varying,
+    total_cost numeric(10,2),
+    settlement_cost numeric(10,2),
+    user_dealing_with_vetting character varying,
+    user_id_dealing_with_vetting integer,
+    number_of_days_for_vetting integer
+);
+
+
+--
+-- Name: warehouse_case_report_for_offender_sar_related; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.warehouse_case_report_for_offender_sar_related AS
+ SELECT warehouse_case_reports.case_id,
+    warehouse_case_reports.created_at,
+    warehouse_case_reports.updated_at,
+    warehouse_case_reports.creator_id,
+    warehouse_case_reports.responding_team_id,
+    warehouse_case_reports.responder_id,
+    warehouse_case_reports.number,
+    warehouse_case_reports.case_type,
+    warehouse_case_reports.current_state,
+    warehouse_case_reports.responding_team,
+    warehouse_case_reports.responder,
+    warehouse_case_reports.date_received,
+    warehouse_case_reports.external_deadline,
+    warehouse_case_reports.date_responded,
+    warehouse_case_reports.name,
+    warehouse_case_reports.message,
+    warehouse_case_reports.outcome,
+    warehouse_case_reports.postal_address,
+    warehouse_case_reports.email,
+    warehouse_case_reports.appeal_outcome,
+    warehouse_case_reports.third_party,
+    warehouse_case_reports.sar_subject_type,
+    warehouse_case_reports.sar_subject_full_name,
+    warehouse_case_reports.deletion_reason,
+    warehouse_case_reports.created_by,
+    warehouse_case_reports.in_target,
+    warehouse_case_reports.number_of_days_late,
+    warehouse_case_reports.outcome_id,
+    warehouse_case_reports.appeal_outcome_id,
+    warehouse_case_reports.number_of_days_taken,
+    warehouse_case_reports.number_of_exempt_pages,
+    warehouse_case_reports.number_of_final_pages,
+    warehouse_case_reports.third_party_company_name,
+    warehouse_case_reports.complaint_subtype,
+    warehouse_case_reports.priority,
+    warehouse_case_reports.total_cost,
+    warehouse_case_reports.settlement_cost,
+        CASE
+            WHEN (warehouse_case_reports.third_party_company_name IS NULL) THEN 'Data subject'::text
+            WHEN ((warehouse_case_reports.third_party_company_name)::text = ''::text) THEN 'Data subject'::text
+            ELSE 'Third party'::text
+        END AS requester_from
+   FROM public.warehouse_case_reports
+  WHERE ((warehouse_case_reports.case_type)::text = ANY (ARRAY[('Offender SAR'::character varying)::text, ('Complaint - Standard'::character varying)::text, ('Complaint - ICO'::character varying)::text, ('Complaint - Litigation'::character varying)::text]));
+
+
+--
+-- Name: offender_data_requests_volume_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.offender_data_requests_volume_view AS
+ SELECT stats_base_categories.request_type,
+    stats_base_categories.stats_month,
+    concat(stats_base_categories.stats_month, ' - ', to_char((to_date((stats_base_categories.stats_month)::text, 'MM'::text))::timestamp with time zone, 'Month'::text)) AS "Month Name",
+    stats_current_year.current_year_volume,
+    stats_previous_year.previous_year_volume
+   FROM ((( SELECT a.stats_month,
+            b.request_type
+           FROM (( SELECT (to_char(generate_series((to_char((CURRENT_DATE)::timestamp with time zone, 'YYYY-01-01'::text))::timestamp without time zone, (CURRENT_DATE)::timestamp without time zone, '1 mon'::interval), 'MM'::text))::integer AS stats_month) a
+             CROSS JOIN ( SELECT t.request_type
+                   FROM ( VALUES ('all_prison_records'::text), ('security_records'::text), ('nomis_records'::text), ('nomis_other'::text), ('nomis_contact_logs'::text), ('probation_records'::text), ('cctv_and_bwcf'::text), ('telephone_recordings'::text), ('telephone_pin_logs'::text), ('probation_archive'::text), ('mappa'::text), ('pdp'::text), ('court'::text), ('other'::text)) t(request_type)) b)) stats_base_categories
+     LEFT JOIN ( SELECT data_requests.request_type,
+            date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received) AS stats_year,
+            date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received) AS stats_month,
+            count(DISTINCT data_requests.case_id) AS current_year_volume
+           FROM (public.data_requests
+             JOIN public.warehouse_case_report_for_offender_sar_related ON ((data_requests.case_id = warehouse_case_report_for_offender_sar_related.case_id)))
+          WHERE ((date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received) = date_part('year'::text, CURRENT_DATE)) AND ((warehouse_case_report_for_offender_sar_related.case_type)::text = 'Offender SAR'::text))
+          GROUP BY data_requests.request_type, (date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received)), (date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received))
+          ORDER BY (date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received)), (date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received))) stats_current_year ON (((stats_base_categories.request_type = (stats_current_year.request_type)::text) AND ((stats_base_categories.stats_month)::double precision = stats_current_year.stats_month))))
+     LEFT JOIN ( SELECT data_requests.request_type,
+            date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received) AS stats_year,
+            date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received) AS stats_month,
+            count(DISTINCT data_requests.case_id) AS previous_year_volume
+           FROM (public.data_requests
+             JOIN public.warehouse_case_report_for_offender_sar_related ON ((data_requests.case_id = warehouse_case_report_for_offender_sar_related.case_id)))
+          WHERE ((date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received) = (date_part('year'::text, CURRENT_DATE) - (1)::double precision)) AND ((warehouse_case_report_for_offender_sar_related.case_type)::text = 'Offender SAR'::text))
+          GROUP BY data_requests.request_type, (date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received)), (date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received))
+          ORDER BY (date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received)), (date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received))) stats_previous_year ON (((stats_base_categories.request_type = (stats_previous_year.request_type)::text) AND ((stats_base_categories.stats_month)::double precision = stats_previous_year.stats_month))));
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0 NOT NULL,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip inet,
+    last_sign_in_ip inet,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    full_name character varying NOT NULL,
+    deleted_at timestamp without time zone,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    locked_at timestamp without time zone
+);
+
+
+--
+-- Name: offender_sar_vetting_track_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.offender_sar_vetting_track_view AS
+ SELECT ready_for_vetting.case_id,
+    ready_for_vetting.user_click_ready_for_vetting,
+    ready_for_vetting.user_ready_for_vettting,
+    ready_for_vetting.date_for_ready_for_vetting,
+    vetting_in_progress.user_click_vetting_in_progress,
+    vetting_in_progress.user_vetting_in_progress,
+    vetting_in_progress.date_for_vetting_in_progress,
+    ((vetting_in_progress.date_for_vetting_in_progress)::date - (ready_for_vetting.date_for_ready_for_vetting)::date) AS days_for_waiting,
+    ready_to_copy.user_click_ready_to_copy,
+    ready_to_copy.user_ready_to_copy,
+    ready_to_copy.date_for_ready_to_copy,
+    ((ready_to_copy.date_for_ready_to_copy)::date - (vetting_in_progress.date_for_vetting_in_progress)::date) AS days_for_vetting
+   FROM ((( SELECT case_transitions.case_id,
+            case_transitions.acting_user_id AS user_click_ready_for_vetting,
+            users.full_name AS user_ready_for_vettting,
+            case_transitions.created_at AS date_for_ready_for_vetting
+           FROM ((public.case_transitions
+             JOIN public.users ON ((case_transitions.acting_user_id = users.id)))
+             JOIN ( SELECT case_transitions_1.case_id,
+                    max(case_transitions_1.id) AS transition_id
+                   FROM public.case_transitions case_transitions_1
+                  WHERE ((case_transitions_1.event)::text = 'mark_as_ready_for_vetting'::text)
+                  GROUP BY case_transitions_1.case_id) ready_for_vetting_transitions ON ((case_transitions.id = ready_for_vetting_transitions.transition_id)))) ready_for_vetting
+     LEFT JOIN ( SELECT case_transitions.case_id,
+            case_transitions.acting_user_id AS user_click_vetting_in_progress,
+            users.full_name AS user_vetting_in_progress,
+            case_transitions.created_at AS date_for_vetting_in_progress
+           FROM ((public.case_transitions
+             JOIN public.users ON ((case_transitions.acting_user_id = users.id)))
+             JOIN ( SELECT case_transitions_1.case_id,
+                    max(case_transitions_1.id) AS transition_id
+                   FROM public.case_transitions case_transitions_1
+                  WHERE ((case_transitions_1.event)::text = 'mark_as_vetting_in_progress'::text)
+                  GROUP BY case_transitions_1.case_id) vetting_in_progress_transitions ON ((case_transitions.id = vetting_in_progress_transitions.transition_id)))) vetting_in_progress ON ((ready_for_vetting.case_id = vetting_in_progress.case_id)))
+     LEFT JOIN ( SELECT case_transitions.case_id,
+            case_transitions.acting_user_id AS user_click_ready_to_copy,
+            users.full_name AS user_ready_to_copy,
+            case_transitions.created_at AS date_for_ready_to_copy
+           FROM ((public.case_transitions
+             JOIN public.users ON ((case_transitions.acting_user_id = users.id)))
+             JOIN ( SELECT case_transitions_1.case_id,
+                    max(case_transitions_1.id) AS transition_id
+                   FROM public.case_transitions case_transitions_1
+                  WHERE ((case_transitions_1.event)::text = 'mark_as_ready_to_copy'::text)
+                  GROUP BY case_transitions_1.case_id) ready_to_copy_transitions ON ((case_transitions.id = ready_to_copy_transitions.transition_id)))) ready_to_copy ON ((ready_for_vetting.case_id = ready_to_copy.case_id)));
+
+
+--
+-- Name: offender_subject_type_volume_view; Type: VIEW; Schema: public; Owner: -
+--
+
+CREATE VIEW public.offender_subject_type_volume_view AS
+ SELECT stats_base_categories.sar_subject_type,
+    stats_base_categories.stats_month,
+    concat(stats_base_categories.stats_month, ' - ', to_char((to_date((stats_base_categories.stats_month)::text, 'MM'::text))::timestamp with time zone, 'Month'::text)) AS "Month Name",
+    stats_base_categories.requester_type,
+    stats_current_year.current_year_volume,
+    stats_previous_year.previous_year_volume
+   FROM ((( SELECT a.stats_month,
+            b.sar_subject_type,
+            c.requester_type
+           FROM ((( SELECT (to_char(generate_series((to_char((CURRENT_DATE)::timestamp with time zone, 'YYYY-01-01'::text))::timestamp without time zone, (CURRENT_DATE)::timestamp without time zone, '1 mon'::interval), 'MM'::text))::integer AS stats_month) a
+             CROSS JOIN ( SELECT t.sar_subject_type
+                   FROM ( VALUES ('Offender'::text), ('Ex offender'::text), ('Detainee'::text), ('Ex detainee'::text), ('Probation service user'::text), ('Ex probation service user'::text)) t(sar_subject_type)) b)
+             CROSS JOIN ( SELECT t.requester_type
+                   FROM ( VALUES ('Third party'::text), ('Data subject'::text)) t(requester_type)) c)) stats_base_categories
+     LEFT JOIN ( SELECT warehouse_case_report_for_offender_sar_related.sar_subject_type,
+            warehouse_case_report_for_offender_sar_related.requester_from,
+            date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received) AS stats_year,
+            date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received) AS stats_month,
+            count(warehouse_case_report_for_offender_sar_related.case_id) AS current_year_volume
+           FROM public.warehouse_case_report_for_offender_sar_related
+          WHERE ((date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received) = date_part('year'::text, CURRENT_DATE)) AND ((warehouse_case_report_for_offender_sar_related.case_type)::text = 'Offender SAR'::text))
+          GROUP BY warehouse_case_report_for_offender_sar_related.sar_subject_type, (date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received)), (date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received)), warehouse_case_report_for_offender_sar_related.requester_from
+          ORDER BY (date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received)), (date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received))) stats_current_year ON (((stats_base_categories.sar_subject_type = (stats_current_year.sar_subject_type)::text) AND ((stats_base_categories.stats_month)::double precision = stats_current_year.stats_month) AND (stats_base_categories.requester_type = stats_current_year.requester_from))))
+     LEFT JOIN ( SELECT warehouse_case_report_for_offender_sar_related.sar_subject_type,
+            warehouse_case_report_for_offender_sar_related.requester_from,
+            date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received) AS stats_year,
+            date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received) AS stats_month,
+            count(warehouse_case_report_for_offender_sar_related.case_id) AS previous_year_volume
+           FROM public.warehouse_case_report_for_offender_sar_related
+          WHERE ((date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received) = (date_part('year'::text, CURRENT_DATE) - (1)::double precision)) AND ((warehouse_case_report_for_offender_sar_related.case_type)::text = 'Offender SAR'::text))
+          GROUP BY warehouse_case_report_for_offender_sar_related.sar_subject_type, (date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received)), (date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received)), warehouse_case_report_for_offender_sar_related.requester_from
+          ORDER BY (date_part('year'::text, warehouse_case_report_for_offender_sar_related.date_received)), (date_part('month'::text, warehouse_case_report_for_offender_sar_related.date_received))) stats_previous_year ON (((stats_base_categories.sar_subject_type = (stats_previous_year.sar_subject_type)::text) AND ((stats_base_categories.stats_month)::double precision = stats_previous_year.stats_month) AND (stats_base_categories.requester_type = stats_previous_year.requester_from))));
 
 
 --
@@ -949,31 +1235,6 @@ ALTER SEQUENCE public.teams_users_roles_id_seq OWNED BY public.teams_users_roles
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-    reset_password_token character varying,
-    reset_password_sent_at timestamp without time zone,
-    sign_in_count integer DEFAULT 0 NOT NULL,
-    current_sign_in_at timestamp without time zone,
-    last_sign_in_at timestamp without time zone,
-    current_sign_in_ip inet,
-    last_sign_in_ip inet,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    full_name character varying NOT NULL,
-    deleted_at timestamp without time zone,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    unlock_token character varying,
-    locked_at timestamp without time zone
-);
-
-
---
 -- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
@@ -1024,79 +1285,6 @@ CREATE SEQUENCE public.versions_id_seq
 --
 
 ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
-
-
---
--- Name: warehouse_case_reports; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.warehouse_case_reports (
-    case_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    creator_id integer,
-    responding_team_id integer,
-    responder_id integer,
-    casework_officer_user_id integer,
-    business_group_id integer,
-    directorate_id integer,
-    director_general_name_property_id integer,
-    director_name_property_id integer,
-    deputy_director_name_property_id integer,
-    number character varying,
-    case_type character varying,
-    current_state character varying,
-    responding_team character varying,
-    responder character varying,
-    date_received date,
-    internal_deadline date,
-    external_deadline date,
-    date_responded date,
-    date_compliant_draft_uploaded date,
-    trigger character varying,
-    name character varying,
-    requester_type character varying,
-    message character varying,
-    info_held character varying,
-    outcome character varying,
-    refusal_reason character varying,
-    exemptions character varying,
-    postal_address character varying,
-    email character varying,
-    appeal_outcome character varying,
-    third_party character varying,
-    reply_method character varying,
-    sar_subject_type character varying,
-    sar_subject_full_name character varying,
-    business_unit_responsible_for_late_response character varying,
-    extended character varying,
-    extension_count integer,
-    deletion_reason character varying,
-    casework_officer character varying,
-    created_by character varying,
-    date_created timestamp without time zone,
-    business_group character varying,
-    directorate_name character varying,
-    director_general_name character varying,
-    director_name character varying,
-    deputy_director_name character varying,
-    draft_in_time character varying,
-    in_target character varying,
-    number_of_days_late integer,
-    info_held_status_id integer,
-    refusal_reason_id integer,
-    outcome_id integer,
-    appeal_outcome_id integer,
-    number_of_days_taken integer,
-    number_of_exempt_pages integer,
-    number_of_final_pages integer,
-    third_party_company_name character varying,
-    number_of_days_taken_after_extension integer,
-    complaint_subtype character varying,
-    priority character varying,
-    total_cost numeric(10,2),
-    settlement_cost numeric(10,2)
-);
 
 
 --
@@ -2020,6 +2208,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200925100514'),
 ('20201113130611'),
 ('20210115230915'),
-('20210518085422');
+('20210518085422'),
+('20210625113911'),
+('20210723160533');
 
 
