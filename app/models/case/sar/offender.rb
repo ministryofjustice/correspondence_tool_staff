@@ -27,7 +27,7 @@ class Case::SAR::Offender < Case::Base
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = 'data_subject'.freeze
 
-  VETTING_IN_PROCESS_EVENT = 'mark_as_ready_for_vetting'.freeze
+  VETTING_IN_PROCESS_EVENT = 'mark_as_vetting_in_progress'.freeze
   READY_FOR_COPY_EVENT = 'mark_as_ready_to_copy'.freeze
 
 
