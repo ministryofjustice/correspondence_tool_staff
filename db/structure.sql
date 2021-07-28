@@ -599,7 +599,8 @@ CREATE TABLE public.letter_templates (
     template_type character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    letter_address character varying DEFAULT ''::character varying
+    letter_address character varying DEFAULT ''::character varying,
+    base_template_file_ref character varying DEFAULT 'ims001.docx'::character varying
 );
 
 
@@ -2020,6 +2021,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20200925100514'),
 ('20201113130611'),
 ('20210115230915'),
-('20210518085422');
+('20210518085422'),
+('20210625113911');
 
 

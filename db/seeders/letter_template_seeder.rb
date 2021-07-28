@@ -409,6 +409,126 @@ class LetterTemplateSeeder
                   <br>#{address}
                 EOF
                 )
+
+
+    rec = LetterTemplate.find_by(abbreviation: 'despatch-change-of-address')
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: 'Change of address',
+                abbreviation: 'despatch-change-of-address',
+                template_type: 'dispatch',
+                body: <<~EOF
+                  <p>
+                  <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
+                  <br>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
+                  <br>
+                  <br>Your subject access request (SAR) has now been completed.
+                  <br>
+                  <br>In order to ensure safe receipt of the data can you please confirm the address to which you would like your documents sent.
+                  <br>
+                  <br>In addition can you also send proof of your identity, a copy of one of the following: 
+                  Photograph page of your passport or driving license                  
+                  <br>
+                  <br><strong>And</strong> a document with your current address on dated within the last six months:
+                  <br>Copy of electricity bill
+                  <br>Copy of gas bill
+                  <br>Copy council tax bill
+                  <br>Copy of any other bill in your full name.
+                  <br>
+                  <br>Once this is received I will ensure that any data is sent to you without delay.
+                  <br>
+                  <br>Yours sincerely
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>Despatch Team
+                  <br>Offender Subject Access Request Team
+                  <br>Ministry of Justice
+                  </p>
+                EOF
+                )
+    rec.update!(letter_address: <<~EOF
+                  #{solictor_receiver}
+                  <br>#{address}
+                EOF
+                )
+
+
+    rec = LetterTemplate.find_by(abbreviation: 'despatch-confirming-address')
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: 'Confirming address',
+                abbreviation: 'despatch-confirming-address',
+                template_type: 'dispatch',
+                body: <<~EOF
+                  <p>
+                  <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
+                  <br>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br>
+                  <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA). 
+                  <% if values.already_late? %>The Ministry of Justice (MoJ) is sorry for the delay in responding to your subject access request (SAR).
+                  <% end %>
+                  <br>
+                  <br>Your SAR is now due to be completed. To ensure safe receipt of the information please can you confirm that you are still residing at this address and provide a copy of one of the following:
+                  <br>
+                  <br>Photograph page of your passport or driving license
+                  <br>
+                  <br><strong>And</strong> a document with your current address on dated within the last six months:
+                  <br>Copy of electricity bill
+                  <br>Copy of gas bill
+                  <br>Copy council tax bill
+                  <br>Copy of any other bill in your full name.
+                  <br>
+                  <br>Once this is received your SAR will be completed and despatched to shortly.
+                  <br>
+                  <br>Yours sincerely
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>Despatch Team
+                  <br>Offender Subject Access Request Team
+                  <br>Ministry of Justice
+                  </p>
+                EOF
+                )
+    rec.update!(letter_address: <<~EOF
+                  #{solictor_receiver}
+                  <br>#{address}
+                EOF
+                )
+
+    rec = LetterTemplate.find_by(abbreviation: 'dispatch-letter-delivery-request-form')
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: 'Special/Recorded delivery request',
+                abbreviation: 'dispatch-letter-delivery-request-form',
+                template_type: 'dispatch',
+                base_template_file_ref: 'ims002.docx',
+                body: <<~EOF
+                  <p>
+                  <br><br>Please check following information which will be used in the form.
+                  <br>
+                  <br><strong>Name:</strong><%=letter.name %>
+                  <br><strong>Date:</strong><%=letter.letter_date %>
+                  <br><strong>Address:</strong>
+                  <br>
+                  #{solictor_receiver} - #{address}
+                  <br>
+                  <br>
+                  <br>Despatch Team
+                  <br>Offender Subject Access Request Team
+                  <br>Ministry of Justice
+                  </p>
+                EOF
+                )
+    rec.update!(letter_address: <<~EOF
+                  #{solictor_receiver}
+                  <br>#{address}
+                EOF
+                )
+
   end
 end
 #rubocop:enable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength
