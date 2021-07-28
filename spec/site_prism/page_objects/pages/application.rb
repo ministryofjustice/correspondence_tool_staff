@@ -68,6 +68,7 @@ module PageObjects
         cases_edit_offender_sar_complaint_requested_info:    'Cases::Edit::OffenderSARComplaintPageRequestedInfo',
         cases_edit_offender_sar_complaint_requester_details: 'Cases::Edit::OffenderSARComplaintPageRequesterDetails',
         cases_edit_offender_sar_complaint_subject_details:   'Cases::Edit::OffenderSARComplaintPageSubjectDetails',
+        cases_edit_offender_sar_complaint:                   'Cases::Edit::OffenderSARComplaintPageEdit',
 
         cases_new_case_link:            'Cases::NewCaseLinkPage',
         cases_edit:                     'Cases::EditPage',
