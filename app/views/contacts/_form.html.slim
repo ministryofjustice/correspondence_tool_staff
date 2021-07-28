@@ -1,0 +1,33 @@
+= form_for @contact do |f|
+  - if @contact.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@contact.errors.count, "error")} prohibited this contact from being saved:"
+      ul
+        - @contact.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :address_line_1
+    = f.text_field :address_line_1
+  .field
+    = f.label :address_line_2
+    = f.text_field :address_line_2
+  .field
+    = f.label :town
+    = f.text_field :town
+  .field
+    = f.label :county
+    = f.text_field :county
+  .field
+    = f.label :postcode
+    = f.text_field :postcode
+  .field
+    = f.label :email
+    = f.text_field :email
+  .field
+    = f.label :contact_type
+    = f.text_field :contact_type
+  .actions = f.submit

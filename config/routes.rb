@@ -2,6 +2,7 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
 
+  resources :contacts
   devise_for :users, controllers: { passwords: 'passwords' }
 
   gnav = Settings.global_navigation
