@@ -313,7 +313,6 @@ class Case::SAR::Offender < Case::Base
     days = nil
     if start_date_for_vetting
       days = start_date_for_vetting.business_days_until(end_date_for_vetting, true) 
-      days > 0 ? days : nil
     end
     days
   end
