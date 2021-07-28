@@ -60,4 +60,10 @@
       ga('create', '#{Rails.configuration.ga_tracking_id}', 'auto');
       ga('send', 'pageview');
 
+- content_for :footer_support_links do
+  ul
+    li
+      a.govuk-footer__link href="/accessibility"
+        = t('common.accessibility')
+
 = render template: 'layouts/govuk_template'
