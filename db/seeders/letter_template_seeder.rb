@@ -467,7 +467,7 @@ class LetterTemplateSeeder
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA)
+                  <br>I am writing in response to your request for information made under the Data Protection Act 2018 (DPA). 
                   <% if values.already_late? %>The Ministry of Justice (MoJ) is sorry for the delay in responding to your subject access request (SAR).
                   <% end %>
                   <br>
