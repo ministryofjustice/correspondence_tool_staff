@@ -4,9 +4,10 @@ RSpec.describe PagesController, type: :controller do
 
   describe "GET #accessibility" do
     let(:user) { create(:user) }
-    before{
-        sign_in user
-      }
+    
+    before {
+      sign_in user
+    }
 
     it "returns http success" do
       get :accessibility
