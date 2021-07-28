@@ -100,7 +100,7 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.9'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 1.18.0', require: false
+  gem 'rubocop', '~> 1.18.4', require: false
   gem 'rubocop-rspec', '~> 2.4.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
