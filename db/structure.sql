@@ -662,107 +662,6 @@ ALTER SEQUENCE public.linked_cases_id_seq OWNED BY public.linked_cases.id;
 
 
 --
--- Name: warehouse_case_reports; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.warehouse_case_reports (
-    case_id integer NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    creator_id integer,
-    responding_team_id integer,
-    responder_id integer,
-    casework_officer_user_id integer,
-    business_group_id integer,
-    directorate_id integer,
-    director_general_name_property_id integer,
-    director_name_property_id integer,
-    deputy_director_name_property_id integer,
-    number character varying,
-    case_type character varying,
-    current_state character varying,
-    responding_team character varying,
-    responder character varying,
-    date_received date,
-    internal_deadline date,
-    external_deadline date,
-    date_responded date,
-    date_compliant_draft_uploaded date,
-    trigger character varying,
-    name character varying,
-    requester_type character varying,
-    message character varying,
-    info_held character varying,
-    outcome character varying,
-    refusal_reason character varying,
-    exemptions character varying,
-    postal_address character varying,
-    email character varying,
-    appeal_outcome character varying,
-    third_party character varying,
-    reply_method character varying,
-    sar_subject_type character varying,
-    sar_subject_full_name character varying,
-    business_unit_responsible_for_late_response character varying,
-    extended character varying,
-    extension_count integer,
-    deletion_reason character varying,
-    casework_officer character varying,
-    created_by character varying,
-    date_created timestamp without time zone,
-    business_group character varying,
-    directorate_name character varying,
-    director_general_name character varying,
-    director_name character varying,
-    deputy_director_name character varying,
-    draft_in_time character varying,
-    in_target character varying,
-    number_of_days_late integer,
-    info_held_status_id integer,
-    refusal_reason_id integer,
-    outcome_id integer,
-    appeal_outcome_id integer,
-    number_of_days_taken integer,
-    number_of_exempt_pages integer,
-    number_of_final_pages integer,
-    third_party_company_name character varying,
-    number_of_days_taken_after_extension integer,
-    complaint_subtype character varying,
-    priority character varying,
-    total_cost numeric(10,2),
-    settlement_cost numeric(10,2),
-    user_dealing_with_vetting character varying,
-    user_id_dealing_with_vetting integer,
-    number_of_days_for_vetting integer
-);
-
-
---
--- Name: users; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.users (
-    id integer NOT NULL,
-    email character varying DEFAULT ''::character varying NOT NULL,
-    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
-    reset_password_token character varying,
-    reset_password_sent_at timestamp without time zone,
-    sign_in_count integer DEFAULT 0 NOT NULL,
-    current_sign_in_at timestamp without time zone,
-    last_sign_in_at timestamp without time zone,
-    current_sign_in_ip inet,
-    last_sign_in_ip inet,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    full_name character varying NOT NULL,
-    deleted_at timestamp without time zone,
-    failed_attempts integer DEFAULT 0 NOT NULL,
-    unlock_token character varying,
-    locked_at timestamp without time zone
-);
-
-
---
 -- Name: report_types; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1077,6 +976,31 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    id integer NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
+    reset_password_token character varying,
+    reset_password_sent_at timestamp without time zone,
+    sign_in_count integer DEFAULT 0 NOT NULL,
+    current_sign_in_at timestamp without time zone,
+    last_sign_in_at timestamp without time zone,
+    current_sign_in_ip inet,
+    last_sign_in_ip inet,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    full_name character varying NOT NULL,
+    deleted_at timestamp without time zone,
+    failed_attempts integer DEFAULT 0 NOT NULL,
+    unlock_token character varying,
+    locked_at timestamp without time zone
+);
+
+
+--
 -- Name: versions; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1108,6 +1032,82 @@ CREATE SEQUENCE public.versions_id_seq
 --
 
 ALTER SEQUENCE public.versions_id_seq OWNED BY public.versions.id;
+
+
+--
+-- Name: warehouse_case_reports; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.warehouse_case_reports (
+    case_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    creator_id integer,
+    responding_team_id integer,
+    responder_id integer,
+    casework_officer_user_id integer,
+    business_group_id integer,
+    directorate_id integer,
+    director_general_name_property_id integer,
+    director_name_property_id integer,
+    deputy_director_name_property_id integer,
+    number character varying,
+    case_type character varying,
+    current_state character varying,
+    responding_team character varying,
+    responder character varying,
+    date_received date,
+    internal_deadline date,
+    external_deadline date,
+    date_responded date,
+    date_compliant_draft_uploaded date,
+    trigger character varying,
+    name character varying,
+    requester_type character varying,
+    message character varying,
+    info_held character varying,
+    outcome character varying,
+    refusal_reason character varying,
+    exemptions character varying,
+    postal_address character varying,
+    email character varying,
+    appeal_outcome character varying,
+    third_party character varying,
+    reply_method character varying,
+    sar_subject_type character varying,
+    sar_subject_full_name character varying,
+    business_unit_responsible_for_late_response character varying,
+    extended character varying,
+    extension_count integer,
+    deletion_reason character varying,
+    casework_officer character varying,
+    created_by character varying,
+    date_created timestamp without time zone,
+    business_group character varying,
+    directorate_name character varying,
+    director_general_name character varying,
+    director_name character varying,
+    deputy_director_name character varying,
+    draft_in_time character varying,
+    in_target character varying,
+    number_of_days_late integer,
+    info_held_status_id integer,
+    refusal_reason_id integer,
+    outcome_id integer,
+    appeal_outcome_id integer,
+    number_of_days_taken integer,
+    number_of_exempt_pages integer,
+    number_of_final_pages integer,
+    third_party_company_name character varying,
+    number_of_days_taken_after_extension integer,
+    complaint_subtype character varying,
+    priority character varying,
+    total_cost numeric(10,2),
+    settlement_cost numeric(10,2),
+    user_dealing_with_vetting character varying,
+    user_id_dealing_with_vetting integer,
+    number_of_days_for_vetting integer
+);
 
 
 --
