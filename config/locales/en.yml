@@ -515,7 +515,7 @@ en:
         Case::SAR::Standard: SAR - Non-offender
       case_foi_standard:
         name: Full name
-        received_date_short: tsd
+        email: Email address
       foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity
@@ -523,6 +523,7 @@ en:
           what_do_they_know: WhatDoTheyKnow
         user_id: 'Drafter'
         name: Full name
+        email: Email address
         subject: Subject of request
         message: Full request
         postal_address: Address
