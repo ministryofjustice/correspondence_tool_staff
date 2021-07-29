@@ -513,6 +513,9 @@ en:
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
         Case::FOI::ComplianceReview: FOI - Internal review for compliance
         Case::SAR::Standard: SAR - Non-offender
+      case_foi_standard:
+        name: Full name
+        received_date_short: tsd
       foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity
