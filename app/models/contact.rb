@@ -22,6 +22,6 @@ class Contact < ApplicationRecord
      address_line_2,
      town,
      county,
-     postcode].compact.join(seperator)
+     postcode].reject(&:empty?).join(seperator)
   end
 end

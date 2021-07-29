@@ -20,7 +20,7 @@ table
     - @contacts.each do |contact|
       tr
         td = contact.name
-        td = contact.address
+        td = contact.inline_address
         td = contact.contact_type
         td = link_to 'Edit', edit_contact_path(contact)
         td = link_to 'Delete', contact, data: { confirm: 'Are you sure?' }, method: :delete
