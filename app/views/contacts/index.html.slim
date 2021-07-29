@@ -1,6 +1,12 @@
-h1 Address book
-br
-= link_to 'Add new address', new_contact_path
+- content_for :heading
+  = "Address book"
+
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full.button-holder
+    = link_to 'Add new address', new_contact_path, class: 'button'
+
 table
   thead
     tr
