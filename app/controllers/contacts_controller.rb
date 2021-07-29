@@ -1,5 +1,5 @@
 class ContactsController < ApplicationController
-  before_action :set_contact, only: %i[ show edit update destroy ]
+  before_action :set_contact, only: %i[ edit update destroy ]
 
   # GET /contacts or /contacts.json
   def index
@@ -44,7 +44,6 @@ class ContactsController < ApplicationController
     @contact.destroy
     respond_to do |format|
       format.html { redirect_to contacts_url, notice: "Contact was successfully destroyed." }
-      format.json { head :no_content }
     end
   end
 
