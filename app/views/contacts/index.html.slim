@@ -1,11 +1,11 @@
-h1 Listing contacts
-
+h1 Address book
+br
+= link_to 'Add new address', new_contact_path
 table
   thead
     tr
       th Name
       th Address
-      th Email
       th Contact type
       th
       th
@@ -16,12 +16,9 @@ table
       tr
         td = contact.name
         td = contact.address
-        td = contact.email
         td = contact.contact_type
-        td = link_to 'Show', contact
         td = link_to 'Edit', edit_contact_path(contact)
-        td = link_to 'Destroy', contact, data: { confirm: 'Are you sure?' }, method: :delete
+        td = link_to 'Delete', contact, data: { confirm: 'Are you sure?' }, method: :delete
 
 br
 
-= link_to 'New Contact', new_contact_path
