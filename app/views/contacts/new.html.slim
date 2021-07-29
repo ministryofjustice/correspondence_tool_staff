@@ -3,6 +3,7 @@
 
 = render partial: 'layouts/header'
 
-== render 'form'
+= GovukElementsErrorsHelper.error_summary @contact,
+  "#{pluralize(@contact.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= link_to 'Back', contacts_path
+= render 'form'
