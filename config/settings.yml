@@ -119,6 +119,7 @@ global_navigation:
         - manager
         - BRANSTON
 
+
     incoming_cases:
       path: /cases/incoming
       visibility: approver
@@ -126,6 +127,7 @@ global_navigation:
         'DISCLOSURE': incoming_approving_cases
         'PRESS-OFFICE': incoming_cases_press_office
         'PRIVATE-OFFICE': incoming_cases_private_office
+
 
     open_cases:
       path: /cases/open
@@ -146,9 +148,11 @@ global_navigation:
         late:
           scope: late_cases
 
+
     closed_cases:
       path: /cases/closed
       scope: closed_cases
+
 
     search_cases:
       path: /cases/search
@@ -163,6 +167,11 @@ global_navigation:
       path: /admin
       visibility:
         - admin
+
+    addresses:
+      path: /contacts
+      visibility:
+        - BRANSTON
 
   tabs:
     in_time:
