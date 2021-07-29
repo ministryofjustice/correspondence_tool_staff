@@ -590,6 +590,7 @@ en:
         third_party: Is the information being requested on someone's behalf?
       case_sar_offender:
         postal_address: Recipient postal address
+        request_dated: What is the date on the complaint?
         received_date: When was the SAR received?
         recipient: The information should be sent to
         subject_full_name: "Full name of data subject"
@@ -633,6 +634,14 @@ en:
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
+      case_sar_offender_complaint:
+        complaint_type: What sort of complaint is this?
+        complaint_subtype: What is the nature of the complaint?
+        external_deadline: Final deadline
+        postal_address: Recipient postal address
+        priority: Choose a priority level
+        request_dated: What is the date on the complaint?
+        received_date: When was the complaint received at MOJ?
       offender_sar_complaint:
         case_reference_number: Case reference number (CRN)
         complaint_type:
