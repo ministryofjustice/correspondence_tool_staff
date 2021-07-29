@@ -8,3 +8,4 @@ RSpec.describe "pages/accessibility.html.slim", type: :view do
     expect(rendered).to have_text("It was last updated")
   end
 end
+
