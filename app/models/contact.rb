@@ -1,5 +1,5 @@
 class Contact < ApplicationRecord
-  enum contact_type: %i(prison probation solicitor)
+  enum contact_type: %i(prison probation solicitor other)
 
   validates :name, presence: true
   validates :address_line_1, presence: true

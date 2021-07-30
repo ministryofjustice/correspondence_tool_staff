@@ -10,7 +10,7 @@ RSpec.describe Contact, type: :model do
                              town: 'bakersville',
                              county: 'Mercia',
                              postcode: 'FE2 9JK',
-                             contact_type: ['prison', 'probation', 'solicitor'].sample) }
+                             contact_type: ['prison', 'probation', 'solicitor', 'other'].sample) }
 
     let(:contact_3) { build(:contact,
                              name: 'HMP halifax',
@@ -56,7 +56,7 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.county).to match("Mercia")
       expect(contact_2.postcode).to match("FE2 9JK")
       expect(contact_2.email).to match("fake.email@test098.gov.uk")
-      expect(['prison', 'probation', 'solicitor']).to include(contact_2.contact_type)
+      expect(['prison', 'probation', 'solicitor', 'other']).to include(contact_2.contact_type)
     end
   end
 end

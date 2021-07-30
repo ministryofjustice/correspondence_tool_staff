@@ -1,4 +1,3 @@
-
 module PageObjects
   module Pages
     module Contacts
