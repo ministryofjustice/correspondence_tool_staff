@@ -690,6 +690,14 @@ en:
         comment: Help make this service better
       search_query:
         business_unit_name_filter: Business unit
+      business_group:
+        name: Business group name
+      directorate:
+        name: Directorate name
+      business_unit:
+        name: Business unit name
+        role: What will the business unit be responsible for?
+        correspondence_type_roles: Correspondence types
       team:
         name: Business unit name
         email: Business unit group email
