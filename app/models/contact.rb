@@ -17,11 +17,15 @@ class Contact < ApplicationRecord
   private
 
   def format_address(seperator)
-    [name,
-     address_line_1,
-     address_line_2,
-     town,
-     county,
-     postcode].reject(&:empty?).join(seperator)
+    [
+      name,
+      address_line_1,
+      address_line_2,
+      town,
+      county,
+      postcode
+    ].compact
+     .reject(&:empty?)
+     .join(seperator)
   end
 end
