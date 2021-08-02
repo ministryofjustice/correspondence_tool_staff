@@ -36,16 +36,16 @@ RSpec.describe Contact, type: :model do
   context 'public methods' do
 
     it 'can output a full concatenated address in a single line' do
-      expect(contact_2.inline_address).to match('HMP halifax, 123 test road, little heath, bakersville, Mercia, FE2 9JK')
+      expect(contact_2.inline_address).to match('123 test road, little heath, bakersville, Mercia, FE2 9JK')
     end
 
     it 'can output a full concatenated multi-line address' do
-      expect(contact_2.address).to match("HMP halifax\n123 test road\nlittle heath\nbakersville\nMercia\nFE2 9JK")
+      expect(contact_2.address).to match("123 test road\nlittle heath\nbakersville\nMercia\nFE2 9JK")
     end
 
     it 'will output correctly if optional address parts are missing' do
-      expect(contact.inline_address).to match("HMP halifax, 123 test road, FE2 9JK")
-      expect(contact.address).to match("HMP halifax\n123 test road\nFE2 9JK")
+      expect(contact.inline_address).to match("123 test road, FE2 9JK")
+      expect(contact.address).to match("123 test road\nFE2 9JK")
     end
 
     it 'can output the subparts of the address' do

@@ -16,9 +16,8 @@ class Contact < ApplicationRecord
 
   private
 
-  def format_address(seperator)
+  def format_address(separator)
     [
-      name,
       address_line_1,
       address_line_2,
       town,
@@ -26,6 +25,6 @@ class Contact < ApplicationRecord
       postcode
     ].compact
      .reject(&:empty?)
-     .join(seperator)
+     .join(separator)
   end
 end

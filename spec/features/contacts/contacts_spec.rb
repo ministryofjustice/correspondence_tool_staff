@@ -73,7 +73,7 @@ feature 'Contacts address book', js: true do
   end
 
   def then_expect_deleted_address_details_not_to_be_visible
-    expect(page).not_to have_content('HMP halifax, 123 test road')
+    expect(page).not_to have_content('123 test road')
     expect(page).not_to have_content('FE2 9JK')
   end
 
@@ -82,7 +82,7 @@ feature 'Contacts address book', js: true do
   end
 
   def then_expect_to_see_edited_details_on_the_index_page
-    expect(page).to have_content("Granary law, 789 another road")
+    expect(page).to have_content("789 another road")
     expect(page).to have_content('AF6 9JO')
   end
 
@@ -104,7 +104,7 @@ feature 'Contacts address book', js: true do
   end
 
   def and_expect_contact_details_to_be_present
-    expect(page).to have_content('HMP halifax, 123 test road')
+    expect(page).to have_content('123 test road')
     expect(page).to have_content('FE2 9JK')
   end
 
@@ -125,7 +125,7 @@ feature 'Contacts address book', js: true do
   end
 
   def then_expect_new_details_to_be_present 
-    expect(page).to have_content("John's law, 345 some road")
+    expect(page).to have_content("345 some road")
     expect(page).to have_content('FG9 5IK')
   end
 

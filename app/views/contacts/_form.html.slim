@@ -1,15 +1,15 @@
 = form_for @contact do |f|
 
-  .form-group
-      = f.text_field :name
-      = f.text_field :address_line_1
-      = f.text_field :address_line_2
-      = f.text_field :town
-      = f.text_field :county
-      = f.text_field :postcode
-      = f.radio_button_fieldset :contact_type, choices: Contact::contact_types.keys, inline: true
+    = f.text_field :name
+    = f.text_field :address_line_1
+    = f.text_field :address_line_2
+    = f.text_field :town
+    = f.text_field :county
+    = f.text_field :postcode
+    = f.radio_button_fieldset :contact_type, choices: Contact::contact_types.keys
 
-  .button-holder
-    = f.submit 'Submit', class: 'button'
+    .button-holder
+      = f.submit 'Submit', class: 'button'
 
-  = link_to('Cancel', contacts_url)
+    .button-holder
+      = link_to('Cancel', contacts_url)
