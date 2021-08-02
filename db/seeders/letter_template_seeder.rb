@@ -49,42 +49,6 @@ class LetterTemplateSeeder
                 EOF
                 )
 
-    rec = LetterTemplate.find_by(abbreviation: 'prisoner-acknowledgement-covid')
-    rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Prisoner acknowledgement letter (COVID-19)',
-                abbreviation: 'prisoner-acknowledgement-covid',
-                template_type: 'acknowledgement',
-                body: <<~EOF
-                  <p>
-                  <br><br>Dear <%= values.requester_name %>
-                  <br>
-                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
-                  <br>
-                  <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
-                  <br>
-                  <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty's Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
-                  <br>
-                  <br>Should you require a copy of any other personal information held by the MoJ we advise you to contact your key worker within the prison who can provide support regarding the disclosure of routine information that does not need to be provided through a formal SAR.
-                  <br>
-                  <br>After the COVID-19 pandemic or as soon as reasonably practicable (based on Government and Public Health England guidance), we will revert to the provision of full services. We apologise for any inconvenience the reduced but pragmatic service may cause you.
-                  <br>
-                  <br>Yours sincerely
-                  <br>
-                  <br>
-                  <br>
-                  <br>
-                  <br>Application Team
-                  <br>Data Protection Compliance Team
-                  <br>Ministry of Justice
-                  </p>
-                EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{prison_receiver}
-                  <br>#{address}
-                EOF
-                )
-
     rec = LetterTemplate.find_by(abbreviation: 'prisoner-disclosed-cover-letter')
     rec = LetterTemplate.new if rec.nil?
     rec.update!(name: 'Prisoner disclosed cover letter',
@@ -231,43 +195,6 @@ class LetterTemplateSeeder
                   <br>To complete the SAR, we will have to identify information from a number of business areas, including establishments. <strong>Because of this, there is very little information we can provide in response to enquiries. It would be helpful if you could limit correspondence during this period.</strong>
                   <br>
                   <br>Please note, if you have requested medical information as part of the request, responsibility for providing medical information has transferred to the National Health Service / Clinical Commissioning Groups. If you require medical data please contact the Healthcare Services team at the establishment.
-                  <br>
-                  <br>Yours sincerely
-                  <br>
-                  <br>
-                  <br>
-                  <br>
-                  <br>Application Team
-                  <br>Data Protection Compliance Team
-                  <br>Ministry of Justice
-                  </p>
-                EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
-
-    rec = LetterTemplate.find_by(abbreviation: 'solicitor-acknowledgement-covid')
-    rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Solicitor acknowledgement letter (COVID-19)',
-                abbreviation: 'solicitor-acknowledgement-covid',
-                template_type: 'acknowledgement',
-                body: <<~EOF
-                  <p>
-                  <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
-                  <br>
-                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
-                  <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
-                  <br>
-                  <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
-                  <br>
-                  <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty's Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
-                  <br>
-                  <br>Should you or your client require a copy of any other personal information held by the MoJ we advise you to contact your client’s key worker within the prison who can provide support regarding the disclosure of routine information that does not need to be provided through a formal SAR.
-                  <br>
-                  <br>After the COVID-19 pandemic or as soon as reasonably practicable (based on Government and Public Health England guidance), we will revert to the provision of full services. We apologise for any inconvenience the reduced but pragmatic service may cause you.
                   <br>
                   <br>Yours sincerely
                   <br>
@@ -529,6 +456,83 @@ class LetterTemplateSeeder
                 EOF
                 )
 
+    # Letters below are commented out due to not being required at the present time 2/08/2021
+    # --------------
+    #
+    #rec = LetterTemplate.find_by(abbreviation: 'prisoner-acknowledgement-covid')
+    #rec = LetterTemplate.new if rec.nil?
+    #rec.update!(name: 'Prisoner acknowledgement letter (COVID-19)',
+    #            abbreviation: 'prisoner-acknowledgement-covid',
+    #            template_type: 'acknowledgement',
+    #            body: <<~EOF
+    #              <p>
+    #              <br><br>Dear <%= values.requester_name %>
+    #              <br>
+    #              <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+    #              <br>
+    #              <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
+    #              <br>
+    #              <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty's Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
+    #              <br>
+    #              <br>Should you require a copy of any other personal information held by the MoJ we advise you to contact your key worker within the prison who can provide support regarding the disclosure of routine information that does not need to be provided through a formal SAR.
+    #              <br>
+    #              <br>After the COVID-19 pandemic or as soon as reasonably practicable (based on Government and Public Health England guidance), we will revert to the provision of full services. We apologise for any inconvenience the reduced but pragmatic service may cause you.
+    #              <br>
+    #              <br>Yours sincerely
+    #              <br>
+    #              <br>
+    #              <br>
+    #              <br>
+    #              <br>Application Team
+    #              <br>Data Protection Compliance Team
+    #              <br>Ministry of Justice
+    #              </p>
+    #            EOF
+    #            )
+    #rec.update!(letter_address: <<~EOF
+    #              #{prison_receiver}
+    #              <br>#{address}
+    #            EOF
+    #            )
+    #
+    #
+    #rec = LetterTemplate.find_by(abbreviation: 'solicitor-acknowledgement-covid')
+    #rec = LetterTemplate.new if rec.nil?
+    #rec.update!(name: 'Solicitor acknowledgement letter (COVID-19)',
+    #            abbreviation: 'solicitor-acknowledgement-covid',
+    #            template_type: 'acknowledgement',
+    #            body: <<~EOF
+    #              <p>
+    #              <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
+    #              <br>
+    #              <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+    #              <br><strong><%= values.subject_full_name&.upcase %> - <%= values.first_prison_number %></strong>
+    #              <br>
+    #              <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
+    #              <br>
+    #              <br>We are not currently able to respond to SARs in full due to coronavirus COVID-19 disruption. During this unprecedented period of our history the Ministry of Justice (MoJ) is continuing to deliver its critical services, with a focus on those areas where resources are immediately required. For this reason and to support our colleagues in Her Majesty's Prison and Probation Service (HMPPS), we are only able to provide you with a copy of the personal information held on the PNOMIS electronic system.
+    #              <br>
+    #              <br>Should you or your client require a copy of any other personal information held by the MoJ we advise you to contact your client’s key worker within the prison who can provide support regarding the disclosure of routine information that does not need to be provided through a formal SAR.
+    #              <br>
+    #              <br>After the COVID-19 pandemic or as soon as reasonably practicable (based on Government and Public Health England guidance), we will revert to the provision of full services. We apologise for any inconvenience the reduced but pragmatic service may cause you.
+    #              <br>
+    #              <br>Yours sincerely
+    #              <br>
+    #              <br>
+    #              <br>
+    #              <br>
+    #              <br>Application Team
+    #              <br>Data Protection Compliance Team
+    #              <br>Ministry of Justice
+    #              </p>
+    #            EOF
+    #            )
+    #rec.update!(letter_address: <<~EOF
+    #              #{solictor_receiver}
+    #              <br>#{address}
+    #            EOF
+    #            )
+    #
   end
 end
 #rubocop:enable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength
