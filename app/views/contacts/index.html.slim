@@ -1,0 +1,29 @@
+- content_for :heading
+  = "Address book"
+
+= render partial: 'layouts/header'
+
+.grid-row
+  .column-full.button-holder
+    = link_to 'Add new address', new_contact_path, class: 'button'
+
+table.report
+  thead
+    tr
+      th Name
+      th Address
+      th Contact type
+      th
+      th
+
+  tbody
+    - @contacts.each do |contact|
+      tr
+        td = contact.name
+        td = contact.inline_address
+        td = contact.contact_type
+        td = link_to 'Edit', edit_contact_path(contact)
+        td = link_to 'Delete', contact, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+

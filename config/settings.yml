@@ -164,6 +164,11 @@ global_navigation:
       visibility:
         - admin
 
+    addresses:
+      path: /contacts
+      visibility:
+        - BRANSTON
+
   tabs:
     in_time:
       params:
