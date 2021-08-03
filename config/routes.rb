@@ -222,8 +222,6 @@ Rails.application.routes.draw do
     get :download_audit, on: :collection
   end
 
-  resources :users
-
   resources :teams do
     resources :users do
       get 'confirm_destroy', on: :member
