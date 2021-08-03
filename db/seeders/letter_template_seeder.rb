@@ -26,11 +26,11 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>To complete the SAR, we will have to identify information from a number of business areas, including establishments. <strong>Because of this, there is very little information we can provide in response to enquiries. It would be helpful if you could limit any communication with the office during this period.</strong>
+                  <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.   
                   <br>
-                  <br>Unfortunately, due to the new data protection laws which were introduced on 25 May 2018, we have seen a significant increase in requests being received.  We take our obligations under the Data Protection Act 2018 (DPA) very seriously and have significant resources devoted to ensuring compliance with the DPA and our policies on information assurance. We make every effort to despatch all SARs by the statutory deadline but regrettably there are occasions when we are unable to achieve this.
+                  <br>Her Majesty’s Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided to you by your keyworker in the prison or your probation office. As some of the information requested can be disclosed directly to you, we will be forwarding your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
                   <br>
-                  <br>Please note, if you have requested medical information as part of the request, the responsibility for providing medical information has transferred to the Primary Care Trusts/ Department of Health. If you require medical data please contact the Healthcare Services team at the establishment.
+                  <br>Please also note if you have requested medical information as part of the request, the responsibility for providing medical information has transferred to the National Health Service/ Clinical Commissioning Groups. If you require medical information, please contact the Healthcare Services team in the prison.
                   <br>
                   <br>Yours sincerely
                   <br>
