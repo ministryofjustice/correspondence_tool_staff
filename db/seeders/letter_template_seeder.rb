@@ -533,6 +533,7 @@ class LetterTemplateSeeder
                 EOF
                 )
 
+    # rubocop:disable Style/AsciiComments
     # Letters below are commented out due to not being required at the present time 2/08/2021
     # --------------
     #
@@ -610,6 +611,7 @@ class LetterTemplateSeeder
     #            EOF
     #            )
     #
+    # rubocop:enable Style/AsciiComments
   end
 end
 #rubocop:enable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength
