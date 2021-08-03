@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-ui
 //= require dropzone
 //= require govuk_date_fields
 //= require vendor/polyfills/bind
