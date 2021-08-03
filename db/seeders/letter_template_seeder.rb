@@ -190,9 +190,9 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>Please note that as your client has previously submitted a SAR and has been supplied with data, we will only be providing you with data not previously received, i.e. data from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
+                  <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period. 
                   <br>
-                  <br>To complete the SAR, we will have to identify information from a number of business areas, including establishments. <strong>Because of this, there is very little information we can provide in response to enquiries. It would be helpful if you could limit correspondence during this period.</strong>
+                  <br>Her Majesty’s Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you or your client as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your client’s keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we will be forwarding your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.  
                   <br>
                   <br>Please note, if you have requested medical information as part of the request, responsibility for providing medical information has transferred to the National Health Service / Clinical Commissioning Groups. If you require medical data please contact the Healthcare Services team at the establishment.
                   <br>
