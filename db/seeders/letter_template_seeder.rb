@@ -38,7 +38,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>
                   <br>Application Team
-                  <br>Data Protection Compliance Team
+                  <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
                 EOF
@@ -202,7 +202,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>
                   <br>Application Team
-                  <br>Data Protection Compliance Team
+                  <br>Offender Subject Access Request Team
                   <br>Ministry of Justice
                   </p>
                 EOF
@@ -251,6 +251,7 @@ class LetterTemplateSeeder
                   <br>#{address}
                 EOF
                 )
+
     rec = LetterTemplate.find_by(abbreviation: 'solicitor-disclosed')
     rec = LetterTemplate.new if rec.nil?
     rec.update!(name: 'Solicitor disclosed letter',
