@@ -1,17 +1,15 @@
-form data-remote="true" for="contacts_search" action="/contacts_search" role="search"
-  input#popup-search type="text" name="contacts_search_value" 
-  input#popup-search-button type="submit" value="Search"
+= render partial: 'search_fields'
 
-ul.list-lines role="list"
+ul.report-list role="list"
   - if @contacts.any?
     - @contacts.each do |contact|
       li
-        .user
+        h4.bold-small.contact-name
           = contact.name
+        .grid-row.contact-address
           = contact.address
-          .action
-            button type="button" onclick="fill_in_address('28 high road')"
-              =  "Use " + contact.name
+        .button.use-address-button
+          =  "Use " + contact.name
 
 javascript:
   moj.Modules.Contacts.search_results_loaded();
