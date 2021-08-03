@@ -3,25 +3,6 @@ class UsersController < ApplicationController
 
   before_action :set_team, only: [:create, :new, :edit, :update, :confirm_destroy]
 
-  def index
-    query = params["q"]
-    if query
-      users = User.all.where("full_name LIKE CONCAT('%', ?, '%')", query)
-    else
-      users = User.all
-    end
-    @users = users
-                 .order(:full_name)
-                 .page(params[:page]).per(100)
-                 .decorate
-    render :index, layout: nil
-    # respond_to do |format|
-    #   format.html { render :index, layout: nil }
-    #   format.js { render partial: 'users', users: @users }
-    # end
-
-  end
-
   def show
     @user = User.find params[:id]
     unpaginated_cases = UserActiveCaseCountService.new.active_cases_for_user(@user)

@@ -1,0 +1,17 @@
+form data-remote="true" for="contacts_search" action="/contacts_search" role="search"
+  input#popup-search type="text" name="contacts_search_value" 
+  input#popup-search-button type="submit" value="Search"
+
+ul.list-lines role="list"
+  - if @contacts.any?
+    - @contacts.each do |contact|
+      li
+        .user
+          = contact.name
+          = contact.address
+          .action
+            button type="button" onclick="fill_in_address('28 high road')"
+              =  "Use " + contact.name
+
+javascript:
+  search_results_loaded();
