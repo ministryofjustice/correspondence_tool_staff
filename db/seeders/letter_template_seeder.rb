@@ -49,6 +49,45 @@ class LetterTemplateSeeder
                 EOF
                 )
 
+    rec = LetterTemplate.find_by(abbreviation: 'prisoner-acknowledgement-restricted')
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: 'Prisoner acknowledgement letter - RESTRICTED',
+                abbreviation: 'prisoner-acknowledgement-restricted',
+                template_type: 'acknowledgement',
+                body: <<~EOF
+                  <p>
+                  <br><br>Dear <%= values.requester_name %>
+                  <br>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br>
+                  <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
+                  <br>
+                  
+                  As you have previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on.
+                  <br>
+                  To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.
+                  <br>
+                  Her Majesty’s Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you as part of business-as-usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided to you by your keyworker in the prison or your probation office. As some of the information requested can be disclosed directly to you, we will be forwarding your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
+                  <br>
+                  Please also note if you have requested medical information as part of the request, the responsibility for providing medical information has transferred to the National Health Service / Clinical Commissioning Groups. If you require medical information, please contact the Healthcare Services team in the prison.
+                  <br>
+                  <br>Yours sincerely
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>Application Team
+                  <br>Offender Subject Access Request Team
+                  <br>Ministry of Justice
+                  </p>
+                EOF
+                )
+    rec.update!(letter_address: <<~EOF
+                  #{prison_receiver}
+                  <br>#{address}
+                EOF
+                )
+
     rec = LetterTemplate.find_by(abbreviation: 'prisoner-disclosed-cover-letter')
     rec = LetterTemplate.new if rec.nil?
     rec.update!(name: 'Prisoner disclosed cover letter',
