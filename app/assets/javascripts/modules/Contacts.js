@@ -4,7 +4,7 @@ moj.Modules.Contacts = {
     $dialog : $("#dialog-content").dialog({
         autoOpen: false,
         height: 400,
-        width: 350,
+        width: 600,
         modal: true,
         title: 'Find address',
         close: function(event, ui) { console.log(event); }
