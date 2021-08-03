@@ -60,7 +60,7 @@ javascript:
   $button.on( "click", function(e) {
     e.preventDefault();
     
-    $remote_content.load("/users", function() {
+    $remote_content.load("/contacts_search", function() {
       $dialog.dialog( "open" );
       setTimeout("$('#popup-search-button').focus();",1); // fix voiceover focus issue
       setTimeout("$('#popup-search').focus();",2); // fix voiceover focus issue
@@ -69,12 +69,7 @@ javascript:
     $('#dialog-content').parent().attr('aria-modal','true');
     $('#dialog-content').parent().removeAttr('aria-describedby','');
   });
-  /*document.body.addEventListener("ajax:success", (event) => {
-    const [data, status, xhr] = event.detail;
-    //$remote_content.load(data)
-  
-    
-  });*/
+
   function fill_in_address(address){
     console.log('fill_in_address');
     $dialog.dialog('close');

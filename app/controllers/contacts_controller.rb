@@ -42,6 +42,11 @@ class ContactsController < ApplicationController
     end
   end
 
+  def contacts_search
+    @contacts = Contact.where(name: contacts_search_param[:contacts_search_value])
+    render :contacts_search, layout: nil
+  end
+
   private
     def set_contact
       @contact = Contact.includes(:contact_type).find(params[:id])
@@ -80,5 +85,9 @@ class ContactsController < ApplicationController
       params.require(:contact).permit(
         :contact_type_id
       )
+    end
+
+    def contacts_search_param
+      params.permit(:contacts_search_value)
     end
 end
