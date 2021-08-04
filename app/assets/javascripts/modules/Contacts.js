@@ -19,7 +19,7 @@ moj.Modules.CaseCreation = {
 
     addOpenDialogEvent : function() {
         var self = this;
-        $( "#find-address" ).button().on( "click", function(e) { 
+        $( "#find-address" ).on( "click", function(e) { 
             e.preventDefault();
             self.$dialog.dialog( "open" );
         });

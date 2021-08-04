@@ -26,8 +26,9 @@
     choices: Case::SAR::Offender::subject_types.keys
 
   = f.text_area :subject_address, rows: '4', id: 'address-field'
-  
-  button#find-address Find an address
+
+  .form-group
+    = link_to 'Find an address', '#', id: 'find-address'
 
   = f.radio_button_fieldset(:flag_as_high_profile) do |fieldset|
     - fieldset.radio_input(true, text_method: :humanize)
