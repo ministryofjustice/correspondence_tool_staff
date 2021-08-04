@@ -18,6 +18,7 @@ class LetterTemplateSeeder
     rec.update!(name: 'Prisoner acknowledgement letter',
                 abbreviation: 'prisoner-acknowledgement',
                 template_type: 'acknowledgement',
+                base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
                   <br><br>Dear <%= values.requester_name %>
@@ -54,6 +55,7 @@ class LetterTemplateSeeder
     rec.update!(name: 'Prisoner acknowledgement letter - RESTRICTED',
                 abbreviation: 'prisoner-acknowledgement-restricted',
                 template_type: 'acknowledgement',
+                base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
                   <br><br>Dear <%= values.requester_name %>
@@ -219,6 +221,7 @@ class LetterTemplateSeeder
     rec.update!(name: 'Solicitor acknowledgement letter',
                 abbreviation: 'solicitor-acknowledgement',
                 template_type: 'acknowledgement',
+                base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
@@ -256,6 +259,7 @@ class LetterTemplateSeeder
     rec.update!(name: 'Solicitor acknowledgement letter - RESTRICTED',
                 abbreviation: 'solicitor-acknowledgement-restricted',
                 template_type: 'acknowledgement',
+                base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
