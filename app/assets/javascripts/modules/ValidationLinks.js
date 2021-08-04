@@ -36,7 +36,7 @@ moj.Modules.fixValidationLinks = {
 		});
 	},
 	getCommonHrefPrefixFromLinks: function() {
-		let arr = [];
+		var arr = [];
 		this.$allValidationLinks.each(function(ind, el) {
 			arr.push(el.href ? el.href.split('#')[1] : '');
 		});
@@ -46,7 +46,7 @@ moj.Modules.fixValidationLinks = {
     this.linkPrefix = a1.substring(0, i);
 	},
 	checkAndUpdateAllLinks: function(){
-		let that = this;
+		var that = this;
 		this.$allValidationLinks.each(function(ind) {
 			var fieldId = $(this).attr('href').split(that.linkPrefix)[1];
 			if(!fieldId) return; 
