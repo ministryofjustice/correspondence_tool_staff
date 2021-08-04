@@ -32,7 +32,7 @@ moj.Modules.fixValidationLinks = {
 	matchSingleDivLinks: function() {
 		var LinkHrefId = this.$allValidationDivs[0].id;
 		this.$allValidationLinks.each(function(){
-			$(this).attr('href', `#${LinkHrefId}`);
+			$(this).attr('href', '#' + LinkHrefId);
 		});
 	},
 	getCommonHrefPrefixFromLinks: function() {
@@ -50,7 +50,7 @@ moj.Modules.fixValidationLinks = {
 		this.$allValidationLinks.each(function(ind) {
 			var fieldId = $(this).attr('href').split(that.linkPrefix)[1];
 			if(!fieldId) return; 
-			if($(`#${that.linkPrefix}${fieldId}`).length > 0) return; // link already working
+			if($('#' + that.linkPrefix + fieldId).length > 0) return; // link already working
 			that.updateLinkToMatchDiv($(this), fieldId);
 		});
 	},
@@ -58,7 +58,7 @@ moj.Modules.fixValidationLinks = {
 		this.$allValidationDivs.each(function(span){
 			str = $(this).attr('id');
 			if(str.indexOf(fieldId)>-1) {
-				$link.attr('href', `#${str}`);
+				$link.attr('href', '#' + str);
 			}
 		});
 	}	
