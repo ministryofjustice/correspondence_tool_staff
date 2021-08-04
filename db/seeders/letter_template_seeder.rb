@@ -18,6 +18,7 @@ class LetterTemplateSeeder
     rec.update!(name: 'Prisoner acknowledgement letter',
                 abbreviation: 'prisoner-acknowledgement',
                 template_type: 'acknowledgement',
+                base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
                   <br><br>Dear <%= values.requester_name %>
@@ -54,6 +55,7 @@ class LetterTemplateSeeder
     rec.update!(name: 'Prisoner acknowledgement letter - RESTRICTED',
                 abbreviation: 'prisoner-acknowledgement-restricted',
                 template_type: 'acknowledgement',
+                base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
                   <br><br>Dear <%= values.requester_name %>
@@ -62,7 +64,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>As you have previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on.
+                  <br>As you have previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
                   <br>
                   <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.
                   <br>
@@ -219,8 +221,10 @@ class LetterTemplateSeeder
     rec.update!(name: 'Solicitor acknowledgement letter',
                 abbreviation: 'solicitor-acknowledgement',
                 template_type: 'acknowledgement',
+                base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
+                  <br><br>Dear <%= values.requester_name %>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
@@ -256,8 +260,10 @@ class LetterTemplateSeeder
     rec.update!(name: 'Solicitor acknowledgement letter - RESTRICTED',
                 abbreviation: 'solicitor-acknowledgement-restricted',
                 template_type: 'acknowledgement',
+                base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
+                  <br><br>Dear <%= values.requester_name %>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
@@ -265,7 +271,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>As your client has previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on.
+                  <br>As your client has previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
                   <br>
                   <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.
                   <br>
