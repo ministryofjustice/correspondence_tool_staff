@@ -41,6 +41,16 @@ class ContactsController < ApplicationController
     end
   end
 
+  def contacts_search
+    @contacts = Contact.where(name: contacts_search_param[:contacts_search_value])
+
+    json = @contacts.map do |contact| 
+      { name: contact.name, address: contact.address } 
+    end
+
+    render json: json
+  end
+
   private
     def set_contact
       @contact = Contact.find(params[:id])
@@ -57,5 +67,9 @@ class ContactsController < ApplicationController
         :email,
         :contact_type
       )
+    end
+
+    def contacts_search_param
+      params.permit(:contacts_search_value)
     end
 end
