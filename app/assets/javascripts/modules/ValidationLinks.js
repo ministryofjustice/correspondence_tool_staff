@@ -16,13 +16,6 @@ moj.Modules.fixValidationLinks = {
 			this.matchSingleDivLinks();
 			return;
 		}
-
-		// Check if it's possible to get a link prefix
-		this.getCommonHrefPrefixFromLinks();
-		if(!this.linkPrefix) return;
-
-		// Update all links to work if possible and needed
-		this.checkAndUpdateAllLinks();
 	},
 	removeAnyExtraSummaries: function() {
 		if(this.$errorSummary.length > 1) {
@@ -34,32 +27,5 @@ moj.Modules.fixValidationLinks = {
 		this.$allValidationLinks.each(function(){
 			$(this).attr('href', `#${LinkHrefId}`);
 		});
-	},
-	getCommonHrefPrefixFromLinks: function() {
-		let arr = [];
-		this.$allValidationLinks.each(function(ind, el) {
-			arr.push(el.href ? el.href.split('#')[1] : '');
-		});
-		var A = arr.concat().sort(), 
-    a1 = A[0], a2 = A[A.length-1], L = a1.length, i = 0;
-    while(i<L && a1.charAt(i) === a2.charAt(i)) i++;
-    this.linkPrefix = a1.substring(0, i);
-	},
-	checkAndUpdateAllLinks: function(){
-		let that = this;
-		this.$allValidationLinks.each(function(ind) {
-			const fieldId = $(this).attr('href').split(that.linkPrefix)[1];
-			if(!fieldId) return; 
-			if($(`#${that.linkPrefix}${fieldId}`).length > 0) return; // link already working
-			that.updateLinkToMatchDiv($(this), fieldId);
-		});
-	},
-	updateLinkToMatchDiv: function($link, fieldId) {
-		this.$allValidationDivs.each(function(span){
-			str = $(this).attr('id');
-			if(str.indexOf(fieldId)>-1) {
-				$link.attr('href', `#${str}`);
-			}
-		});
-	}	
+	}
 }
