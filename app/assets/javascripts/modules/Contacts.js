@@ -8,6 +8,9 @@ moj.Modules.CaseCreation = {
 
     $search_data : null,
 
+    $list_elem_template : $('#address-details > li'),
+    $address_results_list : $('#address-details'),
+
     init: function() {
         var self = this;
         self.addOpenDialogEvent();
@@ -31,6 +34,7 @@ moj.Modules.CaseCreation = {
 
             $.getJSON(search_url)
                 .done(function(data){
+                    self.$address_results_list.empty();
                     self.$search_data = data; 
                     self.appendAddressDataToModal(data);
                     self.addSelectionButtonEvents();
@@ -46,15 +50,13 @@ moj.Modules.CaseCreation = {
 
     appendAddressDataToModal : function(contacts) {
         var self = this;
-        var ul = $('#address-details');
-        var list_elem_template = $('#address-details > li');
         $.each(contacts, function(id, contact) {
             var address_list_item = self.prepareResultsAddressListElement(
-                list_elem_template,
+                self.$list_elem_template,
                 id,
                 contact
             );
-            ul.append(address_list_item);
+            self.$address_results_list.append(address_list_item);
         });
     },
 
