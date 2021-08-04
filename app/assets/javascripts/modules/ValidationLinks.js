@@ -23,6 +23,8 @@ moj.Modules.fixValidationLinks = {
 		}
 	},
 	matchSingleDivLinks: function() {
-
+		this.$allValidationLinks.each(function(){
+			$(this).attr('href', '#' + LinkHrefId);
+		});
 	}
 }
