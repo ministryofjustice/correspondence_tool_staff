@@ -513,6 +513,9 @@ en:
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
         Case::FOI::ComplianceReview: FOI - Internal review for compliance
         Case::SAR::Standard: SAR - Non-offender
+      case_foi_standard:
+        name: Full name
+        email: Email address
       foi:
         requester_type:
           academic_business_charity: Academic/Business/Charity
@@ -520,6 +523,7 @@ en:
           what_do_they_know: WhatDoTheyKnow
         user_id: 'Drafter'
         name: Full name
+        email: Email address
         subject: Subject of request
         message: Full request
         postal_address: Address
@@ -534,6 +538,13 @@ en:
           Case::FOI::Standard: FOI
           Case::FOI::TimelinessReview: FOI - Internal review for timeliness
           Case::FOI::ComplianceReview: FOI - Internal review for compliance
+      case_ico_foi:
+        external_deadline: Final deadline
+        ico_officer_name: Name of the ICO information officer who's handling this case
+        ico_reference_number: ICO case reference number
+        message: ICO's request details can't be blank
+        original_case: 
+        received_date: Date received at MOJ
       ico:
         email: "Recipient email address"
         ico_decision:
@@ -559,14 +570,33 @@ en:
         <<: *overturned_ico
       overturned_sar:
         <<: *overturned_ico
+      case_sar_standard: 
+        message: Full case details
+        postal_address: Recipient postal address
+        reply_method: How and where should the information be sent?        
+        subject: Case summary
+        subject_full_name: "Full name of the person about whom information is being requested (data subject)"
+        subject_type: Who is the person the information is being requested about?      
+        third_party: Is the information being requested on someone's behalf?      
       sar:
         email: "Recipient email address"
         message: Full case details
         name: "Full name of the requestor"
         postal_address: "Recipient postal address"
         received_date: "Received at MOJ"
+        reply_method: How and where should the information be sent?
         subject: "Case summary"
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
+        subject_type: Who is the person the information is being requested about?
+        third_party: Is the information being requested on someone's behalf?
+      case_sar_offender:
+        postal_address: Recipient postal address
+        request_dated: What is the date on the complaint?
+        received_date: When was the SAR received?
+        recipient: The information should be sent to
+        subject_full_name: "Full name of data subject"
+        subject_address: "What is the location of the data subject?"        
+        subject_type: What is their relationship to the MOJ?
       offender_sar:
         case_reference_number: Case reference number (CRN)
         external_reference: Requester reference (optional)
@@ -605,6 +635,14 @@ en:
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
+      case_sar_offender_complaint:
+        complaint_type: What sort of complaint is this?
+        complaint_subtype: What is the nature of the complaint?
+        external_deadline: Final deadline
+        postal_address: Recipient postal address
+        priority: Choose a priority level
+        request_dated: What is the date on the complaint?
+        received_date: When was the complaint received at MOJ?
       offender_sar_complaint:
         case_reference_number: Case reference number (CRN)
         complaint_type:
@@ -653,6 +691,14 @@ en:
         comment: Help make this service better
       search_query:
         business_unit_name_filter: Business unit
+      business_group:
+        name: Business group name
+      directorate:
+        name: Directorate name
+      business_unit:
+        name: Business unit name
+        role: What will the business unit be responsible for?
+        correspondence_type_roles: Correspondence types
       team:
         name: Business unit name
         email: Business unit group email
