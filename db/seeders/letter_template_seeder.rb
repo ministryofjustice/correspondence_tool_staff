@@ -224,6 +224,7 @@ class LetterTemplateSeeder
                 base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
+                  <br><br>Dear <%= values.requester_name %>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
@@ -262,6 +263,7 @@ class LetterTemplateSeeder
                 base_template_file_ref: 'ims003.docx',
                 body: <<~EOF
                   <p>
+                  <br><br>Dear <%= values.requester_name %>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
