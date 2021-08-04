@@ -1,18 +1,23 @@
 #dialog-form title=("Find address") 
   = link_to 'Add or edit addresses (opens in new window)', contacts_url, target: '_blank'
+  br
+  br
   form
     fieldset
       input#contacts-search-field.form-control name="contacts_search" type="text" value=("")
       /! Allow form submission with keyboard without duplicating the dialog button
-      input#search-button.button.button-not-margin tabindex="-1" type="submit" 
+      input#search-button.button.button-no-margin tabindex="-1" type="submit" 
 
-      ul#address-details.report-list role="list" 
-        li
+      hr
+
+      ul#address-details.report-list role="list" type="hidden"
+        li style="display: none;"
           h4.bold-small.contact-name 
-          .grid-row.contact-address 
-          .button.use-address-button style="display: none;" 
+          pre.contact-address 
+          br
+          .button.use-address-button
           input.address-id type="hidden"
           
         
 
-
+  

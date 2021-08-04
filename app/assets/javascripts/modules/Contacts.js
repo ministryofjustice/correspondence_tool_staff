@@ -1,7 +1,7 @@
 moj.Modules.CaseCreation = {
     $dialog : $( "#dialog-form" ).dialog({
         autoOpen: false,
-        height: 400,
+        height: 500,
         width: 600,
         modal: true,
     }),
@@ -68,8 +68,9 @@ moj.Modules.CaseCreation = {
         var address_id = $(list_item.find('.address-id')[0]);
         name.text(contact.name);
         address.text(contact.address);
-        button.text("Use" + contact.name);
+        button.text("Use " + contact.name);
         button.css('display', 'inline');
+        list_item.css('display', 'block');
         address_id.val(id.toString());
         return list_item;
     },
