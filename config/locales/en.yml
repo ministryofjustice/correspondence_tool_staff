@@ -571,6 +571,7 @@ en:
       overturned_sar:
         <<: *overturned_ico
       case_sar_standard: 
+        message: Full case details
         postal_address: Recipient postal address
         reply_method: How and where should the information be sent?        
         subject: Case summary
