@@ -25,7 +25,7 @@ moj.Modules.fixValidationLinks = {
 	matchSingleDivLinks: function() {
 		const LinkHrefId = this.$allValidationDivs[0].id;
 		this.$allValidationLinks.each(function(){
-			$(this).attr('href', `#${LinkHrefId}`);
+			$(this).attr('href', '#' + LinkHrefId);
 		});
 	}
 }
