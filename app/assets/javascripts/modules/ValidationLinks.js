@@ -1,6 +1,6 @@
 // This is to fix the mismatch between the prefixes for validation # links that break after
 // we re-use ruby code. i.e. when we use "as ..." in form generation, context breaks links
-moj.Modules.fixValidationLinks = {
+moj.Modules.FixValidationLinks = {
 	$errorSummary: $('.error-summary'),
 	$allValidationLinks: $('.error-summary-list a'),
 	$allValidationDivs: $('.form-group-error'),
