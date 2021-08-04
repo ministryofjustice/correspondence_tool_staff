@@ -64,7 +64,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>As you have previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on.
+                  <br>As you have previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
                   <br>
                   <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.
                   <br>
@@ -271,7 +271,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>As your client has previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on.
+                  <br>As your client has previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
                   <br>
                   <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.
                   <br>
