@@ -1,11 +1,11 @@
 - content_for :heading
-  = "Address book"
+  = t('common.contacts.address_page_heading')
 
 = render partial: 'layouts/header'
 
 .grid-row
   .column-full.button-holder
-    = link_to 'Add new address', new_contact_path, class: 'button'
+    = link_to t('common.contacts.add_new_address'), new_contact_path, class: 'button'
 
 table.report
   thead
@@ -22,8 +22,7 @@ table.report
         td = contact.name
         td = contact.inline_address
         td = contact.contact_type.value
-        td = link_to 'Edit', edit_contact_path(contact)
-        td = link_to 'Delete', contact, data: { confirm: 'Are you sure?' }, method: :delete
-
+        td = link_to t('button.edit'), edit_contact_path(contact)
+        td = link_to t('button.delete'), contact, data: { confirm: t('common.contacts.delete_address_confirmation') }, method: :delete
 br
 

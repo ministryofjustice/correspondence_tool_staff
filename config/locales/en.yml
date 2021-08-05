@@ -348,6 +348,8 @@ en:
     request_amends: Request amends
     save_changes: Save changes
     search: Search
+    edit: Edit
+    delete: Delete
 
   helpers:
     fieldset:
@@ -877,6 +879,13 @@ en:
       type: 'Type'
       view_case: "Case number "
       who_its_with: With
+    contacts:
+      address_page_heading: Address book
+      add_new_address: Add new address
+      delete_address_confirmation: Are you sure you want to delete this address?
+      find_address: Find an address
+      add_or_edit_address: Add or edit addresses (opens in new window)
+
     choose: Choose...
     choose_file: Choose a file
     close: Close case
