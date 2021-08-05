@@ -1,6 +1,6 @@
 // This is to fix the mismatch between the prefixes for validation # links that break after
 // we re-use ruby code. i.e. when we use "as ..." in form generation, context breaks links
-moj.Modules.fixValidationLinks = {
+moj.Modules.FixValidationLinks = {
 	$errorSummary: $('.error-summary'),
 	$allValidationLinks: $('.error-summary-list a'),
 	$allValidationDivs: $('.form-group-error'),
@@ -29,14 +29,14 @@ moj.Modules.fixValidationLinks = {
 			this.$errorSummary.first().remove();
 		}
 	},
-	matchSingleDivLinks: function(){
-		const LinkHrefId = this.$allValidationDivs[0].id;
+	matchSingleDivLinks: function() {
+		var LinkHrefId = this.$allValidationDivs[0].id;
 		this.$allValidationLinks.each(function(){
-			$(this).attr('href', `#${LinkHrefId}`);
+			$(this).attr('href', '#' + LinkHrefId);
 		});
 	},
-	getCommonHrefPrefixFromLinks: function(){
-		let arr = [];
+	getCommonHrefPrefixFromLinks: function() {
+		var arr = [];
 		this.$allValidationLinks.each(function(ind, el) {
 			arr.push(el.href ? el.href.split('#')[1] : '');
 		});
@@ -46,19 +46,19 @@ moj.Modules.fixValidationLinks = {
     this.linkPrefix = a1.substring(0, i);
 	},
 	checkAndUpdateAllLinks: function(){
-		let that = this;
-		this.$allValidationLinks.each(function(ind){
-			const fieldId = $(this).attr('href').split(that.linkPrefix)[1];
+		var that = this;
+		this.$allValidationLinks.each(function(ind) {
+			var fieldId = $(this).attr('href').split(that.linkPrefix)[1];
 			if(!fieldId) return; 
-			if($(`#${that.linkPrefix}${fieldId}`).length > 0) return; // link already working
+			if($('#' + that.linkPrefix + fieldId).length > 0) return; // link already working
 			that.updateLinkToMatchDiv($(this), fieldId);
 		});
 	},
-	updateLinkToMatchDiv: function($link, fieldId){
+	updateLinkToMatchDiv: function($link, fieldId) {
 		this.$allValidationDivs.each(function(span){
 			str = $(this).attr('id');
 			if(str.indexOf(fieldId)>-1) {
-				$link.attr('href', `#${str}`);
+				$link.attr('href', '#' + str);
 			}
 		});
 	}	
