@@ -58,6 +58,41 @@ xfeature 'Contacts address book', js: true do
     then_address_book_link_is_not_visible
   end
 
+  scenario "addresses can be selected by name from the 'Find an address' dialog" do
+    when_i_navigate_to_offender_sar_subject_page
+    and_fill_in_subject_details_page
+    and_i_use_the_search_dialog_to_select_an_address
+    then_i_expect_the_address_i_searched_for_to_have_been_entered_into_the_form
+  end
+
+  def then_i_expect_the_address_i_searched_for_to_have_been_entered_into_the_form
+    expect(cases_new_offender_sar_subject_details_page.subject_address).to have_content(contact.address)
+  end
+
+  def and_i_use_the_search_dialog_to_select_an_address
+    click_link 'Back'
+    click_link 'Find an address'
+    fill_in 'popup-search', with: "HMP HALIFAX"
+    click_on 'Search'
+    click_on 'Use HMP halifax'
+    click_on 'Continue'
+    click_link 'Back'
+  end
+
+  def and_fill_in_subject_details_page
+    cases_new_offender_sar_subject_details_page.fill_in_case_details
+    scroll_to cases_new_offender_sar_subject_details_page.submit_button
+    click_on "Continue"
+    expect(cases_new_offender_sar_requester_details_page).to be_displayed
+  end
+
+  def when_i_navigate_to_offender_sar_subject_page
+    cases_page.new_case_button.click
+    expect(cases_new_page).to be_displayed
+    click_link 'OFFENDER-SAR - Offender Subject Access Request'
+    expect(cases_new_offender_sar_subject_details_page).to be_displayed
+  end
+
   def then_address_book_link_is_not_visible
     expect(page).not_to have_content('Addresses')
   end
