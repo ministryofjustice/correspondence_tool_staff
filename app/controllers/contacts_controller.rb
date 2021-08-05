@@ -43,7 +43,9 @@ class ContactsController < ApplicationController
   end
 
   def contacts_search
-    @contacts = Contact.where(name: contacts_search_param[:contacts_search_value])
+    query = contacts_search_param[:contacts_search_value]&.downcase
+    @contacts = Contact.all.where("LOWER(name) LIKE CONCAT('%', ?, '%')", query).order(:name)
+
     render :contacts_search, layout: nil
   end
 
