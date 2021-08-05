@@ -6,8 +6,9 @@ ul.report-list role="list"
       li
         h4.bold-small.contact-name
           = contact.name
-        .grid-row.contact-address
+        pre.contact-address
           = contact.address
+        br
         .button.use-address-button
           =  "Use " + contact.name
 
