@@ -71,7 +71,7 @@ xfeature 'Contacts address book', js: true do
 
   def and_i_use_the_search_dialog_to_select_an_address
     click_link 'Back'
-    click_link 'Find an address'
+    cases_new_offender_sar_subject_details_page.find_an_address_button.click 
     fill_in 'popup-search', with: "HMP HALIFAX"
     click_on 'Search'
     click_on 'Use HMP halifax'
