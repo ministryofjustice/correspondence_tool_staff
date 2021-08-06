@@ -42,11 +42,9 @@ section.govuk-tabs__panel
         tbody
           - @cases.each do |kase|
             tr.case_row
-              td aria-label="#{t('.number')}"
-                span.visually-hidden
-                  = t('.view_case')
-                = " "
-                = link_to kase.number, case_path(kase.id)
+              td 
+                = link_to kase.number, case_path(kase.id),
+                    'aria-label': case_number_with_spaces(kase.number)
               td aria-label="#{t('common.case_list.type')}"
                 = "#{kase.pretty_type} "
                 = kase.trigger_case_marker

@@ -23,21 +23,23 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   def case_link_with_hash(kase, field, page, position)
-    span = content_tag(:span, 
-          t('common.case_list.view_case'), 
-          class: 'visually-hidden')
-
     case_number = kase.__send__(field)
-    
+
     page = 1 if page.blank?
     
     if position.nil?
-      link_to span + case_number, case_path(kase.id)
+      link_to case_number, case_path(kase.id), 
+        'aria-label':  case_number_with_spaces(case_number)
     else
       position += 1
       page_offset = Kaminari.config.default_per_page * (page.to_i - 1)
-      link_to span + case_number, case_path(kase.id, pos: page_offset + position)
+      link_to case_number, case_path(kase.id, pos: page_offset + position),
+        'aria-label': case_number_with_spaces(case_number)
     end
+  end
+
+  def case_number_with_spaces(case_number)
+    'Case number ' + case_number.gsub(/(.)/, '\1 ').strip
   end
 
   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength

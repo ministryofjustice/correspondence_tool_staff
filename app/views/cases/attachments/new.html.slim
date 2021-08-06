@@ -5,12 +5,10 @@
   = t('cases.attachments.upload_request_files_heading')
 
 - content_for :sub_heading
+  span role="heading" aria-label="#{case_number_with_spaces(@case.number)}"
+    = @case.number
 
 = link_to("Back", case_path(@case), class: 'govuk-back-link')
-
-span.visually-hidden
-  = t('common.case.header_case_number')
-  = @case.number
 
 = render partial: 'layouts/header'
 

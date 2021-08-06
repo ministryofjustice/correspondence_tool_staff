@@ -5,9 +5,8 @@
   = t('cases.request_amends.heading')
 
 - content_for :sub_heading
-  span.visually-hidden
-    = t('common.case.header_case_number')
-  = @case.number
+  span role="heading" aria-label="#{case_number_with_spaces(@case.number)}"
+    = @case.number
 
 = render partial: 'layouts/header'
 

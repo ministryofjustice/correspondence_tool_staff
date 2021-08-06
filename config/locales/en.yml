@@ -784,7 +784,6 @@ en:
       gld_contact_email: GLD contact email
       gld_contact_phone: GLD contact phone
       gld_reference: GLD reference
-      header_case_number: "You are viewing case number "
       header_subject: "Case subject, "
       internal_deadline: Draft deadline
       ico_contact_name: ICO contact name

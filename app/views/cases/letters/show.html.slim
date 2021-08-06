@@ -3,11 +3,8 @@
 
 a = link_to "Back", new_case_letters_path(@case.id, @type, letter_template_id: @letter.letter_template_id), class: 'govuk-back-link'
 
-span.visually-hidden
-  = t('common.case.header_case_number')
-
 h1.page-heading
-  span.page-heading--secondary
+  span.page-heading--secondary aria-label="#{case_number_with_spaces(@case.number)}" role="heading"
     = "#{@case.number}"
   span.page-heading--primary
     - @letter.template_name[0] = @letter.template_name[0].downcase
