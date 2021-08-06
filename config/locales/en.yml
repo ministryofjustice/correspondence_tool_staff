@@ -885,6 +885,7 @@ en:
       delete_address_confirmation: Are you sure you want to delete this address?
       find_address: Find an address
       add_or_edit_address: Add or edit addresses (opens in new window)
+      address_search_label: Address name search
 
     choose: Choose...
     choose_file: Choose a file

@@ -10,8 +10,7 @@ moj.Modules.Contacts = {
     }),
 
     init: function() {
-        var self = this;
-        self.attach_button_event_to_open_dialog();
+        this.attach_button_event_to_open_dialog();
     },
 
     attach_button_event_to_open_dialog: function() {
