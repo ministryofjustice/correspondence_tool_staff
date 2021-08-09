@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'Contacts address book', js: true do
+xfeature 'Contacts address book', js: true do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
 
