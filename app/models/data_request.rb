@@ -26,7 +26,6 @@ class DataRequest < ApplicationRecord
     probation_records: 'probation_records',
     cctv_and_bwcf: 'cctv_and_bwcf',
     telephone_recordings: 'telephone_recordings',
-    telephone_pin_logs: 'telephone_pin_logs',
     probation_archive: 'probation_archive',
     mappa: 'mappa',
     pdp: 'pdp',
