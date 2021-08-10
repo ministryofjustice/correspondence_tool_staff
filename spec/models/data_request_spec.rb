@@ -32,6 +32,13 @@ RSpec.describe DataRequest, type: :model do
         expect(new_data_request.date_requested).to eq Date.new(1992, 7, 11)
       end
 
+      it 'uses supplied date received if present' do
+        new_data_request = data_request.clone
+        new_data_request.cached_date_received = Date.new(2021, 8, 9)
+        new_data_request.save!
+        expect(new_data_request.cached_date_received).to eq Date.new(2021, 8, 9)
+      end
+
       it 'defaults to in progress' do
         expect(subject.completed).to eq false
         expect(subject.status).to eq 'In progress'

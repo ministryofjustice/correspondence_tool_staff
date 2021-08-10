@@ -23,6 +23,10 @@ module PageObjects
           element :date_to_month, '#data_request_date_to_mm'
           element :date_to_year, '#data_request_date_to_yyyy'
 
+          element :date_received_day, '#data_request_cached_date_received_dd'
+          element :date_received_month, '#data_request_cached_date_received_mm'
+          element :date_received_year, '#data_request_cached_date_received_yyyy'
+
           element :cached_num_pages, 'input[name*="[cached_num_pages]"]'
           element :completed, 'input[name*="[completed]"]'
 
@@ -35,9 +39,13 @@ module PageObjects
               find(selector).set(true)
             end
           end
+
+          def set_date_received(date_received)
+            date_received_day.set(date_received.day)
+            date_received_month.set(date_received.month)
+            date_received_year.set(date_received.year)
+          end
         end
-
-
 
         element :submit_button, '.button'
       end
