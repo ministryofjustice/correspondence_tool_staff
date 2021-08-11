@@ -186,6 +186,9 @@ module Warehouse
         case_report.third_party_company_name = kase.third_party_company_name
         case_report.number_of_exempt_pages = kase.number_exempt_pages
         case_report.number_of_final_pages = kase.number_final_pages
+        case_report.number_of_days_for_vetting = kase.number_of_days_for_vetting
+        case_report.user_dealing_with_vetting = kase.user_dealing_with_vetting&.full_name
+        case_report.user_id_dealing_with_vetting = kase.user_dealing_with_vetting&.id
       end 
 
       def process_offender_sar_complaint(kase, case_report)

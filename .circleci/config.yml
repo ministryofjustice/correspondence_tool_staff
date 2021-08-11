@@ -49,6 +49,14 @@ references:
         sudo apt-get install -y google-chrome-stable
         RAILS_ENV=test bin/rails webdrivers:chromedriver:update
 
+  setup_test_reporter: &setup_test_reporter
+    run:
+      name: Setup Code Climate test-reporter
+      command: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+
   install_expect: &install_expect
     run:
       name: Install Expect
@@ -110,7 +118,8 @@ references:
       name: Install dependencies
       command: |
         if [ "${CIRCLE_NODE_INDEX}" == "0" ]; then
-          bundle check --path vendor/bundle || bundle install --path vendor/bundle && bundle clean
+          bundle config set --local path 'vendor/bundle'
+          bundle check || bundle install && bundle clean
         fi
 
   save_cache: &save_cache
@@ -140,9 +149,17 @@ references:
       name: Run unit and feature tests
       command: |
         export PARALLEL_TEST_PROCESSORS=8
+        export COVERAGE=1
         bundle exec rails parallel:create
         bundle exec rails parallel:load_structure
         bundle exec rails parallel:spec
+
+  upload_test_coverage: &upload_test_coverage
+    run:
+      name: Upload the test coverage into codeclimate
+      command: |
+        ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
+        ./cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
 
   configure_aws_profile: &configure_aws_profile
     run:
@@ -234,7 +251,9 @@ jobs:
       - *set_up_the_database
       - *rubocop
       - *update_chromedriver
+      - *setup_test_reporter
       - *run_unit_and_feature_tests
+      - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
@@ -252,7 +271,7 @@ jobs:
           paths:
             - build_tag
 
-  build_master_and_push_to_ecr:
+  build_main_and_push_to_ecr:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -286,7 +305,7 @@ jobs:
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_dev: *do_dev_deployment_tasks
-  deploy_master_to_dev: *do_dev_deployment_tasks
+  deploy_main_to_dev: *do_dev_deployment_tasks
 
   staging_deployment_tasks: &do_staging_deployment_tasks
     <<: *deploy_container_config
@@ -306,7 +325,7 @@ jobs:
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_staging: *do_staging_deployment_tasks
-  deploy_master_to_staging: *do_staging_deployment_tasks
+  deploy_main_to_staging: *do_staging_deployment_tasks
 
   qa_deployment_tasks: &do_qa_deployment_tasks
     <<: *deploy_container_config
@@ -326,7 +345,7 @@ jobs:
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_qa: *do_qa_deployment_tasks
-  deploy_master_to_qa: *do_qa_deployment_tasks
+  deploy_main_to_qa: *do_qa_deployment_tasks
 
   demo_deployment_tasks: &do_demo_deployment_tasks
     <<: *deploy_container_config
@@ -346,9 +365,9 @@ jobs:
           webhook: ${SLACK_WEBHOOK_CT}
 
   deploy_branch_to_demo: *do_demo_deployment_tasks
-  deploy_master_to_demo: *do_demo_deployment_tasks
+  deploy_main_to_demo: *do_demo_deployment_tasks
 
-  deploy_master_to_production:
+  deploy_main_to_production:
     <<: *deploy_container_config
     <<: *defaults
     steps:
@@ -373,53 +392,53 @@ jobs:
 workflows:
   version: 2
 
-  build_and_deploy_master:
+  build_and_deploy_main:
     jobs:
       - build_and_test:
           filters:
             branches:
-              only: master
-      - build_master_and_push_to_ecr:
+              only: main
+      - build_main_and_push_to_ecr:
           requires:
             - build_and_test
-      - deploy_master_to_dev:
+      - deploy_main_to_dev:
           requires:
-            - build_master_and_push_to_ecr
-      - deploy_master_to_staging_approval:
+            - build_main_and_push_to_ecr
+      - deploy_main_to_staging_approval:
           type: approval
           requires:
-            - deploy_master_to_dev
-      - deploy_master_to_staging:
+            - deploy_main_to_dev
+      - deploy_main_to_staging:
           requires:
-            - deploy_master_to_staging_approval
-      - deploy_master_to_production_approval:
+            - deploy_main_to_staging_approval
+      - deploy_main_to_production_approval:
           type: approval
           requires:
-            - deploy_master_to_staging
-      - deploy_master_to_production:
+            - deploy_main_to_staging
+      - deploy_main_to_production:
           requires:
-            - deploy_master_to_production_approval
-      - deploy_master_to_qa_approval:
+            - deploy_main_to_production_approval
+      - deploy_main_to_qa_approval:
           type: approval
           requires:
-            - build_master_and_push_to_ecr
-      - deploy_master_to_qa:
+            - build_main_and_push_to_ecr
+      - deploy_main_to_qa:
           requires:
-            - deploy_master_to_qa_approval
-      - deploy_master_to_demo_approval:
+            - deploy_main_to_qa_approval
+      - deploy_main_to_demo_approval:
           type: approval
           requires:
-            - build_master_and_push_to_ecr
-      - deploy_master_to_demo:
+            - build_main_and_push_to_ecr
+      - deploy_main_to_demo:
           requires:
-            - deploy_master_to_demo_approval
+            - deploy_main_to_demo_approval
 
   build_and_deploy_branch:
     jobs:
       - build_and_test:
           filters:
             branches:
-              ignore: master
+              ignore: main
       - build_branch_and_push_to_ecr_approval:
           type: approval
           requires:

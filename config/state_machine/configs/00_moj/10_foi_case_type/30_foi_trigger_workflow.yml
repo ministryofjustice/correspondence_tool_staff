@@ -92,7 +92,7 @@
                 send_back:
                   if: Workflows::Predicates#user_is_a_manager_for_case?
                   transition_to: drafting
-                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
+                  after_transition: Workflows::Hooks#notify_responder_responses_sent_back
 
               responded:
                 add_message_to_case:
@@ -109,7 +109,7 @@
                 send_back:
                   if: Workflows::Predicates#user_is_a_manager_for_case?
                   transition_to: drafting
-                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
+                  after_transition: Workflows::Hooks#notify_responder_responses_sent_back
 
               closed:
                 add_message_to_case:
@@ -227,7 +227,7 @@
                 send_back:
                   if: Workflows::Predicates#user_is_approver_on_case?
                   transition_to: drafting
-                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
+                  after_transition: Workflows::Hooks#notify_responder_responses_sent_back
 
               responded:
                 add_message_to_case:

@@ -114,7 +114,7 @@ module Stats
       def self.find_cases(record, query)
         ::Warehouse::CaseReport
           .includes(:case)
-          .where("#{query}", param: record.id)
+          .where([query, param: record.id])
           .map(&:case)
       end
 

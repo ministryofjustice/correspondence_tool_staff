@@ -187,6 +187,7 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to have_content "Mark as vetting in progress"
     expect(cases_show_page).to have_content "Requires response"
     expect(cases_show_page).to have_content "Send acknowledgement letter"
+    expect(cases_show_page).to have_content "Data review is required"
   end
 
   def requires_data

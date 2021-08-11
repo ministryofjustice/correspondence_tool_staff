@@ -1,4 +1,4 @@
-.dropzone{ tabindex="0"
+.dropzone{ 
            data-dz-template=render('shared/dropzone_js').gsub('"', '\'').html_safe
            data-form-data=s3_direct_post.fields.to_json
            data-url= s3_direct_post.url
@@ -13,5 +13,6 @@
     .column-one-half
     span.normal= "Drag and drop files here"
     .bold-normal= "or"
-    .button-secondary
+    button.button-secondary type="button"
       = t('common.choose_file')
+      

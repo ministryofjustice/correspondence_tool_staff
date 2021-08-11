@@ -46,7 +46,8 @@ FactoryBot.define do
 
     # NB: when using either 'find' or 'find_or_create' strategies, the existing
     #     user that is found will have it's password set to 'nil'.
-    password { 'qwerty$123' }
+    ENV['TESTSPEC_LOGIN_PASSWORD'] = SecureRandom.random_number(36**13).to_s(36)
+    password { ENV['TESTSPEC_LOGIN_PASSWORD'] }
     sequence(:full_name) { |n| "#{identifier} #{n}" }
     email { Faker::Internet.email(name: full_name) }
 

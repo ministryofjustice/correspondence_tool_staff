@@ -1,9 +1,6 @@
 - content_for :page_title do
   = t('page_title.destroy_case_page', case_number: @case.number)
 
-= GovukElementsErrorsHelper.error_summary @case,
-  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 - content_for :heading
   = "Delete case"
 
@@ -13,6 +10,9 @@
   = @case.number
 
 = render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case,
+  "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for @case, as: :case, url: case_path(@case), method: :delete do |f|
 

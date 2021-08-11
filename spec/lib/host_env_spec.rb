@@ -92,8 +92,8 @@ describe HostEnv do
 
   describe '5 cloud platform infrastructure environments' do
     before(:each) do
-      k8s_settings = YAML.load_file("config/kubernetes/#{namespace}/deployment.yaml")
-      @envvars = k8s_settings.dig('spec', 'template', 'spec', 'containers')[0]['env']
+      k8s_settings = YAML.load_file("config/kubernetes/#{namespace}/configmap.yaml")
+      @envvars = k8s_settings.dig('data')
     end
 
     context '1. demo server' do
@@ -254,12 +254,8 @@ describe HostEnv do
     end
 
     def expect_k8s_settings
-      expect(env_value_for(name: 'RAILS_ENV')).to eq ENV['RAILS_ENV']
-      expect(env_value_for(name: 'ENV')).to eq ENV['ENV']
-    end
-
-    def env_value_for(name:)
-      @envvars.find { |envvar| envvar['name'] == name.upcase }['value']
+      expect(@envvars['RAILS_ENV']).to eq ENV['RAILS_ENV']
+      expect(@envvars['ENV']).to eq ENV['ENV']
     end
   end
 end

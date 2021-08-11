@@ -1,10 +1,6 @@
 - content_for :page_title do
   = t('page_title.new_user_page', team_name: @team.name)
 
-= GovukElementsErrorsHelper.error_summary @user,
-    "#{pluralize(@user.errors.count, t('common.error'))} #{ t('common.summary_error')}",
-    ""
-
 - content_for :heading
   =t('users.new.heading')
 
@@ -12,6 +8,11 @@
   = "#{@team.pretty_type}: #{@team.name}"
 
 = render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @user,
+    "#{pluralize(@user.errors.count, t('common.error'))} #{ t('common.summary_error')}",
+    ""
+
 = form_for @user do |f|
   = render partial: 'form', locals: {f: f, user: @user, team: @team, role: @role, submit_button_text: t('.create') }
 
