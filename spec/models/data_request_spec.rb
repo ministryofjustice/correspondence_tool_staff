@@ -96,7 +96,7 @@ RSpec.describe DataRequest, type: :model do
       it 'required if the case is marked as completed' do 
         data_request.cached_date_received = nil
         expect(subject).not_to be_valid
-        expect(subject.errors[:cached_date_received]).to eq ["must be completed if this data request has been marked as completed"]        
+        expect(subject.errors[:cached_date_received]).to eq ["must be provided if request is complete"]        
       end 
 
       it 'The value cannot be in the future' do 

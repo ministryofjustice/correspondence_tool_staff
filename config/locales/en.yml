@@ -226,7 +226,7 @@ en:
             request_type_note:
               blank: can't be blank
             cached_date_received:
-              blank: must be completed if this data request has been marked as completed
+              blank: must be provided if request is complete
               future: cannot be in the future
         linked_case:
           missing: "doesn't exist"
@@ -505,7 +505,7 @@ en:
           probation_archive: Probation archive
           other: Other
         request_type_note: Please provide more details
-        cached_date_received: When the data is received
+        cached_date_received: Date when data is received
         cached_num_pages: Number of pages received
         completed: "Yes, all data received"
       data_request_log:
