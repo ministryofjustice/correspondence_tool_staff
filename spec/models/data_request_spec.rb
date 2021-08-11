@@ -230,7 +230,7 @@ RSpec.describe DataRequest, type: :model do
 
   describe 'scope completed' do
     let!(:data_request_in_progress) { create(:data_request) }
-    let!(:data_request_completed) { create(:data_request, :completed) }
+    let!(:data_request_completed) { create(:data_request, :completed, cached_date_received: Date.today) }
     it 'returns completed data requests' do
       expect(DataRequest.completed).to match_array [data_request_completed]
       expect(DataRequest.completed).not_to include data_request_in_progress
@@ -239,7 +239,7 @@ RSpec.describe DataRequest, type: :model do
 
   describe 'scope in_progress' do
     let!(:data_request_in_progress) { create(:data_request) }
-    let!(:data_request_completed) { create(:data_request, :completed) }
+    let!(:data_request_completed) { create(:data_request, :completed, cached_date_received: Date.today) }
     it 'returns in progress data requests' do
       expect(DataRequest.in_progress).to match_array [data_request_in_progress]
       expect(DataRequest.in_progress).not_to include data_request_completed

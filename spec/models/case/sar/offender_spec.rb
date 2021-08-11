@@ -722,7 +722,8 @@ describe Case::SAR::Offender do
         cached_num_pages: 200,
         request_type: 'all_prison_records',
         completed: true,
-        date_requested: Date.new(2020, 8, 15)
+        date_requested: Date.new(2020, 8, 15),
+        cached_date_received: Date.new(2020, 8, 15)
       ).save!
       DataRequest.new(
         offender_sar_case: kase,
@@ -731,7 +732,8 @@ describe Case::SAR::Offender do
         cached_num_pages: 100,
         request_type: 'nomis_records',
         completed: true,
-        date_requested: Date.new(2020, 8, 15)
+        date_requested: Date.new(2020, 8, 15),
+        cached_date_received: Date.new(2020, 8, 15)
       ).save!
       expect(kase.data_requests_completed?).to eq true
     end
