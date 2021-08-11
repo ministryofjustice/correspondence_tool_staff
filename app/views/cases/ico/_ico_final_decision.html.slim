@@ -3,7 +3,13 @@ section.case-info.ico-decision-section
     = "ICO's decision"
 
   .request--message
-    = case_details.ico_decision_summary
+    p
+      strong
+        = "MoJ's decision has been #{ case_details.ico_decision } by the ICO"
+      = " on #{ case_details.formatted_date_ico_decision_received }"
+    - if case_details.ico_decision_comment.present?
+      p
+        = case_details.ico_decision_comment
 
     = render partial: 'cases/attachment_report',
             locals: { attachments: case_details.ico_decision_attachments,
