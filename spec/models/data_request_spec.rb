@@ -90,6 +90,22 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
+    context 'date when data is received' do 
+      subject(:data_request) { build(:data_request, completed: true) }
+
+      it 'required if the case is marked as completed' do 
+        data_request.cached_date_received = nil
+        expect(subject).not_to be_valid
+        expect(subject.errors[:cached_date_received]).to eq ["must be completed if this data request has been marked as completed"]        
+      end 
+
+      it 'The value cannot be in the future' do 
+        data_request.cached_date_received = 1.day.from_now
+        expect(subject).not_to be_valid
+        expect(subject.errors[:cached_date_received]).to eq ["cannot be in the future"]        
+      end 
+    end
+
     context 'when request_type is other' do
       subject(:data_request) { build(:data_request, request_type: 'other', request_type_note: nil) }
 
