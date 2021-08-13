@@ -27,6 +27,10 @@ class Case::SAR::Offender < Case::Base
 
   DATA_SUBJECT_FOR_REQUESTEE_TYPE = 'data_subject'.freeze
 
+  VETTING_IN_PROCESS_EVENT = 'mark_as_vetting_in_progress'.freeze
+  READY_FOR_COPY_EVENT = 'mark_as_ready_to_copy'.freeze
+
+
   GOV_UK_DATE_FIELDS = %i[
     date_of_birth
     date_responded
@@ -290,6 +294,37 @@ class Case::SAR::Offender < Case::Base
   def first_prison_number
     return '' unless prison_number.present?
     prison_number.gsub(/[,]/, ' ').split(' ').first.upcase
+  end
+
+  def number_of_days_for_vetting
+    # Get the start date and end date for the vetting process
+    start_date_for_vetting = nil
+    end_date_for_vetting = nil
+    self.transitions.each do | transition|
+      if transition.event == VETTING_IN_PROCESS_EVENT
+        start_date_for_vetting = transition.created_at.to_date
+      end
+      if transition.event == READY_FOR_COPY_EVENT
+        end_date_for_vetting = transition.created_at.to_date
+      end
+    end
+    end_date_for_vetting = end_date_for_vetting || Date.today
+    # Calculate the days taken for vetting process
+    days = nil
+    if start_date_for_vetting
+      days = start_date_for_vetting.business_days_until(end_date_for_vetting, true) 
+    end
+    days
+  end
+
+  def user_dealing_with_vetting
+    user_for_vetting = nil
+    self.transitions.each do | transition|
+      if transition.event == VETTING_IN_PROCESS_EVENT
+        user_for_vetting = transition.acting_user
+      end
+    end
+    user_for_vetting
   end
 
   private

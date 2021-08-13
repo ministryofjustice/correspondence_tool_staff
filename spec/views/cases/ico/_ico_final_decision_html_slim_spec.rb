@@ -28,7 +28,7 @@ describe 'cases/ico/_ico_final_decision.html.slim', type: :view do
     end
 
     it 'should display comments if comments exist' do
-      upheld_closed_sar_ico_appeal.ico_decision_comment = 'Today is the day.'
+      upheld_closed_sar_ico_appeal.ico_decision_comment = 'Today is the day. \r\n testing more'
 
       disallow_case_policies_in_view upheld_closed_sar_ico_appeal,
                                      :can_remove_attachment?
@@ -37,7 +37,7 @@ describe 'cases/ico/_ico_final_decision.html.slim', type: :view do
 
       partial = ico_decision_section(rendered)
       expect(partial).to have_comments
-      expect(partial.comments.text).to eq 'Today is the day.'
+      expect(partial.comments.text).to eq 'Today is the day. \r\n testing more'
     end
 
     it 'should display attachments' do
