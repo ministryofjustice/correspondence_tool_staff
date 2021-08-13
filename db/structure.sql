@@ -45,16 +45,23 @@ CREATE TYPE public.cases_delivery_methods AS ENUM (
 
 
 --
--- Name: request_types_enum; Type: TYPE; Schema: public; Owner: -
+-- Name: request_types; Type: TYPE; Schema: public; Owner: -
 --
 
-CREATE TYPE public.request_types_enum AS ENUM (
+CREATE TYPE public.request_types AS ENUM (
     'all_prison_records',
     'security_records',
     'nomis_records',
+    'nomis_other',
     'nomis_contact_logs',
     'probation_records',
-    'prison_and_probation_records',
+    'cctv_and_bwcf',
+    'telephone_recordings',
+    'telephone_pin_logs',
+    'probation_archive',
+    'mappa',
+    'pdp',
+    'court',
     'other'
 );
 
@@ -440,6 +447,44 @@ ALTER SEQUENCE public.cases_users_transitions_trackers_id_seq OWNED BY public.ca
 
 
 --
+-- Name: contacts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.contacts (
+    id bigint NOT NULL,
+    name character varying,
+    address_line_1 character varying,
+    address_line_2 character varying,
+    town character varying,
+    county character varying,
+    postcode character varying,
+    email character varying,
+    contact_type integer DEFAULT 0,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.contacts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: contacts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.contacts_id_seq OWNED BY public.contacts.id;
+
+
+--
 -- Name: correspondence_types; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -524,7 +569,7 @@ CREATE TABLE public.data_requests (
     case_id integer NOT NULL,
     user_id integer NOT NULL,
     location character varying NOT NULL,
-    request_type public.request_types_enum NOT NULL,
+    request_type public.request_types NOT NULL,
     date_requested date NOT NULL,
     cached_date_received date,
     cached_num_pages integer DEFAULT 0 NOT NULL,
@@ -1096,7 +1141,10 @@ CREATE TABLE public.warehouse_case_reports (
     complaint_subtype character varying,
     priority character varying,
     total_cost numeric(10,2),
-    settlement_cost numeric(10,2)
+    settlement_cost numeric(10,2),
+    user_dealing_with_vetting character varying,
+    user_id_dealing_with_vetting integer,
+    number_of_days_for_vetting integer
 );
 
 
@@ -1154,6 +1202,13 @@ ALTER TABLE ONLY public.cases_exemptions ALTER COLUMN id SET DEFAULT nextval('pu
 --
 
 ALTER TABLE ONLY public.cases_users_transitions_trackers ALTER COLUMN id SET DEFAULT nextval('public.cases_users_transitions_trackers_id_seq'::regclass);
+
+
+--
+-- Name: contacts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contacts ALTER COLUMN id SET DEFAULT nextval('public.contacts_id_seq'::regclass);
 
 
 --
@@ -1338,6 +1393,14 @@ ALTER TABLE ONLY public.cases
 
 ALTER TABLE ONLY public.cases_users_transitions_trackers
     ADD CONSTRAINT cases_users_transitions_trackers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: contacts contacts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.contacts
+    ADD CONSTRAINT contacts_pkey PRIMARY KEY (id);
 
 
 --
@@ -2022,6 +2085,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20201113130611'),
 ('20210115230915'),
 ('20210518085422'),
-('20210625113911');
+('20210625113911'),
+('20210723160533'),
+('20210727143427');
 
 

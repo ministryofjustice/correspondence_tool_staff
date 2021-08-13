@@ -144,7 +144,6 @@ RSpec.describe DataRequest, type: :model do
         expect(build(:data_request, request_type: 'probation_records')).to be_valid
         expect(build(:data_request, request_type: 'cctv_and_bwcf')).to be_valid
         expect(build(:data_request, request_type: 'telephone_recordings')).to be_valid
-        expect(build(:data_request, request_type: 'telephone_pin_logs')).to be_valid
         expect(build(:data_request, request_type: 'probation_archive')).to be_valid
         expect(build(:data_request, request_type: 'mappa')).to be_valid
         expect(build(:data_request, request_type: 'pdp')).to be_valid
