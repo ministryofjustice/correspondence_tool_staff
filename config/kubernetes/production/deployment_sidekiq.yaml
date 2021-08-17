@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: track-a-query-jobs
 spec:
-  replicas: 1
+  replicas: 4
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -21,6 +21,13 @@ spec:
         - name: jobs
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
           command: ["./config/docker/entrypoint-background-jobs.sh"]
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 2000Mi
+            requests:
+              cpu: 10m
+              memory: 250Mi
           env:
             - name: DATABASE_URL
               valueFrom:
