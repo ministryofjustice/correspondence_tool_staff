@@ -32,6 +32,13 @@ RSpec.describe DataRequest, type: :model do
         expect(new_data_request.date_requested).to eq Date.new(1992, 7, 11)
       end
 
+      it 'uses supplied date received if present' do
+        new_data_request = data_request.clone
+        new_data_request.cached_date_received = Date.new(2021, 8, 9)
+        new_data_request.save!
+        expect(new_data_request.cached_date_received).to eq Date.new(2021, 8, 9)
+      end
+
       it 'defaults to in progress' do
         expect(subject.completed).to eq false
         expect(subject.status).to eq 'In progress'
@@ -81,6 +88,22 @@ RSpec.describe DataRequest, type: :model do
         data_request.cached_num_pages = 6.5
         expect(data_request.valid?).to be false
       end
+    end
+
+    context 'date when data is received' do 
+      subject(:data_request) { build(:data_request, completed: true) }
+
+      it 'required if the case is marked as completed' do 
+        data_request.cached_date_received = nil
+        expect(subject).not_to be_valid
+        expect(subject.errors[:cached_date_received]).to eq ["must be provided if request is complete"]        
+      end 
+
+      it 'The value cannot be in the future' do 
+        data_request.cached_date_received = 1.day.from_now
+        expect(subject).not_to be_valid
+        expect(subject.errors[:cached_date_received]).to eq ["cannot be in the future"]        
+      end 
     end
 
     context 'when request_type is other' do
@@ -207,7 +230,7 @@ RSpec.describe DataRequest, type: :model do
 
   describe 'scope completed' do
     let!(:data_request_in_progress) { create(:data_request) }
-    let!(:data_request_completed) { create(:data_request, :completed) }
+    let!(:data_request_completed) { create(:data_request, :completed, cached_date_received: Date.today) }
     it 'returns completed data requests' do
       expect(DataRequest.completed).to match_array [data_request_completed]
       expect(DataRequest.completed).not_to include data_request_in_progress
@@ -216,7 +239,7 @@ RSpec.describe DataRequest, type: :model do
 
   describe 'scope in_progress' do
     let!(:data_request_in_progress) { create(:data_request) }
-    let!(:data_request_completed) { create(:data_request, :completed) }
+    let!(:data_request_completed) { create(:data_request, :completed, cached_date_received: Date.today) }
     it 'returns in progress data requests' do
       expect(DataRequest.in_progress).to match_array [data_request_in_progress]
       expect(DataRequest.in_progress).not_to include data_request_completed

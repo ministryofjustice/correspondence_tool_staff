@@ -225,6 +225,9 @@ en:
               future: cannot be in the future
             request_type_note:
               blank: can't be blank
+            cached_date_received:
+              blank: must be provided if request is complete
+              future: cannot be in the future
         linked_case:
           missing: "doesn't exist"
           references_self: "can't link to the same case"
@@ -465,8 +468,6 @@ en:
           accepted: Accept
           rejected: Reject
         user_id: Business unit
-      business_unit:
-        id: Business Unit
       state_selector:
         unassigned: Needs reassigning
         awaiting_responder: To be accepted
@@ -504,6 +505,7 @@ en:
           probation_archive: Probation archive
           other: Other
         request_type_note: Please provide more details
+        cached_date_received: Date when data is received
         cached_num_pages: Number of pages received
         completed: "Yes, all data received"
       data_request_log:
@@ -696,6 +698,7 @@ en:
       directorate:
         name: Directorate name
       business_unit:
+        id: Business Unit
         name: Business unit name
         role: What will the business unit be responsible for?
         correspondence_type_roles: Correspondence types
@@ -1058,6 +1061,7 @@ en:
       correspondence_type_errors:
         unknown: "Unknown correspondence type \"%{type}\""
         not_authorised: "You are not authorised to create \"%{type}\" correspondences"
+      date_sar_request_copy: "For example, 12 11 2007"
       date_sar_received_copy: "For example, 12 11 2007"
       date_complaint_external_deadline: "For example, 12 11 2007"
       date_request_received_copy: "For example, 12 11 2007"
