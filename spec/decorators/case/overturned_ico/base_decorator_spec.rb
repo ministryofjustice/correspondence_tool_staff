@@ -24,23 +24,6 @@ describe Case::OverturnedICO::BaseDecorator do
     end
   end
 
-  describe '#ico_decision_summary' do
-    it 'returns a just the summary' do
-      overturned_ico_sar.original_ico_appeal.date_ico_decision_received = Date.new(2017, 8, 13)
-      overturned_ico_sar.original_ico_appeal.ico_decision = :upheld
-      expect(overturned_ico_sar.ico_decision_summary)
-          .to start_with '<p><strong>MoJ&#39;s decision has been upheld by the ICO </strong>on 13 Aug 2017</p>'
-    end
-
-    it 'returns summary and comment' do
-      overturned_ico_sar.original_ico_appeal.date_ico_decision_received = Date.new(2017, 8, 13)
-      overturned_ico_sar.original_ico_appeal.ico_decision_comment = 'Today is a good day'
-      overturned_ico_sar.original_ico_appeal.ico_decision = :overturned
-      expect(overturned_ico_sar.ico_decision_summary)
-          .to eq "<p><strong>MoJ&#39;s decision has been overturned by the ICO </strong>on 13 Aug 2017</p><p>Today is a good day</p>"
-    end
-  end
-
   describe '#original_case_description' do
     context "Overturned SAR" do
       let(:overturned_sar)    { create(:overturned_ico_sar) }
