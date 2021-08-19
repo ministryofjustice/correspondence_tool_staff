@@ -556,8 +556,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>I note the contents and I have asked Her Majesty’s Prison and Probation Service to look into the matter and advise you further.
                   <br>
-                  <br>Your letter/email has been sent on to:
-                  <br>#{address}
+                  <br><strong>Your letter/email has been sent on to: [INSERT APPROPRIATE ADDRESS]</strong>
                   <br>
                   <br>Yours sincerely
                   <br>
