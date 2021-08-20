@@ -862,6 +862,7 @@ en:
       add_complaint_appeal_outcome: Add outcome
       add_complaint_outcome: Add outcome
       add_complaint_costs: Add costs
+      move_case_back: Move case back
     case_list:
       flag: 'Flag'
       draft_deadline: Draft deadline

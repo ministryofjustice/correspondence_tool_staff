@@ -82,6 +82,8 @@
                 edit_case:
                 reset_to_initial_state:
                   transition_to: to_be_assessed
+                move_case_back:
+                  transition_to: data_to_be_requested
               vetting_in_progress:
                 mark_as_ready_to_copy:
                   transition_to: ready_to_copy
