@@ -1,0 +1,11 @@
+.grid-row
+  .column-full
+    header(role= 'banner')
+      h1.page-heading aria-label="#{case_number_with_spaces(kase.number)} #{kase.pretty_type}"
+        - if content_for?(:sub_heading)
+          span.page-heading--secondary
+            = yield :sub_heading
+            = ' '
+        span.page-heading--primary
+          = yield :heading
+= render partial: 'layouts/flashes' unless flash.empty?

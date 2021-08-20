@@ -1,10 +1,10 @@
 - content_for :heading
-  span.visually-hidden
+  span.visually-hidden aria-hidden="true"
     = t('common.case.header_subject')
   = kase.subject
 
 - content_for :sub_heading
-  span role="heading" aria-label="#{case_number_with_spaces(kase.number)}, #{kase.pretty_type}"
+  span aria-hidden="true"
     = "#{kase.number} - #{kase.pretty_type}"
 
-= render partial: 'layouts/header'
+= render partial: 'layouts/case_header', locals: {kase: kase}
