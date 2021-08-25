@@ -34,6 +34,7 @@ RSpec.describe DataRequest, type: :model do
 
       it 'uses supplied date received if present' do
         new_data_request = data_request.clone
+        new_data_request.completed = true
         new_data_request.cached_date_received = Date.new(2021, 8, 9)
         new_data_request.save!
         expect(new_data_request.cached_date_received).to eq Date.new(2021, 8, 9)
