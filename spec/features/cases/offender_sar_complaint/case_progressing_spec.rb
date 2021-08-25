@@ -62,20 +62,6 @@ feature 'offender sar complaint case creation by a manager' do
       close_case
     end
 
-    scenario 'progressing an offender sar complaint case - scenario 6' do
-      to_be_assessed
-      requires_data
-      waiting_for_data
-      ready_for_vetting
-      move_case_back
-      waiting_for_data
-      ready_for_vetting
-      vetting_in_progress
-      ready_to_copy
-      requires_response
-      close_case
-    end
-
   end
 
   context 'ICO offender sar complaint case', js: true do
@@ -127,20 +113,6 @@ feature 'offender sar complaint case creation by a manager' do
       close_case
     end
 
-    scenario 'progressing an offender sar complaint case - scenario 6' do
-      to_be_assessed
-      requires_data
-      waiting_for_data
-      ready_for_vetting
-      move_case_back
-      waiting_for_data
-      ready_for_vetting
-      vetting_in_progress
-      ready_to_copy
-      requires_response
-      close_case
-    end
-
   end
 
   context 'Litigation offender sar complaint case', js: true do
@@ -179,21 +151,6 @@ feature 'offender sar complaint case creation by a manager' do
     scenario 'progressing an offender sar complaint case - scenario 4' do
       to_be_assessed
       requires_data
-      waiting_for_data
-      ready_for_vetting
-      vetting_in_progress
-      ready_to_copy
-      ready_to_dispatch
-      legal_proceedings_ongoing
-      close_case
-    end
-
-    scenario 'progressing an offender sar complaint case - scenario 5' do
-      to_be_assessed
-      requires_data
-      waiting_for_data
-      ready_for_vetting
-      move_case_back
       waiting_for_data
       ready_for_vetting
       vetting_in_progress
@@ -260,15 +217,6 @@ feature 'offender sar complaint case creation by a manager' do
     expect(cases_show_page).to have_content "Mark as vetting in progress"
     expect(cases_show_page).to have_content "Preview cover page"
     expect(cases_show_page).to have_content "Ready for vetting"
-  end
-
-  def move_case_back
-    click_on "Move case back"
-
-    expect(cases_show_page).to be_displayed
-    expect(cases_show_page).to have_content "Mark as waiting for data"
-    expect(cases_show_page).to have_content "Data to be requested"
-    expect(cases_show_page).to have_content "Send acknowledgement letter"
   end
 
   def vetting_in_progress

@@ -53,8 +53,7 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_vetting_in_progress, 
           :preview_cover_page, 
           :reset_to_initial_state, 
-          :add_data_received,
-          :move_case_back
+          :add_data_received
         ]
       },
       {

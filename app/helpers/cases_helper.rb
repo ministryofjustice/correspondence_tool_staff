@@ -57,11 +57,10 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
         class: 'button state-action-button',
         method: 'patch'
       when :move_case_back
-        link_to t("common.case/offender_sar_complaint.move_case_back"),
-              transition_case_sar_offender_complaint_path(@case, event),
+        link_to t("common.case/offender_sar.move_case_back"),
+              move_case_back_case_sar_offender_path(@case),
               id: "action--move_case_back",
-              class: 'button state-action-button',
-              method: 'patch'
+              class: 'button state-action-button'
       when :start_complaint
       link_to I18n.t('common.case/offender_sar.start_complaint'),
               start_complaint_case_sar_offender_complaint_index_path(@case.number),
