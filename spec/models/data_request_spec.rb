@@ -104,6 +104,13 @@ RSpec.describe DataRequest, type: :model do
         expect(subject).not_to be_valid
         expect(subject.errors[:cached_date_received]).to eq ["cannot be in the future"]        
       end 
+
+      it 'The value should be blank if data is not complete' do 
+        data_request.completed = false
+        data_request.cached_date_received = 1.day.from_now
+        expect(subject).not_to be_valid
+        expect(subject.errors[:cached_date_received]).to eq ["should be blank if the request is not complete"]        
+      end 
     end
 
     context 'when request_type is other' do
