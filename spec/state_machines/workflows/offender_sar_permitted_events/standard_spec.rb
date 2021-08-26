@@ -18,6 +18,7 @@ describe ConfigurableStateMachine::Machine do
           :preview_cover_page, 
           :mark_as_ready_for_vetting,
           :send_acknowledgement_letter,
+          :move_case_back
         ]
       },
       {
@@ -25,20 +26,23 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :preview_cover_page, 
           :mark_as_vetting_in_progress,
+          :move_case_back
         ]
       },
       {
         state: :vetting_in_progress,
         specific_events: [
           :mark_as_ready_to_copy,
-          :preview_cover_page
+          :preview_cover_page,
+          :move_case_back
         ]
       },
       {
         state: :ready_to_copy,
         specific_events: [
           :preview_cover_page, 
-          :mark_as_ready_to_dispatch
+          :mark_as_ready_to_dispatch,
+          :move_case_back
         ]
       },
       {

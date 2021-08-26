@@ -312,6 +312,15 @@ class Case::BasePolicy < ApplicationPolicy
     check_user_can_manage_offender_sar
   end
 
+  def method_missing(method, *args)
+    if method.to_s =~ /can_(.+)\?$/
+      event_name = $1
+      check_can_trigger_event(event_name.to_sym)
+    else
+      super
+    end
+  end
+
   private
 
   check :user_in_responding_team do

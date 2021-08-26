@@ -6,7 +6,7 @@ module Cases
     before_action :set_case_types, only: [:new, :create]
 
     before_action -> { set_decorated_case(params[:id]) }, only: [
-      :transition, :edit, :update
+      :transition, :edit, :update, :move_case_back, :confirm_move_case_back
     ]
 
     def initialize
@@ -100,6 +100,23 @@ module Cases
       apply_date_workaround
     end
 
+    def move_case_back
+      authorize @case, :can_move_case_back?
+      render :move_case_back
+    end 
+
+    def confirm_move_case_back
+      authorize @case, :can_move_case_back?
+      if params['extra_comment'].present?
+        @case.state_machine.move_case_back!(params_for_move_case_back)
+        flash[:notice] = "Case has been moved back."
+        redirect_to case_path(@case) and return
+      else
+        flash[:alert] = "Please provide the reason for reverting the case back."
+        render :move_case_back
+      end
+    end
+
     private
 
     def steps_are_completed?
@@ -140,6 +157,12 @@ module Cases
 
     def params_for_transition
       { acting_user: current_user, acting_team: @case.default_managing_team }
+    end
+
+    def params_for_move_case_back
+      message = "(Reason: #{params[:extra_comment]})"
+      
+      { acting_user: current_user, acting_team: @case.default_managing_team, message:  message }
     end
 
     def reload_case_page_on_success
