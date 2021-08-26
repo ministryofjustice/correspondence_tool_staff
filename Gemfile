@@ -78,10 +78,10 @@ group :test do
   gem 'capybara', '~> 3.35.2'
   gem 'i18n-tasks', '~> 0.9.30'
   gem 'rails-controller-testing', require: false
-  gem 'shoulda-matchers', '~> 4.3'
+  gem 'shoulda-matchers', '~> 5.0'
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 4.5'
-  gem 'simplecov', '~> 0.17.1'
+  gem 'simplecov', '~> 0.21.2'
 end
 
 group :development, :test do
@@ -100,7 +100,7 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.9'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 1.18.0', require: false
+  gem 'rubocop', '~> 1.19.1', require: false
   gem 'rubocop-rspec', '~> 2.4.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
@@ -114,7 +114,7 @@ group :development do
   gem 'guard-brakeman'
   gem 'guard-rspec'
   gem 'guard-rubocop'
-  gem 'listen', '~> 3.5.1'
+  gem 'listen', '~> 3.7.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'
