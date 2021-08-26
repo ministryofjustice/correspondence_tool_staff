@@ -228,6 +228,7 @@ en:
             cached_date_received:
               blank: must be provided if request is complete
               future: cannot be in the future
+              not_empty: should be blank if the request is not complete
         linked_case:
           missing: "doesn't exist"
           references_self: "can't link to the same case"

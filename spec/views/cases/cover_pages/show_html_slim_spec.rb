@@ -11,6 +11,7 @@ describe 'cases/cover_pages/show', type: :view do
         date_from: Date.new(2018, 8, 15),
         date_to: Date.new(2019, 8, 15),
         cached_num_pages: 32,
+        completed: true, 
         cached_date_received: Date.new(2020, 8, 15),
       )
     }
