@@ -44,7 +44,7 @@ gem 'paper_trail', '~> 12.0'
 gem 'pg', '~> 1.2'
 gem 'pg_search', '~> 2.3.5'
 gem 'pry-rails'
-gem 'puma', '~> 5.3'
+gem 'puma', '~> 5.4'
 gem 'pundit', '~>2.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.6'
@@ -80,7 +80,7 @@ group :test do
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 5.0'
   gem 'site_prism', '= 3.1'
-  gem 'webdrivers', '~> 4.5'
+  gem 'webdrivers', '~> 4.6'
   gem 'simplecov', '~> 0.21.2'
 end
 
@@ -90,7 +90,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
-  gem 'bullet', '~> 6.1.0'
+  gem 'bullet', '~> 6.1.5'
   gem 'byebug', platform: :mri
   gem 'colorize'
   gem 'guard-jasmine'
