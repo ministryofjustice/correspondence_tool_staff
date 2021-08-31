@@ -40,7 +40,7 @@
     .column-full
       main#content
         = content_for?(:tab_content) ? yield(:tab_content) : yield
-        = render partial: 'feedback/new' if controller_name != 'sessions'
+        = render partial: 'feedback/new' if controller_name !='sessions' && current_user
 
 - content_for :body_end do
   = javascript_include_tag "application"

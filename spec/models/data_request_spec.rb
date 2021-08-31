@@ -34,6 +34,7 @@ RSpec.describe DataRequest, type: :model do
 
       it 'uses supplied date received if present' do
         new_data_request = data_request.clone
+        new_data_request.completed = true
         new_data_request.cached_date_received = Date.new(2021, 8, 9)
         new_data_request.save!
         expect(new_data_request.cached_date_received).to eq Date.new(2021, 8, 9)
@@ -103,6 +104,13 @@ RSpec.describe DataRequest, type: :model do
         data_request.cached_date_received = 1.day.from_now
         expect(subject).not_to be_valid
         expect(subject.errors[:cached_date_received]).to eq ["cannot be in the future"]        
+      end 
+
+      it 'The value should be blank if data is not complete' do 
+        data_request.completed = false
+        data_request.cached_date_received = 1.day.from_now
+        expect(subject).not_to be_valid
+        expect(subject.errors[:cached_date_received]).to eq ["should be blank if the request is not complete"]        
       end 
     end
 
