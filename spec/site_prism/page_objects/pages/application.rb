@@ -44,6 +44,7 @@ module PageObjects
         cases_edit_offender_sar_requested_info:       'Cases::Edit::OffenderSARPageRequestedInfo',
         cases_edit_offender_sar_date_responded:       'Cases::Edit::OffenderSARPageDateResponded',
         cases_edit_offender_sar_date_received:        'Cases::Edit::OffenderSARPageDateReceived',
+        cases_edit_offender_sar_move_back:            'Cases::Edit::OffenderSARPageMoveCaseBack',
 
         cases_new_offender_sar_complaint_confirm_case:       'Cases::New::OffenderSARComplaintPageConfirmCase',
         cases_new_offender_sar_complaint_link_offender_sar:  'Cases::New::OffenderSARComplaintPageLinkSarCase',
