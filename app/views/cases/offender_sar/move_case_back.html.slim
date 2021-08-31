@@ -1,3 +1,6 @@
+- content_for :page_title do
+  = t('page_title.move_case_back', case_number: @case.number)
+
 = link_to "Back", case_path(@case.id), class: 'govuk-back-link'
 
 - content_for :sub_heading

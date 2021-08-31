@@ -76,4 +76,5 @@ en:
     move_directorate_page: Move a directorate - %{team_name} - Track-a-query
     confirm_move_directorate_page: Confirm Move directorate - %{team_name} - Track-a-query
     add_request_attachment_page: Upload new files for this request
+    move_case_back: Revert case back - %{case_number} - Track-a-query
   
