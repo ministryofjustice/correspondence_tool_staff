@@ -26,6 +26,14 @@ feature 'offender sar complaint case editing by a manager' do
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
     cases_show_page.offender_sar_subject_details.change_link.click
     expect(cases_edit_offender_sar_complaint_subject_details_page).to be_displayed
+
+    cases_edit_offender_sar_complaint_subject_details_page.edit_name ''
+    click_on "Continue"
+    expect(cases_edit_offender_sar_complaint_page).to be_displayed
+    expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("Full name of data subject")
+    expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("What is the location of the data subject?")
+    expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("Subject full name can't be blank")
+
     cases_edit_offender_sar_complaint_subject_details_page.edit_name 'Bob Hope'
     click_on "Continue"
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)

@@ -722,7 +722,8 @@ describe Case::SAR::Offender do
         cached_num_pages: 200,
         request_type: 'all_prison_records',
         completed: true,
-        date_requested: Date.new(2020, 8, 15)
+        date_requested: Date.new(2020, 8, 15),
+        cached_date_received: Date.new(2020, 8, 15)
       ).save!
       DataRequest.new(
         offender_sar_case: kase,
@@ -731,7 +732,8 @@ describe Case::SAR::Offender do
         cached_num_pages: 100,
         request_type: 'nomis_records',
         completed: true,
-        date_requested: Date.new(2020, 8, 15)
+        date_requested: Date.new(2020, 8, 15),
+        cached_date_received: Date.new(2020, 8, 15)
       ).save!
       expect(kase.data_requests_completed?).to eq true
     end
@@ -776,8 +778,8 @@ describe Case::SAR::Offender do
   end
 
   describe '#num_days_late' do
-  let(:kase)  { create :offender_sar_case }
-  let(:closed_kase) { create :offender_sar_case, :closed}
+    let(:kase)  { create :offender_sar_case }
+    let(:closed_kase) { create :offender_sar_case, :closed}
 
     it 'is nil when 0 days late' do
       kase.external_deadline = Date.today
@@ -849,6 +851,49 @@ describe Case::SAR::Offender do
       it 'returns it in uppercase' do
         expect(kase.first_prison_number).to eq 'A12345'
       end
+    end
+  end
+
+  describe '#number_of_days_for_vetting' do
+    it 'is nil if the vetting process has not started yet' do
+      kase = create :offender_sar_case
+      expect(kase.number_of_days_for_vetting).to be nil
+    end
+
+    it 'returns correct number when the vetting process started but not ended yet' do
+      kase = nil
+      Timecop.freeze Time.local(2020, 4, 9, 13, 48, 22) do
+        kase = create :offender_sar_case, :vetting_in_progress
+      end
+
+      Timecop.freeze Time.local(2020, 4, 20, 13, 48, 22) do
+        expect(kase.current_state).to eq 'vetting_in_progress'
+        expect(kase.number_of_days_for_vetting).to be 6   
+      end
+    end
+
+    it 'returns correct number when the vetting process has ended' do
+      kase = nil
+      Timecop.freeze Time.local(2020, 4, 9, 13, 48, 22) do
+        kase = create :offender_sar_case, :vetting_in_progress
+      end
+
+      Timecop.freeze Time.local(2020, 4, 20, 13, 48, 22) do
+        create :case_transition_ready_to_copy, case: kase
+      end
+
+      Timecop.freeze Time.local(2020, 5, 2, 13, 48, 22) do
+        create :case_transition_ready_to_dispatch, case: kase
+        expect(kase.current_state).to eq 'ready_to_dispatch'
+        expect(kase.number_of_days_for_vetting).to be 6     
+      end
+    end
+  end
+
+  describe '#user_dealing_with_vetting' do
+    it 'return user id' do
+      kase = create :offender_sar_case, :vetting_in_progress
+      expect(kase.user_dealing_with_vetting.id).to be kase.responding_team.users.first.id
     end
   end
 end

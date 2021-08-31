@@ -15,7 +15,6 @@
         - fieldset.radio_input('probation_records')
         - fieldset.radio_input('cctv_and_bwcf')
         - fieldset.radio_input('telephone_recordings')
-        - fieldset.radio_input('telephone_pin_logs')
         - fieldset.radio_input('probation_archive')
         - fieldset.radio_input('mappa')
         - fieldset.radio_input('pdp')
@@ -25,7 +24,7 @@
 
       = f.gov_uk_date_field :date_requested, { \
         legend_text: 'Date requested',
-        form_hint_text: t('cases.new.date_sar_received_copy'),
+        form_hint_text: t('cases.new.date_sar_request_copy'),
         today_button: { class: '' } \
       }
 
@@ -48,6 +47,11 @@
         = f.text_field :cached_num_pages, class: 'form-control form-control-1-8'
         = f.check_box_fieldset :completed, [:completed]
 
+        = f.gov_uk_date_field :cached_date_received, { \
+          legend_text: 'Date when data is received',
+          form_hint_text: t('cases.new.date_sar_received_copy'),
+          today_button: { class: '' } \
+        }
 
     .button-holder
       = f.submit t('.record_request'), { class: 'button', role: 'button' }

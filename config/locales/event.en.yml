@@ -61,3 +61,5 @@ en:
     mark_as_legal_proceedings_ongoing_desc: Legal proceedings ongoing
     send_back: Send back
     send_back_desc: Case was sent back for change
+    move_case_back: Reverted case back
+    move_case_back_desc: Reverted case back to "%{state}"

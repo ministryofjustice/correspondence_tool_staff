@@ -6,7 +6,7 @@
 
 - if @team.parent.present?
   - content_for :sub_heading
-  = "#{@team.parent.pretty_type}: #{@team.parent.name}"
+    = "#{@team.parent.pretty_type}: #{@team.parent.name}"
 
 = render partial: 'layouts/header'
 

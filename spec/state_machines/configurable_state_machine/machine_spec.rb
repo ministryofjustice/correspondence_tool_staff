@@ -494,7 +494,7 @@ module ConfigurableStateMachine
           expect(machine.teams_that_can_trigger_event_on_case(
               event_name: :add_response,
               user: manager)
-          ).to eq [@accepted_case.managing_team, responding_team]
+          ).to match_array [@accepted_case.managing_team, responding_team]
         end
       end
 
