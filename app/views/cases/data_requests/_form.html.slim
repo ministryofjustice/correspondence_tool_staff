@@ -48,7 +48,7 @@
         = f.check_box_fieldset :completed, [:completed]
 
         = f.gov_uk_date_field :cached_date_received, { \
-          legend_text: 'Date when data is received',
+          legend_text: 'Date when data request is complete',
           form_hint_text: t('cases.new.date_sar_received_copy'),
           today_button: { class: '' } \
         }

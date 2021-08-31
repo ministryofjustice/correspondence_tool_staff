@@ -91,7 +91,7 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
-    context 'date when data is received' do 
+    context 'date when data request is complete' do 
       subject(:data_request) { build(:data_request, completed: true) }
 
       it 'required if the case is marked as completed' do 
