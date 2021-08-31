@@ -23,6 +23,8 @@
                 send_acknowledgement_letter:
                 preview_cover_page:
                 edit_case:
+                move_case_back:
+                  transition_to: data_to_be_requested
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               ready_for_vetting:
@@ -32,6 +34,8 @@
                 add_note_to_case:
                 preview_cover_page:
                 edit_case:
+                move_case_back:
+                  transition_to: waiting_for_data
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               vetting_in_progress:
@@ -41,6 +45,8 @@
                 add_note_to_case:
                 preview_cover_page:
                 edit_case:
+                move_case_back:
+                  transition_to: ready_for_vetting
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               ready_to_copy:
@@ -50,6 +56,8 @@
                 add_note_to_case:
                 preview_cover_page:
                 edit_case:
+                move_case_back:
+                  transition_to: vetting_in_progress
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               ready_to_dispatch:

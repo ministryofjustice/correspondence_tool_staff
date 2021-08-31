@@ -552,7 +552,7 @@ class LetterTemplateSeeder
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <br>Thank you for your letter/email dated<%= values.request_dated&.strftime('%e %B %Y') %>.
+                  <br>Thank you for your letter/email dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
                   <br>I note the contents and I have asked Her Majesty’s Prison and Probation Service to look into the matter and advise you further.
                   <br>
@@ -585,8 +585,9 @@ class LetterTemplateSeeder
                   <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br><strong><%= values.subject_full_name&.upcase %></strong>
                   <br>
-                  <br>Thank you for your letter/email dated<%= values.request_dated&.strftime('%e %B %Y') %>.
+                  <br>Thank you for your letter/email dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
                   <br>I have reviewed your concerns and I can confirm that you have received all the information related to your request that I am able to release.
                   <br>
@@ -625,7 +626,7 @@ class LetterTemplateSeeder
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
                   <br>
-                  <br>Thank you for your letter/email dated<%= values.request_dated&.strftime('%e %B %Y') %>.
+                  <br>Thank you for your letter/email dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
                   <br>I have reviewed your concerns and am able to provide some further information to you.
                   <br>
