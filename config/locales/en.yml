@@ -228,6 +228,7 @@ en:
             cached_date_received:
               blank: must be provided if request is complete
               future: cannot be in the future
+              not_empty: should be blank if the request is not complete
         linked_case:
           missing: "doesn't exist"
           references_self: "can't link to the same case"
@@ -856,6 +857,7 @@ en:
     case/offender_sar:
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
+      move_case_back: Move case back
     case/offender_sar_complaint:
       add_approval_flags_for_ico: Add approval
       add_approval_flags_for_litigation: Add approval
@@ -1173,6 +1175,7 @@ en:
       request_details_heading: What is the date on the request?
       date_received_heading: When was the SAR received?
       request_info_hint: Use this space to store additional case information
+      move_case_back_heading: Reason for reverting case status
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
