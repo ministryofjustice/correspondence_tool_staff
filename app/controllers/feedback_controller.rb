@@ -19,3 +19,4 @@ class FeedbackController < ApplicationController
             })
   end
 end
+
