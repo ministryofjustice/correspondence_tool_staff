@@ -72,6 +72,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       create(
         :data_request,
         cached_num_pages: 10,
+        completed: true,
         cached_date_received: Date.yesterday
       )
     }

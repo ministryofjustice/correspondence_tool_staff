@@ -11,6 +11,7 @@ class DataRequest < ApplicationRecord
   validates :cached_num_pages, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validate :validate_request_type_note
   validate :validate_from_date_before_to_date
+  validate :validate_cached_date_received
 
   before_validation :clean_attributes
 
@@ -91,6 +92,28 @@ class DataRequest < ApplicationRecord
         I18n.t('activerecord.errors.models.data_request.attributes.request_type_note.blank')
       )
       errors[:request_type_note].any?
+    end
+  end
+
+  def validate_cached_date_received
+    if completed?
+      if cached_date_received.nil?
+        errors.add(
+          :cached_date_received,
+          I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.blank')
+        )
+      elsif cached_date_received > Date.today
+        errors.add(
+          :cached_date_received,
+          I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.future')
+        )
+      end
+    end
+    if not completed? and cached_date_received.present?
+      errors.add(
+        :cached_date_received,
+        I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.not_empty')
+      )
     end
   end
 

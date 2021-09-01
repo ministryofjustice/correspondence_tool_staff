@@ -225,6 +225,10 @@ en:
               future: cannot be in the future
             request_type_note:
               blank: can't be blank
+            cached_date_received:
+              blank: must be provided if request is complete
+              future: cannot be in the future
+              not_empty: should be blank if the request is not complete
         linked_case:
           missing: "doesn't exist"
           references_self: "can't link to the same case"
@@ -465,8 +469,6 @@ en:
           accepted: Accept
           rejected: Reject
         user_id: Business unit
-      business_unit:
-        id: Business Unit
       state_selector:
         unassigned: Needs reassigning
         awaiting_responder: To be accepted
@@ -504,6 +506,7 @@ en:
           probation_archive: Probation archive
           other: Other
         request_type_note: Please provide more details
+        cached_date_received: Date when data request is complete
         cached_num_pages: Number of pages received
         completed: "Yes, all data received"
       data_request_log:
@@ -696,6 +699,7 @@ en:
       directorate:
         name: Directorate name
       business_unit:
+        id: Business Unit
         name: Business unit name
         role: What will the business unit be responsible for?
         correspondence_type_roles: Correspondence types
@@ -853,6 +857,7 @@ en:
     case/offender_sar:
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
+      move_case_back: Move case back
     case/offender_sar_complaint:
       add_approval_flags_for_ico: Add approval
       add_approval_flags_for_litigation: Add approval
@@ -1058,6 +1063,7 @@ en:
       correspondence_type_errors:
         unknown: "Unknown correspondence type \"%{type}\""
         not_authorised: "You are not authorised to create \"%{type}\" correspondences"
+      date_sar_request_copy: "For example, 12 11 2007"
       date_sar_received_copy: "For example, 12 11 2007"
       date_complaint_external_deadline: "For example, 12 11 2007"
       date_request_received_copy: "For example, 12 11 2007"
@@ -1169,6 +1175,7 @@ en:
       request_details_heading: What is the date on the request?
       date_received_heading: When was the SAR received?
       request_info_hint: Use this space to store additional case information
+      move_case_back_heading: Reason for reverting case status
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR

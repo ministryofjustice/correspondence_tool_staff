@@ -541,6 +541,124 @@ class LetterTemplateSeeder
                 EOF
                 )
 
+    rec = LetterTemplate.find_by(abbreviation: 'complaint-inaccurate-data')
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: 'Complaint: Inaccurate data',
+                abbreviation: 'complaint-inaccurate-data',
+                template_type: 'dispatch',
+                body: <<~EOF
+                  <p>
+                  <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
+                  <br>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br>
+                  <br>Thank you for your letter/email dated <%= values.request_dated&.strftime('%e %B %Y') %>.
+                  <br>
+                  <br>I note the contents and I have asked Her Majesty’s Prison and Probation Service to look into the matter and advise you further.
+                  <br>
+                  <br><strong>Your letter/email has been sent on to: [INSERT APPROPRIATE ADDRESS]</strong>
+                  <br>
+                  <br>Yours sincerely
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>DPA Team Manager
+                  <br>Offender Subject Access Request Team
+                  <br>Ministry of Justice
+                  </p>
+                EOF
+                )
+    rec.update!(letter_address: <<~EOF
+                  #{solictor_receiver}
+                  <br>#{address}
+                EOF
+                )
+
+    rec = LetterTemplate.find_by(abbreviation: 'complaint-no-further-data')
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: 'Complaint: No further data',
+                abbreviation: 'complaint-no-further-data',
+                template_type: 'dispatch',
+                body: <<~EOF
+                  <p>
+                  <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
+                  <br>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br><strong><%= values.subject_full_name&.upcase %></strong>
+                  <br>
+                  <br>Thank you for your letter/email dated <%= values.request_dated&.strftime('%e %B %Y') %>.
+                  <br>
+                  <br>I have reviewed your concerns and I can confirm that you have received all the information related to your request that I am able to release.
+                  <br>
+                  <br>As previously advised some information may have been withheld and this is because the information is exempt from disclosure under the DPA. The exemptions within the DPA include information which is processed for the prevention or detection of a crime or the apprehension or prosecution of offenders, and information that would identify third parties. Where we have withheld exempt information, you will see items redacted on the documents.
+                  <br>
+                  <br>It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
+                  <br>Information Commissioner’s Office, Wycliffe House, Water Lane, Wilmslow,
+                  <br>Cheshire, SK9 5AF
+                  <br>Internet: <a href="www.ico.gov.uk">www.ico.gov.uk</a>
+                  <br>
+                  <br>Yours sincerely
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>DPA Team Manager
+                  <br>Offender Subject Access Request Team
+                  <br>Ministry of Justice
+                  </p>
+                EOF
+                )
+    rec.update!(letter_address: <<~EOF
+                  #{solictor_receiver}
+                  <br>#{address}
+                EOF
+                )
+
+    rec = LetterTemplate.find_by(abbreviation: 'complaint-additional-data')
+    rec = LetterTemplate.new if rec.nil?
+    rec.update!(name: 'Complaint: Additional data enclosed',
+                abbreviation: 'complaint-additional-data',
+                template_type: 'dispatch',
+                body: <<~EOF
+                  <p>
+                  <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
+                  <br>
+                  <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
+                  <br>
+                  <br>Thank you for your letter/email dated <%= values.request_dated&.strftime('%e %B %Y') %>.
+                  <br>
+                  <br>I have reviewed your concerns and am able to provide some further information to you.
+                  <br>
+                  <br>Enclosed is all the information related to your request that I am able to release. Some information may have been withheld and this is because the information is exempt from disclosure under the DPA. The exemptions within the DPA include information which is processed for the prevention or detection of crime or the apprehension or prosecution of offenders, and information that would identify third parties. Where we have withheld exempt information, you will see items redacted on the documents.
+                  <br>
+                  <br>I can confirm that the personal data contained within these documents is being processed by the Ministry of Justice for the purposes of the administration of justice and for the exercise of any functions of the Crown, a Minister of the Crown or a government department. As such we may share or exchange data with other Departments or organisations if it is lawful to do so, for example the Police or the Probation Service.
+                  <br>
+                  <br>If you have any queries regarding your request please contact the Data Protection Compliance Team (DPCT), at the address above. It is also open to you to ask the Information Commissioner to look into the case. You can contact the Information Commissioner at this address:
+                  <br>Information Commissioner’s Office, Wycliffe House, Water Lane, Wilmslow,
+                  <br>Cheshire, SK9 5AF
+                  <br>Internet: <a href="www.ico.gov.uk">www.ico.gov.uk</a>
+                  <br>
+                  <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any futures SARs.
+                  <br>
+                  <br>Finally I would like to suggest that you do not keep this information where it can be accessed by others. It would be helpful to remind your client of this.
+                  <br>
+                  <br>Yours sincerely
+                  <br>
+                  <br>
+                  <br>
+                  <br>
+                  <br>DPA Team Manager
+                  <br>Offender Subject Access Request Team
+                  <br>Ministry of Justice
+                  </p>
+                EOF
+                )
+    rec.update!(letter_address: <<~EOF
+                  #{solictor_receiver}
+                  <br>#{address}
+                EOF
+                )
     # rubocop:disable Style/AsciiComments
     # Letters below are commented out due to not being required at the present time 2/08/2021
     # --------------
