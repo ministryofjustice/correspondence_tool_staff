@@ -223,7 +223,7 @@ describe Cases::FiltersController, type: :controller do
           get :closed, format: 'csv'
           expect(response.status).to eq 401
           expect(response.header['Content-Type']).to eq 'text/csv; charset=utf-8'
-          expect(response.body).to eq 'You need to sign in or sign up before continuing.'
+          expect(response.body).to eq 'You need to sign in or contact the Disclosure Team at data.access@Justice.gov.uk to request access.'
         end
       end
     end
