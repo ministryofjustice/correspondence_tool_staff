@@ -242,6 +242,7 @@ jobs:
     working_directory: ~/track-a-query
     steps:
       - checkout
+      - *restore_cache
       - *install_bundler
       - *check_bundler_version
       - *install_psql
