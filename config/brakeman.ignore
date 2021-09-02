@@ -121,6 +121,26 @@
       "note": ""
     },
     {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "76a7d57306c0e2d77e12970edf1a0a3caab02b13055a584507c9e09942687681",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/teams_controller.rb",
+      "line": 266,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:team).permit(:name, :email, :team_lead, :parent_id, :role, :correspondence_type_ids => ([]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "TeamsController",
+        "method": "new_team_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "7deee4778c3cd3f054cede4dad522b916477f952f87fce91034f809ace2a9e46",
@@ -158,6 +178,26 @@
       },
       "user_input": "params[:id]",
       "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "bcf8ffb436fd33b140371dd456886b708202a39765aa933fb6039fa9b12fe27e",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/teams_controller.rb",
+      "line": 255,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:team).permit(:name, :email, :team_lead, :role, :correspondence_type_ids => ([]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "TeamsController",
+        "method": "team_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
       "note": ""
     },
     {
@@ -221,6 +261,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-07-06 12:03:57 +0100",
+  "updated": "2021-07-27 13:34:37 +0100",
   "brakeman_version": "5.0.2"
 }
