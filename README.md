@@ -517,7 +517,7 @@ control aspects of the build. The available build arguments are:
 
   Required to run closed case reports
 
-  ```
+ ```
   	postgresql-client-12.6-r0
  ```
 
