@@ -1,10 +1,25 @@
 module Searchable
   extend ActiveSupport::Concern
 
+  include SearchHelper
+  
   included do
     include PgSearch::Model
 
     self.ignored_columns = self.ignored_columns + [searchable_document_tsvector]
+
+    SearchHelper::SEARCH_SCOPE_SET.each do | scope_item |
+      pg_search_scope scope_item["name"],
+                      against: searchable_fields_and_ranks,
+                      order_within_rank: scope_item["order"],
+                      using: { tsearch: {
+                                any_word: false,
+                                dictionary: 'english',
+                                tsvector_column: searchable_document_tsvector,
+                                prefix: true,
+                              }
+                            }
+    end
 
     pg_search_scope :search,
                     against: searchable_fields_and_ranks,

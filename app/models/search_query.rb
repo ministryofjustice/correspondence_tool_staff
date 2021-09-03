@@ -18,6 +18,8 @@
 class SearchQuery < ApplicationRecord
   include ActiveRecord::Store
 
+  include SearchHelper
+
   FILTER_CLASSES_MAP = {
     "all_cases" => [
       CaseFilter::OpenCaseStatusFilter,
@@ -161,11 +163,11 @@ class SearchQuery < ApplicationRecord
     search_query
   end
 
-  def results(cases_list = nil)
+  def results(cases_list = nil, search_scope = nil)
     if root.query_type == 'search'
 
       cases_list ||= Pundit.policy_scope(user, Case::Base.all)
-      cases_list = cases_list.search(search_text)
+      cases_list = cases_list.__send__(get_search_scope(search_scope), search_text)
     elsif cases_list.nil?
       raise ArgumentError.new("cannot perform filters without list of cases")
     end
@@ -217,5 +219,17 @@ class SearchQuery < ApplicationRecord
     applied_filters.reduce(cases) do |result, filter_class|
       filter_class.new(self, user, result).call
     end
+  end
+
+  def get_search_scope(search_scope)
+    search_scope_flag = nil
+    available_search_names = []
+    Searchable::SEARCH_SCOPE_SET.each do | item |
+      available_search_names << item["name"]
+    end 
+    if !available_search_names.include?(search_scope.to_sym)
+      search_scope = Searchable::DEFAULT_SEARCH_RESULT_ORDER_FLAG
+    end
+    search_scope
   end
 end

@@ -8,8 +8,9 @@ class CaseSearchService
               :query_params,
               :search_query
 
-  def initialize(user:, query_type:, query_params:)
+  def initialize(user:, query_type:, query_params:, order:)
     begin
+      @order = order
       @query_params = process_params(query_params)
       @current_user = user
       @query_type = query_type
@@ -26,7 +27,7 @@ class CaseSearchService
 
   def call(full_list_of_cases = nil)
     if @error == false && @query.valid?
-      @result_set = @query.results(full_list_of_cases)
+      @result_set = @query.results(full_list_of_cases, search_scope=@order)
       @query.update num_results: @result_set.size
     else
       @result_set = Case::Base.none
