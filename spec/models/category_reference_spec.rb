@@ -1,10 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe CategoryReference, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
 
   before do
-
     category_references = [
       { 
         category: 'address_type',
@@ -45,14 +43,9 @@ RSpec.describe CategoryReference, type: :model do
 
   describe '#find_by_category' do
     it 'will return a hash of values for a category' do
-      expected = { 
-        prison: "Prison",
-        probation: "Probation centre",
-        court: "Court",
-        moj_hq: "102 Petty France",
-        other: "Some other address type"
-      } 
-      expect(CategoryReference.find_by_category(:address_type)).to include(expected)
+      expected =  ['prison', 'probation', 'court', 'moj_hq', 'other']
+      expect(CategoryReference.list_by_category(:address_type).size).to eq(5)
+      expect(CategoryReference.list_by_category(:address_type).pluck(:code)).to eq(expected)
     end
   end
 end

@@ -1,5 +1,6 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: %i[ edit update destroy ]
+  before_action :set_address_types, only: %i[ edit new ]
 
   def index
     @contacts = Contact.all
@@ -44,6 +45,10 @@ class ContactsController < ApplicationController
   private
     def set_contact
       @contact = Contact.find(params[:id])
+    end
+
+    def set_address_types
+      @address_types = CategoryReference.list_by_category(:address_type)
     end
 
     def contact_params
