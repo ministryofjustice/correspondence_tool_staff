@@ -1,0 +1,2 @@
+class CategoryReference < ApplicationRecord
+end
