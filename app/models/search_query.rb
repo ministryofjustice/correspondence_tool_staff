@@ -222,7 +222,6 @@ class SearchQuery < ApplicationRecord
   end
 
   def get_search_scope(search_scope)
-    search_scope_flag = nil
     available_search_names = []
     Searchable::SEARCH_SCOPE_SET.each do | item |
       available_search_names << item["name"]
