@@ -447,6 +447,41 @@ ALTER SEQUENCE public.cases_users_transitions_trackers_id_seq OWNED BY public.ca
 
 
 --
+-- Name: category_references; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.category_references (
+    id bigint NOT NULL,
+    category character varying,
+    code character varying,
+    value character varying,
+    display_order integer,
+    deactivated boolean DEFAULT false,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: category_references_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.category_references_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: category_references_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.category_references_id_seq OWNED BY public.category_references.id;
+
+
+--
 -- Name: contacts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1205,6 +1240,13 @@ ALTER TABLE ONLY public.cases_users_transitions_trackers ALTER COLUMN id SET DEF
 
 
 --
+-- Name: category_references id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.category_references ALTER COLUMN id SET DEFAULT nextval('public.category_references_id_seq'::regclass);
+
+
+--
 -- Name: contacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1393,6 +1435,14 @@ ALTER TABLE ONLY public.cases
 
 ALTER TABLE ONLY public.cases_users_transitions_trackers
     ADD CONSTRAINT cases_users_transitions_trackers_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: category_references category_references_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.category_references
+    ADD CONSTRAINT category_references_pkey PRIMARY KEY (id);
 
 
 --
@@ -1679,6 +1729,13 @@ CREATE INDEX index_cases_users_transitions_trackers_on_case_id ON public.cases_u
 --
 
 CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON public.cases_users_transitions_trackers USING btree (user_id);
+
+
+--
+-- Name: index_category_references_on_category_and_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_category_references_on_category_and_code ON public.category_references USING btree (category, code);
 
 
 --
@@ -2087,6 +2144,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210518085422'),
 ('20210625113911'),
 ('20210723160533'),
-('20210727143427');
+('20210727143427'),
+('20210903102622');
 
 
