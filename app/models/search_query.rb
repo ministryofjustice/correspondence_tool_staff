@@ -167,7 +167,7 @@ class SearchQuery < ApplicationRecord
     if root.query_type == 'search'
 
       cases_list ||= Pundit.policy_scope(user, Case::Base.all)
-      cases_list = cases_list.__send__(get_search_scope(search_scope), search_text)
+      cases_list = cases_list.__send__(get_search_scope(search_scope.to_s), search_text)
     elsif cases_list.nil?
       raise ArgumentError.new("cannot perform filters without list of cases")
     end

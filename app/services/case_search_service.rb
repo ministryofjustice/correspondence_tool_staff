@@ -8,7 +8,7 @@ class CaseSearchService
               :query_params,
               :search_query
 
-  def initialize(user:, query_type:, query_params:, order:)
+  def initialize(user:, query_type:, query_params:, order: nil)
     begin
       @order = order
       @query_params = process_params(query_params)
