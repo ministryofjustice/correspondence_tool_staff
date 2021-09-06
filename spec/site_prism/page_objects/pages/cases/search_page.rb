@@ -10,6 +10,7 @@ module PageObjects
           element :heading, '.notice-summary-heading'
         end
 
+        
         element :search_query, 'input[type="search"]'
         element :search_button, 'input.button#search-button'
 

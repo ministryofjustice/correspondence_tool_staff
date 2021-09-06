@@ -12,10 +12,9 @@ module Cases
       service = CaseSearchService.new(
         user: current_user,
         query_type: :search,
-        query_params: search_params,
-        order: cookies[:search_result_order]
+        query_params: search_params
       )
-      service.call
+      service.call(order: cookies[:search_result_order])
       @query = service.query
 
       if service.error?

@@ -138,10 +138,9 @@ module Cases
       service = CaseSearchService.new(
         user: current_user,
         query_type: :list,
-        query_params: query_list_params,
-        order: cookies[:search_result_order]
+        query_params: query_list_params
       )
-      service.call(full_list_of_cases)
+      service.call(full_list_of_cases, order: cookies[:search_result_order])
       service
     end
 
