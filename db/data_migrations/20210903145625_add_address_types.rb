@@ -1,4 +1,5 @@
 class AddAddressTypes < ActiveRecord::DataMigration
+  # rubocop:disable Metrics/MethodLength
   def up
     category_references = [
       { 
@@ -49,6 +50,7 @@ class AddAddressTypes < ActiveRecord::DataMigration
       CategoryReference.create(category_reference)
     end
   end
+  # rubocop:enable Metrics/MethodLength
 
   def down
     CategoryReference.where(category: 'address_type').delete_all
