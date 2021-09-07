@@ -2,6 +2,8 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
 
+  resources :contacts, except: :show 
+
   devise_for :users, controllers: { passwords: 'passwords' }
 
   gnav = Settings.global_navigation
@@ -80,6 +82,8 @@ Rails.application.routes.draw do
       get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
       get '/edit/:step', on: :member, to: 'offender_sar#edit', as: 'edit_step'
       post '/update', on: :member, to: 'offender_sar#update', as: 'update_step'
+      get '/move_case_back', on: :member, to: 'offender_sar_complaint#move_case_back', as: 'move_case_back'
+      patch '/move_case_back', on: :member, to: 'offender_sar_complaint#confirm_move_case_back', as: 'confirm_move_case_back'
       member do
         patch '/transitions/:transition_name', to: 'offender_sar#transition', as: :transition
       end
@@ -270,7 +274,8 @@ Rails.application.routes.draw do
   get 'ping', to: 'heartbeat#ping', format: :json
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
   post '/feedback' => 'feedback#create'
-
+  get '/accessibility' => 'pages#accessibility'
+  
   get '/maintenance', to: 'application#maintenance_mode'
 
   root to: redirect('/users/sign_in')

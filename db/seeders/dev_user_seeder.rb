@@ -45,8 +45,12 @@ class DevUserSeeder
   end
   # rubocop:enable Metrics/MethodLength
 
-  def seed! # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity
-    if Rails.env.production?
+  def is_on_production?
+    ENV['ENV'].present? && ENV['ENV'] == 'prod'
+  end
+
+  def seed! # rubocop:disable Metrics/MethodLength, Metrics/CyclomaticComplexity  
+    if is_on_production?
       puts ''
       puts '=================================================================='
       puts '***** Dev users will not be seeded in production environment *****'
@@ -65,7 +69,7 @@ class DevUserSeeder
 
           user = User.where(email: email).first
           if user.nil?
-            user = User.create!(full_name: user_name, email: email, password: 'correspondence')
+            user = User.create!(full_name: user_name, email: email, password: ENV['DEV_PASSWORD'] || SecureRandom.random_number(36**13).to_s(36))
             puts "User #{user.full_name} created with email #{user.email}"
           else
             puts "User with email #{email} already exists"

@@ -37,8 +37,8 @@ function _deploy() {
     # deploy image-tag to development
     ./deploy.sh track-a-query-CT-1234-cloud-deploy-6bece953 development
 
-    # deploy latest image of master to production
-    ./deploy.sh track-a-query-master-6bece953 production
+    # deploy latest image of main to production
+    ./deploy.sh track-a-query-main-6bece953 production
     "
 
   # Ensure the script is called with two or three arguments
@@ -120,6 +120,10 @@ function _deploy() {
   # Set context for following operations
   # kubectl config set-context ${context} --namespace=$namespace
   # kubectl config use-context ${context}
+
+  # Apply config map updates
+  kubectl apply \
+    -f config/kubernetes/${environment}/configmap.yaml -n $namespace
 
   # Apply image specific config
   kubectl set image -f config/kubernetes/${environment}/deployment.yaml \

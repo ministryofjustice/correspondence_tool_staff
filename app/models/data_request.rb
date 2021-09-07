@@ -11,6 +11,7 @@ class DataRequest < ApplicationRecord
   validates :cached_num_pages, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validate :validate_request_type_note
   validate :validate_from_date_before_to_date
+  validate :validate_cached_date_received
 
   before_validation :clean_attributes
 
@@ -21,13 +22,19 @@ class DataRequest < ApplicationRecord
     all_prison_records: 'all_prison_records',
     security_records: 'security_records',
     nomis_records: 'nomis_records',
+    nomis_other: 'nomis_other',
     nomis_contact_logs: 'nomis_contact_logs',
     probation_records: 'probation_records',
-    prison_and_probation_records: 'prison_and_probation_records',
+    cctv_and_bwcf: 'cctv_and_bwcf',
+    telephone_recordings: 'telephone_recordings',
+    probation_archive: 'probation_archive',
+    mappa: 'mappa',
+    pdp: 'pdp',
+    court: 'court',
     other: 'other'
   }
 
-  acts_as_gov_uk_date(:date_requested, :date_from, :date_to)
+  acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
 
   def logs
     self.data_request_logs
@@ -85,6 +92,28 @@ class DataRequest < ApplicationRecord
         I18n.t('activerecord.errors.models.data_request.attributes.request_type_note.blank')
       )
       errors[:request_type_note].any?
+    end
+  end
+
+  def validate_cached_date_received
+    if completed?
+      if cached_date_received.nil?
+        errors.add(
+          :cached_date_received,
+          I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.blank')
+        )
+      elsif cached_date_received > Date.today
+        errors.add(
+          :cached_date_received,
+          I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.future')
+        )
+      end
+    end
+    if not completed? and cached_date_received.present?
+      errors.add(
+        :cached_date_received,
+        I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.not_empty')
+      )
     end
   end
 

@@ -10,7 +10,7 @@ Rails.application.configure do
     # Closed cases action - for some reason the CSV download needs the eager loading, but
     # the main display is less interested.
     [:outcome, :info_held_status, :assignments, :cases_exemptions, :exemptions].each do |foi_assoc|
-      Bullet.add_whitelist :type => :unused_eager_loading,
+      Bullet.add_safelist :type => :unused_eager_loading,
                            :class_name => "Case::FOI::Standard",
                            :association => foi_assoc
     end

@@ -1,0 +1,24 @@
+- content_for :page_title do
+  = t('page_title.move_case_back', case_number: @case.number)
+
+= link_to "Back", case_path(@case.id), class: 'govuk-back-link'
+
+- content_for :sub_heading
+  = "#{@case.number} - #{@case.pretty_type}"
+
+- content_for :heading
+  = t('cases.offender_sar.move_case_back_heading')
+
+= render partial: 'layouts/header'
+
+br
+
+= form_for @case, url: confirm_move_case_back_case_sar_offender_path(@case), as: :foi do |f|
+
+  .form-group
+    label.form_label for="extra_comment"
+            p.form-hint <strong>Include any details for why the case status has reverted</strong>
+            .message-form
+              = text_area_tag(:extra_comment, nil, rows: 4, class: 'form-control')
+
+  = f.submit 'Continue', class: 'button'

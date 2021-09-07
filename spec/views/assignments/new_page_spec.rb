@@ -34,7 +34,7 @@ describe 'assignments/new.html.slim', type: :view do
   context 'User has selected a specific business group or viewing all'  do
     it 'displays the new assignment page with business units' do
 
-      assign(:case, unassigned_case)
+      assign(:case, unassigned_case.decorate)
       assign(:assignment, unassigned_case.assignments.new)
       flash[:notice] = true
       assign(:creating_case, true)

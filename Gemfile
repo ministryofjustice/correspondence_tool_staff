@@ -40,12 +40,11 @@ gem 'logstash-event'
 gem 'lograge'
 gem 'loofah', '>= 2.3.1'
 gem 'mechanize', '>= 2.7.7'
-gem 'mimetype-fu', '~> 0.1.2'
 gem 'paper_trail', '~> 12.0'
 gem 'pg', '~> 1.2'
 gem 'pg_search', '~> 2.3.5'
 gem 'pry-rails'
-gem 'puma', '~> 5.3'
+gem 'puma', '~> 5.4'
 gem 'pundit', '~>2.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.6'
@@ -60,7 +59,7 @@ gem 'sentry-raven', '~> 3.1.2'
 gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
-gem 'sidekiq', '~> 6.2.1'
+gem 'sidekiq', '~> 6.2.2'
 
 gem 'table_print'
 # gem 'thor-rails'
@@ -77,12 +76,12 @@ gem 'tzinfo-data'
 
 group :test do
   gem 'capybara', '~> 3.35.2'
-  gem 'codeclimate-test-reporter', '~> 1.0'
   gem 'i18n-tasks', '~> 0.9.30'
   gem 'rails-controller-testing', require: false
-  gem 'shoulda-matchers', '~> 4.3'
+  gem 'shoulda-matchers', '~> 5.0'
   gem 'site_prism', '= 3.1'
-  gem 'webdrivers', '~> 4.5'
+  gem 'webdrivers', '~> 4.6.0'
+  gem 'simplecov', '~> 0.21.2'
 end
 
 group :development, :test do
@@ -91,7 +90,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
-  gem 'bullet', '~> 6.1.0'
+  gem 'bullet', '~> 6.1.5'
   gem 'byebug', platform: :mri
   gem 'colorize'
   gem 'guard-jasmine'
@@ -101,8 +100,8 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.9'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 0.93.1', require: false
-  gem 'rubocop-rspec', '~> 1.44.0', require: false
+  gem 'rubocop', '~> 1.20.0', require: false
+  gem 'rubocop-rspec', '~> 2.4.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
@@ -115,7 +114,7 @@ group :development do
   gem 'guard-brakeman'
   gem 'guard-rspec'
   gem 'guard-rubocop'
-  gem 'listen', '~> 3.5.1'
+  gem 'listen', '~> 3.7.0'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.1'

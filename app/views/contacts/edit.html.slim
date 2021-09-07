@@ -1,0 +1,13 @@
+= link_to("Back", contacts_url, class: 'govuk-back-link')
+- content_for :heading
+  = "Edit address"
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @contact,
+  "#{pluralize(@contact.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+.form-group
+  = render 'form'
+
+

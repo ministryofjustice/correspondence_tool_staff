@@ -1,5 +1,4 @@
 # Correspondence Tools - Staff
-[![Build Status](https://semaphoreci.com/api/v1/correspondence-tool/correspondence_tool_staff-4/branches/master/badge.svg)](https://semaphoreci.com/correspondence-tool/correspondence_tool_staff-4)
 [![Code Climate](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/gpa.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
 [![Test Coverage](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/coverage.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/coverage)
 [![Issue Count](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff/badges/issue_count.svg)](https://codeclimate.com/github/ministryofjustice/correspondence_tool_staff)
@@ -11,7 +10,7 @@ A simple application to allow internal staff users to answer correspondence.
 
 ### Working on the Code
 
-Work should be based off of, and PRed to, the master branch. We use the GitHub
+Work should be based off of, and PRed to, the main branch. We use the GitHub
 PR approval process so once your PR is ready you'll need to have one person
 approve it, and the CI tests passing, before it can be merged. Feel free to use
 the issue tags on your PR to indicate if it is a WIP or if it is ready for
@@ -194,6 +193,8 @@ The `db:reseed` rake task will:
  - clear the database  by dropping all the tables and enum types
  - load the structure.sql
  - run all the data migrations
+ - create sample users and teams
+The password of each user will be generated randomly but setting up a value for environment variable DEV_PASSWORD beforehand will give you the choice of a known password. This command also can be run on non-production cloud env if you want to clear up the database into a inital state.
 
 This will have the effect of setting up a standard set of teams, users, reports, correspondence types, etc.  The `db:reseed` can be used at any point you want reset the database without
 having to close down all clients using the database.
@@ -516,7 +517,7 @@ control aspects of the build. The available build arguments are:
 
   Required to run closed case reports
 
-  ```
+ ```
   	postgresql-client-12.6-r0
  ```
 
@@ -685,3 +686,16 @@ $ bundler install
 ```
 
 5. run `rails s` check the app
+
+## Dependabot
+
+Dependabot creates PRs to help us keep track of our dependency updates. This is great but can lead to a little bit of work if you integrate these changes one by one (for instance, having to run the test suite over and over again). 
+
+You can manually combine the changes into one PR and then push this and wait for the tests to run, but this is admin that can be automated so why bother?
+
+The app has a github action "Combine PRs" which automatically combines dependabot PRs that have passed the test suite into one PR which you can then merge.
+
+To use this: "Actions" > "All workflows" > on the left "Combine PRs" > "Run workflows"
+
+See here for the [original developers README](https://github.com/hrvey/combine-prs-workflow)
+

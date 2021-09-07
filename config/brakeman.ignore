@@ -101,6 +101,37 @@
       "note": ""
     },
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "4c88cf1040891ad952164e56bfe504a90419114c72d7993038e40bafc05ba933",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/cases/letters/show.html.slim",
+      "line": 29,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Letter.new(letter_params[:letter_template_id], Case::Base.find(params[:case_id]).decorate).body",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Cases::LettersController",
+          "method": "show",
+          "line": 15,
+          "file": "app/controllers/cases/letters_controller.rb",
+          "rendered": {
+            "name": "cases/letters/show",
+            "file": "app/views/cases/letters/show.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "cases/letters/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": "Cloned object in Letter.rb with relevant escaped vals now passed to view"
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "5ce05a8463b1452db5425023a0a6449c38496fca0fe91f20ea4fa6c28abadd25",
@@ -121,23 +152,23 @@
       "note": ""
     },
     {
-      "warning_type": "File Access",
-      "warning_code": 16,
-      "fingerprint": "7a37fb95c5cd8c5d93b1ac95817aa23d44b12dd4c5152a175c3a840cc8b2ca27",
-      "check_name": "SendFile",
-      "message": "Parameter value used in file name",
-      "file": "app/controllers/case_attachments_controller.rb",
-      "line": 11,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "send_file(download_to_tmpfile(Case::Base.find(params[:case_id]).attachments.find(params[:id]).preview_key), :type => File.mime_type?(Case.find(params[:case_id]).attachments.find(params[:id]).preview_key), :disposition => \"inline\")",
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "76a7d57306c0e2d77e12970edf1a0a3caab02b13055a584507c9e09942687681",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/teams_controller.rb",
+      "line": 266,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:team).permit(:name, :email, :team_lead, :parent_id, :role, :correspondence_type_ids => ([]))",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "CaseAttachmentsController",
-        "method": "show"
+        "class": "TeamsController",
+        "method": "new_team_params"
       },
-      "user_input": "params[:id]",
-      "confidence": "Weak",
+      "user_input": ":role",
+      "confidence": "Medium",
       "note": ""
     },
     {
@@ -161,6 +192,77 @@
       "note": ""
     },
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "9809c8ef8339317eed4e032bd3c2ff36a9f6637d75f8e5d0101fde7ea2b815f2",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/cases/show.html.slim",
+      "line": 46,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "action_buttons_for_allowed_events(NewOverturnedIcoCaseService.new(params[:id]).original_ico_appeal.decorate, :extend_for_pit, :remove_pit_extension).join(\" \")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Cases::OverturnedIcoFoiController",
+          "method": "new_overturned_ico_for",
+          "line": 12,
+          "file": "app/controllers/concerns/overturned_case.rb",
+          "rendered": {
+            "name": "cases/show",
+            "file": "app/views/cases/show.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "cases/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": "False positive - vals passed aren't from user input"
+    },
+    {
+      "warning_type": "File Access",
+      "warning_code": 16,
+      "fingerprint": "9863a606e5d2068ebfaa1bc610802142c2fadabee0fee58bf3980c34747ff58c",
+      "check_name": "SendFile",
+      "message": "Parameter value used in file name",
+      "file": "app/controllers/cases/attachments_controller.rb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/file_access/",
+      "code": "send_file(download_to_tmpfile(Case::Base.find(params[:case_id]).attachments.find(params[:id]).preview_key), :type => Rack::Mime.mime_type(File.extname(Case::Base.find(params[:case_id]).attachments.find(params[:id]).preview_key)), :disposition => \"inline\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::AttachmentsController",
+        "method": "show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "bcf8ffb436fd33b140371dd456886b708202a39765aa933fb6039fa9b12fe27e",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/teams_controller.rb",
+      "line": 255,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:team).permit(:name, :email, :team_lead, :role, :correspondence_type_ids => ([]))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "TeamsController",
+        "method": "team_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "bf3788832899894c6e503fac28b24e799865174f4facbecc91a24edbbd941a9e",
@@ -179,6 +281,37 @@
       "user_input": "Time.now.strftime(\"%Y%m%d-%H%M%S\")",
       "confidence": "Medium",
       "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "e4c4ac3c935ca5fb6cfd06500134811926beab214e5b379d800e1b6d64ab7f4b",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/cases/letters/show.html.slim",
+      "line": 27,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Letter.new(letter_params[:letter_template_id], Case::Base.find(params[:case_id]).decorate).letter_address",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Cases::LettersController",
+          "method": "show",
+          "line": 15,
+          "file": "app/controllers/cases/letters_controller.rb",
+          "rendered": {
+            "name": "cases/letters/show",
+            "file": "app/views/cases/letters/show.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "cases/letters/show"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": "Cloned object in Letter.rb with relevant escaped vals now passed to view"
     },
     {
       "warning_type": "Command Injection",
@@ -221,6 +354,6 @@
       "note": ""
     }
   ],
-  "updated": "2017-09-05 16:41:15 +0100",
-  "brakeman_version": "3.5.0"
+  "updated": "2021-07-08 15:07:40 +0100",
+  "brakeman_version": "5.0.2"
 }

@@ -42,6 +42,9 @@ feature 'Offender SAR Case creation by a manager' do
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready to dispatch"
+
+    move_back_to_data_to_be_requested_then_move_to_same_step_agin
+
     click_on "Mark as ready to dispatch"
 
     expect(cases_show_page).to be_displayed
@@ -61,5 +64,51 @@ feature 'Offender SAR Case creation by a manager' do
     # TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
     # expect(cases_show_page).to have_content "Was the information held?"
     # expect(cases_show_page).to have_content "Yes"
+  end
+
+  private 
+
+  def move_back_to_data_to_be_requested_then_move_to_same_step_agin
+    reason = 'move back to vetting_in_progress'
+    move_back_step(reason)
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as ready to copy"
+    expect(cases_show_page).to have_content reason
+    
+    reason = 'move back to ready_for_vetting'
+    move_back_step(reason)
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as vetting in progress"
+    expect(cases_show_page).to have_content reason
+
+    reason = 'move back to waiting_for_data'
+    move_back_step(reason)
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as ready for vetting"
+    expect(cases_show_page).to have_content reason
+
+    reason = 'move back to data_to_be_requested'
+    move_back_step(reason)
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as waiting for data"
+    expect(cases_show_page).to have_content reason
+
+    click_on "Mark as waiting for data"
+    click_on "Mark as ready for vetting"
+    click_on "Mark as vetting in progress"
+    click_on "Mark as ready to copy"
+  end
+
+  def move_back_step(reason)
+    click_on "Move case back"
+
+    expect(cases_edit_offender_sar_move_back_page).to be_displayed
+    expect(cases_edit_offender_sar_move_back_page).to have_content "reverting case status"
+    cases_edit_offender_sar_move_back_page.fill_in_reason(reason)
+    click_on "Continue"
   end
 end

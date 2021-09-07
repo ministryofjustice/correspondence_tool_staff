@@ -39,9 +39,8 @@
   .grid-row
     .column-full
       main#content
-        = render partial: 'layouts/flashes' unless flash.empty?
         = content_for?(:tab_content) ? yield(:tab_content) : yield
-        = render partial: 'feedback/new' if controller_name != 'sessions'
+        = render partial: 'feedback/new' if controller_name !='sessions' && current_user
 
 - content_for :body_end do
   = javascript_include_tag "application"
@@ -60,5 +59,11 @@
       (window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
       ga('create', '#{Rails.configuration.ga_tracking_id}', 'auto');
       ga('send', 'pageview');
+
+- content_for :footer_support_links do
+  ul
+    li
+      a.govuk-footer__link href="/accessibility"
+        = t('common.accessibility')
 
 = render template: 'layouts/govuk_template'

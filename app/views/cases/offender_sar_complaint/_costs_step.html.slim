@@ -3,6 +3,9 @@
 
 = render partial: 'layouts/header'
 
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+        
 = form_for @case.object, url: url, as: :offender_sar_complaint do |f|
   = f.number_field :settlement_cost, style: 'width: 20%', min: '0.00', step: '0.01', max: '100000000000.00'
 

@@ -1,4 +1,10 @@
+- content_for :page_title do
+  = t("page_title.create_case_page.foi")
+
 = render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for kase, as: :foi, url: case_create_action(kase.object) do |f|
   = f.radio_button_fieldset(:type, choices: @case_types, value_method: :demodulize)

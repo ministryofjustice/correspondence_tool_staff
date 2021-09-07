@@ -44,6 +44,7 @@ module PageObjects
         cases_edit_offender_sar_requested_info:       'Cases::Edit::OffenderSARPageRequestedInfo',
         cases_edit_offender_sar_date_responded:       'Cases::Edit::OffenderSARPageDateResponded',
         cases_edit_offender_sar_date_received:        'Cases::Edit::OffenderSARPageDateReceived',
+        cases_edit_offender_sar_move_back:            'Cases::Edit::OffenderSARPageMoveCaseBack',
 
         cases_new_offender_sar_complaint_confirm_case:       'Cases::New::OffenderSARComplaintPageConfirmCase',
         cases_new_offender_sar_complaint_link_offender_sar:  'Cases::New::OffenderSARComplaintPageLinkSarCase',
@@ -68,6 +69,7 @@ module PageObjects
         cases_edit_offender_sar_complaint_requested_info:    'Cases::Edit::OffenderSARComplaintPageRequestedInfo',
         cases_edit_offender_sar_complaint_requester_details: 'Cases::Edit::OffenderSARComplaintPageRequesterDetails',
         cases_edit_offender_sar_complaint_subject_details:   'Cases::Edit::OffenderSARComplaintPageSubjectDetails',
+        cases_edit_offender_sar_complaint:                   'Cases::Edit::OffenderSARComplaintPageEdit',
 
         cases_new_case_link:            'Cases::NewCaseLinkPage',
         cases_edit:                     'Cases::EditPage',
@@ -85,6 +87,9 @@ module PageObjects
         cases_show:                     'Cases::ShowPage',
         case_send_back:                 'Cases::SendBackPage',
         cases_cover:                    'Cases::CoverPage',
+        contacts_edit:                  'Contacts::EditPage',
+        contacts_index:                 'Contacts::IndexPage',
+        contacts_new:                   'Contacts::NewPage',
         closed_cases:                   'Cases::ClosedCasesPage',
         confirm_destroy:                'Cases::ConfirmDestroyPage',
         cases_extend_for_pit:           'Cases::ExtendForPITPage',

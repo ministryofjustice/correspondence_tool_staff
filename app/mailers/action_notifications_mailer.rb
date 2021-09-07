@@ -119,6 +119,8 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
       set_template(Settings.case_closed_notify_template)
     when 'Redraft requested'
       set_template(Settings.redraft_requested_notify_template)
+    when 'Responses have been sent back'
+      set_template(Settings.responses_sent_back_notify_template)
     when 'Ready to send'
       set_template(Settings.case_ready_to_send_notify_template)
     when 'Message received'

@@ -1,6 +1,7 @@
 ---
 en:
   page_title:
+    accessibility_statement: Accessibility statement
     admin_case_creation: Admin case creation - Track-a-query
     admin_case_list: Admin case list - Track-a-query
     admin_user_list: Admin user list - Track-a-query
@@ -12,7 +13,27 @@ en:
     choose_case_type_page: Choosing a correspondence type - Track-a-query
     close_case_page: Closing a case - %{case_number} - Track-a-query
     closed_cases_page: All closed cases - Track-a-query
-    create_case_page: Creating a %{case_type} case - Track-a-query
+    create_case_page: 
+      foi: Creating an FOI case - Track-a-query
+      ico: Creating an ICO case - Track-a-query
+      offender_sar:
+        subject_details_step: Subject details - Creating an Offender SAR case - Track-a-query
+        requester_details_step: Requester details - Creating an Offender SAR case - Track-a-query
+        recipient_details_step: Recipient details - Creating an Offender SAR case - Track-a-query
+        requested_info_step: Request information - Creating an Offender SAR case - Track-a-query
+        request_details_step: Request details - Creating an Offender SAR case - Track-a-query
+        date_received_step: Date SAR received - Creating an Offender SAR case - Track-a-query
+      offender_sar_complaint:
+        link_offender_sar_case_step: Link Offender SAR case - Creating an Offender SAR Complaint case - Track-a-query       
+        confirm_offender_sar_step: Confirm Offender SAR details - Creating an Offender SAR Complaint case - Track-a-query
+        complaint_type_step: Complaint type - Creating an Offender SAR Complaint case - Track-a-query
+        requester_details_step: Requester details - Creating an Offender SAR Complaint case - Track-a-query
+        recipient_details_step: Recipient details - Creating an Offender SAR Complaint case - Track-a-query
+        requested_info_step: Request information - Creating an Offender SAR Complaint case - Track-a-query        
+        request_details_step: Request details - Creating an Offender SAR Complaint case - Track-a-query
+        date_received_step: Date received - Creating an Offender SAR Complaint case - Track-a-query
+        set_deadline_step: Set deadline - Creating an Offender SAR Complaint case - Track-a-query
+      sar: Creating a SAR case - Track-a-query
     create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
     data_request_page: Record data request
@@ -55,4 +76,4 @@ en:
     move_directorate_page: Move a directorate - %{team_name} - Track-a-query
     confirm_move_directorate_page: Confirm Move directorate - %{team_name} - Track-a-query
     add_request_attachment_page: Upload new files for this request
-  
+    move_case_back: Revert case back - %{case_number} - Track-a-query

@@ -1,13 +1,13 @@
 - content_for :page_title do
   - t('page_title.custom_report')
 
-= GovukElementsErrorsHelper.error_summary @report,
-        "#{pluralize(@report.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 - content_for :heading
   | Create custom report
 
 = render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @report,
+        "#{pluralize(@report.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for @report, url: stats_path do |f|
 

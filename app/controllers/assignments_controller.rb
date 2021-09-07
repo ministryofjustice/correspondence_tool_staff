@@ -312,7 +312,7 @@ class AssignmentsController < ApplicationController
   def redirect_on_deleted_case!
     # even if a case has been soft deleted users can still click
     # existing links in emails to edit assigmments, etc
-    if Case::Base.unscoped.soft_deleted.exists?(params[:case_id])
+    if Case::Base.unscoped.soft_deleted.exists?(params[:case_id].to_i)
       flash[:notice] = 'Case has been deleted.'
       redirect_to open_filter_path
     end
