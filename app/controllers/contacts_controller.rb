@@ -1,9 +1,14 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: %i[ edit update destroy ]
-  before_action :set_address_types, only: %i[ edit new ]
+  before_action :set_contact_types, only: %i[ create edit new update ]
 
   def index
     @contacts = Contact.all
+    @contacts.each do |contact|
+      contact.contact_type_display_value = CategoryReference.display_value_by_category_and_code(
+        :contact_type, contact.contact_type
+      )
+    end
   end
 
   def new
@@ -47,8 +52,8 @@ class ContactsController < ApplicationController
       @contact = Contact.find(params[:id])
     end
 
-    def set_address_types
-      @address_types = CategoryReference.list_by_category(:address_type)
+    def set_contact_types
+      @contact_types = CategoryReference.list_by_category(:contact_type)
     end
 
     def contact_params
