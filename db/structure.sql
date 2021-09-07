@@ -494,7 +494,7 @@ CREATE TABLE public.contacts (
     county character varying,
     postcode character varying,
     email character varying,
-    contact_type integer DEFAULT 0,
+    contact_type character varying DEFAULT 0,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
@@ -2145,6 +2145,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210625113911'),
 ('20210723160533'),
 ('20210727143427'),
-('20210903102622');
+('20210903102622'),
+('20210906122848');
 
 
