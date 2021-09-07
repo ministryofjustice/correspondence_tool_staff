@@ -41,11 +41,18 @@ RSpec.describe CategoryReference, type: :model do
     end
   end
 
-  describe '#find_by_category' do
+  describe '#list_by_category' do
     it 'will return a hash of values for a category' do
       expected =  ['apple', 'bread', 'rice', 'potatoes', 'other']
       expect(CategoryReference.list_by_category(:food_types).size).to eq(5)
       expect(CategoryReference.list_by_category(:food_types).pluck(:code)).to eq(expected)
+    end
+  end
+
+  describe '#list_value_by_category_and_code' do
+    it 'will return an array of values for a category' do
+      expected =  'sticky rice'
+      expect(CategoryReference.display_value_by_category_and_code('food_types', 'rice')).to match(expected)
     end
   end
 end
