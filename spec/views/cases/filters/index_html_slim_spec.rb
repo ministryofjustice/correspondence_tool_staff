@@ -242,6 +242,7 @@ describe 'cases/filters/index.html.slim', type: :view do
       expect(response).to have_rendered('cases/filters/index')
     end
 
+    
     # The following tests should ideally be in a separate spec in
     # kaminari/_paginator_html_slim_spec.rb, however when we do that, the test
     # framework tries to create links for a controller called 'kaminari'. Until
