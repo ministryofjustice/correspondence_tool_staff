@@ -44,7 +44,8 @@ RSpec.describe Contact, type: :model do
 
     it 'contact_type is validated by values in CategoryReference table' do
       contact_3.save
-      expect(contact_3.errors[:contact_type].first).to match("Unacceptable contact type")
+      expected = 'must be one of the selectable options'
+      expect(contact_3.errors[:contact_type].first).to match(expected)
     end
   end
 

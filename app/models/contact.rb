@@ -36,7 +36,11 @@ class Contact < ApplicationRecord
     end
 
     unless address_type_codes.include?(contact_type)
-      errors[:contact_type] << "Unacceptable contact type"
+      errors.add(
+        :contact_type,
+        "must be one of the selectable options"
+      )
     end
+    errors[:contact_type].any?
   end
 end
