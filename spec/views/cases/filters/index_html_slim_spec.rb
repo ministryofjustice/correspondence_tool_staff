@@ -70,30 +70,16 @@ describe 'cases/filters/index.html.slim', type: :view do
     render
     cases_page.load(rendered)
 
-    zeroth_case = cases_page.case_list[0]
-    validate_cases_common_fields_displayed(zeroth_case, ovt_foi_trigger_case.original_case, who_its_with: "")
-    expect(zeroth_case.type.text).to eq "FOI "
+    validate_cases_common_fields_displayed(cases_page.case_list[0], ovt_foi_trigger_case.original_case, who_its_with: "")
+    validate_cases_common_fields_displayed(cases_page.case_list[1], ovt_foi_trigger_case.original_ico_appeal, who_its_with: "")
+    expect(cases_page.case_list[1].flag.text).to eq "This is a Trigger case"
 
-    first_case = cases_page.case_list[1]
-    validate_cases_common_fields_displayed(first_case, ovt_foi_trigger_case.original_ico_appeal, who_its_with: "")
-    expect(first_case.type.text).to eq "ICO appeal (FOI) "
-    expect(first_case.flag.text).to eq "This is a Trigger case"
+    validate_cases_common_fields_displayed(cases_page.case_list[2], assigned_case)
+    expect(cases_page.case_list[2].flag.text).to eq "This is a Trigger case"
 
-    second_case = cases_page.case_list[2]
-    validate_cases_common_fields_displayed(second_case, assigned_case)
-    expect(second_case.type.text).to eq "FOI "
-    expect(second_case.flag.text).to eq "This is a Trigger case"
-
-    third_case = cases_page.case_list[3]
-    validate_cases_common_fields_displayed(third_case, accepted_case)
-
-    fourth_case = cases_page.case_list[4]
-    validate_cases_common_fields_displayed(fourth_case, ovt_foi_trigger_case)
-    expect(fourth_case.type.text).to eq "ICO overturned (FOI) "
-
-    fifth_case = cases_page.case_list[5]
-    validate_cases_common_fields_displayed(fifth_case, unflagged_case)
-    expect(fifth_case.type.text).to eq "FOI "
+    validate_cases_common_fields_displayed(cases_page.case_list[3], accepted_case)
+    validate_cases_common_fields_displayed(cases_page.case_list[4], ovt_foi_trigger_case)
+    validate_cases_common_fields_displayed(cases_page.case_list[5], unflagged_case)
   end
 
   it 'displays the offender SAR related cases given it' do
@@ -212,6 +198,7 @@ describe 'cases/filters/index.html.slim', type: :view do
   
   def validate_cases_common_fields_displayed(displayed_case, compared_case, who_its_with: nil)
       expect(displayed_case.number.text).to eq "Case number #{compared_case.number}"
+      expect(displayed_case.type.text).to eq "#{compared_case.decorate.pretty_type} "
       expect(displayed_case.request_detail.text)
           .to eq "#{ compared_case.subject } #{compared_case.name}"
       expect(displayed_case.draft_deadline.text).to eq compared_case.internal_deadline
