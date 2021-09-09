@@ -1,16 +1,20 @@
-<h2>Resend unlock instructions</h2>
+<%= content_for :heading do %>
+  <%= t('page_title.resend_unlock') %> 
+<% end %>
+<%= render partial: 'layouts/header' %>
 
 <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
   <%= devise_error_messages! %>
 
   <div class="field">
-    <%= f.label :email %><br />
     <%= f.email_field :email, autofocus: true %>
   </div>
 
-  <div class="actions">
-    <%= f.submit "Resend unlock instructions" %>
-  </div>
+  <%= content_tag :div, class: 'form-group' do %>
+    <div class="actions">
+      <%= f.submit "Resend unlock instructions", class: 'button' %>
+    </div>
+  <% end %>
 <% end %>
 
 <%= render "devise/shared/links" %>
