@@ -23,3 +23,9 @@
     <%= link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider) %><br />
   <% end -%>
 <% end -%>
+
+<%- if current_page?(new_user_unlock_url) || current_page?(new_user_password_url) %>
+  <%= content_tag :p do %>
+    For any technical queries, please contact <%= link_to "correspondence@digital.justice.gov.uk", "mailto:correspondence@digital.justice.gov.uk", target:"_top" %>
+  <% end %>
+<% end -%>
