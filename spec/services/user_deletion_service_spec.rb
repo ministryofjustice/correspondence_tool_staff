@@ -79,14 +79,37 @@ describe UserDeletionService do
           expect(responder.reload.deleted_at).not_to be nil
         end
 
-        it 'unassigns the cases from user' do
+        it 'unassigns the live cases from user without touching responded cases' do
           kase = create :accepted_case,
                         responder: responder,
                         responding_team: team
+
+          responded_case = create :responded_case,
+                                  responder: responder,
+                                  responding_team: team,
+                                  received_date: 5.days.ago
+          expect(kase.responder_assignment.state).to eq "accepted"
           expect(kase.responder).to eq responder
-          service.call
-          # expect(kase.responder_assignment.user_id).to eq nil
+          expect(kase.current_state).to eq "drafting"
           expect(kase.responding_team).to eq team
+
+          expect(responded_case.responder_assignment.state).to eq "accepted"
+          expect(responded_case.responder).to eq responder
+          expect(responded_case.current_state).to eq "responded"
+          expect(responded_case.responding_team).to eq team
+
+          service.call
+          kase.reload
+          responded_case.reload
+          expect(kase.responder_assignment.state).to eq "pending"
+          expect(kase.responding_team).to eq team
+          expect(kase.responder).to eq nil
+          expect(kase.current_state).to eq 'awaiting_responder'
+
+          expect(responded_case.responder_assignment.state).to eq "accepted"
+          expect(responded_case.responder).to eq responder
+          expect(responded_case.responding_team).to eq team
+          expect(responded_case.current_state).to eq 'responded'
         end
 
         it 'sends the team an email' do
