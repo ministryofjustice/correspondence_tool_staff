@@ -63,8 +63,8 @@ RSpec.describe Case::Base, type: :model do
   
   let(:trigger_foi)        { create :case,
                               :flagged,
-                              received_date: Date.today - 6.months # Valid if within 1 year of today
-                            }
+                              # Valid if within 1 year of today
+                              received_date: Date.today - 6.months }
 
   let(:ot_ico_foi_draft)   { create :ot_ico_foi_noff_draft }
   let(:ot_ico_sar_draft)   { create :ot_ico_sar_noff_draft }
@@ -1653,7 +1653,6 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it 'is true for a responded case' do
-      kase = create :closed_case
       expect(responded_case.has_responded?).to eq true
     end
 

@@ -125,7 +125,7 @@ feature 'deactivating users' do
     expect(live_case.responding_team).to eq bu
     expect(live_case.responder).to eq nil
     expect(live_case.current_state).to eq 'awaiting_responder'
-end
+  end
 
   def check_key_fields_for_responded_case
     responded_case.reload
