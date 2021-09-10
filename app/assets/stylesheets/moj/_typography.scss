@@ -146,6 +146,15 @@ table caption{
   }
 }
 
+.search-results-order {
+  font-size: 110%;
+  margin-top: $gutter-half;
+  margin-bottom: $gutter;
+  strong {
+    font-size: 120%;
+  }
+}
+
 @media (min-width: 641px) {
   .download-cases-link {
     text-align: right;
