@@ -88,28 +88,14 @@ describe UserDeletionService do
                                   responder: responder,
                                   responding_team: team,
                                   received_date: 5.days.ago
-          expect(kase.responder_assignment.state).to eq "accepted"
-          expect(kase.responder).to eq responder
-          expect(kase.current_state).to eq "drafting"
-          expect(kase.responding_team).to eq team
-
-          expect(responded_case.responder_assignment.state).to eq "accepted"
-          expect(responded_case.responder).to eq responder
-          expect(responded_case.current_state).to eq "responded"
-          expect(responded_case.responding_team).to eq team
+          
+          check_key_fields_for_not_responded_case_before_deactivating_responder(kase)
+          check_key_fields_for_responded_case_before_deactivating_responder(responded_case)
 
           service.call
-          kase.reload
-          responded_case.reload
-          expect(kase.responder_assignment.state).to eq "pending"
-          expect(kase.responding_team).to eq team
-          expect(kase.responder).to eq nil
-          expect(kase.current_state).to eq 'awaiting_responder'
 
-          expect(responded_case.responder_assignment.state).to eq "accepted"
-          expect(responded_case.responder).to eq responder
-          expect(responded_case.responding_team).to eq team
-          expect(responded_case.current_state).to eq 'responded'
+          check_key_fields_for_not_responded_case_after_deactivating_responder(kase)
+          check_key_fields_for_responded_case_after_deactivating_responder(responded_case)
         end
 
         it 'sends the team an email' do
@@ -149,6 +135,38 @@ describe UserDeletionService do
         service.call
         expect(responder.reload.team_roles.size).to eq 0
       end
+    end
+
+    private
+
+    def check_key_fields_for_not_responded_case_before_deactivating_responder(kase)
+      expect(kase.responder_assignment.state).to eq "accepted"
+      expect(kase.responder).to eq responder
+      expect(kase.current_state).to eq "drafting"
+      expect(kase.responding_team).to eq team
+    end
+
+    def check_key_fields_for_responded_case_before_deactivating_responder(responded_case)
+      expect(responded_case.responder_assignment.state).to eq "accepted"
+      expect(responded_case.responder).to eq responder
+      expect(responded_case.current_state).to eq "responded"
+      expect(responded_case.responding_team).to eq team
+    end
+
+    def check_key_fields_for_not_responded_case_after_deactivating_responder(kase)
+      kase.reload
+      expect(kase.responder_assignment.state).to eq "pending"
+      expect(kase.responding_team).to eq team
+      expect(kase.responder).to eq nil
+      expect(kase.current_state).to eq 'awaiting_responder'
+    end
+
+    def check_key_fields_for_responded_case_after_deactivating_responder(responded_case)
+      responded_case.reload
+      expect(responded_case.responder_assignment.state).to eq "accepted"
+      expect(responded_case.responder).to eq responder
+      expect(responded_case.responding_team).to eq team
+      expect(responded_case.current_state).to eq 'responded'
     end
   end
 end

@@ -3,23 +3,23 @@ require 'rails_helper'
 feature 'deactivating users' do
   given!(:team_admin)       { find_or_create :team_admin }
   given!(:manager)          { find_or_create :disclosure_bmt_user }
-  given!(:responder)        { create :responder, responding_teams: [bu] }
+  given!(:business_unit)    { find_or_create :foi_responding_team }
+  given!(:responder)        { create :responder, responding_teams: [business_unit] }
   given!(:user_with_cases)  { find_or_create :foi_responder }
   given!(:live_case)        { create :accepted_case }
   given!(:responded_case)   { create :responded_case,
                                 responder: user_with_cases,
-                                responding_team: bu,
+                                responding_team: business_unit,
                                 received_date: 5.days.ago }
-  given!(:bu)               { find_or_create :foi_responding_team }
 
   before do
-    bu.team_admins << team_admin
+    business_unit.team_admins << team_admin
   end
 
   scenario 'manager deactivates a responder with no live cases' do
     login_as manager
 
-    teams_show_page.load(id: bu.id)
+    teams_show_page.load(id: business_unit.id)
     information_officer = teams_show_page.row_for_information_officer(responder.email)
     information_officer.actions.click
 
@@ -42,7 +42,7 @@ feature 'deactivating users' do
     check_key_fields_before_deactivate_user_for_open_case
     check_key_fields_for_responded_case
 
-    teams_show_page.load(id: bu.id)
+    teams_show_page.load(id: business_unit.id)
     information_officer = teams_show_page.row_for_information_officer(user_with_cases.email)
     information_officer.actions.click
 
@@ -66,7 +66,7 @@ feature 'deactivating users' do
   scenario 'user manaing team members deactivates a responder with no live cases' do
     login_as team_admin
 
-    teams_show_page.load(id: bu.id)
+    teams_show_page.load(id: business_unit.id)
     information_officer = teams_show_page.row_for_information_officer(responder.email)
     information_officer.actions.click
 
@@ -89,7 +89,7 @@ feature 'deactivating users' do
     check_key_fields_before_deactivate_user_for_open_case
     check_key_fields_for_responded_case
 
-    teams_show_page.load(id: bu.id)
+    teams_show_page.load(id: business_unit.id)
     information_officer = teams_show_page.row_for_information_officer(user_with_cases.email)
     information_officer.actions.click
 
@@ -116,13 +116,13 @@ feature 'deactivating users' do
     expect(live_case.responder_assignment.state).to eq "accepted"
     expect(live_case.responder).to eq user_with_cases
     expect(live_case.current_state).to eq "drafting"
-    expect(live_case.responding_team).to eq bu
+    expect(live_case.responding_team).to eq business_unit
   end
 
   def check_key_fields_after_deactivate_user_for_open_case
     live_case.reload
     expect(live_case.responder_assignment.state).to eq "pending"
-    expect(live_case.responding_team).to eq bu
+    expect(live_case.responding_team).to eq business_unit
     expect(live_case.responder).to eq nil
     expect(live_case.current_state).to eq 'awaiting_responder'
   end
