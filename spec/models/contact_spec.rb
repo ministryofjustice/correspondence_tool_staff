@@ -72,5 +72,13 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.postcode).to match("FE2 9JK")
       expect(contact_2.email).to match("fake.email@test098.gov.uk")
     end
+
+    it 'allows you to set a contact_type_display_value for an instance' do
+      expect(contact_2.contact_type_display_value).to be nil
+
+      display_value = "Generic Solicitor Firm LLP"
+      contact_2.contact_type_display_value = display_value
+      expect(contact_2.contact_type_display_value).to match display_value
+    end
   end
 end
