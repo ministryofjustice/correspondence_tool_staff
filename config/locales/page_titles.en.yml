@@ -69,6 +69,7 @@ en:
     show_case_page: Viewing case details - %{case_number} - Track-a-query
     show_letter_page: Viewing generated letter - %{case_number} - Track-a-query
     stats: Performance Reports - Track-a-query
+    resend_unlock: Resend unlock instructions
     upload_responses_page: Uploading a response - %{case_number} - Track-a-query
     user_detail_page: Open cases - %{full_name} - Track-a-query
     move_team_page: Move a business unit - %{team_name} - Track-a-query
