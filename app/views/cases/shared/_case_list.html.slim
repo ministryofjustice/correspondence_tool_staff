@@ -13,19 +13,20 @@
         col
       caption
         .grid-row
-          .search-results-summary.column-half
+          .search-results-summary.column-one-third
             strong
               = @cases.total_count
             = " #{ 'case'.pluralize(@cases.total_count)} found" 
 
-          - if @query[:search_text].present?
-            - if cookies[:search_result_order] == 'search_result_order_by_newest_first'
-              = link_to t('common.show_search_result_order_by_oldest_first'), "#{request.fullpath}&order=search_result_order_by_oldest_first"
-            - else
-              = link_to t('common.show_search_result_order_by_newest_first'), "#{request.fullpath}&order=search_result_order_by_newest_first"
+          .search-results-summary.column-one-third
+            - if @query[:search_text].present?
+              - if cookies[:search_result_order] == 'search_result_order_by_newest_first'
+                = link_to t('common.show_search_result_order_by_oldest_first'), "#{request.fullpath}&order=search_result_order_by_oldest_first"
+              - else
+                = link_to t('common.show_search_result_order_by_newest_first'), "#{request.fullpath}&order=search_result_order_by_newest_first"
 
           - (@available_reports || []).each do |report_type|
-            .download-cases-link
+            .download-cases-link.column-one-third
               = download_csv_link(request.fullpath, report_type.abbr)
               | &nbsp;(.csv file)
 
