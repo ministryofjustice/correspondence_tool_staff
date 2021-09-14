@@ -14,6 +14,7 @@ module SearchHelper
     else
       chosen_scope = DEFAULT_SEARCH_RESULT_ORDER_FLAG
     end
+    chosen_scope
   end
 
   def self.get_order_fields(search_order_choice)
