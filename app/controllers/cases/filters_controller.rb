@@ -6,6 +6,7 @@ module Cases
 
     before_action :set_url, only: [:open, :closed, :my_open]
     before_action :set_state_selector, only: [:open, :my_open]
+    before_action :set_cookie_order_flag, only: [:open, :my_open]
 
     def show
       if params[:state_selector].present?
@@ -28,7 +29,6 @@ module Cases
           :cases_exemptions,
           :exemptions
         )
-        
       service = call_search_service(unpaginated_cases)
       @query = service.query
 
@@ -82,7 +82,7 @@ module Cases
           :responding_team,
           :approver_assignments
         )
-      service = call_search_service(unpaginated_cases)
+      service = call_search_service(unpaginated_cases, cookies[:search_result_order])
       @query = service.query
 
       if service.error?
@@ -113,7 +113,7 @@ module Cases
           :responding_team
         )
 
-      service = call_search_service(full_list_of_cases)
+      service = call_search_service(full_list_of_cases, cookies[:search_result_order])
       @query = service.query
 
       if service.error?
@@ -133,15 +133,21 @@ module Cases
 
     private
 
-    def call_search_service(full_list_of_cases)
+    def call_search_service(list_of_cases, order_choice = nil)
       query_list_params = search_params.merge(list_path: request.path)
       service = CaseSearchService.new(
         user: current_user,
         query_type: :list,
         query_params: query_list_params
       )
-      service.call(full_list_of_cases, order: cookies[:search_result_order])
+      service.call(list_of_cases, order: order_choice)
       service
+    end
+
+    def set_cookie_order_flag
+      if params["order"].present?
+        cookies[:search_result_order] = {:value => params["order"], :secure => true }
+      end
     end
 
     def set_state_selector

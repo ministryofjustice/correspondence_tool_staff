@@ -8,10 +8,10 @@ module Searchable
 
     self.ignored_columns = self.ignored_columns + [searchable_document_tsvector]
 
-    SearchHelper::SEARCH_SCOPE_SET.each do | scope_item |
-      pg_search_scope scope_item["name"],
+    SearchHelper::SEARCH_SCOPE_SET.keys().each do | scope_key |
+      pg_search_scope scope_key,
                       against: searchable_fields_and_ranks,
-                      order_within_rank: scope_item["order"],
+                      order_within_rank: SearchHelper::SEARCH_SCOPE_SET[scope_key]["order"],
                       using: { tsearch: {
                                 any_word: false,
                                 dictionary: 'english',

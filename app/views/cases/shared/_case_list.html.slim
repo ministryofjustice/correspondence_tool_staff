@@ -19,11 +19,7 @@
             = " #{ 'case'.pluralize(@cases.total_count)} found" 
 
           .search-results-order.column-one-third
-            - if @query[:search_text].present?
-              - if cookies[:search_result_order] == 'search_result_order_by_newest_first'
-                = link_to t('common.show_search_result_order_by_oldest_first'), "#{request.fullpath}&order=search_result_order_by_oldest_first"
-              - else
-                = link_to t('common.show_search_result_order_by_newest_first'), "#{request.fullpath}&order=search_result_order_by_newest_first"
+            = get_cases_order_option_url(request.fullpath, cookies[:search_result_order])
 
           - (@available_reports || []).each do |report_type|
             .download-cases-link.column-one-third
