@@ -44,7 +44,7 @@ class ContactsController < ApplicationController
 
   private
     def set_contact
-      @contact = Contact.find(params[:id])
+      @contact = Contact.includes(:contact_type).find(params[:id])
     end
 
     def set_new_contact_from_params
