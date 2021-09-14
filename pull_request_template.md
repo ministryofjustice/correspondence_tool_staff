@@ -10,6 +10,8 @@
 * [ ] (5) No superfluous changes in diff
 * [ ] (6) No TODO's without new ticket numbers
 * [ ] (7) PR Prefixed with ticket number e.g. `CT-7654 ...`
+* [ ] (8) Data migration script is created if any of letter templates is changed
+
 
 ### Screenshots
 <!-- Screenshots of the new changes if appropriate -->
