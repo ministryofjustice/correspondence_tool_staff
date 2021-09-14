@@ -1,10 +1,11 @@
 class Contact < ApplicationRecord
-  enum contact_type: %i(prison probation solicitor other)
+  belongs_to :contact_type, class_name: 'CategoryReference'
 
   validates :name, presence: true
   validates :address_line_1, presence: true
   validates :postcode, presence: true
   validates :contact_type, presence: true
+
 
   def address
     format_address("\n")
