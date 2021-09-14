@@ -1398,6 +1398,8 @@ en:
           hint: Enter your email address and we'll send you a link to create a new password.
           title: Reset password
           button: Send me password reset instructions
+      unlock:
+        heading: Resend unlock instructions
 
       sign_in:
         title: Sign in
