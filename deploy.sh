@@ -131,6 +131,11 @@ function _deploy() {
           uploads=${docker_image_tag} \
           jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
+  kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+          webapp=${docker_image_tag} \
+          uploads=${docker_image_tag} \
+          jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+
   # Apply non-image specific config
   kubectl apply \
     -f config/kubernetes/${environment}/service.yaml \

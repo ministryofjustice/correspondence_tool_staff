@@ -56,15 +56,21 @@ RSpec.describe Case::Base, type: :model do
                                             approving_team: approving_team }
   let(:case_being_drafted_trigger) { create :case_being_drafted, :flagged_accepted }
 
-  let(:trigger_foi) {
-    create :case,
-    :flagged,
-    received_date: Date.today - 6.months # Valid if within 1 year of today
-  }
+  let(:responded_case)     { create :responded_case,
+                              responder: responder,
+                              responding_team: responding_team,
+                              received_date: 5.days.ago }
+  
+  let(:trigger_foi)        { create :case,
+                              :flagged,
+                              # Valid if within 1 year of today
+                              received_date: Date.today - 6.months }
 
   let(:ot_ico_foi_draft)   { create :ot_ico_foi_noff_draft }
   let(:ot_ico_sar_draft)   { create :ot_ico_sar_noff_draft }
-  let(:kase) { create :case }
+  let(:kase)               { create :case }
+  let(:closed_case)        { create :closed_case }
+
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do
@@ -1640,4 +1646,21 @@ RSpec.describe Case::Base, type: :model do
       expect(trigger_foi.trigger?).to eq true
     end
   end
+
+  describe '#has_responded?' do
+    it 'is true for a closed case' do
+      expect(closed_case.has_responded?).to eq true
+    end
+
+    it 'is true for a responded case' do
+      expect(responded_case.has_responded?).to eq true
+    end
+
+    it 'is false for a case which has not been responded' do
+      expect(assigned_case.has_responded?).to eq false
+      expect(case_being_drafted.has_responded?).to eq false
+      expect(accepted_case.has_responded?).to eq false
+    end
+  end
+
 end
