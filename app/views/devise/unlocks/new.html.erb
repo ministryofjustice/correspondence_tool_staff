@@ -1,11 +1,13 @@
 <%= devise_error_messages! %>
-<%= content_for :heading do %>
+<%= content_for :page_title do %>
   <%= t('page_title.resend_unlock') %> 
+<% end %>
+<%= content_for :heading do %>
+  <%= t('devise.users.unlock.heading') %> 
 <% end %>
 <%= render partial: 'layouts/header' %>
 
 <%= form_for(resource, as: resource_name, url: unlock_path(resource_name), html: { method: :post }) do |f| %>
-  <%= devise_error_messages! %>
 
   <div class="field">
     <%= f.email_field :email, autofocus: true %>
