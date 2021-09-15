@@ -826,6 +826,10 @@ class Case::Base < ApplicationRecord
     flagged? ? 'trigger': 'non_trigger'
   end
 
+  def has_responded?
+    self.current_state == 'closed' || self.current_state ==  'responded'
+  end
+
   # predicate methods
   #
   def foi?;                    false;  end
