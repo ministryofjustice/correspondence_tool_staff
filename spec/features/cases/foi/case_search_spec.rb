@@ -1,11 +1,11 @@
 require "rails_helper"
 
 feature 'Searching for cases' do
-  given(:approver)  { find_or_create :disclosure_specialist }
-  given(:manager)   { find_or_create :disclosure_bmt_user }
-  given(:responder) { kase.responder }
-  given!(:kase)     { create :case_being_drafted, name: 'testing' }
-  given!(:kase_earlier)     { create :case_being_drafted, name: 'testing', received_date: 3.days.ago}
+  given(:approver)        { find_or_create :disclosure_specialist }
+  given(:manager)         { find_or_create :disclosure_bmt_user }
+  given(:responder)       { kase.responder }
+  given!(:kase_earlier)   { create :case_being_drafted, name: 'testing', received_date: 1.month.ago}
+  given!(:kase)           { create :case_being_drafted, name: 'testing' }
 
   scenario 'searching by case number' do
     login_as manager
@@ -65,15 +65,15 @@ feature 'Searching for cases' do
     expect(cases_search_page).not_to have_notices
     expect(cases_search_page.search_results_count.text).to eq "2 cases found"
     expect(cases_search_page.case_list.count).to eq 2
-    expect(cases_search_page.case_list.first.number).to have_text kase.number
-    expect(cases_search_page.case_list.second.number).to have_text kase_earlier.number
+    expect(cases_search_page.case_list.first.number).to have_text kase_earlier.number
+    expect(cases_search_page.case_list.second.number).to have_text kase.number
 
     click_on "Show newest cases first"
 
     expect(cases_search_page.search_results_count.text).to eq "2 cases found"
     expect(cases_search_page.case_list.count).to eq 2
-    expect(cases_search_page.case_list.first.number).to have_text kase_earlier.number
-    expect(cases_search_page.case_list.second.number).to have_text kase.number
+    expect(cases_search_page.case_list.first.number).to have_text kase.number
+    expect(cases_search_page.case_list.second.number).to have_text kase_earlier.number
   end
 
 end

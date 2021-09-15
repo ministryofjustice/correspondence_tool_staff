@@ -7,6 +7,7 @@ module PageObjects
       element :search, 'a[href="/cases/search"]'
       element :settings, 'a[href="/teams"]'
       element :stats, 'a[href="/stats"]'
+      element :my_open_in_time, 'a[href="/cases/my_open/in_time"]'
     end
   end
 end
