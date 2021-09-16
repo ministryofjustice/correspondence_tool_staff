@@ -91,7 +91,7 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to have_content reason
 
     reason = 'move back to data_to_be_requested'
-    move_back_step(reason)
+    move_back_step_without_reason_initially(reason)
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as waiting for data"
@@ -111,4 +111,25 @@ feature 'Offender SAR Case creation by a manager' do
     cases_edit_offender_sar_move_back_page.fill_in_reason(reason)
     click_on "Continue"
   end
+
+  def move_back_step_without_reason_initially(reason)
+    click_on "Move case back"
+
+    expect(cases_edit_offender_sar_move_back_page).to be_displayed
+    expect(cases_edit_offender_sar_move_back_page).to have_content "reverting case status"
+    click_on "Continue"
+
+    expect(cases_edit_offender_sar_move_back_page)
+      .to have_content "Please provide the reason for reverting the case back"
+    
+      click_on "Back"
+    
+    expect(cases_edit_offender_sar_move_back_page)
+      .to_not have_content "Please provide the reason for reverting the case back"
+
+    click_on "Move case back"
+    cases_edit_offender_sar_move_back_page.fill_in_reason(reason)
+    click_on "Continue"
+  end
+
 end
