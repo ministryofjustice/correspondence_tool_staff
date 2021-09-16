@@ -36,7 +36,11 @@ module PageObjects
 
           def fill_in_case_details(params={})
             kase = FactoryBot.build :offender_sar_case, params
-            subject_full_name.set(params[:subject_full_name] || 'Sabrina Adams')
+            if params.present? && params[:subject_full_name].present?
+              subject_full_name.set(params[:subject_full_name])
+            else
+              subject_full_name.set('Sabrina Adams')
+            end
             prison_number.set kase.prison_number
             subject_address.set kase.subject_address
             subject_aliases.set kase.subject_aliases
