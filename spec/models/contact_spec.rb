@@ -28,7 +28,7 @@ RSpec.describe Contact, type: :model do
 
     it 'must have a valid contact_type' do
       expect(contact_2).to be_valid
-      expect{ contact_3 }.to raise_exception 
+      expect{ contact_3 }.to raise_exception(ActiveRecord::AssociationTypeMismatch)
     end
   end
 

@@ -56,8 +56,8 @@ class ContactsController < ApplicationController
     end
 
     def set_contact_type
-      if contact_type_params[:contact_type]
-        @contact_type = CategoryReference.find(contact_type_params[:contact_type])
+      if contact_type_params[:contact_type_id]
+        @contact_type = CategoryReference.find(contact_type_params[:contact_type_id])
         @contact.contact_type = @contact_type
       else
         @contact.contact_type = nil
@@ -78,7 +78,7 @@ class ContactsController < ApplicationController
 
     def contact_type_params
       params.require(:contact).permit(
-        :contact_type
+        :contact_type_id
       )
     end
 end
