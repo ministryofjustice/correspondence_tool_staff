@@ -112,7 +112,7 @@ module Cases
         flash[:notice] = "Case has been moved back."
         redirect_to case_path(@case) and return
       else
-        flash[:alert] = "Please provide the reason for reverting the case back."
+        flash.now[:alert] = "Please provide the reason for reverting the case back."
         render :move_case_back
       end
     end
