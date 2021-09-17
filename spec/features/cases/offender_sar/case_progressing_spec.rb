@@ -43,13 +43,14 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready to dispatch"
 
-    move_back_to_data_to_be_requested_then_move_to_same_step_agin
-
     click_on "Mark as ready to dispatch"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Send dispatch letter"
     expect(cases_show_page).to have_content "Close case"
+
+    move_back_to_data_to_be_requested_then_move_to_same_step_agin
+
     click_on "Close case"
 
     expect(cases_close_page).to be_displayed
@@ -69,6 +70,13 @@ feature 'Offender SAR Case creation by a manager' do
   private 
 
   def move_back_to_data_to_be_requested_then_move_to_same_step_agin
+    reason = 'move back to ready_to_copy'
+    move_back_step(reason)
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Mark as ready to dispatch"
+    expect(cases_show_page).to have_content reason
+
     reason = 'move back to vetting_in_progress'
     move_back_step(reason)
 
@@ -101,6 +109,7 @@ feature 'Offender SAR Case creation by a manager' do
     click_on "Mark as ready for vetting"
     click_on "Mark as vetting in progress"
     click_on "Mark as ready to copy"
+    click_on "Mark as ready to dispatch"
   end
 
   def move_back_step(reason)

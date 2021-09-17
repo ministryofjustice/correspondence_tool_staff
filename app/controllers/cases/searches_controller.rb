@@ -8,12 +8,13 @@ module Cases
       set_url
       @state_selector = StateSelector.new(params)
 
+      set_cookie_order_flag
       service = CaseSearchService.new(
         user: current_user,
         query_type: :search,
         query_params: search_params
       )
-      service.call
+      service.call(order: cookies[:search_result_order])
       @query = service.query
 
       if service.error?
@@ -40,5 +41,14 @@ module Cases
         format.csv { send_csv_cases 'search' }
       end
     end
+
+    private
+
+    def set_cookie_order_flag
+      if params["order"].present?
+        cookies[:search_result_order] = {:value => params["order"], :secure => true }
+      end
+    end
+
   end
 end

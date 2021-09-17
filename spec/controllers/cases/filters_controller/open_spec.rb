@@ -86,7 +86,7 @@ describe Cases::FiltersController, type: :controller do
 
       it 'calls CaseSearchService with results of GlobalNavManager' do
         get :open
-        expect(case_search_service).to have_received(:call).with(open_cases)
+        expect(case_search_service).to have_received(:call).with(open_cases, order: nil)
       end
 
       it 'assigns the result set from the CaseFinderService' do

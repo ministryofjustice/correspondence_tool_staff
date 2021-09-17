@@ -127,6 +127,8 @@ ignore_unused:
   - stats.show.waiting
   - stats.create*
   - stats.download_custom*
+  - common.show_search_result_order_by_newest_first
+  - common.show_search_result_order_by_oldest_first
 
 
 ## Consider these keys used:

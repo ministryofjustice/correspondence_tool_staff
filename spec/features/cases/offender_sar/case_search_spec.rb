@@ -6,7 +6,7 @@ feature 'Searching for cases' do
 
   given!(:kase) { create :case_being_drafted, subject: "Common text" }
   given!(:offender_sar_case) { create :offender_sar_case, subject_full_name: "Common text" }
-  given!(:offender_sar_case_bill) { create :offender_sar_case, subject_full_name: "Bill", date_of_birth: Date.new(1970, 8, 21) }
+  given!(:offender_sar_case_bill) { create :offender_sar_case, subject_full_name: "Bill", date_of_birth: Date.new(1970, 8, 21), received_date: 3.days.ago}
   given!(:offender_sar_case_bill_1980) { create :offender_sar_case, subject_full_name: "Bill", date_of_birth: Date.new(1980, 8, 21) }
   given!(:offender_sar_case_ted) { create :offender_sar_case, subject_full_name: "Terrence", date_of_birth: Date.new(1970, 8, 21) }
 
@@ -66,12 +66,25 @@ feature 'Searching for cases' do
     let(:searcher) { responder }
     let(:search_term) { "Bill" }
 
-    scenario 'finds two cases' do
+    scenario 'finds two cases with default order: oldest cases first' do
       expect(cases_search_page.search_results_count.text).to eq "2 cases found"
       expect(cases_search_page.case_list.count).to eq 2
       expect(cases_search_page.case_list.first.number).to have_text offender_sar_case_bill.number
       expect(cases_search_page.case_list.last.number).to have_text offender_sar_case_bill_1980.number
     end
+
+    scenario 'finds two cases with newest cases first' do
+      expect(cases_search_page.search_results_count.text).to eq "2 cases found"
+      expect(cases_search_page.case_list.count).to eq 2
+      expect(cases_search_page.case_list.first.number).to have_text offender_sar_case_bill.number
+      expect(cases_search_page.case_list.last.number).to have_text offender_sar_case_bill_1980.number
+
+      click_on "Show newest cases first"
+      expect(cases_search_page.case_list.count).to eq 2
+      expect(cases_search_page.case_list.first.number).to have_text offender_sar_case_bill_1980.number
+      expect(cases_search_page.case_list.last.number).to have_text offender_sar_case_bill.number
+    end
+
   end
 
   context 'searching multiple terms narrows the search' do
