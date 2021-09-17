@@ -65,6 +65,44 @@ describe Cases::SearchesController, type: :controller do
       expect(case_search_service).to have_received(:call)
     end
 
+    it 'uses the CaseSearchService with the choice of oldest cases first' do
+      request.cookies[:search_result_order] = 'search_result_order_by_oldest_first'
+      allow(CaseSearchService).to receive(:new).and_return(case_search_service)
+      params = { search_query: { search_text: assigned_case.subject }}
+      get :show, params: params
+
+      expected_params = ActionController::Parameters.new(
+        params[:search_query]
+      ).permit!
+
+      expect(CaseSearchService).to have_received(:new).with(
+        user: responder,
+        query_type: :search,
+        query_params: expected_params
+      )
+
+      expect(case_search_service).to have_received(:call).with(order: "search_result_order_by_oldest_first")
+    end
+
+    it 'uses the CaseSearchService with the choice of newest cases first flag' do
+      request.cookies[:search_result_order] = 'search_result_order_by_newest_first'
+      allow(CaseSearchService).to receive(:new).and_return(case_search_service)
+      params = { search_query: { search_text: assigned_case.subject }}
+      get :show, params: params
+
+      expected_params = ActionController::Parameters.new(
+        params[:search_query]
+      ).permit!
+
+      expect(CaseSearchService).to have_received(:new).with(
+        user: responder,
+        query_type: :search,
+        query_params: expected_params
+      )
+
+      expect(case_search_service).to have_received(:call).with(order: "search_result_order_by_newest_first")
+    end
+
     it 'sets the query for the view' do
       allow(CaseSearchService).to receive(:new).and_return(case_search_service)
       get :show, params: { search_query: { search_text: assigned_case.subject }}
@@ -120,7 +158,7 @@ describe Cases::SearchesController, type: :controller do
     it 'passes the page param to the paginator' do
       paged_cases = double('Paged Cases', decorate: [])
       cases = double('Cases', page: paged_cases, empty?: true, size: 0)
-      allow(Case::Base).to receive(:search).and_return(cases)
+      allow(Case::Base).to receive(:search_result_order_by_oldest_first).and_return(cases)
       get :show, params: {
         search_query: { search_text: assigned_case.number },
         page: 'our_pages'

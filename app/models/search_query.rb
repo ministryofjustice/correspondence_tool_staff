@@ -18,6 +18,8 @@
 class SearchQuery < ApplicationRecord
   include ActiveRecord::Store
 
+  include SearchHelper
+
   FILTER_CLASSES_MAP = {
     "all_cases" => [
       CaseFilter::OpenCaseStatusFilter,
@@ -161,15 +163,19 @@ class SearchQuery < ApplicationRecord
     search_query
   end
 
-  def results(cases_list = nil)
+  def results(cases_list = nil, search_order_choice = nil)
     if root.query_type == 'search'
-
       cases_list ||= Pundit.policy_scope(user, Case::Base.all)
-      cases_list = cases_list.search(search_text)
+      cases_list = cases_list.__send__(SearchHelper::get_order_option(search_order_choice.to_s), search_text)
     elsif cases_list.nil?
-      raise ArgumentError.new("cannot perform filters without list of cases")
+      raise ArgumentError.new("cannot perform filters without list of cases")    
+    else
+      if search_order_choice.present?
+        order_fields = SearchHelper::get_order_fields(search_order_choice)
+        cases_list = cases_list.order(order_fields)
+      end
     end
-    
+
     perform_filters(cases_list)
   end
 
@@ -218,4 +224,5 @@ class SearchQuery < ApplicationRecord
       filter_class.new(self, user, result).call
     end
   end
+
 end
