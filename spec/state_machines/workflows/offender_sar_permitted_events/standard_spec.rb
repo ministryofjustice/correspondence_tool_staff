@@ -50,7 +50,8 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :preview_cover_page, 
           :close,
-          :send_dispatch_letter
+          :send_dispatch_letter,
+          :move_case_back
         ]
       },
       {

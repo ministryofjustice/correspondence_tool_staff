@@ -68,6 +68,8 @@
                 send_dispatch_letter:
                 preview_cover_page:
                 edit_case:
+                move_case_back:
+                  transition_to: ready_to_copy
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               closed:
