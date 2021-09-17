@@ -885,6 +885,8 @@ en:
     links:
       change: Change
     new_case_button: Create case
+    show_search_result_order_by_newest_first: Show newest cases first
+    show_search_result_order_by_oldest_first: Show oldest cases first
     phase_banner: |
       This is a new service.
     service_name: Track a query

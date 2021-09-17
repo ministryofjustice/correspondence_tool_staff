@@ -18,6 +18,19 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     link_to download_link_name || 'Download cases', csv_path
   end
 
+  def get_cases_order_option_url(original_uri, current_order_option)
+    if current_order_option == 'search_result_order_by_newest_first'
+      new_option = 'search_result_order_by_oldest_first'
+    else
+      new_option = 'search_result_order_by_newest_first'
+    end
+    uri = URI.parse(original_uri)
+    hash_params = Hash[URI.decode_www_form(uri.query || '')]
+    hash_params["order"] = new_option
+    uri.query = URI.encode_www_form(hash_params)
+    link_to t("common.show_#{new_option}"), uri.to_s
+  end
+
   def accepted_case_attachment_types
     Settings.case_uploads_accepted_types.join ','
   end
