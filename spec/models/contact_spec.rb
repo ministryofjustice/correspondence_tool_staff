@@ -9,8 +9,7 @@ RSpec.describe Contact, type: :model do
                              address_line_2: 'little heath',
                              town: 'bakersville',
                              county: 'Mercia',
-                             postcode: 'FE2 9JK',
-                             contact_type: ['prison', 'probation', 'solicitor', 'other'].sample) }
+                             postcode: 'FE2 9JK')}
 
     let(:contact_3) { build(:contact,
                              name: 'HMP halifax',
@@ -29,7 +28,7 @@ RSpec.describe Contact, type: :model do
 
     it 'must have a valid contact_type' do
       expect(contact_2).to be_valid
-      expect{ contact_3 }.to raise_exception 
+      expect{ contact_3 }.to raise_exception(ActiveRecord::AssociationTypeMismatch)
     end
   end
 
@@ -56,7 +55,8 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.county).to match("Mercia")
       expect(contact_2.postcode).to match("FE2 9JK")
       expect(contact_2.email).to match("fake.email@test098.gov.uk")
-      expect(['prison', 'probation', 'solicitor', 'other']).to include(contact_2.contact_type)
+      expect(contact_2.contact_type).to be_a(CategoryReference)
+      expect(contact_2.contact_type.value).to eq("Probation Office")
     end
   end
 end

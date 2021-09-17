@@ -10,7 +10,7 @@
 table.report
   thead
     tr
-      th Name
+      th Organisation name
       th Address
       th Contact type
       th
@@ -21,7 +21,7 @@ table.report
       tr
         td = contact.name
         td = contact.inline_address
-        td = contact.contact_type
+        td = contact.contact_type.value
         td = link_to 'Edit', edit_contact_path(contact)
         td = link_to 'Delete', contact, data: { confirm: 'Are you sure?' }, method: :delete
 
