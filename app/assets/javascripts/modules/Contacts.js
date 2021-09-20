@@ -8,6 +8,7 @@ moj.Modules.Contacts = {
         modal: true,
         title: 'Find an address'
     }),
+    $search_filters: $('#open-button').data('searchFilters'),
 
     init: function() {
         this.attach_button_event_to_open_dialog();
@@ -28,7 +29,7 @@ moj.Modules.Contacts = {
 
     load_modal_form : function(){
         var self = this;
-        self.$remote_content.load("/contacts_search", function() {
+        self.$remote_content.load("/contacts_search?search_filters=" + self.$search_filters, function() {
             self.$dialog.dialog( "open" );
 
             setTimeout(function() { 
@@ -39,6 +40,14 @@ moj.Modules.Contacts = {
                 $('#popup-search').focus(); 
             }, 2); // fix voiceover focus issue
         });
+    },
+
+    set_search_filters : function() {
+        var $form = $('#contacts_search_form');
+        var $form_action = $form.attr('action');
+        var form_action_with_params = $form_action + '?search_filters=' + this.$search_filters;
+        console.log(form_action_with_params);
+        $form.attr('action', form_action_with_params);
     },
 
     attach_address_selection_button_events : function() {
@@ -58,4 +67,5 @@ moj.Modules.Contacts = {
     search_results_loaded : function() { // To refocus on Search for NVDA after popup re-renders
         $('#popup-search-button').focus(); // fix NVDA focus issue after search
     }
+
 };

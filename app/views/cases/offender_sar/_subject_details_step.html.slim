@@ -26,9 +26,7 @@
     choices: Case::SAR::Offender::subject_types.keys
 
   = f.text_area :subject_address, rows: '4' 
-  .form-group
-    button#open-button.button
-      = t('common.contacts.find_address') 
+  = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "prison,probation" }
 
   = f.radio_button_fieldset(:flag_as_high_profile) do |fieldset|
     - fieldset.radio_input(true, text_method: :humanize)
@@ -39,6 +37,4 @@
   = f.submit 'Continue', class: 'button'
 
 
-#dialog-content
-  #remote-content role="region" aria-live="polite"
 

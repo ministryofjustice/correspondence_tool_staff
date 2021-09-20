@@ -7,7 +7,6 @@ class Contact < ApplicationRecord
 
   belongs_to :contact_type, class_name: 'CategoryReference', inverse_of: :contacts 
 
-
   def address
     format_address("\n")
   end

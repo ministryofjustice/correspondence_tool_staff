@@ -36,11 +36,11 @@ module PageObjects
           return unless contact_type
           case contact_type
           when 'prison'
-            choose 'contact_contact_type_prison', visible: false
+            choose 'Prison', visible: false
           when 'probation'
-            choose 'contact_contact_type_probation', visible: false
+            choose 'Probation centre', visible: false
           when 'solicitor'
-            choose 'contact_contact_type_solicitor', visible: false
+            choose 'Solicitor', visible: false
           else
             return
           end

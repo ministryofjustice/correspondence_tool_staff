@@ -1,7 +1,7 @@
 = link_to t('common.contacts.add_or_edit_address'), contacts_url, target: '_blank'
 br
 br
-form data-remote="true" action="/contacts_search" role="search"
+form#contacts_search_form data-remote="true" action="/contacts_search" role="search"
   fieldset
     label.bold-small for="popup-search"
       = t('common.contacts.address_search_label') 
@@ -26,3 +26,4 @@ ul.report-list role="list"
 javascript:
   moj.Modules.Contacts.search_results_loaded();
   moj.Modules.Contacts.attach_address_selection_button_events();
+  moj.Modules.Contacts.set_search_filters();
