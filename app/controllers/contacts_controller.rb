@@ -5,7 +5,7 @@ class ContactsController < ApplicationController
   before_action :set_contact_type, only: %i[ update create ]
 
   def index
-    @contacts = Contact.all
+    @contacts = Contact.includes([:contact_type]).all
   end
 
   def new
@@ -43,8 +43,16 @@ class ContactsController < ApplicationController
   end
 
   def contacts_search
-    query = contacts_search_param[:contacts_search_value]&.downcase
-    @contacts = Contact.all.where("LOWER(name) LIKE CONCAT('%', ?, '%')", query).order(:name)
+    search_term = contacts_search_param[:contacts_search_value]&.downcase
+
+    filters = params[:search_filters]&.split(',')
+
+    if filters&.any?
+      @contacts = Contact.joins(:contact_type).where('category_references.code IN (?)', filters)
+      @contacts = @contacts.where("LOWER(name) LIKE CONCAT('%', ?, '%')", search_term).order(:name)
+    else
+      @contacts = Contact.all.where("LOWER(name) LIKE CONCAT('%', ?, '%')", search_term).order(:name)
+    end
 
     render :contacts_search, layout: nil
   end
