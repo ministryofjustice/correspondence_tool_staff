@@ -21,7 +21,7 @@ table.report
       tr
         td = contact.name
         td = contact.inline_address
-        td = contact.contact_type.value
+        td = contact.contact_type_display_value
         td = link_to t('button.edit'), edit_contact_path(contact)
         td = link_to t('button.delete'), contact, data: { confirm: t('common.contacts.delete_address_confirmation') }, method: :delete
 br
