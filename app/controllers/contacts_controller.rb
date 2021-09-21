@@ -47,12 +47,7 @@ class ContactsController < ApplicationController
 
     filters = params[:search_filters]&.split(',')
 
-    if filters&.any?
-      @contacts = Contact.joins(:contact_type).where('category_references.code IN (?)', filters)
-      @contacts = @contacts.where("LOWER(name) LIKE CONCAT('%', ?, '%')", search_term).order(:name)
-    else
-      @contacts = Contact.all.where("LOWER(name) LIKE CONCAT('%', ?, '%')", search_term).order(:name)
-    end
+    @contacts = ContactsSearchService.new(filters: filters, search_term: search_term).call
 
     render :contacts_search, layout: nil
   end
