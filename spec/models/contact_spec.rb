@@ -63,6 +63,10 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.contact_type.value).to eq("Probation Office")
     end
 
+    it 'can output the contact display value' do
+      expect(contact.contact_type_display_value).to eq("Probation Office")
+    end
+
   end
 
   context 'class methods' do
