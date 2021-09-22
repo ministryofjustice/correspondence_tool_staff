@@ -376,7 +376,7 @@ GEM
     paper_trail (12.1.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
-    parallel (1.20.1)
+    parallel (1.21.0)
     parallel_tests (3.7.1)
       parallel
     parser (3.0.2.0)
@@ -488,9 +488,8 @@ GEM
     rubocop-performance (1.11.5)
       rubocop (>= 1.7.0, < 2.0)
       rubocop-ast (>= 0.4.0)
-    rubocop-rspec (2.4.0)
-      rubocop (~> 1.0)
-      rubocop-ast (>= 1.1.0)
+    rubocop-rspec (2.5.0)
+      rubocop (~> 1.19)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.4)
     rubyntlm (0.6.3)
@@ -591,7 +590,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.7)
-    unicode-display_width (2.0.0)
+    unicode-display_width (2.1.0)
     uniform_notifier (1.14.2)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -683,7 +682,7 @@ DEPENDENCIES
   rspec-rails (~> 5.0)
   rubocop (~> 1.20.0)
   rubocop-performance
-  rubocop-rspec (~> 2.4.0)
+  rubocop-rspec (~> 2.5.0)
   ruby-progressbar
   rubyzip (>= 1.2.4)
   sablon
