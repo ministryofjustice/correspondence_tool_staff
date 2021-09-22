@@ -39,7 +39,7 @@ feature 'SAR Case creation by a manager' do
       .to include responding_team.team_lead
   end
 
-  scenario 'creating a case that needs clearance' do
+  scenario 'creating a case that needs clearance', js: true do
     create_sar_case_step flag_for_disclosure: true
 
     new_case = Case::Base.last
