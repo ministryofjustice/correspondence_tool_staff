@@ -1,4 +1,5 @@
 require 'rails_helper'
+require File.join(Rails.root, 'db', 'seeders', 'category_reference_seeder')
 
 feature 'Contacts address book', js: true do
   given(:manager)         { find_or_create :branston_user }
@@ -37,7 +38,8 @@ feature 'Contacts address book', js: true do
   }
 
   before :all do
-    add_contact_types_reference_data
+    CategoryReferenceSeeder::ContactTypeSeeder.unseed!
+    CategoryReferenceSeeder::ContactTypeSeeder.seed!
   end
 
   before :each do
@@ -197,59 +199,4 @@ feature 'Contacts address book', js: true do
     expect(page).to have_content("345 some road")
     expect(page).to have_content('FG9 5IK')
   end
-
-  # rubocop:disable Metrics/MethodLength
-  def add_contact_types_reference_data
-    CategoryReference.delete_all
-    category_references = [
-      { 
-        category: 'contact_type',
-        code: 'prison',
-        value: 'Prison',
-        display_order: 10
-      },
-      { 
-        category: 'contact_type',
-        code: 'probation',
-        value: 'Probation centre',
-        display_order: 20
-      },
-      { 
-        category: 'contact_type',
-        code: 'solicitor',
-        value: 'Solicitor',
-        display_order: 30
-      },
-      { 
-        category: 'contact_type',
-        code: 'branston',
-        value: 'Branson',
-        display_order: 40
-      },
-      { 
-        category: 'contact_type',
-        code: 'hmpps_hq',
-        value: 'HMPPS HQ',
-        display_order: 50
-      },
-      { 
-        category: 'contact_type',
-        code: 'hmcts',
-        value: 'HMCTS',
-        display_order: 60
-      },
-      { 
-        category: 'contact_type',
-        code: 'other',
-        value: 'Other',
-        display_order: 70
-      }
-    ]
-
-    category_references.each do |category_reference|
-      CategoryReference.create(category_reference)
-    end
-  end
-  # rubocop:enable Metrics/MethodLength
-
 end
