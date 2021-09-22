@@ -30,7 +30,7 @@ module PageObjects
               if kase.recipient == 'subject_recipient'
                 choose('offender_sar_complaint_recipient_subject_recipient', visible: false)
               elsif kase.recipient == 'requester_recipient'
-                  choose('offender_sar_complaint_recipient_requester_recipient', visible: false)
+                choose('offender_sar_complaint_recipient_requester_recipient', visible: false)
               end
             end
           end
