@@ -105,6 +105,7 @@ def create_sar_case_step(params={})
   expect(cases_new_sar_page).to be_displayed
 
   cases_new_sar_page.fill_in_case_details(params)
+  scroll_to cases_new_sar_page.choose_flag_for_disclosure_specialists
   cases_new_sar_page.choose_flag_for_disclosure_specialists(
     flag_for_disclosure ? 'yes' : 'no'
   )
