@@ -63,3 +63,6 @@ en:
     send_back_desc: Case was sent back for change
     move_case_back: Reverted case back
     move_case_back_desc: Reverted case back to "%{state}"
+    record_reason_for_lateness: Record reason for lateness
+    record_reason_for_lateness_add: Reason for lateness added
+    record_reason_for_lateness_change: Reason for lateness changed

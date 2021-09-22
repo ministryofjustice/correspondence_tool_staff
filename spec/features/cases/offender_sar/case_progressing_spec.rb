@@ -1,15 +1,18 @@
 require 'rails_helper'
+require File.join(Rails.root, 'db', 'seeders', 'case_category_reference_seeder')
 
 feature 'Offender SAR Case creation by a manager' do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
   given(:offender_sar_case) { create(:offender_sar_case).decorate }
+  given(:late_offender_sar_case) { create(:offender_sar_case, received_date: 2.month.ago).decorate }
 
   background do
     find_or_create :team_branston
     login_as manager
     cases_page.load
     CaseClosure::MetadataSeeder.seed!
+    CaseCategoryReferenceSeeder.seed!
   end
 
   after do
@@ -112,6 +115,41 @@ feature 'Offender SAR Case creation by a manager' do
     click_on "Mark as ready to dispatch"
   end
 
+  scenario 'progressing an offender sar case which is beyond the deadline', js: true do
+    cases_show_page.load(id: late_offender_sar_case.id)
+
+    click_on "Mark as waiting for data"
+    click_on "Mark as ready for vetting"
+    click_on "Mark as vetting in progress"
+    click_on "Mark as ready to copy"
+
+    check_available_events_before_recording_reason
+    record_reason_of_lateness
+    check_available_events_after_recording_reason
+
+    click_on "Mark as ready to dispatch"
+  end
+
+  def check_available_events_before_recording_reason
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Record reason for lateness"
+    expect(cases_show_page).not_to have_content "Mark as ready to dispatch"
+  end
+
+  def record_reason_of_lateness
+    click_on "Record reason for lateness"
+    expect(cases_edit_offender_sar_reason_for_lateness_page).to be_displayed
+    cases_edit_offender_sar_reason_for_lateness_page.choose_reason(CategoryReference.list_by_category(:reasons_for_lateness).first)
+    click_on "Continue"
+  end
+
+  def check_available_events_after_recording_reason
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).not_to have_content "Record reason for lateness"
+    expect(cases_show_page).to have_content "Mark as ready to dispatch"
+    expect(cases_show_page).to have_content "Reason for lateness added"
+  end
+  
   def move_back_step(reason)
     click_on "Move case back"
 

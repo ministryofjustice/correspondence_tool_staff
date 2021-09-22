@@ -82,8 +82,10 @@ Rails.application.routes.draw do
       get '/(:step)', on: :collection, to: 'offender_sar#new', as: 'step'
       get '/edit/:step', on: :member, to: 'offender_sar#edit', as: 'edit_step'
       post '/update', on: :member, to: 'offender_sar#update', as: 'update_step'
-      get '/move_case_back', on: :member, to: 'offender_sar_complaint#move_case_back', as: 'move_case_back'
-      patch '/move_case_back', on: :member, to: 'offender_sar_complaint#confirm_move_case_back', as: 'confirm_move_case_back'
+      get '/move_case_back', on: :member, to: 'offender_sar#move_case_back', as: 'move_case_back'
+      patch '/move_case_back', on: :member, to: 'offender_sar#confirm_move_case_back', as: 'confirm_move_case_back'
+      get '/record_reason_for_lateness', on: :member, to: 'offender_sar#record_reason_for_lateness', as: 'record_reason_for_lateness'
+      patch '/record_reason_for_lateness', on: :member, to: 'offender_sar#confirm_record_reason_for_lateness', as: 'confirm_record_reason_for_lateness'
       member do
         patch '/transitions/:transition_name', to: 'offender_sar#transition', as: :transition
       end
