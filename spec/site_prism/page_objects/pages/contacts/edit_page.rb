@@ -38,7 +38,7 @@ module PageObjects
           when 'prison'
             choose 'Prison', visible: false
           when 'probation'
-            choose 'Probation centre', visible: false
+            choose 'Probation', visible: false
           when 'solicitor'
             choose 'Solicitor', visible: false
           else
