@@ -10,7 +10,7 @@ module CategoryReferenceSeeder
       { 
         category: 'contact_type',
         code: 'probation',
-        value: 'Probation centre',
+        value: 'Probation',
         display_order: 20
       },
       { 
