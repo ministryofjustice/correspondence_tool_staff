@@ -47,7 +47,14 @@ class AddAddressTypes < ActiveRecord::DataMigration
     ]
 
     category_references.each do |category_reference|
-      CategoryReference.create(category_reference)
+      rec = CategoryReference.find_by(
+        category: category_reference['category'], 
+        code: category_reference['code']
+      )
+
+      rec = CategoryReference.new if rec.nil?
+
+      rec.update!(category_reference)
     end
   end
   # rubocop:enable Metrics/MethodLength
