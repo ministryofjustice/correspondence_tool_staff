@@ -49,8 +49,7 @@ feature 'Contacts address book', js: true do
   end
 
   scenario 'branston user can view addresses and create a new address' do
-    # click_on 'Addresses'
-    visit "contacts"
+    click_on 'Addresses'
     then_expect_heading_to_read_address_book
     and_expect_contact_details_to_be_present
 
@@ -61,8 +60,7 @@ feature 'Contacts address book', js: true do
   end
 
   scenario 'user can edit an existing address' do
-    # click_on 'Addresses'
-    visit "contacts"
+    click_on 'Addresses'
     and_user_can_edit_a_contact
     
     then_expect_to_see_the_edit_success_message
@@ -71,8 +69,7 @@ feature 'Contacts address book', js: true do
 
 
   scenario 'user can delete an address' do
-    # click_on 'Addresses'
-    visit 'contacts'
+    click_on 'Addresses'
     and_expect_contact_details_to_be_present
     and_user_deletes_an_address
     then_expect_to_see_delete_success_message
