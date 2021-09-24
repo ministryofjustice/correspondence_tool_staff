@@ -5,7 +5,7 @@ class ContactsController < ApplicationController
   before_action :set_contact_type, only: %i[ update create ]
 
   def index
-    @contacts = Contact.all
+    @contacts = Contact.includes([:contact_type]).all
   end
 
   def new
@@ -40,6 +40,16 @@ class ContactsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to contacts_url, notice: "Address was successfully destroyed." }
     end
+  end
+
+  def contacts_search
+    search_term = contacts_search_param[:contacts_search_value]&.downcase
+
+    filters = params[:search_filters]&.split(',')
+
+    @contacts = ContactsSearchService.new(filters: filters, search_term: search_term).call
+
+    render :contacts_search, layout: nil
   end
 
   private
@@ -80,5 +90,9 @@ class ContactsController < ApplicationController
       params.require(:contact).permit(
         :contact_type_id
       )
+    end
+
+    def contacts_search_param
+      params.permit(:contacts_search_value)
     end
 end

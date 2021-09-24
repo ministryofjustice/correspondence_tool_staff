@@ -48,6 +48,7 @@ feature 'Closing a case' do
       end
     end
   end
+  
   context 'Is the information held? "Yes"' do
     given!(:kase) { create :responded_ot_ico_foi,
                             received_date: 10.business_days.ago }
