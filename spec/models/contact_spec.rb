@@ -38,6 +38,10 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.inline_address).to match('123 test road, little heath, bakersville, Mercia, FE2 9JK')
     end
 
+    it 'can outout the display value of a contact' do
+      expect(contact.contact_type_display_value).to match('Probation Office')
+    end
+
     it 'can output a full concatenated multi-line address' do
       expect(contact_2.address).to match("123 test road\nlittle heath\nbakersville\nMercia\nFE2 9JK")
     end
@@ -57,6 +61,23 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.email).to match("fake.email@test098.gov.uk")
       expect(contact_2.contact_type).to be_a(CategoryReference)
       expect(contact_2.contact_type.value).to eq("Probation Office")
+    end
+
+    it 'can output the contact display value' do
+      expect(contact.contact_type_display_value).to eq("Probation Office")
+    end
+
+  end
+
+  context 'class methods' do
+    it 'returns expected sql from #search_by_contact_name' do
+      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" WHERE (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC" 
+      expect(Contact.search_by_contact_name('LLP').to_sql).to match(expected_sql)
+    end
+
+    it 'returns expected sql from #filtered_search_by_contact_name' do
+      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" INNER JOIN \"category_references\" ON \"category_references\".\"id\" = \"contacts\".\"contact_type_id\" WHERE (category_references.code IN ('probation,solicitor')) AND (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC"
+      expect(Contact.filtered_search_by_contact_name("probation,solicitor",'LLP').to_sql).to match(expected_sql)
     end
   end
 end

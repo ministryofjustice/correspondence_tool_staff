@@ -32,7 +32,9 @@ module PageObjects
 
           element :date_of_birth_yyyy, '#offender_sar_date_of_birth_yyyy'
 
-          element :submit_button, '.button'
+          element :find_an_address_button, '#open-button'
+
+          element :submit_button, '[value=Continue]'
 
           def fill_in_case_details(params={})
             kase = FactoryBot.build :offender_sar_case, params

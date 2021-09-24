@@ -1,10 +1,11 @@
 require 'rails_helper'
+require File.join(Rails.root, 'db', 'seeders', 'category_reference_seeder')
 
-xfeature 'Contacts address book', js: true do
+feature 'Contacts address book', js: true do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
 
-  given(:foi_manager)                     { find_or_create :disclosure_bmt_user }
+  given(:foi_manager)     { find_or_create :disclosure_bmt_user }
 
   given!(:contact) { create(:contact, 
                            name: 'HMP halifax',
@@ -13,15 +14,39 @@ xfeature 'Contacts address book', js: true do
                            town: 'bakersville',
                            county: 'Mercia',
                            postcode: 'FE2 9JK',
-                           contact_type: ['prison', 'probation', 'solicitor'].sample) 
+                           contact_type: CategoryReference.find_by(code: 'probation')) 
   }
 
-  background do
+  given!(:contact_2) { create(:contact, 
+                           name: 'Solicitors LLP',
+                           address_line_1: '456 fake street',
+                           address_line_2: 'little heath',
+                           town: 'bakersville',
+                           county: 'Mercia',
+                           postcode: 'FL7 0YK',
+                           contact_type: CategoryReference.find_by(code: 'solicitor')) 
+  }
+
+  given!(:contact_3) { create(:contact, 
+                           name: 'HMP Wellingsville',
+                           address_line_1: '789 some lane',
+                           address_line_2: 'little heath',
+                           town: 'bakersville',
+                           county: 'Mercia',
+                           postcode: 'TH8 9KO',
+                           contact_type: CategoryReference.find_by(code: 'prison')) 
+  }
+
+  before :all do
+    CategoryReferenceSeeder::ContactTypeSeeder.unseed!
+    CategoryReferenceSeeder::ContactTypeSeeder.seed!
+  end
+
+  before :each do
     find_or_create :team_branston
     login_as manager
     cases_page.load
   end
-
 
   scenario 'branston user can view addresses and create a new address' do
     click_on 'Addresses'
@@ -58,6 +83,49 @@ xfeature 'Contacts address book', js: true do
     then_address_book_link_is_not_visible
   end
 
+  scenario "addresses can be selected by name from the 'Find an address' dialog" do
+    when_i_navigate_to_offender_sar_subject_page
+    and_fill_in_subject_details_page
+
+    when_i_open_the_address_dialogue_only_prison_and_probation_addresses_should_load
+    and_i_use_the_search_dialog_to_select_an_address
+    then_i_expect_the_address_i_searched_for_to_have_been_entered_into_the_form
+  end
+
+  def then_i_expect_the_address_i_searched_for_to_have_been_entered_into_the_form
+    expect(cases_new_offender_sar_subject_details_page.subject_address).to have_content(contact.address)
+  end
+  
+  def when_i_open_the_address_dialogue_only_prison_and_probation_addresses_should_load
+    click_link 'Back'
+    cases_new_offender_sar_subject_details_page.find_an_address_button.click 
+    expect(page).to have_content('HMP halifax')
+    expect(page).to have_content('HMP Wellingsville')
+    expect(page).to_not have_content('Solicitors LLP')
+  end
+
+  def and_i_use_the_search_dialog_to_select_an_address
+    fill_in 'popup-search', with: "HMP HALIFAX"
+    click_on 'Search'
+    click_on 'Use HMP halifax'
+    click_on 'Continue'
+    click_link 'Back'
+  end
+
+  def and_fill_in_subject_details_page
+    cases_new_offender_sar_subject_details_page.fill_in_case_details
+    scroll_to cases_new_offender_sar_subject_details_page.submit_button
+    click_on "Continue"
+    expect(cases_new_offender_sar_requester_details_page).to be_displayed
+  end
+
+  def when_i_navigate_to_offender_sar_subject_page
+    cases_page.new_case_button.click
+    expect(cases_new_page).to be_displayed
+    click_link 'OFFENDER-SAR - Offender Subject Access Request'
+    expect(cases_new_offender_sar_subject_details_page).to be_displayed
+  end
+
   def then_address_book_link_is_not_visible
     expect(page).not_to have_content('Addresses')
   end
@@ -68,7 +136,7 @@ xfeature 'Contacts address book', js: true do
   
   def and_user_deletes_an_address
     accept_confirm do
-      click_on 'Delete' 
+      click_on 'Delete', match: :first
     end
   end
 
@@ -87,7 +155,7 @@ xfeature 'Contacts address book', js: true do
   end
 
   def and_user_can_edit_a_contact
-    click_link('Edit')
+    click_link 'Edit', match: :first
     details = {
       name: 'Granary law',
       address_line_1: '789 another road',
@@ -120,7 +188,7 @@ xfeature 'Contacts address book', js: true do
     click_on 'Submit'
   end
 
-  def and_expect_to_see_success_message 
+  def and_expect_to_see_success_message
     expect(page).to have_content("Contact was successfully created.")
   end
 
@@ -128,5 +196,4 @@ xfeature 'Contacts address book', js: true do
     expect(page).to have_content("345 some road")
     expect(page).to have_content('FG9 5IK')
   end
-
 end

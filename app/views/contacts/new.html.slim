@@ -1,6 +1,9 @@
+- content_for :page_title do
+  = t('page_title.add_an_address')
+
 = link_to("Back", contacts_url, class: 'govuk-back-link')
 - content_for :heading
-  = "Add new address"
+  = t('common.contacts.add_new_address')
 
 = render partial: 'layouts/header'
 
