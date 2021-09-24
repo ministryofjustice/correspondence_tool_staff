@@ -385,7 +385,7 @@ class Case::Base < ApplicationRecord
   before_save :prevent_number_change,
               :trigger_reindexing
 
-  after_create :create_init_transition
+  after_create :create_init_transition, :trigger_reindexing_after_creation
 
   delegate :available_events, to: :state_machine
 
@@ -853,7 +853,7 @@ class Case::Base < ApplicationRecord
 
   def create_deadline_calculator
     if self.class.respond_to?(:type_abbreviation)
-      klass = DeadlineCalculator.const_get(
+    klass = ::DeadlineCalculator.const_get(
         correspondence_type.deadline_calculator_class
       )
       klass.new(self)
@@ -976,10 +976,14 @@ class Case::Base < ApplicationRecord
   end
 
   def trigger_reindexing
-    if (self.changed & indexable_fields).any?
+    if (self.changed & indexable_fields).any? && self.id.present?
       self.dirty = true
-      SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later
+      SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(self.id)
     end
+  end
+
+  def trigger_reindexing_after_creation
+    SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(self.id)
   end
 
   def validate_related_cases
