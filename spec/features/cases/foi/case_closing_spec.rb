@@ -301,6 +301,7 @@ feature 'Closing a case' do
       expect(show_page).to have_no_exemptions
     end
   end
+  
 
   private
 
