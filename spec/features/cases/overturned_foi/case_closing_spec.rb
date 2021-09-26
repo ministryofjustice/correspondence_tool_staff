@@ -275,6 +275,7 @@ feature 'Closing a case' do
     random_exemption =  Random.new
                           .rand(1..(total_number_exemptions - 1))
 
+    expect(excemption_options.size > 1).to eq true
     excemption_options[random_exemption].click
 
     excemption_options[random_exemption].text
