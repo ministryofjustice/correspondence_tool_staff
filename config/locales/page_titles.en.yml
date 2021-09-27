@@ -80,4 +80,4 @@ en:
     move_case_back: Revert case back - %{case_number} - Track-a-query
     address_book: Organisation Address book - Track-a-query
     add_an_address: Add an address - Track-a-query
-    add_an_address: Add an address - Track-a-query
+    edit_an_address: Edit an address - Track-a-query

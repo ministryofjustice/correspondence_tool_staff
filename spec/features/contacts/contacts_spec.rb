@@ -168,7 +168,7 @@ feature 'Contacts address book', js: true do
   end
 
   def then_expect_heading_to_read_address_book
-    expect(contacts_index_page.page_heading.text).to match('Address book')
+    expect(contacts_index_page.page_heading.text).to match('Organisation address book')
   end
 
   def and_expect_contact_details_to_be_present
