@@ -58,6 +58,21 @@ feature 'Offender SAR Case creation by a manager', js: true do
     then_expect_open_cases_page_to_be_correct
   end
 
+  scenario '5 clean third party informations when option is changed to data subject' do
+    when_i_navigate_to_offender_sar_subject_page
+    and_fill_in_subject_details_page(subject_full_name: '6fe2bd8a-ebd2-49a4-b1c9-94955d9472f1')
+    and_fill_in_requester_details_page(:third_party)
+    and_back_previous_step_to_change_to_non_third_party
+    and_fill_in_recipient_details_page(recipient: 'subject_recipient')
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record_change(
+      '6fe2bd8a-ebd2-49a4-b1c9-94955d9472f1'
+    )
+    then_expect_no_third_party_info_stored('6fe2bd8a-ebd2-49a4-b1c9-94955d9472f1')
+  end
+
   def then_expect_cases_show_page_to_be_correct_for_solicitor_requesting_data_for_data_subject
     basic_details_of_show_page_are_correct
     expect(cases_show_page).to have_content "Information requested on someone's behalf? Yes"
@@ -70,6 +85,15 @@ feature 'Offender SAR Case creation by a manager', js: true do
     expect(cases_show_page).to have_content "Information requested on someone's behalf? Yes"
     expect(cases_show_page).to have_content "Where should the data be sent? Requester"
     expect_to_have_correct_sending_address
+  end
+  
+  def then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record_change(subject_name)
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).to have_content "Case created successfully"
+    expect(cases_show_page.page_heading).to have_content subject_name
+
+    expect(cases_show_page).to have_content "Information requested on someone's behalf? No"
+    expect(cases_show_page).to have_content "Where should the data be sent? The data subject"
   end
 
   def then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
@@ -96,8 +120,8 @@ feature 'Offender SAR Case creation by a manager', js: true do
     expect(cases_new_offender_sar_subject_details_page).to be_displayed
   end
 
-  def and_fill_in_subject_details_page
-    cases_new_offender_sar_subject_details_page.fill_in_case_details
+  def and_fill_in_subject_details_page(params = nil)
+    cases_new_offender_sar_subject_details_page.fill_in_case_details(params)
     scroll_to cases_new_offender_sar_subject_details_page.submit_button
     click_on "Continue"
     expect(cases_new_offender_sar_requester_details_page).to be_displayed
@@ -151,5 +175,19 @@ feature 'Offender SAR Case creation by a manager', js: true do
     expect(cases_show_page).to have_content "Relationship Solicitor"
     expect(cases_show_page).to have_content "Address\n22 High Street"
   end
+
+  def and_back_previous_step_to_change_to_non_third_party
+    click_on "Back"
+    and_fill_in_requester_details_page
+  end
+
+  def then_expect_no_third_party_info_stored(uniq_subject_full_name)
+    kase = Case::Base.where("properties->>'subject_full_name' = ? ", uniq_subject_full_name).first
+    expect(kase.third_party).to eq false 
+    expect(kase.third_party_relationship).to eq "" 
+    expect(kase.third_party_company_name).to eq "" 
+    expect(kase.third_party_name).to eq "" 
+  end
+
 end
 

@@ -250,6 +250,18 @@ feature 'offender sar complaint case editing by a manager' do
     then_i_expect_the_result_to_be_reflected_on_the_case_show_page("8901234.55")
   end
 
+  scenario 'Third party info are cleaned after changing third party to data subject ', js: true do
+    expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
+    cases_show_page.offender_sar_requester_details.change_link.click
+    expect(cases_edit_offender_sar_complaint_requester_details_page).to be_displayed
+    cases_edit_offender_sar_complaint_requester_details_page.choose_third_party_option(false)
+    click_on "Continue"
+    
+    expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
+    expect(cases_show_page).to have_content "Information requested on someone's behalf? No"
+    check_thiry_party_info_are_cleaned(offender_sar_complaint)
+  end
+
   def and_i_expect_the_ico_contact_details_to_be_visible
     expect(cases_show_page).to have_content 'ICO Person'
     expect(cases_show_page).to have_content 'test@email.com'
@@ -498,6 +510,14 @@ feature 'offender sar complaint case editing by a manager' do
 
   def when_i_click_costs_change_link
     cases_show_page.offender_sar_complaint_costs.change_link.click
+  end
+
+  def check_thiry_party_info_are_cleaned(complaint)
+    complaint.reload
+    expect(complaint.third_party).to eq false
+    expect(complaint.third_party_relationship).to eq "" 
+    expect(complaint.third_party_company_name).to eq "" 
+    expect(complaint.third_party_name).to eq "" 
   end
 
 end

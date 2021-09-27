@@ -48,6 +48,7 @@ feature 'Closing a case' do
       end
     end
   end
+  
   context 'Is the information held? "Yes"' do
     given!(:kase) { create :responded_ot_ico_foi,
                             received_date: 10.business_days.ago }
@@ -274,6 +275,7 @@ feature 'Closing a case' do
     random_exemption =  Random.new
                           .rand(1..(total_number_exemptions - 1))
 
+    expect(excemption_options.size > 1).to eq true
     excemption_options[random_exemption].click
 
     excemption_options[random_exemption].text

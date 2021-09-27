@@ -21,6 +21,15 @@ module PageObjects
           def edit_third_party_name(value)
             third_party_name.set value
           end
+
+          def choose_third_party_option(third_party_choice)
+            if third_party_choice
+              choose('offender_sar_complaint_third_party_true', visible: false)
+            else
+              choose('offender_sar_complaint_third_party_false', visible: false)
+            end
+          end
+          
         end
       end
     end

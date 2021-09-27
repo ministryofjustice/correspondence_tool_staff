@@ -76,6 +76,18 @@ feature 'Offender SAR Case editing by a manager', :js do
     then_i_should_see_the_pages_for_dispatch_reflected_on_the_show_page
   end
 
+  scenario 'Third party info are cleaned after changing third party to data subject ', js: true do
+    expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
+    cases_show_page.offender_sar_requester_details.change_link.click
+    expect(cases_edit_offender_sar_requester_details_page).to be_displayed
+    cases_edit_offender_sar_requester_details_page.choose_third_party_option(false)
+    click_on "Continue"
+    
+    expect(cases_show_page).to be_displayed(id: offender_sar_case.id)
+    expect(cases_show_page).to have_content "Information requested on someone's behalf? No"
+    check_thiry_party_info_are_cleaned(offender_sar_case)
+  end
+
   scenario 'user can edit reason for lateness' do
     late_case = create_late_and_have_reason_for_lateness_case
     cases_show_page.load(id: late_case.id)
@@ -105,8 +117,8 @@ feature 'Offender SAR Case editing by a manager', :js do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).not_to have_content "Record reason for lateness"
     expect(cases_show_page).to have_content second_reason.value
-  end
-
+  end 
+  
   def when_i_update_the_exempt_pages_count
     click_on 'Update exempt pages'
     expect(page).to have_content('Update exempt pages')
@@ -163,4 +175,13 @@ feature 'Offender SAR Case editing by a manager', :js do
   def then_i_expect_the_new_date_to_be_reflected_on_the_case_show_page
     expect(cases_show_page).to have_content(I18n.l(offender_sar_case.received_date + 5, format: :default))
   end
+
+  def check_thiry_party_info_are_cleaned(offender_sar_case)
+    offender_sar_case.reload
+    expect(offender_sar_case.third_party).to eq false
+    expect(offender_sar_case.third_party_relationship).to eq "" 
+    expect(offender_sar_case.third_party_company_name).to eq "" 
+    expect(offender_sar_case.third_party_name).to eq "" 
+  end
+
 end

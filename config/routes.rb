@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   resources :contacts, except: :show 
 
+  get '/contacts_search', to: 'contacts#contacts_search'
+
   devise_for :users, controllers: { passwords: 'passwords' }
 
   gnav = Settings.global_navigation
