@@ -8,7 +8,7 @@ feature 'Offender SAR Case editing by a manager', :js do
   given(:offender_sar_case) { create :offender_sar_case, :third_party, received_date: 2.weeks.ago.to_date }
 
   background do
-    CaseCategoryReferenceSeeder.seed!
+    CaseCategoryReferenceSeeder::ReasonsForLateness.seed!
 
     find_or_create :team_branston
     login_as manager

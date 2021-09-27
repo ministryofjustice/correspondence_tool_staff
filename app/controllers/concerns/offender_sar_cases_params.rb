@@ -70,15 +70,15 @@ module OffenderSARCasesParams
   def validate_reason(reason_params)
     error_message = nil
     if reason_params.empty?
-      error_message = 'Please choose the reason for lateness'
+      error_message = t('alerts.offender_sar.reason_for_lateness.blank')
     else
       reason = @reasons_for_lateness[reason_params["reason_for_lateness_id"].to_i]
       if reason.present? 
         if reason == "other" && reason_params["reason_for_lateness_note"].blank?
-          error_message = "Please provide the detail of the reason"
+          error_message = t('alerts.offender_sar.reason_for_lateness.blank')
         end
       else
-        error_message = "Invalid reason"
+        error_message = t('alerts.offender_sar.reason_for_lateness.invalid')
       end
     end
     raise InputValidationError.new(error_message) unless error_message.nil?

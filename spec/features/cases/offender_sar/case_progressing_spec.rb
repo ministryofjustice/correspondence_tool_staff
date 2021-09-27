@@ -12,7 +12,7 @@ feature 'Offender SAR Case creation by a manager' do
     login_as manager
     cases_page.load
     CaseClosure::MetadataSeeder.seed!
-    CaseCategoryReferenceSeeder.seed!
+    CaseCategoryReferenceSeeder::ReasonsForLateness.seed!
   end
 
   after do

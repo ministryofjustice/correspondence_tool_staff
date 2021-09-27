@@ -737,6 +737,11 @@ en:
         </i>
         <strong>You can't update a response after marking it as sent.</strong>
       </p>
+    offender_sar:
+      reason_for_lateness:
+        blank: Please provide the detail of the reason
+        invalid: Invalid reason
+        
 
   notices:
     case_cleared: "%{team} has been notified that the response is %{status}."
