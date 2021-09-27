@@ -880,12 +880,13 @@ en:
       view_case: "Case number "
       who_its_with: With
     contacts:
-      address_page_heading: Address book
+      address_page_heading: Organisation address book 
+      address_page_subheading: Private addresses should not be entered
       add_new_address: Add new address
       delete_address_confirmation: Are you sure you want to delete this address?
       find_address: Find an address
       add_or_edit_address: Add or edit addresses (opens in new window)
-      address_search_label: Address name search
+      address_search_label: Organisation name search
 
     choose: Choose...
     choose_file: Choose a file
