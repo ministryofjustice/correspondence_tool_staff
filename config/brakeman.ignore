@@ -21,6 +21,26 @@
       "note": ""
     },
     {
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "1ceb34276da2b058e0b95ee4f0fc5669bb87dfc14e1338fd4fcbede05c4e70d4",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/controllers/cases/offender_sar_controller.rb",
+      "line": 88,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "@case.state_machine.send((params[:transition_name] + \"!\"), params_for_transition)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::OffenderSarController",
+        "method": "transition"
+      },
+      "user_input": "(params[:transition_name] + \"!\")",
+      "confidence": "High",
+      "note": "check in place to allowlist methods to .send so can be ignored"
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "1d8501f800f3536615a655159c67f5f1908b31069f810109470fcad9c0e2dd6e",
@@ -107,7 +127,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/cases/letters/show.html.slim",
-      "line": 29,
+      "line": 28,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Letter.new(letter_params[:letter_template_id], Case::Base.find(params[:case_id]).decorate).body",
       "render_path": [
@@ -115,7 +135,7 @@
           "type": "controller",
           "class": "Cases::LettersController",
           "method": "show",
-          "line": 15,
+          "line": 16,
           "file": "app/controllers/cases/letters_controller.rb",
           "rendered": {
             "name": "cases/letters/show",
@@ -289,7 +309,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/cases/letters/show.html.slim",
-      "line": 27,
+      "line": 26,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Letter.new(letter_params[:letter_template_id], Case::Base.find(params[:case_id]).decorate).letter_address",
       "render_path": [
@@ -297,7 +317,7 @@
           "type": "controller",
           "class": "Cases::LettersController",
           "method": "show",
-          "line": 15,
+          "line": 16,
           "file": "app/controllers/cases/letters_controller.rb",
           "rendered": {
             "name": "cases/letters/show",
@@ -354,6 +374,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-07-08 15:07:40 +0100",
+  "updated": "2021-09-28 11:15:38 +0100",
   "brakeman_version": "5.0.2"
 }
