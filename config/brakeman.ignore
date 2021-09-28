@@ -121,6 +121,26 @@
       "note": ""
     },
     {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "3ca5cc56652a735e284c9946582427d43e3d48c0f029c9f693bf2ea5aab3077d",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/stats/etl/base_closed_cases.rb",
+      "line": 44,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"#{\"cd #{folder}\"}; #{\"cat *.csv > #{self.result_name}.csv\"}; #{\"zip #{self.result_name}.zip #{self.result_name}.csv\"}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Stats::ETL::BaseClosedCases",
+        "method": "load"
+      },
+      "user_input": "folder",
+      "confidence": "Medium",
+      "note": "No user input, all passed argument are defined in code as constants."
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "3d91aef01954b313c312d5554cdd8a007a604f76f5ce0605085c17e999f12135",
@@ -394,6 +414,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-09-28 11:38:20 +0100",
+  "updated": "2021-09-28 13:30:06 +0100",
   "brakeman_version": "5.0.2"
 }
