@@ -6,7 +6,7 @@ moj.Modules.Contacts = {
         height: 400,
         width: 600,
         modal: true,
-        title: 'Find an location'
+        title: 'Find a location'
     }),
     $search_filters: $('#open-button').data('searchFilters'),
 
