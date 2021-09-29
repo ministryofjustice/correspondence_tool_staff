@@ -48,6 +48,7 @@ feature 'Closing a case' do
       end
     end
   end
+  
   context 'Is the information held? "Yes"' do
     given!(:kase) { create :responded_ot_ico_foi,
                             received_date: 10.business_days.ago }
@@ -264,20 +265,6 @@ feature 'Closing a case' do
   end
 
   private
-
-  def select_random_exemption
-    excemption_options = cases_close_page.exemptions.exemption_options
-    #select a random exemption
-    total_number_exemptions = excemption_options.count
-
-    # choose a random exemption, but not exemption[0] because that is not valid for NCND
-    random_exemption =  Random.new
-                          .rand(1..(total_number_exemptions - 1))
-
-    excemption_options[random_exemption].click
-
-    excemption_options[random_exemption].text
-  end
 
   def close_case(kase)
     expect(cases_page.case_list.first.status.text).to eq 'Ready to close'

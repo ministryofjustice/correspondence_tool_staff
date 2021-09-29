@@ -21,7 +21,7 @@ module PageObjects
           element :date_of_birth_mm, '#offender_sar_date_of_birth_mm'
           element :date_of_birth_yyyy, '#offender_sar_date_of_birth_yyyy'
 
-          element :submit_button, '.button'
+          element :submit_button, '[value=Continue]'
 
           def edit_name(value)
             subject_full_name.set value

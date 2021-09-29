@@ -159,6 +159,24 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_new_page).to be_displayed
   end
 
+  scenario '11 clean third party informations when option is changed to data subject' do
+    offender_sar1 = create(:offender_sar_case, subject_full_name: 'db22f64a-0371-4593-a5a8-1d9c7c8ae8e0')
+    when_i_navigate_to_offender_sar_complaint_subject_page
+    and_choose_original_offender_sar_case_and_confirm(offender_sar1.number)
+    and_fill_in_complaint_type_page
+    and_fill_in_requester_details_page(:third_party)
+    and_back_previous_step_to_change_to_non_third_party
+    and_fill_in_recipient_details_page(recipient: 'subject_recipient')
+    and_fill_in_requested_info_page
+    and_fill_in_request_details_page
+    and_fill_in_date_received_page
+    and_fill_in_external_deadline_page
+
+    then_basic_details_of_show_page_are_correct(offender_sar_case: offender_sar1)
+    then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
+    then_expect_no_third_party_info_stored('db22f64a-0371-4593-a5a8-1d9c7c8ae8e0')
+  end
+
   context 'when complaint is an ICO complaint' do
     let(:complaint_type) { 'ico_complaint' }
 
@@ -343,8 +361,8 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_new_offender_sar_complaint_link_offender_sar_page).to be_displayed
   end
 
-  def and_choose_original_offender_sar_case_and_confirm
-    cases_new_offender_sar_complaint_link_offender_sar_page.fill_in_original_case_number(offender_sar.number)
+  def and_choose_original_offender_sar_case_and_confirm(case_number = nil)
+    cases_new_offender_sar_complaint_link_offender_sar_page.fill_in_original_case_number(case_number || offender_sar.number)
     click_on "Continue"
     expect(cases_new_offender_sar_complaint_confirm_case_page).to have_content "Create Offender SAR Complaint case"
     expect(cases_new_offender_sar_complaint_confirm_case_page).to be_displayed
@@ -491,5 +509,19 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to have_content offender_sar.number
     expect(cases_show_page).to have_content "Start complaint"
   end
+
+  def and_back_previous_step_to_change_to_non_third_party
+    click_on "Back"
+    and_fill_in_requester_details_page
+  end
+
+  def then_expect_no_third_party_info_stored(uniq_subject_full_name)
+    kase = Case::SAR::OffenderComplaint.where("properties->>'subject_full_name' = ? ", uniq_subject_full_name).first
+    expect(kase.third_party).to eq false 
+    expect(kase.third_party_relationship).to eq "" 
+    expect(kase.third_party_company_name).to eq "" 
+    expect(kase.third_party_name).to eq "" 
+  end
+
 end
 

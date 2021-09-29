@@ -1,7 +1,6 @@
-class AddAddressTypes < ActiveRecord::DataMigration
-  # rubocop:disable Metrics/MethodLength
-  def up
-    category_references = [
+module CategoryReferenceSeeder
+  class ContactTypeSeeder
+    @@category_references = [
       { 
         category: 'contact_type',
         code: 'prison',
@@ -11,7 +10,7 @@ class AddAddressTypes < ActiveRecord::DataMigration
       { 
         category: 'contact_type',
         code: 'probation',
-        value: 'Probation centre',
+        value: 'Probation',
         display_order: 20
       },
       { 
@@ -46,20 +45,14 @@ class AddAddressTypes < ActiveRecord::DataMigration
       }
     ]
 
-    category_references.each do |category_reference|
-      rec = CategoryReference.find_by(
-        category: category_reference['category'], 
-        code: category_reference['code']
-      )
-
-      rec = CategoryReference.new if rec.nil?
-
-      rec.update!(category_reference)
+    def self.seed!
+      @@category_references.each do |category_reference|
+        CategoryReference.find_or_create_by!(category_reference)
+      end
     end
-  end
-  # rubocop:enable Metrics/MethodLength
 
-  def down
-    CategoryReference.where(category: 'contact_type').delete_all
+    def self.unseed!
+      CategoryReference.where(category: :contact_type).delete_all
+    end
   end
 end
