@@ -101,13 +101,53 @@
       "note": ""
     },
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "4bebd9c47c71e0cc0257ec1388a062333bb391021c5273e526084891efda5f4f",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/cases/responses_controller.rb",
+      "line": 78,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => params[:response_action].downcase.to_sym, {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::ResponsesController",
+        "method": "create"
+      },
+      "user_input": "params[:response_action].downcase.to_sym",
+      "confidence": "High",
+      "note": "Allowed values are checked, therefore this is not relevant and is a false positive"
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "4bebd9c47c71e0cc0257ec1388a062333bb391021c5273e526084891efda5f4f",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/cases/responses_controller.rb",
+      "line": 81,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => params[:response_action].downcase.to_sym, {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::ResponsesController",
+        "method": "create"
+      },
+      "user_input": "params[:response_action].downcase.to_sym",
+      "confidence": "High",
+      "note": "Allowed values are checked, therefore this is not relevant and is a false positive"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "4c88cf1040891ad952164e56bfe504a90419114c72d7993038e40bafc05ba933",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/cases/letters/show.html.slim",
-      "line": 29,
+      "line": 28,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Letter.new(letter_params[:letter_template_id], Case::Base.find(params[:case_id]).decorate).body",
       "render_path": [
@@ -115,7 +155,7 @@
           "type": "controller",
           "class": "Cases::LettersController",
           "method": "show",
-          "line": 15,
+          "line": 16,
           "file": "app/controllers/cases/letters_controller.rb",
           "rendered": {
             "name": "cases/letters/show",
@@ -170,6 +210,26 @@
       "user_input": ":role",
       "confidence": "Medium",
       "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "7c6f96d56eaebce7c9a307bdb29688371a0588616d3ec91fd49c36f0e339b1b5",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/cases/responses_controller.rb",
+      "line": 53,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => params[:response_action].downcase.to_sym, {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::ResponsesController",
+        "method": "new"
+      },
+      "user_input": "params[:response_action].downcase.to_sym",
+      "confidence": "High",
+      "note": "Allowed values are checked, therefore this is not relevant and is a false positive"
     },
     {
       "warning_type": "Command Injection",
@@ -289,7 +349,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/cases/letters/show.html.slim",
-      "line": 27,
+      "line": 26,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Letter.new(letter_params[:letter_template_id], Case::Base.find(params[:case_id]).decorate).letter_address",
       "render_path": [
@@ -297,7 +357,7 @@
           "type": "controller",
           "class": "Cases::LettersController",
           "method": "show",
-          "line": 15,
+          "line": 16,
           "file": "app/controllers/cases/letters_controller.rb",
           "rendered": {
             "name": "cases/letters/show",
@@ -354,6 +414,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-07-08 15:07:40 +0100",
+  "updated": "2021-09-29 13:16:10 +0100",
   "brakeman_version": "5.0.2"
 }
