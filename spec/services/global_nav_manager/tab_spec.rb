@@ -53,4 +53,11 @@ describe GlobalNavManager::Tab do
       expect(tab.fullpath).to eq '/opened/late'
     end
   end
+
+  describe '#count' do
+    it 'has a count that can be set' do
+      tab.set_count(3)
+      expec(tab.count).to eq(3)
+    end
+  end
 end
