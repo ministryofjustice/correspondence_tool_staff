@@ -12,6 +12,7 @@
         - fieldset.radio_input('nomis_records')
         - fieldset.radio_input('nomis_contact_logs')
         - fieldset.radio_input('nomis_other')
+          = f.text_area :request_type_note, id: 'data_request_request_type_note_for_nomis'
         - fieldset.radio_input('probation_records')
         - fieldset.radio_input('cctv_and_bwcf')
         - fieldset.radio_input('telephone_recordings')

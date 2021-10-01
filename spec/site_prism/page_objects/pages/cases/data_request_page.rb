@@ -16,6 +16,7 @@ module PageObjects
                   '//fieldset[contains(.,"What data is needed?")]'
 
           element :request_type_note, '#data_request_request_type_note'
+          element :request_type_note_for_nomis, '#data_request_request_type_note_for_nomis'
 
           element :date_requested_day, '#data_request_date_requested_dd'
           element :date_requested_month, '#data_request_date_requested_mm'

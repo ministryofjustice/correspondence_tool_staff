@@ -82,16 +82,44 @@ feature 'Data Requests for an Offender SAR' do
     expect(data_request_page).to have_text 'errors prevented this form'
   end
 
-  scenario 'no data entry fails' do
+  scenario 'no data entry fails', js: true do
     cases_show_page.load(id: offender_sar_case.id)
     click_on 'Record data request'
 
     data_request_page.form.location.fill_in(with: '    ')
-    data_request_page.form.request_type.fill_in(with: '')
 
     click_on 'Continue'
 
     expect(data_request_page).to be_displayed
     expect(data_request_page).to have_text '3 errors prevented this form from being submitted'
+  end
+
+  scenario 'record data request with data type of NOMIS other and notes', js: true do
+    request_values = {
+      location: 'HMP testing',
+      request_type: 'all_prison_records',
+      request_type_note: 'Testing nomis-other note',
+      date_requested: Date.new(2020, 8, 15),
+      date_from: Date.new(2018, 8, 15),
+      date_to: Date.new(2019, 8, 15),
+    }
+
+    cases_show_page.load(id: offender_sar_case.id)
+    click_on 'Record data request'
+
+    data_request_page.form.location.fill_in(with: request_values[:location])
+    data_request_page.form.choose_request_type('nomis_other')
+    data_request_page.form.request_type_note_for_nomis.fill_in(with: request_values[:request_type_note])
+    data_request_page.form.set_date_requested(request_values[:date_requested])
+    click_on 'Continue'
+
+    expect(cases_show_page).to be_displayed
+    row = cases_show_page.data_requests.rows[0]
+    expect(row.location).to have_text request_values[:location]
+    expect(row.request_type).to have_text 'NOMIS other'
+    expect(row.request_type).to have_text request_values[:request_type_note]
+    expect(row.date_requested).to have_text request_values[:date_requested].strftime(Settings.default_date_format)
+    data_requests = cases_show_page.data_requests.rows
+    expect(data_requests.size).to eq 1
   end
 end
