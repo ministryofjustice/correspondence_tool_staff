@@ -356,7 +356,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_page).to have_new_case_button
     cases_page.new_case_button.click
     expect(cases_new_page).to be_displayed
-    cases_new_page.create_link_for_correspondence('OFFENDER-SAR-COMPLAINT').click
+    cases_new_page.create_link_for_correspondence('Offender SAR complaint').click
     expect(cases_new_offender_sar_complaint_link_offender_sar_page).to have_content "Create Offender SAR Complaint case"
     expect(cases_new_offender_sar_complaint_link_offender_sar_page).to be_displayed
   end
