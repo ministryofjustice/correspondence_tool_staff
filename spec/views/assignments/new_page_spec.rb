@@ -10,6 +10,7 @@ describe 'assignments/new.html.slim', type: :view do
 
   it 'displays the new assignment page for a new case' do
 
+    deactivated_bg = create :business_group, deleted_at: Date.today, name: '[DEACTIVATED] testing'
     assign(:case, unassigned_case)
     assign(:assignment, unassigned_case.assignments.new)
     flash[:notice] = true
@@ -24,9 +25,10 @@ describe 'assignments/new.html.slim', type: :view do
     expect(page.page_heading.heading.text).to eq "Assign case"
     expect(page.page_heading.sub_heading.text)
         .to eq "Create case "
-
     expect(page.business_groups).to have_group
     expect(page.business_groups).to have_all_groups
+    expect(page).to have_content bg.name
+    expect(page).not_to have_content deactivated_bg.name
 
     expect(page).to have_no_assign_to
   end
