@@ -196,7 +196,7 @@ class Workflows::Predicates
   end
 
   def already_late?
-    @kase.already_late? && !has_caught_reason_for_lateness?
+    case_already_late? && !has_caught_reason_for_lateness?
   end
 
   def is_ready_to_dispatch?
@@ -204,6 +204,10 @@ class Workflows::Predicates
   end
 
   private
+
+  def case_already_late?
+    Date.current >= @kase.external_deadline
+  end
 
   def still_in_time?
     !@kase.already_late?

@@ -59,7 +59,7 @@
                 edit_case:
                 move_case_back:
                   transition_to: vetting_in_progress
-                record_reason_for_lateness:
+                capture_reason_for_lateness:
                   if: Workflows::Predicates#already_late?
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?

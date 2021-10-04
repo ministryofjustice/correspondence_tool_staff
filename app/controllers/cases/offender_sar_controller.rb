@@ -158,9 +158,9 @@ module Cases
 
     def get_extra_message_for_reason_for_lateness_field
       if @case.reason_for_lateness.present?
-        t('event.record_reason_for_lateness_change')
+        t('event.capture_reason_for_lateness_change')
       else
-        t('event.record_reason_for_lateness_add')
+        t('event.capture_reason_for_lateness_add')
       end
     end
 
@@ -168,7 +168,7 @@ module Cases
       if @case.reason_for_lateness.present?
         authorize @case, :can_edit_case?
       else
-        authorize @case, :can_record_reason_for_lateness?
+        authorize @case, :can_capture_reason_for_lateness?
       end
     end
 

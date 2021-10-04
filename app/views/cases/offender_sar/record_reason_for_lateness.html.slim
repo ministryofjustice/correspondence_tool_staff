@@ -14,7 +14,7 @@
 = form_for @case, url: confirm_record_reason_for_lateness_case_sar_offender_path(@case), as: :offender_sar do |f|
               
   h2.heading-medium
-    = t('helpers.label.offender_sar.record_reason_for_lateness')
+    = t('helpers.label.offender_sar.capture_reason_for_lateness')
   = f.radio_button_fieldset:reason_for_lateness_id, choices: @reasons_for_lateness_items, value_method: :id,  text_method: :value, legend_options: { class: "visually-hidden" }
 
   .div id="reason_for_note_group" class="panel panel-border-narrow"

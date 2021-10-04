@@ -641,7 +641,7 @@ en:
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
-        record_reason_for_lateness: Please select reason why the case is out of time?
+        capture_reason_for_lateness: Please select reason why the case is out of time?
       case_sar_offender_complaint:
         complaint_type: What sort of complaint is this?
         complaint_subtype: What is the nature of the complaint?
