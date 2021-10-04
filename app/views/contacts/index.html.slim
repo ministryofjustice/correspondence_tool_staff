@@ -1,10 +1,14 @@
 - content_for :page_title do
   = t('page_title.address_book') 
 
+
 - content_for :heading
   = t('common.contacts.address_page_heading')
 
+
 = render partial: 'layouts/header'
+
+= t('common.contacts.address_page_subheading')
 
 .grid-row
   .column-full.button-holder
