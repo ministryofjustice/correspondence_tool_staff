@@ -2,7 +2,7 @@ h2.heading-medium
   = t('teams.browse_by_business_group')
 
 ul.business-groups.list
-  - BusinessGroup.all.order(:name).each do |bg|
+  - BusinessGroup.active.order(:name).each do |bg|
     li.business-group
       - if assignment.new_record?
         = business_group_option_for_new_case(kase, bg, params)
