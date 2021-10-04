@@ -446,6 +446,7 @@ en:
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
         date_of_birth: "For example, 12 11 2007"
         message_hint: Include any details that will be useful for processing the case (optional)
+        reason_for_lateness_note_hint: Please provide details to why this case is late
         number_exempt_pages: "Pages removed from the SAR as exemptions"
         number_final_pages: "Final page count including exempt pages"
         other_subject_ids: "You can include multiple numbers separated by a comma or a space."
@@ -640,6 +641,7 @@ en:
         third_party_name: "Full name of the representative (optional)"
         third_party_relationship: Relationship to the subject
         total: Total
+        capture_reason_for_lateness: Please select reason why the case is out of time?
       case_sar_offender_complaint:
         complaint_type: What sort of complaint is this?
         complaint_subtype: What is the nature of the complaint?
@@ -745,6 +747,11 @@ en:
         </i>
         <strong>You can't update a response after marking it as sent.</strong>
       </p>
+    offender_sar:
+      reason_for_lateness:
+        blank: Please provide the detail of the reason
+        invalid: Invalid reason
+        
 
   notices:
     case_cleared: "%{team} has been notified that the response is %{status}."
@@ -860,6 +867,8 @@ en:
       upload_approve: 'Upload response and clear'
       upload_response: Upload response
       who_its_with: With
+      reason_for_lateness: Reason for lateness
+      reason_for_lateness_note: Note for reason for lateness
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
@@ -868,6 +877,7 @@ en:
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
       move_case_back: Move case back
+      record_reason_for_lateness: Record reason for lateness
     case/offender_sar_complaint:
       add_approval_flags_for_ico: Add approval
       add_approval_flags_for_litigation: Add approval
@@ -1197,6 +1207,7 @@ en:
       date_received_heading: When was the SAR received?
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
+      record_reason_for_lateness_heading: Reason for lateness
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
