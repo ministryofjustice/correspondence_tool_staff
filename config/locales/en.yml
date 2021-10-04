@@ -715,6 +715,14 @@ en:
           manager: Case management
       team_property:
         value: "Add area"
+      correspondence_types:
+        offender_sar: Offender SAR
+        offender_sar_complaint: Offender SAR complaint
+        foi: FOI
+        sar: SAR
+        ico: ICO
+        overturned_sar: Overturned SAR
+        overturned_foi: Overturned FOI
     links:
       case_details:
         edit_case: 'Edit case details'
