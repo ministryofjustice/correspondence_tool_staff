@@ -58,7 +58,7 @@ moj.Modules.CaseCreation = {
       }
     });
   },
-
+ 
   showHideDeliveryMethodFields: function () {
     if (this.$deliveryMethod.find(':radio').is(':checked')){
 
@@ -70,19 +70,13 @@ moj.Modules.CaseCreation = {
         $('#foi_message').closest('.form-group').hide();
       }
 
-      if (this.$deliveryMethodPost.is(':checked')) {
-        $('.dropzone').closest('.grid-row').show();
-      } else {
-        $('.dropzone').closest('.grid-row').hide();
-      }
+      $('.dropzone').closest('.grid-row').show();
 
     } else {
 
       this.$deliveryMethodFields.hide();
 
       $('#case_message').closest('.form-group').hide();
-
-      $('.dropzone').closest('.grid-row').hide();
 
     }
   },
