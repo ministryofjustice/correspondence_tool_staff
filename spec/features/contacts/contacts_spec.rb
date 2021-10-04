@@ -122,7 +122,7 @@ feature 'Contacts address book', js: true do
   def when_i_navigate_to_offender_sar_subject_page
     cases_page.new_case_button.click
     expect(cases_new_page).to be_displayed
-    click_link 'OFFENDER-SAR - Offender Subject Access Request'
+    click_link 'Offender SAR - Offender Subject Access Request'
     expect(cases_new_offender_sar_subject_details_page).to be_displayed
   end
 
@@ -168,7 +168,7 @@ feature 'Contacts address book', js: true do
   end
 
   def then_expect_heading_to_read_address_book
-    expect(contacts_index_page.page_heading.text).to match('Address book')
+    expect(contacts_index_page.page_heading.text).to match('Organisation address book')
   end
 
   def and_expect_contact_details_to_be_present

@@ -9,5 +9,5 @@
 ul#create-correspondences
   - @permitted_correspondence_types.each do |correspondence_type|
     li style="margin-bottom: 15px"
-      = link_to correspondence_type.abbreviation_and_name,
+      = link_to correspondence_type.decorate.pretty_name,
                 new_admin_case_path(correspondence_type: correspondence_type.abbreviation.downcase)

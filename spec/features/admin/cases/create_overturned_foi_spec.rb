@@ -26,7 +26,7 @@ feature 'creating ICO Overturned FOI case' do
 
     admin_cases_page.load
     admin_cases_page.create_case_button.click
-    admin_cases_new_page.create_link_for_correspondence('OVERTURNED.FOI').click
+    admin_cases_new_page.create_link_for_correspondence('Overturned FOI').click
     expect(admin_cases_new_overturned_foi_page).to be_displayed
 
     if target_state

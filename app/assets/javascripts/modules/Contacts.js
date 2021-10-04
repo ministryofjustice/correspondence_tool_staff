@@ -6,7 +6,7 @@ moj.Modules.Contacts = {
         height: 400,
         width: 600,
         modal: true,
-        title: 'Find an address'
+        title: 'Find an location'
     }),
     $search_filters: $('#open-button').data('searchFilters'),
 
@@ -46,7 +46,6 @@ moj.Modules.Contacts = {
         var $form = $('#contacts_search_form');
         var $form_action = $form.attr('action');
         var form_action_with_params = $form_action + '?search_filters=' + this.$search_filters;
-        console.log(form_action_with_params);
         $form.attr('action', form_action_with_params);
     },
 
@@ -59,8 +58,7 @@ moj.Modules.Contacts = {
 
             $('#dialog-content').dialog( "close" );
 
-            $('#offender_sar_subject_address').text("");
-            $('#offender_sar_subject_address').text(formatted_address);
+            $('#offender_sar_subject_address').val(formatted_address);
         });
     },
 
