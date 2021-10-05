@@ -95,7 +95,7 @@ class Case::FOI::Standard < Case::Base
             on: :create,
             if: -> { sent_by_post? }
 
-  after_create :process_uploaded_request_files, if: :sent_by_post?
+  after_create :process_uploaded_request_files, if: -> { uploaded_request_files.present? }
 
   # determines whether or not the BU responded to flagged cases in time (NOT
   # whether the case was responded to in time!) calculated as the time between
