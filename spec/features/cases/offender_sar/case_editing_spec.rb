@@ -1,4 +1,6 @@
 require 'rails_helper'
+require File.join(Rails.root, 'db', 'seeders', 'case_category_reference_seeder')
+
 
 feature 'Offender SAR Case editing by a manager', :js do
   given(:manager)         { find_or_create :branston_user }
@@ -6,6 +8,8 @@ feature 'Offender SAR Case editing by a manager', :js do
   given(:offender_sar_case) { create :offender_sar_case, :third_party, received_date: 2.weeks.ago.to_date }
 
   background do
+    CaseCategoryReferenceSeeder::ReasonsForLateness.seed!
+
     find_or_create :team_branston
     login_as manager
     cases_show_page.load(id: offender_sar_case.id)
@@ -84,6 +88,37 @@ feature 'Offender SAR Case editing by a manager', :js do
     check_thiry_party_info_are_cleaned(offender_sar_case)
   end
 
+  scenario 'user can edit reason for lateness' do
+    late_case = create_late_and_have_reason_for_lateness_case
+    cases_show_page.load(id: late_case.id)
+    
+    when_i_click_the_reason_for_lateness_change_link
+    then_change_reason_for_lateness_expect_reason_is_changed
+  end
+
+  def create_late_and_have_reason_for_lateness_case
+    late_case = create :offender_sar_case
+    late_case.reason_for_lateness = CategoryReference.list_by_category(:reasons_for_lateness).first
+    late_case.save!
+    late_case.reload
+    late_case
+  end
+
+  def when_i_click_the_reason_for_lateness_change_link
+    cases_show_page.offender_sar_reason_for_lateness.change_link.click
+    expect(cases_edit_offender_sar_reason_for_lateness_page).to be_displayed
+  end
+
+  def then_change_reason_for_lateness_expect_reason_is_changed
+    second_reason = CategoryReference.list_by_category(:reasons_for_lateness).second
+    cases_edit_offender_sar_reason_for_lateness_page.choose_reason(second_reason)
+    click_on "Continue"
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).not_to have_content "Record reason for lateness"
+    expect(cases_show_page).to have_content second_reason.value
+  end 
+  
   def when_i_update_the_exempt_pages_count
     click_on 'Update exempt pages'
     expect(page).to have_content('Update exempt pages')

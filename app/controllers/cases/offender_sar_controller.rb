@@ -6,7 +6,13 @@ module Cases
     before_action :set_case_types, only: [:new, :create]
 
     before_action -> { set_decorated_case(params[:id]) }, only: [
-      :transition, :edit, :update, :move_case_back, :confirm_move_case_back
+      :transition, 
+      :edit, 
+      :update, 
+      :move_case_back, 
+      :confirm_move_case_back, 
+      :record_reason_for_lateness,
+      :confirm_record_reason_for_lateness
     ]
 
     def initialize
@@ -14,6 +20,7 @@ module Cases
       @correspondence_type = CorrespondenceType.offender_sar
       @correspondence_type_key = 'offender_sar'
       @creation_optional_flags = {}
+      get_reasons_for_lateness
     end
 
     def new
@@ -117,7 +124,59 @@ module Cases
       end
     end
 
+    def record_reason_for_lateness
+      check_authorization
+      render :record_reason_for_lateness
+    end 
+
+    def confirm_record_reason_for_lateness
+      check_authorization
+      begin
+        validate_reason(record_reason_params)
+        service = case_updater_service.new(current_user, @case, record_reason_params)
+        service.call(get_extra_message_for_reason_for_lateness_field)
+    
+        if service.result == :error
+          if service.error_message.present?
+            flash[:alert] = service.error_message
+          end
+          render :record_reason_for_lateness
+        end  
+        if service.result == :ok
+          flash[:notice] = t('cases.update.case_updated')
+        elsif service.result == :no_changes
+          flash[:alert] = "No changes were made"
+        end
+        redirect_to case_path(@case) and return 
+      rescue InputValidationError => err
+        flash.now[:alert] = err.message
+        render :record_reason_for_lateness
+      end
+    end
+
     private
+
+    def get_extra_message_for_reason_for_lateness_field
+      if @case.reason_for_lateness.present?
+        t('event.capture_reason_for_lateness_change')
+      else
+        t('event.capture_reason_for_lateness_add')
+      end
+    end
+
+    def check_authorization
+      if @case.reason_for_lateness.present?
+        authorize @case, :can_edit_case?
+      else
+        authorize @case, :can_capture_reason_for_lateness?
+      end
+    end
+
+    def get_reasons_for_lateness
+      @reasons_for_lateness_items = CategoryReference.list_by_category(:reasons_for_lateness)
+      @reasons_for_lateness = CategoryReference.list_by_category(:reasons_for_lateness).pluck(:id, :code).to_h
+      @reason_of_other = @reasons_for_lateness_items.find_by_code('other')
+    end
 
     def steps_are_completed?
       @case.current_step == @case.steps.last
