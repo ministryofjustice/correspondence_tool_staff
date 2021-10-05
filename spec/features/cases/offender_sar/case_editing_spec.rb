@@ -94,6 +94,9 @@ feature 'Offender SAR Case editing by a manager', :js do
     
     when_i_click_the_reason_for_lateness_change_link
     then_change_reason_for_lateness_expect_reason_is_changed
+
+    when_i_click_the_reason_for_lateness_change_link
+    then_change_reason_for_lateness_to_other_expect_reason_is_changed
   end
 
   def create_late_and_have_reason_for_lateness_case
@@ -117,8 +120,22 @@ feature 'Offender SAR Case editing by a manager', :js do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).not_to have_content "Record reason for lateness"
     expect(cases_show_page).to have_content second_reason.value
+    expect(cases_show_page).not_to have_content "Note for reason for lateness"
   end 
   
+  def then_change_reason_for_lateness_to_other_expect_reason_is_changed
+    other_reason = CategoryReference.where(category: 'reasons_for_lateness', code: 'other').first
+    reason_note = 'testing note field for other reason'
+    cases_edit_offender_sar_reason_for_lateness_page.choose_reason(other_reason, reason_note: reason_note)
+    click_on "Continue"
+
+    expect(cases_show_page).to be_displayed
+    expect(cases_show_page).not_to have_content "Record reason for lateness"
+    expect(cases_show_page).to have_content other_reason.value
+    expect(cases_show_page).to have_content "Note for reason for lateness"
+    expect(cases_show_page).to have_content reason_note
+  end 
+
   def when_i_update_the_exempt_pages_count
     click_on 'Update exempt pages'
     expect(page).to have_content('Update exempt pages')
