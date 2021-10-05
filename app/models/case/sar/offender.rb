@@ -1,4 +1,7 @@
 class Case::SAR::Offender < Case::Base
+
+  belongs_to :reason_for_lateness, class_name: 'CategoryReference'
+
   class << self
     def type_abbreviation
       'OFFENDER_SAR'

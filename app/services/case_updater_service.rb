@@ -10,7 +10,7 @@ class CaseUpdaterService
     @error_message = nil
   end
 
-  def call
+  def call(message = nil)
     begin
       ActiveRecord::Base.transaction do
         # There is extra checking for linked cases as those changes won't appear in the 
@@ -25,7 +25,7 @@ class CaseUpdaterService
         # no need for tracking properties as the whole.
         if (@kase.changed_attributes.keys - ["properties"]).present? || linked_cases_changed
           @kase.save!
-          @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team)
+          @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team, message: message)
           @result = :ok
         else
           @result = :no_changes

@@ -2,11 +2,11 @@ class SearchIndexUpdaterJob < ApplicationJob
 
   queue_as :search_index_updater
 
-  def perform
+  def perform(case_id)
     RavenContextProvider.set_context
-    kases = Case::Base.where(dirty: true)
-    kases.each do |kase|
-      kase.update_index if kase.dirty?
+    kase=Case::Base.find(case_id)
+    if kase
+      kase.update_index
       kase.mark_as_clean!
     end
   end
