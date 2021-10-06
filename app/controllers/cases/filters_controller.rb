@@ -7,7 +7,7 @@ module Cases
     before_action :set_url, only: [:open, :closed, :my_open]
     before_action :set_state_selector, only: [:open, :my_open]
     before_action :set_cookie_order_flag, only: [:open, :my_open]
-    before_action :set_filtered_tab_counts, only: [:my_open]
+    before_action :set_non_current_tab_counts, only: [:my_open]
 
     def show
       if params[:state_selector].present?
@@ -85,6 +85,7 @@ module Cases
         )
 
       service = call_search_service(unpaginated_cases, cookies[:search_result_order])
+      set_current_tab_count(service)
       @query = service.query
 
       if service.error?
@@ -115,6 +116,7 @@ module Cases
           :responding_team
         )
 
+
       service = call_search_service(full_list_of_cases, cookies[:search_result_order])
       @query = service.query
 
@@ -133,29 +135,28 @@ module Cases
       end
     end
 
+
     private
 
-    def set_filtered_tab_counts
+    def set_current_tab_count(service)
+      @global_nav_manager
+        .current_page_or_tab
+        .set_count(service.result_set.count)
+    end
+
+    def set_non_current_tab_counts
       @global_nav_manager.current_page.tabs.each do |tab| 
-        tab.set_count(
-          filtered_count_for_tab(
-            cases_for_tab(tab)
-          )
-        )
+
+        tab_is_not_current_tab = @global_nav_manager.current_page_or_tab.name != tab.name
+
+        if tab_is_not_current_tab
+          tab.set_count(filtered_count_for_tab(tab.cases))
+        end
       end
     end
 
     def filtered_count_for_tab(tab_case_list)
       call_search_service(tab_case_list).result_set.count
-    end
-
-    def cases_for_tab(tab)
-      tab.cases.includes(
-        :message_transitions,
-        :responder,
-        :responding_team,
-        :approver_assignments
-      )
     end
 
     def call_search_service(list_of_cases, order_choice = nil)
