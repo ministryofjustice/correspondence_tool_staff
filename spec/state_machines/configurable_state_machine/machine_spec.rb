@@ -465,6 +465,28 @@ module ConfigurableStateMachine
               user: @responder)
           ).to eq [@accepted_case.responding_team]
         end
+
+        it 'return the active team when user has deactivate and active teams both for an event' do
+          machine = Machine.new(config: config, kase: @accepted_case)
+
+          responding_team_to_be_deactivated = create :responding_team, deleted_at: 1.month.ago
+          @responder.team_roles << TeamsUsersRole.new(team: responding_team_to_be_deactivated, role: 'responder')
+          @responder.reload
+          create :assignment,
+                case: @accepted_case,
+                team: responding_team_to_be_deactivated,
+                state: 'accepted',
+                role: 'responding',
+                created_at: @accepted_case.created_at
+
+          expect(@responder.teams_for_case(@accepted_case))
+            .to match [@accepted_case.responding_team, responding_team_to_be_deactivated]
+            
+          expect(machine.teams_that_can_trigger_event_on_case(
+              event_name: :add_response,
+              user: @responder)
+          ).to eq [@accepted_case.responding_team]
+        end
       end
 
       context 'user has multi roles for the case' do

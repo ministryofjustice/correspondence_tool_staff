@@ -186,7 +186,7 @@ module ConfigurableStateMachine
     def teams_that_can_trigger_event_on_case(event_name:, user:)
       available_teams = []
       user.teams_for_case(@kase).each do | team |
-        if can_trigger_event_for_the_case?(event_name: event_name, acting_team: team, user: user) 
+        if team.active? && can_trigger_event_for_the_case?(event_name: event_name, acting_team: team, user: user) 
           available_teams << team
         end
       end
