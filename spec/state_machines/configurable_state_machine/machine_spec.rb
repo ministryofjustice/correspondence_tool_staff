@@ -132,6 +132,7 @@ module ConfigurableStateMachine
       @managing_team      = create :managing_team
       @unassigned_case    = create :case
       @accepted_case      = create :accepted_case, :flagged_accepted
+      @accepted_case1     = create :accepted_case, :flagged_accepted
       @manager            = create :manager, managing_teams: [@managing_team]
       @approver           = create :approver
       @manager_approver   = create :manager_approver
@@ -467,25 +468,29 @@ module ConfigurableStateMachine
         end
 
         it 'return the active team when user has deactivate and active teams both for an event' do
-          machine = Machine.new(config: config, kase: @accepted_case)
+          machine = Machine.new(config: config, kase: @accepted_case1)
 
-          responding_team_to_be_deactivated = create :responding_team, deleted_at: 1.month.ago
+          responding_team_to_be_deactivated = create :responding_team, deleted_at: 1.month.ago, name: '[DEACTIVATE]'
+          active_team = @accepted_case1.responding_team
+
           @responder.team_roles << TeamsUsersRole.new(team: responding_team_to_be_deactivated, role: 'responder')
-          @responder.reload
           create :assignment,
-                case: @accepted_case,
-                team: responding_team_to_be_deactivated,
-                state: 'accepted',
-                role: 'responding',
-                created_at: @accepted_case.created_at
+                  case: @accepted_case1,
+                  team: responding_team_to_be_deactivated,
+                  state: 'accepted',
+                  role: 'responding',
+                  created_at: @accepted_case1.created_at
+          responding_team_to_be_deactivated.reload
+          @responder.reload
+          @accepted_case1.reload
 
-          expect(@responder.teams_for_case(@accepted_case))
-            .to match [@accepted_case.responding_team, responding_team_to_be_deactivated]
-            
+          expect(@responder.teams_for_case(@accepted_case1))
+            .to include responding_team_to_be_deactivated
+
           expect(machine.teams_that_can_trigger_event_on_case(
               event_name: :add_response,
               user: @responder)
-          ).to eq [@accepted_case.responding_team]
+          ).to eq [active_team]
         end
       end
 
