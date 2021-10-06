@@ -3,7 +3,7 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
   include OffenderSARCaseForm
 
   def pretty_type
-    "Offender SAR"
+    I18n.t("helpers.label.correspondence_types.offender_sar")
   end
 
   def case_route_path
