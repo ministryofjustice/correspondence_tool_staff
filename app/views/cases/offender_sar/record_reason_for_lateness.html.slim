@@ -1,0 +1,27 @@
+- content_for :page_title do
+  = t('page_title.record_reason_for_lateness', case_number: @case.number)
+
+= link_to "Back", case_path(@case.id), class: 'govuk-back-link'
+
+- content_for :sub_heading
+  = "#{@case.number} - #{@case.pretty_type}"
+
+- content_for :heading
+  = t('cases.offender_sar.record_reason_for_lateness_heading')
+
+= render partial: 'layouts/header'
+
+= form_for @case, url: confirm_record_reason_for_lateness_case_sar_offender_path(@case), as: :offender_sar do |f|
+              
+  h2.heading-medium
+    = t('helpers.label.offender_sar.capture_reason_for_lateness')
+  = f.radio_button_fieldset:reason_for_lateness_id, choices: @reasons_for_lateness_items, value_method: :id,  text_method: :value, legend_options: { class: "visually-hidden" }
+
+  .div id="reason_for_note_group" class="panel panel-border-narrow"
+    p.no-space
+      = t('helpers.hint.offender_sar.reason_for_lateness_note_hint')
+    = f.text_area :reason_for_lateness_note, { rows: 4, label_options: { class: 'visually-hidden' } }
+
+  = f.submit 'Continue', class: 'button'
+
+  input name="reason_is_other" id="code_for_reason_of_other" type="hidden" value=@reason_of_other&.id

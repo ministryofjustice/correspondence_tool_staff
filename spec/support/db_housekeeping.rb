@@ -21,6 +21,7 @@ module DbHousekeeping
       warehouse_case_reports
       report_types
       letter_templates
+      category_references
     )
     tables.each do |table|
       ActiveRecord::Base.connection.execute("TRUNCATE #{table} CASCADE")

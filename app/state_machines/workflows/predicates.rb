@@ -195,7 +195,27 @@ class Workflows::Predicates
     FeatureSet.offender_sar_complaints.enabled? && @kase.offender_sar? && (@kase.already_late? || @kase.current_state == 'closed')
   end
 
+  def already_late?
+    case_already_late? && !has_caught_reason_for_lateness?
+  end
+
+  def is_ready_to_dispatch?
+    @kase.type == 'Case::SAR::Offender' && (still_in_time? || has_caught_reason_for_lateness?)
+  end
+
   private
+
+  def case_already_late?
+    Date.current >= @kase.external_deadline
+  end
+
+  def still_in_time?
+    !@kase.already_late?
+  end
+
+  def has_caught_reason_for_lateness?
+    @kase.reason_for_lateness_id.present? &&  @kase.reason_for_lateness_id > 0
+  end
 
   def overturned_enabled?(kase)
     if kase.original_case.sar?

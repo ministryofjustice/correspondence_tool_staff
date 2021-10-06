@@ -1351,10 +1351,8 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe '#mark_as_clean!' do
-    it 'unsets the dirty flag' do
+    it 'update index and flag is clean afer creation' do
       kase = create :case
-      expect(kase).to be_dirty
-      kase.mark_as_clean!
       expect(kase).not_to be_dirty
     end
   end
@@ -1368,7 +1366,7 @@ RSpec.describe Case::Base, type: :model do
       it 'sets the dirty flag' do
         expect(kase).not_to be_dirty
         kase.save!
-        expect(kase).to be_dirty
+        expect(kase).not_to be_dirty
       end
 
       it 'queues the job' do

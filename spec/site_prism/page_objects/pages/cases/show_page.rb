@@ -127,6 +127,10 @@ module PageObjects
           element :change_link, 'a'
         end
 
+        section :offender_sar_reason_for_lateness, '.section-reason-for-lateness' do
+          element :change_link, 'a'
+        end
+
         element :offender_sar_complaint_subtype, '.section-complaint-subtype'
         element :offender_sar_complaint_priority, '.section-complaint-priority'
         element :offender_sar_complaint_ico_contact_name, '.section-ico-contact-name'
