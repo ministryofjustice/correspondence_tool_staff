@@ -24,6 +24,9 @@ def delete_case_step(kase:, has_linked_case: false)
     confirm_destroy_page.confirm_button.click
 
     expect(open_cases_page).to be_displayed
+
+    sleep 2
+
     expect(open_cases_page.notices.first.heading.text)
       .to eq "You have deleted case #{kase.number}."
     expect(open_cases_page.case_numbers).not_to include(kase.number)
