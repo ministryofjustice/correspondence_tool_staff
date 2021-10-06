@@ -1,6 +1,8 @@
 module OffenderSARCasesParams
   extend ActiveSupport::Concern
 
+  class InputValidationError < RuntimeError; end
+
   #rubocop:disable Metrics/MethodLength
   def create_offender_sar_params
     params.require(:offender_sar).permit(
@@ -49,6 +51,14 @@ module OffenderSARCasesParams
     )
   end
 
+  def record_reason_params
+    params.require(:offender_sar).permit(
+      :reason_for_lateness_note,
+      :reason_for_lateness_id
+      )
+  end
+
+
   def respond_offender_sar_params
     params.require(:offender_sar).permit(
       :date_responded_dd,
@@ -56,4 +66,22 @@ module OffenderSARCasesParams
       :date_responded_yyyy,
       )
   end
+
+  def validate_reason(reason_params)
+    error_message = nil
+    if reason_params.empty?
+      error_message = t('alerts.offender_sar.reason_for_lateness.blank')
+    else
+      reason = @reasons_for_lateness[reason_params["reason_for_lateness_id"].to_i]
+      if reason.present? 
+        if reason == "other" && reason_params["reason_for_lateness_note"].blank?
+          error_message = t('alerts.offender_sar.reason_for_lateness.blank')
+        end
+      else
+        error_message = t('alerts.offender_sar.reason_for_lateness.invalid')
+      end
+    end
+    raise InputValidationError.new(error_message) unless error_message.nil?
+  end
+
 end

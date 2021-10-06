@@ -96,7 +96,7 @@ class Assignment < ApplicationRecord
     if responding?
       if new_record? || state_changed_to_rejected_or_bypassed?
         self.case.mark_as_dirty!
-        SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later
+        SearchIndexUpdaterJob.set(wait: 10.seconds).perform_later(self.case.id)
       end
     end
   end

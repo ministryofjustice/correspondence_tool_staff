@@ -358,7 +358,9 @@ CREATE TABLE public.cases (
     dirty boolean DEFAULT false,
     document_tsvector tsvector,
     reason_for_deletion character varying,
-    user_id integer DEFAULT '-100'::integer NOT NULL
+    user_id integer DEFAULT '-100'::integer NOT NULL,
+    reason_for_lateness_id bigint,
+    reason_for_lateness_note character varying
 );
 
 
@@ -2154,6 +2156,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210723160533'),
 ('20210727143427'),
 ('20210914110858'),
-('20210914111215');
+('20210914111215'),
+('20210917113753');
+
 
 
