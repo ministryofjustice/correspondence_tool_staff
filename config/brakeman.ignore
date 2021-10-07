@@ -21,6 +21,26 @@
       "note": ""
     },
     {
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "1ceb34276da2b058e0b95ee4f0fc5669bb87dfc14e1338fd4fcbede05c4e70d4",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/controllers/cases/offender_sar_controller.rb",
+      "line": 88,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "@case.state_machine.send((params[:transition_name] + \"!\"), params_for_transition)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::OffenderSarController",
+        "method": "transition"
+      },
+      "user_input": "(params[:transition_name] + \"!\")",
+      "confidence": "High",
+      "note": "check in place to allowlist methods to .send so can be ignored"
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "1d8501f800f3536615a655159c67f5f1908b31069f810109470fcad9c0e2dd6e",
@@ -101,13 +121,93 @@
       "note": ""
     },
     {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "3ca5cc56652a735e284c9946582427d43e3d48c0f029c9f693bf2ea5aab3077d",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/stats/etl/base_closed_cases.rb",
+      "line": 44,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"#{\"cd #{folder}\"}; #{\"cat *.csv > #{self.result_name}.csv\"}; #{\"zip #{self.result_name}.zip #{self.result_name}.csv\"}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Stats::ETL::BaseClosedCases",
+        "method": "load"
+      },
+      "user_input": "folder",
+      "confidence": "Medium",
+      "note": "No user input, all passed argument are defined in code as constants."
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "3d91aef01954b313c312d5554cdd8a007a604f76f5ce0605085c17e999f12135",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/cases/attachments_controller.rb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Case::Base.find(params[:case_id]).attachments.find(params[:id]).temporary_url)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::AttachmentsController",
+        "method": "download"
+      },
+      "user_input": "Case::Base.find(params[:case_id]).attachments.find(params[:id]).temporary_url",
+      "confidence": "High",
+      "note": "Internally generated URL not based on user input, so can ignore"
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "4bebd9c47c71e0cc0257ec1388a062333bb391021c5273e526084891efda5f4f",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/cases/responses_controller.rb",
+      "line": 78,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => params[:response_action].downcase.to_sym, {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::ResponsesController",
+        "method": "create"
+      },
+      "user_input": "params[:response_action].downcase.to_sym",
+      "confidence": "High",
+      "note": "Allowed values are checked, therefore this is not relevant and is a false positive"
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "4bebd9c47c71e0cc0257ec1388a062333bb391021c5273e526084891efda5f4f",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/cases/responses_controller.rb",
+      "line": 81,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => params[:response_action].downcase.to_sym, {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::ResponsesController",
+        "method": "create"
+      },
+      "user_input": "params[:response_action].downcase.to_sym",
+      "confidence": "High",
+      "note": "Allowed values are checked, therefore this is not relevant and is a false positive"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "4c88cf1040891ad952164e56bfe504a90419114c72d7993038e40bafc05ba933",
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/cases/letters/show.html.slim",
-      "line": 29,
+      "line": 28,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Letter.new(letter_params[:letter_template_id], Case::Base.find(params[:case_id]).decorate).body",
       "render_path": [
@@ -115,7 +215,7 @@
           "type": "controller",
           "class": "Cases::LettersController",
           "method": "show",
-          "line": 15,
+          "line": 16,
           "file": "app/controllers/cases/letters_controller.rb",
           "rendered": {
             "name": "cases/letters/show",
@@ -172,6 +272,26 @@
       "note": ""
     },
     {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "7c6f96d56eaebce7c9a307bdb29688371a0588616d3ec91fd49c36f0e339b1b5",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/controllers/cases/responses_controller.rb",
+      "line": 53,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(action => params[:response_action].downcase.to_sym, {})",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::ResponsesController",
+        "method": "new"
+      },
+      "user_input": "params[:response_action].downcase.to_sym",
+      "confidence": "High",
+      "note": "Allowed values are checked, therefore this is not relevant and is a false positive"
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "7deee4778c3cd3f054cede4dad522b916477f952f87fce91034f809ace2a9e46",
@@ -190,6 +310,37 @@
       "user_input": "@file",
       "confidence": "Medium",
       "note": ""
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "9347f47fb707c56f4b4e111aa271ae3a64aa2f6f8ceecbe5338f05e4208f913c",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/admin/cases/new.html.slim",
+      "line": 15,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"admin/cases/#{CTS::Cases::Create.new(Rails.logger, params[case_and_type]).new_case.type_abbreviation.downcase}/new\", { :locals => ({ :kase => CTS::Cases::Create.new(Rails.logger, params[case_and_type]).new_case }) })",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Admin::CasesController",
+          "method": "create",
+          "line": 34,
+          "file": "app/controllers/admin/cases_controller.rb",
+          "rendered": {
+            "name": "admin/cases/new",
+            "file": "app/views/admin/cases/new.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "admin/cases/new"
+      },
+      "user_input": "params[case_and_type]",
+      "confidence": "Weak",
+      "note": "If incorrect path past error is thrown, false positive"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -289,7 +440,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/cases/letters/show.html.slim",
-      "line": 27,
+      "line": 26,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Letter.new(letter_params[:letter_template_id], Case::Base.find(params[:case_id]).decorate).letter_address",
       "render_path": [
@@ -297,7 +448,7 @@
           "type": "controller",
           "class": "Cases::LettersController",
           "method": "show",
-          "line": 15,
+          "line": 16,
           "file": "app/controllers/cases/letters_controller.rb",
           "rendered": {
             "name": "cases/letters/show",
@@ -312,6 +463,37 @@
       "user_input": null,
       "confidence": "High",
       "note": "Cloned object in Letter.rb with relevant escaped vals now passed to view"
+    },
+    {
+      "warning_type": "Dynamic Render Path",
+      "warning_code": 15,
+      "fingerprint": "f086233b580a9d5faa656b7157b644dc09aa5c4613885be89cf8f007f06120ed",
+      "check_name": "Render",
+      "message": "Render path contains parameter value",
+      "file": "app/views/cases/show.html.slim",
+      "line": 72,
+      "link": "https://brakemanscanner.org/docs/warning_types/dynamic_render_path/",
+      "code": "render(partial => \"cases/#{NewOverturnedIcoCaseService.new(params[:id]).original_ico_appeal.decorate.type_abbreviation.parameterize.underscore}/case_details\", { :locals => ({ :case_details => NewOverturnedIcoCaseService.new(params[:id]).original_ico_appeal.decorate, :link_type => nil, :allow_editing => true }) })",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "Cases::OverturnedIcoFoiController",
+          "method": "new_overturned_ico_for",
+          "line": 12,
+          "file": "app/controllers/concerns/overturned_case.rb",
+          "rendered": {
+            "name": "cases/show",
+            "file": "app/views/cases/show.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "cases/show"
+      },
+      "user_input": "params[:id]",
+      "confidence": "Weak",
+      "note": "Path not calculated based on param. Also is server side calculated and not accessable to user. False positive."
     },
     {
       "warning_type": "Command Injection",
@@ -354,6 +536,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-07-08 15:07:40 +0100",
+  "updated": "2021-09-28 13:30:06 +0100",
   "brakeman_version": "5.0.2"
 }
