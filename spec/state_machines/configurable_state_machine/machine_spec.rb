@@ -470,28 +470,32 @@ module ConfigurableStateMachine
         it 'return the active team when user has deactivate and active teams both for an event' do
           machine = Machine.new(config: config, kase: @accepted_case1)
 
-          responding_team_to_be_deactivated = create :responding_team, deleted_at: 1.month.ago, name: '[DEACTIVATE]'
           active_team = @accepted_case1.responding_team
 
-          @responder.team_roles << TeamsUsersRole.new(team: responding_team_to_be_deactivated, role: 'responder')
-          create :assignment,
-                  case: @accepted_case1,
-                  team: responding_team_to_be_deactivated,
-                  state: 'accepted',
-                  role: 'responding',
-                  created_at: @accepted_case1.created_at
-          responding_team_to_be_deactivated.reload
-          @responder.reload
-          @accepted_case1.reload
-
+          deactivated_responding_team = add_deactivated_team_as_responder_of_the_case
           expect(@responder.teams_for_case(@accepted_case1))
-            .to include responding_team_to_be_deactivated
+            .to include deactivated_responding_team
 
           expect(machine.teams_that_can_trigger_event_on_case(
               event_name: :add_response,
               user: @responder)
           ).to eq [active_team]
         end
+      end
+
+      def add_deactivated_team_as_responder_of_the_case
+        deactivated_responding_team = create :responding_team, deleted_at: 1.month.ago, name: '[DEACTIVATE]'
+        @responder.team_roles << TeamsUsersRole.new(team: deactivated_responding_team, role: 'responder')
+        create :assignment,
+                case: @accepted_case1,
+                team: deactivated_responding_team,
+                state: 'accepted',
+                role: 'responding',
+                created_at: @accepted_case1.created_at
+                deactivated_responding_team.reload
+        @responder.reload
+        @accepted_case1.reload
+        deactivated_responding_team
       end
 
       context 'user has multi roles for the case' do
