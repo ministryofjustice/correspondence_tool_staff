@@ -85,7 +85,6 @@ module Cases
         )
 
       service = call_search_service(unpaginated_cases, cookies[:search_result_order])
-      set_current_tab_count(service)
       @query = service.query
 
       if service.error?
@@ -148,12 +147,7 @@ module Cases
 
     def set_non_current_tab_counts
       @global_nav_manager.current_page.tabs.each do |tab| 
-
-        tab_is_not_current_tab = @global_nav_manager.current_page_or_tab != tab
-
-        if tab_is_not_current_tab
-          tab.set_count(filtered_count_for_tab(tab.cases))
-        end
+        tab.set_count(filtered_count_for_tab(tab.cases))
       end
     end
 
