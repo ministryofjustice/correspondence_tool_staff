@@ -10,6 +10,7 @@ feature 'Viewing for cases', js: true do
   end
 
   scenario "View 'My open cases tab' - tab case count numbers are correct" do
+
     login_as responder
 
     cases_page.load
