@@ -21,6 +21,26 @@
       "note": ""
     },
     {
+      "warning_type": "Dangerous Send",
+      "warning_code": 23,
+      "fingerprint": "1ceb34276da2b058e0b95ee4f0fc5669bb87dfc14e1338fd4fcbede05c4e70d4",
+      "check_name": "Send",
+      "message": "User controlled method execution",
+      "file": "app/controllers/cases/offender_sar_controller.rb",
+      "line": 88,
+      "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
+      "code": "@case.state_machine.send((params[:transition_name] + \"!\"), params_for_transition)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::OffenderSarController",
+        "method": "transition"
+      },
+      "user_input": "(params[:transition_name] + \"!\")",
+      "confidence": "High",
+      "note": "check in place to allowlist methods to .send so can be ignored"
+    },
+    {
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "1d8501f800f3536615a655159c67f5f1908b31069f810109470fcad9c0e2dd6e",
@@ -99,6 +119,46 @@
       "user_input": "updated_file_name",
       "confidence": "Medium",
       "note": ""
+    },
+    {
+      "warning_type": "Command Injection",
+      "warning_code": 14,
+      "fingerprint": "3ca5cc56652a735e284c9946582427d43e3d48c0f029c9f693bf2ea5aab3077d",
+      "check_name": "Execute",
+      "message": "Possible command injection",
+      "file": "app/services/stats/etl/base_closed_cases.rb",
+      "line": 44,
+      "link": "https://brakemanscanner.org/docs/warning_types/command_injection/",
+      "code": "system(\"#{\"cd #{folder}\"}; #{\"cat *.csv > #{self.result_name}.csv\"}; #{\"zip #{self.result_name}.zip #{self.result_name}.csv\"}\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Stats::ETL::BaseClosedCases",
+        "method": "load"
+      },
+      "user_input": "folder",
+      "confidence": "Medium",
+      "note": "No user input, all passed argument are defined in code as constants."
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "3d91aef01954b313c312d5554cdd8a007a604f76f5ce0605085c17e999f12135",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/cases/attachments_controller.rb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Case::Base.find(params[:case_id]).attachments.find(params[:id]).temporary_url)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Cases::AttachmentsController",
+        "method": "download"
+      },
+      "user_input": "Case::Base.find(params[:case_id]).attachments.find(params[:id]).temporary_url",
+      "confidence": "High",
+      "note": "Internally generated URL not based on user input, so can ignore"
     },
     {
       "warning_type": "Dynamic Render Path",
@@ -476,6 +536,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-09-29 14:15:26 +0100",
+  "updated": "2021-09-28 13:30:06 +0100",
   "brakeman_version": "5.0.2"
 }
