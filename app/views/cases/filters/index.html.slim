@@ -34,7 +34,7 @@ section.govuk-tabs__panel
             - @global_nav_manager.current_page.tabs.each do |tab|
               li class="tab #{active_link_class(tab.fullpath)}"
                 = link_to t("nav.tabs.#{tab.name}_html",
-                           count: tab.cases.count),
+                           count: tab.count),
                           tab.fullpath_with_query
 
   - if @cases.present?

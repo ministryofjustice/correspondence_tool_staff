@@ -249,13 +249,28 @@ describe Cases::FiltersController, type: :controller do
     pager = double 'Kaminari Pager', decorate: result
     cases_by_deadline = double 'ActiveRecord Cases by Deadline', page: pager
     cases = double 'ActiveRecord Cases', by_deadline: cases_by_deadline
+
     allow(cases).to receive(:includes).and_return(cases)
     allow(cases).to receive(:size).and_return(10)
     allow(cases).to receive(:count).and_return(10)
     allow(cases.by_deadline).to receive(:decorate).and_return(cases)
+
+    tab1 = instance_double GlobalNavManager::Tab
+    tab2 = instance_double GlobalNavManager::Tab
+    tabs = [tab1, tab2]
+
     page = instance_double GlobalNavManager::Page, cases: cases
     gnm = instance_double GlobalNavManager, current_page_or_tab: page
+
     allow(GlobalNavManager).to receive(:new).and_return gnm
+    allow(gnm).to receive(:current_page).and_return page
+    allow(page).to receive(:tabs).and_return tabs
+
+    tabs.each do |tab| 
+      allow(tab).to receive(:cases).and_return cases 
+      allow(tab).to receive(:set_count).and_return nil
+    end
+
     gnm
   end
 end

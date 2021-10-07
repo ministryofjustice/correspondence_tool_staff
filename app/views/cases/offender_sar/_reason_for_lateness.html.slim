@@ -3,6 +3,7 @@ tr.lateness.section.section-reason-for-lateness
   td = case_details.reason_for_lateness.value
   - if allow_editing
     td = link_to t('common.links.change'), record_reason_for_lateness_case_sar_offender_path(case_details)
-tr.reason-for-lateness-note
-  th = t('common.case.reason_for_lateness_note')
-  td = case_details.reason_for_lateness_note
+- if case_details.reason_for_lateness_note.present?
+  tr.reason-for-lateness-note
+    th = t('common.case.reason_for_lateness_note')
+    td = case_details.reason_for_lateness_note
