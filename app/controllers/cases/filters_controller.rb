@@ -137,14 +137,6 @@ module Cases
 
     private
 
-    def set_current_tab_count(service)
-      page_or_tab = @global_nav_manager.current_page_or_tab
-
-      if page_or_tab.is_a?(GlobalNavManager::Tab)
-        page_or_tab.set_count(service.result_set.count)
-      end
-    end
-
     def set_non_current_tab_counts
       @global_nav_manager.current_page.tabs.each do |tab| 
         tab.set_count(filtered_count_for_tab(tab.cases))
