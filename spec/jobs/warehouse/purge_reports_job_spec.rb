@@ -17,7 +17,7 @@ describe Warehouse::PurgeReportsJob, type: :job do
     let(:job) { described_class.new }
 
     it 'is in the warehouse queue' do
-      expect(job.queue_name).to eq('correspondence_tool_staff_warehouse')
+      expect(job.queue_name).to eq('correspondence_tool_staff_reports')
     end
 
     it 'destroys existing reports' do

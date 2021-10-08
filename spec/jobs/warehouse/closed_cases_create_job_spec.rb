@@ -33,7 +33,7 @@ describe Warehouse::ClosedCasesCreateJob, type: :job do
     let(:user) { find_or_create :default_press_officer }
 
     it 'is in the report_job queue' do
-      expect(job.queue_name).to eq('correspondence_tool_staff_warehouse')
+      expect(job.queue_name).to eq('correspondence_tool_staff_reports')
     end
 
     it 'logs to Rails logger if a report related class string does not exist' do

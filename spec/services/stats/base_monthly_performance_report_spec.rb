@@ -109,6 +109,7 @@ module Stats
 
         it 'creates a job to generate report' do
           stub_const("Stats::ROWS_PER_FRAGMENT", 1)
+          stub_const("Stats::MAXIMUM_LIMIT_FOR_USING_JOB", 1)
           expect {
           @report_another.run(report_guid: SecureRandom.uuid)
           }.to change {
