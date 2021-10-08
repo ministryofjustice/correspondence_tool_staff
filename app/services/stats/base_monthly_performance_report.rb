@@ -1,6 +1,7 @@
 module Stats
 
-  ROWS_PER_FRAGMENT = 500 # Arbitrary value, may require experimentation
+  ROWS_PER_FRAGMENT = 100 # Arbitrary value, may require experimentation
+  MAXIMUM_LIMIT_FOR_USING_JOB = 500 # Arbitrary value, may require experimentation
   
   class BaseMonthlyPerformanceReport < BaseReport
 
@@ -72,7 +73,7 @@ module Stats
     end
 
     def run(*)
-      if data_size > ROWS_PER_FRAGMENT
+      if data_size > MAXIMUM_LIMIT_FOR_USING_JOB
         create_background_jobs
       else
         @background_job = false
