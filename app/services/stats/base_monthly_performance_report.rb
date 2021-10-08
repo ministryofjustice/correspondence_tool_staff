@@ -1,6 +1,6 @@
 module Stats
 
-  ROWS_PER_FRAGMENT = 100 # Arbitrary value, may require experimentation
+  ROWS_PER_FRAGMENT = 20 # Arbitrary value, may require experimentation
   MAXIMUM_LIMIT_FOR_USING_JOB = 500 # Arbitrary value, may require experimentation
   
   class BaseMonthlyPerformanceReport < BaseReport
