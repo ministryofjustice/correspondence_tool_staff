@@ -1,7 +1,7 @@
 module Warehouse
   class PurgeReportsJob < ApplicationJob
 
-    queue_as :warehouse
+    queue_as :reports
 
     def perform
       RavenContextProvider.set_context
