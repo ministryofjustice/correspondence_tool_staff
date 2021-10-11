@@ -72,13 +72,14 @@ module PageObjects
             address.set kase.postal_address
             choose_delivery_method kase.delivery_method
             subject.set kase.subject
+
+            kase.uploaded_request_files.each do |file|
+              drop_in_dropzone(file)
+            end
+          
             if kase.sent_by_email?
               full_request.set kase.message
-            elsif kase.sent_by_post?
-              kase.uploaded_request_files.each do |file|
-                drop_in_dropzone(file)
-              end
-            else
+            elsif !kase.sent_by_email? && !kase.sent_by_post?
               raise ArgumentError.new(
                       "unrecognised case delivery method #{kase.delivery_method}"
                     )
