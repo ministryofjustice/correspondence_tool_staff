@@ -14,12 +14,16 @@ feature 'Send back a case for change' do
 
   scenario 'manager send back a triggered case which is ready to close' do
     triggered_case_ready_to_closed = create :responded_case, :flagged
+    check_approver_assignments(triggered_case_ready_to_closed)
     send_back(triggered_case_ready_to_closed, "send back a triggered case which is ready to close")
+    validate_approver_assignments(triggered_case_ready_to_closed)
   end
 
   scenario 'manager send back a triggered case which is ready to send' do
     triggered_case_ready_to_send = create :approved_case, :flagged
+    check_approver_assignments(triggered_case_ready_to_send)
     send_back(triggered_case_ready_to_send, "send back a triggered case which is ready to send")
+    validate_approver_assignments(triggered_case_ready_to_send)
   end
 
   private 
@@ -37,5 +41,18 @@ feature 'Send back a case for change' do
     event_row = cases_show_page.case_history.rows.first
     expect(event_row.details.event.text)
       .to eq 'Case was sent back for change'
+  end
+
+  def check_approver_assignments(kase)
+    kase.approver_assignments.each do | assignment |
+      expect(assignment.approved).to eq true
+    end
+  end 
+
+  def validate_approver_assignments(kase)
+    kase.reload
+    kase.approver_assignments.each do | assignment |
+      expect(assignment.approved).to eq false
+    end
   end
 end
