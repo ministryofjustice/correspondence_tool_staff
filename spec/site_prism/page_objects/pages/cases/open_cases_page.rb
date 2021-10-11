@@ -19,6 +19,7 @@ module PageObjects
           element :filter_status_link, '#filter_status_content_btn'
           element :filter_open_status_link, '#filter_open_case_status_content_btn'
           element :filter_type_link, '#filter_case_type_content_btn'
+          element :filter_complaint_type_link, '#filter_complaint_type_content_btn'
           element :filter_sensitivity_link, '#filter_sensitivity_content_btn'
           element :filter_timeliness_link, '#filter_timeliness_content_btn'
           element :filter_external_deadline_link, '#filter_external_deadline_content_btn'
@@ -34,6 +35,9 @@ module PageObjects
         section :filter_type_content,
                 PageObjects::Sections::Cases::TypeFilterPanelSection,
                 '#filter_case_type_content'
+        section :filter_complaint_type_content,
+                PageObjects::Sections::Cases::TypeComplaintFilterPanelSection,
+                '#filter_complaint_type_content'
         section :filter_sensitivity_content,
                 PageObjects::Sections::Cases::TriggerFlagFilterPanelSection,
                 '#filter_sensitivity_content'

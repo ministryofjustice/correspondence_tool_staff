@@ -7,6 +7,7 @@ module Cases
     before_action :set_url, only: [:open, :closed, :my_open]
     before_action :set_state_selector, only: [:open, :my_open]
     before_action :set_cookie_order_flag, only: [:open, :my_open]
+    before_action :set_non_current_tab_counts, only: [:my_open]
 
     def show
       if params[:state_selector].present?
@@ -82,6 +83,7 @@ module Cases
           :responding_team,
           :approver_assignments
         )
+
       service = call_search_service(unpaginated_cases, cookies[:search_result_order])
       @query = service.query
 
@@ -113,6 +115,7 @@ module Cases
           :responding_team
         )
 
+
       service = call_search_service(full_list_of_cases, cookies[:search_result_order])
       @query = service.query
 
@@ -131,7 +134,18 @@ module Cases
       end
     end
 
+
     private
+
+    def set_non_current_tab_counts
+      @global_nav_manager.current_page.tabs.each do |tab| 
+        tab.set_count(filtered_count_for_tab(tab.cases))
+      end
+    end
+
+    def filtered_count_for_tab(tab_case_list)
+      call_search_service(tab_case_list).result_set.count
+    end
 
     def call_search_service(list_of_cases, order_choice = nil)
       query_list_params = search_params.merge(list_path: request.path)

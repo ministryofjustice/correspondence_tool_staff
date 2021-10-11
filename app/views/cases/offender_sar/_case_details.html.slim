@@ -34,5 +34,8 @@
         - if case_details.responding_team.present?
           = render partial: 'cases/shared/responding_team', locals: { case_details: case_details, allow_editing: allow_editing }
 
+        - if case_details.reason_for_lateness.present?
+          = render partial: 'cases/offender_sar/reason_for_lateness', locals: { case_details: case_details, allow_editing: allow_editing }
+
         - if case_details.closed?
           = render partial: 'cases/shared/closed_case_details', locals: { case_details: case_details, allow_editing: allow_editing }
