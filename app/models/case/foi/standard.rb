@@ -82,7 +82,6 @@ class Case::FOI::Standard < Case::Base
   }
 
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
-  validates :message, presence: true, if: -> { sent_by_email? }
   validates_presence_of :name
   validates :postal_address,
             presence: true,
@@ -90,10 +89,8 @@ class Case::FOI::Standard < Case::Base
             if: -> { email.blank? || sent_by_post? }
   validates_presence_of :requester_type, :delivery_method
   validates :subject, presence: true, length: { maximum: 100 }
-  validates :uploaded_request_files,
-            presence: true,
-            on: :create,
-            if: -> { sent_by_post? }
+
+  validate :validate_uploaded_request_files
 
   after_create :process_uploaded_request_files, if: -> { uploaded_request_files.present? }
 
@@ -142,4 +139,34 @@ class Case::FOI::Standard < Case::Base
   def self.ico_model
     Case::ICO::FOI
   end
+
+  private
+
+  def validate_uploaded_request_files
+    validate_uploaded_request_files_for_sending_by_post
+    validate_uploaded_request_files_for_sending_by_email
+  end 
+
+  def validate_uploaded_request_files_for_sending_by_post
+    if sent_by_post? & uploaded_request_files.blank?
+      errors.add(
+        :uploaded_request_files,
+        I18n.t('activerecord.errors.models.case/foi/standard.attributes.uploaded_request_files.optional_blank')
+      )        
+    end
+  end 
+
+  def validate_uploaded_request_files_for_sending_by_email
+    if sent_by_email? && message.blank? && uploaded_request_files.blank?
+      errors.add(
+        :message,
+        I18n.t('activerecord.errors.models.case/foi/standard.attributes.message.optional_blank')
+      )        
+      errors.add(
+        :uploaded_request_files,
+        I18n.t('activerecord.errors.models.case/foi/standard.attributes.xcvdw.optional_blank')
+      )        
+    end
+  end 
+
 end
