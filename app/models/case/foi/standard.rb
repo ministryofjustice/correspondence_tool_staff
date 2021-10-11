@@ -164,7 +164,7 @@ class Case::FOI::Standard < Case::Base
       )        
       errors.add(
         :uploaded_request_files,
-        I18n.t('activerecord.errors.models.case/foi/standard.attributes.xcvdw.optional_blank')
+        I18n.t('activerecord.errors.models.case/foi/standard.attributes.uploaded_request_files.optional_blank')
       )        
     end
   end 
