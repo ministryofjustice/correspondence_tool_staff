@@ -29,6 +29,8 @@ spec:
               cpu: 10m
               memory: 500Mi
           env:
+            - name: MALLOC_ARENA_MAX
+              value: "2"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
