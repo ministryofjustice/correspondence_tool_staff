@@ -90,7 +90,7 @@ class Case::FOI::Standard < Case::Base
   validates_presence_of :requester_type, :delivery_method
   validates :subject, presence: true, length: { maximum: 100 }
 
-  validate :validate_uploaded_request_files
+  validate :validate_uploaded_request_files, on: :create
 
   after_create :process_uploaded_request_files, if: -> { uploaded_request_files.present? }
 
