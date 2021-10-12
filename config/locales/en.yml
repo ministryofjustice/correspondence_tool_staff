@@ -102,6 +102,10 @@ en:
             date_responded:
               before_received: "can't be before date received"
               future: "can't be in the future"
+            message:
+              optional_blank: "and uploaded request files can't both be blank"
+            uploaded_request_files:
+              optional_blank: "and message box for saving request detail can't both be blank"
 
         case/ico:
           attributes:

@@ -82,16 +82,31 @@ feature 'Data Requests for an Offender SAR' do
     expect(data_request_page).to have_text 'errors prevented this form'
   end
 
-  scenario 'no data entry fails' do
+  scenario 'no data entry fails', js: true do
     cases_show_page.load(id: offender_sar_case.id)
     click_on 'Record data request'
 
     data_request_page.form.location.fill_in(with: '    ')
-    data_request_page.form.request_type.fill_in(with: '')
 
     click_on 'Continue'
 
     expect(data_request_page).to be_displayed
     expect(data_request_page).to have_text '3 errors prevented this form from being submitted'
   end
+
+  scenario 'record data request with data type of NOMIS other and notes', js: true do
+    request_values = {
+      location: 'HMP testing',
+      request_type: 'all_prison_records',
+      request_type_note: 'Testing nomis-other note',
+      date_requested: Date.new(2020, 8, 15),
+      date_from: Date.new(2018, 8, 15),
+      date_to: Date.new(2019, 8, 15),
+    }
+
+    record_a_data_request_of_nomis_other(offender_sar_case, request_values)
+    validate_nomis_other_info(request_values)
+  end
+
+
 end
