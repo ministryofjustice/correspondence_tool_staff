@@ -27,7 +27,7 @@
       "check_name": "Send",
       "message": "User controlled method execution",
       "file": "app/controllers/cases/offender_sar_controller.rb",
-      "line": 88,
+      "line": 95,
       "link": "https://brakemanscanner.org/docs/warning_types/dangerous_send/",
       "code": "@case.state_machine.send((params[:transition_name] + \"!\"), params_for_transition)",
       "render_path": null,
@@ -99,6 +99,26 @@
       "user_input": "@ssh_user",
       "confidence": "Medium",
       "note": ""
+    },
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "330f45b9848734c9700ce80dfe18eb61f5221729eca5b4b3613e4c0df06f459e",
+      "check_name": "UnsafeReflection",
+      "message": "Unsafe reflection method `constantize` called with model attribute",
+      "file": "app/controllers/application_controller.rb",
+      "line": 103,
+      "link": "https://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "ReportType.find_by_abbr(specific_report).class_name.constantize",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "ApplicationController",
+        "method": "send_csv_case_by_specific_report"
+      },
+      "user_input": "ReportType.find_by_abbr(specific_report).class_name",
+      "confidence": "Medium",
+      "note": "False positive"
     },
     {
       "warning_type": "Command Injection",
@@ -343,6 +363,37 @@
       "note": "If incorrect path past error is thrown, false positive"
     },
     {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "93fb271d4834fbc22f6eabc27e61c6ff33a21b9261f48af67e225a9ef712b9c9",
+      "check_name": "UnsafeReflection",
+      "message": "Unsafe reflection method `constantize` called with model attribute",
+      "file": "app/views/teams/index.html.slim",
+      "line": 57,
+      "link": "https://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "ReportType.new.class_name.constantize",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "TeamsController",
+          "method": "index",
+          "line": 31,
+          "file": "app/controllers/teams_controller.rb",
+          "rendered": {
+            "name": "teams/index",
+            "file": "app/views/teams/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "teams/index"
+      },
+      "user_input": "ReportType.new.class_name",
+      "confidence": "Medium",
+      "note": "False positive - see commit message"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "9809c8ef8339317eed4e032bd3c2ff36a9f6637d75f8e5d0101fde7ea2b815f2",
@@ -465,6 +516,37 @@
       "note": "Cloned object in Letter.rb with relevant escaped vals now passed to view"
     },
     {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "e6bb82ee61819045db0fcbb05be9022c84c5d0d6b71ae9f93edd1b50a795b52f",
+      "check_name": "UnsafeReflection",
+      "message": "Unsafe reflection method `constantize` called with model attribute",
+      "file": "app/views/teams/show.html.slim",
+      "line": 34,
+      "link": "https://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "ReportType.new.class_name.constantize",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "TeamsController",
+          "method": "show",
+          "line": 41,
+          "file": "app/controllers/teams_controller.rb",
+          "rendered": {
+            "name": "teams/show",
+            "file": "app/views/teams/show.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "teams/show"
+      },
+      "user_input": "ReportType.new.class_name",
+      "confidence": "Medium",
+      "note": "False positive - see commit message"
+    },
+    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "f086233b580a9d5faa656b7157b644dc09aa5c4613885be89cf8f007f06120ed",
@@ -536,6 +618,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-09-28 13:30:06 +0100",
+  "updated": "2021-10-13 14:03:52 +0100",
   "brakeman_version": "5.0.2"
 }
