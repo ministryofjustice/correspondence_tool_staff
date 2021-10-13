@@ -516,6 +516,37 @@
       "note": "Cloned object in Letter.rb with relevant escaped vals now passed to view"
     },
     {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "e6bb82ee61819045db0fcbb05be9022c84c5d0d6b71ae9f93edd1b50a795b52f",
+      "check_name": "UnsafeReflection",
+      "message": "Unsafe reflection method `constantize` called with model attribute",
+      "file": "app/views/teams/show.html.slim",
+      "line": 34,
+      "link": "https://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "ReportType.new.class_name.constantize",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "TeamsController",
+          "method": "show",
+          "line": 41,
+          "file": "app/controllers/teams_controller.rb",
+          "rendered": {
+            "name": "teams/show",
+            "file": "app/views/teams/show.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "teams/show"
+      },
+      "user_input": "ReportType.new.class_name",
+      "confidence": "Medium",
+      "note": "False positive - see commit message"
+    },
+    {
       "warning_type": "Dynamic Render Path",
       "warning_code": 15,
       "fingerprint": "f086233b580a9d5faa656b7157b644dc09aa5c4613885be89cf8f007f06120ed",
@@ -587,6 +618,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-10-13 14:00:57 +0100",
+  "updated": "2021-10-13 14:03:52 +0100",
   "brakeman_version": "5.0.2"
 }
