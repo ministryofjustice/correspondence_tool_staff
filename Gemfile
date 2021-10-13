@@ -44,7 +44,7 @@ gem 'paper_trail', '~> 12.0'
 gem 'pg', '~> 1.2'
 gem 'pg_search', '~> 2.3.5'
 gem 'pry-rails'
-gem 'puma', '~> 5.4'
+gem 'puma', '~> 5.5'
 gem 'pundit', '~>2.1'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.6'
@@ -100,7 +100,7 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.9'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 1.21.0', require: false
+  gem 'rubocop', '~> 1.22.1', require: false
   gem 'rubocop-rspec', '~> 2.5.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
