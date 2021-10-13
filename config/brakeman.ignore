@@ -363,6 +363,37 @@
       "note": "If incorrect path past error is thrown, false positive"
     },
     {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "93fb271d4834fbc22f6eabc27e61c6ff33a21b9261f48af67e225a9ef712b9c9",
+      "check_name": "UnsafeReflection",
+      "message": "Unsafe reflection method `constantize` called with model attribute",
+      "file": "app/views/teams/index.html.slim",
+      "line": 57,
+      "link": "https://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "ReportType.new.class_name.constantize",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "TeamsController",
+          "method": "index",
+          "line": 31,
+          "file": "app/controllers/teams_controller.rb",
+          "rendered": {
+            "name": "teams/index",
+            "file": "app/views/teams/index.html.slim"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "teams/index"
+      },
+      "user_input": "ReportType.new.class_name",
+      "confidence": "Medium",
+      "note": "False positive - see commit message"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "9809c8ef8339317eed4e032bd3c2ff36a9f6637d75f8e5d0101fde7ea2b815f2",
@@ -556,6 +587,6 @@
       "note": ""
     }
   ],
-  "updated": "2021-10-13 13:58:22 +0100",
+  "updated": "2021-10-13 14:00:57 +0100",
   "brakeman_version": "5.0.2"
 }
