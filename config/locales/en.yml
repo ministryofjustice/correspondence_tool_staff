@@ -907,6 +907,7 @@ en:
       add_new_address: Add new address
       delete_address_confirmation: Are you sure you want to delete this address?
       find_address: Find an address
+      find_solicitor_address: Find a solicitor address
       add_or_edit_address: Add or edit addresses (opens in new window)
       address_search_label: Organisation name search
 

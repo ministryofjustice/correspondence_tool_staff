@@ -1,6 +1,9 @@
 .form-group
   button#open-button.button-secondary.text data-search-filters="#{search_filters}"
-    = t('common.contacts.find_address') 
+    - if local_assigns[:bespoke_lookup_text]
+      = t("common.contacts.#{bespoke_lookup_text}") 
+    - else
+      = t('common.contacts.find_address') 
 
 #dialog-content
   #remote-content role="region" aria-live="polite"

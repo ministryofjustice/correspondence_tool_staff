@@ -58,7 +58,7 @@ moj.Modules.Contacts = {
 
             $('#dialog-content').dialog( "close" );
 
-            $('#offender_sar_subject_address').val(formatted_address);
+            $('.address_input').first().val(formatted_address);
         });
     },
 
