@@ -2,6 +2,8 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
 
   include OffenderSARCaseForm
 
+  attr_accessor :is_solicitor
+
   def pretty_type
     I18n.t("helpers.label.correspondence_types.offender_sar")
   end
