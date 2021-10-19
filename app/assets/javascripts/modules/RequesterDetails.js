@@ -1,31 +1,49 @@
 moj.Modules.RequesterDetails = {
     $is_solicitor: $("#offender_sar_is_solicitor_solicitor"),
     $is_other : $("#offender_sar_is_solicitor_other"),
+
     $is_third_party: $("#offender_sar_third_party_true"),
-    $revealing_panel_address_page_check: $(".js-in-revealing-panel-address-lookup").length,
+    $is_not_third_party: $("#offender_sar_third_party_false"),
+
 
 
     init: function() {
         var self = this;
 
-        if (self.$revealing_panel_address_page_check) {
+        var revealing_panel_address_page_check = $(".js-in-revealing-panel-address-lookup").length;
+        var relationship_is_not_with_solicitor = $("#offender_sar_third_party_relationship").val() !== "Solicitor";
+
+        if (revealing_panel_address_page_check) {
+            var is_fresh_page = !(self.$is_third_party[0].checked || self.$is_not_third_party[0].checked);
+
+            if (is_fresh_page) {
+              self.set_and_hide_relationship();
+            } else {
+                if (relationship_is_not_with_solicitor) {
+                   $("#offender_sar_is_solicitor_other").prop('checked', 'checked');
+                } else {
+                  self.set_and_hide_relationship();
+                }
+            }
+
+
             self.$is_third_party.on('change', function(){
-                self.set_and_hide_relationship();
-            });
-            self.$is_other.on('change', function(){
-                self.show_relationship_input();
-                var address_button = $('#open-button');
-                address_button.hide(); 
-            });
-            self.$is_solicitor.on('change', function(){
-                self.set_and_hide_relationship();
-                var address_button = $('#open-button');
-                address_button.show(); 
+                if ($("#offender_sar_is_solicitor_other")[0].checked) {
+                    var input = $('#offender_sar_third_party_relationship');
+                    var label = $('#third_party_true_panel > div:nth-child(2) > label');
+                    label.show();
+                    input.show();
+                } 
             });
 
-            $( document ).ready(function() {
-                console.log("hi");
-                self.on_load();
+            self.$is_other.on('change', function(){
+                self.show_relationship_input();
+                $('#open-button').hide(); 
+            });
+
+            self.$is_solicitor.on('change', function(){
+                self.set_and_hide_relationship();
+                $('#open-button').show(); 
             });
         }
     },
@@ -37,7 +55,7 @@ moj.Modules.RequesterDetails = {
         label.hide();
         input.hide();
         input.val('Solicitor');
-        is_solicitor.attr('checked', 'checked');
+        is_solicitor.prop('checked', 'checked');
     },
 
     show_relationship_input: function() {
@@ -46,21 +64,5 @@ moj.Modules.RequesterDetails = {
         label.show();
         input.show();
         input.val('');
-    },
-
-    on_load: function() {
-        var is_solicitor = $("#offender_sar_is_solicitor_solicitor");
-        var input = $('#offender_sar_third_party_relationship');
-        var label = $('#third_party_true_panel > div:nth-child(2) > label');
-        var address_button = $('#open-button');
-        if(input.val() === 'Solicitor') {
-            label.hide();
-            input.hide();
-            input.val('Solicitor');
-            is_solicitor.attr('checked', 'checked');
-        } else {
-          address_button.hide();
-        }
     }
-
 };
