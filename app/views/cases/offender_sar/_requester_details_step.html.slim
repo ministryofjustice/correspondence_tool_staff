@@ -7,7 +7,7 @@
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for @case, url: url, as: :offender_sar do |f|
-  #third-party.js-solicitor-address-lookup
+  #third-party.js-in-revealing-panel-address-lookup
     h2.heading-medium
       = t('helpers.label.offender_sar.third_party')
     = f.radio_button_fieldset(:third_party, legend_options: { class: 'visually-hidden' }) do |fieldset|
