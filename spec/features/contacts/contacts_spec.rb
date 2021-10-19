@@ -169,6 +169,10 @@ feature 'Contacts address book', js: true do
     page.execute_script("document.getElementById('offender_sar_is_solicitor_other').click();")
   end
 
+  def when_i_relationship_to_subject_to_other
+    page.execute_script("document.getElementById('offender_sar_is_solicitor_other').click();")
+  end
+
   def then_the_reationship_field_is_shown
     expect(page).to have_content("Please specify relationship to the subject")
   end
