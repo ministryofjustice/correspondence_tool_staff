@@ -18,7 +18,7 @@ moj.Modules.RequesterDetails = {
                 self.set_relationship_to_solicitor();
             } else {
                 
-                // logic if user is loading pre-created record
+                // logic if user is loading existing record
                 if (self.relationship_is_not_with_solicitor()) {
                     self.change_relationship_to_other();
                 } else {
