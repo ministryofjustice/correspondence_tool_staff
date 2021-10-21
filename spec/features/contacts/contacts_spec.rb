@@ -122,6 +122,37 @@ feature 'Contacts address book', js: true do
     then_the_state_remains_the_same
   end
 
+  scenario "a default relationship type and address can be selected on the recipient_details page" do
+    when_i_navigate_to_offender_sar_subject_page
+ 
+    and_fill_in_subject_details_page 
+
+    when_i_select_info_is_not_requested_on_someone_elses_behalf
+    and_continue_to_recipient_details_page
+
+    when_i_select_that_the_recipient_is_a_third_party
+    then_relationship_to_subject_should_be_defaulted_to_solictor
+    and_the_relationship_field_should_not_be_visible
+    then_the_find_a_solicitor_button_should_be_visible
+
+    when_i_open_the_address_selection_dialogue
+    and_only_solicitor_addressess_are_available
+    then_i_am_able_to_select_an_address_from_the_dropown
+    and_fill_in_the_other_details
+
+    when_i_contine_i_can_go_back_and_the_solicitor_radio_is_still_checked
+
+    when_i_set_relationship_to_subject_to_other
+    then_the_reationship_field_is_shown
+    and_i_can_enter_a_relationship_type
+
+    when_i_select_the_data_subject_is_the_recipient
+    then_the_revealing_panel_is_not_visible
+
+    when_i_select_that_the_recipient_is_a_third_party
+    then_the_state_remains_the_same
+  end
+
   def when_i_contine_i_can_go_back_and_the_other_radio_is_still_checked
     click_on 'Continue'
     click_on 'Back'
@@ -137,6 +168,19 @@ feature 'Contacts address book', js: true do
 
   def and_the_state_remains_the_same
     then_the_state_remains_the_same
+  end
+
+
+  def when_i_select_the_data_subject_is_the_recipient
+    choose('offender_sar_recipient_subject_recipient', visible: false)
+  end
+
+  def when_i_select_that_the_recipient_is_a_third_party 
+    choose('offender_sar_recipient_third_party_recipient', visible: false)
+  end
+
+  def and_continue_to_recipient_details_page
+    click_on 'Continue'
   end
 
   def then_the_state_remains_the_same
@@ -215,7 +259,6 @@ feature 'Contacts address book', js: true do
 
   def and_fill_in_subject_details_page_and_continue
     and_fill_in_subject_details_page
-    click_on 'continue'
   end
 
   def then_i_expect_the_address_i_searched_for_to_have_been_entered_into_the_form
