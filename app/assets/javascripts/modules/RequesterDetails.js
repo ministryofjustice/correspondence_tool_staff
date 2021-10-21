@@ -1,9 +1,9 @@
 moj.Modules.RequesterDetails = {
-    $is_solicitor: $("#offender_sar_is_solicitor_solicitor"),
-    $is_other : $("#offender_sar_is_solicitor_other"),
+    $solicitor_radio_button: $("#offender_sar_is_solicitor_solicitor"),
+    $other_radio_button: $("#offender_sar_is_solicitor_other"),
 
-    $radio_option_with_revealing_panel: $("#offender_sar_third_party_true"),
-    $radio_option_without_revealing_panel: $("#offender_sar_third_party_false"), 
+    $radio_option_with_revealing_panel: $(".option_with_revealing_panel input[type=radio]"),
+    $radio_option_without_revealing_panel: $(".option_without_revealing_panel input[type=radio]"), 
 
     $relationship_input_label : $('#third_party_true_panel > div:nth-child(2) > label'),
     $relationship_text_input : $('#offender_sar_third_party_relationship'),
@@ -30,13 +30,13 @@ moj.Modules.RequesterDetails = {
             // event bindings to set things after user interactions
             
             // For "Other" radio button changes
-            self.$is_other.on('change', function(){
+            self.$other_radio_button.on('change', function(){
                 self.show_relationship_input();
                 self.hide_address_button();
             });
 
             // For "Solicitor" radio button changes
-            self.$is_solicitor.on('change', function(){
+            self.$solicitor_radio_button.on('change', function(){
                 self.set_relationship_to_solicitor();
                 self.show_address_button();
             });
@@ -44,7 +44,7 @@ moj.Modules.RequesterDetails = {
     },
 
     change_relationship_to_other : function(){
-        this.$is_other.prop('checked', 'checked');
+        this.$other_radio_button.prop('checked', 'checked');
     },
 
     is_fresh_page : function(){
@@ -65,7 +65,7 @@ moj.Modules.RequesterDetails = {
         this.$relationship_input_label.hide();
         this.$relationship_text_input.hide();
         this.$relationship_text_input.val('Solicitor');
-        this.$is_solicitor.prop('checked', 'checked');
+        this.$solicitor_radio_button.prop('checked', 'checked');
     },
 
     show_relationship_input: function() {
