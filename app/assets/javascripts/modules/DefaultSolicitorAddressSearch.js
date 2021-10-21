@@ -1,4 +1,4 @@
-moj.Modules.RequesterDetails = {
+moj.Modules.DefaultSolicitorAddressSearch = {
     $solicitor_radio_button: $("#offender_sar_is_solicitor_solicitor"),
     $other_radio_button: $("#offender_sar_is_solicitor_other"),
 
