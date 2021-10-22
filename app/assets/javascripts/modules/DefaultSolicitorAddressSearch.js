@@ -5,8 +5,9 @@ moj.Modules.DefaultSolicitorAddressSearch = {
     $radio_option_with_revealing_panel: $(".option_with_revealing_panel input[type=radio]"),
     $radio_option_without_revealing_panel: $(".option_without_revealing_panel input[type=radio]"), 
 
-    $relationship_input_label : $('#third_party_true_panel > div:nth-child(2) > label'),
+    $relationship_input_label : $('#offender_sar_third_party_relationship').parent().find('label'),
     $relationship_text_input : $('#offender_sar_third_party_relationship'),
+
 
     init: function() {
         var self = this;
