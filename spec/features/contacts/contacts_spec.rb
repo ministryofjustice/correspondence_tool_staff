@@ -109,14 +109,33 @@ feature 'Contacts address book', js: true do
 
     when_i_contine_i_can_go_back_and_the_solicitor_radio_is_still_checked
 
-    when_i_relationship_to_subject_to_other
-    then_the_reationship_field_is_shown_and_is_blank
+    when_i_set_relationship_to_subject_to_other
+    then_the_reationship_field_is_shown
     and_i_can_enter_a_relationship_type
+
+    # when_i_contine_i_can_go_back_and_the_other_radio_is_still_checked
 
     when_i_select_info_is_not_requested_on_someone_elses_behalf
     then_the_revealing_panel_is_not_visible
 
     when_i_select_info_is_requested_on_someone_elses_behalf
+    then_the_state_remains_the_same
+  end
+
+  def when_i_contine_i_can_go_back_and_the_other_radio_is_still_checked
+    click_on 'Continue'
+    click_on 'Back'
+    then_the_reationship_field_is_shown
+    and_the_other_radio_is_still_checked
+    and_the_state_remains_the_same
+  end
+
+  def and_the_other_radio_is_still_checked
+    result = page.evaluate_script("document.getElementById('offender_sar_is_solicitor_other').checked;")
+    expect(result).to be true 
+  end
+
+  def and_the_state_remains_the_same
     then_the_state_remains_the_same
   end
 
@@ -146,11 +165,11 @@ feature 'Contacts address book', js: true do
     expect(result).to be true 
   end
 
-  def when_i_relationship_to_subject_to_other
+  def when_i_set_relationship_to_subject_to_other
     page.execute_script("document.getElementById('offender_sar_is_solicitor_other').click();")
   end
 
-  def then_the_reationship_field_is_shown_and_is_blank
+  def then_the_reationship_field_is_shown
     expect(page).to have_content("Please specify relationship to the subject")
   end
 

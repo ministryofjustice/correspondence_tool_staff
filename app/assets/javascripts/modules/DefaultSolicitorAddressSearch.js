@@ -32,19 +32,18 @@ moj.Modules.DefaultSolicitorAddressSearch = {
             // For "Other" radio button changes
             self.$other_radio_button.on('change', function(){
                 self.show_relationship_input();
-                self.hide_address_button();
             });
 
             // For "Solicitor" radio button changes
             self.$solicitor_radio_button.on('change', function(){
                 self.set_relationship_to_solicitor();
-                self.show_address_button();
             });
         }
     },
 
     change_relationship_to_other : function(){
         this.$other_radio_button.prop('checked', 'checked');
+        this.hide_address_button();
     },
 
     is_fresh_page : function(){
@@ -66,12 +65,14 @@ moj.Modules.DefaultSolicitorAddressSearch = {
         this.$relationship_text_input.hide();
         this.$relationship_text_input.val('Solicitor');
         this.$solicitor_radio_button.prop('checked', 'checked');
+        this.show_address_button();
     },
 
     show_relationship_input: function() {
         this.$relationship_input_label.show();
         this.$relationship_text_input.show();
         this.$relationship_text_input.val('');
+        this.hide_address_button();
     },
 
     hide_address_button: function(){
