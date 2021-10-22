@@ -910,6 +910,10 @@ en:
       find_solicitor_address: Find a solicitor address
       add_or_edit_address: Add or edit addresses (opens in new window)
       address_search_label: Organisation name search
+      relationship_to_subject_label: Relationship to subject
+      is_solicitor_label: Solicitor
+      is_other_label: Other
+      third_party_relationship_text_field_label: Please specify relationship to the subject
 
     choose: Choose...
     choose_file: Choose a file

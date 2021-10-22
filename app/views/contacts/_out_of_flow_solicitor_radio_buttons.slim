@@ -1,10 +1,12 @@
 .form-group
   fieldset.inline
     legend
-      span.form-label-bold Relationship to subject
+      span.form-label-bold = t('common.contacts.relationship_to_subject_label')
     .multiple-choice
       input#offender_sar_is_solicitor_solicitor data-form-type="other" name="is_solicitor" type="radio" value="solicitor" /
-      label for=""  Solicitor
+      label for="offender_sar_is_solicitor_solicitor" = t('common.contacts.is_solicitor_label')
+
     .multiple-choice
       input#offender_sar_is_solicitor_other data-form-type="other" name="is_solicitor" type="radio" value="other" /
-      label for="offender_sar_is_solicitor_other"  Other
+      label for="offender_sar_is_solicitor_other" = t('common.contacts.is_other_label')
+

@@ -13,7 +13,7 @@
     = f.radio_button_fieldset(:third_party, legend_options: { class: 'visually-hidden' }) do |fieldset|
       - fieldset.radio_input(true, text_method: :humanize, class: 'multiple-choice option_with_revealing_panel')
         = render partial: 'contacts/out_of_flow_solicitor_radio_buttons'
-        = f.text_field :third_party_relationship, label_options: { value:'Please specify relationship to the subject' }
+        = f.text_field :third_party_relationship, label_options: { value: t('common.contacts.third_party_relationship_text_field_label') }
         = f.text_field :third_party_name
         = f.text_field :third_party_company_name
         = f.text_area  :postal_address, {rows: 4, class: 'address_input'}
