@@ -25,7 +25,7 @@
 
       - fieldset.revealing_panel(:recipient_third_party_recipient) do |panel|
         = render partial: 'contacts/out_of_flow_solicitor_radio_buttons'
-        - panel.text_field :third_party_relationship, label_options: { value: 'Please specify relationship to the subject' }
+        - panel.text_field :third_party_relationship, { label_options: { value: 'Please specify relationship to the subject' } }
         - panel.text_field :third_party_name
         - panel.text_field :third_party_company_name
         - panel.text_area :postal_address, {rows: 4, class: 'address_input'}
