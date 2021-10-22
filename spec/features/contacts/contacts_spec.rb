@@ -113,7 +113,7 @@ feature 'Contacts address book', js: true do
     then_the_reationship_field_is_shown
     and_i_can_enter_a_relationship_type
 
-    # when_i_contine_i_can_go_back_and_the_other_radio_is_still_checked
+    when_i_contine_i_can_go_back_and_the_other_radio_is_still_checked
 
     when_i_select_info_is_not_requested_on_someone_elses_behalf
     then_the_revealing_panel_is_not_visible
