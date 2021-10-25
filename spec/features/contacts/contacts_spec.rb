@@ -92,6 +92,132 @@ feature 'Contacts address book', js: true do
     then_i_expect_the_address_i_searched_for_to_have_been_entered_into_the_form
   end
 
+  scenario "a default relationship type and address can be selected on the requester_details page" do
+    when_i_navigate_to_offender_sar_subject_page
+ 
+    and_fill_in_subject_details_page 
+
+    when_i_select_info_is_requested_on_someone_elses_behalf
+    then_relationship_to_subject_should_be_defaulted_to_solictor
+    and_the_relationship_field_should_not_be_visible
+    then_the_find_a_solicitor_button_should_be_visible
+
+    when_i_open_the_address_selection_dialogue
+    and_only_solicitor_addressess_are_available
+    then_i_am_able_to_select_an_address_from_the_dropown
+    and_fill_in_the_other_details
+
+    when_i_contine_i_can_go_back_and_the_solicitor_radio_is_still_checked
+
+    when_i_set_relationship_to_subject_to_other
+    then_the_reationship_field_is_shown
+    and_i_can_enter_a_relationship_type
+
+    when_i_contine_i_can_go_back_and_the_other_radio_is_still_checked
+
+    when_i_select_info_is_not_requested_on_someone_elses_behalf
+    then_the_revealing_panel_is_not_visible
+
+    when_i_select_info_is_requested_on_someone_elses_behalf
+    then_the_state_remains_the_same
+  end
+
+  def when_i_contine_i_can_go_back_and_the_other_radio_is_still_checked
+    click_on 'Continue'
+    click_on 'Back'
+    then_the_reationship_field_is_shown
+    and_the_other_radio_is_still_checked
+    and_the_state_remains_the_same
+  end
+
+  def and_the_other_radio_is_still_checked
+    result = page.evaluate_script("document.getElementById('offender_sar_is_solicitor_other').checked;")
+    expect(result).to be true 
+  end
+
+  def and_the_state_remains_the_same
+    then_the_state_remains_the_same
+  end
+
+  def then_the_state_remains_the_same
+    value = page.evaluate_script("document.getElementById('offender_sar_third_party_relationship').value;")
+    expect(value).to match('partner')
+
+    expect(page).to_not have_content('Find a solicitor address')
+  end
+
+  def when_i_select_info_is_not_requested_on_someone_elses_behalf
+    choose('offender_sar_third_party_false', visible: false)
+  end
+
+  def then_the_revealing_panel_is_not_visible
+    expect(page).to_not have_content('Full name of the representative (optional)')
+  end
+
+  def and_i_can_enter_a_relationship_type
+    page.execute_script("document.getElementById('offender_sar_third_party_relationship').value = 'partner';")
+    value = page.evaluate_script("document.getElementById('offender_sar_third_party_relationship').value;")
+    expect(value).to match('partner')
+  end
+
+  def then_relationship_to_subject_should_be_defaulted_to_solictor
+    result = page.evaluate_script("document.getElementById('offender_sar_is_solicitor_solicitor').checked;")
+    expect(result).to be true 
+  end
+
+  def when_i_set_relationship_to_subject_to_other
+    page.execute_script("document.getElementById('offender_sar_is_solicitor_other').click();")
+  end
+
+  def then_the_reationship_field_is_shown
+    expect(page).to have_content("Please specify relationship to the subject")
+  end
+
+  def when_i_contine_i_can_go_back_and_the_solicitor_radio_is_still_checked
+    click_on 'Continue'
+    click_on 'Back'
+    and_the_relationship_field_should_not_be_visible
+    then_the_find_a_solicitor_button_should_be_visible
+  end
+
+  def and_fill_in_the_other_details
+    fill_in 'Full name of the representative (optional)', with: "Joe Bloggs"
+    fill_in 'Company name (optional)', with: "Generic company"
+  end
+
+  def when_i_select_info_is_requested_on_someone_elses_behalf
+    choose('offender_sar_third_party_true', visible: false)
+  end
+
+  def then_i_am_able_to_select_an_address_from_the_dropown
+    click_button("Use Solicitors LLP")
+    
+    selected_address_in_textbox = page.find(:css, '#offender_sar_postal_address').value
+    expect(selected_address_in_textbox).to include("456 fake street\nlittle heath")
+  end
+
+  def and_the_relationship_field_should_not_be_visible
+    expect(page).to_not have_content("Please specify relationship to the subject")
+  end
+
+  def and_only_solicitor_addressess_are_available
+    expect(page).to have_content("Solicitors LLP\n456 fake street")
+    expect(page).to_not have_content("HMP Wellingsville")
+  end
+
+  def when_i_open_the_address_selection_dialogue
+    click_button("Find a solicitor")
+  end
+
+  def then_the_find_a_solicitor_button_should_be_visible
+    expect(page).to have_content("Find a solicitor")
+  end
+
+  def and_fill_in_subject_details_page_and_continue
+    and_fill_in_subject_details_page
+    click_on 'continue'
+  end
+
   def then_i_expect_the_address_i_searched_for_to_have_been_entered_into_the_form
     expect(cases_new_offender_sar_subject_details_page.subject_address).to have_content(contact.address)
   end

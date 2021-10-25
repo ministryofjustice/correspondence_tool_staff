@@ -12,6 +12,7 @@ module PageObjects
           section :page_heading,
                   PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+          element :relationship_other, '#offender_sar_is_solicitor_other'
           element :third_party_relationship, '#offender_sar_third_party_relationship'
           element :third_party_name, '#offender_sar_third_party_name'
           element :third_party_company_name, '#offender_sar_third_party_company_name'
@@ -23,6 +24,7 @@ module PageObjects
 
             if kase.third_party?
               choose('offender_sar_third_party_true', visible: false)
+              choose('offender_sar_is_solicitor_other', visible: false)
               third_party_relationship.set kase.third_party_relationship
               third_party_name.set kase.third_party_name
               third_party_company_name.set kase.third_party_company_name

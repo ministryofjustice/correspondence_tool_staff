@@ -7,16 +7,18 @@
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for @case, url: url, as: :offender_sar do |f|
-  #third-party
+  #third-party.js-in-revealing-panel-address-lookup
     h2.heading-medium
       = t('helpers.label.offender_sar.third_party')
     = f.radio_button_fieldset(:third_party, legend_options: { class: 'visually-hidden' }) do |fieldset|
-      - fieldset.radio_input(true, text_method: :humanize)
-        = f.text_field :third_party_relationship
+      - fieldset.radio_input(true, text_method: :humanize, class: 'multiple-choice option_with_revealing_panel')
+        = render partial: 'contacts/out_of_flow_solicitor_radio_buttons'
+        = f.text_field :third_party_relationship, label_options: { value: t('common.contacts.third_party_relationship_text_field_label') }
         = f.text_field :third_party_name
         = f.text_field :third_party_company_name
-        = f.text_area  :postal_address, {rows: 4}
-      - fieldset.radio_input(false, text_method: :humanize)
+        = f.text_area  :postal_address, {rows: 4, class: 'address_input'}
+        = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "solicitor", bespoke_lookup_text: 'find_solicitor_address' }
+      - fieldset.radio_input(false, text_method: :humanize, class: 'multiple-choice option_without_revealing_panel')
 
   input name="current_step" type="hidden" value=@case.current_step
 
