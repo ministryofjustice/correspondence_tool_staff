@@ -523,8 +523,9 @@ GEM
       activerecord (>= 4.2, < 5.3)
       its-it (~> 1.2)
       schema_plus_core
-    selenium-webdriver (3.142.7)
-      childprocess (>= 0.5, < 4.0)
+    selenium-webdriver (4.0.3)
+      childprocess (>= 0.5, < 5.0)
+      rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
     sentry-raven (3.1.2)
       faraday (>= 1.0)
@@ -688,7 +689,7 @@ DEPENDENCIES
   sablon
   sass-rails (~> 6.0)
   schema_plus_enums (~> 0.1)
-  selenium-webdriver (~> 3.142.6)
+  selenium-webdriver (~> 4.0.3)
   sentry-raven (~> 3.1.2)
   shell-spinner
   shoulda-matchers (~> 5.0)
