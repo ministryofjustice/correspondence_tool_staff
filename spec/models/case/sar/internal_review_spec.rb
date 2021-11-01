@@ -123,40 +123,40 @@ describe Case::SAR::InternalReview do
     end
   end
 
-  # describe '#message' do
-  #   it 'validates presence if uploaded_request_files is missing on create' do
-  #     kase = build :sar_internal_review, uploaded_request_files: [], message: ''
-  #     expect(kase).not_to be_valid
-  #     expect(kase.errors[:message])
-  #       .to eq ["can't be blank if no request files attached"]
-  #   end
+  describe '#message' do
+    it 'validates presence if uploaded_request_files is missing on create' do
+      kase = build :sar_internal_review, uploaded_request_files: [], message: ''
+      expect(kase).not_to be_valid
+      expect(kase.errors[:message])
+        .to eq ["can't be blank if no request files attached"]
+    end
 
-  #   it 'validates presence if attached request files is missing on update' do
-  #     kase = create :sar_internal_review, uploaded_request_files: [], message: 'foo'
-  #     expect(kase).to be_valid
-  #     kase.update_attributes(message: '')
-  #     expect(kase).not_to be_valid
-  #     expect(kase.errors[:message])
-  #       .to eq ["can't be blank if no request files attached"]
-  #   end
+    it 'validates presence if attached request files is missing on update' do
+      kase = create :sar_internal_review, uploaded_request_files: [], message: 'foo'
+      expect(kase).to be_valid
+      kase.update_attributes(message: '')
+      expect(kase).not_to be_valid
+      expect(kase.errors[:message])
+        .to eq ["can't be blank if no request files attached"]
+    end
 
-  #   it 'can be empty on create if uploaded_request_files is present' do
-  #     kase = build :sar_internal_review,
-  #                  uploaded_request_files: ["#{Faker::Internet.slug}.pdf"],
-  #                  message: ''
-  #     expect(kase).to be_valid
-  #   end
+    it 'can be empty on create if uploaded_request_files is present' do
+      kase = build :sar_internal_review,
+                   uploaded_request_files: ["#{Faker::Internet.slug}.pdf"],
+                   message: ''
+      expect(kase).to be_valid
+    end
 
-  #   it 'can be empty on update if attached request files is present' do
-  #     kase = create :sar_internal_review,
-  #                   uploaded_request_files: ["#{Faker::Internet.slug}.pdf"],
-  #                   creator: create(:manager),
-  #                   message: 'foo'
-  #     expect(kase).to be_valid
-  #     kase.update_attributes(message: '')
-  #     expect(kase).to be_valid
-  #   end
-  # end
+    it 'can be empty on update if attached request files is present' do
+      kase = create :sar_internal_review,
+                    uploaded_request_files: ["#{Faker::Internet.slug}.pdf"],
+                    creator: create(:manager),
+                    message: 'foo'
+      expect(kase).to be_valid
+      kase.update_attributes(message: '')
+      expect(kase).to be_valid
+    end
+  end
 
   describe '#within_escalation_deadline?' do
     it 'returns false' do
@@ -201,51 +201,51 @@ describe Case::SAR::InternalReview do
       expect(version_hash['subject']).to eq 'subject A'
     end
 
-    # it 'can reconsititue a record from a version (except for received_date)' do
-    #   original_kase = @kase.versions.last.reify
-    #   expect(original_kase.email).to eq 'aa@moj.com'
-    #   expect(original_kase.subject).to eq 'subject A'
-    # end
+    it 'can reconsititue a record from a version (except for received_date)' do
+      original_kase = @kase.versions.last.reify
+      expect(original_kase.email).to eq 'aa@moj.com'
+      expect(original_kase.subject).to eq 'subject A'
+    end
 
-    # it 'reconstitutes the received date properly' do
-    #   original_kase = @kase.versions.last.reify
-    #   expect(original_kase.received_date).to eq Date.today
-    # end
+    it 'reconstitutes the received date properly' do
+      original_kase = @kase.versions.last.reify
+      expect(original_kase.received_date).to eq Date.today
+    end
   end
 
-  # describe 'use_subject_as_requester callback' do
-  #   context 'on create' do
-  #     it 'does not change the requester when present' do
-  #       sar_case = create :sar_internal_review, name: 'Bob', subject_full_name: 'Doug'
-  #       expect(sar_case.reload.name).to eq 'Bob'
-  #     end
+  describe 'use_subject_as_requester callback' do
+    context 'on create' do
+      it 'does not change the requester when present' do
+        sar_case = create :sar_internal_review, name: 'Bob', subject_full_name: 'Doug'
+        expect(sar_case.reload.name).to eq 'Bob'
+      end
 
-  #     it 'uses the subject as the requester if not present on update' do
-  #       sar_case = create :sar_internal_review, name: '', subject_full_name: 'Doug'
-  #       expect(sar_case.reload.name).to eq 'Doug'
-  #     end
-  #   end
+      it 'uses the subject as the requester if not present on update' do
+        sar_case = create :sar_internal_review, name: '', subject_full_name: 'Doug'
+        expect(sar_case.reload.name).to eq 'Doug'
+      end
+    end
 
-  #   context 'on update' do
-  #     it 'does not change the requester when present' do
-  #       sar_case = create :sar_internal_review
-  #       sar_case.update! name: 'Bob', subject_full_name: 'Doug'
-  #       expect(sar_case.name).to eq 'Bob'
-  #     end
+    context 'on update' do
+      it 'does not change the requester when present' do
+        sar_case = create :sar_internal_review
+        sar_case.update! name: 'Bob', subject_full_name: 'Doug'
+        expect(sar_case.name).to eq 'Bob'
+      end
 
-  #     it 'uses the subject as the requester if not present on update' do
-  #       sar_case = create :sar_internal_review
-  #       sar_case.update! name: '', subject_full_name: 'Doug'
-  #       expect(sar_case.name).to eq 'Doug'
-  #     end
-  #   end
-  # end
+      it 'uses the subject as the requester if not present on update' do
+        sar_case = create :sar_internal_review
+        sar_case.update! name: '', subject_full_name: 'Doug'
+        expect(sar_case.name).to eq 'Doug'
+      end
+    end
+  end
 
   describe '#requires_flag_for_disclosure_specialists?' do
-    # it 'returns true' do
-    #   kase = create :sar_internal_review
-    #   expect(kase.requires_flag_for_disclosure_specialists?).to be true
-    # end
+    it 'returns true' do
+      kase = create :sar_internal_review
+      expect(kase.requires_flag_for_disclosure_specialists?).to be true
+    end
   end
 
 
@@ -258,53 +258,53 @@ describe Case::SAR::InternalReview do
   describe 'deadline' do
     subject             { create :sar_internal_review }
 
-    # describe '#deadline_extended' do
-    #   it 'is false by default' do
-    #     expect(subject.deadline_extended?).to be false
-    #   end
-    # end
+    describe '#deadline_extended' do
+      it 'is false by default' do
+        expect(subject.deadline_extended?).to be false
+      end
+    end
 
-    # describe '#deadline_extendable?' do
-    #   it 'is true if external_deadline is less than max possible deadline' do
-    #     max_statutory_deadline =  subject.max_allowed_deadline_date
+    describe '#deadline_extendable?' do
+      it 'is true if external_deadline is less than max possible deadline' do
+        max_statutory_deadline =  subject.max_allowed_deadline_date
 
-    #     expect(subject.deadline_extendable?).to eq true
-    #     expect(subject.external_deadline).to be < max_statutory_deadline
-    #   end
+        expect(subject.deadline_extendable?).to eq true
+        expect(subject.external_deadline).to be < max_statutory_deadline
+      end
 
-    #   it 'is false when already extended equal or beyond satutory limit' do
-    #     sar = create :approved_sar
-    #     sar.external_deadline = subject.max_allowed_deadline_date
+      it 'is false when already extended equal or beyond satutory limit' do
+        sar = create :approved_sar
+        sar.external_deadline = subject.max_allowed_deadline_date
 
-    #     expect(sar.deadline_extendable?).to eq false
-    #   end
-    # end
+        expect(sar.deadline_extendable?).to eq false
+      end
+    end
 
-    # describe '#initial_deadline' do
-    #   it 'uses current external_deadline if not yet extended' do
-    #     expect(subject.initial_deadline).to eq subject.external_deadline
-    #   end
+    describe '#initial_deadline' do
+      it 'uses current external_deadline if not yet extended' do
+        expect(subject.initial_deadline).to eq subject.external_deadline
+      end
 
-    #   it 'checks transitions for initial deadline' do
-    #     extended_sar = create(:sar_internal_review, :extended_deadline_sar)
+      it 'checks transitions for initial deadline' do
+        extended_sar = create(:sar_internal_review, :extended_deadline_sar)
 
-    #     original_deadline = extended_sar
-    #       .transitions
-    #       .where(event: 'extend_sar_deadline')
-    #       .order(:id)
-    #       .first
-    #       .original_final_deadline
+        original_deadline = extended_sar
+          .transitions
+          .where(event: 'extend_sar_deadline')
+          .order(:id)
+          .first
+          .original_final_deadline
 
-    #     expect(extended_sar.initial_deadline).to eq original_deadline
-    #   end
-    # end
+        expect(extended_sar.initial_deadline).to eq original_deadline
+      end
+    end
 
-    # describe '#max_allowed_deadline_date' do
-    #   it 'is 3 calendar months after the received date' do
+    describe '#max_allowed_deadline_date' do
+      it 'is 3 calendar months after the received date' do
 
-    #     expect(subject.max_allowed_deadline_date).to eq get_expected_deadline(3.month.since(subject.received_date))
-    #   end
-    # end
+        expect(subject.max_allowed_deadline_date).to eq get_expected_deadline(3.month.since(subject.received_date))
+      end
+    end
 
     describe '#extend_deadline!' do
       let(:approved_sar)      { create :approved_sar }
@@ -327,66 +327,66 @@ describe Case::SAR::InternalReview do
     end
 
 
-    # describe '#reset_deadline!' do
-    #   let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar) }
-    #   let(:initial_deadline)  { extended_sar.initial_deadline }
-    #   let(:extended_deadline) { extended_sar.external_deadline }
-    #   let(:reset_external_deadline) { get_expected_deadline(1.month.since(extended_sar.received_date)) }
+    describe '#reset_deadline!' do
+      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar) }
+      let(:initial_deadline)  { extended_sar.initial_deadline }
+      let(:extended_deadline) { extended_sar.external_deadline }
+      let(:reset_external_deadline) { get_expected_deadline(1.month.since(extended_sar.received_date)) }
 
-    #   it 'sets #deadline_extended to false' do
-    #     expect { extended_sar.reset_deadline! }.to \
-    #       change(extended_sar, :deadline_extended)
-    #       .from(true)
-    #       .to(false)
-    #   end
+      it 'sets #deadline_extended to false' do
+        expect { extended_sar.reset_deadline! }.to \
+          change(extended_sar, :deadline_extended)
+          .from(true)
+          .to(false)
+      end
 
-    #   it 'sets #extended_times to 0' do
-    #     expect { extended_sar.reset_deadline! }.to \
-    #       change(extended_sar, :extended_times)
-    #       .from(1)
-    #       .to(0)
-    #   end
+      it 'sets #extended_times to 0' do
+        expect { extended_sar.reset_deadline! }.to \
+          change(extended_sar, :extended_times)
+          .from(1)
+          .to(0)
+      end
 
-    #   it 'resets external_deadline' do
-    #     expect { extended_sar.reset_deadline! }.to \
-    #       change(extended_sar, :external_deadline)
-    #       .from(extended_deadline)
-    #       .to(reset_external_deadline)
-    #   end
-    # end
+      it 'resets external_deadline' do
+        expect { extended_sar.reset_deadline! }.to \
+          change(extended_sar, :external_deadline)
+          .from(extended_deadline)
+          .to(reset_external_deadline)
+      end
+    end
 
 
-    # describe 'Update the deadline due to the change of received_date' do
-    #   let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar) }
-    #   let(:new_received_date)      { 10.days.ago(extended_sar.received_date) }
+    describe 'Update the deadline due to the change of received_date' do
+      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar) }
+      let(:new_received_date)      { 10.days.ago(extended_sar.received_date) }
 
-    #   it 'Change the received date to trigger resetting the deadline' do
-    #     extended_sar.update!(received_date: new_received_date)
-    #     expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
-    #     expect(extended_sar.deadline_extended).to eq false
-    #     expect(extended_sar.extended_times).to eq 0
-    #   end
-    # end
+      it 'Change the received date to trigger resetting the deadline' do
+        extended_sar.update!(received_date: new_received_date)
+        expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
+        expect(extended_sar.deadline_extended).to eq false
+        expect(extended_sar.extended_times).to eq 0
+      end
+    end
 
-    # describe 'The external_deadline is always based on the latest received_date' do
-    #   let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar) }
-    #   let(:new_received_date)      { 5.days.ago(extended_sar.received_date) }
+    describe 'The external_deadline is always based on the latest received_date' do
+      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar) }
+      let(:new_received_date)      { 5.days.ago(extended_sar.received_date) }
 
-    #   it 'external_deadline based on the latest received date after editing/extending/reseting actions' do
-    #     extended_sar.update!(received_date: new_received_date)
-    #     expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
-    #     expect(extended_sar.deadline_extended).to eq false
-    #     expect(extended_sar.extended_times).to eq 0
+      it 'external_deadline based on the latest received date after editing/extending/reseting actions' do
+        extended_sar.update!(received_date: new_received_date)
+        expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
+        expect(extended_sar.deadline_extended).to eq false
+        expect(extended_sar.extended_times).to eq 0
         
-    #     extended_sar.extend_deadline!(get_expected_deadline(2.month.since(extended_sar.received_date)), 2)
-    #     expect(extended_sar.deadline_extended).to eq true
-    #     expect(extended_sar.extended_times).to eq 2
+        extended_sar.extend_deadline!(get_expected_deadline(2.month.since(extended_sar.received_date)), 2)
+        expect(extended_sar.deadline_extended).to eq true
+        expect(extended_sar.extended_times).to eq 2
 
-    #     extended_sar.reset_deadline!
-    #     expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
-    #     expect(extended_sar.deadline_extended).to eq false
-    #     expect(extended_sar.extended_times).to eq 0
-    #   end
-    # end 
+        extended_sar.reset_deadline!
+        expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
+        expect(extended_sar.deadline_extended).to eq false
+        expect(extended_sar.extended_times).to eq 0
+      end
+    end 
   end
 end
