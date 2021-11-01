@@ -16,6 +16,7 @@ describe CorrespondenceType, type: :model do
   let(:foi) { create(:foi_correspondence_type) }
   let(:ico) { create(:ico_correspondence_type) }
   let(:sar) { create(:sar_correspondence_type) }
+  let(:sar_ir) { create(:sar_internal_review_correspondence_type) }
 
   it { should validate_presence_of(:name) }
   it { should validate_presence_of(:abbreviation) }
@@ -98,7 +99,7 @@ describe CorrespondenceType, type: :model do
 
     it 'returns only those correspondence types where report_category_name is present' do
       expect(CorrespondenceType.all.size).to be > 2
-      expect(cts.size).to eq 4
+      expect(cts.size).to eq 5
     end
 
     it 'returns them in alphabetic order of report category name' do
@@ -106,6 +107,7 @@ describe CorrespondenceType, type: :model do
         'FOI report',
         'Offender SAR Complaint report',
         'Offender SAR report',
+        'SAR report',
         'SAR report'
       ]
     end
