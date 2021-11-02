@@ -7,4 +7,8 @@ class Case::SAR::InternalReview < Case::SAR::Standard
       'SAR_INTERNAL_REVIEW'
     end
   end
+
+  def sar_internal_review?
+    true
+  end
 end
