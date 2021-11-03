@@ -6,7 +6,12 @@ class Case::SAR::InternalReview < Case::SAR::Standard
       # and does not contain special chars like slashes, etc.
       'SAR_INTERNAL_REVIEW'
     end
+
+    def state_machine_name
+      'sar'
+    end
   end
+
 
   def sar_internal_review?
     true

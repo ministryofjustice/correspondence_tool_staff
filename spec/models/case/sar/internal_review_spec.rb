@@ -397,4 +397,12 @@ describe Case::SAR::InternalReview do
       expect(sar_internal_review.sar_internal_review?).to be(true)
     end
   end
+
+  describe '#state_machine_name?' do
+    let(:sar_internal_review)      { create(:sar_internal_review, :extended_deadline_sar) }
+
+    it 'has a class method state_machine_name that returns "sar"' do
+      expect(Case::SAR::InternalReview.state_machine_name).to match("sar")
+    end
+  end
 end
