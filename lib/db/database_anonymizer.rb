@@ -2,7 +2,7 @@ class DatabaseAnonymizer
 
   attr_reader :tables_to_anonymised
 
-  CLASSES_TO_ANONYMISE = [ Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment]
+  # CLASSES_TO_ANONYMISE = [Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment]
 
   class RecordToCopySql
     def initialize(record)

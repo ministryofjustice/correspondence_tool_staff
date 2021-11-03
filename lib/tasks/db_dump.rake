@@ -68,18 +68,6 @@ namespace :db do
       end
     end
 
-    # desc 'makes an sql dump of the database on the demo environement to the local machine'
-    # task :demo, [:host] do |_task, args|
-    #   # require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
-    #   DatabaseDumper.new('demo', args[:host], 'clear').run
-    # end
-
-    # desc 'makes an sql dump of the database on the staging environment to the local machine'
-    # task :staging, [:host] do |_task, args|
-    #   # require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
-    #   DatabaseDumper.new('demo', args[:host], 'clear').run
-    # end
-
     desc 'makes an anonymised dump of the local database'
     task :local, [:anonymized, :tag, :storage, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
@@ -94,6 +82,22 @@ namespace :db do
         args[:anonymized] == 'anon', 
         args[:tag], 
         is_store_to_s3_bucket)
+      if is_store_to_s3_bucket
+        dumper.set_up_bucket(args)
+      end
+      dumper.run
+    end
+
+    desc 'makes an anonymised dump of local database with tasks'
+    task :local, [:tag, :storage, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
+      require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
+      args.with_defaults(:tag => "latest")
+      args.with_defaults(:storage => "bucket")
+      raise "third argument must be 'bucket' or 'local', is: #{args[:storage]}" unless args[:storage].in?(%w( bucket local ))
+
+      is_store_to_s3_bucket = args[:storage] == 'bucket'
+      puts 'exporting unanonymised database data'
+      dumper = DatabaseDumper.new(true, args[:tag], is_store_to_s3_bucket)
       if is_store_to_s3_bucket
         dumper.set_up_bucket(args)
       end
