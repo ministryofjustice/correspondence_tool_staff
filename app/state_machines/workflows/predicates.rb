@@ -82,6 +82,8 @@ class Workflows::Predicates
   end
 
   def case_can_be_unflagged_for_clearance?
+    return false if @kase.try(:sar_internal_review?)
+
     case_can_be_unflagged_for_clearance_by_disclosure_specialist? ||
       case_can_be_unflagged_for_clearance_by_press_officer? ||
       case_can_be_unflagged_for_clearance_by_private_officer?
