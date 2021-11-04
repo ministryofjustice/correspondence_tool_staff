@@ -234,7 +234,7 @@ en:
               future: cannot be in the future
               not_empty: should be blank if the request is not complete
         linked_case:
-          missing: "doesn't exist"
+          missing: "does not exist"
           references_self: "cannot link to the same case"
           wrong_type: "cannot link a %{case_class} case to a %{linked_case_class} as a %{type} case"
         report:
