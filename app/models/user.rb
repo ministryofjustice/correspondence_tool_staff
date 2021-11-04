@@ -207,10 +207,8 @@ class User < ApplicationRecord
   end
 
   def permitted_correspondence_types
-    types = self.teams
-              .collect(&:correspondence_types)
-              .flatten
-              .uniq
+    types = all_possible_user_correspondence_types
+    
     types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
     types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
     types.delete(CorrespondenceType.offender_sar) unless FeatureSet.offender_sars.enabled?
@@ -226,6 +224,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def all_possible_user_correspondence_types
+    self.teams.collect(&:correspondence_types).flatten.uniq
+  end
 
   def bad_passwords
     %w{
