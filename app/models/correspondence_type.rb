@@ -65,6 +65,7 @@ class CorrespondenceType < ApplicationRecord
           Case::FOI::TimelinessReview,
           Case::FOI::ComplianceReview],
     SAR: [Case::SAR::Standard],
+    SAR_INTERNAL_REVIEW: [Case::SAR::InternalReview],
     OFFENDER_SAR: [Case::SAR::Offender],
     OFFENDER_SAR_COMPLAINT: [Case::SAR::OffenderComplaint],
     ICO: [Case::ICO::FOI,
@@ -129,6 +130,10 @@ class CorrespondenceType < ApplicationRecord
 
   def self.overturned_foi
     find_by_abbreviation! 'OVERTURNED_FOI'
+  end
+
+  def self.sar_internal_review
+    find_by_abbreviation! 'SAR_INTERNAL_REVIEW'
   end
 
   def abbreviation_and_name

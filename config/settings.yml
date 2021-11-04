@@ -299,3 +299,10 @@ enabled_features:
     Host-staging: false
     Host-qa: false
     Host-prod: false
+  sar_internal_review:
+    Local: true
+    Host-dev: true
+    Host-demo: false
+    Host-staging: false
+    Host-qa: false
+    Host-prod: false

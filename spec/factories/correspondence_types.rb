@@ -38,6 +38,21 @@ FactoryBot.define do
     initialize_with { CorrespondenceType.find_or_create_by(name: name) }
   end
 
+  factory :sar_internal_review_correspondence_type, parent: :correspondence_type do
+    name { 'Subject access request internal review' }
+    abbreviation { 'SAR_INTERNAL_REVIEW' }
+    escalation_time_limit { 3 }
+    internal_time_limit { 10 }
+    external_time_limit { 1 }
+    extension_time_limit { 2 }
+    extension_time_default { 1 }
+    deadline_calculator_class { 'CalendarMonths' }
+    report_category_name { 'SAR report' }
+
+
+    initialize_with { CorrespondenceType.find_or_create_by(name: name) }
+  end
+
   factory :offender_sar_correspondence_type, parent: :correspondence_type do
     name { 'Offender Subject Access Request' }
     abbreviation { 'OFFENDER_SAR' }
