@@ -390,11 +390,11 @@ describe Case::SAR::InternalReview do
     end 
   end
 
-  describe '#sar_internal_review?' do
+  describe '#is_sar_internal_review?' do
     let(:sar_internal_review)      { create(:sar_internal_review, :extended_deadline_sar) }
 
     it 'sets #deadline_extended to false' do
-      expect(sar_internal_review.sar_internal_review?).to be(true)
+      expect(sar_internal_review.is_sar_internal_review?).to be(true)
     end
   end
 

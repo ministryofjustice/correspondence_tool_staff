@@ -11,9 +11,4 @@ class Case::SAR::InternalReview < Case::SAR::Standard
       'sar'
     end
   end
-
-
-  def sar_internal_review?
-    true
-  end
 end
