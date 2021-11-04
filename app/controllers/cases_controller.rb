@@ -213,6 +213,7 @@ class CasesController < ApplicationController
       types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
       types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
       types.delete(CorrespondenceType.offender_sar) unless FeatureSet.offender_sars.enabled?
+      types.delete(CorrespondenceType.sar_internal_review) unless FeatureSet.sar_internal_review.enabled?
       @permitted_correspondence_types += types
     elsif policy(Case::Base).can_manage_offender_sar?
       @permitted_correspondence_types << CorrespondenceType.offender_sar

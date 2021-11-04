@@ -111,6 +111,10 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :sar_internal_review, only: only, controller: 'sar_internal_review', as: :case_sar_internal_review do
+      get '/(:step)', on: :collection, to: 'sar_internal_review#new', as: 'step'
+    end
+
     resources :icos, only: only, controller: 'ico', as: :case_ico do
       get 'new_linked_cases_for', on: :collection, to: 'ico#new_linked_cases_for'
       patch 'record_late_team', on: :member, to: 'ico#record_late_team'
