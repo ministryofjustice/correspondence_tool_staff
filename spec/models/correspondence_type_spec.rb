@@ -48,6 +48,13 @@ describe CorrespondenceType, type: :model do
     end
   end
 
+  describe '.sar_internal_review' do
+    it 'finds the SAR Internal Review correspondence type' do
+      sar_internal_review = find_or_create :sar_internal_review_correspondence_type
+      expect(described_class.sar_internal_review).to eq sar_internal_review
+    end
+  end
+
   describe 'teams' do
     it 'lists teams that can handle this correspondence type' do
       ct1    = create(:correspondence_type, name: 'ct1', abbreviation: 'ct1')
@@ -127,6 +134,10 @@ describe CorrespondenceType, type: :model do
 
     it 'returns SAR sub-classes' do
       expect(sar.sub_classes).to eq [Case::SAR::Standard]
+    end
+
+    it 'returns SAR_INTERNAL_REVIEW sub-classes' do
+      expect(sar_ir.sub_classes).to eq [Case::SAR::InternalReview]
     end
   end
 end
