@@ -155,7 +155,7 @@ describe Case::ICO::Base do
       ico = build(:ico_foi_case, original_case: linked_case)
       expect(ico).not_to be_valid
       expect(ico.errors[:original_case])
-        .to eq ["can't link a ICO Appeal - FOI case to a ICO Appeal - FOI as a original case"]
+        .to eq ["cannot link a ICO Appeal - FOI case to a ICO Appeal - FOI as a original case"]
     end
 
     it "validates that a case isn't both original and related" do
@@ -170,7 +170,7 @@ describe Case::ICO::Base do
       ico = create(:ico_foi_case)
       ico.original_case = nil
       ico.valid?
-      expect(ico.errors[:original_case]).to eq ["can't be blank"]
+      expect(ico.errors[:original_case]).to eq ["cannot be blank"]
     end
   end
 
@@ -238,7 +238,7 @@ describe Case::ICO::Base do
       kase.received_date = Date.today + 1.day
       expect(kase).not_to be_valid
       expect(kase.errors[:received_date])
-        .to eq ["can't be in the future."]
+        .to eq ["cannot be in the future."]
     end
   end
 

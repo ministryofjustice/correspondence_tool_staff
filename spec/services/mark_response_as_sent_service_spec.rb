@@ -32,7 +32,7 @@ describe MarkResponseAsSentService do
 
         it 'sets the error' do
           service.call
-          expect(foi_kase.errors[:date_responded]).to eq ["can't be blank"]
+          expect(foi_kase.errors[:date_responded]).to eq ["cannot be blank"]
         end
       end
 
@@ -52,7 +52,7 @@ describe MarkResponseAsSentService do
 
         it 'sets the error' do
           service.call
-          expect(foi_kase.errors[:date_responded]).to eq ["can't be blank"]
+          expect(foi_kase.errors[:date_responded]).to eq ["cannot be blank"]
         end
 
       end
@@ -74,7 +74,7 @@ describe MarkResponseAsSentService do
 
         it 'sets the error' do
           service.call
-          expect(foi_kase.errors[:date_responded]).to eq ["can't be in the future"]
+          expect(foi_kase.errors[:date_responded]).to eq ["cannot be in the future"]
         end
       end
     end
@@ -126,7 +126,7 @@ describe MarkResponseAsSentService do
 
         it 'sets the error' do
           service.call
-          expect(ico_kase.errors[:date_responded]).to eq ["can't be blank"]
+          expect(ico_kase.errors[:date_responded]).to eq ["cannot be blank"]
         end
       end
 
@@ -167,7 +167,7 @@ describe MarkResponseAsSentService do
 
         it 'sets the error' do
           service.call
-          expect(ico_kase.errors[:date_responded]).to eq ["can't be in the future"]
+          expect(ico_kase.errors[:date_responded]).to eq ["cannot be in the future"]
         end
       end
     end

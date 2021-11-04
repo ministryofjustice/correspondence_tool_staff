@@ -196,7 +196,7 @@ RSpec.describe StatsController, type: :controller do
 
         it 'marks an error for missing correspondence type but  not report type' do
           post :create, params: params
-          expect(assigns(:report).errors[:correspondence_type]).to eq ["can't be blank"]
+          expect(assigns(:report).errors[:correspondence_type]).to eq ["cannot be blank"]
           expect(assigns(:report).errors[:report_type]).not_to be_present
         end
       end
@@ -218,7 +218,7 @@ RSpec.describe StatsController, type: :controller do
 
         it 'marks the report type as being in error' do
           post :create, params: params
-          expect(assigns(:report).errors[:report_type_id]).to eq ["can't be blank"]
+          expect(assigns(:report).errors[:report_type_id]).to eq ["cannot be blank"]
         end
       end
 

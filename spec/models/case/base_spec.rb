@@ -148,7 +148,7 @@ RSpec.describe Case::Base, type: :model do
         it 'is not valid' do
           closed_case.info_held_status = nil
           expect(closed_case).not_to be_valid
-          expect(closed_case.errors[:info_held_status]).to eq ["can't be blank"]
+          expect(closed_case.errors[:info_held_status]).to eq ["cannot be blank"]
         end
       end
     end
@@ -235,7 +235,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#type' do
     it { should validate_exclusion_of(:type).in_array(['Case'])
-                    .with_message("Case type can't be blank")}
+                    .with_message("Case type cannot be blank")}
   end
 
   describe '#received_date' do
@@ -522,7 +522,7 @@ RSpec.describe Case::Base, type: :model do
       kase = build(:case, related_cases: [linked_case])
       expect(kase).not_to be_valid
       expect(kase.errors[:related_cases])
-        .to eq ["can't link a FOI case to a FOI as a related case"]
+        .to eq ["cannot link a FOI case to a FOI as a related case"]
     end
   end
 

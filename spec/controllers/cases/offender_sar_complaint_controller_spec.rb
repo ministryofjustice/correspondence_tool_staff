@@ -99,7 +99,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
 
           it 'requires original case number to be set' do
             remains_on_step 'link-offender-sar-case'
-            expect(errors[:original_case_number]).to eq ["can't be blank"]
+            expect(errors[:original_case_number]).to eq ["cannot be blank"]
           end
         end
 
@@ -113,7 +113,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
 
           it 'The user needs to be allowed to view the original case' do
             remains_on_step 'link-offender-sar-case'
-            expect(errors[:original_case_number]).to eq ["can't be authorised to link this case"]
+            expect(errors[:original_case_number]).to eq ["cannot be authorised to link this case"]
           end
         end
 
@@ -127,7 +127,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
 
           it 'requires the original case is the type allowed for complaint case' do
             remains_on_step 'link-offender-sar-case'
-            expect(errors[:original_case]).to eq ["can't link a Complaint case to a Complaint as a original case"]
+            expect(errors[:original_case]).to eq ["cannot link a Complaint case to a Complaint as a original case"]
           end
         end
       end
@@ -144,7 +144,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
           context 'when complaint-type absent' do
             it 'requires complaint-type to be set' do
               remains_on_step 'complaint-type'
-              expect(errors[:complaint_type]).to eq ["can't be blank"]
+              expect(errors[:complaint_type]).to eq ["cannot be blank"]
             end
           end
           context 'when complaint-type present' do
@@ -157,16 +157,16 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
               end
 
               it 'requires ico contact name' do
-                expect(errors[:ico_contact_name]).to eq ["can't be blank"]
+                expect(errors[:ico_contact_name]).to eq ["cannot be blank"]
               end
 
               it 'requires ico contact phone or email' do
-                expect(errors[:ico_contact_email]).to eq ["can't be blank if ICO contact phone not given"]
-                expect(errors[:ico_contact_phone]).to eq ["can't be blank if ICO contact email not given"]
+                expect(errors[:ico_contact_email]).to eq ["cannot be blank if ICO contact phone not given"]
+                expect(errors[:ico_contact_phone]).to eq ["cannot be blank if ICO contact email not given"]
               end
 
               it 'requires ico reference' do
-                expect(errors[:ico_reference]).to eq ["can't be blank"]
+                expect(errors[:ico_reference]).to eq ["cannot be blank"]
               end
 
             end
@@ -180,16 +180,16 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
               end
 
               it 'requires gld contact name' do
-                expect(errors[:gld_contact_name]).to eq ["can't be blank"]
+                expect(errors[:gld_contact_name]).to eq ["cannot be blank"]
               end
 
               it 'requires gld contact phone or email' do
-                expect(errors[:gld_contact_email]).to eq ["can't be blank if GLD contact phone not given"]
-                expect(errors[:gld_contact_phone]).to eq ["can't be blank if GLD contact email not given"]
+                expect(errors[:gld_contact_email]).to eq ["cannot be blank if GLD contact phone not given"]
+                expect(errors[:gld_contact_phone]).to eq ["cannot be blank if GLD contact email not given"]
               end
 
               it 'requires gld reference' do
-                expect(errors[:gld_reference]).to eq ["can't be blank"]
+                expect(errors[:gld_reference]).to eq ["cannot be blank"]
               end
             end
           end
@@ -198,14 +198,14 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         context 'when complaint-subtype absent' do
           it 'requires complaint-subtype to be set' do
             remains_on_step 'complaint-type'
-            expect(errors[:complaint_subtype]).to eq ["can't be blank"]
+            expect(errors[:complaint_subtype]).to eq ["cannot be blank"]
           end
         end
 
         context 'when priority absent' do
           it 'requires priority to be set' do
             remains_on_step 'complaint-type'
-            expect(errors[:priority]).to eq ["can't be blank"]
+            expect(errors[:priority]).to eq ["cannot be blank"]
           end
         end
       end
@@ -221,7 +221,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
 
           it 'requires third_party to be set' do
             remains_on_step 'requester-details'
-            expect(errors[:third_party]).to eq ["can't be blank"]
+            expect(errors[:third_party]).to eq ["cannot be blank"]
           end
         end
 
@@ -264,7 +264,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
 
           it 'requires recipient to be set' do
             remains_on_step 'recipient-details'
-            expect(errors[:recipient]).to eq ["can't be blank"]
+            expect(errors[:recipient]).to eq ["cannot be blank"]
           end
         end
 
@@ -303,7 +303,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
 
           it 'fails to be valid' do
             remains_on_step 'request-details'
-            expect(errors[:request_dated]).to eq ["can't be in the future."]
+            expect(errors[:request_dated]).to eq ["cannot be in the future."]
           end
         end
       end
@@ -319,7 +319,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
 
           it 'requires received date to be set' do
             remains_on_step 'date-received'
-            expect(errors[:received_date]).to eq ["can't be blank"]
+            expect(errors[:received_date]).to eq ["cannot be blank"]
           end
         end
 
@@ -338,7 +338,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
 
           it 'fails to be valid' do
             remains_on_step 'date-received'
-            expect(errors[:received_date]).to eq ["can't be in the future."]
+            expect(errors[:received_date]).to eq ["cannot be in the future."]
           end
         end
       end
@@ -461,10 +461,10 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
       it 'check the errors' do
         patch :update, params: invalid_litigation_params
         expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
-        expect(errors[:gld_contact_name]).to eq ["can't be blank"]
-        expect(errors[:gld_contact_email]).to eq ["can't be blank if GLD contact phone not given"]
-        expect(errors[:gld_contact_phone]).to eq ["can't be blank if GLD contact email not given"]
-        expect(errors[:gld_reference]).to eq ["can't be blank"]
+        expect(errors[:gld_contact_name]).to eq ["cannot be blank"]
+        expect(errors[:gld_contact_email]).to eq ["cannot be blank if GLD contact phone not given"]
+        expect(errors[:gld_contact_phone]).to eq ["cannot be blank if GLD contact email not given"]
+        expect(errors[:gld_reference]).to eq ["cannot be blank"]
         expect(litigation_complaint.object.transitions.where(event: "edit_case").count).to eq 0
       end
     end
@@ -473,10 +473,10 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
       it 'check the errors' do
         patch :update, params: invalid_ico_params
         expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
-        expect(errors[:ico_contact_name]).to eq ["can't be blank"]
-        expect(errors[:ico_contact_email]).to eq ["can't be blank if ICO contact phone not given"]
-        expect(errors[:ico_contact_phone]).to eq ["can't be blank if ICO contact email not given"]
-        expect(errors[:ico_reference]).to eq ["can't be blank"]
+        expect(errors[:ico_contact_name]).to eq ["cannot be blank"]
+        expect(errors[:ico_contact_email]).to eq ["cannot be blank if ICO contact phone not given"]
+        expect(errors[:ico_contact_phone]).to eq ["cannot be blank if ICO contact email not given"]
+        expect(errors[:ico_reference]).to eq ["cannot be blank"]
         expect(ico_complaint.object.transitions.where(event: "edit_case").count).to eq 0
       end
     end
@@ -503,10 +503,10 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
   # Utility methods
 
   def third_party_validations_found(errors)
-    expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-    expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
-    expect(errors[:third_party_relationship]).to eq ["can't be blank"]
-    expect(errors[:postal_address]).to eq ["can't be blank"]
+    expect(errors[:third_party_name]).to eq ["cannot be blank if company name not given"]
+    expect(errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
+    expect(errors[:third_party_relationship]).to eq ["cannot be blank"]
+    expect(errors[:postal_address]).to eq ["cannot be blank"]
   end
 
   def remains_on_step(step)

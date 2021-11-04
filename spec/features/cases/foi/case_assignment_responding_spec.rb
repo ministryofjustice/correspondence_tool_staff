@@ -70,7 +70,7 @@ feature 'respond to responder assignment' do
     expect(page).
       to have_content('1 error prevented this form from being submitted')
     expect(page).
-      to have_content("Why are you rejecting this case? can't be blank")
+      to have_content("Why are you rejecting this case? cannot be blank")
   end
 
   scenario 'kilo tries to submit the form without selecting accept / reject' do
