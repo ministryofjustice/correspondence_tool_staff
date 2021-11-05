@@ -1,4 +1,11 @@
 class Case::SAR::InternalReview < Case::SAR::Standard
+
+  include LinkableOriginalCase
+
+  validates_presence_of :original_case
+
+  attr_accessor :original_case_number
+
   class << self
     def type_abbreviation
       # This string is used when constructing paths or methods in other parts of
