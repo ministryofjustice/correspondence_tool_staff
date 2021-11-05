@@ -61,7 +61,11 @@ describe ConfigurableStateMachine::Machine do
           :add_note_to_case,
           :edit_case,
           :send_dispatch_letter,
-          :start_complaint
+          :start_complaint,
+          :mark_as_further_actions_required,
+          :mark_as_partial_case,
+          :unmark_as_further_actions_required,
+          :unmark_as_partial_case
         ]
       },
     ].freeze

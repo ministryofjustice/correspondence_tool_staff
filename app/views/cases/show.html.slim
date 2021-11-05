@@ -34,6 +34,7 @@ div id="case-#{@correspondence_type_key}" class="case"
             locals: { case_details: @case }
 
         - permitted_events = @permitted_events - [:add_responses, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
+        - permitted_events = permitted_events - [:mark_as_partial_case, :unmark_as_partial_case, :mark_as_further_actions_required, :unmark_as_further_actions_required]
         - if @case.type_abbreviation.in? %w( SAR OVERTURNED_SAR )
           - permitted_events.delete(:close)
 
@@ -60,6 +61,10 @@ div id="case-#{@correspondence_type_key}" class="case"
   - if @case.type_of_offender_sar?
     section.case-info
       = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, allow_editing: true}
+
+  - if @case.type_of_offender_sar? && @case.closed?
+    section.case-info
+      = render partial: 'cases/offender_sar/partial_case_flags', locals: {case_details: @case}
 
   - if FeatureSet.offender_sar_complaints.enabled? || !@case.type_of_offender_sar?
     = render partial: 'shared/components/case_linked_cases'

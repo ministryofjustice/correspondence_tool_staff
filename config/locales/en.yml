@@ -182,6 +182,8 @@ en:
               blank: can't be blank
             third_party_address:
               blank: can't be blank
+            is_partial_case: 
+              invalid: Cannot be marked if case is marked as SSCL managing case
         case/sar/offender_complaint:
           attributes:
             ico_contact_name:
@@ -293,6 +295,8 @@ en:
     case/sar/offender_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
+      can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
+      can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -1217,6 +1221,7 @@ en:
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
       record_reason_for_lateness_heading: Reason for lateness
+      partial_case_flags_heading: SSCL COVID-19 partial case
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR

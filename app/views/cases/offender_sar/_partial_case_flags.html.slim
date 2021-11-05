@@ -1,0 +1,17 @@
+.grid-row
+  .column-full
+    h2.request--heading.data-requests__title
+      = t('cases.offender_sar.partial_case_flags_heading')
+  .column-full
+    = form_for case_details, url: update_partial_flags_case_sar_offender_path(case_details), as: 'case_sar_partial_flags'
+      .column-half
+        .multiple-choice
+          input type="checkbox" value="#{case_details.is_partial_case ? 1 : 0}" name="case_sar[is_partial_case]" id="is_partial_case"
+          label for="is_partial_case" 
+              = 'Confirmed SSCL COVID-19 partial case'
+
+      .column-half
+        .multiple-choice
+          input type="checkbox" value="#{case_details.further_actions_required ? 1 : 0}" name="case_sar[further_actions_required]" id="further_actions_required"
+          label for="further_actions_required" 
+              = 'SSCL managing case'

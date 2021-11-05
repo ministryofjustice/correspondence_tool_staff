@@ -68,7 +68,9 @@ class Case::SAR::Offender < Case::Base
                  late_team_id: :integer,
                  third_party_name: :string,
                  number_final_pages: :integer,
-                 number_exempt_pages: :integer
+                 number_exempt_pages: :integer,
+                 is_partial_case: :boolean, 
+                 further_actions_required: :boolean
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
@@ -122,6 +124,7 @@ class Case::SAR::Offender < Case::Base
             numericality: { only_integer: true, greater_than: -1,
                             message: 'must be a positive whole number' }
   validate :validate_third_party_states_consistent
+  validate :validate_partial_flags
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -209,6 +212,15 @@ class Case::SAR::Offender < Case::Base
         )
     end
     errors[:third_party_relationship].any?
+  end
+
+  def validate_partial_flags
+    if (!is_partial_case && further_actions_required)
+      errors.add(
+        :is_partial_case,
+        I18n.t('activerecord.errors.models.case/sar/offender.attributes.is_partial_case.invalid')
+      )
+    end
   end
 
   def default_managing_team

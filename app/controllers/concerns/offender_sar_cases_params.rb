@@ -58,6 +58,12 @@ module OffenderSARCasesParams
       )
   end
 
+  def partial_case_flags_params
+    params.permit(
+      :is_partial_case,
+      :further_actions_required
+      )
+  end
 
   def respond_offender_sar_params
     params.require(:offender_sar).permit(

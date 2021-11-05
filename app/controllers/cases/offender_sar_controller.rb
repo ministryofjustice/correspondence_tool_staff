@@ -12,7 +12,8 @@ module Cases
       :move_case_back, 
       :confirm_move_case_back, 
       :record_reason_for_lateness,
-      :confirm_record_reason_for_lateness
+      :confirm_record_reason_for_lateness,
+      :update_partial_flags
     ]
 
     def initialize
@@ -98,6 +99,34 @@ module Cases
         raise ArgumentError.new("Bad transition, the action #{params[:transition_name]}is not allowed.")
       end
     end
+
+    def update_partial_flags
+      authorize @case, :can_mark_as_partial_case?
+      authorize @case, :can_mark_as_further_actions_required?
+      service = CaseUpdatePartialFlagsService.new(
+        user: current_user, 
+        kase: @case, 
+        flag_params: partial_case_flags_params)
+      service.call()
+
+      status = :ok
+      transitions = []
+      message = nil
+      if service.result == :error
+        if service.error_message.present?
+          message = service.error_message
+        end
+        status = :bad_request
+      end  
+      if service.result == :ok
+        transitions = service.transitions
+      end
+      render status: status, json: {
+        message: message, 
+        transitions: transitions
+      }
+    end
+
 
     def edit
       permitted_correspondence_types
