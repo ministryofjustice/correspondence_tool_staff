@@ -90,7 +90,7 @@ RSpec.shared_examples 'update case spec' do
           Timecop.freeze(now) do
             params[correspondence_type_abbr]['date_draft_compliant_yyyy'] = '2020'
             patch :update, params: params
-            expect(assigns(:case).errors.full_messages).to eq ['Date compliant draft uploaded can\'t be in the future.']
+            expect(assigns(:case).errors.full_messages).to eq ['Date compliant draft uploaded cannot be in the future.']
           end
         end
       end
