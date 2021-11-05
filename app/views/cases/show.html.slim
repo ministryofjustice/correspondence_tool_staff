@@ -62,7 +62,7 @@ div id="case-#{@correspondence_type_key}" class="case"
     section.case-info
       = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, allow_editing: true}
 
-  - if @case.type_of_offender_sar? && @case.closed?
+  - if @case.offender_sar? && @case.closed?
     section.case-info
       = render partial: 'cases/offender_sar/partial_case_flags', locals: {case_details: @case}
 
