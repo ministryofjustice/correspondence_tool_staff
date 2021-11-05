@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     correspondence_type_resources = {
       foi: 'foi_standard', # views are in /foi
       sar: 'sar_standard', # views are in /sar
+      sar_internal_review: 'sar_internal_review', # views are in /sar
       offender_sar: 'sar_offender',
       offender_sar_complaint: 'sar_offender_complaint',
       ico: 'ico',
@@ -113,6 +114,7 @@ Rails.application.routes.draw do
 
     resources :sar_internal_review, only: only, controller: 'sar_internal_review', as: :case_sar_internal_review do
       get '/(:step)', on: :collection, to: 'sar_internal_review#new', as: 'step'
+      post '/sar_internal_review/(:number)', on: :collection, to: 'sar_internal_review#start_internal_review', as: 'start_internal_review'
     end
 
     resources :icos, only: only, controller: 'ico', as: :case_ico do

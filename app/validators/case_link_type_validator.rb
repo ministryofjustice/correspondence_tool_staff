@@ -25,7 +25,8 @@ class CaseLinkTypeValidator < ActiveModel::Validator
                                         'Case::OverturnedICO::FOI'],
       'Case::SAR::Standard'         => ['Case::SAR::Standard',
                                         'Case::ICO::SAR',
-                                        'Case::OverturnedICO::SAR'],
+                                        'Case::OverturnedICO::SAR',
+                                        'Case::SAR::InternalReview'],
       'Case::ICO::SAR'              => ['Case::SAR::Standard',
                                         'Case::ICO::SAR',
                                         'Case::OverturnedICO::SAR'],
@@ -50,6 +51,7 @@ class CaseLinkTypeValidator < ActiveModel::Validator
       'Case::OverturnedICO::SAR'  => ['Case::SAR::Standard'],
       'Case::OverturnedICO::FOI'  => ['Case::FOI::Standard'],
       'Case::SAR::OffenderComplaint'  => ['Case::SAR::Offender'],
+      'Case::SAR::InternalReview'  => ['Case::SAR::Standard'],
     },
     original_appeal: {
       'Case::OverturnedICO::SAR'  => ['Case::ICO::SAR'],
