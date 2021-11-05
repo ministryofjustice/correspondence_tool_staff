@@ -70,6 +70,20 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
       CorrespondenceType.offender_sar
     end 
 
+    def resolve
+      if @user.permitted_correspondence_types.include? correspondence_type
+        scopes = []
+        scopes << @scope
+        
+        if scopes.any?
+          scopes.reduce { |memo, scope| memo.or(scope) }
+        else
+          @scope.none
+        end
+      else
+        @scope.none
+      end
+    end   
   end
 
 end

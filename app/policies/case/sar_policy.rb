@@ -19,7 +19,7 @@ class Case::SARPolicy < Case::BasePolicy
         end
 
         if @user.responder?
-          # scopes << @scope.where(id: Assignment.team_restriction(@user.id, :responder))
+          scopes << @scope.where(id: Assignment.team_restriction(@user.id, :responder))
           scopes << @scope
         end
 
