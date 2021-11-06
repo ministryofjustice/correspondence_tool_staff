@@ -22,7 +22,13 @@
       = f.text_field :gld_reference
 
   = f.radio_button_fieldset :complaint_subtype,
-    choices: Case::SAR::OffenderComplaint::complaint_subtypes.values
+      choices: Case::SAR::OffenderComplaint::complaint_subtypes.keys do |fieldset|
+    - fieldset.radio_input('sscl_partial_case')
+    - fieldset.radio_input('covid_partial_response')
+    - fieldset.radio_input('missing_data')
+    - fieldset.radio_input('inaccurate_data')
+    - fieldset.radio_input('timeliness')
+    - fieldset.radio_input('not_applicable')
 
   = f.radio_button_fieldset :priority,
     choices: Case::SAR::OffenderComplaint::priorities.values

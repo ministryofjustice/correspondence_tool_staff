@@ -702,6 +702,9 @@ en:
         total: Total
         settlement_cost: Enter settlement cost
         total_cost: Enter total costs
+        complaint_subtype:
+          sscl_partial_case: SSCL partial case
+          covid_partial_response: COVID partial response
       feedback:
         comment: Help make this service better
       search_query:
