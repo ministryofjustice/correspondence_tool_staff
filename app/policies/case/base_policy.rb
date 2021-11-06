@@ -27,6 +27,16 @@ class Case::BasePolicy < ApplicationPolicy
   # which is in fact shorthand for:
   #     scope = Case::BasePolicy::Scope.new(user, Case::Base.all).resolve
   #
+  # The whole data permission will base on 3 dimention 
+  # notes: The data permission only means the scope of the data the user can work with at least can see, whether
+  # the user do further process on the data is determinded by the app's feature design
+  #  - User (team + role)
+  #  - Whole data space (Data model class level , not exact same as the table level)
+  #  - Feature (App's functionality level, this level is based on requirement no any criteria to be defined)
+  # The framework would be 
+  # Whole data space 
+  #   - User Role + Feature
+  # The arguments reflect the above structure: @user, @scope (data space), @feature
   class Scope
     attr_reader :user, :scope
 
@@ -46,9 +56,10 @@ class Case::BasePolicy < ApplicationPolicy
         Case::OverturnedICO::FOI,
     ]
 
-    def initialize(user, scope)
+    def initialize(user, scope, feature = nil)
       @user  = user
       @scope = scope
+      @feature = feature
     end
 
     # We resolve the scope for Case::BasePolicy by getting the scope on each of the sub-classes
@@ -57,7 +68,7 @@ class Case::BasePolicy < ApplicationPolicy
     # one policy(this one, Case::BasePolicy) for scope resolution
     def resolve
       scopes = CASE_TYPES.map do |case_type|
-        "#{case_type}Policy::Scope".constantize.new(@user,@scope.where(type: case_type.to_s)).resolve
+        "#{case_type}Policy::Scope".constantize.new(@user, @scope.where(type: case_type.to_s), @feature).resolve
       end
       scopes.reduce { |memo, scope| memo.or(scope) }
     end
