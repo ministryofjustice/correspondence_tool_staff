@@ -705,6 +705,11 @@ en:
         complaint_subtype:
           sscl_partial_case: SSCL partial case
           covid_partial_response: COVID partial response
+          missing_data: Missing data
+          inaccurate_data: Inaccurate data
+          redacted_data: Redacted data
+          timeliness: Timeliness
+          not_applicable: Not applicable
       feedback:
         comment: Help make this service better
       search_query:
