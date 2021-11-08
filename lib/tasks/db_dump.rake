@@ -68,36 +68,17 @@ namespace :db do
       end
     end
 
-    desc 'makes an anonymised dump of the local database'
-    task :local, [:anonymized, :tag, :storage, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
-      require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
-      raise "first argument must be 'anon' or 'clear', is: #{args[:anonymized]}" unless args[:anonymized].in?(%w( anon clear ))
-      args.with_defaults(:tag => "latest")
-      args.with_defaults(:storage => "bucket")
-      raise "third argument must be 'bucket' or 'local', is: #{args[:storage]}" unless args[:storage].in?(%w( bucket local ))
-
-      is_store_to_s3_bucket = args[:storage] == 'bucket'
-      puts 'exporting unanonymised database data'
-      dumper = DatabaseDumper.new(
-        args[:anonymized] == 'anon', 
-        args[:tag], 
-        is_store_to_s3_bucket)
-      if is_store_to_s3_bucket
-        dumper.set_up_bucket(args)
-      end
-      dumper.run
-    end
-
     desc 'makes an anonymised dump of local database with tasks'
     task :local, [:tag, :storage, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_dumper')
-      args.with_defaults(:tag => "latest")
+      args.with_defaults(:tag => ENV["DB_ANON_TAG"] || "latest")
       args.with_defaults(:storage => "bucket")
       raise "third argument must be 'bucket' or 'local', is: #{args[:storage]}" unless args[:storage].in?(%w( bucket local ))
 
-      is_store_to_s3_bucket = args[:storage] == 'bucket'
+      is_store_to_s3_bucket = (args[:storage] == 'bucket')
       puts 'exporting unanonymised database data'
-      dumper = DatabaseDumper.new(true, args[:tag], is_store_to_s3_bucket)
+      
+      dumper = DatabaseDumper.new(args[:tag], "tasks", is_store_to_s3_bucket, s3_bucket)
       if is_store_to_s3_bucket
         dumper.set_up_bucket(args)
       end
@@ -107,7 +88,7 @@ namespace :db do
     desc 'List s3 database dump files'
     task :list_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       include ActionController
-      args.with_defaults(:tag => "latest")
+      args.with_defaults(:tag => ENV["DB_ANON_TAG"] || "latest")
       s3_bucket = init_s3_bucket(args)
       puts "Listing dump files in s3 with tag of #{args[:tag]} from bucket #{args[:bucket]}"
       dump_files = s3_bucket.list("dumps/#{args[:tag]}")
@@ -121,7 +102,7 @@ namespace :db do
 
     desc 'Delete all but latest s3 database dump files'
     task :delete_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
-      args.with_defaults(:tag => "latest")
+      args.with_defaults(:tag => ENV["DB_ANON_TAG"] || "latest")
       s3_bucket = init_s3_bucket(args)
       puts "Delete dump files in s3 with tag of #{args[:bucket]}"
       DumperUtils.question_user(
@@ -140,7 +121,7 @@ namespace :db do
 
     desc 'Copy s3 bucket dump file locally and decompress'
     task :copy_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
-      args.with_defaults(:tag => "latest")
+      args.with_defaults(:tag => ENV["DB_ANON_TAG"] || "latest")
       s3_bucket = init_s3_bucket(args)
       dir_name_base = "dumps_#{args[:tag]}_from_#{args[:bucket]}"
       dirname = Rails.root.join(dir_name_base)
@@ -164,7 +145,7 @@ namespace :db do
 
     desc 'Decompress downloaded files'
     task :decompress, [:tag] => :environment do |_task, args|
-      args.with_defaults(:tag => "latest")
+      args.with_defaults(:tag => ENV["DB_ANON_TAG"] || "latest")
       dirname = Rails.root.join("dumps_#{args[:tag]}")      
       DumperUtils.shell_working "Decompress all those sql files from local folder #{dirname}" do
         Dir.glob("#{dirname}/*.gz").sort.map do | local_filename |
@@ -231,7 +212,7 @@ namespace :db do
         puts "Cannot run this command on production environment!"
       else
         safeguard
-        args.with_defaults(:dir => "dumps_latest")
+        args.with_defaults(:dir => "dumps_latest_from_#{args[:bucket]}")
         dirname = Rails.root.join(args[:dir])
   
         require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_loader')

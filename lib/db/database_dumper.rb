@@ -14,37 +14,53 @@ class DatabaseDumper
   CLASSES_TO_ANONYMISE = [Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment]
 
 
-  def initialize(tag, is_store_to_s3_bucket, s3_bucket: nil, running_mode: 'simple')
-    @anonymizer = nil
-    @db_connection_url = ENV['DATABASE_URL'] || 'postgres://localhost/correspondence_platform_development'
+  def initialize(tag, running_mode = 'tasks', is_store_to_s3_bucket = true, s3_bucket = nil)
+    ####
+    # tag:  part of the file name for  the anonymised data, it is ID of the anonymised db copy on s3 bucket
+    # is_store_to_s3_bucket: this flag is default to true, if you want to debug it at local, you can turn it off
+    # s3_bucket: nil, this setting need to be provided if is_store_to_s3_bucket 
+    # running_mode: tasks: run those tasks in the background, other value will turn it off
+    ####
     @s3_bucket = s3_bucket
     @tag = tag
     @is_store_to_s3_bucket = is_store_to_s3_bucket
-
     @running_mode = running_mode
-    @tasks = nil
-    @dirname = "./dumps_#{@tag}"
-    @tables_to_anonymised = {}
-    CLASSES_TO_ANONYMISE.each { |klass| @tables_to_anonymised[klass.table_name] = klass }
+
+    init_dump_environment
   end
 
   def run
-    plan_tasks(pack_task_arguments)
-    # dump_schema_snapshot(dirname)
-    # dump_data_models_snapshot(dirname)
-    # dump_local_database(dirname)
-    # if @s3_bucket
-    #   upload_to_s3(dirname)
-    # end
-    # @outcome_files
+    task_arguments = pack_task_arguments
+    plan_tasks(task_arguments)
+    AnonymiserDBJob.new.store_anonymise_status(task_arguments, @tasks)
     trigger_tasks
   end
 
   private
 
   def init_dump_environment
+    @db_connection_url = ENV['DATABASE_URL'] || 'postgres://localhost/correspondence_platform_development'
+    @dirname = "./dumps_#{@tag}"
+    @anonymizer = nil
+    @tasks = nil
+    @tables_to_anonymised = {}
+    CLASSES_TO_ANONYMISE.each { |klass| @tables_to_anonymised[klass.table_name] = klass }
+
+    set_local_folder_for_saving_temp_files
+  end
+
+  def set_local_folder_for_saving_temp_files
     FileUtils.rm_rf(@dirname)
     FileUtils.mkpath(@dirname)
+  end
+
+  def pack_task_arguments
+    {
+      "db_connection_url": @db_connection_url
+      "dir_name": @dirname,
+      "is_store_to_s3_bucket": @is_store_to_s3_bucket,
+      "tag": @tag
+    }
   end
 
   def plan_tasks(task_arguments)
@@ -53,16 +69,14 @@ class DatabaseDumper
   end 
 
   def trigger_tasks
-    @tasks.each do | task | 
-      AnonymiserDBJob.perform_later(task['task_function'], task)
+    @tasks.each do | task |
+      if @running_mode == 'tasks':
+        AnonymiserDBJob.perform_later(task['task_function'], task)
+      else
+        AnonymiserDBJob.new.execute_task(task['task_function'], task)
+      end
     end 
   end 
-
-  def pack_task_arguments
-    {
-      "db_connection_url": @db_connection_url
-    }
-  end
 
   def add_initial_tasks(task_arguments)
     arguments = task_arguments.clone

@@ -10,26 +10,25 @@ class DatabaseAnonymizerTasks
   end
 
   def execute_task(task_name, task_arguments)
-    begin
-      set_up_execute_variables(task_arguments)
-      result_file = self.__send__(task_name, task_arguments)
-      result_file = compresssed_file(result_file)
-      upload_file_to_s3(result_file)
-    rescue
-    end 
+    set_up_execute_variables(task_arguments)
+    result_file = self.__send__(task_name, task_arguments)
+    result_file = compresssed_file(result_file)
+    upload_file_to_s3(result_file)
+  end
+
+  def store_anonymise_status(task_arguments, tasks)
+    redis = Redis.new
+    tasks_ids = tasks.map {|task| task[:task_id]}
+    anonymizer_job_info = {
+      "start_time": Time.now.strftime('%Y%m%d-%H%M%S'), 
+      "tag": task_arguments["tag"], 
+      "number_of_tasks": tasks_ids.size, 
+      "tasks": tasks_ids
+    }
+    redis.set(report_job_guid, anonymizer_job_info.to_json)
   end
   
   private 
-
-  def is_anoymised_job_done?
-    redis = Redis.new
-    redis.get(report.guid)
-  end
-
-  def save_info(info_key, content)
-    redis = Redis.new
-    redis.set(info_key, content)
-  end
 
   # Setup the variables requried for task
 
@@ -55,7 +54,7 @@ class DatabaseAnonymizerTasks
 
   # The actual function of processing different task 
 
-  def task_dump_schema_snapshot(task_arguments)
+  def task_dump_schema_snapshot(_)
     filename = "#{dirname}/#{@tag}_database_schema_snapshot.snap"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -s -f #{filename}"
     result = system command_line
@@ -63,7 +62,7 @@ class DatabaseAnonymizerTasks
     filename
   end
 
-  def task_dump_pre_data_tables(task_arguments)
+  def task_dump_pre_data_tables(_)
     filename = "#{@base_file_name}_00_pre_data.sql"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -O --section=pre-data -f #{filename}"
     result = system command_line
@@ -71,7 +70,7 @@ class DatabaseAnonymizerTasks
     filename 
   end
 
-  def task_dump_post_data_tables(task_arguments)
+  def task_dump_post_data_tables(_)
     filename = "#{@base_file_name}_post_data.sql"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -O --section=post-data -f #{filename}"
     result = system command_line
@@ -79,7 +78,7 @@ class DatabaseAnonymizerTasks
     filename 
   end
 
-  def task_dump_data_models_snapshot(task_arguments)
+  def task_dump_data_models_snapshot(_)
     filename = "#{@dirname}/#{@tag}_activerecord_models_snapshot.json"
     activerecord_models = {}
     Rails.application.eager_load! unless Rails.configuration.cache_classes
@@ -107,12 +106,13 @@ class DatabaseAnonymizerTasks
     model_class = class_name.constantize
     base_filename = "#{base_file_name}_#{counter >= 10 ? counter.to_s : '0'+counter.to_s}_#{table_name}"
     filename = @anonymizer.anonymise_class(model_class, base_filename)
+    filename
   end
 
   def task_dump_clear_table(task_arguments)
     table_name = task_arguments['table_name']
     counter = task_arguments['counter']
-    filename = "#{@base_file_name}_#{table_name}"
+    filename = "#{@base_file_name}_#{table_name}_#{counter}"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password --data-only --table=#{table_name} -f #{filename}.sql"
     result = system command_line
     raise 'Unable to execute pg_dump command' unless result == true
