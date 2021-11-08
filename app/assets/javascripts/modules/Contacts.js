@@ -49,7 +49,12 @@ moj.Modules.Contacts = {
         $form.attr('action', form_action_with_params);
     },
 
+    is_page_with_revealing_address_panel : function(){
+        return $(".js-in-revealing-panel-address-lookup").length;
+    },
+
     attach_address_selection_button_events : function() {
+        var self = this;
         $('.use-address-button').on('click', function(e){
             var name = $($(this).parent().find('.contact-name')[0]).text();
             var address = $($(this).parent().find('.contact-address')[0]).text();
@@ -58,12 +63,15 @@ moj.Modules.Contacts = {
 
             $('#dialog-content').dialog( "close" );
 
-            $('#offender_sar_subject_address').val(formatted_address);
+            $('.address_input').first().val(formatted_address);
+
+            if(self.is_page_with_revealing_address_panel()){
+                $('#offender_sar_third_party_company_name').val(name);
+            }
         });
     },
 
     search_results_loaded : function() { // To refocus on Search for NVDA after popup re-renders
         $('#popup-search-button').focus(); // fix NVDA focus issue after search
     }
-
 };

@@ -726,6 +726,10 @@ class Case::Base < ApplicationRecord
     type_abbreviation == 'SAR'
   end
 
+  def is_sar_internal_review?
+    type_abbreviation == 'SAR_INTERNAL_REVIEW'
+  end
+
   def set_workflow!(new_workflow_name)
     update!(workflow: new_workflow_name)
   end

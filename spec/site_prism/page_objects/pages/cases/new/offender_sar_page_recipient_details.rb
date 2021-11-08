@@ -22,6 +22,7 @@ module PageObjects
 
             if kase.third_party?
               choose('offender_sar_recipient_third_party_recipient', visible: false)
+              choose('offender_sar_is_solicitor_other', visible: false)
               third_party_relationship.set kase.third_party_relationship
               third_party_name.set kase.third_party_name
               third_party_company_name.set kase.third_party_company_name
