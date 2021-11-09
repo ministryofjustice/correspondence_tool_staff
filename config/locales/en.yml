@@ -104,6 +104,7 @@ en:
             date_responded:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
+              blank: cannot be blank
             message:
               optional_blank: "and uploaded request files cannot both be blank"
               blank: test
@@ -131,6 +132,7 @@ en:
             date_responded:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
+              blank: cannot be blank
           related_case_number:
             does_not_match_original: >-
               You've linked an FOI case as the original for this appeal. You
@@ -185,6 +187,20 @@ en:
           attributes:
             third_party:
               inclusion: Please choose yes or no
+        case/sar/standard:
+          attributes:
+            subject_full_name:
+              blank: cannot be blank
+            subject_type:
+              blank: cannot be blank
+            email:
+              blank: cannot be blank
+            postal_address:
+              blank: cannot be blank
+            name:
+              blank: cannot be blank
+            third_party_relationship:
+              blank: cannot be blank
         case/sar/offender:
           attributes:
             date_responded:
@@ -210,7 +226,10 @@ en:
               blank: cannot be blank
             recipient:
               blank: cannot be blank
-
+            date_of_birth:
+              blank: cannot be blank
+            subject_address:
+              blank: cannot be blank
         case/sar/offender_complaint:
           attributes:
             ico_contact_name:
@@ -276,6 +295,18 @@ en:
               <<: *report_dates
               before_start_date: "cannot be after Date to"
             report_type_id:
+              blank: cannot be blank
+        user:
+          attributes:
+            email:
+              blank: cannot be blank
+        case_transition:
+          attributes:
+            message:
+              blank: cannot be blank
+        data_request:
+          attributes:
+            request_type:
               blank: cannot be blank
 
   pundit:

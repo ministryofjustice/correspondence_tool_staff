@@ -255,7 +255,7 @@ describe CaseLinkingService do
       it 'adds an error to the case' do
         service.create
         expect(kase.errors[:linked_case_number])
-          .to eq ["cannot be blank"]
+          .to eq ["can't be blank"]
       end
     end
 
@@ -291,7 +291,7 @@ describe CaseLinkingService do
       it 'adds an error to the case' do
         service.create
         expect(kase.errors[:linked_case_number])
-          .to eq ["doesn't exist"]
+          .to eq ["does not exist"]
       end
     end
   end
