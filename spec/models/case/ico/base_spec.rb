@@ -170,7 +170,7 @@ describe Case::ICO::Base do
       ico = create(:ico_foi_case)
       ico.original_case = nil
       ico.valid?
-      expect(ico.errors[:original_case]).to eq ["cannot be blank"]
+      expect(ico.errors[:original_case]).to eq ["can't be blank"]
     end
   end
 

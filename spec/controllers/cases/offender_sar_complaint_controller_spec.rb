@@ -99,7 +99,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
 
           it 'requires original case number to be set' do
             remains_on_step 'link-offender-sar-case'
-            expect(errors[:original_case_number]).to eq ["cannot be blank"]
+            expect(errors[:original_case_number]).to eq ["can't be blank"]
           end
         end
 
@@ -144,7 +144,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
           context 'when complaint-type absent' do
             it 'requires complaint-type to be set' do
               remains_on_step 'complaint-type'
-              expect(errors[:complaint_type]).to eq ["cannot be blank"]
+              expect(errors[:complaint_type]).to eq ["can't be blank"]
             end
           end
           context 'when complaint-type present' do
@@ -198,14 +198,14 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         context 'when complaint-subtype absent' do
           it 'requires complaint-subtype to be set' do
             remains_on_step 'complaint-type'
-            expect(errors[:complaint_subtype]).to eq ["cannot be blank"]
+            expect(errors[:complaint_subtype]).to eq ["can't be blank"]
           end
         end
 
         context 'when priority absent' do
           it 'requires priority to be set' do
             remains_on_step 'complaint-type'
-            expect(errors[:priority]).to eq ["cannot be blank"]
+            expect(errors[:priority]).to eq ["can't be blank"]
           end
         end
       end

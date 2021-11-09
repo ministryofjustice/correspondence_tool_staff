@@ -146,26 +146,41 @@ en:
             received_date:
               future: cannot be in the future
               past: is too far in the past
+              blank: cannot be blank
             external_deadline:
               past: cannot be in the past
               future: is too far in the future
+              blank: cannot be blank
             original_ico_appeal:
               not_ico_sar: is not an ICO appeal for a SAR case
+              blank: cannot be blank
             original_case:
               not_sar: is not a SAR case
+              blank: cannot be blank
+            email:
+              blank: cannot be blank
+            postal_address:
+              blank: cannot be blank
+            ico_officer_name:
+              blank: cannot be blank
+
         case/overturned_ico/foi:
           attributes:
             <<: *foi_attr
             received_date:
               future: cannot be in the future
               past: is too far in the past
+              blank: cannot be blank
             external_deadline:
               past: cannot be in the past
               future: is too far in the future
+              blank: cannot be blank
             original_ico_appeal:
               not_ico_foi: is not an ICO appeal for a FOI case
+              blank: cannot be blank
             original_case:
               not_foi: is not a FOI case
+              blank: cannot be blank
         case/sar:
           attributes:
             third_party:
@@ -185,8 +200,17 @@ en:
               blank: cannot be blank
             third_party_address:
               blank: cannot be blank
-            message_text:
-              blank: atest
+            subject_full_name:
+              blank: cannot be blank
+            subject_address:
+              blank: cannot be blank
+            subject_type:
+              blank: cannot be blank
+            received_date:
+              blank: cannot be blank
+            recipient:
+              blank: cannot be blank
+
         case/sar/offender_complaint:
           attributes:
             ico_contact_name:
@@ -251,6 +275,8 @@ en:
             period_end:
               <<: *report_dates
               before_start_date: "cannot be after Date to"
+            report_type_id:
+              blank: cannot be blank
 
   pundit:
     assignment_policy:
