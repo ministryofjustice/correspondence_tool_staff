@@ -26,6 +26,9 @@ RSpec.describe Cases::SarInternalReviewController, type: :controller do
     include_examples 'can_add_case policy spec', Case::SAR::InternalReview
   end
 
+  # Not using shared_examples/new_spec due to the way  Sar IR Controller
+  # sets `@case` to be a SarInternalReviewCaseForm rather than a 
+  # decorator at present
   describe '#new' do
     let(:case_types) { %w[Case::SAR::InternalReview] }
 
