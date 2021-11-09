@@ -814,6 +814,7 @@ en:
         foi: FOI
         sar: SAR
         sar_internal_review: SAR IR
+        sar_internal_review_long: SAR Internal Review
         ico: ICO
         overturned_sar: Overturned SAR
         overturned_foi: Overturned FOI
