@@ -3,7 +3,8 @@ module SarInternalReviewCaseForm
 
   STEPS = %w[link-sar-case
              confirm-sar
-             add-data].freeze
+             case-details
+             assign-case].freeze
 
   def steps
     STEPS
