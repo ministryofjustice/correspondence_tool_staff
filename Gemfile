@@ -59,7 +59,7 @@ gem 'sentry-raven', '~> 3.1.2'
 gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
-gem 'sidekiq', '~> 6.2.2'
+gem 'sidekiq', '~> 6.3.1'
 
 gem 'table_print'
 # gem 'thor-rails'
