@@ -39,7 +39,7 @@ describe Case::SAR::OffenderComplaint do
       kase = build :offender_sar_complaint, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
 
       expect(kase).not_to be_valid
-      expect(kase.errors[:subject_full_name]).to eq(["can't be blank"])
+      expect(kase.errors[:subject_full_name]).to eq(["cannot be blank"])
       expect(kase.errors[:third_party]).to eq(["cannot be blank"])
     end
   end
@@ -49,7 +49,7 @@ describe Case::SAR::OffenderComplaint do
       it 'errors' do
         kase = build(:offender_sar_complaint, complaint_type: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:complaint_type]).to eq ["can't be blank"]
+        expect(kase.errors[:complaint_type]).to eq ["cannot be blank"]
       end
     end
 
@@ -75,7 +75,7 @@ describe Case::SAR::OffenderComplaint do
       it 'errors' do
         kase = build(:offender_sar_complaint, priority: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:priority]).to eq ["can't be blank"]
+        expect(kase.errors[:priority]).to eq ["cannot be blank"]
       end
     end
 
@@ -118,7 +118,7 @@ describe Case::SAR::OffenderComplaint do
       it 'errors' do
         kase = build(:offender_sar_complaint, complaint_subtype: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:complaint_subtype]).to eq ["can't be blank"]
+        expect(kase.errors[:complaint_subtype]).to eq ["cannot be blank"]
       end
     end
 
@@ -164,7 +164,7 @@ describe Case::SAR::OffenderComplaint do
       it 'errors' do
         kase = build(:offender_sar_complaint, subject_type: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:subject_type]).to eq ["can't be blank"]
+        expect(kase.errors[:subject_type]).to eq ["cannot be blank"]
       end
     end
   end
@@ -195,7 +195,7 @@ describe Case::SAR::OffenderComplaint do
       it 'errors' do
         kase = build(:offender_sar_complaint, recipient: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:recipient]).to eq ["can't be blank"]
+        expect(kase.errors[:recipient]).to eq ["cannot be blank"]
       end
     end
   end
@@ -212,7 +212,7 @@ describe Case::SAR::OffenderComplaint do
       it 'validates presence of postal address when recipient is third party' do
         kase = build :offender_sar_complaint, :third_party, postal_address: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:postal_address]).to eq ["can't be blank"]
+        expect(kase.errors[:postal_address]).to eq ["cannot be blank"]
       end
     end
   end
@@ -239,7 +239,7 @@ describe Case::SAR::OffenderComplaint do
       it 'errors' do
         kase = build(:offender_sar_complaint, date_of_birth: 1.day.from_now)
         expect(kase).not_to be_valid
-        expect(kase.errors[:date_of_birth]).to eq ["can't be in the future."]
+        expect(kase.errors[:date_of_birth]).to eq ["cannot be in the future."]
       end
     end
 
@@ -247,7 +247,7 @@ describe Case::SAR::OffenderComplaint do
       it 'errors' do
         kase = build(:offender_sar_complaint, date_of_birth: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:date_of_birth]).to eq ["can't be blank"]
+        expect(kase.errors[:date_of_birth]).to eq ["cannot be blank"]
       end
     end
   end
@@ -275,7 +275,7 @@ describe Case::SAR::OffenderComplaint do
       it 'errors' do
         kase = build(:offender_sar_complaint, received_date: 1.day.from_now)
         expect(kase).not_to be_valid
-        expect(kase.errors[:received_date]).to eq ["can't be in the future."]
+        expect(kase.errors[:received_date]).to eq ["cannot be in the future."]
       end
     end
   end
@@ -293,7 +293,7 @@ describe Case::SAR::OffenderComplaint do
       it 'errors' do
         kase = build(:offender_sar_complaint, request_dated: 1.day.from_now)
         expect(kase).not_to be_valid
-        expect(kase.errors[:request_dated]).to eq ["can't be in the future."]
+        expect(kase.errors[:request_dated]).to eq ["cannot be in the future."]
       end
     end
   end
@@ -337,16 +337,16 @@ describe Case::SAR::OffenderComplaint do
       it 'validates third party names when third party is true' do
         kase = build :offender_sar_complaint, :third_party, third_party_name: '', third_party_company_name: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-        expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+        expect(kase.errors[:third_party_name]).to eq ["cannot be blank if company name not given"]
+        expect(kase.errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
       end
 
       it 'validates third party names when recipient is third party' do
         kase = build :offender_sar_complaint, third_party: false, third_party_name: '',
                       third_party_company_name: '', recipient: 'third_party_recipient'
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-        expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+        expect(kase.errors[:third_party_name]).to eq ["cannot be blank if company name not given"]
+        expect(kase.errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
       end
 
       it 'does not validate third_party names when ecipient is not third party too' do
@@ -361,14 +361,14 @@ describe Case::SAR::OffenderComplaint do
       it 'must be present when thrid party is true' do
         kase = build :offender_sar_complaint, third_party: true, third_party_relationship: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
+        expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
       it 'must be present when third party is false but recipient is third party' do
         kase = build :offender_sar_complaint, third_party: false, third_party_relationship: '',
                       recipient: 'third_party_recipient'
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
+        expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
       it 'does not validates presence of third party relationship when recipient is not third party' do
@@ -592,7 +592,7 @@ describe Case::SAR::OffenderComplaint do
     it 'validates presence of subject address' do
       kase = build :offender_sar_complaint, subject_address: ''
       expect(kase).not_to be_valid
-      expect(kase.errors[:subject_address]).to eq ["can't be blank"]
+      expect(kase.errors[:subject_address]).to eq ["cannot be blank"]
     end
   end
 
@@ -601,7 +601,7 @@ describe Case::SAR::OffenderComplaint do
       it 'must be present when ico is true' do
         kase = build :offender_sar_complaint, complaint_type: 'ico_complaint', ico_contact_name: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:ico_contact_name]).to eq ["can't be blank"]
+        expect(kase.errors[:ico_contact_name]).to eq ["cannot be blank"]
       end
 
       it 'is not required when litigation or standard complaint' do
@@ -739,7 +739,7 @@ describe Case::SAR::OffenderComplaint do
       complaint = build(:offender_sar_complaint, original_case: linked_case)
       expect(complaint).not_to be_valid
       expect(complaint.errors[:original_case])
-        .to eq ["can't link a Complaint case to a Complaint as a original case"]
+        .to eq ["Original case must be Offender SAR"]
     end
 
     it "validates that a case isn't both original and related" do
@@ -754,7 +754,7 @@ describe Case::SAR::OffenderComplaint do
       complaint = create(:offender_sar_complaint)
       complaint.original_case = nil
       complaint.valid?
-      expect(complaint.errors[:original_case]).to eq ["can't be blank"]
+      expect(complaint.errors[:original_case]).to eq ["cannot be blank"]
     end
   end
 
@@ -781,7 +781,7 @@ describe Case::SAR::OffenderComplaint do
       complaint.valid?
       expect(complaint).not_to be_valid
       expect(complaint.errors[:related_cases])
-      .to eq ["can't link a Complaint case to a Offender SAR as a related case"]
+      .to eq ["cannot link a Complaint case to a Offender SAR as a related case"]
     end
   end
 

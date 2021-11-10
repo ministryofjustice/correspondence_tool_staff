@@ -38,7 +38,7 @@ describe Case::SAR::InternalReview do
       kase = build :sar_internal_review, subject_full_name: nil, subject_type: nil, third_party: nil
 
       expect(kase).not_to be_valid
-      expect(kase.errors[:subject_full_name]).to eq(["can't be blank"])
+      expect(kase.errors[:subject_full_name]).to eq(["cannot be blank"])
       expect(kase.errors[:third_party]).to eq(["Please choose yes or no"])
     end
   end
@@ -69,7 +69,7 @@ describe Case::SAR::InternalReview do
       it 'errors' do
         kase = build(:sar_internal_review, subject_type: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:subject_type]).to eq ["can't be blank"]
+        expect(kase.errors[:subject_type]).to eq ["cannot be blank"]
       end
     end
   end
@@ -83,7 +83,7 @@ describe Case::SAR::InternalReview do
     it 'validates presence of email when reply is to be sent by email' do
       kase = build :sar_internal_review, reply_method: :send_by_email, email: ''
       expect(kase).not_to be_valid
-      expect(kase.errors[:email]).to eq ["can't be blank"]
+      expect(kase.errors[:email]).to eq ["cannot be blank"]
     end
   end
 
@@ -91,7 +91,7 @@ describe Case::SAR::InternalReview do
     it 'validates presence of postal address when reply is to be sent by post' do
       kase = build :sar_internal_review, reply_method: :send_by_post, postal_address: ''
       expect(kase).not_to be_valid
-      expect(kase.errors[:postal_address]).to eq ["can't be blank"]
+      expect(kase.errors[:postal_address]).to eq ["cannot be blank"]
     end
   end
 
@@ -100,7 +100,7 @@ describe Case::SAR::InternalReview do
       it 'validates presence of name when third party is true' do
         kase = build :sar_internal_review, third_party: true, name: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:name]).to eq ["can't be blank"]
+        expect(kase.errors[:name]).to eq ["cannot be blank"]
       end
 
       it 'does not validates presence of name when third party is false' do
@@ -113,7 +113,7 @@ describe Case::SAR::InternalReview do
       it 'must be persent when thrid party is true' do
         kase = build :sar_internal_review, third_party: true, third_party_relationship: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
+        expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
       it 'does not validates presence of third party relationship when third party is false' do

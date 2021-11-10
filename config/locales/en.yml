@@ -61,8 +61,6 @@ en:
               blank: cannot be blank
         case:
           attributes:
-            message:
-              blank: test
             email:
               blank: "and address cannot both be blank"
             external_deadline:
@@ -95,19 +93,34 @@ en:
                 An error has occurred and your case could not be created.
                 Please try again.
             requester_type:
-              blank: Type of requester must be selected
+              blank: must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
 
         case/foi/standard:
           attributes: &foi_attr
+            received_date:
+              blank: cannot be blank
+            email: 
+              blank: cannot be blank
+            name: 
+              blank: cannot be blank
+            postal_address: 
+              blank: cannot be blank
+            requester_type: 
+              blank: cannot be blank
+            delivery_method: 
+              blank: cannot be blank
+            subject: 
+              blank: cannot be blank
+            flag_for_disclosure_specialists: 
+              blank: cannot be blank
             date_responded:
               before_received: "cannot be before date received"
               future: "cannot be in the future"
               blank: cannot be blank
             message:
               optional_blank: "and uploaded request files cannot both be blank"
-              blank: test
             uploaded_request_files:
               optional_blank: "and message box for saving request detail cannot both be blank"
 
@@ -201,6 +214,14 @@ en:
               blank: cannot be blank
             third_party_relationship:
               blank: cannot be blank
+            received_date:
+              blank: cannot be blank
+            reply_method:
+              blank: cannot be blank
+            subject:
+              blank: cannot be blank
+            third_party_relationship:
+              blank: cannot be blank
         case/sar/offender:
           attributes:
             date_responded:
@@ -208,6 +229,7 @@ en:
               future: "cannot be in the future"
             recipient:
               third_party: cannot be third_party_recipient if third party requester
+              blank: cannot be blank
             third_party_company_name:
               blank: cannot be blank if representative name not given
             third_party_name:
@@ -223,8 +245,6 @@ en:
             subject_type:
               blank: cannot be blank
             received_date:
-              blank: cannot be blank
-            recipient:
               blank: cannot be blank
             date_of_birth:
               blank: cannot be blank
@@ -253,10 +273,17 @@ en:
             external_deadline:
               before_received: "cannot be before date received"
               past: cannot be in the past
-          original_case_number:
-            blank: "Enter original case number"
-            not_authorised: cannot be authorised to link this case
-            wrong_type: Original case must be Offender SAR
+            original_case:
+              blank: cannot be blank
+              not_authorised: cannot be authorised to link this case
+              wrong_type: Original case must be Offender SAR
+            complaint_type:
+              blank: cannot be blank
+            complaint_subtype:
+              blank: cannot be blank
+            priority:
+              blank: cannot be blank
+
         assignment:
           attributes:
             state:
@@ -281,6 +308,8 @@ en:
               blank: must be provided if request is complete
               future: cannot be in the future
               not_empty: should be blank if the request is not complete
+            request_type:
+              blank: cannot be blank
         linked_case:
           missing: "does not exist"
           references_self: "cannot link to the same case"
@@ -303,11 +332,7 @@ en:
         case_transition:
           attributes:
             message:
-              blank: cannot be blank
-        data_request:
-          attributes:
-            request_type:
-              blank: cannot be blank
+              blank: cannot be blank            
 
   pundit:
     assignment_policy:

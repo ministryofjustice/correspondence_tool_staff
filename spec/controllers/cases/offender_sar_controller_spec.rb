@@ -111,7 +111,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         # contains logic to set required ones if missing
         it 'sets empty values and validates other fields' do
           remains_on_step 'subject-details'
-          expect(errors[:date_of_birth]).to eq ["can't be blank"]
+          expect(errors[:date_of_birth]).to eq ["cannot be blank"]
           expect(errors[:subject_type]).to eq ["cannot be blank"]
           expect(errors[:flag_as_high_profile]).to eq ["cannot be blank"]
         end
