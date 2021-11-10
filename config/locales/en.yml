@@ -222,6 +222,9 @@ en:
               blank: cannot be blank
             third_party_relationship:
               blank: cannot be blank
+        case/sar/internal_review:
+          original_case_number:
+            not_authorised: can't be authorised to link this case
         case/sar/offender:
           attributes:
             date_responded:

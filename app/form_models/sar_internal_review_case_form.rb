@@ -21,7 +21,7 @@ module SarInternalReviewCaseForm
       original_case = case_link.linked_case
       if not Pundit.policy(object.creator, original_case).show?
         add_errors_for_original_case(
-          I18n.t('activerecord.errors.models.case/sar/offender_complaint.original_case_number.not_authorised'))
+          I18n.t('activerecord.errors.models.case/sar/internal_review.original_case_number.not_authorised'))
       else
         object.original_case_id = original_case.id
         object.validate_original_case
