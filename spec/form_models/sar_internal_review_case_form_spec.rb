@@ -12,8 +12,7 @@ RSpec.describe SarInternalReviewCaseForm do
       expect(case_form.steps).to eq [
         "link-sar-case", 
         "confirm-sar",
-        "case-details",
-        "assign-case"]
+        "case-details"]
     end
   end
 
