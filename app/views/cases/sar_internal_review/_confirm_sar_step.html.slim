@@ -14,12 +14,12 @@ section.case-info
 
   .form-group
 
-    #js-offender-sar-confirm-actions
+    #js-sar-internal-review-confirm-actions
       = f.radio_button_fieldset :original_case_number, choices: [:yes, :no], inline: true
 
   input name="current_step" type="hidden" value=@case.current_step
 
-  = f.submit 'Continue', class: 'button', id: 'btn-offender-sar-complaint-continue', disabled: true
+  = f.submit 'Continue', class: 'button', id: 'btn-sar-internal-review-continue', disabled: true
 
 br
 = link_to "Back", @back_link, class: 'govuk-back-link'
