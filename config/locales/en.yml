@@ -86,6 +86,8 @@ en:
               not_whole_number: 'must be a positive whole number'
             request_dated:
               not_in_future: "can't be in the future."
+            partial_case_letter_sent_dated:
+              not_in_future: "can't be in the future."
             postal_address:
               blank: "and email can't both be blank"
             number:
@@ -358,6 +360,7 @@ en:
     search: Search
     edit: Edit
     delete: Delete
+    update_partial_flags: Update partial case
 
   helpers:
     fieldset:
@@ -453,6 +456,7 @@ en:
       offender_sar:
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
         date_of_birth: "For example, 12 11 2007"
+        partial_case_letter_sent_dated: "For example, 12 11 2007"
         message_hint: Include any details that will be useful for processing the case (optional)
         reason_for_lateness_note_hint: Please provide details to why this case is late
         number_exempt_pages: "Pages removed from the SAR as exemptions"
@@ -650,6 +654,9 @@ en:
         third_party_relationship: Relationship to the subject
         total: Total
         capture_reason_for_lateness: Please select reason why the case is out of time?
+        is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
+        partial_case_letter_sent_dated: Date letter sent
+        further_actions_required: Is this a COVID-19 partial case being managed by SSCL?
       case_sar_offender_complaint:
         complaint_type: What sort of complaint is this?
         complaint_subtype: What is the nature of the complaint?
@@ -1084,6 +1091,7 @@ en:
         sub_heading: Edit Complaint case
     update:
       case_updated: Case updated
+      case_partial_flag_updated: Case updated
     filters:
       index:
         <<: *cases_list
@@ -1229,6 +1237,7 @@ en:
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
       record_reason_for_lateness_heading: Reason for lateness
+      edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case

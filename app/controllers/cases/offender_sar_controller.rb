@@ -13,7 +13,7 @@ module Cases
       :confirm_move_case_back, 
       :record_reason_for_lateness,
       :confirm_record_reason_for_lateness,
-      :update_partial_flags
+      :confirm_update_partial_flags
     ]
 
     def initialize
@@ -100,33 +100,25 @@ module Cases
       end
     end
 
-    def update_partial_flags
-      authorize @case, :can_mark_as_partial_case?
-      authorize @case, :can_mark_as_further_actions_required?
+    def confirm_update_partial_flags
+      authorize @case, :can_edit_case?
       service = CaseUpdatePartialFlagsService.new(
         user: current_user, 
         kase: @case, 
         flag_params: partial_case_flags_params)
       service.call()
 
-      status = :ok
-      transitions = []
-      message = nil
       if service.result == :error
-        if service.error_message.present?
-          message = service.error_message
-        end
-        status = :bad_request
-      end  
-      if service.result == :ok
-        transitions = service.transitions
+        @case = @case.decorate
+        preserve_step_state    
+        render "cases/edit" and return
+      elsif service.result == :ok
+        flash[:notice] = t('cases.update.case_partial_flag_updated')
+      elsif service.result == :no_changes
+        flash[:alert] = "No changes were made"
       end
-      render status: status, json: {
-        message: message, 
-        transitions: transitions
-      }
+      redirect_to case_path(@case) and return 
     end
-
 
     def edit
       permitted_correspondence_types
@@ -241,6 +233,8 @@ module Cases
       @case.date_of_birth = @case.date_of_birth
       @case.request_dated = @case.request_dated
       @case.external_deadline = @case.external_deadline
+      @case.external_deadline = @case.external_deadline
+      @case.partial_case_letter_sent_dated = @case.partial_case_letter_sent_dated
     end
 
     def params_for_transition

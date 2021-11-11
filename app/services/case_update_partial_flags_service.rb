@@ -1,58 +1,41 @@
 class CaseUpdatePartialFlagsService
-  attr_accessor :result, :message, :transitions
+  attr_accessor :result, :message
 
   def initialize(user:, kase:, flag_params:)
     @case = kase
     @user = user
     @flag_params = flag_params
     @message = nil
-    @transitions = []
     @result = :incomplete
   end
 
   def call
     ActiveRecord::Base.transaction do
-      set_initial_value
-      update_flag_of_requiring_further_actions(@flag_params['further_actions_required'])
-      update_partial_flag(@flag_params['is_partial_case'])
-      update_case_with_new_flags
-      @result = :ok
+      @case.assign_attributes(@flag_params)
+      has_changed = is_data_changed?
+      has_partial_flag_changed = is_partial_case_flag_changed?
+      has_second_flag_changed = is_further_actions_required_flag_changed?
+     
+      if has_partial_flag_changed
+        trigger_event(get_partial_event_name('mark_as_partial_case', @flag_params["is_partial_case"]))
+      end 
+
+      if has_second_flag_changed
+        trigger_event(get_event_name_for_second_flag(@flag_params["further_actions_required"]))        
+      end
+      
+      if has_changed
+        @case.save!
+        @result = :ok
+      else
+        @result = :no_changes
+      end
     end
   rescue
     @result = :error
-    raise
   end
 
   private 
-
-  def update_case_with_new_flags
-    @case.save!
-  end
-
-  def set_initial_value
-    if @case.is_partial_case.nil?
-      @case.is_partial_case = false
-      @case.save!
-    end
-    if @case.further_actions_required.nil?
-      @case.further_actions_required = false
-      @case.save!
-    end
-  end
-
-  def update_partial_flag(is_partial_case)
-    @case.is_partial_case =  is_partial_case unless is_partial_case.blank? 
-    if is_partial_case_flag_changed?
-      trigger_event(get_event_name('mark_as_partial_case', is_partial_case))
-    end
-  end
-
-  def update_flag_of_requiring_further_actions(further_actions_required)
-    @case.further_actions_required = further_actions_required unless further_actions_required.blank? 
-    if is_further_actions_required_flag_changed?
-      trigger_event(get_event_name('mark_as_further_actions_required', further_actions_required))
-    end
-  end
 
   def is_partial_case_flag_changed?
     @case.changed_attributes.keys.include?('is_partial_case')
@@ -62,7 +45,15 @@ class CaseUpdatePartialFlagsService
     @case.changed_attributes.keys.include?('further_actions_required')
   end
 
-  def get_event_name(event_name, flag_value)
+  def is_date_change?
+    @case.changed_attributes.keys.include?('partial_case_letter_sent_dated')
+  end
+  
+  def is_data_changed?
+    is_partial_case_flag_changed? || is_further_actions_required_flag_changed? || is_date_change?
+  end
+
+  def get_partial_event_name(event_name, flag_value)
     if flag_value.to_s.downcase == "true"
       event_name
     else
@@ -70,16 +61,20 @@ class CaseUpdatePartialFlagsService
     end
   end
 
+  def get_event_name_for_second_flag(flag_value)
+    case flag_value
+    when 'yes'
+      'mark_as_further_actions_required'
+    when 'no'
+      'unmark_as_further_actions_required'
+    when 'awaiting_response'
+      'mark_as_awaiting_response_for_partial_case'
+    end
+  end
+
   def trigger_event(event_name)
     acting_team = @user.case_team_for_event(@case, event_name)
     @case.state_machine.send("#{event_name}!", acting_user: @user,
       acting_team: acting_team)
-    new_transition = @case.reload.transitions.last
-    transitions << {
-      timestamp: new_transition.decorate.action_date,
-      user: @user.full_name, 
-      team: acting_team.name, 
-      message: new_transition.decorate.event_and_detail
-    }
   end
 end

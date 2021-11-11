@@ -779,19 +779,19 @@ describe Case::SAR::Offender do
 
   describe '#partial flags' do
     it 'errors when further_actions_required is true but is_partial_case' do
-      kase = build(:offender_sar_case, is_partial_case: false, further_actions_required: true)
+      kase = build(:offender_sar_case, is_partial_case: false, further_actions_required: "yes")
       expect(kase).not_to be_valid
       expect(kase.errors[:is_partial_case]).to eq ['Cannot be marked if case is marked as SSCL managing case']
     end
 
     it 'validate values' do
-      kase = build(:offender_sar_case, is_partial_case: false, further_actions_required: false)
+      kase = build(:offender_sar_case, is_partial_case: false, further_actions_required: "no")
       expect(kase).to be_valid
 
-      kase = build(:offender_sar_case, is_partial_case: true, further_actions_required: true)
+      kase = build(:offender_sar_case, is_partial_case: true, further_actions_required: "yes")
       expect(kase).to be_valid
 
-      kase = build(:offender_sar_case, is_partial_case: true, further_actions_required: false)
+      kase = build(:offender_sar_case, is_partial_case: true, further_actions_required: "no")
       expect(kase).to be_valid
     end
   end

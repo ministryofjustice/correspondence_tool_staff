@@ -65,7 +65,8 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_further_actions_required,
           :mark_as_partial_case,
           :unmark_as_further_actions_required,
-          :unmark_as_partial_case
+          :unmark_as_partial_case,
+          :mark_as_awaiting_response_for_partial_case
         ]
       },
     ].freeze

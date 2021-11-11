@@ -1,17 +1,28 @@
 .grid-row
-  .column-full
+  .column-full.data-requests
     h2.request--heading.data-requests__title
       = t('cases.offender_sar.partial_case_flags_heading')
-  .column-full
-    = form_for case_details, url: update_partial_flags_case_sar_offender_path(case_details), as: 'case_sar_partial_flags'
-      .column-half
-        .multiple-choice
-          input type="checkbox" value="#{case_details.is_partial_case ? 1 : 0}" name="case_sar[is_partial_case]" id="is_partial_case"
-          label for="is_partial_case" 
-              = 'Confirmed SSCL COVID-19 partial case'
 
-      .column-half
-        .multiple-choice
-          input type="checkbox" value="#{case_details.further_actions_required ? 1 : 0}" name="case_sar[further_actions_required]" id="further_actions_required"
-          label for="further_actions_required" 
-              = 'SSCL managing case'
+    - if !case_details.is_partial_case.nil?
+
+      table#data-request-table.report
+        thead
+          tr
+            th Confirmed SSCL COVID-19 partial case
+            th Date letter sent
+            th SSCL managing case
+            th
+        tbody
+          tr
+            td
+              = case_details.is_partial_case? ? "Yes" : "No"
+            td
+              - if case_details.partial_case_letter_sent_dated.present?
+                time datetime="#{case_details.partial_case_letter_sent_dated}"
+                  = l case_details.partial_case_letter_sent_dated, format: :default
+            td
+              - if case_details.further_actions_required.present?
+                = case_details.further_actions_required.humanize
+
+.partial-flags-buttons
+  = link_to I18n.t('button.update_partial_flags'), edit_step_case_sar_offender_path(case_details, "partial_case_flags"), class: 'button-tertiary'

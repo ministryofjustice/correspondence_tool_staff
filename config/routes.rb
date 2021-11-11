@@ -88,7 +88,7 @@ Rails.application.routes.draw do
       patch '/move_case_back', on: :member, to: 'offender_sar#confirm_move_case_back', as: 'confirm_move_case_back'
       get '/record_reason_for_lateness', on: :member, to: 'offender_sar#record_reason_for_lateness', as: 'record_reason_for_lateness'
       patch '/record_reason_for_lateness', on: :member, to: 'offender_sar#confirm_record_reason_for_lateness', as: 'confirm_record_reason_for_lateness'
-      post '/update_partial_flags', on: :member, to: 'offender_sar#update_partial_flags', as: 'update_partial_flags'
+      patch '/confirm_update_partial_flags', on: :member, to: 'offender_sar#confirm_update_partial_flags', as: 'confirm_update_partial_flags'
       member do
         patch '/transitions/:transition_name', to: 'offender_sar#transition', as: :transition
       end

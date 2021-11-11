@@ -27,14 +27,12 @@ feature 'Handle partical case', :js do
   private
 
   def validate_flags_invisible
-    expect(cases_show_page).not_to have_content "Confirmed SSCL COVID-19 partial case"
-    expect(cases_show_page).not_to have_content "SSCL managing case"
+    expect(cases_show_page).not_to have_content "Update partial case"
     expect(cases_show_page).not_to have_content "SSCL COVID-19 partial case"
   end 
 
   def validate_flags_visible 
-    expect(cases_show_page).to have_content "Confirmed SSCL COVID-19 partial case"
-    expect(cases_show_page).to have_content "SSCL managing case"
+    expect(cases_show_page).to have_content "Update partial case"
     expect(cases_show_page).to have_content "SSCL COVID-19 partial case"
   end
 

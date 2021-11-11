@@ -40,7 +40,7 @@ FactoryBot.define do
     number_final_pages              { 5 }
     number_exempt_pages             { 2 }
     is_partial_case                 { false }
-    further_actions_required        { false }
+    further_actions_required        { "no" }
   end
 
   trait :third_party do

@@ -1,3 +1,4 @@
+#rubocop:disable Metrics/ClassLength
 class Case::SAR::Offender < Case::Base
 
   belongs_to :reason_for_lateness, class_name: 'CategoryReference'
@@ -37,9 +38,9 @@ class Case::SAR::Offender < Case::Base
   GOV_UK_DATE_FIELDS = %i[
     date_of_birth
     date_responded
-    date_draft_compliant
     external_deadline
     request_dated
+    partial_case_letter_sent_dated
     received_date
   ].freeze
 
@@ -70,7 +71,8 @@ class Case::SAR::Offender < Case::Base
                  number_final_pages: :integer,
                  number_exempt_pages: :integer,
                  is_partial_case: :boolean, 
-                 further_actions_required: :boolean
+                 partial_case_letter_sent_dated: :date, 
+                 further_actions_required: :string
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
@@ -88,6 +90,12 @@ class Case::SAR::Offender < Case::Base
     subject_recipient:  'subject_recipient',
     requester_recipient: 'requester_recipient',
     third_party_recipient: 'third_party_recipient',
+  }
+
+  enum further_actions_required: {
+    yes:  'yes',
+    no: 'no',
+    awaiting_response: 'awaiting_response',
   }
 
   has_paper_trail only: [
@@ -125,6 +133,7 @@ class Case::SAR::Offender < Case::Base
                             message: 'must be a positive whole number' }
   validate :validate_third_party_states_consistent
   validate :validate_partial_flags
+  validate :validate_partial_case_letter_sent_dated
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -215,12 +224,22 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_partial_flags
-    if (!is_partial_case && further_actions_required)
+    if (!is_partial_case && further_actions_required == 'yes')
       errors.add(
         :is_partial_case,
         I18n.t('activerecord.errors.models.case/sar/offender.attributes.is_partial_case.invalid')
       )
     end
+  end
+
+  def validate_partial_case_letter_sent_dated
+    if is_partial_case? && partial_case_letter_sent_dated.present? && partial_case_letter_sent_dated > Date.today
+      errors.add(
+        :partial_case_letter_sent_dated,
+        I18n.t('activerecord.errors.models.case.attributes.partial_case_letter_sent_dated.not_in_future')
+      )
+    end
+    errors[:partial_case_letter_sent_dated].any?
   end
 
   def default_managing_team
@@ -363,3 +382,4 @@ class Case::SAR::Offender < Case::Base
     end
   end
 end
+#rubocop:enable Metrics/ClassLength
