@@ -46,8 +46,8 @@ describe Case::SAR::Offender do
       kase = build :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
 
       expect(kase).not_to be_valid
-      expect(kase.errors[:subject_full_name]).to eq(["can't be blank"])
-      expect(kase.errors[:third_party]).to eq(["can't be blank"])
+      expect(kase.errors[:subject_full_name]).to eq(["cannot be blank"])
+      expect(kase.errors[:third_party]).to eq(["cannot be blank"])
     end
   end
 
@@ -98,7 +98,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, subject_type: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:subject_type]).to eq ["can't be blank"]
+        expect(kase.errors[:subject_type]).to eq ["cannot be blank"]
       end
     end
   end
@@ -129,7 +129,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, recipient: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:recipient]).to eq ["can't be blank"]
+        expect(kase.errors[:recipient]).to eq ["cannot be blank"]
       end
     end
   end
@@ -146,7 +146,7 @@ describe Case::SAR::Offender do
       it 'validates presence of postal address when recipient is third party' do
         kase = build :offender_sar_case, :third_party, postal_address: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:postal_address]).to eq ["can't be blank"]
+        expect(kase.errors[:postal_address]).to eq ["cannot be blank"]
       end
     end
   end
@@ -173,7 +173,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, date_of_birth: 1.day.from_now)
         expect(kase).not_to be_valid
-        expect(kase.errors[:date_of_birth]).to eq ["can't be in the future."]
+        expect(kase.errors[:date_of_birth]).to eq ["cannot be in the future."]
       end
     end
 
@@ -181,7 +181,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, date_of_birth: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:date_of_birth]).to eq ["can't be blank"]
+        expect(kase.errors[:date_of_birth]).to eq ["cannot be blank"]
       end
     end
   end
@@ -209,7 +209,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, received_date: 1.day.from_now)
         expect(kase).not_to be_valid
-        expect(kase.errors[:received_date]).to eq ["can't be in the future."]
+        expect(kase.errors[:received_date]).to eq ["cannot be in the future."]
       end
     end
   end
@@ -227,7 +227,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, request_dated: 1.day.from_now)
         expect(kase).not_to be_valid
-        expect(kase.errors[:request_dated]).to eq ["can't be in the future."]
+        expect(kase.errors[:request_dated]).to eq ["cannot be in the future."]
       end
     end
   end
@@ -271,16 +271,16 @@ describe Case::SAR::Offender do
       it 'validates third party names when third party is true' do
         kase = build :offender_sar_case, :third_party, third_party_name: '', third_party_company_name: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-        expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+        expect(kase.errors[:third_party_name]).to eq ["cannot be blank if company name not given"]
+        expect(kase.errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
       end
 
       it 'validates third party names when recipient is third party' do
         kase = build :offender_sar_case, third_party: false, third_party_name: '',
                       third_party_company_name: '', recipient: 'third_party_recipient'
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-        expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+        expect(kase.errors[:third_party_name]).to eq ["cannot be blank if company name not given"]
+        expect(kase.errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
       end
 
       it 'does not validate third_party names when ecipient is not third party too' do
@@ -295,14 +295,14 @@ describe Case::SAR::Offender do
       it 'must be present when thrid party is true' do
         kase = build :offender_sar_case, third_party: true, third_party_relationship: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
+        expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
       it 'must be present when third party is false but recipient is third party' do
         kase = build :offender_sar_case, third_party: false, third_party_relationship: '',
                       recipient: 'third_party_recipient'
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
+        expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
       it 'does not validates presence of third party relationship when recipient is not third party' do
@@ -523,7 +523,7 @@ describe Case::SAR::Offender do
     it 'validates presence of subject address' do
       kase = build :offender_sar_case, subject_address: ''
       expect(kase).not_to be_valid
-      expect(kase.errors[:subject_address]).to eq ["can't be blank"]
+      expect(kase.errors[:subject_address]).to eq ["cannot be blank"]
     end
   end
 

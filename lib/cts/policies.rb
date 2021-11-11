@@ -6,7 +6,7 @@ module CTS
     long_desc <<~EOD
       Check the policies for a given user and case. Runs all the policies
       and displays whether it succeeded or not, and if not which checks failed.
-      This is meant as a handy debugging tool to understand why a user can't do
+      This is meant as a handy debugging tool to understand why a user cannot do
       something with a particular case.
 
       Command-Line Args:

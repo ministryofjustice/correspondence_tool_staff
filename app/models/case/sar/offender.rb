@@ -109,8 +109,8 @@ class Case::SAR::Offender < Case::Base
   has_many :data_requests, dependent: :destroy, foreign_key: :case_id
   accepts_nested_attributes_for :data_requests
 
-  validates :third_party,          inclusion: { in: [true, false], message: "can't be blank" }
-  validates :flag_as_high_profile, inclusion: { in: [true, false], message: "can't be blank" }
+  validates :third_party,          inclusion: { in: [true, false], message: "cannot be blank" }
+  validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
   validates :date_of_birth, presence: true
 
   validates_presence_of :subject_address

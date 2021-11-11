@@ -36,7 +36,7 @@ class CaseExtendForPITService
 
   def validate_params
     unless @reason.present?
-      @case.errors.add(:reason_for_extending, "can't be blank")
+      @case.errors.add(:reason_for_extending, "cannot be blank")
       @result = :validation_error
     end
 
@@ -52,7 +52,7 @@ class CaseExtendForPITService
                         .business_days
                         .after(@case.external_deadline)
     if @extension_deadline.blank?
-      @case.errors.add(:extension_deadline, "Date can't be blank")
+      @case.errors.add(:extension_deadline, "Date cannot be blank")
       false
     elsif @extension_deadline > extension_limit
       @case.errors.add(
@@ -62,7 +62,7 @@ class CaseExtendForPITService
       false
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(:extension_deadline,
-                       "Date can't be before the final deadline")
+                       "Date cannot be before the final deadline")
       false
     else
       true

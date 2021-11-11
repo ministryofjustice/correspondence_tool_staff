@@ -39,7 +39,7 @@ feature 'joining business units' do
     teams_show_page.join_team_link.click
     expect(teams_join_page).to be_displayed(id: bu.id)
 
-    # Verify that teams with a special role can't be joined
+    # Verify that teams with a special role cannot be joined
     select("Operations")
     select("Press Office Directorate")
     expect(teams_join_page.find_row("Press Office")).not_to have_text "Join with this team"
