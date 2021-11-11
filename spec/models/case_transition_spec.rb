@@ -163,7 +163,7 @@ RSpec.describe CaseTransition, type: :model do
                                    acting_team_id: kase.responding_team.id
       )
       expect(transition).not_to be_valid
-      expect(transition.errors[:message]).to eq ["can't be blank"]
+      expect(transition.errors[:message]).to eq ["cannot be blank"]
 
     end
   end

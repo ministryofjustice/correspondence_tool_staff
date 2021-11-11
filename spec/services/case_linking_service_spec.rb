@@ -92,7 +92,7 @@ describe CaseLinkingService do
             service.create
             expect(service.result).to eq :validation_error
             expect(sar_case_1.errors[:linked_case_number])
-              .to eq ["can't link a Non-offender SAR case to a FOI as a related case"]
+              .to eq ["cannot link a Non-offender SAR case to a FOI as a related case"]
           end
         end
 
@@ -102,7 +102,7 @@ describe CaseLinkingService do
             service.create
             expect(service.result).to eq :validation_error
             expect(foi_case.errors[:linked_case_number])
-              .to eq ["can't link a FOI case to a Non-offender SAR as a related case"]
+              .to eq ["cannot link a FOI case to a Non-offender SAR as a related case"]
           end
         end
 
@@ -273,7 +273,7 @@ describe CaseLinkingService do
       it 'adds an error to the case' do
         service.create
         expect(kase.errors[:linked_case_number])
-          .to eq ["can't link to the same case"]
+          .to eq ["cannot link to the same case"]
       end
     end
 
@@ -291,7 +291,7 @@ describe CaseLinkingService do
       it 'adds an error to the case' do
         service.create
         expect(kase.errors[:linked_case_number])
-          .to eq ["doesn't exist"]
+          .to eq ["does not exist"]
       end
     end
   end

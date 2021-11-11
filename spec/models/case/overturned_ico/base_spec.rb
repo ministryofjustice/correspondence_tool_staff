@@ -47,7 +47,7 @@ describe Case::OverturnedICO::Base do
       it 'is invalid if no email address specified' do
         overturned_ico.email = nil
         expect(overturned_ico).not_to be_valid
-        expect(overturned_ico.errors[:email]).to eq ["can't be blank"]
+        expect(overturned_ico.errors[:email]).to eq ["cannot be blank"]
       end
     end
 
@@ -55,7 +55,7 @@ describe Case::OverturnedICO::Base do
       it 'is invalid if no postal address specified' do
         overturned_ico.reply_method = 'send_by_post'
         expect(overturned_ico).not_to be_valid
-        expect(overturned_ico.errors[:postal_address]).to eq ["can't be blank"]
+        expect(overturned_ico.errors[:postal_address]).to eq ["cannot be blank"]
       end
     end
   end
@@ -158,7 +158,7 @@ describe Case::OverturnedICO::Base do
     it 'is not valid if not set' do
       overturned_ico.ico_officer_name = ''
       expect(overturned_ico).not_to be_valid
-      expect(overturned_ico.errors[:ico_officer_name]).to include("can't be blank")
+      expect(overturned_ico.errors[:ico_officer_name]).to include("cannot be blank")
     end
 
   end

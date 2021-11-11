@@ -8,7 +8,7 @@ RSpec.describe Searchable do
       # use the Searchable concern.
 
       class << self
-        # can't create doubles otherwise
+        # cannot create doubles otherwise
         include RSpec::Mocks::ExampleMethods
 
         def table_name

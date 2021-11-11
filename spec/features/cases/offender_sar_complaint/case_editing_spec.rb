@@ -32,7 +32,7 @@ feature 'offender sar complaint case editing by a manager' do
     expect(cases_edit_offender_sar_complaint_page).to be_displayed
     expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("Full name of data subject")
     expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("What is the location of the data subject?")
-    expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("Subject full name can't be blank")
+    expect(cases_edit_offender_sar_complaint_subject_details_page).to have_content("Subject full name cannot be blank")
 
     cases_edit_offender_sar_complaint_subject_details_page.edit_name 'Bob Hope'
     click_on "Continue"

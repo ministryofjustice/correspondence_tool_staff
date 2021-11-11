@@ -78,7 +78,7 @@ describe CaseExtendSARDeadlineService do
 
           it {
             expect(sar_case.errors[:extension_period])
-              .to eq ["can't be blank"]
+              .to eq ["cannot be blank"]
           }
         end
 
@@ -99,7 +99,7 @@ describe CaseExtendSARDeadlineService do
 
           it {
             expect(sar_case.errors[:extension_period])
-              .to eq ["can't be more than two calendar months beyond the received date"]
+              .to eq ["cannot be more than two calendar months beyond the received date"]
           }
         end
 
@@ -119,7 +119,7 @@ describe CaseExtendSARDeadlineService do
 
           it {
             expect(sar_case.errors[:extension_period])
-              .to eq ["can't be before the final deadline"]
+              .to eq ["cannot be before the final deadline"]
           }
         end
 
@@ -156,7 +156,7 @@ describe CaseExtendSARDeadlineService do
 
         it {
           expect(sar_case.errors[:reason_for_extending])
-            .to eq ["can't be blank"]
+            .to eq ["cannot be blank"]
         }
       end
 

@@ -171,7 +171,7 @@ RSpec.configure do |config|
   # Replace stubbing out CASE_UPLOADS_S3_BUCKET with a test harness of our own
   # making. The problem with stubbing out is that it doesn't work in 'before
   # :all' blocks, which are sometimes needed e.g. ICO appeals which always
-  # require an uploaded document. so can't be instantiate in a 'before :all'
+  # require an uploaded document. so cannot be instantiated in a 'before :all'
   self.class.__send__(:remove_const, :CASE_UPLOADS_S3_BUCKET)
   self.class.const_set(:CASE_UPLOADS_S3_BUCKET,
                        TestAWSS3.new.bucket(Settings.case_uploads_s3_bucket))

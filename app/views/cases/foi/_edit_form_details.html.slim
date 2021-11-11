@@ -4,7 +4,7 @@
   - if @case.attachments.request.present?
     .panel.panel-border-wide
       p
-        = "You can't edit an uploaded request"
+        = "You cannot edit an uploaded request"
   - else
     = f.text_area :message, { rows: 10 }
 

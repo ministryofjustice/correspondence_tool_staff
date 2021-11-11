@@ -105,7 +105,7 @@ RSpec.describe Cases::MessagesController, type: :controller do
       end
 
       it "copies the error to the flash" do
-        expect(flash[:case_errors][:message_text]).to eq ["can't be blank"]
+        expect(flash[:case_errors][:message_text]).to eq ["cannot be blank"]
       end
 
       it 'redirects to case detail page and contains a anchor' do
