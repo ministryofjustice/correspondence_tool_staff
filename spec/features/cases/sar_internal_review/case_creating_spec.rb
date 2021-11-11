@@ -30,7 +30,7 @@ feature 'SAR Internal Review Case creation by a manager' do
 
     click_button 'Continue'
 
-    expect(page).to have_content("Original case can't link a SAR Internal review case to a FOI as a original case")
+    expect(page).to have_content("Original case cannot link a SAR Internal review case to a FOI as a original case")
 
     fill_in :sar_internal_review_original_case_number, with: sar_case.number
 
