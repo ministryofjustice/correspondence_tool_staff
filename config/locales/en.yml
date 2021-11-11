@@ -222,6 +222,9 @@ en:
               blank: cannot be blank
             third_party_relationship:
               blank: cannot be blank
+        case/sar/internal_review:
+          original_case_number:
+            not_authorised: can't be authorised to link this case
         case/sar/offender:
           attributes:
             date_responded:
@@ -813,6 +816,8 @@ en:
         offender_sar_complaint: Offender SAR complaint
         foi: FOI
         sar: SAR
+        sar_internal_review: SAR IR
+        sar_internal_review_long: SAR Internal Review
         ico: ICO
         overturned_sar: Overturned SAR
         overturned_foi: Overturned FOI
@@ -1285,6 +1290,9 @@ en:
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{time_period_description}.
+    sar_internal_review:
+      link_sar_case_heading: Link case details
+      check_sar_details_heading: Check details of the SAR
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals
@@ -1368,6 +1376,7 @@ en:
       Case::ICO::FOI: ICO Appeal - FOI
       Case::ICO::SAR: ICO Appeal - SAR
       Case::SAR::Standard: Non-offender SAR
+      Case::SAR::InternalReview:  SAR Internal review
       Case::SAR::Offender: Offender SAR
       Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
       Case::OverturnedICO::FOI: Overturned ICO appeal for FOI

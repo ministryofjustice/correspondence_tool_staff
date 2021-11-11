@@ -48,6 +48,10 @@ FactoryBot.define do
       correspondence_type   { find_or_create :sar_correspondence_type }
     end
 
+    trait :sar_internal_review do
+      correspondence_type   { find_or_create :sar_internal_review_correspondence_type }
+    end
+
     trait :offender_sar do
       correspondence_type   { find_or_create :offender_sar_correspondence_type }
     end
