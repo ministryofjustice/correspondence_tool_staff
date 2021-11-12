@@ -47,20 +47,21 @@ module SarInternalReviewCaseForm
     params.merge!(original_case_id: object.original_case_id)
     params.delete(:original_case_number)
     fields_subject_details = [
-      "subject_full_name",
-      "subject_type",
-      "subject_aliases",
-      "subject_address",
-      "prison_number",
-      "other_subject_ids",
-      "recipient",
-      "third_party_relationship",
-      "third_party",
-      "third_party_company_name",
-      "third_party_name",
-      "postal_address",
-      "flag_as_high_profile",
-      "date_of_birth"
+      :delivery_method,
+      :email,
+      :flag_for_disclosure_specialists,
+      :message,
+      :name,
+      :postal_address,
+      :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :requester_type,
+      :subject,
+      :subject_full_name,
+      :subject_type,
+      :third_party,
+      :third_party_relationship,
+      :reply_method,
+      :uploaded_request_files
     ]
     fields_subject_details.each do | single_field |
       params[single_field] = object.original_case.send(single_field)

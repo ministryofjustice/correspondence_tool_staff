@@ -37,6 +37,14 @@ feature 'SAR Internal Review Case creation by a manager' do
     click_button 'Continue'
 
     expect(page).to have_content(sar_case.subject_full_name)
+    expect(page).to have_content(sar_case.subject)
+    expect(page).to have_content(sar_case.email)
     expect(page).to have_content('Check details of the SAR')
+
+    choose 'sar_internal_review[original_case_number]', option: 'yes', visible: false
+
+    click_button 'Continue'
+
+    expect(page).to have_content("Case name: #{sar_case.name}")
   end
 end

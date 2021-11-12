@@ -7,6 +7,11 @@
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
         
 section.case-info
+  h2.form-label-bold
+    = "Subject of case"
+    p
+      = linked_sar_case.subject
+  br
   = render partial: "cases/sar/case_details",
             locals: {case_details: linked_sar_case, link_type: nil, allow_editing: false}
 
