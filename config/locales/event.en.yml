@@ -67,7 +67,7 @@ en:
     capture_reason_for_lateness_add: Reason for lateness added
     capture_reason_for_lateness_change: Reason for lateness changed
     mark_as_partial_case: Case marked as SSCL partial case
-    unmark_as_partial_case: Case marked as not a SSCL partial case
+    unmark_as_partial_case: Case marked as not an SSCL partial case
     mark_as_further_actions_required: Case marked as SSCL managing case
     unmark_as_further_actions_required: Case marked as SSCL not managing case
     mark_as_awaiting_response_for_partial_case: Case marked as awaiting response following SSCL letter

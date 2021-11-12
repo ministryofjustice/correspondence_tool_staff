@@ -1330,6 +1330,11 @@ en:
       record_reason_for_lateness_heading: Reason for lateness
       edit_partial_case_flags_heading: Edit partial case information
       partial_case_flags_heading: SSCL COVID-19 partial case
+      is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
+      partial_case_letter_sent_dated_heading: Date letter sent from SSCL
+      further_actions_required_heading: SSCL managing case
+      flag_choice_yes: "Yes"
+      flag_choice_no: "No"
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
