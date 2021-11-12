@@ -8,7 +8,6 @@ module Cases
 
       @correspondence_type = CorrespondenceType.sar_internal_review
       @correspondence_type_key = 'sar_internal_review'
-      @back_link = '#'
     end
 
     def new
@@ -16,6 +15,7 @@ module Cases
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
       @case.current_step = params[:step]
+      @back_link = back_link_url
     end
 
     def create
@@ -90,5 +90,12 @@ module Cases
       "#{@correspondence_type_key}_state".to_sym
     end
 
+    def back_link_url
+      if @case.get_previous_step       
+        "#{@case.case_route_path}/#{@case.get_previous_step}"
+      else
+        new_case_path
+      end
+    end
   end
 end
