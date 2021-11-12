@@ -1,17 +1,25 @@
 class Case::FOI::StandardPolicy < Case::BasePolicy
 
-  class Scope
-    def initialize(user, scope)
-      @user  = user
-      @scope = scope
+  class Scope < Case::BaseScopePolicy
+
+    def correspondence_type
+      CorrespondenceType.foi
+    end 
+
+    def resolve_responder_default
+      @scope
     end
 
-    def resolve
-      if @user.permitted_correspondence_types.include? CorrespondenceType.foi
-        @scope
-      else
-        @scope.none
-      end
+    def resolve_approver_default
+      @scope
+    end
+
+    def resolve_responder_open_cases_scope
+      @scope.where(id: Assignment.team_restriction(@user.id, :responder))
+    end
+
+    def resolve_responder_closed_cases_scope
+      @scope.where(id: Assignment.team_restriction(@user.id, :responder))
     end
   end
 

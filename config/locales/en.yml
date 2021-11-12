@@ -86,6 +86,8 @@ en:
               not_whole_number: 'must be a positive whole number'
             request_dated:
               not_in_future: "cannot be in the future."
+            partial_case_letter_sent_dated:
+              not_in_future: "cannot be in the future."
             postal_address:
               blank: "and email cannot both be blank"
             number:
@@ -220,8 +222,6 @@ en:
               blank: cannot be blank
             subject:
               blank: cannot be blank
-            third_party_relationship:
-              blank: cannot be blank
         case/sar/internal_review:
           original_case_number:
             not_authorised: can't be authorised to link this case
@@ -241,6 +241,8 @@ en:
               blank: cannot be blank
             third_party_address:
               blank: cannot be blank
+            is_partial_case: 
+              invalid: Cannot be marked if case is marked as SSCL managing case
             subject_full_name:
               blank: cannot be blank
             subject_address:
@@ -250,8 +252,6 @@ en:
             received_date:
               blank: cannot be blank
             date_of_birth:
-              blank: cannot be blank
-            subject_address:
               blank: cannot be blank
         case/sar/offender_complaint:
           attributes:
@@ -383,6 +383,8 @@ en:
     case/sar/offender_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
+      can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
+      can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -444,6 +446,7 @@ en:
     search: Search
     edit: Edit
     delete: Delete
+    update_partial_flags: Update partial case
 
   helpers:
     fieldset:
@@ -539,6 +542,7 @@ en:
       offender_sar:
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
         date_of_birth: "For example, 12 11 2007"
+        partial_case_letter_sent_dated: "For example, 12 11 2007"
         message_hint: Include any details that will be useful for processing the case (optional)
         reason_for_lateness_note_hint: Please provide details to why this case is late
         number_exempt_pages: "Pages removed from the SAR as exemptions"
@@ -736,6 +740,9 @@ en:
         third_party_relationship: Relationship to the subject
         total: Total
         capture_reason_for_lateness: Please select reason why the case is out of time?
+        is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
+        partial_case_letter_sent_dated: Date letter sent from SSCL
+        further_actions_required: Is this a COVID-19 partial case being managed by SSCL?
       case_sar_offender_complaint:
         complaint_type: What sort of complaint is this?
         complaint_subtype: What is the nature of the complaint?
@@ -788,6 +795,14 @@ en:
         total: Total
         settlement_cost: Enter settlement cost
         total_cost: Enter total costs
+        complaint_subtype:
+          sscl_partial_case: SSCL partial case
+          covid_partial_response: COVID partial response
+          missing_data: Missing data
+          inaccurate_data: Inaccurate data
+          redacted_data: Redacted data
+          timeliness: Timeliness
+          not_applicable: Not applicable
       feedback:
         comment: Help make this service better
       search_query:
@@ -1164,6 +1179,7 @@ en:
         sub_heading: Edit Complaint case
     update:
       case_updated: Case updated
+      case_partial_flag_updated: Case updated
     filters:
       index:
         <<: *cases_list
@@ -1312,6 +1328,13 @@ en:
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
       record_reason_for_lateness_heading: Reason for lateness
+      edit_partial_case_flags_heading: Edit partial case information
+      partial_case_flags_heading: SSCL COVID-19 partial case
+      is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
+      partial_case_letter_sent_dated_heading: Date letter sent from SSCL
+      further_actions_required_heading: SSCL managing case
+      flag_choice_yes: "Yes"
+      flag_choice_no: "No"
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR

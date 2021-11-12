@@ -12,7 +12,8 @@ module Cases
       :move_case_back, 
       :confirm_move_case_back, 
       :record_reason_for_lateness,
-      :confirm_record_reason_for_lateness
+      :confirm_record_reason_for_lateness,
+      :confirm_update_partial_flags
     ]
 
     def initialize
@@ -99,6 +100,29 @@ module Cases
       end
     end
 
+    def confirm_update_partial_flags
+      authorize @case, :can_edit_case?
+      service = CaseUpdatePartialFlagsService.new(
+        user: current_user, 
+        kase: @case, 
+        flag_params: flags_process(partial_case_flags_params))
+      service.call()
+
+      if service.result == :error
+        if service.error_message.present?
+          flash[:alert] = service.error_message
+        end
+        @case = @case.decorate
+        preserve_step_state    
+        render "cases/edit" and return
+      elsif service.result == :ok
+        flash[:notice] = t('cases.update.case_partial_flag_updated')
+      elsif service.result == :no_changes
+        flash[:alert] = "No changes were made"
+      end
+      redirect_to case_path(@case) and return 
+    end
+
     def edit
       permitted_correspondence_types
       authorize case_type, :can_add_case?
@@ -156,6 +180,20 @@ module Cases
 
     private
 
+    def flags_process(flag_params)
+      if is_reqired_clear_up_second_partial_flag(flag_params)
+        if flag_params['further_actions_required'].present?
+          flag_params.delete('further_actions_required')
+        end
+        flag_params = flag_params.merge('further_actions_required' => nil)
+      end
+      flag_params
+    end
+
+    def is_reqired_clear_up_second_partial_flag(flag_params)
+      flag_params['is_partial_case'].present? && flag_params['is_partial_case'].to_s.downcase == 'false'
+    end
+
     def get_extra_message_for_reason_for_lateness_field
       if @case.reason_for_lateness.present?
         t('event.capture_reason_for_lateness_change')
@@ -212,6 +250,8 @@ module Cases
       @case.date_of_birth = @case.date_of_birth
       @case.request_dated = @case.request_dated
       @case.external_deadline = @case.external_deadline
+      @case.external_deadline = @case.external_deadline
+      @case.partial_case_letter_sent_dated = @case.partial_case_letter_sent_dated
     end
 
     def params_for_transition

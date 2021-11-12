@@ -9,7 +9,7 @@ tr.complaint-type.section-complaint-subtype
   th
     = t('common.case.complaint_subtype')
   td
-    = case_details.complaint_subtype.humanize
+    = t :"helpers.label.offender_sar_complaint.complaint_subtype.#{case_details.complaint_subtype}"
 tr.complaint-type.section-complaint-priority
   th
     = t('common.case.priority')

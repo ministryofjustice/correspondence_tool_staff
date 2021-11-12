@@ -4,7 +4,7 @@ class CaseFinderService
   # Initialize with Pundit.policy_scope so scope always limited by what user is allowed to see
   def initialize(user)
     @user = user
-    @scope = Pundit.policy_scope(@user, Case::Base.all)
+    @scope = get_root_scope
   end
 
   def for_scopes scope_names
@@ -41,15 +41,18 @@ class CaseFinderService
   end
 
   def closed_cases_scope
-    closed_scope = scope.presented_as_closed
-    if user.responder_only?
-      closed_scope.where(id: Assignment.team_restriction(user.id, :responder)).most_recent_first
-    else
-      closed_scope.most_recent_first
-    end
+    get_root_scope('closed_cases_scope').presented_as_closed
   end
 
   private
+
+  def get_root_scope(feature = nil)
+    if feature.present?
+      Case::BasePolicy::Scope.new(user, Case::Base.all, feature).resolve
+    else
+      Pundit.policy_scope(@user, Case::Base.all)
+    end
+  end
 
   def index_cases_scope
     # effectively a nop; just return all the cases the user can view
@@ -90,16 +93,11 @@ class CaseFinderService
   end
 
   def open_cases_scope
-    open_scope = scope.presented_as_open
+    get_root_scope('open_cases_scope')
+    .presented_as_open
     .joins(:assignments)
     .where(assignments: { state: ['pending', 'accepted']})
     .distinct('case.id')
-
-    if user.responder_only?
-      open_scope.where(id: Assignment.team_restriction(user.id, :responder))
-    else
-      open_scope
-    end
   end
 
   def open_flagged_for_approval_scope

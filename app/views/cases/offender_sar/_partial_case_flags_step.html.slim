@@ -1,0 +1,36 @@
+- content_for :page_title do
+  = t('page_title.partial_case_flags', case_number: @case.number)
+
+- content_for :heading, flush: true
+  = t('cases.offender_sar.edit_partial_case_flags_heading')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @case.object, url: confirm_update_partial_flags_case_sar_offender_path(@case), as: :offender_sar, id: "edit_partial_case_flags_form" do |f|
+  
+  h2.heading-small
+    = t('helpers.label.offender_sar.is_partial_case')
+  = f.radio_button_fieldset(:is_partial_case, inline: true, legend_options: { class: "visually-hidden" }) do |fieldset|
+    - fieldset.radio_input(true, text_method: :humanize)
+    - fieldset.radio_input(false, text_method: :humanize)
+    
+  div id="partial_case_info_panel"
+    = f.gov_uk_date_field :partial_case_letter_sent_dated, { \
+        legend_text: t('helpers.label.offender_sar.partial_case_letter_sent_dated'),
+        form_hint_text: t('helpers.hint.offender_sar.partial_case_letter_sent_dated'),
+        today_button: { class: '' } \
+      }
+
+    h2.heading-small
+      = t('helpers.label.offender_sar.further_actions_required')
+    = f.radio_button_fieldset :further_actions_required, legend_options: { class: "visually-hidden" }, 
+      choices: Case::SAR::Offender::further_actions_requireds.keys
+
+  input name="current_step" type="hidden" value=@case.current_step
+  input name="further_actions_required_init" id="further_actions_required_init" type="hidden" value="#{@case.further_actions_required.nil? ? 0 : 1}"
+  input name="is_partial_case_init" id="is_partial_case_init" type="hidden" value="#{@case.is_partial_case.nil? ? 0 : 1}"
+
+  = f.submit 'Continue', class: 'button'

@@ -16,7 +16,7 @@ RSpec.describe Case::ICO::FOIPolicy do
       described_class.new(manager, Case::ICO::FOI.all).resolve
 
       expect(Case::FOI::StandardPolicy::Scope)
-        .to have_received(:new).with(manager, Case::ICO::FOI.all)
+        .to have_received(:new).with(manager, Case::ICO::FOI.all, nil)
     end
 
     it 'defers to resolving with Case::FOI::StandardPolicy::Scope' do

@@ -1,7 +1,7 @@
 class Case::ICO::FOIPolicy < Case::ICO::BasePolicy
   class Scope
-    def initialize(user, scope)
-      @policy_scope = Case::FOI::StandardPolicy::Scope.new(user, scope)
+    def initialize(user, scope, feature = nil)
+      @policy_scope = Case::FOI::StandardPolicy::Scope.new(user, scope, feature)
     end
 
     def resolve
