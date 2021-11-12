@@ -741,7 +741,7 @@ en:
         total: Total
         capture_reason_for_lateness: Please select reason why the case is out of time?
         is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
-        partial_case_letter_sent_dated: Date letter sent
+        partial_case_letter_sent_dated: Date letter sent from SSCL
         further_actions_required: Is this a COVID-19 partial case being managed by SSCL?
       case_sar_offender_complaint:
         complaint_type: What sort of complaint is this?
