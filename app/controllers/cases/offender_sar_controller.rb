@@ -109,8 +109,8 @@ module Cases
       service.call()
 
       if service.result == :error
-        if service.error_message.present?
-          flash[:alert] = service.error_message
+        if service.message.present?
+          flash[:alert] = service.message
         end
         @case = @case.decorate
         preserve_step_state    
