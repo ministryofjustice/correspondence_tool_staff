@@ -19,7 +19,9 @@ moj.Modules.PartialCaseFlagsActions = {
     var self = this;
 
     self.init_ui();
-    self.hidePartialSecondFlagsPanel();
+    if (this.$is_partial_case_init.val() == '1') {
+      self.hidePartialSecondFlagsPanel();
+    }
     
     self.$is_not_partial_case.on('change', function(){
       self.hidePartialSecondFlagsPanel();
@@ -36,7 +38,7 @@ moj.Modules.PartialCaseFlagsActions = {
 
   init_ui: function () {
     if (this.$is_partial_case_init.val() == '0') {
-      this.$is_not_partial_case.prop('checked', true);
+      this.$partial_flags_info_panel.hide();
     }
   },
 
