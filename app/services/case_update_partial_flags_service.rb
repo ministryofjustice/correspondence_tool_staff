@@ -21,7 +21,10 @@ class CaseUpdatePartialFlagsService
       end 
 
       if has_second_flag_changed
-        trigger_event(get_event_name_for_second_flag(@flag_params["further_actions_required"]))        
+        event_name = get_event_name_for_second_flag(@flag_params["further_actions_required"])
+        if event_name.present?
+          trigger_event(event_name)
+        end
       end
       
       if has_changed
@@ -31,7 +34,8 @@ class CaseUpdatePartialFlagsService
         @result = :no_changes
       end
     end
-  rescue
+  rescue => err
+    @message = err.message
     @result = :error
   end
 
@@ -69,6 +73,8 @@ class CaseUpdatePartialFlagsService
       'unmark_as_further_actions_required'
     when 'awaiting_response'
       'mark_as_awaiting_response_for_partial_case'
+    else
+      nil
     end
   end
 

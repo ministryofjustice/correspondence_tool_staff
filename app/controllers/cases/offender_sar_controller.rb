@@ -105,10 +105,13 @@ module Cases
       service = CaseUpdatePartialFlagsService.new(
         user: current_user, 
         kase: @case, 
-        flag_params: partial_case_flags_params)
+        flag_params: flags_process(partial_case_flags_params))
       service.call()
 
       if service.result == :error
+        if service.error_message.present?
+          flash[:alert] = service.error_message
+        end
         @case = @case.decorate
         preserve_step_state    
         render "cases/edit" and return
@@ -176,6 +179,20 @@ module Cases
     end
 
     private
+
+    def flags_process(flag_params)
+      if is_reqired_clear_up_second_partial_flag(flag_params)
+        if flag_params['further_actions_required'].present?
+          flag_params.delete('further_actions_required')
+        end
+        flag_params = flag_params.merge('further_actions_required' => nil)
+      end
+      flag_params
+    end
+
+    def is_reqired_clear_up_second_partial_flag(flag_params)
+      flag_params['is_partial_case'].present? && flag_params['is_partial_case'].to_s.downcase == 'false'
+    end
 
     def get_extra_message_for_reason_for_lateness_field
       if @case.reason_for_lateness.present?
