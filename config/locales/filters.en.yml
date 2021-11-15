@@ -39,6 +39,8 @@ en:
         <<: *list_filter_type
       filter_caseworker:
         <<: *list_filter_type
+      filter_partial_case_flag:
+        <<: *list_filter_type
     headings:
       filter_status: Filter by open/closed cases
       filter_cases: Filter cases
@@ -74,6 +76,9 @@ en:
     filter_high_profile:
       high-profile: High profile 
       not-high-profile: Not high profile 
+    filter_partial_case_flag:
+      partial-case: Is partial case
+      not-partial-case: Is not partial case
     filter_status:
       open: 'Open'
       closed: 'Closed'
