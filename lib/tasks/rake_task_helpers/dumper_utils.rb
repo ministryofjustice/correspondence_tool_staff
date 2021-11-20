@@ -31,7 +31,7 @@ module DumperUtils
 
   def self.decompress_file(filename)
     shell_working "decompressing file #{filename}" do
-      system "gunzip -3 -f #{filename}"
+      system "gunzip -f #{filename}"
     end
   end
 
