@@ -163,7 +163,7 @@ describe CaseLinkTypeValidator do
       validator = CaseLinkTypeValidator.new
       validator.validate(case_link)
       expect(case_link.errors[:linked_case])
-        .to eq ["can't link a FOI case to a FOI as a related case"]
+        .to eq ["cannot link a FOI case to a FOI as a related case"]
       expect(CaseLinkTypeValidator)
         .to have_received(:classes_can_be_linked_with_type?)
               .with(type: 'related',

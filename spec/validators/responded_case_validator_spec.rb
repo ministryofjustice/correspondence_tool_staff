@@ -18,7 +18,7 @@ describe RespondedCaseValidator do
       it 'is not valid' do
         ico.date_responded = nil
         expect(ico).not_to be_valid
-        expect(ico.errors[:date_responded]).to eq ["can't be blank"]
+        expect(ico.errors[:date_responded]).to eq ["cannot be blank"]
       end
     end
 
@@ -34,7 +34,7 @@ describe RespondedCaseValidator do
       it 'is not valid' do
         ico.date_responded = ico.received_date - 1.day
         expect(ico).not_to be_valid
-        expect(ico.errors[:date_responded]).to eq ["can't be before date received"]
+        expect(ico.errors[:date_responded]).to eq ["cannot be before date received"]
       end
     end
 
@@ -42,7 +42,7 @@ describe RespondedCaseValidator do
       it 'is not valid' do
         ico.date_responded = 1.day.from_now.to_date
         expect(ico).not_to be_valid
-        expect(ico.errors[:date_responded]).to eq ["can't be in the future"]
+        expect(ico.errors[:date_responded]).to eq ["cannot be in the future"]
       end
     end
   end

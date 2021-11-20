@@ -201,13 +201,13 @@ class Case::SAR::Standard < Case::Base
       errors.add(
         :message,
         :blank,
-        message: "can't be blank if no request files attached"
+        message: "cannot be blank if no request files attached"
       )
 
       errors.add(
         :uploaded_request_files,
         :blank,
-        message: "can't be blank if no case details entered"
+        message: "cannot be blank if no case details entered"
       )
     end
   end
@@ -217,7 +217,7 @@ class Case::SAR::Standard < Case::Base
       errors.add(
         :message,
         :blank,
-        message: "can't be blank if no request files attached"
+        message: "cannot be blank if no request files attached"
       )
     end
   end

@@ -34,6 +34,7 @@ en:
         date_received_step: Date received - Creating an Offender SAR Complaint case - Track-a-query
         set_deadline_step: Set deadline - Creating an Offender SAR Complaint case - Track-a-query
       sar: Creating a SAR case - Track-a-query
+      sar_internal_review: Creating a SAR Internal Review case - Track-a-query
     create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
     data_request_page: Record data request
@@ -82,3 +83,4 @@ en:
     address_book: Organisation Address book - Track-a-query
     add_an_address: Add an address - Track-a-query
     edit_an_address: Edit an address - Track-a-query
+    partial_case_flags: Edit partial case information - %{case_number} - Track-a-query 

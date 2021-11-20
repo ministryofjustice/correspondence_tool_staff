@@ -44,7 +44,7 @@ describe UserCreationService do
           params[:email] = ''
           service.call
           expect(service.result).to eq :error
-          expect(service.user.errors[:email]).to eq ["can't be blank"]
+          expect(service.user.errors[:email]).to eq ["cannot be blank"]
         end
       end
     end

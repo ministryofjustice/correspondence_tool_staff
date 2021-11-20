@@ -447,7 +447,9 @@ feature 'offender sar complaint case creation by a manager', js: true do
     expect(cases_show_page).to have_content linked_case.subject_type.humanize
     expect(cases_show_page).to have_content linked_case.subject_address
     expect(cases_show_page).to have_content target_case.complaint_type
-    expect(cases_show_page).to have_content target_case.complaint_subtype.humanize
+    expect(cases_show_page)
+    .to have_content I18n.t(
+        "helpers.label.offender_sar_complaint.complaint_subtype.#{target_case.complaint_subtype}")
     expect(cases_show_page).to have_content target_case.priority.humanize
   end
 

@@ -1,40 +1,11 @@
 class Case::SARPolicy < Case::BasePolicy
 
-  class Scope
-
-    def initialize(user, scope)
-      @user  = user
-      @scope = scope
-    end
-
+  class Scope < Case::BaseScopePolicy
+    
     def correspondence_type
       CorrespondenceType.sar
     end 
-
-    def resolve
-      if @user.permitted_correspondence_types.include? correspondence_type
-        scopes = []
-        if @user.manager?
-          scopes << @scope
-        end
-
-        if @user.responder?
-          scopes << @scope.where(id: Assignment.team_restriction(@user.id, :responder))
-        end
-
-        if @user.approver?
-          scopes << @scope.where(id: Assignment.team_restriction(@user.id, :approver))
-        end
-
-        if scopes.any?
-          scopes.reduce { |memo, scope| memo.or(scope) }
-        else
-          @scope.none
-        end
-      else
-        @scope.none
-      end
-    end   
+    
   end
 
   def respond_and_close?

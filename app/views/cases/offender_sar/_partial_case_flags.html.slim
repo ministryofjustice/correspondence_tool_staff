@@ -1,0 +1,33 @@
+.grid-row
+  .column-full.data-requests
+    h2.request--heading
+      = t('cases.offender_sar.partial_case_flags_heading')
+
+    - if !case_details.is_partial_case.nil?
+
+      table#data-request-table.report
+        thead
+          tr
+            th 
+              = t('cases.offender_sar.is_partial_case_flag_heading')
+            th 
+              = t('cases.offender_sar.partial_case_letter_sent_dated_heading')
+            th 
+              = t('cases.offender_sar.further_actions_required_heading')
+        tbody
+          tr
+            td
+              - if case_details.is_partial_case?
+                = t('cases.offender_sar.flag_choice_yes')
+              - else
+                = t('cases.offender_sar.flag_choice_no')                
+            td
+              - if case_details.partial_case_letter_sent_dated.present?
+                time datetime="#{case_details.partial_case_letter_sent_dated}"
+                  = l case_details.partial_case_letter_sent_dated, format: :default
+            td
+              - if case_details.further_actions_required.present?
+                = case_details.further_actions_required.humanize
+
+.button-holder
+  = link_to I18n.t('button.update_partial_flags'), edit_step_case_sar_offender_path(case_details, "partial_case_flags"), class: 'button-tertiary'

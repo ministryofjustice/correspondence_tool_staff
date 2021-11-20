@@ -59,17 +59,17 @@ class CaseExtendSARDeadlineService
     if @extension_period.blank?
       @case.errors.add(
         :extension_period,
-        "can't be blank"
+        "cannot be blank"
       )
     elsif @extension_deadline > extension_limit
       @case.errors.add(
         :extension_period,
-        "can't be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date"
+        "cannot be more than #{@case.time_period_description(@case.extension_time_limit)} beyond the received date"
       )
     elsif @extension_deadline < @case.external_deadline
       @case.errors.add(
         :extension_period,
-        "can't be before the final deadline"
+        "cannot be before the final deadline"
       )
     end
   end
@@ -78,7 +78,7 @@ class CaseExtendSARDeadlineService
     if @reason.blank?
       @case.errors.add(
         :reason_for_extending,
-        "can't be blank"
+        "cannot be blank"
       )
     end
   end

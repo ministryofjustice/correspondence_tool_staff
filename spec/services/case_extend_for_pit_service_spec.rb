@@ -60,7 +60,7 @@ describe CaseExtendForPITService do
       it 'adds an error to the case' do
         service.call
         expect(case_being_drafted.errors[:reason_for_extending])
-          .to eq ["can't be blank"]
+          .to eq ["cannot be blank"]
       end
     end
 
@@ -80,7 +80,7 @@ describe CaseExtendForPITService do
       it 'adds an error to the case' do
         service.call
         expect(case_being_drafted.errors[:extension_deadline])
-          .to eq ["Date can't be blank"]
+          .to eq ["Date cannot be blank"]
       end
     end
 
@@ -110,7 +110,7 @@ describe CaseExtendForPITService do
       it 'adds an error to the case' do
         service.call
         expect(case_being_drafted.errors[:extension_deadline])
-          .to eq ["Date can't be before the final deadline"]
+          .to eq ["Date cannot be before the final deadline"]
       end
     end
 

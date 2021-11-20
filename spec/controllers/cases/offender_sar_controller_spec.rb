@@ -102,8 +102,8 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
         it 'validates subject name and address' do
           remains_on_step 'subject-details'
-          expect(errors[:subject_full_name]).to eq ["can't be blank"]
-          expect(errors[:subject_address]).to eq ["can't be blank"]
+          expect(errors[:subject_full_name]).to eq ["cannot be blank"]
+          expect(errors[:subject_address]).to eq ["cannot be blank"]
         end
 
         # unset radio options and date fields are hard to validate
@@ -111,9 +111,9 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         # contains logic to set required ones if missing
         it 'sets empty values and validates other fields' do
           remains_on_step 'subject-details'
-          expect(errors[:date_of_birth]).to eq ["can't be blank"]
-          expect(errors[:subject_type]).to eq ["can't be blank"]
-          expect(errors[:flag_as_high_profile]).to eq ["can't be blank"]
+          expect(errors[:date_of_birth]).to eq ["cannot be blank"]
+          expect(errors[:subject_type]).to eq ["cannot be blank"]
+          expect(errors[:flag_as_high_profile]).to eq ["cannot be blank"]
         end
       end
 
@@ -128,7 +128,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
           it 'requires third_party to be set' do
             remains_on_step 'requester-details'
-            expect(errors[:third_party]).to eq ["can't be blank"]
+            expect(errors[:third_party]).to eq ["cannot be blank"]
           end
         end
 
@@ -171,7 +171,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
           it 'requires recipient to be set' do
             remains_on_step 'recipient-details'
-            expect(errors[:recipient]).to eq ["can't be blank"]
+            expect(errors[:recipient]).to eq ["cannot be blank"]
           end
         end
 
@@ -210,7 +210,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
           it 'fails to be valid' do
             remains_on_step 'request-details'
-            expect(errors[:request_dated]).to eq ["can't be in the future."]
+            expect(errors[:request_dated]).to eq ["cannot be in the future."]
           end
         end
       end
@@ -226,7 +226,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
           it 'requires received date to be set' do
             remains_on_step 'date-received'
-            expect(errors[:received_date]).to eq ["can't be blank"]
+            expect(errors[:received_date]).to eq ["cannot be blank"]
           end
         end
 
@@ -245,7 +245,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
           it 'fails to be valid' do
             remains_on_step 'date-received'
-            expect(errors[:received_date]).to eq ["can't be in the future."]
+            expect(errors[:received_date]).to eq ["cannot be in the future."]
           end
         end
       end
@@ -354,10 +354,10 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   # Utility methods
 
   def third_party_validations_found(errors)
-    expect(errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-    expect(errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
-    expect(errors[:third_party_relationship]).to eq ["can't be blank"]
-    expect(errors[:postal_address]).to eq ["can't be blank"]
+    expect(errors[:third_party_name]).to eq ["cannot be blank if company name not given"]
+    expect(errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
+    expect(errors[:third_party_relationship]).to eq ["cannot be blank"]
+    expect(errors[:postal_address]).to eq ["cannot be blank"]
   end
 
   def remains_on_step(step)

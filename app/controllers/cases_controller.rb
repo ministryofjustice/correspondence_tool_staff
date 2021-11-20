@@ -206,23 +206,36 @@ class CasesController < ApplicationController
     # @permitted_correspondence_types so that it's changed as an atomic
     # operation ... we don't want to possibly allow SAR or ICO types to be
     # permitted at any point.
-
     @permitted_correspondence_types = []
     if current_user.managing_teams.present?
-      types = current_user.managing_teams.first.correspondence_types.menu_visible.order(:name).to_a
-      types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
-      types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
-      types.delete(CorrespondenceType.offender_sar) unless FeatureSet.offender_sars.enabled?
-      @permitted_correspondence_types += types
+      @permitted_correspondence_types += correspondence_types_for_current_user
     elsif policy(Case::Base).can_manage_offender_sar?
       @permitted_correspondence_types << CorrespondenceType.offender_sar
-      @permitted_correspondence_types << CorrespondenceType.offender_sar_complaint if FeatureSet.offender_sar_complaints.enabled?
+      @permitted_correspondence_types << CorrespondenceType.offender_sar_complaint 
     end
   end
+
 
   def preserve_step_state
     # this method left intentionally blank
     # used by Steppable cases where validation fails on a particular step
     # e.g. Offender SAR
   end
+
+  private
+
+  def correspondence_types_for_current_user
+    types = current_user.  
+              managing_teams.  
+              first.  
+              correspondence_types.  
+              menu_visible.  
+              order(:name).to_a
+
+    sar_ir_enabled = FeatureSet.sar_internal_review.enabled?
+
+    types.delete(CorrespondenceType.sar_internal_review) unless sar_ir_enabled
+    types
+  end
+
 end

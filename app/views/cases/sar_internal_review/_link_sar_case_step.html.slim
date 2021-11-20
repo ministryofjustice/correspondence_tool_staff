@@ -1,0 +1,17 @@
+- content_for :heading, flush: true
+  = t('cases.sar_internal_review.link_sar_case_heading')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+        
+= form_for @case.object, url: url, as: :sar_internal_review do |f|
+
+  .form-group
+
+    = f.text_field :original_case_number
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', class: 'button'

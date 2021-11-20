@@ -82,4 +82,9 @@
                 edit_case:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
+                mark_as_partial_case:
+                mark_as_further_actions_required:
+                mark_as_awaiting_response_for_partial_case:
+                unmark_as_partial_case:
+                unmark_as_further_actions_required:
 

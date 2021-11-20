@@ -46,8 +46,8 @@ describe Case::SAR::Offender do
       kase = build :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
 
       expect(kase).not_to be_valid
-      expect(kase.errors[:subject_full_name]).to eq(["can't be blank"])
-      expect(kase.errors[:third_party]).to eq(["can't be blank"])
+      expect(kase.errors[:subject_full_name]).to eq(["cannot be blank"])
+      expect(kase.errors[:third_party]).to eq(["cannot be blank"])
     end
   end
 
@@ -98,7 +98,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, subject_type: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:subject_type]).to eq ["can't be blank"]
+        expect(kase.errors[:subject_type]).to eq ["cannot be blank"]
       end
     end
   end
@@ -129,7 +129,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, recipient: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:recipient]).to eq ["can't be blank"]
+        expect(kase.errors[:recipient]).to eq ["cannot be blank"]
       end
     end
   end
@@ -146,7 +146,7 @@ describe Case::SAR::Offender do
       it 'validates presence of postal address when recipient is third party' do
         kase = build :offender_sar_case, :third_party, postal_address: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:postal_address]).to eq ["can't be blank"]
+        expect(kase.errors[:postal_address]).to eq ["cannot be blank"]
       end
     end
   end
@@ -173,7 +173,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, date_of_birth: 1.day.from_now)
         expect(kase).not_to be_valid
-        expect(kase.errors[:date_of_birth]).to eq ["can't be in the future."]
+        expect(kase.errors[:date_of_birth]).to eq ["cannot be in the future."]
       end
     end
 
@@ -181,7 +181,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, date_of_birth: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:date_of_birth]).to eq ["can't be blank"]
+        expect(kase.errors[:date_of_birth]).to eq ["cannot be blank"]
       end
     end
   end
@@ -209,7 +209,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, received_date: 1.day.from_now)
         expect(kase).not_to be_valid
-        expect(kase.errors[:received_date]).to eq ["can't be in the future."]
+        expect(kase.errors[:received_date]).to eq ["cannot be in the future."]
       end
     end
   end
@@ -227,7 +227,7 @@ describe Case::SAR::Offender do
       it 'errors' do
         kase = build(:offender_sar_case, request_dated: 1.day.from_now)
         expect(kase).not_to be_valid
-        expect(kase.errors[:request_dated]).to eq ["can't be in the future."]
+        expect(kase.errors[:request_dated]).to eq ["cannot be in the future."]
       end
     end
   end
@@ -271,16 +271,16 @@ describe Case::SAR::Offender do
       it 'validates third party names when third party is true' do
         kase = build :offender_sar_case, :third_party, third_party_name: '', third_party_company_name: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-        expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+        expect(kase.errors[:third_party_name]).to eq ["cannot be blank if company name not given"]
+        expect(kase.errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
       end
 
       it 'validates third party names when recipient is third party' do
         kase = build :offender_sar_case, third_party: false, third_party_name: '',
                       third_party_company_name: '', recipient: 'third_party_recipient'
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_name]).to eq ["can't be blank if company name not given"]
-        expect(kase.errors[:third_party_company_name]).to eq ["can't be blank if representative name not given"]
+        expect(kase.errors[:third_party_name]).to eq ["cannot be blank if company name not given"]
+        expect(kase.errors[:third_party_company_name]).to eq ["cannot be blank if representative name not given"]
       end
 
       it 'does not validate third_party names when ecipient is not third party too' do
@@ -295,14 +295,14 @@ describe Case::SAR::Offender do
       it 'must be present when thrid party is true' do
         kase = build :offender_sar_case, third_party: true, third_party_relationship: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
+        expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
       it 'must be present when third party is false but recipient is third party' do
         kase = build :offender_sar_case, third_party: false, third_party_relationship: '',
                       recipient: 'third_party_recipient'
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_relationship]).to eq ["can't be blank"]
+        expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
       it 'does not validates presence of third party relationship when recipient is not third party' do
@@ -404,29 +404,6 @@ describe Case::SAR::Offender do
   end
 
 
-  # describe '#within_escalation_deadline?' do
-  #   it 'returns false' do
-  #     sar = build(:offender_sar_case)
-  #     expect(sar.within_escalation_deadline?).to be_falsey
-  #   end
-  # end
-
-  # describe '#uploaded_request_files' do
-  #   it 'validates presence if message is missing' do
-  #     kase = build :sar_case, uploaded_request_files: [], message: ''
-  #     expect(kase).not_to be_valid
-  #     expect(kase.errors[:uploaded_request_files])
-  #       .to eq ["can't be blank if no case details entered"]
-  #   end
-
-  #   it 'does validates presence if message is present' do
-  #     kase = build :sar_case,
-  #                  uploaded_request_files: [],
-  #                  message: 'A message'
-  #     expect(kase).to be_valid
-  #   end
-  # end
-
   describe 'papertrail versioning', versioning: true do
     let(:kase) { create :offender_sar_case,
                            name: 'aaa',
@@ -510,103 +487,6 @@ describe Case::SAR::Offender do
     end
   end
 
-  # describe 'deadline' do
-  #   subject             { create :sar_case }
-  #   let(:max_extension) { Settings.sar_extension_limit.to_i }
-
-  #   describe '#deadline_extended' do
-  #     it 'is false by default' do
-  #       expect(subject.deadline_extended?).to be false
-  #     end
-  #   end
-
-  #   describe '#deadline_extendable?' do
-  #     it 'is true if external_deadline is less than max possible deadline' do
-  #       max_statutory_deadline = subject.initial_deadline + max_extension.days
-
-  #       expect(subject.deadline_extendable?).to eq true
-  #       expect(subject.external_deadline).to be < max_statutory_deadline
-  #     end
-
-  #     it 'is false when already extended equal or beyond satutory limit' do
-  #       sar = create :approved_sar
-  #       initial_deadline = DateTime.new(2019, 01, 01)
-  #       allow(sar).to receive(:initial_deadline) { initial_deadline }
-
-  #       sar.external_deadline = initial_deadline + max_extension.days
-
-  #       expect(sar.deadline_extendable?).to eq false
-  #     end
-  #   end
-
-  #   describe '#initial_deadline' do
-  #     it 'uses current external_deadline if not yet extended' do
-  #       expect(subject.initial_deadline).to eq subject.external_deadline
-  #     end
-
-  #     it 'checks transitions for initial deadline' do
-  #       extended_sar = create(:sar_case, :extended_deadline_sar)
-
-  #       original_deadline = extended_sar
-  #         .transitions
-  #         .where(event: 'extend_sar_deadline')
-  #         .order(:id)
-  #         .first
-  #         .original_final_deadline
-
-  #       expect(extended_sar.initial_deadline).to eq original_deadline
-  #     end
-  #   end
-
-  #   describe '#max_allowed_deadline_date' do
-  #     it 'is 60 calendar days after the initial_deadline' do
-  #       max_statutory_deadline = subject.initial_deadline + 60.days
-
-  #       expect(subject.max_allowed_deadline_date).to eq max_statutory_deadline
-  #     end
-  #   end
-
-  #   describe '#extend_deadline!' do
-  #     let(:approved_sar)      { create :approved_sar }
-  #     let(:initial_deadline)  { approved_sar.initial_deadline }
-  #     let(:new_deadline)      { DateTime.new(2019, 01, 01) }
-
-  #     it 'sets #deadline_extended to true' do
-  #       expect { approved_sar.extend_deadline!(new_deadline) }.to \
-  #         change(approved_sar, :deadline_extended)
-  #         .from(false)
-  #         .to(true)
-  #     end
-
-  #     it 'sets new external_deadline' do
-  #       expect { approved_sar.extend_deadline!(new_deadline) }.to \
-  #         change(approved_sar, :external_deadline)
-  #         .from(initial_deadline)
-  #         .to(new_deadline)
-  #     end
-  #   end
-
-  #   describe '#reset_deadline!' do
-  #     let(:extended_sar)      { create(:sar_case, :extended_deadline_sar) }
-  #     let(:initial_deadline)  { extended_sar.initial_deadline }
-  #     let(:extended_deadline) { extended_sar.external_deadline }
-
-  #     it 'sets #deadline_extended to false' do
-  #       expect { extended_sar.reset_deadline! }.to \
-  #         change(extended_sar, :deadline_extended)
-  #         .from(true)
-  #         .to(false)
-  #     end
-
-  #     it 'resets external_deadline' do
-  #       expect { extended_sar.reset_deadline! }.to \
-  #         change(extended_sar, :external_deadline)
-  #         .from(extended_deadline)
-  #         .to(initial_deadline)
-  #     end
-  #   end
-  # end
-
   describe '#reassign_gov_uk_dates' do
     let(:kase) { build :offender_sar_case }
 
@@ -643,7 +523,7 @@ describe Case::SAR::Offender do
     it 'validates presence of subject address' do
       kase = build :offender_sar_case, subject_address: ''
       expect(kase).not_to be_valid
-      expect(kase.errors[:subject_address]).to eq ["can't be blank"]
+      expect(kase.errors[:subject_address]).to eq ["cannot be blank"]
     end
   end
 
@@ -894,6 +774,25 @@ describe Case::SAR::Offender do
     it 'return user id' do
       kase = create :offender_sar_case, :vetting_in_progress
       expect(kase.user_dealing_with_vetting.id).to be kase.responding_team.users.first.id
+    end
+  end
+
+  describe '#partial flags' do
+    it 'errors when further_actions_required is true but is_partial_case' do
+      kase = build(:offender_sar_case, is_partial_case: false, further_actions_required: "yes")
+      expect(kase).not_to be_valid
+      expect(kase.errors[:is_partial_case]).to eq ['Cannot be marked if case is marked as SSCL managing case']
+    end
+
+    it 'validate values' do
+      kase = build(:offender_sar_case, is_partial_case: false, further_actions_required: "no")
+      expect(kase).to be_valid
+
+      kase = build(:offender_sar_case, is_partial_case: true, further_actions_required: "yes")
+      expect(kase).to be_valid
+
+      kase = build(:offender_sar_case, is_partial_case: true, further_actions_required: "no")
+      expect(kase).to be_valid
     end
   end
 end

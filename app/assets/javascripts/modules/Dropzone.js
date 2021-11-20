@@ -17,7 +17,7 @@ moj.Modules.Dropzone = {
       url : this.$target.data('url'),
       method : 'post',
       addRemoveLinks : true,
-      dictFileTooBig: "File is too big. Max file size is {{maxFilesize}}MB. We can't upload this file.",
+      dictFileTooBig: "File is too big. Max file size is {{maxFilesize}}MB. We cannot upload this file.",
       maxFilesize : this.$target.data('max-filesize-in-mb'),
       previewTemplate : this.$target.data('dz-template'),
       paramName : 'file',

@@ -21,7 +21,7 @@ describe('Modules.Dropzone.js', function() {
 
     it('should change the default error messages',function() {
       expect(dropzone.dropzone.options.dictFileTooBig)
-        .toEqual('File is too big. Max file size is {{maxFilesize}}MB. We can\'t upload this file.')
+        .toEqual('File is too big. Max file size is {{maxFilesize}}MB. We cannot upload this file.')
     })
   })
 });

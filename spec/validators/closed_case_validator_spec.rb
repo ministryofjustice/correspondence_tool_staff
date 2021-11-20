@@ -57,19 +57,19 @@ describe 'ClosedCaseValidator' do
       it 'errors if date_responded blank' do
         kase.date_responded = nil
         expect(kase).not_to be_valid
-        expect(kase.errors[:date_responded]).to eq(["can't be blank"])
+        expect(kase.errors[:date_responded]).to eq(["cannot be blank"])
       end
 
       it 'errors if date_responded in the future' do
         kase.date_responded = 3.days.from_now
         expect(kase).not_to be_valid
-        expect(kase.errors[:date_responded]).to eq(["can't be in the future"])
+        expect(kase.errors[:date_responded]).to eq(["cannot be in the future"])
       end
 
       it 'errors if date before received date' do
         kase.date_responded = kase.received_date - 1.day
         expect(kase).not_to be_valid
-        expect(kase.errors[:date_responded]).to eq(["can't be before date received"])
+        expect(kase.errors[:date_responded]).to eq(["cannot be before date received"])
       end
 
       it 'does not error if between received date and today' do
@@ -477,7 +477,7 @@ describe 'ClosedCaseValidator' do
         it 'is invalid' do
           responded_ico.date_ico_decision_received = nil
           expect(responded_ico).not_to be_valid
-          expect(responded_ico.errors[:date_ico_decision_received]).to eq ["can't be blank"]
+          expect(responded_ico.errors[:date_ico_decision_received]).to eq ["cannot be blank"]
         end
       end
       context 'future' do
