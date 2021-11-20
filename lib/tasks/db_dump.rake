@@ -220,12 +220,15 @@ namespace :db do
   namespace :restore do
 
     desc 'Loads an SQL dump of the database created by db:dump:<env> rake task to the local database'
-    task :local, [:dir] => :environment do |_task, args|
+    task :local, [:dir, :requie_confirmation] => :environment do |_task, args|
       if is_on_production?
         puts "Cannot run this command on production environment!"
       else
-        safeguard
-        args.with_defaults(:dir => "dumps_latest_from_#{args[:bucket]}")
+        args.with_defaults(:requie_confirmation => 'true')
+        args.with_defaults(:dir => "dumps_latest_from_#{Settings.case_uploads_s3_bucket}")
+        if args[:requie_confirmation].to_s == 'true'
+          safeguard
+        end
         dirname = Rails.root.join(args[:dir])
   
         require File.expand_path(File.dirname(__FILE__) + '/../../lib/db/database_loader')
