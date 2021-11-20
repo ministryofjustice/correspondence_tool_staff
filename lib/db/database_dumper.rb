@@ -14,14 +14,14 @@ class DatabaseDumper
   CLASSES_TO_ANONYMISE = [Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment]
 
 
-  def initialize(tag, running_mode = 'tasks', is_store_to_s3_bucket = true, s3_bucket = nil)
+  def initialize(tag, running_mode = 'tasks', is_store_to_s3_bucket = true, s3_bucket_setting = nil)
     ####
     # tag:  part of the file name for  the anonymised data, it is ID of the anonymised db copy on s3 bucket
     # is_store_to_s3_bucket: this flag is default to true, if you want to debug it at local, you can turn it off
-    # s3_bucket: nil, this setting need to be provided if is_store_to_s3_bucket 
+    # s3_bucket_setting: nil, this setting need to be provided if is_store_to_s3_bucket 
     # running_mode: tasks: run those tasks in the background, other value will turn it off
     ####
-    @s3_bucket = s3_bucket
+    @s3_bucket_setting = s3_bucket_setting
     @tag = tag
     @is_store_to_s3_bucket = is_store_to_s3_bucket
     @running_mode = running_mode
@@ -32,7 +32,7 @@ class DatabaseDumper
   def run
     task_arguments = pack_task_arguments
     plan_tasks(task_arguments)
-    AnonymiserDBJob.new.store_anonymise_status(task_arguments, @tasks)
+    DatabaseAnonymizerTasks.new.store_anonymise_status(task_arguments, @tasks)
     trigger_tasks
   end
 
@@ -41,11 +41,10 @@ class DatabaseDumper
   def init_dump_environment
     @db_connection_url = ENV['DATABASE_URL'] || 'postgres://localhost/correspondence_platform_development'
     @dirname = "./dumps_#{@tag}"
-    @anonymizer = nil
-    @tasks = nil
+    @tasks = []
     @tables_to_anonymised = {}
     CLASSES_TO_ANONYMISE.each { |klass| @tables_to_anonymised[klass.table_name] = klass }
-
+    @timestamp = Time.now.strftime('%Y%m%d-%H%M%S')
     set_local_folder_for_saving_temp_files
   end
 
@@ -56,10 +55,12 @@ class DatabaseDumper
 
   def pack_task_arguments
     {
-      "db_connection_url": @db_connection_url
+      "db_connection_url": @db_connection_url,
       "dir_name": @dirname,
       "is_store_to_s3_bucket": @is_store_to_s3_bucket,
-      "tag": @tag
+      "tag": @tag, 
+      "timestamp": @timestamp,
+      "s3_bucket_setting": @s3_bucket_setting
     }
   end
 
@@ -69,70 +70,74 @@ class DatabaseDumper
   end 
 
   def trigger_tasks
-    @tasks.each do | task |
-      if @running_mode == 'tasks':
-        AnonymiserDBJob.perform_later(task['task_function'], task)
+    @tasks.slice(0, 10).each do | task |
+      if @running_mode == 'tasks'
+        AnonymiserDBJob.perform_later(task[:task_function], task)
       else
-        AnonymiserDBJob.new.execute_task(task['task_function'], task)
+        AnonymiserDBJob.new.execute_task(task[:task_function], task)
       end
     end 
   end 
 
   def add_initial_tasks(task_arguments)
     arguments = task_arguments.clone
-    arguments["task_function"] = "task_dump_schema_snapshot"
-    arguments["task_id"] = "task_dump_schema_snapshot"
-    @task << arguments
+    arguments[:task_function] = "task_dump_schema_snapshot"
+    arguments[:task_id] = "task_dump_schema_snapshot"
+    @tasks << arguments
 
     arguments = task_arguments.clone
-    arguments["task_function"] = "task_dump_data_models_snapshot"
-    arguments["task_id"] = "task_dump_data_models_snapshot"
-    @task << arguments
+    arguments[:task_function] = "task_dump_data_models_snapshot"
+    arguments[:task_id] = "task_dump_data_models_snapshot"
+    @tasks << arguments
 
     arguments = task_arguments.clone
-    arguments["task_function"] = "task_dump_pre_data_tables"
-    arguments["task_id"] = "task_dump_pre_data_tables"
-    @task << arguments
+    arguments[:task_function] = "task_dump_pre_data_tables"
+    arguments[:task_id] = "task_dump_pre_data_tables"
+    @tasks << arguments
   end 
 
   def add_tables_tasks(task_arguments)
+    table_counter = 1
     ActiveRecord::Base.connection.tables.each do | table_name |
       if TABLES_TO_BE_EXCLUDED.include? table_name
         next
       end
       if require_to_be_anonymised?(table_name)
-        add_anoymised_table_tasks(task_arguments, table_name)
+        add_anoymised_table_tasks(task_arguments, table_name, table_counter)
       else
-        add_clear_table_task(task_arguments, table_name)
+        add_clear_table_task(task_arguments, table_name, table_counter)
       end
-      counter += 1
+      table_counter += 1
     end 
   end
 
-  def add_clear_table_task(task_arguments, table_name)
+  def add_clear_table_task(task_arguments, table_name, table_counter)
     arguments = task_arguments.clone
-    arguments['table'] = table_name
-    arguments['task_function'] = "task_dump_clear_table"
-    arguments['task_id'] = "task_dump_clear_table"
+    arguments[:table] = table_name
+    arguments[:counter] = table_counter
+    arguments[:task_function] = "task_dump_clear_table"
+    arguments[:task_id] = "task_dump_clear_table"
     @tasks << arguments
   end
 
-  def add_anoymised_table_tasks(task_arguments, table_name)
+  def add_anoymised_table_tasks(task_arguments, table_name, table_counter)
     number_of_groups = cal_number_of_groups(@tables_to_anonymised[table_name])
     number_of_groups.times do | counter |
       arguments = task_arguments.clone
-      arguments['table'] = table_name
-      arguments['counter'] = counter
-      arguments['class_name'] = @tables_to_anonymised[table_name].to_s
-      arguments['offset'] = MAX_NUM_OF_RECORDS_PER_GROUP * counter
-      arguments['task_function'] = "task_dump_anonymised_table"
-      arguments['task_id'] = "task_dump_anonymised_table_#{counter}"
+      arguments[:table] = table_name
+      arguments[:counter] = table_counter
+      arguments[:offset_counter] = counter
+      arguments[:number_of_groups] = number_of_groups
+      arguments[:class_name] = @tables_to_anonymised[table_name].to_s
+      arguments[:limit] = MAX_NUM_OF_RECORDS_PER_GROUP
+      arguments[:task_function] = "task_dump_anonymised_table"
+      arguments[:task_id] = "task_dump_anonymised_table_#{counter}"
       @tasks << arguments
     end    
   end
 
   def require_to_be_anonymised?(table_name)
-    @anonymize && @tables_to_anonymised.keys().include?(table_name)
+    @tables_to_anonymised.keys().include?(table_name)
   end
 
   def cal_number_of_groups(klass)

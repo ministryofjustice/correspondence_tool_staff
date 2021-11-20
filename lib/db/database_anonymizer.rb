@@ -2,7 +2,6 @@ class DatabaseAnonymizer
 
   attr_reader :tables_to_anonymised
 
-  # CLASSES_TO_ANONYMISE = [Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment]
 
   class RecordToCopySql
     def initialize(record)
@@ -93,13 +92,7 @@ class DatabaseAnonymizer
   end
 
   def initialize(max_num_of_records_per_group=10000)
-    @tables_to_anonymised = {}
     @max_num_of_records_per_group = max_num_of_records_per_group
-    CLASSES_TO_ANONYMISE.each { |klass| @tables_to_anonymised[klass.table_name] = klass }
-  end
-
-  def run
-    CLASSES_TO_ANONYMISE.each { |klass| anonymise_class(klass) }
   end
 
   def anonymise_class(klass, filename)
@@ -107,28 +100,31 @@ class DatabaseAnonymizer
     number_of_groups = cal_number_of_groups(klass)
 
     number_of_groups.times do | counter |
-      number_file = "%.#{number_of_groups.to_s.length}i" % ( counter + 1 )
-      full_path_filename = File.expand_path("#{filename}.#{number_file}.sql")
-      File.open(full_path_filename, 'a') do |fp|
-        puts full_path_filename
-        files << full_path_filename
-
-        sql_settings_start(fp, klass)
-
-        offset = @max_num_of_records_per_group * counter
-        limit = @max_num_of_records_per_group
-        last_primary_value = 0
-        klass.offset(offset).limit(limit).order(klass.primary_key.to_sym).each do | record |
-          sql_statement = raw_sql_from_record(record)
-          fp.puts sql_statement
-
-          last_primary_value = record._read_attribute(Case::Base.primary_key)
-        end
-
-        sql_settings_end(fp, klass, last_primary_value: last_primary_value)
-      end
+      files << anonymise_class_part(klass, filename, number_of_groups, counter)
     end
     files
+  end
+
+  def anonymise_class_part(klass, filename, number_of_groups, counter)
+    number_file = "%.#{number_of_groups.to_s.length}i" % ( counter + 1 )
+    full_path_filename = File.expand_path("#{filename}.#{number_file}.sql")
+    File.open(full_path_filename, 'a') do |fp|
+      puts full_path_filename
+      sql_settings_start(fp, klass)
+
+      offset = @max_num_of_records_per_group * counter
+      limit = @max_num_of_records_per_group
+      last_primary_value = 0
+      klass.offset(offset).limit(limit).order(klass.primary_key.to_sym).each do | record |
+        sql_statement = raw_sql_from_record(record)
+        fp.puts sql_statement
+
+        last_primary_value = record._read_attribute(Case::Base.primary_key)
+      end
+
+      sql_settings_end(fp, klass, last_primary_value: last_primary_value)
+    end
+    full_path_filename
   end
 
   private

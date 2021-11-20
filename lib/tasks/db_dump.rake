@@ -78,10 +78,11 @@ namespace :db do
       is_store_to_s3_bucket = (args[:storage] == 'bucket')
       puts 'exporting unanonymised database data'
       
-      dumper = DatabaseDumper.new(args[:tag], "tasks", is_store_to_s3_bucket, s3_bucket)
+      s3_bucket_setting = nil
       if is_store_to_s3_bucket
-        dumper.set_up_bucket(args)
+        s3_bucket_setting = set_up_bucket(args)
       end
+      dumper = DatabaseDumper.new(args[:tag], "tasks", is_store_to_s3_bucket, s3_bucket_setting)
       dumper.run
     end
 
@@ -101,17 +102,22 @@ namespace :db do
     end
 
     desc 'Delete all but latest s3 database dump files'
-    task :delete_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
+    task :delete_s3_dumps, [:tag, :requie_confirmation, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       args.with_defaults(:tag => ENV["DB_ANON_TAG"] || "latest")
+      args.with_defaults(:requie_confirmation => 'true')
       s3_bucket = init_s3_bucket(args)
       puts "Delete dump files in s3 with tag of #{args[:bucket]}"
-      DumperUtils.question_user(
-        'Are you sure the folder under the bucket is not the folder of storing important user files? Please check the following files carefully. ')
+      if args[:requie_confirmation].to_s == 'true'
+        DumperUtils.question_user(
+          'Are you sure the folder under the bucket is not the folder of storing important user files? Please check the following files carefully. ')
+      end
       dump_files = s3_bucket.list("dumps/#{args[:tag]}")
       dump_files.sort_by(&:last_modified).reverse.map do |object|
         puts "Key: #{object.key}"
       end
-      confirm_delete_dumps_file
+      if args[:requie_confirmation].to_s == 'true'
+        confirm_delete_dumps_file
+      end
       dump_files.sort_by(&:last_modified).map do |object|
         print "Deleting #{object.key}..."
         object.delete
@@ -155,6 +161,13 @@ namespace :db do
     end    
 
     private
+
+    def set_up_bucket(args)
+      { "bucket_key_id": args[:bucket_key_id] || ENV["AWS_ACCESS_KEY_ID"],
+        "bucket_access_key": args[:bucket_access_key] || ENV["AWS_SECRET_ACCESS_KEY"],
+        "bucket": args[:bucket] || Settings.case_uploads_s3_bucket
+      }
+    end 
 
     def safeguard
       puts 'Are you sure you need to do this data dump?'

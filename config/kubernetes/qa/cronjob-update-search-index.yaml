@@ -1,9 +1,9 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: restore-anonymised-db-to-local
+  name: update-search-index
 spec:
-  schedule: "10 12 * * 5"
+  schedule: "30 * * * 5"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -18,7 +18,7 @@ spec:
               - -c
               - |-
                 set +ex
-                rake db:dump:copy_s3_dumps && db:restore:local
+                ./cts cases reindex --non-indexed 5000
             env:
               - name: DATABASE_URL
                 valueFrom:

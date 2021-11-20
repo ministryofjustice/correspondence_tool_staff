@@ -1,5 +1,8 @@
-class DatabaseAnonymizerTasks
 
+require File.join(Rails.root, 'lib', 'tasks', 'rake_task_helpers', 'dumper_utils')
+require File.join(Rails.root, 'lib', 'db', 'database_anonymizer')
+
+class DatabaseAnonymizerTasks
 
   def initialize
     @s3_bucket = nil
@@ -7,25 +10,31 @@ class DatabaseAnonymizerTasks
     @is_store_to_s3_bucket = true
     @dirname = nil
     @db_connection_url = nil
+    @anonymizer = nil
+    @task_arguments = nil
   end
 
   def execute_task(task_name, task_arguments)
+    @task_arguments = task_arguments
     set_up_execute_variables(task_arguments)
     result_file = self.__send__(task_name, task_arguments)
     result_file = compresssed_file(result_file)
-    upload_file_to_s3(result_file)
+    if @is_store_to_s3_bucket
+      upload_file_to_s3(result_file)
+    end
   end
 
   def store_anonymise_status(task_arguments, tasks)
     redis = Redis.new
     tasks_ids = tasks.map {|task| task[:task_id]}
     anonymizer_job_info = {
-      "start_time": Time.now.strftime('%Y%m%d-%H%M%S'), 
-      "tag": task_arguments["tag"], 
+      "start_time": task_arguments[:timestamp], 
+      "tag": task_arguments[:tag], 
       "number_of_tasks": tasks_ids.size, 
       "tasks": tasks_ids
     }
-    redis.set(report_job_guid, anonymizer_job_info.to_json)
+    anonymizer_job_id = "anonymizer_job_#{task_arguments[:tag]}_#{Date.today.strftime('%Y%m%d')}"
+    redis.set(anonymizer_job_id, anonymizer_job_info.to_json)
   end
   
   private 
@@ -33,19 +42,20 @@ class DatabaseAnonymizerTasks
   # Setup the variables requried for task
 
   def set_up_execute_variables(task_arguments)
-    set_up_bucket(task_arguments)
-    @tag = task_arguments['tag']
-    @is_store_to_s3_bucket = task_arguments['is_store_to_s3_bucket']
-    @db_connection_url = task_arguments['db_connection_url']
-    @dirname = task_arguments['dirname']
-    created_at = Time.now.strftime('%Y%m%d-%H%M%S')
+    set_up_bucket()
+    @tag = task_arguments[:tag]
+    @is_store_to_s3_bucket = task_arguments[:is_store_to_s3_bucket]
+    @db_connection_url = task_arguments[:db_connection_url]
+    @dirname = task_arguments[:dir_name]
+    created_at = task_arguments[:timestamp]
     @base_file_name = "#{@dirname}/#{@tag}_#{created_at}"
+    @anonymizer = DatabaseAnonymizer.new(task_arguments[:limit])
   end
 
-  def set_up_bucket(task_arguments)
-    bucket_key_id = task_arguments['bucket_key_id'] || ENV["AWS_ACCESS_KEY_ID"]
-    bucket_access_key = task_arguments['bucket_access_key'] || ENV["AWS_SECRET_ACCESS_KEY"]
-    bucket = task_arguments['bucket'] || Settings.case_uploads_s3_bucket
+  def set_up_bucket()
+    bucket_key_id = @task_arguments[:s3_bucket_setting][:bucket_key_id]
+    bucket_access_key = @task_arguments[:s3_bucket_setting][:bucket_access_key]
+    bucket = @task_arguments[:s3_bucket_setting][:bucket]
     @s3_bucket = S3BucketHelper::S3Bucket.new(
       bucket_key_id, 
       bucket_access_key,
@@ -55,7 +65,7 @@ class DatabaseAnonymizerTasks
   # The actual function of processing different task 
 
   def task_dump_schema_snapshot(_)
-    filename = "#{dirname}/#{@tag}_database_schema_snapshot.snap"
+    filename = "#{@dirname}/#{@tag}_database_schema_snapshot.snap"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -s -f #{filename}"
     result = system command_line
     raise 'Unable to execute pg_dump command' unless result == true
@@ -99,24 +109,36 @@ class DatabaseAnonymizerTasks
     filename
   end
 
-  def task_dump_anonymised_table(table_name, base_file_name, counter)
-    table_name = task_arguments['table_name']
-    counter = task_arguments['counter']
-    class_name = task_arguments['class_name']
+  def task_dump_anonymised_table(task_arguments)
+    table_name = task_arguments[:table]
+    if table_name.blank?
+      raise RuntimeError.new("No table name is provided")
+    end
+    counter = task_arguments[:counter]
+    offset_counter = task_arguments[:offset_counter]
+    number_of_groups = task_arguments[:number_of_groups]
+    class_name = task_arguments[:class_name]
     model_class = class_name.constantize
-    base_filename = "#{base_file_name}_#{counter >= 10 ? counter.to_s : '0'+counter.to_s}_#{table_name}"
-    filename = @anonymizer.anonymise_class(model_class, base_filename)
+    base_filename = "#{@base_file_name}_#{convert_counter_to_string(counter)}_#{table_name}"
+    filename = @anonymizer.anonymise_class_part(model_class, base_filename, number_of_groups, offset_counter)
     filename
   end
 
   def task_dump_clear_table(task_arguments)
-    table_name = task_arguments['table_name']
-    counter = task_arguments['counter']
-    filename = "#{@base_file_name}_#{table_name}_#{counter}"
+    table_name = task_arguments[:table]
+    if table_name.blank?
+      raise RuntimeError.new("No table name is provided")
+    end
+    counter = task_arguments[:counter]
+    filename = "#{@base_file_name}_#{convert_counter_to_string(counter)}_#{table_name}"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password --data-only --table=#{table_name} -f #{filename}.sql"
     result = system command_line
     raise 'Unable to execute pg_dump command' unless result == true
     "#{filename}.sql"
+  end
+
+  def convert_counter_to_string(counter)
+    counter >= 10 ? counter.to_s : '0'+counter.to_s
   end
 
    # The actual function of processing different task 
@@ -135,14 +157,14 @@ class DatabaseAnonymizerTasks
           File.read(upload_file), 
           metadata: {"created_at" => Date.today.to_s}
         )
-        if respondse && response['ETag'].present?
+        if response && response['etag'].present?
           puts 'done'.green
         else
           puts "Failed to upload this file, the response is #{response}"
           raise "Failed to upload #{upload_file}, will try again!"
         end
       rescue
-        init_s3_bucket
+        set_up_bucket
         retry if (retries += 1) < 2
       end
     end
