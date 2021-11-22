@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: db-anonymizer
 spec:
-  schedule: "10 8 * * 5"
+  schedule: "10 8 * * 6"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:

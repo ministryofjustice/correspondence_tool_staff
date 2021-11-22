@@ -3,7 +3,7 @@ kind: CronJob
 metadata:
   name: restore-anonymised-db-to-local
 spec:
-  schedule: "10 12 * * 5"
+  schedule: "10 12 * * 6"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
