@@ -11,7 +11,7 @@ class DatabaseDumper
 
   MAX_NUM_OF_RECORDS_PER_GROUP = 10000
   TABLES_TO_BE_EXCLUDED = ["reports", "search_queries", "sessions", "versions"]
-  CLASSES_TO_ANONYMISE = [Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment]
+  CLASSES_TO_ANONYMISE = [Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment, Contact]
 
 
   def initialize(tag, running_mode = 'tasks', is_store_to_s3_bucket = true, s3_bucket_setting = nil)
@@ -42,8 +42,8 @@ class DatabaseDumper
     @db_connection_url = ENV['DATABASE_URL'] || 'postgres://localhost/correspondence_platform_development'
     @dirname = "./dumps_#{@tag}"
     @tasks = []
-    @tables_to_anonymised = {}
-    CLASSES_TO_ANONYMISE.each { |klass| @tables_to_anonymised[klass.table_name] = klass }
+    @tables_to_anonymise = {}
+    CLASSES_TO_ANONYMISE.each { |klass| @tables_to_anonymise[klass.table_name] = klass }
     @timestamp = Time.now.strftime('%Y%m%d-%H%M%S')
     set_local_folder_for_saving_temp_files
   end
@@ -66,7 +66,8 @@ class DatabaseDumper
 
   def plan_tasks(task_arguments)
     add_initial_tasks(task_arguments)
-    add_tables_tasks(task_arguments)
+    table_counter = add_tables_tasks(task_arguments)
+    add_end_tasks(task_arguments, table_counter)
   end 
 
   def trigger_tasks
@@ -96,6 +97,14 @@ class DatabaseDumper
     @tasks << arguments
   end 
 
+  def add_end_tasks(task_arguments, table_counter)
+    arguments = task_arguments.clone
+    arguments[:task_function] = "task_dump_post_data_tables"
+    arguments[:counter] = table_counter
+    arguments[:task_id] = "task_dump_post_data_tables"
+    @tasks << arguments
+  end
+
   def add_tables_tasks(task_arguments)
     table_counter = 1
     ActiveRecord::Base.connection.tables.each do | table_name |
@@ -109,6 +118,7 @@ class DatabaseDumper
       end
       table_counter += 1
     end 
+    table_counter
   end
 
   def add_clear_table_task(task_arguments, table_name, table_counter)
@@ -121,14 +131,14 @@ class DatabaseDumper
   end
 
   def add_anoymised_table_tasks(task_arguments, table_name, table_counter)
-    number_of_groups = cal_number_of_groups(@tables_to_anonymised[table_name])
+    number_of_groups = cal_number_of_groups(@tables_to_anonymise[table_name])
     number_of_groups.times do | counter |
       arguments = task_arguments.clone
       arguments[:table] = table_name
       arguments[:counter] = table_counter
       arguments[:offset_counter] = counter
       arguments[:number_of_groups] = number_of_groups
-      arguments[:class_name] = @tables_to_anonymised[table_name].to_s
+      arguments[:class_name] = @tables_to_anonymise[table_name].to_s
       arguments[:limit] = MAX_NUM_OF_RECORDS_PER_GROUP
       arguments[:task_function] = "task_dump_anonymised_table"
       arguments[:task_id] = "task_dump_anonymised_table_#{counter}"
@@ -137,7 +147,7 @@ class DatabaseDumper
   end
 
   def require_to_be_anonymised?(table_name)
-    @tables_to_anonymised.keys().include?(table_name)
+    @tables_to_anonymise.keys().include?(table_name)
   end
 
   def cal_number_of_groups(klass)

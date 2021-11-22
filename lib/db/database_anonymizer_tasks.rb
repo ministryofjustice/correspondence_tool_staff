@@ -80,8 +80,9 @@ class DatabaseAnonymizerTasks
     filename 
   end
 
-  def task_dump_post_data_tables(_)
-    filename = "#{@base_file_name}_post_data.sql"
+  def task_dump_post_data_tables(task_arguments)
+    counter = task_arguments[:counter]
+    filename = "#{@base_file_name}_#{counter}_post_data.sql"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -O --section=post-data -f #{filename}"
     result = system command_line
     raise 'Unable to execute pg_dump command' unless result == true
