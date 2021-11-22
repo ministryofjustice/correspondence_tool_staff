@@ -1,6 +1,6 @@
 class DatabaseAnonymizer
 
-  attr_reader :tables_to_anonymised
+  attr_reader :tables_to_anonymise
 
 
   class RecordToCopySql
@@ -172,6 +172,17 @@ class DatabaseAnonymizer
       user.email = Faker::Internet.email(name: user.full_name)
     end
     user
+  end
+
+  def anonymize_contacts(contact)
+    contact.name = Faker::Company.name unless contact.name.blank?
+    contact.email = Faker::Internet.email(name: contact.email) unless contact.email.blank?
+    contact.address_line_1 = Faker::Address.street_address unless contact.address_line_1.blank?
+    contact.address_line_2 = ""
+    contact.postcode = Faker::Address.zip unless contact.postcode.blank?
+    contact.town = Faker::Address.city unless contact.town.blank?
+    contact.county = Faker::Address.state unless contact.county.blank?
+    contact
   end
 
   def allow_to_be_reserved?(user)
