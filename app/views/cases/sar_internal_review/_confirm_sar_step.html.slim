@@ -7,19 +7,24 @@
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
         
 section.case-info
-  = render partial: "cases/sar_internal_review/original_sar_details",
+  h2.form-label-bold
+    = "Subject of case"
+    p
+      = linked_sar_case.subject
+  br
+  = render partial: "cases/sar/case_details",
             locals: {case_details: linked_sar_case, link_type: nil, allow_editing: false}
 
 = form_for @case, url: url, as: :sar_internal_review do |f|
 
   .form-group
 
-    #js-offender-sar-confirm-actions
+    #js-sar-internal-review-confirm-actions
       = f.radio_button_fieldset :original_case_number, choices: [:yes, :no], inline: true
 
   input name="current_step" type="hidden" value=@case.current_step
 
-  = f.submit 'Continue', class: 'button', id: 'btn-offender-sar-complaint-continue', disabled: true
+  = f.submit 'Continue', class: 'button', id: 'btn-sar-internal-review-continue', disabled: true
 
 br
 = link_to "Back", @back_link, class: 'govuk-back-link'
