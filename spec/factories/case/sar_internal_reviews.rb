@@ -33,7 +33,7 @@ FactoryBot.define do
   factory :sar_internal_review, class: Case::SAR::InternalReview do
     transient do
       creation_time       { 4.business_days.ago }
-      identifier          { "new sar case" }
+      identifier          { "new sar ir case" }
       managing_team       { find_or_create :team_dacu }
       manager             { managing_team.managers.first }
       responding_team     { find_or_create :sar_responding_team }
@@ -44,6 +44,7 @@ FactoryBot.define do
       i_am_deleted        { false }
     end
 
+    association :original_case, factory: [:sar_case]
     current_state                 { 'unassigned' }
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(name: identifier) }

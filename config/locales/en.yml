@@ -62,7 +62,7 @@ en:
         case:
           attributes:
             email:
-              blank: "and address can't both be blank"
+              blank: "and address cannot both be blank"
             external_deadline:
               too_far_past_received: 'cannot be more than a year past the date received'
               before_received: "cannot be before date received"
@@ -70,14 +70,14 @@ en:
               after_external: "cannot be after final deadline"
               before_received: "cannot be before date received"
             received_date:
-              not_in_future: "can't be in the future."
+              not_in_future: "cannot be in the future."
               past: too far in past.
             date_draft_compliant:
-              before_received: "can't be before date received"
-              not_in_future: "can't be in the future."
-              after_date_responded: "can't be after the date responded"
+              before_received: "cannot be before date received"
+              not_in_future: "cannot be in the future."
+              after_date_responded: "cannot be after the date responded"
             date_of_birth:
-              not_in_future: "can't be in the future."
+              not_in_future: "cannot be in the future."
             related_case_links:
               not_empty: "are not empty. Please remove all linked cases in order to delete this case."
             number_final_pages:
@@ -85,27 +85,46 @@ en:
             number_exempt_pages:
               not_whole_number: 'must be a positive whole number'
             request_dated:
-              not_in_future: "can't be in the future."
+              not_in_future: "cannot be in the future."
+            partial_case_letter_sent_dated:
+              not_in_future: "cannot be in the future."
             postal_address:
-              blank: "and email can't both be blank"
+              blank: "and email cannot both be blank"
             number:
               duplication: |
                 An error has occurred and your case could not be created.
                 Please try again.
             requester_type:
-              blank: Type of requester must be selected
+              blank: must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
 
         case/foi/standard:
           attributes: &foi_attr
+            received_date:
+              blank: cannot be blank
+            email: 
+              blank: cannot be blank
+            name: 
+              blank: cannot be blank
+            postal_address: 
+              blank: cannot be blank
+            requester_type: 
+              blank: cannot be blank
+            delivery_method: 
+              blank: cannot be blank
+            subject: 
+              blank: cannot be blank
+            flag_for_disclosure_specialists: 
+              blank: cannot be blank
             date_responded:
-              before_received: "can't be before date received"
-              future: "can't be in the future"
+              before_received: "cannot be before date received"
+              future: "cannot be in the future"
+              blank: cannot be blank
             message:
-              optional_blank: "and uploaded request files can't both be blank"
+              optional_blank: "and uploaded request files cannot both be blank"
             uploaded_request_files:
-              optional_blank: "and message box for saving request detail can't both be blank"
+              optional_blank: "and message box for saving request detail cannot both be blank"
 
         case/ico:
           attributes:
@@ -126,8 +145,9 @@ en:
         case/ico/foi:
           attributes:
             date_responded:
-              before_received: "can't be before date received"
-              future: "can't be in the future"
+              before_received: "cannot be before date received"
+              future: "cannot be in the future"
+              blank: cannot be blank
           related_case_number:
             does_not_match_original: >-
               You've linked an FOI case as the original for this appeal. You
@@ -141,74 +161,132 @@ en:
         case/overturned_ico/sar:
           attributes:
             received_date:
-              future: can't be in the future
+              future: cannot be in the future
               past: is too far in the past
+              blank: cannot be blank
             external_deadline:
-              past: can't be in the past
+              past: cannot be in the past
               future: is too far in the future
+              blank: cannot be blank
             original_ico_appeal:
               not_ico_sar: is not an ICO appeal for a SAR case
+              blank: cannot be blank
             original_case:
               not_sar: is not a SAR case
+              blank: cannot be blank
+            email:
+              blank: cannot be blank
+            postal_address:
+              blank: cannot be blank
+            ico_officer_name:
+              blank: cannot be blank
+
         case/overturned_ico/foi:
           attributes:
             <<: *foi_attr
             received_date:
-              future: can't be in the future
+              future: cannot be in the future
               past: is too far in the past
+              blank: cannot be blank
             external_deadline:
               past: cannot be in the past
               future: is too far in the future
+              blank: cannot be blank
             original_ico_appeal:
               not_ico_foi: is not an ICO appeal for a FOI case
+              blank: cannot be blank
             original_case:
               not_foi: is not a FOI case
+              blank: cannot be blank
         case/sar:
           attributes:
             third_party:
               inclusion: Please choose yes or no
+        case/sar/standard:
+          attributes:
+            subject_full_name:
+              blank: cannot be blank
+            subject_type:
+              blank: cannot be blank
+            email:
+              blank: cannot be blank
+            postal_address:
+              blank: cannot be blank
+            name:
+              blank: cannot be blank
+            third_party_relationship:
+              blank: cannot be blank
+            received_date:
+              blank: cannot be blank
+            reply_method:
+              blank: cannot be blank
+            subject:
+              blank: cannot be blank
+        case/sar/internal_review:
+          original_case_number:
+            not_authorised: can't be authorised to link this case
         case/sar/offender:
           attributes:
             date_responded:
-              before_received: "can't be before date received"
-              future: "can't be in the future"
+              before_received: "cannot be before date received"
+              future: "cannot be in the future"
             recipient:
-              third_party: can't be third_party_recipient if third party requester
+              third_party: cannot be third_party_recipient if third party requester
+              blank: cannot be blank
             third_party_company_name:
-              blank: can't be blank if representative name not given
+              blank: cannot be blank if representative name not given
             third_party_name:
-              blank: can't be blank if company name not given
+              blank: cannot be blank if company name not given
             third_party_relationship:
-              blank: can't be blank
+              blank: cannot be blank
             third_party_address:
-              blank: can't be blank
+              blank: cannot be blank
+            is_partial_case: 
+              invalid: Cannot be marked if case is marked as SSCL managing case
+            subject_full_name:
+              blank: cannot be blank
+            subject_address:
+              blank: cannot be blank
+            subject_type:
+              blank: cannot be blank
+            received_date:
+              blank: cannot be blank
+            date_of_birth:
+              blank: cannot be blank
         case/sar/offender_complaint:
           attributes:
             ico_contact_name:
-              blank: can't be blank
+              blank: cannot be blank
             ico_contact_email:
-              blank: can't be blank if ICO contact phone not given
+              blank: cannot be blank if ICO contact phone not given
             ico_contact_phone:
-              blank: can't be blank if ICO contact email not given
+              blank: cannot be blank if ICO contact email not given
             ico_reference:
-              blank: can't be blank
+              blank: cannot be blank
             gld_contact_name:
-              blank: can't be blank
+              blank: cannot be blank
             gld_contact_email:
-              blank: can't be blank if GLD contact phone not given
+              blank: cannot be blank if GLD contact phone not given
             gld_contact_phone:
-              blank: can't be blank if GLD contact email not given
+              blank: cannot be blank if GLD contact email not given
             gld_reference:
-              blank: can't be blank
+              blank: cannot be blank
             linked_cases:
               original_case_already_related: already linked as the original case
             external_deadline:
               before_received: "cannot be before date received"
               past: cannot be in the past
-          original_case_number:
-            blank: "Enter original case number"
-            not_authorised: can't be authorised to link this case
-            wrong_type: Original case must be Offender SAR
+            original_case:
+              blank: cannot be blank
+              not_authorised: cannot be authorised to link this case
+              wrong_type: Original case must be Offender SAR
+            complaint_type:
+              blank: cannot be blank
+            complaint_subtype:
+              blank: cannot be blank
+            priority:
+              blank: cannot be blank
+
         assignment:
           attributes:
             state:
@@ -228,24 +306,36 @@ en:
               blank: must be completed
               future: cannot be in the future
             request_type_note:
-              blank: can't be blank
+              blank: cannot be blank
             cached_date_received:
               blank: must be provided if request is complete
               future: cannot be in the future
               not_empty: should be blank if the request is not complete
+            request_type:
+              blank: cannot be blank
         linked_case:
-          missing: "doesn't exist"
-          references_self: "can't link to the same case"
-          wrong_type: "can't link a %{case_class} case to a %{linked_case_class} as a %{type} case"
+          missing: "does not exist"
+          references_self: "cannot link to the same case"
+          wrong_type: "cannot link a %{case_class} case to a %{linked_case_class} as a %{type} case"
         report:
           attributes:
             correspondence_type:
-              blank: "can't be blank"
+              blank: "cannot be blank"
             period_start: &report_dates
-              in_future: "can't be in the future."
+              in_future: "cannot be in the future."
             period_end:
               <<: *report_dates
-              before_start_date: "can't be after Date to"
+              before_start_date: "cannot be after Date to"
+            report_type_id:
+              blank: cannot be blank
+        user:
+          attributes:
+            email:
+              blank: cannot be blank
+        case_transition:
+          attributes:
+            message:
+              blank: cannot be blank            
 
   pundit:
     assignment_policy:
@@ -293,6 +383,8 @@ en:
     case/sar/offender_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
+      can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
+      can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -354,6 +446,7 @@ en:
     search: Search
     edit: Edit
     delete: Delete
+    update_partial_flags: Update partial case
 
   helpers:
     fieldset:
@@ -449,6 +542,7 @@ en:
       offender_sar:
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
         date_of_birth: "For example, 12 11 2007"
+        partial_case_letter_sent_dated: "For example, 12 11 2007"
         message_hint: Include any details that will be useful for processing the case (optional)
         reason_for_lateness_note_hint: Please provide details to why this case is late
         number_exempt_pages: "Pages removed from the SAR as exemptions"
@@ -552,7 +646,7 @@ en:
         external_deadline: Final deadline
         ico_officer_name: Name of the ICO information officer who's handling this case
         ico_reference_number: ICO case reference number
-        message: ICO's request details can't be blank
+        message: ICO's request details cannot be blank
         original_case: 
         received_date: Date received at MOJ
       ico:
@@ -646,6 +740,9 @@ en:
         third_party_relationship: Relationship to the subject
         total: Total
         capture_reason_for_lateness: Please select reason why the case is out of time?
+        is_partial_case: Is this a confirmed SSCL COVID-19 partial case?
+        partial_case_letter_sent_dated: Date letter sent from SSCL
+        further_actions_required: Is this a COVID-19 partial case being managed by SSCL?
       case_sar_offender_complaint:
         complaint_type: What sort of complaint is this?
         complaint_subtype: What is the nature of the complaint?
@@ -698,6 +795,14 @@ en:
         total: Total
         settlement_cost: Enter settlement cost
         total_cost: Enter total costs
+        complaint_subtype:
+          sscl_partial_case: SSCL partial case
+          covid_partial_response: COVID partial response
+          missing_data: Missing data
+          inaccurate_data: Inaccurate data
+          redacted_data: Redacted data
+          timeliness: Timeliness
+          not_applicable: Not applicable
       feedback:
         comment: Help make this service better
       search_query:
@@ -726,6 +831,8 @@ en:
         offender_sar_complaint: Offender SAR complaint
         foi: FOI
         sar: SAR
+        sar_internal_review: SAR IR
+        sar_internal_review_long: SAR Internal Review
         ico: ICO
         overturned_sar: Overturned SAR
         overturned_foi: Overturned FOI
@@ -749,7 +856,7 @@ en:
         <i class="icon icon-important">
           <span class="visually-hidden">Important</span>
         </i>
-        <strong>You can't update a response after marking it as sent.</strong>
+        <strong>You cannot update a response after marking it as sent.</strong>
       </p>
     offender_sar:
       reason_for_lateness:
@@ -1072,6 +1179,7 @@ en:
         sub_heading: Edit Complaint case
     update:
       case_updated: Case updated
+      case_partial_flag_updated: Case updated
     filters:
       index:
         <<: *cases_list
@@ -1177,7 +1285,7 @@ en:
       success: The response has been marked as sent.
     foi:
       case_details:
-        cannot_update_closure_html: "This is an old case with closure details that can't be edited. If you need to edit this case <a href=\"#new_feedback\">let us know</a>."
+        cannot_update_closure_html: "This is an old case with closure details that cannot be edited. If you need to edit this case <a href=\"#new_feedback\">let us know</a>."
       close_form:
         date_example: For example, 30 1 2017
         close_date:  Date response sent
@@ -1198,6 +1306,9 @@ en:
       new:
         extension_period: How long would you like to extend by?
         extend_further: The deadline for this case will be extended by a further %{time_period_description}.
+    sar_internal_review:
+      link_sar_case_heading: Link case details
+      check_sar_details_heading: Check details of the SAR
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals
@@ -1217,6 +1328,13 @@ en:
       request_info_hint: Use this space to store additional case information
       move_case_back_heading: Reason for reverting case status
       record_reason_for_lateness_heading: Reason for lateness
+      edit_partial_case_flags_heading: Edit partial case information
+      partial_case_flags_heading: SSCL COVID-19 partial case
+      is_partial_case_flag_heading: Confirmed SSCL COVID-19 partial case
+      partial_case_letter_sent_dated_heading: Date letter sent from SSCL
+      further_actions_required_heading: SSCL managing case
+      flag_choice_yes: "Yes"
+      flag_choice_no: "No"
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
@@ -1281,6 +1399,7 @@ en:
       Case::ICO::FOI: ICO Appeal - FOI
       Case::ICO::SAR: ICO Appeal - SAR
       Case::SAR::Standard: Non-offender SAR
+      Case::SAR::InternalReview:  SAR Internal review
       Case::SAR::Offender: Offender SAR
       Case::OverturnedICO::SAR: Overturned ICO appeal for non-offender SAR
       Case::OverturnedICO::FOI: Overturned ICO appeal for FOI

@@ -119,7 +119,7 @@ RSpec.describe DataRequest, type: :model do
 
       it 'ensures the note is present' do
         expect(subject).not_to be_valid
-        expect(subject.errors[:request_type_note]).to eq ["can't be blank"]
+        expect(subject.errors[:request_type_note]).to eq ["cannot be blank"]
       end
     end
 
@@ -195,7 +195,7 @@ RSpec.describe DataRequest, type: :model do
       it 'errors' do
         kase = build(:data_request, request_type: nil)
         expect(kase).not_to be_valid
-        expect(kase.errors[:request_type]).to eq ["can't be blank"]
+        expect(kase.errors[:request_type]).to eq ["cannot be blank"]
       end
     end
   end

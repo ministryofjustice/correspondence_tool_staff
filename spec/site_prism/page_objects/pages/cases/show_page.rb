@@ -53,6 +53,10 @@ module PageObjects
           element :record_data_request, '#action--record-data-request'
         end
 
+        section :flags_items, '.multiple-choice' do
+          element :partial_case_flag, '#is_partial_case'
+        end
+
         section :link_case,
                 PageObjects::Sections::Cases::LinkedCasesSection, '.case-linking'
 

@@ -59,7 +59,7 @@ gem 'sentry-raven', '~> 3.1.2'
 gem 'slim-rails', '~> 3.2'
 gem 'shell-spinner'
 gem 'schema_plus_enums', '~> 0.1'
-gem 'sidekiq', '~> 6.2.2'
+gem 'sidekiq', '~> 6.3.1'
 
 gem 'table_print'
 # gem 'thor-rails'
@@ -75,8 +75,8 @@ gem 'uglifier', '>= 1.3.0'
 gem 'tzinfo-data'
 
 group :test do
-  gem 'capybara', '~> 3.35.2'
-  gem 'i18n-tasks', '~> 0.9.30'
+  gem 'capybara', '~> 3.36.0'
+  gem 'i18n-tasks', '~> 0.9.35'
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 5.0'
   gem 'site_prism', '= 3.1'
@@ -100,12 +100,12 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.9'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 1.22.1', require: false
-  gem 'rubocop-rspec', '~> 2.5.0', require: false
+  gem 'rubocop', '~> 1.22.3', require: false
+  gem 'rubocop-rspec', '~> 2.6.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
-  gem 'selenium-webdriver', '~> 3.142.6'
+  gem 'selenium-webdriver', '~> 4.0.3'
   gem 'spring-commands-rspec'
 end
 

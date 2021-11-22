@@ -101,7 +101,7 @@ RSpec.describe Report, type: :model do
       )
     }
 
-    it "can't be in the future" do
+    it "cannot be in the future" do
       expect(tomorrow).to_not be_valid
     end
 

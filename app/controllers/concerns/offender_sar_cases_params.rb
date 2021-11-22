@@ -58,6 +58,13 @@ module OffenderSARCasesParams
       )
   end
 
+  def partial_case_flags_params
+    params.require(:offender_sar).permit(
+      :is_partial_case,
+      :further_actions_required,
+      :partial_case_letter_sent_dated_dd, :partial_case_letter_sent_dated_mm, :partial_case_letter_sent_dated_yyyy,
+      )
+  end
 
   def respond_offender_sar_params
     params.require(:offender_sar).permit(
