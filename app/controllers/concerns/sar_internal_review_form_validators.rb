@@ -1,28 +1,24 @@
-module OffenderFormValidators
+module SarInternalReviewFormValidators 
   extend ActiveSupport::Concern
 
   private
 
   def validate_case_details(params)
     set_empty_value_if_unset(params, "subject_type")
-    set_empty_value_if_unset_for_date(params, "date_of_birth")
-    set_empty_value_if_unset(params, "flag_as_high_profile")
+    set_flag_for_disclosure_specialists(params)
     object.assign_attributes(params)
-    object.validate_date_of_birth
+    # object.validate_third_party_relationship
+    # object.validate_third_party_address
+    # object.validate_request_dated
+    # object.validate_received_date
   end
 
-  def validate_date_received(params)
-    set_empty_value_if_unset_for_date(params, "received_date")
-    object.assign_attributes(params)
-    object.validate_received_date
+  def set_flag_for_disclosure_specialists(params)
+    params.merge!('flag_for_disclosure_specialists' => 'yes')
   end
 
   def set_empty_value_if_unset(params, field)
     params.merge!(field => "") unless params[field].present?
-  end
-
-  def set_trigger_case_param(params, field)
-    params.merge!(field => true) unless params[field].present?
   end
 
   def set_empty_value_if_unset_for_date(params, field)

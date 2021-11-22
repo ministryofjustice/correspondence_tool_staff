@@ -1,5 +1,62 @@
-h1 
-  = "holding page pending next step"
+- content_for :heading, flush: true
+  = t('cases.sar_internal_review.case_details')
 
-h2
-  = "Case name: #{@case.name}"
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+
+table
+  tbody.sar-basic-details
+    = render partial: 'cases/sar/data_subject', locals: { case_details: @case }
+    = render partial: 'cases/sar/subject_type', locals: { case_details: @case }
+
+= form_for @case, as: :sar_internal_review, url: case_create_action(@case)  do |f|
+  br
+  section
+    header
+    #third-party.form-group
+      = f.radio_button_fieldset(:third_party) do |fieldset|
+        - fieldset.radio_input(true, text_method: :humanize)
+          = f.text_field :name
+          = f.text_field :third_party_relationship
+        - fieldset.radio_input(false, text_method: :humanize)
+  section
+    header
+
+    .form-group
+      = f.gov_uk_date_field :received_date,
+              {legend_text: t('cases.new.received_date'),
+                      form_hint_text: t('cases.new.received_date_copy'),
+                      today_button: {class: ''} }
+      = f.text_field :subject
+
+      = f.text_area :message, { rows: 10 }
+
+  / label.form-label
+  /   = t('.dropzone')
+
+  /   .grid-row
+  /     .column-two-thirds
+  /       div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+  /       = render partial: 'shared/dropzone_form',
+  /               locals: { s3_direct_post: @s3_direct_post,
+  /                       file_input_name: 'sar[uploaded_request_files][]' }
+
+  h2.heading-medium How and where should the information be sent?
+  = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
+    - fieldset.radio_input('send_by_email',
+                           panel_id: 'reply_method_send_by_email_panel')
+    - fieldset.revealing_panel(:reply_method_send_by_email_panel) do |panel|
+      - panel.email_field :email
+
+    - fieldset.radio_input('send_by_post',
+                           panel_id: 'reply_method_send_by_post_panel')
+
+    - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
+      - panel.text_area :postal_address, {rows: 4}
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Continue', class: 'button'

@@ -21,7 +21,7 @@ module Cases
     def create
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
-      @case.creator = current_user #to-do Remove when we use the case create service
+      @case.creator = current_user
       @case.current_step = params[:current_step]
       if steps_are_completed? 
         if @case.valid_attributes?(create_params) && @case.valid?

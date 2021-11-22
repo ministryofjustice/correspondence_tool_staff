@@ -1,9 +1,12 @@
 module SarInternalReviewCaseForm
   extend ActiveSupport::Concern
 
+  include SarInternalReviewFormValidators
+
   STEPS = %w[link-sar-case
              confirm-sar
-             case-details].freeze
+             case-details
+             holding_page].freeze
 
   def steps
     STEPS
@@ -61,11 +64,17 @@ module SarInternalReviewCaseForm
       :third_party,
       :third_party_relationship,
       :reply_method,
-      :uploaded_request_files
     ]
     fields_subject_details.each do | single_field |
       params[single_field] = object.original_case.send(single_field)
     end
+    params
+  end
+
+  def params_after_step_case_details(params)
+    params.merge!(original_case_id: object.original_case_id)
+    params.delete(:original_case_number)
+
     params
   end
 

@@ -10,4 +10,7 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
     h.step_case_sar_offender_index_path
   end
 
+  def subject_type_display
+    object.subject_type.humanize
+  end
 end
