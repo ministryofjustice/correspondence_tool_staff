@@ -32,11 +32,28 @@ feature 'SAR Internal Review Case creation by a manager' do
 
     expect(page).to have_content("Original case cannot link a SAR Internal review case to a FOI as a original case")
 
+
+    fill_in :sar_internal_review_original_case_number, with: sar_case.number
+
+    click_button 'Continue'
+
+    click_link 'Back', visible: false, match: :first
+
+    expect(page).to have_content("Link case details")
+
     fill_in :sar_internal_review_original_case_number, with: sar_case.number
 
     click_button 'Continue'
 
     expect(page).to have_content(sar_case.subject_full_name)
+    expect(page).to have_content(sar_case.subject)
+    expect(page).to have_content(sar_case.email)
     expect(page).to have_content('Check details of the SAR')
+
+    choose 'sar_internal_review[original_case_number]', option: 'yes', visible: false
+
+    click_button 'Continue'
+
+    expect(page).to have_content("Case name: #{sar_case.name}")
   end
 end
