@@ -80,7 +80,7 @@ namespace :db do
       
       s3_bucket_setting = nil
       if is_store_to_s3_bucket
-        s3_bucket_setting = set_up_bucket(args)
+        s3_bucket_setting = set_up_bucket_setting(args)
       end
       dumper = DatabaseDumper.new(args[:tag], "tasks", is_store_to_s3_bucket, s3_bucket_setting)
       dumper.run
@@ -162,7 +162,7 @@ namespace :db do
 
     private
 
-    def set_up_bucket(args)
+    def set_up_bucket_setting(args)
       { "bucket_key_id": args[:bucket_key_id] || ENV["AWS_ACCESS_KEY_ID"],
         "bucket_access_key": args[:bucket_access_key] || ENV["AWS_SECRET_ACCESS_KEY"],
         "bucket": args[:bucket] || Settings.case_uploads_s3_bucket
