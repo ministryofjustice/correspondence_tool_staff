@@ -15,4 +15,6 @@ table
 = form_for @case.object, as: :sar_internal_review, url: case_create_action(@case.object)  do |f|
   = render partial: 'cases/sar_internal_review/new_form_common', locals: { f: f, dropzone: true, kase: @case }
 
+  input name="current_step" type="hidden" value=@case.current_step
+
   = f.submit t('button.next_page_assign'), { class: 'button' }

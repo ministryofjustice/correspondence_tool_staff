@@ -1,31 +1,11 @@
-class Case::SAR::InternalReview < Case::SAR::Standard
+module SarInternalReviewFormValidators
+  extend ActiveSupport::Concern
 
-  include LinkableOriginalCase
-
-  validates_presence_of :original_case
-
-  attr_accessor :original_case_number
-
-  validate :validate_email
-  validate :validate_postal_address
-  validate :name
-  validate :validate_subject
-  validate :validate_third_party_relationship
-
-  after_initialize :remove_conditional_validators
-
-  class << self
-    def type_abbreviation
-      # This string is used when constructing paths or methods in other parts of
-      # the system. Ensure that it does not come from a user-supplied parameter,
-      # and does not contain special chars like slashes, etc.
-      'SAR_INTERNAL_REVIEW'
-    end
-
-    def state_machine_name
-      'sar'
-    end
+  def validate_case_details(params)
+    object.assign_attributes(params)
   end
+
+  private
 
   def validate_email
     if send_by_email? && email.blank?
@@ -80,16 +60,17 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   end
 
   def remove_conditional_validators
-    # This method is here due to an issue whereby
-    # the inline conditional validation declarations
-    # in the parent class are not respected by the
-    # valid_attributes? method in ApplicationRecord.
+    # This method is called in SarInternalReview 
+    # due to an issue whereby the inline conditional 
+    # validation declarations in the parent class 
+    # (Case::SAR::Standard) are not respected by the 
+    # .valid_attributes? method in ApplicationRecord.
     #
-    # This cause the validations to fire incorrectly.
+    # This causes the validations to fire incorrectly.
     # This method removes the inherited validators
     # which are then replaced with validator methods
     # in this class which are respected by
-    # valid_attributes? in ApplicationRecord
+    # .valid_attributes? in ApplicationRecord
     parent_class_validators_to_remove = [
       :name,
       :email,

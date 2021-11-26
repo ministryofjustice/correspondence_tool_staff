@@ -1,6 +1,8 @@
 module SarInternalReviewCaseForm
   extend ActiveSupport::Concern
 
+  include SarInternalReviewFormValidators
+
   STEPS = %w[link-sar-case
              confirm-sar
              case-details].freeze
@@ -38,7 +40,6 @@ module SarInternalReviewCaseForm
 
   def params_after_step_link_sar_case(params)
     params.merge!(original_case_id: object.original_case_id)
-    params.delete(:original_case_number)
 
     params
   end
@@ -49,7 +50,6 @@ module SarInternalReviewCaseForm
     fields_subject_details = [
       :delivery_method,
       :email,
-      :flag_for_disclosure_specialists,
       :message,
       :name,
       :postal_address,
@@ -61,7 +61,6 @@ module SarInternalReviewCaseForm
       :third_party,
       :third_party_relationship,
       :reply_method,
-      :uploaded_request_files
     ]
     fields_subject_details.each do | single_field |
       params[single_field] = object.original_case.send(single_field)
