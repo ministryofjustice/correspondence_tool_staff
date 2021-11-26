@@ -55,5 +55,9 @@ feature 'SAR Internal Review Case creation by a manager' do
     click_button 'Continue'
 
     expect(page).to have_content("Add case details")
+    expect(page).to have_content("Subject type")
+    expect(page).to have_content("Offender")
+    expect(page).to have_content("Full name of subject")
+    expect(page).to have_content("Subject 1")
   end
 end
