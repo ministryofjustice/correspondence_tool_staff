@@ -1,5 +1,4 @@
-h1 
-  = "holding page pending next step"
+- content_for :heading, flush: true
+  = t('cases.sar_internal_review.case_details')
 
-h2
-  = "Case name: #{@case.name}"
+= render partial: 'layouts/header'

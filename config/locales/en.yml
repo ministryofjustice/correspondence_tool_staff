@@ -1309,6 +1309,7 @@ en:
     sar_internal_review:
       link_sar_case_heading: Link case details
       check_sar_details_heading: Check details of the SAR
+      case_details: Add case details
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals
