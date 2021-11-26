@@ -50,14 +50,14 @@ describe LinkedCase do
         case_link = LinkedCase.create(case: foi, linked_case: foi)
         expect(case_link).not_to be_valid
         expect(case_link.errors[:linked_case])
-          .to eq ["can't link to the same case"]
+          .to eq ["cannot link to the same case"]
       end
 
       it 'cannot link to a SAR case' do
         case_link = LinkedCase.create(case: foi, linked_case: sar)
         expect(case_link).not_to be_valid
         expect(case_link.errors[:linked_case])
-          .to eq ["can't link a FOI case to a Non-offender SAR as a related case"]
+          .to eq ["cannot link a FOI case to a Non-offender SAR as a related case"]
       end
     end
   end

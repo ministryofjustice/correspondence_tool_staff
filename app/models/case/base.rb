@@ -188,7 +188,7 @@ class Case::Base < ApplicationRecord
   validates :current_state, presence: true, on: :update
   validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
   validates_presence_of :received_date
-  validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type can't be blank" }
+  validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type cannot be blank" }
   validates :workflow, inclusion: { in: %w{ standard trigger full_approval }, message: "invalid" }
 
   validate :validate_related_cases
@@ -724,6 +724,10 @@ class Case::Base < ApplicationRecord
 
   def is_sar?
     type_abbreviation == 'SAR'
+  end
+
+  def is_sar_internal_review?
+    type_abbreviation == 'SAR_INTERNAL_REVIEW'
   end
 
   def set_workflow!(new_workflow_name)

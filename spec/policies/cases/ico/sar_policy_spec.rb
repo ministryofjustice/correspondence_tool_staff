@@ -16,7 +16,7 @@ RSpec.describe Case::ICO::SARPolicy do
       described_class.new(manager, Case::ICO::SAR.all).resolve
 
       expect(Case::SARPolicy::Scope)
-        .to have_received(:new).with(manager, Case::ICO::SAR.all)
+        .to have_received(:new).with(manager, Case::ICO::SAR.all, nil)
     end
 
     it 'defers to resolving with Case::SARPolicy::Scope' do

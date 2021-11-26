@@ -113,7 +113,7 @@ class ClosedCaseValidator < ActiveModel::Validator
 
   def validate_date_ico_decision_received(rec)
     if rec.date_ico_decision_received.blank?
-      rec.errors.add(:date_ico_decision_received, "can't be blank")
+      rec.errors.add(:date_ico_decision_received, "cannot be blank")
     elsif rec.date_ico_decision_received > Date.today
       rec.errors.add(:date_ico_decision_received, 'future')
     elsif rec.date_ico_decision_received < rec.created_at.to_date
@@ -138,7 +138,7 @@ class ClosedCaseValidator < ActiveModel::Validator
 
   def validate_info_held_status(rec)
     if rec.info_held_status.nil?
-      rec.errors.add(:info_held_status, "can't be blank")
+      rec.errors.add(:info_held_status, "cannot be blank")
     end
   end
 
@@ -150,12 +150,12 @@ class ClosedCaseValidator < ActiveModel::Validator
 
   def validate_date_responded(rec)
     if rec.date_responded.blank?
-      rec.errors.add(:date_responded, "can't be blank")
+      rec.errors.add(:date_responded, "cannot be blank")
     else
       if rec.date_responded < rec.received_date
-        rec.errors.add(:date_responded, "can't be before date received")
+        rec.errors.add(:date_responded, "cannot be before date received")
       elsif rec.date_responded > Date.today
-        rec.errors.add(:date_responded, "can't be in the future")
+        rec.errors.add(:date_responded, "cannot be in the future")
       end
     end
   end
@@ -164,7 +164,7 @@ class ClosedCaseValidator < ActiveModel::Validator
   def validate_outcome(rec)
     if self.class.outcome_required?(info_held_status: rec.info_held_status_abbreviation)
       if rec.outcome.blank?
-        rec.errors.add(:outcome, "can't be blank")
+        rec.errors.add(:outcome, "cannot be blank")
       end
     elsif rec.outcome.present?
       rec.errors.add(:outcome, 'can only be present if information held or part held')

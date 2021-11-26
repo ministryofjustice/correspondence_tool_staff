@@ -168,7 +168,7 @@ class Case::ICO::Base < Case::Base
   def validate_late_team_recorded
     if prepared_for_recording_late_team? && responded_late?
       if late_team_id.blank?
-        errors.add(:late_team, "can't be blank")
+        errors.add(:late_team, "cannot be blank")
       end
     end
   end

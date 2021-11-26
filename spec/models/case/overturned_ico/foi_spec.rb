@@ -94,13 +94,13 @@ describe Case::OverturnedICO::FOI do
     context 'received_date' do
       it 'errors if blank' do
         expect(new_case).not_to be_valid
-        expect(new_case.errors[:received_date]).to eq ["can't be blank"]
+        expect(new_case.errors[:received_date]).to eq ["cannot be blank"]
       end
 
       it 'errors if in the future' do
         new_case.received_date = 1.day.from_now
         expect(new_case).not_to be_valid
-        expect(new_case.errors[:received_date]).to eq ["can't be in the future"]
+        expect(new_case.errors[:received_date]).to eq ["cannot be in the future"]
       end
 
       context 'too far in the past' do
@@ -139,7 +139,7 @@ describe Case::OverturnedICO::FOI do
     context 'external_deadline' do
       it 'errors if blank' do
         expect(new_case).not_to be_valid
-        expect(new_case.errors[:external_deadline]).to eq ["can't be blank"]
+        expect(new_case.errors[:external_deadline]).to eq ["cannot be blank"]
       end
 
       context 'in the past' do
@@ -184,7 +184,7 @@ describe Case::OverturnedICO::FOI do
       context 'blank' do
         it 'errors' do
           expect(new_case).not_to be_valid
-          expect(new_case.errors[:original_ico_appeal]).to eq ["can't be blank"]
+          expect(new_case.errors[:original_ico_appeal]).to eq ["cannot be blank"]
         end
       end
 
@@ -226,7 +226,7 @@ describe Case::OverturnedICO::FOI do
 
         it 'errors' do
           expect(new_case).not_to be_valid
-          expect(new_case.errors[:original_case]).to eq ["can't be blank"]
+          expect(new_case.errors[:original_case]).to eq ["cannot be blank"]
         end
       end
 
@@ -245,7 +245,7 @@ describe Case::OverturnedICO::FOI do
             ico_foi = create :ico_foi_case
             new_case.original_case = ico_foi
             new_case.valid?
-            expect(new_case.errors[:original_case]).to eq ["can't link a Overturned ICO appeal for FOI case to a ICO Appeal - FOI as a original case"]
+            expect(new_case.errors[:original_case]).to eq ["cannot link a Overturned ICO appeal for FOI case to a ICO Appeal - FOI as a original case"]
           end
         end
 
@@ -254,7 +254,7 @@ describe Case::OverturnedICO::FOI do
             sar = create :sar_case
             new_case.original_case = sar
             new_case.valid?
-            expect(new_case.errors[:original_case]).to eq ["can't link a Overturned ICO appeal for FOI case to a Non-offender SAR as a original case"]
+            expect(new_case.errors[:original_case]).to eq ["cannot link a Overturned ICO appeal for FOI case to a Non-offender SAR as a original case"]
           end
         end
       end

@@ -34,6 +34,7 @@ div id="case-#{@correspondence_type_key}" class="case"
             locals: { case_details: @case }
 
         - permitted_events = @permitted_events - [:add_responses, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
+        - permitted_events = permitted_events - [:mark_as_awaiting_response_for_partial_case, :mark_as_partial_case, :unmark_as_partial_case, :mark_as_further_actions_required, :unmark_as_further_actions_required]
         - if @case.type_abbreviation.in? %w( SAR OVERTURNED_SAR )
           - permitted_events.delete(:close)
 
@@ -56,6 +57,10 @@ div id="case-#{@correspondence_type_key}" class="case"
 
   - if @case.respond_to?(:ico_decision) && @case.ico_decision.present?
     = render partial: 'cases/ico/ico_final_decision', locals: {case_details: @case}
+
+  - if @case.offender_sar? && @case.closed?
+    section.case-info
+      = render partial: 'cases/offender_sar/partial_case_flags', locals: {case_details: @case}
 
   - if @case.type_of_offender_sar?
     section.case-info

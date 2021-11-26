@@ -70,6 +70,14 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
       CorrespondenceType.offender_sar
     end 
 
+    def resolve_responder_default
+      @scope
+    end
+
+    def resolve_approver_default
+      @scope
+    end
+
   end
 
 end
