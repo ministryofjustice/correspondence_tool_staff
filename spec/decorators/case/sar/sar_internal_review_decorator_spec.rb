@@ -15,4 +15,11 @@ describe Case::SAR::InternalReviewDecorator do
       expect(decorated_sar_internal_review_case.decorate.pretty_type).to eq 'SAR Internal Review'
     end
   end
+
+  describe '#subject_type_display' do
+    it 'humanizes the subject_type for display' do
+      kase = decorated_sar_internal_review_case.decorate
+      expect(kase.subject_type_display).to eq 'Offender'
+    end
+  end
 end

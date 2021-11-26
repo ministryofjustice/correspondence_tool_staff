@@ -15,4 +15,8 @@ class Case::SAR::InternalReviewDecorator < Case::SAR::StandardDecorator
   def case_route_path
     h.step_case_sar_internal_review_index_path
   end
+
+  def subject_type_display
+    object.subject_type.humanize
+  end
 end
