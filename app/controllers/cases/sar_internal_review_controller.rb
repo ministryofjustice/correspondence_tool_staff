@@ -14,25 +14,40 @@ module Cases
       permitted_correspondence_types
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
+
+      binding.pry
+
+      # this is nil on first load so is assigned
+      # to step.first in steppable
       @case.current_step = params[:step]
       @back_link = back_link_url
     end
 
     def create
       authorize case_type, :can_add_case?
-      @case = build_case_from_session(case_type)
+      if params[:current_step] == 'case-details'
+       @case = case_type.new(create_params).decorate
+      else
+        @case = build_case_from_session(case_type)
+      end
       @case.creator = current_user
       @case.current_step = params[:current_step]
+      
+
       if steps_are_completed? 
         if @case.valid_attributes?(create_params) && @case.valid?
           create_case
         else
+          save_session_on_error
           render :new
         end
       else
         if @case.valid_attributes?(create_params)
+          binding.pry
           go_next_step
         else
+          save_session_on_error
+          binding.pry
           render :new
         end
       end
@@ -40,6 +55,13 @@ module Cases
 
     def case_type
       Case::SAR::InternalReview
+    end
+
+    def create_case
+      @case.save
+      session[session_state] = nil
+      flash[:notice] = "Case created successfully"
+      redirect_to case_path(@case)
     end
 
     def create_params
@@ -66,6 +88,11 @@ module Cases
       session_persist_state(copy_params)
       get_next_step(@case)
       redirect_to "#{@case.case_route_path}/#{@case.current_step}"
+    end
+
+    def save_session_on_error
+      copy_params = create_params
+      session_persist_state(copy_params)
     end
 
     def get_next_step(obj)

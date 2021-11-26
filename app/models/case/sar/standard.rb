@@ -92,8 +92,10 @@ class Case::SAR::Standard < Case::Base
   validates_presence_of :name, :third_party_relationship, if: -> { third_party }
   validates_presence_of :reply_method
   validates_presence_of :subject_type
+
   validates_presence_of :email,          if: :send_by_email?
   validates_presence_of :postal_address, if: :send_by_post?
+
   validates :subject, presence: true, length: { maximum: 100 }
   validate :validate_message_or_uploaded_request_files, on: :create
   validate :validate_message_or_attached_request_files, on: :update

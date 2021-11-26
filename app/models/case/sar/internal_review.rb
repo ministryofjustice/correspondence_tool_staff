@@ -3,8 +3,16 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   include LinkableOriginalCase
 
   validates_presence_of :original_case
+  validate :validate_email
+  validate :validate_postal_address
+  validate :name
+  validate :validate_subject
+  validate :validate_third_party_relationship
 
   attr_accessor :original_case_number
+
+  after_initialize :remove_conditional_validators
+
 
   class << self
     def type_abbreviation
@@ -16,6 +24,85 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
     def state_machine_name
       'sar'
+    end
+
+  end
+
+  private
+
+  def validate_email
+    if send_by_email? && email.blank?
+        errors.add(
+          :email,
+          :blank
+        )
+    end
+  end
+
+  def validate_name
+    if third_party && name.blank?
+        errors.add(
+          :name,
+          :blank
+        )
+    end
+  end
+
+  def validate_postal_address
+    if send_by_post? && postal_address.blank?
+      errors.add(
+        :post_address,
+        :blank
+      )
+    end
+  end
+
+  def validate_subject
+    binding.pry
+    if subject.blank?
+      errors.add(
+        :subject,
+        :blank
+      )
+    end
+
+    if subject.size > 100
+      errors.add(
+        :subject,
+        message: "Subject must be under 100 characters in length"
+      )
+    end
+  end
+
+  def validate_third_party_relationship
+    if third_party && third_party_relationship.blank?
+      errors.add(
+        :third_party_relationship,
+        :blank
+      )
+    end
+  end
+
+  def remove_conditional_validators
+    # This method is here due to an issue whereby
+    # the inline conditional validation declarations
+    # in the parent class are not respected by the
+    # valid_attributes? method in ApplicationRecord.
+    #
+    # This cause the validations to fire incorrectly.
+    # This method removes the inherited validators
+    # which are then replaced with validator methods
+    # in this class which are respected by
+    # valid_attributes? in ApplicationRecord
+    parent_class_validators_to_remove = [
+      :name,
+      :email,
+      :postal_address,
+      :third_party_relationship,
+      :subject
+    ]
+    _validators.reject! do |key, _val| 
+      parent_class_validators_to_remove.include?(key)
     end
   end
 end

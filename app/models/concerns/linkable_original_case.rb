@@ -41,5 +41,4 @@ module LinkableOriginalCase
     end
   end
 
-
 end
