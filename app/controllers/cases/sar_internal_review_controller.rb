@@ -15,6 +15,7 @@ module Cases
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
       @case.current_step = params[:step]
+      @s3_direct_post = S3Uploader.for(@case, 'requests')
       @back_link = back_link_url
     end
 

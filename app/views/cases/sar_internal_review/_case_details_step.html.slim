@@ -10,3 +10,9 @@ table
   tbody.sar-basic-details
     = render partial: 'cases/sar/data_subject', locals: { case_details: @case }
     = render partial: 'cases/sar/subject_type', locals: { case_details: @case }
+
+
+= form_for @case.object, as: :sar_internal_review, url: case_create_action(@case.object)  do |f|
+  = render partial: 'cases/sar_internal_review/new_form_common', locals: { f: f, dropzone: true, kase: @case }
+
+  = f.submit t('button.next_page_assign'), { class: 'button' }

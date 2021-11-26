@@ -59,5 +59,13 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Offender")
     expect(page).to have_content("Full name of subject")
     expect(page).to have_content("Subject 1")
+
+    # form details
+    expect(page).to have_content("Is this information being requested on someone else's behalf?")
+    expect(page).to have_content("Case summary")
+    expect(page).to have_content("Full case details")
+    expect(page).to have_content("Dropzone")
+
+
   end
 end

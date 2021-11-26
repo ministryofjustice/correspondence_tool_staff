@@ -494,6 +494,8 @@ en:
           <div class="heading-medium">Where the information should be sent</div>
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+      sar_internal_review:
+        third_party: Is this information being requested on someone else's behalf?
       offender_sar_complaint:
         original_case_number: Is this the correct case?
         complaint_type: What sort of complaint is this?
