@@ -60,7 +60,7 @@ namespace :cases do
                 FROM cases left join 
                 (select * from linked_cases where linked_cases.type='original') as origin_linked_cases 
                 on cases.id = origin_linked_cases.case_id 
-                WHERE cases.deleted = false limit 100
+                WHERE cases.deleted = false
               SQL
       ActiveRecord::Base.connection.execute(query)
     end
@@ -76,7 +76,13 @@ namespace :cases do
       rescue => exception            
         errors << exception.message
       end
-      errors
+      if errors.empty?
+        byebug
+        kase = Case::Base.find_by_number(record['number'])
+        if kase.present? and kase.managing_team.nil?
+          errors << "This case doesn't have managing_team"
+        end
+      end
     end
 
     def remove_invalid_error_messages(errors)
