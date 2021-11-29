@@ -76,6 +76,6 @@ feature 'SAR Internal Review Case creation by a manager' do
     click_button 'Create case'
 
     expect(page).to have_content("Case created successfully")
-
+    expect(page).to have_content("new sar case subject 1")
   end
 end
