@@ -56,9 +56,11 @@ namespace :cases do
 
     def cases_scope
       query = <<-SQL
-                SELECT cases.*, linked_cases.linked_case_id
-                FROM cases left join linked_cases on cases.id = linked_cases.case_id 
-                WHERE cases.deleted = false and linked_cases.type='original'
+                SELECT cases.*, origin_linked_cases.linked_case_id
+                FROM cases left join 
+                (select * from linked_cases where linked_cases.type='original') as origin_linked_cases 
+                on cases.id = origin_linked_cases.case_id 
+                WHERE cases.deleted = false limit 100
               SQL
       ActiveRecord::Base.connection.execute(query)
     end
@@ -80,7 +82,8 @@ namespace :cases do
     def remove_invalid_error_messages(errors)
       allowed_errors = [
         "External deadline cannot be in the past", 
-        "Received date is too far in the past", 
+        "Received date is too far in the past",
+        "Received date too far in past.",
         "Final deadline cannot be in the past", 
         " No ICO decision files have been uploaded"]
       actual_errors = []
