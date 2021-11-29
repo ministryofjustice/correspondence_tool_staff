@@ -27,6 +27,8 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     end
   end
 
+  private
+
   def validate_email
     if send_by_email? && email.blank?
       errors.add(
@@ -80,16 +82,17 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   end
 
   def remove_conditional_validators
-    # This method is here due to an issue whereby
-    # the inline conditional validation declarations
-    # in the parent class are not respected by the
-    # valid_attributes? method in ApplicationRecord.
+    # This method is called in SarInternalReview 
+    # due to an issue whereby the inline conditional 
+    # validation declarations in the parent class 
+    # (Case::SAR::Standard) are not respected by the 
+    # .valid_attributes? method in ApplicationRecord.
     #
-    # This cause the validations to fire incorrectly.
+    # This causes the validations to fire incorrectly.
     # This method removes the inherited validators
     # which are then replaced with validator methods
     # in this class which are respected by
-    # valid_attributes? in ApplicationRecord
+    # .valid_attributes? in ApplicationRecord
     parent_class_validators_to_remove = [
       :name,
       :email,
@@ -101,4 +104,5 @@ class Case::SAR::InternalReview < Case::SAR::Standard
       parent_class_validators_to_remove.include?(key)
     end
   end
+
 end

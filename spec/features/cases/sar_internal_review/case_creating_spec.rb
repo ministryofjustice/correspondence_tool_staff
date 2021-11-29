@@ -61,11 +61,21 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Subject 1")
 
     # form details
+    Capybara.find(:css, '#sar_internal_review_third_party_true', visible: false).click
+    fill_in :sar_internal_review_name, with: "Joe Bloggs"
+    fill_in :sar_internal_review_third_party_relationship, with: "Solicitor"
+    click_link 'Today'
+    fill_in :sar_internal_review_message, with: "Case message"
+    Capybara.find(:css, '#sar_internal_review_reply_method_send_by_post', visible: false).click
+    fill_in :sar_internal_review_postal_address, with: "123, Test road, AB1 3CD"
     expect(page).to have_content("Is this information being requested on someone else's behalf?")
     expect(page).to have_content("Case summary")
     expect(page).to have_content("Full case details")
     expect(page).to have_content("Dropzone")
 
+    click_button 'Create case'
+
+    expect(page).to have_content("Case created successfully")
 
   end
 end
