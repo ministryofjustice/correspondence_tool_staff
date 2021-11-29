@@ -100,7 +100,7 @@ namespace :cases do
         record["original_case"] = original_case
       end
       record.delete('linked_case_id')
-      if ["Case::ICO::FOI", "Case::ICO::SAR"].include?record['type']
+      if ["Case::ICO::FOI", "Case::ICO::SAR"].include?(record['type'])
         record.delete('name')
         record.delete('subject')
       end
@@ -108,7 +108,7 @@ namespace :cases do
         record[key] = value
       end
       case_class = record['type'].constantize
-      case_object = case_class.new(record)
+      case_class.new(record)
     end
 
     def remove_case(case_id)
