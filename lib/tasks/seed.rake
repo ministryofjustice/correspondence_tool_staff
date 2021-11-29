@@ -9,7 +9,7 @@ namespace :db do
       x = STDIN.gets.chomp
       exit unless (x == 'y' || x == 'Y')
       begin
-        ActiveRedord::Base.connection.execute 'DROP TABLE conversations'
+        ActiveRecord::Base.connection.execute 'DROP TABLE conversations'
       rescue => err
         puts "#{err.class} trying to drop conversations table"
         puts err.message
