@@ -77,7 +77,6 @@ namespace :cases do
         errors << exception.message
       end
       if errors.empty?
-        byebug
         kase = Case::Base.find_by_number(record['number'])
         if kase.present? and kase.managing_team.nil?
           errors << "This case doesn't have managing_team"
