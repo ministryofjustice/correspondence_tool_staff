@@ -3,9 +3,11 @@ section
 
   br
   br 
+    = f.radio_button_fieldset :sar_ir_subtype, 
+      choices: ['Timeliness', 'Compliance'], 
+      value_method: :downcase
 
   #third-party
-    - label_text = "Is this information being requested on someone elses behalf?"
     = f.radio_button_fieldset :third_party do |fieldset|
       - fieldset.radio_input(true, text_method: :humanize)
         = f.text_field :name, label_options: { value: "Full name of the requestor" }

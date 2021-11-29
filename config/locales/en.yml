@@ -496,6 +496,7 @@ en:
         third_party: Is the information being requested on someone's behalf?
       sar_internal_review:
         third_party: Is this information being requested on someone else's behalf?
+        sar_ir_subtype: Case type
       offender_sar_complaint:
         original_case_number: Is this the correct case?
         complaint_type: What sort of complaint is this?

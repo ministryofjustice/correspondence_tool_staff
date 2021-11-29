@@ -14,6 +14,11 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   after_initialize :remove_conditional_validators
 
+  validates_presence_of :sar_ir_subtype
+
+  jsonb_accessor :properties,
+                 sar_ir_subtype: :string
+
   class << self
     def type_abbreviation
       # This string is used when constructing paths or methods in other parts of
@@ -26,6 +31,11 @@ class Case::SAR::InternalReview < Case::SAR::Standard
       'sar'
     end
   end
+
+  enum sar_ir_subtype: {
+    timeliness: 'timeliness',
+    compliance: 'compliance'
+  }
 
   private
 
@@ -64,7 +74,7 @@ class Case::SAR::InternalReview < Case::SAR::Standard
       )
     end
 
-    if subject.size > 100
+    if subject.present? && subject.size > 100
       errors.add(
         :subject,
         message: "Subject must be under 100 characters in length"

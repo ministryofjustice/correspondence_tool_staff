@@ -61,6 +61,7 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Subject 1")
 
     # form details
+    Capybara.find(:css, '#sar_internal_review_sar_ir_subtype_compliance', visible: false).click
     Capybara.find(:css, '#sar_internal_review_third_party_true', visible: false).click
     fill_in :sar_internal_review_name, with: "Joe Bloggs"
     fill_in :sar_internal_review_third_party_relationship, with: "Solicitor"

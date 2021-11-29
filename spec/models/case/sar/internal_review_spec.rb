@@ -405,4 +405,10 @@ describe Case::SAR::InternalReview do
       expect(Case::SAR::InternalReview.state_machine_name).to match("sar")
     end
   end
+
+  describe 'enums' do
+    it { should validate_presence_of(:sar_ir_subtype) }
+
+    it { should have_enum(:sar_ir_subtype).with_values(['timeliness', 'compliance' ]) }
+  end
 end
