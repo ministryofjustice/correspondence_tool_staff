@@ -19,4 +19,13 @@ class Case::SAR::InternalReviewDecorator < Case::SAR::StandardDecorator
   def subject_type_display
     object.subject_type.humanize
   end
+  
+  def subject_with_original_case_reference
+    if subject =~ /IR of ([0-9]+)\s-/ 
+      subject
+    else
+      "IR of #{original_case.number} - #{subject}"
+    end
+  end
+
 end

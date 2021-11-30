@@ -74,6 +74,8 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Full case details")
     expect(page).to have_content("Dropzone")
 
+    expect(page.html).to include("IR of 211130002 - new sar case subject 1")
+
     click_button 'Create case'
 
     expect(page).to have_content("Case created successfully")

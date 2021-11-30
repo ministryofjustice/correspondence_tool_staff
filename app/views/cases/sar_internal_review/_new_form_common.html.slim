@@ -24,7 +24,9 @@ section
                     today_button: {class: ''} }
 
 
-  = f.text_field :subject, label_options: { value: 'Case summary' }
+  = f.text_field :subject, 
+    label_options: { value: 'Case summary' },
+    value: @case.subject_with_original_case_reference
 
   = f.text_area :message, rows: 10, label_options: { value: 'Full case details', rows: 10 }
 
