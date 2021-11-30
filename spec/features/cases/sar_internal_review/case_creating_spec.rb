@@ -58,7 +58,7 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Subject type")
     expect(page).to have_content("Offender")
     expect(page).to have_content("Full name of subject")
-    expect(page).to have_content("Subject 1")
+    expect(page).to have_content(sar_case.subject_full_name)
 
     # form details
     Capybara.find(:css, '#sar_internal_review_sar_ir_subtype_compliance', visible: false).click
@@ -74,11 +74,11 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Full case details")
     expect(page).to have_content("Requestor's proof of ID and other documents")
 
-    expect(page.html).to include("IR of 211130002 - new sar case subject 1")
+    expect(page.html).to include("IR of 211130002 - new sar case #{sar_case.subject_full_name.downcase}")
 
     click_button 'Create case'
 
     expect(page).to have_content("Case created successfully")
-    expect(page).to have_content("new sar case subject 1")
+    expect(page).to have_content("new sar case #{sar_case.subject_full_name.downcase}")
   end
 end

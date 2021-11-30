@@ -2,7 +2,15 @@ section
   header
 
   br
-  br 
+  br
+    = f.text_field :subject_type, class: 'visually-hidden', 
+      label_options: { class: 'visually-hidden' }
+
+    = f.text_field :flag_for_disclosure_specialists, 
+      class: 'visually-hidden', 
+      label_options: { class: 'visually-hidden' }, 
+      value: 'true'
+
     = f.radio_button_fieldset :sar_ir_subtype, 
       choices: ['Timeliness', 'Compliance'], 
       value_method: :downcase
