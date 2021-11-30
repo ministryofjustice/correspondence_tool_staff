@@ -1313,6 +1313,8 @@ en:
       link_sar_case_heading: Link case details
       check_sar_details_heading: Check details of the SAR
       case_details: Add case details
+      new_form_common:
+        dropzone: Requestor's proof of ID and other documents
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals

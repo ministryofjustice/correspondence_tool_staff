@@ -72,7 +72,7 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Is this information being requested on someone else's behalf?")
     expect(page).to have_content("Case summary")
     expect(page).to have_content("Full case details")
-    expect(page).to have_content("Dropzone")
+    expect(page).to have_content("Requestor's proof of ID and other documents")
 
     expect(page.html).to include("IR of 211130002 - new sar case subject 1")
 
