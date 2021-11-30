@@ -82,6 +82,7 @@ namespace :cases do
           errors << "This case doesn't have managing_team"
         end
       end
+      errors
     end
 
     def remove_invalid_error_messages(errors)
@@ -90,6 +91,7 @@ namespace :cases do
         "Received date is too far in the past",
         "Received date too far in past.",
         "Final deadline cannot be in the past", 
+        "unknown attribute 'reply_method' for Case::SAR::Offender.", 
         " No ICO decision files have been uploaded"]
       actual_errors = []
       errors.each do | error |
