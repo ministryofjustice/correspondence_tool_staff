@@ -7,8 +7,29 @@ module SarInternalReviewCaseForm
              confirm-sar
              case-details].freeze
 
+  ORIGINAL_SAR_ATTRIBUTES_TO_COPY = [
+    :delivery_method,
+    :email,
+    :name,
+    :postal_address,
+    :received_date_dd, 
+    :received_date_mm, 
+    :received_date_yyyy,
+    :requester_type,
+    :subject,
+    :subject_full_name,
+    :subject_type,
+    :third_party,
+    :third_party_relationship,
+    :reply_method
+  ].freeze
+
   def steps
     STEPS
+  end
+
+  def original_sar_attributes_to_copy
+    ORIGINAL_SAR_ATTRIBUTES_TO_COPY
   end
 
   private
@@ -47,22 +68,7 @@ module SarInternalReviewCaseForm
   def params_after_step_confirm_sar(params)
     params.merge!(original_case_id: object.original_case_id)
     params.delete(:original_case_number)
-    fields_subject_details = [
-      :delivery_method,
-      :email,
-      :message,
-      :name,
-      :postal_address,
-      :received_date_dd, :received_date_mm, :received_date_yyyy,
-      :requester_type,
-      :subject,
-      :subject_full_name,
-      :subject_type,
-      :third_party,
-      :third_party_relationship,
-      :reply_method,
-    ]
-    fields_subject_details.each do | single_field |
+    original_sar_attributes_to_copy.each do | single_field |
       params[single_field] = object.original_case.send(single_field)
     end
     params
