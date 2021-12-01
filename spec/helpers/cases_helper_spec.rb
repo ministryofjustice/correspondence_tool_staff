@@ -484,4 +484,26 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       expect(output).to eq 'PRISONNUM1'
     end
   end
+
+  describe '#sort_correspondence_types_for_display' do
+    it 'sorts correspondence types by their #display_order' do
+      ct1 = build(:correspondence_type, display_order: 0)
+      ct2 = build(:correspondence_type, display_order: 1)
+      ct3 = build(:correspondence_type, display_order: 2)
+
+      result = sort_correspondence_types_for_display([ct3, ct1, ct2])
+      expect(result.first).to be(ct1)
+      expect(result.last).to be(ct3)
+    end
+
+    it 'does not sort if members of collection have nil #display_order' do
+      ct1 = build(:correspondence_type, display_order: nil)
+      ct2 = build(:correspondence_type, display_order: nil)
+      ct3 = build(:correspondence_type, display_order: 2)
+
+      result = sort_correspondence_types_for_display([ct3, ct1, ct2])
+      expect(result.first).to be(ct3)
+      expect(result.last).to be(ct2)
+    end
+  end
 end

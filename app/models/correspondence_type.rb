@@ -27,7 +27,8 @@ class CorrespondenceType < ApplicationRecord
                  report_category_name: [:string, default: ''],
                  extension_time_limit: :integer,
                  extension_time_default:  :integer,
-                 show_on_menu: [:boolean, default: true]
+                 show_on_menu: [:boolean, default: true],
+                 display_order: [:integer, default: nil]
 
 
   enum deadline_calculator_class: {
