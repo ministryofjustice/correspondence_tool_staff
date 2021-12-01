@@ -74,7 +74,8 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Full case details")
     expect(page).to have_content("Requestor's proof of ID and other documents")
 
-    expect(page.html).to include("IR of 211130002 - new sar case #{sar_case.subject_full_name.downcase}")
+
+    expect(page.html).to include("IR of #{sar_case.number} - new sar case #{sar_case.subject_full_name.downcase}")
 
     click_button 'Create case'
 
