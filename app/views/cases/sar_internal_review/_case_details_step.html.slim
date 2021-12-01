@@ -6,7 +6,7 @@
 = GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-table
+table.report
   tbody.sar-basic-details
     = render partial: 'cases/sar/data_subject', locals: { case_details: @case }
     = render partial: 'cases/sar/subject_type', locals: { case_details: @case }

@@ -223,8 +223,12 @@ en:
             subject:
               blank: cannot be blank
         case/sar/internal_review:
-          original_case_number:
-            not_authorised: can't be authorised to link this case
+          attributes:
+            original_case_number:
+              not_authorised: can't be authorised to link this case
+            sar_ir_subtype:
+              blank: cannot be blank
+
         case/sar/offender:
           attributes:
             date_responded:
