@@ -1,6 +1,4 @@
 section
-  header
-
   br
   br
     = f.text_field :subject_type, class: 'visually-hidden', 
@@ -12,13 +10,14 @@ section
       value: 'true'
 
     = f.radio_button_fieldset :sar_ir_subtype, 
-      choices: ['Timeliness', 'Compliance'], 
+      choices: [t('helpers.fieldset.sar_internal_review.sar_ir_subtypes.timeliness'), 
+                t('helpers.fieldset.sar_internal_review.sar_ir_subtypes.compliance')], 
       value_method: :downcase
 
   #third-party
     = f.radio_button_fieldset :third_party do |fieldset|
       - fieldset.radio_input(true, text_method: :humanize)
-        = f.text_field :name, label_options: { value: "Full name of the requestor" }
+        = f.text_field :name, label_options: { value: t('helpers.fieldset.sar_internal_review.name') }
         = f.text_field :third_party_relationship
       - fieldset.radio_input(false, text_method: :humanize)
 
@@ -33,10 +32,9 @@ section
 
 
   = f.text_field :subject, 
-    label_options: { value: 'Case summary' },
     value: @case.subject_with_original_case_reference
 
-  = f.text_area :message, rows: 10, label_options: { value: 'Full case details', rows: 10 }
+  = f.text_area :message, rows: 10 
 
   label.form-label
     = t('.dropzone')
