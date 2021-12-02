@@ -1,8 +1,6 @@
 module SarInternalReviewCaseForm
   extend ActiveSupport::Concern
 
-  include SarInternalReviewFormValidators
-
   STEPS = %w[link-sar-case
              confirm-sar
              case-details].freeze

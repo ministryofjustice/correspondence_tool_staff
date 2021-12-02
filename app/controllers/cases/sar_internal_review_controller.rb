@@ -1,6 +1,5 @@
 module Cases
   class SarInternalReviewController < CasesController
-    include NewCase
     include SARInternalReviewCasesParams
 
     def initialize
@@ -30,7 +29,8 @@ module Cases
       @s3_direct_post = S3Uploader.for(@case, 'requests')
 
       if steps_are_completed? 
-        if @case.valid_attributes?(create_params) && @case.valid?
+        @case.assign_attributes(create_params)
+        if @case.valid?
           create_case
         else
           render :new
@@ -110,5 +110,6 @@ module Cases
         new_case_path
       end
     end
+
   end
 end

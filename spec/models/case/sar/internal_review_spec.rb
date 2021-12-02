@@ -51,7 +51,7 @@ describe Case::SAR::InternalReview do
       kase = build :sar_internal_review, subject: invalid_subject
 
       expect(kase).not_to be_valid
-      expect(kase.errors[:subject]).to eq(["must be under 100 characters in length"])
+      expect(kase.errors[:subject]).to eq(["is too long (maximum is 100 characters)"])
     end
   end
 
@@ -120,7 +120,7 @@ describe Case::SAR::InternalReview do
       it 'must be persent when thrid party is true' do
         kase = build :sar_internal_review, third_party: true, third_party_relationship: ''
         expect(kase).not_to be_valid
-        expect(kase.errors[:third_party_relationship]).to eq ["Please choose yes or no"]
+        expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
       it 'does not validates presence of third party relationship when third party is false' do

@@ -89,75 +89,19 @@ class Case::SAR::Standard < Case::Base
   validates_presence_of :subject_full_name
   validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
 
+  validates_presence_of :name, :third_party_relationship, if: -> { third_party }
   validates_presence_of :reply_method
   validates_presence_of :subject_type
-  validates_presence_of :email
+  validates_presence_of :email,          if: :send_by_email?
+  validates_presence_of :postal_address, if: :send_by_post?
+  validates :subject, presence: true, length: { maximum: 100 }
   validate :validate_message_or_uploaded_request_files, on: :create
   validate :validate_message_or_attached_request_files, on: :update
-  validate :validate_email
-  validate :validate_postal_address
-  validate :validate_third_party_relationship
-  validate :validate_name
-  validate :validate_subject
 
   before_save :use_subject_as_requester,
               if: -> { name.blank? }
   after_create :process_uploaded_request_files,
                if: -> { uploaded_request_files.present? }
-
-  def validate_subject
-    if subject.blank?
-      errors.add(
-        :subject,
-        :blank
-      )
-    end
-
-    if subject.present? && subject.size > 100
-      errors.add(
-        :subject,
-        :blank,
-        message: "must be under 100 characters in length"
-      )
-    end
-  end
-
-  def validate_name
-    if third_party && name.blank?
-        errors.add(
-          :name,
-          :blank
-        )
-    end
-  end
-
-  def validate_email
-    if send_by_email? && email.blank?
-      errors.add(
-        :email,
-        :blank
-      )
-    end
-  end
-
-  def validate_postal_address
-    if send_by_post? && postal_address.blank?
-      errors.add(
-        :postal_address,
-        :blank
-      )
-    end
-  end
-
-  def validate_third_party_relationship
-    if third_party && third_party_relationship.blank?
-      errors.add(
-        :third_party_relationship,
-        :blank,
-        message: "Please choose yes or no"
-      )
-    end
-  end
 
   # The method below is overriding the close method in the case_states.rb file.
   # This is so that the case is closed with the responder's team instead of the manager's team
@@ -278,6 +222,7 @@ class Case::SAR::Standard < Case::Base
     end
   end
 end
+
 
 
 
