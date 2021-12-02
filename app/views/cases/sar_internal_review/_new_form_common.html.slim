@@ -1,11 +1,11 @@
 section
   br
   br
-    = f.text_field :subject_type, class: 'visually-hidden', 
+    = f.text_field :subject_type, hidden: true, 
       label_options: { class: 'visually-hidden' }
 
     = f.text_field :flag_for_disclosure_specialists, 
-      class: 'visually-hidden', 
+      hidden: true,
       label_options: { class: 'visually-hidden' }, 
       value: 'true'
 
