@@ -32,7 +32,7 @@ describe Case::SAR::InternalReviewDecorator do
 
   describe '#subject_with_original_case_reference' do
     it 'Adds original case reference to subject line if not present' do
-      subject_line = "IR of 211130001 - new sar ir case subject 3"
+      subject_line = "IR of #{sar_ir_case.original_case.number} - #{sar_ir_case.subject}"
       kase = sar_ir_case.decorate
       expect(kase.subject_with_original_case_reference).to eq subject_line
     end

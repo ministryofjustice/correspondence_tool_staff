@@ -224,7 +224,7 @@ en:
               blank: cannot be blank
         case/sar/internal_review:
           attributes:
-            original_case_number:
+            original_case:
               not_authorised: can't be authorised to link this case
             sar_ir_subtype:
               blank: cannot be blank
