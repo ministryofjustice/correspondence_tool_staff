@@ -1,5 +1,9 @@
+- content_for :page_title, flush: true
+  = t('page_title.create_case_page.sar_internal_review.confirm_sar_step')
+
 - content_for :heading, flush: true
   = t('cases.sar_internal_review.check_sar_details_heading')
+
 - linked_sar_case = @case.original_case.decorate
 = render partial: 'layouts/header'
 

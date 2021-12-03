@@ -11,6 +11,7 @@ module SARInternalReviewCasesParams
       :postal_address,
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :requester_type,
+      :sar_ir_subtype,
       :subject,
       :subject_full_name,
       :subject_type,

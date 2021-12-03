@@ -45,7 +45,14 @@ describe Case::SAR::InternalReview do
 
   describe 'subject attribute' do
     it { should validate_presence_of(:subject) }
-    it { should validate_length_of(:subject).is_at_most(100) }
+
+    it 'should not be valid if subject length is over 100' do
+      invalid_subject = "test " * 21
+      kase = build :sar_internal_review, subject: invalid_subject
+
+      expect(kase).not_to be_valid
+      expect(kase.errors[:subject]).to eq(["is too long (maximum is 100 characters)"])
+    end
   end
 
   describe '#subject_type' do
@@ -404,5 +411,11 @@ describe Case::SAR::InternalReview do
     it 'has a class method state_machine_name that returns "sar"' do
       expect(Case::SAR::InternalReview.state_machine_name).to match("sar")
     end
+  end
+
+  describe 'enums' do
+    it { should validate_presence_of(:sar_ir_subtype) }
+
+    it { should have_enum(:sar_ir_subtype).with_values(['timeliness', 'compliance' ]) }
   end
 end

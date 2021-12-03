@@ -1,8 +1,5 @@
-- content_for :page_title do
-  = t("page_title.create_case_page.sar_internal_review")
-
-
 = link_to "Back", @back_link, class: 'govuk-back-link'
 
 = render "cases/sar_internal_review/#{kase.get_step_partial}", url: case_create_action(@case.object)
+
 
