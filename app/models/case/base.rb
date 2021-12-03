@@ -171,6 +171,20 @@ class Case::Base < ApplicationRecord
     )
   }
 
+  scope :partial_case, -> {
+    where(
+      "properties->>'is_partial_case'::text = ? ",
+      true.to_s
+    )
+  }
+
+  scope :not_partial_case, -> {
+    where(
+      "properties->>'is_partial_case'::text = ? or properties->>'is_partial_case'::text is null",
+      false.to_s
+    )
+  }
+
   scope :appeal, -> { where('type=? OR type=?', 'Case::FOI::TimelinessReview', 'Case::FOI::ComplianceReview' )}
 
   scope :with_exemptions, ->(exemption_ids) { includes(:cases_exemptions).where(cases_exemptions: {exemption_id: exemption_ids} ) }
