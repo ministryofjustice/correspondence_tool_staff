@@ -223,8 +223,12 @@ en:
             subject:
               blank: cannot be blank
         case/sar/internal_review:
-          original_case_number:
-            not_authorised: can't be authorised to link this case
+          attributes:
+            original_case:
+              not_authorised: can't be authorised to link this case
+            sar_ir_subtype:
+              blank: cannot be blank
+
         case/sar/offender:
           attributes:
             date_responded:
@@ -494,6 +498,13 @@ en:
           <div class="heading-medium">Where the information should be sent</div>
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+      sar_internal_review:
+        sar_ir_subtypes:
+          compliance: Compliance
+          timeliness: Timeliness
+        third_party: Is this information being requested on someone else's behalf?
+        sar_ir_subtype: Case type
+        name:  Full name of the requestor
       offender_sar_complaint:
         original_case_number: Is this the correct case?
         complaint_type: What sort of complaint is this?
@@ -1309,6 +1320,9 @@ en:
     sar_internal_review:
       link_sar_case_heading: Link case details
       check_sar_details_heading: Check details of the SAR
+      case_details: Add case details
+      new_form_common:
+        dropzone: Requestor's proof of ID and other documents
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals

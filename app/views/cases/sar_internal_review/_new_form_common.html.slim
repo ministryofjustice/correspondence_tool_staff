@@ -1,0 +1,63 @@
+section
+  br
+  br
+    = f.text_field :subject_type, hidden: true, 
+      label_options: { class: 'visually-hidden' }
+
+    = f.text_field :flag_for_disclosure_specialists, 
+      hidden: true,
+      label_options: { class: 'visually-hidden' }, 
+      value: 'true'
+
+    = f.radio_button_fieldset :sar_ir_subtype, 
+      choices: [t('helpers.fieldset.sar_internal_review.sar_ir_subtypes.timeliness'), 
+                t('helpers.fieldset.sar_internal_review.sar_ir_subtypes.compliance')], 
+      value_method: :downcase
+
+  #third-party
+    = f.radio_button_fieldset :third_party do |fieldset|
+      - fieldset.radio_input(true, text_method: :humanize)
+        = f.text_field :name, label_options: { value: t('helpers.fieldset.sar_internal_review.name') }
+        = f.text_field :third_party_relationship
+      - fieldset.radio_input(false, text_method: :humanize)
+
+section
+  header
+
+  .form-group
+    = f.gov_uk_date_field :received_date,
+            {legend_text: t('cases.new.received_date'),
+                    form_hint_text: t('cases.new.received_date_copy'),
+                    today_button: {class: ''} }
+
+
+  = f.text_field :subject, 
+    value: @case.subject_with_original_case_reference
+
+  = f.text_area :message, rows: 10 
+
+  label.form-label
+    = t('.dropzone')
+
+  - if dropzone == true
+    .grid-row
+      .column-two-thirds
+        div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+          = render partial: 'shared/dropzone_form',
+                  locals: { s3_direct_post: @s3_direct_post,
+                          file_input_name: 'sar_internal_review[uploaded_request_files][]' }
+
+  = f.hidden_field :flag_for_disclosure_specialists
+
+  h2.heading-medium How and where should the information be sent?
+  = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|
+    - fieldset.radio_input('send_by_email',
+                           panel_id: 'reply_method_send_by_email_panel')
+    - fieldset.revealing_panel(:reply_method_send_by_email_panel) do |panel|
+      - panel.email_field :email
+
+    - fieldset.radio_input('send_by_post',
+                           panel_id: 'reply_method_send_by_post_panel')
+
+    - fieldset.revealing_panel(:reply_method_send_by_post_panel) do |panel|
+      - panel.text_area :postal_address, {rows: 4}

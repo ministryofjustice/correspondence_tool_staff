@@ -68,9 +68,10 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
       allow(Case::Base).to receive_message_chain(:where, :limit).and_return([sar_case, foi_case])
       allow(sar_case).to receive(:update_index)
       allow(foi_case).to receive(:update_index)
+      expect(SearchIndexUpdaterJob).to receive(:perform_later).with(sar_case.id)
+      expect(SearchIndexUpdaterJob).to receive(:perform_later).with(foi_case.id)
+
       cli_index.reindex
-      expect(sar_case).to have_received(:update_index)
-      expect(foi_case).to have_received(:update_index)
     end
 
   end

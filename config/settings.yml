@@ -304,5 +304,5 @@ enabled_features:
     Host-dev: true
     Host-demo: false
     Host-staging: false
-    Host-qa: false
+    Host-qa: true
     Host-prod: false

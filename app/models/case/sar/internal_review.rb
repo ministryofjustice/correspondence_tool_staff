@@ -6,6 +6,17 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   attr_accessor :original_case_number
 
+  validates_presence_of :sar_ir_subtype
+
+  jsonb_accessor :properties,
+                 sar_ir_subtype: :string
+
+  HUMANIZED_ATTRIBUTES = {
+    sar_ir_subtype: 'Case type',
+    subject: 'Case summary',
+    message: 'Full case details'
+  }
+
   class << self
     def type_abbreviation
       # This string is used when constructing paths or methods in other parts of
@@ -17,5 +28,15 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     def state_machine_name
       'sar'
     end
+
+    def human_attribute_name(attr, options = {})
+      HUMANIZED_ATTRIBUTES[attr.to_sym] || super
+    end
   end
+
+  enum sar_ir_subtype: {
+    timeliness: 'timeliness',
+    compliance: 'compliance'
+  }
+
 end

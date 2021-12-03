@@ -2,6 +2,15 @@ require './lib/translate_for_case'
 
 module CasesHelper #rubocop:disable Metrics/ModuleLength
 
+  def sort_correspondence_types_for_display(types)
+    types_have_display_order = types.all? do |t| 
+      t.display_order.present?
+    end
+
+    types.sort_by! { |t| t.display_order } if types_have_display_order
+    types
+  end
+
   def download_csv_link(full_path, csv_report=nil, download_link_name=nil)
     uri = URI(full_path)
     csv_path = "#{uri.path}.csv"
