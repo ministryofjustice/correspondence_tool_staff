@@ -41,7 +41,8 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseHighProfileFilter,       
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter, 
-      CaseFilter::CaseComplaintPriorityFilter],
+      CaseFilter::CaseComplaintPriorityFilter, 
+      CaseFilter::CasePartialCaseFlagFilter],
     "my_cases" => [
       CaseFilter::OpenCaseStatusFilter, 
       CaseFilter::CaseComplaintTypeFilter,
@@ -58,7 +59,8 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseHighProfileFilter,       
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter, 
-      CaseFilter::CaseComplaintPriorityFilter]
+      CaseFilter::CaseComplaintPriorityFilter, 
+      CaseFilter::CasePartialCaseFlagFilter]
   }.freeze
 
   attr_accessor :business_unit_name_filter
