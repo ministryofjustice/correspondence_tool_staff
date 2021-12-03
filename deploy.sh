@@ -142,9 +142,18 @@ function _deploy() {
     -n $namespace
 
   if [ $environment == "production" ]
-    then
-      kubectl apply -f config/kubernetes/${environment}/cronjob-delete-old-ecr-images.yaml -n $namespace
-    fi
+  then
+    kubectl apply -f config/kubernetes/${environment}/cronjob-delete-old-ecr-images.yaml -n $namespace
+    kubectl apply -f config/kubernetes/${environment}/cronjob-anonymizer.yaml -n $namespace
+  fi
+
+  if [ $environment == "qa" ]
+  then
+    kubectl apply -f config/kubernetes/${environment}/cronjob-restore-anonymised-db.yaml -n $namespace
+    kubectl apply -f config/kubernetes/${environment}/cronjob-update-search-index.yaml -n $namespace
+  fi
+
+
 }
 
 _deploy $@
