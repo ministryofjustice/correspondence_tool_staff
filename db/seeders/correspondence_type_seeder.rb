@@ -16,7 +16,8 @@ class CorrespondenceTypeSeeder
                 report_category_name: 'FOI report',
                 deadline_calculator_class: 'BusinessDays',
                 default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
-                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
+                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk',
+                display_order: 0)
 
     rec = CorrespondenceType.find_by(abbreviation: 'SAR')
     rec = CorrespondenceType.new if rec.nil?
@@ -31,7 +32,8 @@ class CorrespondenceTypeSeeder
                 extension_time_default: 1,
                 deadline_calculator_class: 'CalendarMonths',
                 default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
-                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
+                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk',
+                display_order: 1)
 
     rec = CorrespondenceType.find_by(abbreviation: 'ICO')
     rec = CorrespondenceType.new if rec.nil?
@@ -42,7 +44,8 @@ class CorrespondenceTypeSeeder
                 escalation_time_limit: 3,
                 internal_time_limit: 10,
                 external_time_limit: 30,
-                deadline_calculator_class: 'BusinessDays')
+                deadline_calculator_class: 'BusinessDays',
+                display_order: 3)
 
     rec = CorrespondenceType.find_by(abbreviation: 'OVERTURNED_SAR')
     rec = CorrespondenceType.new if rec.nil?
@@ -53,7 +56,8 @@ class CorrespondenceTypeSeeder
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
                 external_time_limit: 30,
-                deadline_calculator_class: 'CalendarDays')
+                deadline_calculator_class: 'CalendarDays',
+                display_order: nil)
 
     rec = CorrespondenceType.find_by(abbreviation: 'OVERTURNED_FOI')
     rec = CorrespondenceType.new if rec.nil?
@@ -66,7 +70,8 @@ class CorrespondenceTypeSeeder
                 external_time_limit: 20,
                 deadline_calculator_class: 'BusinessDays',
                 default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
-                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
+                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk',
+                display_order: nil)
 
     rec = CorrespondenceType.find_by(abbreviation: 'OFFENDER_SAR')
     rec = CorrespondenceType.new if rec.nil?
@@ -79,7 +84,8 @@ class CorrespondenceTypeSeeder
                 external_time_limit: 1,
                 extension_time_limit: 2, 
                 extension_time_default: 1, 
-                deadline_calculator_class: 'CalendarMonths')
+                deadline_calculator_class: 'CalendarMonths',
+                display_order: nil)
 
     rec = CorrespondenceType.find_by(abbreviation: 'OFFENDER_SAR_COMPLAINT')
     rec = CorrespondenceType.new if rec.nil?
@@ -90,7 +96,8 @@ class CorrespondenceTypeSeeder
                 escalation_time_limit: 3,
                 internal_time_limit: 10,
                 external_time_limit: 20,
-                deadline_calculator_class: 'BusinessDays')
+                deadline_calculator_class: 'BusinessDays',
+                display_order: nil)
 
     rec = CorrespondenceType.find_by(abbreviation: 'SAR_INTERNAL_REVIEW')
     rec = CorrespondenceType.new if rec.nil?
@@ -105,7 +112,8 @@ class CorrespondenceTypeSeeder
                 extension_time_default: 1,
                 deadline_calculator_class: 'CalendarMonths',
                 default_press_officer: 'correspondence-staff-dev+preston.offman@digital.justice.gov.uk',
-                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk')
+                default_private_officer: 'correspondence-staff-dev+primrose.offord@digital.justice.gov.uk',
+                display_order: 2)
 
   end
   #rubocop:enable Metrics/MethodLength

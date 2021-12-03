@@ -11,6 +11,7 @@
 
 ul#create-correspondences
 
+  - sort_correspondence_types_for_display(@permitted_correspondence_types)
   - @permitted_correspondence_types.each do |correspondence_type|
     li
       - case_type = correspondence_type.abbreviation == 'ICO' ? 'case_ico' : correspondence_type.sub_classes.first

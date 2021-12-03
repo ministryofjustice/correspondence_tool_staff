@@ -23,8 +23,8 @@ module CTS::Cases
         logger.info "Start to query the cases with size #{size}."
         cases = Case::Base.where("document_tsvector is NULL").limit(size)
         cases.each do |kase|
-          kase.update_index
-          logger.info("id: #{kase.id} (#{kase.number}) has been indexed")
+          SearchIndexUpdaterJob.perform_later(kase.id)
+          logger.info("The task of updateing the case with id: #{kase.id} (#{kase.number}) has been triggered")
         end
         cases.count
       else 

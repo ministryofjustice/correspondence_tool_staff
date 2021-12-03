@@ -16,6 +16,29 @@ RSpec.describe SarInternalReviewCaseForm do
     end
   end
 
+  describe 'Original sar attributes to copy' do
+    correct_attributes = [
+      :delivery_method,
+      :email,
+      :name,
+      :postal_address,
+      :received_date_dd, 
+      :received_date_mm, 
+      :received_date_yyyy,
+      :requester_type,
+      :subject,
+      :subject_full_name,
+      :subject_type,
+      :third_party,
+      :third_party_relationship,
+      :reply_method
+    ].freeze
+
+    it 'should list the correct attributes to copy over to the SAR IR' do
+      expect(case_form.original_sar_attributes_to_copy).to match(correct_attributes)
+    end
+  end
+
   describe "#valid_attributes?" do
     context "when params is empty" do
       params = ActionController::Parameters.new({}).permit!

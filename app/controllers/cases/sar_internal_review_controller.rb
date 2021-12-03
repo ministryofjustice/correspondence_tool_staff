@@ -1,6 +1,5 @@
 module Cases
   class SarInternalReviewController < CasesController
-    include NewCase
     include SARInternalReviewCasesParams
 
     def initialize
@@ -8,7 +7,6 @@ module Cases
 
       @correspondence_type = CorrespondenceType.sar_internal_review
       @correspondence_type_key = 'sar_internal_review'
-      @back_link = '#'
     end
 
     def new
@@ -16,6 +14,10 @@ module Cases
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
       @case.current_step = params[:step]
+
+      @s3_direct_post = S3Uploader.for(@case, 'requests')
+
+      @back_link = back_link_url
     end
 
     def create
@@ -23,8 +25,12 @@ module Cases
       @case = build_case_from_session(case_type)
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
+
+      @s3_direct_post = S3Uploader.for(@case, 'requests')
+
       if steps_are_completed? 
-        if @case.valid_attributes?(create_params) && @case.valid?
+        @case.assign_attributes(create_params)
+        if @case.valid?
           create_case
         else
           render :new
@@ -40,6 +46,13 @@ module Cases
 
     def case_type
       Case::SAR::InternalReview
+    end
+
+    def create_case
+      @case.save
+      session[session_state] = nil
+      flash[:notice] = "Case created successfully"
+      redirect_to case_path(@case)
     end
 
     def create_params
@@ -88,6 +101,14 @@ module Cases
       # TODO: Copied from OffenderSarController
       # Refactor
       "#{@correspondence_type_key}_state".to_sym
+    end
+
+    def back_link_url
+      if @case.get_previous_step       
+        "#{@case.case_route_path}/#{@case.get_previous_step}"
+      else
+        new_case_path
+      end
     end
 
   end

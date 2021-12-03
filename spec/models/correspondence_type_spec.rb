@@ -140,4 +140,16 @@ describe CorrespondenceType, type: :model do
       expect(sar_ir.sub_classes).to eq [Case::SAR::InternalReview]
     end
   end
+
+  describe '#display_order' do
+    it 'has a display_order order of nil' do
+      ct = CorrespondenceType.new name: 'Business Days Test',
+                                  abbreviation: 'BDT',
+                                  escalation_time_limit: 1,
+                                  internal_time_limit: 1,
+                                  external_time_limit: 1,
+                                  deadline_calculator_class: 'BusinessDays'
+      expect(ct.display_order).to eq nil
+    end
+  end
 end
