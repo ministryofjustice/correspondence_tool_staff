@@ -30,7 +30,7 @@ gem 'govuk_elements_form_builder', '>= 1.2.0'
 gem 'govuk_notify_rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'humanize_boolean'
-gem 'jbuilder', '~> 2.10'
+gem 'jbuilder', '~> 2.11'
 gem 'jquery-rails', '~> 4.4.0'
 gem 'jquery-ui-rails'
 gem 'jsonb_accessor', '~> 1.3.2'
@@ -80,7 +80,7 @@ group :test do
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 5.0'
   gem 'site_prism', '= 3.1'
-  gem 'webdrivers', '~> 4.7.0'
+  gem 'webdrivers', '~> 5.0.0'
   gem 'simplecov', '~> 0.21.2'
 end
 
@@ -100,12 +100,12 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.9'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 1.22.3', require: false
+  gem 'rubocop', '~> 1.23.0', require: false
   gem 'rubocop-rspec', '~> 2.6.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
-  gem 'selenium-webdriver', '~> 4.0.3'
+  gem 'selenium-webdriver', '~> 4.1.0'
   gem 'spring-commands-rspec'
 end
 
