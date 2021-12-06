@@ -51,8 +51,9 @@ module Cases
     def create_case
       @case.save
       session[session_state] = nil
+      flash[:creating_case] = true
       flash[:notice] = "Case created successfully"
-      redirect_to case_path(@case)
+      redirect_to new_case_assignment_path @case
     end
 
     def create_params

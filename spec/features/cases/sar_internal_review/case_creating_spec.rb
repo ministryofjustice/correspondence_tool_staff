@@ -9,6 +9,8 @@ feature 'SAR Internal Review Case creation by a manager' do
 
   let(:sar_case) { create(:sar_case) }
   let(:foi_case) { create(:foi_case) }
+  let(:subject_name) { sar_case.subject_full_name.downcase }
+  let(:case_summary_text) { "IR of #{sar_case.number} - new sar case #{subject_name}" }
 
   background do
     responding_team
@@ -34,6 +36,20 @@ feature 'SAR Internal Review Case creation by a manager' do
     and_the_headings_are_correct
     and_i_submit_the_form
     then_the_case_should_be_successfully_created
+
+    when_i_assign_the_case
+    then_i_expect_to_land_on_the_case_show_page
+
+  end
+
+  def when_i_assign_the_case
+    click_link "Responder Business Group"
+    click_link "SAR Responding Team"
+  end
+
+  def then_i_expect_to_land_on_the_case_show_page
+    expect(page).to have_content(case_summary_text)
+    expect(page).to have_content("Case assigned to SAR Responding Team")
   end
 
   def when_i_start_sar_ir_case_journey
@@ -45,19 +61,23 @@ feature 'SAR Internal Review Case creation by a manager' do
   end
 
   def and_i_try_to_link_an_foi_case
-    expect(case_new_sar_ir_link_case_page).to have_content("Link case details")
+    page = case_new_sar_ir_link_case_page
+    expect(page).to have_content("Link case details")
 
-    case_new_sar_ir_link_case_page.fill_in_original_case_number(foi_case.number)
-    case_new_sar_ir_link_case_page.submit_button.click
+    page.fill_in_original_case_number(foi_case.number)
+    page.submit_button.click
   end
 
   def then_i_shoul_expect_to_see_an_error
-    expect(case_new_sar_ir_link_case_page).to have_content("Original case cannot link a SAR Internal review case to a FOI as a original case")
+    page = case_new_sar_ir_link_case_page
+    error_message = "Original case cannot link a SAR Internal review case to a FOI as a original case" 
+    expect(page).to have_content(error_message)
   end
 
   def when_i_try_to_link_a_regular_sar_case 
-    case_new_sar_ir_link_case_page.fill_in_original_case_number(sar_case.number)
-    case_new_sar_ir_link_case_page.submit_button.click
+    page = case_new_sar_ir_link_case_page
+    page.fill_in_original_case_number(sar_case.number)
+    page.submit_button.click
   end
 
   def and_test_the_back_link_works
@@ -70,10 +90,11 @@ feature 'SAR Internal Review Case creation by a manager' do
   end
 
   def then_i_should_see_the_linked_sar_case_details_on_the_confirm_page 
-    expect(case_new_sar_ir_confirm_sar_page).to have_content(sar_case.subject_full_name)
-    expect(case_new_sar_ir_confirm_sar_page).to have_content(sar_case.subject)
-    expect(case_new_sar_ir_confirm_sar_page).to have_content(sar_case.email)
-    expect(case_new_sar_ir_confirm_sar_page).to have_content('Check details of the SAR')
+    page = case_new_sar_ir_confirm_sar_page
+    expect(page).to have_content(sar_case.subject_full_name)
+    expect(page).to have_content(sar_case.subject)
+    expect(page).to have_content(sar_case.email)
+    expect(page).to have_content('Check details of the SAR')
   end
 
   def when_i_confirm_the_linked_sar_details
@@ -88,27 +109,28 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Full name of subject")
     expect(page).to have_content(sar_case.subject_full_name)
 
-    name_of_the_requestor = case_new_sar_ir_case_details_page.requestor_full_name.value
-    expect(name_of_the_requestor).to match(sar_case.name)
+    requestor_name = case_new_sar_ir_case_details_page.requestor_full_name.value
+    expect(requestor_name).to match(sar_case.name)
 
     case_summary = case_new_sar_ir_case_details_page.case_summary.value
-    expect(case_summary).to match("IR of #{sar_case.number} - new sar case #{sar_case.subject_full_name.downcase}")
+    expect(case_summary).to match(case_summary_text)
 
     full_case_details = case_new_sar_ir_case_details_page.full_case_details.value
     expect(full_case_details).to match("")
   end
 
   def when_fill_in_the_case_details
-    case_new_sar_ir_case_details_page.compliance_subtype.click
-    case_new_sar_ir_case_details_page.third_party_true.click
-    case_new_sar_ir_case_details_page.fill_in_requestor_name("Joe Bloggs")
-    case_new_sar_ir_case_details_page.fill_in_third_party_relationship("Solicitor")
+    page = case_new_sar_ir_case_details_page
+    page.compliance_subtype.click
+    page.third_party_true.click
+    page.fill_in_requestor_name("Joe Bloggs")
+    page.fill_in_third_party_relationship("Solicitor")
 
-    case_new_sar_ir_case_details_page.date_today_link.click
+    page.date_today_link.click
 
-    case_new_sar_ir_case_details_page.fill_in_full_case_details("Case message")
-    case_new_sar_ir_case_details_page.send_by_post.click
-    case_new_sar_ir_case_details_page.fill_in_postal_address("123, Test road, AB1 3CD")
+    page.fill_in_full_case_details("Case message")
+    page.send_by_post.click
+    page.fill_in_postal_address("123, Test road, AB1 3CD")
   end
 
   def and_the_headings_are_correct
@@ -124,6 +146,7 @@ feature 'SAR Internal Review Case creation by a manager' do
 
   def then_the_case_should_be_successfully_created
     expect(page).to have_content("Case created successfully")
-    expect(page).to have_content("new sar case #{sar_case.subject_full_name.downcase}")
+    expect(page).to have_content("Create case")
+    expect(page).to have_content("Assign case")
   end
 end
