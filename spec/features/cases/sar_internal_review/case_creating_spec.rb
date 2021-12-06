@@ -25,41 +25,63 @@ feature 'SAR Internal Review Case creation by a manager' do
     click_link "SAR IR - Subject access request internal review"
   end
 
-  scenario 'creating a SAR internal review case', js: true do
-    when_i_start_sar_ir_case_journey
-
+  def and_i_try_to_link_an_foi_case
     expect(case_new_sar_ir_link_case_page).to have_content("Link case details")
 
     case_new_sar_ir_link_case_page.fill_in_original_case_number(foi_case.number)
     case_new_sar_ir_link_case_page.submit_button.click
+  end
 
+  def then_i_shoul_expect_to_see_an_error
     expect(case_new_sar_ir_link_case_page).to have_content("Original case cannot link a SAR Internal review case to a FOI as a original case")
+  end
 
-
+  def when_i_try_to_link_a_regular_sar_case 
     case_new_sar_ir_link_case_page.fill_in_original_case_number(sar_case.number)
     case_new_sar_ir_link_case_page.submit_button.click
-    
-    click_link 'Back', visible: false, match: :first
+  end
 
+  def and_test_the_back_link_works
+    case_new_sar_ir_confirm_sar_page.back_link.click
     expect(case_new_sar_ir_link_case_page).to have_content("Link case details")
+  end
 
-    case_new_sar_ir_link_case_page.fill_in_original_case_number(sar_case.number)
-    case_new_sar_ir_link_case_page.submit_button.click
+  def and_link_a_sar_case
+    when_i_try_to_link_a_regular_sar_case
+  end
 
-    expect(page).to have_content(sar_case.subject_full_name)
-    expect(page).to have_content(sar_case.subject)
-    expect(page).to have_content(sar_case.email)
-    expect(page).to have_content('Check details of the SAR')
+  def then_i_should_see_the_linked_sar_case_details_on_the_confirm_page 
+    expect(case_new_sar_ir_confirm_sar_page).to have_content(sar_case.subject_full_name)
+    expect(case_new_sar_ir_confirm_sar_page).to have_content(sar_case.subject)
+    expect(case_new_sar_ir_confirm_sar_page).to have_content(sar_case.email)
+    expect(case_new_sar_ir_confirm_sar_page).to have_content('Check details of the SAR')
+  end
 
-    choose 'sar_internal_review[original_case_number]', option: 'yes', visible: false
+  def when_i_confirm_the_linked_sar_details
+    case_new_sar_ir_confirm_sar_page.original_case_number.click
+    case_new_sar_ir_confirm_sar_page.submit_button.click
+  end
 
-    click_button 'Continue'
-
+  def then_i_should_see_the_correct_details_pre_populated_on_the_sar_ir_form
     expect(page).to have_content("Add case details")
     expect(page).to have_content("Subject type")
     expect(page).to have_content("Offender")
     expect(page).to have_content("Full name of subject")
     expect(page).to have_content(sar_case.subject_full_name)
+  end
+
+  scenario 'creating a SAR internal review case', js: true do
+    when_i_start_sar_ir_case_journey
+    and_i_try_to_link_an_foi_case
+    then_i_shoul_expect_to_see_an_error
+
+    when_i_try_to_link_a_regular_sar_case
+    and_test_the_back_link_works
+    and_link_a_sar_case
+    then_i_should_see_the_linked_sar_case_details_on_the_confirm_page
+
+    when_i_confirm_the_linked_sar_details
+    then_i_should_see_the_correct_details_pre_populated_on_the_sar_ir_form
 
     # form details
     Capybara.find(:css, '#sar_internal_review_sar_ir_subtype_compliance', visible: false).click

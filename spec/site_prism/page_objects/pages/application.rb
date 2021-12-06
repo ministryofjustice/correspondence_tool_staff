@@ -35,6 +35,7 @@ module PageObjects
         cases_new_sar:                  'Cases::New::SARPage',
 
         case_new_sar_ir_link_case: 'Cases::New::SarInternalReviewLinkCasePage',
+        case_new_sar_ir_confirm_sar: 'Cases::New::SarInternalReviewConfirmSarCasePage',
 
         cases_new_offender_sar_subject_details:       'Cases::New::OffenderSARPageSubjectDetails',
         cases_new_offender_sar_requester_details:     'Cases::New::OffenderSARPageRequesterDetails',
