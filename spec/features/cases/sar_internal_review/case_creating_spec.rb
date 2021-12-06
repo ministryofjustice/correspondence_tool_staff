@@ -17,33 +17,34 @@ feature 'SAR Internal Review Case creation by a manager' do
     cases_page.load
   end
 
-  scenario 'creating a SAR internal review case', js: true do
+  def when_i_start_sar_ir_case_journey
     click_link 'Create case', match: :first
 
     expect(page).to have_content("SAR IR - Subject access request internal review")
 
     click_link "SAR IR - Subject access request internal review"
+  end
 
-    expect(page).to have_content("Link case details")
+  scenario 'creating a SAR internal review case', js: true do
+    when_i_start_sar_ir_case_journey
 
-    fill_in :sar_internal_review_original_case_number, with: foi_case.number
+    expect(case_new_sar_ir_link_case_page).to have_content("Link case details")
 
-    click_button 'Continue'
+    case_new_sar_ir_link_case_page.fill_in_original_case_number(foi_case.number)
+    case_new_sar_ir_link_case_page.submit_button.click
 
-    expect(page).to have_content("Original case cannot link a SAR Internal review case to a FOI as a original case")
+    expect(case_new_sar_ir_link_case_page).to have_content("Original case cannot link a SAR Internal review case to a FOI as a original case")
 
 
-    fill_in :sar_internal_review_original_case_number, with: sar_case.number
-
-    click_button 'Continue'
-
+    case_new_sar_ir_link_case_page.fill_in_original_case_number(sar_case.number)
+    case_new_sar_ir_link_case_page.submit_button.click
+    
     click_link 'Back', visible: false, match: :first
 
-    expect(page).to have_content("Link case details")
+    expect(case_new_sar_ir_link_case_page).to have_content("Link case details")
 
-    fill_in :sar_internal_review_original_case_number, with: sar_case.number
-
-    click_button 'Continue'
+    case_new_sar_ir_link_case_page.fill_in_original_case_number(sar_case.number)
+    case_new_sar_ir_link_case_page.submit_button.click
 
     expect(page).to have_content(sar_case.subject_full_name)
     expect(page).to have_content(sar_case.subject)

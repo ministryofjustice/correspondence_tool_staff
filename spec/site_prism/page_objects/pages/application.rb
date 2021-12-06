@@ -33,6 +33,9 @@ module PageObjects
         cases_new_sar_overturned_ico:   'Cases::New::SarOverturnedIcoPage',
         cases_new_foi_overturned_ico:   'Cases::New::FoiOverturnedIcoPage',
         cases_new_sar:                  'Cases::New::SARPage',
+
+        case_new_sar_ir_link_case: 'Cases::New::SarInternalReviewLinkCasePage',
+
         cases_new_offender_sar_subject_details:       'Cases::New::OffenderSARPageSubjectDetails',
         cases_new_offender_sar_requester_details:     'Cases::New::OffenderSARPageRequesterDetails',
         cases_new_offender_sar_recipient_details:     'Cases::New::OffenderSARPageRecipientDetails',
@@ -71,6 +74,7 @@ module PageObjects
         cases_edit_offender_sar_complaint_requester_details: 'Cases::Edit::OffenderSARComplaintPageRequesterDetails',
         cases_edit_offender_sar_complaint_subject_details:   'Cases::Edit::OffenderSARComplaintPageSubjectDetails',
         cases_edit_offender_sar_complaint:                   'Cases::Edit::OffenderSARComplaintPageEdit',
+
 
         cases_new_case_link:            'Cases::NewCaseLinkPage',
         cases_edit:                     'Cases::EditPage',
