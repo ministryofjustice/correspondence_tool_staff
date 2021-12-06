@@ -17,6 +17,25 @@ feature 'SAR Internal Review Case creation by a manager' do
     cases_page.load
   end
 
+  scenario 'creating a SAR internal review case', js: true do
+    when_i_start_sar_ir_case_journey
+    and_i_try_to_link_an_foi_case
+    then_i_shoul_expect_to_see_an_error
+
+    when_i_try_to_link_a_regular_sar_case
+    and_test_the_back_link_works
+    and_link_a_sar_case
+    then_i_should_see_the_linked_sar_case_details_on_the_confirm_page
+
+    when_i_confirm_the_linked_sar_details
+    then_i_should_see_the_correct_details_pre_populated_on_the_sar_ir_form
+
+    when_fill_in_the_case_details
+    and_the_headings_are_correct
+    and_i_submit_the_form
+    then_the_case_should_be_successfully_created
+  end
+
   def when_i_start_sar_ir_case_journey
     click_link 'Create case', match: :first
 
@@ -68,40 +87,42 @@ feature 'SAR Internal Review Case creation by a manager' do
     expect(page).to have_content("Offender")
     expect(page).to have_content("Full name of subject")
     expect(page).to have_content(sar_case.subject_full_name)
+
+    name_of_the_requestor = case_new_sar_ir_case_details_page.requestor_full_name.value
+    expect(name_of_the_requestor).to match(sar_case.name)
+
+    case_summary = case_new_sar_ir_case_details_page.case_summary.value
+    expect(case_summary).to match("IR of #{sar_case.number} - new sar case #{sar_case.subject_full_name.downcase}")
+
+    full_case_details = case_new_sar_ir_case_details_page.full_case_details.value
+    expect(full_case_details).to match("")
   end
 
-  scenario 'creating a SAR internal review case', js: true do
-    when_i_start_sar_ir_case_journey
-    and_i_try_to_link_an_foi_case
-    then_i_shoul_expect_to_see_an_error
+  def when_fill_in_the_case_details
+    case_new_sar_ir_case_details_page.compliance_subtype.click
+    case_new_sar_ir_case_details_page.third_party_true.click
+    case_new_sar_ir_case_details_page.fill_in_requestor_name("Joe Bloggs")
+    case_new_sar_ir_case_details_page.fill_in_third_party_relationship("Solicitor")
 
-    when_i_try_to_link_a_regular_sar_case
-    and_test_the_back_link_works
-    and_link_a_sar_case
-    then_i_should_see_the_linked_sar_case_details_on_the_confirm_page
+    case_new_sar_ir_case_details_page.date_today_link.click
 
-    when_i_confirm_the_linked_sar_details
-    then_i_should_see_the_correct_details_pre_populated_on_the_sar_ir_form
+    case_new_sar_ir_case_details_page.fill_in_full_case_details("Case message")
+    case_new_sar_ir_case_details_page.send_by_post.click
+    case_new_sar_ir_case_details_page.fill_in_postal_address("123, Test road, AB1 3CD")
+  end
 
-    # form details
-    Capybara.find(:css, '#sar_internal_review_sar_ir_subtype_compliance', visible: false).click
-    Capybara.find(:css, '#sar_internal_review_third_party_true', visible: false).click
-    fill_in :sar_internal_review_name, with: "Joe Bloggs"
-    fill_in :sar_internal_review_third_party_relationship, with: "Solicitor"
-    click_link 'Today'
-    fill_in :sar_internal_review_message, with: "Case message"
-    Capybara.find(:css, '#sar_internal_review_reply_method_send_by_post', visible: false).click
-    fill_in :sar_internal_review_postal_address, with: "123, Test road, AB1 3CD"
+  def and_the_headings_are_correct
     expect(page).to have_content("Is this information being requested on someone else's behalf?")
     expect(page).to have_content("Case summary")
     expect(page).to have_content("Full case details")
     expect(page).to have_content("Requestor's proof of ID and other documents")
+  end
 
+  def and_i_submit_the_form
+    case_new_sar_ir_case_details_page.submit_button.click
+  end
 
-    expect(page.html).to include("IR of #{sar_case.number} - new sar case #{sar_case.subject_full_name.downcase}")
-
-    click_button 'Create case'
-
+  def then_the_case_should_be_successfully_created
     expect(page).to have_content("Case created successfully")
     expect(page).to have_content("new sar case #{sar_case.subject_full_name.downcase}")
   end
