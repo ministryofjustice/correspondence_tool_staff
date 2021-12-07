@@ -39,7 +39,6 @@ feature 'SAR Internal Review Case creation by a manager' do
 
     when_i_assign_the_case
     then_i_expect_to_land_on_the_case_show_page
-
   end
 
   def when_i_assign_the_case
