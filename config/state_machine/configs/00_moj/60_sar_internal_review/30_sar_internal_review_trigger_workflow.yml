@@ -1,0 +1,249 @@
+
+      ###########################TRIGGER SAR INTERNAL REVIEW ########################
+      trigger:
+        initial_state: unassigned
+        user_roles:
+
+        ########################### SAR INTERNAL REVIEW :: TRIGGER WORKFLOW :: MANAGER ########################
+          manager:
+            states:
+              unassigned:
+                add_message_to_case:
+                assign_responder:
+                  transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+
+              awaiting_responder:
+                add_message_to_case:
+                assign_to_new_team:
+                  after_transition: Workflows::Hooks#assign_responder_email
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+
+              drafting:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                extend_sar_deadline:
+                flag_for_clearance:
+                link_a_case:
+                remove_linked_case:
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
+                unassign_from_user:
+                  transition_to: awaiting_responder
+
+              pending_dacu_clearance:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                extend_sar_deadline:
+                link_a_case:
+                remove_linked_case:
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
+                unassign_from_user:
+                  transition_to: awaiting_responder
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                extend_sar_deadline:
+                link_a_case:
+                remove_linked_case:
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
+                unassign_from_user:
+                  transition_to: awaiting_responder
+
+              closed:
+                add_message_to_case:
+                add_responses:
+                  if: Workflows::Predicates#is_tmm_case?
+                remove_response:
+                  if: Workflows::Predicates#is_tmm_case?
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                update_closure:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                link_a_case:
+                remove_linked_case:
+
+          ########################### SAR INTERNAL REVIEW :: TRIGGER WORKFLOW :: RESPONDER ########################
+          responder:
+            states:
+              unassigned:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+
+              awaiting_responder:
+                accept_responder_assignment:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: drafting
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                reject_responder_assignment:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: unassigned
+
+              drafting:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                progress_for_clearance:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_approver_ready_for_review
+                  transition_to: pending_dacu_clearance
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#reassign_user_email
+
+              pending_dacu_clearance:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#reassign_user_email
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                respond_and_close:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: closed
+                respond:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                close:
+                  after_transition: Workflows::Hooks#notify_managing_team_case_closed
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: closed
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#reassign_user_email
+
+              closed:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                update_closure:
+                  if: Workflows::Predicates#overturned_editing_enabled_and_responder_in_assigned_team?
+
+          ########################### SAR INTERNAL REVIEW :: STANDARD WORKFLOW :: APPROVER ########################
+          approver:
+            states:
+              unassigned:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow: standard
+
+              awaiting_responder:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow: standard
+
+              drafting:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                extend_sar_deadline:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#case_extended_and_user_in_approving_team?
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow: standard
+
+              pending_dacu_clearance:
+                accept_approver_assignment:
+                  if: Case::BasePolicy#can_accept_or_reject_approver_assignment?
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                approve:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  transition_to: awaiting_dispatch
+                  after_transition: Workflows::Hooks#notify_responder_ready_to_send
+                extend_sar_deadline:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#case_extended_and_user_in_approving_team?
+                request_amends:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
+                  transition_to: drafting
+                unaccept_approver_assignment:
+                  if: Case::BasePolicy#can_unaccept_approval_assignment?
+                unflag_for_clearance:
+                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
+                  switch_workflow: standard
+                  transition_to: drafting
+
+              awaiting_dispatch:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                extend_sar_deadline:
+                  if: Workflows::Predicates#user_is_assigned_disclosure_specialist?
+                reassign_user:
+                  if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
+                  after_transition: Workflows::Hooks#reassign_user_email
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#case_extended_and_user_in_approving_team?
+
+              closed:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?

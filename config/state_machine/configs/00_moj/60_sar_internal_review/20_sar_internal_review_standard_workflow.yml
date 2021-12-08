@@ -1,0 +1,138 @@
+      standard:
+        initial_state: unassigned
+        user_roles:
+
+        ########################### SAR :: STANDARD WORKFLOW :: MANAGER ########################
+          manager:
+            states:
+              unassigned:
+                add_message_to_case:
+                assign_responder:
+                  transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::SARPolicy#can_request_further_clearance?
+                  switch_workflow: trigger
+
+              awaiting_responder:
+                add_message_to_case:
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                request_further_clearance:
+                  if: Case::SARPolicy#can_request_further_clearance?
+                  switch_workflow: trigger
+
+              drafting:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                assign_to_new_team:
+                  transition_to: awaiting_responder
+                  after_transition: Workflows::Hooks#assign_responder_email
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                extend_sar_deadline:
+                  if: Workflows::Predicates#deadline_does_not_exceed_max_deadline?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                link_a_case:
+                remove_linked_case:
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#has_sar_deadline_extension?
+                request_further_clearance:
+                  if: Case::SARPolicy#can_request_further_clearance?
+                  switch_workflow: trigger
+                unassign_from_user:
+                  transition_to: awaiting_responder
+
+              closed:
+                add_message_to_case:
+                add_responses:
+                  if: Workflows::Predicates#is_tmm_case?
+                remove_response:
+                  if: Workflows::Predicates#is_tmm_case?
+                assign_to_new_team:
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                update_closure:
+                  if: Workflows::Predicates#overturned_editing_enabled?
+                link_a_case:
+                remove_linked_case:
+
+          ########################### SAR :: STANDARD WORKFLOW :: RESPONDER ########################
+          responder:
+            states:
+              unassigned:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+
+              awaiting_responder:
+                accept_responder_assignment:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: drafting
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                reject_responder_assignment:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: unassigned
+
+              drafting:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                respond_and_close:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: closed
+                respond:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                close:
+                  after_transition: Workflows::Hooks#notify_managing_team_case_closed
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  transition_to: closed
+                reassign_user:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  after_transition: Workflows::Hooks#reassign_user_email
+
+              closed:
+                add_message_to_case:
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                update_closure:
+                  if: Workflows::Predicates#overturned_editing_enabled_and_responder_in_assigned_team?
+
+
+          ########################### SAR :: STANDARD WORKFLOW :: APPROVER ########################
+          approver:
+            states:
+              unassigned:
+                add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                flag_for_clearance:
+                  switch_workflow: trigger
+
+              awaiting_responder:
+                flag_for_clearance:
+                  switch_workflow: trigger
+
+              drafting:
+                extend_sar_deadline:
+                  if: Workflows::Predicates#user_is_in_approving_team_for_case?
+                flag_for_clearance:
+                  switch_workflow: trigger
+                remove_sar_deadline_extension:
+                  if: Workflows::Predicates#case_extended_and_user_in_approving_team?
