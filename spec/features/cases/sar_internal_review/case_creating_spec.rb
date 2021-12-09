@@ -39,6 +39,11 @@ feature 'SAR Internal Review Case creation by a manager' do
 
     when_i_assign_the_case
     then_i_expect_to_land_on_the_case_show_page
+    and_that_the_case_is_a_trigger_case
+  end
+
+  def and_that_the_case_is_a_trigger_case
+    expect(page).to have_content("SAR Internal Review\nTrigger")
   end
 
   def when_i_assign_the_case

@@ -53,7 +53,16 @@ module Cases
       session[session_state] = nil
       flash[:creating_case] = true
       flash[:notice] = "Case created successfully"
+      make_case_a_triggered_case
       redirect_to new_case_assignment_path @case
+    end
+
+    def make_case_a_triggered_case
+      CaseFlagForClearanceService.new(
+        user: current_user,
+        kase: @case,
+        team: BusinessUnit.dacu_disclosure
+      ).call
     end
 
     def create_params
