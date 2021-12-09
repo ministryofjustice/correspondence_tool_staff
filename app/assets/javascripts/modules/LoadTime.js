@@ -30,7 +30,7 @@ moj.Modules.LoadTime = {
 	},
 
 	getLoadTimeSeconds: function() {
-		if(!window.performance && !window.performance.timing)return false;
+		if(!window.performance || !window.performance.timing)return false;
 		return (window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart) / 1000;
 	},
 
