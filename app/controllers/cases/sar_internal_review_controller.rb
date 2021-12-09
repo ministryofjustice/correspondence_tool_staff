@@ -28,7 +28,7 @@ module Cases
 
       @s3_direct_post = S3Uploader.for(@case, 'requests')
 
-      if steps_are_completed? 
+      if @case.steps_are_completed? 
         @case.assign_attributes(create_params)
         if @case.valid?
           create_case
@@ -58,12 +58,6 @@ module Cases
 
     def create_params
       create_sar_internal_review_params
-    end
-
-    def steps_are_completed?
-      # TODO: Copied from OffenderSarController
-      # Refactor
-      @case.current_step == @case.steps.last
     end
 
     def build_case_from_session(correspondence_type)

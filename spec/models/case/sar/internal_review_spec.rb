@@ -413,6 +413,17 @@ describe Case::SAR::InternalReview do
     end
   end
 
+  describe'#steps_are_completed? on decorated case' do
+    let(:sar_internal_review) { build(:sar_internal_review) }
+    it 'returns false if steps aren\'t completed' do
+      expect(sar_internal_review.steps_are_completed?).to eq(false)
+    end
+    it 'returns false if steps aren\'t completed' do
+      sar_internal_review.current_step = sar_internal_review.steps.last
+      expect(sar_internal_review.steps_are_completed?).to eq(true)
+    end
+  end
+
   describe 'enums' do
     it { should validate_presence_of(:sar_ir_subtype) }
 
