@@ -16,7 +16,7 @@ moj.Modules.LoadTime = {
 	},
 
 	pageLoaded: function() {
-		if(typeof 'ga' === 'undefined') return;
+		if(typeof ga === 'undefined') return;
 		
 		var loadTime = this.getLoadTimeSeconds();
 		if(!loadTime || isNaN(loadTime)) return;
@@ -49,7 +49,6 @@ moj.Modules.LoadTime = {
 	},
 
 	sendEventToGoogle: function(pageName, label, loadTime) {
-		console.log('category: ' + this.category + ' action: ' + pageName + ' label: ' + label + ' value: ' + loadTime);
-		// ga('send', 'event', this.category, pageName, label, parseInt(loadTime));
+		ga('send', 'event', this.category, pageName, label, parseInt(loadTime));
 	}
 }
