@@ -413,7 +413,7 @@ describe Case::SAR::InternalReview do
     end
   end
 
-  describe'#steps_are_completed? on decorated case' do
+  describe '#steps_are_completed? on decorated case' do
     let(:sar_internal_review) { build(:sar_internal_review) }
     it 'returns false if steps aren\'t completed' do
       expect(sar_internal_review.steps_are_completed?).to eq(false)

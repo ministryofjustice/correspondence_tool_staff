@@ -167,9 +167,6 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
-                unflag_for_clearance:
-                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
-                  switch_workflow: standard
 
               awaiting_responder:
                 accept_approver_assignment:
@@ -181,9 +178,6 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
-                unflag_for_clearance:
-                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
-                  switch_workflow: standard
 
               drafting:
                 accept_approver_assignment:
@@ -200,9 +194,6 @@
                   if: Workflows::Predicates#case_extended_and_user_in_approving_team?
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
-                unflag_for_clearance:
-                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
-                  switch_workflow: standard
 
               pending_dacu_clearance:
                 accept_approver_assignment:
@@ -227,10 +218,6 @@
                   transition_to: drafting
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
-                unflag_for_clearance:
-                  if: Workflows::Predicates#case_can_be_unflagged_for_clearance?
-                  switch_workflow: standard
-                  transition_to: drafting
 
               awaiting_dispatch:
                 add_message_to_case:

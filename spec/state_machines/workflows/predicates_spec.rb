@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-# rubocop:disable Metrics/ModuleLength
 module Workflows
   describe Predicates do
     include PermitPredicate
@@ -296,18 +295,6 @@ module Workflows
             expect(predicate.assigned_team_member_and_case_outside_escalation_period?).to be false
           end
         end
-      end
-    end
-
-    describe '#case_can_be_unflagged_for_clearance?' do
-      it 'should return false for a SAR_INTERNAL_REVIEW case' do
-        sar_ir_case = create(:sar_internal_review)
-        control_case = all_cases[:case_drafting_trigger]
-        sar_ir_predicate = Workflows::Predicates.new(user: @disclosure_specialist, kase: sar_ir_case)
-        control_predicate = Workflows::Predicates.new(user: @disclosure_specialist, kase: control_case)
-
-        expect(sar_ir_predicate.case_can_be_unflagged_for_clearance?).to be(false)
-        expect(control_predicate.case_can_be_unflagged_for_clearance?).to be(true)
       end
     end
   end
