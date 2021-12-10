@@ -7,22 +7,22 @@ moj.Modules.LoadTime = {
 		veryGood: '1 to 2 seconds (Very good)',
 		acceptable: '2 to 3 seconds (Acceptable)',
 		improve: '3 to 5 seconds (Try improving)',
-		fix: '5 to 8 seconds (Needs fixing)'
+		fix: 'More than 5 seconds (Needs fixing)'
 	},
 	category: 'Page load time',
 
 	init: function() {
-		window.onload = this.pageLoaded.bind(this);
+		window.onload = function() { setTimeout('moj.Modules.LoadTime.pageLoaded()',1000); }
 	},
 
 	pageLoaded: function() {
-		if(typeof 'ga' === 'undefined')return;
+		if(typeof 'ga' === 'undefined') return;
 		
 		var loadTime = this.getLoadTimeSeconds();
-		if(!loadTime || isNaN(loadTime))return;
+		if(!loadTime || isNaN(loadTime)) return;
 		
 		var pageName = this.getPageName();
-		if(!pageName)return;		
+		if(!pageName) return;		
 		
 		var label = this.labelLoadTime(loadTime);
 		
@@ -30,8 +30,10 @@ moj.Modules.LoadTime = {
 	},
 
 	getLoadTimeSeconds: function() {
-		if(!window.performance || !window.performance.timing)return false;
-		return (window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart) / 1000;
+		if(typeof performance === 'undefined' || !performance || !performance.getEntriesByType 
+			|| !performance.getEntriesByType('navigation')[0]) return false;
+
+		return performance.getEntriesByType('navigation')[0].duration / 1000;
 	},
 
 	getPageName: function() {
@@ -47,6 +49,7 @@ moj.Modules.LoadTime = {
 	},
 
 	sendEventToGoogle: function(pageName, label, loadTime) {
-		ga('send', 'event', this.category, pageName, label, parseInt(loadTime));
+		console.log('category: ' + this.category + ' action: ' + pageName + ' label: ' + label + ' value: ' + loadTime);
+		// ga('send', 'event', this.category, pageName, label, parseInt(loadTime));
 	}
 }
