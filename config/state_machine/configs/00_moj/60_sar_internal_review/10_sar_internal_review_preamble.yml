@@ -6,7 +6,6 @@
   sar_internal_review:
     name: Subject Access Request Internal Review
     permitted_workflows:
-      - standard
       - trigger
 
     permitted_user_roles:
