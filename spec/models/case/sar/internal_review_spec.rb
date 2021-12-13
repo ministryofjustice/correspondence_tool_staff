@@ -409,7 +409,7 @@ describe Case::SAR::InternalReview do
     let(:sar_internal_review)      { create(:sar_internal_review, :extended_deadline_sar) }
 
     it 'has a class method state_machine_name that returns "sar"' do
-      expect(Case::SAR::InternalReview.state_machine_name).to match("sar")
+      expect(Case::SAR::InternalReview.state_machine_name).to match("sar_internal_review")
     end
   end
 
@@ -422,6 +422,12 @@ describe Case::SAR::InternalReview do
     it 'returns false if steps aren\'t completed' do
       sar_internal_review.current_step = sar_internal_review.steps.last
       expect(sar_internal_review.steps_are_completed?).to eq(true)
+    end
+  end
+
+  describe '#steppable?' do
+    it 'class can be asked if steppable? it returns true' do
+      expect(Case::SAR::InternalReview.steppable?).to eq(true)
     end
   end
 
