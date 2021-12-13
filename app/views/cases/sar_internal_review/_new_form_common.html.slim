@@ -4,11 +4,6 @@ section
     = f.text_field :subject_type, hidden: true, 
       label_options: { class: 'visually-hidden' }
 
-    = f.text_field :flag_for_disclosure_specialists, 
-      hidden: true,
-      label_options: { class: 'visually-hidden' }, 
-      value: 'true'
-
     = f.radio_button_fieldset :sar_ir_subtype, 
       choices: [t('helpers.fieldset.sar_internal_review.sar_ir_subtypes.timeliness'), 
                 t('helpers.fieldset.sar_internal_review.sar_ir_subtypes.compliance')], 

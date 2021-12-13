@@ -22,6 +22,7 @@ module Cases
 
     def create
       authorize case_type, :can_add_case?
+      default_disclosure_specialists_flag
       @case = build_case_from_session(case_type)
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
@@ -46,6 +47,10 @@ module Cases
 
     def case_type
       Case::SAR::InternalReview
+    end
+
+    def default_disclosure_specialists_flag
+      params[:sar_internal_review].merge!(flag_for_disclosure_specialists: 'yes')
     end
 
     def create_case
