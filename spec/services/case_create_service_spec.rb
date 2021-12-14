@@ -4,6 +4,9 @@ describe CaseCreateService do
   let(:manager) { create :manager, managing_teams: [ team_dacu ] }
   let!(:team_dacu) { find_or_create :team_dacu }
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
+
+  let(:unsaved_sar_ir_case) { build(:sar_internal_review)}
+
   let(:regular_params) do
     ActionController::Parameters.new(
     {
@@ -364,6 +367,25 @@ describe CaseCreateService do
 
     it 'returns false' do
       expect(ccs.call).to eq false
+    end
+  end
+
+  context 'prebuilt case for stepped cases' do
+    let(:minimal_params) { 
+      ActionController::Parameters.new({
+          flag_for_disclosure_specialists: 'yes'
+    })}
+
+    let(:ccs) { CaseCreateService.new(user: manager, case_type: Case::SAR::InternalReview, params: minimal_params, prebuilt_case: unsaved_sar_ir_case) }
+
+    it 'can create a case from a prebuilt case - i.e. assignments and saving' do
+      expect(unsaved_sar_ir_case.workflow).to eq('standard')
+
+      ccs.call
+      new_case = Case::SAR::InternalReview.last 
+
+      expect(new_case.id).to match(unsaved_sar_ir_case.id)
+      expect(new_case.workflow).to match('trigger')
     end
   end
 end

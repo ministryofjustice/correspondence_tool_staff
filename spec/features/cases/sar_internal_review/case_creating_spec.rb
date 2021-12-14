@@ -149,7 +149,7 @@ feature 'SAR Internal Review Case creation by a manager' do
   end
 
   def then_the_case_should_be_successfully_created
-    expect(page).to have_content("Case created successfully")
+    expect(page).to have_content("SAR Internal Review case created")
     expect(page).to have_content("Create case")
     expect(page).to have_content("Assign case")
   end
