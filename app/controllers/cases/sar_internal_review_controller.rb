@@ -12,8 +12,19 @@ module Cases
     def new
       permitted_correspondence_types
       authorize case_type, :can_add_case?
-      @case = build_case_from_session(case_type)
-      @case.current_step = params[:step]
+
+      builder = Builders::SteppedCaseBuilder.new(
+        case_type: case_type,
+        session: session,
+        params: params,
+        creator: current_user
+      )
+
+      builder.build_from_session
+      builder.set_initial_step
+
+      @case = builder.kase
+
 
       @s3_direct_post = S3Uploader.for(@case, 'requests')
 
