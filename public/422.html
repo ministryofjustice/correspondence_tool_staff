@@ -1,67 +1,87 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>The change you wanted was rejected (422)</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>
-  body {
-    background-color: #EFEFEF;
-    color: #2E2F30;
-    text-align: center;
-    font-family: arial, sans-serif;
-    margin: 0;
-  }
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Error - 422 - Unprocessable entity - Track-a-query</title>
 
-  div.dialog {
-    width: 95%;
-    max-width: 33em;
-    margin: 4em auto 0;
-  }
+        <link rel="stylesheet" media="all" href="/assets/application.css" />
+        <link href="/assets/govuk-template.css" media="screen" rel="stylesheet" />
+        <link href="/assets/govuk-template-print.css" media="print" rel="stylesheet" />
+        <link href="/assets/fonts.css" media="all" rel="stylesheet" />
 
-  div.dialog > div {
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #BBB;
-    border-top: #B00100 solid 4px;
-    border-top-left-radius: 9px;
-    border-top-right-radius: 9px;
-    background-color: white;
-    padding: 7px 12% 0;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="og:image" content="/assets/opengraph-image.png">
+    </head>
 
-  h1 {
-    font-size: 100%;
-    color: #730E15;
-    line-height: 1.5em;
-  }
+    <body class="controller-sessions">
 
-  div.dialog > p {
-    margin: 0 0 1em;
-    padding: 1em;
-    background-color: #F7F7F7;
-    border: 1px solid #CCC;
-    border-right-color: #999;
-    border-left-color: #999;
-    border-bottom-color: #999;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-    border-top-color: #DADADA;
-    color: #666;
-    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
-  }
-  </style>
-</head>
+        <div id="skiplink-container">
+            <div>
+                <a href="#content" class="skiplink">Skip to main content</a>
+            </div>
+        </div>
 
-<body>
-  <!-- This file lives in public/422.html -->
-  <div class="dialog">
-    <div>
-      <h1>The change you wanted was rejected.</h1>
-      <p>Maybe you tried to change something you didn't have access to.</p>
-    </div>
-    <p>If you are the application owner check the logs for more information.</p>
-  </div>
-</body>
+        <header role="banner" id="global-header" class="with-proposition">
+            <div class="header-wrapper">
+                <div class="header-global">
+                    <div class="header-logo">
+                        <a href="/" title="Return to home page" id="logo" class="content">
+                            <img src="/assets/gov.uk_logotype_crown_invert_trans.png" width="36" height="32" alt=""> Track a query
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div id="global-header-bar"></div>
+
+        <div class="grid-row"><div class="column-full">
+            <main id='page-container' role='main'>
+                <div id="wrapper" class="group live">
+                    <section id="content" role="main">
+                        <header class="page-header group">
+                            <h1 class="heading-xlarge">Sorry, there is a problem with this service</h1>
+                        </header>
+                        <p>Please contact <a href="mailto:correspondence@digital.justice.gov.uk?subject=422 error report">correspondence@digital.justice.gov.uk</a> with the details on how you got here to report this issue.</p>
+                    </section>
+                </div>
+
+            </main>
+
+        </div></div>
+
+        <footer class="group js-footer" id="footer" role="contentinfo">
+            <div class="footer-wrapper">
+                <div class="footer-meta">
+                    <div class="footer-meta-inner">
+                        <div class="open-government-licence">
+                            <p class="logo"><a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence</a></p>
+                            <p>All content is available under the <a href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open Government Licence v3.0</a>, except where otherwise stated</p>
+                        </div>
+                    </div>
+
+                    <div class="copyright">
+                        <a href="http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/copyright-and-re-use/crown-copyright/">© Crown copyright</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <div id="global-app-error" class="app-error hidden"></div>
+
+        <script>
+            (function (i, s, o, g, r, a, m) {
+              i['GoogleAnalyticsObject'] = r;
+              i[r] = i[r] || function () {
+                        (i[r].q = i[r].q || []).push(arguments)
+                      }, i[r].l = 1 * new Date();
+              a = s.createElement(o), m = s.getElementsByTagName(o)[0];
+              a.async = 1;
+              a.src = g;
+              m.parentNode.insertBefore(a, m)
+            })
+            (window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+            ga('create', 'UA-37377084-57', 'auto');
+            ga('send', 'pageview');</script>
+    </body>
 </html>
