@@ -21,6 +21,10 @@ module Steppable
     self.current_step = get_previous_step
   end
 
+  def steps_are_completed?
+    @current_step == steps.last
+  end
+
   def get_next_step
     if current_step == steps.last
       current_step

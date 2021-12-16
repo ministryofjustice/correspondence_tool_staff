@@ -6,37 +6,49 @@ module Cases
       super
 
       @correspondence_type = CorrespondenceType.sar_internal_review
-      @correspondence_type_key = 'sar_internal_review'
+      @correspondence_type_key = case_type.type_abbreviation.downcase
     end
 
     def new
       permitted_correspondence_types
       authorize case_type, :can_add_case?
-      @case = build_case_from_session(case_type)
-      @case.current_step = params[:step]
 
+      builder = build_case(session: session, step: params[:step])
+
+      @case = builder.build
       @s3_direct_post = S3Uploader.for(@case, 'requests')
-
       @back_link = back_link_url
     end
 
     def create
       authorize case_type, :can_add_case?
-      @case = build_case_from_session(case_type)
-      @case.creator = current_user #to-do Remove when we use the case create service
-      @case.current_step = params[:current_step]
+      default_disclosure_specialists_flag
 
-      @s3_direct_post = S3Uploader.for(@case, 'requests')
+      builder = build_case(
+        session: session, 
+        step: params[:current_step], 
+        params: create_params
+      )
 
-      if steps_are_completed? 
-        @case.assign_attributes(create_params)
-        if @case.valid?
-          create_case
-        else
-          render :new
-        end
+      @case = builder.build
+
+      @s3_direct_post = S3Uploader.for(builder.kase, 'requests')
+
+      if builder.kase_ready_for_creation? 
+        default_disclosure_specialists_flag
+
+        service = CaseCreateService.new(
+          user: current_user,
+          case_type: case_type,
+          params: create_params,
+          prebuilt_case: builder.kase
+        )
+        service.call
+        @case = service.case
+
+        handle_case_service_result(service)
       else
-        if @case.valid_attributes?(create_params)
+        if builder.kase.valid_attributes?(create_params)
           go_next_step
         else
           render :new
@@ -44,8 +56,35 @@ module Cases
       end
     end
 
+    def handle_case_service_result(service)
+      case service.result
+      when :assign_responder
+        flash[:creating_case] = true
+        flash[:notice] = service.message
+        redirect_to new_case_assignment_path @case
+      else
+        @case = @case.decorate
+        @s3_direct_post = S3Uploader.for(@case, 'requests')
+        render :new
+      end
+    end
+
     def case_type
       Case::SAR::InternalReview
+    end
+
+    def build_case(session:, step:, params: nil)
+      Builders::SteppedCaseBuilder.new(
+        case_type: case_type,
+        session: session,
+        step: step,
+        creator: current_user,
+        params: params
+      )
+    end
+
+    def default_disclosure_specialists_flag
+      params[:sar_internal_review].merge!(flag_for_disclosure_specialists: 'yes')
     end
 
     def create_case
@@ -53,25 +92,12 @@ module Cases
       session[session_state] = nil
       flash[:creating_case] = true
       flash[:notice] = "Case created successfully"
+      make_case_a_triggered_case
       redirect_to new_case_assignment_path @case
     end
 
     def create_params
       create_sar_internal_review_params
-    end
-
-    def steps_are_completed?
-      # TODO: Copied from OffenderSarController
-      # Refactor
-      @case.current_step == @case.steps.last
-    end
-
-    def build_case_from_session(correspondence_type)
-      # TODO: copied from OffenderSarController
-      # Need to refactor to DRY out between two
-      values = session[session_state] 
-
-      correspondence_type.new(values).decorate
     end
 
     def go_next_step
@@ -93,15 +119,10 @@ module Cases
     end
 
     def session_persist_state(params)
+      session_state = "#{case_type.type_abbreviation.downcase}_state".to_sym
       session[session_state] ||= {}
       params ||= {}
       session[session_state].merge! params
-    end
-
-    def session_state
-      # TODO: Copied from OffenderSarController
-      # Refactor
-      "#{@correspondence_type_key}_state".to_sym
     end
 
     def back_link_url

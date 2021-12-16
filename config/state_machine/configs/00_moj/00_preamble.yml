@@ -5,6 +5,7 @@ preamble:
   permitted_case_types:
     foi: Freedom of information request
     sar: Subject Access Request
+    sar_internal_review: Subject Access Request Internal Review
     ico: Information Commissioner Office appeal
     offender_sar: Offender Subject Access Request
     offender_sar_complaint: Offender Subject Access Request Complaint

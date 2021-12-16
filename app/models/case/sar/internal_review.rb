@@ -17,6 +17,10 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     message: 'Full case details'
   }
 
+  before_save do
+    self.workflow = 'trigger'
+  end
+
   class << self
     def type_abbreviation
       # This string is used when constructing paths or methods in other parts of
@@ -26,11 +30,15 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     end
 
     def state_machine_name
-      'sar'
+      'sar_internal_review'
     end
 
     def human_attribute_name(attr, options = {})
       HUMANIZED_ATTRIBUTES[attr.to_sym] || super
+    end
+
+    def steppable?
+      true
     end
   end
 

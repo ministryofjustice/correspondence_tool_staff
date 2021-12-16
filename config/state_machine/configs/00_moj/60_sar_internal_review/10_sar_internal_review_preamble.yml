@@ -1,0 +1,23 @@
+#########################################################################
+#                                                                       #
+#                         SAR INTERNAL REVIEW                           #
+#                                                                       #
+#########################################################################
+  sar_internal_review:
+    name: Subject Access Request Internal Review
+    permitted_workflows:
+      - trigger
+
+    permitted_user_roles:
+      - manager
+      - responder
+      - approver
+
+    permitted_states:
+      - unassigned
+      - awaiting_responder
+      - drafting
+      - pending_dacu_clearance
+      - awaiting_dispatch
+      - closed
+
