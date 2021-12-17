@@ -24,4 +24,38 @@ module SARInternalReviewCasesParams
     )
   end
 
+  def process_sar_closure_params
+    params.require(:sar_internal_review).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+      :late_team_id,
+    ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
+  end
+
+  def process_sar_internal_review_closure_params
+    params.require(:sar_internal_review).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+      :late_team_id,
+    ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
+  end
+
+  def respond_sar_internal_review_params
+    params.require(:sar_internal_review).permit(
+      :date_responded_dd,
+      :date_responded_mm,
+      :date_responded_yyyy,
+    )
+  end
+
+  def missing_info_to_tmm
+    if params[:sar_internal_review][:missing_info] == "yes"
+      @case.missing_info = true
+      CaseClosure::RefusalReason.sar_tmm.abbreviation
+    elsif params[:sar_internal_review][:missing_info] == "no"
+      @case.missing_info = false
+    end
+  end
 end

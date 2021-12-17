@@ -1,0 +1,18 @@
+- url = defined?(form_url) ? form_url : polymorphic_path(@case, action: :process_closure)
+
+= form_for @case, as: :sar_internal_review, url: url do |f|
+  .form-group
+    = f.gov_uk_date_field :date_responded, { legend_text: t('cases.sar.close_form.close_date'),
+            form_hint_text: t('cases.sar.close_form.date_example'),
+            today_button: {class: ''} }
+
+  .missing-info
+    = f.radio_button_fieldset :missing_info
+
+  .grid-row
+    .column-two-thirds
+      .button-holder
+        = f.submit submit_button, {class: 'button'}
+        = link_to('Cancel',
+                  case_path(kase),
+                  class: 'acts-like-button button-left-spacing')
