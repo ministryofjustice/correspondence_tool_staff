@@ -6,6 +6,7 @@ feature 'SAR Internal Review Case creation by a manager' do
   given(:responding_team) { create :responding_team, responders: [responder] }
   given(:manager)         { find_or_create :disclosure_bmt_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
+  given(:approver)        { (find_or_create :team_dacu_disclosure).users.first }
 
   let(:sar_case) { create(:sar_case) }
   let(:foi_case) { create(:foi_case) }
@@ -40,6 +41,54 @@ feature 'SAR Internal Review Case creation by a manager' do
     when_i_assign_the_case
     then_i_expect_to_land_on_the_case_show_page
     and_that_the_case_is_a_trigger_case
+
+    login_as responder
+    cases_page.load
+
+    click_link "#{Case::SAR::InternalReview.first.number}"
+
+    assignments_edit_page.accept_radio.click
+    assignments_edit_page.confirm_button.click
+
+    click_link 'Ready for Disclosure clearance'
+
+    login_as approver
+    cases_page.load
+
+    click_link 'New cases'
+    click_link 'Take case on'
+    click_link "#{Case::SAR::InternalReview.first.number}"
+
+    expect(page).not_to have_content('Close case')
+
+    click_link 'Clear response'
+    click_button 'Clear response'
+
+    login_as responder
+    cases_page.load
+
+    click_link "#{Case::SAR::InternalReview.first.number}"
+
+    cases_show_page.actions.mark_as_sent.click
+    cases_respond_page.today_button.click
+    cases_respond_page.submit_button.click
+
+    expect(page).to have_content("The response has been marked as sent")
+
+    login_as manager
+    cases_page.load
+
+    click_link "#{Case::SAR::InternalReview.first.number}"
+
+    cases_show_page.actions.close_case.click
+
+    cases_close_page.submit_button.click
+
+    cases_closure_outcomes_page.missing_info.sar_ir_no.click
+
+    cases_closure_outcomes_page.submit_button.click
+
+    expect(page).to have_content("You've closed this case.")
   end
 
   def and_that_the_case_is_a_trigger_case
