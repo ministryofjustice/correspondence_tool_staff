@@ -327,7 +327,6 @@ class Case::Base < ApplicationRecord
 
   has_many :cases_exemptions,
            class_name: 'CaseExemption',
-           through: 'cases_exemptions',
            foreign_key: :case_id
 
   has_many :exemptions,
