@@ -96,7 +96,7 @@ group :development, :test do
   gem 'launchy'
   gem 'parallel_tests', '~> 3.7'
   gem 'pry'
-  gem 'pry-byebug'
+  gem 'pry-byebug', "3.9.0"
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
   gem 'rubocop', '~> 1.23.0', require: false
