@@ -333,7 +333,7 @@ RSpec.describe User, type: :model do
   describe 'paper_trail versions', versioning: true do
 
     it 'has versions' do
-      it { is_expected.to be_versioned }
+      is_expected.to be_versioned
     end
 
     context 'on create' do
