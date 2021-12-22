@@ -7,7 +7,7 @@ class ChangeCaseAttachmentsUrlToKey < ActiveRecord::Migration[5.0]
     CaseAttachment.connection.transaction do
       add_column :case_attachments, :key, :string
       CaseAttachment.all.each do |attachment|
-        attachment.update_attributes(
+        attachment.update(
           key: URI.decode(URI.parse(attachment.url).path.sub(%r{^/}, ''))
         )
       end
@@ -21,7 +21,7 @@ class ChangeCaseAttachmentsUrlToKey < ActiveRecord::Migration[5.0]
       add_column :case_attachments, :url, :string
       bucket = Aws::S3::Resource.new.bucket(Settings.case_uploads_s3_bucket)
       CaseAttachment.all.each do |attachment|
-        attachment.update_attributes(
+        attachment.update(
           url: bucket.object(attachment.key).public_url
         )
       end

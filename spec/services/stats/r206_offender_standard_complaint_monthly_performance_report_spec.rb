@@ -99,7 +99,7 @@ module Stats
               received_date: @period_start+ 1.days,
             )
 
-            in_time_open_case.update_attributes(
+            in_time_open_case.update(
               external_deadline: Date.current + 10.days
             )
 

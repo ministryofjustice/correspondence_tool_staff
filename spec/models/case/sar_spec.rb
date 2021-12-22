@@ -134,7 +134,7 @@ describe Case::SAR::Standard do
     it 'validates presence if attached request files is missing on update' do
       kase = create :sar_case, uploaded_request_files: [], message: 'foo'
       expect(kase).to be_valid
-      kase.update_attributes(message: '')
+      kase.update(message: '')
       expect(kase).not_to be_valid
       expect(kase.errors[:message])
         .to eq ["cannot be blank if no request files attached"]
@@ -153,7 +153,7 @@ describe Case::SAR::Standard do
                     creator: create(:manager),
                     message: 'foo'
       expect(kase).to be_valid
-      kase.update_attributes(message: '')
+      kase.update(message: '')
       expect(kase).to be_valid
     end
   end

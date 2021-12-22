@@ -346,7 +346,7 @@ RSpec.describe User, type: :model do
     context 'on update' do
 
       it 'updates versions' do
-        expect{responder.update_attributes!(full_name: 'Namerson')}.to change(responder.versions, :count).by 1
+        expect{responder.update!(full_name: 'Namerson')}.to change(responder.versions, :count).by 1
         expect(responder.versions.last.event).to eq 'update'
       end
     end

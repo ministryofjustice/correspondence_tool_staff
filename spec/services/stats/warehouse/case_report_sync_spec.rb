@@ -137,7 +137,7 @@ describe Stats::Warehouse::CaseReportSync do
 
       it 'updates related CaseReport' do
         new_name = 'Tiny Temporary ' + rand(20).to_s
-        kase.update_attributes(name: new_name)
+        kase.update(name: new_name)
         described_class.new(kase) # re-generate CaseReport
         expect(warehouse_case_report.name).to eq new_name
       end
@@ -188,7 +188,7 @@ describe Stats::Warehouse::CaseReportSync do
 
       it 'updates related CaseReport' do
         metadatum.each do |metdata|
-          metdata.update_attributes(name: new_name)
+          metdata.update(name: new_name)
           described_class.new(metdata) # re-generate related CaseReports
         end
 
@@ -219,7 +219,7 @@ describe Stats::Warehouse::CaseReportSync do
         ]
 
         affected_case_relationships.each do |team|
-          team.update_attributes(name: new_team_name)
+          team.update(name: new_team_name)
           described_class.new(responded_case) # re-generate CaseReport
         end
 
@@ -267,7 +267,7 @@ describe Stats::Warehouse::CaseReportSync do
           expect(kase.reload.warehouse_case_report).to be_present
           property = source[:property]
 
-          property.update_attributes(value: new_name)
+          property.update(value: new_name)
           described_class.new(property) # re-sync
           warehouse_case_report = kase.reload.warehouse_case_report
           expect(warehouse_case_report.send(case_report_field)).to eq new_name
@@ -310,7 +310,7 @@ describe Stats::Warehouse::CaseReportSync do
           expect(kase.reload.warehouse_case_report).to be_present
           user = kase.send(source_field)
 
-          user.update_attributes(full_name: new_name)
+          user.update(full_name: new_name)
           described_class.new(user) # re-sync
           warehouse_case_report = kase.reload.warehouse_case_report
           expect(warehouse_case_report.send(case_report_field)).to eq new_name

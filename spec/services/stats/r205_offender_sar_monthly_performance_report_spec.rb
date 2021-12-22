@@ -89,7 +89,7 @@ module Stats
               received_date: @period_start+ 1.days,
             )
 
-            in_time_unassigned_trigger_sar_case.update_attributes(
+            in_time_unassigned_trigger_sar_case.update(
               external_deadline: Date.current + 10.days
             )
 
