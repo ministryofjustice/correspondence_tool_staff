@@ -19,10 +19,10 @@ RSpec.describe Contact, type: :model do
 
   context 'validations' do
     it 'is valid if it is has a name, address_line_1 and postcode, and contact_type' do
-      it { should validate_presence_of(:name) }
-      it { should validate_presence_of(:address_line_1) }
-      it { should validate_presence_of(:postcode)   }
-      it { should validate_presence_of(:contact_type)   }
+      should validate_presence_of(:name)
+      should validate_presence_of(:address_line_1)
+      should validate_presence_of(:postcode)
+      should validate_presence_of(:contact_type)
       expect(contact).to be_valid
     end
 
