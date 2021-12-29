@@ -76,7 +76,7 @@ gem 'tzinfo-data'
 
 group :test do
   gem 'capybara', '~> 3.36.0'
-  gem 'i18n-tasks', '~> 0.9.35'
+  gem 'i18n-tasks', '~> 0.9.37'
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 5.0'
   gem 'site_prism', '= 3.1'
