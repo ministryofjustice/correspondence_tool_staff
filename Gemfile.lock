@@ -627,7 +627,7 @@ DEPENDENCIES
   caxlsx_rails
   colorize
   config (~> 3.1)
-  devise (~> 4.8.0)
+  devise (~> 4.8.1)
   draper (= 4.0.2)
   dropzonejs-rails (>= 0.8)
   factory_bot_rails (~> 6.2.0)
