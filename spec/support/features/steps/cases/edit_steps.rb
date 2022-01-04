@@ -194,6 +194,7 @@ def edit_ico_case_closure_step(kase:, decision_received_date: Date.today, ico_de
     cases_edit_closure_page.ico_decision.overturned.click
   end
   upload_ico_decision_file
+  binding.pry
   cases_edit_closure_page.click_on 'Save changes'
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.notice.text)
