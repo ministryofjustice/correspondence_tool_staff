@@ -16,7 +16,7 @@ gem 'aws-sdk-s3'
 gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git', branch: 'bundler-fix'
 gem 'business_time'
 gem 'config', '~> 3.1'
-gem 'devise', '~> 4.8.0'
+gem 'devise', '~> 4.8.1'
 gem 'draper', '4.0.2'
 gem 'dropzonejs-rails', '>= 0.8'
 gem 'foreman', '~> 0.87.1'
@@ -76,9 +76,9 @@ gem 'tzinfo-data'
 
 group :test do
   gem 'capybara', '~> 3.36.0'
-  gem 'i18n-tasks', '~> 0.9.35'
+  gem 'i18n-tasks', '~> 0.9.37'
   gem 'rails-controller-testing', require: false
-  gem 'shoulda-matchers', '~> 5.0'
+  gem 'shoulda-matchers', '~> 5.1'
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 5.0.0'
   gem 'simplecov', '~> 0.21.2'
@@ -90,7 +90,7 @@ group :development, :test do
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
-  gem 'bullet', '~> 6.1.5'
+  gem 'bullet', '~> 7.0.0'
   gem 'byebug', platform: :mri
   gem 'colorize'
   gem 'guard-jasmine'
@@ -100,7 +100,7 @@ group :development, :test do
   gem 'pry-byebug', '~> 3.9'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 1.23.0', require: false
+  gem 'rubocop', '~> 1.24.0', require: false
   gem 'rubocop-rspec', '~> 2.6.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
