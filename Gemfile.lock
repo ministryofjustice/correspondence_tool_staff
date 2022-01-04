@@ -644,7 +644,7 @@ DEPENDENCIES
   guard-rspec
   guard-rubocop
   humanize_boolean
-  i18n-tasks (~> 0.9.35)
+  i18n-tasks (~> 0.9.37)
   jbuilder (~> 2.11)
   jquery-rails (~> 4.4.0)
   jquery-ui-rails
