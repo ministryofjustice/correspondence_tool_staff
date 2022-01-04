@@ -78,7 +78,7 @@ group :test do
   gem 'capybara', '~> 3.36.0'
   gem 'i18n-tasks', '~> 0.9.35'
   gem 'rails-controller-testing', require: false
-  gem 'shoulda-matchers', '~> 5.0'
+  gem 'shoulda-matchers', '~> 5.1'
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 5.0.0'
   gem 'simplecov', '~> 0.21.2'

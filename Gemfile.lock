@@ -683,7 +683,7 @@ DEPENDENCIES
   selenium-webdriver (~> 4.1.0)
   sentry-raven (~> 3.1.2)
   shell-spinner
-  shoulda-matchers (~> 5.0)
+  shoulda-matchers (~> 5.1)
   sidekiq (~> 6.3.1)
   simplecov (~> 0.21.2)
   site_prism (= 3.1)
