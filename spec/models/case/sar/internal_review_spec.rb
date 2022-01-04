@@ -293,7 +293,7 @@ describe Case::SAR::InternalReview do
       end
 
       it 'checks transitions for initial deadline' do
-        extended_sar = create(:sar_internal_review, :extended_deadline_sar)
+        extended_sar = create(:sar_internal_review, :extended_deadline_sar_internal_review)
 
         original_deadline = extended_sar
           .transitions
@@ -335,7 +335,7 @@ describe Case::SAR::InternalReview do
 
 
     describe '#reset_deadline!' do
-      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar) }
+      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar_internal_review) }
       let(:initial_deadline)  { extended_sar.initial_deadline }
       let(:extended_deadline) { extended_sar.external_deadline }
       let(:reset_external_deadline) { get_expected_deadline(1.month.since(extended_sar.received_date)) }
@@ -364,7 +364,7 @@ describe Case::SAR::InternalReview do
 
 
     describe 'Update the deadline due to the change of received_date' do
-      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar) }
+      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar_internal_review) }
       let(:new_received_date)      { 10.days.ago(extended_sar.received_date) }
 
       it 'Change the received date to trigger resetting the deadline' do
@@ -376,7 +376,7 @@ describe Case::SAR::InternalReview do
     end
 
     describe 'The external_deadline is always based on the latest received_date' do
-      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar) }
+      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar_internal_review) }
       let(:new_received_date)      { 5.days.ago(extended_sar.received_date) }
 
       it 'external_deadline based on the latest received date after editing/extending/reseting actions' do
@@ -398,7 +398,7 @@ describe Case::SAR::InternalReview do
   end
 
   describe '#is_sar_internal_review?' do
-    let(:sar_internal_review)      { create(:sar_internal_review, :extended_deadline_sar) }
+    let(:sar_internal_review)      { create(:sar_internal_review, :extended_deadline_sar_internal_review) }
 
     it 'sets #deadline_extended to false' do
       expect(sar_internal_review.is_sar_internal_review?).to be(true)
@@ -406,7 +406,7 @@ describe Case::SAR::InternalReview do
   end
 
   describe '#state_machine_name?' do
-    let(:sar_internal_review)      { create(:sar_internal_review, :extended_deadline_sar) }
+    let(:sar_internal_review)      { create(:sar_internal_review, :extended_deadline_sar_internal_review) }
 
     it 'has a class method state_machine_name that returns "sar"' do
       expect(Case::SAR::InternalReview.state_machine_name).to match("sar_internal_review")
