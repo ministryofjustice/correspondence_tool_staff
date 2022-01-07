@@ -18,6 +18,8 @@ module PageObjects
         element :back_link,  'a.acts-like-button'
         element :submit_button, '.button'
 
+        element :today_button, '#sar_internal_review_date_responded > fieldset > div > a'
+
         def fill_in_date_responded(date)
           date_responded_day.set(date.day)
           date_responded_month.set(date.month)

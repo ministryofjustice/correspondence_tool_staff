@@ -79,6 +79,24 @@
                 unassign_from_user:
                   transition_to: awaiting_responder
 
+              responded:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                respond:
+                close:
+                  transition_to: closed
+                destroy_case:
+                edit_case:
+                  if: Workflows::Predicates#not_overturned?
+                link_a_case:
+                remove_linked_case:
+                unassign_from_user:
+                  transition_to: awaiting_responder
+                send_back:
+                  if: Workflows::Predicates#user_is_a_manager_for_case?
+                  transition_to: drafting
+                  after_transition: Workflows::Hooks#notify_responder_responses_sent_back
+
               closed:
                 add_message_to_case:
                 add_responses:
@@ -135,15 +153,9 @@
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                respond_and_close:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                  transition_to: closed
                 respond:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                close:
-                  after_transition: Workflows::Hooks#notify_managing_team_case_closed
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                  transition_to: closed
+                  transition_to: responded
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#reassign_user_email
