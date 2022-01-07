@@ -115,6 +115,8 @@ Rails.application.routes.draw do
 
     resources :sar_internal_review, only: only, controller: 'sar_internal_review', as: :case_sar_internal_review do
       get '/(:step)', on: :collection, to: 'sar_internal_review#new', as: 'step'
+      get '/edit', on: :member, to: 'offender_sar_complaint#edit' 
+      post '/update', on: :member, to: 'offender_sar_complaint#update'
     end
 
     resources :icos, only: only, controller: 'ico', as: :case_ico do
