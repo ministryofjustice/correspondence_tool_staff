@@ -41,8 +41,6 @@ module SARInternalReviewCasesParams
       :third_party,
       :third_party_relationship,
       :reply_method,
-      :original_case_number,
-      :original_case_id,
       uploaded_request_files: [],
     )
   end
