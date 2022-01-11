@@ -1192,6 +1192,8 @@ en:
         sub_heading: Edit Offender SAR case
       offender_sar_complaint:
         sub_heading: Edit Complaint case
+      sar_internal_review:
+        sub_heading: Edit SAR Internal Review case
     update:
       case_updated: Case updated
       case_partial_flag_updated: Case updated
