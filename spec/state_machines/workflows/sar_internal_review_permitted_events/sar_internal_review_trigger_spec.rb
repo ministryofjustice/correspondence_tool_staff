@@ -318,6 +318,7 @@ describe ConfigurableStateMachine::Machine do
             .to match_array [
                   :add_message_to_case,
                   :reassign_user,
+                  :edit_case,
                   :unaccept_approver_assignment
                 ]
         end
@@ -332,6 +333,7 @@ describe ConfigurableStateMachine::Machine do
             .to match_array [
                   :add_message_to_case,
                   :reassign_user,
+                  :edit_case,
                   :unaccept_approver_assignment,
                 ]
         end
@@ -346,6 +348,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(approver.id))
             .to eq [
                   :add_message_to_case,
+                  :edit_case,
                   :extend_sar_deadline,
                   :reassign_user,
                   :remove_sar_deadline_extension,
@@ -364,6 +367,7 @@ describe ConfigurableStateMachine::Machine do
             .to eq [
                   :add_message_to_case,
                   :approve,
+                  :edit_case,
                   :extend_sar_deadline,
                   :reassign_user,
                   :request_amends,
@@ -379,6 +383,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.current_state).to eq 'awaiting_dispatch'
           expect(k.workflow).to eq 'trigger'
           expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case,
+                                                                        :edit_case,
                                                                         :extend_sar_deadline,
                                                                         :reassign_user]
         end
@@ -389,7 +394,8 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_sar_internal_review, :flagged_accepted
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case ]
+          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case, 
+                                                                        :edit_case]
         end
       end
 
