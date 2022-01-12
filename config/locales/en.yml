@@ -1327,6 +1327,7 @@ en:
       link_sar_case_heading: Link case details
       check_sar_details_heading: Check details of the SAR
       case_details: Add case details
+      edit_case_details: Edit case details
       new_form_common:
         dropzone: Requestor's proof of ID and other documents
     search_bar:
