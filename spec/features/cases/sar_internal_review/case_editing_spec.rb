@@ -29,7 +29,7 @@ feature 'SAR Internal Review Case can be edited', js:true do
     end
   end
 
-  fcontext 'as an approver' do
+  context 'as an approver' do
     it 'will allow me to edit a SAR IR case details' do
       when_an_approver_logs_in
       and_they_edit_the_case_details(approved_sar_ir)
