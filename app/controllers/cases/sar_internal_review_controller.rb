@@ -100,6 +100,10 @@ module Cases
       create_sar_internal_review_params
     end
 
+    def edit_params
+      edit_sar_internal_review_params
+    end
+
     def process_closure_params
       process_sar_internal_review_closure_params
     end

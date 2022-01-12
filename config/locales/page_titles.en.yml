@@ -38,6 +38,7 @@ en:
         link_sar_case_step: Link SAR case - Creating a SAR Internal Review case - Track-a-query       
         confirm_sar_step: Confirm Linked SAR details - Creating a SAR Internal Review case - Track-a-query       
         case_details_step: Add SAR IR details - Creating a SAR Internal Review case - Track-a-query       
+        edit_case_details: Edit SAR IR details - Editing a SAR Internal Review case - Track-a-query       
     create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
     data_request_page: Record data request
