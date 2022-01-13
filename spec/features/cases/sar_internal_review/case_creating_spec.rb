@@ -22,6 +22,11 @@ feature 'SAR Internal Review Case creation by a manager' do
     cases_page.load
   end
 
+  before do
+    require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+    CaseClosure::MetadataSeeder.seed!
+  end
+
   scenario 'creating a SAR internal review case', js: true do
     when_i_start_sar_ir_case_journey
     and_i_try_to_link_an_foi_case

@@ -9,7 +9,9 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   validates_presence_of :sar_ir_subtype
 
   jsonb_accessor :properties,
-                 sar_ir_subtype: :string
+                 sar_ir_outcome_id: :integer,
+                 sar_ir_subtype: :string,
+                 team_responsible_for_outcome_id: :integer
 
   HUMANIZED_ATTRIBUTES = {
     sar_ir_subtype: 'Case type',

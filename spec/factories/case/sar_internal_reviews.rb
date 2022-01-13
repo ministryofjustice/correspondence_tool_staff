@@ -310,4 +310,38 @@ FactoryBot.define do
       kase.reload
     end
   end
+
+  factory :ready_to_close_sar_internal_review, parent: :accepted_sar_internal_review do
+    missing_info { false }
+
+    transient do
+      identifier { "responded sar ir" }
+    end
+
+    received_date  { 22.business_days.ago }
+    date_responded { 4.business_days.ago }
+
+    after(:create) do |kase, evaluator|
+      if evaluator.flag_for_disclosure
+        create :case_transition_progress_for_clearance,
+               case: kase,
+               acting_team: evaluator.responding_team,
+               acting_user: evaluator.responder,
+               target_team: evaluator.approving_team
+
+        create :case_transition_approve,
+               case: kase,
+               acting_team: evaluator.approving_team,
+               acting_user: evaluator.approver
+      end
+
+      create :case_transition_respond,
+             case: kase,
+             acting_user: evaluator.responder,
+             acting_team: evaluator.responding_team,
+             target_user: evaluator.responder,
+             target_team: evaluator.responding_team
+      kase.reload
+    end
+  end
 end

@@ -4,6 +4,14 @@
   - if @case.responded_late?
     = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
 
+  .appeal-outcome-group
+    = f.radio_button_fieldset :sar_ir_outcome_id, choices: CaseClosure::AppealOutcome.active.map(&:name)
+
+  .appeal-outcome-group
+    = f.radio_button_fieldset :team_responsible_for_outcome_id, 
+      choices: @team_collection.teams, 
+      text_method: :name, 
+      value_method: :id
 
   .missing-info
     = f.radio_button_fieldset :missing_info
