@@ -1,5 +1,3 @@
-require File.join(Rails.root, 'lib', 'db', 'users_settings_for_anonymizer')
-
 class DatabaseAnonymizer
 
   attr_reader :tables_to_anonymise
@@ -93,8 +91,9 @@ class DatabaseAnonymizer
     end
   end
 
-  def initialize(max_num_of_records_per_group=10000)
+  def initialize(user_settings_reader = nil, max_num_of_records_per_group=10000)
     @max_num_of_records_per_group = max_num_of_records_per_group
+    @user_settings_reader = user_settings_reader
   end
 
   def anonymise_class(klass, filename)
@@ -169,7 +168,7 @@ class DatabaseAnonymizer
   #
 
   def anonymize_users(user)
-    user_setting = UsersSettingsForAnonymizer.get_setting(user.id)
+    user_setting = user_settings_reader.get_setting(user.id)
     unless is_internal_admin_user?(user, user_setting) || user_setting.present?
       user.full_name = Faker::Name.unique.name
       user.email = Faker::Internet.email(name: user.full_name)

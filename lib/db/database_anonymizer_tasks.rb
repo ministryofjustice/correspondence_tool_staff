@@ -1,6 +1,8 @@
 
 require File.join(Rails.root, 'lib', 'tasks', 'rake_task_helpers', 'dumper_utils')
 require File.join(Rails.root, 'lib', 'db', 'database_anonymizer')
+require File.join(Rails.root, 'lib', 'db', 'users_settings_for_anonymizer')
+
 
 class DatabaseAnonymizerTasks
 
@@ -50,7 +52,8 @@ class DatabaseAnonymizerTasks
     @db_connection_url = task_arguments[:db_connection_url]
     created_at = task_arguments[:timestamp]
     @base_file_name = "#{@tag}_#{created_at}"
-    @anonymizer = DatabaseAnonymizer.new(task_arguments[:limit])
+    user_settings_reader =  UsersSettingsForAnonymizer.new(s3_bucket)
+    @anonymizer = DatabaseAnonymizer.new(task_arguments[:limit], user_settings_reader=user_settings_reader)
   end
 
   def set_up_bucket()

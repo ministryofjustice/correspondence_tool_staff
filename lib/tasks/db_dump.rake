@@ -37,6 +37,7 @@
 #   This task is to wrap the above tasks into a task to export data from live and anonymize it 
 
 require File.join(Rails.root, 'lib', 'tasks', 'rake_task_helpers', 'dumper_utils')
+require File.join(Rails.root, 'lib', 'db', 'users_settings_for_anonymizer')
 
 namespace :db do
   namespace :dump  do
@@ -142,6 +143,10 @@ namespace :db do
         end 
       end
       
+      puts "Download the user settingsxs"
+      local_filename = Rails.root.join(dir_name_base, "user_settings.json")
+      UsersSettingsForAnonymizer.new(s3_bucket).download_user_settings(local_filename)
+
       DumperUtils.shell_working "Decompress all those sql files from local folder #{dirname}" do
         Dir.glob("#{dirname}/*.gz").sort.map do | local_filename |
           DumperUtils.decompress_file(local_filename)
