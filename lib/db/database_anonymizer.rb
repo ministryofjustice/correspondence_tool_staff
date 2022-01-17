@@ -1,3 +1,5 @@
+require File.join(Rails.root, 'lib', 'db', 'users_settings_for_anonymizer')
+
 class DatabaseAnonymizer
 
   attr_reader :tables_to_anonymise
@@ -167,9 +169,14 @@ class DatabaseAnonymizer
   #
 
   def anonymize_users(user)
-    unless allow_to_be_reserved?(user)
+    user_setting = UsersSettingsForAnonymizer.get_setting(user.id)
+    unless is_internal_admin_user?(user, user_setting) || user_setting.present?
       user.full_name = Faker::Name.unique.name
       user.email = Faker::Internet.email(name: user.full_name)
+    else
+      user.full_name = user_setting["full_name"] unless user_setting["full_name"].blank?
+      user.email = user_setting["email"] unless user_setting["email"].blank?
+      user.encrypted_password = user_setting["encrypted_password"] unless user_setting["encrypted_password"].blank?
     end
     user
   end
@@ -185,10 +192,10 @@ class DatabaseAnonymizer
     contact
   end
 
-  def allow_to_be_reserved?(user)
+  def is_internal_admin_user?(user)
     (user.email =~ /@digital.justice.gov.uk$/ || user.email =~ /@justice.gov.uk$/) &&
-      user.roles.include?("admin")
-  end
+    user.roles.include?("admin")
+  end 
 
   # Anonymize Cases table including all those case types
   def anonymize_cases(kase)

@@ -5,6 +5,9 @@ metadata:
 spec:
   schedule: "10 8 * * 6"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  ttlSecondsAfterFinished: 3600
   jobTemplate:
     spec:
       template:
@@ -14,23 +17,15 @@ spec:
             image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
             imagePullPolicy: IfNotPresent
             command:
-              - /bin/sh
-              - -c
-              - |-
-                set +ex
-                rake db:dump:delete_s3_dumps[latest,false,] && db:dump:local
-                rm -rf ./dumps_latest
+              - sh
+              - "-c"
+              - "bundle exec rake 'db:dump:local'"
             env:
               - name: DATABASE_URL
                 valueFrom:
                   secretKeyRef:
                     name: track-a-query-rds-replica-output
                     key: url
-              - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: track-a-query-rds-replica-output
-                    key: database_password
               - name: REDIS_URL
                 valueFrom:
                   secretKeyRef:

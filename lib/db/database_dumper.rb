@@ -45,13 +45,8 @@ class DatabaseDumper
     @tables_to_anonymise = {}
     CLASSES_TO_ANONYMISE.each { |klass| @tables_to_anonymise[klass.table_name] = klass }
     @timestamp = Time.now.strftime('%Y%m%d-%H%M%S')
-    set_local_folder_for_saving_temp_files
   end
 
-  def set_local_folder_for_saving_temp_files
-    FileUtils.rm_rf(@dirname)
-    FileUtils.mkpath(@dirname)
-  end
 
   def pack_task_arguments
     {

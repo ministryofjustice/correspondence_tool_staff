@@ -8,7 +8,6 @@ class DatabaseAnonymizerTasks
     @s3_bucket = nil
     @tag = nil
     @is_store_to_s3_bucket = true
-    @dirname = nil
     @db_connection_url = nil
     @anonymizer = nil
     @task_arguments = nil
@@ -21,6 +20,9 @@ class DatabaseAnonymizerTasks
     result_file = compresssed_file(result_file)
     if @is_store_to_s3_bucket
       upload_file_to_s3(result_file)
+    end
+    if Rails.env.production?
+      FileUtils.rm(result_file)
     end
   end
 
@@ -46,9 +48,8 @@ class DatabaseAnonymizerTasks
     @tag = task_arguments[:tag]
     @is_store_to_s3_bucket = task_arguments[:is_store_to_s3_bucket]
     @db_connection_url = task_arguments[:db_connection_url]
-    @dirname = task_arguments[:dir_name]
     created_at = task_arguments[:timestamp]
-    @base_file_name = "#{@dirname}/#{@tag}_#{created_at}"
+    @base_file_name = "#{@tag}_#{created_at}"
     @anonymizer = DatabaseAnonymizer.new(task_arguments[:limit])
   end
 
@@ -65,7 +66,7 @@ class DatabaseAnonymizerTasks
   # The actual function of processing different task 
 
   def task_dump_schema_snapshot(_)
-    filename = "#{@dirname}/#{@tag}_database_schema_snapshot.snap"
+    filename = "#{@tag}_database_schema_snapshot.snap"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password -s -f #{filename}"
     result = system command_line
     raise 'Unable to execute pg_dump command' unless result == true
@@ -90,7 +91,7 @@ class DatabaseAnonymizerTasks
   end
 
   def task_dump_data_models_snapshot(_)
-    filename = "#{@dirname}/#{@tag}_activerecord_models_snapshot.json"
+    filename = "#{@tag}_activerecord_models_snapshot.json"
     activerecord_models = {}
     Rails.application.eager_load! unless Rails.configuration.cache_classes
     ActiveRecord::Base.descendants.each do | activerecord_model |
