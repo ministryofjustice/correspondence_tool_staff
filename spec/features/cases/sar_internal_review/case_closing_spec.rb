@@ -26,7 +26,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
     CaseClosure::MetadataSeeder.seed!
   end
 
-  context 'as a manager closing a SAR IR' do
+  describe 'as a manager closing a SAR IR' do
     context 'for late case' do
       it 'page loads with correct fields asking who is responsible for lateness' do
         login_as manager

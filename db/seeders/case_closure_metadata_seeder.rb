@@ -7,6 +7,7 @@ module CaseClosure
       seed_appeal_outcomes(verbose)
       seed_refusal_reasons(verbose)
       seed_exemptions(verbose)
+      seed_outcome_reasons(verbose)
       implement_oct_2017_changes(verbose)
       implement_jan_2021_changes(verbose)
       implement_feb_2021_changes(verbose)
@@ -243,6 +244,25 @@ module CaseClosure
         name: '(s43) - Commercial interests',
         abbreviation: 'comm',
         sequence_id: 685)
+    end
+
+    def self.seed_outcome_reasons(verbose)
+      puts "----Seeding CaseClosure::OutcomeReasons----" if verbose
+
+      OutcomeReason.find_or_create_by!(
+        name: 'Proper searches not carried out/missing information',
+        abbreviation: 'missing_info',
+        sequence_id: 900)
+
+      OutcomeReason.find_or_create_by!(
+        name: 'Incorrect exemption engaged',
+        abbreviation: 'wrong_exemp',
+        sequence_id: 905)
+
+      OutcomeReason.find_or_create_by!(
+        name: 'Excessive redaction(s)',
+        abbreviation: 'excess_redacts',
+        sequence_id: 910)
     end
     #rubocop:enable Metrics/MethodLength
 

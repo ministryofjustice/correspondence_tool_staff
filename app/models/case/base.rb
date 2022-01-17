@@ -334,6 +334,16 @@ class Case::Base < ApplicationRecord
             through: 'cases_exemptions',
             foreign_key: :case_id
 
+  has_many :cases_outcome_reasons,
+           class_name: 'CaseOutcomeReason',
+           table_name: :cases_outcome_reasons,
+           foreign_key: :case_id
+
+  has_many :outcome_reasons,
+            class_name: 'CaseClosure::OutcomeReason',
+            through: 'cases_outcome_reasons',
+            foreign_key: :case_id
+
   has_many :case_links,
            -> { readonly },
            class_name: 'LinkedCase',

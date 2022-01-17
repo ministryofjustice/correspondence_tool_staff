@@ -13,6 +13,13 @@
       text_method: :name, 
       value_method: :id
 
+  .appeal-outcome-group
+    = render partial: 'cases/sar_internal_review/outcome_reason_checkbox_section', 
+      locals: { outcome_reasons: CaseClosure::OutcomeReason.all, 
+        heading: 'Reason(s) for outcome being partially upheld out overturned?', 
+        hint: 'Select all that apply', 
+        kase: @case, f: f }
+
   .missing-info
     = f.radio_button_fieldset :missing_info
 
