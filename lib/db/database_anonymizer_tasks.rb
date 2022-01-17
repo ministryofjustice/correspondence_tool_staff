@@ -53,7 +53,7 @@ class DatabaseAnonymizerTasks
     created_at = task_arguments[:timestamp]
     @base_file_name = "#{@tag}_#{created_at}"
     user_settings_reader =  UsersSettingsForAnonymizer.new(s3_bucket)
-    @anonymizer = DatabaseAnonymizer.new(task_arguments[:limit], user_settings_reader=user_settings_reader)
+    @anonymizer = DatabaseAnonymizer.new(task_arguments[:limit], user_settings_reader)
   end
 
   def set_up_bucket()

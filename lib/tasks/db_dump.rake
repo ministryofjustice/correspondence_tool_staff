@@ -144,8 +144,8 @@ namespace :db do
       end
       
       puts "Download the user settingsxs"
-      local_filename = Rails.root.join(dir_name_base, "user_settings.json")
-      UsersSettingsForAnonymizer.new(s3_bucket).download_user_settings(local_filename)
+      setting_filename = Rails.root.join(dir_name_base, "user_settings.json")
+      UsersSettingsForAnonymizer.new(s3_bucket).download_user_settings(setting_filename)
 
       DumperUtils.shell_working "Decompress all those sql files from local folder #{dirname}" do
         Dir.glob("#{dirname}/*.gz").sort.map do | local_filename |
