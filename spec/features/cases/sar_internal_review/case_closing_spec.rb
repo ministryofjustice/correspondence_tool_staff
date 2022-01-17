@@ -13,7 +13,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
   let!(:late_sar_ir) { 
     create(:ready_to_close_sar_internal_review, 
             date_responded: Date.today,
-            external_deadline: Date.today - 5) 
+            external_deadline: Date.today - 10) 
   }
 
   background do
@@ -27,14 +27,23 @@ feature 'SAR Internal Review Case can be closed', js:true do
   end
 
   describe 'as a manager closing a SAR IR' do
-    context 'for late case' do
+    fcontext 'for late case' do
       it 'page loads with correct fields asking who is responsible for lateness' do
         login_as manager
         cases_page.load
         click_link "#{late_sar_ir.number}"
         cases_show_page.actions.close_case.click
         cases_close_page.submit_button.click
+
+        cases_closure_outcomes_page.sar_ir_responsible_for_lateness.disclosure_radio.click
+        cases_closure_outcomes_page.sar_ir_outcome.upheld_in_part.click
+        cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Excessive redaction(s)", visible: false
+        cases_closure_outcomes_page.missing_info.sar_ir_yes.click
         on_load_field_expectations(lateness: true)
+
+        cases_closure_outcomes_page.submit_button.click
+
+        expect(cases_show_page).to have_content("You've closed this case.")
       end
     end
 
@@ -45,6 +54,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
         click_link "#{sar_ir.number}"
         cases_show_page.actions.close_case.click
         cases_close_page.submit_button.click
+        cases_closure_outcomes_page.sar_ir_outcome.upheld.click
         on_load_field_expectations
       end
     end
@@ -57,7 +67,8 @@ feature 'SAR Internal Review Case can be closed', js:true do
       expect(page).to_not have_content("Who was responsible for lateness?")
     end
     expect(page).to have_content("SAR IR Outcome?")
-    expect(page).to have_content("Who was responsible for outcome being partially upheld or overturned?")
+    # expect(page).to_not have_content("Who was responsible for outcome being partially upheld or overturned?")
+    # expect(page).to_not have_content("Reason(s) for outcome being partly upheld or overturned?")
     expect(page).to have_content("Was the response asking for missing information (e.g. proof of ID), or clarification, i.e. a TTM?")
   end
 end

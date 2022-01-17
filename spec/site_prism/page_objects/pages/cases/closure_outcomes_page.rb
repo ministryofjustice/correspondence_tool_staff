@@ -12,11 +12,25 @@ module PageObjects
                  PageObjects::Sections::Cases::CaseAttachmentSection,
                  '.case-attachments-group'
 
+        section :sar_ir_outcome, '.appeal-outcome-group' do
+          element :upheld, 'label[for="sar_internal_review_sar_ir_outcome_id_upheld"]'
+          element :upheld_in_part, 'label[for="sar_internal_review_sar_ir_outcome_id_upheld_in_part"]'
+          element :overturned, 'label[for="sar_internal_review_sar_ir_outcome_id_overturned"]'
+        end
+
+        section :sar_ir_outcome_reasons, '.outcome-reasons-group' do
+        end
+
+        section :sar_ir_responsible_for_lateness, '.responsible-for-lateness-group' do
+          element :disclosure_radio, 'input[id^="sar_internal_review_late_team_id_"]', match: :first, visible: false
+        end
+
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="foi_appeal_outcome_name_upheld"]'
           element :upheld_in_part, 'label[for="foi_appeal_outcome_name_upheld_in_part"]'
           element :overturned, 'label[for="foi_appeal_outcome_name_overturned"]'
         end
+
 
         section :ico_decision, '.ico-decision' do
           element :upheld, 'input#case_ico_ico_decision_upheld', visible: false
