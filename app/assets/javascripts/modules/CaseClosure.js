@@ -18,12 +18,25 @@ moj.Modules.CaseClosure = {
 
   $refusalExemptions : $('.js-refusal-exemptions'),
 
+
+  // SAR IR specific variables
+  $sarIrOutcomeGroup : $('.appeal-outcome-group'),
+  $sarIrOutcomeUpheldInPart : $('#sar_internal_review_sar_ir_outcome_id_upheld_in_part'),
+  $sarIrOutcomeOverturned : $('#sar_internal_review_sar_ir_outcome_id_overturned'),
+  $outcomeExplanationGroups : $('.responsible-for-outcome-group, .outcome-reasons-group'),
+
   init: function() {
     var self = this;
 
     self.showHideOtherGroup();
 
     self.showHideExemption();
+
+    self.showHideOutcomeExplantionGroups();
+
+    self.$sarIrOutcomeGroup.on('change', ':radio', function() {
+      self.showHideOutcomeExplantionGroups();
+    });
 
     //Bind events
     self.$infoHeldGroup.on('change', ':radio', function(){
@@ -37,6 +50,17 @@ moj.Modules.CaseClosure = {
     self.$otherReasons.on('change', ':radio', function() {
       self.showHideExemption();
     });
+  },
+
+  showHideOutcomeExplantionGroups: function() {
+    var upheldInPart = this.$sarIrOutcomeUpheldInPart.is(':checked');
+    var overturned = this.$sarIrOutcomeOverturned.is(':checked');
+
+    if (upheldInPart || overturned) {
+      this.$outcomeExplanationGroups.show();
+    } else {
+      this.$outcomeExplanationGroups.hide();
+    }
   },
 
   showHideOtherGroup: function() {
