@@ -1,0 +1,7 @@
+- content_for :sub_heading, flush: true
+  = t("cases.edit.sar_internal_review.sub_heading")
+
+= link_to "Back", case_path(@case.id), class: 'govuk-back-link'
+
+= render "cases/sar_internal_review/edit_case_details", url: case_sar_internal_review_path(@case)
+
