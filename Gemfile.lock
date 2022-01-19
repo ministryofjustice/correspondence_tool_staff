@@ -103,7 +103,7 @@ GEM
     browser_sync_rails (0.1.1)
       rails
     builder (3.2.4)
-    bullet (7.0.0)
+    bullet (7.0.1)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.11)
     business_time (0.11.0)
@@ -619,7 +619,7 @@ DEPENDENCIES
   binding_of_caller
   bootsnap (>= 1.1.0)
   browser_sync_rails
-  bullet (~> 7.0.0)
+  bullet (~> 7.0.1)
   business_time
   byebug
   capybara (~> 3.36.0)
