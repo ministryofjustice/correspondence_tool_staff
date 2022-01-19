@@ -3,6 +3,8 @@
     legend
       span.form-label-bold
         = heading
+      span.form-hint
+        = hint
 
     = collection_check_boxes(:sar_internal_review, :outcome_reason_ids, outcome_reasons, :id, :name) do |b|
       - content_tag :div, class: "multiple-choice" do
