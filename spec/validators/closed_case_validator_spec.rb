@@ -562,5 +562,69 @@ describe 'ClosedCaseValidator' do
     end
   end
 
+  fcontext 'SAR IR cases' do
+
+    let!(:sar_ir) { create(:ready_to_close_sar_internal_review) }
+    let(:outcome_reason_ids) { CaseClosure::OutcomeReason.all.map(&:id) }
+
+    before(:each) do
+      sar_ir.prepare_for_close
+    end
+
+    context '#validate_sar_ir_outcome' do
+      context 'sar_ir_outcome blank' do
+        it 'has correct error' do
+          sar_ir.save
+          expect(sar_ir.errors[:sar_ir_outcome]).to eq ['must be selected']
+        end
+      end
+
+      context 'sar_ir_outcome present' do
+        it 'has no errors' do
+          sar_ir.sar_ir_outcome = 'Upheld'
+          sar_ir.save
+          expect(sar_ir.errors[:sar_ir_outcome]).to eq [] 
+        end
+      end
+    end
+
+    context '#validate_outcome_reasons' do
+      context 'outcome reasons blank' do
+        it 'has correct error' do
+          sar_ir.sar_ir_outcome = 'Upheld in part'
+          sar_ir.save
+          expect(sar_ir.errors[:outcome_reasons]).to eq ['must be selected']
+        end
+      end
+
+      context 'ourcome reasonss present' do
+        it 'has no errors' do
+          sar_ir.sar_ir_outcome = 'Upheld in part'
+          sar_ir.outcome_reason_ids = outcome_reason_ids
+          sar_ir.save
+          expect(sar_ir.errors[:outcome_reasons]).to eq [] 
+        end
+      end
+    end
+
+    context '#validate_team_responsible' do
+      context 'team responsible blank' do
+        it 'has correct error' do
+          sar_ir.sar_ir_outcome = 'Upheld in part'
+          sar_ir.save
+          expect(sar_ir.errors[:team_responsible_for_outcome]).to eq ['must be selected']
+        end
+      end
+
+      context 'team responsible present' do
+        it 'has no errors' do
+          sar_ir.sar_ir_outcome = 'Upheld in part'
+          sar_ir.team_responsible_for_outcome_id = 1
+          sar_ir.save
+          expect(sar_ir.errors[:team_responsible_for_outcome]).to eq [] 
+        end
+      end
+    end
+  end
 end
 
