@@ -21,8 +21,8 @@ moj.Modules.CaseClosure = {
 
   // SAR IR specific variables
   $sarIrOutcomeGroup : $('.appeal-outcome-group'),
-  $sarIrOutcomeUpheldInPart : $('#sar_internal_review_sar_ir_outcome_id_upheld_in_part'),
-  $sarIrOutcomeOverturned : $('#sar_internal_review_sar_ir_outcome_id_overturned'),
+  $sarIrOutcomeUpheldInPart : $('#sar_internal_review_sar_ir_outcome_upheld_in_part'),
+  $sarIrOutcomeOverturned : $('#sar_internal_review_sar_ir_outcome_overturned'),
   $outcomeExplanationGroups : $('.responsible-for-outcome-group, .outcome-reasons-group'),
 
   init: function() {

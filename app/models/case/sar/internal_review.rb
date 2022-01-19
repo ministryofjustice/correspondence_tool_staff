@@ -2,6 +2,8 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   include LinkableOriginalCase
 
+  belongs_to :sar_ir_outcome, class_name: 'CaseClosure::AppealOutcome'
+
   validates_presence_of :original_case
 
   attr_accessor :original_case_number
@@ -9,7 +11,6 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   validates_presence_of :sar_ir_subtype
 
   jsonb_accessor :properties,
-                 sar_ir_outcome_id: :integer,
                  sar_ir_subtype: :string,
                  team_responsible_for_outcome_id: :integer
 
@@ -54,4 +55,11 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     compliance: 'compliance'
   }
 
+  def sar_ir_outcome
+    appeal_outcome&.name
+  end
+
+  def sar_ir_outcome=(name)
+    self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
+  end
 end

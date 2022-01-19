@@ -17,9 +17,9 @@ module PageObjects
         end
 
         section :sar_ir_outcome, '.appeal-outcome-group' do
-          element :upheld, 'label[for="sar_internal_review_sar_ir_outcome_id_upheld"]'
-          element :upheld_in_part, 'label[for="sar_internal_review_sar_ir_outcome_id_upheld_in_part"]'
-          element :overturned, 'label[for="sar_internal_review_sar_ir_outcome_id_overturned"]'
+          element :upheld, 'label[for="sar_internal_review_sar_ir_outcome_upheld"]'
+          element :upheld_in_part, 'label[for="sar_internal_review_sar_ir_outcome_upheld_in_part"]'
+          element :overturned, 'label[for="sar_internal_review_sar_ir_outcome_overturned"]'
         end
 
         section :sar_ir_responsible_for_outcome, '.responsible-for-outcome-group' do

@@ -510,7 +510,7 @@ en:
         sar_ir_subtype: Case type
         name:  Full name of the requestor
         late_team_id: Who was responsible for lateness?
-        sar_ir_outcome_id: SAR IR Outcome?
+        sar_ir_outcome: SAR IR Outcome?
         team_responsible_for_outcome_id: Who was responsible for outcome being partially upheld or overturned?
         missing_info:  Was the response asking for missing information (e.g. proof of ID), or clarification, i.e. a TTM?
       offender_sar_complaint:

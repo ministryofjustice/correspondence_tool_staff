@@ -32,6 +32,11 @@ require 'rails_helper'
 
 describe Case::SAR::InternalReview do
 
+  before do
+    require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+    CaseClosure::MetadataSeeder.seed!
+  end
+
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 
@@ -435,5 +440,16 @@ describe Case::SAR::InternalReview do
     it { should validate_presence_of(:sar_ir_subtype) }
 
     it { should have_enum(:sar_ir_subtype).with_values(['timeliness', 'compliance' ]) }
+  end
+
+  describe '#sar_ir_outcome' do
+    let(:sar_internal_review) { build(:sar_internal_review) }
+    it 'can set a sar_ir_outcome by name' do
+      sar_internal_review.sar_ir_outcome = "Upheld"
+
+      expect(sar_internal_review.sar_ir_outcome).to match("Upheld")
+      expect(sar_internal_review.appeal_outcome).to be_an_instance_of(CaseClosure::AppealOutcome)
+      expect(sar_internal_review.appeal_outcome.abbreviation).to match("upheld")
+    end
   end
 end

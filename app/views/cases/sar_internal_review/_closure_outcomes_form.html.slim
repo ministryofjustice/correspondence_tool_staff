@@ -8,7 +8,7 @@
       = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
 
   .appeal-outcome-group
-    = f.radio_button_fieldset :sar_ir_outcome_id, choices: CaseClosure::AppealOutcome.active.map(&:name)
+    = f.radio_button_fieldset :sar_ir_outcome, choices: CaseClosure::AppealOutcome.active.map(&:name)
 
   .responsible-for-outcome-group
     = f.radio_button_fieldset :team_responsible_for_outcome_id, 
