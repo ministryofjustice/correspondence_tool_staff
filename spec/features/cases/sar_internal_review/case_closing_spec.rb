@@ -50,10 +50,13 @@ feature 'SAR Internal Review Case can be closed', js:true do
 
         cases_closure_outcomes_page.sar_ir_responsible_for_outcome.disclosure.click
         cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Excessive redaction(s)", visible: false
+        cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Incorrect exemption engaged", visible: false
         cases_closure_outcomes_page.missing_info.sar_ir_yes.click
         cases_closure_outcomes_page.submit_button.click
 
         expect(cases_show_page).to have_content("You've closed this case.")
+        expect(cases_show_page).to have_content("Excessive redaction(s)")
+        expect(cases_show_page).to have_content("Incorrect exemption engaged")
       end
     end
 

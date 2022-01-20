@@ -34,6 +34,11 @@ tbody.response-details
       th = t('common.case.outcome')
       td = case_details.outcome.name
 
+  - if case_details.outcome_reasons.present?
+    tr.refusal-reason
+      th = t('common.case.outcome_reason')
+      td = case_details.pretty_outcome_reasons
+
   - if case_details.refusal_reason.present?
     tr.refusal-reason
       th = t('common.case.reason_for_refusal')
