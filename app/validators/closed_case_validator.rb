@@ -103,8 +103,6 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
-  private
-
   def run_validations(validations:, kase:)
     validations.each do |validation|
       self.__send__(validation, kase)
@@ -190,7 +188,7 @@ class ClosedCaseValidator < ActiveModel::Validator
 
   def validate_outcome_reasons(rec) 
     if not_upheld(rec) && rec.outcome_reason_ids == []
-      rec.errors.add(:outcome_reason_ids, 'must be selected')
+      rec.errors.add(:outcome_reasons, 'must be selected')
     end
   end
 
