@@ -4,7 +4,8 @@ class ClosedCaseValidator < ActiveModel::Validator
     'SAR'=>                 [:validate_date_responded,
                              :validate_late_team_id],
     'SAR_INTERNAL_REVIEW'=> [:validate_date_responded,
-                             :validate_late_team_id],
+                             :validate_late_team_id,
+                             :validate_outcome_reasons],
     'FOI'=>                 [:validate_date_responded,
                              :validate_info_held_status,
                              :validate_outcome,
@@ -182,16 +183,14 @@ class ClosedCaseValidator < ActiveModel::Validator
   end
 
   def validate_team_responsible(rec)
-    not_upheld = rec.sar_ir_outcome == 'Upheld' || rec.sar_ir_outcome == 'Upheld in part'
-    if not_upheld && rec.team_responsible_for_outcome_id.blank? 
-      rec.errors.add(:team_responsible_for_outcome, 'must be selected')
+    if not_upheld(rec) && rec.team_responsible_for_outcome_id.blank? 
+      rec.errors.add(:team_responsible_for_outcome_id, 'must be selected')
     end
   end
 
   def validate_outcome_reasons(rec) 
-    not_upheld = rec.sar_ir_outcome == 'Upheld' || rec.sar_ir_outcome == 'Upheld in part'
-    if not_upheld && rec.outcome_reason_ids == []
-      rec.errors.add(:outcome_reasons, 'must be selected')
+    if not_upheld(rec) && rec.outcome_reason_ids == []
+      rec.errors.add(:outcome_reason_ids, 'must be selected')
     end
   end
 
@@ -250,5 +249,11 @@ class ClosedCaseValidator < ActiveModel::Validator
     if rec.info_held_status.not_confirmed? && rec.exemptions.include?(CaseClosure::Exemption.s12)
       rec.errors.add(:exemptions, 'cost is not valid NCND')
     end
+  end
+
+  private
+
+  def not_upheld(rec)
+    rec.sar_ir_outcome == 'Overturned' || rec.sar_ir_outcome == 'Upheld in part'
   end
 end
