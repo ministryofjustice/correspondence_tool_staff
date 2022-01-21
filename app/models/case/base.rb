@@ -336,7 +336,6 @@ class Case::Base < ApplicationRecord
 
   has_many :cases_outcome_reasons,
            class_name: 'CaseOutcomeReason',
-           table_name: :cases_outcome_reasons,
            foreign_key: :case_id
 
   has_many :outcome_reasons,
