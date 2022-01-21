@@ -11,6 +11,11 @@ class Case::SAR::InternalReviewPolicy < Case::SAR::StandardPolicy
     check_can_trigger_event(:respond)
   end
 
+  def edit?
+    clear_failed_checks
+    check_can_trigger_event(:edit_case)
+  end
+
   def can_close_case?
     clear_failed_checks
     user.managing_teams.include?(self.case.managing_team)

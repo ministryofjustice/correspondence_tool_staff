@@ -24,6 +24,27 @@ module SARInternalReviewCasesParams
     )
   end
 
+  def edit_sar_internal_review_params
+    params.require(:sar_internal_review).permit(
+      :delivery_method,
+      :email,
+      :flag_for_disclosure_specialists,
+      :message,
+      :name,
+      :postal_address,
+      :received_date_dd, :received_date_mm, :received_date_yyyy,
+      :requester_type,
+      :sar_ir_subtype,
+      :subject,
+      :subject_full_name,
+      :subject_type,
+      :third_party,
+      :third_party_relationship,
+      :reply_method,
+      uploaded_request_files: [],
+    )
+  end
+
   def process_sar_internal_review_closure_params
     params.require(:sar_internal_review).permit(
       :date_responded_dd,

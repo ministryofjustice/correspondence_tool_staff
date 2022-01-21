@@ -1,0 +1,23 @@
+- content_for :page_title, flush: true
+  = t('page_title.create_case_page.sar_internal_review.edit_case_details')
+
+- content_for :heading, flush: true
+  = t('cases.sar_internal_review.edit_case_details')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+table.report
+  tbody.sar-basic-details
+    = render partial: 'cases/sar/data_subject', locals: { case_details: @case }
+    = render partial: 'cases/sar/subject_type', locals: { case_details: @case }
+
+
+= form_for @case.object, as: :sar_internal_review, url: case_sar_internal_review_path(@case.object), html: { autocomplete: 'off' } do |f|
+  = render partial: 'cases/sar_internal_review/new_form_common', locals: { f: f, dropzone: true, kase: @case }
+
+  input name="current_step" type="hidden" value=@case.current_step
+
+  = f.submit 'Update case', { class: 'button' }
