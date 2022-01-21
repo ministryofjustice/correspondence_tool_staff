@@ -32,9 +32,13 @@ require 'rails_helper'
 
 describe Case::SAR::InternalReview do
 
-  before do
+  before :all do
     require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
     CaseClosure::MetadataSeeder.seed!
+  end
+
+  after :all do
+    CaseClosure::MetadataSeeder.unseed!
   end
 
   context 'validates that SAR-specific fields are not blank' do

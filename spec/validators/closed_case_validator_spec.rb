@@ -574,7 +574,7 @@ describe 'ClosedCaseValidator' do
     context '#validate_sar_ir_outcome' do
       context 'sar_ir_outcome blank' do
         it 'has correct error' do
-          sar_ir.save
+          sar_ir.valid?
           expect(sar_ir.errors[:sar_ir_outcome]).to eq ['must be selected']
         end
       end
@@ -582,7 +582,7 @@ describe 'ClosedCaseValidator' do
       context 'sar_ir_outcome present' do
         it 'has no errors' do
           sar_ir.sar_ir_outcome = 'Upheld'
-          sar_ir.save
+          sar_ir.valid?
           expect(sar_ir.errors[:sar_ir_outcome]).to eq [] 
         end
       end
@@ -592,7 +592,7 @@ describe 'ClosedCaseValidator' do
       context 'outcome reasons blank' do
         it 'has correct error' do
           sar_ir.sar_ir_outcome = 'Upheld in part'
-          sar_ir.save
+          sar_ir.valid?
           expect(sar_ir.errors[:outcome_reasons]).to eq ['must be selected']
         end
       end
@@ -601,7 +601,7 @@ describe 'ClosedCaseValidator' do
         it 'has no errors' do
           sar_ir.sar_ir_outcome = 'Upheld in part'
           sar_ir.outcome_reason_ids = outcome_reason_ids
-          sar_ir.save
+          sar_ir.valid?
           expect(sar_ir.errors[:outcome_reasons]).to eq [] 
         end
       end
@@ -611,7 +611,7 @@ describe 'ClosedCaseValidator' do
       context 'team responsible blank' do
         it 'has correct error' do
           sar_ir.sar_ir_outcome = 'Upheld in part'
-          sar_ir.save
+          sar_ir.valid?
           expect(sar_ir.errors[:team_responsible_for_outcome_id]).to eq ['must be selected']
         end
       end
@@ -620,7 +620,7 @@ describe 'ClosedCaseValidator' do
         it 'has no errors' do
           sar_ir.sar_ir_outcome = 'Upheld in part'
           sar_ir.team_responsible_for_outcome_id = 1
-          sar_ir.save
+          sar_ir.valid?
           expect(sar_ir.errors[:team_responsible_for_outcome_id]).to eq [] 
         end
       end

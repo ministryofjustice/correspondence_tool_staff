@@ -21,12 +21,12 @@ feature 'SAR Internal Review Case can be closed', js:true do
     find_or_create :team_dacu_disclosure
   end
 
-  before(:all) do
+  before :all do
     require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
     CaseClosure::MetadataSeeder.seed!
   end
 
-  after(:all) do
+  after :all do
     CaseClosure::MetadataSeeder.unseed!
   end
 
@@ -38,7 +38,6 @@ feature 'SAR Internal Review Case can be closed', js:true do
         click_link "#{late_sar_ir.number}"
         cases_show_page.actions.close_case.click
         cases_close_page.submit_button.click
-
 
         on_load_field_expectations(lateness: true)
 

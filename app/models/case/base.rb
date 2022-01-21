@@ -313,6 +313,8 @@ class Case::Base < ApplicationRecord
 
   belongs_to :late_team, class_name: 'BusinessUnit'
 
+  belongs_to :team_responsible_for_outcome, class_name: 'BusinessUnit'
+
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
 
   belongs_to :appeal_outcome, class_name: 'CaseClosure::AppealOutcome'

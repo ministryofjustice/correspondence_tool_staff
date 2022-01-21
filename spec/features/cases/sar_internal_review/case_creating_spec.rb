@@ -22,9 +22,13 @@ feature 'SAR Internal Review Case creation by a manager' do
     cases_page.load
   end
 
-  before do
+  before :all do
     require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
     CaseClosure::MetadataSeeder.seed!
+  end
+
+  after :all do
+    CaseClosure::MetadataSeeder.unseed!
   end
 
   scenario 'creating a SAR internal review case', js: true do
@@ -59,20 +63,12 @@ feature 'SAR Internal Review Case creation by a manager' do
     then_they_can_mark_the_case_as_sent
 
     when_a_manager_logs_in
-    and_they_can_close_the_case
-    then_they_are_alerted_that_the_case_is_closed
+    they_see_the_option_to_close_the_case
   end
 
-  def then_they_are_alerted_that_the_case_is_closed
-    expect(page).to have_content("You've closed this case.")
-  end
-
-  def and_they_can_close_the_case
+  def they_see_the_option_to_close_the_case
     click_link latest_sar_ir_number
-    cases_show_page.actions.close_case.click
-    cases_close_page.submit_button.click
-    cases_closure_outcomes_page.missing_info.sar_ir_no.click
-    cases_closure_outcomes_page.submit_button.click
+    expect(cases_show_page.actions.close_case).to be_a(Capybara::Node::Element)
   end
 
   def when_a_manager_logs_in
