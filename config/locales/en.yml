@@ -384,6 +384,10 @@ en:
       <<: *case_policy
       extend_sar_deadline?: 'SAR deadline cannot be extended'
       remove_sar_deadline_extension?: 'Deadline extension cannot be removed'
+    case/sar/internal_review_policy:
+      can_close_case?: You are not authorised to close this case
+      respond_and_close?: You are not authorised to close this case
+      <<: *case_policy
     case/sar/offender_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -1188,6 +1192,8 @@ en:
         sub_heading: Edit Offender SAR case
       offender_sar_complaint:
         sub_heading: Edit Complaint case
+      sar_internal_review:
+        sub_heading: Edit SAR Internal Review case
     update:
       case_updated: Case updated
       case_partial_flag_updated: Case updated
@@ -1321,6 +1327,7 @@ en:
       link_sar_case_heading: Link case details
       check_sar_details_heading: Check details of the SAR
       case_details: Add case details
+      edit_case_details: Edit case details
       new_form_common:
         dropzone: Requestor's proof of ID and other documents
     search_bar:

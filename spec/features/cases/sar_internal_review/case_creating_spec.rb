@@ -6,11 +6,14 @@ feature 'SAR Internal Review Case creation by a manager' do
   given(:responding_team) { create :responding_team, responders: [responder] }
   given(:manager)         { find_or_create :disclosure_bmt_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
+  given(:approver)        { (find_or_create :team_dacu_disclosure).users.first }
 
   let(:sar_case) { create(:sar_case) }
   let(:foi_case) { create(:foi_case) }
   let(:subject_name) { sar_case.subject_full_name.downcase }
   let(:case_summary_text) { "IR of #{sar_case.number} - new sar case #{subject_name}" }
+
+  let(:latest_sar_ir_number) { Case::SAR::InternalReview.first.number.to_s }
 
   background do
     responding_team
@@ -40,6 +43,81 @@ feature 'SAR Internal Review Case creation by a manager' do
     when_i_assign_the_case
     then_i_expect_to_land_on_the_case_show_page
     and_that_the_case_is_a_trigger_case
+
+    when_a_responder_logs_in
+    then_they_can_accept_and_clear_the_case
+
+    when_an_approver_logs_in
+    then_they_can_take_the_case_on_and_clear_the_response
+
+    when_a_responder_logs_in
+    then_they_can_mark_the_case_as_sent
+
+    when_a_manager_logs_in
+    and_they_can_close_the_case
+    then_they_are_alerted_that_the_case_is_closed
+  end
+
+  def then_they_are_alerted_that_the_case_is_closed
+    expect(page).to have_content("You've closed this case.")
+  end
+
+  def and_they_can_close_the_case
+    click_link latest_sar_ir_number
+    cases_show_page.actions.close_case.click
+    cases_close_page.submit_button.click
+    cases_closure_outcomes_page.missing_info.sar_ir_no.click
+    cases_closure_outcomes_page.submit_button.click
+  end
+
+  def when_a_manager_logs_in
+    login_as manager
+    cases_page.load
+  end
+
+  def then_they_can_take_the_case_on_and_clear_the_response
+    click_link 'New cases'
+    click_link 'Take case on'
+    click_link latest_sar_ir_number
+
+    expect(page).not_to have_content('Close case')
+
+    click_link 'Clear response'
+    click_button 'Clear response'
+  end
+
+  def then_they_can_mark_the_case_as_sent
+    click_link latest_sar_ir_number
+
+    cases_show_page.actions.mark_as_sent.click
+    cases_respond_page.today_button.click
+    cases_respond_page.submit_button.click
+
+    expect(page).to have_content("The response has been marked as sent")
+  end
+
+  def when_a_responder_logs_in
+    login_as responder
+    cases_page.load
+  end
+
+  def when_an_approver_logs_in 
+    login_as approver
+    cases_page.load
+  end
+
+  def then_they_can_accept_and_clear_the_case
+    click_link "#{Case::SAR::InternalReview.first.number}"
+
+    assignments_edit_page.accept_radio.click
+    assignments_edit_page.confirm_button.click
+
+    click_link 'Ready for Disclosure clearance'
+  end
+
+  def when_i_sign_in_as_a_responder
+    login_as responder
+    cases_page.load
   end
 
   def and_that_the_case_is_a_trigger_case

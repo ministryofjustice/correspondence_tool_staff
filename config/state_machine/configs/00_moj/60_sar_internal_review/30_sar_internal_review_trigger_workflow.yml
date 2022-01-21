@@ -14,7 +14,6 @@
                   after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#overturned_editing_enabled?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -25,7 +24,6 @@
                   after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#overturned_editing_enabled?
                 flag_for_clearance:
                 link_a_case:
                 remove_linked_case:
@@ -38,7 +36,6 @@
                   after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
                 flag_for_clearance:
                 link_a_case:
@@ -56,7 +53,6 @@
                   after_transition: Workflows::Hooks#assign_responder_email
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
                 link_a_case:
                 remove_linked_case:
@@ -70,7 +66,6 @@
                   after_transition: Workflows::Hooks#notify_responder_message_received
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#overturned_editing_enabled?
                 extend_sar_deadline:
                 link_a_case:
                 remove_linked_case:
@@ -78,6 +73,23 @@
                   if: Workflows::Predicates#has_sar_deadline_extension?
                 unassign_from_user:
                   transition_to: awaiting_responder
+
+              responded:
+                add_message_to_case:
+                  after_transition: Workflows::Hooks#notify_responder_message_received
+                respond:
+                close:
+                  transition_to: closed
+                destroy_case:
+                edit_case:
+                link_a_case:
+                remove_linked_case:
+                unassign_from_user:
+                  transition_to: awaiting_responder
+                send_back:
+                  if: Workflows::Predicates#user_is_a_manager_for_case?
+                  transition_to: drafting
+                  after_transition: Workflows::Hooks#notify_responder_responses_sent_back
 
               closed:
                 add_message_to_case:
@@ -88,9 +100,7 @@
                 assign_to_new_team:
                 destroy_case:
                 edit_case:
-                  if: Workflows::Predicates#overturned_editing_enabled?
                 update_closure:
-                  if: Workflows::Predicates#overturned_editing_enabled?
                 link_a_case:
                 remove_linked_case:
 
@@ -135,15 +145,9 @@
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                respond_and_close:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                  transition_to: closed
                 respond:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                close:
-                  after_transition: Workflows::Hooks#notify_managing_team_case_closed
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                  transition_to: closed
+                  transition_to: responded
                 reassign_user:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#reassign_user_email
@@ -167,6 +171,8 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
+                edit_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
 
               awaiting_responder:
                 accept_approver_assignment:
@@ -178,6 +184,8 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
+                edit_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
 
               drafting:
                 accept_approver_assignment:
@@ -194,6 +202,8 @@
                   if: Workflows::Predicates#case_extended_and_user_in_approving_team?
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
+                edit_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
 
               pending_dacu_clearance:
                 accept_approver_assignment:
@@ -218,6 +228,8 @@
                   transition_to: drafting
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
+                edit_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
 
               awaiting_dispatch:
                 add_message_to_case:
@@ -230,7 +242,11 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_sar_deadline_extension:
                   if: Workflows::Predicates#case_extended_and_user_in_approving_team?
+                edit_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
 
               closed:
                 add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                edit_case:
                   if: Workflows::Predicates#user_is_approver_on_case?

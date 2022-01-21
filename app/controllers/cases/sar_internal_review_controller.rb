@@ -100,6 +100,22 @@ module Cases
       create_sar_internal_review_params
     end
 
+    def edit_params
+      edit_sar_internal_review_params
+    end
+
+    def process_closure_params
+      process_sar_internal_review_closure_params
+    end
+
+    def respond_params
+      respond_sar_internal_review_params
+    end
+
+    def process_date_responded_params
+      respond_sar_internal_review_params
+    end
+
     def go_next_step
       copy_params = create_params
       copy_params = @case.process_params_after_step(copy_params)
