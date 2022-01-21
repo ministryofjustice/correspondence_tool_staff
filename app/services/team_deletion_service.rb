@@ -28,7 +28,7 @@ class TeamDeletionService
   def soft_delete
     deletion_date = DateTime.now.strftime('%F %T')
 
-    @team.update_attributes!(
+    @team.update!(
       deleted_at: Time.current,
       name: "#{Team::DEACTIVATED_LABEL} #{@team.name} @(#{deletion_date})"
     )

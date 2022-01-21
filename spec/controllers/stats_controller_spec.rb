@@ -31,7 +31,7 @@ RSpec.describe StatsController, type: :controller do
           get :show, params: { id: report_type.id }
 
           expect(response.headers['Content-Disposition'])
-            .to eq 'attachment; filename="r005_monthly_performance_report.xlsx"'
+            .to have_content 'attachment; filename="r005_monthly_performance_report.xlsx"'
         end
       end
     end

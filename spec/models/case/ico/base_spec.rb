@@ -90,7 +90,7 @@ describe Case::ICO::Base do
     end
 
     it 'cannot be before than received_date' do
-      kase.update_attributes(
+      kase.update(
         received_date: Date.today,
         external_deadline: Date.today - 1.day,
       )
@@ -100,7 +100,7 @@ describe Case::ICO::Base do
     end
 
     it 'cannot be more than a year past received_date' do
-      kase.update_attributes(
+      kase.update(
         received_date: Date.today,
         external_deadline: Date.today + 1.year + 1.day,
       )
@@ -124,7 +124,7 @@ describe Case::ICO::Base do
       it { should validate_presence_of(:internal_deadline).on(:update) }
 
       it 'cannot be before received_date' do
-        kase.update_attributes(
+        kase.update(
           received_date: Date.today,
           internal_deadline: Date.today - 1.day,
         )
@@ -134,7 +134,7 @@ describe Case::ICO::Base do
       end
 
       it 'cannot be after than external_deadline' do
-        kase.update_attributes(
+        kase.update(
           external_deadline: Date.today + 20.days,
           internal_deadline: Date.today + 21.day,
         )
