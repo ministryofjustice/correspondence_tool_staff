@@ -958,6 +958,7 @@ en:
       progress_for_clearance: "Ready for Disclosure clearance"
       reason_for_refusal: Outcome
       outcome_reason: Reason for appeal outcome
+      team_responsible_for_outcome: Business unit responsible for appeal outcome
       reassign_case: "Change team member"
       received_date: Date request received at MOJ
       remove_link_html: |

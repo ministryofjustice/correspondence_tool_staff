@@ -13,7 +13,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
   let!(:late_sar_ir) { 
     create(:ready_to_close_sar_internal_review, 
             date_responded: Date.today,
-            external_deadline: Date.today - 10) 
+            external_deadline: 30.business_days.ago) 
   }
 
   background do
@@ -37,12 +37,12 @@ feature 'SAR Internal Review Case can be closed', js:true do
         cases_page.load
         click_link "#{late_sar_ir.number}"
         cases_show_page.actions.close_case.click
-
         cases_close_page.submit_button.click
 
-        cases_closure_outcomes_page.sar_ir_responsible_for_lateness.disclosure.click
 
         on_load_field_expectations(lateness: true)
+
+        cases_closure_outcomes_page.sar_ir_responsible_for_lateness.disclosure.click
 
         cases_closure_outcomes_page.sar_ir_outcome.upheld_in_part.click
 
@@ -57,6 +57,8 @@ feature 'SAR Internal Review Case can be closed', js:true do
         expect(cases_show_page).to have_content("You've closed this case.")
         expect(cases_show_page).to have_content("Excessive redaction(s)")
         expect(cases_show_page).to have_content("Incorrect exemption engaged")
+        expect(cases_show_page).to have_content("Business unit responsible for appeal outcome")
+        expect(cases_show_page).to have_content("Disclosure BMT")
       end
     end
 

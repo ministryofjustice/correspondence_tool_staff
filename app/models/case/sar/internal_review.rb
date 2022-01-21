@@ -3,12 +3,14 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   include LinkableOriginalCase
 
   belongs_to :sar_ir_outcome, class_name: 'CaseClosure::AppealOutcome'
+  belongs_to :team_responsible_for_outcome, class_name: 'BusinessUnit'
 
   validates_presence_of :original_case
+  validates_presence_of :sar_ir_subtype
 
   attr_accessor :original_case_number
 
-  validates_presence_of :sar_ir_subtype
+
 
   jsonb_accessor :properties,
                  sar_ir_subtype: :string,
