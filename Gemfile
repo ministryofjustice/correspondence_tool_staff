@@ -113,7 +113,7 @@ group :development do
   gem 'guard-brakeman'
   gem 'guard-rspec'
   gem 'guard-rubocop'
-  gem 'listen', '~> 3.7.0'
+  gem 'listen', '~> 3.7.1'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen'
