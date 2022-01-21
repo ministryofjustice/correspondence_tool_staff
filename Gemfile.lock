@@ -431,7 +431,7 @@ GEM
       method_source
       rake (>= 0.13)
       thor (~> 1.0)
-    rainbow (3.0.0)
+    rainbow (3.1.1)
     rake (13.0.6)
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
@@ -469,9 +469,9 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.3)
-    rubocop (1.24.1)
+    rubocop (1.25.0)
       parallel (~> 1.10)
-      parser (>= 3.0.0.0)
+      parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml
@@ -666,7 +666,7 @@ DEPENDENCIES
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails (~> 5.0)
-  rubocop (~> 1.24.0)
+  rubocop (~> 1.25.0)
   rubocop-performance
   rubocop-rspec (~> 2.6.0)
   ruby-progressbar
