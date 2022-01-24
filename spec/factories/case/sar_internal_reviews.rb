@@ -254,15 +254,17 @@ FactoryBot.define do
     end
   end
 
-  factory :closed_sar_internal_review, parent: :accepted_sar_internal_review do
+  factory :approved_and_closed_sar_internal_review, parent: :approved_sar_internal_review do
     missing_info { false }
-
-    transient do
-      identifier { "closed sar" }
-    end
 
     received_date  { 22.business_days.ago }
     date_responded { 4.business_days.ago }
+
+    transient do
+      identifier { "closed sar internal review" }
+      date_draft_compliant { received_date + 2.days }
+    end
+
 
     after(:create) do |kase, evaluator|
       if evaluator.flag_for_disclosure
@@ -277,6 +279,7 @@ FactoryBot.define do
                acting_team: evaluator.approving_team,
                acting_user: evaluator.approver
       end
+
 
       create :case_transition_respond,
              case: kase,

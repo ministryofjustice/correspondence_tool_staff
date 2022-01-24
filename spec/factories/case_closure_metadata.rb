@@ -397,6 +397,28 @@ FactoryBot.define do
     end
   end
 
+  factory :outcome_reason, class: CaseClosure::OutcomeReason do
+    subtype                       { nil }
+
+    trait :missing_info do
+      name { 'Proper searches not carried out/missing information' }
+      abbreviation { 'missing_info' }
+      sequence_id { 900 }
+    end
+
+    trait :wrong_exemp do
+      name { 'Incorrect exemption engaged' }
+      abbreviation { 'wrong_exemp' }
+      sequence_id { 905 }
+    end
+
+    trait :excess_redacts do
+      name { 'Excessive redaction(s)' }
+      abbreviation { 'excess_redacts' }
+      sequence_id { 910 }
+    end
+  end
+
   factory :offender_complaint_outcome, class: CaseClosure::OffenderComplaintOutcome do
     subtype { nil }
 

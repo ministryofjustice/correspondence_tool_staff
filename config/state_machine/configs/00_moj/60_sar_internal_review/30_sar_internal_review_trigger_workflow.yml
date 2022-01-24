@@ -246,5 +246,7 @@
               closed:
                 add_message_to_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
+                update_closure:
+                  if: Workflows::Predicates#user_is_approver_on_case?
                 edit_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
