@@ -9,8 +9,21 @@ feature 'SAR Internal Review Case can be edited', js:true do
   given(:approver)        { (find_or_create :team_dacu_disclosure).users.first }
 
   let(:sar_ir) { create(:sar_internal_review) }
-  let(:approved_sar_ir) { create(:approved_sar_internal_review, approver: approver) }
-  let(:responding_sar_ir) { create(:approved_sar_internal_review, responder: responder, responding_team: responding_team) }
+
+  let(:approved_sar_ir) { 
+    create(:approved_sar_internal_review,
+           approver: approver) 
+  }
+
+  let(:responding_sar_ir) { 
+    create(:approved_sar_internal_review,
+           responder: responder,
+           responding_team: responding_team) 
+  }
+
+  let(:closed_sar_ir) {
+      create(:closed_sar_internal_review)
+  }
 
   let(:new_message) { 'This is an updated message' }
   let(:new_name) { 'Newthaniel Newname' }
@@ -40,8 +53,14 @@ feature 'SAR Internal Review Case can be edited', js:true do
   context 'as a responder' do
     it 'won\'t allow me to edit a SAR IR case details' do
       when_a_responder_logs_in
-      and_loads_the_case_show_page
+      and_loads_the_case_show_page(responding_sar_ir)
       they_cannot_edit_the_case
+    end
+
+    fit 'won\'t allow me to edit the details of a case closure' do
+      when_a_responder_logs_in
+      and_loads_the_case_show_page(closed_sar_ir)
+      then_they_should_not_be_able_to_edit_the_case_closure_details
     end
   end
 
@@ -50,6 +69,10 @@ feature 'SAR Internal Review Case can be edited', js:true do
   def when_a_manager_logs_in
     login_as manager
     cases_page.load
+  end
+
+  def then_they_should_not_be_able_to_edit_the_case_closure_details
+    expect(page).to_not have_content("Edit closure details")
   end
 
   def when_an_approver_logs_in
@@ -62,8 +85,8 @@ feature 'SAR Internal Review Case can be edited', js:true do
     cases_page.load
   end
 
-  def and_loads_the_case_show_page
-    cases_show_page.load(id: responding_sar_ir.id)
+  def and_loads_the_case_show_page(sar_ir)
+    cases_show_page.load(id: sar_ir.id)
   end
 
   def they_cannot_edit_the_case
