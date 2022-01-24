@@ -168,6 +168,8 @@ module Closable
 
     service = UpdateClosureService.new(@case, current_user, close_params)
     service.call
+    
+    @team_collection = CaseTeamCollection.new(@case)
 
     if service.result == :ok
       set_permitted_events
