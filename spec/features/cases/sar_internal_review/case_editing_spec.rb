@@ -72,8 +72,8 @@ feature 'SAR Internal Review Case can be edited', js:true do
     expect(page).to_not have_content('Edit case details')
   end
 
-  def and_they_edit_the_case_details(sar_ir)
-    cases_show_page.load(id: sar_ir.id)
+  def and_they_edit_the_case_details(sar_internal_review)
+    cases_show_page.load(id: sar_internal_review.id)
     cases_show_page.case_details.edit_case.click
 
     page = case_new_sar_ir_case_details_page

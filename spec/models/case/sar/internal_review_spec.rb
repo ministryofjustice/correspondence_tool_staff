@@ -456,4 +456,16 @@ describe Case::SAR::InternalReview do
       expect(sar_internal_review.appeal_outcome.abbreviation).to match("upheld")
     end
   end
+
+  describe '#sar_ir_outcome_abbr' do
+    let(:sar_internal_review) { build(:sar_internal_review) }
+    it 'can return a sar ir outcome abbreviation' do
+      sar_internal_review.sar_ir_outcome = "Upheld"
+
+      expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
+      expect(sar_internal_review.sar_ir_outcome_abbr).to be_an_instance_of(String)
+      expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
+    end
+  end
+
 end

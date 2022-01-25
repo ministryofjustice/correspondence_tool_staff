@@ -60,6 +60,10 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     appeal_outcome&.name
   end
 
+  def sar_ir_outcome_abbr
+    appeal_outcome&.abbreviation
+  end
+
   def sar_ir_outcome=(name)
     self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
   end

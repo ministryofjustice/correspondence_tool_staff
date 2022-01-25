@@ -252,6 +252,6 @@ class ClosedCaseValidator < ActiveModel::Validator
   private
 
   def not_upheld(rec)
-    rec.appeal_outcome.abbreviation == 'overturned' || rec.sar_ir_outcome == 'part_upheld'
+    rec.sar_ir_outcome_abbr == 'overturned' || rec.sar_ir_outcome_abbr == 'part_upheld'
   end
 end
