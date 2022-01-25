@@ -1336,6 +1336,9 @@ en:
       edit_case_details: Edit case details
       new_form_common:
         dropzone: Requestor's proof of ID and other documents
+      outcome_reasons: 
+        heading: Reason(s) for outcome being partially upheld out overturned?
+        hint: Select all that apply
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals
