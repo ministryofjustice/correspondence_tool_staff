@@ -1,9 +1,27 @@
 - url = defined?(form_url) ? form_url : polymorphic_path(@case, action: :process_respond_and_close)
 = form_for kase, as: :sar_internal_review, url: url do |f|
 
-  - if @case.responded_late?
-    = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
+  .js-sar-internal-review
 
+  - if @case.responded_late?
+    .responsible-for-lateness-group
+      = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
+
+  .appeal-outcome-group
+    = f.radio_button_fieldset :sar_ir_outcome, choices: CaseClosure::AppealOutcome.active.map(&:name)
+
+  .responsible-for-outcome-group
+    = f.radio_button_fieldset :team_responsible_for_outcome_id, 
+      choices: @team_collection.teams, 
+      text_method: :name, 
+      value_method: :id
+
+  .outcome-reasons-group
+    = render partial: 'cases/sar_internal_review/outcome_reason_checkbox_section', 
+      locals: { outcome_reasons: CaseClosure::OutcomeReason.all, 
+        heading: t('cases.sar_internal_review.outcome_reasons.heading'),
+        hint: t('cases.sar_internal_review.outcome_reasons.hint'),
+        kase: @case, f: f }
 
   .missing-info
     = f.radio_button_fieldset :missing_info

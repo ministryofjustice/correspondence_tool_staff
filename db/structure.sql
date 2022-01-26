@@ -416,6 +416,38 @@ ALTER SEQUENCE public.cases_id_seq OWNED BY public.cases.id;
 
 
 --
+-- Name: cases_outcome_reasons; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.cases_outcome_reasons (
+    id bigint NOT NULL,
+    case_id bigint,
+    outcome_reason_id bigint,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: cases_outcome_reasons_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.cases_outcome_reasons_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: cases_outcome_reasons_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.cases_outcome_reasons_id_seq OWNED BY public.cases_outcome_reasons.id;
+
+
+--
 -- Name: cases_users_transitions_trackers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1235,6 +1267,13 @@ ALTER TABLE ONLY public.cases_exemptions ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: cases_outcome_reasons id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cases_outcome_reasons ALTER COLUMN id SET DEFAULT nextval('public.cases_outcome_reasons_id_seq'::regclass);
+
+
+--
 -- Name: cases_users_transitions_trackers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1421,6 +1460,14 @@ ALTER TABLE ONLY public.case_transitions
 
 ALTER TABLE ONLY public.cases_exemptions
     ADD CONSTRAINT cases_exemptions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: cases_outcome_reasons cases_outcome_reasons_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.cases_outcome_reasons
+    ADD CONSTRAINT cases_outcome_reasons_pkey PRIMARY KEY (id);
 
 
 --
@@ -1717,6 +1764,20 @@ CREATE INDEX index_cases_on_requester_type ON public.cases USING btree (requeste
 --
 
 CREATE INDEX index_cases_on_user_id ON public.cases USING btree (user_id);
+
+
+--
+-- Name: index_cases_outcome_reasons_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_outcome_reasons_on_case_id ON public.cases_outcome_reasons USING btree (case_id);
+
+
+--
+-- Name: index_cases_outcome_reasons_on_outcome_reason_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_cases_outcome_reasons_on_outcome_reason_id ON public.cases_outcome_reasons USING btree (outcome_reason_id);
 
 
 --
@@ -2157,7 +2218,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210727143427'),
 ('20210914110858'),
 ('20210914111215'),
-('20210917113753');
-
+('20210917113753'),
+('20220117091139');
 
 
