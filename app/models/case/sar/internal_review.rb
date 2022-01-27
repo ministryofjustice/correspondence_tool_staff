@@ -2,14 +2,16 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   include LinkableOriginalCase
 
+  # override parent class callback behaviour
+  # as not required for SAR::InternalReview cases
+  skip_callback :save, :before, :use_subject_as_requester
+
   belongs_to :sar_ir_outcome, class_name: 'CaseClosure::AppealOutcome'
 
   validates_presence_of :original_case
   validates_presence_of :sar_ir_subtype
 
   attr_accessor :original_case_number
-
-
 
   jsonb_accessor :properties,
                  sar_ir_subtype: :string,
