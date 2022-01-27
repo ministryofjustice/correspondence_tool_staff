@@ -123,7 +123,7 @@ function _deploy() {
   if [[ $environment == "staging" ]]
   then
     p "--------------------------------------------------"
-    p "Deploying People Finder to kubernetes cluster: Live"
+    p "Deploying Track a query to kubernetes cluster: Live"
     p "Environment: \e[32m$environment\e[0m"
     p "Docker image: \e[32m$image_tag\e[0m"
     p "Target namespace: \e[32m$namespace\e[0m"
@@ -171,7 +171,7 @@ function _deploy() {
   # Apply non-image specific config
   kubectl apply \
     -f config/kubernetes/${environment}/service.yaml \
-    -f config/kubernetes/${environment}/ingress.yaml \
+    -f config/kubernetes/${environment}/${ingress_yaml_file} \
     -f config/kubernetes/${environment}/secrets.yaml \
     -n $namespace
 
