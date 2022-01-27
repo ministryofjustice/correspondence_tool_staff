@@ -117,6 +117,40 @@ function _deploy() {
     fi
   fi
 
+
+  ingress_yaml_file=ingress.yaml
+  # Deploy to Live cluster
+  if [[ $environment == "staging" ]]
+  then
+    p "--------------------------------------------------"
+    p "Deploying People Finder to kubernetes cluster: Live"
+    p "Environment: \e[32m$environment\e[0m"
+    p "Docker image: \e[32m$image_tag\e[0m"
+    p "Target namespace: \e[32m$namespace\e[0m"
+    p "--------------------------------------------------"
+
+    ingress_yaml_file=ingress-live.yaml
+
+    if [[ "$3" == "circleci" ]]
+    then
+    #authenticate to live cluster
+      p "Authenticating to live..."
+      echo -n $KUBE_ENV_LIVE_CA_CERT | base64 -d > ./live_ca.crt
+      kubectl config set-cluster $KUBE_ENV_LIVE_CLUSTER_NAME --certificate-authority=./live_ca.crt --server=https://$KUBE_ENV_LIVE_CLUSTER_NAME
+      
+      live_token=$KUBE_ENV_LIVE_STAGING_TOKEN
+      
+      kubectl config set-credentials circleci --token=$live_token
+      kubectl config set-context $KUBE_ENV_LIVE_CLUSTER_NAME --cluster=$KUBE_ENV_LIVE_CLUSTER_NAME --user=circleci --namespace=$namespace
+      kubectl config use-context $KUBE_ENV_LIVE_CLUSTER_NAME
+      kubectl config current-context
+      kubectl --namespace=$namespace get pods
+    fi
+
+    #deploy to live cluster
+    p "Authenticated, deploying to live..."
+  fi
+
   # Set context for following operations
   # kubectl config set-context ${context} --namespace=$namespace
   # kubectl config use-context ${context}
