@@ -147,14 +147,8 @@ function _deploy() {
     kubectl apply -f config/kubernetes/${environment}/cronjob-anonymizer.yaml -n $namespace
   fi
 
-  if [ $environment == "qa" ]
-  then
-    kubectl apply -f config/kubernetes/${environment}/cronjob-restore-anonymised-db.yaml -n $namespace
-    kubectl apply -f config/kubernetes/${environment}/cronjob-update-search-index.yaml -n $namespace
-  fi
-
   # Deploy to Live cluster
-  if [ $environment == "staging" ] || [ $environment == "development" ] || [ $environment == "demo" ]
+  if [ $environment == "staging" ] || [ $environment == "development" ] || [ $environment == "demo" ] || [ $environment == "qa" ]
   then
     p "--------------------------------------------------"
     p "Deploying Track a query to kubernetes cluster: Live"
@@ -185,6 +179,11 @@ function _deploy() {
         live_token=$KUBE_ENV_LIVE_DEMO_TOKEN
       fi
       
+      if [[ $environment == "qa" ]]
+      then
+        live_token=$KUBE_ENV_LIVE_QA_TOKEN
+      fi
+
       kubectl config set-credentials circleci --token=$live_token
       kubectl config set-context $KUBE_ENV_LIVE_CLUSTER_NAME --cluster=$KUBE_ENV_LIVE_CLUSTER_NAME --user=circleci --namespace=$namespace
       kubectl config use-context $KUBE_ENV_LIVE_CLUSTER_NAME
