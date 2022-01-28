@@ -149,7 +149,7 @@ function _deploy() {
 
   if [ $environment == "qa" ]
   then
-    kubectl apply -f config/kubernetes/${environment}/cronjob-restore-anonymised-db.yaml -n $namespace
+    # kubectl apply -f config/kubernetes/${environment}/cronjob-restore-anonymised-db.yaml -n $namespace
     kubectl apply -f config/kubernetes/${environment}/cronjob-update-search-index.yaml -n $namespace
   fi
 
@@ -224,7 +224,7 @@ function _deploy() {
 
   if [ $environment == "qa" ]
   then
-    kubectl apply -f config/kubernetes/${environment}/cronjob-restore-anonymised-db.yaml -n $namespace
+    # kubectl apply -f config/kubernetes/${environment}/cronjob-restore-anonymised-db.yaml -n $namespace
     kubectl apply -f config/kubernetes/${environment}/cronjob-update-search-index.yaml -n $namespace
   fi
 
