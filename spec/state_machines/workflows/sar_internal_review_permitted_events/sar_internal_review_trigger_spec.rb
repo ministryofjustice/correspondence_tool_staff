@@ -93,7 +93,6 @@ describe ConfigurableStateMachine::Machine do
                   :edit_case,
                   :link_a_case,
                   :remove_linked_case,
-                  :respond,
                   :unassign_from_user]
         end
 

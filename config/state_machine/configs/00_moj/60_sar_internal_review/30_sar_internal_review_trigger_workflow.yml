@@ -77,7 +77,6 @@
               responded:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                respond:
                 close:
                   transition_to: closed
                 destroy_case:
