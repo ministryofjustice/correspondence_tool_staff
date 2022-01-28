@@ -148,7 +148,7 @@ function _deploy() {
   fi
 
   # Deploy to Live cluster
-  if [ $environment == "staging" ] || [ $environment == "development" ] || [ $environment == "qa" ]
+  if [ $environment == "staging" ] || [ $environment == "development" ] || [ $environment == "demo" ] || [ $environment == "qa" ]
   then
     p "--------------------------------------------------"
     p "Deploying Track a query to kubernetes cluster: Live"
@@ -172,6 +172,11 @@ function _deploy() {
       if [[ $environment == "staging" ]]
       then
         live_token=$KUBE_ENV_LIVE_STAGING_TOKEN
+      fi
+
+      if [[ $environment == "demo" ]]
+      then
+        live_token=$KUBE_ENV_LIVE_DEMO_TOKEN
       fi
       
       if [[ $environment == "qa" ]]
