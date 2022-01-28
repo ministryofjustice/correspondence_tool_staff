@@ -147,12 +147,6 @@ function _deploy() {
     kubectl apply -f config/kubernetes/${environment}/cronjob-anonymizer.yaml -n $namespace
   fi
 
-  if [ $environment == "qa" ]
-  then
-    kubectl apply -f config/kubernetes/${environment}/cronjob-restore-anonymised-db.yaml -n $namespace
-    kubectl apply -f config/kubernetes/${environment}/cronjob-update-search-index.yaml -n $namespace
-  fi
-
   # Deploy to Live cluster
   if [ $environment == "staging" ] || [ $environment == "development" ] || [ $environment == "qa" ]
   then
