@@ -54,7 +54,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
         cases_closure_outcomes_page.missing_info.sar_ir_yes.click
         cases_closure_outcomes_page.submit_button.click
 
-        expect(cases_show_page).to have_content("You've closed this case.")
+        expect(cases_show_page).to have_content("You've closed this case")
         expect(cases_show_page).to have_content("Excessive redaction(s)")
         expect(cases_show_page).to have_content("Incorrect exemption engaged")
         expect(cases_show_page).to have_content("Business unit responsible for appeal outcome")
@@ -79,7 +79,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
 
         cases_closure_outcomes_page.submit_button.click
 
-        expect(cases_show_page).to have_content("You've closed this case.")
+        expect(cases_show_page).to have_content("You've closed this case")
       end
     end
   end
