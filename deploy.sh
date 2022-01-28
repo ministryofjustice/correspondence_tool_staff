@@ -165,7 +165,7 @@ function _deploy() {
 
     if [[ "$3" == "circleci" ]]
     then
-    #authenticate to live cluster
+      # Authenticate to live cluster
       p "Authenticating to live..."
       echo -n $KUBE_ENV_LIVE_CA_CERT | base64 -d > ./live_ca.crt
       kubectl config set-cluster $KUBE_ENV_LIVE_CLUSTER_NAME --certificate-authority=./live_ca.crt --server=https://$KUBE_ENV_LIVE_CLUSTER_NAME
@@ -174,7 +174,7 @@ function _deploy() {
       then
         live_token=$KUBE_ENV_LIVE_DEVELOPMENT_TOKEN
       fi
-      
+
       if [[ $environment == "staging" ]]
       then
         live_token=$KUBE_ENV_LIVE_STAGING_TOKEN
@@ -207,7 +207,7 @@ function _deploy() {
   # Apply non-image specific config
   kubectl apply \
     -f config/kubernetes/${environment}/service.yaml \
-    -f config/kubernetes/${environment}/ingress.yaml \
+    -f config/kubernetes/${environment}/ingress-live.yaml \
     -f config/kubernetes/${environment}/secrets.yaml \
     -n $namespace
 
