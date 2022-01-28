@@ -70,6 +70,8 @@ module PageObjects
         end
 
         section :missing_info, '.missing-info' do
+          element :sar_ir_yes, 'input#sar_internal_review_missing_info_yes', visible: false
+          element :sar_ir_no,  'input#sar_internal_review_missing_info_no', visible: false
           element :yes, 'input#sar_missing_info_yes', visible: false
           element :no,  'input#sar_missing_info_no', visible: false
         end
