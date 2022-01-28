@@ -180,6 +180,11 @@ function _deploy() {
         live_token=$KUBE_ENV_LIVE_STAGING_TOKEN
       fi
       
+      if [[ $environment == "qa" ]]
+      then
+        live_token=$KUBE_ENV_LIVE_QA_TOKEN
+      fi
+
       kubectl config set-credentials circleci --token=$live_token
       kubectl config set-context $KUBE_ENV_LIVE_CLUSTER_NAME --cluster=$KUBE_ENV_LIVE_CLUSTER_NAME --user=circleci --namespace=$namespace
       kubectl config use-context $KUBE_ENV_LIVE_CLUSTER_NAME
