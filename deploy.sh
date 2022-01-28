@@ -193,7 +193,8 @@ function _deploy() {
   # Apply image specific config
   kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
           webapp=${docker_image_tag} \
-          jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+          uploads=${docker_image_tag} \
+          quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
   # Apply non-image specific config
   kubectl apply \
