@@ -93,7 +93,6 @@ describe ConfigurableStateMachine::Machine do
                   :edit_case,
                   :link_a_case,
                   :remove_linked_case,
-                  :respond,
                   :unassign_from_user]
         end
 
@@ -108,7 +107,6 @@ describe ConfigurableStateMachine::Machine do
                   :edit_case,
                   :link_a_case,
                   :remove_linked_case,
-                  :respond,
                   :send_back, 
                   :unassign_from_user]
         end
@@ -235,8 +233,7 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_sar_internal_review, :flagged_accepted
           responder = responder_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case,
-                                                                        :update_closure]
+          expect(k.state_machine.permitted_events(responder.id)).to eq [:add_message_to_case ]
         end
       end
     end
@@ -394,8 +391,9 @@ describe ConfigurableStateMachine::Machine do
           k = create :closed_sar_internal_review, :flagged_accepted
           approver = approver_in_assigned_team(k)
           expect(k.current_state).to eq 'closed'
-          expect(k.state_machine.permitted_events(approver.id)).to eq [ :add_message_to_case, 
-                                                                        :edit_case]
+          expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case, 
+                                                                       :edit_case,
+                                                                       :update_closure]
         end
       end
 

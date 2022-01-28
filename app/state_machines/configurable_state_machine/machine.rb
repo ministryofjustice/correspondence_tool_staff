@@ -275,6 +275,7 @@ module ConfigurableStateMachine
     def trigger_event(event:, params:)
       event = event.to_sym
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
+
       role =  params[:acting_team].role
       user_role_config = @config.user_roles[role]
       if user_role_config.nil?

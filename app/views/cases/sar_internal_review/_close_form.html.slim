@@ -1,10 +1,34 @@
 - url = defined?(form_url) ? form_url : polymorphic_path(@case, action: :process_closure)
-
 = form_for @case, as: :sar_internal_review, url: url do |f|
   .form-group
     = f.gov_uk_date_field :date_responded, { legend_text: t('cases.sar.close_form.close_date'),
             form_hint_text: t('cases.sar.close_form.date_example'),
             today_button: {class: ''} }
+
+  .js-sar-internal-review
+
+  - if @case.responded_late?
+    .responsible-for-lateness-group
+      = render partial: 'cases/shared/team_caused_late_response', locals: {kase: @case, f: f}
+
+  .appeal-outcome-group
+    = f.radio_button_fieldset :sar_ir_outcome, choices: CaseClosure::AppealOutcome.active.map(&:name)
+
+  .responsible-for-outcome-group
+    = f.radio_button_fieldset :team_responsible_for_outcome_id, 
+      choices: @team_collection.teams, 
+      text_method: :name, 
+      value_method: :id
+
+  .outcome-reasons-group
+    = render partial: 'cases/sar_internal_review/outcome_reason_checkbox_section', 
+      locals: { outcome_reasons: CaseClosure::OutcomeReason.all, 
+        heading: 'Reason(s) for outcome being partially upheld out overturned?', 
+        hint: 'Select all that apply', 
+        kase: @case, f: f }
+
+  .missing-info
+    = f.radio_button_fieldset :missing_info
 
   .grid-row
     .column-two-thirds

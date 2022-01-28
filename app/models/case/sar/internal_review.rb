@@ -27,11 +27,6 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     self.workflow = 'trigger'
   end
 
-  def respond_and_close(current_user)
-    state_machine.respond!(acting_user: current_user, acting_team: self.managing_team)
-    state_machine.close!(acting_user: current_user, acting_team: self.managing_team)
-  end
-
   class << self
     def type_abbreviation
       # This string is used when constructing paths or methods in other parts of

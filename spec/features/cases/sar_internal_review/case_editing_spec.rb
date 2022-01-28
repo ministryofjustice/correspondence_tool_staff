@@ -3,15 +3,46 @@ require 'rails_helper'
 feature 'SAR Internal Review Case can be edited', js:true do
 
   given(:responder)       { find_or_create(:sar_responder) }
-  given(:responding_team) { create :responding_team, responders: [responder] }
+  given(:responding_team) { find_or_create :responding_team, responders: [responder] }
   given(:manager)         { find_or_create :disclosure_bmt_user }
-  given(:managing_team)   { create :managing_team, managers: [manager] }
-  given(:approver)        { (find_or_create :team_dacu_disclosure).users.first }
+  given(:managing_team)   { find_or_create :managing_team, managers: [manager] }
+  given(:approving_team)  { find_or_create :team_dacu_disclosure }
+  given(:approver)        { approving_team.users.first }
+
+  given(:outcome_reasons)  { 
+    [ find(:outcome_reason, :excess_redacts), 
+      find(:outcome_reason, :wrong_exemp)]
+  }
 
   let(:sar_ir) { create(:sar_internal_review) }
-  let(:approved_sar_ir) { create(:approved_sar_internal_review, approver: approver) }
-  let(:responding_sar_ir) { create(:approved_sar_internal_review, responder: responder, responding_team: responding_team) }
 
+  let(:approved_sar_ir) { 
+    create(:approved_sar_internal_review,
+           approver: approver) 
+  }
+
+  let(:responding_sar_ir) { 
+    create(:approved_sar_internal_review,
+           responder: responder,
+           responding_team: responding_team) 
+  }
+
+  let(:closed_sar_ir) {
+    kase = create(:closed_sar_internal_review, 
+           responder: responder,
+           responding_team: responding_team,
+           outcome_reasons: outcome_reasons,
+           approver: approver,
+           approving_team: approving_team,
+           team_responsible_for_outcome: responding_team,
+           team_responsible_for_outcome_id: responding_team.id,
+           late_team: responding_team)
+    appeal_outcome = CaseClosure::AppealOutcome.overturned
+    kase.appeal_outcome_id = appeal_outcome.id
+    kase.save!
+    kase
+  }
+  
   let(:new_message) { 'This is an updated message' }
   let(:new_name) { 'Newthaniel Newname' }
   let(:new_third_party_relationship) { 'Barrister' }
@@ -21,11 +52,28 @@ feature 'SAR Internal Review Case can be edited', js:true do
     find_or_create :team_dacu_disclosure
   end
 
+  before :all do
+    require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+    CaseClosure::MetadataSeeder.seed!
+  end
+
+
+  after :all do
+    CaseClosure::MetadataSeeder.unseed!
+  end
+
   context 'as a manager' do
     it 'will allow me to edit a SAR IR case details' do
       when_a_manager_logs_in
       and_they_edit_the_case_details(sar_ir)
       then_they_expect_the_new_details_to_be_reflected_on_the_case_show_page
+    end
+
+    it 'will allow me to edit the details of a case closure' do
+      when_a_manager_logs_in
+      and_loads_the_case_show_page(closed_sar_ir)
+      and_they_edit_case_closure_details
+      then_the_changes_are_reflected_on_the_case_show_page
     end
   end
 
@@ -35,13 +83,26 @@ feature 'SAR Internal Review Case can be edited', js:true do
       and_they_edit_the_case_details(approved_sar_ir)
       then_they_expect_the_new_details_to_be_reflected_on_the_case_show_page
     end
+
+    fit 'will allow me to edit the details of a case closure' do
+      when_an_approver_logs_in
+      and_loads_the_case_show_page(closed_sar_ir)
+      and_they_edit_case_closure_details
+      then_the_changes_are_reflected_on_the_case_show_page
+    end
   end
 
   context 'as a responder' do
     it 'won\'t allow me to edit a SAR IR case details' do
       when_a_responder_logs_in
-      and_loads_the_case_show_page
+      and_loads_the_case_show_page(responding_sar_ir)
       they_cannot_edit_the_case
+    end
+
+    it 'won\'t allow me to edit the details of a case closure' do
+      when_a_responder_logs_in
+      and_loads_the_case_show_page(closed_sar_ir)
+      then_they_should_not_be_able_to_edit_the_case_closure_details
     end
   end
 
@@ -50,6 +111,10 @@ feature 'SAR Internal Review Case can be edited', js:true do
   def when_a_manager_logs_in
     login_as manager
     cases_page.load
+  end
+
+  def then_they_should_not_be_able_to_edit_the_case_closure_details
+    expect(page).to_not have_content("Edit closure details")
   end
 
   def when_an_approver_logs_in
@@ -62,14 +127,32 @@ feature 'SAR Internal Review Case can be edited', js:true do
     cases_page.load
   end
 
-  def and_loads_the_case_show_page
-    cases_show_page.load(id: responding_sar_ir.id)
+  def and_loads_the_case_show_page(sar_internal_review)
+    cases_show_page.load(id: sar_internal_review.id)
   end
 
   def they_cannot_edit_the_case
     page = case_new_sar_ir_case_details_page
     expect(page).to have_content(responding_sar_ir.number.to_s)
     expect(page).to_not have_content('Edit case details')
+  end
+
+  def and_they_edit_case_closure_details
+    click_link("Edit closure details")
+
+    cases_edit_closure_page.sar_ir_responsible_for_outcome.disclosure.click
+    cases_edit_closure_page.sar_ir_outcome_reasons.check "Excessive redaction(s)", visible: false
+    cases_edit_closure_page.sar_ir_outcome_reasons.check "Incorrect exemption engaged", visible: false
+    cases_edit_closure_page.missing_info.sar_ir_yes.click
+    cases_edit_closure_page.submit_button.click
+  end
+
+  def then_the_changes_are_reflected_on_the_case_show_page
+    expect(cases_show_page).to have_content("You have updated the closure details for this case.")
+    expect(cases_show_page).to have_content("Excessive redaction(s)")
+    expect(cases_show_page).to have_content("Incorrect exemption engaged")
+    expect(cases_show_page).to have_content("Business unit responsible for appeal outcome")
+    expect(cases_show_page).to have_content("Disclosure BMT")
   end
 
   def and_they_edit_the_case_details(sar_internal_review)

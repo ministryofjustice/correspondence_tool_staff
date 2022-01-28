@@ -77,7 +77,6 @@
               responded:
                 add_message_to_case:
                   after_transition: Workflows::Hooks#notify_responder_message_received
-                respond:
                 close:
                   transition_to: closed
                 destroy_case:
@@ -155,8 +154,6 @@
               closed:
                 add_message_to_case:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
-                update_closure:
-                  if: Workflows::Predicates#overturned_editing_enabled_and_responder_in_assigned_team?
 
           ########################### SAR INTERNAL REVIEW :: STANDARD WORKFLOW :: APPROVER ########################
           approver:
@@ -247,6 +244,8 @@
 
               closed:
                 add_message_to_case:
+                  if: Workflows::Predicates#user_is_approver_on_case?
+                update_closure:
                   if: Workflows::Predicates#user_is_approver_on_case?
                 edit_case:
                   if: Workflows::Predicates#user_is_approver_on_case?
