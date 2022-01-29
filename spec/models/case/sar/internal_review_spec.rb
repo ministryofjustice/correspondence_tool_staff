@@ -32,6 +32,15 @@ require 'rails_helper'
 
 describe Case::SAR::InternalReview do
 
+  before :all do
+    require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+    CaseClosure::MetadataSeeder.seed!
+  end
+
+  after :all do
+    CaseClosure::MetadataSeeder.unseed!
+  end
+
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 
@@ -141,7 +150,7 @@ describe Case::SAR::InternalReview do
     it 'validates presence if attached request files is missing on update' do
       kase = create :sar_internal_review, uploaded_request_files: [], message: 'foo'
       expect(kase).to be_valid
-      kase.update_attributes(message: '')
+      kase.update(message: '')
       expect(kase).not_to be_valid
       expect(kase.errors[:message])
         .to eq ["cannot be blank if no request files attached"]
@@ -160,7 +169,7 @@ describe Case::SAR::InternalReview do
                     creator: create(:manager),
                     message: 'foo'
       expect(kase).to be_valid
-      kase.update_attributes(message: '')
+      kase.update(message: '')
       expect(kase).to be_valid
     end
   end
@@ -436,4 +445,27 @@ describe Case::SAR::InternalReview do
 
     it { should have_enum(:sar_ir_subtype).with_values(['timeliness', 'compliance' ]) }
   end
+
+  describe '#sar_ir_outcome' do
+    let(:sar_internal_review) { build(:sar_internal_review) }
+    it 'can set a sar_ir_outcome by name' do
+      sar_internal_review.sar_ir_outcome = "Upheld"
+
+      expect(sar_internal_review.sar_ir_outcome).to match("Upheld")
+      expect(sar_internal_review.appeal_outcome).to be_an_instance_of(CaseClosure::AppealOutcome)
+      expect(sar_internal_review.appeal_outcome.abbreviation).to match("upheld")
+    end
+  end
+
+  describe '#sar_ir_outcome_abbr' do
+    let(:sar_internal_review) { build(:sar_internal_review) }
+    it 'can return a sar ir outcome abbreviation' do
+      sar_internal_review.sar_ir_outcome = "Upheld"
+
+      expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
+      expect(sar_internal_review.sar_ir_outcome_abbr).to be_an_instance_of(String)
+      expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
+    end
+  end
+
 end

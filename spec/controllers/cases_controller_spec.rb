@@ -182,12 +182,12 @@ RSpec.describe CasesController, type: :controller do
 
         it 'should permit adding a response' do
 
-          it {should have_permitted_events_including :add_message_to_case,
-                                                     :add_responses,
-                                                     :link_a_case,
-                                                     :reassign_user,
-                                                     :remove_linked_case,
-                                                     :upload_responses }
+          should have_permitted_events_including :add_message_to_case,
+                                                  :add_responses,
+                                                  :link_a_case,
+                                                  :reassign_user,
+                                                  :remove_linked_case,
+                                                  :upload_responses
         end
 
         it 'renders the show page' do
@@ -203,11 +203,11 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it 'should not permit adding a response' do
-          it {should have_permitted_events :add_message_to_case,
-                                           :link_a_case,
-                                           :reassign_user,
-                                           :remove_linked_case,
-                                           :upload_responses }
+          should have_permitted_events :add_message_to_case,
+                                        :link_a_case,
+                                        :reassign_user,
+                                        :remove_linked_case,
+                                        :upload_responses
         end
 
         it 'renders the show page' do

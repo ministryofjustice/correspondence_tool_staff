@@ -4,7 +4,8 @@ class ClosedCaseValidator < ActiveModel::Validator
     'SAR'=>                 [:validate_date_responded,
                              :validate_late_team_id],
     'SAR_INTERNAL_REVIEW'=> [:validate_date_responded,
-                             :validate_late_team_id],
+                             :validate_late_team_id,
+                             :validate_outcome_reasons],
     'FOI'=>                 [:validate_date_responded,
                              :validate_info_held_status,
                              :validate_outcome,
@@ -32,7 +33,9 @@ class ClosedCaseValidator < ActiveModel::Validator
   # the form to close a case, and is only required at that time.
   PROCESSING_CLOSURE_VALIDATIONS = {
     'SAR'=>                 [:validate_tmm],
-    'SAR_INTERNAL_REVIEW'=> [:validate_tmm],
+    'SAR_INTERNAL_REVIEW'=> [:validate_tmm, 
+                             :validate_sar_ir_outcome,
+                             :validate_team_responsible],
     'FOI'=>                 [],
     'ICO'=>                 [],
     'OVERTURNED_SAR' =>     [:validate_tmm,
@@ -100,8 +103,6 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
-  private
-
   def run_validations(validations:, kase:)
     validations.each do |validation|
       self.__send__(validation, kase)
@@ -151,6 +152,12 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
+  def validate_sar_ir_outcome(rec)
+    if rec.sar_ir_outcome.blank?
+      rec.errors.add(:sar_ir_outcome, 'must be selected')
+    end
+  end
+
   def validate_date_responded(rec)
     if rec.date_responded.blank?
       rec.errors.add(:date_responded, "cannot be blank")
@@ -163,7 +170,6 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
-
   def validate_outcome(rec)
     if self.class.outcome_required?(info_held_status: rec.info_held_status_abbreviation)
       if rec.outcome.blank?
@@ -171,6 +177,18 @@ class ClosedCaseValidator < ActiveModel::Validator
       end
     elsif rec.outcome.present?
       rec.errors.add(:outcome, 'can only be present if information held or part held')
+    end
+  end
+
+  def validate_team_responsible(rec)
+    if not_upheld(rec) && rec.team_responsible_for_outcome_id.blank? 
+      rec.errors.add(:team_responsible_for_outcome_id, 'must be selected')
+    end
+  end
+
+  def validate_outcome_reasons(rec) 
+    if not_upheld(rec) && rec.outcome_reason_ids == []
+      rec.errors.add(:outcome_reasons, 'must be selected')
     end
   end
 
@@ -229,5 +247,11 @@ class ClosedCaseValidator < ActiveModel::Validator
     if rec.info_held_status.not_confirmed? && rec.exemptions.include?(CaseClosure::Exemption.s12)
       rec.errors.add(:exemptions, 'cost is not valid NCND')
     end
+  end
+
+  private
+
+  def not_upheld(rec)
+    rec.sar_ir_outcome_abbr == 'overturned' || rec.sar_ir_outcome_abbr == 'part_upheld'
   end
 end

@@ -28,4 +28,11 @@ class Case::SAR::InternalReviewDecorator < Case::SAR::StandardDecorator
     end
   end
 
+  def pretty_outcome_reasons
+    object.outcome_reasons
+      .map { |reason| reason.name }
+      .join(",<br>")
+      .html_safe
+  end
+
 end

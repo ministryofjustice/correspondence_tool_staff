@@ -313,6 +313,8 @@ class Case::Base < ApplicationRecord
 
   belongs_to :late_team, class_name: 'BusinessUnit'
 
+  belongs_to :team_responsible_for_outcome, class_name: 'BusinessUnit'
+
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
 
   belongs_to :appeal_outcome, class_name: 'CaseClosure::AppealOutcome'
@@ -327,12 +329,20 @@ class Case::Base < ApplicationRecord
 
   has_many :cases_exemptions,
            class_name: 'CaseExemption',
-           table_name: :cases_exemptions,
            foreign_key: :case_id
 
   has_many :exemptions,
             class_name: 'CaseClosure::Exemption',
             through: 'cases_exemptions',
+            foreign_key: :case_id
+
+  has_many :cases_outcome_reasons,
+           class_name: 'CaseOutcomeReason',
+           foreign_key: :case_id
+
+  has_many :outcome_reasons,
+            class_name: 'CaseClosure::OutcomeReason',
+            through: 'cases_outcome_reasons',
             foreign_key: :case_id
 
   has_many :case_links,

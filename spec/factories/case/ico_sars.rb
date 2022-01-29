@@ -103,8 +103,7 @@ FactoryBot.define do
 
     after(:create) do |kase, evaluator|
       kase.approver_assignments.for_team(evaluator.approving_team).singular
-        .update_attributes(user: evaluator.approver,
-                           state: 'accepted')
+        .update(user: evaluator.approver, state: 'accepted')
       create :case_transition_progress_for_clearance,
              case: kase,
              acting_team: kase.responding_team,

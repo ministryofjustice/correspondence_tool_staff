@@ -27,7 +27,7 @@ describe Warehouse::CaseSyncJob, type: :job do
       expect { job.perform(Object.new, model_id) }.to raise_error NoMethodError
       expect { job.perform(User, model_id) }.to raise_error NoMethodError
       expect { job.perform(User.new, model_id) }.to raise_error NoMethodError
-      expect(job.perform('User', model_id)).to be true
+      expect(job.perform('User', model_id)).to be > 0
     end
 
     it 'logs to Rails logger if ActiveRecord model retrieval fails' do

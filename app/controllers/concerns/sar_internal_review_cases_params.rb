@@ -50,7 +50,10 @@ module SARInternalReviewCasesParams
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
+      :sar_ir_outcome,
       :late_team_id,
+      :team_responsible_for_outcome_id,
+      outcome_reason_ids: []
     ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
   end
 

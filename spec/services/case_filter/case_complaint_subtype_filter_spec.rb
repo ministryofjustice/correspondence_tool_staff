@@ -22,9 +22,8 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
     subject    { case_complaint_subtype_filter.available_choices.values[0] }
 
     it 'available complaint_subtypes' do 
-      case_complaint_subtype_filter.available_choices.each do | choice |
-        it { should include choice }
-      end
+      expect(case_complaint_subtype_filter.available_choices[:filter_complaint_subtype].keys())
+        .to match_array Case::SAR::OffenderComplaint.complaint_subtypes.keys()
     end
   end
 

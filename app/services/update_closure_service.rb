@@ -30,6 +30,10 @@ class UpdateClosureService
   end
 
   def find_user_role
+    if @kase.is_sar_internal_review? 
+      return :approver if @user.approver?
+    end
+
     @user.manager? ? :manager : :responder
   end
 end

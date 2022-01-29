@@ -23,6 +23,26 @@ describe Case::SAR::InternalReviewDecorator do
     end
   end
 
+  describe '#pretty_outcome_reasons' do
+    it 'pretty prints outcome_reasons' do
+      stub_reasons = [
+        double(CaseClosure::OutcomeReason),
+        double(CaseClosure::OutcomeReason),
+        double(CaseClosure::OutcomeReason)
+      ]
+
+      stub_reasons.each_with_index do |reason, i|
+        allow(reason).to receive(:name).and_return("Outcome Reason #{i + 1}")
+      end
+
+      kase = sar_ir_case.decorate
+      allow(kase.object).to receive(:outcome_reasons).and_return(stub_reasons)
+
+      expected_string = 'Outcome Reason 1,<br>Outcome Reason 2,<br>Outcome Reason 3'
+      expect(kase.pretty_outcome_reasons).to eq expected_string 
+    end
+  end
+
   describe '#subject_type_display' do
     it 'humanizes the subject_type for display' do
       kase = sar_ir_case.decorate
