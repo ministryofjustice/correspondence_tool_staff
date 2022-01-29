@@ -132,6 +132,7 @@ function _deploy() {
           quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
   kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+          anonjobs=${docker_image_tag} \
           jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
   # Apply non-image specific config
@@ -144,7 +145,9 @@ function _deploy() {
   if [ $environment == "production" ]
   then
     kubectl apply -f config/kubernetes/${environment}/cronjob-delete-old-ecr-images.yaml -n $namespace
-    kubectl apply -f config/kubernetes/${environment}/cronjob-anonymizer.yaml -n $namespace
+
+    kubectl set image -f config/kubernetes/${environment}/cronjob-anonymizer.yaml \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
   fi
 
   # Deploy to Live cluster

@@ -1,0 +1,9 @@
+---
+:concurrency: 5
+production:
+  :concurrency: 10
+staging:
+  :concurrency: 10
+:logfile: ./log/sidekiq-jobs.log
+:queues:
+  - correspondence_tool_staff_anonymiser
