@@ -194,6 +194,9 @@ class Case::Base < ApplicationRecord
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
   scope :internal_deadline_within, -> (from_date, to_date) { where("properties->>'internal_deadline' BETWEEN ? AND ?", from_date, to_date) }
 
+  scope :sar_ir_compliance, -> { where(type: 'Case::SAR::InternalReview').where("properties->>'sar_ir_subtype' = 'compliance'")}
+  scope :sar_ir_timeliness, -> { where(type: 'Case::SAR::InternalReview').where("properties->>'sar_ir_subtype' = 'timeliness'")}
+
   validates :creator, presence: true
   scope :soft_deleted, -> { where(deleted: true) }
 

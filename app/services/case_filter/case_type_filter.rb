@@ -6,6 +6,8 @@ module CaseFilter
       'foi-ir-compliance': ['FOI'],
       'foi-ir-timeliness': ['FOI'],
       'sar-non-offender': ['SAR'], 
+      'sar-ir-compliance': ['SAR_INTERNAL_REVIEW'],
+      'sar-ir-timeliness': ['SAR_INTERNAL_REVIEW'],
       'ico-appeal': ['ICO'],
       'overturned-ico': ['FOI', 'SAR'],
       'offender-sar': ['OFFENDER_SAR'],
@@ -62,6 +64,8 @@ module CaseFilter
         when 'foi-ir-compliance'      then records.internal_review_compliance
         when 'foi-ir-timeliness'      then records.internal_review_timeliness
         when 'sar-non-offender'       then records.non_offender_sar
+        when 'sar-ir-compliance'      then records.sar_ir_compliance
+        when 'sar-ir-timeliness'      then records.sar_ir_timeliness 
         when 'ico-appeal'             then records.ico_appeal
         when 'overturned-ico'         then records.overturned_ico
         when 'offender-sar'           then records.offender_sar
