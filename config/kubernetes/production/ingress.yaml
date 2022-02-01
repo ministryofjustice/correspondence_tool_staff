@@ -5,7 +5,7 @@ metadata:
   namespace: track-a-query-production
   annotations:
     external-dns.alpha.kubernetes.io/set-identifier: track-a-query-ingress-track-a-query-production-blue
-    external-dns.alpha.kubernetes.io/aws-weight: "100"  
+    external-dns.alpha.kubernetes.io/aws-weight: "0"  
 spec:
   tls:
     - hosts:
