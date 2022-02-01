@@ -17,7 +17,11 @@ describe CaseFilter::CaseTypeFilter do
                                  :ot_ico_foi_noff_unassigned,
                                  :ot_ico_sar_noff_unassigned,
                                ])
+
     @offender_sar = create :offender_sar_case
+
+    @sar_ir_timeliness = create :sar_internal_review, sar_ir_subtype: 'timeliness'
+    @sar_ir_compliance = create :sar_internal_review, sar_ir_subtype: 'compliance'
   end
 
   after(:all) { DbHousekeeping.clean }
@@ -118,6 +122,46 @@ describe CaseFilter::CaseTypeFilter do
                              @setup.sar_noff_unassigned,
                              @setup.ico_sar_unassigned.original_case,
                              @setup.ot_ico_sar_noff_unassigned.original_case,
+                             @sar_ir_timeliness.original_case,
+                             @sar_ir_compliance.original_case
+                           ]
+      end
+    end
+
+    xdescribe 'filtering for SAR Internal Review cases' do
+      let(:search_query_sar_ir_compliance) { create :search_query,
+                                             filter_case_type: ['sar-ir-compliance'] }
+
+      let(:search_query_sar_ir_timeliness) { create :search_query,
+                                             filter_case_type: ['sar-ir-timeliness'] }
+      
+      let(:search_query_sar_ir) { create :search_query,
+                                  filter_case_type: ['sar-ir-compliance', 
+                                                     'sar-ir-timeliness'] }
+
+
+
+      it 'returns SAR Internal review timeliness cases' do
+        binding.pry
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @sar_ir_timeliness
+                           ]
+      end
+      :w
+
+      it 'returns SAR Internal review compliance cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @sar_ir_compliance
+                           ]
+      end
+
+      it 'returns both SAR Internal review compliance, and timeliness cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @sar_ir_timeliness,
+                             @sar_ir_compliance
                            ]
       end
     end
