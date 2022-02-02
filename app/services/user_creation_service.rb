@@ -53,7 +53,7 @@ class UserCreationService
   end
 
   def full_names_match
-    @user.full_name.downcase == @params[:full_name].downcase
+    @user.full_name.strip().downcase == @params[:full_name].strip().downcase
   end
 
   def add_user_to_teams

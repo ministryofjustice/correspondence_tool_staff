@@ -88,6 +88,7 @@ class UsersController < ApplicationController
   end
 
   def create_user_params
+    params[:user][:full_name] =  params[:user][:full_name].strip()
     params.require(:user).permit(
       :full_name,
       :email,
