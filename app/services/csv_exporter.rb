@@ -46,6 +46,7 @@ class CSVExporter
     'Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)',
     'Number of days late',
     'Number of days taken after extension',
+    'SAR IR - timeliness or compliance'
   ]
 
   CSV_COLUMN_FIELDS = [
@@ -90,7 +91,7 @@ class CSVExporter
     'in_target',
     'number_of_days_taken',
     'number_of_days_late',
-    'number_of_days_taken_after_extension',
+    'number_of_days_taken_after_extension'
   ]
 
   def initialize(kase)
@@ -150,6 +151,7 @@ class CSVExporter
         @kase.num_days_taken, # Number of days taken
         @kase.num_days_late, # Number of days late
         @kase.num_days_taken_after_extension, # Number of days late
+        sar_ir_subtype(@kase)
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
@@ -162,6 +164,10 @@ class CSVExporter
   end
 
   private
+
+  def sar_ir_subtype(kase)
+    kase.is_sar_internal_review? ? kase.sar_ir_subtype : ''
+  end
 
   def extension_count(kase)
     pit_count, sar_count = 0, 0
