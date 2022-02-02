@@ -110,6 +110,25 @@ FactoryBot.define do
     end
   end
 
+
+  factory :ico_foi_case_with_response, parent: :accepted_ico_foi_case do
+    transient do
+      identifier { "ico foi case with response" }
+      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+    end
+
+    after(:create) do |kase, evaluator|
+      kase.attachments.push(*evaluator.responses)
+
+      create :case_transition_add_responses,
+             case: kase,
+             acting_team: kase.responding_team,
+             acting_user: kase.responder,
+             filenames: [evaluator.responses.map(&:filename)]
+      kase.reload
+    end
+  end
+
   factory :pending_dacu_clearance_ico_foi_case, parent: :accepted_ico_foi_case do
     transient do
       identifier      { 'pending dacu clearance ICO FOI case' }

@@ -38,7 +38,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
   end
 
   describe 'section heading' do
-    let(:ico_case){ create :ico_foi_case}
+    let(:ico_case){ create :ico_foi_case_with_response}
 
     it 'should display as Appeal response for ICO cases' do
       disallow_case_policy(:can_remove_attachment?, ico_case)
@@ -48,7 +48,6 @@ describe 'cases/case_attachments.html.slim', type: :view do
              locals:{ case_details: ico_case}
 
       partial =  case_attachments_section(rendered)
-
       expect(partial.section_heading.text).to eq 'Appeal response'
     end
 
