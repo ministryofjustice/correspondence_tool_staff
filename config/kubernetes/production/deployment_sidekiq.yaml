@@ -105,11 +105,6 @@ spec:
                 secretKeyRef:
                   name: track-a-query-rds-replica-output
                   key: url
-            - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: track-a-query-rds-replica-output
-                  key: database_password
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
