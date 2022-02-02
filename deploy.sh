@@ -14,8 +14,6 @@ function _deploy() {
   ecr_repo_name=track-a-query-ecr
   component=track-a-query
 
-  context='live-1'
-
   docker_endpoint=754256621582.dkr.ecr.eu-west-2.amazonaws.com
   docker_registry=${docker_endpoint}/${team_name}/${ecr_repo_name}
 
@@ -89,7 +87,7 @@ function _deploy() {
 
   namespace=$component-${environment}
   p "--------------------------------------------------"
-  p "Deploying Track a Query to kubernetes cluster: $context"
+  p "Deploying Track a Query to kubernetes cluster: Live-1"
   p "Environment: \e[32m$environment\e[0m"
   p "Docker image: \e[32m$image_tag\e[0m"
   p "Target namespace: \e[32m$namespace\e[0m"
@@ -131,9 +129,15 @@ function _deploy() {
           uploads=${docker_image_tag} \
           quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
-  kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
-          anonjobs=${docker_image_tag} \
-          jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  if [ $environment == "production" ]
+  then
+    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            anonjobs=${docker_image_tag} \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  else
+    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  fi
 
   # Apply non-image specific config
   kubectl apply \
@@ -142,61 +146,55 @@ function _deploy() {
     -f config/kubernetes/${environment}/secrets.yaml \
     -n $namespace
 
-  if [ $environment == "production" ]
-  then
-    kubectl apply -f config/kubernetes/${environment}/cronjob-delete-old-ecr-images.yaml -n $namespace
-
-    kubectl set image -f config/kubernetes/${environment}/cronjob-anonymizer.yaml \
-            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
-  fi
-
   # Deploy to Live cluster
-  if [ $environment == "staging" ] || [ $environment == "development" ] || [ $environment == "demo" ] || [ $environment == "qa" ]
+  p "--------------------------------------------------"
+  p "Deploying Track a query to kubernetes cluster: Live"
+  p "Environment: \e[32m$environment\e[0m"
+  p "Docker image: \e[32m$image_tag\e[0m"
+  p "Target namespace: \e[32m$namespace\e[0m"
+  p "--------------------------------------------------"
+
+  if [[ "$3" == "circleci" ]]
   then
-    p "--------------------------------------------------"
-    p "Deploying Track a query to kubernetes cluster: Live"
-    p "Environment: \e[32m$environment\e[0m"
-    p "Docker image: \e[32m$image_tag\e[0m"
-    p "Target namespace: \e[32m$namespace\e[0m"
-    p "--------------------------------------------------"
-
-    if [[ "$3" == "circleci" ]]
+    # Authenticate to live cluster
+    p "Authenticating to live..."
+    echo -n $KUBE_ENV_LIVE_CA_CERT | base64 -d > ./live_ca.crt
+    kubectl config set-cluster $KUBE_ENV_LIVE_CLUSTER_NAME --certificate-authority=./live_ca.crt --server=https://$KUBE_ENV_LIVE_CLUSTER_NAME
+    
+    if [[ $environment == "development" ]]
     then
-      # Authenticate to live cluster
-      p "Authenticating to live..."
-      echo -n $KUBE_ENV_LIVE_CA_CERT | base64 -d > ./live_ca.crt
-      kubectl config set-cluster $KUBE_ENV_LIVE_CLUSTER_NAME --certificate-authority=./live_ca.crt --server=https://$KUBE_ENV_LIVE_CLUSTER_NAME
-      
-      if [[ $environment == "development" ]]
-      then
-        live_token=$KUBE_ENV_LIVE_DEVELOPMENT_TOKEN
-      fi
-
-      if [[ $environment == "staging" ]]
-      then
-        live_token=$KUBE_ENV_LIVE_STAGING_TOKEN
-      fi
-
-      if [[ $environment == "demo" ]]
-      then
-        live_token=$KUBE_ENV_LIVE_DEMO_TOKEN
-      fi
-      
-      if [[ $environment == "qa" ]]
-      then
-        live_token=$KUBE_ENV_LIVE_QA_TOKEN
-      fi
-
-      kubectl config set-credentials circleci --token=$live_token
-      kubectl config set-context $KUBE_ENV_LIVE_CLUSTER_NAME --cluster=$KUBE_ENV_LIVE_CLUSTER_NAME --user=circleci --namespace=$namespace
-      kubectl config use-context $KUBE_ENV_LIVE_CLUSTER_NAME
-      kubectl config current-context
-      kubectl --namespace=$namespace get pods
+      live_token=$KUBE_ENV_LIVE_DEVELOPMENT_TOKEN
     fi
 
-    #deploy to live cluster
-    p "Authenticated, deploying to live..."
+    if [[ $environment == "staging" ]]
+    then
+      live_token=$KUBE_ENV_LIVE_STAGING_TOKEN
+    fi
+
+    if [[ $environment == "demo" ]]
+    then
+      live_token=$KUBE_ENV_LIVE_DEMO_TOKEN
+    fi
+    
+    if [[ $environment == "qa" ]]
+    then
+      live_token=$KUBE_ENV_LIVE_QA_TOKEN
+    fi
+
+    if [[ $environment == "production" ]]
+    then
+      live_token=$KUBE_ENV_LIVE_PRODUCTION_TOKEN
+    fi
+
+    kubectl config set-credentials circleci --token=$live_token
+    kubectl config set-context $KUBE_ENV_LIVE_CLUSTER_NAME --cluster=$KUBE_ENV_LIVE_CLUSTER_NAME --user=circleci --namespace=$namespace
+    kubectl config use-context $KUBE_ENV_LIVE_CLUSTER_NAME
+    kubectl config current-context
+    kubectl --namespace=$namespace get pods
   fi
+
+  #deploy to live cluster
+  p "Authenticated, deploying to live..."
 
   # Apply config map updates
   kubectl apply \
@@ -208,8 +206,15 @@ function _deploy() {
           uploads=${docker_image_tag} \
           quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
-  kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
-          jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  if [ $environment == "production" ]
+  then
+    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            anonjobs=${docker_image_tag} \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  else
+    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  fi
 
   # Apply non-image specific config
   kubectl apply \
