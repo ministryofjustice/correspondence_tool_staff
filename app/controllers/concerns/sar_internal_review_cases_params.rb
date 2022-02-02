@@ -2,6 +2,7 @@ module SARInternalReviewCasesParams
   extend ActiveSupport::Concern
 
   def create_sar_internal_review_params
+    process_third_party_details(params)
     params.require(:sar_internal_review).permit(
       :delivery_method,
       :email,
@@ -25,6 +26,7 @@ module SARInternalReviewCasesParams
   end
 
   def edit_sar_internal_review_params
+    process_third_party_details(params)
     params.require(:sar_internal_review).permit(
       :delivery_method,
       :email,
@@ -65,12 +67,24 @@ module SARInternalReviewCasesParams
     )
   end
 
+  private
+
   def missing_info_to_tmm
     if params[:sar_internal_review][:missing_info] == "yes"
       @case.missing_info = true
       CaseClosure::RefusalReason.sar_tmm.abbreviation
     elsif params[:sar_internal_review][:missing_info] == "no"
       @case.missing_info = false
+    end
+  end
+
+  def process_third_party_details(params)
+    third_party = params[:sar_internal_review][:third_party]
+    request_not_on_others_behalf = third_party == "false" 
+
+    if request_not_on_others_behalf
+      params[:sar_internal_review][:name] = nil
+      params[:sar_internal_review][:third_party_relationship] = nil
     end
   end
 end

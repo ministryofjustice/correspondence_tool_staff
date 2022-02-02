@@ -357,7 +357,7 @@ class AssignmentsController < ApplicationController
   def redirect_user_to_specific_landing_page
     case @case.type_abbreviation
     when 'FOI', 'OVERTURNED_FOI' then redirect_to case_path(@case)
-    when 'SAR', 'OVERTURNED_SAR' then redirect_to responder_root_path
+    when 'SAR', 'OVERTURNED_SAR', 'SAR_INTERNAL_REVIEW' then redirect_to responder_root_path
     when 'ICO' then
       if @case.original_case_type === 'SAR'
         redirect_to responder_root_path
