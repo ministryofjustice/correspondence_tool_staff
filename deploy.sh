@@ -176,6 +176,11 @@ function _deploy() {
       live_token=$KUBE_ENV_LIVE_DEMO_TOKEN
     fi
     
+    if [[ $environment == "qa" ]]
+    then
+      live_token=$KUBE_ENV_LIVE_QA_TOKEN
+    fi
+
     if [[ $environment == "production" ]]
     then
       live_token=$KUBE_ENV_LIVE_PRODUCTION_TOKEN
