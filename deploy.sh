@@ -129,9 +129,15 @@ function _deploy() {
           uploads=${docker_image_tag} \
           quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
-  kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
-          anonjobs=${docker_image_tag} \
-          jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  if [ $environment == "production" ]
+  then
+    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            anonjobs=${docker_image_tag} \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  else
+    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  fi
 
   # Apply non-image specific config
   kubectl apply \
@@ -195,9 +201,15 @@ function _deploy() {
           uploads=${docker_image_tag} \
           quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
 
-  kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
-          anonjobs=${docker_image_tag} \
-          jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  if [ $environment == "production" ]
+  then
+    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            anonjobs=${docker_image_tag} \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  else
+    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+  fi
 
   # Apply non-image specific config
   kubectl apply \
