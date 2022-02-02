@@ -229,16 +229,16 @@ describe Case::SAR::InternalReview do
     end
   end
 
-  describe 'use_subject_as_requester callback' do
+  describe 'not using use_subject_as_requester callback' do
     context 'on create' do
       it 'does not change the requester when present' do
         sar_case = create :sar_internal_review, name: 'Bob', subject_full_name: 'Doug'
         expect(sar_case.reload.name).to eq 'Bob'
       end
 
-      it 'uses the subject as the requester if not present on update' do
+      it 'does not change the requester if not present on update' do
         sar_case = create :sar_internal_review, name: '', subject_full_name: 'Doug'
-        expect(sar_case.reload.name).to eq 'Doug'
+        expect(sar_case.reload.name).to eq ''
       end
     end
 
@@ -246,13 +246,13 @@ describe Case::SAR::InternalReview do
       it 'does not change the requester when present' do
         sar_case = create :sar_internal_review
         sar_case.update! name: 'Bob', subject_full_name: 'Doug'
-        expect(sar_case.name).to eq 'Bob'
+        expect(sar_case.reload.name).to eq 'Bob'
       end
 
-      it 'uses the subject as the requester if not present on update' do
+      it 'does not change the requester if not present on update' do
         sar_case = create :sar_internal_review
         sar_case.update! name: '', subject_full_name: 'Doug'
-        expect(sar_case.name).to eq 'Doug'
+        expect(sar_case.reload.name).to eq ''
       end
     end
   end

@@ -228,6 +228,10 @@ en:
               not_authorised: can't be authorised to link this case
             sar_ir_subtype:
               blank: cannot be blank
+            date_responded:
+              before_received: "cannot be before date received at MoJ"
+              future: "cannot be in the future"
+              blank: cannot be blank
 
         case/sar/offender:
           attributes:
