@@ -12,8 +12,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
 
   let!(:late_sar_ir) { 
     create(:ready_to_close_sar_internal_review,
-            date_responded: 1.business_days.ago,
-            external_deadline: 30.business_days.ago) 
+            received_date: 50.days.ago)
   }
 
   background do
@@ -37,8 +36,9 @@ feature 'SAR Internal Review Case can be closed', js:true do
         cases_page.load
         click_link "#{late_sar_ir.number}"
         cases_show_page.actions.close_case.click
+        click_link 'Today'
         cases_close_page.submit_button.click
-        cases_close_page.submit_button.click
+
 
         on_load_field_expectations(lateness: true)
 
@@ -68,6 +68,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
         cases_page.load
         click_link "#{sar_ir.number}"
         cases_show_page.actions.close_case.click
+        click_link 'Today'
         cases_close_page.submit_button.click
 
         on_load_field_expectations
