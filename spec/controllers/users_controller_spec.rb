@@ -70,10 +70,27 @@ RSpec.describe UsersController, type: :controller do
      }
     end
 
+    let(:params_with_spaces_around) do
+      {
+        user: {
+          full_name: '  TEst Er  ',
+          email:     'test.er@localhost',
+        },
+        team_id: dacu.id
+     }
+    end
+
     before { sign_in manager }
 
     it 'creates a user with the given params' do
       post :create, params: params
+
+      expect(User.last).to have_attributes full_name: 'TEst Er',
+                                           email: 'test.er@localhost'
+    end
+
+    it 'creates a user with a name being wrapped with spaces ' do
+      post :create, params: params_with_spaces_around
 
       expect(User.last).to have_attributes full_name: 'TEst Er',
                                            email: 'test.er@localhost'
@@ -115,6 +132,22 @@ RSpec.describe UsersController, type: :controller do
       it 'redirects to the team details page' do
         post :create, params: params
         expect(response).to redirect_to(team_path(id: dacu.id))
+      end
+
+      it 'adds the existing user to new given team with the given role' do
+        responder = find_or_create :foi_responder
+        test_params = {
+          user: {
+            full_name: "  #{responder.full_name}  ",
+            email: responder.email
+          },
+          team_id: dacu.id
+       }
+        post :create, params: test_params
+
+        responder.reload
+        expect(dacu.managers).to include responder
+        expect(responder.teams).to include dacu
       end
     end
 
