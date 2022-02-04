@@ -22,3 +22,4 @@ module Stats
 
   end
 end
+

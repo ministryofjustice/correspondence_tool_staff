@@ -89,15 +89,15 @@ module Stats
   
       context '#run' do
         it 'generate the report without creating the job' do
-          stub_const("Stats::ROWS_PER_FRAGMENT", 6)
-          allow(@report).to receive(:process)
+          stub_const("Stats::ROWS_PER_FRAGMENT", 2)
+          allow(@report).to receive(:analyse_case)
           @report.run(report_guid: SecureRandom.uuid)
-          expect(@report).to have_received(:process).once               
+          expect(@report).to have_received(:analyse_case).at_least(4).times               
 
           expect(@report.background_job).to eq false
           expect(@report.status).to eq Stats::BaseReport::COMPLETE
           expect(@report.persist_results?).to eq true
-          expect(@report.num_fragments).to eq 1
+          expect(@report.num_fragments).to eq 2
           expect(@report.data_size).to eq 4
 
           expect {
