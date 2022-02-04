@@ -9,7 +9,8 @@ class Case::SAR::InternalReviewDecorator < Case::SAR::StandardDecorator
   end
 
   def pretty_type
-    I18n.t("helpers.label.correspondence_types.sar_internal_review_long")
+    I18n.t("helpers.label.correspondence_types.sar_internal_review_long",
+           formatted_sar_ir_subtype: formatted_sar_ir_subtype)
   end
 
   def case_route_path
@@ -33,6 +34,12 @@ class Case::SAR::InternalReviewDecorator < Case::SAR::StandardDecorator
       .map { |reason| reason.name }
       .join(",<br>")
       .html_safe
+  end
+
+  private
+
+  def formatted_sar_ir_subtype
+    sar_ir_subtype ? " - #{sar_ir_subtype}" : ''
   end
 
 end
