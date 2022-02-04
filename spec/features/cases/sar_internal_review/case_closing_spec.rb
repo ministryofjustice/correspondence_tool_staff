@@ -38,7 +38,6 @@ feature 'SAR Internal Review Case can be closed', js:true do
         click_link "#{late_sar_ir.number}"
         cases_show_page.actions.close_case.click
         cases_close_page.submit_button.click
-        cases_close_page.submit_button.click
 
         on_load_field_expectations(lateness: true)
 
