@@ -321,7 +321,7 @@ FactoryBot.define do
       identifier { "responded sar ir" }
     end
 
-    received_date  { 42.business_days.ago }
+    received_date  { 18.business_days.ago }
     date_responded { 4.business_days.ago }
 
     after(:create) do |kase, evaluator|
@@ -346,5 +346,16 @@ FactoryBot.define do
              target_team: evaluator.responding_team
       kase.reload
     end
+  end
+
+  factory :ready_to_close_and_late_sar_internal_review, parent: :ready_to_close_sar_internal_review do
+    missing_info { false }
+
+    transient do
+      identifier { "responded and late sar ir" }
+    end
+
+    received_date  { 42.business_days.ago }
+    date_responded { 4.business_days.ago }
   end
 end
