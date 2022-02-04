@@ -56,6 +56,70 @@ RSpec.describe Cases::SarInternalReviewController, type: :controller do
       get :new, params: params
       expect(assigns(:case)).to be_a klass
     end
+  end
 
+  describe '#create' do
+    let(:third_party_true_params) do
+      { 
+        "sar_internal_review":  {
+          "subject_type"=>"offender",
+          "sar_ir_subtype"=>"timeliness",
+          "name"=>"Fred Jones",
+          "third_party_relationship"=>"Solicitor",
+          "third_party"=>"false",
+          "received_date_dd"=>"27",
+          "received_date_mm"=>"01",
+          "received_date_yyyy"=>"2022",
+          "subject"=>"IR of 220127001 - Some info",
+          "message"=>"asd",
+          "flag_for_disclosure_specialists"=>"yes",
+          "reply_method"=>"send_by_email",
+          "email"=>"asd@asd.com",
+          "postal_address"=>"",
+          "current_step"=>"case-details"
+        }
+      }
+    end
+
+    let(:third_party_false_params) do
+      { 
+        "sar_internal_review":  {
+          "subject_type"=>"offender",
+          "sar_ir_subtype"=>"timeliness",
+          "name"=>"Fred Jones",
+          "third_party_relationship"=>"Solicitor",
+          "third_party"=>"true",
+          "received_date_dd"=>"27",
+          "received_date_mm"=>"01",
+          "received_date_yyyy"=>"2022",
+          "subject"=>"IR of 220127001 - Some info",
+          "message"=>"asd",
+          "flag_for_disclosure_specialists"=>"yes",
+          "reply_method"=>"send_by_email",
+          "email"=>"asd@asd.com",
+          "postal_address"=>"",
+          "current_step"=>"case-details"
+        }
+      }
+    end
+
+    it 'if third party is false then details are nil in processed params' do
+      post :create, params: third_party_true_params
+
+      processed_params = subject.create_params
+      expect(processed_params[:name]).to be(nil)
+      expect(processed_params[:third_party]).to match("false")
+      expect(processed_params[:third_party_relationship]).to be(nil)
+    end
+
+    it 'if third party is true then details are not nil in processed params' do
+      post :create, params: third_party_false_params
+
+      processed_params = subject.create_params
+      expect(processed_params[:name]).to match("Fred Jones")
+      expect(processed_params[:third_party]).to match("true")
+      expect(processed_params[:third_party_relationship]).to match("Solicitor")
+    end
   end
 end
+
