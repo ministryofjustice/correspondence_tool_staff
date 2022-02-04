@@ -104,7 +104,7 @@ class CorrespondenceTypeSeeder
     rec.update!(name: 'Subject access request internal review',
                 abbreviation: 'SAR_INTERNAL_REVIEW',
                 show_on_menu: true, 
-                report_category_name: 'SAR report', 
+                report_category_name: '', 
                 escalation_time_limit: 0,
                 internal_time_limit: 10,
                 external_time_limit: 1,
