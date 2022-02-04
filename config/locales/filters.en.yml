@@ -5,6 +5,8 @@ en:
       foi-ir-compliance: 'FOI - Internal review for compliance'
       foi-ir-timeliness: 'FOI - Internal review for timeliness'
       sar-non-offender: 'SAR - Non-offender'
+      sar-ir-compliance: 'SAR - Internal review for compliance'
+      sar-ir-timeliness: 'SAR - Internal review for timeliness'
       ico-appeal: 'ICO appeals'
       overturned-ico: 'ICO overturned'
       offender-sar: 'Offender SAR'

@@ -17,7 +17,11 @@ describe CaseFilter::CaseTypeFilter do
                                  :ot_ico_foi_noff_unassigned,
                                  :ot_ico_sar_noff_unassigned,
                                ])
+
     @offender_sar = create :offender_sar_case
+
+    @sar_ir_timeliness = create :sar_internal_review, sar_ir_subtype: 'timeliness'
+    @sar_ir_compliance = create :sar_internal_review, sar_ir_subtype: 'compliance'
   end
 
   after(:all) { DbHousekeeping.clean }
@@ -29,18 +33,22 @@ describe CaseFilter::CaseTypeFilter do
     let(:search_query)      { create :search_query }
     subject    { case_type_filter.available_choices.values[0] }
 
+
     it { should include 'foi-standard'      => 'FOI - Standard' }
     it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
     it { should include 'foi-ir-timeliness' => 'FOI - Internal review for timeliness' }
     it { should include 'sar-non-offender'  => 'SAR - Non-offender' }
-    it { should include 'ico-appeal'        =>'ICO appeals' }
-    it { should include 'overturned-ico'    =>'ICO overturned' }
+    it { should include 'sar-ir-compliance' => 'SAR - Internal review for compliance' }
+    it { should include 'sar-ir-timeliness' => 'SAR - Internal review for timeliness' }
+    it { should include 'ico-appeal'        => 'ICO appeals' }
+    it { should include 'overturned-ico'    => 'ICO overturned' }
 
     context 'for user who is assigned to a team that only handles FOIs' do
       let(:foi)             { find_or_create(:foi_correspondence_type) }
       let(:responding_team) { create(:business_unit, correspondence_types: [foi]) }
       let(:user)            { create(:user, responding_teams: [responding_team]) }
       subject    { case_type_filter.available_choices.values[0] }
+
 
       it { should include 'foi-standard' => 'FOI - Standard' }
       it { should include 'foi-ir-compliance' => 'FOI - Internal review for compliance' }
@@ -118,6 +126,44 @@ describe CaseFilter::CaseTypeFilter do
                              @setup.sar_noff_unassigned,
                              @setup.ico_sar_unassigned.original_case,
                              @setup.ot_ico_sar_noff_unassigned.original_case,
+                             @sar_ir_timeliness.original_case,
+                             @sar_ir_compliance.original_case
+                           ]
+      end
+    end
+
+    describe 'filtering SAR IR timeliness' do
+      let(:search_query) { create :search_query,
+                           filter_case_type: ['sar-ir-timeliness'] }
+
+      it 'returns SAR Internal review timeliness cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [ @sar_ir_timeliness ]
+        expect(results).to_not include @sar_ir_compliance
+      end
+    end
+
+    describe 'filtering SAR IR compliance' do
+      let(:search_query) { create :search_query,
+                           filter_case_type: ['sar-ir-compliance'] }
+      
+      it 'returns SAR Internal review compliance cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [ @sar_ir_compliance ]
+        expect(results).to_not include @sar_ir_timeliness 
+      end
+    end
+
+    describe 'filter SAR IR both timeliness and compliance' do
+      let(:search_query) { create :search_query,
+                           filter_case_type: ['sar-ir-timeliness', 
+                                              'sar-ir-compliance'] }
+
+      it 'returns both SAR Internal review compliance, and timeliness cases' do
+        results = case_type_filter.call
+        expect(results).to match_array [
+                             @sar_ir_timeliness,
+                             @sar_ir_compliance
                            ]
       end
     end
