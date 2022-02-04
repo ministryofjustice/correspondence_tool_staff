@@ -19,7 +19,7 @@ describe Case::SAR::InternalReviewDecorator do
 
   describe '#pretty_type' do
     it 'pretty prints case type name' do
-      expect(sar_ir_case.decorate.pretty_type).to eq 'SAR Internal Review'
+      expect(sar_ir_case.decorate.pretty_type).to eq 'SAR Internal Review - compliance'
     end
   end
 
