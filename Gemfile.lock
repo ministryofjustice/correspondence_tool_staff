@@ -469,9 +469,9 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.3)
-    rubocop (1.24.1)
+    rubocop (1.25.1)
       parallel (~> 1.10)
-      parser (>= 3.0.0.0)
+      parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml
@@ -666,7 +666,7 @@ DEPENDENCIES
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails (~> 5.0)
-  rubocop (~> 1.24.0)
+  rubocop (~> 1.25.0)
   rubocop-performance
   rubocop-rspec (~> 2.8.0)
   ruby-progressbar
