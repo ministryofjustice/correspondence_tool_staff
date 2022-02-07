@@ -20,7 +20,8 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   HUMANIZED_ATTRIBUTES = {
     sar_ir_subtype: 'Case type',
     subject: 'Case summary',
-    message: 'Full case details'
+    message: 'Full case details',
+    original_case: 'The original case'
   }
 
   before_save do
@@ -63,5 +64,21 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   def sar_ir_outcome=(name)
     self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
+  end
+
+  def validate_case_link(type, linked_case, attribute)
+    linkable = CaseLinkTypeValidator.classes_can_be_linked_with_type?(
+      klass: self.class.to_s,
+      linked_klass: linked_case.class.to_s,
+      type: type
+    )
+
+    unless linkable
+      errors.add(
+        attribute,
+        :wrong_type,
+        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.linked_case.wrong_type')
+      )
+    end
   end
 end
