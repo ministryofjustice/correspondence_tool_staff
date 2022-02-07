@@ -87,7 +87,7 @@ function _deploy() {
 
   namespace=$component-${environment}
   p "--------------------------------------------------"
-  p "Deploying Track a Query to kubernetes cluster: Live-1"
+  p "Deploying Track a Query to kubernetes cluster: Live"
   p "Environment: \e[32m$environment\e[0m"
   p "Docker image: \e[32m$image_tag\e[0m"
   p "Target namespace: \e[32m$namespace\e[0m"
@@ -114,45 +114,6 @@ function _deploy() {
       fi
     fi
   fi
-
-  # Set context for following operations
-  # kubectl config set-context ${context} --namespace=$namespace
-  # kubectl config use-context ${context}
-
-  # Apply config map updates
-  kubectl apply \
-    -f config/kubernetes/${environment}/configmap.yaml -n $namespace
-
-  # Apply image specific config
-  kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
-          webapp=${docker_image_tag} \
-          uploads=${docker_image_tag} \
-          quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
-
-  if [ $environment == "production" ]
-  then
-    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
-            anonjobs=${docker_image_tag} \
-            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
-  else
-    kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
-            jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
-  fi
-
-  # Apply non-image specific config
-  kubectl apply \
-    -f config/kubernetes/${environment}/service.yaml \
-    -f config/kubernetes/${environment}/ingress.yaml \
-    -f config/kubernetes/${environment}/secrets.yaml \
-    -n $namespace
-
-  # Deploy to Live cluster
-  p "--------------------------------------------------"
-  p "Deploying Track a query to kubernetes cluster: Live"
-  p "Environment: \e[32m$environment\e[0m"
-  p "Docker image: \e[32m$image_tag\e[0m"
-  p "Target namespace: \e[32m$namespace\e[0m"
-  p "--------------------------------------------------"
 
   if [[ "$3" == "circleci" ]]
   then
