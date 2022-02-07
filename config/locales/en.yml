@@ -232,6 +232,8 @@ en:
               before_received: "cannot be before date received at MoJ"
               future: "cannot be in the future"
               blank: cannot be blank
+            linked_case:
+              wrong_type: must be a SAR (Subject Access Request) correspondence type
 
         case/sar/offender:
           attributes:
