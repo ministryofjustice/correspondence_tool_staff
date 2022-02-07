@@ -15,8 +15,7 @@ function _build() {
   component=track-a-query
 
   region='eu-west-2'
-  context='live-1'
-  aws_profile='ecr-live-1'
+  aws_profile='ecr-live'
 
   git_remote_url="https://github.com/ministryofjustice/correspondence_tool_staff.git";
   docker_endpoint=754256621582.dkr.ecr.eu-west-2.amazonaws.com
