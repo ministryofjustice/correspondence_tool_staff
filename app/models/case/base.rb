@@ -194,6 +194,9 @@ class Case::Base < ApplicationRecord
   scope :deadline_within, -> (from_date, to_date) { where("properties->>'external_deadline' BETWEEN ? AND ?", from_date, to_date) }
   scope :internal_deadline_within, -> (from_date, to_date) { where("properties->>'internal_deadline' BETWEEN ? AND ?", from_date, to_date) }
 
+  scope :sar_ir_compliance, -> { where(type: 'Case::SAR::InternalReview').where("properties->>'sar_ir_subtype' = 'compliance'")}
+  scope :sar_ir_timeliness, -> { where(type: 'Case::SAR::InternalReview').where("properties->>'sar_ir_subtype' = 'timeliness'")}
+
   validates :creator, presence: true
   scope :soft_deleted, -> { where(deleted: true) }
 
@@ -313,6 +316,8 @@ class Case::Base < ApplicationRecord
 
   belongs_to :late_team, class_name: 'BusinessUnit'
 
+  belongs_to :team_responsible_for_outcome, class_name: 'BusinessUnit'
+
   belongs_to :outcome, class_name: 'CaseClosure::Outcome'
 
   belongs_to :appeal_outcome, class_name: 'CaseClosure::AppealOutcome'
@@ -332,6 +337,15 @@ class Case::Base < ApplicationRecord
   has_many :exemptions,
             class_name: 'CaseClosure::Exemption',
             through: 'cases_exemptions',
+            foreign_key: :case_id
+
+  has_many :cases_outcome_reasons,
+           class_name: 'CaseOutcomeReason',
+           foreign_key: :case_id
+
+  has_many :outcome_reasons,
+            class_name: 'CaseClosure::OutcomeReason',
+            through: 'cases_outcome_reasons',
             foreign_key: :case_id
 
   has_many :case_links,

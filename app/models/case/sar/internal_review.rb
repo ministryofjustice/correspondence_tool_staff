@@ -2,28 +2,30 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   include LinkableOriginalCase
 
+  # override parent class callback behaviour
+  # as not required for SAR::InternalReview cases
+  skip_callback :save, :before, :use_subject_as_requester
+
+  belongs_to :sar_ir_outcome, class_name: 'CaseClosure::AppealOutcome'
+
   validates_presence_of :original_case
+  validates_presence_of :sar_ir_subtype
 
   attr_accessor :original_case_number
 
-  validates_presence_of :sar_ir_subtype
-
   jsonb_accessor :properties,
-                 sar_ir_subtype: :string
+                 sar_ir_subtype: :string,
+                 team_responsible_for_outcome_id: :integer
 
   HUMANIZED_ATTRIBUTES = {
     sar_ir_subtype: 'Case type',
     subject: 'Case summary',
-    message: 'Full case details'
+    message: 'Full case details',
+    original_case: 'The original case'
   }
 
   before_save do
     self.workflow = 'trigger'
-  end
-
-  def respond_and_close(current_user)
-    state_machine.respond!(acting_user: current_user, acting_team: self.managing_team)
-    state_machine.close!(acting_user: current_user, acting_team: self.managing_team)
   end
 
   class << self
@@ -52,4 +54,31 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     compliance: 'compliance'
   }
 
+  def sar_ir_outcome
+    appeal_outcome&.name
+  end
+
+  def sar_ir_outcome_abbr
+    appeal_outcome&.abbreviation
+  end
+
+  def sar_ir_outcome=(name)
+    self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
+  end
+
+  def validate_case_link(type, linked_case, attribute)
+    linkable = CaseLinkTypeValidator.classes_can_be_linked_with_type?(
+      klass: self.class.to_s,
+      linked_klass: linked_case.class.to_s,
+      type: type
+    )
+
+    unless linkable
+      errors.add(
+        attribute,
+        :wrong_type,
+        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.linked_case.wrong_type')
+      )
+    end
+  end
 end

@@ -3,6 +3,9 @@ kind: Ingress
 metadata:
   name: track-a-query-ingress
   namespace: track-a-query-production
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: track-a-query-ingress-track-a-query-production-green
+    external-dns.alpha.kubernetes.io/aws-weight: "100"  
 spec:
   tls:
     - hosts:

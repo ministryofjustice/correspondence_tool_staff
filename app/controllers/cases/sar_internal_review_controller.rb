@@ -46,6 +46,7 @@ module Cases
         service.call
         @case = service.case
 
+        session[session_state] = nil
         handle_case_service_result(service)
       else
         if builder.kase.valid_attributes?(create_params)
@@ -87,15 +88,6 @@ module Cases
       params[:sar_internal_review].merge!(flag_for_disclosure_specialists: 'yes')
     end
 
-    def create_case
-      @case.save
-      session[session_state] = nil
-      flash[:creating_case] = true
-      flash[:notice] = "Case created successfully"
-      make_case_a_triggered_case
-      redirect_to new_case_assignment_path @case
-    end
-
     def create_params
       create_sar_internal_review_params
     end
@@ -134,8 +126,11 @@ module Cases
       end
     end
 
+    def session_state
+      "#{case_type.type_abbreviation.downcase}_state".to_sym
+    end
+
     def session_persist_state(params)
-      session_state = "#{case_type.type_abbreviation.downcase}_state".to_sym
       session[session_state] ||= {}
       params ||= {}
       session[session_state].merge! params

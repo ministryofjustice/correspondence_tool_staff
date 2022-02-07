@@ -32,6 +32,15 @@ require 'rails_helper'
 
 describe Case::SAR::InternalReview do
 
+  before :all do
+    require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+    CaseClosure::MetadataSeeder.seed!
+  end
+
+  after :all do
+    CaseClosure::MetadataSeeder.unseed!
+  end
+
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 
@@ -220,16 +229,16 @@ describe Case::SAR::InternalReview do
     end
   end
 
-  describe 'use_subject_as_requester callback' do
+  describe 'not using use_subject_as_requester callback' do
     context 'on create' do
       it 'does not change the requester when present' do
         sar_case = create :sar_internal_review, name: 'Bob', subject_full_name: 'Doug'
         expect(sar_case.reload.name).to eq 'Bob'
       end
 
-      it 'uses the subject as the requester if not present on update' do
+      it 'does not change the requester if not present on update' do
         sar_case = create :sar_internal_review, name: '', subject_full_name: 'Doug'
-        expect(sar_case.reload.name).to eq 'Doug'
+        expect(sar_case.reload.name).to eq ''
       end
     end
 
@@ -237,13 +246,13 @@ describe Case::SAR::InternalReview do
       it 'does not change the requester when present' do
         sar_case = create :sar_internal_review
         sar_case.update! name: 'Bob', subject_full_name: 'Doug'
-        expect(sar_case.name).to eq 'Bob'
+        expect(sar_case.reload.name).to eq 'Bob'
       end
 
-      it 'uses the subject as the requester if not present on update' do
+      it 'does not change the requester if not present on update' do
         sar_case = create :sar_internal_review
         sar_case.update! name: '', subject_full_name: 'Doug'
-        expect(sar_case.name).to eq 'Doug'
+        expect(sar_case.reload.name).to eq ''
       end
     end
   end
@@ -436,4 +445,27 @@ describe Case::SAR::InternalReview do
 
     it { should have_enum(:sar_ir_subtype).with_values(['timeliness', 'compliance' ]) }
   end
+
+  describe '#sar_ir_outcome' do
+    let(:sar_internal_review) { build(:sar_internal_review) }
+    it 'can set a sar_ir_outcome by name' do
+      sar_internal_review.sar_ir_outcome = "Upheld"
+
+      expect(sar_internal_review.sar_ir_outcome).to match("Upheld")
+      expect(sar_internal_review.appeal_outcome).to be_an_instance_of(CaseClosure::AppealOutcome)
+      expect(sar_internal_review.appeal_outcome.abbreviation).to match("upheld")
+    end
+  end
+
+  describe '#sar_ir_outcome_abbr' do
+    let(:sar_internal_review) { build(:sar_internal_review) }
+    it 'can return a sar ir outcome abbreviation' do
+      sar_internal_review.sar_ir_outcome = "Upheld"
+
+      expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
+      expect(sar_internal_review.sar_ir_outcome_abbr).to be_an_instance_of(String)
+      expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
+    end
+  end
+
 end

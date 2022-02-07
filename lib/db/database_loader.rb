@@ -1,3 +1,5 @@
+require File.join(Rails.root, 'lib', 'db', 'users_settings_for_anonymizer')
+
 class DatabaseLoader
 
   def initialize(env, folder_for_load)
@@ -10,15 +12,12 @@ class DatabaseLoader
   def run
     drop_and_recreate_database
     load_database
+    user_settings = UsersSettingsForAnonymizer.new(nil)
+    user_settings.load_from_file("dumps/user_settings.json")
+    user_settings.add_roles()
   end
 
   private
-
-  def add_role(filename)
-    system "sed -e $'1i\\\nCREATE ROLE correspondence_staff;\n' -i .bak #{filename}"
-    puts "File #{filename} updated to add CREATE ROLE line - original saved in #{filename}.bak"
-    filename
-  end
 
   def drop_and_recreate_database
     # The following way for resetting the db has no need to stop the app server instances 

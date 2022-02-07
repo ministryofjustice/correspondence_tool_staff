@@ -58,11 +58,11 @@ module Stats
       @stats.add_callback(:before_finalise, -> { Calculations::Callbacks.calculate_percentages(@stats) })
     end
 
-    def process(offset, report_job_guid=nil)
+    def process(offset, report_job_guid: nil, record_limit: ROWS_PER_FRAGMENT)
       CaseSelector.new(case_scope)
       .cases_received_in_period(@period_start, @period_end)
       .order(:id)
-      .limit(ROWS_PER_FRAGMENT)
+      .limit(record_limit)
       .offset(offset)
       .includes(:responded_transitions, :approver_assignments, :assign_responder_transitions) 
       .each { |kase| analyse_case(kase) }
@@ -78,7 +78,7 @@ module Stats
       else
         @background_job = false
         @status = Stats::BaseReport::COMPLETE
-        process(0)
+        process(0, record_limit: MAXIMUM_LIMIT_FOR_USING_JOB)
         @stats.finalise
       end 
     end

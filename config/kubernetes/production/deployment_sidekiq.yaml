@@ -87,3 +87,67 @@ spec:
                 - 'sidekiqmon | grep "track-a-query-jobs"'
             initialDelaySeconds: 40
             periodSeconds: 60
+        - name: anonjobs
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          command: ["./config/docker/entrypoint-anonymizer-jobs.sh"]
+          resources:
+            limits:
+              cpu: 1000m
+              memory: 1500Mi
+            requests:
+              cpu: 10m
+              memory: 500Mi
+          env:
+            - name: MALLOC_ARENA_MAX
+              value: "2"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-rds-replica-output
+                  key: url
+            - name: REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-elasticache-redis-output
+                  key: url
+            - name: REDIS_AUTH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-elasticache-redis-output
+                  key: auth_token
+            - name: SETTINGS__CASE_UPLOADS_S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-target-s3-output
+                  key: bucket_name
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-target-s3-output
+                  key: access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-target-s3-output
+                  key: secret_access_key
+          envFrom:
+            - configMapRef:
+                name: environment-variables
+            - secretRef:
+                name: app-secrets
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - 'sidekiqmon | grep "track-a-query-jobs"'
+            initialDelaySeconds: 40
+            periodSeconds: 60
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - 'sidekiqmon | grep "track-a-query-jobs"'
+            initialDelaySeconds: 40
+            periodSeconds: 60

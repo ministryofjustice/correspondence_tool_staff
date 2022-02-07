@@ -228,6 +228,12 @@ en:
               not_authorised: can't be authorised to link this case
             sar_ir_subtype:
               blank: cannot be blank
+            date_responded:
+              before_received: "cannot be before date received at MoJ"
+              future: "cannot be in the future"
+              blank: cannot be blank
+            linked_case:
+              wrong_type: must be a SAR (Subject Access Request) correspondence type
 
         case/sar/offender:
           attributes:
@@ -509,6 +515,10 @@ en:
         third_party: Is this information being requested on someone else's behalf?
         sar_ir_subtype: Case type
         name:  Full name of the requestor
+        late_team_id: Who was responsible for lateness?
+        sar_ir_outcome: SAR IR Outcome?
+        team_responsible_for_outcome_id: Who was responsible for outcome being partially upheld or overturned?
+        missing_info:  Was the response asking for missing information (e.g. proof of ID), or clarification, i.e. a TTM?
       offender_sar_complaint:
         original_case_number: Is this the correct case?
         complaint_type: What sort of complaint is this?
@@ -847,7 +857,7 @@ en:
         foi: FOI
         sar: SAR
         sar_internal_review: SAR IR
-        sar_internal_review_long: SAR Internal Review
+        sar_internal_review_long: SAR Internal Review%{formatted_sar_ir_subtype}
         ico: ICO
         overturned_sar: Overturned SAR
         overturned_foi: Overturned FOI
@@ -953,6 +963,8 @@ en:
       prison_number: "Prison number"
       progress_for_clearance: "Ready for Disclosure clearance"
       reason_for_refusal: Outcome
+      outcome_reason: Reason for appeal outcome
+      team_responsible_for_outcome: Business unit responsible for appeal outcome
       reassign_case: "Change team member"
       received_date: Date request received at MOJ
       remove_link_html: |
@@ -1330,6 +1342,9 @@ en:
       edit_case_details: Edit case details
       new_form_common:
         dropzone: Requestor's proof of ID and other documents
+      outcome_reasons: 
+        heading: Reason(s) for outcome being partially upheld out overturned?
+        hint: Select all that apply
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals
