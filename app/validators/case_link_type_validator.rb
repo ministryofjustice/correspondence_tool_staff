@@ -27,6 +27,7 @@ class CaseLinkTypeValidator < ActiveModel::Validator
                                         'Case::ICO::SAR',
                                         'Case::OverturnedICO::SAR',
                                         'Case::SAR::InternalReview'],
+      'Case::SAR::InternalReview'   => ['Case::SAR::Standard'],
       'Case::ICO::SAR'              => ['Case::SAR::Standard',
                                         'Case::ICO::SAR',
                                         'Case::OverturnedICO::SAR'],
