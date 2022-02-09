@@ -70,6 +70,8 @@ class Case::Base < ApplicationRecord
 
   attr_reader :deadline_calculator
 
+  attr_accessor :number_to_link
+
   acts_as_gov_uk_date :date_responded,
                       :date_draft_compliant,
                       :external_deadline,
