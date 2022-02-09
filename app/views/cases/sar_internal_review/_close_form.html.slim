@@ -23,7 +23,7 @@
   .outcome-reasons-group
     = render partial: 'cases/sar_internal_review/outcome_reason_checkbox_section', 
       locals: { outcome_reasons: CaseClosure::OutcomeReason.all, 
-        heading: 'Reason(s) for outcome being partially upheld out overturned?', 
+        heading: t('cases.sar_internal_review.outcome_reasons.heading'),
         hint: 'Select all that apply', 
         kase: @case, f: f }
 

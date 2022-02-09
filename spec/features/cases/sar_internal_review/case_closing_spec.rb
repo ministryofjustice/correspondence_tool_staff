@@ -97,10 +97,10 @@ feature 'SAR Internal Review Case can be closed', js:true do
   def hidden_fields_expectations(should_be_shown: true)
     if should_be_shown
       expect(page).to have_content("Who was responsible for outcome being partially upheld or overturned?")
-      expect(page).to have_content("Reason(s) for outcome being partially upheld out overturned?")
+      expect(page).to have_content("Reason(s) for outcome being partially upheld or overturned?")
     else
       expect(page).to_not have_content("Who was responsible for outcome being partially upheld or overturned?")
-      expect(page).to_not have_content("Reason(s) for outcome being partially upheld out overturned?")
+      expect(page).to_not have_content("Reason(s) for outcome being partially upheld or overturned?")
     end
   end
 end

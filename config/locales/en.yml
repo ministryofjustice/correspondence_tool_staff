@@ -1343,7 +1343,7 @@ en:
       new_form_common:
         dropzone: Requestor's proof of ID and other documents
       outcome_reasons: 
-        heading: Reason(s) for outcome being partially upheld out overturned?
+        heading: Reason(s) for outcome being partially upheld or overturned?
         hint: Select all that apply
     search_bar:
       heading: Case number, requester name or keyword
