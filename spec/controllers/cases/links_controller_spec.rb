@@ -32,7 +32,7 @@ RSpec.describe Cases::LinksController, type: :controller do
       {
         case_id: kase.id,
         case: {
-          id: link_case.number
+          number_to_link: link_case.number
         }
       }
     }
@@ -53,7 +53,7 @@ RSpec.describe Cases::LinksController, type: :controller do
       expect(CaseLinkingService).to have_received(:new).with(
         manager,
         kase,
-        post_params[:case][:id]
+        post_params[:case][:number_to_link]
       )
 
       expect(service).to have_received(:create)

@@ -91,7 +91,7 @@ feature 'SAR Internal Review Case creation by a manager' do
     click_link latest_sar_ir_number
 
     cases_show_page.actions.mark_as_sent.click
-    cases_respond_page.today_button.click
+    cases_respond_page.fill_in_date_responded(Date.today)
     cases_respond_page.submit_button.click
 
     expect(page).to have_content("The response has been marked as sent")
@@ -122,7 +122,7 @@ feature 'SAR Internal Review Case creation by a manager' do
   end
 
   def and_that_the_case_is_a_trigger_case
-    expect(page).to have_content("SAR Internal Review\nTrigger")
+    expect(page).to have_content("SAR Internal Review - compliance\nTrigger")
   end
 
   def when_i_assign_the_case
@@ -153,7 +153,7 @@ feature 'SAR Internal Review Case creation by a manager' do
 
   def then_i_shoul_expect_to_see_an_error
     page = case_new_sar_ir_link_case_page
-    error_message = "Original case cannot link a SAR Internal review case to a FOI as a original case" 
+    error_message = "The original case must be a SAR (Subject Access Request) correspondence type" 
     expect(page).to have_content(error_message)
   end
 
@@ -228,7 +228,7 @@ feature 'SAR Internal Review Case creation by a manager' do
   end
 
   def then_the_case_should_be_successfully_created
-    expect(page).to have_content("SAR Internal Review case created")
+    expect(page).to have_content("SAR Internal Review - compliance case created")
     expect(page).to have_content("Create case")
     expect(page).to have_content("Assign case")
   end
