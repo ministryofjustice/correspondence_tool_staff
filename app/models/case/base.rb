@@ -942,7 +942,7 @@ class Case::Base < ApplicationRecord
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.not_in_future')
       )
-    elsif self.date_responded.present? && self.date_draft_compliant > self.date_responded
+    elsif (self.date_responded.present? && self.date_draft_compliant > self.date_responded) && !self.is_sar_internal_review?
       errors.add(
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.after_date_responded')

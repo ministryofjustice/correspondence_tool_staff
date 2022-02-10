@@ -91,7 +91,7 @@ feature 'SAR Internal Review Case creation by a manager' do
     click_link latest_sar_ir_number
 
     cases_show_page.actions.mark_as_sent.click
-    cases_respond_page.today_button.click
+    cases_respond_page.fill_in_date_responded(Date.today)
     cases_respond_page.submit_button.click
 
     expect(page).to have_content("The response has been marked as sent")
