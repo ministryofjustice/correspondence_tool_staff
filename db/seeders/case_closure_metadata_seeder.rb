@@ -263,6 +263,11 @@ module CaseClosure
         name: 'Excessive redaction(s)',
         abbreviation: 'excess_redacts',
         sequence_id: 910)
+
+      OutcomeReason.find_or_create_by!(
+        name: 'Other',
+        abbreviation: 'other',
+        sequence_id: 915)
     end
     #rubocop:enable Metrics/MethodLength
 
