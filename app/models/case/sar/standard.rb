@@ -92,8 +92,8 @@ class Case::SAR::Standard < Case::Base
   validates_presence_of :name, :third_party_relationship, if: -> { third_party }
   validates_presence_of :reply_method
   validates_presence_of :subject_type
-  validates_presence_of :email,          if: :send_by_email?
-  validates_presence_of :postal_address, if: :send_by_post?
+  validate :validate_email_address
+  validate :validate_postal_address
   validates :subject, presence: true, length: { maximum: 100 }
   validate :validate_message_or_uploaded_request_files, on: :create
   validate :validate_message_or_attached_request_files, on: :update
@@ -196,6 +196,24 @@ class Case::SAR::Standard < Case::Base
     self.name = self.subject_full_name
   end
 
+  def validate_postal_address
+    if send_by_post? && postal_address.blank?
+      errors.add(
+        :postal_address,
+        :blank
+      )
+    end
+  end
+
+  def validate_email_address
+    if send_by_email? && email.blank?
+      errors.add(
+        :email,
+        :blank
+      )
+    end
+  end
+
   def validate_message_or_uploaded_request_files
     if message.blank? && uploaded_request_files.blank?
       errors.add(
@@ -221,8 +239,6 @@ class Case::SAR::Standard < Case::Base
       )
     end
   end
+
 end
-
-
-
 
