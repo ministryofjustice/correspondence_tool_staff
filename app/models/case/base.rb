@@ -933,7 +933,7 @@ class Case::Base < ApplicationRecord
   end
 
   def validate_email_format
-    if email =~ /\A.+@.+\z/ && email.present?
+    if email.present? && email =~ /\A.+@.+\z/ 
       errors.add(
         :email,
         :invalid
