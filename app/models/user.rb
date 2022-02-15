@@ -221,6 +221,7 @@ class User < ApplicationRecord
   end
 
   def add_sar_ir_to_permitted_types_if_sars_allowed(types)
+    types.delete(CorrespondenceType.sar_internal_review)
     if types.include?(CorrespondenceType.sar)
       types << CorrespondenceType.sar_internal_review
     end
