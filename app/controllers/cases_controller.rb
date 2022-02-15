@@ -229,13 +229,22 @@ class CasesController < ApplicationController
               managing_teams.  
               first.  
               correspondence_types.  
-              menu_visible.  
+              menu_visible.
               order(:name).to_a
+
+    add_sar_ir_to_permitted_types_if_sars_allowed(types)
 
     sar_ir_enabled = FeatureSet.sar_internal_review.enabled?
 
     types.delete(CorrespondenceType.sar_internal_review) unless sar_ir_enabled
     types
+  end
+
+  def add_sar_ir_to_permitted_types_if_sars_allowed(types)
+    types.delete(CorrespondenceType.sar_internal_review)
+    if types.include?(CorrespondenceType.sar)
+      types << CorrespondenceType.sar_internal_review
+    end
   end
 
 end

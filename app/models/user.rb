@@ -209,6 +209,8 @@ class User < ApplicationRecord
   def permitted_correspondence_types
     types = all_possible_user_correspondence_types
     
+    add_sar_ir_to_permitted_types_if_sars_allowed(types)
+    
     types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
     types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
     types.delete(CorrespondenceType.offender_sar) unless FeatureSet.offender_sars.enabled?
@@ -216,6 +218,13 @@ class User < ApplicationRecord
     types << CorrespondenceType.overturned_foi if types.include?(CorrespondenceType.foi)
     types << CorrespondenceType.overturned_sar if types.include?(CorrespondenceType.sar)
     types
+  end
+
+  def add_sar_ir_to_permitted_types_if_sars_allowed(types)
+    types.delete(CorrespondenceType.sar_internal_review)
+    if types.include?(CorrespondenceType.sar)
+      types << CorrespondenceType.sar_internal_review
+    end
   end
 
   def other_teams_names(current_team)
