@@ -26,7 +26,7 @@ gem 'gov_uk_date_fields', '~> 3.1'
 gem 'govuk_template',         '~> 0.26.0'
 gem 'govuk_frontend_toolkit', '>= 9.0.0'
 gem 'govuk_elements_rails',   '>= 3.1.2'
-gem 'govuk_elements_form_builder', '~> 1.2.0'
+gem 'govuk_elements_form_builder', '~> 1.3.0'
 gem 'govuk_notify_rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'humanize_boolean'
