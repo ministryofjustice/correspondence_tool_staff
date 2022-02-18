@@ -64,7 +64,6 @@ class BusinessUnit < Team
            foreign_key: :team_id,
            class_name: 'Assignment'
 
-
   has_many :pending_accepted_assignments,
            -> { pending_accepted},
            foreign_key: :team_id,
@@ -86,7 +85,6 @@ class BusinessUnit < Team
   scope :active, -> { where(deleted_at: nil) }
 
   after_save :update_search_index
-
 
   def self.responding_for_correspondence_type(correspondence_type)
     joins(:correspondence_type_roles).where(
