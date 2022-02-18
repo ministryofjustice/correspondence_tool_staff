@@ -269,9 +269,7 @@ class TeamsController < ApplicationController
   end
 
   def business_areas_cover_params
-    params.require(:team_property).permit(
-        :value
-    )
+    params.require(:team_property).permit(:value)
   end
 
   def destroy_business_areas_cover_params
@@ -330,11 +328,8 @@ class TeamsController < ApplicationController
   end
 
   def set_destination(team)
-    if team.type == 'BusinessGroup'
-      teams_path
-    else
-      team_path(team.parent_id)
-    end
+    team_is_bu = team.type == 'BusinessGroup'
+    team_is_bu ? teams_path : team_path(team.parent_id)
   end
 
   def default_params_to_include_sar_ir
