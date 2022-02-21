@@ -197,8 +197,8 @@ module Stats
       it 'outputs results as a csv lines' do
         Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
           super_header = %q{"","","","",} +
-            %q{ICO appeals,ICO appeals,ICO appeals,ICO appeals,ICO appeals,ICO appeals,} +
-            %q{SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,SAR Internal reviews}
+            %q{SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,} +
+            %q{ICO appeals,ICO appeals,ICO appeals,ICO appeals,ICO appeals,ICO appeals}
           header = %q{Business group,Directorate,Business unit,Responsible,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
@@ -206,16 +206,16 @@ module Stats
             SAR Appeal performance stats - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
-            BGAB,"","",#{@bizgrp_ab.team_lead},44.4,9,2,2,2,3,100.0,2,2,0,0,0
-            BGAB,DRA,"",#{@dir_a.team_lead},33.3,6,1,2,1,2,100.0,1,1,0,0,0
-            BGAB,DRA,RTA,#{@team_a.team_lead},33.3,6,1,2,1,2,100.0,1,1,0,0,0
-            BGAB,DRB,"",#{@dir_b.team_lead},66.7,3,1,0,1,1,100.0,1,1,0,0,0
-            BGAB,DRB,RTB,#{@team_b.team_lead},66.7,3,1,0,1,1,100.0,1,1,0,0,0
-            BGCD,"","",#{@bizgrp_cd.team_lead},66.7,3,1,1,1,0,100.0,2,2,0,0,0
-            BGCD,DRCD,"",#{@dir_cd.team_lead},66.7,3,1,1,1,0,100.0,2,2,0,0,0
-            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,100.0,1,1,0,0,0
-            BGCD,DRCD,RTD,#{@team_d.team_lead},100.0,1,0,0,1,0,100.0,1,1,0,0,0
-            Total,"","","",50.0,12,3,3,3,3,100.0,4,4,0,0,0
+            BGAB,"","",#{@bizgrp_ab.team_lead},100.0,2,2,0,0,0,44.4,9,2,2,2,3
+            BGAB,DRA,"",#{@dir_a.team_lead},100.0,1,1,0,0,0,33.3,6,1,2,1,2
+            BGAB,DRA,RTA,#{@team_a.team_lead},100.0,1,1,0,0,0,33.3,6,1,2,1,2
+            BGAB,DRB,"",#{@dir_b.team_lead},100.0,1,1,0,0,0,66.7,3,1,0,1,1
+            BGAB,DRB,RTB,#{@team_b.team_lead},100.0,1,1,0,0,0,66.7,3,1,0,1,1
+            BGCD,"","",#{@bizgrp_cd.team_lead},100.0,2,2,0,0,0,66.7,3,1,1,1,0
+            BGCD,DRCD,"",#{@dir_cd.team_lead},100.0,2,2,0,0,0,66.7,3,1,1,1,0
+            BGCD,DRCD,RTC,#{@team_c.team_lead},100.0,1,1,0,0,0,50.0,2,1,1,0,0
+            BGCD,DRCD,RTD,#{@team_d.team_lead},100.0,1,1,0,0,0,100.0,1,0,0,1,0
+            Total,"","","",100.0,4,4,0,0,0,50.0,12,3,3,3,3
           EOCSV
           report = R102SarAppealsPerformanceReport.new
           report.run
