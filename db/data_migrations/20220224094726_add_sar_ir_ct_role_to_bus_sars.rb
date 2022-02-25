@@ -10,34 +10,24 @@ class AddSarIrCtRoleToBusSars < ActiveRecord::DataMigration
       when 'manager'
         set_correspondence_type_roles_for_sar_ir(
           bus_unit: bus_unit,
-          roles: %w{ view edit manage }
         )
       when 'responder'
         set_correspondence_type_roles_for_sar_ir(
           bus_unit: bus_unit,
-          roles: %w{ view respond }
         )
       when 'approver'
         set_correspondence_type_roles_for_sar_ir(
           bus_unit: bus_unit,
-          roles: %w{ view approve }
         )
       end
-
-      bus_unit.save
     end
   end
 
-  def set_correspondence_type_roles_for_sar_ir(bus_unit:, roles:)
-    ct = CorrespondenceType.sar_internal_review
-    tcr = TeamCorrespondenceTypeRole.find_by(team_id: bus_unit.id, correspondence_type_id: cat.id)
-    if tcr.nil?
-      TeamCorrespondenceTypeRole.create(
-        team_id: bus_unit,
-        correspondence_type_id: ct.id,
-        roles: roles
-      )
-    end
+  def set_correspondence_type_roles_for_sar_ir(bus_unit:)
+    TeamCorrespondenceTypeRole.find_or_create_by(
+      team: bus_unit,
+      correspondence_type: CorrespondenceType.sar_internal_review,
+    )
   end
 
   def down

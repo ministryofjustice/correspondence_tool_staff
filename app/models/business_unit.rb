@@ -43,7 +43,7 @@ class BusinessUnit < Team
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
 
-           has_many :managers, through: :manager_user_roles, source: :user
+  has_many :managers, through: :manager_user_roles, source: :user
   has_many :responders, through: :responder_user_roles, source: :user
   has_many :approvers, through: :approver_user_roles, source: :user
   has_many :team_admins, through: :team_admin_user_roles, source: :user
