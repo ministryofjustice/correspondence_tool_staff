@@ -22,5 +22,9 @@
       - if case_details.responded? || case_details.closed?
         = render partial: 'cases/shared/closed_case_details', locals: { case_details: case_details }
 
+      - if case_details.ico_foi?
+        = render partial: 'cases/ico_foi/original_deadlines_details', locals: { case_details: case_details }
+
+
     / display links to edit case and/or closure details
     = case_details_links(case_details, current_user).html_safe

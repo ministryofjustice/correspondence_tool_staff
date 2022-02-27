@@ -1,0 +1,39 @@
+- content_for :page_title do
+  = t('page_title.ico_foi.recored_further_action', case_number: @case.number)
+
+- content_for :heading
+  = t('cases.ico_foi.recored_further_action.heading')
+
+- content_for :sub_heading
+  span.visually-hidden
+    = t('common.case.header_case_number')
+  = "#{@case.number} - #{@case.pretty_type}"
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object, @case.error_summary_message, ''
+
+= form_for @case, as: :ico, url: record_further_action_case_ico_foi_path(@case) do |f|
+
+  .grid-row
+    .column-two-thirds
+      / label.form_label for="message"
+      /   | <strong>ICO request details</strong>
+      = f.text_area :message, { rows: 10, class: 'form-control-1-1' }
+
+      #uploaded-ico-decision-files-fields
+        span.form-label-bold
+          = "Upload relevant fie"
+        span.form-hint
+          = t('cases.new.uploaded_request_files_hint')
+
+      div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
+        = render partial: 'shared/dropzone_form',
+                locals: { s3_direct_post: @s3_direct_post,
+                        file_input_name: 'ico[uploaded_ico_further_request_files][]' }
+
+  .grid-row
+    .column-two-thirds
+      = f.submit 'Continue', {class: 'button'}

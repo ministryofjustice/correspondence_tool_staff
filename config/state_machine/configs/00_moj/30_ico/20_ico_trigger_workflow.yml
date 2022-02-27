@@ -68,6 +68,19 @@
                 remove_linked_case:
                 unassign_from_user:
                   transition_to: awaiting_responder
+                record_further_action:
+                  if: Workflows::Predicates#can_require_further_action_for_ico?
+                require_further_action:
+                  if: Workflows::Predicates#can_require_further_action_for_ico?
+                  after_transition: Workflows::Hooks#notify_responder_redraft_requested
+                  transition_to: drafting
+                require_further_action_to_responder_team:
+                  if: Workflows::Predicates#can_require_further_action_for_ico?
+                  after_transition: Workflows::Hooks#assign_responder_email
+                  transition_to: awaiting_responder
+                require_further_action_unassigned:
+                  if: Workflows::Predicates#can_require_further_action_for_ico?
+                  transition_to: unassigned
 
               closed:
                 add_message_to_case:

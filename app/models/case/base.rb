@@ -877,6 +877,7 @@ class Case::Base < ApplicationRecord
   def type_of_offender_sar?;   false;  end
   def offender_sar?;           false;  end
   def offender_sar_complaint?; false;  end
+  def ico_foi?;                false;  end
 
   def default_managing_team
     BusinessUnit.dacu_bmt

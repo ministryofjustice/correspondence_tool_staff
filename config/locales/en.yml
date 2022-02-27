@@ -130,6 +130,10 @@ en:
           attributes:
             received_date:
               past: "cannot be over 10 years in the past"
+            external_deadline:
+              past: "cannot be in the past"
+            internal_deadline:
+              past: "cannot be in the past"
           original_case_number:
             blank: "Enter original case number"
             missing: "Original case not found"
@@ -899,6 +903,9 @@ en:
     progress_for_clearance: The Disclosure team has been notified this case is ready for clearance
     case/ico:
       case_cleared: "The response has been cleared and is ready to be sent to the ICO"
+      case_required_further_action_same_responder: "The responding team has been notified and case is ready for redrafting."
+      case_required_further_action_same_team: "The responding team has been notified and case is ready for acceptance."
+      case_required_further_action_reassign: "The responding team has been deactivated and please re-assignt to another team."
 
   common:
     accessibility: Accessibility
@@ -1011,6 +1018,8 @@ en:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
       request: "ICO's request"
+    case/ico_foi:
+      record_further_action: Start further ICO request
     case/offender_sar:
       start_complaint: Start complaint
       complaint_case_link_message: Complaint received for this case on %{received_date}
@@ -1178,6 +1187,13 @@ en:
         date_example: For example, 30 1 2017
       form:
         uploaded_request_files: Upload relevant files (optional)
+    ico_foi: 
+      recored_further_action:
+        heading: Further ICO request
+      require_further_action:
+        heading: Set new deadlines
+      extend_internal_deadline: New draft deadline date
+      extend_external_deadline: New final deadline date
     index: &cases_list
       heading_all_cases: Cases
       heading_my_cases: My open cases

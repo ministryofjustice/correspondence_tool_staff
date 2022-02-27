@@ -149,6 +149,10 @@ class Workflows::Predicates
         @kase.lacks_overturn?
   end
 
+  def can_require_further_action_for_ico?
+    (@kase.ico_foi?) && (@user.in? @kase.managing_team.users)
+  end
+
   def not_overturned?
     !@kase.overturned_ico?
   end
