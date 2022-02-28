@@ -54,6 +54,10 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     compliance: 'compliance'
   }
 
+  def closed_for_reporting_purposes?
+    closed? || responded?
+  end
+
   def sar_ir_outcome
     appeal_outcome&.name
   end
