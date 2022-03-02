@@ -146,6 +146,20 @@ RSpec.describe TeamsController, type: :controller do
             'commit' => 'Submit'}
         }
 
+        let(:params_foi_access) {
+          {
+            'team' => {
+              'name' => 'Frog sizing unit',
+              'email' => 'frogs@a.com',
+              'team_lead' => 'Stephen Richards',
+              'parent_id' => directorate.id,
+              'role' => 'responder',
+              'correspondence_type_ids' => [ CorrespondenceType.foi.id.to_s ]
+            },
+            'team_type' => 'bu',
+            'commit' => 'Submit'}
+        }
+
         it 'creates a business unit with the given params' do
           post :create, params: params
 
@@ -160,6 +174,32 @@ RSpec.describe TeamsController, type: :controller do
           post :create, params: params
           whodunnit = BusinessUnit.last.versions.last.whodunnit.to_i
           expect(whodunnit).to eq manager.id
+        end
+
+        context "SAR IR access" do
+          it 'adds access if SAR access is enabled' do
+            post :create, params: params
+            bu = BusinessUnit.last
+            
+            ctrs_ids = bu.correspondence_type_roles.map do |ctr|
+              ctr.correspondence_type_id
+            end
+
+            sar_ir_ct_id = CorrespondenceType.sar_internal_review.id
+            expect(ctrs_ids).to include(sar_ir_ct_id)
+          end
+
+          it 'does not add access if SAR access is not present' do
+            post :create, params: params_foi_access
+            bu = BusinessUnit.last
+            
+            ctrs_ids = bu.correspondence_type_roles.map do |ctr|
+              ctr.correspondence_type_id
+            end
+
+            sar_ir_ct_id = CorrespondenceType.sar_internal_review.id
+            expect(ctrs_ids).to_not include(sar_ir_ct_id)
+          end
         end
       end
     end
@@ -250,8 +290,57 @@ RSpec.describe TeamsController, type: :controller do
                             team_lead: 'New Team Lead',
                           } } }
 
+      let(:params_sar_ir_access) { 
+          { id: business_unit.id,
+              team: {
+                'name' => 'Frog sizing unit',
+                'email' => 'frogs@a.com',
+                'team_lead' => 'Stephen Richards',
+                'correspondence_type_ids' => [ CorrespondenceType.sar.id.to_s ]
+              }
+            }
+      }
+    
+      let(:params_foi_access) {
+           { id: business_unit.id,
+              team: {
+                'name' => 'Frog sizing unit',
+                'email' => 'frogs@a.com',
+                'team_lead' => 'Stephen Richards',
+                'correspondence_type_ids' => [ CorrespondenceType.foi.id.to_s ]
+              }
+            }
+      }
+      
+
       before do
         sign_in manager
+      end
+
+      context "SAR IR access" do
+        it 'adds access if SAR access is enabled' do
+          patch :update, params: params_sar_ir_access
+          bu = business_unit.reload 
+          
+          ctrs_ids = bu.correspondence_type_roles.map do |ctr|
+            ctr.correspondence_type_id
+          end
+
+          sar_ir_ct_id = CorrespondenceType.sar_internal_review.id
+          expect(ctrs_ids).to include(sar_ir_ct_id)
+        end
+
+        it 'does not add access if SAR access is not present' do
+          patch :update, params: params_foi_access
+          bu = business_unit.reload 
+          
+          ctrs_ids = bu.correspondence_type_roles.map do |ctr|
+            ctr.correspondence_type_id
+          end
+
+          sar_ir_ct_id = CorrespondenceType.sar_internal_review.id
+          expect(ctrs_ids).to_not include(sar_ir_ct_id)
+        end
       end
 
       it 'authorises' do

@@ -20,7 +20,7 @@ FactoryBot.define do
     deadline_calculator_class { 'BusinessDays' }
     report_category_name { 'FOI report' }
 
-    initialize_with { CorrespondenceType.find_or_create_by(name: name) }
+    initialize_with { CorrespondenceType.find_or_create_by(abbreviation: abbreviation) }
   end
 
   factory :sar_correspondence_type, parent: :correspondence_type do
@@ -35,12 +35,13 @@ FactoryBot.define do
     report_category_name { 'SAR report' }
 
 
-    initialize_with { CorrespondenceType.find_or_create_by(name: name) }
+    initialize_with { CorrespondenceType.find_or_create_by(abbreviation: abbreviation) }
   end
 
   factory :sar_internal_review_correspondence_type, parent: :correspondence_type do
     name { 'Subject access request internal review' }
     abbreviation { 'SAR_INTERNAL_REVIEW' }
+    show_on_menu { false }
     escalation_time_limit { 3 }
     internal_time_limit { 10 }
     external_time_limit { 1 }
@@ -50,7 +51,7 @@ FactoryBot.define do
     report_category_name { 'SAR report' }
 
 
-    initialize_with { CorrespondenceType.find_or_create_by(name: name) }
+    initialize_with { CorrespondenceType.find_or_create_by(abbreviation: abbreviation) }
   end
 
   factory :offender_sar_correspondence_type, parent: :correspondence_type do
@@ -63,7 +64,7 @@ FactoryBot.define do
     report_category_name { 'Offender SAR report' }
 
 
-    initialize_with { CorrespondenceType.find_or_create_by(name: name) }
+    initialize_with { CorrespondenceType.find_or_create_by(abbreviation: abbreviation) }
   end
 
   factory :offender_sar_complaint_correspondence_type, parent: :correspondence_type do
@@ -76,7 +77,7 @@ FactoryBot.define do
     report_category_name { 'Offender SAR Complaint report' }
     show_on_menu { false }
 
-    initialize_with { CorrespondenceType.find_or_create_by(name: name) }
+    initialize_with { CorrespondenceType.find_or_create_by(abbreviation: abbreviation) }
   end
 
   factory :gq_correspondence_type, parent: :correspondence_type do
@@ -87,7 +88,7 @@ FactoryBot.define do
     deadline_calculator_class { 'BusinessDays' }
     report_category_name { '' }
 
-    initialize_with { CorrespondenceType.find_or_create_by(name: name) }
+    initialize_with { CorrespondenceType.find_or_create_by(abbreviation: abbreviation) }
   end
 
   factory :ico_correspondence_type, parent: :correspondence_type do

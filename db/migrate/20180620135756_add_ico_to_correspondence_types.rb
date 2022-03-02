@@ -9,8 +9,8 @@ class AddIcoToCorrespondenceTypes < ActiveRecord::Migration[5.0]
                    default_private_officer: :string
   end
 
-  class TeamCorrespondenceTypeRole < ActiveRecord::Base
-  end
+  # class TeamCorrespondenceTypeRole < ActiveRecord::Base
+  # end
 
   def up
     ico = CorrespondenceType.create!(name: 'Information Commissioner Office appeal.',

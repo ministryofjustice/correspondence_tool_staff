@@ -21,6 +21,9 @@ class TeamsController < ApplicationController
 
   before_action :set_areas, only: [:business_areas_covered,
                                    :create_business_areas_covered]
+  
+  before_action :default_params_to_include_sar_ir, only: [:update, 
+                                                          :create] 
 
   def index
     @teams = policy_scope(Team).order(:name)
@@ -79,7 +82,6 @@ class TeamsController < ApplicationController
         flash[:notice] = 'Team created'
         redirect_to params[:team_type] == 'bg' ? teams_path : team_path(@team.parent_id)
       end
-
     else
       @team_type = params[:team_type]
       render :new
@@ -98,7 +100,6 @@ class TeamsController < ApplicationController
       if @team.areas.create(business_areas_cover_params)
         format.js { render 'teams/business_areas/create'}
       end
-
     end
   end
 
@@ -170,7 +171,6 @@ class TeamsController < ApplicationController
     authorize @team, :move?
     @directorate = Directorate.find(params[:directorate_id])
   end
-
 
   def update_business_group
     authorize @team, :move?
@@ -269,9 +269,7 @@ class TeamsController < ApplicationController
   end
 
   def business_areas_cover_params
-    params.require(:team_property).permit(
-        :value
-    )
+    params.require(:team_property).permit(:value)
   end
 
   def destroy_business_areas_cover_params
@@ -286,7 +284,6 @@ class TeamsController < ApplicationController
         id: params[:area_id]
     )
   end
-
 
   def post_update_redirect_destination
     if @team.is_a?(BusinessUnit)
@@ -328,15 +325,20 @@ class TeamsController < ApplicationController
     else
       "Submit"
     end
-
   end
 
   def set_destination(team)
-    if team.type == 'BusinessGroup'
-      teams_path
-    else
-      team_path(team.parent_id)
-    end
+    team_is_bu = team.type == 'BusinessGroup'
+    team_is_bu ? teams_path : team_path(team.parent_id)
   end
 
+  def default_params_to_include_sar_ir
+    # include access to SAR::InternalReviews if team has access to standard SARs
+    return unless params[:team].fetch(:correspondence_type_ids, nil)
+    sar_ir_ct_id = CorrespondenceType.sar_internal_review.id.to_s
+    sar_ct_id = CorrespondenceType.sar.id.to_s
+    if params[:team][:correspondence_type_ids].include?(sar_ct_id)
+      params[:team][:correspondence_type_ids] << sar_ir_ct_id
+    end
+  end
 end
