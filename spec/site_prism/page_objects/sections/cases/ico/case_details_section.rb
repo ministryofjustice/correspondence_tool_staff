@@ -31,6 +31,14 @@ module PageObjects
             element :data, 'td:nth-child(2)'
           end
 
+          section :original_internal_deadline, 'tr.case-original-internal-deadline' do
+            element :data, 'td:nth-child(2)'
+          end
+
+          section :original_external_deadline, 'tr.case-original-external-deadline' do
+            element :data, 'td:nth-child(2)'
+          end
+
           section :name, 'tr.requester-name' do
             element :data, 'td'
           end

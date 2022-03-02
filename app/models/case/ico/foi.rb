@@ -40,11 +40,8 @@ class Case::ICO::FOI < Case::ICO::Base
     linked_cases.pluck(:type).include?('Case::OverturnedICO::FOI')
   end
 
-  def ico_foi?
-    return true
-  end
-
   def clear_responding_assignment
+    byebug
     self.responder_assignment.destroy()
   end
 

@@ -23,7 +23,7 @@
       /   | <strong>ICO request details</strong>
       = f.text_area :message, { rows: 10, class: 'form-control-1-1' }
 
-      #uploaded-ico-decision-files-fields
+      #uploaded-ico-further-action-files-fields
         span.form-label-bold
           = "Upload relevant fie"
         span.form-hint
@@ -32,7 +32,7 @@
       div class="#{case_uploaded_request_files_class}" id=case_uploaded_request_files_id
         = render partial: 'shared/dropzone_form',
                 locals: { s3_direct_post: @s3_direct_post,
-                        file_input_name: 'ico[uploaded_ico_further_request_files][]' }
+                        file_input_name: 'ico[uploaded_request_files][]' }
 
   .grid-row
     .column-two-thirds

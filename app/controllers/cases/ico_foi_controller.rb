@@ -21,7 +21,6 @@ module Cases
       else
         @case = @case.decorate
         @s3_direct_post = S3Uploader.for(@case, 'requests')
-        # flash[:error] = service.error_message
         render :record_further_action
       end
     end
@@ -68,19 +67,18 @@ module Cases
 
       case_params.permit(
         :message,
-        uploaded_ico_further_request_files: [],
+        uploaded_request_files: [],
       )
     end
 
     def params_for_requiring_further_action
       case_params = params.require(:ico)
       case_params.merge! session[session_info_key] || {}
-
       case_params.permit(
         :message,
-        :uploaded_ico_further_request_files,
         :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
-        :internal_deadline_dd, :internal_deadline_mm, :internal_deadline_yyyy
+        :internal_deadline_dd, :internal_deadline_mm, :internal_deadline_yyyy,
+        uploaded_request_files: [],
       )
     end
     

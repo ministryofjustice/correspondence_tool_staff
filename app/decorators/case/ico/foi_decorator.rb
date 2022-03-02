@@ -8,4 +8,16 @@ class Case::ICO::FOIDecorator < Case::ICO::BaseDecorator
     pretty_type
   end
 
+  def original_internal_deadline
+    if object.original_internal_deadline.present?
+      I18n.l(object.original_internal_deadline, format: :default)
+    end
+  end
+
+  def original_external_deadline
+    if object.original_external_deadline.present?
+      I18n.l(object.original_external_deadline, format: :default)
+    end
+  end
+
 end

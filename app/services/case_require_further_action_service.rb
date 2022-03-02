@@ -98,14 +98,14 @@ class CaseRequireFurtherActionService
       acting_user: @user, 
       acting_team: team,
       target_team: @target_team, 
-      message: I18n.t("event.case/ico.#{@trigger_event_name}_message", team: @target_team.name)   
+      message: I18n.t("event.case/ico.#{@trigger_event_name}_message", team: @target_team.nil? ? '' : @target_team.name)   
     })
   end
   
   def add_ico_further_files
-    if @update_parameters[:uploaded_ico_further_request_files].present?
+    if @update_parameters[:uploaded_request_files].present?
       uploader = S3Uploader.new(@kase, @user)
-      uploader.process_files(@update_parameters[:uploaded_ico_further_request_files], :further_request)
+      uploader.process_files(@update_parameters[:uploaded_request_files], :response)
     end
   end
 
@@ -113,8 +113,7 @@ class CaseRequireFurtherActionService
     if @kase.responding_team.active?
       check_responder_state
     else 
-      @kase.clear_responding_assignment
-      @event_message = I18n.t('notices.case/ico.case_required_further_action_reassign')
+      @trigger_event_name = 'require_further_action_unassigned'
     end
   end
 
