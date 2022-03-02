@@ -40,11 +40,6 @@ class Case::ICO::FOI < Case::ICO::Base
     linked_cases.pluck(:type).include?('Case::OverturnedICO::FOI')
   end
 
-  def clear_responding_assignment
-    byebug
-    self.responder_assignment.destroy()
-  end
-
   def reset_responding_assignment_flag
     self.responder_assignment.update(state: 'pending')
   end
