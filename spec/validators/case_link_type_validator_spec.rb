@@ -138,6 +138,23 @@ describe CaseLinkTypeValidator do
                   .to_case(Case::ICO::SAR )
                   .as_type(:related) }
 
+    it { should allow_link(Case::SAR::InternalReview)
+                  .to_case(Case::SAR::InternalReview)
+                  .as_type(:related) }
+    it { should allow_link(Case::SAR::InternalReview)
+                  .to_case(Case::SAR::Standard )
+                  .as_type(:related) }
+    it { should allow_link(Case::SAR::InternalReview)
+                  .to_case(Case::ICO::SAR)
+                  .as_type(:related) }
+    it { should allow_link(Case::SAR::InternalReview)
+                  .to_case(Case::OverturnedICO::SAR)
+                  .as_type(:related) }
+
+    it { should allow_link(Case::SAR::InternalReview)
+                  .to_case(Case::SAR::Standard)
+                  .as_type(:original) }
+
     it { should allow_link(Case::OverturnedICO::SAR)
                   .to_case(Case::SAR::Standard )
                   .as_type(:original) }
