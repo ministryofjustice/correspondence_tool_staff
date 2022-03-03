@@ -24,7 +24,7 @@ describe PerformanceReportJob, type: :job do
 
   before(:each) do
     ActiveJob::Base.queue_adapter = :test
-    allow(RavenContextProvider).to receive(:set_context)
+    allow(SentryContextProvider).to receive(:set_context)
   end
 
   after do

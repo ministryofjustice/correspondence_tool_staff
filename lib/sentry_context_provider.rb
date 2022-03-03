@@ -1,4 +1,4 @@
-class RavenContextProvider
+class SentryContextProvider
 
   def self.set_context(controller = nil)
     if controller.respond_to?(:current_user) && controller.current_user.present?

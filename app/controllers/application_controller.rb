@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   before_action do
     unless self.class.to_s =~ /^Devise::/
-      RavenContextProvider.set_context(self)
+      SentryContextProvider.set_context(self)
     end
   end
 

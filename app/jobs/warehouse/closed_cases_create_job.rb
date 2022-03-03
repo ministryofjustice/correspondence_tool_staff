@@ -5,7 +5,7 @@ module Warehouse
 
     # +period_start_ts+ and +period_end_ts+ are integer timestamps
     def perform(report_service_class_name, report_guid, user_id, period_start_ts, period_end_ts)
-      RavenContextProvider.set_context
+      SentryContextProvider.set_context
 
       begin        
         report_service_class = report_service_class_name.constantize
