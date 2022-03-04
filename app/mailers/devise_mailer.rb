@@ -6,7 +6,7 @@ class DeviseMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers
 
   def reset_password_instructions record, token, _opts={}
-    RavenContextProvider.set_context
+    SentryContextProvider.set_context
     set_template(Settings.reset_password_instructions_notify_template)
 
     set_personalisation(
@@ -19,7 +19,7 @@ class DeviseMailer < Devise::Mailer
   end
 
   def unlock_instructions(record, token, _opts={})
-    RavenContextProvider.set_context
+    SentryContextProvider.set_context
     set_template(Settings.unlock_user_account_template)
 
     set_personalisation(
