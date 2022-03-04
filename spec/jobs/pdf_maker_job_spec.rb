@@ -6,7 +6,7 @@ describe PdfMakerJob, type: :job do
   before(:each) do
     ActiveJob::Base.queue_adapter = :test
     @attachment = double CaseAttachment
-    allow(RavenContextProvider).to receive(:set_context)
+    allow(SentryContextProvider).to receive(:set_context)
     allow(CaseAttachment).to receive(:find).with(123).and_return(@attachment)
     allow(@attachment).to receive(:make_preview)
   end
@@ -15,7 +15,7 @@ describe PdfMakerJob, type: :job do
 
     it 'sets the Raven environment' do
       described_class.perform_now(123)
-      expect(RavenContextProvider).to have_received(:set_context)
+      expect(SentryContextProvider).to have_received(:set_context)
     end
 
     it 'queues the job' do

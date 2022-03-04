@@ -4,7 +4,7 @@ module Warehouse
     queue_as :reports
 
     def perform
-      RavenContextProvider.set_context
+      SentryContextProvider.set_context
 
       # Reports generated, regardless if downloaded or not
       Report.destroy_all

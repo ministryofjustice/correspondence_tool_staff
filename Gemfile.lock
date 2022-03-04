@@ -217,8 +217,6 @@ GEM
       railties (>= 5.0.0)
     faker (2.18.0)
       i18n (>= 1.6, < 2)
-    faraday (2.0.0)
-      ruby2_keywords (>= 0.0.4)
     ffi (1.15.5)
     foreman (0.87.2)
     formatador (0.3.0)
@@ -511,8 +509,14 @@ GEM
       childprocess (>= 0.5, < 5.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2)
-    sentry-raven (3.1.2)
-      faraday (>= 1.0)
+    sentry-rails (5.1.1)
+      railties (>= 5.0)
+      sentry-ruby-core (~> 5.1.1)
+    sentry-ruby (5.1.1)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      sentry-ruby-core (= 5.1.1)
+    sentry-ruby-core (5.1.1)
+      concurrent-ruby
     set (1.0.2)
     shell-spinner (1.0.4)
       colorize
@@ -674,7 +678,8 @@ DEPENDENCIES
   sablon
   sass-rails (~> 6.0)
   selenium-webdriver (~> 4.1.0)
-  sentry-raven (~> 3.1.2)
+  sentry-rails
+  sentry-ruby
   shell-spinner
   shoulda-matchers (~> 5.1)
   sidekiq (~> 6.4.0)

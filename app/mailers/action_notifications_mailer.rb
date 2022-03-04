@@ -1,7 +1,7 @@
 class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
   def new_assignment(assignment, recipient)
-    RavenContextProvider.set_context
+    SentryContextProvider.set_context
     @assignment = assignment
     kase = @assignment.case
 
@@ -21,7 +21,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
   end
 
   def ready_for_press_or_private_review(assignment)
-    RavenContextProvider.set_context
+    SentryContextProvider.set_context
 
     kase = assignment.case
     recipient = assignment.user
@@ -43,7 +43,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
   end
 
   def notify_information_officers(kase, type)
-    RavenContextProvider.set_context
+    SentryContextProvider.set_context
 
     recipient = kase.assignments.responding.accepted.first.user
     find_template(type)
@@ -65,7 +65,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
   end
 
   def notify_team(team, kase, notification_type)
-    RavenContextProvider.set_context
+    SentryContextProvider.set_context
 
     find_template(notification_type)
 
@@ -84,7 +84,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
   end
 
   def case_assigned_to_another_user(kase,recipient)
-    RavenContextProvider.set_context
+    SentryContextProvider.set_context
 
     set_template(Settings.assigned_to_another_user_template)
 
