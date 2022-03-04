@@ -43,7 +43,7 @@ class BusinessUnit < Team
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
 
-           has_many :managers, through: :manager_user_roles, source: :user
+  has_many :managers, through: :manager_user_roles, source: :user
   has_many :responders, through: :responder_user_roles, source: :user
   has_many :approvers, through: :approver_user_roles, source: :user
   has_many :team_admins, through: :team_admin_user_roles, source: :user
@@ -63,7 +63,6 @@ class BusinessUnit < Team
            -> { responding },
            foreign_key: :team_id,
            class_name: 'Assignment'
-
 
   has_many :pending_accepted_assignments,
            -> { pending_accepted},
@@ -86,7 +85,6 @@ class BusinessUnit < Team
   scope :active, -> { where(deleted_at: nil) }
 
   after_save :update_search_index
-
 
   def self.responding_for_correspondence_type(correspondence_type)
     joins(:correspondence_type_roles).where(

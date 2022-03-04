@@ -37,6 +37,23 @@ module Stats
       ico_appeal_open_late:           'ICO appeals',
     }.freeze
     
+    SAR_IR_APPEAL_COLUMNS = {
+      sar_ir_appeal_performance:         'Performance %',
+      sar_ir_appeal_total:               'Total received',
+      sar_ir_appeal_responded_in_time:   'Responded - in time',
+      sar_ir_appeal_responded_late:      'Responded - late',
+      sar_ir_appeal_open_in_time:        'Open - in time',
+      sar_ir_appeal_open_late:           'Open - late',
+    }.freeze
+
+    SAR_IR_APPEAL_SUPERHEADINGS = {
+      sar_ir_appeal_performance:         'SAR Internal reviews',
+      sar_ir_appeal_total:               'SAR Internal reviews',
+      sar_ir_appeal_responded_in_time:   'SAR Internal reviews',
+      sar_ir_appeal_responded_late:      'SAR Internal reviews',
+      sar_ir_appeal_open_in_time:        'SAR Internal reviews',
+      sar_ir_appeal_open_late:           'SAR Internal reviews',
+    }.freeze
 
     def initialize(kase)
       @kase = kase
@@ -64,8 +81,12 @@ module Stats
     end
 
     def add_type(timeliness)
+      if @kase.is_a?(Case::SAR::InternalReview)
+        status = "sar_ir_appeal_#{timeliness}"
+      else
       appeal_type = @kase.is_a?(Case::ICO::Base) ? 'ico' : 'ir'
       status = "#{appeal_type}_appeal_#{timeliness}"
+      end
       status.to_sym
     end
 

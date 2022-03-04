@@ -1,3 +1,4 @@
-tr.requester-name
-  th = t('common.case.name')
-  td = case_details.name
+- if case_details.name.present?
+  tr.requester-name
+    th = t('common.case.name')
+    td = case_details.name

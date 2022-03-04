@@ -205,7 +205,7 @@ class Case::Base < ApplicationRecord
   scope :updated_since, ->(date) { where('updated_at >= ?', date) }
 
   validates :current_state, presence: true, on: :update
-  validates :email, format: { with: /\A.+@.+\z/ }, if: -> { email.present? }
+  validate :validate_email_format
   validates_presence_of :received_date
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type cannot be blank" }
   validates :workflow, inclusion: { in: %w{ standard trigger full_approval }, message: "invalid" }
@@ -217,6 +217,7 @@ class Case::Base < ApplicationRecord
   validates_with ::ClosedCaseValidator
 
   validates_presence_of :reason_for_deletion, if: -> { deleted }
+
 
   has_many :assignments, inverse_of: :case, dependent: :destroy, foreign_key: :case_id
 
@@ -929,6 +930,15 @@ class Case::Base < ApplicationRecord
       ) unless type_of_offender_sar?
     end
     errors[:received_date].any?
+  end
+
+  def validate_email_format
+    if email.present? && !(email =~ /\A.+@.+\z/)
+      errors.add(
+        :email,
+        :invalid
+      )
+    end
   end
 
   def validate_date_draft_compliant

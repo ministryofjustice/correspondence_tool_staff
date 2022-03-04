@@ -1,5 +1,6 @@
 require 'rails_helper'
 
+# rubocop:disable Metrics/ModuleLength
 module Stats
   describe R102SarAppealsPerformanceReport do
     before(:all) do
@@ -74,6 +75,12 @@ module Stats
         create_ico(type: :sar, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'ico sar for team c - responded late')
         create_ico(type: :sar, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'ico sar for team c - responded in time')
         create_ico(type: :sar, received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'ico sar for team d - open in time')
+        
+        # SAR Internal Reviews
+        create_sar_ir(received: '20170605', deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'case for team d - open in time', case_type: :closed_sar_internal_review)
+        create_sar_ir(received: '20170606', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'case for team c - responded in time', case_type: :closed_sar_internal_review)
+        create_sar_ir(received: '20170607', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'case for team b - responded in time', case_type: :closed_sar_internal_review)
+        create_sar_ir(received: '20170606', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'case for team a - responded in time', case_type: :closed_sar_internal_review)
       end
 
       required_teams = [@bizgrp_ab, @dir_a, @dir_b, @bizgrp_cd, @dir_cd, @team_dacu_disclosure, @team_dacu_bmt, @team_a, @team_b, @team_c, @team_d]
@@ -90,7 +97,7 @@ module Stats
 
     describe '#description' do
       it 'returns the report description' do
-        expect(R102SarAppealsPerformanceReport.description).to eq 'Shows all ICO appeals which are open, or have been closed this month, analysed by timeliness'
+        expect(R102SarAppealsPerformanceReport.description).to eq 'Shows all ICO appeals, and SAR IRs which are open, or have been closed this month, analysed by timeliness'
       end
     end
 
@@ -124,6 +131,12 @@ module Stats
             ico_appeal_responded_late:     2,
             ico_appeal_open_in_time:       2,
             ico_appeal_open_late:          3,
+            sar_ir_appeal_performance:        100.0,
+            sar_ir_appeal_total:              2,
+            sar_ir_appeal_responded_in_time:  2,
+            sar_ir_appeal_responded_late:     0,
+            sar_ir_appeal_open_in_time:       0,
+            sar_ir_appeal_open_late:          0
           })
       end
 
@@ -144,6 +157,12 @@ module Stats
             ico_appeal_responded_late:     1,
             ico_appeal_open_in_time:       1,
             ico_appeal_open_late:          0,
+            sar_ir_appeal_performance:        100.0,
+            sar_ir_appeal_total:              2,
+            sar_ir_appeal_responded_in_time:  2,
+            sar_ir_appeal_responded_late:     0,
+            sar_ir_appeal_open_in_time:       0,
+            sar_ir_appeal_open_late:          0
           })
       end
 
@@ -164,6 +183,12 @@ module Stats
             ico_appeal_responded_late:     1,
             ico_appeal_open_in_time:       0,
             ico_appeal_open_late:          0,
+            sar_ir_appeal_performance:        100.0,
+            sar_ir_appeal_total:              1,
+            sar_ir_appeal_responded_in_time:  1,
+            sar_ir_appeal_responded_late:     0,
+            sar_ir_appeal_open_in_time:       0,
+            sar_ir_appeal_open_late:          0
           })
       end
     end
@@ -172,23 +197,25 @@ module Stats
       it 'outputs results as a csv lines' do
         Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
           super_header = %q{"","","","",} +
+            %q{SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,SAR Internal reviews,} +
             %q{ICO appeals,ICO appeals,ICO appeals,ICO appeals,ICO appeals,ICO appeals}
           header = %q{Business group,Directorate,Business unit,Responsible,} +
+            %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late,} +
             %q{Performance %,Total received,Responded - in time,Responded - late,Open - in time,Open - late}
           expected_text = <<~EOCSV
             SAR Appeal performance stats - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
-            BGAB,"","",#{@bizgrp_ab.team_lead},44.4,9,2,2,2,3
-            BGAB,DRA,"",#{@dir_a.team_lead},33.3,6,1,2,1,2
-            BGAB,DRA,RTA,#{@team_a.team_lead},33.3,6,1,2,1,2
-            BGAB,DRB,"",#{@dir_b.team_lead},66.7,3,1,0,1,1
-            BGAB,DRB,RTB,#{@team_b.team_lead},66.7,3,1,0,1,1
-            BGCD,"","",#{@bizgrp_cd.team_lead},66.7,3,1,1,1,0
-            BGCD,DRCD,"",#{@dir_cd.team_lead},66.7,3,1,1,1,0
-            BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0
-            BGCD,DRCD,RTD,#{@team_d.team_lead},100.0,1,0,0,1,0
-            Total,"","","",50.0,12,3,3,3,3
+            BGAB,"","",#{@bizgrp_ab.team_lead},100.0,2,2,0,0,0,44.4,9,2,2,2,3
+            BGAB,DRA,"",#{@dir_a.team_lead},100.0,1,1,0,0,0,33.3,6,1,2,1,2
+            BGAB,DRA,RTA,#{@team_a.team_lead},100.0,1,1,0,0,0,33.3,6,1,2,1,2
+            BGAB,DRB,"",#{@dir_b.team_lead},100.0,1,1,0,0,0,66.7,3,1,0,1,1
+            BGAB,DRB,RTB,#{@team_b.team_lead},100.0,1,1,0,0,0,66.7,3,1,0,1,1
+            BGCD,"","",#{@bizgrp_cd.team_lead},100.0,2,2,0,0,0,66.7,3,1,1,1,0
+            BGCD,DRCD,"",#{@dir_cd.team_lead},100.0,2,2,0,0,0,66.7,3,1,1,1,0
+            BGCD,DRCD,RTC,#{@team_c.team_lead},100.0,1,1,0,0,0,50.0,2,1,1,0,0
+            BGCD,DRCD,RTD,#{@team_d.team_lead},100.0,1,1,0,0,0,100.0,1,0,0,1,0
+            Total,"","","",100.0,4,4,0,0,0,50.0,12,3,3,3,3
           EOCSV
           report = R102SarAppealsPerformanceReport.new
           report.run
@@ -228,6 +255,17 @@ module Stats
             kase.state_machine.respond_and_close!(acting_user: responder, acting_team: team)
           end
         end
+      end
+      kase.save!
+      kase
+    end
+
+    def create_sar_ir(received:, deadline:, team:, responder:, ident:, case_type:)
+      received_date = Date.parse(received)
+      kase = nil
+      Timecop.freeze(received_date + 10.hours) do
+        kase = create case_type, responding_team: team, responder: responder, identifier: ident
+        kase.external_deadline = Date.parse(deadline)
       end
       kase.save!
       kase
@@ -281,3 +319,4 @@ module Stats
     # rubocop:enable Metrics/ParameterLists
   end
 end
+# rubocop:enable Metrics/ModuleLength
