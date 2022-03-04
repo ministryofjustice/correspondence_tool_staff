@@ -29,11 +29,4 @@ class UpdateClosureService
     uploader.process_files(@params[:case_ico][:uploaded_ico_decision_files], :ico_decision)
   end
 
-  # def find_user_role
-  #   if @kase.is_sar_internal_review? 
-  #     return :approver if @user.approver?
-  #   end
-
-  #   @user.manager? ? :manager : :responder
-  # end
 end
