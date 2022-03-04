@@ -28,8 +28,7 @@ class CaseRequireFurtherActionService
     rescue ConfigurableStateMachine::InvalidEventError => err
       @kase.errors.add(:external_deadline, err.message)
       @result = :error
-    rescue StandardError => error
-      @kase.errors.add(:external_deadline, error.message)
+    rescue ActiveRecord::RecordInvalid => error
       @error_message = error.message
       @result = :error
     end

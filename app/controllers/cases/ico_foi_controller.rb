@@ -53,7 +53,7 @@ module Cases
         redirect_to case_path(@case)
       else
         @case = @case.decorate
-        flash[:error] = service.error_message
+        flash.now[:alert] = service.error_message
         render :require_further_action
       end
     end
@@ -93,8 +93,8 @@ module Cases
     end
     
     def params_valid?
-      @case.assign_attributes(params_for_record_further_action)
-      @case.valid?
+      @case.object.assign_attributes(params_for_record_further_action)
+      @case.object.valid?
     end
 
     def session_info_key
@@ -104,7 +104,20 @@ module Cases
     def session_persist_state(params)
       session[session_info_key] ||= {}
       params ||= {}
+      clear_up_files_params
       session[session_info_key].merge! params
+    end
+
+    def clear_up_files_params
+      # The current implementation of front-end ui for uploading the files 
+      #  doesn't have the function of loading files which has been uploaded 
+      #  so we cannot keep this info in session
+      if session[session_info_key][:uploaded_request_files].present?
+        session[session_info_key].delete(:uploaded_request_files)
+      end
+      if session[session_info_key]["uploaded_request_files"].present?
+        session[session_info_key].delete("uploaded_request_files")
+      end
     end
 
     def read_info_from_session
