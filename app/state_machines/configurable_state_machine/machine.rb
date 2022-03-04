@@ -197,7 +197,7 @@ module ConfigurableStateMachine
 
     def possible_teams_for_case(user)
       if (@kase.teams & user.teams.active).any?
-        case_teams = @kase.teams & user.teams.active
+        case_teams = @kase.permitted_teams & user.teams.active
       else
         case_teams = user.teams.active
       end

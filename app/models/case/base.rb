@@ -489,6 +489,10 @@ class Case::Base < ApplicationRecord
     TeamFinderService.new(self, user, role).team_for_user
   end
 
+  def permitted_teams
+    assigned_teams = self.assignments.where(state: [:accepted, :pending]).map(&:team)
+  end
+
   def allow_event?(user, event)
     state_machine.permitted_events(user.id).include?(event)
   end
