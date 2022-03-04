@@ -112,11 +112,13 @@ module Cases
       # The current implementation of front-end ui for uploading the files 
       #  doesn't have the function of loading files which has been uploaded 
       #  so we cannot keep this info in session
-      if session[session_info_key][:uploaded_request_files].present?
-        session[session_info_key].delete(:uploaded_request_files)
-      end
-      if session[session_info_key]["uploaded_request_files"].present?
-        session[session_info_key].delete("uploaded_request_files")
+      if session[session_info_key].present?
+        if session[session_info_key][:uploaded_request_files].present?
+          session[session_info_key].delete(:uploaded_request_files)
+        end
+        if session[session_info_key]["uploaded_request_files"].present?
+          session[session_info_key].delete("uploaded_request_files")
+        end
       end
     end
 
