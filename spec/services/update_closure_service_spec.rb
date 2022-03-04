@@ -8,11 +8,16 @@ describe UpdateClosureService do
     let(:team)                  { find_or_create :team_dacu }
     let(:user)                  { team.users.first }
     let(:kase)                  { create :closed_case, received_date: date_received }
-    let(:state_machine)         { double ConfigurableStateMachine::Machine, update_closure!: true }
+    let(:state_machine)         { double ConfigurableStateMachine::Machine, 
+                                  update_closure!: true, 
+                                  teams_that_can_trigger_event_on_case: [team]    }
 
     before(:each) do
       @service = UpdateClosureService.new(kase, user, params)
       allow(kase).to receive(:state_machine).and_return(state_machine)
+      allow(state_machine).to receive(:teams_that_can_trigger_event_on_case!).with(
+        event_name: 'update_closure', 
+        user: user).and_return([team])
     end
 
     context 'when we have different params (i.e user edited data)' do
