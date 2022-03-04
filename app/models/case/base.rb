@@ -490,7 +490,7 @@ class Case::Base < ApplicationRecord
   end
 
   def permitted_teams
-    assigned_teams = self.assignments.where(state: [:accepted, :pending]).map(&:team)
+    self.assignments.where(state: [:accepted, :pending]).map(&:team)
   end
 
   def allow_event?(user, event)
