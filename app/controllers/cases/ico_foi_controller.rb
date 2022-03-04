@@ -1,11 +1,12 @@
 module Cases
   class IcoFoiController < IcoController
 
-    before_action -> { set_decorated_case(params[:id]) }, 
-                        only: [:record_further_action, 
-                              :require_further_action, 
-                              :confirm_record_further_action, 
-                              :confirm_require_further_action]
+    before_action -> { set_decorated_case(params[:id]) }, only: [
+      :record_further_action,
+      :require_further_action, 
+      :confirm_record_further_action, 
+      :confirm_require_further_action
+    ]
 
     def record_further_action
       authorize @case, :can_record_further_action?
