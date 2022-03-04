@@ -1,7 +1,11 @@
 module Cases
   class IcoFoiController < IcoController
 
-    before_action -> { set_decorated_case(params[:id]) }, only: [:record_further_action, :require_further_action, :confirm_record_further_action, :confirm_require_further_action]
+    before_action -> { set_decorated_case(params[:id]) }, 
+                        only: [:record_further_action, 
+                              :require_further_action, 
+                              :confirm_record_further_action, 
+                              :confirm_require_further_action]
 
     def record_further_action
       authorize @case, :can_record_further_action?
@@ -43,14 +47,7 @@ module Cases
       )
       result = service.call
       if result == :ok
-        case @case.current_state
-        when "drafting"
-          flash[:notice] = I18n.t('notices.case/ico.case_required_further_action_same_responder')
-        when "awaiting_responder"
-          flash[:notice] = I18n.t('notices.case/ico.case_required_further_action_same_team')
-        else
-          flash[:notice] = I18n.t('notices.case/ico.case_required_further_action_reassign')
-        end
+        flash[:notice] = prepare_flash_message
         clear_up_session
         redirect_to case_path(@case)
       else
@@ -61,6 +58,18 @@ module Cases
     end
 
     private 
+
+    def prepare_flash_message
+      case @case.current_state
+      when "drafting"
+        notice_message = I18n.t('notices.case/ico.required_further_action.same_responder')
+      when "awaiting_responder"
+        notice_message = I18n.t('notices.case/ico.required_further_action.same_team')
+      else
+        notice_message = I18n.t('notices.case/ico.required_further_action.reassign')
+      end
+      notice_message
+    end
 
     def params_for_record_further_action
       case_params = params.require(:ico)

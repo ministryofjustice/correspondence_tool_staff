@@ -903,9 +903,10 @@ en:
     progress_for_clearance: The Disclosure team has been notified this case is ready for clearance
     case/ico:
       case_cleared: "The response has been cleared and is ready to be sent to the ICO"
-      case_required_further_action_same_responder: "The responding team has been notified and case is ready for redrafting."
-      case_required_further_action_same_team: "The responding team has been notified and case is ready for acceptance."
-      case_required_further_action_reassign: "The responding team has been deactivated and please re-assignt to another team."
+      required_further_action:
+        same_responder: "The responding team has been notified and case is ready for redrafting."
+        same_team: "The responding team has been notified and case is ready for acceptance."
+        reassign: "The responding team has been deactivated and please re-assignt to another team."
 
   common:
     accessibility: Accessibility

@@ -43,7 +43,7 @@ class CaseRequireFurtherActionService
   end
 
   def update_deadline_attributes
-    if requie_update_deadlines?
+    if require_update_deadlines?
       # only store the original deadlines not previous deadline as the case can be reverted multiple times.
       if (@kase.original_internal_deadline.nil? &&  @kase.original_external_deadline.nil?)
         @kase.original_internal_deadline = @kase.internal_deadline
@@ -57,12 +57,12 @@ class CaseRequireFurtherActionService
     @kase.save!
   end
 
-  def requie_update_deadlines?
+  def require_update_deadlines?
     @update_parameters[:external_deadline_dd].present?
   end
 
   def validate_dates?
-    if requie_update_deadlines?
+    if require_update_deadlines?
       # Check whether the deadline dates are in the past, this validation rule is not 
       # suitable on the data model level as users may changed them after initial action
       if Date.parse(@kase.internal_deadline) <= Date.today
@@ -84,15 +84,6 @@ class CaseRequireFurtherActionService
 
   def trigger_flow_action
     team = @user.case_team_for_event(@kase, 'record_further_action')
-    # @kase.state_machine.record_further_action!(
-    #   acting_user: @user, 
-    #   acting_team: team
-    # )
-    # @kase.state_machine.edit_case!(acting_user: @user, acting_team: team)
-    # @kase.state_machine.require_further_action!(
-    #   acting_user: @user, 
-    #   acting_team: team,
-    # )
     determine_event_name
     @kase.state_machine.send(@trigger_event_name + '!', {
       acting_user: @user, 
@@ -119,7 +110,9 @@ class CaseRequireFurtherActionService
 
   def check_responder_state
     @target_team = @kase.responding_team
-    if !@kase.responder.deactivated? && @kase.responding_team.users.include?(@kase.responder)
+    responder_active =  !@kase.responder.deactivated? 
+    case_responder_in_responding_team = @kase.responding_team.users.include?(@kase.responder)
+    if responder_active && case_responder_in_responding_team
       @trigger_event_name = 'require_further_action'
     else
       @kase.reset_responding_assignment_flag
