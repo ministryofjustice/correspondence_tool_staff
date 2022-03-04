@@ -88,3 +88,5 @@ en:
     add_an_address: Add an address - Track-a-query
     edit_an_address: Edit an address - Track-a-query
     partial_case_flags: Edit partial case information - %{case_number} - Track-a-query 
+    ico_foi:
+      require_further_action: Require further action - %{case_number} - Track-a-query

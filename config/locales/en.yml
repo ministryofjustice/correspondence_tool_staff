@@ -1015,6 +1015,8 @@ en:
       who_its_with: With
       reason_for_lateness: Reason for lateness
       reason_for_lateness_note: Note for reason for lateness
+      original_external_deadline: Original external deadline
+      original_internal_deadline: Original internal deadline
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO

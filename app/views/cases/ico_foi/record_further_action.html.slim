@@ -1,5 +1,5 @@
 - content_for :page_title do
-  = t('page_title.ico_foi.recored_further_action', case_number: @case.number)
+  = t('page_title.ico_foi.require_further_action', case_number: @case.number)
 
 - content_for :heading
   = t('cases.ico_foi.recored_further_action.heading')
@@ -19,8 +19,6 @@
 
   .grid-row
     .column-two-thirds
-      / label.form_label for="message"
-      /   | <strong>ICO request details</strong>
       = f.text_area :message, { rows: 10, class: 'form-control-1-1' }
 
       #uploaded-ico-further-action-files-fields
