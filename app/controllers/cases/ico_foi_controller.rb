@@ -121,6 +121,7 @@ module Cases
     end
 
     def read_info_from_session
+      clear_up_files_params
       if session[session_info_key].present?
         @case.assign_attributes(session[session_info_key])
       end
