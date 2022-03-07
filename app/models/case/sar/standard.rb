@@ -89,9 +89,11 @@ class Case::SAR::Standard < Case::Base
   validates_presence_of :subject_full_name
   validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
 
-  validates_presence_of :name, :third_party_relationship, if: -> { third_party }
   validates_presence_of :reply_method
   validates_presence_of :subject_type
+
+  validate :validate_name
+  validate :validate_third_party_relationship
   validate :validate_email_address
   validate :validate_postal_address
   validates :subject, presence: true, length: { maximum: 100 }
@@ -105,6 +107,24 @@ class Case::SAR::Standard < Case::Base
 
   # The method below is overriding the close method in the case_states.rb file.
   # This is so that the case is closed with the responder's team instead of the manager's team
+
+  def validate_name
+    if third_party && name.blank?
+      errors.add(
+        :name,
+        :blank
+      )
+    end
+  end
+
+  def validate_third_party_relationship
+    if third_party && third_party_relationship.blank?
+      errors.add(
+        :third_party_relationship,
+        :blank
+      )
+    end
+  end
 
   def respond_and_close(current_user)
     state_machine.respond!(acting_user: current_user, acting_team: self.responding_team)
