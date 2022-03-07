@@ -37,6 +37,7 @@ module Cases
       authorize @case, :can_require_further_action?
     
       set_permitted_events
+      init_deadlines
       render 'cases/ico_foi/require_further_action'
     end
 
@@ -61,7 +62,12 @@ module Cases
       end
     end
 
-    private 
+    private
+
+    def init_deadlines
+      @case.internal_deadline = nil
+      @case.external_deadline = nil 
+    end
 
     def prepare_flash_message
       case @case.current_state
