@@ -27,6 +27,7 @@ module Cases
         session_persist_state(params_for_record_further_action)
         redirect_to require_further_action_case_ico_foi_path(@case)
       else
+        @case = @case.decorate
         @s3_direct_post = S3Uploader.for(@case, 'requests')
         render :record_further_action
       end
@@ -54,6 +55,7 @@ module Cases
         clear_up_session
         redirect_to case_path(@case)
       else
+        @case = @case.decorate
         flash.now[:alert] = service.error_message
         render :require_further_action
       end
