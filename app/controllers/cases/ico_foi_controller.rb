@@ -3,7 +3,10 @@ module Cases
 
     before_action -> { set_decorated_case(params[:id]) }, only: [
       :record_further_action,
-      :require_further_action, 
+      :require_further_action
+    ]
+
+    before_action -> { set_case(params[:id]) }, only: [
       :confirm_record_further_action, 
       :confirm_require_further_action
     ]
@@ -24,7 +27,6 @@ module Cases
         session_persist_state(params_for_record_further_action)
         redirect_to require_further_action_case_ico_foi_path(@case)
       else
-        @case = @case.decorate
         @s3_direct_post = S3Uploader.for(@case, 'requests')
         render :record_further_action
       end
@@ -52,7 +54,6 @@ module Cases
         clear_up_session
         redirect_to case_path(@case)
       else
-        @case = @case.decorate
         flash.now[:alert] = service.error_message
         render :require_further_action
       end
@@ -93,8 +94,8 @@ module Cases
     end
     
     def params_valid?
-      @case.object.assign_attributes(params_for_record_further_action)
-      @case.object.valid?
+      @case.assign_attributes(params_for_record_further_action)
+      @case.valid?
     end
 
     def session_info_key
