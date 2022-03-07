@@ -735,6 +735,40 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe '#permitted_teams' do
+    let(:responder)       { case_being_drafted_trigger.responder }
+    let(:responding_team) { case_being_drafted_trigger.responding_team }
+    let(:another_team)    { create :business_unit, name:'testing team'  }
+    let(:approving_team)  { case_being_drafted_trigger.approving_teams.first  }
+    let(:managing_team)   { case_being_drafted_trigger.managing_team  }
+
+    it 'Return the teams which did not reject the case' do
+      responding_assignment = Assignment.new(
+        case_id: case_being_drafted_trigger.id,
+        team: another_team,
+        user: responder, 
+        state: 'rejected', 
+        role: 'responding',
+        reasons_for_rejection: 'testing'
+      )
+      responding_assignment.save!
+      responder.team_roles << TeamsUsersRole.new(team: another_team, role: 'responder')
+      responder.reload
+      case_being_drafted_trigger.reload
+
+      expect(case_being_drafted_trigger.teams).to match_array [
+        responding_team, 
+        managing_team,
+        approving_team,
+        another_team]
+
+      expect(case_being_drafted_trigger.permitted_teams).to match_array [
+        responding_team, 
+        managing_team, 
+        approving_team]
+    end
+  end
+
   describe '#approver_assignments.for_team' do
 
     it 'returns the correct assignments given the team' do

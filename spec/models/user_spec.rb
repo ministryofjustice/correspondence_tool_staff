@@ -210,6 +210,29 @@ RSpec.describe User, type: :model do
         expect(check_user.teams_for_case(kase)).to match_array [approving_team, kase.responding_team]
         expect(check_user.case_team_for_event(kase, 'reassign_user')).to eq approving_team
       end
+
+      it 'returns the team link having highest authority not including the team rejecting the case' do
+        kase = create :accepted_case
+        check_user = kase.responder
+        another_team = create :business_unit, name:'testing team'
+        
+        responding_assignment = Assignment.new(
+          case_id: kase.id,
+          team: another_team,
+          user: check_user, 
+          state: 'rejected', 
+          role: 'responding',
+          reasons_for_rejection: 'testing'
+        )
+        responding_assignment.save!
+        check_user.team_roles << TeamsUsersRole.new(team: kase.managing_team, role: 'manager')
+        check_user.team_roles << TeamsUsersRole.new(team: another_team, role: 'responder')
+        check_user.reload
+        kase.reload
+
+        expect(check_user.teams_for_case(kase)).to match_array [kase.managing_team, another_team, kase.responding_team]
+        expect(check_user.case_team_for_event(kase, 'add_responses')).to eq kase.responding_team
+      end
     end
 
   end
