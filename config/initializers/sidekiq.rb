@@ -12,4 +12,4 @@ end
 require "sidekiq/web"
 
 # Requirement since Sidekiq 5+
-Sidekiq::Extensions.enable_delay!
+# Sidekiq::Extensions.enable_delay!
