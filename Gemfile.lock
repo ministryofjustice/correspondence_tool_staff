@@ -149,7 +149,7 @@ GEM
     coderay (1.1.3)
     colorize (0.8.1)
     concurrent-ruby (1.1.9)
-    config (3.1.1)
+    config (4.0.0)
       deep_merge (~> 1.2, >= 1.2.1)
       dry-validation (~> 1.0, >= 1.0.0)
     connection_pool (2.2.5)
@@ -624,7 +624,7 @@ DEPENDENCIES
   caxlsx
   caxlsx_rails
   colorize
-  config (~> 3.1)
+  config (~> 4.0)
   devise (~> 4.8.1)
   draper (= 4.0.2)
   dropzonejs-rails
