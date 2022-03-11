@@ -1145,6 +1145,7 @@ en:
           overturned_foi: "Once you clear this response the assigned Information Officer will be notified they can send the response."
           overturned_sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
           sar: "Once you clear this response the assigned Information Officer will be notified they can send the response and close the case."
+          sar_internal_review: "Once you clear this response the assigned Information Officer will be notified they can send the response."
     closable:
       close:
         heading: Close case

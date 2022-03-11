@@ -122,6 +122,40 @@ def edit_foi_case_closure_step(kase:, # rubocop:disable Metrics/MethodLength, Me
   end
 end
 
+def edit_sar_ir_case_closure_step(kase:, date_responded: Date.today)
+  expect(cases_show_page.case_details).to have_edit_closure
+  expect(cases_show_page.case_details).to have_content("Business unit responsible for appeal outcome")
+  expect(cases_show_page.case_details).to have_content("Disclosure")
+  expect(cases_show_page.case_details).to have_content("Reason for appeal outcome")
+  expect(cases_show_page.case_details).to have_content("Reason for appeal outcome Proper searches not carried out/missing information,\nOther")
+
+  cases_show_page.case_details.edit_closure.click
+
+  expect(cases_edit_closure_page.date_responded_day.value)
+    .to eq kase.date_responded.day.to_s
+  expect(cases_edit_closure_page.date_responded_month.value)
+    .to eq kase.date_responded.month.to_s
+  expect(cases_edit_closure_page.date_responded_year.value)
+    .to eq kase.date_responded.year.to_s
+
+  cases_edit_closure_page.sar_ir_outcome.upheld.click
+
+  cases_edit_closure_page.fill_in_date_responded(date_responded)
+
+  cases_edit_closure_page.click_on 'Save changes'
+  expect(cases_show_page).to be_displayed(id: kase.id)
+  expect(cases_show_page.notice.text)
+    .to eq 'You have updated the closure details for this case.'
+  expect(cases_show_page.case_details.response_details.date_responded.data.text)
+    .to eq date_responded.strftime(Settings.default_date_format)
+
+  
+  expect(cases_show_page.case_details).to_not have_content("Business unit responsible for appeal outcome")
+  expect(cases_show_page.case_details).to_not have_content("Disclosure")
+  expect(cases_show_page.case_details).to_not have_content("Reason for appeal outcome")
+  expect(cases_show_page.case_details).to_not have_content("Reason for appeal outcome Proper searches not carried out/missing information,\nOther")
+end
+
 def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false) # rubocop:disable Metrics/MethodLength
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_closure

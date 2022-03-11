@@ -15,18 +15,18 @@ gem 'awesome_print'
 gem 'aws-sdk-s3'
 gem 'bank_holiday', git: 'https://github.com/ministryofjustice/bank_holiday.git', branch: 'bundler-fix'
 gem 'business_time'
-gem 'config', '~> 3.1'
+gem 'config', '~> 4.0'
 gem 'devise', '~> 4.8.1'
 gem 'draper', '4.0.2'
 gem 'dropzonejs-rails'
 gem 'foreman', '~> 0.87.1'
 gem 'factory_bot_rails', '~> 6.2.0'
-gem 'faker', '~> 2.18.0'
+gem 'faker', '~> 2.20.0'
 gem 'gov_uk_date_fields', '~> 3.1'
 gem 'govuk_template',         '~> 0.26.0'
 gem 'govuk_frontend_toolkit', '>= 9.0.0'
 gem 'govuk_elements_rails',   '>= 3.1.2'
-gem 'govuk_elements_form_builder', '~> 1.2.0'
+gem 'govuk_elements_form_builder', '~> 1.3.0'
 gem 'govuk_notify_rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'humanize_boolean'
@@ -46,7 +46,7 @@ gem 'pg_search', '~> 2.3.6'
 gem 'pry-rails'
 gem 'puma', '~> 5.6'
 gem 'pundit', '~>2.1'
-gem 'rails', '~> 6.1.4.6'
+gem 'rails', '~> 6.1.4.7'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'sprockets', '~> 4.0.2'
@@ -86,7 +86,7 @@ end
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'annotate', '~> 3.1.1'
+  gem 'annotate', '~> 3.2.0'
   gem 'better_errors'
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
@@ -101,7 +101,7 @@ group :development, :test do
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
   gem 'rubocop', '~> 1.25.0', require: false
-  gem 'rubocop-rspec', '~> 2.8.0', require: false
+  gem 'rubocop-rspec', '~> 2.9.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
