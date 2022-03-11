@@ -48,6 +48,7 @@ module SARInternalReviewCasesParams
   end
 
   def process_sar_internal_review_closure_params
+    remove_reasons_and_responsible_team_if_upheld
     params.require(:sar_internal_review).permit(
       :date_responded_dd,
       :date_responded_mm,
@@ -68,6 +69,13 @@ module SARInternalReviewCasesParams
   end
 
   private
+
+  def remove_reasons_and_responsible_team_if_upheld
+    if params[:sar_internal_review][:sar_ir_outcome] == "Upheld"
+      params[:sar_internal_review][:team_responsible_for_outcome_id] = nil
+      params[:sar_internal_review][:outcome_reason_ids] = []
+    end
+  end
 
   def missing_info_to_tmm
     if params[:sar_internal_review][:missing_info] == "yes"
