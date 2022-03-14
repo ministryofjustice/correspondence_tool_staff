@@ -49,6 +49,7 @@ class CaseRequireFurtherActionService
         @kase.original_external_deadline = @kase.external_deadline
       end
     end
+    @kase.date_responded = nil
   end
 
   def save_attributes

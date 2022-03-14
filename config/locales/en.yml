@@ -904,9 +904,9 @@ en:
     case/ico:
       case_cleared: "The response has been cleared and is ready to be sent to the ICO"
       required_further_action:
-        same_responder: "The responding team has been notified and case is ready for redrafting."
-        same_team: "The responding team has been notified and case is ready for acceptance."
-        reassign: "The responding team has been deactivated and please re-assignt to another team."
+        same_responder: "The responding team has been notified and the case is ready for redrafting."
+        same_team: "The responding team has been notified and the case is ready for acceptance."
+        reassign: "The responding team has been deactivated. Please reassignt to another team."
 
   common:
     accessibility: Accessibility
