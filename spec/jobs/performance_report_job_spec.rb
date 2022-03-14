@@ -45,11 +45,6 @@ describe PerformanceReportJob, type: :job do
       job.perform('NotExistingReportClass', 'test', 0, 0, 0)
     end
 
-    it 'logs to Rails logger if the report class cannot accept the arguments' do
-        expect(Rails.logger).to receive(:error).with(/ArgumentError/)
-        job.perform('DummyWrongTestSecond', 'test', 0, 0, 0)
-    end
-
     it 'logs to Rails logger if the report class does not have process method' do
         expect(Rails.logger).to receive(:error).with(/NoMethodError/)
         job.perform('DummyWrongTestFirst', 'test', 0, 0, 0)
