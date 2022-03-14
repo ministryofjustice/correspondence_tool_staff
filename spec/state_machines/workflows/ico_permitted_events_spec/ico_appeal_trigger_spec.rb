@@ -85,15 +85,21 @@ describe ConfigurableStateMachine::Machine do
       context 'responded state' do
         it 'shows events' do
           k = create :responded_ico_foi_case, :dacu_disclosure
+          manager_in_the_case = k.managing_team.users.first
 
           expect(k.current_state).to eq 'responded'
-          expect(k.state_machine.permitted_events(manager.id)).to eq [:add_message_to_case,
-                                                                      :close,
-                                                                      :destroy_case,
-                                                                      :edit_case,
-                                                                      :link_a_case,
-                                                                      :remove_linked_case,
-                                                                      :unassign_from_user]
+          expect(k.state_machine.permitted_events(manager_in_the_case.id)).to eq [
+            :add_message_to_case,
+            :close,
+            :destroy_case,
+            :edit_case,
+            :link_a_case,
+            :record_further_action,
+            :remove_linked_case,
+            :require_further_action,
+            :require_further_action_to_responder_team,
+            :require_further_action_unassigned,
+            :unassign_from_user]
         end
       end
 

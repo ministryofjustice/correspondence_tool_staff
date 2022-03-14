@@ -83,6 +83,11 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
             move_case_back_case_sar_offender_path(@case),
             id: "action--move_case_back",
             class: 'button state-action-button'
+    when :record_further_action
+      link_to t("common.case/ico_foi.record_further_action"),
+            record_further_action_case_ico_foi_path(@case),
+            id: "action--record_further_action",
+            class: 'button state-action-button'
     when :capture_reason_for_lateness
       link_to t("common.case/offender_sar.record_reason_for_lateness"),
             record_reason_for_lateness_case_sar_offender_path(@case),

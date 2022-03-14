@@ -136,7 +136,7 @@ class AssignmentsController < ApplicationController
         if @success
           flash[:notice] = "#{ @message}. #{ get_undo_link }".html_safe
         elsif @success == false
-          flash[:error] = @message
+          flash[:alert] = @message
         end
         redirect_to case_path(@case)
       end
@@ -165,7 +165,7 @@ class AssignmentsController < ApplicationController
         if @success
           flash[:notice] = "#{ @message}. #{ get_undo_link }".html_safe
         elsif @success == false
-          flash[:error] = @message
+          flash[:alert] = @message
         end
         redirect_to case_path(@case)
       end

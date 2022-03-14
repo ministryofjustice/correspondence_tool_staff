@@ -46,7 +46,10 @@ class Case::ICO::Base < Case::Base
                  ico_decision: :string,
                  ico_decision_comment: :string,
                  late_team_id: :integer,
-                 date_draft_compliant: :date
+                 date_draft_compliant: :date, 
+                 original_internal_deadline: :date,
+                 original_external_deadline: :date
+
 
   acts_as_gov_uk_date :date_ico_decision_received,
                       :date_responded,
@@ -184,6 +187,14 @@ class Case::ICO::Base < Case::Base
   end
 
   def external_deadline_within_limits?
+    if original_external_deadline.present?
+      validate_external_deadline_after_further_action?
+    else 
+      validate_external_deadline_before_further_action?
+    end
+  end
+
+  def validate_external_deadline_before_further_action?
     if received_date.present?
       if external_deadline < received_date
         errors.add(
@@ -197,10 +208,19 @@ class Case::ICO::Base < Case::Base
         )
       end
     end
+  end 
+
+  def validate_external_deadline_after_further_action?
+    if external_deadline.present? && internal_deadline > external_deadline
+      errors.add(
+        :external_deadline,
+        I18n.t('activerecord.errors.models.case.attributes.internal_deadline.after_external')
+      )
+    end
   end
 
   def internal_deadline_within_limits?
-    if received_date.present? && internal_deadline < received_date
+    if original_internal_deadline.nil? && received_date.present? && internal_deadline < received_date
       errors.add(
         :internal_deadline,
         TranslateForCase.t(

@@ -22,7 +22,15 @@ module SetupCase
   def set_permitted_events
     @permitted_events = @case.state_machine.permitted_events(current_user.id)
     @permitted_events ||= []
-    @filtered_permitted_events = @permitted_events - [:extend_for_pit, :request_further_clearance, :link_a_case, :remove_linked_case]
+    @filtered_permitted_events = @permitted_events - [
+      :extend_for_pit, 
+      :request_further_clearance, 
+      :link_a_case, 
+      :remove_linked_case, 
+      :require_further_action, 
+      :require_further_action_to_responder_team, 
+      :require_further_action_unassigned
+    ]
   end
 
   def set_decorated_case(case_id = params[:case_id])

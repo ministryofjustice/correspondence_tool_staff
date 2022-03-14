@@ -35,7 +35,7 @@ module Cases
         redirect_to case_path(@case)
       else
         @case = @case.decorate
-        flash[:error] = service.error_message
+        flash[:alert] = service.error_message
         render :send_back
       end
     end

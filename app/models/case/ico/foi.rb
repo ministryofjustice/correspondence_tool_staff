@@ -39,4 +39,9 @@ class Case::ICO::FOI < Case::ICO::Base
   def has_overturn?
     linked_cases.pluck(:type).include?('Case::OverturnedICO::FOI')
   end
+
+  def reset_responding_assignment_flag
+    self.responder_assignment.update(state: 'pending')
+  end
+
 end

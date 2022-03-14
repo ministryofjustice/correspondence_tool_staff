@@ -124,6 +124,13 @@ Rails.application.routes.draw do
       patch 'record_late_team', on: :member, to: 'ico#record_late_team'
     end
 
+    resources :ico_fois, only: only, controller: 'ico_foi', as: :case_ico_foi do
+      get 'record_further_action', on: :member, to: 'ico_foi#record_further_action'
+      patch 'record_further_action', on: :member, to: 'ico_foi#confirm_record_further_action'
+      get 'require_further_action', on: :member, to: 'ico_foi#require_further_action'
+      patch 'require_further_action', on: :member, to: 'ico_foi#confirm_require_further_action'
+    end
+
     resources :overturned_ico_fois, only: [:create], controller: 'overturned_ico_foi', as: :case_overturned_ico_fois do
       get 'new/:id', as: 'new', to: 'overturned_ico_foi#new', on: :collection
     end

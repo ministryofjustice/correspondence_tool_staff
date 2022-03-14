@@ -31,7 +31,7 @@ module LinkableOriginalCase
 
   def validate_original_case
     if self.original_case
-      validate_case_link(:original, original_case, :original_case)
+      validate_case_link(:original, self.original_case, :original_case)
     end
   end
 
