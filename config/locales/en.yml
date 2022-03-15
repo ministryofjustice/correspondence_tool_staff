@@ -907,7 +907,7 @@ en:
       required_further_action:
         same_responder: "The responding team has been notified and the case is ready for redrafting."
         same_team: "The responding team has been notified and the case is ready for acceptance."
-        reassign: "The responding team has been deactivated. Please reassignt to another team."
+        reassign: "The responding team has been deactivated. Please reassign it to another team."
 
   common:
     accessibility: Accessibility
