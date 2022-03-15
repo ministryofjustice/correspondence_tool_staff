@@ -66,6 +66,7 @@ en:
             external_deadline:
               too_far_past_received: 'cannot be more than a year past the date received'
               before_received: "cannot be before date received"
+              before_internal: "cannot be before draft deadline"
             internal_deadline:
               after_external: "cannot be after final deadline"
               before_received: "cannot be before date received"
@@ -1017,6 +1018,7 @@ en:
       reason_for_lateness_note: Note for reason for lateness
       original_external_deadline: Original external deadline
       original_internal_deadline: Original internal deadline
+      original_date_responded: Original date response sent to ICO
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO

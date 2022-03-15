@@ -39,6 +39,10 @@ module PageObjects
             element :data, 'td:nth-child(2)'
           end
 
+          section :original_date_responded, 'tr.case-original-date-responded' do
+            element :data, 'td:nth-child(2)'
+          end
+
           section :name, 'tr.requester-name' do
             element :data, 'td'
           end
