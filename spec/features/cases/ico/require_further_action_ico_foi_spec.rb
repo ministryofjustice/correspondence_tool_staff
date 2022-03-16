@@ -63,6 +63,7 @@ feature 'Require further action for ICO-FOI responded case' do
       :upload_file => "#{Faker::Internet.slug}.jpg",
       :original_internal_deadline => kase.internal_deadline, 
       :original_external_deadline => kase.external_deadline,
+      :original_date_responded => kase.date_responded,
       :interal_deadlinen => Date.today + 10.day,
       :external_deadline => Date.today + 20.day, 
       :team_name => kase.responding_team.name
@@ -111,6 +112,8 @@ feature 'Require further action for ICO-FOI responded case' do
         .to eq test_inputs[:original_external_deadline].strftime(Settings.default_date_format)
     expect(case_details.original_internal_deadline.data.text)
         .to eq test_inputs[:original_internal_deadline].strftime(Settings.default_date_format)
+    expect(case_details.original_date_responded.data.text)
+        .to eq test_inputs[:original_date_responded].strftime(Settings.default_date_format)
   end
 
   def validate_error_message_not_in_past
@@ -122,6 +125,7 @@ feature 'Require further action for ICO-FOI responded case' do
   def validate_error_message_value_of_deadlines
     expect(cases_ico_foi_require_further_action_page).to be_displayed
     expect(cases_ico_foi_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case.attributes.internal_deadline.after_external')
+    expect(cases_ico_foi_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case.attributes.external_deadline.before_internal')
   end
 
 end

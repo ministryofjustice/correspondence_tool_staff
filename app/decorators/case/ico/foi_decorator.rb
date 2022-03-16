@@ -20,4 +20,10 @@ class Case::ICO::FOIDecorator < Case::ICO::BaseDecorator
     end
   end
 
+  def original_date_responded
+    if object.original_date_responded.present?
+      I18n.l(object.original_date_responded, format: :default)
+    end
+  end
+
 end

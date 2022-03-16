@@ -8,3 +8,8 @@
   tr.section.case-original-external-deadline.section-external-deadline
     th = t('common.case.original_external_deadline')
     td = case_details.original_external_deadline
+
+- if case_details.original_date_responded.present?
+  tr.section.case-original-date-responded.section-date-responded
+    th = t('common.case.original_date_responded')
+    td = case_details.original_date_responded

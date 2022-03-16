@@ -44,9 +44,14 @@ class CaseRequireFurtherActionService
   def update_deadline_attributes
     if require_update_deadlines?
       # only store the original deadlines not previous deadline as the case can be reverted multiple times.
-      if (@kase.original_internal_deadline.nil? &&  @kase.original_external_deadline.nil?)
+      if @kase.original_internal_deadline.nil?
         @kase.original_internal_deadline = @kase.internal_deadline
+      end
+      if @kase.original_external_deadline.nil?
         @kase.original_external_deadline = @kase.external_deadline
+      end
+      if @kase.original_date_responded.nil?
+        @kase.original_date_responded = @kase.date_responded
       end
     end
     @kase.date_responded = nil
