@@ -302,10 +302,10 @@ enabled_features:
   sar_internal_review:
     Local: true
     Host-dev: true
-    Host-demo: false
-    Host-staging: false
+    Host-demo: true
+    Host-staging: true
     Host-qa: true
-    Host-prod: false
+    Host-prod: true
   branston_retention_scheduling:
     Local: true
     Host-dev: true
