@@ -306,3 +306,10 @@ enabled_features:
     Host-staging: false
     Host-qa: true
     Host-prod: false
+  branston_retention_scheduling:
+    Local: true
+    Host-dev: true
+    Host-demo: false
+    Host-staging: false
+    Host-qa: true
+    Host-prod: false
