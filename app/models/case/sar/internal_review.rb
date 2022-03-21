@@ -15,7 +15,9 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   jsonb_accessor :properties,
                  sar_ir_subtype: :string,
-                 team_responsible_for_outcome_id: :integer
+                 team_responsible_for_outcome_id: :integer,
+                 other_overturned: :string
+                
 
   HUMANIZED_ATTRIBUTES = {
     sar_ir_subtype: 'Case type',

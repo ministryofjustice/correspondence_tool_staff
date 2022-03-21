@@ -8,5 +8,9 @@
 
     = collection_check_boxes(:sar_internal_review, :outcome_reason_ids, outcome_reasons, :id, :name) do |b|
       - content_tag :div, class: "multiple-choice" do
-        - b.check_box(checked: b.object.id.in?(kase.outcome_reason_ids)) \
-            + b.label(for: "sar_internal_review_outcome_reason_ids_#{b.object.id}")
+        - if b.object.abbreviation == 'other'
+          - b.check_box(checked: b.object.id.in?(kase.outcome_reason_ids)) \
+              + b.label(for: "sar_internal_review_outcome_reason_ids_#{b.object.id}")
+        - else
+          - b.check_box(checked: b.object.id.in?(kase.outcome_reason_ids)) \
+              + b.label(for: "sar_internal_review_outcome_reason_ids_#{b.object.id}")

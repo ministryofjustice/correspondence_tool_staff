@@ -63,6 +63,7 @@ feature 'SAR Internal Review Case creation by a manager' do
     then_they_can_mark_the_case_as_sent
 
     when_a_manager_logs_in
+    binding.pry
     they_see_the_option_to_close_the_case
   end
 

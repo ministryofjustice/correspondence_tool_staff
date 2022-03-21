@@ -523,6 +523,7 @@ en:
         late_team_id: Who was responsible for lateness?
         sar_ir_outcome: SAR IR Outcome?
         team_responsible_for_outcome_id: Who was responsible for outcome being partially upheld or overturned?
+        other_overturned: Please provide more details
       offender_sar_complaint:
         original_case_number: Is this the correct case?
         complaint_type: What sort of complaint is this?

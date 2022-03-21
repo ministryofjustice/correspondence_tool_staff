@@ -25,6 +25,9 @@ moj.Modules.CaseClosure = {
   $sarIrOutcomeOverturned : $('#sar_internal_review_sar_ir_outcome_overturned'),
   $outcomeExplanationGroups : $('.responsible-for-outcome-group, .outcome-reasons-group'),
 
+  $otherOverturned : $('.js-other-overturned'),
+  $outcomeReasonOtherOption : $('label:contains("Other")').siblings().first(),
+
   init: function() {
     var self = this;
 
@@ -33,6 +36,17 @@ moj.Modules.CaseClosure = {
     self.showHideExemption();
 
     self.showHideOutcomeExplantionGroups();
+
+    self.$otherOverturned.hide();
+
+    self.$outcomeReasonOtherOption.on('click', function() {
+      console.log(this.checked);
+      if (this.checked) {
+        self.$otherOverturned.show();
+      } else {
+        self.$otherOverturned.hide();
+      }
+    });
 
     self.$sarIrOutcomeGroup.on('change', ':radio', function() {
       self.showHideOutcomeExplantionGroups();
