@@ -28,6 +28,13 @@ describe CSVExporter do
       subject_full_name: 'Theresa Cant'
   }
 
+  let(:require_further_action_ico_case) {
+    create :require_further_action_ico_foi_case,
+      postal_address: "2 High Street\nAnytown\nAY2 4FF",
+      email: 'theresa@moj.com',
+      message: 'my FOI ICO message'
+  }
+
   let(:extended_case) {
     create :closed_case,
       :fully_refused_exempt_s40,
@@ -119,6 +126,9 @@ describe CSVExporter do
           'Number of days late' => 9,
           "Number of days taken after extension" => nil,
           'Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)' => 30,
+          'Original internal deadline' => nil,
+          'Original external deadline' => nil,
+          'Number of days late against original deadline' => nil
         })
       end
     end
@@ -254,9 +264,71 @@ describe CSVExporter do
           'Number of days late' => nil,
           "Number of days taken after extension" => nil,
           'Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)' => 25,
+          'Original internal deadline' => nil,
+          'Original external deadline' => nil,
+          'Number of days late against original deadline' => nil
         })
       end
     end
   end
+
+  context 'ICO-FOI which has been required further action' do
+    it 'returns sar fields' do
+      Timecop.freeze Time.local(2018, 9, 1, 13, 21, 33) do
+        csv = CSVExporter.new(require_further_action_ico_case).to_csv
+        expect(csv.size).to eq(CSVExporter::CSV_COLUMN_HEADINGS.size)
+
+        result = CSVExporter::CSV_COLUMN_HEADINGS.zip(csv).to_h
+
+        # Test transient columns before removing them from +result+ hash
+        transient_columns.each { |key| expect(result[key]).not_to be_blank }
+        expect(result.except!(*transient_columns)).to eq({
+          'Number' => '180824001',
+          'Case type' => 'ICO appeal (FOI)',
+          'Current state' => 'Draft in progress',
+          'Responding team' => 'FOI Responding Team',
+          'Responder' => 'foi responding user',
+          'Date received' => '2018-08-24',
+          'Internal deadline' => "2018-10-08",
+          'External deadline' => '2018-10-22',
+          'Date responded' => nil,
+          'Date compliant draft uploaded' => "2018-08-26",
+          'Trigger' => 'Yes',
+          'Name' => nil,
+          'Requester type' => "Nothing",
+          'Message' => 'my FOI ICO message',
+          'Info held' => nil,
+          'Outcome' => nil,
+          'Refusal reason' => nil,
+          'Exemptions' => '',
+          'Postal address' => "2 High Street\nAnytown\nAY2 4FF",
+          'Email' => 'theresa@moj.com',
+          'Appeal outcome' => nil,
+          'Third party' => nil,
+          'Reply method' => nil,
+          'SAR Subject type' => nil,
+          'SAR Subject full name' => nil,
+          'Business unit responsible for late response' => 'N/A',
+          'Extended' => 'No',
+          'Extension Count' => 0,
+          'Deletion Reason' => nil,
+          'Casework officer' => "disclosure-specialist approving user",
+          'Created by' => require_further_action_ico_case.creator.full_name,
+          'Date created' => '2018-08-24',
+          'Business group' => 'Responder Business Group',
+          'Directorate name' => 'Responder Directorate',
+          'Draft in time' => 'Yes',
+          'In target' => 'Yes',
+          'Number of days late' => nil,
+          "Number of days taken after extension" => nil,
+          'Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)' => 5,
+          'Original internal deadline' => "2018-09-10",
+          'Original external deadline' => "2018-09-24",
+          'Number of days late against original deadline' => nil
+        })
+      end
+    end
+  end
+
 end
 

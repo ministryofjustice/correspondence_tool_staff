@@ -681,6 +681,17 @@ class Case::Base < ApplicationRecord
     days > 0 ? days : nil
   end
 
+  def num_days_late_against_original_deadline
+    if original_external_deadline.present?
+      days = @deadline_calculator.class.days_late(
+        original_external_deadline,
+        benchmark_date_value_for_days_metrics)
+      days > 0 ? days : nil
+    else
+      nil
+    end
+  end
+
   def num_days_taken
     days = @deadline_calculator.class.days_taken(
       received_date,

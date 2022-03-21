@@ -209,6 +209,11 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(result['External deadline']).to eq case_report.external_deadline&.strftime('%F')
       expect(result['Date responded']).to eq case_report.date_responded&.strftime('%F')
       expect(result['Date created']).to eq case_report.date_created&.strftime('%F')
+
+      expect(result['Original internal deadline']).to eq case_report.original_internal_deadline
+      expect(result['Original external deadline']).to eq case_report.original_external_deadline
+      expect(result['Number of days late against original deadline']).to eq case_report.num_days_late_against_original_deadline
+
     end
     #rubocop:enable Metrics/MethodLength
 

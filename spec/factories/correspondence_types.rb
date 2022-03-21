@@ -94,9 +94,9 @@ FactoryBot.define do
   factory :ico_correspondence_type, parent: :correspondence_type do
     name { 'ICO' }
     abbreviation { 'ICO' }
-    escalation_time_limit { 0 }
-    external_time_limit { 15 }
-    deadline_calculator_class { 'CalendarDays' }
+    escalation_time_limit { 3 }
+    external_time_limit { 30 }
+    deadline_calculator_class { 'BusinessDays' }
     report_category_name { '' }
   end
 
