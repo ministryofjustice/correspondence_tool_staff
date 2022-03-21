@@ -4,6 +4,10 @@ metadata:
   name: track-a-query-ingress
   namespace: track-a-query-production
   annotations:
+    kubernetes.io/ingress.class: "modsec01"
+    nginx.ingress.kubernetes.io/enable-modsecurity: "true"
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecRuleEngine On
     external-dns.alpha.kubernetes.io/set-identifier: track-a-query-ingress-track-a-query-production-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"  
 spec:
