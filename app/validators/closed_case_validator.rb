@@ -33,8 +33,7 @@ class ClosedCaseValidator < ActiveModel::Validator
   # the form to close a case, and is only required at that time.
   PROCESSING_CLOSURE_VALIDATIONS = {
     'SAR'=>                 [:validate_tmm],
-    'SAR_INTERNAL_REVIEW'=> [:validate_tmm, 
-                             :validate_sar_ir_outcome,
+    'SAR_INTERNAL_REVIEW'=> [:validate_sar_ir_outcome,
                              :validate_team_responsible],
     'FOI'=>                 [],
     'ICO'=>                 [],
