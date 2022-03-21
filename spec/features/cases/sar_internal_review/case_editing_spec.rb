@@ -143,7 +143,6 @@ feature 'SAR Internal Review Case can be edited', js:true do
     cases_edit_closure_page.sar_ir_responsible_for_outcome.disclosure.click
     cases_edit_closure_page.sar_ir_outcome_reasons.check "Excessive redaction(s)", visible: false
     cases_edit_closure_page.sar_ir_outcome_reasons.check "Incorrect exemption engaged", visible: false
-    cases_edit_closure_page.missing_info.sar_ir_yes.click
     cases_edit_closure_page.submit_button.click
   end
 

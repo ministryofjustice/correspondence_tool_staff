@@ -562,7 +562,7 @@ describe 'ClosedCaseValidator' do
     end
   end
 
-  fcontext 'SAR IR cases' do
+  context 'SAR IR cases' do
 
     let!(:sar_ir) { create(:ready_to_close_sar_internal_review) }
     let(:outcome_reason_ids) { CaseClosure::OutcomeReason.all.map(&:id) }

@@ -57,7 +57,7 @@ module SARInternalReviewCasesParams
       :late_team_id,
       :team_responsible_for_outcome_id,
       outcome_reason_ids: []
-    ).merge(refusal_reason_abbreviation: missing_info_to_tmm)
+    )
   end
 
   def respond_sar_internal_review_params
@@ -74,15 +74,6 @@ module SARInternalReviewCasesParams
     if params[:sar_internal_review][:sar_ir_outcome] == "Upheld"
       params[:sar_internal_review][:team_responsible_for_outcome_id] = nil
       params[:sar_internal_review][:outcome_reason_ids] = []
-    end
-  end
-
-  def missing_info_to_tmm
-    if params[:sar_internal_review][:missing_info] == "yes"
-      @case.missing_info = true
-      CaseClosure::RefusalReason.sar_tmm.abbreviation
-    elsif params[:sar_internal_review][:missing_info] == "no"
-      @case.missing_info = false
     end
   end
 

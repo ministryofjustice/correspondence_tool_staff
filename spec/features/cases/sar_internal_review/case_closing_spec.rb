@@ -48,7 +48,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
         cases_closure_outcomes_page.sar_ir_responsible_for_outcome.disclosure.click
         cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Excessive redaction(s)", visible: false
         cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Incorrect exemption engaged", visible: false
-        cases_closure_outcomes_page.missing_info.sar_ir_yes.click
+
         cases_closure_outcomes_page.submit_button.click
 
         expect(cases_show_page).to have_content("You've closed this case")
@@ -70,7 +70,6 @@ feature 'SAR Internal Review Case can be closed', js:true do
         on_load_field_expectations
 
         cases_closure_outcomes_page.sar_ir_outcome.upheld.click
-        cases_closure_outcomes_page.missing_info.sar_ir_yes.click
 
         hidden_fields_expectations(should_be_shown: false)
 
@@ -91,7 +90,6 @@ feature 'SAR Internal Review Case can be closed', js:true do
     end
 
     expect(page).to have_content("SAR IR Outcome?")
-    expect(page).to have_content("Was the response asking for missing information (e.g. proof of ID), or clarification, i.e. a TTM?")
   end
 
   def hidden_fields_expectations(should_be_shown: true)
