@@ -445,4 +445,13 @@ FactoryBot.define do
     linked_case_id { self.case.id }
   end
 
+  factory :case_transition_require_further_action, parent: :case_transition do
+    association :case, factory: [:ico_foi_case]
+    event       { 'require_further_action' }
+    to_state    { 'drafting' }
+
+    acting_team { self.case.responding_team }
+    acting_user { acting_team.responders.first }
+  end
+
 end

@@ -1213,7 +1213,10 @@ CREATE TABLE public.warehouse_case_reports (
     settlement_cost numeric(10,2),
     user_dealing_with_vetting character varying,
     user_id_dealing_with_vetting integer,
-    number_of_days_for_vetting integer
+    number_of_days_for_vetting integer,
+    original_external_deadline date,
+    original_internal_deadline date,
+    num_days_late_against_original_deadline integer
 );
 
 
@@ -2219,6 +2222,5 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210914110858'),
 ('20210914111215'),
 ('20210917113753'),
-('20220117091139');
-
-
+('20220117091139'),
+('20220319002602');

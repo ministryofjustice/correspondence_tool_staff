@@ -46,6 +46,9 @@ class CSVExporter
     'Days taken (FOIs, IRs, ICO appeals = working days; SARs = calendar days)',
     'Number of days late',
     'Number of days taken after extension',
+    'Original internal deadline',
+    'Original external deadline',
+    'Number of days late against original deadline'
   ]
 
   CSV_COLUMN_FIELDS = [
@@ -91,6 +94,9 @@ class CSVExporter
     'number_of_days_taken',
     'number_of_days_late',
     'number_of_days_taken_after_extension',
+    'original_internal_deadline', 
+    'original_external_deadline',
+    'num_days_late_against_original_deadline'
   ]
 
   def initialize(kase)
@@ -143,13 +149,16 @@ class CSVExporter
         @kase.responding_team&.business_group&.team_lead, # Director General name
         @kase.responding_team&.directorate&.team_lead, # Director name
         @kase.responding_team&.team_lead, # Deputy Director name
-
+        
         # Draft Timliness related information
         humanize_boolean(@kase.within_draft_deadline?), # Draft in time
         humanize_boolean(@kase.response_in_target?), # In Target
         @kase.num_days_taken, # Number of days taken
         @kase.num_days_late, # Number of days late
         @kase.num_days_taken_after_extension, # Number of days late
+        @kase.respond_to?(:original_internal_deadline) ? @kase.original_internal_deadline&.to_s : nil,
+        @kase.respond_to?(:original_external_deadline) ? @kase.original_external_deadline&.to_s : nil,
+        @kase.respond_to?(:original_external_deadline) ? @kase.num_days_late_against_original_deadline : nil
       ]
     rescue => err
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")

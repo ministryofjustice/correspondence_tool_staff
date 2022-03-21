@@ -229,4 +229,28 @@ FactoryBot.define do
       kase.reload
     end
   end
+
+  factory :require_further_action_ico_foi_case, parent: :responded_ico_foi_case do
+    transient do
+      identifier { 'ICO FOI case required further action' }
+    end
+    
+    after(:create) do |kase, evaluator|
+      create :case_transition_require_further_action,
+             case: kase
+      kase.update!(
+        original_external_deadline: kase.external_deadline, 
+        original_internal_deadline: kase.internal_deadline,
+        original_date_responded: kase.date_responded
+      )
+      kase.reload
+      kase.update!(
+        external_deadline: 20.business_days.after(evaluator.original_external_deadline), 
+        internal_deadline: 10.business_days.after(evaluator.original_external_deadline),
+        date_responded: nil
+      )
+      kase.reload
+    end
+  end
+
 end
