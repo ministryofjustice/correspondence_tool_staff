@@ -18,9 +18,10 @@
   <%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %><br />
 <% end -%>
 
-<%- if devise_mapping.omniauthable? %>
+<%- if FeatureSet.devise_azure_activedirectory.enabled? && controller_name != 'unlocks' %>
   <%- resource_class.omniauth_providers.each do |provider| %>
-    <%= link_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider) %><br />
+    <%= button_to t(provider, scope: 'devise.omniauth.providers_sign_in'),
+                  omniauth_authorize_path(resource_name, provider), method: :post, class: 'button-secondary' %><br />
   <% end -%>
 <% end -%>
 

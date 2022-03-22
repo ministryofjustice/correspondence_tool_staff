@@ -1606,6 +1606,9 @@ en:
       heading: Deactivate team member
 
   devise:
+    omniauth:
+      providers_sign_in:
+        azure_activedirectory_v2: Sign in with Justice account
     registrations:
       destroyed: "Team member has been deactivated"
       has_live_cases: "Team member could not be deactivated, as open cases are currently assigned to them"
