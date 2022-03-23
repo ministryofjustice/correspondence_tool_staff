@@ -368,7 +368,7 @@ GEM
     paper_trail (12.2.0)
       activerecord (>= 5.2)
       request_store (~> 1.1)
-    parallel (1.21.0)
+    parallel (1.22.0)
     parallel_tests (3.7.3)
       parallel
     parser (3.1.1.0)
@@ -467,13 +467,13 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.3)
-    rubocop (1.25.1)
+    rubocop (1.26.1)
       parallel (~> 1.10)
       parser (>= 3.1.0.0)
       rainbow (>= 2.2.2, < 4.0)
       regexp_parser (>= 1.8, < 3.0)
       rexml
-      rubocop-ast (>= 1.15.1, < 2.0)
+      rubocop-ast (>= 1.16.0, < 2.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.16.0)
@@ -670,7 +670,7 @@ DEPENDENCIES
   recursive-open-struct
   rspec-collection_matchers
   rspec-rails (~> 5.0)
-  rubocop (~> 1.25.0)
+  rubocop (~> 1.26.1)
   rubocop-performance
   rubocop-rspec (~> 2.9.0)
   ruby-progressbar
