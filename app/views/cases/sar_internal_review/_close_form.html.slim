@@ -26,6 +26,9 @@
         heading: t('cases.sar_internal_review.outcome_reasons.heading'),
         hint: 'Select all that apply', 
         kase: @case, f: f }
+    
+  .js-other-overturned
+    = f.text_field :other_overturned
 
   .grid-row
     .column-two-thirds

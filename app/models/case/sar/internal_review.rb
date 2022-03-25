@@ -11,6 +11,8 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   validates_presence_of :original_case
   validates_presence_of :sar_ir_subtype
 
+  validate :validate_other_overturned
+
   attr_accessor :original_case_number
 
   jsonb_accessor :properties,
@@ -70,6 +72,26 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   def sar_ir_outcome=(name)
     self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
+  end
+
+  def validate_other_overturned
+    other_reason_id = CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id
+    other_not_selected = outcome_reason_ids.exclude?(other_reason_id)
+    other_is_selected = outcome_reason_ids.include?(other_reason_id)
+
+    if other_not_selected && other_overturned.present?
+      errors.add(
+        :other_overturned,
+        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_overturned.present')
+      )
+    end
+
+    if other_is_selected && !other_overturned.present?
+      errors.add(
+        :other_overturned,
+        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_overturned.absent')
+      )
+    end
   end
 
   def validate_case_link(type, linked_case, attribute)

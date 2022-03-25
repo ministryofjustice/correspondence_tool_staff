@@ -239,6 +239,9 @@ en:
               blank: cannot be blank
             linked_case:
               wrong_type: must be a SAR (Subject Access Request) correspondence type
+            other_overturned:
+              present: must be only be present if 'other' reason selected
+              absent: must be submitted if 'other' reason selected
 
         case/sar/offender:
           attributes:
