@@ -37,15 +37,10 @@ moj.Modules.CaseClosure = {
 
     self.showHideOutcomeExplantionGroups();
 
-    self.$otherOverturned.hide();
+    self.showHideOtherOverturned();
 
     self.$outcomeReasonOtherOption.on('click', function() {
-      console.log(this.checked);
-      if (this.checked) {
-        self.$otherOverturned.show();
-      } else {
-        self.$otherOverturned.hide();
-      }
+      self.showHideOtherOverturned();
     });
 
     self.$sarIrOutcomeGroup.on('change', ':radio', function() {
@@ -64,6 +59,14 @@ moj.Modules.CaseClosure = {
     self.$otherReasons.on('change', ':radio', function() {
       self.showHideExemption();
     });
+  },
+
+  showHideOtherOverturned: function() {
+      if (this.$outcomeReasonOtherOption.is(':checked')) {
+        this.$otherOverturned.show();
+      } else {
+        this.$otherOverturned.hide();
+      }
   },
 
   showHideOutcomeExplantionGroups: function() {
