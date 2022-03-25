@@ -463,8 +463,41 @@ describe Case::SAR::InternalReview do
       sar_internal_review.sar_ir_outcome = "Upheld"
 
       expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
-      expect(sar_internal_review.sar_ir_outcome_abbr).to be_an_instance_of(String)
+      expect(sar_internal_review.sar_ir_outcome_abbr).to be_an_instance_of(string)
       expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
+    end
+  end
+
+  describe '#other_overturned' do
+    let(:sar_internal_review) { build(:sar_internal_review) }
+    it 'other overtuned is valid' do
+      other_id = CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id
+      sar_internal_review.other_overturned = "sample text"
+      sar_internal_review.outcome_reason_ids << other_id
+
+      expect(sar_internal_review).to be_valid
+    end
+
+    it 'outome reasons other is invalid without other_overturned text' do
+      other_id = CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id
+      sar_internal_review.other_overturned = nil
+      sar_internal_review.outcome_reason_ids << other_id
+
+      expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_overturned.absent')
+        
+      expect(sar_internal_review).to be_invalid
+      expect(sar_internal_review.errors.first.options[:message]).to include(expected_error)
+    end
+
+    it 'other_overturned is invalid without reason other being selected' do
+      other_id = CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id
+      sar_internal_review.other_overturned = 'sample text'
+      sar_internal_review.outcome_reason_ids.delete(other_id)
+
+      expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_overturned.present')
+        
+      expect(sar_internal_review).to be_invalid
+      expect(sar_internal_review.errors.first.options[:message]).to include(expected_error)
     end
   end
 
