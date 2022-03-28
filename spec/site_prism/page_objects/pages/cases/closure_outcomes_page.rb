@@ -29,6 +29,7 @@ module PageObjects
         section :sar_ir_outcome_reasons, '.outcome-reasons-group' do
         end
 
+        element :other_overturned, '#sar_internal_review_other_overturned'
 
         section :appeal_outcome, '.appeal-outcome-group' do
           element :upheld, 'label[for="foi_appeal_outcome_name_upheld"]'
