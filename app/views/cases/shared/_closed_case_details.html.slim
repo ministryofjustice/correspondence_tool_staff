@@ -44,7 +44,7 @@ tbody.response-details
       th = t('common.case.outcome_reason')
       td = case_details.pretty_outcome_reasons
 
-  - if case_details.sar_internal_review? && case_details.other_overturned.present?
+  - if case_details.is_sar_internal_review? && case_details.other_overturned.present?
     tr.outcome-reasons
       th = t('common.case.other_overturned')
       td = case_details.other_overturned
