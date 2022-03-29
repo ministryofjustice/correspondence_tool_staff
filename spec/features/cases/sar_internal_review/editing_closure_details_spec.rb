@@ -17,8 +17,6 @@ feature 'editing case closure information' do
       CaseClosure::OutcomeReason.first
     ]
 
-    other_overturned_text = 'More info on other reasons'
-
     responsible_team = Team.find_by(code: 'DISCLOSURE').id
 
     kase = create(:closed_sar_internal_review,
