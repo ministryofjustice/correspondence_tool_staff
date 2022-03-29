@@ -75,9 +75,8 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   end
 
   def validate_other_overturned
-    other_reason_id = CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id
-    other_not_selected = outcome_reason_ids.exclude?(other_reason_id)
-    other_is_selected = outcome_reason_ids.include?(other_reason_id)
+    other_is_selected = outcome_reasons.map(&:abbreviation).include?('other')
+    other_not_selected = !other_is_selected 
 
     if other_not_selected && other_overturned.present?
       errors.add(
