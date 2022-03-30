@@ -27,6 +27,10 @@ module PageObjects
         end
 
         section :sar_ir_outcome_reasons, '.outcome-reasons-group' do
+          element :missing_info, 'input#sar_internal_review_missing_info', visible: false
+          element :wrong_exemption, 'input#sar_internal_review_wrong_exemp', visible: false 
+          element :exessive_redactions, 'input#sar_internal_review_excess_redacts', visible: false
+          element :other, 'input#sar_internal_review_other', visible: false
         end
 
         element :other_option_details, '#sar_internal_review_other_option_details'

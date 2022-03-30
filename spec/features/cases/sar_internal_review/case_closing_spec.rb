@@ -46,9 +46,10 @@ feature 'SAR Internal Review Case can be closed', js:true do
         hidden_fields_expectations
 
         cases_closure_outcomes_page.sar_ir_responsible_for_outcome.disclosure.click
-        cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Excessive redaction(s)", visible: false
-        cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Incorrect exemption engaged", visible: false
-        cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Other", visible: false
+
+        cases_closure_outcomes_page.sar_ir_outcome_reasons.exessive_redactions.check
+        cases_closure_outcomes_page.sar_ir_outcome_reasons.wrong_exemption.check
+        cases_closure_outcomes_page.sar_ir_outcome_reasons.other.check
 
         expect(cases_show_page).to have_content("Please provide more details")
 
