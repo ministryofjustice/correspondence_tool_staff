@@ -239,7 +239,7 @@ en:
               blank: cannot be blank
             linked_case:
               wrong_type: must be a SAR (Subject Access Request) correspondence type
-            other_overturned:
+            other_option_details:
               present: must be only be present if 'other' reason selected
               absent: must be submitted if 'other' reason selected
 
@@ -1022,7 +1022,7 @@ en:
       original_external_deadline: Original external deadline
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
-      other_overturned: More details on other reason for outcome
+      other_option_details: More details on other reason for outcome
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
@@ -1371,7 +1371,7 @@ en:
       outcome_reasons: 
         heading: Reason(s) for outcome being partially upheld or overturned?
         hint: Select all that apply
-      other_overturned: Please provide more details 
+      other_option_details: Please provide more details 
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals

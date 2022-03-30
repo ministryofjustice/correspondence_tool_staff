@@ -469,33 +469,33 @@ describe Case::SAR::InternalReview do
     end
   end
 
-  describe '#other_overturned' do
+  describe '#other_option_details' do
     let(:sar_internal_review) { build(:sar_internal_review) }
     let(:other_id) { CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id }
     it 'other overtuned is valid' do
       other_id = CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id
-      sar_internal_review.other_overturned = "sample text"
+      sar_internal_review.other_option_details = "sample text"
       sar_internal_review.outcome_reason_ids = [other_id]
 
       expect(sar_internal_review).to be_valid
     end
 
-    it 'outome reasons other is invalid without other_overturned text' do
-      sar_internal_review.other_overturned = nil
+    it 'outome reasons other is invalid without other_option_details text' do
+      sar_internal_review.other_option_details = nil
       sar_internal_review.outcome_reason_ids = [other_id]
 
-      expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_overturned.absent')
+      expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.absent')
         
       expect(sar_internal_review).to be_invalid
       expect(sar_internal_review.errors.first.options[:message]).to include(expected_error)
     end
 
-    it 'other_overturned is invalid without reason other being selected' do
+    it 'other_option_details is invalid without reason other being selected' do
       other_id = CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id
-      sar_internal_review.other_overturned = 'sample text'
+      sar_internal_review.other_option_details = 'sample text'
       sar_internal_review.outcome_reason_ids.delete(other_id)
 
-      expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_overturned.present')
+      expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.present')
         
       expect(sar_internal_review).to be_invalid
       expect(sar_internal_review.errors.first.options[:message]).to include(expected_error)

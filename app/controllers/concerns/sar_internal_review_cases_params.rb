@@ -56,7 +56,7 @@ module SARInternalReviewCasesParams
       :sar_ir_outcome,
       :late_team_id,
       :team_responsible_for_outcome_id,
-      :other_overturned,
+      :other_option_details,
       outcome_reason_ids: []
     )
   end

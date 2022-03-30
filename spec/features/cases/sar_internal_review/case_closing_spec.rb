@@ -52,7 +52,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
 
         expect(cases_show_page).to have_content("Please provide more details")
 
-        cases_closure_outcomes_page.other_overturned.set("Reason for other option")
+        cases_closure_outcomes_page.other_option_details.set("Reason for other option")
 
         cases_closure_outcomes_page.submit_button.click
 

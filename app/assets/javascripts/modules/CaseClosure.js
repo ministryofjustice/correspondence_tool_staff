@@ -63,9 +63,9 @@ moj.Modules.CaseClosure = {
 
   showHideOtherOverturned: function() {
       var other_is_checked = this.$outcomeReasonOtherOption.is(':checked');
-      var other_overturned_has_value = $('#sar_internal_review_other_overturned').val() ? true : false;
+      var other_option_details_has_value = $('#sar_internal_review_other_option_details').val() ? true : false;
 
-      if (other_is_checked || other_overturned_has_value) {
+      if (other_is_checked || other_option_details_has_value) {
         this.$otherOverturned.show();
       } else {
         this.$otherOverturned.hide();

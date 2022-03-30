@@ -11,14 +11,14 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   validates_presence_of :original_case
   validates_presence_of :sar_ir_subtype
 
-  validate :validate_other_overturned
+  validate :validate_other_option_details
 
   attr_accessor :original_case_number
 
   jsonb_accessor :properties,
                  sar_ir_subtype: :string,
                  team_responsible_for_outcome_id: :integer,
-                 other_overturned: :string
+                 other_option_details: :string
                 
 
   HUMANIZED_ATTRIBUTES = {
@@ -74,21 +74,21 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
   end
 
-  def validate_other_overturned
+  def validate_other_option_details
     other_is_selected = outcome_reasons.map(&:abbreviation).include?('other')
     other_not_selected = !other_is_selected 
 
-    if other_not_selected && other_overturned.present?
+    if other_not_selected && other_option_details.present?
       errors.add(
-        :other_overturned,
-        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_overturned.present')
+        :other_option_details,
+        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.present')
       )
     end
 
-    if other_is_selected && !other_overturned.present?
+    if other_is_selected && !other_option_details.present?
       errors.add(
-        :other_overturned,
-        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_overturned.absent')
+        :other_option_details,
+        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.absent')
       )
     end
   end
