@@ -26,7 +26,7 @@ moj.Modules.CaseClosure = {
   $outcomeExplanationGroups : $('.responsible-for-outcome-group, .outcome-reasons-group'),
 
   $otherOverturned : $('.js-other-overturned'),
-  $outcomeReasonOtherOption : $('label:contains("Other")').siblings().first(),
+  $outcomeReasonOtherOption : $('#sar_internal_review_other'),
 
   init: function() {
     var self = this;
