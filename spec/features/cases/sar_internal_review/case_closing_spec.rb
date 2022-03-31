@@ -46,16 +46,25 @@ feature 'SAR Internal Review Case can be closed', js:true do
         hidden_fields_expectations
 
         cases_closure_outcomes_page.sar_ir_responsible_for_outcome.disclosure.click
-        cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Excessive redaction(s)", visible: false
-        cases_closure_outcomes_page.sar_ir_outcome_reasons.check "Incorrect exemption engaged", visible: false
+
+        cases_closure_outcomes_page.sar_ir_outcome_reasons.exessive_redactions.check
+        cases_closure_outcomes_page.sar_ir_outcome_reasons.wrong_exemption.check
+        cases_closure_outcomes_page.sar_ir_outcome_reasons.other.check
+
+        expect(cases_show_page).to have_content("Please provide more details")
+
+        cases_closure_outcomes_page.other_option_details.set("Reason for other option")
 
         cases_closure_outcomes_page.submit_button.click
 
+        expect(cases_show_page).to have_content("You've closed this case")
         expect(cases_show_page).to have_content("You've closed this case")
         expect(cases_show_page).to have_content("Excessive redaction(s)")
         expect(cases_show_page).to have_content("Incorrect exemption engaged")
         expect(cases_show_page).to have_content("Business unit responsible for appeal outcome")
         expect(cases_show_page).to have_content("Disclosure BMT")
+        expect(cases_show_page).to have_content("More details on other reason for outcome")
+        expect(cases_show_page).to have_content("Reason for other option")
       end
     end
 

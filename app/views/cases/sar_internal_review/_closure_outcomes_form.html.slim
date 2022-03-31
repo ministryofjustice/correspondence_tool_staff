@@ -23,6 +23,9 @@
         hint: t('cases.sar_internal_review.outcome_reasons.hint'),
         kase: @case, f: f }
 
+  .js-other-overturned
+    = f.text_field :other_option_details, label_options: { value: t('cases.sar_internal_review.other_option_details') }
+
   .grid-row
     .column-two-thirds
       .button-holder

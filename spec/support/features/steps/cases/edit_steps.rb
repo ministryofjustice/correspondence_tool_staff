@@ -127,7 +127,7 @@ def edit_sar_ir_case_closure_step(kase:, date_responded: Date.today)
   expect(cases_show_page.case_details).to have_content("Business unit responsible for appeal outcome")
   expect(cases_show_page.case_details).to have_content("Disclosure")
   expect(cases_show_page.case_details).to have_content("Reason for appeal outcome")
-  expect(cases_show_page.case_details).to have_content("Reason for appeal outcome Proper searches not carried out/missing information,\nOther")
+  expect(cases_show_page.case_details).to have_content("Reason for appeal outcome Proper searches not carried out/missing information")
 
   cases_show_page.case_details.edit_closure.click
 
@@ -153,7 +153,7 @@ def edit_sar_ir_case_closure_step(kase:, date_responded: Date.today)
   expect(cases_show_page.case_details).to_not have_content("Business unit responsible for appeal outcome")
   expect(cases_show_page.case_details).to_not have_content("Disclosure")
   expect(cases_show_page.case_details).to_not have_content("Reason for appeal outcome")
-  expect(cases_show_page.case_details).to_not have_content("Reason for appeal outcome Proper searches not carried out/missing information,\nOther")
+  expect(cases_show_page.case_details).to_not have_content("Reason for appeal outcome Proper searches not carried out/missing information")
 end
 
 def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false) # rubocop:disable Metrics/MethodLength

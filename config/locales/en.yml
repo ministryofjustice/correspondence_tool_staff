@@ -239,6 +239,9 @@ en:
               blank: cannot be blank
             linked_case:
               wrong_type: must be a SAR (Subject Access Request) correspondence type
+            other_option_details:
+              present: must be only be present if 'other' reason selected
+              absent: must be submitted if 'other' reason selected
 
         case/sar/offender:
           attributes:
@@ -523,6 +526,7 @@ en:
         late_team_id: Who was responsible for lateness?
         sar_ir_outcome: SAR IR Outcome?
         team_responsible_for_outcome_id: Who was responsible for outcome being partially upheld or overturned?
+        over_overturned: Please provide more details
       offender_sar_complaint:
         original_case_number: Is this the correct case?
         complaint_type: What sort of complaint is this?
@@ -1018,6 +1022,7 @@ en:
       original_external_deadline: Original external deadline
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
+      other_option_details: More details on other reason for outcome
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
@@ -1366,6 +1371,7 @@ en:
       outcome_reasons: 
         heading: Reason(s) for outcome being partially upheld or overturned?
         hint: Select all that apply
+      other_option_details: Please provide more details 
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals

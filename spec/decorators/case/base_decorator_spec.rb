@@ -44,7 +44,6 @@ describe Case::BaseDecorator, type: :model do
 
   end
 
-
   describe '#who_its_with' do
     context 'case has no responding team assigned' do
       it 'returns the managing teams name' do

@@ -11,11 +11,15 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   validates_presence_of :original_case
   validates_presence_of :sar_ir_subtype
 
+  validate :validate_other_option_details
+
   attr_accessor :original_case_number
 
   jsonb_accessor :properties,
                  sar_ir_subtype: :string,
-                 team_responsible_for_outcome_id: :integer
+                 team_responsible_for_outcome_id: :integer,
+                 other_option_details: :string
+                
 
   HUMANIZED_ATTRIBUTES = {
     sar_ir_subtype: 'Case type',
@@ -68,6 +72,25 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   def sar_ir_outcome=(name)
     self.appeal_outcome = CaseClosure::AppealOutcome.by_name(name)
+  end
+
+  def validate_other_option_details
+    other_is_selected = outcome_reasons.map(&:abbreviation).include?('other')
+    other_not_selected = !other_is_selected 
+
+    if other_not_selected && other_option_details.present?
+      errors.add(
+        :other_option_details,
+        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.present')
+      )
+    end
+
+    if other_is_selected && !other_option_details.present?
+      errors.add(
+        :other_option_details,
+        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.absent')
+      )
+    end
   end
 
   def validate_case_link(type, linked_case, attribute)

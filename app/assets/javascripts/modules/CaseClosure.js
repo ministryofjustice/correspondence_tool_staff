@@ -25,6 +25,9 @@ moj.Modules.CaseClosure = {
   $sarIrOutcomeOverturned : $('#sar_internal_review_sar_ir_outcome_overturned'),
   $outcomeExplanationGroups : $('.responsible-for-outcome-group, .outcome-reasons-group'),
 
+  $otherOverturned : $('.js-other-overturned'),
+  $outcomeReasonOtherOption : $('#sar_internal_review_other'),
+
   init: function() {
     var self = this;
 
@@ -33,6 +36,12 @@ moj.Modules.CaseClosure = {
     self.showHideExemption();
 
     self.showHideOutcomeExplantionGroups();
+
+    self.showHideOtherOverturned();
+
+    self.$outcomeReasonOtherOption.on('click', function() {
+      self.showHideOtherOverturned();
+    });
 
     self.$sarIrOutcomeGroup.on('change', ':radio', function() {
       self.showHideOutcomeExplantionGroups();
@@ -50,6 +59,17 @@ moj.Modules.CaseClosure = {
     self.$otherReasons.on('change', ':radio', function() {
       self.showHideExemption();
     });
+  },
+
+  showHideOtherOverturned: function() {
+      var other_is_checked = this.$outcomeReasonOtherOption.is(':checked');
+      var other_option_details_has_value = $('#sar_internal_review_other_option_details').val() ? true : false;
+
+      if (other_is_checked || other_option_details_has_value) {
+        this.$otherOverturned.show();
+      } else {
+        this.$otherOverturned.hide();
+      }
   },
 
   showHideOutcomeExplantionGroups: function() {

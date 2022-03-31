@@ -210,7 +210,7 @@ describe Case::SAR::InternalReview do
                     subject: 'subject B'
     end
 
-    xit 'saves all values in the versions object hash' do
+    it 'saves all values in the versions object hash' do
       version_hash = YAML.load(@kase.versions.last.object)
       expect(version_hash['email']).to eq 'aa@moj.com'
       expect(version_hash['received_date']).to eq Date.today
@@ -459,12 +459,46 @@ describe Case::SAR::InternalReview do
 
   describe '#sar_ir_outcome_abbr' do
     let(:sar_internal_review) { build(:sar_internal_review) }
+
     it 'can return a sar ir outcome abbreviation' do
       sar_internal_review.sar_ir_outcome = "Upheld"
 
       expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
       expect(sar_internal_review.sar_ir_outcome_abbr).to be_an_instance_of(String)
       expect(sar_internal_review.sar_ir_outcome_abbr).to match("upheld")
+    end
+  end
+
+  describe '#other_option_details' do
+    let(:sar_internal_review) { build(:sar_internal_review) }
+    let(:other_id) { CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id }
+    it 'other overtuned is valid' do
+      other_id = CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id
+      sar_internal_review.other_option_details = "sample text"
+      sar_internal_review.outcome_reason_ids = [other_id]
+
+      expect(sar_internal_review).to be_valid
+    end
+
+    it 'outome reasons other is invalid without other_option_details text' do
+      sar_internal_review.other_option_details = nil
+      sar_internal_review.outcome_reason_ids = [other_id]
+
+      expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.absent')
+        
+      expect(sar_internal_review).to be_invalid
+      expect(sar_internal_review.errors.first.options[:message]).to include(expected_error)
+    end
+
+    it 'other_option_details is invalid without reason other being selected' do
+      other_id = CaseClosure::OutcomeReason.find_by(abbreviation: 'other').id
+      sar_internal_review.other_option_details = 'sample text'
+      sar_internal_review.outcome_reason_ids.delete(other_id)
+
+      expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.present')
+        
+      expect(sar_internal_review).to be_invalid
+      expect(sar_internal_review.errors.first.options[:message]).to include(expected_error)
     end
   end
 

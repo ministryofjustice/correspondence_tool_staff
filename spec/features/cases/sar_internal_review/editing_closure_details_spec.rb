@@ -14,8 +14,7 @@ feature 'editing case closure information' do
 
   scenario 'bmt changes case closure information', js: true do
     outcome_reasons = [
-      CaseClosure::OutcomeReason.first,
-      CaseClosure::OutcomeReason.last
+      CaseClosure::OutcomeReason.first
     ]
 
     responsible_team = Team.find_by(code: 'DISCLOSURE').id
