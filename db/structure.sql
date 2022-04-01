@@ -82,6 +82,19 @@ CREATE TYPE public.requester_type AS ENUM (
 
 
 --
+-- Name: retention_status; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.retention_status AS ENUM (
+    'review',
+    'retain',
+    'erasable',
+    'erased',
+    'not_set'
+);
+
+
+--
 -- Name: search_query_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -845,6 +858,40 @@ ALTER SEQUENCE public.reports_id_seq OWNED BY public.reports.id;
 
 
 --
+-- Name: retention_schedules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.retention_schedules (
+    id bigint NOT NULL,
+    case_id bigint NOT NULL,
+    planned_erasure_date date,
+    erasure_date date,
+    status public.retention_status,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: retention_schedules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.retention_schedules_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: retention_schedules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.retention_schedules_id_seq OWNED BY public.retention_schedules.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -1354,6 +1401,13 @@ ALTER TABLE ONLY public.reports ALTER COLUMN id SET DEFAULT nextval('public.repo
 
 
 --
+-- Name: retention_schedules id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.retention_schedules ALTER COLUMN id SET DEFAULT nextval('public.retention_schedules_id_seq'::regclass);
+
+
+--
 -- Name: search_queries id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1575,6 +1629,14 @@ ALTER TABLE ONLY public.report_types
 
 ALTER TABLE ONLY public.reports
     ADD CONSTRAINT reports_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: retention_schedules retention_schedules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.retention_schedules
+    ADD CONSTRAINT retention_schedules_pkey PRIMARY KEY (id);
 
 
 --
@@ -1882,6 +1944,13 @@ CREATE INDEX index_reports_on_report_type_id ON public.reports USING btree (repo
 
 
 --
+-- Name: index_retention_schedules_on_case_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_retention_schedules_on_case_id ON public.retention_schedules USING btree (case_id);
+
+
+--
 -- Name: index_sessions_on_session_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2043,6 +2112,14 @@ ALTER TABLE ONLY public.warehouse_case_reports
 
 ALTER TABLE ONLY public.cases
     ADD CONSTRAINT fk_rails_5b2f8d9aa6 FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
+-- Name: retention_schedules fk_rails_5f5dbf6820; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.retention_schedules
+    ADD CONSTRAINT fk_rails_5f5dbf6820 FOREIGN KEY (case_id) REFERENCES public.cases(id);
 
 
 --
@@ -2223,6 +2300,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210914111215'),
 ('20210917113753'),
 ('20220117091139'),
-('20220319002602');
+('20220319002602'),
+('20220401091216');
 
 
