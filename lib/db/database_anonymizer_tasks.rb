@@ -52,7 +52,7 @@ class DatabaseAnonymizerTasks
     @db_connection_url = task_arguments[:db_connection_url]
     created_at = task_arguments[:timestamp]
     @base_file_name = "#{@tag}_#{created_at}"
-    user_settings_reader =  UsersSettingsForAnonymizer.new(s3_bucket)
+    user_settings_reader =  UsersSettingsForAnonymizer.new(@s3_bucket)
     @anonymizer = DatabaseAnonymizer.new(task_arguments[:limit], user_settings_reader)
   end
 
