@@ -105,6 +105,14 @@ homepage_navigation:
       path: /cases/closed
       scope: closed_cases
 
+    case_retention:
+      path: /cases/retention
+      visibility:
+        - BRANSTON
+      # tabs:
+      #   ready_for_removal:
+      #   Pending_removal:
+
 global_navigation:
   default_urls:
     approver: /cases/open
