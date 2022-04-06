@@ -154,6 +154,8 @@ Rails.application.routes.draw do
     resource :filter, only: [:show], path: '/' do
       get 'my_open', to: redirect('/cases/my_open/in_time'), as: :root_my_open
       get 'my_open/:tab' => 'filters#my_open', as: :my_open
+      get 'retention', to: redirect('/cases/retention/pending_removal'), as: :root_retention
+      get 'retention/:tab' => 'filters#retention', as: :retention
       get 'open' => 'filters#open'
       get 'open/in_time', to: redirect('/cases/open')
       get 'open/late',    to: redirect('/cases/open')
