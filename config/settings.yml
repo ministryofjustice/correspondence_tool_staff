@@ -107,7 +107,7 @@ homepage_navigation:
 
     case_retention:
       path: /cases/retention
-      scope: closed_cases
+      scope: retention_cases
       visibility:
         - BRANSTON
       tabs:
@@ -163,7 +163,7 @@ global_navigation:
 
     case_retention:
       path: /cases/retention
-      scope: closed_cases
+      scope: retention_cases
       visibility:
         - BRANSTON
       tabs:
