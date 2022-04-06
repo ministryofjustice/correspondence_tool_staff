@@ -44,6 +44,10 @@ class CaseFinderService
     get_root_scope('closed_cases_scope').presented_as_closed
   end
 
+  def retention_cases_scope
+    get_root_scope('default')
+  end
+
   private
 
   def get_root_scope(feature = nil)
@@ -101,16 +105,14 @@ class CaseFinderService
   end
 
   def erasable_cases_scope
-    # scope.joins(:retention_schedules)
-    #   .where(retention_schedules: { state: ['erasable']})
-    Case::SAR::Offender.all
+    Case::SAR::Offender.includes([:linked_cases]).joins(:retention_schedule)
+      .where(retention_schedule: { status: ['erasable']})
   end
 
   def triagable_cases_scope
-    # triagable_statuses = ['review', 'retain', 'not_set']
-    # scope.joins(:retention_schedules)
-    #   .where(retention_schedules: { state: triagable_statuses })
-    Case::SAR::Offender.all
+    triagable_statuses = ['review', 'retain', 'not_set']
+    Case::SAR::Offender.includes([:linked_cases]).joins(:retention_schedule)
+      .where(retention_schedule: { status: triagable_statuses })
   end
 
   def open_flagged_for_approval_scope
