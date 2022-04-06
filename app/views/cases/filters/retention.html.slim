@@ -1,0 +1,62 @@
+
+- content_for :page_title do
+  = t('page_title.closed_cases_page')
+
+- content_for :heading
+  = t('.heading')
+
+= render partial: 'layouts/header'
+
+= render partial: 'cases/shared/search_bar'
+
+= render partial: 'cases/shared/case_tabs'
+
+section.govuk-tabs__panel
+  - if @query.available_filters(current_user, @current_tab_name)
+    = render partial: 'cases/search_filters/filters'
+
+    - if @query.filter_crumbs.present?
+      = render partial: 'cases/search_filters/filter_crumbs',
+               locals: { query: @query,
+                         clear_params: {} }
+
+  - if @global_nav_manager.current_page.tabs.present?
+    
+    = get_cases_order_option_url(request.fullpath, cookies[:search_result_order])
+
+    .grid-row
+      .column-full
+        nav.section-tabs
+          ul
+            - @global_nav_manager.current_page.tabs.each do |tab|
+              li class="tab #{active_link_class(tab.fullpath)}"
+                = link_to t("nav.tabs.#{tab.name}",
+                           count: tab.count),
+                          tab.fullpath_with_query
+  - if @cases.present?
+      .grid-row
+        .column-full.table-container.container.cases-table-container tabindex="0"
+          table.report.table-font-xsmall
+            thead
+              th Case .no
+              th Type
+              th Name / subject
+              th Destruction date
+              th Linked case 
+              th Retention status 
+            tbody
+              - @cases.each do |kase|
+                tr.case_row
+                  td 
+                    = link_to kase.number, case_path(kase.id)
+                  td 
+                    = kase.pretty_type
+                  td 
+                    = kase.subject_name
+                  td 
+                    = "TODO" 
+                  td 
+                    = kase.linked_cases.present? ? "Yes" : "No"
+                  td 
+                    = "TODO" 
+

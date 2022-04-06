@@ -100,6 +100,19 @@ class CaseFinderService
     .distinct('case.id')
   end
 
+  def erasable_cases_scope
+    # scope.joins(:retention_schedules)
+    #   .where(retention_schedules: { state: ['erasable']})
+    Case::SAR::Offender.all
+  end
+
+  def triagable_cases_scope
+    # triagable_statuses = ['review', 'retain', 'not_set']
+    # scope.joins(:retention_schedules)
+    #   .where(retention_schedules: { state: triagable_statuses })
+    Case::SAR::Offender.all
+  end
+
   def open_flagged_for_approval_scope
     scope.presented_as_open
       .flagged_for_approval(*user.approving_team)

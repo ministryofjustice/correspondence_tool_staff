@@ -48,7 +48,7 @@ class GlobalNavManager
   end
 
   def pages_for_user(pages)
-    output = pages.map do |page_name, page_settings|
+    pages.map do |page_name, page_settings|
       unless page_name == :case_retention && FeatureSet.branston_retention_scheduling.disabled?
         Page.new(name: page_name, parent: self, attrs: page_settings)
       end
