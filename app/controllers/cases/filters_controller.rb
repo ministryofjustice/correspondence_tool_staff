@@ -139,7 +139,6 @@ module Cases
         .current_page_or_tab
         .cases
 
-
       service = call_search_service(full_list_of_cases, cookies[:search_result_order])
       @query = service.query
       @cases = service.result_set.by_deadline.decorate

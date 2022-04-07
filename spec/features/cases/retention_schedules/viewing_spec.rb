@@ -3,7 +3,6 @@ require 'rails_helper'
 feature 'Case retention schedules for GDPR', :js do
   given(:branston_user)         { find_or_create :branston_user }
   given(:branston_team)   { create :managing_team, managers: [branston_user] }
-  given(:offender_sar_case) { create :offender_sar_case, :third_party, received_date: 2.weeks.ago.today }
 
   given(:non_branston_user)         { find_or_create :disclosure_bmt_user }
   given(:non_branston_team)   { create :managing_team, managers: [non_branston_user] }
@@ -86,7 +85,7 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to have_content 'Case Retention'
 
     cases_page.homepage_navigation.case_retention.click
-
+    
     expect(page).to have_content 'Pending removal'
     expect(page).to have_content 'Ready for removal'
 
@@ -104,6 +103,19 @@ feature 'Case retention schedules for GDPR', :js do
 
     expect(page).to_not have_content reviewable_untimely_kase.number
     expect(page).to_not have_content retain_untimely_kase.number
+
+    Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}").set(true)
+    Capybara.find(:css, "#retention-checkbox-#{retain_timely_kase.id}").set(true)
+
+    click_on "Mark for destruction"
+
+    expect(page).to_not have_content not_set_timely_kase.number
+    expect(page).to_not have_content retain_timely_kase.number
+
+    click_on 'Ready for removal'
+
+    expect(page).to have_content not_set_timely_kase.number
+    expect(page).to have_content retain_timely_kase.number
   end
 
   scenario 'non branston users cannot see the GDPR tab' do
