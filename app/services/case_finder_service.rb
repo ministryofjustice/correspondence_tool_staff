@@ -105,7 +105,7 @@ class CaseFinderService
   end
 
   def erasable_cases_scope
-    Case::SAR::Offender
+    scope
       .includes(:retention_schedule)
       .where(retention_schedule: { 
         status: ['erasable'],
@@ -115,7 +115,7 @@ class CaseFinderService
 
   def triagable_cases_scope
     triagable_statuses = ['review', 'retain', 'not_set']
-    Case::SAR::Offender
+    scope
       .includes(:retention_schedule)
       .where(retention_schedule: { 
         status: triagable_statuses,

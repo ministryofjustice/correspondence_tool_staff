@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   get '/contacts_search', to: 'contacts#contacts_search'
 
+
   devise_for :users, controllers: { passwords: 'passwords' }
 
   gnav = Settings.global_navigation
@@ -165,6 +166,8 @@ Rails.application.routes.draw do
       get '/' => 'filters#show'
     end
   end
+
+  patch '/retention_schedules', to: "retention_schedules#bulk_update"
 
   # Case Actions (general)
   resources :cases, only: [:new, :show, :destroy] do

@@ -234,6 +234,10 @@ class Case::Base < ApplicationRecord
           class_name: 'Assignment',
           foreign_key: :case_id
 
+  has_one :retention_schedule,
+          foreign_key: :case_id,
+          class_name: 'RetentionSchedule'
+
   has_one :manager,
           through: :managing_assignment,
           source: :user
