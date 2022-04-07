@@ -105,14 +105,22 @@ class CaseFinderService
   end
 
   def erasable_cases_scope
-    Case::SAR::Offender.includes([:linked_cases]).joins(:retention_schedule)
-      .where(retention_schedule: { status: ['erasable']})
+    Case::SAR::Offender
+      .includes(:retention_schedule)
+      .where(retention_schedule: { 
+        status: ['erasable'],
+        planned_erasure_date: RetentionSchedule.common_date_viewable_from_range
+      })
   end
 
   def triagable_cases_scope
     triagable_statuses = ['review', 'retain', 'not_set']
-    Case::SAR::Offender.includes([:linked_cases]).joins(:retention_schedule)
-      .where(retention_schedule: { status: triagable_statuses })
+    Case::SAR::Offender
+      .includes(:retention_schedule)
+      .where(retention_schedule: { 
+        status: triagable_statuses,
+        planned_erasure_date: RetentionSchedule.common_date_viewable_from_range
+      })
   end
 
   def open_flagged_for_approval_scope
