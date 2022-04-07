@@ -11,68 +11,74 @@ feature 'Case retention schedules for GDPR', :js do
 
   ## Dates > 8 years
   # not set
-  let!(:kase_one) { 
+  let!(:not_set_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
       status: 'not_set',
-      date: Date.today - 8.years
+      date: Date.today - 4.months
     ) 
   }
 
   # review
-  let!(:kase_two) { 
+  let!(:reviewable_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
       status: 'review',
-      date: Date.today - 8.years
+      date: Date.today - (4.months - 7.days)
+    ) 
+  }
+
+  let!(:reviewable_untimely_kase) { 
+    case_with_retention_schedule(
+      case_type: :offender_sar_case, 
+      status: 'review',
+      date: Date.today - (5.months)
+    ) 
+  }
+  
+  # retain
+  let!(:retain_timely_kase) { 
+    case_with_retention_schedule(
+      case_type: :offender_sar_case, 
+      status: 'retain',
+      date: Date.today - (4.months - 7.days)
+    ) 
+  }
+
+  let!(:retain_untimely_kase) { 
+    case_with_retention_schedule(
+      case_type: :offender_sar_case, 
+      status: 'retain',
+      date: Date.today - (5.months)
     ) 
   }
 
   # erasable
-  let!(:kase_three) { 
+  let!(:erasable_timely_kase) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
       status: 'erasable',
-      date: Date.today - 8.years
+      date: Date.today - 4.months
     ) 
   }
 
-  let!(:kase_four) { 
+  let!(:erasable_timely_kase_two) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
       status: 'erasable',
-      date: Date.today - 8.years
+      date: Date.today - (4.months - 7.days)
     ) 
   }
 
-  # retain
-  let!(:kase_five) { 
-    case_with_retention_schedule(
-      case_type: :offender_sar_case, 
-      status: 'retain',
-      date: Date.today - 8.years
-    ) 
-  }
-
-  ## dates < 8 years
-  # One not set one erasable
-  let!(:kase_six) { 
-    case_with_retention_schedule(
-      case_type: :offender_sar_case, 
-      status: 'not_set',
-      date: Date.today - 7.years
-    ) 
-  }
-
-  let!(:kase_seven) { 
+  let!(:erasable_untimely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
       status: 'erasable',
-      date: Date.today - 7.years
+      date: Date.today - (5.months)
     ) 
   }
 
-  scenario 'branston users can see the GDPR tab' do
+  scenario 'branston users can see the GDPR tab with correct cases' do
     login_as branston_user
     
     cases_page.load
@@ -85,15 +91,19 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to have_content 'Ready for removal'
 
 
-    expect(page).to have_content kase_three.number
-    expect(page).to have_content kase_four.number
+    expect(page).to have_content erasable_timely_kase.number
+    expect(page).to have_content erasable_timely_kase_two.number
 
-    # Turn these lets into an array
-    # check numbers that shouldn't be there
-    # implement date restrictions
-    # click other tab
-    # check cases should and shouldn't be there
-    #
+    expect(page).to_not have_content erasable_untimely_kase.number
+
+    click_on 'Pending removal'
+
+    expect(page).to have_content not_set_timely_kase.number
+    expect(page).to have_content reviewable_timely_kase.number
+    expect(page).to have_content retain_timely_kase.number
+
+    expect(page).to_not have_content reviewable_untimely_kase.number
+    expect(page).to_not have_content retain_untimely_kase.number
   end
 
   scenario 'non branston users cannot see the GDPR tab' do
