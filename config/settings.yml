@@ -335,3 +335,9 @@ enabled_features:
     Host-staging: false
     Host-qa: true
     Host-prod: false
+
+# Timing definitions for RetentionSchedule (GDPR / DPA) 
+retention_timings:
+    common:
+      viewable_from: 4
+

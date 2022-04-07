@@ -73,4 +73,17 @@ RSpec.describe RetentionSchedule, type: :model do
       expect(kase.retention_schedule).to eq(retention_schedule)
     end
   end
+
+  describe 'class methods' do
+    describe '#common_date_viewable_from_range' do
+      it 'returns a range that is correct' do
+        class_range = RetentionSchedule.common_date_viewable_from_range
+        expected_range = 4.months.ago..Date.today
+
+        expect(class_range).to be_a(Range)
+        expect(class_range.begin.day).to match(expected_range.begin.day)
+        expect(class_range.end).to match(expected_range.end)
+      end
+    end
+  end
 end
