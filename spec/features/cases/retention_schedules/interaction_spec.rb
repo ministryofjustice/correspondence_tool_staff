@@ -116,6 +116,20 @@ feature 'Case retention schedules for GDPR', :js do
 
     expect(page).to have_content not_set_timely_kase.number
     expect(page).to have_content retain_timely_kase.number
+
+    Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}").set(true)
+
+    click_on "Destroy cases"
+
+    expect(page).to_not have_content not_set_timely_kase.number
+
+    click_on 'Pending removal'
+
+    expect(page).to_not have_content not_set_timely_kase.number
+
+    not_set_timely_kase.reload
+
+    expect(not_set_timely_kase.retention_schedule.status).to eq('erased')
   end
 
   scenario 'non branston users cannot see the GDPR tab' do
