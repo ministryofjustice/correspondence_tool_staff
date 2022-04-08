@@ -20,6 +20,11 @@ class RetentionSchedulesController < ApplicationController
         case_ids: case_ids, 
         new_status: 'erasable'
       ) 
+    when :destroy_cases
+      update_retention_schedule_statuses(
+        case_ids: case_ids, 
+        new_status: 'erased'
+      ) 
     end
 
     redirect_to '/cases/retention'
