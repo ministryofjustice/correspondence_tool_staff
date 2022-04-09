@@ -149,13 +149,13 @@ class Case::Base < ApplicationRecord
   scope :in_time, -> {
     where(
       "CASE WHEN current_state = 'closed' THEN date_responded <= (properties->>'external_deadline')::date ELSE ? <= properties->>'external_deadline' END",
-      Date.today
+      Time.zone.today
     )
   }
   scope :late, -> {
     where(
       "CASE WHEN current_state = 'closed' THEN date_responded > (properties->>'external_deadline')::date ELSE ? > properties->>'external_deadline' END",
-      Date.today
+      Time.zone.today
     )
   }
 
@@ -199,14 +199,13 @@ class Case::Base < ApplicationRecord
   scope :sar_ir_compliance, -> { where(type: 'Case::SAR::InternalReview').where("properties->>'sar_ir_subtype' = 'compliance'")}
   scope :sar_ir_timeliness, -> { where(type: 'Case::SAR::InternalReview').where("properties->>'sar_ir_subtype' = 'timeliness'")}
 
-  validates :creator, presence: true
   scope :soft_deleted, -> { where(deleted: true) }
 
   scope :updated_since, ->(date) { where('updated_at >= ?', date) }
 
   validates :current_state, presence: true, on: :update
   validate :validate_email_format
-  validates_presence_of :received_date
+  validates :received_date, presence: true
   validates :type, presence: true, exclusion: { in: %w{Case}, message: "Case type cannot be blank" }
   validates :workflow, inclusion: { in: %w{ standard trigger full_approval }, message: "invalid" }
 
@@ -216,7 +215,7 @@ class Case::Base < ApplicationRecord
   validates_with ::RespondedCaseValidator
   validates_with ::ClosedCaseValidator
 
-  validates_presence_of :reason_for_deletion, if: -> { deleted }
+  validates :reason_for_deletion, presence: true, if: -> { deleted }
 
 
   has_many :assignments, inverse_of: :case, dependent: :destroy, foreign_key: :case_id
@@ -656,7 +655,7 @@ class Case::Base < ApplicationRecord
     else
       responding_team_assignment_date = assign_responder_transitions.last&.created_at&.to_date || received_date
       internal_deadline = @deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
-      internal_deadline < Date.today
+      internal_deadline < Time.zone.today
     end
   end
 
@@ -937,12 +936,12 @@ class Case::Base < ApplicationRecord
   end
 
   def validate_received_date
-    if received_date.present? && self.received_date > Date.today
+    if received_date.present? && self.received_date > Time.zone.today
       errors.add(
         :received_date,
         I18n.t('activerecord.errors.models.case.attributes.received_date.not_in_future')
       )
-    elsif received_date.present? && self.received_date < Date.today - 1.year
+    elsif received_date.present? && self.received_date < Time.zone.today - 1.year
       errors.add(
         :received_date,
         I18n.t('activerecord.errors.models.case.attributes.received_date.past')
@@ -966,7 +965,7 @@ class Case::Base < ApplicationRecord
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.before_received')
       )
-    elsif self.date_draft_compliant > Date.today
+    elsif self.date_draft_compliant > Time.zone.today
       errors.add(
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.not_in_future')
@@ -1088,7 +1087,7 @@ class Case::Base < ApplicationRecord
   end
 
   def benchmark_date_value_for_days_metrics
-    date_responded.nil? ? Date.today : date_responded
+    date_responded.nil? ? Time.zone.today : date_responded
   end
 
   def delete_reverse_links(related_case)

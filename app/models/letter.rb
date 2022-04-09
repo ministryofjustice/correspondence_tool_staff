@@ -11,7 +11,7 @@ class Letter
   def initialize(letter_template_id, kase = nil)
     @letter_template_id = letter_template_id
     @case = kase
-    @letter_template = LetterTemplate.find_by_id(letter_template_id)
+    @letter_template = LetterTemplate.find(letter_template_id)
   end
 
   def body
@@ -39,7 +39,7 @@ class Letter
   end
 
   def letter_date
-    Date.today.strftime('%e %B %Y')
+    Time.zone.today.strftime('%e %B %Y')
   end
 
   def template_name

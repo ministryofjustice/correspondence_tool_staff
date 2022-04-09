@@ -8,8 +8,9 @@ class Case::SAR::InternalReview < Case::SAR::Standard
 
   belongs_to :sar_ir_outcome, class_name: 'CaseClosure::AppealOutcome'
 
-  validates_presence_of :original_case
-  validates_presence_of :sar_ir_subtype
+  # validates_presence_of :original_case
+  # validates_presence_of :sar_ir_subtype
+  validates :original_case, :sar_ir_subtype, presence: true
 
   validate :validate_other_option_details
 

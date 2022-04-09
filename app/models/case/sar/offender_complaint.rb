@@ -2,7 +2,9 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
 
   include LinkableOriginalCase
 
-  validates_presence_of :original_case
+  # validates_presence_of :original_case
+  validates :original_case, presence: true
+
   after_create :stamp_on_original_case
 
   jsonb_accessor :properties,
@@ -179,7 +181,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     if received_date.present? && external_deadline.present? && external_deadline < received_date
       errors.add(:external_deadline, :before_received)
     end
-    if external_deadline.present? && external_deadline < Date.today && self.new_record?
+    if external_deadline.present? && external_deadline < Time.zone.today && self.new_record?
       errors.add(:external_deadline, :past)
     end
   end

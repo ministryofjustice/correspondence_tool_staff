@@ -191,7 +191,7 @@ module Stats
     end 
 
     def producer_stamp
-      "Created at #{Date.today.to_date}"
+      "Created at #{Time.zone.today.to_date}"
     end
 
     def create_background_jobs

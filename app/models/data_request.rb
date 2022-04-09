@@ -1,12 +1,12 @@
 class DataRequest < ApplicationRecord
   belongs_to :offender_sar_case, class_name: 'Case::Base', foreign_key: 'case_id'
   belongs_to :user
-  has_many   :data_request_logs, after_add: :update_cached_attributes
+  has_many   :data_request_logs, after_add: :update_cached_attributes, dependent: :destroy
 
   validates :location, presence: true, length: { maximum: 500 }
   validates :request_type, presence: true
-  validates :offender_sar_case, presence: true
-  validates :user, presence: true
+  # validates :offender_sar_case, presence: true
+  # validates :user, presence: true
   validates :date_requested, presence: true
   validates :cached_num_pages, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validate :validate_request_type_note
@@ -102,7 +102,7 @@ class DataRequest < ApplicationRecord
           :cached_date_received,
           I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.blank')
         )
-      elsif cached_date_received > Date.today
+      elsif cached_date_received > Time.zone.today
         errors.add(
           :cached_date_received,
           I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.future')

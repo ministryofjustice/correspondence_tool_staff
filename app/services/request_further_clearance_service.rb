@@ -61,6 +61,6 @@ class RequestFurtherClearanceService
   def flag_case_for_press_and_private
     # update the escalation deadline to the new clearance deadline
     # Enabled press/private to view this case in their Case list
-    @kase.update( escalation_deadline: @kase.deadline_calculator.escalation_deadline(Date.today))
+    @kase.update( escalation_deadline: @kase.deadline_calculator.escalation_deadline(Time.zone.today))
   end
 end

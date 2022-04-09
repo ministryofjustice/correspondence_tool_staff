@@ -113,7 +113,7 @@ class Case::SAR::Offender < Case::Base
   validates :flag_as_high_profile, inclusion: { in: [true, false], message: "cannot be blank" }
   validates :date_of_birth, presence: true
 
-  validates_presence_of :subject_address
+  validates :subject_address, presence: true
 
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
@@ -156,7 +156,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_date_of_birth
-    if date_of_birth.present? && self.date_of_birth > Date.today
+    if date_of_birth.present? && self.date_of_birth > Time.zone.today
       errors.add(
         :date_of_birth,
         I18n.t('activerecord.errors.models.case.attributes.date_of_birth.not_in_future')
@@ -166,7 +166,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_request_dated
-    if request_dated.present? && self.request_dated > Date.today
+    if request_dated.present? && self.request_dated > Time.zone.today
       errors.add(
         :request_dated,
         I18n.t('activerecord.errors.models.case.attributes.request_dated.not_in_future')
@@ -233,7 +233,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_partial_case_letter_sent_dated
-    if is_partial_case? && partial_case_letter_sent_dated.present? && partial_case_letter_sent_dated > Date.today
+    if is_partial_case? && partial_case_letter_sent_dated.present? && partial_case_letter_sent_dated > Time.zone.today
       errors.add(
         :partial_case_letter_sent_dated,
         I18n.t('activerecord.errors.models.case.attributes.partial_case_letter_sent_dated.not_in_future')
@@ -342,7 +342,7 @@ class Case::SAR::Offender < Case::Base
         end_date_for_vetting = transition.created_at.to_date
       end
     end
-    end_date_for_vetting = end_date_for_vetting || Date.today
+    end_date_for_vetting = end_date_for_vetting || Time.zone.today
     # Calculate the days taken for vetting process
     days = nil
     if start_date_for_vetting

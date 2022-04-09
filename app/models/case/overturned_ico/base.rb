@@ -63,11 +63,15 @@ class Case::OverturnedICO::Base < Case::Base
   validate :validate_external_deadline
   validate :validate_original_ico_appeal
 
-  validates_presence_of :ico_officer_name
-  validates_presence_of :original_case
-  validates_presence_of :reply_method
-  validates_presence_of :email,          if: :send_by_email?
-  validates_presence_of :postal_address, if: :send_by_post?
+  # validates_presence_of :ico_officer_name
+  # validates_presence_of :original_case
+  # validates_presence_of :reply_method
+  validates :ico_officer_name, :original_case, :reply_method,  presence: true
+
+  # validates_presence_of :email,          if: :send_by_email?
+  # validates_presence_of :postal_address, if: :send_by_post?
+  validates :email, presence: true, if: -> { send_by_email? }
+  validates :postal_address, presence: true, if: -> { send_by_post? }
 
   has_one :original_ico_appeal_link,
           -> { original_appeal },
@@ -138,9 +142,9 @@ class Case::OverturnedICO::Base < Case::Base
   def validate_received_date
     if received_date.blank?
       errors.add(:received_date, :blank)
-    elsif received_date > Date.today
+    elsif received_date > Time.zone.today
       errors.add(:received_date, :future)
-    elsif received_date < Date.today - 4.weeks  && self.new_record?
+    elsif received_date < Time.zone.today - 4.weeks  && self.new_record?
       errors.add(:received_date, :past)
     end
   end
@@ -148,9 +152,9 @@ class Case::OverturnedICO::Base < Case::Base
   def validate_external_deadline
     if external_deadline.blank?
       errors.add(:external_deadline, :blank)
-    elsif external_deadline < Date.today && self.new_record?
+    elsif external_deadline < Time.zone.today && self.new_record?
       errors.add(:external_deadline, :past)
-    elsif external_deadline > Date.today + 50.days
+    elsif external_deadline > Time.zone.today + 50.days
       errors.add(:external_deadline, :future)
     end
   end

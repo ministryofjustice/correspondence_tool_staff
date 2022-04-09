@@ -69,7 +69,8 @@ class SearchQuery < ApplicationRecord
   belongs_to :parent, class_name: 'SearchQuery'
   has_many   :children, class_name: 'SearchQuery'
 
-  validates_presence_of :search_text, if: :search_query_type?
+  # validates_presence_of :search_text, if: :search_query_type?
+  validates :search_text, presence: true, if: -> { search_query_type.present? }
 
   enum query_type: {
       search: 'search',
@@ -156,7 +157,7 @@ class SearchQuery < ApplicationRecord
                      .where(user_id: merged_params[:user_id],
                             query_type: merged_params[:query_type])
                      .where('created_at >= ? AND created_at < ?',
-                            Date.today, Date.tomorrow)
+                            Time.zone.today, Date.tomorrow)
                      .where('query = ?', params_to_match_on.to_json)
                      .first
     if search_query.nil?

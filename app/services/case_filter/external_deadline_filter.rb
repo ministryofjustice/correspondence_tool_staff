@@ -9,17 +9,17 @@ module CaseFilter
       {
         today: {
           name: 'Today',
-          from: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json,
-          to: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json,
+          from: { day: Time.zone.today.strftime("%d"), month: Time.zone.today.strftime("%m"), year: Time.zone.today.strftime("%Y") }.to_json,
+          to: { day: Time.zone.today.strftime("%d"), month: Time.zone.today.strftime("%m"), year: Time.zone.today.strftime("%Y") }.to_json,
         },
         three_days: {
           name: 'In the next 3 days',
-          from: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json,
+          from: { day: Time.zone.today.strftime("%d"), month: Time.zone.today.strftime("%m"), year: Time.zone.today.strftime("%Y") }.to_json,
           to: { day: 3.business_days.from_now.strftime("%d"), month: 3.business_days.from_now.strftime("%m"), year: 3.business_days.from_now.strftime("%Y") }.to_json,
         },
         ten_days: {
           name: 'In the next 10 days',
-          from: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json,
+          from: { day: Time.zone.today.strftime("%d"), month: Time.zone.today.strftime("%m"), year: Time.zone.today.strftime("%Y") }.to_json,
           to: { day: 10.business_days.from_now.strftime("%d"), month: 10.business_days.from_now.strftime("%m"), year: 10.business_days.from_now.strftime("%Y") }.to_json
         }
       }

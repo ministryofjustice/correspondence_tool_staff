@@ -18,8 +18,7 @@ class BusinessUnit < Team
 
   VALID_ROLES = %w{ responder approver manager team_admin}.freeze
   validates :parent_id, presence: true
-  validates_presence_of :correspondence_type_roles
-
+  validates :correspondence_type_roles, presence: true
 
   belongs_to :directorate, foreign_key: 'parent_id'
 
@@ -28,20 +27,23 @@ class BusinessUnit < Team
   has_many :manager_user_roles,
            -> { manager_roles },
            class_name: 'TeamsUsersRole',
-           foreign_key: :team_id
+           foreign_key: :team_id, 
+           dependent: :destroy
   has_many :responder_user_roles,
            -> { responder_roles  },
            class_name: 'TeamsUsersRole',
-           foreign_key: :team_id
+           foreign_key: :team_id,
+           dependent: :destroy
   has_many :approver_user_roles,
            -> { approver_roles  },
            class_name: 'TeamsUsersRole',
-           foreign_key: :team_id
-
+           foreign_key: :team_id,
+           dependent: :destroy
   has_many :team_admin_user_roles,
            -> { team_admin_roles  },
            class_name: 'TeamsUsersRole',
-           foreign_key: :team_id
+           foreign_key: :team_id,
+           dependent: :destroy
 
   has_many :managers, through: :manager_user_roles, source: :user
   has_many :responders, through: :responder_user_roles, source: :user
@@ -50,7 +52,9 @@ class BusinessUnit < Team
   has_many :correspondence_type_roles,
            -> { distinct },
            foreign_key: :team_id,
-           class_name: 'TeamCorrespondenceTypeRole'
+           class_name: 'TeamCorrespondenceTypeRole',
+           dependent: :destroy
+           
 
   has_many :correspondence_types,
            -> { distinct },
@@ -62,14 +66,16 @@ class BusinessUnit < Team
   has_many :responding_assignments,
            -> { responding },
            foreign_key: :team_id,
-           class_name: 'Assignment'
+           class_name: 'Assignment',
+           dependent: :restrict_with_exception
 
   has_many :pending_accepted_assignments,
            -> { pending_accepted},
            foreign_key: :team_id,
-           class_name: 'Assignment'
+           class_name: 'Assignment',
+           dependent: :restrict_with_exception
 
-  has_many :cases, through: :assignments
+  has_many :cases, through: :assignments, dependent: :restrict_with_exception
 
   has_many :responding_cases,
            through: :responding_assignments,

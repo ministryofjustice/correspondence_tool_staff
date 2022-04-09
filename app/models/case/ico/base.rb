@@ -85,7 +85,7 @@ class Case::ICO::Base < Case::Base
   validates :internal_deadline, presence: true
   validate :internal_deadline_within_limits?,
            if: -> { internal_deadline.present? }
-  validates_presence_of :original_case
+  validates :original_case, presence: true
   validates :received_date, presence: true
   validate :received_date_within_limits?,
            if: -> { received_date.present? }
@@ -240,7 +240,7 @@ class Case::ICO::Base < Case::Base
   end
 
   def received_date_within_limits?
-    if received_date < Date.today - 10.years
+    if received_date < Time.zone.today - 10.years
       errors.add(
         :received_date,
         TranslateForCase.t(
@@ -249,7 +249,7 @@ class Case::ICO::Base < Case::Base
           'attributes.received_date.past'
         )
       )
-    elsif received_date > Date.today
+    elsif received_date > Time.zone.today
       errors.add(
         :received_date,
         TranslateForCase.t(

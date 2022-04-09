@@ -86,11 +86,14 @@ class Case::SAR::Standard < Case::Base
     :subject,
   ]
 
-  validates_presence_of :subject_full_name
+  # validates_presence_of :subject_full_name
+  validates :subject_full_name, presence: true
   validates :third_party, inclusion: {in: [ true, false ], message: "Please choose yes or no" }
 
-  validates_presence_of :reply_method
-  validates_presence_of :subject_type
+  # validates_presence_of :reply_method
+  # validates_presence_of :subject_type
+  validates :reply_method, presence: true
+  validates :subject_type, presence: true
 
   validate :validate_name
   validate :validate_third_party_relationship

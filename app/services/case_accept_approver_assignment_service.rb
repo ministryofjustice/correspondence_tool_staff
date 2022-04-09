@@ -19,9 +19,9 @@ class CaseAcceptApproverAssignmentService
       @result = :ok
       true
     rescue => err
-      puts ">>>>>>>>>>>> error #{err.class} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n"
-      puts err.message
-      puts err.backtrace
+      Rails.logger.error(">>>>>>>>>>>> error #{err.class} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<\n")
+      Rails.logger.error(err.message)
+      Rails.logger.error(err.backtrace)
       raise
     end
   end

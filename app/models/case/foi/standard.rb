@@ -82,12 +82,15 @@ class Case::FOI::Standard < Case::Base
   }
 
   validates :email, presence: true, on: :create, if: -> { postal_address.blank? }
-  validates_presence_of :name
+  # validates_presence_of :name
+  validates :name, presence: true
   validates :postal_address,
             presence: true,
             on: :create,
             if: -> { email.blank? || sent_by_post? }
-  validates_presence_of :requester_type, :delivery_method
+  # validates_presence_of :requester_type, :delivery_method
+  validates :requester_type, :delivery_method, presence: true
+
   validates :subject, presence: true, length: { maximum: 100 }
 
   validate :validate_uploaded_request_files, on: :create

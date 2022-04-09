@@ -467,7 +467,7 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   check :escalation_deadline_has_expired do
-    self.case.escalation_deadline < Date.today
+    self.case.escalation_deadline < Time.zone.today
   end
 
   check :within_escalation_deadline do
@@ -485,7 +485,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   check :case_not_already_taken_on_for_approval_by do
     team = @user.approving_team
-    team.present? && !self.case.approver_assignments.map(&:team_id).include?(team.id)
+    team.present? && self.case.approver_assignments.map(&:team_id).exclude?(team.id)
   end
 
   check :case_was_accepted_for_approval_by_user do

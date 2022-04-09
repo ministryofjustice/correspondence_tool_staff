@@ -24,7 +24,8 @@ class Report < ApplicationRecord
                  user_id: :integer,
                  report_format: :string
         
-  validates_presence_of :report_type_id, :period_start, :period_end
+  # validates_presence_of :report_type_id, :period_start, :period_end
+  validates :report_type_id, :period_start, :period_end, presence: true
 
   acts_as_gov_uk_date :period_start, :period_end, validate_if: :period_within_acceptable_range?
 
@@ -126,7 +127,7 @@ class Report < ApplicationRecord
   end
 
   def period_in_the_future?(period_date)
-    period_date.present? && period_date > Date.today
+    period_date.present? && period_date > Time.zone.today
   end
 
   def period_end_before_period_start?(period_start, period_end)

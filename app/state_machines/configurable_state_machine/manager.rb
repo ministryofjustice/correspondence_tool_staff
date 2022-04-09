@@ -12,7 +12,7 @@ module ConfigurableStateMachine
 
     @@instance = nil
 
-    DEFAULT_CONFIG_DIR = File.join(Rails.root, 'config', 'state_machine')
+    DEFAULT_CONFIG_DIR = Rails.root.join('config', 'state_machine')
 
     attr_reader :config_dir
 

@@ -27,7 +27,7 @@ module Cases
     def reopen
       authorize @case, :can_be_reopened?
       if @case.standard_complaint?
-        @case.received_date = Date.today
+        @case.received_date = Time.zone.today
         @case.object.external_deadline = @case.object.deadline_calculator.external_deadline
       end
       render :reopen

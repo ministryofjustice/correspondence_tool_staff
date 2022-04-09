@@ -33,7 +33,7 @@ class CaseFlagForClearanceService
   private
 
   def validate_case_is_unflagged
-    if !@case.approving_teams.include? @team
+    if @case.approving_teams.exclude? @team
       true
     else
       @result = :already_flagged

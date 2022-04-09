@@ -14,7 +14,7 @@ class RespondedCaseValidator < ActiveModel::Validator
     else
       if rec.date_responded < rec.received_date
         rec.errors.add(:date_responded, :before_received)
-      elsif rec.date_responded > Date.today
+      elsif rec.date_responded > Time.zone.today
         rec.errors.add(:date_responded, :future)
       end
     end

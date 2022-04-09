@@ -49,26 +49,34 @@ class User < ApplicationRecord
              :managing_teams)
   end
 
-  has_many :assignments
+  has_many :assignments, dependent: :restrict_with_exception
   has_many :cases, through: :assignments
-  has_many :team_roles, class_name: 'TeamsUsersRole'
+  has_many :team_roles, class_name: 'TeamsUsersRole', dependent: :destroy
   has_many :teams, through: :team_roles
   has_many :managing_team_roles,
            -> { active_manager_roles },
-           class_name: 'TeamsUsersRole'
+           class_name: 'TeamsUsersRole',
+           dependent: :destroy
+
   has_many :responding_team_roles,
            -> { responder_roles  },
-           class_name: 'TeamsUsersRole'
+           class_name: 'TeamsUsersRole',
+           dependent: :destroy
+
   has_one :approving_team_roles,
            -> { active_approver_roles  },
-           class_name: 'TeamsUsersRole'
+           class_name: 'TeamsUsersRole',
+           dependent: :destroy
+
   has_one :team_admin_team_roles,
            -> { team_admin_roles  },
-           class_name: 'TeamsUsersRole'
+           class_name: 'TeamsUsersRole',
+           dependent: :destroy
+
   has_many :team_admin_teams, through: :team_admin_team_roles, source: :team
   has_many :managing_teams, through: :managing_team_roles, source: :team
   has_many :responding_teams, through: :responding_team_roles, source: :team
-  has_many :data_requests
+  has_many :data_requests, dependent: :restrict_with_exception
   has_one  :approving_team, through: :approving_team_roles, source: :team
 
   validates :full_name, presence: true
