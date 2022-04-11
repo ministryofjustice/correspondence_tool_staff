@@ -104,8 +104,8 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to_not have_content reviewable_untimely_kase.number
     expect(page).to_not have_content retain_untimely_kase.number
 
-    Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}").set(true)
-    Capybara.find(:css, "#retention-checkbox-#{retain_timely_kase.id}").set(true)
+    Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}", visible: false).set(true)
+    Capybara.find(:css, "#retention-checkbox-#{retain_timely_kase.id}", visible: false).set(true)
 
     click_on "Mark for destruction"
 
@@ -117,7 +117,7 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to have_content not_set_timely_kase.number
     expect(page).to have_content retain_timely_kase.number
 
-    Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}").set(true)
+    Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}", visible: false).set(true)
 
     click_on "Destroy cases"
 

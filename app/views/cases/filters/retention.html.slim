@@ -11,7 +11,7 @@
 
 = render partial: 'cases/shared/case_tabs'
 
-section.govuk-tabs__panel
+section#retention-cases.govuk-tabs__panel
   - if @query.available_filters(current_user, @current_tab_name)
     = render partial: 'cases/search_filters/filters'
 
@@ -27,7 +27,7 @@ section.govuk-tabs__panel
       = submit_tag "Further review needed", class: 'button-secondary', form: 'retention_schedules_form' 
       = submit_tag "Retain", class: 'button-secondary', form: 'retention_schedules_form' 
       = submit_tag "Mark for destruction", class: 'button-secondary', form: 'retention_schedules_form' 
-      = submit_tag "Destroy cases", class: 'button-secondary', form: 'retention_schedules_form' 
+      = submit_tag "Destroy cases", class: 'button-secondary button-destroy', form: 'retention_schedules_form' 
 
     .grid-row
       .column-full
@@ -43,9 +43,12 @@ section.govuk-tabs__panel
           .column-full.table-container.container.cases-table-container tabindex="0"
             table.report.table-font-xsmall
               thead
-                th 
-                  = check_box_tag "retention-select-all-checkbox"
-                th 
+                th
+                  .multiple-choice
+                    = check_box_tag "retention-select-all-checkbox"
+                    label for="retention-select-all-checkbox"
+                      span.visually-hidden Select all
+                th
                   = "Case .no"
                 th 
                   = "Type"
@@ -62,7 +65,10 @@ section.govuk-tabs__panel
                   - @cases.each do |kase|
                     tr.case_row
                       td
-                        = f.check_box "retention_schedules[case_ids[#{kase.id}]]", id: "retention-checkbox-#{kase.id}"
+                        .multiple-choice
+                          = f.check_box "retention_schedules[case_ids[#{kase.id}]]", id: "retention-checkbox-#{kase.id}"
+                          label for="retention-checkbox-#{kase.id}"
+                            span.visually-hidden Select case number #{kase.number}
                       td 
                         = link_to kase.number, case_path(kase.id)
                       td 
