@@ -13,6 +13,7 @@ en:
     choose_case_type_page: Choosing a correspondence type - Track-a-query
     close_case_page: Closing a case - %{case_number} - Track-a-query
     closed_cases_page: All closed cases - Track-a-query
+    retention_schedules_page: Case retention schedules - Track-a-query
     create_case_page: 
       foi: Creating an FOI case - Track-a-query
       ico: Creating an ICO case - Track-a-query
