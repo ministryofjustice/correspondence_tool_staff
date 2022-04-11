@@ -1,6 +1,6 @@
 
 - content_for :page_title do
-  = t('page_title.closed_cases_page')
+  = t('page_title.retention_schedules_page')
 
 - content_for :heading
   = t('.heading')
@@ -42,31 +42,23 @@ section#retention-cases.govuk-tabs__panel
         .grid-row
           .column-full.table-container.container.cases-table-container tabindex="0"
             table.report.table-font-xsmall
-              colgroup
-                col
-                col
-                col
-                col
-                col
-                col
-                col
               thead
-                th scope='col'
+                th
                   .multiple-choice
                     = check_box_tag "retention-select-all-checkbox"
                     label for="retention-select-all-checkbox"
                       span.visually-hidden Select all
-                th scope='col'
+                th
                   = "Case .no"
-                th scope='col'
+                th 
                   = "Type"
-                th scope='col'
+                th 
                   = "Name / subject"
-                th scope='col'
+                th 
                   = "Destruction date"
-                th scope='col'
+                th 
                   = "Linked case "
-                th scope='col'
+                th 
                   = "Retention status "
               tbody
                 = form_with url: "/retention_schedules", method: :patch, id: 'retention_schedules_form' do |f|
