@@ -112,6 +112,8 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to_not have_content not_set_timely_kase.number
     expect(page).to_not have_content retain_timely_kase.number
 
+    expect(page).to have_content("2 cases retention statuses updated to erasable")
+    
     click_on 'Ready for removal'
 
     expect(page).to have_content not_set_timely_kase.number
