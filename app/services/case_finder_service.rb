@@ -46,6 +46,10 @@ class CaseFinderService
 
   def retention_cases_scope
     get_root_scope('default')
+      .includes(:retention_schedule)
+      .where(retention_schedule: {
+        planned_erasure_date: RetentionSchedule.common_date_viewable_from_range
+      })
   end
 
   private
@@ -105,21 +109,17 @@ class CaseFinderService
   end
 
   def erasable_cases_scope
-    scope
-      .includes(:retention_schedule)
-      .where(retention_schedule: { 
-        status: ['erasable'],
-        planned_erasure_date: RetentionSchedule.common_date_viewable_from_range
+    retention_cases_scope.where(
+      retention_schedule: { 
+        status: ['erasable']
       })
   end
 
   def triagable_cases_scope
     triagable_statuses = ['review', 'retain', 'not_set']
-    scope
-      .includes(:retention_schedule)
-      .where(retention_schedule: { 
-        status: triagable_statuses,
-        planned_erasure_date: RetentionSchedule.common_date_viewable_from_range
+    retention_cases_scope.where(
+      retention_schedule: { 
+        status: triagable_statuses
       })
   end
 
