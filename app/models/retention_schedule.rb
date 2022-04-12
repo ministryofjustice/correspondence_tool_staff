@@ -13,10 +13,16 @@ class RetentionSchedule < ApplicationRecord
 
   enum status: { 
     review: "review", 
-    retain: "retain", 
+    retain: "retain",  
     erasable: "erasable", 
     erased: "erased", 
     not_set: "not_set" 
   }, _default: "not_set"
 
+  class << self
+    def common_date_viewable_from_range
+      viewable_from = Settings.retention_timings.common.viewable_from
+      viewable_from.months.ago..Date.today
+    end
+  end
 end

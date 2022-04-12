@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :retention_schedule do
-    destruction_date { "2022-04-01" }
-    references { "" }
+    planned_erasure_date { "2022-04-01" }
+
+    status { 'not_set' }
   end
 end

@@ -4,7 +4,7 @@ module Cases
     include SearchParams
     include AvailableCaseReports
 
-    before_action :set_url, only: [:open, :closed, :my_open]
+    before_action :set_url, only: [:open, :closed, :my_open, :retention]
     before_action :set_state_selector, only: [:open, :my_open]
     before_action :set_cookie_order_flag, only: [:open, :my_open]
     before_action :set_non_current_tab_counts, only: [:my_open]
@@ -134,6 +134,18 @@ module Cases
       end
     end
 
+    def retention
+      full_list_of_cases = @global_nav_manager
+        .current_page_or_tab
+        .cases
+
+      service = call_search_service(full_list_of_cases, cookies[:search_result_order])
+      @query = service.query
+      @cases = service.result_set.by_deadline.decorate
+      respond_to do |format|
+        format.html { render :retention }
+      end
+    end
 
     private
 

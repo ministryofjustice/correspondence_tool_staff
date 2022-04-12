@@ -1251,6 +1251,8 @@ en:
         number_html: 'Case <abbr title="number">No.</abbr>'
         request: Request
         actions: Actions
+      retention:
+        heading: Case retention scheduling
     fixed_details:
       requester: Requester
       email_address: Email address

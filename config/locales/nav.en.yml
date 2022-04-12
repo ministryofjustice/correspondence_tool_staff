@@ -5,6 +5,7 @@ en:
       incoming_cases: New cases
       my_open_cases: My open cases
       open_cases: All open cases
+      case_retention: Case Retention
   nav:
     menu: Menu
     pages:
@@ -24,3 +25,5 @@ en:
         <span class="visuallyhidden">View tab </span>In time (%{count})
       late_html: |
         <span class="visuallyhidden">View tab </span>Late (%{count})
+      ready_for_removal: Ready for removal
+      pending_removal: Pending removal

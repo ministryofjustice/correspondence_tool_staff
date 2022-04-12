@@ -44,6 +44,14 @@ class CaseFinderService
     get_root_scope('closed_cases_scope').presented_as_closed
   end
 
+  def retention_cases_scope
+    get_root_scope('default')
+      .includes(:retention_schedule)
+      .where(retention_schedule: {
+        planned_erasure_date: RetentionSchedule.common_date_viewable_from_range
+      })
+  end
+
   private
 
   def get_root_scope(feature = nil)
@@ -98,6 +106,21 @@ class CaseFinderService
     .joins(:assignments)
     .where(assignments: { state: ['pending', 'accepted']})
     .distinct('case.id')
+  end
+
+  def erasable_cases_scope
+    retention_cases_scope.where(
+      retention_schedule: { 
+        status: ['erasable']
+      })
+  end
+
+  def triagable_cases_scope
+    triagable_statuses = ['review', 'retain', 'not_set']
+    retention_cases_scope.where(
+      retention_schedule: { 
+        status: triagable_statuses
+      })
   end
 
   def open_flagged_for_approval_scope
