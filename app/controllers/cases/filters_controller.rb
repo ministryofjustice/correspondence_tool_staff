@@ -6,7 +6,7 @@ module Cases
 
     before_action :set_url, only: [:open, :closed, :my_open, :retention]
     before_action :set_state_selector, only: [:open, :my_open]
-    before_action :set_cookie_order_flag, only: [:open, :my_open]
+    before_action :set_cookie_order_flag, only: [:open, :my_open, :retention]
     before_action :set_non_current_tab_counts, only: [:my_open]
 
     def show

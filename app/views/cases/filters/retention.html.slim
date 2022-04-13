@@ -12,7 +12,7 @@
 = render partial: 'cases/shared/case_tabs'
 
 section#retention-cases.govuk-tabs__panel
-  - if @query.available_filters(current_user, @current_tab_name)
+  - if @query.available_filters(current_user, @current_tab_name).present?
     = render partial: 'cases/search_filters/filters'
 
     - if @query.filter_crumbs.present?
@@ -23,14 +23,15 @@ section#retention-cases.govuk-tabs__panel
   - if @global_nav_manager.current_page.tabs.present?
     
     = get_cases_order_option_url(request.fullpath, cookies[:search_result_order])
-    .button-holder
-      = submit_tag "Further review needed", class: 'button-secondary', form: 'retention_schedules_form' 
-      = submit_tag "Retain", class: 'button-secondary', form: 'retention_schedules_form' 
-      = submit_tag "Mark for destruction", class: 'button-secondary', form: 'retention_schedules_form' 
-      = submit_tag "Destroy cases", class: 'button-secondary button-destroy', form: 'retention_schedules_form' 
+
 
     .grid-row
       .column-full
+        .button-holder
+          = submit_tag "Further review needed", class: 'button-secondary', form: 'retention_schedules_form' 
+          = submit_tag "Retain", class: 'button-secondary', form: 'retention_schedules_form' 
+          = submit_tag "Mark for destruction", class: 'button-secondary', form: 'retention_schedules_form' 
+          = submit_tag "Destroy cases", class: 'button-secondary button-destroy', form: 'retention_schedules_form' 
         nav.section-tabs
           ul
             - @global_nav_manager.current_page.tabs.each do |tab|
