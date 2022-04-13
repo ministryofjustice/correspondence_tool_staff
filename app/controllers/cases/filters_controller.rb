@@ -141,7 +141,13 @@ module Cases
 
       service = call_search_service(full_list_of_cases, cookies[:search_result_order])
       @query = service.query
-      @cases = service.result_set.by_deadline.decorate
+
+      if service.error?
+        flash.now[:alert] = service.error_message
+      else
+        prepare_open_cases_collection(service)
+      end
+
       respond_to do |format|
         format.html { render :retention }
       end
