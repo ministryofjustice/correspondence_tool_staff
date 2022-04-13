@@ -89,6 +89,7 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to have_content 'Pending removal'
     expect(page).to have_content 'Ready for removal'
 
+    expect(page).to have_content '2 cases found'
 
     expect(page).to have_content erasable_timely_kase.number
     expect(page).to have_content erasable_timely_kase_two.number
@@ -96,6 +97,9 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to_not have_content erasable_untimely_kase.number
 
     click_on 'Pending removal'
+
+    expect(page).to have_content '3 cases found'
+    expect(page).to_not have_content 'Destroy cases'
 
     expect(page).to have_content not_set_timely_kase.number
     expect(page).to have_content reviewable_timely_kase.number
@@ -118,6 +122,21 @@ feature 'Case retention schedules for GDPR', :js do
 
     expect(page).to have_content not_set_timely_kase.number
     expect(page).to have_content retain_timely_kase.number
+
+    click_on 'Show newest cases first'
+
+    page_order_correct?(
+      not_set_timely_kase.number.to_s, 
+      retain_timely_kase.number.to_s
+    )
+
+    expect(page).to have_content 'Show oldest cases first'
+
+    click_on 'Show oldest cases first'
+    page_order_correct?(
+      retain_timely_kase.number.to_s,
+      not_set_timely_kase.number.to_s
+    )
 
     Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}", visible: false).set(true)
 
@@ -148,6 +167,12 @@ feature 'Case retention schedules for GDPR', :js do
 
     cases_page.load
     expect(page).to_not have_content 'Case Retention'
+  end
+
+  def page_order_correct?(before_text, after_text)
+    before = page.text.index(before_text)
+    after = page.text.index(after_text)
+    before < after
   end
 
   def case_with_retention_schedule(case_type:, status:, date:)
