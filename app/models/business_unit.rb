@@ -71,7 +71,7 @@ class BusinessUnit < Team
            foreign_key: :team_id,
            class_name: 'Assignment'
 
-  has_many :cases, through: :assignments, dependent: :restrict_with_exception
+  has_many :cases, through: :assignments
 
   has_many :responding_cases,
            through: :responding_assignments,

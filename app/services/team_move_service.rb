@@ -106,8 +106,8 @@ class TeamMoveService
 
   def restore_users_for_old_team
     @keep_user_roles.each do |team_id, user_id, role|
-      team =  Team.find(team_id)
-      user = User.find(user_id)
+      team =  Team.find_by(id: team_id)
+      user = User.find_by(id: user_id)
       if team && user
         TeamsUsersRole.create!(team: team, user: user, role: role)
       end

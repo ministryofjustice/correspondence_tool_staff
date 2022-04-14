@@ -49,7 +49,7 @@ class User < ApplicationRecord
              :managing_teams)
   end
 
-  has_many :assignments, dependent: :restrict_with_exception
+  has_many :assignments
   has_many :cases, through: :assignments
   has_many :team_roles, class_name: 'TeamsUsersRole', dependent: :destroy
   has_many :teams, through: :team_roles
@@ -76,7 +76,7 @@ class User < ApplicationRecord
   has_many :team_admin_teams, through: :team_admin_team_roles, source: :team
   has_many :managing_teams, through: :managing_team_roles, source: :team
   has_many :responding_teams, through: :responding_team_roles, source: :team
-  has_many :data_requests, dependent: :restrict_with_exception
+  has_many :data_requests
   has_one  :approving_team, through: :approving_team_roles, source: :team
 
   validates :full_name, presence: true

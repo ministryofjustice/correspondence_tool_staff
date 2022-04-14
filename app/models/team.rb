@@ -35,8 +35,7 @@ class Team < ApplicationRecord
   # This can be eager loaded using includes
   has_one :team_leader,
           -> { lead },
-          class_name: "TeamProperty",
-          dependent: :restrict_with_exception
+          class_name: "TeamProperty"
 
   has_one :old_team, class_name: 'Team', foreign_key: :moved_to_unit_id, dependent: :destroy
   belongs_to :moved_to_unit, class_name: 'Team', optional: true
