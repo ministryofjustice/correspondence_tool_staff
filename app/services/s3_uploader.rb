@@ -121,6 +121,6 @@ class S3Uploader
   end
 
   def create_upload_group()
-    Time.zone.now.strftime('%Y%m%d%H%M%S')
+    Time.current.strftime('%Y%m%d%H%M%S')
   end
 end
