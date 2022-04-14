@@ -6,6 +6,6 @@ class CaseOutcomeReason < ApplicationRecord
              class_name: 'Case::Base'
 
   belongs_to :outcome_reason,
-             class_name: 'CaseClosure::OutcomeReason',
+             class_name: 'CaseClosure::OutcomeReason'
 
 end
