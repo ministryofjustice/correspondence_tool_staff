@@ -86,9 +86,7 @@ module Stats
       0
     end
 
-    def default_reporting_period
-      report_type.default_reporting_period
-    end
+    delegate :default_reporting_period, to: :report_type
 
     def results
       @stats.stats

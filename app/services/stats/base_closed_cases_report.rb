@@ -55,9 +55,7 @@ module Stats
       raise '#description should be defined in sub-class of BaseClosedCasesReport'
     end
 
-    def default_reporting_period
-      report_type.default_reporting_period
-    end
+    delegate :default_reporting_period, to: :report_type
 
     # Using a job allows processing to be offloaded into a separate
     # server/container instance, increasing responsiveness of the web app.

@@ -321,7 +321,7 @@ module Stats
         end
         unless responded_date.nil?
           Timecop.freeze responded_date + 14.hours do
-            kase.date_responded = Time.now
+            kase.date_responded = Time.zone.now
             kase.state_machine.close!(acting_user: responder, acting_team: team)
           end
         end

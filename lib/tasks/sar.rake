@@ -2,7 +2,7 @@ namespace :sar do
   desc 'create a dummy SAR case'
   task :create => :environment do
     category = get_sar_category
-    Timecop.freeze Time.now - 24.hours do
+    Timecop.freeze Time.zone.now - 24.hours do
       kase = Case::SAR::Standard.new
       kase.name = Faker::Name.name
       kase.email = Faker::Internet.email(name: kase.name)

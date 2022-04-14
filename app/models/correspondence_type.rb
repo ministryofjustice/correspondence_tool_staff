@@ -101,6 +101,7 @@ class CorrespondenceType < ApplicationRecord
   end
 
   # Invalidate the cache after saving a change
+  #rubocop:disable Rails/DynamicFindBy
   after_save do
     self.class.clear_cache
   end
@@ -145,6 +146,7 @@ class CorrespondenceType < ApplicationRecord
   def self.sar_internal_review
     find_by_abbreviation! 'SAR_INTERNAL_REVIEW'
   end
+  #rubocop:enable Rails/DynamicFindBy
 
   def abbreviation_and_name
     "#{abbreviation.tr('_', '-')} - #{name}"

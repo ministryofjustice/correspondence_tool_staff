@@ -15,7 +15,7 @@
 
 class Assignment < ApplicationRecord
 
-  validates :case, :role, :state, :team, presence: true
+  validates :role, :state, presence: true
   validates :reasons_for_rejection, presence: true, if: -> { self.rejected? }
   validate :approved_only_for_approvals
   validate :unique_pending_responder
@@ -34,7 +34,6 @@ class Assignment < ApplicationRecord
 
   belongs_to :case,
              inverse_of: :assignments,
-             foreign_key: :case_id,
              class_name: 'Case::Base'
 
   belongs_to :team

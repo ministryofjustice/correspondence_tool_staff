@@ -8,7 +8,6 @@ module Cases
     before_action -> { set_decorated_case(params[:id]) }, only: [
       :transition, 
       :edit, 
-      :update, 
       :move_case_back, 
       :confirm_move_case_back, 
       :record_reason_for_lateness,
@@ -213,7 +212,7 @@ module Cases
     def get_reasons_for_lateness
       @reasons_for_lateness_items = CategoryReference.list_by_category(:reasons_for_lateness)
       @reasons_for_lateness = CategoryReference.list_by_category(:reasons_for_lateness).pluck(:id, :code).to_h
-      @reason_of_other = @reasons_for_lateness_items.find_by_code('other')
+      @reason_of_other = @reasons_for_lateness_items.find_by(code: 'other')
     end
 
     def steps_are_completed?

@@ -15,7 +15,7 @@
 #
 
 class BusinessGroup < Team
-  validates_absence_of :parent_id
+  validates :parent_id, presence: true
 
   has_many :directorates, foreign_key: 'parent_id', dependent: :restrict_with_exception, inverse_of: 'business_group'
 

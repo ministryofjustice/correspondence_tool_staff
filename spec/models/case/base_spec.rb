@@ -884,7 +884,7 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe '#attachments_dir' do
-    let(:upload_group) { Time.now.strftime('%Y%m%d%H%M%S') }
+    let(:upload_group) { Time.zone.now.strftime('%Y%m%d%H%M%S') }
 
     it 'returns a path generated from case attributes' do
       expect(case_being_drafted.attachments_dir('responses', upload_group))
@@ -1096,7 +1096,7 @@ RSpec.describe Case::Base, type: :model do
         it 'changes the internal and external deadlines (but not escalation deadline)' do
           kase = nil
           Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
-            kase = create :case, :flagged, received_date: Date.today, created_at: Time.now
+            kase = create :case, :flagged, received_date: Date.today, created_at: Time.zone.now
           end
           expect(kase.received_date).to eq Date.new(2017, 12, 1)
           expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
@@ -1153,7 +1153,7 @@ RSpec.describe Case::Base, type: :model do
       it 'does not update deadlines' do
         kase = nil
         Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
-          kase = create :case, :flagged, received_date: Date.today, created_at: Time.now
+          kase = create :case, :flagged, received_date: Date.today, created_at: Time.zone.now
         end
         expect(kase.received_date).to eq Date.new(2017, 12, 1)
         expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
@@ -1196,7 +1196,7 @@ RSpec.describe Case::Base, type: :model do
     #rubocop:enable Metrics/ParameterLists
 
     def create_case(t, creating_team)
-      Timecop.freeze(Time.at(Time.parse(t))) do
+      Timecop.freeze(Time.zone.at(Time.parse(t))) do
         kase = create :case
         create_transition(kase, 'flag_for_clearance', 'unassigned', creating_team )
         kase
@@ -1204,25 +1204,25 @@ RSpec.describe Case::Base, type: :model do
     end
 
     def assign_to_responder(kase, t, acting_team, target_team)
-      Timecop.freeze(Time.at(Time.parse(t))) do
+      Timecop.freeze(Time.zone.at(Time.parse(t))) do
         create_transition(kase, 'assign_responder', 'awaiting_responder', acting_team, target_team)
       end
     end
 
     def reject_assignment(kase, t, acting_team)
-      Timecop.freeze(Time.at(Time.parse(t))) do
+      Timecop.freeze(Time.zone.at(Time.parse(t))) do
         create_transition(kase, 'reject_responder_assignment', 'unassigned', acting_team)
       end
     end
 
     def accept_assignment(kase, t, acting_team)
-      Timecop.freeze(Time.at(Time.parse(t))) do
+      Timecop.freeze(Time.zone.at(Time.parse(t))) do
         create_transition(kase, 'accept_responder_assignment', 'drafting', acting_team)
       end
     end
 
     def flag_for_clearance(kase, t, acting_team, target_team)
-      Timecop.freeze(Time.at(Time.parse(t))) do
+      Timecop.freeze(Time.zone.at(Time.parse(t))) do
         create_transition(kase, 'flag_for_clearance', kase.current_state, acting_team, target_team)
         kase.assignments << Assignment.new(
           state: 'accepted',
@@ -1234,19 +1234,19 @@ RSpec.describe Case::Base, type: :model do
     end
 
     def upload_response(kase, t, acting_team)
-      Timecop.freeze(Time.at(Time.parse(t))) do
+      Timecop.freeze(Time.zone.at(Time.parse(t))) do
         create_transition(kase, 'add_responses', 'pending_dacu_clearance', acting_team)
       end
     end
 
     def request_amends(kase, t, acting_team)
-      Timecop.freeze(Time.at(Time.parse(t))) do
+      Timecop.freeze(Time.zone.at(Time.parse(t))) do
         create_transition(kase, 'upload_response_and_return_for_redraft', 'drafting', acting_team)
       end
     end
 
     def clear_case(kase, t, new_state, acting_team)
-      Timecop.freeze(Time.at(Time.parse(t))) do
+      Timecop.freeze(Time.zone.at(Time.parse(t))) do
         create_transition(kase, 'approve', new_state, acting_team)
       end
     end
@@ -1404,7 +1404,7 @@ RSpec.describe Case::Base, type: :model do
       end
 
       it 'queues the job' do
-        t = Time.now
+        t = Time.zone.now
         expect {
           Timecop.freeze(t) do
             kase.save!
@@ -1438,7 +1438,7 @@ RSpec.describe Case::Base, type: :model do
 
         it 'queues the job' do
           kase   # need this here so that the job triggered by create is outside the expect block
-          t = Time.now
+          t = Time.zone.now
           expect {
             Timecop.freeze(t) do
               kase.update(name: 'John Smith')

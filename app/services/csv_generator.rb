@@ -21,7 +21,7 @@ class CSVGenerator
 
   class << self
     def filename(action_string)
-      "#{action_string}-cases-#{Time.now.strftime('%y-%m-%d-%H%M%S')}.csv"
+      "#{action_string}-cases-#{Time.zone.now.strftime('%y-%m-%d-%H%M%S')}.csv"
     end
   end
 end

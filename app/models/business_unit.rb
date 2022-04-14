@@ -52,9 +52,7 @@ class BusinessUnit < Team
   has_many :correspondence_type_roles,
            -> { distinct },
            foreign_key: :team_id,
-           class_name: 'TeamCorrespondenceTypeRole',
-           dependent: :destroy
-           
+           class_name: 'TeamCorrespondenceTypeRole'         
 
   has_many :correspondence_types,
            -> { distinct },
@@ -66,14 +64,12 @@ class BusinessUnit < Team
   has_many :responding_assignments,
            -> { responding },
            foreign_key: :team_id,
-           class_name: 'Assignment',
-           dependent: :restrict_with_exception
+           class_name: 'Assignment'
 
   has_many :pending_accepted_assignments,
            -> { pending_accepted},
            foreign_key: :team_id,
-           class_name: 'Assignment',
-           dependent: :restrict_with_exception
+           class_name: 'Assignment'
 
   has_many :cases, through: :assignments, dependent: :restrict_with_exception
 

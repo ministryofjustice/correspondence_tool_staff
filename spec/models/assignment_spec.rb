@@ -240,7 +240,7 @@ RSpec.describe Assignment, type: :model do
         end
 
         it 'queues the job' do
-          t = Time.now
+          t = Time.zone.now
           expect {
             Timecop.freeze(t) do
               create :assignment, :responding, case_id: kase.id
@@ -281,7 +281,7 @@ RSpec.describe Assignment, type: :model do
 
 
         it 'queues the job' do
-          t = Time.now
+          t = Time.zone.now
 
           expect {
             Timecop.freeze(t) do

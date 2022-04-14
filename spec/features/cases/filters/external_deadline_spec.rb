@@ -1,7 +1,7 @@
 require "rails_helper"
 
 def working_hours
-  Date.today.workday? && Time.now.during_business_hours?
+  Date.today.workday? && Time.zone.now.during_business_hours?
 end
 
 feature 'filtering by external deadline', if: working_hours do

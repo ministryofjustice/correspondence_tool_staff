@@ -250,7 +250,7 @@ FactoryBot.define do
 
       full_name      { generate(:manager_name) }
       managing_teams { [create(:managing_team)] }
-      deleted_at { Time.now }
+      deleted_at { Time.zone.now }
     end
 
     factory :admin do

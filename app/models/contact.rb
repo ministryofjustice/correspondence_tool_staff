@@ -3,7 +3,6 @@ class Contact < ApplicationRecord
   validates :name, presence: true
   validates :address_line_1, presence: true
   validates :postcode, presence: true
-  validates :contact_type, presence: true
 
   belongs_to :contact_type, class_name: 'CategoryReference', inverse_of: :contacts 
 

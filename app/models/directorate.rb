@@ -18,7 +18,7 @@ class Directorate < Team
   validates :parent_id, presence: true
 
   belongs_to :business_group, foreign_key: 'parent_id'
-  has_many :business_units, foreign_key: 'parent_id'
+  has_many :business_units, foreign_key: 'parent_id', dependent: :restrict_with_exception
 
   def child_type
     "business units"

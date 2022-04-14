@@ -14,8 +14,7 @@
 # a particular user has looked at.
 class CasesUsersTransitionsTracker < ApplicationRecord
   belongs_to :case,
-             class_name: 'Case::Base',
-             foreign_key: :case_id
+             class_name: 'Case::Base'
 
   belongs_to :user
 

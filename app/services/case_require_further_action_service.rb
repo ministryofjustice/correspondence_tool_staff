@@ -16,7 +16,7 @@ class CaseRequireFurtherActionService
   def call
     begin
       ActiveRecord::Base.transaction do
-        update_attributes
+        update_related_attributes
         if validate_dates?
           save_attributes
           trigger_flow_action
@@ -36,7 +36,7 @@ class CaseRequireFurtherActionService
     
   private 
 
-  def update_attributes
+  def update_related_attributes
     update_deadline_attributes
     @kase.assign_attributes(@update_parameters)
   end

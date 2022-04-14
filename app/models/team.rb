@@ -30,14 +30,15 @@ class Team < ApplicationRecord
   has_many :user_roles, class_name: 'TeamsUsersRole'
   has_many :users, -> { order(:full_name) }, through: :user_roles
   has_many :properties, class_name: 'TeamProperty', :dependent => :delete_all
-  has_many :areas, -> { area }, class_name: 'TeamProperty'
+  has_many :areas, -> { area }, class_name: 'TeamProperty', dependent: :destroy
 
   # This can be eager loaded using includes
   has_one :team_leader,
           -> { lead },
-          class_name: TeamProperty.to_s
+          class_name: "TeamProperty",
+          dependent: :restrict_with_exception
 
-  has_one :old_team, class_name: 'Team', foreign_key: :moved_to_unit_id
+  has_one :old_team, class_name: 'Team', foreign_key: :moved_to_unit_id, dependent: :destroy
   belongs_to :moved_to_unit, class_name: 'Team', optional: true
 
   scope :with_user, ->(user) {

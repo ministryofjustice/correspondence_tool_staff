@@ -40,10 +40,12 @@ module SetupCase
     @case_transitions = @case_transitions.decorate
   end
 
+  #rubocop:disable Rails/DynamicFindBy
   def set_correspondence_type(type)
     @correspondence_type = CorrespondenceType.find_by_abbreviation(type.upcase)
     @correspondence_type_key = type
   end
+  #rubocop:enable Rails/DynamicFindBy
 
   def set_assignments
     @assignments = []

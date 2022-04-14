@@ -74,6 +74,51 @@ Rails:
 #   Description: 'Use validates :attribute, hash of validations.'
 #   Enabled: true
 
+# Reason: too many places and the differentce is quite minor
+Rails/Blank:
+  Description: ' Use if .blank? instead of not .present?'
+  Enabled: false
+
+# Reason: too many places and the differentce is quite minor
+Rails/Present:
+  Description: ' Use if .present? instead of not .blank?'
+  Enabled: false
+
+# Reason: Due to performance reason, the places using update_all are related to team operations.
+Rails/SkipsModelValidations:
+  Description: 'Avoid using update_attribute/update_all because it skips validations'
+  Enabled: false
+
+# Reason: All the helpers in this app use instance variables which is not easy to move them out as lots code rely on them.
+Rails/HelperInstanceVariable:
+  Description: 'Do not use instance variables in helpers'
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Description: 'Move locale texts to the locale files in the config/locales directory'
+  Enabled: false
+
+# Reason : Inverseof is only useful when we want to trace link back which can be decided by the requirement
+Rails/InverseOf:
+  Description: 'Specify an :inverse_of option'
+  Enabled: false
+
+# Reason: there are some concerns about the squish
+Rails/SquishedSQLHeredocs:
+  Description: 'Use <<~SQL.squish instead of <<~SQL'
+  Enabled: false
+
+# Reason: Turn off as the text marked as html_safe does look safe in this app
+Rails/OutputSafety: 
+  Description: 'Tagging a string as html safe may be a security risk.'
+  Enabled: false
+
+# Reason: handling link between object sometime is more complicated than just 
+# using the option, turn off this mandatory check. 
+Rails/HasManyOrHasOneDependent:
+  Description: 'Specify a :dependent option'
+  Enabled: false
+
 
 #################### Lint ################################
 

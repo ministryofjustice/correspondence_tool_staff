@@ -264,7 +264,7 @@ module Stats # rubocop:disable Metrics/ModuleLength
         unless responded_date.nil?
           Timecop.freeze responded_date  do
             kase.state_machine.respond!(acting_user: responder, acting_team: team)
-            kase.update!(date_responded: Time.now, outcome_id: @outcome.id, info_held_status: @info_held)
+            kase.update!(date_responded: Time.zone.now, outcome_id: @outcome.id, info_held_status: @info_held)
             kase.state_machine.close!(acting_user: kase.managing_team.users.first, acting_team: kase.managing_team)
           end
         end

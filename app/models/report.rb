@@ -25,7 +25,7 @@ class Report < ApplicationRecord
                  report_format: :string
         
   # validates_presence_of :report_type_id, :period_start, :period_end
-  validates :report_type_id, :period_start, :period_end, presence: true
+  validates :period_start, :period_end, presence: true
 
   acts_as_gov_uk_date :period_start, :period_end, validate_if: :period_within_acceptable_range?
 
@@ -34,7 +34,7 @@ class Report < ApplicationRecord
   attr_accessor :correspondence_type
  
   def self.last_by_abbr(abbr)
-    report_type = ReportType.find_by_abbr(abbr)
+    report_type = ReportType.find_by(abbr: abbr)
     where(report_type_id: report_type.id).order(id: :desc).limit(1).singular
   end
 

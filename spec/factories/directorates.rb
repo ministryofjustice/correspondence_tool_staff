@@ -57,6 +57,6 @@ FactoryBot.define do
     name           { 'Deactivated Directorate' }
     email          { 'deactivated-dir@localhost' }
     business_group { find_or_create :responder_business_group }
-    deleted_at     { Time.now }
+    deleted_at     { Time.zone.now }
   end
 end

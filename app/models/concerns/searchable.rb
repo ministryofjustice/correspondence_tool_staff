@@ -25,7 +25,7 @@ module Searchable
 
   class_methods do
     def update_all_indexes
-      self.all.each(&:update_index)
+      self.all.find_each(&:update_index)
     end
   end
 

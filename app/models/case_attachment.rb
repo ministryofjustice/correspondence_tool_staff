@@ -21,7 +21,6 @@ class CaseAttachment < ApplicationRecord
   self.inheritance_column = :_type_not_used
   belongs_to :case,
              class_name: 'Case::Base',
-             foreign_key: :case_id,
              inverse_of: :attachments
 
   validates :type, presence: true
@@ -123,10 +122,13 @@ class CaseAttachment < ApplicationRecord
   def validate_file_extension
     mime_type = Rack::Mime.mime_type(File.extname filename)
     unless Settings.case_uploads_accepted_types.include? mime_type
-      errors[:url] << I18n.t(
-        'activerecord.errors.models.case_attachment.attributes.url.bad_file_type',
-        type: mime_type,
-        filename: filename
+      errors.add(
+        :url,
+        I18n.t(
+          'activerecord.errors.models.case_attachment.attributes.url.bad_file_type',
+          type: mime_type,
+          filename: filename
+        )
       )
     end
   end

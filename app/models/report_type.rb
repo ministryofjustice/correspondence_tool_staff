@@ -64,8 +64,6 @@ class ReportType < ApplicationRecord
     class_constant.report_format
   end
 
-  def description
-    class_constant.description
-  end
+  delegate :description, to: :class_constant
 
 end

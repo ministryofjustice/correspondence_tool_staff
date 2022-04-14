@@ -231,7 +231,8 @@ class Case::Base < ApplicationRecord
   has_one :managing_assignment,
           -> { managing },
           class_name: 'Assignment',
-          foreign_key: :case_id
+          foreign_key: :case_id,
+          dependent: :destroy
 
   has_one :retention_schedule,
           foreign_key: :case_id,
@@ -245,16 +246,13 @@ class Case::Base < ApplicationRecord
           through: :managing_assignment,
           source: :team
 
-  has_one :responder,
-          through: :responder_assignment,
-          source: :user
-
   has_one :responder_assignment,
           -> { last_responding },
           class_name: 'Assignment',
-          foreign_key: :case_id
+          foreign_key: :case_id,
+          dependent: :destroy
 
-  has_one :responder,
+          has_one :responder,
           through: :responder_assignment,
           source: :user
 
@@ -271,7 +269,8 @@ class Case::Base < ApplicationRecord
   has_many :approver_assignments,
            -> { approving },
            class_name: 'Assignment',
-           foreign_key: :case_id
+           foreign_key: :case_id,
+           dependent: :destroy
 
   has_many :approvers,
            through: :approver_assignments,
@@ -298,17 +297,20 @@ class Case::Base < ApplicationRecord
   has_many :message_transitions,
            -> { messages },
            class_name: 'CaseTransition',
-           foreign_key: :case_id
+           foreign_key: :case_id,
+           dependent: :destroy
 
   has_many :responded_transitions,
            -> { responded },
            class_name: 'CaseTransition',
-           foreign_key: :case_id
+           foreign_key: :case_id,
+           dependent: :destroy
 
   has_many :assign_responder_transitions,
            -> { where(event: CaseTransition::ASSIGN_RESPONDER_EVENT) },
            class_name: 'CaseTransition',
-           foreign_key: :case_id
+           foreign_key: :case_id,
+           dependent: :destroy
 
   has_many :users_transitions_trackers,
            class_name: 'CasesUsersTransitionsTracker',
@@ -410,15 +412,15 @@ class Case::Base < ApplicationRecord
     @deadline_calculator = create_deadline_calculator
   end
 
+  before_save :prevent_number_change,
+              :trigger_reindexing
   before_create :set_initial_state,
                 :set_number,
                 :set_managing_team,
                 :set_deadlines
-  before_update :update_deadlines
-  before_save :prevent_number_change,
-              :trigger_reindexing
-
   after_create :create_init_transition, :trigger_reindexing_after_creation
+  before_update :update_deadlines
+
 
   delegate :available_events, to: :state_machine
 
@@ -662,7 +664,7 @@ class Case::Base < ApplicationRecord
   def default_clearance_team
     case_type = "#{type_abbreviation.downcase}_cases"
     team_code = Settings.__send__(case_type).default_clearance_team
-    Team.find_by_code team_code
+    Team.find_by(code: team_code)
   end
 
   def responded_in_time_for_stats_purposes?
@@ -753,11 +755,13 @@ class Case::Base < ApplicationRecord
     self.class.type_abbreviation
   end
 
+  #rubocop:disable Rails/DynamicFindBy
   def correspondence_type
     # CorrespondenceType.find_by_abbreviation! is overloaded to look in a
     # global cache of all (probably 6) correspondence types
     CorrespondenceType.find_by_abbreviation! type_abbreviation.parameterize.underscore.upcase
   end
+  #rubocop:enable Rails/DynamicFindBy
 
   # Override this method if you want to make this correspondence type
   # assignable by the same business units as another correspondence type. e.x.
@@ -985,7 +989,7 @@ class Case::Base < ApplicationRecord
 
   def set_initial_state
     self.current_state = self.state_machine.current_state
-    self.last_transitioned_at = Time.now
+    self.last_transitioned_at = Time.zone.now
   end
 
   def set_deadlines

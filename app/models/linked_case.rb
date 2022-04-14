@@ -33,9 +33,6 @@ class LinkedCase < ApplicationRecord
   validates :linked_case_number,
             presence: true,
             if: -> { linked_case_id.nil? }
-  validates :linked_case_id,
-            presence: true,
-            if: -> { linked_case_number.nil? }
 
   validates_with ::CaseLinkTypeValidator,
                  if: -> { self.case_id.present? &&

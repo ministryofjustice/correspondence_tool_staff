@@ -19,8 +19,6 @@ class TeamCorrespondenceTypeRole < ApplicationRecord
   belongs_to :team
   belongs_to :correspondence_type
 
-  validates :correspondence_type_id, presence: true
-
   before_create do
     roles_for_team(team).each do |role|
       self[role] = true
