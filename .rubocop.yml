@@ -7,9 +7,11 @@ AllCops:
   DisabledByDefault: true
   Exclude:
     - 'db/**/*'
-    - 'spec/**/*'
-    - 'lib/**/*'
+    - 'spec/**/*' # TODO
+    - 'lib/**/*'  # TODO
     - 'config/**/*'
+    - 'vendor/**/*' # this prevents version mismatch in circleci
+    - 'vendor/bundle/**/*' # this prevents rubocop being run on dependencies in circleci
 
 Rails:
   Enabled: true
