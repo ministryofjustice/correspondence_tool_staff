@@ -220,3 +220,4 @@ describe 'cases/filters/index.html.slim', type: :view do
         .to eq compared_case.decorate.external_deadline
   end
 end
+
