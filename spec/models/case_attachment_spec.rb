@@ -26,7 +26,8 @@ RSpec::Matchers.define :allow_file_extension do |extension|
 end
 
 RSpec.describe CaseAttachment, type: :model do
-  let!(:time) { Time.new(2017, 6, 14, 14, 22, 3) }
+  let!(:time) { Time.utc(2017, 6, 14, 14, 22, 3).in_time_zone }
+  let!(:time_string) { Time.utc(2017, 6, 14, 14, 22, 3).in_time_zone.in_time_zone.strftime('%Y%m%d%H%M%S')}
 
   describe 'type enum' do
     it { should have_enum(:type).with_values %w{ response request ico_decision } }
@@ -177,14 +178,14 @@ RSpec.describe CaseAttachment, type: :model do
 
 
 
-    let(:doc_case_attachment) { create :correspondence_response, key: '6/responses/20170614142203/my_doc.doc' }
-    let(:jpg_case_attachment) { create :correspondence_response, key: '6/responses/20170614142203/my_photo.jpg' }
+    let(:doc_case_attachment) { create :correspondence_response, key: "6/responses/#{time_string}/my_doc.doc" }
+    let(:jpg_case_attachment) { create :correspondence_response, key: "6/responses/#{time_string}/my_photo.jpg" }
 
 
     context 'non convertible file types' do
       it 'copies original key to preview key' do
         CaseAttachment::UNCONVERTIBLE_EXTENSIONS.each do |ext|
-          attachment = create :correspondence_response, :without_preview_key, key: "/6/responses/20170614142203/my_attachment#{ext}"
+          attachment = create :correspondence_response, :without_preview_key, key: "/6/responses/#{time_string}/my_attachment#{ext}"
           expect(attachment.preview_key).to be_nil
           attachment.make_preview(0)
           expect(attachment.preview_key).to eq attachment.key
@@ -193,7 +194,7 @@ RSpec.describe CaseAttachment, type: :model do
 
       it 'does not call Libreconv' do
         CaseAttachment::UNCONVERTIBLE_EXTENSIONS.each do |ext|
-          attachment = create :correspondence_response, :without_preview_key, key: "/6/responses/20170614142203/my_attachment#{ext}"
+          attachment = create :correspondence_response, :without_preview_key, key: "/6/responses/#{time_string}/my_attachment#{ext}"
           expect(Libreconv).not_to receive(:convert)
           attachment.make_preview(0)
         end
@@ -217,11 +218,11 @@ RSpec.describe CaseAttachment, type: :model do
         allow(doc_case_attachment).to receive(:download_original_file).and_return('tempfile_orig.doc')
         allow(doc_case_attachment).to receive(:make_preview_filename).and_return('tempfile_preview.pdf')
         allow(Libreconv).to receive(:convert).with('tempfile_orig.doc', 'tempfile_preview.pdf')
-        allow(doc_case_attachment).to receive(:upload_preview).and_return('/6/response_previews/20170614142203/tempfile_preview.pdf')
+        allow(doc_case_attachment).to receive(:upload_preview).and_return("/6/response_previews/#{time_string}/tempfile_preview.pdf")
 
         doc_case_attachment.make_preview(0)
 
-        expect(doc_case_attachment.reload.preview_key).to eq '/6/response_previews/20170614142203/tempfile_preview.pdf'
+        expect(doc_case_attachment.reload.preview_key).to eq "/6/response_previews/#{time_string}/tempfile_preview.pdf"
       end
     end
 
@@ -244,7 +245,7 @@ RSpec.describe CaseAttachment, type: :model do
           tempfile = double Tempfile, close: nil, path: '/tmp/xxx_my_photo.jpg'
           expect(Tempfile).to receive(:new).with(['orig', '.jpg']).and_return(tempfile)
           s3_object = double 'S3 Object'
-          expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with('6/responses/20170614142203/my_photo.jpg').and_return(s3_object)
+          expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("6/responses/#{time_string}/my_photo.jpg").and_return(s3_object)
           expect(s3_object).to receive(:get).with(response_target: '/tmp/xxx_my_photo.jpg')
 
           download_file_path = jpg_case_attachment.__send__(:download_original_file)
@@ -268,7 +269,7 @@ RSpec.describe CaseAttachment, type: :model do
 
         it 'uploads the file to s3' do
           Timecop.freeze(time) do
-            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
+            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/#{time_string}/my_photo.pdf").and_return(s3_object)
             expect(s3_object).to receive(:upload_file).with('xxx')
 
             jpg_case_attachment.__send__(:upload_preview, 'xxx', 0)
@@ -277,7 +278,7 @@ RSpec.describe CaseAttachment, type: :model do
 
         it 'raises if fails after the maximum number of retries has been reached' do
           Timecop.freeze(time) do
-            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
+            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/#{time_string}/my_photo.pdf").and_return(s3_object)
             expect(s3_object).to receive(:upload_file).with('xxx').and_return(false)
 
             expect {
@@ -288,7 +289,7 @@ RSpec.describe CaseAttachment, type: :model do
 
         it 'requeues the job if uplaod fails and max retries as not been reached' do
           Timecop.freeze(time) do
-            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
+            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/#{time_string}/my_photo.pdf").and_return(s3_object)
             expect(s3_object).to receive(:upload_file).with('xxx').and_return(false)
 
             expect(PdfMakerJob).to receive(:perform_with_delay).with(jpg_case_attachment.id, 3)

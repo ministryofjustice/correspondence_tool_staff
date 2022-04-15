@@ -20,5 +20,5 @@ RSpec.describe TeamsUsersRole, type: :model do
 
   it { should have_enum(:role).with_values(%w{manager responder approver admin team_admin}) }
   it { should belong_to(:user) }
-  it { should belong_to(:team).with_foreign_key(:team_id) }
+  it { should belong_to(:team) }
 end

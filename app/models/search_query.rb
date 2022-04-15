@@ -138,6 +138,10 @@ class SearchQuery < ApplicationRecord
   # b) a search query can match within the same day so created_at time has to
   #    be taken into consideration
   # c) we're searching using the JSON query field as well as other columns
+
+  # Turn off the folowing check because somehow the result from where(query: params_to_match_on.to_json) 
+  # is differnt from the result by using ?
+  #rubocop:disable Rails/WhereEquals
   def self.find_or_create(query_params)
     if query_params[:parent_id].present?
       parent = find(query_params[:parent_id])
@@ -157,13 +161,14 @@ class SearchQuery < ApplicationRecord
                             query_type: merged_params[:query_type])
                      .where('created_at >= ? AND created_at < ?',
                             Time.current.to_date, Date.tomorrow)
-                     .where(query: params_to_match_on.to_json)
+                     .where('query = ?', params_to_match_on.to_json)
                      .first
     if search_query.nil?
       search_query = SearchQuery.create(merged_params)
     end
     search_query
   end
+  #rubocop:enable Rails/WhereEquals
 
   def results(cases_list = nil, search_order_choice = nil)
     if root.query_type == 'search'

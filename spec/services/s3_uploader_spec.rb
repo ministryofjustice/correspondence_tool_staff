@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe S3Uploader do
-  let!(:time)              { Time.new(2017, 6, 15, 10, 22, 33) }
-  let(:upload_group)       {  Time.new(2017, 6, 15, 10, 22, 33).strftime('%Y%m%d%H%M%S') }
+  let!(:time)              { Time.utc(2017, 6, 15, 10, 22, 33).in_time_zone }
+  let(:upload_group)       { Time.utc(2017, 6, 15, 10, 22, 33).in_time_zone.strftime('%Y%m%d%H%M%S') }
   let(:responder)          { find_or_create :foi_responder }
   let(:kase)               { create(:accepted_case, responder: responder) }
   let(:filename)           { "#{Faker::Internet.slug}.jpg" }
