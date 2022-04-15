@@ -56,11 +56,11 @@ module Stats
     end
 
     def period_start
-      Time.zone.now
+      Time.current
     end
 
     def period_end
-      Time.zone.now
+      Time.current
     end
 
     private

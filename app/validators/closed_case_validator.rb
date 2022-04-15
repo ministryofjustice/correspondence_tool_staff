@@ -117,7 +117,7 @@ class ClosedCaseValidator < ActiveModel::Validator
   def validate_date_ico_decision_received(rec)
     if rec.date_ico_decision_received.blank?
       rec.errors.add(:date_ico_decision_received, "cannot be blank")
-    elsif rec.date_ico_decision_received > Time.zone.today
+    elsif rec.date_ico_decision_received > Time.current.to_date
       rec.errors.add(:date_ico_decision_received, 'future')
     elsif rec.date_ico_decision_received < rec.created_at.to_date
       rec.errors.add(:date_ico_decision_received, 'before creation date')
@@ -163,7 +163,7 @@ class ClosedCaseValidator < ActiveModel::Validator
     else
       if rec.date_responded < rec.received_date
         rec.errors.add(:date_responded, "cannot be before date received")
-      elsif rec.date_responded > Time.zone.today
+      elsif rec.date_responded > Time.current.to_date
         rec.errors.add(:date_responded, "cannot be in the future")
       end
     end

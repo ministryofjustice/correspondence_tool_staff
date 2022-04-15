@@ -104,7 +104,7 @@ FactoryBot.define do
     delivery_method           { 'sent_by_email' }
     sequence(:subject)        { |n| "#{identifier} subject #{n}" }
     sequence(:message)        { |n| "#{identifier} message #{n}" }
-    received_date             { Time.zone.today.to_s }
+    received_date             { Time.current.to_date.to_s }
     sequence(:postal_address) { |n| "#{identifier} postal address #{n}" }
     created_at                { creation_time }
     creator                   { create(:user, :orphan) }

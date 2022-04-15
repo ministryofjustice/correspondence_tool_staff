@@ -884,7 +884,7 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe '#attachments_dir' do
-    let(:upload_group) { Time.zone.now.strftime('%Y%m%d%H%M%S') }
+    let(:upload_group) { Time.current.strftime('%Y%m%d%H%M%S') }
 
     it 'returns a path generated from case attributes' do
       expect(case_being_drafted.attachments_dir('responses', upload_group))
@@ -1096,7 +1096,7 @@ RSpec.describe Case::Base, type: :model do
         it 'changes the internal and external deadlines (but not escalation deadline)' do
           kase = nil
           Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
-            kase = create :case, :flagged, received_date: Date.today, created_at: Time.zone.now
+            kase = create :case, :flagged, received_date: Date.today, created_at: Time.current
           end
           expect(kase.received_date).to eq Date.new(2017, 12, 1)
           expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
@@ -1153,7 +1153,7 @@ RSpec.describe Case::Base, type: :model do
       it 'does not update deadlines' do
         kase = nil
         Timecop.freeze(Time.local(2017, 12, 1, 12, 0, 0)) do
-          kase = create :case, :flagged, received_date: Date.today, created_at: Time.zone.now
+          kase = create :case, :flagged, received_date: Date.today, created_at: Time.current
         end
         expect(kase.received_date).to eq Date.new(2017, 12, 1)
         expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
@@ -1404,7 +1404,7 @@ RSpec.describe Case::Base, type: :model do
       end
 
       it 'queues the job' do
-        t = Time.zone.now
+        t = Time.current
         expect {
           Timecop.freeze(t) do
             kase.save!
@@ -1438,7 +1438,7 @@ RSpec.describe Case::Base, type: :model do
 
         it 'queues the job' do
           kase   # need this here so that the job triggered by create is outside the expect block
-          t = Time.zone.now
+          t = Time.current
           expect {
             Timecop.freeze(t) do
               kase.update(name: 'John Smith')

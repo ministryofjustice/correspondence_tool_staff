@@ -151,12 +151,12 @@ class CaseFinderService
     scope
       .joins(:transitions)
       .where.not(type: CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE)
-      .where("(properties ->> 'escalation_deadline')::date >= ?", Time.zone.today)
+      .where("(properties ->> 'escalation_deadline')::date >= ?", Time.current.to_date)
       .or(
         scope
           .joins(:transitions)
           .where(type: CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE)
-          .where("(properties ->> 'escalation_deadline')::date >= ?", Time.zone.today)
+          .where("(properties ->> 'escalation_deadline')::date >= ?", Time.current.to_date)
           .where(case_transitions: { event: :request_further_clearance })
       )
       .not_with_teams(team)

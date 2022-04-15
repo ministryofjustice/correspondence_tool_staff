@@ -4,8 +4,6 @@ class DataRequestLog < ApplicationRecord
 
   validates :num_pages, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :date_received, presence: true
-  # validates :user, presence: true
-  # validates :data_request, presence: true
   validate :validate_date_received?
 
   acts_as_gov_uk_date :date_received
@@ -13,7 +11,7 @@ class DataRequestLog < ApplicationRecord
   def validate_date_received?
     return false if self.date_received.blank?
 
-    if self.date_received > Time.zone.today
+    if self.date_received > Time.current.to_date
       errors.add(
         :date_received,
         I18n.t('activerecord.errors.models.data_request.attributes.date_received.future')

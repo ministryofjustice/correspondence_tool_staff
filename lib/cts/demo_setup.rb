@@ -7,7 +7,7 @@ module CTS
     include FactoryBot::Syntax::Methods
 
     def initialize(number)
-      @real_time = Time.zone.now
+      @real_time = Time.current
       @number = number
       @cases = Case::Base.order(id: :desc).limit(number).to_a
       @managing_team = CTS::dacu_team
@@ -26,11 +26,11 @@ module CTS
     def run
       @number.times do |iternum|
         Timecop.freeze(random_date_received) do
-          puts "\n>>>>>> Time frozen to #{Time.zone.now} for case creation"
+          puts "\n>>>>>> Time frozen to #{Time.current} for case creation"
           begin
             kase = create_case(flagged: random_flagged)
             Timecop.freeze random_response_time do
-              puts ">>>>>> Time frozen to #{Time.zone.now} for response"
+              puts ">>>>>> Time frozen to #{Time.current} for response"
               add_responses(kase)
               unless iternum % 5 == 0
                 n = random_days_to_approve
@@ -56,11 +56,11 @@ module CTS
     end
 
     def random_response_time
-      least_of(@real_time, Time.zone.now + random_days_to_response.days)
+      least_of(@real_time, Time.current + random_days_to_response.days)
     end
 
     def random_approval_time(delay_days)
-      least_of(@real_time, Time.zone.now + delay_days.days)
+      least_of(@real_time, Time.current + delay_days.days)
     end
 
     def random_date_received
@@ -99,7 +99,7 @@ module CTS
 
     def add_responses(kase)
       puts ">>>>>> adding responses to case #{kase.id} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
-      upload_group = Time.zone.now.strftime('%Y%m%d%H%M%S')
+      upload_group = Time.current.strftime('%Y%m%d%H%M%S')
       kase.attachments << [ build_response(kase, upload_group, 1),  build_response(kase, upload_group, 2) ]
       if kase.requires_clearance?
         kase.state_machine.add_responses!(kase.responder, kase.responding_team, ['Demo_file_1.pdf', 'Demo_file_2.pdf'])
@@ -118,8 +118,8 @@ module CTS
 
 
     def approve_case(kase, delay_days)
-      Timecop.freeze Time.zone.now + delay_days.days do
-        puts ">>>>>> Time frozen to #{Time.zone.now} for approval"
+      Timecop.freeze Time.current + delay_days.days do
+        puts ">>>>>> Time frozen to #{Time.current} for approval"
         dacu_approver= random_dacu_disclosure_team_member
         assig = kase.approver_assignments.for_team(@dacu_disclosure).first
         kase.state_machine.accept_approver_assignment!(acting_user: dacu_approver, acting_team: @dacu_disclosure)

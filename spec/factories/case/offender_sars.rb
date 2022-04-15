@@ -19,8 +19,8 @@ FactoryBot.define do
     email                           { Faker::Internet.email(name: identifier) }
     sequence(:subject)              { |n| "#{identifier} subject #{n}" }
     sequence(:message)              { |n| "#{identifier} message #{n}" }
-    received_date                   { Time.zone.today.to_s }
-    date_of_birth                   { Time.zone.today.to_s }
+    received_date                   { Time.current.to_date.to_s }
+    date_of_birth                   { Time.current.to_date.to_s }
     sequence(:postal_address)       { |n| "#{identifier} postal address #{n}" }
     sequence(:subject_full_name)    { |n| "Subject #{n}" }
     sequence(:subject_aliases)      { |n| "#{identifier} subject alias #{n}" }

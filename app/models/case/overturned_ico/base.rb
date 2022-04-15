@@ -142,9 +142,9 @@ class Case::OverturnedICO::Base < Case::Base
   def validate_received_date
     if received_date.blank?
       errors.add(:received_date, :blank)
-    elsif received_date > Time.zone.today
+    elsif received_date > Time.current.to_date
       errors.add(:received_date, :future)
-    elsif received_date < Time.zone.today - 4.weeks  && self.new_record?
+    elsif received_date < Time.current.to_date - 4.weeks  && self.new_record?
       errors.add(:received_date, :past)
     end
   end
@@ -152,9 +152,9 @@ class Case::OverturnedICO::Base < Case::Base
   def validate_external_deadline
     if external_deadline.blank?
       errors.add(:external_deadline, :blank)
-    elsif external_deadline < Time.zone.today && self.new_record?
+    elsif external_deadline < Time.current.to_date && self.new_record?
       errors.add(:external_deadline, :past)
-    elsif external_deadline > Time.zone.today + 50.days
+    elsif external_deadline > Time.current.to_date + 50.days
       errors.add(:external_deadline, :future)
     end
   end

@@ -149,13 +149,13 @@ class Case::Base < ApplicationRecord
   scope :in_time, -> {
     where(
       "CASE WHEN current_state = 'closed' THEN date_responded <= (properties->>'external_deadline')::date ELSE ? <= properties->>'external_deadline' END",
-      Time.zone.today
+      Time.current.to_date
     )
   }
   scope :late, -> {
     where(
       "CASE WHEN current_state = 'closed' THEN date_responded > (properties->>'external_deadline')::date ELSE ? > properties->>'external_deadline' END",
-      Time.zone.today
+      Time.current.to_date
     )
   }
 
@@ -657,7 +657,7 @@ class Case::Base < ApplicationRecord
     else
       responding_team_assignment_date = assign_responder_transitions.last&.created_at&.to_date || received_date
       internal_deadline = @deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
-      internal_deadline < Time.zone.today
+      internal_deadline < Time.current.to_date
     end
   end
 
@@ -940,12 +940,12 @@ class Case::Base < ApplicationRecord
   end
 
   def validate_received_date
-    if received_date.present? && self.received_date > Time.zone.today
+    if received_date.present? && self.received_date > Time.current.to_date
       errors.add(
         :received_date,
         I18n.t('activerecord.errors.models.case.attributes.received_date.not_in_future')
       )
-    elsif received_date.present? && self.received_date < Time.zone.today - 1.year
+    elsif received_date.present? && self.received_date < Time.current.to_date - 1.year
       errors.add(
         :received_date,
         I18n.t('activerecord.errors.models.case.attributes.received_date.past')
@@ -969,7 +969,7 @@ class Case::Base < ApplicationRecord
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.before_received')
       )
-    elsif self.date_draft_compliant > Time.zone.today
+    elsif self.date_draft_compliant > Time.current.to_date
       errors.add(
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.not_in_future')
@@ -989,7 +989,7 @@ class Case::Base < ApplicationRecord
 
   def set_initial_state
     self.current_state = self.state_machine.current_state
-    self.last_transitioned_at = Time.zone.now
+    self.last_transitioned_at = Time.current
   end
 
   def set_deadlines
@@ -1091,7 +1091,7 @@ class Case::Base < ApplicationRecord
   end
 
   def benchmark_date_value_for_days_metrics
-    date_responded.nil? ? Time.zone.today : date_responded
+    date_responded.nil? ? Time.current.to_date : date_responded
   end
 
   def delete_reverse_links(related_case)

@@ -125,7 +125,7 @@ RSpec.describe User, type: :model do
       new_team = create :business_unit, correspondence_type_ids: [foi.id]
       approver.team_roles << TeamsUsersRole.new(team: new_team, role: 'approver')
       approver.reload
-      current_approving_team.deleted_at = Time.zone.now
+      current_approving_team.deleted_at = Time.current
       current_approving_team.save!
       approver.reload
       expect(approver.approving_team).to eq new_team
@@ -138,7 +138,7 @@ RSpec.describe User, type: :model do
       new_team = create :managing_team, correspondence_type_ids: [foi.id]
       manager.team_roles << TeamsUsersRole.new(team: new_team, role: 'manager')
       manager.reload
-      current_managing_team.deleted_at = Time.zone.now
+      current_managing_team.deleted_at = Time.current
       current_managing_team.save!
       manager.reload
       expect(manager.managing_teams.first).to eq new_team

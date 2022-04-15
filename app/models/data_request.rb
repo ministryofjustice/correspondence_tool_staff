@@ -5,8 +5,6 @@ class DataRequest < ApplicationRecord
 
   validates :location, presence: true, length: { maximum: 500 }
   validates :request_type, presence: true
-  # validates :offender_sar_case, presence: true
-  # validates :user, presence: true
   validates :date_requested, presence: true
   validates :cached_num_pages, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validate :validate_request_type_note
@@ -102,7 +100,7 @@ class DataRequest < ApplicationRecord
           :cached_date_received,
           I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.blank')
         )
-      elsif cached_date_received > Time.zone.today
+      elsif cached_date_received > Time.current.to_date
         errors.add(
           :cached_date_received,
           I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.future')

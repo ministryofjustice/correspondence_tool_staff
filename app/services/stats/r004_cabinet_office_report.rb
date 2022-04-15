@@ -223,7 +223,7 @@ module Stats
     end
 
     def open_late_cases_received_in_period
-      open_cases_received_in_period.where("properties->>'external_deadline' < ?", Time.zone.today)
+      open_cases_received_in_period.where("properties->>'external_deadline' < ?", Time.current.to_date)
     end
 
     def get_value_1_C
@@ -494,7 +494,7 @@ module Stats
 
     def superheadings
       [
-        ["Dated: #{Time.zone.today.strftime(Settings.default_date_format)}"],
+        ["Dated: #{Time.current.to_date.strftime(Settings.default_date_format)}"],
         ["For period #{@period_start.strftime(Settings.default_date_format)} to #{@period_end.strftime(Settings.default_date_format)}"]
       ]
     end

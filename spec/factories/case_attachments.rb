@@ -25,7 +25,7 @@ FactoryBot.define do
     #       number we generate here.
     key { "#{SecureRandom.hex(16)}/responses/#{Faker::Internet.slug}.pdf" }
     preview_key { "#{SecureRandom.hex(16)}/response_previews/#{Faker::Internet.slug}.pdf" }
-    upload_group { Time.zone.now.strftime('%Y%m%d%H%M%S') }
+    upload_group { Time.current.strftime('%Y%m%d%H%M%S') }
   end
 
   factory :correspondence_response, parent: :case_attachment do

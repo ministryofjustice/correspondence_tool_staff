@@ -44,7 +44,7 @@ class DatabaseDumper
     @tasks = []
     @tables_to_anonymise = {}
     CLASSES_TO_ANONYMISE.each { |klass| @tables_to_anonymise[klass.table_name] = klass }
-    @timestamp = Time.zone.now.strftime('%Y%m%d-%H%M%S')
+    @timestamp = Time.current.strftime('%Y%m%d-%H%M%S')
   end
 
 

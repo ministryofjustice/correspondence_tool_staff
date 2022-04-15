@@ -14,9 +14,9 @@ RSpec.describe Cases::SarInternalReviewController, type: :controller do
           email: 'member@public.com',
           subject: 'SAR request from controller spec',
           message: 'SAR about prisons and probation',
-          received_date_dd: Time.zone.today.day.to_s,
-          received_date_mm: Time.zone.today.month.to_s,
-          received_date_yyyy: Time.zone.today.year.to_s,
+          received_date_dd: Time.current.to_date.day.to_s,
+          received_date_mm: Time.current.to_date.month.to_s,
+          received_date_yyyy: Time.current.to_date.year.to_s,
           delivery_method: :sent_by_email,
           flag_for_disclosure_specialists: false,
         }

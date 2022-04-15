@@ -240,7 +240,7 @@ class Case::ICO::Base < Case::Base
   end
 
   def received_date_within_limits?
-    if received_date < Time.zone.today - 10.years
+    if received_date < Time.current.to_date - 10.years
       errors.add(
         :received_date,
         TranslateForCase.t(
@@ -249,7 +249,7 @@ class Case::ICO::Base < Case::Base
           'attributes.received_date.past'
         )
       )
-    elsif received_date > Time.zone.today
+    elsif received_date > Time.current.to_date
       errors.add(
         :received_date,
         TranslateForCase.t(

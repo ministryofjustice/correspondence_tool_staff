@@ -39,7 +39,7 @@ class Letter
   end
 
   def letter_date
-    Time.zone.today.strftime('%e %B %Y')
+    Time.current.strftime('%e %B %Y')
   end
 
   def template_name

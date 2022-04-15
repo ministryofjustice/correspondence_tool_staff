@@ -294,6 +294,6 @@ feature 'adding cases' do
   end
 
   def create_deactivated_responding_teams(numbers)
-    numbers.times { |_| (create :team).update!(deleted_at: Time.zone.now) }
+    numbers.times { |_| (create :team).update!(deleted_at: Time.current) }
   end
 end

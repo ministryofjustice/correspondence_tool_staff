@@ -18,9 +18,9 @@ describe CaseCreateService do
           email: 'member@public.com',
           subject: 'FOI request from controller spec',
           message: 'FOI about prisons and probation',
-          received_date_dd: Time.zone.today.day.to_s,
-          received_date_mm: Time.zone.today.month.to_s,
-          received_date_yyyy: Time.zone.today.year.to_s,
+          received_date_dd: Time.current.to_date.day.to_s,
+          received_date_mm: Time.current.to_date.month.to_s,
+          received_date_yyyy: Time.current.to_date.year.to_s,
           delivery_method: :sent_by_email,
           uploaded_request_files: ['uploads/71/request/request.pdf'],
           flag_for_disclosure_specialists: 'no'
@@ -59,7 +59,7 @@ describe CaseCreateService do
         expect(created_case.email).to eq 'member@public.com'
         expect(created_case.subject).to eq 'FOI request from controller spec'
         expect(created_case.message).to eq 'FOI about prisons and probation'
-        expect(created_case.received_date).to eq Time.zone.today
+        expect(created_case.received_date).to eq Time.current.to_date
       end
 
       it 'sets the result to "assign_responder"' do
@@ -93,7 +93,7 @@ describe CaseCreateService do
         expect(created_case.email).to eq 'member@public.com'
         expect(created_case.subject).to eq 'FOI request from controller spec'
         expect(created_case.message).to eq 'FOI about prisons and probation'
-        expect(created_case.received_date).to eq Time.zone.today
+        expect(created_case.received_date).to eq Time.current.to_date
       end
 
       it 'flags for disclosure specialists' do

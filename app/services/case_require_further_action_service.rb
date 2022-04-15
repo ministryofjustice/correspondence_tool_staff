@@ -70,14 +70,14 @@ class CaseRequireFurtherActionService
     if require_update_deadlines?
       # Check whether the deadline dates are in the past, this validation rule is not 
       # suitable on the data model level as users may changed them after initial action
-      if @kase.internal_deadline <= Time.zone.today
+      if @kase.internal_deadline <= Time.current.to_date
         @kase.errors.add(
           :internal_deadline,
           I18n.t('activerecord.errors.models.case/ico.attributes.internal_deadline.past')
         )
       end 
 
-      if @kase.external_deadline <= Time.zone.today
+      if @kase.external_deadline <= Time.current.to_date
         @kase.errors.add(
           :external_deadline,
           I18n.t('activerecord.errors.models.case/ico.attributes.external_deadline.past')

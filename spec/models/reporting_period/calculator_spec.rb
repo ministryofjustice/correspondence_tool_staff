@@ -31,7 +31,7 @@ module ReportingPeriod
         it 'sets period_start and period_end with Time or DateTime values' do
           calculator = described_class.new(
             period_start: DateTime.yesterday,
-            period_end: Time.zone.now
+            period_end: Time.current
           )
 
           expect(calculator.period_start).to be_a Time

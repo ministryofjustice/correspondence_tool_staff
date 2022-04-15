@@ -4,7 +4,7 @@ module ConfigurableStateMachine
 
   describe Manager do
 
-    let(:config_dir)  { File.join(Rails.root, 'config', 'state_machine') }
+    let(:config_dir)  { Rails.root.join('config/state_machine') }
 
     describe '.new' do
       it 'is a private method' do

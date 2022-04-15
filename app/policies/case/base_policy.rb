@@ -467,7 +467,7 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   check :escalation_deadline_has_expired do
-    self.case.escalation_deadline < Time.zone.today
+    self.case.escalation_deadline < Time.current.to_date
   end
 
   check :within_escalation_deadline do
