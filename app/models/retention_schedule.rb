@@ -1,14 +1,12 @@
 class RetentionSchedule < ApplicationRecord
   include AASM
 
-  validates_presence_of(:case)
-  validates_presence_of(:planned_destruction_date)
+  validates :case, :planned_destruction_date, :status, presence: true
 
   # this should change to Case::Base
   # as this retention_schedule is expanded
   # to other / all case types
   belongs_to :case,
-             foreign_key: :case_id,
              class_name: 'Case::SAR::Offender'
 
   aasm column: 'state', logger: Rails.logger do
@@ -42,7 +40,7 @@ class RetentionSchedule < ApplicationRecord
   class << self
     def common_date_viewable_from_range
       viewable_from = Settings.retention_timings.common.viewable_from
-      viewable_from.months.ago..Date.today
+      viewable_from.months.ago..Time.current.to_date
     end
   end
 end
