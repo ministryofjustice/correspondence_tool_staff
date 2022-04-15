@@ -121,6 +121,12 @@ Rails/HasManyOrHasOneDependent:
   Description: 'Specify a :dependent option'
   Enabled: false
 
+# Reason: if remove the validation for foregin key, the error (PG::NotNullViolation: ERROR:) 
+# will be only raised when the updating/creation is applied to database and won't be identified 
+# during validation stage. So from this angle, such double validation is fine
+Rails/RedundantPresenceValidationOnBelongsTo:
+  Description: 'Remove explicit presence validation for foreign key'
+  Enabled: false
 
 #################### Lint ################################
 

@@ -5,6 +5,9 @@ class DataRequest < ApplicationRecord
 
   validates :location, presence: true, length: { maximum: 500 }
   validates :request_type, presence: true
+  validates :offender_sar_case, presence: true
+  validates :user, presence: true
+
   validates :date_requested, presence: true
   validates :cached_num_pages, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validate :validate_request_type_note

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe RequestUploaderService do
 
-  let(:upload_group)       { '20170615102233' }
+  let(:upload_group)       {  Time.new(2017, 6, 15, 10, 22, 33).strftime('%Y%m%d%H%M%S') }
   let(:responder)          { find_or_create :foi_responder }
   let(:kase)               { create(:accepted_case, responder: responder) }
   let(:user)               { kase.responder }

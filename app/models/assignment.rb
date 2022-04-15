@@ -15,7 +15,7 @@
 
 class Assignment < ApplicationRecord
 
-  validates :role, :state, presence: true
+  validates :case, :role, :state, :team, presence: true
   validates :reasons_for_rejection, presence: true, if: -> { self.rejected? }
   validate :approved_only_for_approvals
   validate :unique_pending_responder
