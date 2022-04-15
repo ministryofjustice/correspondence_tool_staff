@@ -37,14 +37,6 @@ class CorrespondenceType < ApplicationRecord
          'CalendarMonths' => 'CalendarMonths',
        }
 
-  # validates_presence_of :name,
-  #                       :abbreviation,
-  #                       :escalation_time_limit,
-  #                       :internal_time_limit,
-  #                       :external_time_limit,
-  #                       :deadline_calculator_class,
-  #                       on: :create
-
   validates :name,
             :abbreviation,
             :escalation_time_limit,

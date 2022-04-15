@@ -63,13 +63,8 @@ class Case::OverturnedICO::Base < Case::Base
   validate :validate_external_deadline
   validate :validate_original_ico_appeal
 
-  # validates_presence_of :ico_officer_name
-  # validates_presence_of :original_case
-  # validates_presence_of :reply_method
   validates :ico_officer_name, :original_case, :reply_method,  presence: true
 
-  # validates_presence_of :email,          if: :send_by_email?
-  # validates_presence_of :postal_address, if: :send_by_post?
   validates :email, presence: true, if: -> { send_by_email? }
   validates :postal_address, presence: true, if: -> { send_by_post? }
 

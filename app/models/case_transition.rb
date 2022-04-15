@@ -53,7 +53,6 @@ class CaseTransition < ApplicationRecord
   belongs_to :target_user, class_name: 'User'
   belongs_to :target_team, class_name: 'Team'
 
-  # scope :accepted,          -> { where to_state: 'drafting'  }
   scope :drafting,          -> { where to_state: 'drafting'  }
   scope :messages,          -> { where(event: ADD_MESSAGE_TO_CASE_EVENT).order(:id) }
   scope :responded,         -> { where event: 'respond' }
