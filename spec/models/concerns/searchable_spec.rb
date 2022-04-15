@@ -41,10 +41,24 @@ RSpec.describe Searchable do
       # pretending to be an ActiveRecord object again, with some doubled
       # objects we can set expectations on in the specs
       def self.all
-        @all ||= [
-          double('Object A', update_index: true),
-          double('Object B', update_index: true),
-        ]
+        @active_record_class.new
+      end
+
+      @active_record_class = Class.new do
+        include RSpec::Mocks::ExampleMethods
+      
+        def find_each 
+          [
+            double('Object A', update_index: true),
+            double('Object B', update_index: true),
+          ]
+        end
+        def each 
+          [
+            double('Object A', update_index: true),
+            double('Object B', update_index: true),
+          ]
+        end
       end
 
       include Searchable
