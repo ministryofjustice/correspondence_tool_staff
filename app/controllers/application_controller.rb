@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
 
-  include Pundit
+  include Pundit::Authorization
 
   GLOBAL_NAV_EXCLUSION_PATHS    = %w{ /cases/filter }
   CSV_REQUEST_REGEX             = /\.csv$/

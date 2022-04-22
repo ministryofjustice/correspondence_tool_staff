@@ -133,3 +133,35 @@ td {
 .visually-hidden {
   user-select: none;
 }
+
+// Retention scheduling
+#retention-cases {
+  .button-destroy {
+    background-color: $red;
+    color: #fff;
+    float: right;
+  }
+
+  .multiple-choice {
+    padding: 9px 0 0 13px;
+
+    label {
+      padding: 0;
+
+      &:before {
+        width: 20px;
+        height: 20px;
+        top: -2px;
+        background-color: #fff;
+      }
+
+      &:after {
+        border-width: 0 0 3px 3px;
+        top: 6px;
+        left: 5px;
+        width: 10px;
+        height: 4px;
+      }
+    }
+  }
+}

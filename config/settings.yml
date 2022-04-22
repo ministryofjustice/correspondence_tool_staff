@@ -105,6 +105,17 @@ homepage_navigation:
       path: /cases/closed
       scope: closed_cases
 
+    case_retention:
+      path: /cases/retention
+      scope: retention_cases
+      visibility:
+        - BRANSTON
+      tabs:
+        ready_for_removal:
+          scope: erasable_cases
+        pending_removal:
+          scope: triagable_cases
+
 global_navigation:
   default_urls:
     approver: /cases/open
@@ -149,6 +160,17 @@ global_navigation:
     closed_cases:
       path: /cases/closed
       scope: closed_cases
+
+    case_retention:
+      path: /cases/retention
+      scope: retention_cases
+      visibility:
+        - BRANSTON
+      tabs:
+        ready_for_removal:
+          scope: erasable_cases
+        pending_removal:
+          scope: triagable_cases
 
     search_cases:
       path: /cases/search
@@ -313,3 +335,9 @@ enabled_features:
     Host-staging: false
     Host-qa: true
     Host-prod: false
+
+# Timing definitions for RetentionSchedule (GDPR / DPA) 
+retention_timings:
+    common:
+      viewable_from: 4
+
