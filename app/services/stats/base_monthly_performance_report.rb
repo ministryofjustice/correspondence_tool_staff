@@ -145,13 +145,23 @@ module Stats
       analyser = self.class.case_analyzer.new(kase)
       analyser.run
       column_key = analyser.result
-      month = kase.received_date.month
+      # month = kase.received_date.month
+      month = construct_year_month(kase.received_date)
       @stats.record_stats(month, column_key)
       @stats.record_stats(:total, column_key)
     end
 
     def array_of_month_numbers
-      (@period_start.month..@period_end.month).to_a
+      month_columns = []
+      month_date  = @period_start
+      current_month = construct_year_month(@period_start)
+      end_month = construct_year_month(@period_end)
+      while current_month <= end_month
+        month_columns << current_month
+        month_date = month_date + 1.month
+        current_month = construct_year_month(month_date)
+      end
+      return month_columns
     end
 
     def populate_month_names_callback(stats)
@@ -159,7 +169,7 @@ module Stats
         if month_no == :total
           result_set[:month] = 'Total'
         else
-          result_set[:month] = Date::MONTHNAMES[month_no]
+          result_set[:month] = Date::MONTHNAMES[get_month_from_yearmonth_string(month_no)]
         end
       end
     end
@@ -167,8 +177,18 @@ module Stats
     def case_scope
       raise 'This method should be defined in the child class'
     end
-    
+
     private
+
+    def get_month_from_yearmonth_string(yearmonth_string)
+      return yearmonth_string.to_s.last(2).to_i
+    end
+
+    def construct_year_month(the_date)
+      month_str = '%02i' % the_date.month
+      start_month = "#{the_date.year}#{month_str}"
+      return start_month.to_i
+    end 
 
     def producer_stamp
       "Created at #{Date.today.to_date}"
