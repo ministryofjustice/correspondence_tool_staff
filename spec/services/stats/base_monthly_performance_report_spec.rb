@@ -131,7 +131,7 @@ module Stats
       
           allow(redis_double).to receive(:exists?).and_return(true)
           allow(redis_double).to receive(:get).and_return(
-            '{"11":
+            '{"201811":
               {"month":0,
                 "non_trigger_performance":0,
                 "non_trigger_total":0,
@@ -151,7 +151,7 @@ module Stats
                 "overall_responded_late":0,
                 "overall_open_in_time":30,
                 "overall_open_late":5},
-              "12":
+              "201812":
               { "month":0,
                 "non_trigger_performance":0,
                 "non_trigger_total":0,
@@ -198,9 +198,9 @@ module Stats
           )
           new_report.job_ids = ['job1']
           result_data = JSON.parse(@report.report_details(new_report))
-          expect(result_data.key?("12")).to eq true
+          expect(result_data.key?("201812")).to eq true
           expect(result_data.key?("total")).to eq true
-          expect(result_data.key?("11")).to eq false
+          expect(result_data.key?("201811")).to eq false
         end 
       end 
     end  
