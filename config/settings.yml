@@ -339,7 +339,7 @@ enabled_features:
   # through config_map / secrets. Refer to `config/initializers/devise.rb`, omniauth section.
   devise_azure_activedirectory:
     Local: true
-    Host-dev: false
+    Host-dev: true
     Host-demo: false
     Host-staging: false
     Host-qa: false
