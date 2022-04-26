@@ -168,11 +168,12 @@ class DatabaseAnonymizer
   #
 
   def anonymize_users(user)
-    user_setting = user_settings_reader.get_setting(user.id)
-    unless is_internal_admin_user?(user, user_setting) || user_setting.present?
+    user_setting = @user_settings_reader.get_setting(user.id)
+    if !is_internal_admin_user?(user)
       user.full_name = Faker::Name.unique.name
       user.email = Faker::Internet.email(name: user.full_name)
-    else
+    end
+    if user_setting.present?
       user.full_name = user_setting["full_name"] unless user_setting["full_name"].blank?
       user.email = user_setting["email"] unless user_setting["email"].blank?
       user.encrypted_password = user_setting["encrypted_password"] unless user_setting["encrypted_password"].blank?

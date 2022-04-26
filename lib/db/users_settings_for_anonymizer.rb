@@ -7,6 +7,11 @@
 #     - part 1:  will be performed by anonymizer, handle the existing users and apply suitable way 
 #                 to modify the users, then converted into sql 
 #     - part 2: will be performed by restoring process, which will create the new users
+# @user_settings = [
+#   1334 => {
+#     "full_name" => "testing-testing-testing"
+#   }
+# ]
 require 'json'
 
 class UsersSettingsForAnonymizer
@@ -31,14 +36,7 @@ class UsersSettingsForAnonymizer
   end
 
   def get_setting(user_id)
-    record = nil
-    @user_settings.each do | item |
-      if (item["user_id"] == user_id)
-        record = item
-        break
-      end
-    end
-    record
+    @user_settings[user_id]
   end
 
   def add_roles

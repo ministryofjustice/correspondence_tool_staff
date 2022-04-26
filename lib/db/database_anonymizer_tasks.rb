@@ -134,7 +134,7 @@ class DatabaseAnonymizerTasks
     if table_name.blank?
       raise RuntimeError.new("No table name is provided")
     end
-    counter = task_arguments[:counter]
+    counter = task_arguments[:counter].to_i
     filename = "#{@base_file_name}_#{convert_counter_to_string(counter)}_#{table_name}"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password --data-only --table=#{table_name} -f #{filename}.sql"
     result = system command_line
