@@ -9,11 +9,8 @@ module RetentionSchedules
     end
 
     def call
-      if @kase.offender_sar?
-        add_retention_schedule(@kase)
-        return @kase
-      elsif @kase.offender_sar_complaint?
-        add_retention_schedule_for_cases_with_links(@kase)
+      if @kase.offender_sar? || @kase.offender_sar_complaint?
+        add_retention_schedules
         return @kase
       else
         @result = :invalid_case
@@ -23,7 +20,17 @@ module RetentionSchedules
 
     private
 
-    def add_retention_schedule(kase)
+    def add_retention_schedules
+      if @kase.linked_cases.present?
+        add_retention_schedule
+        add_retention_schedules_to_linked_cases
+      else
+        add_retention_schedule
+      end
+    end
+
+    def add_retention_schedule(linked_case: nil)
+      kase = linked_case.present? ? linked_case : @kase
       if kase.retention_schedule.present?
         kase
           .retention_schedule
@@ -35,11 +42,9 @@ module RetentionSchedules
       end
     end
 
-    def add_retention_schedule_for_cases_with_links(kase)
-      add_retention_schedule(kase)
-
-      kase.linked_cases.each do |linked_kase|
-        add_retention_schedule(linked_kase)
+    def add_retention_schedules_to_linked_cases
+      @kase.linked_cases.each do |linked_kase|
+        add_retention_schedule(linked_case: linked_kase)
       end
     end
 
