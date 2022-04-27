@@ -1,5 +1,5 @@
 module RetentionSchedules
-  class PlannedErasureDateService
+  class AddScheduleService
     attr_reader :result
 
     def initialize(kase:)
@@ -10,7 +10,10 @@ module RetentionSchedules
 
     def call
       if @kase.offender_sar?
-        calculate_off_sar_planned_erasure_dates
+        add_retention_schedule(@kase)
+        return @kase
+      elsif @kase.offender_sar_complaint?
+        add_retention_schedule_for_cases_with_links(@kase)
         return @kase
       else
         @result = :invalid_case
@@ -20,17 +23,24 @@ module RetentionSchedules
 
     private
 
-    def calculate_off_sar_planned_erasure_dates
-      if @kase.retention_schedule.present?
-        @kase
+    def add_retention_schedule(kase)
+      if kase.retention_schedule.present?
+        kase
           .retention_schedule
           .planned_erasure_date = @planned_erasure_date 
       else
-        @kase.retention_schedule = RetentionSchedule.new(
+        kase.retention_schedule = RetentionSchedule.new(
           planned_erasure_date: @planned_erasure_date 
         )
       end
-      @kase
+    end
+
+    def add_retention_schedule_for_cases_with_links(kase)
+      add_retention_schedule(kase)
+
+      kase.linked_cases.each do |linked_kase|
+        add_retention_schedule(linked_kase)
+      end
     end
 
     def planned_erasure_date

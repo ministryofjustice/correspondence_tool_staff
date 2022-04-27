@@ -1,6 +1,20 @@
 require "rails_helper"
 
-describe RetentionSchedules::PlannedErasureDateService do
+describe RetentionSchedules::AddScheduleService do
+  
+  let(:closed_offender_sar_complaint) {
+    create(
+      :offender_sar_complaint, 
+      :closed,
+      identifier: 'closed offender sar complaint',
+      received_date: 4.weeks.ago,
+      retention_schedule: 
+        RetentionSchedule.new(
+          planned_erasure_date: Date.today
+        )
+      )
+  }
+
   let(:closed_offender_sar) {
     create(
       :offender_sar_case, 
@@ -14,6 +28,7 @@ describe RetentionSchedules::PlannedErasureDateService do
     instance_double(
       Case::SAR::Standard, 
       offender_sar?: false,
+      offender_sar_complaint?: false,
       last_transitioned_at: Date.today,
       closed?: true
     )
@@ -31,23 +46,21 @@ describe RetentionSchedules::PlannedErasureDateService do
     (closure_date + years + months + added_days)
   }
 
-  let!(:closed_offender_sar_with_retention_schedule) {
-    kase = create(:offender_sar_case, :closed,
-    identifier: 'closed offender sar',
-    received_date: 4.weeks.ago,
-    retention_schedule: 
-      RetentionSchedule.new(
-        planned_erasure_date: Date.today
-      )
-    )
-
-    kase.save
-    kase
+  let(:closed_offender_sar_with_retention_schedule) {
+    create(
+      :offender_sar_case, :closed,
+      identifier: 'closed offender sar',
+      received_date: 4.weeks.ago,
+      retention_schedule: 
+        RetentionSchedule.new(
+          planned_erasure_date: Date.today
+        )
+     )
   }
 
   describe 'cases service can mutate' do
     it 'cannot be cases other than offender sar' do
-      service = RetentionSchedules::PlannedErasureDateService.new(
+      service = RetentionSchedules::AddScheduleService.new(
         kase: mock_case
       )
       service.call
@@ -56,11 +69,11 @@ describe RetentionSchedules::PlannedErasureDateService do
     end
   end
 
-  context 'when setting planned erasure dates on offender sars' do
+  context 'when setting planned erasure dates on Offender SARs' do
     it 'sets the correct planned erasure date' do
       kase = closed_offender_sar
 
-      service = RetentionSchedules::PlannedErasureDateService.new(kase: kase)
+      service = RetentionSchedules::AddScheduleService.new(kase: kase)
       service.call
 
       expected_date = kase.retention_schedule.planned_erasure_date
@@ -73,13 +86,38 @@ describe RetentionSchedules::PlannedErasureDateService do
       retention_schedule = closed_offender_sar_with_retention_schedule.retention_schedule
       kase = closed_offender_sar_with_retention_schedule
 
-      service = RetentionSchedules::PlannedErasureDateService.new(kase: kase)
+      service = RetentionSchedules::AddScheduleService.new(kase: kase)
       service.call
 
       expected_date = kase.retention_schedule.planned_erasure_date
 
       expect(kase.retention_schedule).to be(retention_schedule)
       expect(expected_date).to match(expected_off_sar_erasure_date)
+    end
+  end
+
+  context 'when setting planned erasure dates on Offender SARs Complaints' do
+    it 'sets the correct planned erasure date on the complaint and the linked case' do
+
+      retention_schedule = closed_offender_sar_complaint.retention_schedule
+      kase = closed_offender_sar_complaint
+
+      original_kase = closed_offender_sar_complaint.original_case
+
+      service = RetentionSchedules::AddScheduleService.new(kase: kase)
+      service.call
+
+      expected_date = kase.retention_schedule.planned_erasure_date
+
+      expected_original_kase_date = original_kase
+                                      .retention_schedule
+                                      .planned_erasure_date
+
+      expect(kase.retention_schedule).to be(retention_schedule)
+      expect(original_kase.retention_schedule).not_to be(retention_schedule)
+
+      expect(expected_date).to match(expected_off_sar_erasure_date)
+      expect(expected_original_kase_date).to match(expected_off_sar_erasure_date)
     end
   end
 end
