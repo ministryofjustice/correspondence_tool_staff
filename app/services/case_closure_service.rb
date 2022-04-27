@@ -28,6 +28,7 @@ class CaseClosureService
     if FeatureSet.branston_retention_scheduling.enabled?
       service = RetentionSchedules::PlannedErasureDateService.new(kase: @kase)
       service.call
+      @kase.save
     end
   end
 

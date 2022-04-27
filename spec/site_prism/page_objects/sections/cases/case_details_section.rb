@@ -130,6 +130,10 @@ module PageObjects
           section :exemptions, '.exemptions' do
             elements :list, 'td ul li'
           end
+
+          section :planned_erasure, '.planned-erasure-date' do
+            elements :date, 'td'
+          end
         end
 
 
