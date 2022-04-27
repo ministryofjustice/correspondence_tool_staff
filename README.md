@@ -303,6 +303,21 @@ $ export SETTINGS__CTS_EMAIL_HOST=localhost
 $ export SETTINGS__CTS_EMAIL_PORT=5000
 ```
 
+#### Devise OmniAuth - Azure Active Directory
+
+In addition to sign in with email and password, there is an integration with 
+Azure Active Directory through Devise OmniAuth.
+
+For this to work in your local machine, you will need to set 3 ENV variables.  
+See the instructions in the `.env.example` file.
+
+A colleague can provide this to you. Usually, the tenant and client will be 
+the same for all local/dev environments, but the secret should be unique to 
+your machine, as this makes it easier to revoke it in case of a leak.
+
+This feature can be enabled/disabled through the `enabled_features` mechanism 
+configured in [config/settings.yml](config/settings.yml).
+
 #### Uploads
 
 Responses and other case attachments are uploaded directly to S3 before being
