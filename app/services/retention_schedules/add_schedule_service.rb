@@ -43,8 +43,25 @@ module RetentionSchedules
     end
 
     def add_retention_schedules_to_linked_cases
-      @kase.linked_cases.each do |linked_kase|
-        add_retention_schedule(linked_case: linked_kase)
+      processed_cases = []
+      linked_cases = collect_linked_cases
+
+      while linked_cases.present?
+        current_case = linked_cases.shift
+        if processed_cases.exclude?(current_case)
+          add_retention_schedule(linked_case: current_case)
+          processed_cases << current_case
+        end
+      end
+    end
+
+    def collect_linked_cases
+      # i.e. is an offender sar complaint
+      if @kase.original_cases.present?
+       ([@kase.original_case] + 
+        @kase.original_case.linked_cases).to_a
+      else
+        @kase.linked_cases.to_a
       end
     end
 
