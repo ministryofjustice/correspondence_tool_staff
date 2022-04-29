@@ -92,12 +92,12 @@ module Stats
             expect(in_time_unassigned_trigger_sar_case.already_late?).to be false
             expect(report.case_scope).to include(late_unassigned_trigger_sar_case)
             expect(report.case_scope).to include(in_time_unassigned_trigger_sar_case)
-            expect(results[12][:non_trigger_open_late]).to eq(2)
-            expect(results[12][:non_trigger_performance]).to eq(33.3)
-            expect(results[12][:trigger_open_late]).to eq(1)
-            expect(results[12][:trigger_open_in_time]).to eq(1)
-            expect(results[12][:trigger_performance]).to eq(50)
-            expect(results[12][:overall_performance]).to eq(40)
+            expect(results[201812][:non_trigger_open_late]).to eq(2)
+            expect(results[201812][:non_trigger_performance]).to eq(33.3)
+            expect(results[201812][:trigger_open_late]).to eq(1)
+            expect(results[201812][:trigger_open_in_time]).to eq(1)
+            expect(results[201812][:trigger_performance]).to eq(50)
+            expect(results[201812][:overall_performance]).to eq(40)
           end
         end
       end
