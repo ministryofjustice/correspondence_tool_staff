@@ -335,6 +335,15 @@ enabled_features:
     Host-staging: false
     Host-qa: true
     Host-prod: false
+  # Before enabling a host, make sure the necessary ENV variables are exposed in the environment
+  # through config_map / secrets. Refer to `config/initializers/devise.rb`, omniauth section.
+  devise_azure_activedirectory:
+    Local: true
+    Host-dev: true
+    Host-demo: false
+    Host-staging: false
+    Host-qa: false
+    Host-prod: false
 
 # Timing definitions for RetentionSchedule (GDPR / DPA) 
 retention_timings:
