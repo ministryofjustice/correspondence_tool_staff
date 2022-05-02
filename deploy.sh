@@ -191,11 +191,12 @@ function _deploy() {
             jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
   fi
 
-  if [ $environment == "qa" ]
-  then
-    kubectl apply -f config/kubernetes/${environment}/cronjob-restore-anonymised-db.yaml -n $namespace
-    kubectl apply -f config/kubernetes/${environment}/cronjob-update-search-index.yaml -n $namespace
-  fi
+  # Turn off the jobs for now
+  # if [ $environment == "qa" ]
+  # then
+  #   kubectl apply -f config/kubernetes/${environment}/cronjob-restore-anonymised-db.yaml -n $namespace
+  #   kubectl apply -f config/kubernetes/${environment}/cronjob-update-search-index.yaml -n $namespace
+  # fi
 
 }
 

@@ -18,7 +18,7 @@ spec:
             command:
               - sh
               - "-c"
-              - "bundle exec rake 'db:dump:local'"
+              - "bundle exec rake 'db:dump:delete_s3_dumps[latest,false]' && rake 'db:dump:local'"
             env:
               - name: DATABASE_URL
                 valueFrom:

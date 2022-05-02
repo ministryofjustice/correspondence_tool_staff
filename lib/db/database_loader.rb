@@ -12,9 +12,6 @@ class DatabaseLoader
   def run
     drop_and_recreate_database
     load_database
-    user_settings = UsersSettingsForAnonymizer.new(nil)
-    user_settings.load_from_file("dumps/user_settings.json")
-    user_settings.add_roles()
   end
 
   private
