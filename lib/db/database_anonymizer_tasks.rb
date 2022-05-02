@@ -52,7 +52,8 @@ class DatabaseAnonymizerTasks
     @db_connection_url = task_arguments[:db_connection_url]
     created_at = task_arguments[:timestamp]
     @base_file_name = "#{@tag}_#{created_at}"
-    user_settings_reader =  UsersSettingsForAnonymizer.new(@s3_bucket)
+    user_settings_reader =  UsersSettingsForAnonymizer.new()
+    user_settings_reader.load_user_settings_from_s3(@s3_bucket)
     @anonymizer = DatabaseAnonymizer.new(user_settings_reader, task_arguments[:limit])
   end
 
@@ -103,9 +104,9 @@ class DatabaseAnonymizerTasks
         activerecord_models[model_key] = {
           "table_name" => activerecord_model.table_name, 
           "attributes" => activerecord_model.new.attributes.keys
-        }  
-      rescue NotImplementedError
-        false
+        }
+      rescue StandardError, NotImplementedError => error
+        puts error.message
       end
     end
     File.open(filename, "w") do |f|

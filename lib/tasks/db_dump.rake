@@ -87,6 +87,21 @@ namespace :db do
       dumper.run
     end
 
+    desc 'upload user_settings for anonymizer into s3 bucket under dumps folder'
+    task :upload_user_settings, [:setting_file, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
+      raise "Please specifiy the file you want to upload" unless args[:setting_file].present?
+      s3_bucket = init_s3_bucket(args)
+      user_settings = UsersSettingsForAnonymizer.new()
+      user_settings.upload_settings_to_s3(s3_bucket, Rails.root.join(args[:setting_file]))
+    end
+
+    desc 'download user_settings for anonymizer from s3 buckets'
+    task :download_user_settings, [:bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
+      s3_bucket = init_s3_bucket(args)
+      user_settings = UsersSettingsForAnonymizer.new()
+      user_settings.download_user_settings_from_s3(s3_bucket, Rails.root.join("user_settings.json"))
+    end
+
     desc 'List s3 database dump files'
     task :list_s3_dumps, [:tag, :bucket_key_id, :bucket_access_key, :bucket] => :environment do |_task, args|
       include ActionController
@@ -143,9 +158,9 @@ namespace :db do
         end 
       end
       
-      puts "Download the user settingsxs"
+      puts "Download the user settings"
       setting_filename = Rails.root.join(dir_name_base, "user_settings.json")
-      UsersSettingsForAnonymizer.new(s3_bucket).download_user_settings(setting_filename)
+      UsersSettingsForAnonymizer.new().download_user_settings_from_s3(s3_bucket, setting_filename)
 
       DumperUtils.shell_working "Decompress all those sql files from local folder #{dirname}" do
         Dir.glob("#{dirname}/*.gz").sort.map do | local_filename |
@@ -240,6 +255,11 @@ namespace :db do
         env = ENV['ENV'] || 'local'
         raise "This task is not allowed on non-prod environment." unless env != 'prod'
         DatabaseLoader.new(env, dirname).run
+
+        user_settings = UsersSettingsForAnonymizer.new()
+        setting_filename = Rails.root.join(dirname, "user_settings.json")
+        user_settings.load_user_settings_from_local(setting_filename)
+        user_settings.add_roles()
       end    
     end
 
