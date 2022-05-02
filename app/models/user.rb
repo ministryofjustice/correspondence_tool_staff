@@ -28,7 +28,8 @@ class User < ApplicationRecord
   # :confirmable, :lockable and :omniauthable
 
   devise :database_authenticatable, :timeoutable,
-    :trackable, :validatable, :recoverable, :lockable
+    :trackable, :validatable, :recoverable, :lockable,
+    :omniauthable, omniauth_providers: [:azure_activedirectory_v2]
 
   has_paper_trail only: [:email, :encrypted_password, :full_name, :deleted_at]
 

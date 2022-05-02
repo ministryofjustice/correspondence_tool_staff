@@ -6,8 +6,10 @@ Rails.application.routes.draw do
 
   get '/contacts_search', to: 'contacts#contacts_search'
 
-
-  devise_for :users, controllers: { passwords: 'passwords' }
+  devise_for :users, controllers: {
+    passwords: 'passwords',
+    omniauth_callbacks: 'omniauth_callbacks'
+  }
 
   gnav = Settings.global_navigation
 
