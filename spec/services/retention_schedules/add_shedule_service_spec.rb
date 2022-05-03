@@ -6,71 +6,32 @@ describe RetentionSchedules::AddScheduleService do
     create(
       :offender_sar_complaint, 
       :closed,
-      identifier: 'closed offender sar complaint',
-      received_date: 4.weeks.ago,
-      retention_schedule: 
-      RetentionSchedule.new(
-        planned_erasure_date: Date.today
-      )
+      retention_schedule:
+        RetentionSchedule.new(
+          planned_erasure_date: Date.today
+        )
     )
   }
 
   let(:other_related_complaints) {
-    with_rs_cases = 3.times.map do
-      create(
-        :offender_sar_complaint, 
-        :closed,
-        original_case: closed_offender_sar_complaint.original_case, 
-        identifier: 'closed offender sar complaint',
-        received_date: 4.weeks.ago,
-        retention_schedule: 
-        RetentionSchedule.new(
-          planned_erasure_date: Date.today
-        )
-      )
+    rs_needed = [true, true, true, false, false]
+    5.times.map.with_index do |_, i|
+      create_offsar_complaint(rs_needed: rs_needed[i], state: :closed)
     end
-
-    without_rs_cases = 3.times.map do
-      create(
-        :offender_sar_complaint, 
-        :closed,
-        original_case: closed_offender_sar_complaint.original_case, 
-        identifier: 'closed offender sar complaint',
-        received_date: 4.weeks.ago
-      )
-    end
-    with_rs_cases + without_rs_cases 
   }
 
   let(:other_related_open_complaints) {
     2.times.map do
-      kase = create(
-        :offender_sar_complaint, 
-        :to_be_assessed,
-        original_case: closed_offender_sar_complaint.original_case, 
-        identifier: 'closed offender sar complaint',
-        received_date: 4.weeks.ago,
-      )
-      kase
+      create_offsar_complaint(rs_needed: false, state: :to_be_assessed)
     end
   }
 
-  before do
-    # set up reverse links for original case
-    original_case = closed_offender_sar_complaint.original_case
-    original_case.linked_cases = [closed_offender_sar_complaint] + 
-      other_related_complaints +
-      other_related_open_complaints
-    original_case.save
-  end
-
   let(:closed_offender_sar) {
-    create(
-      :offender_sar_case, 
-      :closed,
-      identifier: 'closed offender sar',
-      received_date: 4.weeks.ago
-    )
+    create_offsar(rs_needed: false, state: :closed)
+  }
+
+  let(:closed_offender_sar_with_retention_schedule) {
+    create_offsar(rs_needed: true, state: :closed)
   }
 
   let(:mock_case) {
@@ -83,31 +44,24 @@ describe RetentionSchedules::AddScheduleService do
     )
   }
 
-
-  let(:closed_offender_sar_with_retention_schedule) {
-    create(
-      :offender_sar_case, :closed,
-      identifier: 'closed offender sar',
-      received_date: 4.weeks.ago,
-      retention_schedule: 
-      RetentionSchedule.new(
-        planned_erasure_date: Date.today
-      )
-    )
-  }
-
   let(:expected_off_sar_erasure_date) {
-    # defined as these in Settings 
-    # and then referenced in service class
-    years = 8.years
-    months = 6.months
-    added_days = 1.day
-
     # i.e. the day this test is run
     closure_date = Date.today
 
-    (closure_date + years + months + added_days)
+    # defined as these in Settings.retention_timings.off_sars
+    # and then referenced in service class
+    (closure_date + 8.years + 6.months + 1.day)
   }
+
+  before do
+    # set up reverse links for original case
+    original_case = closed_offender_sar_complaint.original_case
+    original_case.linked_cases = 
+      [closed_offender_sar_complaint] + 
+      other_related_complaints +
+      other_related_open_complaints
+    original_case.save
+  end
 
   describe 'cases service can mutate' do
     it 'cannot be cases other than offender sar' do
@@ -145,68 +99,93 @@ describe RetentionSchedules::AddScheduleService do
       expect(kase.retention_schedule).to be(retention_schedule)
       expect(expected_date).to match(expected_off_sar_erasure_date)
     end
+  end
+
+  context 'for planned erasure dates on Offender SARs Complaints' do
+    it 'sets them correctly for the complaint and the original case' do
+      retention_schedule = closed_offender_sar_complaint.retention_schedule
+      kase = closed_offender_sar_complaint
+
+      original_kase = closed_offender_sar_complaint.original_case
+
+      service = RetentionSchedules::AddScheduleService.new(kase: kase)
+      service.call
+
+      expected_date = kase.retention_schedule.planned_erasure_date
+
+      expected_original_kase_date = original_kase
+        .retention_schedule
+        .planned_erasure_date
+
+      expect(kase.retention_schedule).to be(retention_schedule)
+      expect(original_kase.retention_schedule).not_to be(retention_schedule)
+
+      expect(expected_date).to match(expected_off_sar_erasure_date)
+      expect(expected_original_kase_date).to match(expected_off_sar_erasure_date)
     end
 
-  context 'when setting planned erasure dates on Offender SARs Complaints' do
-    context 'it sets the correct planned eraure date' do
-      it 'on the complaint and the original case' do
-        retention_schedule = closed_offender_sar_complaint.retention_schedule
-        kase = closed_offender_sar_complaint
+    it 'sets them correctly on closed complaints related to the original case' do
+      service = RetentionSchedules::AddScheduleService.new(
+        kase: closed_offender_sar_complaint
+      )
+      service.call
 
-        original_kase = closed_offender_sar_complaint.original_case
+      expected_date = closed_offender_sar_complaint
+        .retention_schedule
+        .planned_erasure_date
 
-        service = RetentionSchedules::AddScheduleService.new(kase: kase)
-        service.call
+      original_kase = closed_offender_sar_complaint.original_case
 
-        expected_date = kase.retention_schedule.planned_erasure_date
+      ok_retention_schedule = original_kase.retention_schedule
 
-        expected_original_kase_date = original_kase
+      other_related_complaints.each do |related_complaint|
+        related_original_case = related_complaint.original_case
+
+        related_case_date = related_complaint
           .retention_schedule
           .planned_erasure_date
 
-        expect(kase.retention_schedule).to be(retention_schedule)
-        expect(original_kase.retention_schedule).not_to be(retention_schedule)
-
-        expect(expected_date).to match(expected_off_sar_erasure_date)
-        expect(expected_original_kase_date).to match(expected_off_sar_erasure_date)
+        expect(ok_retention_schedule).to_not be(related_complaint.retention_schedule)
+        expect(expected_date).to match(related_case_date)
+        expect(expected_off_sar_erasure_date).to match(related_case_date)
+        expect(original_kase).to match(related_original_case)
       end
 
-      it 'on other closed complaints related to the original case' do
-
-        service = RetentionSchedules::AddScheduleService.new(
-          kase: closed_offender_sar_complaint
-        )
-        service.call
-
-        expected_date = closed_offender_sar_complaint
-                          .retention_schedule
-                          .planned_erasure_date
-
-        original_kase = closed_offender_sar_complaint.original_case
-
-        ok_retention_schedule = original_kase.retention_schedule
-
-        other_related_complaints.each do |related_complaint|
-          related_original_case = related_complaint.original_case
-
-          related_case_date = related_complaint
-                                .retention_schedule
-                                .planned_erasure_date
-
-          expect(ok_retention_schedule).to_not be(related_complaint.retention_schedule)
-
-          expect(expected_date).to match(related_case_date)
-
-          expect(expected_off_sar_erasure_date).to match(related_case_date)
-
-          expect(original_kase).to match(related_original_case)
-        end
-
-        other_related_open_complaints.each do |related_complaint|
-          related_original_case = related_complaint.original_case
-          expect(related_complaint.retention_schedule).to be(nil)
-        end
+      other_related_open_complaints.each do |related_complaint|
+        related_original_case = related_complaint.original_case
+        expect(related_complaint.retention_schedule).to be(nil)
       end
     end
+  end
+
+  def create_offsar(rs_needed:, state:)
+    create(
+      :offender_sar_case, 
+      state,
+      retention_schedule: 
+        if rs_needed
+          RetentionSchedule.new(
+            planned_erasure_date: Date.today
+          )
+        else
+          nil
+        end
+    )
+  end
+
+  def create_offsar_complaint(rs_needed:, state:)
+    create(
+      :offender_sar_complaint, 
+      state,
+      original_case: closed_offender_sar_complaint.original_case,
+      retention_schedule: 
+        if rs_needed
+          RetentionSchedule.new(
+            planned_erasure_date: Date.today
+          )
+        else
+          nil
+        end
+    )
   end
 end
