@@ -16,8 +16,8 @@ describe RetentionSchedules::AddScheduleService do
   }
 
   let(:other_related_complaints) {
-    5.times.map do
-      kase = create(
+    with_rs_cases = 3.times.map do
+      create(
         :offender_sar_complaint, 
         :closed,
         original_case: closed_offender_sar_complaint.original_case, 
@@ -28,6 +28,29 @@ describe RetentionSchedules::AddScheduleService do
           planned_erasure_date: Date.today
         )
       )
+    end
+
+    without_rs_cases = 3.times.map do
+      create(
+        :offender_sar_complaint, 
+        :closed,
+        original_case: closed_offender_sar_complaint.original_case, 
+        identifier: 'closed offender sar complaint',
+        received_date: 4.weeks.ago
+      )
+    end
+    with_rs_cases + without_rs_cases 
+  }
+
+  let(:other_related_open_complaints) {
+    2.times.map do
+      kase = create(
+        :offender_sar_complaint, 
+        :to_be_assessed,
+        original_case: closed_offender_sar_complaint.original_case, 
+        identifier: 'closed offender sar complaint',
+        received_date: 4.weeks.ago,
+      )
       kase
     end
   }
@@ -35,7 +58,9 @@ describe RetentionSchedules::AddScheduleService do
   before do
     # set up reverse links for original case
     original_case = closed_offender_sar_complaint.original_case
-    original_case.linked_cases = [closed_offender_sar_complaint] + other_related_complaints
+    original_case.linked_cases = [closed_offender_sar_complaint] + 
+      other_related_complaints +
+      other_related_open_complaints
     original_case.save
   end
 
@@ -58,17 +83,6 @@ describe RetentionSchedules::AddScheduleService do
     )
   }
 
-  let(:expected_off_sar_erasure_date) {
-    # defined in Settings referenced in service class
-    years = 8.years
-    months = 6.months
-    added_days = 1.day
-
-    # i.e. the day this test is run
-    closure_date = Date.today
-
-    (closure_date + years + months + added_days)
-  }
 
   let(:closed_offender_sar_with_retention_schedule) {
     create(
@@ -80,6 +94,19 @@ describe RetentionSchedules::AddScheduleService do
         planned_erasure_date: Date.today
       )
     )
+  }
+
+  let(:expected_off_sar_erasure_date) {
+    # defined as these in Settings 
+    # and then referenced in service class
+    years = 8.years
+    months = 6.months
+    added_days = 1.day
+
+    # i.e. the day this test is run
+    closure_date = Date.today
+
+    (closure_date + years + months + added_days)
   }
 
   describe 'cases service can mutate' do
@@ -144,7 +171,7 @@ describe RetentionSchedules::AddScheduleService do
         expect(expected_original_kase_date).to match(expected_off_sar_erasure_date)
       end
 
-      it 'on other the complaints related to the original case' do
+      it 'on other closed complaints related to the original case' do
 
         service = RetentionSchedules::AddScheduleService.new(
           kase: closed_offender_sar_complaint
@@ -173,6 +200,11 @@ describe RetentionSchedules::AddScheduleService do
           expect(expected_off_sar_erasure_date).to match(related_case_date)
 
           expect(original_kase).to match(related_original_case)
+        end
+
+        other_related_open_complaints.each do |related_complaint|
+          related_original_case = related_complaint.original_case
+          expect(related_complaint.retention_schedule).to be(nil)
         end
       end
     end

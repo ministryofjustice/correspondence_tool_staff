@@ -48,7 +48,7 @@ module RetentionSchedules
 
       while linked_cases.present?
         current_case = linked_cases.shift
-        if processed_cases.exclude?(current_case)
+        if processed_cases.exclude?(current_case) && current_case.closed?
           add_retention_schedule(linked_case: current_case)
           processed_cases << current_case
         end
