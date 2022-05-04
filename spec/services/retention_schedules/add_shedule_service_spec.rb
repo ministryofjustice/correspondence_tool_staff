@@ -171,7 +171,6 @@ describe RetentionSchedules::AddScheduleService do
       end
 
       other_related_open_complaints.each do |related_complaint|
-        related_original_case = related_complaint.original_case
         expect(related_complaint.retention_schedule).to be(nil)
       end
     end

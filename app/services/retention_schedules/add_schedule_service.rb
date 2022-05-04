@@ -39,9 +39,9 @@ module RetentionSchedules
     def add_retention_schedule(linked_case: nil)
       kase = linked_case.present? ? linked_case : @kase
       if kase.retention_schedule.present?
-        kase
-          .retention_schedule
-          .planned_erasure_date = @planned_erasure_date 
+        rs = kase.retention_schedule
+        rs.planned_erasure_date = @planned_erasure_date 
+        rs.save
       else
         kase.retention_schedule = RetentionSchedule.new(
           planned_erasure_date: @planned_erasure_date 
