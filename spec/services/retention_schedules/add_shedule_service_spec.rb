@@ -6,32 +6,54 @@ describe RetentionSchedules::AddScheduleService do
     create(
       :offender_sar_complaint, 
       :closed,
-      retention_schedule:
-        RetentionSchedule.new(
-          planned_erasure_date: Date.today
-        )
+      :with_retention_schedule
     )
   }
 
   let(:other_related_complaints) {
-    rs_needed = [true, true, true, false, false]
-    5.times.map.with_index do |_, i|
-      create_offsar_complaint(rs_needed: rs_needed[i], state: :closed)
+    with_rs_cases = 3.times.map do 
+      create(
+        :offender_sar_complaint, 
+        :closed,
+        :with_retention_schedule,
+        original_case: closed_offender_sar_complaint.original_case
+      )
     end
+
+    without_rs_cases = 2.times.map do
+      create(
+        :offender_sar_complaint, 
+        :closed,
+        original_case: closed_offender_sar_complaint.original_case
+      )
+    end
+
+    with_rs_cases + without_rs_cases
   }
 
   let(:other_related_open_complaints) {
     2.times.map do
-      create_offsar_complaint(rs_needed: false, state: :to_be_assessed)
+      create(
+        :offender_sar_complaint, 
+        :to_be_assessed,
+        original_case: closed_offender_sar_complaint.original_case
+      )
     end
   }
 
   let(:closed_offender_sar) {
-    create_offsar(rs_needed: false, state: :closed)
+    create(
+      :offender_sar_case, 
+      :closed
+    )
   }
 
   let(:closed_offender_sar_with_retention_schedule) {
-    create_offsar(rs_needed: true, state: :closed)
+    create(
+      :offender_sar_case, 
+      :closed,
+      :with_retention_schedule
+    )
   }
 
   let(:mock_case) {
@@ -60,8 +82,8 @@ describe RetentionSchedules::AddScheduleService do
     original_case.save
   end
 
-  describe 'cases service can mutate' do
-    it 'cannot be cases other than offender sar' do
+  describe 'what types of case service can act upon' do
+    it 'cannot chage cases other than offender sar or complaints' do
       service = RetentionSchedules::AddScheduleService.new(
         kase: mock_case
       )
@@ -84,7 +106,7 @@ describe RetentionSchedules::AddScheduleService do
       expect(expected_date).to match(expected_off_sar_erasure_date)
     end
 
-    it 'sets the correct planned erasure date when off sar already has a retention schedule' do
+    it 'sets the correct planned erasure date when an off sar already has a retention schedule' do
       retention_schedule = closed_offender_sar_with_retention_schedule.retention_schedule
       kase = closed_offender_sar_with_retention_schedule
 
@@ -103,7 +125,6 @@ describe RetentionSchedules::AddScheduleService do
     it 'sets them correctly for the complaint and the original case' do
       retention_schedule = closed_offender_sar_complaint.retention_schedule
       kase = closed_offender_sar_complaint
-
       original_kase = closed_offender_sar_complaint.original_case
 
       service = RetentionSchedules::AddScheduleService.new(kase: kase)
@@ -154,36 +175,5 @@ describe RetentionSchedules::AddScheduleService do
         expect(related_complaint.retention_schedule).to be(nil)
       end
     end
-  end
-
-  def create_offsar(rs_needed:, state:)
-    create(
-      :offender_sar_case, 
-      state,
-      retention_schedule: 
-        if rs_needed
-          RetentionSchedule.new(
-            planned_erasure_date: Date.today
-          )
-        else
-          nil
-        end
-    )
-  end
-
-  def create_offsar_complaint(rs_needed:, state:)
-    create(
-      :offender_sar_complaint, 
-      state,
-      original_case: closed_offender_sar_complaint.original_case,
-      retention_schedule: 
-        if rs_needed
-          RetentionSchedule.new(
-            planned_erasure_date: Date.today
-          )
-        else
-          nil
-        end
-    )
   end
 end
