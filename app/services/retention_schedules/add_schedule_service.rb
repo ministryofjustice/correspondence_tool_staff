@@ -9,12 +9,19 @@ module RetentionSchedules
     end
 
     def call
-      if @kase.offender_sar? || @kase.offender_sar_complaint?
-        add_retention_schedules
-        return @kase
-      else
-        @result = :invalid_case
-        return @kase
+      ActiveRecord::Base.transaction do
+        begin
+          if @kase.offender_sar? || @kase.offender_sar_complaint?
+            add_retention_schedules
+            @result = :success
+          else
+            @result = :invalid_case_type
+          end
+        rescue ActiveRecord::RecordInvalid => err
+          Rails.logger.error err.to_s
+          Rails.logger.error err.backtrace.join("\n\t")
+          @result = :error
+        end
       end
     end
 

@@ -45,12 +45,9 @@ describe RetentionSchedules::AddScheduleService do
   }
 
   let(:expected_off_sar_erasure_date) {
-    # i.e. the day this test is run
-    closure_date = Date.today
-
     # defined as these in Settings.retention_timings.off_sars
     # and then referenced in service class
-    (closure_date + 8.years + 6.months + 1.day)
+    (Date.today + 8.years + 6.months + 1.day)
   }
 
   before do
@@ -70,7 +67,7 @@ describe RetentionSchedules::AddScheduleService do
       )
       service.call
 
-      expect(service.result).to be(:invalid_case)
+      expect(service.result).to be(:invalid_case_type)
     end
   end
 
@@ -96,6 +93,7 @@ describe RetentionSchedules::AddScheduleService do
 
       expected_date = kase.retention_schedule.planned_erasure_date
 
+      expect(service.result).to be(:success)
       expect(kase.retention_schedule).to be(retention_schedule)
       expect(expected_date).to match(expected_off_sar_erasure_date)
     end
