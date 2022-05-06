@@ -82,19 +82,6 @@ CREATE TYPE public.requester_type AS ENUM (
 
 
 --
--- Name: retention_status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.retention_status AS ENUM (
-    'review',
-    'retain',
-    'erasable',
-    'erased',
-    'not_set'
-);
-
-
---
 -- Name: search_query_type; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -866,9 +853,9 @@ CREATE TABLE public.retention_schedules (
     case_id bigint NOT NULL,
     planned_erasure_date date,
     erasure_date date,
-    status public.retention_status,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    state character varying
 );
 
 
@@ -2301,6 +2288,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20210917113753'),
 ('20220117091139'),
 ('20220319002602'),
-('20220401091216');
+('20220401091216'),
+('20220506131034');
 
 

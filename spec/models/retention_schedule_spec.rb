@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'aasm/rspec'
 
 RSpec.describe RetentionSchedule, type: :model do
 
@@ -27,15 +28,42 @@ RSpec.describe RetentionSchedule, type: :model do
     ) 
   }
 
-  describe '#status' do
-    it 'defaults to "not_set"'do
-      expect(retention_schedule.status).to eq('not_set')
+  describe 'state transitions' do
+    it 'has an initial state of "not_set"' do
+      expect(retention_schedule).to have_state(:not_set)
     end
 
-    it 'cannot have a status outside of enum definition' do
-      expect { 
-        retention_schedule.status = 'incorrect_status' 
-      }.to raise_error(ArgumentError)
+    it 'allows the correct transitions' do
+      expect(retention_schedule).to transition_from(:not_set, :review, :retain)
+        .to(:retain).on_event(:mark_for_retention)
+
+      expect(retention_schedule).to transition_from(:not_set, :retain, :destroy)
+        .to(:review).on_event(:mark_for_review)
+
+      expect(retention_schedule).to transition_from(:not_set, :retain, :review)
+        .to(:destroy).on_event(:mark_for_destruction)
+
+      expect(retention_schedule).to transition_from(:destroy)
+        .to(:destroyed).on_event(:final_destruction)
+
+      expect(retention_schedule).to transition_from(:retain)
+        .to(:not_set).on_event(:unlist)
+    end
+
+    it 'disallows incorrect transitions' do
+      expect(retention_schedule).to_not transition_from(:not_set, :retain, :review)
+        .to(:destroyed).on_event(:final_destruction)
+
+      expect(retention_schedule).to_not transition_from(:review, :destroy)
+        .to(:unlist).on_event(:unlist)
+
+      retention_schedule.mark_for_destruction
+      retention_schedule.final_destruction
+
+      expect(retention_schedule).to have_state(:destroyed)
+      expect(retention_schedule).to_not allow_transition_to(
+        :not_set, :retain, :review, :destroy
+      )
     end
   end
 
@@ -43,7 +71,6 @@ RSpec.describe RetentionSchedule, type: :model do
     it { should belong_to(:case).class_name('Case::SAR::Offender') }
     it { should validate_presence_of(:case) }
     it { should validate_presence_of(:planned_erasure_date) }
-    it { should validate_presence_of(:status) }
     
     it 'should be valid' do
       expect(retention_schedule).to be_valid

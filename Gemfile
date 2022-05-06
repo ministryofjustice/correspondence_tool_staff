@@ -9,6 +9,7 @@ gem 'acts_as_tree', '~> 2.9'
 gem 'rubyzip', '>= 1.2.4'
 gem 'caxlsx'
 gem 'caxlsx_rails'
+gem 'aasm', '~> 5.2'
 # AXLSX styler - easy styling of cells based on cell references
 gem 'axlsx_styler'
 gem 'awesome_print'
