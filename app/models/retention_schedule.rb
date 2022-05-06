@@ -12,11 +12,11 @@ class RetentionSchedule < ApplicationRecord
              class_name: 'Case::SAR::Offender'
 
   aasm column: 'state', logger: Rails.logger do
-    state :not_set, initial: true
-    state :retain
-    state :review
-    state :destroy
-    state :destroyed
+    state :not_set, initial: true, display: 'Not set'
+    state :retain, display: 'Retain'
+    state :review, display: 'Review'
+    state :destroy, display: 'Destroy'
+    state :destroyed, display: 'Anonymised'
     
     event :mark_for_retention do
       transitions from: [:not_set, :review, :destroy], to: :retain
@@ -38,7 +38,6 @@ class RetentionSchedule < ApplicationRecord
       transitions from: [:destroy], to: :destroyed
     end
   end
-
 
   class << self
     def common_date_viewable_from_range

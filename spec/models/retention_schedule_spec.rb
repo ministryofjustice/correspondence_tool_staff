@@ -28,6 +28,32 @@ RSpec.describe RetentionSchedule, type: :model do
     ) 
   }
 
+  describe 'deplay values for states' do
+    # TODO
+    # retention_schedule.aasm.human_state
+
+    it 'has correct display values for its states' do
+      retention_schedule = RetentionSchedule.new(
+        case: kase, 
+        planned_erasure_date: Date.today
+      ) 
+
+      expect(retention_schedule.aasm.human_state).to match('Not set')
+
+      retention_schedule.mark_for_retention
+      expect(retention_schedule.aasm.human_state).to match('Retain')
+
+      retention_schedule.mark_for_review
+      expect(retention_schedule.aasm.human_state).to match('Review')
+
+      retention_schedule.mark_for_destruction
+      expect(retention_schedule.aasm.human_state).to match('Destroy')
+
+      retention_schedule.final_destruction
+      expect(retention_schedule.aasm.human_state).to match('Anonymised')
+    end
+  end
+
   describe 'state transitions' do
     it 'has an initial state of "not_set"' do
       expect(retention_schedule).to have_state(:not_set)
