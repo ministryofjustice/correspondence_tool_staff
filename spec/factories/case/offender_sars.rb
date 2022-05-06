@@ -142,4 +142,17 @@ FactoryBot.define do
       kase.reload
     end
   end
+
+  trait :with_retention_schedule do
+    transient do
+      planned_erasure_date { Date.today }
+    end
+
+    after(:create) do |kase, evaluator|
+      kase.retention_schedule = RetentionSchedule.new(
+        planned_erasure_date: evaluator.planned_erasure_date
+      )
+      kase.save!
+    end
+  end
 end

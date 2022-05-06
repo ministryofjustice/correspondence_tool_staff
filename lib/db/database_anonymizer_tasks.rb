@@ -52,8 +52,9 @@ class DatabaseAnonymizerTasks
     @db_connection_url = task_arguments[:db_connection_url]
     created_at = task_arguments[:timestamp]
     @base_file_name = "#{@tag}_#{created_at}"
-    user_settings_reader =  UsersSettingsForAnonymizer.new(s3_bucket)
-    @anonymizer = DatabaseAnonymizer.new(task_arguments[:limit], user_settings_reader)
+    user_settings_reader =  UsersSettingsForAnonymizer.new()
+    user_settings_reader.load_user_settings_from_s3(@s3_bucket)
+    @anonymizer = DatabaseAnonymizer.new(user_settings_reader, task_arguments[:limit])
   end
 
   def set_up_bucket()
@@ -103,9 +104,9 @@ class DatabaseAnonymizerTasks
         activerecord_models[model_key] = {
           "table_name" => activerecord_model.table_name, 
           "attributes" => activerecord_model.new.attributes.keys
-        }  
-      rescue NotImplementedError
-        false
+        }
+      rescue StandardError, NotImplementedError => error
+        puts error.message
       end
     end
     File.open(filename, "w") do |f|
@@ -134,7 +135,7 @@ class DatabaseAnonymizerTasks
     if table_name.blank?
       raise RuntimeError.new("No table name is provided")
     end
-    counter = task_arguments[:counter]
+    counter = task_arguments[:counter].to_i
     filename = "#{@base_file_name}_#{convert_counter_to_string(counter)}_#{table_name}"
     command_line = "pg_dump #{@db_connection_url} -v --no-owner --no-privileges --no-password --data-only --table=#{table_name} -f #{filename}.sql"
     result = system command_line

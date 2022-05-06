@@ -11,6 +11,60 @@ feature 'Closing a case' do
     login_as responder
   end
 
+  context 'GDPR retention schedules' do
+    given!(:case_ready_to_close) {
+      create(
+        :offender_sar_complaint,
+        :response_required,
+        received_date: 5.days.ago 
+      )
+    }
+
+    given(:original_case) { case_ready_to_close.original_case }
+
+    given(:other_related_complaints) {
+      2.times.map do
+        create(
+          :offender_sar_complaint, 
+          :closed,
+          :with_retention_schedule,
+          original_case: original_case
+        )
+      end
+    }
+    
+    before do
+      # set up reverse links for original case
+      original_case.linked_cases = other_related_complaints
+      original_case.save
+    end
+
+    scenario 'adds retention schedule to case and related cases on closure', js: true do
+      open_cases_page.load
+      close_case(case_ready_to_close)
+
+      cases_close_page.fill_in_date_responded(0.days.ago)
+      cases_close_page.click_on 'Continue'
+
+      show_page = cases_show_page.case_details
+
+      expect(show_page.response_details.planned_erasure.date.first.text)
+        .to eq(formatted_planned_closure_date(case_ready_to_close))
+
+      visit("cases/#{original_case.id}")
+      show_page = cases_show_page.case_details
+      expect(show_page.response_details.planned_erasure.date.first.text)
+        .to eq(formatted_planned_closure_date(case_ready_to_close))
+
+      other_related_complaints.each do |kase|
+        visit("cases/#{kase.id}")
+        show_page = cases_show_page.case_details
+        expect(show_page.response_details.planned_erasure.date.first.text)
+          .to eq(formatted_planned_closure_date(case_ready_to_close))
+      end
+    end
+  end
+
   context 'Reporting timiliness' do
     Timecop.freeze(Time.local(2017, 11, 23, 13, 13, 56)) do
       context 'responded-to in time' do
@@ -78,5 +132,12 @@ feature 'Closing a case' do
     expect(cases_show_page).
       to have_link('Close case', href: "/cases/offender_sar_complaints/#{kase.id}/close")
     click_link 'Close case'
+  end
+
+  def formatted_planned_closure_date(kase)
+    I18n.l(
+      kase.retention_schedule.planned_erasure_date,
+      format: :default
+    )
   end
 end

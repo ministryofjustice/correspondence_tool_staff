@@ -67,3 +67,8 @@ tbody.response-details
       th = t('common.case.outcome')
       td = case_details.pretty_ico_decision
 
+  - if case_details.retention_schedule.present? && FeatureSet.branston_retention_scheduling.enabled?
+    tr.planned-erasure-date
+      th = "Planned erasure date"
+      td = case_details.planned_erasure_date
+

@@ -30,7 +30,7 @@ Rails.application.configure do
                          :association => :case
 
     # searches are also a challenge...
-    [:responder, :message_transitions, :managing_assignment, :responder_assignment, :responding_team, :approver_assignments, :managing_team].each do |assoc|
+    [:retention_schedule, :responder, :message_transitions, :managing_assignment, :responder_assignment, :responding_team, :approver_assignments, :managing_team].each do |assoc|
       [Case::FOI::TimelinessReview, Case::FOI::ComplianceReview,
        Case::ICO::FOI, Case::FOI::Standard, Case::SAR::Standard, 
        Case::SAR::Offender, Case::SAR::OffenderComplaint].each do |klass|

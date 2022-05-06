@@ -123,11 +123,11 @@ module Stats
             expect(report.case_scope).to include(late_open_case)
             expect(report.case_scope).to include(in_time_open_case)
 
-            expect(results[4][:overall_responded_in_time]).to eq(2)
-            expect(results[4][:overall_responded_late]).to eq(1)
-            expect(results[4][:overall_open_in_time]).to eq(3)
-            expect(results[4][:overall_open_late]).to eq(1)
-            expect(results[4][:overall_performance]).to eq(28.6)
+            expect(results[201904][:overall_responded_in_time]).to eq(2)
+            expect(results[201904][:overall_responded_late]).to eq(1)
+            expect(results[201904][:overall_open_in_time]).to eq(3)
+            expect(results[201904][:overall_open_late]).to eq(1)
+            expect(results[201904][:overall_performance]).to eq(28.6)
           end
         end
       end

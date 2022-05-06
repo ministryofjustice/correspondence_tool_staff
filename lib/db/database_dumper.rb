@@ -66,7 +66,7 @@ class DatabaseDumper
   end 
 
   def trigger_tasks
-    @tasks.slice(0, 10).each do | task |
+    @tasks.each do | task |
       if @running_mode == 'tasks'
         AnonymiserDBJob.perform_later(task[:task_function], task)
       else

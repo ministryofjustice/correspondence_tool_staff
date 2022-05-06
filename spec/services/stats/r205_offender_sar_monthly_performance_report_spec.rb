@@ -32,6 +32,7 @@ module Stats
         Timecop.freeze Time.new(2019, 6, 30, 12, 0, 0) do
           @period_start = 0.business_days.after(Date.new(2018, 12, 20))
           @period_end = 0.business_days.after(Date.new(2018, 12, 31))
+          @period_end1 = 0.business_days.after(Date.new(2019, 02, 01))
 
           @sar_1 = create :accepted_sar, identifier: 'sar-1', received_date: @period_start - 5.hours
           @offender_sar_1 = create :offender_sar_case, :waiting_for_data, identifier: 'osar-1', received_date: @period_start - 5.hours
@@ -58,11 +59,18 @@ module Stats
       context 'stats values' do
         it 'cases in different stages' do
           Timecop.freeze Time.new(2019, 01, 30, 12, 0, 0) do
-            responded_in_time = create(
+            @responded_in_time = create(
               :offender_sar_case,
               :closed,
             )
-            expect(responded_in_time.responded_in_time?).to be true
+            expect(@responded_in_time.responded_in_time?).to be true
+          end
+          Timecop.freeze Time.new(2019, 02, 30, 12, 0, 0) do
+            @responded_in_time1 = create(
+              :offender_sar_case,
+              :closed,
+            )
+            expect(@responded_in_time1.responded_in_time?).to be true
           end
           Timecop.freeze Time.new(2019, 6, 30, 12, 0, 0) do
             # pending "This fails when the analyzer runs because assign_responder_transitions is nil in business_unit_already_late?"
@@ -95,7 +103,7 @@ module Stats
 
             report = described_class.new(
               period_start: @period_start,
-              period_end: @period_end
+              period_end: @period_end1
             )
             report.run
             results = report.results
@@ -106,11 +114,17 @@ module Stats
             expect(report.case_scope).to include(late_unassigned_trigger_sar_case)
             expect(report.case_scope).to include(in_time_unassigned_trigger_sar_case)
 
-            expect(results[12][:overall_responded_in_time]).to eq(1)
-            expect(results[12][:overall_responded_late]).to eq(2)
-            expect(results[12][:overall_open_in_time]).to eq(1)
-            expect(results[12][:overall_open_late]).to eq(3)
-            expect(results[12][:overall_performance]).to eq(14.3)
+            expect(results[201812][:overall_responded_in_time]).to eq(1)
+            expect(results[201812][:overall_responded_late]).to eq(2)
+            expect(results[201812][:overall_open_in_time]).to eq(1)
+            expect(results[201812][:overall_open_late]).to eq(3)
+            expect(results[201812][:overall_performance]).to eq(14.3)
+
+            expect(results[201901][:overall_responded_in_time]).to eq(1)
+            expect(results[201901][:overall_responded_late]).to eq(0)
+            expect(results[201901][:overall_open_in_time]).to eq(0)
+            expect(results[201901][:overall_open_late]).to eq(0)
+            expect(results[201901][:overall_performance]).to eq(100.0)
           end
         end
       end
