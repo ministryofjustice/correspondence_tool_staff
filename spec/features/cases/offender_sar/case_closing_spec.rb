@@ -36,6 +36,12 @@ feature 'Closing a case' do
           .to eq 'Answered in time'
           expect(show_page.response_details.time_taken.data.text)
           .to eq '5 calendar days'
+
+          expect(show_page.response_details.planned_erasure)
+            .to have_content("Planned erasure date")
+
+          expect(show_page.response_details.planned_erasure.date.first.text)
+            .to eq(formatted_planned_closure_date(fully_granted_case))
         end
       end
 
@@ -74,5 +80,12 @@ feature 'Closing a case' do
     expect(cases_show_page).
       to have_link('Close case', href: "/cases/offender_sars/#{kase.id}/close")
     click_link 'Close case'
+  end
+
+  def formatted_planned_closure_date(kase)
+    I18n.l(
+      kase.retention_schedule.planned_erasure_date,
+      format: :default
+    )
   end
 end

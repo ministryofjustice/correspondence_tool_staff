@@ -349,4 +349,8 @@ enabled_features:
 retention_timings:
     common:
       viewable_from: 4
+    off_sars:
+      erasure:
+        years: 8
+        months: 6
 

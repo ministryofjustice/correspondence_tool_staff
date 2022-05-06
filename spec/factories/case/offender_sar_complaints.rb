@@ -228,7 +228,20 @@ FactoryBot.define do
       end
     end
 
+    trait :with_retention_schedule do
+      transient do
+        planned_erasure_date { Date.today }
+      end
+
+      after(:create) do |kase, evaluator|
+        kase.retention_schedule = RetentionSchedule.new(
+          planned_erasure_date: evaluator.planned_erasure_date
+        )
+        kase.save!
+      end
+    end
   end
+
 
   factory :accepted_complaint_case, parent: :offender_sar_complaint do
     transient do
@@ -241,6 +254,7 @@ FactoryBot.define do
       kase.responder_assignment.accepted!
     end
   end
+
 
   factory :closed_ico_complaint, parent: :offender_sar_complaint, traits: [:closed]do
     transient do
