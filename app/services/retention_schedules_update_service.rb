@@ -5,10 +5,10 @@ class RetentionSchedulesUpdateService
               :status_action
 
   STATUS_ACTIONS = {
-    further_review_needed: 'review',
-    retain: 'retain',
-    mark_for_destruction: 'erasable',
-    destroy_cases: 'erased'
+    further_review_needed: :mark_for_review,
+    retain: :mark_for_retention,
+    mark_for_destruction: :mark_for_destruction,
+    destroy_cases: :final_destruction
   }.freeze
 
   def initialize(retention_schedules_params:, action_text:)
@@ -61,7 +61,7 @@ class RetentionSchedulesUpdateService
       kase = Case::Base.includes(:retention_schedule).find(case_id)
       if kase
         retention_schedule = kase.retention_schedule
-        retention_schedule.status = @status_action
+        retention_schedule.public_send(@status_action)
         retention_schedule.save if retention_schedule.valid? 
       end
     end
