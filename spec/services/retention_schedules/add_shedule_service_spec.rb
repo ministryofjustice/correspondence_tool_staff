@@ -66,6 +66,16 @@ describe RetentionSchedules::AddScheduleService do
     )
   }
 
+  let(:mock_open_case) {
+    instance_double(
+      Case::SAR::Offender, 
+      offender_sar?: true,
+      offender_sar_complaint?: false,
+      last_transitioned_at: Date.today,
+      closed?: false
+    )
+  }
+
   let(:expected_off_sar_erasure_date) {
     # defined as these in Settings.retention_timings.off_sars
     # and then referenced in service class
@@ -83,13 +93,24 @@ describe RetentionSchedules::AddScheduleService do
   end
 
   describe 'what types of case service can act upon' do
-    it 'cannot chage cases other than offender sar or complaints' do
+    it 'cannot change cases other than offender sar or complaints' do
       service = RetentionSchedules::AddScheduleService.new(
         kase: mock_case
       )
+
+      service.call
+      expect(service.result).to be(:invalid_case_type)
+    end
+
+    it 'cannot add retention schedules to open cases' do
+      service = RetentionSchedules::AddScheduleService.new(
+        kase: mock_open_case
+      )
       service.call
 
-      expect(service.result).to be(:invalid_case_type)
+      expect(service.result).to be(:invalid_as_case_is_open)
+      expect(service).not_to receive(:add_retention_schedule)
+      expect(service).not_to receive(:add_retention_schedules)
     end
   end
 

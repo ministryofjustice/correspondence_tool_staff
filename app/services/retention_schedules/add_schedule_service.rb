@@ -9,6 +9,8 @@ module RetentionSchedules
     end
 
     def call
+      return if case_is_open
+
       ActiveRecord::Base.transaction do
         begin
           if @kase.offender_sar? || @kase.offender_sar_complaint?
@@ -26,6 +28,13 @@ module RetentionSchedules
     end
 
     private
+
+    def case_is_open
+      if !@kase.closed?
+        @result = :invalid_as_case_is_open
+        true
+      end
+    end
 
     def add_retention_schedules
       if @kase.linked_cases.present?
@@ -81,8 +90,7 @@ module RetentionSchedules
     end
 
     def closure_date
-      return @kase.last_transitioned_at.to_date if @kase.closed?
-      nil
+      @kase.last_transitioned_at.to_date 
     end
   end
 end
