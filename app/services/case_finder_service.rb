@@ -111,15 +111,15 @@ class CaseFinderService
   def erasable_cases_scope
     retention_cases_scope.where(
       retention_schedule: { 
-        status: ['erasable']
+        state: [:destroy]
       })
   end
 
   def triagable_cases_scope
-    triagable_statuses = ['review', 'retain', 'not_set']
+    triagable_states = [:review, :retain, :not_set]
     retention_cases_scope.where(
       retention_schedule: { 
-        status: triagable_statuses
+        state: triagable_states
       })
   end
 

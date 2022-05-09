@@ -6,14 +6,14 @@ namespace :retention_schedules do
         puts "Cannot run this command on production environment!"
       else
         puts "Seeding some cases with retention_schedules"
-        statuses = ['erasable', 'erasable', 'review', 'retain', 'not_set', 'review'] * 3
+        states = ['destroy', 'destroy', 'review', 'retain', 'not_set', 'review'] * 3
 
         count = 0
-        statuses.each do |status|
+        states.each do |state|
 
           case_with_retention_schedule(
             case_type: :offender_sar_case,
-            status: status,
+            state: state,
             planned_erasure_date: (Date.today - (3.months + rand(1..10).days))
           )
 
@@ -23,12 +23,12 @@ namespace :retention_schedules do
       end
     end
 
-    def case_with_retention_schedule(case_type:, status:, planned_erasure_date:)
+    def case_with_retention_schedule(case_type:, state:, planned_erasure_date:)
       kase = FactoryBot::create(
         case_type, 
         retention_schedule: 
         RetentionSchedule.new( 
-          status: status, 
+          state: state, 
           planned_erasure_date: planned_erasure_date 
         ) 
       )

@@ -29,9 +29,6 @@ RSpec.describe RetentionSchedule, type: :model do
   }
 
   describe 'deplay values for states' do
-    # TODO
-    # retention_schedule.aasm.human_state
-
     it 'has correct display values for its states' do
       retention_schedule = RetentionSchedule.new(
         case: kase, 

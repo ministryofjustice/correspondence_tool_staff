@@ -38,14 +38,14 @@ describe RetentionSchedulesUpdateService do
   let(:service) {
     RetentionSchedulesUpdateService.new(
       retention_schedules_params: selected_cases_params,
-      action_text: "Mark for destruction"
+      event_text: "Mark for destruction"
     )
   }
 
   let(:service_with_error) {
     RetentionSchedulesUpdateService.new(
       retention_schedules_params: selected_cases_params,
-      action_text: "non existant status"
+      event_text: "non existant status"
     )
   }
 
