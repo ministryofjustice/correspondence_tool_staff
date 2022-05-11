@@ -1,8 +1,8 @@
 class RetentionSchedule < ApplicationRecord
+  include AASM
 
   validates_presence_of(:case)
   validates_presence_of(:planned_erasure_date)
-  validates_presence_of(:status)
 
   # this should change to Case::Base
   # as this retention_schedule is expanded
@@ -11,13 +11,33 @@ class RetentionSchedule < ApplicationRecord
              foreign_key: :case_id,
              class_name: 'Case::SAR::Offender'
 
-  enum status: { 
-    review: "review", 
-    retain: "retain",  
-    erasable: "erasable", 
-    erased: "erased", 
-    not_set: "not_set" 
-  }, _default: "not_set"
+  aasm column: 'state', logger: Rails.logger do
+    state :not_set, initial: true, display: 'Not set'
+    state :retain, display: 'Retain'
+    state :review, display: 'Review'
+    state :to_be_destroyed, display: 'Destroy'
+    state :destroyed, display: 'Anonymised'
+    
+    event :mark_for_retention do
+      transitions from: [:not_set, :review, :to_be_destroyed], to: :retain
+    end
+
+    event :mark_for_review do
+      transitions from: [:not_set, :retain, :to_be_destroyed], to: :review
+    end
+
+    event :mark_for_destruction do
+      transitions from: [:not_set, :retain, :review], to: :to_be_destroyed
+    end
+
+    event :unlist do
+      transitions from: [:retain], to: :not_set
+    end
+
+    event :final_destruction do
+      transitions from: [:to_be_destroyed], to: :destroyed
+    end
+  end
 
   class << self
     def common_date_viewable_from_range

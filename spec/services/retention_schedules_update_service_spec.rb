@@ -4,7 +4,7 @@ describe RetentionSchedulesUpdateService do
   let!(:not_set_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'not_set',
+      state: 'not_set',
       date: Date.today - 4.months
     ) 
   }
@@ -12,7 +12,7 @@ describe RetentionSchedulesUpdateService do
   let!(:reviewable_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'review',
+      state: 'review',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -20,7 +20,7 @@ describe RetentionSchedulesUpdateService do
   let!(:retain_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'retain',
+      state: 'retain',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -38,14 +38,14 @@ describe RetentionSchedulesUpdateService do
   let(:service) {
     RetentionSchedulesUpdateService.new(
       retention_schedules_params: selected_cases_params,
-      action_text: "Mark for destruction"
+      event_text: "Mark for destruction"
     )
   }
 
   let(:service_with_error) {
     RetentionSchedulesUpdateService.new(
       retention_schedules_params: selected_cases_params,
-      action_text: "non existant status"
+      event_text: "non existant status"
     )
   }
 
@@ -56,9 +56,9 @@ describe RetentionSchedulesUpdateService do
       not_set_timely_kase.reload
       reviewable_timely_kase.reload
 
-      expect(not_set_timely_kase.retention_schedule.status).to eq 'erasable'
-      expect(reviewable_timely_kase.retention_schedule.status).to eq 'erasable'
-      expect(retain_timely_kase.retention_schedule.status).to eq 'retain'
+      expect(not_set_timely_kase.retention_schedule.state).to eq 'to_be_destroyed'
+      expect(reviewable_timely_kase.retention_schedule.state).to eq 'to_be_destroyed'
+      expect(retain_timely_kase.retention_schedule.state).to eq 'retain'
     end
   end
 
@@ -89,24 +89,23 @@ describe RetentionSchedulesUpdateService do
   end
 
   describe 'constants' do
-    it 'can resolve STATUS_ACTIONS to correct values' do
-      correct_statues = RetentionSchedule.statuses
+    it 'can resolve STATUS_ACTIONS to correct AASM event trigger method names' do
       statuses = RetentionSchedulesUpdateService::STATUS_ACTIONS
 
-      expect(statuses[:further_review_needed]).to eq correct_statues[:review]
-      expect(statuses[:retain]).to eq correct_statues[:retain]
-      expect(statuses[:mark_for_destruction]).to eq correct_statues[:erasable]
-      expect(statuses[:destroy_cases]).to eq correct_statues[:erased]
+      expect(statuses[:further_review_needed]).to eq :mark_for_review
+      expect(statuses[:retain]).to eq :mark_for_retention
+      expect(statuses[:mark_for_destruction]).to eq :mark_for_destruction
+      expect(statuses[:destroy_cases]).to eq :final_destruction
     end
   end
 
 
-  def case_with_retention_schedule(case_type:, status:, date:)
+  def case_with_retention_schedule(case_type:, state:, date:)
     kase = create(
       case_type, 
       retention_schedule: 
         RetentionSchedule.new( 
-         status: status, 
+         state: state,
          planned_erasure_date: date 
       ) 
     )

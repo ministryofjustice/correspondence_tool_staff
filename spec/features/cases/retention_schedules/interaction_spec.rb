@@ -13,7 +13,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:not_set_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'not_set',
+      state: 'not_set',
       date: Date.today - 4.months
     ) 
   }
@@ -22,7 +22,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:reviewable_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'review',
+      state: 'review',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -30,7 +30,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:reviewable_untimely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'review',
+      state: 'review',
       date: Date.today - (5.months)
     ) 
   }
@@ -39,7 +39,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:retain_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'retain',
+      state: 'retain',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -47,7 +47,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:retain_untimely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'retain',
+      state: 'retain',
       date: Date.today - (5.months)
     ) 
   }
@@ -56,7 +56,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_timely_kase) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'erasable',
+      state: 'to_be_destroyed',
       date: Date.today - 4.months
     ) 
   }
@@ -64,7 +64,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_timely_kase_two) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'erasable',
+      state: 'to_be_destroyed',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -72,7 +72,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_untimely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      status: 'erasable',
+      state: 'to_be_destroyed',
       date: Date.today - (5.months)
     ) 
   }
@@ -101,6 +101,7 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to have_content '3 cases found'
     expect(page).to_not have_content 'Destroy cases'
 
+
     expect(page).to have_content not_set_timely_kase.number
     expect(page).to have_content reviewable_timely_kase.number
     expect(page).to have_content retain_timely_kase.number
@@ -111,12 +112,13 @@ feature 'Case retention schedules for GDPR', :js do
     Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}", visible: false).set(true)
     Capybara.find(:css, "#retention-checkbox-#{retain_timely_kase.id}", visible: false).set(true)
 
+
     click_on "Mark for destruction"
 
     expect(page).to_not have_content not_set_timely_kase.number
     expect(page).to_not have_content retain_timely_kase.number
 
-    expect(page).to have_content("2 cases retention statuses updated to erasable")
+    expect(page).to have_content("2 cases have been marked for destruction")
     
     click_on 'Ready for removal'
 
@@ -150,7 +152,7 @@ feature 'Case retention schedules for GDPR', :js do
 
     not_set_timely_kase.reload
 
-    expect(not_set_timely_kase.retention_schedule.status).to eq('erased')
+    expect(not_set_timely_kase.retention_schedule.aasm.current_state).to eq(:to_be_destroyed)
   end
 
   scenario 'non branston users cannot see the GDPR tab' do
@@ -175,12 +177,12 @@ feature 'Case retention schedules for GDPR', :js do
     before < after
   end
 
-  def case_with_retention_schedule(case_type:, status:, date:)
+  def case_with_retention_schedule(case_type:, state:, date:)
     kase = create(
       case_type, 
       retention_schedule: 
         RetentionSchedule.new( 
-         status: status, 
+         state: state, 
          planned_erasure_date: date 
       ) 
     )

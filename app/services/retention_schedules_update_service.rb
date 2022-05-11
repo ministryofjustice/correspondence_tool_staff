@@ -2,26 +2,34 @@ class RetentionSchedulesUpdateService
 
   attr_reader :error_message, 
               :result,
-              :status_action
+              :post_update_message
 
   STATUS_ACTIONS = {
-    further_review_needed: 'review',
-    retain: 'retain',
-    mark_for_destruction: 'erasable',
-    destroy_cases: 'erased'
+    further_review_needed: :mark_for_review,
+    retain: :mark_for_retention,
+    mark_for_destruction: :mark_for_destruction,
+    destroy_cases: :final_destruction
   }.freeze
 
-  def initialize(retention_schedules_params:, action_text:)
-    @action_text = action_text
+  POST_UPDATE_MESSAGES = {
+    further_review_needed: "marked for review",
+    retain: "marked for retention",
+    mark_for_destruction: "marked for destruction",
+    destroy_cases: "destroyed"
+  }
+
+  def initialize(retention_schedules_params:, event_text:)
+    @event_text = event_text
     @retention_schedules_params = retention_schedules_params
     @case_ids = prepare_case_ids
-    @status_action = lookup_status_action 
+    @state_change_event = lookup_status_action 
+    @post_update_message = lookup_post_update_message
     @result = :incomplete
     @error_message = nil
   end
 
   def call
-    if @status_action.nil?
+    if @state_change_event.nil?
       @error_message =  "Requested retention schedule status action is incorrect"
       @result = :error
     else
@@ -42,8 +50,12 @@ class RetentionSchedulesUpdateService
     STATUS_ACTIONS[parameterize_status_action]
   end
 
+  def lookup_post_update_message
+    POST_UPDATE_MESSAGES[parameterize_status_action]
+  end
+
   def parameterize_status_action
-    @action_text.parameterize(separator: "_").to_sym
+    @event_text.parameterize(separator: "_").to_sym
   end
 
   def prepare_case_ids
@@ -57,13 +69,13 @@ class RetentionSchedulesUpdateService
   private
 
   def update_retention_schedule_statuses
-    @case_ids.each do |case_id|
-      kase = Case::Base.includes(:retention_schedule).find(case_id)
-      if kase
-        retention_schedule = kase.retention_schedule
-        retention_schedule.status = @status_action
-        retention_schedule.save if retention_schedule.valid? 
-      end
+    retention_schedules = RetentionSchedule
+                            .includes(:case)
+                            .where(case_id: @case_ids)
+
+    retention_schedules.each do |retention_schedule|
+      retention_schedule.public_send(@state_change_event)
+      retention_schedule.save if retention_schedule.valid? 
     end
   end
 end
