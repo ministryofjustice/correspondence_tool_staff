@@ -2,7 +2,7 @@ class RetentionSchedule < ApplicationRecord
   include AASM
 
   validates_presence_of(:case)
-  validates_presence_of(:planned_erasure_date)
+  validates_presence_of(:planned_destruction_date)
 
   # this should change to Case::Base
   # as this retention_schedule is expanded

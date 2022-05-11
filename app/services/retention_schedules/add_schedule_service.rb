@@ -4,7 +4,7 @@ module RetentionSchedules
 
     def initialize(kase:)
       @kase = kase
-      @planned_erasure_date = planned_erasure_date
+      @planned_destruction_date = planned_destruction_date
       @result = nil
     end
 
@@ -49,11 +49,11 @@ module RetentionSchedules
       kase = linked_case.present? ? linked_case : @kase
       if kase.retention_schedule.present?
         rs = kase.retention_schedule
-        rs.planned_erasure_date = @planned_erasure_date 
+        rs.planned_destruction_date = @planned_destruction_date 
         rs.save
       else
         kase.retention_schedule = RetentionSchedule.new(
-          planned_erasure_date: @planned_erasure_date 
+          planned_destruction_date: @planned_destruction_date 
         )
       end
     end
@@ -81,7 +81,7 @@ module RetentionSchedules
       end
     end
 
-    def planned_erasure_date
+    def planned_destruction_date
       years = Settings.retention_timings.off_sars.erasure.years
       months = Settings.retention_timings.off_sars.erasure.months
       retention_period = years.years + months.months

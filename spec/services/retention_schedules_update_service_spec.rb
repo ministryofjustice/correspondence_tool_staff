@@ -106,7 +106,7 @@ describe RetentionSchedulesUpdateService do
       retention_schedule: 
         RetentionSchedule.new( 
          state: state,
-         planned_erasure_date: date 
+         planned_destruction_date: date 
       ) 
     )
     kase.save

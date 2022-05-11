@@ -183,7 +183,7 @@ feature 'Case retention schedules for GDPR', :js do
       retention_schedule: 
         RetentionSchedule.new( 
          state: state, 
-         planned_erasure_date: date 
+         planned_destruction_date: date 
       ) 
     )
     kase.save
