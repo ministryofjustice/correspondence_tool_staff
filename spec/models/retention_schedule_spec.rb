@@ -10,21 +10,21 @@ RSpec.describe RetentionSchedule, type: :model do
   let(:retention_schedule) { 
     RetentionSchedule.new(
       case: kase, 
-      planned_erasure_date: Date.today
+      planned_destruction_date: Date.today
     ) 
   }
 
   let(:retention_schedule_for_complaint) { 
     RetentionSchedule.new(
       case: complaint_kase, 
-      planned_erasure_date: Date.today
+      planned_destruction_date: Date.today
     ) 
   }
 
   let(:retention_schedule_foi) { 
     RetentionSchedule.new(
       case: foi_kase, 
-      planned_erasure_date: Date.today
+      planned_destruction_date: Date.today
     ) 
   }
 
@@ -32,7 +32,7 @@ RSpec.describe RetentionSchedule, type: :model do
     it 'has correct display values for its states' do
       retention_schedule = RetentionSchedule.new(
         case: kase, 
-        planned_erasure_date: Date.today
+        planned_destruction_date: Date.today
       ) 
 
       expect(retention_schedule.aasm.human_state).to match('Not set')
@@ -93,7 +93,7 @@ RSpec.describe RetentionSchedule, type: :model do
   describe 'validations' do
     it { should belong_to(:case).class_name('Case::SAR::Offender') }
     it { should validate_presence_of(:case) }
-    it { should validate_presence_of(:planned_erasure_date) }
+    it { should validate_presence_of(:planned_destruction_date) }
     
     it 'should be valid' do
       expect(retention_schedule).to be_valid

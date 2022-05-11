@@ -121,7 +121,7 @@ describe RetentionSchedules::AddScheduleService do
       service = RetentionSchedules::AddScheduleService.new(kase: kase)
       service.call
 
-      expected_date = kase.retention_schedule.planned_erasure_date
+      expected_date = kase.retention_schedule.planned_destruction_date
 
       expect(kase.retention_schedule).to be_a(RetentionSchedule)
       expect(expected_date).to match(expected_off_sar_erasure_date)
@@ -134,7 +134,7 @@ describe RetentionSchedules::AddScheduleService do
       service = RetentionSchedules::AddScheduleService.new(kase: kase)
       service.call
 
-      expected_date = kase.retention_schedule.planned_erasure_date
+      expected_date = kase.retention_schedule.planned_destruction_date
 
       expect(service.result).to be(:success)
       expect(kase.retention_schedule).to be(retention_schedule)
@@ -151,11 +151,11 @@ describe RetentionSchedules::AddScheduleService do
       service = RetentionSchedules::AddScheduleService.new(kase: kase)
       service.call
 
-      expected_date = kase.retention_schedule.planned_erasure_date
+      expected_date = kase.retention_schedule.planned_destruction_date
 
       expected_original_kase_date = original_kase
         .retention_schedule
-        .planned_erasure_date
+        .planned_destruction_date
 
       expect(kase.retention_schedule).to be(retention_schedule)
       expect(original_kase.retention_schedule).not_to be(retention_schedule)
@@ -172,7 +172,7 @@ describe RetentionSchedules::AddScheduleService do
 
       expected_date = closed_offender_sar_complaint
         .retention_schedule
-        .planned_erasure_date
+        .planned_destruction_date
 
       original_kase = closed_offender_sar_complaint.original_case
 
@@ -183,7 +183,7 @@ describe RetentionSchedules::AddScheduleService do
 
         related_case_date = related_complaint
           .retention_schedule
-          .planned_erasure_date
+          .planned_destruction_date
 
         expect(ok_retention_schedule).to_not be(related_complaint.retention_schedule)
         expect(expected_date).to match(related_case_date)

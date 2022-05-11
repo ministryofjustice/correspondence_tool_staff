@@ -136,7 +136,7 @@ feature 'Closing a case' do
 
   def formatted_planned_closure_date(kase)
     I18n.l(
-      kase.retention_schedule.planned_erasure_date,
+      kase.retention_schedule.planned_destruction_date,
       format: :default
     )
   end

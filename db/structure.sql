@@ -851,7 +851,7 @@ ALTER SEQUENCE public.reports_id_seq OWNED BY public.reports.id;
 CREATE TABLE public.retention_schedules (
     id bigint NOT NULL,
     case_id bigint NOT NULL,
-    planned_erasure_date date,
+    planned_destruction_date date,
     erasure_date date,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
@@ -2289,6 +2289,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220117091139'),
 ('20220319002602'),
 ('20220401091216'),
-('20220506131034');
+('20220506131034'),
+('20220511130149');
 
 
