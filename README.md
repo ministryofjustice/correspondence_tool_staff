@@ -199,6 +199,15 @@ The password of each user will be generated randomly but setting up a value for 
 This will have the effect of setting up a standard set of teams, users, reports, correspondence types, etc.  The `db:reseed` can be used at any point you want reset the database without
 having to close down all clients using the database.
 
+##### Migrations
+
+Only the most recent migrations will be present in [db/migrate](db/migrate), as when setting up the application locally, the `structure.sql` will be used instead.  
+You only need to run migrations (`db:migrate`) when pulling new code that may include them.
+
+Older migrations, unlikely to be needed anymore, are archived in [db/archived_migrations](db/archived_migrations) for reference.
+
+Some of these older migrations made use of the gem `schema_plus_enums` which is no longer used due to incompatibilities with other gem versions.
+
 ##### Creating individual test correspondence items
 
 Individual correspondence items can be quickly created by logging in as David Attenborough, and using the admin tab to create any kind of case in any state.
