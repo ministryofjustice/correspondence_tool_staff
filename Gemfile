@@ -104,7 +104,7 @@ group :development, :test do
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
   gem 'rubocop', '~> 1.28.2', require: false
-  gem 'rubocop-rspec', '~> 2.9.0', require: false
+  gem 'rubocop-rspec', '~> 2.10.0', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'
