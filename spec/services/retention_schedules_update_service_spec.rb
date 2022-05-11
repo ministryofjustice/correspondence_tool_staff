@@ -56,8 +56,8 @@ describe RetentionSchedulesUpdateService do
       not_set_timely_kase.reload
       reviewable_timely_kase.reload
 
-      expect(not_set_timely_kase.retention_schedule.state).to eq 'destroy'
-      expect(reviewable_timely_kase.retention_schedule.state).to eq 'destroy'
+      expect(not_set_timely_kase.retention_schedule.state).to eq 'to_be_destroyed'
+      expect(reviewable_timely_kase.retention_schedule.state).to eq 'to_be_destroyed'
       expect(retain_timely_kase.retention_schedule.state).to eq 'retain'
     end
   end

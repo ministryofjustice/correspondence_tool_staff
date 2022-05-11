@@ -60,13 +60,13 @@ RSpec.describe RetentionSchedule, type: :model do
       expect(retention_schedule).to transition_from(:not_set, :review, :retain)
         .to(:retain).on_event(:mark_for_retention)
 
-      expect(retention_schedule).to transition_from(:not_set, :retain, :destroy)
+      expect(retention_schedule).to transition_from(:not_set, :retain, :to_be_destroyed)
         .to(:review).on_event(:mark_for_review)
 
       expect(retention_schedule).to transition_from(:not_set, :retain, :review)
-        .to(:destroy).on_event(:mark_for_destruction)
+        .to(:to_be_destroyed).on_event(:mark_for_destruction)
 
-      expect(retention_schedule).to transition_from(:destroy)
+      expect(retention_schedule).to transition_from(:to_be_destroyed)
         .to(:destroyed).on_event(:final_destruction)
 
       expect(retention_schedule).to transition_from(:retain)
@@ -77,7 +77,7 @@ RSpec.describe RetentionSchedule, type: :model do
       expect(retention_schedule).to_not transition_from(:not_set, :retain, :review)
         .to(:destroyed).on_event(:final_destruction)
 
-      expect(retention_schedule).to_not transition_from(:review, :destroy)
+      expect(retention_schedule).to_not transition_from(:review, :to_be_destroyed)
         .to(:unlist).on_event(:unlist)
 
       retention_schedule.mark_for_destruction
@@ -85,7 +85,7 @@ RSpec.describe RetentionSchedule, type: :model do
 
       expect(retention_schedule).to have_state(:destroyed)
       expect(retention_schedule).to_not allow_transition_to(
-        :not_set, :retain, :review, :destroy
+        :not_set, :retain, :review, :to_be_destroyed
       )
     end
   end

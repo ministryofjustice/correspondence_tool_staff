@@ -15,19 +15,19 @@ class RetentionSchedule < ApplicationRecord
     state :not_set, initial: true, display: 'Not set'
     state :retain, display: 'Retain'
     state :review, display: 'Review'
-    state :destroy, display: 'Destroy'
+    state :to_be_destroyed, display: 'Destroy'
     state :destroyed, display: 'Anonymised'
     
     event :mark_for_retention do
-      transitions from: [:not_set, :review, :destroy], to: :retain
+      transitions from: [:not_set, :review, :to_be_destroyed], to: :retain
     end
 
     event :mark_for_review do
-      transitions from: [:not_set, :retain, :destroy], to: :review
+      transitions from: [:not_set, :retain, :to_be_destroyed], to: :review
     end
 
     event :mark_for_destruction do
-      transitions from: [:not_set, :retain, :review], to: :destroy
+      transitions from: [:not_set, :retain, :review], to: :to_be_destroyed
     end
 
     event :unlist do
@@ -35,7 +35,7 @@ class RetentionSchedule < ApplicationRecord
     end
 
     event :final_destruction do
-      transitions from: [:destroy], to: :destroyed
+      transitions from: [:to_be_destroyed], to: :destroyed
     end
   end
 
