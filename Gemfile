@@ -78,7 +78,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'tzinfo-data'
 
 group :test do
-  gem 'capybara', '~> 3.36.0'
+  gem 'capybara', '~> 3.37.1'
   gem 'i18n-tasks', '~> 1.0.9'
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 5.1'
