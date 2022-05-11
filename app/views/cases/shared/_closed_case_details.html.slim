@@ -69,6 +69,6 @@ tbody.response-details
 
   - if case_details.retention_schedule.present? && FeatureSet.branston_retention_scheduling.enabled?
     tr.planned-erasure-date
-      th = "Planned erasure date"
-      td = case_details.planned_erasure_date
+      th = t('common.case.planned_destruction_date')
+      td = case_details.planned_destruction_date
 

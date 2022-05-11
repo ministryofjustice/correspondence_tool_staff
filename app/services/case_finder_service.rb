@@ -48,7 +48,7 @@ class CaseFinderService
     get_root_scope('default')
       .includes(:retention_schedule)
       .where(retention_schedule: {
-        planned_erasure_date: RetentionSchedule.common_date_viewable_from_range
+        planned_destruction_date: RetentionSchedule.common_date_viewable_from_range
       })
   end
 
