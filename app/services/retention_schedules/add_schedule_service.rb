@@ -46,7 +46,7 @@ module RetentionSchedules
     end
 
     def add_retention_schedule(linked_case: nil)
-      kase = linked_case.present? ? linked_case : @kase
+      kase = linked_case.presence || @kase
       if kase.retention_schedule.present?
         rs = kase.retention_schedule
         rs.planned_destruction_date = @planned_destruction_date 
