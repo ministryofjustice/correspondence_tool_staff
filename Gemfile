@@ -59,7 +59,7 @@ gem 'sablon'
 gem 'sass-rails', '~> 6.0'
 gem 'sentry-ruby' 
 gem 'sentry-rails' 
-gem 'slim-rails', '~> 3.4'
+gem 'slim-rails', '~> 3.5'
 gem 'shell-spinner'
 gem 'sidekiq', '~> 6.4.0'
 
