@@ -61,7 +61,7 @@ gem 'sentry-ruby'
 gem 'sentry-rails' 
 gem 'slim-rails', '~> 3.4'
 gem 'shell-spinner'
-gem 'sidekiq', '~> 6.4.0'
+gem 'sidekiq', '~> 6.4.2'
 
 gem 'table_print'
 # gem 'thor-rails'
