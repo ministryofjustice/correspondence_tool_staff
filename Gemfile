@@ -49,7 +49,7 @@ gem 'pg_search', '~> 2.3.6'
 gem 'pry-rails'
 gem 'puma', '~> 5.6'
 gem 'pundit', '~>2.1'
-gem 'rails', '~> 6.1.5.1'
+gem 'rails', '~> 7.0.3'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'sprockets', '~> 4.0.2'
