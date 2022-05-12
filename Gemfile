@@ -61,7 +61,6 @@ gem 'sentry-ruby'
 gem 'sentry-rails' 
 gem 'slim-rails', '~> 3.4'
 gem 'shell-spinner'
-# gem 'schema_plus_enums'
 gem 'sidekiq', '~> 6.4.0'
 
 gem 'table_print'
