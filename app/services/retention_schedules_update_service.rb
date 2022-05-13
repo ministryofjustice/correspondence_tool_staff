@@ -18,13 +18,14 @@ class RetentionSchedulesUpdateService
     destroy_cases: "destroyed"
   }
 
-  def initialize(retention_schedules_params:, event_text:)
+  def initialize(retention_schedules_params:, event_text:, current_user:)
     @event_text = event_text
     @retention_schedules_params = retention_schedules_params
     @case_ids = prepare_case_ids
     @state_change_event = lookup_status_action 
     @post_update_message = lookup_post_update_message
     @result = :incomplete
+    @current_user = current_user
     @error_message = nil
   end
 
@@ -70,12 +71,34 @@ class RetentionSchedulesUpdateService
 
   def update_retention_schedule_statuses
     retention_schedules = RetentionSchedule
-                            .includes(:case)
+                            .includes(case: [
+                              :assignments, 
+                              :teams, 
+                              :creator, 
+                              :related_case_links, 
+                              :related_cases, 
+                              :case_links
+                            ])
                             .where(case_id: @case_ids)
 
     retention_schedules.each do |retention_schedule|
-      retention_schedule.public_send(@state_change_event)
+      previous_state = retention_schedule.human_state
+      retention_schedule.public_send(@state_change_event) do
+        add_retention_schedule_state_change_note(
+          kase: retention_schedule.case,
+          previous_state: previous_state,
+          current_state: retention_schedule.human_state
+        )
+      end
       retention_schedule.save if retention_schedule.valid? 
     end
+  end
+
+  def add_retention_schedule_state_change_note(kase:, previous_state:, current_state:)
+    kase.state_machine.send(:add_note_to_case!,
+      acting_user: @current_user,
+      acting_team: @current_user.case_team(kase),
+      message: "Case RRD status updated from #{previous_state} to #{current_state}"
+    )
   end
 end

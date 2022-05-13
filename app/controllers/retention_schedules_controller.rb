@@ -1,8 +1,10 @@
 class RetentionSchedulesController < ApplicationController
+
   def bulk_update
     service = RetentionSchedulesUpdateService.new(
       retention_schedules_params: retention_schedules_params,
-      event_text: params[:commit]
+      event_text: params[:commit],
+      current_user: current_user
     )
 
     service.call
