@@ -28,6 +28,7 @@ RSpec.describe RetentionSchedule, type: :model do
     ) 
   }
 
+
   describe 'deplay values for states' do
     it 'has correct display values for its states' do
       retention_schedule = RetentionSchedule.new(

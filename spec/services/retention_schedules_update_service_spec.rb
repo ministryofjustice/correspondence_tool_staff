@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 describe RetentionSchedulesUpdateService do
+  let(:manager)         { find_or_create :branston_user }
+  let(:managing_team)   { create :managing_team, managers: [manager] }
+
   let!(:not_set_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
@@ -38,27 +41,42 @@ describe RetentionSchedulesUpdateService do
   let(:service) {
     RetentionSchedulesUpdateService.new(
       retention_schedules_params: selected_cases_params,
-      event_text: "Mark for destruction"
+      event_text: "Mark for destruction",
+      current_user: manager
     )
   }
 
   let(:service_with_error) {
     RetentionSchedulesUpdateService.new(
       retention_schedules_params: selected_cases_params,
-      event_text: "non existant status"
+      event_text: "non existant status",
+      current_user: manager
     )
   }
 
   describe '#call' do
-    it 'call to service updates correct cases' do
+    before do
       service.call
 
       not_set_timely_kase.reload
       reviewable_timely_kase.reload
+    end
 
+    it 'call to service updates correct cases' do
       expect(not_set_timely_kase.retention_schedule.state).to eq 'to_be_destroyed'
       expect(reviewable_timely_kase.retention_schedule.state).to eq 'to_be_destroyed'
       expect(retain_timely_kase.retention_schedule.state).to eq 'retain'
+    end
+
+    it 'adds note to case history on state change' do
+      history_message = reviewable_timely_kase
+                          .transitions
+                          .case_history
+                          .last
+                          .message
+
+      expected_message = "Case RRD status updated from Review to Destroy" 
+      expect(history_message).to eq(expected_message)
     end
   end
 
@@ -98,7 +116,6 @@ describe RetentionSchedulesUpdateService do
       expect(statuses[:destroy_cases]).to eq :final_destruction
     end
   end
-
 
   def case_with_retention_schedule(case_type:, state:, date:)
     kase = create(

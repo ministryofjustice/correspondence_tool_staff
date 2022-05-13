@@ -39,6 +39,10 @@ class RetentionSchedule < ApplicationRecord
     end
   end
 
+  def human_state
+    aasm.human_state
+  end
+
   class << self
     def common_date_viewable_from_range
       viewable_from = Settings.retention_timings.common.viewable_from
