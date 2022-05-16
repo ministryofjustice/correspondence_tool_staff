@@ -839,7 +839,7 @@ class Case::Base < ApplicationRecord
   end
 
   def closed_for_reporting_purposes?
-    closed?
+    has_responded?
   end
 
   # don't know why, but adding external deadline into the list of dates acting as gov uk seems to remove
