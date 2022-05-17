@@ -58,13 +58,16 @@ module Stats # rubocop:disable Metrics/ModuleLength
         create_ico(type: :foi, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, ident: 'ico foi for team a - responded in time')
         create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - open late')
         create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170702', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - open in time')
-        create_ico(type: :foi, received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - responded in time')
         create_ico(type: :foi, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_c, responder: @responder_c, ident: 'ico foi for team c - responded late')
         create_ico(type: :foi, received: '20170606', responded: '20170625', deadline: '20170630', team: @team_c, responder: @responder_c, ident: 'ico foi for team c - responded in time')
         create_ico(type: :foi, received: '20170605', responded: nil,        deadline: '20170702', team: @team_d, responder: @responder_d, ident: 'ico foi for team d - open in time')
 
         create_ico(type: :sar, received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded late')
         create_ico(type: :sar, received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'ico sar for team a - responded late')
+
+        # A responded ICO case, reopened with an extended deadline
+        kase = create_ico(type: :foi, received: '20170607', responded: '20170620', deadline: '20170625', team: @team_b, responder: @responder_b, ident: 'ico foi for team b - reopened in time')
+        kase.update(current_state: 'drafting', date_responded: nil, external_deadline: '20170703')
       end
 
       ###############
@@ -122,9 +125,9 @@ module Stats # rubocop:disable Metrics/ModuleLength
             ir_appeal_open_late:           3,
             ico_appeal_performance:        44.4,
             ico_appeal_total:              9,
-            ico_appeal_responded_in_time:  2,
+            ico_appeal_responded_in_time:  1,
             ico_appeal_responded_late:     2,
-            ico_appeal_open_in_time:       2,
+            ico_appeal_open_in_time:       3,
             ico_appeal_open_late:          3,
           })
       end
@@ -197,16 +200,16 @@ module Stats # rubocop:disable Metrics/ModuleLength
             Appeals report (FOI) - 1 Jan 2017 to 30 Jun 2017
             #{super_header}
             #{header}
-            BGAB,"","",#{@bizgrp_ab.team_lead},44.4,9,2,2,2,3,44.4,9,2,2,2,3
+            BGAB,"","",#{@bizgrp_ab.team_lead},44.4,9,2,2,2,3,44.4,9,1,2,3,3
             BGAB,DRA,"",#{@dir_a.team_lead},33.3,6,1,2,1,2,33.3,6,1,2,1,2
             BGAB,DRA,RTA,#{@team_a.team_lead},33.3,6,1,2,1,2,33.3,6,1,2,1,2
-            BGAB,DRB,"",#{@dir_b.team_lead},66.7,3,1,0,1,1,66.7,3,1,0,1,1
-            BGAB,DRB,RTB,#{@team_b.team_lead},66.7,3,1,0,1,1,66.7,3,1,0,1,1
+            BGAB,DRB,"",#{@dir_b.team_lead},66.7,3,1,0,1,1,66.7,3,0,0,2,1
+            BGAB,DRB,RTB,#{@team_b.team_lead},66.7,3,1,0,1,1,66.7,3,0,0,2,1
             BGCD,"","",#{@bizgrp_cd.team_lead},66.7,3,1,1,1,0,66.7,3,1,1,1,0
             BGCD,DRCD,"",#{@dir_cd.team_lead},66.7,3,1,1,1,0,66.7,3,1,1,1,0
             BGCD,DRCD,RTC,#{@team_c.team_lead},50.0,2,1,1,0,0,50.0,2,1,1,0,0
             BGCD,DRCD,RTD,#{@team_d.team_lead},100.0,1,0,0,1,0,100.0,1,0,0,1,0
-            Total,"","","",50.0,12,3,3,3,3,50.0,12,3,3,3,3
+            Total,"","","",50.0,12,3,3,3,3,50.0,12,2,3,4,3
           EOCSV
           actual_lines = report_csv.map { |row| row.map(&:value) }
           expected_lines = expected_text.split("\n")

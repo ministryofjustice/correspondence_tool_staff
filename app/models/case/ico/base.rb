@@ -123,10 +123,6 @@ class Case::ICO::Base < Case::Base
     end
   end
 
-  def closed_for_reporting_purposes?
-    closed? || responded?
-  end
-
   def name=(_new_name)
     raise StandardError.new('name attribute is read-only for ICO cases')
   end
