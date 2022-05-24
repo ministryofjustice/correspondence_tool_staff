@@ -82,7 +82,7 @@ feature 'Case retention schedules for GDPR', :js do
     
     cases_page.load
 
-    expect(page).to have_content 'Case Retention'
+    expect(page).to have_content 'Rrd Pending'
 
     cases_page.homepage_navigation.case_retention.click
     

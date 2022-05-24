@@ -1253,7 +1253,7 @@ en:
         request: Request
         actions: Actions
       retention:
-        heading: Case retention scheduling
+        heading: Retain, Review, or Destroy (RRD)
     fixed_details:
       requester: Requester
       email_address: Email address
