@@ -49,7 +49,7 @@ gem 'pg_search', '~> 2.3.6'
 gem 'pry-rails'
 gem 'puma', '~> 5.6'
 gem 'pundit', '~>2.1'
-gem 'rails', '~> 6.1.5.1'
+gem 'rails', '~> 6.1.6'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'sprockets', '~> 4.0.2'
@@ -77,7 +77,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'tzinfo-data'
 
 group :test do
-  gem 'capybara', '~> 3.36.0'
+  gem 'capybara', '~> 3.37'
   gem 'i18n-tasks', '~> 1.0.9'
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 5.1'
@@ -102,8 +102,8 @@ group :development, :test do
   gem 'pry-byebug', "3.9.0"
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 1.28.2', require: false
-  gem 'rubocop-rspec', '~> 2.9.0', require: false
+  gem 'rubocop', '~> 1.29', require: false
+  gem 'rubocop-rspec', '~> 2.10', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
   gem 'ruby-progressbar'

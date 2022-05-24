@@ -9,6 +9,10 @@ module FactoryBot
         build_class(evaluation).where(get_match_attributes(evaluation)).first
       end
 
+      def to_sym
+        :find
+      end
+
       private
 
       def build_class(evaluation)
@@ -46,6 +50,10 @@ module FactoryBot
         else
           found_object
         end
+      end
+
+      def to_sym
+        :find_or_create
       end
     end
   end
