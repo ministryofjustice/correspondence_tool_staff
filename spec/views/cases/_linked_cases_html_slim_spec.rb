@@ -52,7 +52,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
         disallow_case_policy main_case, :new_case_link?, :destroy_case_link?
 
-        render partial: 'cases/linked_cases.html.slim',
+        render partial: 'cases/linked_cases',
                locals:{ case_details: main_case}
 
         partial = linked_cases_section(rendered)
@@ -76,7 +76,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
         allow_case_policy main_case, :new_case_link?, :destroy_case_link?
 
-        render partial: 'cases/linked_cases.html.slim',
+        render partial: 'cases/linked_cases',
                locals:{ case_details: main_case}
 
         partial = linked_cases_section(rendered)
@@ -107,7 +107,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
 
       disallow_case_policy unlinked_case, :new_case_link?, :destroy_case_link?
 
-      render partial: 'cases/linked_cases.html.slim',
+      render partial: 'cases/linked_cases',
              locals:{ case_details: unlinked_case}
 
       partial = linked_cases_section(rendered)
@@ -132,7 +132,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
     it 'hides the link if user is not authorised to link cases' do
       disallow_case_policy main_case, :new_case_link?, :destroy_case_link?
 
-      render partial: 'cases/linked_cases.html.slim',
+      render partial: 'cases/linked_cases',
              locals:{ case_details: main_case}
 
       partial = linked_cases_section(rendered)
@@ -143,7 +143,7 @@ describe 'cases/linked_cases.html.slim', type: :view do
     it 'shows the link if user is authorised to link cases' do
       allow_case_policy main_case, :new_case_link?, :destroy_case_link?
 
-      render partial: 'cases/linked_cases.html.slim',
+      render partial: 'cases/linked_cases',
              locals:{ case_details: main_case}
 
       partial = linked_cases_section(rendered)

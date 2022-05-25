@@ -47,7 +47,7 @@ describe 'cases/overturned_shared/_new.html.slim' do
     subject { partial.ico_appeal_info }
 
     it { should be_visible }
-    it { should have_text(overturned_foi.number) }
+    it { should have_text(overturned_foi.original_ico_appeal.number) }
     it { should have_text(overturned_foi.subject) }
     it { should have_text('(opens in a new tab)') }
 

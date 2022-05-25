@@ -37,7 +37,7 @@ describe 'cases/case_request.html.slim', type: :view do
     let(:offender_sar_case) { create :offender_sar_case, message: '' }
   
     let(:partial) do
-      render partial: 'cases/case_request.html.slim',
+      render partial: 'cases/case_request',
              locals:{ case_details: offender_sar_case }
 
       case_request_section(rendered)
@@ -66,7 +66,7 @@ describe 'cases/case_request.html.slim', type: :view do
     end
 
     let(:partial) do
-      render partial: 'cases/case_request.html.slim',
+      render partial: 'cases/case_request',
              locals:{ case_details: decorated_case }
 
       case_request_section(rendered)
@@ -94,7 +94,7 @@ describe 'cases/case_request.html.slim', type: :view do
     end
 
     let(:partial) do
-      render partial: 'cases/case_request.html.slim',
+      render partial: 'cases/case_request',
              locals:{ case_details: decorated_case}
 
       case_request_section(rendered)
@@ -121,7 +121,7 @@ describe 'cases/case_request.html.slim', type: :view do
 
     let(:partial) do
       disallow_case_policies_in_view(decorated_case, :can_remove_attachment?, :can_upload_request_attachment?)
-      render partial: 'cases/case_request.html.slim',
+      render partial: 'cases/case_request',
              locals:{ case_details: decorated_case }
 
       case_request_section(rendered)

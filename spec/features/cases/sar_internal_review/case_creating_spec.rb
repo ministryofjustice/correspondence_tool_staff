@@ -79,6 +79,8 @@ feature 'SAR Internal Review Case creation by a manager' do
   def then_they_can_take_the_case_on_and_clear_the_response
     click_link 'New cases'
     click_link 'Take case on'
+
+    expect(page).to have_content(latest_sar_ir_number)
     click_link latest_sar_ir_number
 
     expect(page).not_to have_content('Close case')

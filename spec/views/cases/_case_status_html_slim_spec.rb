@@ -15,7 +15,7 @@ describe 'cases/case_status.html.slim', type: :view do
       offender_sar?: false
 
 
-    render partial: 'cases/case_status.html.slim',
+    render partial: 'cases/case_status',
            locals:{ case_details: unassigned_case}
 
     partial = case_status_section(rendered)
@@ -47,7 +47,7 @@ describe 'cases/case_status.html.slim', type: :view do
       type_of_offender_sar?: false,
       offender_sar?: false
 
-    render partial: 'cases/case_status.html.slim',
+    render partial: 'cases/case_status',
            locals:{ case_details: closed_case}
 
     partial = case_status_section(rendered)
@@ -73,7 +73,7 @@ describe 'cases/case_status.html.slim', type: :view do
       type_of_offender_sar?: false,
       offender_sar?: false
 
-    render partial: 'cases/case_status.html.slim',
+    render partial: 'cases/case_status',
            locals:{ case_details: non_trigger_case}
 
     partial = case_status_section(rendered)
@@ -100,7 +100,7 @@ describe 'cases/case_status.html.slim', type: :view do
         type_of_offender_sar?: false,
         offender_sar?: false
 
-      render partial: 'cases/case_status.html.slim',
+      render partial: 'cases/case_status',
              locals:{ case_details: non_trigger_case}
 
       partial = case_status_section(rendered)
@@ -131,7 +131,7 @@ describe 'cases/case_status.html.slim', type: :view do
         offender_sar?: false
 
 
-      render partial: 'cases/case_status.html.slim',
+      render partial: 'cases/case_status',
              locals:{ case_details: ico_case}
 
       partial = case_status_section(rendered)
@@ -171,7 +171,7 @@ describe 'cases/case_status.html.slim', type: :view do
                             params.merge({ offender_sar_complaint?: true })
 
       [offender_sar_case, offender_sar_complaint].each do |kase|
-        render partial: 'cases/case_status.html.slim',
+        render partial: 'cases/case_status',
                locals:{ case_details: kase}
         partial = case_status_section(rendered)
 
@@ -198,7 +198,7 @@ describe 'cases/case_status.html.slim', type: :view do
         offender_sar?: false
 
 
-      render partial: 'cases/case_status.html.slim',
+      render partial: 'cases/case_status',
              locals:{ case_details: ico_case}
 
       partial = case_status_section(rendered)
@@ -221,7 +221,7 @@ describe 'cases/case_status.html.slim', type: :view do
     }
 
     it 'displays ICO case reference number for ICO overturned SAR cases' do
-      render partial: 'cases/case_status.html.slim',
+      render partial: 'cases/case_status',
              locals: { case_details: ico_overturned_sar }
       partial = case_status_section(rendered)
 

@@ -2,8 +2,6 @@ require 'rails_helper'
 
 describe 'shared/dropzone_js.html.slim', type: :view do
   describe 'Preview template' do
-
-
     it 'displays a filename' do
       partial =  render_partial
       expect(partial).to have_filename
@@ -32,7 +30,7 @@ describe 'shared/dropzone_js.html.slim', type: :view do
 
 
   def render_partial
-    render partial: 'shared/dropzone_js.html.slim'
+    render partial: 'shared/dropzone_js'
     dropzonejs_preview_template_section(rendered)
   end
 

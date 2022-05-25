@@ -15,7 +15,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       before do
         assign(:case, ico_foi_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details.html.slim',
+        render partial: 'cases/ico/case_details',
                locals: { case_details: ico_foi_case,
                          link_type: nil }
       end
@@ -30,7 +30,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       it 'displays the initial case details' do
         assign(:case, ico_foi_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details.html.slim',
+        render partial: 'cases/ico/case_details',
                locals: { case_details: ico_foi_case,
                          link_type: nil }
 
@@ -52,7 +52,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       it 'displays the responders team name' do
         assign(:case, accepted_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details.html.slim',
+        render partial: 'cases/ico/case_details',
                locals: { case_details: accepted_case,
                          link_type: nil }
 
@@ -68,7 +68,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       it 'displays the date,time taken, timeliness and final outcome' do
         assign(:case, closed_foi_appeal)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details.html.slim',
+        render partial: 'cases/ico/case_details',
                locals: { case_details: closed_foi_appeal,
                          link_type: nil }
 
@@ -86,7 +86,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
         login_as create(:manager)
         assign(:case, responded_case)
 
-        render partial: 'cases/ico/case_details.html.slim',
+        render partial: 'cases/ico/case_details',
                locals:{ case_details: responded_case,
                         link_type: nil }
 
@@ -104,7 +104,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       before do
         assign(:case, ico_sar_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details.html.slim',
+        render partial: 'cases/ico/case_details',
                locals: { case_details: ico_sar_case,
                          link_type: nil }
       end
@@ -119,7 +119,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       it 'displays the initial case details' do
         assign(:case, ico_sar_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details.html.slim',
+        render partial: 'cases/ico/case_details',
                locals: { case_details: ico_sar_case,
                          link_type: nil }
 
@@ -141,7 +141,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       it 'displays the responders team name' do
         assign(:case, accepted_sar_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details.html.slim',
+        render partial: 'cases/ico/case_details',
                locals: { case_details: accepted_sar_case,
                          link_type: nil }
 
@@ -157,7 +157,7 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       it 'displays the date,time taken, timeliness and final outcome' do
         assign(:case, closed_sar_appeal)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details.html.slim',
+        render partial: 'cases/ico/case_details',
                locals: { case_details: closed_sar_appeal,
                          link_type: nil }
 

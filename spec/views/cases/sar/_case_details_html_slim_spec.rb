@@ -17,7 +17,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
   describe 'basic_details' do
     it 'displays the initial case details (non third party case' do
       assign(:case, unassigned_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/sar/case_details',
              locals: { case_details: unassigned_case,
                        link_type: nil }
 
@@ -37,7 +37,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     it 'displays third party details if present' do
       third_party_case = (create :sar_case, :third_party, name: 'Rick Westor').decorate
       assign(:case, third_party_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/sar/case_details',
              locals: { case_details: third_party_case,
                        link_type: nil }
       partial = case_details_section(rendered).sar_basic_details
@@ -52,7 +52,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       unassigned_case.reply_method = 'send_by_post'
 
       assign(:case, unassigned_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/sar/case_details',
              locals: { case_details: unassigned_case,
                        link_type: nil }
 
@@ -67,7 +67,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       unassigned_case.email = 'john.doe@moj.com'
 
       assign(:case, unassigned_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/sar/case_details',
              locals:{ case_details: unassigned_case,
                       link_type: nil }
 
@@ -81,7 +81,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
   describe 'responders details' do
     it 'displays the responders team name' do
       assign(:case, accepted_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/sar/case_details',
              locals:{ case_details: accepted_case,
                       link_type: nil }
 
@@ -97,7 +97,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     it 'displays the date compliant' do
       assign(:case, approved_case)
 
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/sar/case_details',
              locals:{ case_details: approved_case,
                       link_type: nil }
 
@@ -114,7 +114,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
 
     it 'displays as original case' do
       assign(:case, ico_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/sar/case_details',
              locals: { case_details: ico_case.original_case.decorate,
                        link_type: 'original' }
 
@@ -124,7 +124,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
 
     it 'displays a link to original case' do
       assign(:case, ico_case)
-      render partial: 'cases/sar/case_details.html.slim',
+      render partial: 'cases/sar/case_details',
              locals: { case_details: ico_case.original_case.decorate,
                        link_type: nil }
 

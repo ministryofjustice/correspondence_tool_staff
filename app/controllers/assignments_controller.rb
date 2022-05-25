@@ -131,7 +131,7 @@ class AssignmentsController < ApplicationController
       end
     end
     respond_to do |format|
-      format.js { render 'assignments/accept.js.erb' }
+      format.js { render 'assignments/accept' }
       format.html do
         if @success
           flash[:notice] = "#{ @message}. #{ get_undo_link }".html_safe
@@ -160,7 +160,7 @@ class AssignmentsController < ApplicationController
     end
 
     respond_to do |format|
-      format.js { render 'assignments/accept.js.erb' }
+      format.js { render 'assignments/accept' }
       format.html do
         if @success
           flash[:notice] = "#{ @message}. #{ get_undo_link }".html_safe
@@ -178,7 +178,7 @@ class AssignmentsController < ApplicationController
     unaccept_service.call
 
     respond_to do |format|
-      format.js { render 'assignments/unaccept.js.erb' }
+      format.js { render 'assignments/unaccept' }
       format.html { redirect_to case_path(@case) }
     end
   end

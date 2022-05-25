@@ -5,7 +5,7 @@ describe 'cases/sar/_date_responded_form.html.slim' do
 
   it 'renders the close_form partial' do
     assign(:case, closed_sar)
-    render(partial: 'cases/sar/close_form.html.slim',
+    render(partial: 'cases/sar/close_form',
            locals: { kase: closed_sar.decorate,
                      submit_button: 'Save changes' })
     cases_close_page.load(rendered)

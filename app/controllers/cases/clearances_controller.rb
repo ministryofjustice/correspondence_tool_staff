@@ -33,7 +33,7 @@ module Cases
       service.call
 
       respond_to do |format|
-        format.js { render 'flag_for_clearance.js.erb' }
+        format.js { render 'flag_for_clearance' }
         format.html do
           redirect_to case_path(@case)
         end
@@ -67,7 +67,7 @@ module Cases
       service.call
 
       respond_to do |format|
-        format.js { render 'unflag_for_clearance.js.erb' }
+        format.js { render 'unflag_for_clearance' }
         format.html do
           flash[:notice] = "Case has been de-escalated. #{ get_de_escalated_undo_link }".html_safe
           if @case.type_abbreviation == 'SAR'

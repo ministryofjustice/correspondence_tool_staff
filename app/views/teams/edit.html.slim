@@ -14,4 +14,4 @@
         "#{pluralize(@team.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
 = form_for @team, as: :team, url: team_path(@team) do |f|
-  = render partial: 'form.html.slim', locals: {form: f}
+  = render partial: 'form', locals: {form: f}
