@@ -44,7 +44,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
       disallow_case_policy(:can_remove_attachment?, ico_case)
 
 
-      render partial: 'cases/case_attachments.html.slim',
+      render partial: 'cases/case_attachments',
              locals:{ case_details: ico_case}
 
       partial =  case_attachments_section(rendered)
@@ -55,7 +55,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
       disallow_case_policy(:can_remove_attachment?, @kase)
 
 
-      render partial: 'cases/case_attachments.html.slim',
+      render partial: 'cases/case_attachments',
              locals:{ case_details: @kase}
 
       partial =  case_attachments_section(rendered)
@@ -69,7 +69,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
       disallow_case_policy(:can_remove_attachment?, @kase)
 
 
-      render partial: 'cases/case_attachments.html.slim',
+      render partial: 'cases/case_attachments',
              locals:{ case_details: @kase}
 
       partial =  case_attachments_section(rendered)
@@ -85,7 +85,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
     it 'should have a preview and download link' do
       disallow_case_policy(:can_remove_attachment?, @kase)
 
-      render partial: 'cases/case_attachments.html.slim',
+      render partial: 'cases/case_attachments',
              locals:{ case_details: @kase}
 
       partial =  case_attachments_section(rendered)
@@ -101,7 +101,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
       it 'should show a remove link if the user is authorised to do so' do
         allow_case_policy(:can_remove_attachment?, @kase)
 
-        render partial: 'cases/case_attachments.html.slim',
+        render partial: 'cases/case_attachments',
                locals:{ case_details: @kase}
 
         partial =  case_attachments_section(rendered)
@@ -114,7 +114,7 @@ describe 'cases/case_attachments.html.slim', type: :view do
       it 'should not show a remove link if the user is not allowed to' do
         disallow_case_policy(:can_remove_attachment?, @kase)
 
-        render partial: 'cases/case_attachments.html.slim',
+        render partial: 'cases/case_attachments',
                locals:{ case_details: @kase}
 
         partial =  case_attachments_section(rendered)

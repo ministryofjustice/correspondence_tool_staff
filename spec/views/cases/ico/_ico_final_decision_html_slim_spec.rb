@@ -10,7 +10,7 @@ describe 'cases/ico/_ico_final_decision.html.slim', type: :view do
       login_as create(:manager)
       disallow_case_policies_in_view upheld_closed_sar_ico_appeal,
                                      :can_remove_attachment?
-      render partial: 'cases/ico/ico_final_decision.html.slim',
+      render partial: 'cases/ico/ico_final_decision',
              locals: { case_details: upheld_closed_sar_ico_appeal }
     end
 
@@ -32,7 +32,7 @@ describe 'cases/ico/_ico_final_decision.html.slim', type: :view do
 
       disallow_case_policies_in_view upheld_closed_sar_ico_appeal,
                                      :can_remove_attachment?
-      render partial: 'cases/ico/ico_final_decision.html.slim',
+      render partial: 'cases/ico/ico_final_decision',
              locals: { case_details: upheld_closed_sar_ico_appeal }
 
       partial = ico_decision_section(rendered)
@@ -54,7 +54,7 @@ describe 'cases/ico/_ico_final_decision.html.slim', type: :view do
     def render_partial(kase)
       assign(:case, kase)
       disallow_case_policies_in_view kase, :can_remove_attachment?
-      render partial: 'cases/ico/ico_final_decision.html.slim',
+      render partial: 'cases/ico/ico_final_decision',
              locals: { case_details: kase }
 
       ico_decision_section(rendered)

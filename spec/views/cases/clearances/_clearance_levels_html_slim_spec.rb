@@ -46,7 +46,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
       allow_case_policies_in_view kase.decorate, :request_further_clearance?
 
-      render partial: 'cases/clearance_levels.html.slim',
+      render partial: 'cases/clearance_levels',
              locals:{ case_details: kase }
 
       partial = clearance_levels_section(rendered)
@@ -61,7 +61,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
 
         allow_case_policies_in_view accepted_case.decorate, :request_further_clearance?
 
-        render partial: 'cases/clearance_levels.html.slim',
+        render partial: 'cases/clearance_levels',
                locals:{ case_details: accepted_case.decorate }
         partial = clearance_levels_section(rendered)
 
@@ -79,7 +79,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
           :request_further_clearance?
         )
 
-        render partial: 'cases/clearance_levels.html.slim',
+        render partial: 'cases/clearance_levels',
                locals:{ case_details:unaccepted_pending_dacu_clearance_case.decorate }
         partial = clearance_levels_section(rendered)
 
@@ -99,7 +99,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
         )
 
 
-        render partial: 'cases/clearance_levels.html.slim',
+        render partial: 'cases/clearance_levels',
                locals:{ case_details: accepted_pending_dacu_clearance_case.decorate }
         partial = clearance_levels_section(rendered)
 
@@ -118,7 +118,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
         allow(policy).to receive(:request_further_clearance?).and_return(true)
         allow(view).to receive(:policy).with(triple_flagged_case).and_return(policy)
 
-        render partial: 'cases/clearance_levels.html.slim',
+        render partial: 'cases/clearance_levels',
                locals:{ case_details: triple_flagged_case.decorate }
         partial = clearance_levels_section(rendered)
 
@@ -147,7 +147,7 @@ describe 'cases/clearance_details.html.slim', type: :view do
         )
 
 
-        render partial: 'cases/clearance_levels.html.slim',
+        render partial: 'cases/clearance_levels',
                locals:{ case_details: flagged_overturned_sar.decorate }
         partial = clearance_levels_section(rendered)
 

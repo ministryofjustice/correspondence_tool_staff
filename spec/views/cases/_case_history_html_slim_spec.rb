@@ -12,7 +12,7 @@ describe 'cases/case_history.html.slim', type: :view do
     transitions = [first]
 
     assign(:case_transitions, transitions)
-    render partial: 'cases/case_history.html.slim',
+    render partial: 'cases/case_history',
               locals:{ case_details: first}
 
     partial = case_history_section(rendered)
@@ -30,7 +30,7 @@ describe 'cases/case_history.html.slim', type: :view do
     transitions = [first]
 
     assign(:case_transitions, transitions)
-    render partial: 'cases/case_history.html.slim',
+    render partial: 'cases/case_history',
               locals:{ case_details: first}
 
     partial = case_history_section(rendered)

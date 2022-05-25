@@ -7,7 +7,7 @@ describe 'cases/overturned_foi/case_details.html.slim', type: :view do
   let(:bmt_manager)     { find_or_create(:disclosure_bmt_user) }
 
   def render_partial(kase)
-    render partial: 'cases/overturned_foi/case_details.html.slim',
+    render partial: 'cases/overturned_foi/case_details',
            locals: { case_details: kase.decorate,
                      link_type: nil }
     overturned_foi_case_details_section(rendered)
@@ -94,7 +94,7 @@ describe 'cases/overturned_foi/case_details.html.slim', type: :view do
     it 'displays the date compliant' do
       assign(:case, approved_case)
 
-      render partial: 'cases/overturned_foi/case_details.html.slim',
+      render partial: 'cases/overturned_foi/case_details',
              locals:{ case_details: approved_case,
                       link_type: nil }
 
@@ -110,7 +110,7 @@ describe 'cases/overturned_foi/case_details.html.slim', type: :view do
 
     it 'displays as original case' do
       assign(:case, ico_case)
-      render partial: 'cases/foi/case_details.html.slim',
+      render partial: 'cases/foi/case_details',
              locals: { case_details: ico_case.original_case.decorate,
                        link_type: 'original' }
 
@@ -120,7 +120,7 @@ describe 'cases/overturned_foi/case_details.html.slim', type: :view do
 
     it 'displays a link to original case' do
       assign(:case, ico_case)
-      render partial: 'cases/foi/case_details.html.slim',
+      render partial: 'cases/foi/case_details',
              locals: { case_details: ico_case.original_case.decorate,
                        link_type: 'original' }
 

@@ -19,7 +19,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
   describe 'basic_details' do
     it 'displays the initial case details (non third party case)' do
       assign(:case, offender_sar_case)
-      render partial: 'cases/offender_sar/case_details.html.slim',
+      render partial: 'cases/offender_sar/case_details',
              locals: { case_details: offender_sar_case,
                        link_type: nil, allow_editing: true}
 
@@ -49,7 +49,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
     it 'displays third party details if present' do
       third_party_case = (create :offender_sar_case, :third_party, third_party_name: 'Rick Westor').decorate
       assign(:case, third_party_case)
-      render partial: 'cases/offender_sar/case_details.html.slim', locals: {
+      render partial: 'cases/offender_sar/case_details', locals: {
         case_details: third_party_case,
         link_type: nil, 
         allow_editing: true
@@ -70,7 +70,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
         date_responded: 1.days.ago,
         external_deadline: 40.days.ago).decorate
       assign(:case, late_closed_case)
-      render partial: 'cases/offender_sar/case_details.html.slim', locals: {
+      render partial: 'cases/offender_sar/case_details', locals: {
         case_details: late_closed_case,
         link_type: nil,
         allow_editing: true

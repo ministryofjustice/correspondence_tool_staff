@@ -81,7 +81,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
 
         it 'renders the view' do
           patch :flag_for_clearance, params: params, xhr: true
-          expect(response).to have_rendered('flag_for_clearance.js.erb')
+          expect(response).to have_rendered('flag_for_clearance')
         end
 
         it 'returns a success code' do
@@ -133,7 +133,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
 
         it 'renders the view' do
           patch :flag_for_clearance, params: params, xhr: true
-          expect(response).to have_rendered('flag_for_clearance.js.erb')
+          expect(response).to have_rendered('flag_for_clearance')
         end
 
         it 'returns success' do
@@ -415,7 +415,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
 
           it 'renders the view' do
             patch :unflag_for_clearance, params: params, xhr: true
-            expect(response).to have_rendered(('unflag_for_clearance.js.erb'))
+            expect(response).to have_rendered(('unflag_for_clearance'))
           end
 
           it 'returns success' do

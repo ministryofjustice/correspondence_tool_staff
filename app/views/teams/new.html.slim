@@ -18,4 +18,4 @@
 
   = hidden_field_tag :team_type, params[:team_type]
 
-  = render partial: 'form.html.slim', locals: {form: f, team_type: @team_type }
+  = render partial: 'form', locals: {form: f, team_type: @team_type }
