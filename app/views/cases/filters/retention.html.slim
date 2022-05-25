@@ -49,7 +49,8 @@ section#retention-cases.govuk-tabs__panel
             .button-holder
               = submit_tag "Further review needed", class: 'button-secondary', form: 'retention_schedules_form' 
               = submit_tag "Retain", class: 'button-secondary', form: 'retention_schedules_form' 
-              = submit_tag "Mark for destruction", class: 'button-secondary', form: 'retention_schedules_form' 
+              - if @global_nav_manager.current_page_or_tab.name == :pending_removal
+                = submit_tag "Mark for destruction", class: 'button-secondary', form: 'retention_schedules_form' 
               - if @global_nav_manager.current_page_or_tab.name == :ready_for_removal
                 = submit_tag "Destroy cases", class: 'button-secondary button-destroy', form: 'retention_schedules_form' 
           .column-full.table-container.container.cases-table-container tabindex="0"
