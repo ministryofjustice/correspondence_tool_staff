@@ -32,7 +32,7 @@ gem 'govuk_notify_rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'humanize_boolean'
 gem 'jbuilder', '~> 2.11'
-gem 'jquery-rails', '~> 4.4.0'
+gem 'jquery-rails', '~> 4.5.0'
 gem 'jquery-ui-rails'
 gem 'jsonb_accessor', '~> 1.3.2'
 gem 'kaminari'
