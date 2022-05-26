@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 describe RetentionSchedules::AnonymiseCaseService do
-  # let(:manager)         { find_or_create :branston_user }
-  # let(:managing_team)   { create :managing_team, managers: [manager] }
+  let(:manager)         { find_or_create :branston_user }
+  let(:managing_team)   { create :managing_team, managers: [manager] }
 
   let!(:offender_sar_case) { 
     case_with_retention_schedule(
@@ -65,13 +65,19 @@ describe RetentionSchedules::AnonymiseCaseService do
     )
   end
 
-
   describe '#call' do
     before do
+      offender_sar_case.state_machine.add_note_to_case!(
+        acting_user: manager,
+        acting_team: managing_team,
+        message: 'Notify Me!'
+      )
+
       service.call
       service_two.call
       offender_sar_case.reload
       offender_sar_complaint.reload
+
     end
 
     it 'can anonymise the key fields of a case Offender SAR case' do
@@ -88,7 +94,14 @@ describe RetentionSchedules::AnonymiseCaseService do
       end
     end
 
-    xit 'can anonymise the notes on a case' do
+    it 'can anonymise the notes on a case' do
+      message = offender_sar_case
+                  .transitions
+                  .where(event: 'add_note_to_case')
+                  .first
+                  .message
+
+      expect(message).to eq('XXXX XXXX')
     end
 
     xit 'can anonymise the papertrail versions of a case' do

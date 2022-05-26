@@ -29,6 +29,8 @@ module RetentionSchedules
       ico_reference: 'XXXX XXXX',
     }
 
+    ANON_NOTE_MESSAGE_VALUE = 'XXXX XXXX'
+
     def initialize(kase:)
       # whole case and links will need to be loaded
       @kase = kase
@@ -41,7 +43,7 @@ module RetentionSchedules
 
         anonymise_core_case_fields
 
-        binding.pry if @kase.invalid?
+
         @kase.save
       end
     end
@@ -52,6 +54,15 @@ module RetentionSchedules
           # puts "#{key} : #{value}"
           @kase.update(key => value)
         end
+      end
+    end
+
+    def anonymise_case_notes
+      notes = @kase.transitions.where(event: 'add_note_to_case')
+
+      notes.each do |note|
+        note.message = ANON_NOTE_MESSAGE_VALUE
+        note.save
       end
     end
   end
