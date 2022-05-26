@@ -75,6 +75,7 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'bcrypt', '~> 3.1.7'
 # Alpine does not include zoneinfo files (probably) - it asked for tinfo-data, so bundle the tzinfo-data gem
 gem 'tzinfo-data'
+gem 'ruby-progressbar'
 
 group :test do
   gem 'capybara', '~> 3.37'
@@ -106,7 +107,6 @@ group :development, :test do
   gem 'rubocop-rspec', '~> 2.10', require: false
   gem 'rubocop-performance', require: false
   # TODO CT-2608: gem 'rubocop-rails', require: false
-  gem 'ruby-progressbar'
   gem 'selenium-webdriver', '~> 4.1.0'
   gem 'spring-commands-rspec'
 end
