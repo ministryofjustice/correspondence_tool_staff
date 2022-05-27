@@ -44,6 +44,8 @@ module RetentionSchedules
         anonymise_core_case_fields
         anonymise_case_notes
 
+        destroy_case_versions
+
         @kase.save
       end
     end
@@ -63,6 +65,10 @@ module RetentionSchedules
         note.message = ANON_NOTE_MESSAGE_VALUE
         note.save
       end
+    end
+
+    def destroy_case_versions
+      @kase.versions.destroy_all
     end
   end
 end

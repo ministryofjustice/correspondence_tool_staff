@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe RetentionSchedules::AnonymiseCaseService do
+describe RetentionSchedules::AnonymiseCaseService, versioning: true do
   let(:manager)         { find_or_create :branston_user }
   let(:managing_team)   { create :managing_team, managers: [manager] }
 
@@ -81,6 +81,8 @@ describe RetentionSchedules::AnonymiseCaseService do
         )
       end
 
+      expect(offender_sar_case.versions.count).to be > 0
+
       service.call
       service_two.call
       offender_sar_case.reload
@@ -119,7 +121,9 @@ describe RetentionSchedules::AnonymiseCaseService do
       end
     end
 
-    xit 'can anonymise the papertrail versions of a case' do
+    it 'can destroy the papertrail versions of a case' do 
+      expect(offender_sar_case.versions.empty?).to be true
+      expect(offender_sar_complaint.versions.empty?).to be true
     end
 
     xit 'can anonymise the data request other details of a case' do
