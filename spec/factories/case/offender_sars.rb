@@ -146,11 +146,12 @@ FactoryBot.define do
   trait :with_retention_schedule do
     transient do
       planned_destruction_date { Date.today }
+      state { }
     end
 
     after(:create) do |kase, evaluator|
       kase.retention_schedule = RetentionSchedule.new(
-        planned_destruction_date: evaluator.planned_destruction_date
+        planned_destruction_date: evaluator.planned_destruction_date, state: evaluator.state
       )
       kase.save!
     end

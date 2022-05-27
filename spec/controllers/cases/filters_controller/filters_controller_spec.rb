@@ -229,6 +229,78 @@ describe Cases::FiltersController, type: :controller do
     end
   end
 
+  describe '#retention' do
+    context 'tab ready_for_removal' do
+      context 'as an anonymous user' do
+        it 'be redirected to signin if trying to access the page' do
+          get :retention, params: { tab: 'ready_for_removal' }
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+
+      context 'as a manager' do
+        before do
+          sign_in manager
+
+          allow_any_instance_of(GlobalNavManager).to receive(:current_page_or_tab).and_return(page_double)
+          allow_any_instance_of(CaseSearchService).to receive(:call).and_return(true)
+        end
+
+        let(:page_double) { double('page', name: 'ready_for_removal').as_null_object }
+
+        it 'renders the retention cases page' do
+          get :retention, params: { tab: 'ready_for_removal' }
+          expect(response).to render_template :retention
+        end
+
+        it 'assigns the filter_crumbs' do
+          get :retention, params: { tab: 'ready_for_removal' }
+          expect(assigns(:filter_crumbs)).not_to be_nil
+        end
+
+        it 'assigns the current_tab_name' do
+          get :retention, params: { tab: 'ready_for_removal' }
+          expect(assigns(:current_tab_name)).to eq('retention_ready_for_removal')
+        end
+      end
+    end
+
+    context 'tab pending_removal' do
+      context 'as an anonymous user' do
+        it 'be redirected to signin if trying to access the page' do
+          get :retention, params: { tab: 'pending_removal' }
+          expect(response).to redirect_to(new_user_session_path)
+        end
+      end
+
+      context 'as a manager' do
+        before do
+          sign_in manager
+
+          allow_any_instance_of(GlobalNavManager).to receive(:current_page_or_tab).and_return(page_double)
+          allow_any_instance_of(CaseSearchService).to receive(:call).and_return(true)
+        end
+
+        let(:page_double) { double('page', name: 'pending_removal').as_null_object }
+
+        it 'renders the retention cases page' do
+          get :retention, params: { tab: 'pending_removal' }
+          expect(response).to render_template :retention
+        end
+
+        it 'assigns the filter_crumbs' do
+          get :retention, params: { tab: 'pending_removal' }
+          expect(assigns(:filter_crumbs)).not_to be_nil
+        end
+
+        it 'assigns the current_tab_name' do
+          get :retention, params: { tab: 'pending_removal' }
+          expect(assigns(:current_tab_name)).to eq('retention_pending_removal')
+        end
+      end
+    end
+  end
+
   # Utility methods
 
   def stub_current_case_finder_for_closed_cases_with(result)

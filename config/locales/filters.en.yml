@@ -43,6 +43,8 @@ en:
         <<: *list_filter_type
       filter_partial_case_flag:
         <<: *list_filter_type
+      filter_retention_state:
+        <<: *list_filter_type
     headings:
       filter_status: Filter by open/closed cases
       filter_cases: Filter cases
@@ -60,6 +62,7 @@ en:
       filter_complaint_priority: Filter by priority
       filter_high_profile: Filter by sensitivity
       filter_caseworker: Filter by complaint caseworker
+      filter_retention_state: Filter by GDPR RRD status
       date_headings:
         filter_received_date: 'Received between'
         filter_date_responded: 'Responded between'

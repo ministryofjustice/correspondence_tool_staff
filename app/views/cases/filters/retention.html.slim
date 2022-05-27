@@ -33,7 +33,7 @@ section#retention-cases.govuk-tabs__panel
                            count: tab.count),
                           tab.fullpath_with_query
     - if @cases.present?
-        - cases_count = @global_nav_manager.current_page_or_tab.cases.count
+        - cases_count = @cases.total_count
 
         .grid-row
           .search-results-summary.column-one-third

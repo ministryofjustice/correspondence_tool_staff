@@ -552,6 +552,7 @@ en:
         filter_status: Status
         filter_timeliness: Timeliness
         filter_high_profile: Flag as high profile?
+        filter_retention_state: Status
       team:
         role: What will the business unit be responsible for?
         correspondence_type_ids: Correspondence types

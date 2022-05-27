@@ -60,7 +60,10 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter, 
       CaseFilter::CaseComplaintPriorityFilter, 
-      CaseFilter::CasePartialCaseFlagFilter]
+      CaseFilter::CasePartialCaseFlagFilter],
+    "retention_pending_removal" => [
+      CaseFilter::CaseRetentionStateFilter
+    ],
   }.freeze
 
   attr_accessor :business_unit_name_filter

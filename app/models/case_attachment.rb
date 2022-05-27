@@ -123,11 +123,11 @@ class CaseAttachment < ApplicationRecord
   def validate_file_extension
     mime_type = Rack::Mime.mime_type(File.extname filename)
     unless Settings.case_uploads_accepted_types.include? mime_type
-      errors[:url] << I18n.t(
+      errors.add(:url, I18n.t(
         'activerecord.errors.models.case_attachment.attributes.url.bad_file_type',
         type: mime_type,
         filename: filename
-      )
+      ))
     end
   end
 end

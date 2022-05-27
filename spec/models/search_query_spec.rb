@@ -78,6 +78,7 @@ describe SearchQuery do
                                                  :filter_complaint_subtype, 
                                                  :filter_caseworker,
                                                  :filter_partial_case_flag,
+                                                 :filter_retention_state,
                                                  :date_responded_from, 
                                                  :date_responded_to, 
                                                  :received_date_from, 
@@ -234,6 +235,7 @@ describe SearchQuery do
                                                 :filter_complaint_subtype,
                                                 :filter_caseworker,
                                                 :filter_partial_case_flag,
+                                                :filter_retention_state,
                                                 :date_responded_from, 
                                                 :date_responded_to, 
                                                 :received_date_from, 
@@ -554,6 +556,11 @@ describe SearchQuery do
       search_query = create :search_query, filter_timeliness: ['in_time']
       expect(search_query.applied_filters).to eq [CaseFilter::TimelinessFilter]
     end
+
+    it 'includes retention state filter' do
+      search_query = create :search_query, filter_retention_state: ['review']
+      expect(search_query.applied_filters).to eq [CaseFilter::CaseRetentionStateFilter]
+    end
   end
 
   describe '#available_filters' do
@@ -642,6 +649,13 @@ describe SearchQuery do
           CaseFilter::CaseComplaintSubtypeFilter, 
           CaseFilter::CaseComplaintPriorityFilter,
         ]
+      end
+
+      it 'Pending removal tab' do
+        search_query = create :search_query
+        expect(
+          search_query.available_filters(user, 'retention_pending_removal'
+        ).map(&:class)).to eq [CaseFilter::CaseRetentionStateFilter]
       end
 
       it 'Search tab' do
