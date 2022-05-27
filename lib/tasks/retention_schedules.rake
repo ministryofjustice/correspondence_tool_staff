@@ -39,7 +39,7 @@ namespace :retention_schedules do
       progressbar = ProgressBar.create
 
       
-      Case::SAR::Offender.where(current_state: :closed).find_each do | kase |
+      Case::SAR::Offender.where(current_state: :closed).includes(:transitions).find_each do | kase |
         if kase.retention_schedule.nil?
           percent_counter += 1
           begin 

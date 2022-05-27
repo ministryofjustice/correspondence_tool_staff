@@ -4,7 +4,6 @@ module RetentionSchedules
 
     def initialize(kase:)
       @kase = kase
-      @planned_destruction_date = planned_destruction_date
       @result = nil
     end
 
@@ -14,6 +13,7 @@ module RetentionSchedules
       ActiveRecord::Base.transaction do
         begin
           if @kase.offender_sar? || @kase.offender_sar_complaint?
+            @planned_destruction_date = planned_destruction_date
             add_retention_schedules
             @result = :success
           else
@@ -81,7 +81,7 @@ module RetentionSchedules
       end
     end
 
-    def planned_destruction_date
+    def planned_destruction_date 
       years = Settings.retention_timings.off_sars.erasure.years
       months = Settings.retention_timings.off_sars.erasure.months
       retention_period = years.years + months.months
@@ -90,7 +90,11 @@ module RetentionSchedules
     end
 
     def closure_date
-      @kase.last_transitioned_at.to_date 
+      if @kase.last_transitioned_at.nil?
+        @kase.transitions.most_recent.created_at.to_date
+      else
+        @kase.last_transitioned_at.to_date
+      end
     end
   end
 end
