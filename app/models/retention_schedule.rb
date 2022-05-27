@@ -48,5 +48,9 @@ class RetentionSchedule < ApplicationRecord
       viewable_from = Settings.retention_timings.common.viewable_from
       viewable_from.months.ago..Date.today
     end
+
+    def states_map
+      aasm.states.to_h { |state| [state.name, state.display_name] }
+    end
   end
 end

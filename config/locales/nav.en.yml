@@ -5,7 +5,7 @@ en:
       incoming_cases: New cases
       my_open_cases: My open cases
       open_cases: All open cases
-      case_retention: Case Retention
+      rrd_pending: RRD Pending
   nav:
     menu: Menu
     pages:
@@ -15,6 +15,7 @@ en:
       my_open_cases: My open cases
       open_cases: Cases
       search_cases: Search
+      rrd_pending: RRD Pending
       teams:
         one: Team
         other: Teams

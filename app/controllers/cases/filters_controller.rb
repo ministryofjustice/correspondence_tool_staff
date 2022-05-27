@@ -148,6 +148,9 @@ module Cases
         prepare_open_cases_collection(service)
       end
 
+      @filter_crumbs = @query.filter_crumbs
+      @current_tab_name = "retention_#{@global_nav_manager.current_page_or_tab.name}"
+
       respond_to do |format|
         format.html { render :retention }
       end
