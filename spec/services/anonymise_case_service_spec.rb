@@ -126,7 +126,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       expect(offender_sar_complaint.versions.empty?).to be true
     end
 
-    xit 'can anonymise the data request other details of a case' do
+    it 'can anonymise the data request "other details" of a case' do
     end
   end
 
@@ -135,16 +135,16 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       service.call
     end
 
-    xit 'will raise an error if cases is not closed' do
+    xit 'will raise an error if case is not closed' do
     end
 
-    xit 'will raise an error if cases has no retention schedule' do
+    xit 'will raise an error if case has no retention schedule' do
     end
 
     xit 'will raise and error if a case is not and Offender SAR or an Offender SAR complaint' do
     end
 
-    xit 'will raise an error if the cases retention schedule does not have a state of :to_be_destroyed' do
+    xit 'will raise an error if the case retention schedule does not have a state of :to_be_destroyed' do
     end
   end
 
