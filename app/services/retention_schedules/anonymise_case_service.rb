@@ -42,7 +42,7 @@ module RetentionSchedules
         # for each datapoint on case
 
         anonymise_core_case_fields
-
+        anonymise_case_notes
 
         @kase.save
       end
@@ -51,7 +51,6 @@ module RetentionSchedules
     def anonymise_core_case_fields
       ANON_VALUES.each do |key, value|
         if @kase.respond_to?(key)
-          # puts "#{key} : #{value}"
           @kase.update(key => value)
         end
       end

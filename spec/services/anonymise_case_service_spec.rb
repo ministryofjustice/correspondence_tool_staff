@@ -67,11 +67,19 @@ describe RetentionSchedules::AnonymiseCaseService do
 
   describe '#call' do
     before do
-      offender_sar_case.state_machine.add_note_to_case!(
-        acting_user: manager,
-        acting_team: managing_team,
-        message: 'Notify Me!'
-      )
+      5.times do |i|
+        offender_sar_case.state_machine.add_note_to_case!(
+          acting_user: manager,
+          acting_team: manager.case_team(offender_sar_case),
+          message: "Note on case #{i}"
+        )
+
+        offender_sar_complaint.state_machine.add_note_to_case!(
+          acting_user: manager,
+          acting_team: manager.case_team(offender_sar_complaint),
+          message: "Note on case #{i}"
+        )
+      end
 
       service.call
       service_two.call
@@ -82,26 +90,33 @@ describe RetentionSchedules::AnonymiseCaseService do
 
     it 'can anonymise the key fields of a case Offender SAR case' do
       expected_off_sar_anon_values.each do |kase_attribute_name, value|
-        # puts "#{kase_attribute_name} -> #{offender_sar_case.send(kase_attribute_name)} : #{value}"
         expect(offender_sar_case.send(kase_attribute_name)).to eq(value)
       end
     end
 
     it 'can anonymise the key fields of a case Offender SAR Complaint case' do
       expected_off_sar_complaint_anon_values.each do |kase_attribute_name, value|
-        # puts "#{kase_attribute_name} -> #{offender_sar_case.send(kase_attribute_name)} : #{value}"
         expect(offender_sar_complaint.send(kase_attribute_name)).to eq(value)
       end
     end
 
     it 'can anonymise the notes on a case' do
-      message = offender_sar_case
+      sar_notes = offender_sar_case
                   .transitions
                   .where(event: 'add_note_to_case')
-                  .first
-                  .message
+                  .map(&:message)
 
-      expect(message).to eq('XXXX XXXX')
+      complaint_notes = offender_sar_case
+                  .transitions
+                  .where(event: 'add_note_to_case')
+                  .map(&:message)
+
+
+      notes = sar_notes + complaint_notes
+
+      notes.each do |note|
+        expect(note).to eq('XXXX XXXX')
+      end
     end
 
     xit 'can anonymise the papertrail versions of a case' do
