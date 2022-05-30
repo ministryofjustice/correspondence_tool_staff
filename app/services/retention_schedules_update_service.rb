@@ -7,8 +7,8 @@ class RetentionSchedulesUpdateService
   STATUS_ACTIONS = {
     further_review_needed: :mark_for_review,
     retain: :mark_for_retention,
-    mark_for_destruction: :mark_for_destruction,
-    destroy_cases: :final_destruction
+    mark_for_destruction: :mark_for_anonymisation,
+    destroy_cases: :anonymise!
   }.freeze
 
   POST_UPDATE_MESSAGES = {

@@ -1,5 +1,7 @@
 module RetentionSchedules
+
   class AnonymiseCaseService
+
 
     ANON_VALUES = {
       case_reference_number: 'XXXX XXXX',
@@ -31,19 +33,25 @@ module RetentionSchedules
 
     ANON_NOTE_MESSAGE_VALUE = 'XXXX XXXX'
 
+    ANON_DATA_REQUEST_NOTE_VALUE = 'XXXX XXXX'
+
     def initialize(kase:)
       # whole case and links will need to be loaded
+      # including trasitions, and data_requests
       @kase = kase
     end
 
     def call
+      
       # guard_clauses that throw errors
       ActiveRecord::Base.transaction do
         # for each datapoint on case
-
         anonymise_core_case_fields
         anonymise_case_notes
+        anonymise_cases_data_requests_notes
+        update_cases_retention_schedule_state
 
+        # this should always be called last
         destroy_case_versions
 
         @kase.save
@@ -61,10 +69,30 @@ module RetentionSchedules
     def anonymise_case_notes
       notes = @kase.transitions.where(event: 'add_note_to_case')
 
-      notes.each do |note|
-        note.message = ANON_NOTE_MESSAGE_VALUE
-        note.save
+      if notes
+        notes.each do |note|
+          note.message = ANON_NOTE_MESSAGE_VALUE
+          note.save
+        end
       end
+    end
+
+    def anonymise_cases_data_requests_notes
+      data_requests = @kase.data_requests
+
+      if data_requests
+        data_requests.each do |data_request|
+          data_request.request_type_note = ANON_DATA_REQUEST_NOTE_VALUE
+          data_request.save
+        end
+      end
+    end
+
+    def update_cases_retention_schedule_state
+      retention_schedule = @kase.retention_schedule
+      retention_schedule.anonymise!
+      retention_schedule.erasure_date = Date.today
+      retention_schedule.save
     end
 
     def destroy_case_versions

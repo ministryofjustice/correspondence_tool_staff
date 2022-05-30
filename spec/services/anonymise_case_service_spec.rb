@@ -8,7 +8,16 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
       case_state: :closed,
-      rs_state: 'to_be_destroyed',
+      rs_state: :to_be_anonymised,
+      date: Date.today - 4.months
+    ) 
+  }
+
+  let!(:case_with_no_relations) { 
+    case_with_retention_schedule(
+      case_type: :offender_sar_case, 
+      case_state: :closed,
+      rs_state: :to_be_anonymised,
       date: Date.today - 4.months
     ) 
   }
@@ -17,7 +26,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
     case_with_retention_schedule(
       case_type: :offender_sar_complaint, 
       case_state: :closed,
-      rs_state: 'to_be_destroyed',
+      rs_state: :to_be_anonymised,
       date: Date.today - 4.months
     ) 
   }
@@ -28,6 +37,10 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
 
   let(:service_two) {
     RetentionSchedules::AnonymiseCaseService.new(kase: offender_sar_complaint)
+  }
+
+  let(:service_three) {
+    RetentionSchedules::AnonymiseCaseService.new(kase: case_with_no_relations)
   }
 
   let(:expected_off_sar_anon_values) do
@@ -81,13 +94,37 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
         )
       end
 
+      10.times do |i|
+        offender_sar_case.data_requests << DataRequest.new(
+          user: manager,
+          location: 'X' * 500, # Max length
+          request_type: 'all_prison_records',
+          request_type_note: "this is a data request note #{i}",
+          date_requested: Date.current
+        )
+
+        offender_sar_complaint.data_requests << DataRequest.new(
+          user: manager,
+          location: 'X' * 500, # Max length
+          request_type: 'all_prison_records',
+          request_type_note: "this is a data request note #{i}",
+          date_requested: Date.current
+        )
+      end
+
+      # check setup
       expect(offender_sar_case.versions.count).to be > 0
+      expect(offender_sar_case.retention_schedule.present?).to be(true)
+      expect(offender_sar_complaint.versions.count).to be > 0
+      expect(offender_sar_case.data_requests.count).to be > 0
+      expect(offender_sar_complaint.data_requests.count).to be > 0
 
       service.call
       service_two.call
+      service_three.call
+
       offender_sar_case.reload
       offender_sar_complaint.reload
-
     end
 
     it 'can anonymise the key fields of a case Offender SAR case' do
@@ -102,6 +139,12 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       end
     end
 
+    it 'can anonymise the key fields of a plain case without many relations' do
+      expected_off_sar_anon_values.each do |kase_attribute_name, value|
+        expect(case_with_no_relations.send(kase_attribute_name)).to eq(value)
+      end
+    end
+
     it 'can anonymise the notes on a case' do
       sar_notes = offender_sar_case
                   .transitions
@@ -112,7 +155,6 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
                   .transitions
                   .where(event: 'add_note_to_case')
                   .map(&:message)
-
 
       notes = sar_notes + complaint_notes
 
@@ -127,6 +169,19 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
     end
 
     it 'can anonymise the data request "other details" of a case' do
+      offender_sar_case.data_requests.each do |data_request|
+        expect(data_request.request_type_note).to eq('XXXX XXXX')
+      end
+
+      offender_sar_complaint.data_requests.each do |data_request|
+        expect(data_request.request_type_note).to eq('XXXX XXXX')
+      end
+    end
+
+    it 'updates the cases retention schedule to anonymised' do
+      retention_schedule = offender_sar_case.retention_schedule
+      expect(retention_schedule.aasm.current_state).to eq(:anonymised)
+      expect(retention_schedule.erasure_date).to eq(Date.today)
     end
   end
 
@@ -144,13 +199,15 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
     xit 'will raise and error if a case is not and Offender SAR or an Offender SAR complaint' do
     end
 
-    xit 'will raise an error if the case retention schedule does not have a state of :to_be_destroyed' do
+    xit 'will raise an error if the case retention schedule does not have a state of :to_be_anonymised' do
     end
   end
 
   def case_with_retention_schedule(case_type:, case_state:, rs_state:, date:)
     kase = create(
       case_type, 
+      current_state: case_state,
+      date_responded: Date.today,
       retention_schedule: 
         RetentionSchedule.new( 
          state: rs_state,
