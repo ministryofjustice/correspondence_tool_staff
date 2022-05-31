@@ -62,7 +62,11 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseComplaintPriorityFilter, 
       CaseFilter::CasePartialCaseFlagFilter],
     "retention_pending_removal" => [
-      CaseFilter::CaseRetentionStateFilter
+      CaseFilter::CaseRetentionDeadlineFilter,
+      CaseFilter::CaseRetentionStateFilter,
+    ],
+    "retention_ready_for_removal" => [
+      CaseFilter::CaseRetentionDeadlineFilter,
     ],
   }.freeze
 
@@ -91,7 +95,8 @@ class SearchQuery < ApplicationRecord
   GOV_UK_DATE_FIELDS = CaseFilter::ReceivedDateFilter.date_fields + 
                         CaseFilter::DateRespondedFilter.date_fields + 
                         CaseFilter::ExternalDeadlineFilter.date_fields +
-                        CaseFilter::InternalDeadlineFilter.date_fields
+                        CaseFilter::InternalDeadlineFilter.date_fields +
+                        CaseFilter::CaseRetentionDeadlineFilter.date_fields
 
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 

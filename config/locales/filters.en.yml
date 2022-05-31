@@ -21,6 +21,7 @@ en:
       internal_deadline: "Draft deadline %{from_date} - %{to_date}"
       received_date: "Received date %{from_date} - %{to_date}"
       date_responded: "Date responded %{from_date} - %{to_date}"
+      planned_destruction_date: "Destruction due %{from_date} - %{to_date}"
       filter_case_type:
         <<: *list_filter_type
       filter_open_case_status:
@@ -63,11 +64,13 @@ en:
       filter_high_profile: Filter by sensitivity
       filter_caseworker: Filter by complaint caseworker
       filter_retention_state: Filter by GDPR RRD status
+      filter_planned_destruction_date: Filter by GDPR destruction deadline
       date_headings:
         filter_received_date: 'Received between'
         filter_date_responded: 'Responded between'
         filter_external_deadline: 'Due'
         filter_internal_deadline: 'Due'
+        filter_planned_destruction_date: 'Due'
     filter_open_case_status:
       pending_dacu_clearance: 'Pending clearance - Disclosure'
       pending_press_office_clearance: 'Pending clearance - Press office'
