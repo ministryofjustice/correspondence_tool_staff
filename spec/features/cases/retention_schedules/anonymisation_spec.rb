@@ -11,7 +11,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_timely_kase) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'to_be_anonymised',
+      case_state: :closed,
+      rs_state: 'to_be_anonymised',
       date: Date.today - 4.months
     ) 
   }
@@ -19,7 +20,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_timely_kase_two) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'to_be_anonymised',
+      case_state: :closed,
+      rs_state: 'to_be_anonymised',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -27,7 +29,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_untimely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'to_be_anonymised',
+      case_state: :closed,
+      rs_state: 'to_be_anonymised',
       date: Date.today - (5.months)
     ) 
   }
@@ -43,8 +46,8 @@ feature 'Case retention schedules for GDPR', :js do
     
     click_on 'Ready for removal'
 
-    expect(page).to have_content erasable_timely_kase.number
-    expect(page).to have_content erasable_timely_kase_two.number
+    expect(page).to have_content erasable_timely_kase.number.to_s
+    expect(page).to have_content erasable_timely_kase_two.number.to_s
 
     Capybara.find(:css, "#retention-checkbox-#{erasable_timely_kase.id}", visible: false).set(true)
     Capybara.find(:css, "#retention-checkbox-#{erasable_timely_kase_two.id}", visible: false).set(true)
@@ -56,17 +59,8 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to_not have_content erasable_timely_kase.number
     expect(page).to_not have_content erasable_timely_kase_two.number
 
-    cases_show_page.load(id: erasable_timely_kase.id)
-
-    expect(page).to have_content erasable_timely_kase.number
-    expect(page).to have_content 'XXXX XXXX'
-    expect(page).to have_content 'Information has been anonymised'
-    
-    cases_show_page.load(id: erasable_timely_kase.id)
-
-    expect(page).to have_content erasable_timely_kase_two.number
-    expect(page).to have_content 'XXXX XXXX'
-    expect(page).to have_content 'Information has been anonymised'
+    expect_case_to_be_anonymised(kase: erasable_timely_kase)
+    expect_case_to_be_anonymised(kase: erasable_timely_kase_two)
 
     erasable_timely_kase.reload
     erasable_timely_kase_two.reload
@@ -75,15 +69,26 @@ feature 'Case retention schedules for GDPR', :js do
     expect(erasable_timely_kase_two.retention_schedule.aasm.current_state).to eq(:anonymised)
   end
 
-  def case_with_retention_schedule(case_type:, state:, date:)
-    kase = create(
-      case_type, 
-      retention_schedule: 
-        RetentionSchedule.new( 
-         state: state, 
-         planned_destruction_date: date 
-      ) 
-    )
+  def expect_case_to_be_anonymised(kase:)
+    cases_show_page.load(id: kase.id)
+    expect(page).to have_content kase.number.to_s
+    expect(page).to have_content 'XXXX XXXX'
+    expect(page).to have_content 'Information has been anonymised'
+    expect(page).to have_content 'Anon location'
+  end
+
+  def case_with_retention_schedule(case_type:, case_state:, rs_state:, date:)
+      kase = create(
+        case_type, 
+        current_state: case_state,
+        date_responded: Date.today,
+        retention_schedule: 
+          RetentionSchedule.new( 
+           state: rs_state,
+           planned_destruction_date: date 
+        ) 
+      )
+
     kase.save
     kase
   end

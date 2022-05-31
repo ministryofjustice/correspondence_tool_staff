@@ -1,7 +1,7 @@
 module RetentionSchedules
   class CaseNotClosedError < StandardError
     def message
-      "Case cannoted be destroyed as it is still open"
+      "Case cannot be destroyed as it is still open"
     end
   end
 

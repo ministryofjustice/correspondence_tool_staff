@@ -13,7 +13,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:not_set_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'not_set',
+      case_state: :closed,
+      rs_state: 'not_set',
       date: Date.today - 4.months
     ) 
   }
@@ -22,7 +23,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:reviewable_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'review',
+      case_state: :closed,
+      rs_state: 'review',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -30,7 +32,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:reviewable_untimely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'review',
+      case_state: :closed,
+      rs_state: 'review',
       date: Date.today - (5.months)
     ) 
   }
@@ -39,7 +42,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:retain_timely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'retain',
+      case_state: :closed,
+      rs_state: 'retain',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -47,7 +51,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:retain_untimely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'retain',
+      case_state: :closed,
+      rs_state: 'retain',
       date: Date.today - (5.months)
     ) 
   }
@@ -56,7 +61,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_timely_kase) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'to_be_anonymised',
+      case_state: :closed,
+      rs_state: 'to_be_anonymised',
       date: Date.today - 4.months
     ) 
   }
@@ -64,7 +70,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_timely_kase_two) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'to_be_anonymised',
+      case_state: :closed,
+      rs_state: 'to_be_anonymised',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -72,7 +79,8 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_untimely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'to_be_anonymised',
+      case_state: :closed,
+      rs_state: 'to_be_anonymised',
       date: Date.today - (5.months)
     ) 
   }
@@ -84,10 +92,10 @@ feature 'Case retention schedules for GDPR', :js do
 
     expect(page).to have_content 'RRD Pending'
 
+    cases_page.homepage_navigation.case_retention.click
+    #
     # simple check to see Linked Case column has data
     expect(page).to have_content 'No'
-
-    cases_page.homepage_navigation.case_retention.click
     
     expect(page).to have_content 'Pending removal'
     expect(page).to have_content 'Ready for removal'
@@ -180,15 +188,18 @@ feature 'Case retention schedules for GDPR', :js do
     before < after
   end
 
-  def case_with_retention_schedule(case_type:, state:, date:)
-    kase = create(
-      case_type, 
-      retention_schedule: 
-        RetentionSchedule.new( 
-         state: state, 
-         planned_destruction_date: date 
-      ) 
-    )
+  def case_with_retention_schedule(case_type:, case_state:, rs_state:, date:)
+      kase = create(
+        case_type, 
+        current_state: case_state,
+        date_responded: Date.today,
+        retention_schedule: 
+          RetentionSchedule.new( 
+           state: rs_state,
+           planned_destruction_date: date 
+        ) 
+      )
+
     kase.save
     kase
   end
