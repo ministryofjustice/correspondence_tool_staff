@@ -63,8 +63,8 @@ describe RetentionSchedulesUpdateService do
     end
 
     it 'call to service updates correct cases' do
-      expect(not_set_timely_kase.retention_schedule.state).to eq 'to_be_destroyed'
-      expect(reviewable_timely_kase.retention_schedule.state).to eq 'to_be_destroyed'
+      expect(not_set_timely_kase.retention_schedule.state).to eq 'to_be_anonymised'
+      expect(reviewable_timely_kase.retention_schedule.state).to eq 'to_be_anonymised'
       expect(retain_timely_kase.retention_schedule.state).to eq 'retain'
     end
 
@@ -112,8 +112,8 @@ describe RetentionSchedulesUpdateService do
 
       expect(statuses[:further_review_needed]).to eq :mark_for_review
       expect(statuses[:retain]).to eq :mark_for_retention
-      expect(statuses[:mark_for_destruction]).to eq :mark_for_destruction
-      expect(statuses[:destroy_cases]).to eq :final_destruction
+      expect(statuses[:mark_for_destruction]).to eq :mark_for_anonymisation
+      expect(statuses[:destroy_cases]).to eq :anonymise!
     end
   end
 

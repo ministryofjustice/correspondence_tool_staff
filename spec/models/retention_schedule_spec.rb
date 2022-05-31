@@ -141,7 +141,15 @@ RSpec.describe RetentionSchedule, type: :model do
       it 'returns a map of states and their corresponding display names' do
         expect(
           described_class.states_map
-        ).to eq({ not_set: 'Not set', retain: 'Retain', review: 'Review', to_be_destroyed: 'Destroy', destroyed: 'Anonymised' })
+        ).to eq(
+          { 
+            not_set: 'Not set', 
+            retain: 'Retain', 
+            review: 'Review', 
+            to_be_anonymised: 'Destroy', 
+            anonymised: 'Anonymised' 
+          }
+        )
       end
     end
   end
