@@ -25,7 +25,7 @@ namespace :retention_schedules do
   end
   
   desc 'Adds retention_schedules to existing closed cases'
-  task :add_rs_to_existing_branston_cases => [:environment] do
+  task :add_rs_to_existing_branston_cases, [:batch_size] => [:environment] do |_, args|
     if FeatureSet.branston_retention_scheduling.enabled?
       puts "\n*** Adding Retention Schedules to existing closed Branston cases ***"
 
@@ -34,12 +34,25 @@ namespace :retention_schedules do
       off_sar_complaint_count = 0
       already_had_rs = 0
 
-      percent = (Case::SAR::Offender.where(current_state: :closed).count / 100).round
+      all_closed_cases = Case::SAR::Offender.where(current_state: :closed).count
+      complaints = Case::SAR::OffenderComplaint.where(current_state: :closed).count
+
+      # makes progressbar more accurate as it discounts linked complaints
+      # as complaints don't exist in isolation
+      percent = (all_closed_cases - complaints) / 100 .round
       percent_counter = 0
       progressbar = ProgressBar.create
+      start = Time.now
 
+      kases = Case::SAR::Offender.where(current_state: :closed).includes(:transitions)
+
+      puts "Kases count: #{kases.count}"
+
+      batch_size = args[:batch_size].to_i
+
+      puts "Batch size: #{batch_size}"
       
-      Case::SAR::Offender.where(current_state: :closed).includes(:transitions).find_each do | kase |
+      kases.find_each(batch_size: batch_size) do | kase |
         if kase.retention_schedule.nil?
           percent_counter += 1
           begin 
@@ -73,6 +86,7 @@ namespace :retention_schedules do
     puts "Offender SAR complaint total: #{off_sar_complaint_count}"
     puts "-------------------------"
     puts "#{already_had_rs} cases already had retention schedules"
+    puts "Job took: #{Time.now - start} seconds to run"
 
     puts "\n Case errors: \n--------------\n\n" if errors.any?
     errors.each { |error| puts error }
