@@ -1,4 +1,27 @@
 module RetentionSchedules
+  class CaseNotClosedError < StandardError
+    def message
+      "Case cannoted be destroyed as it is still open"
+    end
+  end
+
+  class NoRetentionScheduleError < StandardError
+    def message
+      "Cases without Retention Schedules cannot be destroyed"
+    end
+  end
+
+  class WrongCaseTypeError< StandardError
+    def message
+      "Non Offender SAR / Offender SAR Compaint cases cannot be destroyed"
+    end
+  end
+
+  class UnactionableStateError < StandardError
+    def message
+      "Case must have a Retention Schedule state of to_be_anonymised to be destroyed"
+    end
+  end
 
   class AnonymiseCaseService
 
@@ -41,7 +64,9 @@ module RetentionSchedules
       @kase = kase
     end
 
+
     def call
+      guard_clause_checks
       
       # guard_clauses that throw errors
       ActiveRecord::Base.transaction do
@@ -57,6 +82,8 @@ module RetentionSchedules
         @kase.save
       end
     end
+
+    private
 
     def anonymise_core_case_fields
       ANON_VALUES.each do |key, value|
@@ -97,6 +124,13 @@ module RetentionSchedules
 
     def destroy_case_versions
       @kase.versions.destroy_all
+    end
+
+    def guard_clause_checks
+      raise RetentionSchedules::WrongCaseTypeError unless @kase.type_of_offender_sar? 
+      raise RetentionSchedules::CaseNotClosedError unless @kase.closed?
+      raise RetentionSchedules::NoRetentionScheduleError unless @kase.retention_schedule.present?
+      raise RetentionSchedules::UnactionableStateError unless @kase.retention_schedule.to_be_anonymised?
     end
   end
 end

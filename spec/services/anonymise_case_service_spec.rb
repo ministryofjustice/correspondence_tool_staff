@@ -186,20 +186,83 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
   end
 
   describe 'error states' do
-    before do
-      service.call
+    let(:open_case) {
+      instance_double(
+        Case::SAR::Offender, 
+        type_of_offender_sar?: true,
+        closed?: false)
+    }
+
+    let(:no_rs_case) {
+      instance_double(
+        Case::SAR::Offender, 
+        type_of_offender_sar?: true,
+        closed?: true,
+        retention_schedule: instance_double(
+          RetentionSchedule,
+          present?: false
+        )
+      )
+    }
+
+    let(:wrong_rs_state) {
+      instance_double(
+        Case::SAR::Offender, 
+        type_of_offender_sar?: true,
+        closed?: true,
+        retention_schedule: instance_double(
+          RetentionSchedule,
+          present?: true,
+          to_be_anonymised?: false
+        )
+      )
+    }
+
+    let(:wrong_case_type) {
+      instance_double(
+        Case::Base, 
+        type_of_offender_sar?: false,
+        retention_schedule: instance_double(
+          RetentionSchedule,
+          present?: false
+        )
+      )
+    }
+
+    it 'will raise an error if case is not closed' do
+      expect {
+        service = RetentionSchedules::AnonymiseCaseService.new(
+          kase: open_case
+        )
+        service.call
+      }.to raise_error RetentionSchedules::CaseNotClosedError
     end
 
-    xit 'will raise an error if case is not closed' do
+    it 'will raise an error if case has no retention schedule' do
+      expect {
+        service = RetentionSchedules::AnonymiseCaseService.new(
+          kase: no_rs_case
+        )
+        service.call
+      }.to raise_error RetentionSchedules::NoRetentionScheduleError
     end
 
-    xit 'will raise an error if case has no retention schedule' do
+    it 'will raise and error if a case is not an Offender SAR or an Offender SAR complaint' do
+      expect {
+        service = RetentionSchedules::AnonymiseCaseService.new(
+          kase: wrong_case_type
+        )
+        service.call
+      }.to raise_error RetentionSchedules::WrongCaseTypeError
     end
 
-    xit 'will raise and error if a case is not and Offender SAR or an Offender SAR complaint' do
-    end
-
-    xit 'will raise an error if the case retention schedule does not have a state of :to_be_anonymised' do
+    it 'will raise an error if the case retention schedule does not have a state of :to_be_anonymised' do
+      expect {
+        service = RetentionSchedules::AnonymiseCaseService.new(
+          kase: wrong_rs_state
+        )
+        service.call
+      }.to raise_error RetentionSchedules::UnactionableStateError
     end
   end
 
