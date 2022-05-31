@@ -236,6 +236,8 @@ describe CaseSearchService do
                                            filter_case_type: ['foi-standard'],
                                            external_deadline_from: external_deadline_from,
                                            external_deadline_to: external_deadline_to,
+                                           planned_destruction_date_from: nil,
+                                           planned_destruction_date_to:   nil,
                                            internal_deadline_from:       nil,
                                            internal_deadline_to:         nil,
                                            received_date_from:       nil,

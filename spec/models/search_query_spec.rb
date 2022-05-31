@@ -67,6 +67,8 @@ describe SearchQuery do
                                                  :external_deadline_to,
                                                  :internal_deadline_from,
                                                  :internal_deadline_to,
+                                                 :planned_destruction_date_from,
+                                                 :planned_destruction_date_to,
                                                  :filter_case_type,
                                                  :filter_open_case_status,
                                                  :filter_sensitivity,
@@ -120,6 +122,8 @@ describe SearchQuery do
           received_date_to:         nil,
           date_responded_from:      nil,
           date_responded_to:        nil,
+          planned_destruction_date_from: nil,
+          planned_destruction_date_to: nil,
         )
       }
       let(:query_params) {
@@ -187,6 +191,8 @@ describe SearchQuery do
           date_responded_from:      nil,
           date_responded_to:        nil,
           filter_status:            [],
+          planned_destruction_date_from: nil,
+          planned_destruction_date_to: nil,
         )
       }
       let(:query_params) {
@@ -224,6 +230,8 @@ describe SearchQuery do
                                                 :external_deadline_to,
                                                 :internal_deadline_from,
                                                 :internal_deadline_to,
+                                                :planned_destruction_date_from,
+                                                :planned_destruction_date_to,
                                                 :filter_case_type,
                                                 :filter_open_case_status,
                                                 :filter_sensitivity,
@@ -561,6 +569,11 @@ describe SearchQuery do
       search_query = create :search_query, filter_retention_state: ['review']
       expect(search_query.applied_filters).to eq [CaseFilter::CaseRetentionStateFilter]
     end
+
+    it 'includes retention deadline filter' do
+      search_query = create :search_query, planned_destruction_date_from: Date.today, planned_destruction_date_to: Date.today
+      expect(search_query.applied_filters).to eq [CaseFilter::CaseRetentionDeadlineFilter]
+    end
   end
 
   describe '#available_filters' do
@@ -655,7 +668,17 @@ describe SearchQuery do
         search_query = create :search_query
         expect(
           search_query.available_filters(user, 'retention_pending_removal'
-        ).map(&:class)).to eq [CaseFilter::CaseRetentionStateFilter]
+        ).map(&:class)).to eq [
+          CaseFilter::CaseRetentionDeadlineFilter,
+          CaseFilter::CaseRetentionStateFilter,
+        ]
+      end
+
+      it 'Ready for removal tab' do
+        search_query = create :search_query
+        expect(
+          search_query.available_filters(user, 'retention_ready_for_removal'
+        ).map(&:class)).to eq [CaseFilter::CaseRetentionDeadlineFilter]
       end
 
       it 'Search tab' do
