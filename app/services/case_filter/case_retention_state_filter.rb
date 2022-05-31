@@ -30,8 +30,8 @@ module CaseFilter
     # with these retention states will not show in the tab where this filter is applied.
     def excluded_states
       [
-        RetentionSchedule::STATE_TO_BE_DESTROYED,
-        RetentionSchedule::STATE_DESTROYED
+        RetentionSchedule::STATE_TO_BE_ANONYMISED,
+        RetentionSchedule::STATE_ANONYMISED
       ]
     end
   end

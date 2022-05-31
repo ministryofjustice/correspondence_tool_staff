@@ -92,8 +92,6 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to have_content 'Pending removal'
     expect(page).to have_content 'Ready for removal'
 
-    binding.pry
-
     expect(page).to have_content '2 cases found'
 
     expect(page).to have_content erasable_timely_kase.number

@@ -36,7 +36,6 @@ class RetentionSchedule < ApplicationRecord
 
     event :anonymise! do
       transitions from: [:to_be_anonymised], to: :anonymised
-      erasure_date = Date.today
     end
   end
 
