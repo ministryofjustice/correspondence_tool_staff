@@ -16,7 +16,7 @@ RSpec.describe Query::CaseReport do
 
   let(:default_retrieval_scope) { Case::Base.all }
   let(:external_deadline_retrieval_scope) { 
-    Case::Base.all.select(:id).order(Arel.sql("(properties ->> 'external_deadline')::timestamp with time zone")) 
+    Case::Base.all.select(:id).order(Arel.sql("(cases.properties ->> 'external_deadline')::timestamp with time zone")) 
   }
 
   describe '#initialize' do

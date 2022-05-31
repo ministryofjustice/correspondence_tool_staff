@@ -92,7 +92,7 @@ describe Cases::FiltersController, type: :controller do
       it 'assigns the result set from the CaseFinderService' do
         get :open
         expect(assigns(:cases).object.to_sql)
-          .to include("ORDER BY (properties ->> 'external_deadline')")
+          .to include("ORDER BY (cases.properties ->> 'external_deadline')")
         expect(assigns(:cases).current_page).to eq 1
         expect(assigns(:cases)).to be_decorated
       end

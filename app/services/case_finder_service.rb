@@ -46,7 +46,7 @@ class CaseFinderService
 
   def retention_cases_scope
     get_root_scope('default')
-      .includes(:retention_schedule)
+      .includes([:retention_schedule, :case_links, :linked_cases])
       .where(retention_schedule: {
         planned_destruction_date: RetentionSchedule.common_date_viewable_from_range
       })
