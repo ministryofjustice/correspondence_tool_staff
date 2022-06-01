@@ -44,10 +44,10 @@ RSpec.describe RetentionSchedule, type: :model do
       retention_schedule.mark_for_review
       expect(retention_schedule.aasm.human_state).to match('Review')
 
-      retention_schedule.mark_for_destruction
+      retention_schedule.mark_for_anonymisation
       expect(retention_schedule.aasm.human_state).to match('Destroy')
 
-      retention_schedule.final_destruction
+      retention_schedule.anonymise!
       expect(retention_schedule.aasm.human_state).to match('Anonymised')
     end
   end
@@ -61,14 +61,14 @@ RSpec.describe RetentionSchedule, type: :model do
       expect(retention_schedule).to transition_from(:not_set, :review, :retain)
         .to(:retain).on_event(:mark_for_retention)
 
-      expect(retention_schedule).to transition_from(:not_set, :retain, :to_be_destroyed)
+      expect(retention_schedule).to transition_from(:not_set, :retain, :to_be_anonymised)
         .to(:review).on_event(:mark_for_review)
 
       expect(retention_schedule).to transition_from(:not_set, :retain, :review)
-        .to(:to_be_destroyed).on_event(:mark_for_destruction)
+        .to(:to_be_anonymised).on_event(:mark_for_anonymisation)
 
-      expect(retention_schedule).to transition_from(:to_be_destroyed)
-        .to(:destroyed).on_event(:final_destruction)
+      expect(retention_schedule).to transition_from(:to_be_anonymised)
+        .to(:anonymised).on_event(:anonymise!)
 
       expect(retention_schedule).to transition_from(:retain)
         .to(:not_set).on_event(:unlist)
@@ -76,17 +76,17 @@ RSpec.describe RetentionSchedule, type: :model do
 
     it 'disallows incorrect transitions' do
       expect(retention_schedule).to_not transition_from(:not_set, :retain, :review)
-        .to(:destroyed).on_event(:final_destruction)
+        .to(:destroyed).on_event(:anonymise!)
 
-      expect(retention_schedule).to_not transition_from(:review, :to_be_destroyed)
+      expect(retention_schedule).to_not transition_from(:review, :to_be_anonymised)
         .to(:unlist).on_event(:unlist)
 
-      retention_schedule.mark_for_destruction
-      retention_schedule.final_destruction
+      retention_schedule.mark_for_anonymisation
+      retention_schedule.anonymise!
 
-      expect(retention_schedule).to have_state(:destroyed)
+      expect(retention_schedule).to have_state(:anonymised)
       expect(retention_schedule).to_not allow_transition_to(
-        :not_set, :retain, :review, :to_be_destroyed
+        :not_set, :retain, :review, :to_be_anonymised
       )
     end
   end
@@ -141,7 +141,15 @@ RSpec.describe RetentionSchedule, type: :model do
       it 'returns a map of states and their corresponding display names' do
         expect(
           described_class.states_map
-        ).to eq({ not_set: 'Not set', retain: 'Retain', review: 'Review', to_be_destroyed: 'Destroy', destroyed: 'Anonymised' })
+        ).to eq(
+          { 
+            not_set: 'Not set', 
+            retain: 'Retain', 
+            review: 'Review', 
+            to_be_anonymised: 'Destroy', 
+            anonymised: 'Anonymised' 
+          }
+        )
       end
     end
   end

@@ -111,7 +111,7 @@ class CaseFinderService
   def erasable_cases_scope
     retention_cases_scope.where(
       retention_schedule: { 
-        state: [:to_be_destroyed]
+        state: [:to_be_anonymised]
       })
   end
 

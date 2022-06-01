@@ -56,7 +56,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_timely_kase) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'to_be_destroyed',
+      state: 'to_be_anonymised',
       date: Date.today - 4.months
     ) 
   }
@@ -64,7 +64,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_timely_kase_two) {
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'to_be_destroyed',
+      state: 'to_be_anonymised',
       date: Date.today - (4.months - 7.days)
     ) 
   }
@@ -72,7 +72,7 @@ feature 'Case retention schedules for GDPR', :js do
   let!(:erasable_untimely_kase) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
-      state: 'to_be_destroyed',
+      state: 'to_be_anonymised',
       date: Date.today - (5.months)
     ) 
   }
@@ -155,7 +155,7 @@ feature 'Case retention schedules for GDPR', :js do
 
     not_set_timely_kase.reload
 
-    expect(not_set_timely_kase.retention_schedule.aasm.current_state).to eq(:to_be_destroyed)
+    expect(not_set_timely_kase.retention_schedule.aasm.current_state).to eq(:anonymised)
   end
 
   scenario 'non branston users cannot see the GDPR tab' do
