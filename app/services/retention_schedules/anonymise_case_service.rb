@@ -68,29 +68,25 @@ module RetentionSchedules
     def call
       guard_clause_checks
 
-      PaperTrail.request(enabled: false) do
-      # guard_clauses that throw errors
-        ActiveRecord::Base.transaction do
-          # for each datapoint on case
-          anonymise_core_case_fields
-          anonymise_case_notes
-          anonymise_cases_data_requests_notes
-          update_cases_retention_schedule_state
+      ActiveRecord::Base.transaction do
+        anonymise_core_case_fields
+        anonymise_case_notes
+        anonymise_cases_data_requests_notes
+        update_cases_retention_schedule_state
+        destroy_case_versions
 
-          # this should always be called last
-          destroy_case_versions
-
-          @kase.save
-        end
-      end 
+        @kase.save
+      end
     end
 
     private
 
     def anonymise_core_case_fields
-      ANON_VALUES.each do |key, value|
-        if @kase.respond_to?(key)
-          @kase.update_attribute(key, value)
+      PaperTrail.request(enabled: false) do
+        ANON_VALUES.each do |key, value|
+          if @kase.respond_to?(key)
+            @kase.update_attribute(key, value)
+          end
         end
       end
     end
@@ -98,22 +94,18 @@ module RetentionSchedules
     def anonymise_case_notes
       notes = @kase.transitions.where(event: 'add_note_to_case')
 
-      if notes
-        notes.each do |note|
-          note.message = ANON_NOTE_MESSAGE_VALUE
-          note.save
-        end
+      notes.each do |note|
+        note.message = ANON_NOTE_MESSAGE_VALUE
+        note.save
       end
     end
 
     def anonymise_cases_data_requests_notes
       data_requests = @kase.data_requests
 
-      if data_requests
-        data_requests.each do |data_request|
-          data_request.request_type_note = ANON_DATA_REQUEST_NOTE_VALUE
-          data_request.save
-        end
+      data_requests.each do |data_request|
+        data_request.request_type_note = ANON_DATA_REQUEST_NOTE_VALUE
+        data_request.save
       end
     end
 
