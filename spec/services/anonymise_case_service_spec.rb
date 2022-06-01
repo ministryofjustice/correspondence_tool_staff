@@ -13,6 +13,16 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
     ) 
   }
 
+  let!(:third_party_offender_sar_case) { 
+    case_with_retention_schedule(
+      case_type: :offender_sar_case, 
+      case_state: :closed,
+      rs_state: :to_be_anonymised,
+      third_party: true,
+      date: Date.today - 4.months
+    ) 
+  }
+
   let!(:case_with_no_relations) { 
     case_with_retention_schedule(
       case_type: :offender_sar_case, 
@@ -45,21 +55,44 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
 
   let(:expected_off_sar_anon_values) do
     {
-      case_reference_number: 'XXXX XXXX',
+      case_reference_number: '',
       date_of_birth: Date.new(01, 01, 0001),
       email: 'anon.email@cms-gdpr.justice.gov.uk',
-      message: 'XXXX XXXX',
+      message: 'Information has been anonymised',
       name: 'XXXX XXXX',
-      postal_address: 'XXXX XXXX',
-      previous_case_numbers: 'XXXX XXXX',
-      prison_number: 'XXXX XXXX',
-      requester_reference: 'XXXX XXXX',
+      other_subject_ids: '',
+      postal_address: 'Anon address',
+      previous_case_numbers: '',
+      prison_number: '',
+      requester_reference: '',
       subject: 'XXXX XXXX',
-      subject_address: 'XXXX XXXX',
-      subject_aliases: 'XXXX XXXX',
+      subject_address: 'Anon location',
+      subject_aliases: '',
       subject_full_name: 'XXXX XXXX',
-      third_party_company_name: 'XXXX XXXX',
-      third_party_name: 'XXXX XXXX',
+      third_party_company_name: nil,
+      third_party_name: nil,
+    }
+  end
+
+
+  let(:expected_third_pary_off_sar_anon_values) do
+    {
+      case_reference_number: 'XXXX XXXX',
+      # date_of_birth: Date.new(01, 01, 0001),
+      # email: 'anon.email@cms-gdpr.justice.gov.uk',
+      # message: 'Information has been anonymised',
+      # name: 'XXXX XXXX',
+      # other_subject_ids: '',
+      # postal_address: 'Anon address',
+      # previous_case_numbers: '',
+      # prison_number: '',
+      # requester_reference: '',
+      # subject: 'XXXX XXXX',
+      # subject_address: 'Anon location',
+      # subject_aliases: '',
+      # subject_full_name: 'XXXX XXXX',
+      # third_party_company_name: '',
+      # third_party_name: 'Anon requester',
     }
   end
 
@@ -127,13 +160,19 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       offender_sar_complaint.reload
     end
 
-    it 'can anonymise the key fields of a case Offender SAR case' do
+    it 'can anonymise the key fields of a Offender SAR case' do
       expected_off_sar_anon_values.each do |kase_attribute_name, value|
-        expect(offender_sar_case.send(kase_attribute_name)).to eq(value)
+        expect(offender_sar_case.send(kase_attribute_name)).to eq(value), "Case attribute name #{kase_attribute_name} - Model value: #{offender_sar_case.send(kase_attribute_name)}"
       end
     end
 
-    it 'can anonymise the key fields of a case Offender SAR Complaint case' do
+    fit 'can anonymise the key fields of a third party Offender SAR case' do
+      expected_third_pary_off_sar_anon_values.each do |kase_attribute_name, value|
+        expect(third_party_offender_sar_case.send(kase_attribute_name)).to eq(value)
+      end
+    end
+
+    it 'can anonymise the key fields of a Offender SAR Complaint case' do
       expected_off_sar_complaint_anon_values.each do |kase_attribute_name, value|
         expect(offender_sar_complaint.send(kase_attribute_name)).to eq(value)
       end
@@ -159,7 +198,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       notes = sar_notes + complaint_notes
 
       notes.each do |note|
-        expect(note).to eq('XXXX XXXX')
+        expect(note).to eq('Note details have been anonymised')
       end
     end
 
@@ -170,11 +209,11 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
 
     it 'can anonymise the data request "other details" of a case' do
       offender_sar_case.data_requests.each do |data_request|
-        expect(data_request.request_type_note).to eq('XXXX XXXX')
+        expect(data_request.request_type_note).to eq('Information has been anonymised')
       end
 
       offender_sar_complaint.data_requests.each do |data_request|
-        expect(data_request.request_type_note).to eq('XXXX XXXX')
+        expect(data_request.request_type_note).to eq('Information has been anonymised')
       end
     end
 
@@ -266,17 +305,32 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
     end
   end
 
-  def case_with_retention_schedule(case_type:, case_state:, rs_state:, date:)
-    kase = create(
-      case_type, 
-      current_state: case_state,
-      date_responded: Date.today,
-      retention_schedule: 
-        RetentionSchedule.new( 
-         state: rs_state,
-         planned_destruction_date: date 
-      ) 
-    )
+  def case_with_retention_schedule(case_type:, case_state:, rs_state:, date:, third_party: false)
+    if third_party
+      kase = create(
+        case_type,
+        :third_party,
+        current_state: case_state,
+        date_responded: Date.today,
+        retention_schedule: 
+          RetentionSchedule.new( 
+           state: rs_state,
+           planned_destruction_date: date 
+        ) 
+      )
+    else
+      kase = create(
+        case_type, 
+        current_state: case_state,
+        date_responded: Date.today,
+        retention_schedule: 
+          RetentionSchedule.new( 
+           state: rs_state,
+           planned_destruction_date: date 
+        ) 
+      )
+    end
+
     kase.save
     kase
   end
