@@ -67,20 +67,22 @@ module RetentionSchedules
 
     def call
       guard_clause_checks
-      
+
+      PaperTrail.request(enabled: false) do
       # guard_clauses that throw errors
-      ActiveRecord::Base.transaction do
-        # for each datapoint on case
-        anonymise_core_case_fields
-        anonymise_case_notes
-        anonymise_cases_data_requests_notes
-        update_cases_retention_schedule_state
+        ActiveRecord::Base.transaction do
+          # for each datapoint on case
+          anonymise_core_case_fields
+          anonymise_case_notes
+          anonymise_cases_data_requests_notes
+          update_cases_retention_schedule_state
 
-        # this should always be called last
-        destroy_case_versions
+          # this should always be called last
+          destroy_case_versions
 
-        @kase.save
-      end
+          @kase.save
+        end
+      end 
     end
 
     private
@@ -88,7 +90,7 @@ module RetentionSchedules
     def anonymise_core_case_fields
       ANON_VALUES.each do |key, value|
         if @kase.respond_to?(key)
-          @kase.update(key => value)
+          @kase.update_attribute(key, value)
         end
       end
     end
