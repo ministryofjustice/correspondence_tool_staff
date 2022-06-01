@@ -47,7 +47,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
     {
       case_reference_number: 'XXXX XXXX',
       date_of_birth: Date.new(01, 01, 0001),
-      email: 'anon@email.com',
+      email: 'anon.email@cms-gdpr.justice.gov.uk',
       message: 'XXXX XXXX',
       name: 'XXXX XXXX',
       postal_address: 'XXXX XXXX',
@@ -66,11 +66,11 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
   let(:expected_off_sar_complaint_anon_values) do
     expected_off_sar_anon_values.merge(
       {
-        gld_contact_email: 'XXXX XXXX',
+        gld_contact_email: 'anon.email@cms-gdpr.justice.gov.uk',
         gld_contact_name: 'XXXX XXXX',
         gld_contact_phone: 'XXXX XXXX',
         gld_reference: 'XXXX XXXX',
-        ico_contact_email: 'XXXX XXXX',
+        ico_contact_email: 'anon.email@cms-gdpr.justice.gov.uk',
         ico_contact_name: 'XXXX XXXX',
         ico_contact_phone: 'XXXX XXXX',
         ico_reference: 'XXXX XXXX',
