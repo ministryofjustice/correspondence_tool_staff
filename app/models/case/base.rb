@@ -897,6 +897,7 @@ class Case::Base < ApplicationRecord
   def type_of_offender_sar?;   false;  end
   def offender_sar?;           false;  end
   def offender_sar_complaint?; false;  end
+  def sar_internal_review?;    false;  end
 
   def default_managing_team
     BusinessUnit.dacu_bmt
@@ -971,11 +972,11 @@ class Case::Base < ApplicationRecord
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.not_in_future')
       )
-    elsif (self.date_responded.present? && self.date_draft_compliant > self.date_responded) && !self.is_sar_internal_review?
+    elsif (self.date_responded.present? && self.date_draft_compliant > self.date_responded) 
       errors.add(
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.after_date_responded')
-      )
+      ) unless sar_internal_review?
     end
     errors[:date_draft_compliant].any?
   end

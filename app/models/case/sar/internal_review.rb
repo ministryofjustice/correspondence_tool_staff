@@ -62,6 +62,10 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     appeal_outcome&.name
   end
 
+  def sar_internal_review?
+    true
+  end
+
   def sar_ir_outcome_abbr
     appeal_outcome&.abbreviation
   end
