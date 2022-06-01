@@ -84,6 +84,9 @@ feature 'Case retention schedules for GDPR', :js do
 
     expect(page).to have_content 'RRD Pending'
 
+    # simple check to see Linked Case column has data
+    expect(page).to have_content 'No'
+
     cases_page.homepage_navigation.case_retention.click
     
     expect(page).to have_content 'Pending removal'

@@ -91,7 +91,7 @@ section#retention-cases.govuk-tabs__panel
                       td 
                         = kase.retention_schedule.planned_destruction_date 
                       td 
-                        = "TODO" 
+                        = kase.linked_cases.present?.humanize
                       td 
                         = kase.retention_schedule.human_state
 
