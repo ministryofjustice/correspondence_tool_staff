@@ -26,7 +26,7 @@ class ClosedCaseValidator < ActiveModel::Validator
                              :validate_late_team_id ],
     'OFFENDER_SAR' =>       [:validate_date_responded],
     'OFFENDER_SAR_COMPLAINT' =>   [:validate_date_responded],
-  }
+  }.freeze
   # Validations applicable to cases that are being processed for closure.
   #
   # e.g. missing_info is a virtual attribute which is only used when submitting
@@ -42,7 +42,7 @@ class ClosedCaseValidator < ActiveModel::Validator
     'OVERTURNED_FOI'=>      [],
     'OFFENDER_SAR'  =>      [],
     'OFFENDER_SAR_COMPLAINT'  =>    [],
-  }
+  }.freeze
 
   class << self
     # Predicates to check what closure information is necessary for a case.

@@ -16,7 +16,7 @@ require 'json'
 
 class UsersSettingsForAnonymizer
 
-  USER_SETTINGS_JSON_S3_PATH = "dumps/user_settings.json"
+  USER_SETTINGS_JSON_S3_PATH = "dumps/user_settings.json".freeze
 
   def initialize()
     @user_settings = []

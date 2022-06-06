@@ -26,7 +26,7 @@ module Stats
       refusal_reason
       appeal_outcome
       deleted
-    }
+    }.freeze
 
     # Note: Does not run parent constructor
     def initialize(**)

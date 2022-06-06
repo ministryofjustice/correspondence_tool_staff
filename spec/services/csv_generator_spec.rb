@@ -7,7 +7,7 @@ describe 'CSVGenerator' do
 
     CSV_COLUMN_HEADINGS = [
       'test column'
-    ]
+    ].freeze
 
     def initialize(**options)
     end

@@ -18,8 +18,8 @@ class TeamProperty < ApplicationRecord
     lead
     can_allocate
     role
-  )
-  ROLES = %w[manager responder approver]
+  ).freeze
+  ROLES = %w[manager responder approver].freeze
 
   belongs_to :team
 

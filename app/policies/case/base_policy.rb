@@ -54,7 +54,7 @@ class Case::BasePolicy < ApplicationPolicy
         Case::ICO::SAR,
         Case::OverturnedICO::SAR,
         Case::OverturnedICO::FOI,
-    ]
+    ].freeze
 
     def initialize(user, scope, feature = nil)
       @user  = user

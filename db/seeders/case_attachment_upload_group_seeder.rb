@@ -4,7 +4,7 @@ class CaseAttachmentUploadGroupSeeder
     add_responses
     add_response_to_flagged_case
     upload_response_and_approve
-  )
+  ).freeze
 
   def initialize
     @transitions = CaseTransition.where(event: RESPONSE_EVENTS)

@@ -26,7 +26,7 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     subject: 'Case summary',
     message: 'Full case details',
     original_case: 'The original case'
-  }
+  }.freeze
 
   before_save do
     self.workflow = 'trigger'

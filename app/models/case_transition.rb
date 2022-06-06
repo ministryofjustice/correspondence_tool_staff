@@ -21,7 +21,7 @@
 class CaseTransition < ApplicationRecord
   include Warehousable
 
-  ASSIGN_RESPONDER_EVENT = 'assign_responder'
+  ASSIGN_RESPONDER_EVENT = 'assign_responder'.freeze
 
   belongs_to :case,
              inverse_of: :transitions,
@@ -29,12 +29,12 @@ class CaseTransition < ApplicationRecord
              foreign_key: :case_id
 
   # This list should be bigger, but don't have time or inclination to move all event names here (yet)
-  EXTEND_FOR_PIT_EVENT = 'extend_for_pit'
-  REMOVE_PIT_EXTENSION_EVENT = 'remove_pit_extension'
-  EXTEND_SAR_DEADLINE_EVENT = 'extend_sar_deadline'
-  REMOVE_SAR_EXTENSION_EVENT = 'remove_sar_deadline_extension'
-  ADD_MESSAGE_TO_CASE_EVENT = 'add_message_to_case'
-  ADD_NOTE_TO_CASE_EVENT = 'add_note_to_case'
+  EXTEND_FOR_PIT_EVENT = 'extend_for_pit'.freeze
+  REMOVE_PIT_EXTENSION_EVENT = 'remove_pit_extension'.freeze
+  EXTEND_SAR_DEADLINE_EVENT = 'extend_sar_deadline'.freeze
+  REMOVE_SAR_EXTENSION_EVENT = 'remove_sar_deadline_extension'.freeze
+  ADD_MESSAGE_TO_CASE_EVENT = 'add_message_to_case'.freeze
+  ADD_NOTE_TO_CASE_EVENT = 'add_note_to_case'.freeze
 
   after_destroy :update_most_recent, if: :most_recent?
 

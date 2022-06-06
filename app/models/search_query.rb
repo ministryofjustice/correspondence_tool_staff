@@ -85,11 +85,11 @@ class SearchQuery < ApplicationRecord
   },  _suffix: true
 
   # Add all those properties withn query jsonb fields
-  TYPED_FILTER_FIELDS = {search_text: [:string, default: nil], list_path: [:string, default: nil]}
+  @@typed_filter_fields = {search_text: [:string, default: nil], list_path: [:string, default: nil]}
   FILTER_CLASSES_MAP.to_hash.values.flatten.uniq.each do | filter_class |
-    filter_class.filter_fields(TYPED_FILTER_FIELDS)
+    filter_class.filter_fields(@@typed_filter_fields)
   end
-  jsonb_accessor(:query, **TYPED_FILTER_FIELDS)
+  jsonb_accessor(:query, **@@typed_filter_fields)
 
   # Define the list of date fields
   GOV_UK_DATE_FIELDS = CaseFilter::ReceivedDateFilter.date_fields + 

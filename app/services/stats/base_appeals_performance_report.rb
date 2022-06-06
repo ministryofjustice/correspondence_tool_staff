@@ -6,14 +6,14 @@ module Stats
         directorate:                     'Directorate',
         business_unit:                   'Business unit',
         responsible:                     'Responsible'
-    }
+    }.freeze
 
     R002_SPECIFIC_SUPERHEADINGS = {
         business_group:                  '',
         directorate:                     '',
         business_unit:                   '',
         responsible:                     ''
-    }
+    }.freeze
 
     class << self
       def report_format
@@ -37,7 +37,7 @@ module Stats
       @stats.finalise
     end
 
-    INDEXES_FOR_PERCENTAGE_COLUMNS = [4, 10]
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [4, 10].freeze
 
     def to_csv
       csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)

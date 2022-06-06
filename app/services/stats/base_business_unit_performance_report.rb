@@ -10,7 +10,7 @@ module Stats
       responsible:                     'Responsible',
       deactivated:                     'Deactivated',
       moved:                           'Moved to',
-    }
+    }.freeze
 
     R003_BU_PERFORMANCE_COLUMNS = {
       bu_performance:             'Performance %',
@@ -19,7 +19,7 @@ module Stats
       bu_responded_late:          'Responded - late',
       bu_open_in_time:            'Open - in time',
       bu_open_late:               'Open - late',
-    }
+    }.freeze
 
     R003_SPECIFIC_SUPERHEADINGS = {
       business_group:                  '',
@@ -30,7 +30,7 @@ module Stats
       responsible:                     '',
       deactivated:                     '',
       moved:                           '',
-    }
+    }.freeze
 
     R003_BU_PERFORMANCE_SUPERHEADINGS = {
       bu_performance:             'Business unit',
@@ -39,7 +39,7 @@ module Stats
       bu_responded_late:          'Business unit',
       bu_open_in_time:            'Business unit',
       bu_open_late:               'Business unit',
-    }
+    }.freeze
 
     class << self
       def report_format
@@ -91,7 +91,7 @@ module Stats
       @stats.finalise
     end
 
-    INDEXES_FOR_PERCENTAGE_COLUMNS = [8, 14, 20]
+    INDEXES_FOR_PERCENTAGE_COLUMNS = [8, 14, 20].freeze
 
     # This method needs to return a grid of 'cells' with value and rag_rating properties
     def to_csv

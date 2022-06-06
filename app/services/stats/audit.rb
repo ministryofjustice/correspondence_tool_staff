@@ -17,7 +17,7 @@ module Stats
       info_held
       granted
       exemptions
-    }
+    }.freeze
 
     attr_reader :filename
 

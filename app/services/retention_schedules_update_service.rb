@@ -16,7 +16,7 @@ class RetentionSchedulesUpdateService
     retain: "marked for retention",
     mark_for_destruction: "marked for destruction",
     destroy_cases: "destroyed"
-  }
+  }.freeze
 
   def initialize(retention_schedules_params:, event_text:, current_user:)
     @event_text = event_text

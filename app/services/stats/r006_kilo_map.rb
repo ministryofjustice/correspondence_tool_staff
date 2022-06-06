@@ -12,7 +12,7 @@ module Stats
         'Group email',
         'Team member name',
         'Team member email'
-    ]
+    ].freeze
 
     def self.description
       'Includes a list of all teams and users that respond to requests for information'

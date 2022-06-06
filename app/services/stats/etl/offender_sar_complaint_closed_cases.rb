@@ -26,7 +26,7 @@ module Stats
         'Outcome of litigation complaint', 
         'Cost paid', 
         'Settlement paid'
-      ]
+      ].freeze
 
       FIELD_COLUMNS = [
         'number',
@@ -48,7 +48,7 @@ module Stats
         'outcome', 
         'total_cost', 
         'settlement_cost'
-      ]
+      ].freeze
 
       def result_name
         RESULT_NAME

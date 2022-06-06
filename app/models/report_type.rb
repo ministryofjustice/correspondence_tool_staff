@@ -21,7 +21,7 @@ class ReportType < ApplicationRecord
                                         quarter_to_date
                                         last_quarter
                                         last_month
-                                      }
+                                      }.freeze
 
   has_many :reports
 

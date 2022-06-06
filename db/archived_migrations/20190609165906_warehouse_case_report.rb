@@ -45,7 +45,7 @@ class WarehouseCaseReport < ActiveRecord::Migration[5.0]
     'Draft in time' => :string,
     'In target' => :string,
     'Number of days late' => :integer,
-  }
+  }.freeze
 
   def up
     create_table :warehouse_case_reports, id: false do |t|

@@ -2,8 +2,8 @@ class ApplicationController < ActionController::Base
 
   include Pundit::Authorization
 
-  GLOBAL_NAV_EXCLUSION_PATHS    = %w{ /cases/filter }
-  CSV_REQUEST_REGEX             = /\.csv$/
+  GLOBAL_NAV_EXCLUSION_PATHS    = %w{ /cases/filter }.freeze
+  CSV_REQUEST_REGEX             = /\.csv$/.freeze
 
   before_action do
     unless self.class.to_s =~ /^Devise::/

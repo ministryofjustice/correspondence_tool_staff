@@ -107,7 +107,7 @@ class ReportTypeSeeder
                          default_reporting_period: 'year_to_date',
                          offender_sar_complaint: true,
                          etl: false},
-  ]
+  ].freeze
 
   def seed!(verbose: false)
     puts '----Seeding ReportTypes----' if verbose
