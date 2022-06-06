@@ -35,7 +35,11 @@ class RetentionSchedulesUpdateService
       @result = :error
     else
       begin
-        update_retention_schedule_statuses
+        if @state_change_event == :anonymise!
+          anonymise_cases
+        else
+          update_retention_schedule_statuses
+        end
       rescue StandardError => error
         @error_message = error.message
         @result = :error
@@ -69,17 +73,33 @@ class RetentionSchedulesUpdateService
 
   private
 
+  def anonymise_cases
+    kases = Case::SAR::Offender
+      .includes([
+        :assignments, 
+        :transitions,
+        :data_requests,
+        :versions
+      ]).where(id: @case_ids)
+
+    kases.each do |kase|
+      service = RetentionSchedules::AnonymiseCaseService.new(
+        kase: kase
+      )
+      service.call
+    end
+  end
+
   def update_retention_schedule_statuses
     retention_schedules = RetentionSchedule
-                            .includes(case: [
-                              :assignments, 
-                              :teams, 
-                              :creator, 
-                              :related_case_links, 
-                              :related_cases, 
-                              :case_links
-                            ])
-                            .where(case_id: @case_ids)
+      .includes(case: [
+        :assignments, 
+        :teams, 
+        :creator, 
+        :related_case_links, 
+        :related_cases, 
+        :case_links
+      ]).where(case_id: @case_ids)
 
     retention_schedules.each do |retention_schedule|
       previous_state = retention_schedule.human_state
