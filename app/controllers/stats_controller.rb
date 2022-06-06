@@ -127,19 +127,19 @@ class StatsController < ApplicationController
   end
 
   # The plan here is/was to colour the spreadsheet titles just like the existing reports from ITG
-  LIGHT_BLUE = 'c1d1f0'
-  LIGHT_GREY = 'd1d1e0'
+  LIGHT_BLUE = 'c1d1f0'.freeze
+  LIGHT_GREY = 'd1d1e0'.freeze
 
-  BRIGHT_RED = 'FF0000'
-  BRIGHT_YELLOW = 'FFFF00'
-  BRIGHT_LIME_GREEN = '00FF00'
+  BRIGHT_RED = 'FF0000'.freeze
+  BRIGHT_YELLOW = 'FFFF00'.freeze
+  BRIGHT_LIME_GREEN = '00FF00'.freeze
 
   # mapping of RAG ratings to spreadsheet cell colours
   RAG_RATING_COLOURS = { red: BRIGHT_RED,
                          amber: BRIGHT_YELLOW,
                          green: BRIGHT_LIME_GREEN,
                          grey: LIGHT_GREY,
-                         blue: LIGHT_BLUE }
+                         blue: LIGHT_BLUE }.freeze
 
   # Assumes no report spans more than 26 columns
   SPREADSHEET_COLUMN_NAMES = ('A'..'Z').to_a

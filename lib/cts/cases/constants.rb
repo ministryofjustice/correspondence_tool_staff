@@ -5,13 +5,13 @@ module CTS
       ICO_CASE_TYPES = %w{
           Case::ICO::FOI
           Case::ICO::SAR
-      }
+      }.freeze
 
       FOI_CASE_TYPES = %w{
           Case::FOI::Standard
           Case::FOI::ComplianceReview
           Case::FOI::TimelinessReview
-      }
+      }.freeze
 
       CASE_JOURNEYS = {
         foi:{
@@ -75,7 +75,7 @@ module CTS
             :closed,
           ]
         },
-      }
+      }.freeze
 
     end
   end

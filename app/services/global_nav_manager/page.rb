@@ -2,7 +2,7 @@ class GlobalNavManager
   class Page
     attr_reader :name, :path, :tabs
 
-    IGNORE_QUERY_PARAMS = ['page']
+    IGNORE_QUERY_PARAMS = ['page'].freeze
 
     # 'parent' here is actually a GlobalNavManager instance
     def initialize(name:, parent:, attrs:)

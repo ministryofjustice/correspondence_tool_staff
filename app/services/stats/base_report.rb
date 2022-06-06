@@ -3,8 +3,8 @@ module Stats
 
     # These are the current RAG (red-amber-green) thresholds for each report type
     # obviously anything above the 'amber' threshold is 'green'
-    RAG_THRESHOLDS_FOI = { red: 85, amber: 90 }
-    RAG_THRESHOLDS_SAR = { red: 80, amber: 85 }
+    RAG_THRESHOLDS_FOI = { red: 85, amber: 90 }.freeze
+    RAG_THRESHOLDS_SAR = { red: 80, amber: 85 }.freeze
 
     # Status names for ETL generated reports
     COMPLETE = 'complete'.freeze

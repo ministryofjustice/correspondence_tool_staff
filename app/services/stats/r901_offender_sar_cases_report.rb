@@ -20,7 +20,7 @@ module Stats
         'Case status',
         'Days open',
         'Data requests completed?'
-    ]
+    ].freeze
 
     def self.title
       'Cases report for Offender SAR and Complaint'

@@ -5,7 +5,7 @@ module Stats
     COLUMNS = {
       desc:   "Description",
       value:  "Value"
-    }
+    }.freeze
 
     # The Cabinet Office report is one of the few to remain purely
     # in CSV format

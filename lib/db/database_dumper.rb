@@ -10,8 +10,8 @@ class DatabaseDumper
   attr_reader :outcome_files, :bucket_key_id, :bucket_access_key, :bucket
 
   MAX_NUM_OF_RECORDS_PER_GROUP = 10000
-  TABLES_TO_BE_EXCLUDED = ["reports", "search_queries", "sessions", "versions"]
-  CLASSES_TO_ANONYMISE = [Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment, Contact]
+  TABLES_TO_BE_EXCLUDED = ["reports", "search_queries", "sessions", "versions"].freeze
+  CLASSES_TO_ANONYMISE = [Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment, Contact].freeze
 
 
   def initialize(tag, running_mode = 'tasks', is_store_to_s3_bucket = true, s3_bucket_setting = nil)

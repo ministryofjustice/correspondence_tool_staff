@@ -19,7 +19,7 @@ module Stats
         'Pages for dispatch',
         'Exempt pages',
         'Final page count'
-      ]
+      ].freeze
 
       FIELD_COLUMNS = [
         'number', 
@@ -34,7 +34,7 @@ module Stats
         'number_of_final_pages::integer - number_of_exempt_pages::integer', 
         'number_of_exempt_pages', 
         'number_of_final_pages'
-      ]
+      ].freeze
 
       def result_name
         RESULT_NAME

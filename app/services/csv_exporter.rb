@@ -49,7 +49,7 @@ class CSVExporter
     'Original internal deadline',
     'Original external deadline',
     'Number of days late against original deadline'
-  ]
+  ].freeze
 
   CSV_COLUMN_FIELDS = [
     'number',
@@ -97,7 +97,7 @@ class CSVExporter
     'original_internal_deadline', 
     'original_external_deadline',
     'num_days_late_against_original_deadline'
-  ]
+  ].freeze
 
   def initialize(kase)
     @kase = kase

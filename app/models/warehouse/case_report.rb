@@ -11,7 +11,7 @@ module Warehouse
       "Case::SAR::OffenderComplaint" => ['process_offender_sar', 'process_offender_sar_complaint'], 
       "Case::ICO::FOI" => ['process_ico'],
       "Case::ICO::SAR" => ['process_ico']    
-    }
+    }.freeze
 
     # Class methods to allow this class to be used in async jobs
     class << self

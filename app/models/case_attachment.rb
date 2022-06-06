@@ -16,7 +16,7 @@
 
 class CaseAttachment < ApplicationRecord
 
-  UNCONVERTIBLE_EXTENSIONS = %w( .pdf .jpg .jpeg .bmp .gif .png )
+  UNCONVERTIBLE_EXTENSIONS = %w( .pdf .jpg .jpeg .bmp .gif .png ).freeze
 
   self.inheritance_column = :_type_not_used
   belongs_to :case,

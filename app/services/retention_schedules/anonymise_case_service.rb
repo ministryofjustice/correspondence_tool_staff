@@ -54,11 +54,11 @@ module RetentionSchedules
       ico_contact_name: 'XXXX XXXX',
       ico_contact_phone: 'XXXX XXXX',
       ico_reference: 'XXXX XXXX',
-    }
+    }.freeze
 
-    ANON_NOTE_MESSAGE_VALUE = 'Note details have been anonymised'
+    ANON_NOTE_MESSAGE_VALUE = 'Note details have been anonymised'.freeze
 
-    ANON_DATA_REQUEST_NOTE_VALUE = 'Information has been anonymised'
+    ANON_DATA_REQUEST_NOTE_VALUE = 'Information has been anonymised'.freeze
 
     def initialize(kase:)
       # whole case and links will need to be loaded

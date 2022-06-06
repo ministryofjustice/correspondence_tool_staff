@@ -4,9 +4,9 @@ module SearchHelper
     :search_result_order_by_oldest_first => { "order" => "cases.id ASC"},
     :search_result_order_by_newest_first => {"order" => "cases.received_date DESC, cases.id DESC"},
     :search => {"order" => nil}
-  }
+  }.freeze
 
-  DEFAULT_SEARCH_RESULT_ORDER_FLAG = "search_result_order_by_oldest_first"
+  DEFAULT_SEARCH_RESULT_ORDER_FLAG = "search_result_order_by_oldest_first".freeze
 
   def self.get_order_option(search_order_choice)
     if SEARCH_SCOPE_SET[search_order_choice.to_sym].present?
