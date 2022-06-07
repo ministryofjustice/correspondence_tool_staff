@@ -90,11 +90,9 @@ module RetentionSchedules
     end
 
     def closure_date
-      if @kase.last_transitioned_at.nil?
-        @kase.transitions.most_recent.created_at.to_date
-      else
-        @kase.last_transitioned_at.to_date
-      end
+      # all cases recieve a date 
+      # responded on closure
+      @kase.date_responded
     end
   end
 end

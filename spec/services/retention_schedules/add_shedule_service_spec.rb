@@ -79,7 +79,7 @@ describe RetentionSchedules::AddScheduleService do
   let(:expected_off_sar_erasure_date) {
     # defined as these in Settings.retention_timings.off_sars
     # and then referenced in service class
-    (Date.today + 8.years + 6.months + 1.day)
+    (4.business_days.ago + 8.years + 6.months + 1.day).to_date
   }
 
   before do
