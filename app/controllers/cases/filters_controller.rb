@@ -6,7 +6,9 @@ module Cases
 
     before_action :set_url, only: [:open, :closed, :my_open, :retention]
     before_action :set_state_selector, only: [:open, :my_open]
-    before_action :set_cookie_order_flag, only: [:open, :my_open, :retention]
+    before_action :set_retention_schedule_order_flag, only: [:retention]
+    before_action :set_cookie_order_flag_from_param, only: [:open, :my_open]
+    before_action :reset_default_order_from_retention_schedule_order_flag, only: [:open, :my_open]
     before_action :set_non_current_tab_counts, only: [:my_open]
 
     def show
@@ -158,6 +160,7 @@ module Cases
 
     private
 
+
     def set_non_current_tab_counts
       @global_nav_manager.current_page.tabs.each do |tab| 
         tab.set_count(filtered_count_for_tab(tab.cases))
@@ -179,9 +182,53 @@ module Cases
       service
     end
 
-    def set_cookie_order_flag
+    def set_cookie_order_flag_from_param
       if params["order"].present?
-        cookies[:search_result_order] = {:value => params["order"], :secure => true }
+        set_order_cookie(params["order"]) 
+      end
+    end
+
+    def set_order_cookie(order)
+      cookies[:search_result_order] = {
+        :value => order,
+        :secure => true 
+      }
+    end
+
+    def set_initial_retention_shedule_order_flag
+      if cookies[:search_result_order] == nil
+        set_order_cookie(
+          SearchHelper::RETENTION_SCHEDULE_DEFAULT_SEARCH_RESULT_ORDER_FLAG
+        )
+      end
+    end
+
+    def set_retention_schedule_order_flag
+      set_initial_retention_shedule_order_flag
+      if order_flag_is_not_applicable_to_retention_schedules
+        set_order_cookie(
+          SearchHelper::RETENTION_SCHEDULE_DEFAULT_SEARCH_RESULT_ORDER_FLAG
+        )
+      else
+        set_cookie_order_flag_from_param
+      end
+    end
+
+    def reset_default_order_from_retention_schedule_order_flag
+      if order_flag_is_not_applicable_to_retention_schedules
+        set_cookie_order_flag_from_param
+      else
+        set_order_cookie(
+          SearchHelper::DEFAULT_SEARCH_RESULT_ORDER_FLAG
+        )
+      end
+    end
+
+    def order_flag_is_not_applicable_to_retention_schedules
+      # 'destruction_date' is the common part of the SEARCH_SCOPE_SET
+      # for the RetentionSchedule page. See the SearchHelper module
+      if cookies[:search_result_order]
+        cookies[:search_result_order].exclude?('destruction_date')
       end
     end
 
