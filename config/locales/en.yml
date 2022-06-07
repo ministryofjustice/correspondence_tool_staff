@@ -1079,6 +1079,8 @@ en:
     new_case_button: Create case
     show_search_result_order_by_newest_first: Show newest cases first
     show_search_result_order_by_oldest_first: Show oldest cases first
+    show_search_result_order_by_newest_destruction_date: Show newest destruction date first
+    show_search_result_order_by_oldest_destruction_date: Show oldest destruction date first
     phase_banner: |
       This is a new service.
     service_name: Track a query

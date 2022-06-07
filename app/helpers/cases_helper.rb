@@ -2,6 +2,13 @@ require './lib/translate_for_case'
 
 module CasesHelper #rubocop:disable Metrics/ModuleLength
 
+  REVERSE_ORDER_OPTIONS = {
+    'search_result_order_by_newest_first' => 'search_result_order_by_oldest_first',
+    'search_result_order_by_oldest_first' => 'search_result_order_by_newest_first',
+    'search_result_order_by_newest_destruction_date' => 'search_result_order_by_oldest_destruction_date',
+    'search_result_order_by_oldest_destruction_date' => 'search_result_order_by_newest_destruction_date'
+  }.freeze
+
   def sort_correspondence_types_for_display(types)
     types_have_display_order = types.all? do |t| 
       t.display_order.present?
@@ -28,11 +35,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   def get_cases_order_option_url(original_uri, current_order_option)
-    if current_order_option == 'search_result_order_by_newest_first'
-      new_option = 'search_result_order_by_oldest_first'
-    else
-      new_option = 'search_result_order_by_newest_first'
-    end
+    new_option = REVERSE_ORDER_OPTIONS[current_order_option]
     uri = URI.parse(original_uri)
     hash_params = Hash[URI.decode_www_form(uri.query || '')]
     hash_params["order"] = new_option
