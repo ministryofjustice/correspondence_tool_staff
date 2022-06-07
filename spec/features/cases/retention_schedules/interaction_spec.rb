@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 feature 'Case retention schedules for GDPR', :js do
-  given(:branston_user)         { find_or_create :branston_user }
+  given(:branston_user)   { find_or_create :branston_user }
   given(:branston_team)   { create :managing_team, managers: [branston_user] }
 
-  given(:non_branston_user)         { find_or_create :disclosure_bmt_user }
+  given(:non_branston_user)   { find_or_create :disclosure_bmt_user }
   given(:non_branston_team)   { create :managing_team, managers: [non_branston_user] }
 
 
@@ -136,16 +136,17 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to have_content not_set_timely_kase.number
     expect(page).to have_content retain_timely_kase.number
 
-    click_on 'Show newest cases first'
+    click_on 'Show oldest destruction date first'
 
     page_order_correct?(
       not_set_timely_kase.number.to_s, 
       retain_timely_kase.number.to_s
     )
 
-    expect(page).to have_content 'Show oldest cases first'
+    expect(page).to have_content 'Show newest destruction date first'
 
-    click_on 'Show oldest cases first'
+    click_on 'Show newest destruction date first'
+
     page_order_correct?(
       retain_timely_kase.number.to_s,
       not_set_timely_kase.number.to_s
