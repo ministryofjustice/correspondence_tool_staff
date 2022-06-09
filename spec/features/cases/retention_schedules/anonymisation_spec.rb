@@ -52,7 +52,9 @@ feature 'Case retention schedules for GDPR', :js do
     Capybara.find(:css, "#retention-checkbox-#{erasable_timely_kase.id}", visible: false).set(true)
     Capybara.find(:css, "#retention-checkbox-#{erasable_timely_kase_two.id}", visible: false).set(true)
 
-    click_on "Destroy cases"
+    accept_alert do
+      click_on "Destroy cases"
+    end
 
     expect(page).to have_content '2 cases have been destroyed'
 

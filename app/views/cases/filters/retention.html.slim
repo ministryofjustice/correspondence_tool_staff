@@ -47,12 +47,25 @@ section#retention-cases.govuk-tabs__panel
 
           .column-full
             .button-holder
-              = submit_tag "Further review needed", class: 'button-secondary', form: 'retention_schedules_form' 
-              = submit_tag "Retain", class: 'button-secondary', form: 'retention_schedules_form' 
+              = submit_tag t('retention_schedules.buttons.review'),
+                class: 'button-secondary', 
+                form: 'retention_schedules_form' 
+
+              = submit_tag t('retention_schedules.buttons.retain'),
+                class: 'button-secondary', 
+                form: 'retention_schedules_form' 
+
               - if @global_nav_manager.current_page_or_tab.name == :pending_removal
-                = submit_tag "Mark for destruction", class: 'button-secondary', form: 'retention_schedules_form' 
+                = submit_tag t('retention_schedules.buttons.mark_for_destroy'),
+                    class: 'button-secondary', 
+                    form: 'retention_schedules_form' 
+
               - if @global_nav_manager.current_page_or_tab.name == :ready_for_removal
-                = submit_tag "Destroy cases", class: 'button-secondary button-destroy', form: 'retention_schedules_form' 
+                = submit_tag t('retention_schedules.buttons.destroy'),
+                    class: 'button-secondary button-destroy', 
+                    form: 'retention_schedules_form', 
+                    data: { confirm: t('retention_schedules.misc.destroy_alert_message') }
+
           .column-full.table-container.container.cases-table-container tabindex="0"
             table.report.table-font-xsmall
               thead
@@ -62,17 +75,17 @@ section#retention-cases.govuk-tabs__panel
                     label for="retention-select-all-checkbox"
                       span.visually-hidden Select all
                 th
-                  = "Case .no"
+                  = t('retention_schedules.table_headings.case_number')
                 th 
-                  = "Type"
+                  = t('retention_schedules.table_headings.case_type')
                 th 
-                  = "Name / subject"
+                  = t('retention_schedules.table_headings.subject_name')
                 th 
-                  = "Destruction date"
+                  = t('retention_schedules.table_headings.destruction_date')
                 th 
-                  = "Linked case "
+                  = t('retention_schedules.table_headings.links')
                 th 
-                  = "Retention status "
+                  = t('retention_schedules.table_headings.status')
               tbody
                 = form_with url: "/retention_schedules", method: :patch, id: 'retention_schedules_form' do |f|
                   - @cases.each do |kase|

@@ -1593,7 +1593,21 @@ en:
       will_be_moved: "The users and open cases assigned to the business units under %{team_name} will be moved to %{target_business_group_name}"
       error: "Failed to move this directorate due to reason: #{reason}"
     unreversible: This action cannot be reversed
-
+  retention_schedules:
+    buttons:
+      review: Further review needed
+      retain: Retain
+      mark_for_destroy: Mark for destruction
+      destroy: Destroy cases
+    table_headings:
+      case_number: Case .no
+      case_type: Type
+      subject_name: Name / subject
+      destruction_date: Destruction date
+      links: Linked case
+      status: Retention status
+    misc:
+      destroy_alert_message: Are you sure you want to permanently destroy these cases?
 
   users:
     new:
