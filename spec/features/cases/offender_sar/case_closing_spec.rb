@@ -36,12 +36,6 @@ feature 'Closing a case' do
           .to eq 'Answered in time'
           expect(show_page.response_details.time_taken.data.text)
           .to eq '5 calendar days'
-
-          expect(show_page.response_details.planned_erasure)
-            .to have_content("Planned destruction date")
-
-          expect(show_page.response_details.planned_erasure.date.first.text)
-            .to eq(formatted_planned_closure_date(fully_granted_case))
         end
       end
 
@@ -71,6 +65,32 @@ feature 'Closing a case' do
     end
   end
 
+  context 'GDPR retention schedules' do
+    given!(:fully_granted_case) {
+      create :offender_sar_case,
+             :ready_to_dispatch,
+             received_date: 5.days.ago }
+
+    scenario 'adds retention schedule details to the page', js: true do
+      open_cases_page.load
+      close_case(fully_granted_case)
+
+      cases_close_page.fill_in_date_responded(0.days.ago)
+      cases_close_page.click_on 'Continue'
+
+      show_page = cases_show_page.case_details
+
+      expect(show_page.retention_details.planned_destruction_date)
+        .to have_content('Destruction date')
+      expect(show_page.retention_details.planned_destruction_date.date.first.text)
+        .to eq(formatted_planned_closure_date(fully_granted_case))
+
+      expect(show_page.retention_details.retention_schedule_state)
+        .to have_content('Retention status')
+      expect(show_page.retention_details.retention_schedule_state.data.first.text)
+        .to eq('Not set')
+    end
+  end
 
   private
 

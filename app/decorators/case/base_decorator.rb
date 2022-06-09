@@ -148,11 +148,6 @@ class Case::BaseDecorator < Draper::Decorator
     I18n.l(object.date_responded, format: :default)
   end
 
-  def planned_destruction_date
-    date = object.retention_schedule.planned_destruction_date
-    I18n.l(date, format: :default)
-  end
-
   def self.collection_decorator_class
     PaginatingDecorator
   end

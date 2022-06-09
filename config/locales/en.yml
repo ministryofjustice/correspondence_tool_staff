@@ -970,7 +970,9 @@ en:
       pages_exempt: Exempt pages
       pages_final_count: Final page count
       pages_received: Pages received
-      planned_destruction_date: Planned destruction date
+      retention_details:
+        destruction_date: Destruction date
+        status: Retention status
       pnc_acronym_html: '<abbr title="Police national computer">PNC</abbr> number'
       postal_address: "Requester’s postal address"
       previous_case_numbers: Previous SAR cases
