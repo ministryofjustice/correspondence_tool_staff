@@ -103,7 +103,6 @@ module PageObjects
         end
 
         section :response_details, '.response-details' do
-
           section :date_responded, '.date-responded' do
             element :data, 'td'
           end
@@ -130,13 +129,17 @@ module PageObjects
           section :exemptions, '.exemptions' do
             elements :list, 'td ul li'
           end
-
-          section :planned_erasure, '.planned-erasure-date' do
-            elements :date, 'td'
-          end
         end
 
+        section :retention_details, 'tbody.retention-details' do
+          section :planned_destruction_date, '.planned-destruction-date' do
+            elements :date, 'td'
+          end
 
+          section :retention_schedule_state, '.retention-schedule-state' do
+            elements :data, 'td'
+          end
+        end
 
         element :edit_case, :xpath, '//a[contains(.,"Edit case details")]'
         element :edit_case_link, :xpath, '//a[contains(.,"Edit case details")]'

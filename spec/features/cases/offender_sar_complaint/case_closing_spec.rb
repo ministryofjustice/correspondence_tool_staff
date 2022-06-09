@@ -39,7 +39,7 @@ feature 'Closing a case' do
       original_case.save
     end
 
-    scenario 'adds retention schedule to case and related cases on closure', js: true do
+    scenario 'adds retention schedule details to case and related cases on closure', js: true do
       open_cases_page.load
       close_case(case_ready_to_close)
 
@@ -48,19 +48,39 @@ feature 'Closing a case' do
 
       show_page = cases_show_page.case_details
 
-      expect(show_page.response_details.planned_erasure.date.first.text)
+      expect(show_page.retention_details.planned_destruction_date)
+        .to have_content('Destruction date')
+      expect(show_page.retention_details.planned_destruction_date.date.first.text)
         .to eq(formatted_planned_closure_date(case_ready_to_close))
+      expect(show_page.retention_details.retention_schedule_state)
+        .to have_content('Retention status')
+      expect(show_page.retention_details.retention_schedule_state.data.first.text)
+        .to eq('Not set')
 
       visit("cases/#{original_case.id}")
       show_page = cases_show_page.case_details
-      expect(show_page.response_details.planned_erasure.date.first.text)
+
+      expect(show_page.retention_details.planned_destruction_date)
+        .to have_content('Destruction date')
+      expect(show_page.retention_details.planned_destruction_date.date.first.text)
         .to eq(formatted_planned_closure_date(case_ready_to_close))
+      expect(show_page.retention_details.retention_schedule_state)
+        .to have_content('Retention status')
+      expect(show_page.retention_details.retention_schedule_state.data.first.text)
+        .to eq('Not set')
 
       other_related_complaints.each do |kase|
         visit("cases/#{kase.id}")
         show_page = cases_show_page.case_details
-        expect(show_page.response_details.planned_erasure.date.first.text)
+
+        expect(show_page.retention_details.planned_destruction_date)
+          .to have_content('Destruction date')
+        expect(show_page.retention_details.planned_destruction_date.date.first.text)
           .to eq(formatted_planned_closure_date(case_ready_to_close))
+        expect(show_page.retention_details.retention_schedule_state)
+          .to have_content('Retention status')
+        expect(show_page.retention_details.retention_schedule_state.data.first.text)
+          .to eq('Not set')
       end
     end
   end
