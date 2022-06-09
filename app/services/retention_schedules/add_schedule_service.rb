@@ -90,8 +90,6 @@ module RetentionSchedules
     end
 
     def closure_date
-      # all cases recieve a date 
-      # responded on closure
       if @kase.date_responded.present?
         @kase.date_responded
       else
