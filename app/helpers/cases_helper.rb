@@ -28,17 +28,15 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   def get_cases_order_option_url(original_uri, current_order_option)
-    if current_order_option == 'search_result_order_by_newest_first'
-      new_option = 'search_result_order_by_oldest_first'
-    else
-      new_option = 'search_result_order_by_newest_first'
-    end
+    new_option = get_new_option(current_order_option)
+
     uri = URI.parse(original_uri)
     hash_params = Hash[URI.decode_www_form(uri.query || '')]
     hash_params["order"] = new_option
     uri.query = URI.encode_www_form(hash_params)
     link_to t("common.show_#{new_option}"), uri.to_s
   end
+
 
   def accepted_case_attachment_types
     Settings.case_uploads_accepted_types.join ','
@@ -451,5 +449,25 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   def get_first_number_in_string(number_string)
     return number_string.split(",").first&.upcase if number_string&.include?(",")
     number_string&.upcase
+  end
+
+  def get_new_option(current_order_option)
+    default_oldest = 'search_result_order_by_oldest_first'
+    default_newest = 'search_result_order_by_newest_first'
+    destruction_oldest = 'search_result_order_by_oldest_destruction_date'
+    destruction_newest = 'search_result_order_by_newest_destruction_date'
+
+      
+    if current_order_option == destruction_newest
+      destruction_oldest
+    elsif current_order_option == destruction_oldest
+      destruction_newest
+    elsif current_order_option == default_newest
+      default_oldest
+    elsif current_order_option == default_oldest
+      default_newest
+    else
+      default_newest
+    end
   end
 end

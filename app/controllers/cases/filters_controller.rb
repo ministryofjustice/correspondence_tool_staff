@@ -3,10 +3,13 @@ module Cases
     include SetupCase
     include SearchParams
     include AvailableCaseReports
+    include RetentionSchedulePageOrdering
 
     before_action :set_url, only: [:open, :closed, :my_open, :retention]
     before_action :set_state_selector, only: [:open, :my_open]
-    before_action :set_cookie_order_flag, only: [:open, :my_open, :retention]
+    before_action :set_retention_schedule_order_flag, only: [:retention]
+    before_action :set_cookie_order_flag, only: [:open, :my_open]
+    after_action :reset_default_order_from_retention_schedule_order_flag, only: [:retention]
     before_action :set_non_current_tab_counts, only: [:my_open]
 
     def show
@@ -158,6 +161,7 @@ module Cases
 
     private
 
+
     def set_non_current_tab_counts
       @global_nav_manager.current_page.tabs.each do |tab| 
         tab.set_count(filtered_count_for_tab(tab.cases))
@@ -181,8 +185,15 @@ module Cases
 
     def set_cookie_order_flag
       if params["order"].present?
-        cookies[:search_result_order] = {:value => params["order"], :secure => true }
+        set_order_cookie(params["order"]) 
       end
+    end
+
+    def set_order_cookie(order)
+      cookies[:search_result_order] = {
+        :value => order,
+        :secure => true 
+      }
     end
 
     def set_state_selector

@@ -129,6 +129,8 @@ ignore_unused:
   - stats.download_custom*
   - common.show_search_result_order_by_newest_first
   - common.show_search_result_order_by_oldest_first
+  - common.show_search_result_order_by_newest_destruction_date
+  - common.show_search_result_order_by_oldest_destruction_date
 
 
 ## Consider these keys used:
