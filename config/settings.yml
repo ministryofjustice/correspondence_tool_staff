@@ -161,17 +161,6 @@ global_navigation:
       path: /cases/closed
       scope: closed_cases
 
-    rrd_pending:
-      path: /cases/retention
-      scope: retention_cases
-      visibility:
-        - BRANSTON
-      tabs:
-        ready_for_removal:
-          scope: erasable_cases
-        pending_removal:
-          scope: triagable_cases
-
     search_cases:
       path: /cases/search
     teams:
@@ -190,6 +179,17 @@ global_navigation:
       path: /contacts
       visibility:
         - BRANSTON
+
+    rrd_pending:
+      path: /cases/retention
+      scope: retention_cases
+      visibility:
+        - BRANSTON
+      tabs:
+        ready_for_removal:
+          scope: erasable_cases
+        pending_removal:
+          scope: triagable_cases
 
   tabs:
     in_time:
