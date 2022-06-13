@@ -92,9 +92,10 @@ ignore_unused:
   # Default date/time format used
   - '{date,time}.formats.default'
   - 'time.formats.default_date'
-  # ActiveRecord Model error messages
-  - 'activerecord.errors.models.*'
-  - 'activerecord.attributes.*'
+  # ActiveRecord errors and attributes
+  - 'activerecord.{errors.models,attributes}.*'
+  # ActiveModel errors and attributes
+  - 'activemodel.{errors.models,attributes}.*'
   - 'nav.tabs.{in_time,late}_html'
   - 'pundit.nil_class'
   - 'event.*'

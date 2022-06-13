@@ -355,6 +355,18 @@ en:
             message:
               blank: cannot be blank            
 
+  activemodel:
+    attributes:
+      retention_schedule_form:
+        planned_destruction_date: Destruction date
+    errors:
+      models:
+        retention_schedule_form:
+          attributes:
+            planned_destruction_date:
+              blank: cannot be blank
+              before_closure: must be after case closed date
+
   pundit:
     assignment_policy:
       can_assign_to_new_team?: You are not authorised to assign this case to another team
