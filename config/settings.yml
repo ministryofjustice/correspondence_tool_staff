@@ -109,7 +109,7 @@ homepage_navigation:
       path: /cases/retention
       scope: retention_cases
       visibility:
-        - BRANSTON
+        - team_admin
       tabs:
         ready_for_removal:
           scope: erasable_cases
@@ -184,7 +184,7 @@ global_navigation:
       path: /cases/retention
       scope: retention_cases
       visibility:
-        - BRANSTON
+        - team_admin
       tabs:
         ready_for_removal:
           scope: erasable_cases

@@ -32,7 +32,8 @@ section#retention-cases.govuk-tabs__panel
                 = link_to t("nav.tabs.#{tab.name}",
                            count: tab.count),
                           tab.fullpath_with_query
-    - if @cases.present?
+
+    - if @cases.present? && @user.team_admin?
         - cases_count = @cases.total_count
 
         .grid-row

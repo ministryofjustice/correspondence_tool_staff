@@ -1,11 +1,18 @@
 require 'rails_helper'
 
 feature 'Case retention schedules for GDPR', :js do
-  given(:branston_user)         { find_or_create :branston_user }
-  given(:branston_team)   { create :managing_team, managers: [branston_user] }
+  given(:branston_team_admin_user)         { find_or_create :branston_user }
+  given(:admin_team)          { find_or_create :team_for_admin_users }
 
-  given(:non_branston_user)         { find_or_create :disclosure_bmt_user }
-  given(:non_branston_team)   { create :managing_team, managers: [non_branston_user] }
+  before do
+    tur = TeamsUsersRole.new(
+      team_id: admin_team.id, 
+      user_id: branston_team_admin_user.id, 
+      role: 'team_admin'
+    )
+
+    branston_team_admin_user.team_roles << tur
+  end
 
   # erasable
   let!(:erasable_timely_kase) {
@@ -35,8 +42,8 @@ feature 'Case retention schedules for GDPR', :js do
     ) 
   }
 
-  scenario 'branston users can see the GDPR tab with correct cases' do
-    login_as branston_user
+  scenario 'branston team admin users can see the GDPR tab with correct cases' do
+    login_as branston_team_admin_user
     
     cases_page.load
 
