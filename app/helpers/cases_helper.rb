@@ -467,7 +467,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     elsif current_order_option == default_oldest
       default_newest
     else
-      default_oldest
+      default_newest
     end
   end
 end

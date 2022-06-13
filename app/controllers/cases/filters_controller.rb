@@ -8,8 +8,8 @@ module Cases
     before_action :set_url, only: [:open, :closed, :my_open, :retention]
     before_action :set_state_selector, only: [:open, :my_open]
     before_action :set_retention_schedule_order_flag, only: [:retention]
-    before_action :set_cookie_order_flag_from_param, only: [:open, :my_open]
-    before_action :reset_default_order_from_retention_schedule_order_flag, only: [:open, :my_open]
+    before_action :set_cookie_order_flag, only: [:open, :my_open]
+    after_action :reset_default_order_from_retention_schedule_order_flag, only: [:retention]
     before_action :set_non_current_tab_counts, only: [:my_open]
 
     def show
@@ -183,7 +183,7 @@ module Cases
       service
     end
 
-    def set_cookie_order_flag_from_param
+    def set_cookie_order_flag
       if params["order"].present?
         set_order_cookie(params["order"]) 
       end
