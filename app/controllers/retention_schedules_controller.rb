@@ -1,4 +1,7 @@
 class RetentionSchedulesController < ApplicationController
+  include FormObjectUpdatable
+
+  before_action :set_case, only: [:edit, :update]
 
   def bulk_update
     service = RetentionSchedulesUpdateService.new(
@@ -19,8 +22,29 @@ class RetentionSchedulesController < ApplicationController
     end
   end
 
+  def edit
+    @form_object = RetentionScheduleForm.build(
+      current_retention_schedule
+    )
+  end
+
+  def update
+    update_and_advance(RetentionScheduleForm, record: current_retention_schedule) do
+      redirect_to case_path(@case), flash: { notice: t('.flash.success') }
+    end
+  end
 
   private
+
+  def set_case
+    @case = current_retention_schedule.case
+  end
+
+  def current_retention_schedule
+    @_current_retention_schedule ||= RetentionSchedule.find(
+      params.require(:id)
+    )
+  end
 
   def retention_schedules_params
     params.require(:retention_schedules).require(:case_ids).permit!

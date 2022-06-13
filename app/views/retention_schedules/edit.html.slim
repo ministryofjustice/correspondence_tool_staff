@@ -1,0 +1,23 @@
+- content_for :page_title do
+  = t('page_title.edit_case_page', case_number: @case.number)
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+  = t('.subheading')
+
+= link_to 'Back', case_path(@case), class: 'govuk-back-link'
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @form_object,
+    "#{pluralize(@form_object.errors.count, t('common.error'))} #{t('common.summary_error')}", ""
+
+= form_for @form_object, url: retention_schedule_path(@form_object.record), method: :put do |f|
+  .form-group
+    = f.gov_uk_date_field :planned_destruction_date, { \
+        legend_text: '', form_hint_text: t('cases.new.date_sar_received_copy') \
+      }
+  .form-group
+    = f.submit t('.submit'), class: 'button'
