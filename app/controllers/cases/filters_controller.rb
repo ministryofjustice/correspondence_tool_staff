@@ -3,6 +3,7 @@ module Cases
     include SetupCase
     include SearchParams
     include AvailableCaseReports
+    include RetentionSchedulePageOrdering
 
     before_action :set_url, only: [:open, :closed, :my_open, :retention]
     before_action :set_state_selector, only: [:open, :my_open]
@@ -193,43 +194,6 @@ module Cases
         :value => order,
         :secure => true 
       }
-    end
-
-    def set_initial_retention_shedule_order_flag
-      if cookies[:search_result_order] == nil
-        set_order_cookie(
-          SearchHelper::RETENTION_SCHEDULE_DEFAULT_SEARCH_RESULT_ORDER_FLAG
-        )
-      end
-    end
-
-    def set_retention_schedule_order_flag
-      set_initial_retention_shedule_order_flag
-      if order_flag_is_not_applicable_to_retention_schedules
-        set_order_cookie(
-          SearchHelper::RETENTION_SCHEDULE_DEFAULT_SEARCH_RESULT_ORDER_FLAG
-        )
-      else
-        set_cookie_order_flag_from_param
-      end
-    end
-
-    def reset_default_order_from_retention_schedule_order_flag
-      if order_flag_is_not_applicable_to_retention_schedules
-        set_cookie_order_flag_from_param
-      else
-        set_order_cookie(
-          SearchHelper::DEFAULT_SEARCH_RESULT_ORDER_FLAG
-        )
-      end
-    end
-
-    def order_flag_is_not_applicable_to_retention_schedules
-      # 'destruction_date' is the common part of the SEARCH_SCOPE_SET
-      # for the RetentionSchedule page. See the SearchHelper module
-      if cookies[:search_result_order]
-        cookies[:search_result_order].exclude?('destruction_date')
-      end
     end
 
     def set_state_selector
