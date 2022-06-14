@@ -111,15 +111,29 @@ class CaseFinderService
   def erasable_cases_scope
     retention_cases_scope.where(
       retention_schedule: { 
-        state: [:to_be_anonymised]
+        state: [:to_be_anonymised],
+        planned_destruction_date: ..Date.today
       })
   end
 
   def triagable_cases_scope
-    triagable_states = [:review, :retain, :not_set]
+    triagable_statuses =  [
+      :review, 
+      :retain, 
+      :not_set
+    ]
+
     retention_cases_scope.where(
       retention_schedule: { 
-        state: triagable_states
+        state: triagable_statuses
+      }).or(traiagable_destroy_cases_scope)
+  end
+
+  def traiagable_destroy_cases_scope
+    retention_cases_scope.where(
+      retention_schedule: { 
+        state: [:to_be_anonymised],
+        planned_destruction_date: (Date.today + 1)..
       })
   end
 

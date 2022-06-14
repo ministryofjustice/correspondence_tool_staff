@@ -46,7 +46,7 @@ class RetentionSchedule < ApplicationRecord
   class << self
     def common_date_viewable_from_range
       viewable_from = Settings.retention_timings.common.viewable_from
-      viewable_from.months.ago..Date.today
+      ..Date.today + viewable_from.months
     end
 
     def states_map

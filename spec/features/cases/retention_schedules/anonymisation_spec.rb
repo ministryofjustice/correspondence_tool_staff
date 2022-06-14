@@ -29,7 +29,7 @@ feature 'Case retention schedules for GDPR', :js do
       case_type: :offender_sar_case, 
       case_state: :closed,
       rs_state: 'to_be_anonymised',
-      date: Date.today - (4.months - 7.days)
+      date: Date.today
     ) 
   }
 
@@ -38,7 +38,7 @@ feature 'Case retention schedules for GDPR', :js do
       case_type: :offender_sar_case, 
       case_state: :closed,
       rs_state: 'to_be_anonymised',
-      date: Date.today - (5.months)
+      date: Date.today + 5.months
     ) 
   }
 
