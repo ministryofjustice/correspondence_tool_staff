@@ -12,17 +12,6 @@ class BaseFormObject
     run_callbacks(:initialize) { super }
   end
 
-  # Initialize a new form object given an AR model, setting its attributes
-  def self.build(record)
-    attributes = attributes_map(record)
-
-    attributes.merge!(
-      record: record
-    )
-
-    new(attributes)
-  end
-
   def save
     valid? && persist!
   end
@@ -39,7 +28,7 @@ class BaseFormObject
 
   # Add the ability to read/write attributes without calling their accessor methods.
   # Needed to behave more like an ActiveRecord model, where you can manipulate the
-  # database attributes making use of `self[:attribute]`
+  # DB attributes making use of `self[:attribute]`, and for `acts_as_gov_uk_date`.
   def [](attr_name)
     instance_variable_get("@#{attr_name}".to_sym)
   end
@@ -48,20 +37,30 @@ class BaseFormObject
     instance_variable_set("@#{attr_name}".to_sym, value)
   end
 
-  def attributes_map
-    self.class.attributes_map(self)
-  end
+  class << self
+    # Initialize a new form object given an AR model, setting its attributes
+    def build(record)
+      attributes = attributes_map(record)
 
-  # Iterates through all declared attributes in the form object, mapping its values
-  def self.attributes_map(origin)
-    attribute_names.to_h { |attr| [attr, origin[attr]] }
+      attributes.merge!(
+        record: record
+      )
+
+      new(attributes)
+    end
+
+    # Iterates through all declared attributes in the form object, retrieving
+    # their values from the `record` instance and generating a hash map.
+    def attributes_map(record)
+      attribute_names.to_h { |attr| [attr, record[attr]] }
+    end
   end
 
   private
 
   # :nocov:
   def persist!
-    raise 'Subclasses of BaseForm need to implement #persist!'
+    raise 'Subclasses of BaseFormObject need to implement #persist!'
   end
   # :nocov:
 end
