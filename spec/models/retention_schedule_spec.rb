@@ -152,5 +152,15 @@ RSpec.describe RetentionSchedule, type: :model do
         )
       end
     end
+
+    describe '.state_names' do
+      it 'returns an array of symbols of all possible states' do
+        expect(
+          described_class.state_names
+        ).to match_array(
+          [:not_set, :retain, :review, :to_be_anonymised, :anonymised]
+        )
+      end
+    end
   end
 end

@@ -52,13 +52,15 @@ RSpec.describe RetentionSchedulesController, type: :controller do
             retention_schedule_form: {
               planned_destruction_date_yyyy: 2050,
               planned_destruction_date_mm: 12,
-              planned_destruction_date_dd: 31
+              planned_destruction_date_dd: 31,
+              state: RetentionSchedule::STATE_REVIEW
             }
           }
 
+          expect(retention_schedule.reload.review?).to eq(true)
           expect(retention_schedule.reload.planned_destruction_date).to eq(Date.new(2050, 12, 31))
 
-          expect(flash[:notice]).to eq('Retention details updated')
+          expect(flash[:notice]).to eq('Retention details successfully updated')
           expect(response).to redirect_to(case_path(case_with_rrd))
         end
       end

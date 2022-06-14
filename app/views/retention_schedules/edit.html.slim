@@ -20,4 +20,7 @@
         legend_text: '', form_hint_text: t('cases.new.date_sar_received_copy') \
       }
   .form-group
+    = f.radio_button_fieldset :state, choices: @form_object.state_choices
+
+  .form-group
     = f.submit t('.submit'), class: 'button'
