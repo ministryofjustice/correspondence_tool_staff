@@ -109,8 +109,8 @@ RSpec.describe RetentionScheduleForm do
       context 'when form is valid' do
         it 'saves the record' do
           expect(record).to receive(:update).with(
-            planned_destruction_date: planned_destruction_date,
-            state: state,
+            'planned_destruction_date' => planned_destruction_date,
+            'state' => state,
           ).and_return(true)
 
           expect(subject.save).to be(true)

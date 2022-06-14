@@ -36,11 +36,4 @@ class RetentionScheduleForm < BaseFormObject
       errors.add(:planned_destruction_date, :before_closure)
     end
   end
-
-  def persist!
-    record.update(
-      planned_destruction_date: planned_destruction_date,
-      state: state,
-    )
-  end
 end

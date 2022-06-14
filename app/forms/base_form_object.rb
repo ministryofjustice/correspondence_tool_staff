@@ -12,6 +12,16 @@ class BaseFormObject
     run_callbacks(:initialize) { super }
   end
 
+  # Initialize a new form object given an AR model, reading and setting
+  # the attributes declared in the form object.
+  def self.build(record)
+    attrs = record.slice(
+      attribute_names
+    ).merge!(record: record)
+
+    new(attrs)
+  end
+
   def save
     valid? && persist!
   end
@@ -37,30 +47,12 @@ class BaseFormObject
     instance_variable_set("@#{attr_name}".to_sym, value)
   end
 
-  class << self
-    # Initialize a new form object given an AR model, setting its attributes
-    def build(record)
-      attributes = attributes_map(record)
-
-      attributes.merge!(
-        record: record
-      )
-
-      new(attributes)
-    end
-
-    # Iterates through all declared attributes in the form object, retrieving
-    # their values from the `record` instance and generating a hash map.
-    def attributes_map(record)
-      attribute_names.to_h { |attr| [attr, record[attr]] }
-    end
-  end
-
   private
 
-  # :nocov:
+  # If the logic is any more complex than this, override in subclasses
   def persist!
-    raise 'Subclasses of BaseFormObject need to implement #persist!'
+    record.update(
+      attributes
+    )
   end
-  # :nocov:
 end
