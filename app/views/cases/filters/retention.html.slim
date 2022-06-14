@@ -88,7 +88,7 @@ section#retention-cases.govuk-tabs__panel
                 th 
                   = t('retention_schedules.table_headings.status')
               tbody
-                = form_with url: "/retention_schedules", method: :patch, id: 'retention_schedules_form' do |f|
+                = form_with url: bulk_update_retention_schedules_path, method: :patch, id: 'retention_schedules_form' do |f|
                   - @cases.each do |kase|
                     tr.case_row
                       td

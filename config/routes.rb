@@ -169,7 +169,9 @@ Rails.application.routes.draw do
     end
   end
 
-  patch '/retention_schedules', to: "retention_schedules#bulk_update"
+  resources :retention_schedules, only: [:edit, :update] do
+    patch :bulk_update, on: :collection
+  end
 
   # Case Actions (general)
   resources :cases, only: [:new, :show, :destroy] do
