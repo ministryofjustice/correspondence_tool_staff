@@ -86,7 +86,7 @@ module RetentionSchedules
       months = Settings.retention_timings.off_sars.erasure.months
       retention_period = years.years + months.months
 
-      closure_date + retention_period + 1.day
+      closure_date + retention_period
     end
 
     def closure_date
