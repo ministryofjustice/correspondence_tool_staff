@@ -52,5 +52,9 @@ class RetentionSchedule < ApplicationRecord
     def states_map
       aasm.states.to_h { |state| [state.name, state.display_name] }
     end
+
+    def state_names
+      aasm.states.map(&:name)
+    end
   end
 end

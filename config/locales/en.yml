@@ -359,6 +359,7 @@ en:
     attributes:
       retention_schedule_form:
         planned_destruction_date: Destruction date
+        state: Status
     errors:
       models:
         retention_schedule_form:
@@ -366,6 +367,8 @@ en:
             planned_destruction_date:
               blank: cannot be blank
               before_closure: must be after case closed date
+            state:
+              inclusion: is not a valid status
 
   pundit:
     assignment_policy:
@@ -568,6 +571,8 @@ en:
       team:
         role: What will the business unit be responsible for?
         correspondence_type_ids: Correspondence types
+      retention_schedule_form:
+        state: What is the retention status?
     hint:
       case:
         linked_case_number: " For example 170131001"
@@ -882,6 +887,12 @@ en:
         ico: ICO
         overturned_sar: Overturned SAR
         overturned_foi: Overturned FOI
+      retention_schedule_form:
+        state:
+          not_set: Not set
+          retain: Retain
+          review: Review
+          to_be_anonymised: Destroy
     links:
       case_details:
         edit_case: 'Edit case details'
@@ -1630,7 +1641,7 @@ en:
       submit: Continue
     update:
       flash:
-        success: Retention details updated
+        success: Retention details successfully updated
 
   users:
     new:

@@ -12,15 +12,14 @@ class BaseFormObject
     run_callbacks(:initialize) { super }
   end
 
-  # Initialize a new form object given an AR model, setting its attributes
+  # Initialize a new form object given an AR model, reading and setting
+  # the attributes declared in the form object.
   def self.build(record)
-    attributes = attributes_map(record)
+    attrs = record.slice(
+      attribute_names
+    ).merge!(record: record)
 
-    attributes.merge!(
-      record: record
-    )
-
-    new(attributes)
+    new(attrs)
   end
 
   def save
@@ -39,7 +38,7 @@ class BaseFormObject
 
   # Add the ability to read/write attributes without calling their accessor methods.
   # Needed to behave more like an ActiveRecord model, where you can manipulate the
-  # database attributes making use of `self[:attribute]`
+  # DB attributes making use of `self[:attribute]`, and for `acts_as_gov_uk_date`.
   def [](attr_name)
     instance_variable_get("@#{attr_name}".to_sym)
   end
@@ -48,20 +47,12 @@ class BaseFormObject
     instance_variable_set("@#{attr_name}".to_sym, value)
   end
 
-  def attributes_map
-    self.class.attributes_map(self)
-  end
-
-  # Iterates through all declared attributes in the form object, mapping its values
-  def self.attributes_map(origin)
-    attribute_names.to_h { |attr| [attr, origin[attr]] }
-  end
-
   private
 
-  # :nocov:
+  # If the logic is any more complex than this, override in subclasses
   def persist!
-    raise 'Subclasses of BaseForm need to implement #persist!'
+    record.update(
+      attributes
+    )
   end
-  # :nocov:
 end
