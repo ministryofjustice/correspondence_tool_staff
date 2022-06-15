@@ -11,7 +11,7 @@ module FormObjectUpdatable
     )
 
     if @form_object.save
-      block.call
+      block.call(@form_object)
     else
       render opts.fetch(:render, :edit)
     end

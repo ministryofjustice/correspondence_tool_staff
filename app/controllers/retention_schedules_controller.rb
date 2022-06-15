@@ -1,7 +1,8 @@
 class RetentionSchedulesController < ApplicationController
   include FormObjectUpdatable
 
-  before_action :set_case, only: [:edit, :update]
+  before_action :set_case,
+                :authorize_action, only: [:edit, :update]
 
   def bulk_update
     service = RetentionSchedulesUpdateService.new(
@@ -29,12 +30,31 @@ class RetentionSchedulesController < ApplicationController
   end
 
   def update
-    update_and_advance(RetentionScheduleForm, record: current_retention_schedule) do
+    update_and_advance(RetentionScheduleForm, record: current_retention_schedule) do |form_object|
+      add_note_to_case!(
+        form_object.previous_values
+      )
       redirect_to case_path(@case), flash: { notice: t('.flash.success') }
     end
   end
 
   private
+
+  def authorize_action
+    authorize @case, :can_perform_retention_actions?
+  end
+
+  def add_note_to_case!(previous_values)
+    @case.state_machine.add_note_to_case!(
+      acting_user: @user,
+      acting_team: @user.case_team(@case),
+      message: t('retention_schedules.update.case_note_html',
+                 state_from: previous_values[:state],
+                 state_to: current_retention_schedule.human_state,
+                 date_from: l(previous_values[:date], format: :compact),
+                 date_to: l(current_retention_schedule.planned_destruction_date, format: :compact))
+    )
+  end
 
   def set_case
     @case = current_retention_schedule.case
