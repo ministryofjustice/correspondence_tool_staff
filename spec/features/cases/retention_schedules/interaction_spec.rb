@@ -36,7 +36,7 @@ feature 'Case retention schedules for GDPR', :js do
       case_type: :offender_sar_case, 
       case_state: :closed,
       rs_state: 'review',
-      date: Date.today - (4.months - 7.days)
+      date: Date.today
     ) 
   }
 
@@ -45,7 +45,7 @@ feature 'Case retention schedules for GDPR', :js do
       case_type: :offender_sar_case, 
       case_state: :closed,
       rs_state: 'review',
-      date: Date.today - (5.months)
+      date: Date.today + 5.months
     ) 
   }
   
@@ -55,7 +55,7 @@ feature 'Case retention schedules for GDPR', :js do
       case_type: :offender_sar_case, 
       case_state: :closed,
       rs_state: 'retain',
-      date: Date.today - (4.months - 7.days)
+      date: Date.today - 4.months
     ) 
   }
 
@@ -64,7 +64,7 @@ feature 'Case retention schedules for GDPR', :js do
       case_type: :offender_sar_case, 
       case_state: :closed,
       rs_state: 'retain',
-      date: Date.today - (5.months)
+      date: Date.today + 5.months
     ) 
   }
 
@@ -83,7 +83,7 @@ feature 'Case retention schedules for GDPR', :js do
       case_type: :offender_sar_case, 
       case_state: :closed,
       rs_state: 'to_be_anonymised',
-      date: Date.today - (4.months - 7.days)
+      date: Date.today - 3.months
     ) 
   }
 
@@ -92,8 +92,19 @@ feature 'Case retention schedules for GDPR', :js do
       case_type: :offender_sar_case, 
       case_state: :closed,
       rs_state: 'to_be_anonymised',
-      date: Date.today - (5.months)
+      date: Date.today + 5.months
     ) 
+  }
+
+  let!(:erasable_pending_kases) {
+    2.times.map {
+      case_with_retention_schedule(
+        case_type: :offender_sar_case, 
+        case_state: :closed,
+        rs_state: 'to_be_anonymised',
+        date: Date.today + 2
+      ) 
+    }
   }
 
   scenario 'non admin branston users cannot manage RRD schedules of cases' do
@@ -128,13 +139,17 @@ feature 'Case retention schedules for GDPR', :js do
 
     click_on 'Pending removal'
 
-    expect(page).to have_content '3 cases found'
+    expect(page).to have_content '5 cases found'
     expect(page).to_not have_content 'Destroy cases'
 
 
     expect(page).to have_content not_set_timely_kase.number
     expect(page).to have_content reviewable_timely_kase.number
     expect(page).to have_content retain_timely_kase.number
+
+    erasable_pending_kases.each do |kase|
+      expect(page).to have_content kase.number
+    end
 
     expect(page).to_not have_content reviewable_untimely_kase.number
     expect(page).to_not have_content retain_untimely_kase.number
@@ -154,6 +169,9 @@ feature 'Case retention schedules for GDPR', :js do
 
     expect(page).to have_content not_set_timely_kase.number
     expect(page).to have_content retain_timely_kase.number
+    erasable_pending_kases.each do |kase|
+      expect(page).not_to have_content kase.number
+    end
 
     click_on 'Show newest destruction date first'
 
@@ -171,7 +189,6 @@ feature 'Case retention schedules for GDPR', :js do
     )
 
     Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}", visible: false).set(true)
-
 
     accept_alert do
       click_on "Destroy cases"
