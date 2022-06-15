@@ -49,6 +49,14 @@ class RetentionSchedule < ApplicationRecord
       ..Date.today + viewable_from.months
     end
 
+    def erasable_cases_viewable_range
+      (..Date.today)
+    end
+
+    def triagable_destory_cases_range
+      ((Date.today + 1)..)
+    end
+
     def states_map
       aasm.states.to_h { |state| [state.name, state.display_name] }
     end
