@@ -4,6 +4,9 @@ class RetentionScheduleForm < BaseFormObject
   attribute :planned_destruction_date, :date
   attribute :state, :string
 
+  # Transient attribute used for the case history log
+  attr_reader :previous_values
+
   acts_as_gov_uk_date :planned_destruction_date
 
   validates_presence_of :planned_destruction_date
@@ -16,6 +19,15 @@ class RetentionScheduleForm < BaseFormObject
   end
 
   private
+
+  def persist!
+    @previous_values = {
+      state: record.human_state,
+      date:  record.planned_destruction_date
+    }
+
+    super
+  end
 
   # If the retention schedule has progressed already to any state other than the
   # initial `not_set`, we don't allow reverting back to the initial state, so we

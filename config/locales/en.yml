@@ -422,6 +422,7 @@ en:
       can_record_data_request?: You cannot edit data request once the case has been closed.
       can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
       can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
+      can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -462,6 +463,7 @@ en:
   date:
     formats:
       default: "%-d %b %Y"
+      compact: "%d-%m-%Y"
 
   time:
     formats:
@@ -1642,6 +1644,9 @@ en:
     update:
       flash:
         success: Retention details successfully updated
+      case_note_html: |
+        Retention status changed from %{state_from} to %{state_to}
+        Destruction date changed from %{date_from} to %{date_to}
 
   users:
     new:

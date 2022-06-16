@@ -15,6 +15,7 @@ describe Case::SARPolicy do
   let(:other_managing_team)   { create :managing_team }
   let(:responding_team)       { create :responding_team }
   let(:dacu_disclosure)       { find_or_create :team_dacu_disclosure }
+  let(:admin_team)            { find_or_create :team_for_admin_users }
 
   # Users
   let(:manager)               { managing_team.managers.first }
@@ -23,6 +24,7 @@ describe Case::SARPolicy do
   let(:press_officer)         { find_or_create :press_officer }
   let(:private_officer)       { find_or_create :private_officer }
   let(:disclosure_approver)   { dacu_disclosure.approvers.first }
+  let(:branston_user)         { find_or_create :branston_user }
 
   # Cases
   let(:non_trigger_sar_case)   { create :sar_case,
@@ -55,6 +57,11 @@ describe Case::SARPolicy do
                                         manager: manager,
                                         approver: disclosure_specialist,
                                         managing_team: managing_team }
+
+  let(:closed_sar_case)        { create :offender_sar_case,
+                                        :closed,
+                                        managing_team: managing_team,
+                                        responding_team: responding_team }
 
   after(:each) do |example|
     if example.exception
@@ -122,6 +129,37 @@ describe Case::SARPolicy do
       it { should_not permit(responder,             extended_sar_case) }
       it { should     permit(manager,               extended_sar_case) }
       it { should     permit(disclosure_approver,   extended_sar_case) }
+    end
+  end
+
+  permissions :can_perform_retention_actions? do
+    context 'can see the case' do
+      let(:team_admin_user) { find_or_create :branston_user }
+
+      before do
+        tur = TeamsUsersRole.new(
+          team_id: admin_team.id,
+          user_id: team_admin_user.id,
+          role: 'team_admin'
+        )
+
+        team_admin_user.team_roles << tur
+      end
+
+      context 'and the case is closed' do
+        it { should permit(team_admin_user, closed_sar_case) }
+        it { should_not permit(responder, closed_sar_case) }
+      end
+
+      context 'and the case is not closed' do
+        it { should_not permit(team_admin_user, approved_sar) }
+        it { should_not permit(responder, approved_sar) }
+      end
+    end
+
+    context 'cannot see the case' do
+      it { should_not permit(branston_user, approved_sar) }
+      it { should_not permit(responder, approved_sar) }
     end
   end
 end

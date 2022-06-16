@@ -3,7 +3,7 @@
     tr.section.planned-destruction-date
       th = t('common.case.retention_details.destruction_date')
       td = l(case_details.retention_schedule.planned_destruction_date)
-      td = (allow_editing ? link_to(t('common.links.change'), edit_retention_schedule_path(case_details.retention_schedule)) : ' ')
+      td = (@user.team_admin? ? link_to(t('common.links.change'), edit_retention_schedule_path(case_details.retention_schedule)) : ' ')
     tr.retention-schedule-state
       th = t('common.case.retention_details.status')
       td = case_details.retention_schedule.human_state

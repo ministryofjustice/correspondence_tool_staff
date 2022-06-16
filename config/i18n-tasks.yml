@@ -90,7 +90,7 @@ ignore_unused:
   # GOVUK Form Builder uses these translations
   - 'helpers.{fieldset,hint,label}.*'
   # Default date/time format used
-  - '{date,time}.formats.default'
+  - '{date,time}.formats.{default,compact}'
   - 'time.formats.default_date'
   # ActiveRecord errors and attributes
   - 'activerecord.{errors.models,attributes}.*'
