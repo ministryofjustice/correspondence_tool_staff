@@ -85,10 +85,8 @@ module RetentionSchedules
     def anonymise_core_case_fields
       PaperTrail.request(enabled: false) do
         ANON_VALUES.each do |key, value|
-          if @kase.respond_to?(key)
-            if @kase.send(key).present?
-              @kase.update_attribute(key, value)
-            end
+          if @kase.respond_to?(key) && @kase.send(key).present?
+            @kase.update_attribute(key, value)
           end
         end
       end
