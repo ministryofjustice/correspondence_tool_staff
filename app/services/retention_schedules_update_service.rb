@@ -102,23 +102,22 @@ class RetentionSchedulesUpdateService
       ]).where(case_id: @case_ids)
 
     retention_schedules.each do |retention_schedule|
-      previous_state = retention_schedule.human_state
-      retention_schedule.public_send(@state_change_event) do
-        add_retention_schedule_state_change_note(
-          kase: retention_schedule.case,
-          previous_state: previous_state,
-          current_state: retention_schedule.human_state
+      retention_schedule.public_send(@state_change_event)
+
+      if retention_schedule.valid?
+        retention_schedule.save
+
+        annotate_case!(
+          retention_schedule.case,
+          retention_schedule.saved_changes
         )
       end
-      retention_schedule.save if retention_schedule.valid? 
     end
   end
 
-  def add_retention_schedule_state_change_note(kase:, previous_state:, current_state:)
-    kase.state_machine.send(:add_note_to_case!,
-      acting_user: @current_user,
-      acting_team: @current_user.case_team(kase),
-      message: "Case RRD status updated from #{previous_state} to #{current_state}"
+  def annotate_case!(kase, changes)
+    RetentionScheduleCaseNote.log!(
+      kase: kase, user: @current_user, changes: changes
     )
   end
 end

@@ -75,7 +75,7 @@ describe RetentionSchedulesUpdateService do
                           .last
                           .message
 
-      expected_message = "Case RRD status updated from Review to Destroy" 
+      expected_message = "Retention status changed from Review to Destroy"
       expect(history_message).to eq(expected_message)
     end
   end

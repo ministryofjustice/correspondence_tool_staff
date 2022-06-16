@@ -14,9 +14,7 @@ RSpec.describe RetentionScheduleForm do
     let(:record) {
       double('Record',
              case: case_double,
-             not_set?: schedule_not_set,
-             human_state: 'Not set',
-             planned_destruction_date: planned_destruction_date)
+             not_set?: schedule_not_set)
     }
     let(:case_double) { double(Case::Base, date_responded: Date.today) }
 
@@ -120,15 +118,6 @@ RSpec.describe RetentionScheduleForm do
           ).and_return(true)
 
           expect(subject.save).to be(true)
-        end
-
-        it 'saves the previous attribute values for later inspection' do
-          expect(record).to receive(:update).and_return(true)
-          expect(subject.save).to be(true)
-
-          expect(
-            subject.previous_values
-          ).to eq({date: planned_destruction_date, state: 'Not set'})
         end
       end
     end

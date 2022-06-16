@@ -85,7 +85,7 @@ RSpec.describe RetentionSchedulesController, type: :controller do
           expect(retention_schedule.reload.planned_destruction_date).to eq(Date.new(2050, 12, 31))
 
           last_history_message = case_with_rrd.transitions.case_history.last.message
-          expect(last_history_message).to eq("Retention status changed from Not set to Review\nDestruction date changed from 18-12-2024 to 31-12-2050\n")
+          expect(last_history_message).to eq("Retention status changed from Not set to Review\nDestruction date changed from 18-12-2024 to 31-12-2050")
 
           expect(flash[:notice]).to eq('Retention details successfully updated')
           expect(response).to redirect_to(case_path(case_with_rrd))
