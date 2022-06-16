@@ -34,7 +34,7 @@ module RetentionSchedules
       name: 'XXXX XXXX',
       other_subject_ids: 'YY0123456789X',
       postal_address: 'Anon address',
-      previous_case_numbers: '',
+      previous_case_numbers: 'XXXXXXXX',
       prison_number: '123456',
       requester_reference: 'XXXXXX',
       subject: 'XXXX XXXX',
