@@ -57,6 +57,7 @@ Having done this, make sure all the post-install variables have been put in
 `.bash_profile` or similar e.g.
 
 ```
+echo 'export PATH="/usr/local/opt/postgresql@12/bin:$PATH"' >> ~/.bash_profile
 export PKG_CONFIG_PATH="/usr/local/opt/postgresql@12/lib/pkgconfig"
 export CPPFLAGS="-I/usr/local/opt/postgresql@12/include"
 export LDFLAGS="-L/usr/local/opt/postgresql@12/lib"
