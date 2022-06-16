@@ -27,21 +27,20 @@ module RetentionSchedules
 
 
     ANON_VALUES = {
-      case_reference_number: 'XXXX XXXX',
+      case_reference_number: '123456',
       date_of_birth: Date.new(01, 01, 0001),
       email: 'anon.email@cms-gdpr.justice.gov.uk',
       message: 'Information has been anonymised',
       name: 'XXXX XXXX',
-      other_subject_ids: '',
+      other_subject_ids: 'YY0123456789X',
       postal_address: 'Anon address',
-      previous_case_numbers: '',
-      prison_number: '',
-      requester_reference: '',
+      previous_case_numbers: 'XXXXXXXX',
+      prison_number: '123456',
+      requester_reference: 'XXXXXX',
       subject: 'XXXX XXXX',
       subject_address: 'Anon location',
-      subject_aliases: '',
+      subject_aliases: 'Anon alias',
       subject_full_name: 'XXXX XXXX',
-      third_party_company_name: '',
       third_party_name: 'Anon requester',
 
 
@@ -86,10 +85,8 @@ module RetentionSchedules
     def anonymise_core_case_fields
       PaperTrail.request(enabled: false) do
         ANON_VALUES.each do |key, value|
-          if @kase.respond_to?(key)
-            if @kase.send(key).present?
-              @kase.update_attribute(key, value)
-            end
+          if @kase.respond_to?(key) && @kase.send(key).present?
+            @kase.update_attribute(key, value)
           end
         end
       end
