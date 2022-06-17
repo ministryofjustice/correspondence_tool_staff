@@ -59,19 +59,19 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
 
   let(:expected_off_sar_anon_values) do
     {
-      case_reference_number: 'XXXX XXXX',
+      case_reference_number: '123456',
       date_of_birth: Date.new(01, 01, 0001),
       email: 'anon.email@cms-gdpr.justice.gov.uk',
       message: 'Information has been anonymised',
       name: 'XXXX XXXX',
-      other_subject_ids: '',
+      other_subject_ids: 'YY0123456789X',
       postal_address: 'Anon address',
-      previous_case_numbers: '',
-      prison_number: '',
-      requester_reference: '',
+      previous_case_numbers: 'XXXXXXXX',
+      prison_number: '123456',
+      requester_reference: 'XXXXXX',
       subject: 'XXXX XXXX',
       subject_address: 'Anon location',
-      subject_aliases: '',
+      subject_aliases: 'Anon alias',
       subject_full_name: 'XXXX XXXX',
       third_party_company_name: nil,
       third_party_name: nil,
@@ -79,23 +79,22 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
   end
 
 
-  let(:expected_third_pary_off_sar_anon_values) do
+  let(:expected_third_party_off_sar_anon_values) do
     {
-      case_reference_number: 'XXXX XXXX',
+      case_reference_number: '123456',
       date_of_birth: Date.new(01, 01, 0001),
       email: 'anon.email@cms-gdpr.justice.gov.uk',
       message: 'Information has been anonymised',
       name: 'XXXX XXXX',
-      other_subject_ids: '',
+      other_subject_ids: 'YY0123456789X',
       postal_address: 'Anon address',
-      previous_case_numbers: '',
-      prison_number: '',
-      requester_reference: '',
+      previous_case_numbers: 'XXXXXXXX',
+      prison_number: '123456',
+      requester_reference: 'XXXXXX',
       subject: 'XXXX XXXX',
       subject_address: 'Anon location',
-      subject_aliases: '',
+      subject_aliases: 'Anon alias',
       subject_full_name: 'XXXX XXXX',
-      third_party_company_name: '',
       third_party_name: 'Anon requester',
     }
   end
@@ -172,7 +171,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
     end
 
     it 'can anonymise the key fields of a third party Offender SAR case' do
-      expected_third_pary_off_sar_anon_values.each do |kase_attribute_name, value|
+      expected_third_party_off_sar_anon_values.each do |kase_attribute_name, value|
         expect(third_party_offender_sar_case.send(kase_attribute_name)).to eq(value)
       end
     end

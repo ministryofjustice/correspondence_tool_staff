@@ -22,7 +22,7 @@ describe CaseFilter::CaseRetentionStateFilter do
     it 'contains the choices for the filter' do
       expect(
         filter.available_choices
-      ).to eq({ filter_retention_state: {'not_set' => 'Not set', 'retain' => 'Retain', 'review' => 'Review'} })
+      ).to eq({ filter_retention_state: {'not_set' => 'Not set', 'retain' => 'Retain', 'review' => 'Review', 'to_be_anonymised' => 'Destroy'} })
     end
   end
 

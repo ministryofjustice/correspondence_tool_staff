@@ -26,12 +26,11 @@ module CaseFilter
       RetentionSchedule.states_map.except(*excluded_states).stringify_keys
     end
 
-    # No need to show checkboxes for `to_be_destroyed` and `destroyed`, as cases
-    # with these retention states will not show in the tab where this filter is applied.
+    # No need to show checkbox for state `anonymised`, as these cases
+    # will not show in the tab where this filter is applied.
     def excluded_states
       [
-        RetentionSchedule::STATE_TO_BE_ANONYMISED,
-        RetentionSchedule::STATE_ANONYMISED
+        RetentionSchedule::STATE_ANONYMISED,
       ]
     end
   end

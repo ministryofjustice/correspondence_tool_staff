@@ -20,6 +20,14 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  dictionary:
+    retention_schedule_states: &retention_schedule_states
+      not_set: Not set
+      retain: Retain
+      review: Review
+      to_be_anonymised: Destroy
+      anonymised: Anonymised
+
   activerecord:
     attributes:
       business_unit:
@@ -891,10 +899,7 @@ en:
         overturned_foi: Overturned FOI
       retention_schedule_form:
         state:
-          not_set: Not set
-          retain: Retain
-          review: Review
-          to_be_anonymised: Destroy
+          <<: *retention_schedule_states
     links:
       case_details:
         edit_case: 'Edit case details'
@@ -1644,9 +1649,6 @@ en:
     update:
       flash:
         success: Retention details successfully updated
-      case_note_html: |
-        Retention status changed from %{state_from} to %{state_to}
-        Destruction date changed from %{date_from} to %{date_to}
 
   users:
     new:
