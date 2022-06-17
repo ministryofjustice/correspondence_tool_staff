@@ -60,7 +60,7 @@ Having done this, make sure all the post-install variables have been put in
 export PKG_CONFIG_PATH="/usr/local/opt/postgresql@12/lib/pkgconfig"
 export CPPFLAGS="-I/usr/local/opt/postgresql@12/include"
 export LDFLAGS="-L/usr/local/opt/postgresql@12/lib"
-export PATH=$PATH:/usr/local/opt/postgresql@12/bin
+export PATH="/usr/local/opt/postgresql@12/bin:$PATH"
 ```
 
 The PKG_CONFIG_PATH and PATH are useful to help install the PG gem
@@ -124,6 +124,78 @@ brew install redis
 ```
 </details>
 
+#### Database Setup
+
+Run these rake tasks to prepare the database for local development.
+```
+$ rails db:create
+$ rails db:reseed
+```
+
+The `db:reseed` rake task will:
+ - clear the database  by dropping all the tables and enum types
+ - load the structure.sql
+ - run all the data migrations
+ - create sample users and teams
+The password of each user will be generated randomly but setting up a value for environment variable DEV_PASSWORD beforehand will give you the choice of a known password. This command also can be run on non-production cloud env if you want to clear up the database into a inital state.
+
+This will have the effect of setting up a standard set of teams, users, reports, correspondence types, etc.  The `db:reseed` can be used at any point you want reset the database without
+having to close down all clients using the database.
+
+##### Migrations
+
+Only the most recent migrations will be present in [db/migrate](db/migrate), as when setting up the application locally, the `structure.sql` will be used instead.  
+You only need to run migrations (`db:migrate`) when pulling new code that may include them.
+
+Older migrations, unlikely to be needed anymore, are archived in [db/archived_migrations](db/archived_migrations) for reference.
+
+Some of these older migrations made use of the gem `schema_plus_enums` which is no longer used due to incompatibilities with other gem versions.
+
+
+## Running the application
+
+- Make sure you have followed all the previous steps.
+- That you have read the `.env.example` and you have a file named `.env.sh` with your own environment variables
+- That you have applied those changes (`source .env.sh`).
+
+#### To start the rails console:
+
+```
+rails console
+```
+
+#### To start the web server:
+
+Depending on what you are doing you may need to start `redis` and `sidekiq`
+
+In a separate terminal, inside this project, run the following:
+
+```
+brew services start redis
+sidekiq
+```
+
+In another terminal start the server:
+
+```
+rails server
+```
+
+The `db:reseed` command creates a few testing accounts, make sure you take some notes and use them to login in the app.
+
+##### Creating individual test correspondence items
+
+Individual correspondence items can be quickly created by logging in as David Attenborough, and using the admin tab to create any kind of case in any state.
+
+##### Creating bulk test correspondence items
+
+To create 200 cases in various states with various responders for search testing, you can use the following rake task:
+```
+rake seed:search:data
+```
+It appears that redis needs to be running to attempt this task - but it doesn't currently work for unknown reasons.
+
+
 ##### Testing
 
 This project can produce code coverage data (w/o JS or views) using the `simplecov` gem
@@ -180,45 +252,6 @@ $ CHROME_DEBUG=1 bundle exec rspec
 When you have set `CHROME_DEBUG`, you should notice chrome start up and appear on your
 taskbar/Docker. You can now click on chrome and watch it run through your tests.
 If you have a `binding.pry`  in your tests the browser will stop at that point.
-
-#### Database Setup
-
-Run these rake tasks to prepare the database for local development.
-```
-$ rails db:create
-$ rails db:reseed
-```
-
-The `db:reseed` rake task will:
- - clear the database  by dropping all the tables and enum types
- - load the structure.sql
- - run all the data migrations
- - create sample users and teams
-The password of each user will be generated randomly but setting up a value for environment variable DEV_PASSWORD beforehand will give you the choice of a known password. This command also can be run on non-production cloud env if you want to clear up the database into a inital state.
-
-This will have the effect of setting up a standard set of teams, users, reports, correspondence types, etc.  The `db:reseed` can be used at any point you want reset the database without
-having to close down all clients using the database.
-
-##### Migrations
-
-Only the most recent migrations will be present in [db/migrate](db/migrate), as when setting up the application locally, the `structure.sql` will be used instead.  
-You only need to run migrations (`db:migrate`) when pulling new code that may include them.
-
-Older migrations, unlikely to be needed anymore, are archived in [db/archived_migrations](db/archived_migrations) for reference.
-
-Some of these older migrations made use of the gem `schema_plus_enums` which is no longer used due to incompatibilities with other gem versions.
-
-##### Creating individual test correspondence items
-
-Individual correspondence items can be quickly created by logging in as David Attenborough, and using the admin tab to create any kind of case in any state.
-
-##### Creating bulk test correspondence items
-
-To create 200 cases in various states with various responders for search testing, you can use the following rake task:
-```
-rake seed:search:data
-```
-It appears that redis needs to be running to attempt this task - but it doesn't currently work for unknown reasons.
 
 ### Additional Setup
 
@@ -344,7 +377,7 @@ In order to perform certain actions, you need to have valid S3 credentials activ
 You can configure the aws-sdk with your access and secret key by placing them in
  the `[default]` section in `.aws/credentials`:
 
-Retrieve details from the secret created in Kubernetes in the  [s3.tf terraform resource](https://github.com/ministryofjustice/cloud-platform-environments/blob/master/namespaces/live-1.cloud-platform.service.justice.gov.uk/track-a-query-development/resources/s3.tf#L74)
+Retrieve details from the secret created in Kubernetes in the  [s3.tf terraform resource](https://github.com/ministryofjustice/cloud-platform-environments/blob/master/namespaces/live.cloud-platform.service.justice.gov.uk/track-a-query-development/resources/s3.tf#L74)
 
 
 `kubectl -n track-a-query-production get secret track-a-query-ecr-credentials-output -o yaml`
