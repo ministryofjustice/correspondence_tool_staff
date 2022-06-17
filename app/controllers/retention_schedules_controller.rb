@@ -31,8 +31,8 @@ class RetentionSchedulesController < ApplicationController
 
   def update
     update_and_advance(RetentionScheduleForm, record: current_retention_schedule) do |form_object|
-      add_note_to_case!(
-        form_object.previous_values
+      annotate_case!(
+        form_object.record.saved_changes
       )
       redirect_to case_path(@case), flash: { notice: t('.flash.success') }
     end
@@ -44,15 +44,9 @@ class RetentionSchedulesController < ApplicationController
     authorize @case, :can_perform_retention_actions?
   end
 
-  def add_note_to_case!(previous_values)
-    @case.state_machine.add_note_to_case!(
-      acting_user: @user,
-      acting_team: @user.case_team(@case),
-      message: t('retention_schedules.update.case_note_html',
-                 state_from: previous_values[:state],
-                 state_to: current_retention_schedule.human_state,
-                 date_from: l(previous_values[:date], format: :compact),
-                 date_to: l(current_retention_schedule.planned_destruction_date, format: :compact))
+  def annotate_case!(changes)
+    RetentionScheduleCaseNote.log!(
+      kase: @case, user: @user, changes: changes
     )
   end
 
