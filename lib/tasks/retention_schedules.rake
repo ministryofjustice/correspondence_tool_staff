@@ -34,12 +34,15 @@ namespace :retention_schedules do
       off_sar_complaint_count = 0
       already_had_rs = 0
 
+      allready_had_rs_nums = []
+
       all_closed_cases = Case::SAR::Offender.where(current_state: :closed).count
       complaints = Case::SAR::OffenderComplaint.where(current_state: :closed).count
 
       # makes progressbar more accurate as it discounts linked complaints
       # as complaints don't exist in isolation
-      percent = (all_closed_cases - complaints) / 100 .round
+      percent = ((all_closed_cases + complaints) / 100).round
+      # percent = (complaints) / 100 .round
       percent_counter = 0
       progressbar = ProgressBar.create
       start = Time.now
@@ -53,7 +56,7 @@ namespace :retention_schedules do
       puts "Batch size: #{batch_size}"
       
       kases.find_each(batch_size: batch_size) do | kase |
-        if kase.retention_schedule.nil?
+        if kase.retention_schedule.blank?
           percent_counter += 1
           begin 
             service = RetentionSchedules::AddScheduleService.new(
@@ -74,6 +77,7 @@ namespace :retention_schedules do
             end
           end
         else
+          allready_had_rs_nums << kase.number
           already_had_rs += 1 
         end
       end
@@ -86,6 +90,7 @@ namespace :retention_schedules do
     puts "Offender SAR complaint total: #{off_sar_complaint_count}"
     puts "-------------------------"
     puts "#{already_had_rs} cases already had retention schedules"
+    puts "#{allready_had_rs_nums} case nums that already had rs"
     puts "Job took: #{Time.now - start} seconds to run"
 
     puts "\n Case errors: \n--------------\n\n" if errors.any?

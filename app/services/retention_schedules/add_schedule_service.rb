@@ -39,7 +39,9 @@ module RetentionSchedules
     def add_retention_schedules
       if @kase.linked_cases.present?
         add_retention_schedule
-        add_retention_schedules_to_linked_cases
+        if @kase.offender_sar_complaint?
+          add_retention_schedules_to_linked_cases
+        end
       else
         add_retention_schedule
       end
