@@ -47,7 +47,7 @@ RSpec.describe RetentionSchedule, type: :model do
       retention_schedule.mark_for_anonymisation
       expect(retention_schedule.aasm.human_state).to match('Destroy')
 
-      retention_schedule.anonymise!
+      retention_schedule.anonymise
       expect(retention_schedule.aasm.human_state).to match('Anonymised')
     end
   end
@@ -68,7 +68,7 @@ RSpec.describe RetentionSchedule, type: :model do
         .to(:to_be_anonymised).on_event(:mark_for_anonymisation)
 
       expect(retention_schedule).to transition_from(:to_be_anonymised)
-        .to(:anonymised).on_event(:anonymise!)
+        .to(:anonymised).on_event(:anonymise)
 
       expect(retention_schedule).to transition_from(:retain)
         .to(:not_set).on_event(:unlist)
@@ -76,18 +76,30 @@ RSpec.describe RetentionSchedule, type: :model do
 
     it 'disallows incorrect transitions' do
       expect(retention_schedule).to_not transition_from(:not_set, :retain, :review)
-        .to(:destroyed).on_event(:anonymise!)
+        .to(:destroyed).on_event(:anonymise)
 
       expect(retention_schedule).to_not transition_from(:review, :to_be_anonymised)
         .to(:unlist).on_event(:unlist)
 
       retention_schedule.mark_for_anonymisation
-      retention_schedule.anonymise!
+      retention_schedule.anonymise
 
       expect(retention_schedule).to have_state(:anonymised)
       expect(retention_schedule).to_not allow_transition_to(
         :not_set, :retain, :review, :to_be_anonymised
       )
+    end
+
+    it 'saves the record and updates the `erasure_date` when using bang method' do
+      retention_schedule.mark_for_anonymisation
+      expect(retention_schedule.persisted?).to eq(false)
+
+      expect {
+        retention_schedule.anonymise!
+      }.to change { retention_schedule.erasure_date }.from(nil).to(Date.today)
+
+      expect(retention_schedule).to have_state(:anonymised)
+      expect(retention_schedule.persisted?).to eq(true)
     end
   end
 

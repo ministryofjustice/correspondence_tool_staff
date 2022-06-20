@@ -11,7 +11,12 @@ class RetentionSchedule < ApplicationRecord
              foreign_key: :case_id,
              class_name: 'Case::SAR::Offender'
 
-  aasm column: 'state', logger: Rails.logger do
+  # Event `anonymise` will update the `erasure_date` automatically.
+  # We alias it because for this update to magically work, the date attribute
+  # should have followed the convention `[new_state]_at` instead.
+  alias_attribute :anonymised_at, :erasure_date
+
+  aasm column: 'state', timestamps: true, logger: Rails.logger do
     state :not_set, initial: true, display: 'Not set'
     state :retain, display: 'Retain'
     state :review, display: 'Review'
@@ -34,7 +39,7 @@ class RetentionSchedule < ApplicationRecord
       transitions from: [:retain], to: :not_set
     end
 
-    event :anonymise! do
+    event :anonymise do
       transitions from: [:to_be_anonymised], to: :anonymised
     end
   end
@@ -46,7 +51,7 @@ class RetentionSchedule < ApplicationRecord
   class << self
     def common_date_viewable_from_range
       viewable_from = Settings.retention_timings.common.viewable_from
-      ..Date.today + viewable_from.months
+      (..(Date.today + viewable_from.months))
     end
 
     def erasable_cases_viewable_range

@@ -1695,4 +1695,47 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
+  describe '#readonly?' do
+    let(:retention_schedule) { nil }
+
+    context 'for a closed case' do
+      context 'with retention schedule' do
+        let(:retention_schedule) { double(RetentionSchedule, anonymised?: anonymised) }
+
+        before do
+          allow(closed_case).to receive(:retention_schedule).and_return(retention_schedule)
+        end
+
+        context 'anonymised state' do
+          let(:anonymised) { true }
+
+          it 'returns false' do
+            expect(closed_case.readonly?).to eq(true)
+          end
+        end
+
+        context 'not anonymised state' do
+          let(:anonymised) { false }
+
+          it 'returns false' do
+            expect(closed_case.readonly?).to eq(false)
+          end
+        end
+      end
+
+      context 'without retention schedule' do
+        it 'returns false' do
+          expect(closed_case.readonly?).to eq(false)
+        end
+      end
+    end
+
+    context 'for a non-closed case' do
+      let(:closed) { false }
+
+      it 'returns false' do
+        expect(assigned_case.readonly?).to eq(false)
+      end
+    end
+  end
 end

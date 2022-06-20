@@ -377,6 +377,7 @@ en:
               before_closure: must be after case closed date
             state:
               inclusion: is not a valid status
+              forbidden: cannot be changed once case is anonymised
 
   pundit:
     assignment_policy:
