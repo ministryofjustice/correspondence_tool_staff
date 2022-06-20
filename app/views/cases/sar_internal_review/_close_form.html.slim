@@ -2,7 +2,7 @@
 = form_for @case, as: :sar_internal_review, url: url do |f|
   .form-group
     = f.gov_uk_date_field :date_responded, { legend_text: t('cases.sar.close_form.close_date'),
-            form_hint_text: t('cases.sar.close_form.date_example'),
+            form_hint_text: t('helpers.hint.shared.date_example'),
             today_button: {class: ''} }
 
   .js-sar-internal-review

@@ -18,7 +18,7 @@ div class="case-#{@correspondence_type_key}"
   = form_for @case, url: case_sar_offender_complaint_path(@case), as: :offender_sar_complaint do |f|
     .form-group
         = f.gov_uk_date_field :date_responded, { legend_text: t('cases.shared.date_responded_form.close_date'),
-                form_hint_text: t('cases.shared.date_responded_form.date_example'),
+                form_hint_text: t('helpers.hint.shared.date_example'),
                 today_button: {class: ''} }
 
     = f.submit 'Continue', {class: 'button'}

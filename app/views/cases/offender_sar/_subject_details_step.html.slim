@@ -20,7 +20,7 @@
   = f.text_field :case_reference_number
 
   = f.gov_uk_date_field :date_of_birth, { legend_text: t('cases.new.date_of_birth'),
-    form_hint_text: t('cases.new.date_of_birth_copy') }
+    form_hint_text: t('helpers.hint.shared.date_example') }
 
   = f.radio_button_fieldset :subject_type,
     choices: Case::SAR::Offender::subject_types.keys

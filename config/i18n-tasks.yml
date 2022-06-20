@@ -110,7 +110,6 @@ ignore_unused:
   - 'cases.new*.sub_heading'
   - '*.case/*'
   - 'cases.show.case.attachments_heading'
-  - 'cases.respond.respond_date'
   - 'notices.case_cleared'
   - 'common.case.request'
   - 'nav.pages.teams.*'
@@ -118,7 +117,7 @@ ignore_unused:
   - 'teams.business_group_detail.destroy'
   - 'teams.directorate_detail.destroy'
   - 'teams.business_unit_detail.destroy'
-  - 'dictionary.retention_schedule_states.*'
+  - 'dictionary.*'
   - 'retention_schedule_case_notes.changes.*'
   - users.show.heading_all_cases
   - users.show.heading_my_cases
