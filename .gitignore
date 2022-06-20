@@ -26,6 +26,7 @@ config/settings/*.local.yml
 config/environments/*.local.yml
 .env
 env.sh
+.env.sh
 
 
 # Ignore .DS_Store in all directories
