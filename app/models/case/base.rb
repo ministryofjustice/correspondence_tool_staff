@@ -457,6 +457,12 @@ class Case::Base < ApplicationRecord
     raise NotImplementedError.new('Case type must implement self.factory')
   end
 
+  # Once a case has been anonymised we forbid any further updates.
+  # Note destroy/delete will still work.
+  def readonly?
+    closed? && !!retention_schedule.try(:anonymised?)
+  end
+
   def to_csv
     CSVExporter.new(self).to_csv
   end

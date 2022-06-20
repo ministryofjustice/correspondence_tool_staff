@@ -7,6 +7,7 @@ RSpec.describe RetentionScheduleForm do
       # We stub these as we will test more thoroughly in separate scenarios
       allow(subject).to receive(:destruction_date_after_close_date).and_return(true)
       allow(subject).to receive(:state_choices).and_return([])
+      allow(subject).to receive(:state_is_not_anonymised)
     end
   end
 
@@ -14,13 +15,15 @@ RSpec.describe RetentionScheduleForm do
     let(:record) {
       double('Record',
              case: case_double,
-             not_set?: schedule_not_set)
+             not_set?: schedule_not_set,
+             anonymised?: state_anonymised)
     }
     let(:case_double) { double(Case::Base, date_responded: Date.today) }
 
     let(:planned_destruction_date) { Date.tomorrow }
     let(:state) { RetentionSchedule::STATE_NOT_SET.to_s }
     let(:schedule_not_set) { true }
+    let(:state_anonymised) { false }
 
     let(:arguments) { {
       record: record,
@@ -105,6 +108,19 @@ RSpec.describe RetentionScheduleForm do
         it 'has a validation error on the field' do
           expect(subject).to_not be_valid
           expect(subject.errors.of_kind?(:state, :inclusion)).to eq(true)
+        end
+      end
+
+      context 'when the case has been anonymised already' do
+        let(:state_anonymised) { true }
+
+        it 'returns false' do
+          expect(subject.save).to be(false)
+        end
+
+        it 'has a validation error on the field' do
+          expect(subject).to_not be_valid
+          expect(subject.errors.of_kind?(:state, :forbidden)).to eq(true)
         end
       end
     end
