@@ -19,9 +19,9 @@ fieldset
     .form-group
       = f.gov_uk_date_field filter.class.date_from_field,
               { legend_text: t('cases.searches.show.date_from'),
-                      form_hint_text: t('cases.searches.show.date_hint') }
+                      form_hint_text: t('helpers.hint.shared.date_example') }
 
     .form-group
       = f.gov_uk_date_field filter.class.date_to_field,
               { legend_text: t('cases.searches.show.date_to'),
-                      form_hint_text: t('cases.searches.show.date_hint') }
+                      form_hint_text: t('helpers.hint.shared.date_example') }

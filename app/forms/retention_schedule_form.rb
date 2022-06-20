@@ -10,6 +10,7 @@ class RetentionScheduleForm < BaseFormObject
   validate :destruction_date_after_close_date, if: :planned_destruction_date
 
   validates_inclusion_of :state, in: :state_choices
+  validate :state_is_not_anonymised
 
   def state_choices
     allowed_states.map(&:to_s)
@@ -29,6 +30,12 @@ class RetentionScheduleForm < BaseFormObject
       states.delete(RetentionSchedule::STATE_ANONYMISED)
       states.delete(RetentionSchedule::STATE_NOT_SET) unless record.not_set?
     end
+  end
+
+  # If the case has been anonymised, we can't go back to any previous state.
+  # Although change links will be disabled, a malicious request could be crafted.
+  def state_is_not_anonymised
+    errors.add(:state, :forbidden) if record.anonymised?
   end
 
   def destruction_date_after_close_date

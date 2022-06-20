@@ -23,7 +23,7 @@
     .form-group
       = f.gov_uk_date_field :date_responded,
               {legend_text: translate_for_case(@case, 'cases.respond', 'respond_date'),
-                      form_hint_text: t('.date_example'),
+                      form_hint_text: t('helpers.hint.shared.date_example'),
                       today_button: {class: ''} }
 
     - if @case.foi?

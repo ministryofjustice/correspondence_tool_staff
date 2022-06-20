@@ -59,10 +59,10 @@
 
     .period-start
       = f.gov_uk_date_field :period_start, {legend_text: t('stats.common.period_start'),
-              form_hint_text: t('cases.new.received_date_copy')}
+              form_hint_text: t('helpers.hint.shared.date_example')}
 
     .period-end
       = f.gov_uk_date_field :period_end, {legend_text: t('stats.common.period_end'),
-              form_hint_text: t('cases.new.received_date_copy')}
+              form_hint_text: t('helpers.hint.shared.date_example')}
 
   = f.submit 'Create custom report', class:'button', data: { disable_with: false }

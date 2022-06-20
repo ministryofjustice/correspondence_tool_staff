@@ -21,6 +21,7 @@
 
 en:
   dictionary:
+    date_hint_text: &date_hint_text "For example, 31 07 2019"
     retention_schedule_states: &retention_schedule_states
       not_set: Not set
       retain: Retain
@@ -377,6 +378,7 @@ en:
               before_closure: must be after case closed date
             state:
               inclusion: is not a valid status
+              forbidden: cannot be changed once case is anonymised
 
   pundit:
     assignment_policy:
@@ -584,13 +586,14 @@ en:
       retention_schedule_form:
         state: What is the retention status?
     hint:
+      shared:
+        date_example: *date_hint_text
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
       data_request:
         location: Where is the data held?
       data_request_log:
-        date_received: For example, 31 07 2019
         num_pages: Record new total number of pages
       feedback:
         comment: |
@@ -602,8 +605,6 @@ en:
         related_case_number:  Enter related case  reference number, for example 170131001.
       offender_sar:
         case_reference_number: "You can include multiple numbers separated by a comma or a space."
-        date_of_birth: "For example, 12 11 2007"
-        partial_case_letter_sent_dated: "For example, 12 11 2007"
         message_hint: Include any details that will be useful for processing the case (optional)
         reason_for_lateness_note_hint: Please provide details to why this case is late
         number_exempt_pages: "Pages removed from the SAR as exemptions"
@@ -1199,7 +1200,6 @@ en:
         heading: Edit case closure details
         submit: Save changes
       respond:
-        date_example: For example, 30 1 2017
         case/ico:
           respond_date: Add date this response was sent to ICO
         heading: Mark as sent
@@ -1230,7 +1230,6 @@ en:
     ico:
       close_form:
         date_ico_decision_received_date: Date decision was received at MoJ
-        date_example: For example, 30 1 2017
       form:
         uploaded_request_files: Upload relevant files (optional)
     ico_foi: 
@@ -1258,7 +1257,6 @@ en:
     edit:
       heading: Edit case details
       date_draft_compliant: Date compliant draft was uploaded
-      date_draft_compliant_example: "For example, 01 02 2018"
       offender_sar:
         number_final_pages: 'Update final page count'
         number_exempt_pages: 'Update exempt pages'
@@ -1304,21 +1302,18 @@ en:
       correspondence_type_errors:
         unknown: "Unknown correspondence type \"%{type}\""
         not_authorised: "You are not authorised to create \"%{type}\" correspondences"
-      date_sar_request_copy: "For example, 12 11 2007"
-      date_sar_received_copy: "For example, 12 11 2007"
-      date_complaint_external_deadline: "For example, 12 11 2007"
-      date_request_received_copy: "For example, 12 11 2007"
+      request_dated_legend: What is the date on the request?
+      complaint_request_dated_legend: What is the date on the complaint?
+      date_sar_received_legend: When was the complaint received at MOJ?
+      date_offender_sar_received_legend: When was the SAR received?
       date_of_birth: "Date of birth"
-      date_of_birth_copy: "For example, 24 11 1992"
       external_deadline: "Final deadline"
-      external_deadline_copy: "For example, 01 02 2018"
       internal_deadline: Draft deadline
       heading: Add case details
       created_at: Created at
       created_at_copy: 'Date to use as creation date of case, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"'
       received_date: Date received at MOJ
       received_date_short: Received date
-      received_date_copy: "For example, 01 02 2018"
       received_date_copy_long: Date correspondence was received, ex. "Oct 2", "Oct 2, 2017", "02-10-2017", "2017-10-02 12:00:00"
       only_select_one: Please only select one.
       case/ico:
@@ -1351,7 +1346,6 @@ en:
     shared:
       date_responded_form:
         close_date:  Date response sent
-        date_example: For example, 30 1 2017
         date_ico_decision_received_date: Date decision received from ICO
     show:
       case/ico:
@@ -1380,14 +1374,12 @@ en:
       case_details:
         cannot_update_closure_html: "This is an old case with closure details that cannot be edited. If you need to edit this case <a href=\"#new_feedback\">let us know</a>."
       close_form:
-        date_example: For example, 30 1 2017
         close_date:  Date response sent
       send_back_heading: 'Send case back for change'
     sar:
       new_form_common:
         dropzone: "Requestor's proof of ID and other documents"
       close_form:
-        date_example: For example, 30 1 2017
         close_date:  Date response sent
     sar_extensions:
       create:
@@ -1418,7 +1410,6 @@ en:
         heading: Search
         date_from: From
         date_to: To
-        date_hint: For example. 31 01 2017
     offender_sar:
       subject_heading: Who is the subject?
       requester_heading: Who is making the subject access request?
@@ -1646,6 +1637,9 @@ en:
       heading: What are the retention details?
       subheading: Edit retention details
       submit: Continue
+      planned_destruction_date:
+        legend: What is the destruction date?
+        hint: For example, 31 12 2026
     update:
       flash:
         success: Retention details successfully updated

@@ -73,10 +73,8 @@ module RetentionSchedules
         anonymise_core_case_fields
         anonymise_case_notes
         anonymise_cases_data_requests_notes
-        update_cases_retention_schedule_state
         destroy_case_versions
-      
-        @kase.save
+        update_cases_retention_schedule_state
       end
     end
 
@@ -115,10 +113,7 @@ module RetentionSchedules
     end
 
     def update_cases_retention_schedule_state
-      retention_schedule = @kase.retention_schedule
-      retention_schedule.anonymise!
-      retention_schedule.erasure_date = Date.today
-      retention_schedule.save
+      @kase.retention_schedule.anonymise!
     end
 
     def destroy_case_versions

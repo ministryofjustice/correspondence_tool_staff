@@ -7,7 +7,7 @@
 
   .form-group
     = f.gov_uk_date_field :date_ico_decision_received, { legend_text: t('.date_ico_decision_received_date'),
-            form_hint_text: t('.date_example'),
+            form_hint_text: t('helpers.hint.shared.date_example'),
             today_button: {class: ''} }
 
   - if @case.respond_to?(:ico_decision) && @case.ico_decision.present?

@@ -10,8 +10,8 @@
 
   .form-group
     = f.gov_uk_date_field :received_date, { \
-        legend_text: '',
-        form_hint_text: t('cases.new.date_sar_received_copy'),
+        legend_text: t('cases.new.date_offender_sar_received_legend'),
+        form_hint_text: t('helpers.hint.shared.date_example'),
         today_button: { class: '' } \
       }
 
