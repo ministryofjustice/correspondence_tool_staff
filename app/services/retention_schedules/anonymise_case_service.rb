@@ -42,6 +42,7 @@ module RetentionSchedules
       subject_aliases: 'Anon alias',
       subject_full_name: 'XXXX XXXX',
       third_party_name: 'Anon requester',
+      third_party_relationship: 'Anon relationship',
 
 
       # Offender SAR Complaint specific fields
