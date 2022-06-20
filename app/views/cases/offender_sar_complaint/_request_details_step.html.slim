@@ -11,8 +11,8 @@
   .form-group
 
     = f.gov_uk_date_field :request_dated, { \
-        legend_text: '',
-        form_hint_text: t('cases.new.date_request_received_copy'),
+        legend_text: t('cases.new.complaint_request_dated_legend'),
+        form_hint_text: t('helpers.hint.shared.date_example'),
         today_button: { class: '' } \
       }
 

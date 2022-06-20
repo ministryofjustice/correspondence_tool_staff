@@ -17,7 +17,7 @@
 = form_for @form_object, url: retention_schedule_path(@form_object.record), method: :put do |f|
   .form-group
     = f.gov_uk_date_field :planned_destruction_date, { \
-        legend_text: '', form_hint_text: t('cases.new.date_sar_received_copy') \
+        legend_text: t('.planned_destruction_date.legend'), form_hint_text: t('.planned_destruction_date.hint') \
       }
   .form-group
     = f.radio_button_fieldset :state, choices: @form_object.state_choices

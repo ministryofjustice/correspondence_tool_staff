@@ -16,7 +16,7 @@ hr
 .form-group
   = f.gov_uk_date_field :external_deadline,
                         { legend_text: "Final deadline" ,
-                          form_hint_text: "For example, 01 02 2018" }
+                          form_hint_text: t('helpers.hint.shared.date_example') }
   p
     .form-hint
       | The draft deadline will be set to 20 working days before the final deadline.
