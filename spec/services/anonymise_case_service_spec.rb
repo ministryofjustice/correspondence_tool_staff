@@ -75,6 +75,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       subject_full_name: 'XXXX XXXX',
       third_party_company_name: nil,
       third_party_name: nil,
+      third_party_relationship: nil
     }
   end
 
@@ -96,6 +97,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       subject_aliases: 'Anon alias',
       subject_full_name: 'XXXX XXXX',
       third_party_name: 'Anon requester',
+      third_party_relationship: 'Anon relationship'
     }
   end
 
