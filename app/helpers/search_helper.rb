@@ -3,8 +3,8 @@ module SearchHelper
   SEARCH_SCOPE_SET = {
     :search_result_order_by_oldest_first => { "order" => "cases.id ASC"},
     :search_result_order_by_newest_first => {"order" => "cases.received_date DESC, cases.id DESC"},
-    :search_result_order_by_oldest_destruction_date => {"order" => 'retention_schedule.planned_destruction_date DESC'},
-    :search_result_order_by_newest_destruction_date => {"order" => 'retention_schedule.planned_destruction_date ASC'},
+    :search_result_order_by_oldest_destruction_date => {"order" => 'retention_schedule.planned_destruction_date ASC'},
+    :search_result_order_by_newest_destruction_date => {"order" => 'retention_schedule.planned_destruction_date DESC'},
     :search => {"order" => nil},
   }.freeze
 
