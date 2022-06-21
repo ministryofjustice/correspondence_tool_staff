@@ -29,5 +29,6 @@
               - if case_details.further_actions_required.present?
                 = case_details.further_actions_required.humanize
 
-.button-holder
-  = link_to I18n.t('button.update_partial_flags'), edit_step_case_sar_offender_path(case_details, "partial_case_flags"), class: 'button-tertiary'
+- if allow_editing
+  .button-holder
+    = link_to I18n.t('button.update_partial_flags'), edit_step_case_sar_offender_path(case_details, "partial_case_flags"), class: 'button-tertiary'

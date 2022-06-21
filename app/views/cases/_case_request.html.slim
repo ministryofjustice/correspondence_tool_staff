@@ -2,13 +2,13 @@
   .grid-row.section-requested-heading
       h2.request--heading
         = t4c(case_details, 'common', 'request')
-      - if case_details.offender_sar?
-        .change-link
-          = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "requested_info")
-
-      - if case_details.offender_sar_complaint?
-        .change-link
-          = link_to t('common.links.change'), edit_step_case_sar_offender_complaint_path(case_details, "requested_info")
+      - if case_details.editable?
+        - if case_details.offender_sar?
+          .change-link
+            = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "requested_info")
+        - if case_details.offender_sar_complaint?
+          .change-link
+            = link_to t('common.links.change'), edit_step_case_sar_offender_complaint_path(case_details, "requested_info")
 
   .request--message.section-requested-info
     - if case_details.message.present?

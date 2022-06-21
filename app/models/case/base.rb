@@ -463,6 +463,10 @@ class Case::Base < ApplicationRecord
     closed? && !!retention_schedule.try(:anonymised?)
   end
 
+  def editable?
+    !readonly?
+  end
+
   def to_csv
     CSVExporter.new(self).to_csv
   end
