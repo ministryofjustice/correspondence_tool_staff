@@ -11,46 +11,49 @@
 
 = render partial: 'shared/components/case_page_heading', locals: {kase: @case}
 
+- allow_editing = @case.editable?
+
 div id="case-#{@correspondence_type_key}" class="case"
-  section.case-info.has-actions
-    h2.visually-hidden
-      = "Actions you can take on this case"
-    .button-holder
-      - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
-        - if policy(@case).approve?
-          = action_button_for(:approve)
-        - if policy(@case).upload_responses?
-          = action_button_for(:add_responses)
-        - if policy(@case).upload_response_and_approve?
-          = action_button_for(:upload_response_and_approve)
-        - if policy(@case).upload_response_and_return_for_redraft?
-          = action_button_for(:upload_response_and_return_for_redraft)
+  - if allow_editing
+    section.case-info.has-actions
+      h2.visually-hidden
+        = "Actions you can take on this case"
+      .button-holder
+        - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
+          - if policy(@case).approve?
+            = action_button_for(:approve)
+          - if policy(@case).upload_responses?
+            = action_button_for(:add_responses)
+          - if policy(@case).upload_response_and_approve?
+            = action_button_for(:upload_response_and_approve)
+          - if policy(@case).upload_response_and_return_for_redraft?
+            = action_button_for(:upload_response_and_return_for_redraft)
 
-        - if policy(@case).can_respond?
-          = action_button_for(:respond)
+          - if policy(@case).can_respond?
+            = action_button_for(:respond)
 
-        - if policy(@case).can_accept_or_reject_approver_assignment?
-          = render partial: 'cases/shared/take_case_on_or_de_escalate',
-            locals: { case_details: @case }
+          - if policy(@case).can_accept_or_reject_approver_assignment?
+            = render partial: 'cases/shared/take_case_on_or_de_escalate',
+              locals: { case_details: @case }
 
-        - permitted_events = @permitted_events - [:add_responses, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
-        - permitted_events = permitted_events - [:mark_as_awaiting_response_for_partial_case, :mark_as_partial_case, :unmark_as_partial_case, :mark_as_further_actions_required, :unmark_as_further_actions_required]
-        - if @case.type_abbreviation.in? %w( SAR OVERTURNED_SAR )
-          - permitted_events.delete(:close)
+          - permitted_events = @permitted_events - [:add_responses, :approve, :respond, :reassign_user, :upload_response_and_approve, :upload_response_and_return_for_redraft]
+          - permitted_events = permitted_events - [:mark_as_awaiting_response_for_partial_case, :mark_as_partial_case, :unmark_as_partial_case, :mark_as_further_actions_required, :unmark_as_further_actions_required]
+          - if @case.type_abbreviation.in? %w( SAR OVERTURNED_SAR )
+            - permitted_events.delete(:close)
 
-        - permitted_events.each do |event|
-          = action_button_for(event)
+          - permitted_events.each do |event|
+            = action_button_for(event)
 
-        - if policy(@case).assignments_execute_reassign_user?
-          = action_button_for(:reassign_user)
+          - if policy(@case).assignments_execute_reassign_user?
+            = action_button_for(:reassign_user)
 
-      = action_buttons_for_allowed_events(@case, :extend_for_pit, :remove_pit_extension).join(' ').html_safe
+        = action_buttons_for_allowed_events(@case, :extend_for_pit, :remove_pit_extension).join(' ').html_safe
 
-      - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
-        - if policy(@case).destroy_case?
-          = action_button_for_destroy_case(@case)
+        - if (@filtered_permitted_events - [:edit_case, :destroy_case]).any?
+          - if policy(@case).destroy_case?
+            = action_button_for_destroy_case(@case)
 
-        - action_button_for(:progress_for_clearance)
+          - action_button_for(:progress_for_clearance)
 
   section.case-info
     = render partial: 'cases/case_status', locals: {case_details: @case}
@@ -60,11 +63,11 @@ div id="case-#{@correspondence_type_key}" class="case"
 
   - if @case.offender_sar? && @case.closed?
     section.case-info
-      = render partial: 'cases/offender_sar/partial_case_flags', locals: {case_details: @case}
+      = render partial: 'cases/offender_sar/partial_case_flags', locals: { case_details: @case, allow_editing: allow_editing }
 
   - if @case.type_of_offender_sar?
     section.case-info
-      = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, allow_editing: true}
+      = render partial: 'cases/offender_sar/data_requests', locals: { case_details: @case, allow_editing: allow_editing }
 
   - if FeatureSet.offender_sar_complaints.enabled? || !@case.type_of_offender_sar?
     = render partial: 'shared/components/case_linked_cases'
@@ -75,7 +78,7 @@ div id="case-#{@correspondence_type_key}" class="case"
 
   section.case-info
     = render partial: "cases/#{@case.type_abbreviation.parameterize.underscore}/case_details",
-             locals: {case_details: @case, link_type: nil, allow_editing: true}
+             locals: {case_details: @case, link_type: nil, allow_editing: allow_editing}
 
   - if !@case.type_of_offender_sar?
     section.case-info
@@ -93,7 +96,7 @@ div id="case-#{@correspondence_type_key}" class="case"
     section.case-info.has-page-break
       = render partial: 'cases/case_history', locals: { case_transitions: @case_transitions }
 
-  - if @case.type_of_offender_sar?
+  - if @case.type_of_offender_sar? && allow_editing
     section.notes-section
       = render partial: 'cases/offender_sar/case_notes', locals: { case_details: @case }
 

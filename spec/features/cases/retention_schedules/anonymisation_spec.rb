@@ -84,6 +84,9 @@ feature 'Case retention schedules for GDPR', :js do
     expect(page).to have_content 'XXXX XXXX'
     expect(page).to have_content 'Information has been anonymised'
     expect(page).to have_content 'Anon location'
+
+    expect(page).not_to have_content 'Start complaint'
+    expect(page).not_to have_content 'Change'
   end
 
   def case_with_retention_schedule(case_type:, case_state:, rs_state:, date:)

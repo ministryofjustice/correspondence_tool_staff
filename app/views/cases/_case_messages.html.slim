@@ -8,7 +8,7 @@ h2.request--heading Conversation
     - case_details.transitions.messages.order(:id).each do |chat|
       = render partial: 'messages/message', locals: {message_event: chat, user: current_user}
 
-- if policy(case_details).can_add_message_to_case?
+- if case_details.editable? && policy(case_details).can_add_message_to_case?
   = form_for case_details, as: :case, url: case_messages_path(case_details), method: :post, class: "message-form" do |f|
     .message-form data-ws-case-id="#{case_details.id}"
       .form-group

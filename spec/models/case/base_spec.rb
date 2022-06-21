@@ -1738,4 +1738,11 @@ RSpec.describe Case::Base, type: :model do
       end
     end
   end
+
+  describe '#editable?' do
+    it 'is the opposite of `readonly?` method' do
+      expect(closed_case).to receive(:readonly?).and_return(true)
+      expect(closed_case.editable?).to eq(false)
+    end
+  end
 end
