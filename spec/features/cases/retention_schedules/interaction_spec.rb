@@ -176,16 +176,16 @@ feature 'Case retention schedules for GDPR', :js do
     click_on 'Show newest destruction date first'
 
     page_order_correct?(
-      not_set_timely_kase.number.to_s, 
-      retain_timely_kase.number.to_s
+      retain_timely_kase.number.to_s,
+      not_set_timely_kase.number.to_s
     )
 
     expect(page).to have_content 'Show oldest destruction date first'
 
     click_on 'Show oldest destruction date first'
     page_order_correct?(
-      retain_timely_kase.number.to_s,
-      not_set_timely_kase.number.to_s
+      not_set_timely_kase.number.to_s,
+      retain_timely_kase.number.to_s
     )
 
     Capybara.find(:css, "#retention-checkbox-#{not_set_timely_kase.id}", visible: false).set(true)
