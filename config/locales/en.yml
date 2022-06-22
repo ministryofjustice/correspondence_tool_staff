@@ -1004,6 +1004,7 @@ en:
       retention_details:
         destruction_date: Destruction date
         status: Retention status
+        anonymised_at: Anonymised on
       pnc_acronym_html: '<abbr title="Police national computer">PNC</abbr> number'
       postal_address: "Requester’s postal address"
       previous_case_numbers: Previous SAR cases

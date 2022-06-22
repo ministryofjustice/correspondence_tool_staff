@@ -139,6 +139,10 @@ module PageObjects
           section :retention_schedule_state, '.retention-schedule-state' do
             elements :data, 'td'
           end
+
+          section :anonymised_at, '.anonymised-at-date' do
+            elements :date, 'td'
+          end
         end
 
         element :edit_case, :xpath, '//a[contains(.,"Edit case details")]'
