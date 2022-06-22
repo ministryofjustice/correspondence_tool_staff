@@ -89,6 +89,9 @@ feature 'Closing a case' do
         .to have_content('Retention status')
       expect(show_page.retention_details.retention_schedule_state.data.first.text)
         .to eq('Not set')
+
+      expect(show_page.retention_details)
+        .not_to have_content('Anonymised on')
     end
   end
 

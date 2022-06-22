@@ -56,6 +56,8 @@ feature 'Closing a case' do
         .to have_content('Retention status')
       expect(show_page.retention_details.retention_schedule_state.data.first.text)
         .to eq('Not set')
+      expect(show_page.retention_details)
+        .not_to have_content('Anonymised on')
 
       visit("cases/#{original_case.id}")
       show_page = cases_show_page.case_details
@@ -68,6 +70,8 @@ feature 'Closing a case' do
         .to have_content('Retention status')
       expect(show_page.retention_details.retention_schedule_state.data.first.text)
         .to eq('Not set')
+      expect(show_page.retention_details)
+        .not_to have_content('Anonymised on')
 
       other_related_complaints.each do |kase|
         visit("cases/#{kase.id}")
@@ -81,6 +85,8 @@ feature 'Closing a case' do
           .to have_content('Retention status')
         expect(show_page.retention_details.retention_schedule_state.data.first.text)
           .to eq('Not set')
+        expect(show_page.retention_details)
+          .not_to have_content('Anonymised on')
       end
     end
   end

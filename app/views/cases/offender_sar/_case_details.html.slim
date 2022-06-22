@@ -39,4 +39,4 @@
 
         - if case_details.closed?
           = render partial: 'cases/shared/closed_case_details', locals: { case_details: case_details, allow_editing: allow_editing }
-          = render partial: 'cases/shared/retention_details', locals: { case_details: case_details, allow_editing: allow_editing }
+          = render partial: 'cases/shared/retention_details', locals: { retention_schedule: case_details.retention_schedule, allow_editing: allow_editing }
