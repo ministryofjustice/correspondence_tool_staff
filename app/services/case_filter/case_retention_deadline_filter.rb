@@ -6,35 +6,37 @@ module CaseFilter
 
     def available_choices
       {
-        today: {
-          name: 'Today', from: today, to: today,
+        due: {
+          from: json_date(far_in_the_past), to: json_date(months: 0),
         },
         one_month: {
-          name: '1 month', from: months_ago(1), to: today,
+          from: json_date(days: 1), to: json_date(months: 1),
         },
         two_months: {
-          name: '2 months', from: months_ago(2), to: today,
+          from: json_date(months: 1, days: 1), to: json_date(months: 2),
         },
         three_months: {
-          name: '3 months', from: months_ago(3), to: today,
+          from: json_date(months: 2, days: 1), to: json_date(months: 3),
         },
         four_months: {
-          name: '4 months', from: months_ago(4), to: today,
+          from: json_date(months: 3, days: 1), to: json_date(months: 4),
         },
       }
     end
 
     private
 
-    def today
-      months_ago(0)
+    def far_in_the_past
+      Date.new(2000, 01, 01)
     end
 
-    def months_ago(months)
+    def json_date(args)
+      date = args.is_a?(Hash) ? Date.today.advance(args) : args
+
       {
-        day: months.months.ago.strftime("%d"),
-        month: months.months.ago.strftime("%m"),
-        year: months.months.ago.strftime("%Y")
+        day: date.strftime("%d"),
+        month: date.strftime("%m"),
+        year: date.strftime("%Y")
       }.to_json
     end
   end

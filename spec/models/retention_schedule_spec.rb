@@ -158,7 +158,7 @@ RSpec.describe RetentionSchedule, type: :model do
       end
 
       it 'returns a range that is correct to view triagable "destroy" cases' do
-        class_range = RetentionSchedule.triagable_destory_cases_range
+        class_range = RetentionSchedule.triagable_destroy_cases_range
         expected_range = ((Date.today + 1)..)
 
         expect(class_range).to be_a(Range)

@@ -133,7 +133,7 @@ class CaseFinderService
     retention_cases_scope.where(
       retention_schedule: { 
         state: RetentionSchedule::STATE_TO_BE_ANONYMISED,
-        planned_destruction_date: RetentionSchedule.triagable_destory_cases_range
+        planned_destruction_date: RetentionSchedule.triagable_destroy_cases_range
       })
   end
 

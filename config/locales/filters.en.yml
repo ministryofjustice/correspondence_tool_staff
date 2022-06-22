@@ -70,7 +70,14 @@ en:
         filter_date_responded: 'Responded between'
         filter_external_deadline: 'Due'
         filter_internal_deadline: 'Due'
-        filter_planned_destruction_date: 'Due'
+        filter_planned_destruction_date: 'Destruction'
+    date_range:
+      planned_destruction_date:
+        due: Due
+        one_month: In 1 month
+        two_months: In 2 months
+        three_months: In 3 months
+        four_months: In 4 months
     filter_open_case_status:
       pending_dacu_clearance: 'Pending clearance - Disclosure'
       pending_press_office_clearance: 'Pending clearance - Press office'
