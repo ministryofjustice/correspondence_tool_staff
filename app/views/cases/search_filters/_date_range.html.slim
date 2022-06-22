@@ -5,15 +5,16 @@ fieldset
         span#quick-link-label.bold-small
            = t("filters.headings.date_headings.#{filter.class.identifier}")
         ul.quick-link-options
-          - filter.available_choices.each do | _, date_info |
+          - filter.available_choices.each do |choice, date_info|
             li.quick-link-option
               a { href="#"
                   data-target-id="#{filter.class.date_field_name}"
-                  aria-describeby="quick-link-label"
+                  aria-describedby="quick-link-label"
                   data-date-from=date_info[:from]
                   data-date-to=date_info[:to]
                 }
-                = date_info[:name]
+                = t(choice, default: date_info.fetch(:name, choice),
+                            scope: [:filters, :date_range, filter.class.date_field_name])
 
   hr
     .form-group

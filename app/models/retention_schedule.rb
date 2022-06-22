@@ -58,7 +58,7 @@ class RetentionSchedule < ApplicationRecord
       (..Date.today)
     end
 
-    def triagable_destory_cases_range
+    def triagable_destroy_cases_range
       ((Date.today + 1)..)
     end
 

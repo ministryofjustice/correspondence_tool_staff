@@ -102,6 +102,7 @@ ignore_unused:
   - 'cases.index.*'
   - 'cases.filters.index.*'
   - 'filters.crumbs.*'
+  - 'filters.date_range.*'
   - 'devise.*'
   - 'errors.*'
   - 'cases.new.correspondence_type_errors.*'

@@ -23,11 +23,11 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
       expect(
         available_choices
       ).to eq({
-        :today => {:name => "Today", :from => "{\"day\":\"15\",\"month\":\"05\",\"year\":\"2018\"}", :to => "{\"day\":\"15\",\"month\":\"05\",\"year\":\"2018\"}"},
-        :one_month => {:name => "1 month", :from => "{\"day\":\"15\",\"month\":\"04\",\"year\":\"2018\"}", :to => "{\"day\":\"15\",\"month\":\"05\",\"year\":\"2018\"}"},
-        :two_months => {:name => "2 months", :from => "{\"day\":\"15\",\"month\":\"03\",\"year\":\"2018\"}", :to => "{\"day\":\"15\",\"month\":\"05\",\"year\":\"2018\"}"},
-        :three_months => {:name => "3 months", :from => "{\"day\":\"15\",\"month\":\"02\",\"year\":\"2018\"}", :to => "{\"day\":\"15\",\"month\":\"05\",\"year\":\"2018\"}"},
-        :four_months => {:name => "4 months", :from => "{\"day\":\"15\",\"month\":\"01\",\"year\":\"2018\"}", :to => "{\"day\":\"15\",\"month\":\"05\",\"year\":\"2018\"}"}
+        :due => {:from => "{\"day\":\"01\",\"month\":\"01\",\"year\":\"2000\"}", :to => "{\"day\":\"15\",\"month\":\"05\",\"year\":\"2018\"}"},
+        :one_month => {:from => "{\"day\":\"16\",\"month\":\"05\",\"year\":\"2018\"}", :to => "{\"day\":\"15\",\"month\":\"06\",\"year\":\"2018\"}"},
+        :two_months => {:from => "{\"day\":\"16\",\"month\":\"06\",\"year\":\"2018\"}", :to => "{\"day\":\"15\",\"month\":\"07\",\"year\":\"2018\"}"},
+        :three_months => {:from => "{\"day\":\"16\",\"month\":\"07\",\"year\":\"2018\"}", :to => "{\"day\":\"15\",\"month\":\"08\",\"year\":\"2018\"}"},
+        :four_months => {:from => "{\"day\":\"16\",\"month\":\"08\",\"year\":\"2018\"}", :to => "{\"day\":\"15\",\"month\":\"09\",\"year\":\"2018\"}"}
       })
     end
   end
