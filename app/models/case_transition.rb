@@ -35,11 +35,18 @@ class CaseTransition < ApplicationRecord
   REMOVE_SAR_EXTENSION_EVENT = 'remove_sar_deadline_extension'.freeze
   ADD_MESSAGE_TO_CASE_EVENT = 'add_message_to_case'.freeze
   ADD_NOTE_TO_CASE_EVENT = 'add_note_to_case'.freeze
+  ANNOTATE_RETENTION_CHANGES = 'annotate_retention_changes'.freeze
+  ANNOTATE_SYSTEM_RETENTION_CHANGES = 'annotate_system_retention_changes'.freeze
 
   after_destroy :update_most_recent, if: :most_recent?
 
   validates :message, presence: true, if: -> {
-    [ADD_MESSAGE_TO_CASE_EVENT, ADD_NOTE_TO_CASE_EVENT].include? event
+    [
+      ADD_MESSAGE_TO_CASE_EVENT,
+      ADD_NOTE_TO_CASE_EVENT,
+      ANNOTATE_RETENTION_CHANGES,
+      ANNOTATE_SYSTEM_RETENTION_CHANGES,
+    ].include? event
   }
 
   jsonb_accessor :metadata,
