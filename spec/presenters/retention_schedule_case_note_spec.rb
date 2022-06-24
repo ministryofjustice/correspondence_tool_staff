@@ -25,7 +25,7 @@ RSpec.describe RetentionScheduleCaseNote do
       let(:changes) { {} }
 
       it 'does not write anything to the case history' do
-        expect(sm_double).not_to receive(:add_note_to_case!)
+        expect(sm_double).not_to receive(:annotate_retention_changes!)
         subject.log!(args)
       end
     end
@@ -36,7 +36,7 @@ RSpec.describe RetentionScheduleCaseNote do
       it 'writes the change to the case history' do
         expect(
           sm_double
-        ).to receive(:add_note_to_case!).with(
+        ).to receive(:annotate_retention_changes!).with(
           acting_user: user, acting_team: team,
           message: 'Retention status changed from Not set to Review'
         )
@@ -51,7 +51,7 @@ RSpec.describe RetentionScheduleCaseNote do
       it 'writes the change to the case history' do
         expect(
           sm_double
-        ).to receive(:add_note_to_case!).with(
+        ).to receive(:annotate_retention_changes!).with(
           acting_user: user, acting_team: team,
           message: 'Destruction date changed from 25-10-2018 to 31-12-2025'
         )
@@ -66,12 +66,27 @@ RSpec.describe RetentionScheduleCaseNote do
       it 'writes the change to the case history' do
         expect(
           sm_double
-        ).to receive(:add_note_to_case!).with(
+        ).to receive(:annotate_retention_changes!).with(
           acting_user: user, acting_team: team,
           message: "Retention status changed from Not set to Review\nDestruction date changed from 25-10-2018 to 31-12-2025"
         )
 
         subject.log!(args)
+      end
+    end
+
+    context 'for a system update' do
+      let(:changes) { { state: [:not_set, :review] } }
+
+      it 'writes the system change to the case history' do
+        expect(
+          sm_double
+        ).to receive(:annotate_system_retention_changes!).with(
+          acting_user: user, acting_team: team,
+          message: 'Retention status changed from Not set to Review'
+        )
+
+        subject.log!(**args, is_system: true)
       end
     end
   end

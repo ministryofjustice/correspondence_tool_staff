@@ -119,7 +119,7 @@ describe RetentionSchedulesUpdateService do
 
   def case_with_retention_schedule(case_type:, state:, date:)
     kase = create(
-      case_type, 
+      case_type, :closed,
       retention_schedule: 
         RetentionSchedule.new( 
          state: state,

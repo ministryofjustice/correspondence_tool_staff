@@ -158,13 +158,21 @@ RSpec.describe CaseTransition, type: :model do
       kase = create :accepted_case
       transition = CaseTransition.new(
                                    case_id: kase.id,
-                                   event: 'add_message_to_case',
                                    acting_user_id: kase.responder.id,
                                    acting_team_id: kase.responding_team.id
       )
-      expect(transition).not_to be_valid
-      expect(transition.errors[:message]).to eq ["cannot be blank"]
 
+      %w(
+        add_message_to_case
+        add_note_to_case
+        annotate_retention_changes
+        annotate_system_retention_changes
+      ).each do |event|
+        transition.event = event
+
+        expect(transition).to_not be_valid
+        expect(transition.errors.added?(:message, :blank)).to eq(true)
+      end
     end
   end
 end

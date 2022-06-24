@@ -111,7 +111,9 @@ describe ConfigurableStateMachine::Machine do
         full_events: [
           :preview_cover_page, 
           :add_note_to_case, 
-          :edit_case, 
+          :edit_case,
+          :annotate_retention_changes,
+          :annotate_system_retention_changes,
           :send_dispatch_letter, 
           :reset_to_initial_state,
           :add_complaint_costs, 

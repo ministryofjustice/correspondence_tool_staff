@@ -1,5 +1,5 @@
 class RetentionScheduleCaseNote
-  attr_accessor :kase, :user, :changes
+  attr_accessor :kase, :user, :changes, :is_system
 
   class AttrChange
     attr_accessor :from, :to
@@ -37,12 +37,13 @@ class RetentionScheduleCaseNote
     def to; I18n.l(@to, format: :compact); end
   end
 
-  def initialize(kase:, user:, changes:)
+  def initialize(kase:, user:, changes:, is_system: false)
     @kase = kase
     @user = user
     @changes = changes
+    @is_system = is_system
 
-    add_note_to_case!
+    trigger_event!
   end
   private_class_method :new
 
@@ -52,12 +53,13 @@ class RetentionScheduleCaseNote
 
   private
 
-  def add_note_to_case!
+  def trigger_event!
     return if changes.empty?
 
-    @kase.state_machine.add_note_to_case!(
-      acting_user: @user,
-      acting_team: @user.case_team(@kase),
+    kase.state_machine.public_send(
+      "#{event_name}!",
+      acting_user: user,
+      acting_team: user.case_team(kase),
       message: message
     )
   end
@@ -70,5 +72,13 @@ class RetentionScheduleCaseNote
       state_change,
       date_change,
     ].compact_blank.join("\n")
+  end
+
+  def event_name
+    if is_system
+      CaseTransition::ANNOTATE_SYSTEM_RETENTION_CHANGES
+    else
+      CaseTransition::ANNOTATE_RETENTION_CHANGES
+    end
   end
 end
