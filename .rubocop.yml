@@ -471,12 +471,12 @@ Layout/CaseIndentation:
 Style/CharacterLiteral:
   Description: 'Checks for uses of character literals.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-character-literals'
-  Enabled: false
+  Enabled: true
 
 Naming/ClassAndModuleCamelCase:
   Description: 'Use CamelCase for classes and modules.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#camelcase-classes'
-  Enabled: false
+  Enabled: true
 
 Style/ClassAndModuleChildren:
   Description: 'Checks style of children classes and modules.'
@@ -484,7 +484,7 @@ Style/ClassAndModuleChildren:
 
 Style/ClassCheck:
   Description: 'Enforces consistent use of `Object#is_a?` or `Object#kind_of?`.'
-  Enabled: false
+  Enabled: true
 
 Style/ClassMethods:
   Description: 'Use self when defining module/class methods.'

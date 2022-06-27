@@ -82,7 +82,7 @@ module Stats
       # code-smell, took the pragmatic/simpler decision to maintain sync
       # operations in one place for this initial 'alpha' implementation
       def initialize(record)
-        raise ArgumentError.new('record must be an ApplicationRecord') unless record.kind_of? ApplicationRecord
+        raise ArgumentError.new('record must be an ApplicationRecord') unless record.is_a? ApplicationRecord
 
         syncable, mapping_klass = self.class.syncable?(record)
 
@@ -122,7 +122,7 @@ module Stats
         mapping_klass = nil
 
         result = MAPPINGS.keys.any? do |type|
-          if record.kind_of?(type.to_s.constantize)
+          if record.is_a?(type.to_s.constantize)
             !!(mapping_klass = type)
           end
         end
