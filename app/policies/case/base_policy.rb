@@ -27,14 +27,14 @@ class Case::BasePolicy < ApplicationPolicy
   # which is in fact shorthand for:
   #     scope = Case::BasePolicy::Scope.new(user, Case::Base.all).resolve
   #
-  # The whole data permission will base on 3 dimention 
+  # The whole data permission will base on 3 dimention
   # notes: The data permission only means the scope of the data the user can work with at least can see, whether
   # the user do further process on the data is determinded by the app's feature design
   #  - User (team + role)
   #  - Whole data space (Data model class level , not exact same as the table level)
   #  - Feature (App's functionality level, this level is based on requirement no any criteria to be defined)
-  # The framework would be 
-  # Whole data space 
+  # The framework would be
+  # Whole data space
   #   - User Role + Feature
   # The arguments reflect the above structure: @user, @scope (data space), @feature
   class Scope
@@ -229,12 +229,13 @@ class Case::BasePolicy < ApplicationPolicy
   def can_remove_attachment?
     clear_failed_checks
     case self.case.current_state
-      when 'awaiting_dispatch'
-        user.responding_teams.include?(self.case.responding_team) &&
-            self.case.assignments.approving.approved.none?
-      when 'drafting'
-        user.responding_teams.include?(self.case.responding_team)
-      else false
+    when 'awaiting_dispatch'
+      user.responding_teams.include?(self.case.responding_team) &&
+        self.case.assignments.approving.approved.none?
+    when 'drafting'
+      user.responding_teams.include?(self.case.responding_team)
+    else
+      false
     end
   end
 
