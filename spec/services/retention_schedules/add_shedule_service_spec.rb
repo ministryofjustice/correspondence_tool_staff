@@ -1,6 +1,7 @@
 require "rails_helper"
 
 describe RetentionSchedules::AddScheduleService do
+  let(:user) { find_or_create :branston_user }
 
   let(:closed_offender_sar_complaint) {
     create(
@@ -94,8 +95,8 @@ describe RetentionSchedules::AddScheduleService do
 
   describe 'what types of case service can act upon' do
     it 'cannot change cases other than offender sar or complaints' do
-      service = RetentionSchedules::AddScheduleService.new(
-        kase: mock_case
+      service = described_class.new(
+        kase: mock_case, user: user
       )
 
       service.call
@@ -103,8 +104,8 @@ describe RetentionSchedules::AddScheduleService do
     end
 
     it 'cannot add retention schedules to open cases' do
-      service = RetentionSchedules::AddScheduleService.new(
-        kase: mock_open_case
+      service = described_class.new(
+        kase: mock_open_case, user: user
       )
       service.call
 
@@ -118,37 +119,53 @@ describe RetentionSchedules::AddScheduleService do
     it 'sets the correct planned erasure date' do
       kase = closed_offender_sar
 
-      service = RetentionSchedules::AddScheduleService.new(kase: kase)
+      service = described_class.new(
+        kase: kase, user: user
+      )
       service.call
 
       expected_date = kase.retention_schedule.planned_destruction_date
 
       expect(kase.retention_schedule).to be_a(RetentionSchedule)
       expect(expected_date).to match(expected_off_sar_erasure_date)
+
+      check_last_transition(
+        kase, "Destruction date set to #{expected_date.strftime('%d-%m-%Y')}"
+      )
     end
 
     it 'sets the correct planned erasure date when an off sar already has a retention schedule' do
       retention_schedule = closed_offender_sar_with_retention_schedule.retention_schedule
+      previous_date = retention_schedule.planned_destruction_date
       kase = closed_offender_sar_with_retention_schedule
 
-      service = RetentionSchedules::AddScheduleService.new(kase: kase)
+      service = described_class.new(
+        kase: kase, user: user
+      )
       service.call
 
       expected_date = kase.retention_schedule.planned_destruction_date
 
       expect(service.result).to be(:success)
-      expect(kase.retention_schedule).to be(retention_schedule)
+      expect(kase.retention_schedule).to eq(retention_schedule)
       expect(expected_date).to match(expected_off_sar_erasure_date)
+
+      check_last_transition(
+        kase, "Destruction date changed from #{previous_date.strftime('%d-%m-%Y')} to #{expected_date.strftime('%d-%m-%Y')}"
+      )
     end
   end
 
   context 'for planned erasure dates on Offender SARs Complaints' do
     it 'sets them correctly for the complaint and the original case' do
       retention_schedule = closed_offender_sar_complaint.retention_schedule
+      previous_date = retention_schedule.planned_destruction_date
       kase = closed_offender_sar_complaint
       original_kase = closed_offender_sar_complaint.original_case
 
-      service = RetentionSchedules::AddScheduleService.new(kase: kase)
+      service = described_class.new(
+        kase: kase, user: user
+      )
       service.call
 
       expected_date = kase.retention_schedule.planned_destruction_date
@@ -157,16 +174,23 @@ describe RetentionSchedules::AddScheduleService do
         .retention_schedule
         .planned_destruction_date
 
-      expect(kase.retention_schedule).to be(retention_schedule)
-      expect(original_kase.retention_schedule).not_to be(retention_schedule)
+      expect(kase.retention_schedule).to eq(retention_schedule)
+      expect(original_kase.retention_schedule).not_to eq(retention_schedule)
 
       expect(expected_date).to match(expected_off_sar_erasure_date)
       expect(expected_original_kase_date).to match(expected_off_sar_erasure_date)
+
+      check_last_transition(
+        kase, "Destruction date changed from #{previous_date.strftime('%d-%m-%Y')} to #{expected_date.strftime('%d-%m-%Y')}"
+      )
+      check_last_transition(
+        original_kase, "Destruction date set to #{expected_date.strftime('%d-%m-%Y')}"
+      )
     end
 
     it 'sets them correctly on closed complaints related to the original case' do
-      service = RetentionSchedules::AddScheduleService.new(
-        kase: closed_offender_sar_complaint
+      service = described_class.new(
+        kase: closed_offender_sar_complaint, user: user
       )
       service.call
 
@@ -195,5 +219,14 @@ describe RetentionSchedules::AddScheduleService do
         expect(related_complaint.retention_schedule).to be(nil)
       end
     end
+  end
+
+  def check_last_transition(kase, message)
+    transition = kase.transitions.last
+
+    expect(transition.event).to eq('annotate_system_retention_changes')
+    expect(transition.acting_user).to eq(user)
+    expect(transition.acting_team).to eq(user.teams.last)
+    expect(transition.message).to eq(message)
   end
 end

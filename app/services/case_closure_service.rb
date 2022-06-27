@@ -26,7 +26,7 @@ class CaseClosureService
 
   def add_retention_schedule
     service = RetentionSchedules::AddScheduleService.new(
-      kase: @kase
+      kase: @kase, user: @user
     )
     service.call
   end

@@ -51,7 +51,7 @@ namespace :retention_schedules do
 
       puts "Kases count: #{kases.count}"
 
-      batch_size = args[:batch_size].to_i
+      batch_size = args.fetch(:batch_size, 500).to_i
 
       puts "Batch size: #{batch_size}"
       
@@ -60,7 +60,7 @@ namespace :retention_schedules do
           percent_counter += 1
           begin 
             service = RetentionSchedules::AddScheduleService.new(
-              kase: kase
+              kase: kase, user: nil
             )
             service.call
             
