@@ -774,7 +774,7 @@ Style/NegatedIf:
 Style/NegatedWhile:
   Description: 'Favor until over while for negative conditions.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#until-for-negatives'
-  Enabled: false
+  Enabled: true
 
 Style/NestedTernaryOperator:
   Description: 'Use one expression per branch in a ternary operator.'

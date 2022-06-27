@@ -43,7 +43,7 @@ module ConfigurableStateMachine
     def run
       line_number = 0
       File.open(@filename, 'r') do |fp|
-        while !fp.eof do
+        until fp.eof do
           line = fp.readline
           line_number += 1
           next if comment_line?(line)
