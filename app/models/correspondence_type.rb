@@ -78,11 +78,11 @@ class CorrespondenceType < ApplicationRecord
   # Keep a cache of all (6!) items to prevent endless N+1 queries using this tiny class
   class << self
     def all_cached
-      @@all ||= all
+      @all ||= all
     end
 
     def clear_cache
-      @@all = nil
+      @all = nil
     end
 
     # This method is used by Case::Base to find its correspondence type
