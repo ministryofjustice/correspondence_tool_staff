@@ -4,7 +4,7 @@ class AssignmentsController < ApplicationController
     :assign_to_team,
     :new,
     :assign_to_team_member,
-    :execute_assign_to_team_member, 
+    :execute_assign_to_team_member,
     :select_team,
     :take_case_on,
   ]
@@ -196,7 +196,7 @@ class AssignmentsController < ApplicationController
               .new(target_user: target_user,
                    acting_user: current_user,
                    assignment: @assignment)
-    
+
     case urs.call
     when :ok
       flash[:notice] = "Case re-assigned to #{@assignment.user.full_name}"
@@ -204,7 +204,7 @@ class AssignmentsController < ApplicationController
     when :no_changes
       flash[:alert] = 'No changes were made'
       redirect_to case_path(@case)
-    else 
+    else
       @case = @case.decorate
       flash.now[:alert] = service.error_message
       render :reassign_user
@@ -216,7 +216,7 @@ class AssignmentsController < ApplicationController
     authorize @case, :can_assign_to_team_member?
     @team_users = set_team_members.decorate
     @assignment = @case.assignments.new
-  end 
+  end
 
   def execute_assign_to_team_member
     authorize @case, :can_assign_to_team_member?
@@ -356,15 +356,18 @@ class AssignmentsController < ApplicationController
 
   def redirect_user_to_specific_landing_page
     case @case.type_abbreviation
-    when 'FOI', 'OVERTURNED_FOI' then redirect_to case_path(@case)
-    when 'SAR', 'OVERTURNED_SAR', 'SAR_INTERNAL_REVIEW' then redirect_to responder_root_path
-    when 'ICO' then
-      if @case.original_case_type === 'SAR'
+    when 'FOI', 'OVERTURNED_FOI'
+      redirect_to case_path(@case)
+    when 'SAR', 'OVERTURNED_SAR', 'SAR_INTERNAL_REVIEW'
+      redirect_to responder_root_path
+    when 'ICO'
+      if @case.original_case_type == 'SAR'
         redirect_to responder_root_path
       else
         redirect_to case_path(@case)
       end
-    else raise 'Unknown case type'
+    else
+      raise 'Unknown case type'
     end
   end
 end

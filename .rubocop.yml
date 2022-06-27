@@ -461,7 +461,7 @@ Style/BlockDelimiters:
 Style/CaseEquality:
   Description: 'Avoid explicit use of the case equality operator(===).'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-case-equality'
-  Enabled: false
+  Enabled: true
 
 Layout/CaseIndentation:
   Description: 'Indentation of when in a case/when/[else/]end.'
