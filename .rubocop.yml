@@ -557,7 +557,7 @@ Style/DoubleNegation:
 
 Style/EachWithObject:
   Description: 'Prefer `each_with_object` over `inject` or `reduce`.'
-  Enabled: false
+  Enabled: true
 
 Layout/ElseAlignment:
   Description: 'Align elses and elsifs correctly.'
