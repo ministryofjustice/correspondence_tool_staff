@@ -294,8 +294,6 @@ class AssignmentsController < ApplicationController
       params.require(:assignment).permit(
         :user_id
       )
-    else
-      nil
     end
   end
 

@@ -565,7 +565,7 @@ Layout/ElseAlignment:
 
 Style/EmptyElse:
   Description: 'Avoid empty else-clauses.'
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLineBetweenDefs:
   Description: 'Use empty lines between defs.'

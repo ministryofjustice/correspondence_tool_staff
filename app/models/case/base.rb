@@ -701,8 +701,6 @@ class Case::Base < ApplicationRecord
         original_external_deadline,
         benchmark_date_value_for_days_metrics)
       days > 0 ? days : nil
-    else
-      nil
     end
   end
 
@@ -720,8 +718,6 @@ class Case::Base < ApplicationRecord
         the_date_being_extended,
         benchmark_date_value_for_days_metrics)
       days > 0 ? days : nil
-    else
-      nil
     end
   end
 
@@ -921,8 +917,6 @@ class Case::Base < ApplicationRecord
         correspondence_type.deadline_calculator_class
       )
       klass.new(self)
-    else
-      nil
     end
   end
 
@@ -1093,8 +1087,6 @@ class Case::Base < ApplicationRecord
       .order(id: :desc)
       .first
       most_recent_extension.nil? ? nil : most_recent_extension.created_at.to_date
-    else
-      nil
     end
   end
 

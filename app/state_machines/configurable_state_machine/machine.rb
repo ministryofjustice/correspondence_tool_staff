@@ -340,8 +340,6 @@ module ConfigurableStateMachine
         metadata[:acting_team]
       elsif metadata.key?(:acting_team_id)
         Team.find(metadata[:acting_team_id])
-      else
-        nil
       end
     end
 

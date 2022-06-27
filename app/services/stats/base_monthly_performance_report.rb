@@ -116,8 +116,6 @@ module Stats
         report.report_data = (@stats.stats).to_json
         report.save!
         report.report_data
-      else
-        nil
       end
     end
 

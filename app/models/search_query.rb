@@ -106,8 +106,6 @@ class SearchQuery < ApplicationRecord
   def self.parent_search_query_id(case_search_service)
     if case_search_service.child?
       self.by_query_hash!(case_search_service.parent_hash).id
-    else
-      nil
     end
   end
 
