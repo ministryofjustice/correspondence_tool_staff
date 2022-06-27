@@ -261,7 +261,7 @@ module Cases
     def params_for_move_case_back
       message = "(Reason: #{params[:extra_comment]})"
       
-      { acting_user: current_user, acting_team: @case.default_managing_team, message:  message }
+      { acting_user: current_user, acting_team: @case.default_managing_team, message: message }
     end
 
     def reload_case_page_on_success

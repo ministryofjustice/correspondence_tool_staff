@@ -19,7 +19,7 @@ class CaseAttachmentUploadGroupCollection
   end
 
   def for_case_attachment_id(case_attachment_id)
-    result =  @grouped_collection.detect { | gc | gc.ids.include?(case_attachment_id) }
+    result = @grouped_collection.detect { | gc | gc.ids.include?(case_attachment_id) }
     raise ArgumentError.new "No upload group contains a case attachment with id #{case_attachment_id}" unless result
     result
   end

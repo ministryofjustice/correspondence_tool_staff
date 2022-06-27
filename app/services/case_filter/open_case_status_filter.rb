@@ -23,7 +23,7 @@ module CaseFilter
       @user.permitted_correspondence_types.each do | correspondence_type |
         correspondence_type.sub_classes.each do | sub_class|
           (sub_class.permitted_states - ConfigurableStateMachine::Machine.states_for_closed_cases).map do | state |
-            state_choices[state] =  get_tranlation_of_state_for_filter(sub_class, state)
+            state_choices[state] = get_tranlation_of_state_for_filter(sub_class, state)
           end
         end 
       end 
@@ -33,7 +33,7 @@ module CaseFilter
     private
 
     def get_tranlation_of_state_for_filter(sub_class, state)
-      I18n.t("filters.filter_open_case_status.#{state}", default: nil) ||  TranslateForCase.translate(sub_class, 'state', state)
+      I18n.t("filters.filter_open_case_status.#{state}", default: nil) || TranslateForCase.translate(sub_class, 'state', state)
     end
 
   end

@@ -17,7 +17,7 @@ module CaseFilter
                         .pluck("assignments.user_id")
                         .uniq
       users_scope = User.where(id: caseworker_ids)
-      users_scope.each  do | user | 
+      users_scope.each do | user | 
         caseworkers[user.id.to_s] = user.full_name
       end
       { :filter_caseworker => caseworkers}

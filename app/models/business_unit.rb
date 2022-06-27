@@ -29,16 +29,16 @@ class BusinessUnit < Team
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
   has_many :responder_user_roles,
-           -> { responder_roles  },
+           -> { responder_roles },
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
   has_many :approver_user_roles,
-           -> { approver_roles  },
+           -> { approver_roles },
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
 
   has_many :team_admin_user_roles,
-           -> { team_admin_roles  },
+           -> { team_admin_roles },
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
 

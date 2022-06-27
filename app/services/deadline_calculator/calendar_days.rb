@@ -46,7 +46,7 @@ module DeadlineCalculator
     end
 
     def business_unit_deadline_for_date(date)
-      deadline_method  = @kase.flagged? ? :internal_time_limit : :external_time_limit
+      deadline_method = @kase.flagged? ? :internal_time_limit : :external_time_limit
       num_days = @kase.correspondence_type.__send__(deadline_method)
       date + num_days.days
     end

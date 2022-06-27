@@ -200,7 +200,7 @@ class Case::SAR::Standard < Case::Base
   private
 
   def update_deadlines
-    if changed.include?('received_date')  && !extended_for_pit?
+    if changed.include?('received_date') && !extended_for_pit?
       self.internal_deadline = @deadline_calculator.internal_deadline
       self.external_deadline = @deadline_calculator.external_deadline
       self.extended_times = 0

@@ -240,7 +240,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     else
       content_tag(:span, preview_copy, class: 'ellipsis-preview') +
           content_tag(:span,'...', class:'ellipsis-delimiter js-hidden') +
-          content_tag(:span, remaining_copy,  class: 'ellipsis-complete js-hidden' ) +
+          content_tag(:span, remaining_copy, class: 'ellipsis-complete js-hidden' ) +
           link_to('Show more', '#', class: 'ellipsis-button js-hidden')
     end
   end
@@ -312,7 +312,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   def action_buttons_for_allowed_events(kase, *events)
     events
       .find_all { |name| policy(kase).send("#{name}?") }
-      .map  { |name| send("action_button_for_#{name}", kase) }
+      .map { |name| send("action_button_for_#{name}", kase) }
   end
 
   def action_link_for_destroy_case(kase)

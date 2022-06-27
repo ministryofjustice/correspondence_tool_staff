@@ -37,13 +37,13 @@ module Stats
     end
 
     def self.calculate_percentages_for_month(row)
-      row[:non_trigger_performance]  = calculate_non_trigger(row)
+      row[:non_trigger_performance] = calculate_non_trigger(row)
       row[:trigger_performance]  = calculate_trigger(row)
       row[:overall_performance]  = calculate_overall_performance(row)  
     end
 
     def self.calculate_percentages_for_bu(row)
-      row[:non_trigger_performance]  = calculate_bu_non_trigger(row)
+      row[:non_trigger_performance] = calculate_bu_non_trigger(row)
       row[:trigger_performance]  = calculate_bu_trigger(row)
       row[:overall_performance]  = calculate_bu_overall_performance(row)  
     end 

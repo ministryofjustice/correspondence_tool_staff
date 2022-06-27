@@ -618,7 +618,7 @@ Style/EvenOdd:
 
 Layout/ExtraSpacing:
   Description: 'Do not use unnecessary spacing.'
-  Enabled: false
+  Enabled: true
 
 Naming/FileName:
   Description: 'Use snake_case for source file names.'

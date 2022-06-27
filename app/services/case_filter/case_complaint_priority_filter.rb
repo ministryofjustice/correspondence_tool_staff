@@ -11,7 +11,7 @@ module CaseFilter
 
     def available_choices
       priorities = {}
-      Case::SAR::OffenderComplaint.priorities.map  do |key, value| 
+      Case::SAR::OffenderComplaint.priorities.map do |key, value| 
         priorities[key] = value.humanize
       end
       { :filter_complaint_priority => priorities}

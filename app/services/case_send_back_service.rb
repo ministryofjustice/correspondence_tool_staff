@@ -14,7 +14,7 @@ class CaseSendBackService
     begin
       process_send_back
       @result = :ok
-    rescue ConfigurableStateMachine::InvalidEventError  => err
+    rescue ConfigurableStateMachine::InvalidEventError => err
       @error_message = "Error processing sending back: #{err.message}"
       Rails.logger.error(@error_message)
       @result = :error

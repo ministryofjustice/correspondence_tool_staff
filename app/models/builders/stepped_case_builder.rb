@@ -5,8 +5,8 @@ module Builders
     def initialize(case_type:, session:, step:, creator:, params: nil)
       @case_type = case_type
       @session   = session
-      @step    = step
-      @creator   = creator
+      @step = step
+      @creator = creator
       @params = params
 
       @ready_for_creation = false

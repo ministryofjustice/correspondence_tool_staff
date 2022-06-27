@@ -85,7 +85,7 @@ class Case::Base < ApplicationRecord
   scope :by_last_transitioned_date, -> { reorder(last_transitioned_at: :desc) }
   scope :most_recent_first, -> {reorder(Arel.sql("(cases.properties ->> 'external_deadline')::timestamp with time zone DESC, cases.id")) }
 
-  scope :opened, ->       { where.not(current_state: 'closed') }
+  scope :opened, -> { where.not(current_state: 'closed') }
   scope :not_icos, -> { where.not(type: ['Case::ICO::FOI', 'Case::ICO::SAR'] ) }
 
   scope :not_closed_or_responded, -> {where.not(current_state: [ :responded, :closed] ) }
@@ -94,7 +94,7 @@ class Case::Base < ApplicationRecord
 
   scope :presented_as_open, -> { (opened.not_icos).or(icos_not_responded_or_closed) }
 
-  scope :closed, ->       { where(current_state: 'closed')}
+  scope :closed, -> { where(current_state: 'closed')}
   scope :presented_as_closed, -> { where(current_state: 'closed').or(where(type: ['Case::ICO::FOI', "Case::ICO::SAR"], current_state: [:responded, :closed])) }
   scope :standard_foi, -> { where(type: 'Case::FOI::Standard') }
   scope :ico_appeal, ->   { where(type: ['Case::ICO::FOI', 'Case::ICO::SAR'])}
@@ -884,7 +884,7 @@ class Case::Base < ApplicationRecord
   end
 
   def has_responded?
-    self.current_state == 'closed' || self.current_state ==  'responded'
+    self.current_state == 'closed' || self.current_state == 'responded'
   end
 
   # predicate methods
@@ -1005,7 +1005,7 @@ class Case::Base < ApplicationRecord
   end
 
   def update_deadlines
-    if changed.include?('received_date')  && !extended_for_pit?
+    if changed.include?('received_date') && !extended_for_pit?
       self.internal_deadline = @deadline_calculator.internal_deadline
       self.external_deadline = @deadline_calculator.external_deadline
     end

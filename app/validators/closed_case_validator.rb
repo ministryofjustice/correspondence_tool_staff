@@ -234,7 +234,7 @@ class ClosedCaseValidator < ActiveModel::Validator
   end
 
   def validate_cost_exemption_not_present_for_part_refused(rec)
-    if rec.outcome&.part_refused?  && rec.exemptions.include?(CaseClosure::Exemption.s12)
+    if rec.outcome&.part_refused? && rec.exemptions.include?(CaseClosure::Exemption.s12)
       rec.errors.add(:exemptions, 'cost is not valid for part refusals')
     end
   end

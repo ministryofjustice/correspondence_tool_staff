@@ -11,7 +11,7 @@ module CaseFilter
 
     def available_choices
       subtypes = {}
-      Case::SAR::OffenderComplaint.complaint_subtypes.map  do |key, value| 
+      Case::SAR::OffenderComplaint.complaint_subtypes.map do |key, value| 
         subtypes[key] = I18n.t("helpers.label.offender_sar_complaint.complaint_subtype.#{value}", default: value.humanize)
       end
       { :filter_complaint_subtype => subtypes}

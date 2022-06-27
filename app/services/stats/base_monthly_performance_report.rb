@@ -151,7 +151,7 @@ module Stats
 
     def array_of_month_numbers
       month_columns = []
-      month_date  = @period_start
+      month_date = @period_start
       current_month = construct_year_month(@period_start)
       end_month = construct_year_month(@period_end)
       while current_month <= end_month
