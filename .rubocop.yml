@@ -527,7 +527,7 @@ Naming/ConstantName:
 Style/DefWithParentheses:
   Description: 'Use def with parentheses when there are arguments.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#method-parens'
-  Enabled: false
+  Enabled: true
 
 Style/PreferredHashMethods:
   Description: 'Checks for use of deprecated Hash methods.'

@@ -120,7 +120,7 @@ class S3Uploader
     end
   end
 
-  def create_upload_group()
+  def create_upload_group
     Time.now.strftime('%Y%m%d%H%M%S')
   end
 end
