@@ -489,7 +489,7 @@ Style/ClassCheck:
 Style/ClassMethods:
   Description: 'Use self when defining module/class methods.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#def-self-class-methods'
-  Enabled: false
+  Enabled: true
 
 Style/ClassVars:
   Description: 'Avoid the use of class variables.'
