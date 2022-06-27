@@ -1,19 +1,19 @@
 module GovukElementsErrorsExtHelper
 
-  def error_summary_list object
+  def error_summary_list(object)
     content_tag(:ul, class: 'error-summary-list') do
       messages = error_summary_messages(object)
       messages.flatten.join('').html_safe
     end
   end
 
-  def error_summary_messages object
+  def error_summary_messages(object)
     object.errors.attribute_names.map do |attribute|
       error_summary_message object, attribute
     end
   end
 
-  def error_summary_message object, attribute
+  def error_summary_message(object, attribute)
     messages = object.errors.full_messages_for attribute
     messages.map do |message|
       object_prefixes = object_prefixes object
@@ -23,7 +23,7 @@ module GovukElementsErrorsExtHelper
     end
   end
 
-  def object_prefixes object
+  def object_prefixes(object)
     [underscore_name(object)]
   end
 
