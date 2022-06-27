@@ -119,7 +119,7 @@ ignore_unused:
   - 'teams.directorate_detail.destroy'
   - 'teams.business_unit_detail.destroy'
   - 'dictionary.*'
-  - 'retention_schedule_case_notes.changes.*'
+  - 'retention_schedule_case_notes.{create,update}.*'
   - users.show.heading_all_cases
   - users.show.heading_my_cases
   - users.show.message_notification

@@ -76,14 +76,14 @@ RSpec.describe RetentionScheduleCaseNote do
     end
 
     context 'for a system update' do
-      let(:changes) { { state: [:not_set, :review] } }
+      let(:changes) { { state: [nil, :not_set], planned_destruction_date: [nil, Date.new(2025,12,31)] } }
 
       it 'writes the system change to the case history' do
         expect(
           sm_double
         ).to receive(:annotate_system_retention_changes!).with(
           acting_user: user, acting_team: team,
-          message: 'Retention status changed from Not set to Review'
+          message: "Destruction date set to 31-12-2025"
         )
 
         subject.log!(**args, is_system: true)

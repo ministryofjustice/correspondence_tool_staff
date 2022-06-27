@@ -2,9 +2,9 @@ module RetentionSchedules
   class AddScheduleService
     attr_reader :result
 
-    def initialize(kase:)
+    def initialize(kase:, user:)
       @kase = kase
-      @result = nil
+      @user = user
     end
 
     def call
@@ -49,15 +49,16 @@ module RetentionSchedules
 
     def add_retention_schedule(linked_case: nil)
       kase = linked_case.present? ? linked_case : @kase
-      if kase.retention_schedule.present?
-        rs = kase.retention_schedule
-        rs.planned_destruction_date = @planned_destruction_date 
-        rs.save
-      else
-        kase.retention_schedule = RetentionSchedule.new(
-          planned_destruction_date: @planned_destruction_date 
-        )
-      end
+
+      rs = RetentionSchedule.find_or_initialize_by(case: kase)
+      rs.planned_destruction_date = @planned_destruction_date
+      rs.save
+
+      annotate_case!(
+        kase, rs.saved_changes
+      )
+
+      kase.reload_retention_schedule
     end
 
     def add_retention_schedules_to_linked_cases
@@ -83,12 +84,11 @@ module RetentionSchedules
       end
     end
 
-    def planned_destruction_date 
-      years = Settings.retention_timings.off_sars.erasure.years
-      months = Settings.retention_timings.off_sars.erasure.months
-      retention_period = years.years + months.months
-
-      closure_date + retention_period
+    def planned_destruction_date
+      closure_date.advance(
+        years: Settings.retention_timings.off_sars.erasure.years,
+        months: Settings.retention_timings.off_sars.erasure.months
+      )
     end
 
     def closure_date
@@ -97,6 +97,18 @@ module RetentionSchedules
       else
         @kase.received_date
       end
+    end
+
+    # This service class can also be called via a rake task to populate or update
+    # the retention schedules for all cases in the database. This rake task does not
+    # have the concept of an "user", so for the task runs we skip the annotations.
+    # Refer to: `lib/tasks/retention_schedules.rake`
+    def annotate_case!(kase, changes)
+      return unless @user
+
+      RetentionScheduleCaseNote.log!(
+        kase: kase, user: @user, changes: changes, is_system: true
+      )
     end
   end
 end

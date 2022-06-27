@@ -13,13 +13,25 @@ class RetentionScheduleCaseNote
     end
 
     def to_s
-      I18n.t(
-        self.class::ATTR_NAME, scope: scope, from: from, to: to
-      ) unless blank?
+      return if blank?
+
+      if @from && @to
+        I18n.t(
+          self.class::ATTR_NAME, scope: scope_for_update, from: from, to: to
+        )
+      else
+        I18n.t(
+          self.class::ATTR_NAME, scope: scope_for_create, to: to
+        )
+      end
     end
 
-    def scope
-      [:retention_schedule_case_notes, :changes]
+    def scope_for_update
+      [:retention_schedule_case_notes, :update]
+    end
+
+    def scope_for_create
+      [:retention_schedule_case_notes, :create]
     end
   end
 
@@ -28,6 +40,12 @@ class RetentionScheduleCaseNote
 
     def from; I18n.t(@from, scope: 'dictionary.retention_schedule_states'); end
     def to; I18n.t(@to, scope: 'dictionary.retention_schedule_states'); end
+
+    # On creation, the state is always `Not set` and this has no interest
+    # in the case history, so we skip the message (from `nil` to `not_set`)
+    def blank?
+      @from.blank?
+    end
   end
 
   class DateChange < AttrChange
