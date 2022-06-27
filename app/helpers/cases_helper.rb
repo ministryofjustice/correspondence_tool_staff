@@ -3,7 +3,7 @@ require './lib/translate_for_case'
 module CasesHelper #rubocop:disable Metrics/ModuleLength
 
   def sort_correspondence_types_for_display(types)
-    types_have_display_order = types.all? do |t| 
+    types_have_display_order = types.all? do |t|
       t.display_order.present?
     end
 
@@ -43,14 +43,14 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   def case_link_with_hash(kase, field, page, position)
-    span = content_tag(:span, 
-          t('common.case_list.view_case'), 
+    span = content_tag(:span,
+          t('common.case_list.view_case'),
           class: 'visually-hidden')
 
     case_number = kase.__send__(field)
-    
+
     page = 1 if page.blank?
-    
+
     if position.nil?
       link_to span + case_number, case_path(kase.id)
     else
@@ -60,13 +60,14 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     end
   end
 
+  #rubocop:disable Metrics/PerceivedComplexity
   #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
   def action_button_for(event)
     case event
     # Offender SAR case state transitions e.g. mark as ready for vetting
     when /mark_as_([a-zA-Z]*)/
       link_text = t("event.#{event}")
-      if @case.offender_sar? 
+      if @case.offender_sar?
         action_url = transition_case_sar_offender_path(@case, event)
       else
         action_url = transition_case_sar_offender_complaint_path(@case, event)
@@ -181,7 +182,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               polymorphic_path(@case, action: :close),
               id: 'action--close-case',
               class: 'button', method: :get
-    when :send_back 
+    when :send_back
       link_to I18n.t("event.#{event}"),
               send_back_case_foi_path(@case),
               id: 'action--send-back',
@@ -229,6 +230,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     end
   end
   #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
+  #rubocop:enable Metrics/PerceivedComplexity
 
   def show_hide_message(kase)
 
@@ -436,7 +438,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   def choose_cover_page_id_number(prison_number, pnc_number)
-    prison_number = get_first_number_in_string(prison_number) 
+    prison_number = get_first_number_in_string(prison_number)
     pnc_number = get_first_number_in_string(pnc_number)
 
     return pnc_number if prison_number.nil?
@@ -445,7 +447,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     prison_number
   end
 
-  private 
+  private
   def get_first_number_in_string(number_string)
     return number_string.split(",").first&.upcase if number_string&.include?(",")
     number_string&.upcase
@@ -457,7 +459,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     destruction_oldest = 'search_result_order_by_oldest_destruction_date'
     destruction_newest = 'search_result_order_by_newest_destruction_date'
 
-      
+
     if current_order_option == destruction_newest
       destruction_oldest
     elsif current_order_option == destruction_oldest

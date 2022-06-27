@@ -103,7 +103,9 @@ class CSVExporter
     @kase = kase
   end
 
-  def to_csv #rubocop:disable Metrics/MethodLength,Metrics/CyclomaticComplexity
+  #rubocop:disable Metrics/PerceivedComplexity
+  #rubocop:disable Metrics/MethodLength,Metrics/CyclomaticComplexity
+  def to_csv
     begin
       [
         @kase.number,
@@ -149,7 +151,7 @@ class CSVExporter
         @kase.responding_team&.business_group&.team_lead, # Director General name
         @kase.responding_team&.directorate&.team_lead, # Director name
         @kase.responding_team&.team_lead, # Deputy Director name
-        
+
         # Draft Timliness related information
         humanize_boolean(@kase.within_draft_deadline?), # Draft in time
         humanize_boolean(@kase.response_in_target?), # In Target
@@ -164,6 +166,8 @@ class CSVExporter
       raise CSVExporterError.new("Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{err.class} #{err.message}")
     end
   end
+  #rubocop:enable Metrics/PerceivedComplexity
+  #rubocop:enable Metrics/MethodLength,Metrics/CyclomaticComplexity
 
   def analyse_case(kase)
     @kase = kase
