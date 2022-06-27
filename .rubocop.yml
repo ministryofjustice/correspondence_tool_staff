@@ -513,7 +513,7 @@ Style/CommandLiteral:
 Style/CommentAnnotation:
   Description: 'Checks formatting of annotation comments.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#annotate-keywords'
-  Enabled: false
+  Enabled: true
 
 Layout/CommentIndentation:
   Description: 'Indentation of comments.'

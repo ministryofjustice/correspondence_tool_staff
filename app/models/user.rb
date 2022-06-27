@@ -158,7 +158,7 @@ class User < ApplicationRecord
     self.class.sort_teams_by_roles(available_teams).first
   end
 
-  # Note: Role Weightings can be very different depending on the event
+  # NOTE: Role Weightings can be very different depending on the event
   def self.sort_teams_by_roles(teams, role_weightings = ROLE_WEIGHTINGS)
     teams.sort do |a, b|
       role_weightings[a.role] <=> role_weightings[b.role]

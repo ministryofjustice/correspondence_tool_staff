@@ -52,7 +52,7 @@ class S3Uploader
   def add_attachments(uploaded_files, type)
     attachments = create_attachments(uploaded_files, type)
 
-    # TODO (Mohammed Seedat): this block of code is not necessary
+    # TODO: (Mohammed Seedat): this block of code is not necessary
     # because `create_attachments` can throw an exception on
     # CaseAttachment.create! This block of code runs during
     # the web-request before any jobs are added to a jobs queue

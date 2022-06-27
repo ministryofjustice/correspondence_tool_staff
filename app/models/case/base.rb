@@ -1036,7 +1036,7 @@ class Case::Base < ApplicationRecord
     ]
   end
 
-  # Note: When creating a case Delivery Method: Post
+  # NOTE: When creating a case Delivery Method: Post
   # allows the user to upload documents (presumably letters)
   # which are converted to PDF files via a delayed job
   def process_uploaded_request_files
