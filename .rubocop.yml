@@ -697,7 +697,7 @@ Layout/FirstHashElementIndentation:
 Style/InfiniteLoop:
   Description: 'Use Kernel#loop for infinite loops.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#infinite-loop'
-  Enabled: false
+  Enabled: true
 
 Style/Lambda:
   Description: 'Use the new lambda literal syntax for single-line blocks.'
