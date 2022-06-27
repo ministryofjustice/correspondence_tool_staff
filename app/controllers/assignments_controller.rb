@@ -49,7 +49,6 @@ class AssignmentsController < ApplicationController
     end
   end
 
-
   def select_team
     assignment_ids = params[:assignment_ids].split('+')
     @assignments = Assignment.find(assignment_ids)

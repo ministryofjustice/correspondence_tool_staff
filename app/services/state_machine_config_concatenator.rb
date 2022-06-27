@@ -25,7 +25,6 @@ class StateMachineConfigConcatenator
     File.exist?(@output_file_name) && output_file_newest? ? false : true
   end
 
-
   def output_file_newest?
     most_recent_modified_date < File.mtime(@output_file_name)
   end

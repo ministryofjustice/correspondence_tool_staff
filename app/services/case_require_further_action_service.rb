@@ -12,7 +12,6 @@ class CaseRequireFurtherActionService
     @target_team = nil
   end
 
-
   def call
     begin
       ActiveRecord::Base.transaction do

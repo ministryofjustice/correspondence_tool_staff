@@ -12,7 +12,6 @@ class CaseAttachmentUploadGroup
     @team_name = team.nil? ? '' : team.name
   end
 
-
   def date_time
     @timestamp.strftime(Settings.default_time_format)
   end

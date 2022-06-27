@@ -40,7 +40,6 @@ module ConfigurableStateMachine
       @current_indent = -2
     end
 
-
     def run
       line_number = 0
       File.open(@filename, 'r') do |fp|

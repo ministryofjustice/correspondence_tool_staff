@@ -66,7 +66,6 @@ module RetentionSchedules
       @kase = kase
     end
 
-
     def call
       guard_clause_checks
 

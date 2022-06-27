@@ -145,8 +145,6 @@ module ConfigurableStateMachine
         guards.all? { |g| g.call(object,last_transition,metadata) }
     end
 
-
-
     def next_state_for_event(event, params)   #rubocop:disable Metrics/MethodLength
       user = extract_user_from_metadata(params)
       if can_trigger_event?(event_name: event, metadata: params)
@@ -342,7 +340,6 @@ module ConfigurableStateMachine
         Team.find(metadata[:acting_team_id])
       end
     end
-
 
     def extract_user_from_metadata(metadata)
       if metadata.key?(:acting_user_id)

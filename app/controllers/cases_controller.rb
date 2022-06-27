@@ -119,7 +119,6 @@ class CasesController < ApplicationController
     redirect_to case_path(@case)
   end
 
-
   def destroy
     authorize @case
 
@@ -168,7 +167,6 @@ class CasesController < ApplicationController
     raise NotImplementedError
   end
 
-
   # Catch exceptions as a result of a user not being authorised to perform an
   # action on a case. The default behaviour is to redirect them to '/' but here
   # we change that for certain actions where it makes sense (i.e. ones that
@@ -214,7 +212,6 @@ class CasesController < ApplicationController
       @permitted_correspondence_types << CorrespondenceType.offender_sar_complaint 
     end
   end
-
 
   def preserve_step_state
     # this method left intentionally blank

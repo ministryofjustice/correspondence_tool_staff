@@ -14,7 +14,6 @@ class CaseAttachmentUploadGroupCollection
     @grouped_collection.any?
   end
 
-
   # each returns an instance of GroupedCollection
   def each(&block)
     @grouped_collection.each { |gc| block.call(gc) }

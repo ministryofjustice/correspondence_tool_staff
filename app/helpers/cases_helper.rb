@@ -37,7 +37,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     link_to t("common.show_#{new_option}"), uri.to_s
   end
 
-
   def accepted_case_attachment_types
     Settings.case_uploads_accepted_types.join ','
   end
