@@ -216,7 +216,7 @@ module Warehouse
       end
 
       def exemptions(kase)
-        kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
+        kase.exemptions.map { |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
       end
 
     end

@@ -116,7 +116,7 @@ module Stats
         line << ''
       end
       line << bu.email
-      users = bu.users.to_a.sort{ |a, b| a.full_name <=> b.full_name }
+      users = bu.users.to_a.sort { |a, b| a.full_name <=> b.full_name }
       if users.any?
         user = users.shift
         line << user.full_name

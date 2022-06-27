@@ -73,7 +73,7 @@ class Letter
 
   def format_address(address)
     if address.include?(",")
-      address.split(',').map{|word| word.strip }.join("\n") 
+      address.split(',').map {|word| word.strip }.join("\n") 
     else
       address
     end

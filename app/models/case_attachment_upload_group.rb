@@ -26,7 +26,7 @@ class CaseAttachmentUploadGroup
 
   def delete!(case_attachment_id)
     if @collection.map(&:id).include?(case_attachment_id)
-      @collection.delete_if{ |ca| ca.id == case_attachment_id}
+      @collection.delete_if { |ca| ca.id == case_attachment_id}
     else
       raise ArgumentError.new "Specified CaseAttachmentId (#{case_attachment_id}) not in collection"
     end

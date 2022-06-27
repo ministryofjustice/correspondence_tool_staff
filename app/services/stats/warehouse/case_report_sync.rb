@@ -30,11 +30,11 @@ module Stats
       MAPPINGS = {
         'Assignment': {
           fields: [],
-          execute: ->(record, _){ [record.case] },
+          execute: ->(record, _) { [record.case] },
         },
         'Case::Base': {
           fields: [],
-          execute: ->(record, _){ [record] }
+          execute: ->(record, _) { [record] }
         },
         'CaseClosure::Metadatum': {
           fields: %w[
@@ -43,11 +43,11 @@ module Stats
               outcome_id
               appeal_outcome_id
             ],
-          execute: ->(record, query){ self.find_cases(record, query) },
+          execute: ->(record, query) { self.find_cases(record, query) },
         },
         'CaseTransition': {
           fields: [],
-          execute: ->(record, _){ [record.case] },
+          execute: ->(record, _) { [record.case] },
         },
         'Team': {
           fields: %w[
@@ -55,7 +55,7 @@ module Stats
               business_group_id
               directorate_id
             ],
-          execute: ->(record, query){ self.find_cases(record, query) },
+          execute: ->(record, query) { self.find_cases(record, query) },
         },
         'TeamProperty': {
           fields: %w[
@@ -63,7 +63,7 @@ module Stats
               director_name_property_id
               deputy_director_name_property_id
             ],
-          execute: ->(record, query){ self.find_cases(record, query) },
+          execute: ->(record, query) { self.find_cases(record, query) },
         },
         'User': {
           fields: %w[
@@ -71,7 +71,7 @@ module Stats
               casework_officer_user_id
               responder_id
             ],
-          execute: ->(record, query){ self.find_cases(record, query) },
+          execute: ->(record, query) { self.find_cases(record, query) },
         },
       }.freeze
 

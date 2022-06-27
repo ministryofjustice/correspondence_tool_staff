@@ -46,7 +46,7 @@ class Team < ApplicationRecord
       .order(:name)
   }
 
-  scope :active, ->{ where(deleted_at: nil)}
+  scope :active, -> { where(deleted_at: nil)}
 
   def self.hierarchy
     result_set = []

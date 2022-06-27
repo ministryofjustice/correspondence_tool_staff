@@ -98,7 +98,7 @@ class CaseLinkingService
 
   def acting_team_for_case_and_user
     if @case.sar? || @case.overturned_ico_sar?
-      team = @user.teams_for_case(@case).detect{ |t| t.role == 'manager'}
+      team = @user.teams_for_case(@case).detect { |t| t.role == 'manager'}
       raise CaseLinkingError.new('User requires manager role for linking SAR cases') if team.nil?
       team
     else

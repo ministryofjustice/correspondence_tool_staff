@@ -125,7 +125,7 @@ class CSVExporter
         @kase.info_held_status&.name,
         @kase.outcome&.name,
         @kase.refusal_reason&.name,
-        @kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(','),
+        @kase.exemptions.map { |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(','),
         @kase.postal_address,
         @kase.email,
         @kase.appeal_outcome&.name,

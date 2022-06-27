@@ -732,7 +732,7 @@ class Case::Base < ApplicationRecord
   end
 
   def non_default_approver_assignments
-    approver_assignments.where.not(team: default_team_service.approving_team).sort{ |a, b| a.team.name <=> b.team.name }
+    approver_assignments.where.not(team: default_team_service.approving_team).sort { |a, b| a.team.name <=> b.team.name }
   end
 
   def transition_tracker_for_user(user)
@@ -800,7 +800,7 @@ class Case::Base < ApplicationRecord
   end
 
   def assigned_disclosure_specialist!
-    ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.dacu_disclosure.id }
+    ass = assignments.approving.accepted.detect { |a| a.team_id == BusinessUnit.dacu_disclosure.id }
     raise 'No assigned disclosure specialist' if ass.nil? || ass.user.nil?
     ass.user
   end
@@ -814,13 +814,13 @@ class Case::Base < ApplicationRecord
   end
 
   def assigned_press_officer!
-    ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.press_office.id }
+    ass = assignments.approving.accepted.detect { |a| a.team_id == BusinessUnit.press_office.id }
     raise 'No assigned press officer' if ass.nil? || ass.user.nil?
     ass.user
   end
 
   def assigned_private_officer!
-    ass = assignments.approving.accepted.detect{ |a| a.team_id == BusinessUnit.private_office.id }
+    ass = assignments.approving.accepted.detect { |a| a.team_id == BusinessUnit.private_office.id }
     raise 'No assigned private officer' if ass.nil? || ass.user.nil?
     ass.user
   end

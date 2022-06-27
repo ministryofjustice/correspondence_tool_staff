@@ -54,7 +54,7 @@ module Stats
       arry << in_time(kase)
       arry << kase.info_held_status&.name
       arry << kase.outcome&.name
-      arry << kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
+      arry << kase.exemptions.map { |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(',')
     end
 
     def last_assigned_date(kase)
