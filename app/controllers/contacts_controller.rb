@@ -53,6 +53,7 @@ class ContactsController < ApplicationController
   end
 
   private
+
     def set_contact
       @contact = Contact.includes(:contact_type).find(params[:id])
     end

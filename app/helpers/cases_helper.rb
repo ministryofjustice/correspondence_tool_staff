@@ -447,6 +447,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   private
+
   def get_first_number_in_string(number_string)
     return number_string.split(",").first&.upcase if number_string&.include?(",")
     number_string&.upcase

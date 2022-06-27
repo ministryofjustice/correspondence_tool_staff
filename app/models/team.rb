@@ -160,6 +160,7 @@ class Team < ApplicationRecord
   def moved
     moved_to_unit&.parent&.name || ''
   end
+
   private
 
   # This method applies to Business Groups and Directorates only.
