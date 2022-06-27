@@ -7,10 +7,10 @@ module Warehouse
     CASE_BATCH_SIZE = 500
 
     CLASS_CASE_REPORT_DATA_PROCESSES = {
-      "Case::SAR::Offender" => ['process_offender_sar'], 
-      "Case::SAR::OffenderComplaint" => %w[process_offender_sar process_offender_sar_complaint], 
+      "Case::SAR::Offender" => ['process_offender_sar'],
+      "Case::SAR::OffenderComplaint" => %w[process_offender_sar process_offender_sar_complaint],
       "Case::ICO::FOI" => ['process_ico'],
-      "Case::ICO::SAR" => ['process_ico']    
+      "Case::ICO::SAR" => ['process_ico']
     }.freeze
 
     # Class methods to allow this class to be used in async jobs
@@ -24,6 +24,7 @@ module Warehouse
       # be calculated and therefore needs to be readily understood
       #
       #rubocop:disable Metrics/CyclomaticComplexity, Metrics/MethodLength
+      #rubocop:disable Metrics/PerceivedComplexity
       def generate(kase)
         case_report = self.for(kase)
 
@@ -41,7 +42,7 @@ module Warehouse
         case_report.refusal_reason_id = kase.refusal_reason&.id
         case_report.outcome_id = kase.outcome&.id
         case_report.appeal_outcome_id = kase.appeal_outcome&.id
-        
+
         # Report fields - for output
         case_report.number = kase.number
         case_report.case_type = kase.decorate.pretty_type
@@ -57,7 +58,7 @@ module Warehouse
         case_report.name = kase.name
         case_report.requester_type = kase.sar? ? nil : kase.requester_type.humanize
         case_report.message = self.dequote_and_truncate(kase.message)
-        
+
         case_report.info_held = kase.info_held_status&.name
         case_report.outcome = kase.outcome&.name
         case_report.refusal_reason = kase.refusal_reason&.name
@@ -103,6 +104,7 @@ module Warehouse
         case_report.save!
         case_report
       end
+      #rubocop:enable Metrics/PerceivedComplexity
       #rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
       def generate_all
@@ -144,13 +146,12 @@ module Warehouse
             count += 1
           end
 
-          GC.start  # Clear up allocated objects
+          GC.start # Clear up allocated objects
           sleep(10) if throttle
         end
 
         count
       end
-
 
       # Methods copied from CSVExporter
 
@@ -192,21 +193,21 @@ module Warehouse
         case_report.number_of_days_for_vetting = kase.number_of_days_for_vetting
         case_report.user_dealing_with_vetting = kase.user_dealing_with_vetting&.full_name
         case_report.user_id_dealing_with_vetting = kase.user_dealing_with_vetting&.id
-      end 
+      end
 
       def process_offender_sar_complaint(kase, case_report)
         case_report.complaint_subtype = kase.complaint_subtype.humanize
         case_report.priority = kase.priority.humanize
         case_report.total_cost = kase.total_cost
         case_report.settlement_cost = kase.settlement_cost
-      end 
+      end
 
       def process_ico(kase, case_report)
         case_report.info_held_status_id = kase.original_case.info_held_status&.id
         case_report.refusal_reason_id = kase.original_case.refusal_reason&.id
         case_report.outcome_id = kase.original_case.outcome&.id
 
-        case_report.info_held = kase.original_case.info_held_status&.name 
+        case_report.info_held = kase.original_case.info_held_status&.name
         case_report.outcome = kase.original_case.outcome&.name
         case_report.refusal_reason = kase.original_case.refusal_reason&.name
         case_report.exemptions = self.exemptions(kase.original_case)

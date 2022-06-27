@@ -18,7 +18,6 @@ class TeamFinderService
     end
   end
 
-
   TEAM_ROLES = {
       manager: :managing,
       responder: :responding,
@@ -43,6 +42,7 @@ class TeamFinderService
     user_teams = @user.team_roles.where(role: @team_role).map(&:team)
     (assigned_teams & user_teams).first
   end
+
   #
   def team_for_assigned_user
     assignments = @kase.assignments.accepted.where(user_id: @user.id, role: @assignment_role)
@@ -58,7 +58,6 @@ class TeamFinderService
     user_teams = @user.team_roles.where(role: @team_role).map(&:team)
     (assigned_teams & user_teams).first
   end
-
 
   private
 

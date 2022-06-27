@@ -117,7 +117,7 @@ class CaseFinderService
   end
 
   def triagable_cases_scope
-    triagable_statuses =  [
+    triagable_statuses = [
       RetentionSchedule::STATE_REVIEW, 
       RetentionSchedule::STATE_RETAIN, 
       RetentionSchedule::STATE_NOT_SET

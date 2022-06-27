@@ -6,7 +6,6 @@ class Case::BaseDecorator < Draper::Decorator
   decorates_association :original_ico_appeal
   decorates_association :original_appeal_and_related_cases
 
-
   # if the case is with a responding team and the current user is a responder
   # in that team, display the name of the specific user it's with instead of
   # the team name
@@ -65,7 +64,7 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
-   # we only display the marker for flagged cases
+  # we only display the marker for flagged cases
   def trigger_case_marker
     if object.flagged?
       h.content_tag :div, class: "#{object.type_abbreviation.downcase}-trigger" do
@@ -122,7 +121,7 @@ class Case::BaseDecorator < Draper::Decorator
     if object.message.size < num_chars
       [object.message]
     else
-      [object.message[0..num_chars-1] ,  object.message[num_chars..-1]]
+      [object.message[0..num_chars-1] , object.message[num_chars..-1]]
     end
   end
 

@@ -17,7 +17,6 @@ class Letter
   def body
     @letter_template&.render(values, self, 'body')
   end
-
   
   def values
     cloned_case = @case.dup

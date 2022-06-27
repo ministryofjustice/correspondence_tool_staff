@@ -33,7 +33,6 @@ class Contact < ApplicationRecord
     filter_by_contact_type(filters).search_by_contact_name(search_term)
   end
 
-
   private
 
   def format_address(separator)

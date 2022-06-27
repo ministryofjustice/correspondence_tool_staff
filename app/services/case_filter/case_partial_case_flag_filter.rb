@@ -11,7 +11,7 @@ module CaseFilter
 
     def available_choices
       {
-        :filter_partial_case_flag => {
+        filter_partial_case_flag: {
           'partial-case' => I18n.t('filters.filter_partial_case_flag.partial-case'),
           'not-partial-case'     => I18n.t('filters.filter_partial_case_flag.not-partial-case')
         }

@@ -27,7 +27,6 @@ module Stats
       @filename = File.join(ENV['HOME'], 'audit.csv')
     end
 
-
     def run(*)
       case_ids = Case::Base.where(received_date: @period_start..@period_end).pluck(:id)
       CSV.open(@filename, 'wb') do |csv|

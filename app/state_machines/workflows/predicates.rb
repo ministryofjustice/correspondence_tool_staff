@@ -218,7 +218,7 @@ class Workflows::Predicates
   end
 
   def has_caught_reason_for_lateness?
-    @kase.reason_for_lateness_id.present? &&  @kase.reason_for_lateness_id > 0
+    @kase.reason_for_lateness_id.present? && @kase.reason_for_lateness_id > 0
   end
 
   def overturned_enabled?(kase)

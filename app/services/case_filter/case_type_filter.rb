@@ -34,7 +34,7 @@ module CaseFilter
         end
       end 
 
-      { :filter_case_type => types }
+      { filter_case_type: types }
     end
 
     def call

@@ -12,7 +12,7 @@ class UsersController < ApplicationController
       @cases = unpaginated_cases.page(params[:page]).decorate
     end
     respond_to do |format|
-      format.html     { render :show }
+      format.html { render :show }
       format.csv do
         send_csv_cases @user.full_name.downcase.tr(' ', '_')
       end
@@ -88,7 +88,7 @@ class UsersController < ApplicationController
   end
 
   def create_user_params
-    params[:user][:full_name] =  params[:user][:full_name].strip()
+    params[:user][:full_name] = params[:user][:full_name].strip()
     params.require(:user).permit(
       :full_name,
       :email,

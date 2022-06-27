@@ -18,7 +18,7 @@ class Workflows::Conditionals
     else
       if @kase.assignments.where(team_id: BusinessUnit.dacu_disclosure.id).any?
         'trigger'
-        else
+      else
         'standard'
       end
     end

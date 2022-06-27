@@ -20,7 +20,6 @@ module Searchable
                               }
                             }
     end
-
   end
 
   class_methods do
@@ -41,6 +40,5 @@ module Searchable
     EOSQL
     self.class.connection.execute update_sql
   end
-
 
 end

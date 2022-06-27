@@ -29,7 +29,7 @@ class Team < ApplicationRecord
 
   has_many :user_roles, class_name: 'TeamsUsersRole'
   has_many :users, -> { order(:full_name) }, through: :user_roles
-  has_many :properties, class_name: 'TeamProperty', :dependent => :delete_all
+  has_many :properties, class_name: 'TeamProperty', dependent: :delete_all
   has_many :areas, -> { area }, class_name: 'TeamProperty'
 
   # This can be eager loaded using includes
@@ -160,6 +160,7 @@ class Team < ApplicationRecord
   def moved
     moved_to_unit&.parent&.name || ''
   end
+
   private
 
   # This method applies to Business Groups and Directorates only.

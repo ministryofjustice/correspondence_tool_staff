@@ -84,7 +84,6 @@ class DataRequest < ApplicationRecord
     end
   end
 
-
   def validate_request_type_note
     if request_type == 'other' && request_type_note.blank?
       errors.add(
@@ -109,7 +108,7 @@ class DataRequest < ApplicationRecord
         )
       end
     end
-    if not completed? and cached_date_received.present?
+    if (not completed?) && cached_date_received.present?
       errors.add(
         :cached_date_received,
         I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.not_empty')

@@ -88,5 +88,4 @@ class TeamPolicy < ApplicationPolicy
     !team.has_active_children?
   end
 
-
 end

@@ -119,7 +119,6 @@ class CasesController < ApplicationController
     redirect_to case_path(@case)
   end
 
-
   def destroy
     authorize @case
 
@@ -149,7 +148,6 @@ class CasesController < ApplicationController
   end
   alias t4c translate_for_case
 
-
   protected
 
   def case_updater_service
@@ -167,7 +165,6 @@ class CasesController < ApplicationController
   def edit_params
     raise NotImplementedError
   end
-
 
   # Catch exceptions as a result of a user not being authorised to perform an
   # action on a case. The default behaviour is to redirect them to '/' but here
@@ -214,7 +211,6 @@ class CasesController < ApplicationController
       @permitted_correspondence_types << CorrespondenceType.offender_sar_complaint 
     end
   end
-
 
   def preserve_step_state
     # this method left intentionally blank

@@ -9,7 +9,7 @@ module OverturnedCase
 
     if service.error?
       @case = service.original_ico_appeal.decorate
-      render '/cases/show', :status => :bad_request
+      render '/cases/show', status: :bad_request
     else
       @case = service.overturned_ico_case.decorate
       @original_ico_appeal = service.original_ico_appeal

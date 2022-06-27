@@ -33,7 +33,6 @@ class DataRequestUpdateService
     end
   end
 
-
   private
 
   def log_message

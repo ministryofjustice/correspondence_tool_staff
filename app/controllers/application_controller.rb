@@ -19,9 +19,9 @@ class ApplicationController < ActionController::Base
 
   before_action :set_paper_trail_whodunnit
   before_action :authenticate_user!, :set_user, except: [:ping, :healthcheck, :maintenance_mode, :accessibility]
-  before_action :set_global_nav, if: -> { current_user.present?  && global_nav_required? }
+  before_action :set_global_nav, if: -> { current_user.present? && global_nav_required? }
   before_action :add_security_headers
-  before_action :set_hompepage_nav, if: -> { current_user.present?  && global_nav_required? }
+  before_action :set_hompepage_nav, if: -> { current_user.present? && global_nav_required? }
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 

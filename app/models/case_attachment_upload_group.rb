@@ -12,7 +12,6 @@ class CaseAttachmentUploadGroup
     @team_name = team.nil? ? '' : team.name
   end
 
-
   def date_time
     @timestamp.strftime(Settings.default_time_format)
   end
@@ -38,6 +37,7 @@ class CaseAttachmentUploadGroup
   end
 
   private
+
   def get_time(upload_group)
     Time.find_zone('Etc/UTC').parse(upload_group).in_time_zone
   end

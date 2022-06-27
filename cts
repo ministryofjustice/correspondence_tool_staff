@@ -25,7 +25,6 @@ class Thor
   end
 end
 
-
 if File.expand_path($0) == __FILE__
   CTS::CLI.start(ARGV)
 end

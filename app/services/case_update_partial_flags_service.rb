@@ -73,8 +73,6 @@ class CaseUpdatePartialFlagsService
       'unmark_as_further_actions_required'
     when 'awaiting_response'
       'mark_as_awaiting_response_for_partial_case'
-    else
-      nil
     end
   end
 

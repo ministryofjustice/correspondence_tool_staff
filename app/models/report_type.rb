@@ -35,7 +35,6 @@ class ReportType < ApplicationRecord
 
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
-
   def class_constant
     @_class_constant ||= class_name.constantize
   end

@@ -96,7 +96,6 @@ module Cases
       end
     end
 
-
     private
 
     def get_de_escalated_undo_link

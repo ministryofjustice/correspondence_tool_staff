@@ -62,7 +62,6 @@ module Cases
       raise NotImplementedError.new 'Data request delete unavailable'
     end
 
-
     private
 
     def set_case

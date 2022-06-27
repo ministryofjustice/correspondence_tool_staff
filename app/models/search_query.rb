@@ -100,14 +100,11 @@ class SearchQuery < ApplicationRecord
 
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
-
   acts_as_tree
 
   def self.parent_search_query_id(case_search_service)
     if case_search_service.child?
       self.by_query_hash!(case_search_service.parent_hash).id
-    else
-      nil
     end
   end
 
@@ -176,12 +173,12 @@ class SearchQuery < ApplicationRecord
   def results(cases_list = nil, search_order_choice = nil)
     if root.query_type == 'search'
       cases_list ||= Pundit.policy_scope(user, Case::Base.all)
-      cases_list = cases_list.__send__(SearchHelper::get_order_option(search_order_choice.to_s), search_text)
+      cases_list = cases_list.__send__(SearchHelper.get_order_option(search_order_choice.to_s), search_text)
     elsif cases_list.nil?
       raise ArgumentError.new("cannot perform filters without list of cases")    
     else
       if search_order_choice.present?
-        order_fields = SearchHelper::get_order_fields(search_order_choice)
+        order_fields = SearchHelper.get_order_fields(search_order_choice)
         cases_list = cases_list.order(order_fields)
       end
     end

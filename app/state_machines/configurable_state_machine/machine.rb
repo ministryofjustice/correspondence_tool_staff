@@ -76,7 +76,7 @@ module ConfigurableStateMachine
       @roles.each do |role|
         role_config = @config.user_roles[role]
         next if role_config.nil?
-        role_state_config =  role_config.states[@kase.current_state]
+        role_state_config = role_config.states[@kase.current_state]
         event_config = fetch_event_config(config: role_state_config, event: event_name)
         configs << event_config
       end
@@ -100,7 +100,7 @@ module ConfigurableStateMachine
       @roles.each do |role|
         role_config = @config.user_roles[role]
         next if role_config.nil?
-        role_state_config =  role_config.states[@kase.current_state]
+        role_state_config = role_config.states[@kase.current_state]
         event_config = fetch_event_config(config: role_state_config, event: event_name)
         if event_config
           return check_event_config(config: event_config, user: @user)
@@ -145,9 +145,7 @@ module ConfigurableStateMachine
         guards.all? { |g| g.call(object,last_transition,metadata) }
     end
 
-
-
-    def next_state_for_event(event, params)   #rubocop:disable Metrics/MethodLength
+    def next_state_for_event(event, params) #rubocop:disable Metrics/MethodLength
       user = extract_user_from_metadata(params)
       if can_trigger_event?(event_name: event, metadata: params)
         event = event.to_sym
@@ -157,7 +155,7 @@ module ConfigurableStateMachine
                                     user: params[:acting_user],
                                     event: event,
                                     role: role,
-                                    message: "No such role") if user_role_config.nil?  ###
+                                    message: "No such role") if user_role_config.nil? ###
         state_config = user_role_config.states[@kase.current_state]
         if state_config.nil? || !state_config.to_hash.keys.include?(event)
           raise InvalidEventError.new(role: role,
@@ -259,7 +257,7 @@ module ConfigurableStateMachine
       end
       if !can_trigger_event?(
             event_name: event, 
-            metadata: {:acting_user => user, :acting_team => acting_team},
+            metadata: {acting_user: user, acting_team: acting_team},
             roles: [role])
         return false
       end
@@ -276,7 +274,7 @@ module ConfigurableStateMachine
       event = event.to_sym
       raise ::ConfigurableStateMachine::ArgumentError.new(kase: @kase, event: event, params: params) if !params.key?(:acting_user) || !params.key?(:acting_team)
 
-      role =  params[:acting_team].role
+      role = params[:acting_team].role
       user_role_config = @config.user_roles[role]
       if user_role_config.nil?
         raise InvalidEventError.new(
@@ -322,7 +320,6 @@ module ConfigurableStateMachine
     end
     #rubocop:enable Metrics/MethodLength
 
-
     def extract_roles_from_metadata(metadata)
       team = extract_team_from_metadata(metadata)
       user = extract_user_from_metadata(metadata)
@@ -340,11 +337,8 @@ module ConfigurableStateMachine
         metadata[:acting_team]
       elsif metadata.key?(:acting_team_id)
         Team.find(metadata[:acting_team_id])
-      else
-        nil
       end
     end
-
 
     def extract_user_from_metadata(metadata)
       if metadata.key?(:acting_user_id)

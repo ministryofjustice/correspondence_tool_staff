@@ -62,7 +62,6 @@ module CaseClosure
       abbreviation == 'ncnd'
     end
 
-
     def self.abbrev(abbreviation)
       where(abbreviation: abbreviation).first
     end

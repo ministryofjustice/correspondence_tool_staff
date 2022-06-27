@@ -1,5 +1,6 @@
 module CaseFilter
   class InternalDeadlineFilter < CaseDateRangeFilterBase
+    PERMITTED_CORRESPONDENCE_TYPES = %w[FOI SAR ICO OVERTURNED_FOI OVERTURNED_SAR].freeze
 
     def self.date_field_name
       'internal_deadline'
@@ -26,9 +27,9 @@ module CaseFilter
     end
 
     def is_permitted_for_user?
-      @user.permitted_correspondence_types.any? { 
-        | c_type | %w[FOI SAR ICO OVERTURNED_FOI OVERTURNED_SAR].include? c_type.abbreviation 
-      }
+      @user.permitted_correspondence_types.any? do |c_type|
+        PERMITTED_CORRESPONDENCE_TYPES.include? c_type.abbreviation
+      end
     end
 
     def call
