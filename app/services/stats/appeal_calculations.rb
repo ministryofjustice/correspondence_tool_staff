@@ -7,7 +7,7 @@ module Stats
         appeal_types.each do |appeal_type|
           stats.stats.each do | _team_id, row |
             row_name = "#{appeal_type}_appeal_total".to_sym
-            row[row_name] = AppealCalculations::sum_all_received(row, appeal_type)
+            row[row_name] = AppealCalculations.sum_all_received(row, appeal_type)
           end
         end
       end
@@ -16,7 +16,7 @@ module Stats
         appeal_types.each do |appeal_type|
           stats.stats.each do | _team_id, row |
             row_name = "#{appeal_type}_appeal_performance".to_sym
-            row[row_name]  = AppealCalculations::calculate_overall_performance(row, appeal_type)
+            row[row_name]  = AppealCalculations.calculate_overall_performance(row, appeal_type)
           end
         end
       end
