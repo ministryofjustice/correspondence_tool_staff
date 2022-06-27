@@ -9,7 +9,7 @@ module CaseFilter
       'sar-ir-compliance': ['SAR_INTERNAL_REVIEW'],
       'sar-ir-timeliness': ['SAR_INTERNAL_REVIEW'],
       'ico-appeal': ['ICO'],
-      'overturned-ico': ['FOI', 'SAR'],
+      'overturned-ico': %w[FOI SAR],
       'offender-sar': ['OFFENDER_SAR'],
       'offender-sar-complaint': ['OFFENDER_SAR_COMPLAINT'],
     }.with_indifferent_access.freeze

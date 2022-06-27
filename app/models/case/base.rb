@@ -32,7 +32,7 @@
 #rubocop:disable Metrics/ClassLength
 class Case::Base < ApplicationRecord
 
-  TRIGGER_WORKFLOWS = ['trigger', 'full_approval'].freeze
+  TRIGGER_WORKFLOWS = %w[trigger full_approval].freeze
   CREATE_EVENT = 'create'.freeze
 
   def self.searchable_fields_and_ranks
@@ -108,7 +108,7 @@ class Case::Base < ApplicationRecord
   scope :with_teams, -> (teams) do
     includes(:assignments)
       .where(assignments: { team: teams,
-                            state: ['pending', 'accepted']})
+                            state: %w[pending accepted]})
   end
   scope :not_with_teams, -> (teams) do
     where.not(id: Case::Base.with_teams(teams).pluck(:id))
@@ -116,7 +116,7 @@ class Case::Base < ApplicationRecord
 
   scope :in_states, -> (states) { where(current_state: states) }
 
-  scope :with_user, ->(*users, states: ['pending', 'accepted']) do
+  scope :with_user, ->(*users, states: %w[pending accepted]) do
     joins(:assignments)
       .where(assignments: { user_id: users.map { |u| u.id },
                             state: states})

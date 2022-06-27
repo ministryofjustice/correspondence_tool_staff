@@ -4,6 +4,14 @@ require:
 AllCops:
   DisabledByDefault: true
 
+  Exclude:
+    - 'db/**/*'
+    - 'spec/**/*'
+    - 'lib/**/*'
+    - 'config/**/*'
+    - 'vendor/**/*' # this prevents version mismatch in circleci
+    - 'vendor/bundle/**/*' # this prevents rubocop being run on dependencies in circleci
+
 # TODO CT-2608:- rubocop-rails
 # This block commented out - restore when we add the Rubocop Rails gem
 ##################### Rails ##################################
@@ -1137,4 +1145,4 @@ Style/WhileUntilModifier:
 Style/WordArray:
   Description: 'Use %w or %W for arrays of words.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#percent-w'
-  Enabled: false
+  Enabled: true

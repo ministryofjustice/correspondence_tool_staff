@@ -8,7 +8,7 @@ module Warehouse
 
     CLASS_CASE_REPORT_DATA_PROCESSES = {
       "Case::SAR::Offender" => ['process_offender_sar'], 
-      "Case::SAR::OffenderComplaint" => ['process_offender_sar', 'process_offender_sar_complaint'], 
+      "Case::SAR::OffenderComplaint" => %w[process_offender_sar process_offender_sar_complaint], 
       "Case::ICO::FOI" => ['process_ico'],
       "Case::ICO::SAR" => ['process_ico']    
     }.freeze

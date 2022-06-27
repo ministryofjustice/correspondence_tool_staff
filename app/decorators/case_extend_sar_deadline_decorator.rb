@@ -2,7 +2,7 @@ class CaseExtendSARDeadlineDecorator < Draper::Decorator
   decorates Case::SAR::Standard
   delegate_all
 
-  NUMBER_TO_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'].freeze
+  NUMBER_TO_WORDS = %w[zero one two three four five six seven eight nine ten].freeze
 
   attr_accessor :extension_period
   attr_accessor :reason_for_extending

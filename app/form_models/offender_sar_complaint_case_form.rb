@@ -54,21 +54,21 @@ module OffenderSARComplaintCaseForm
   def params_after_step_confirm_offender_sar(params)
     params.merge!(original_case_id: object.original_case_id)
     params.delete(:original_case_number)
-    fields_subject_details = [
-      "subject_full_name",
-      "subject_type",
-      "subject_aliases",
-      "subject_address",
-      "prison_number",
-      "other_subject_ids",
-      "recipient",
-      "third_party_relationship",
-      "third_party",
-      "third_party_company_name",
-      "third_party_name",
-      "postal_address",
-      "flag_as_high_profile",
-      "date_of_birth"
+    fields_subject_details = %w[
+      subject_full_name
+      subject_type
+      subject_aliases
+      subject_address
+      prison_number
+      other_subject_ids
+      recipient
+      third_party_relationship
+      third_party
+      third_party_company_name
+      third_party_name
+      postal_address
+      flag_as_high_profile
+      date_of_birth
     ]
     fields_subject_details.each do | single_field |
       params[single_field] = object.original_case.send(single_field)

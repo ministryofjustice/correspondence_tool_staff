@@ -13,25 +13,25 @@ module ConfigurableStateMachine
     # >> Circular dependency detected while autoloading constant in one of policy ruby code
     # Couldn't think of easy way to fix it, so just added missing states here
     def self.states
-      ['unassigned',
-       'awaiting_responder',
-       'drafting',
-       'pending_dacu_clearance',
-       'pending_press_office_clearance',
-       'pending_private_office_clearance',
-       'awaiting_dispatch',
-       'responded',
-       'data_to_be_requested', 
-       'waiting_for_data', 
-       'ready_for_vetting', 
-       'vetting_in_progress', 
-       'ready_to_copy', 
-       'ready_to_dispatch',
-       'to_be_assessed',
-       'data_review_required',
-       'response_required', 
-       'waiting', 
-       'closed']
+      %w[unassigned
+         awaiting_responder
+         drafting
+         pending_dacu_clearance
+         pending_press_office_clearance
+         pending_private_office_clearance
+         awaiting_dispatch
+         responded
+         data_to_be_requested
+         waiting_for_data
+         ready_for_vetting
+         vetting_in_progress
+         ready_to_copy
+         ready_to_dispatch
+         to_be_assessed
+         data_review_required
+         response_required
+         waiting
+         closed]
     end
 
     def self.states_for_closed_cases
