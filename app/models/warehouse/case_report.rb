@@ -100,7 +100,7 @@ module Warehouse
         case_report.original_external_deadline = kase.respond_to?(:original_external_deadline) ? kase.original_external_deadline : nil
         case_report.num_days_late_against_original_deadline = kase.respond_to?(:original_external_deadline) ? kase.num_days_late_against_original_deadline : nil
 
-        process_class_related_process(kase,case_report)
+        process_class_related_process(kase, case_report)
         case_report.save!
         case_report
       end

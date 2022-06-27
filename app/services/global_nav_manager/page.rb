@@ -36,7 +36,7 @@ class GlobalNavManager
     def fullpath_with_query
       if @fullpath_with_query.nil?
         @fullpath_with_query = fullpath
-        query_params = request.query_parameters.reject do |k,_|
+        query_params = request.query_parameters.reject do |k, _|
           k.in? IGNORE_QUERY_PARAMS
         end
         if query_params.present?

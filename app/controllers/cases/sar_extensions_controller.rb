@@ -35,7 +35,7 @@ module Cases
     def destroy
       authorize @case, :remove_sar_deadline_extension?
 
-      service = CaseRemoveSARDeadlineExtensionService.new(current_user,@case)
+      service = CaseRemoveSARDeadlineExtensionService.new(current_user, @case)
       service.call
 
       if service.result == :ok

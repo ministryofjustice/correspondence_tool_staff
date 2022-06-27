@@ -126,7 +126,7 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def shortened_message
-    (part1,part2) = self.message_extract
+    (part1, part2) = self.message_extract
 
     if part2.nil?
       object.message

@@ -10,7 +10,7 @@ module CaseFilter
     end
 
     def available_choices
-      caseworkers = {"0" => I18n.t("filters.filter_caseworker.not_assigned"),}
+      caseworkers = {"0" => I18n.t("filters.filter_caseworker.not_assigned"), }
       caseworker_ids = Case::SAR::OffenderComplaint
                         .opened
                         .accepted_responding

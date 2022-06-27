@@ -142,7 +142,7 @@ module ConfigurableStateMachine
     def call_guards_for_target_state(target_state, metadata)
       guards = target_state[:guards]
       guards.blank? ||
-        guards.all? { |g| g.call(object,last_transition,metadata) }
+        guards.all? { |g| g.call(object, last_transition, metadata) }
     end
 
     def next_state_for_event(event, params) #rubocop:disable Metrics/MethodLength
