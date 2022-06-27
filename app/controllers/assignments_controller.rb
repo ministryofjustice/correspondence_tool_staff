@@ -123,10 +123,8 @@ class AssignmentsController < ApplicationController
                             name: @assignment.user.full_name)
         end
       else
-        raise RuntimeError.new(
-                "Unknown error when accepting approver assignment: " +
+        raise "Unknown error when accepting approver assignment: " +
                 accept_service.result.to_s
-              )
       end
     end
     respond_to do |format|
@@ -155,7 +153,7 @@ class AssignmentsController < ApplicationController
       @success = false
       @message = I18n.t('assignments.take_case_on.already_accepted', name: service.other_user.full_name)
     else
-      raise RuntimeError.new("Unknown error when accepting approver assignment: " + result.to_s)
+      raise "Unknown error when accepting approver assignment: " + result.to_s
     end
 
     respond_to do |format|

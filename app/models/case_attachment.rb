@@ -104,7 +104,7 @@ class CaseAttachment < ApplicationRecord
     result = preview_object.upload_file(filepath)
     if result == false
       if retry_count == Settings.s3_upload_max_tries
-        raise RuntimeError, "Max upload retry exceeded for CaseAttachment #{self.id}"
+        raise "Max upload retry exceeded for CaseAttachment #{self.id}"
       else
         PdfMakerJob.perform_with_delay(self.id, retry_count + 1)
         pdf_key = nil

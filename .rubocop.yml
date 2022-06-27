@@ -880,7 +880,7 @@ Style/RedundantBegin:
 Style/RedundantException:
   Description: "Checks for an obsolete RuntimeException argument in raise/fail."
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-explicit-runtimeerror'
-  Enabled: false
+  Enabled: true
 
 Style/RedundantReturn:
   Description: "Don't use return where it's not required."

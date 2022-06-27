@@ -79,7 +79,7 @@ module Stats
     end
 
     def case_scope
-      raise RuntimeError.new('#case_scope method must be defined in derived class')
+      raise '#case_scope method must be defined in derived class'
     end
 
     def run(*)
