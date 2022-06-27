@@ -508,7 +508,7 @@ Style/ColonMethodCall:
 Style/CommandLiteral:
   Description: 'Use `` or %x around command literals.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#percent-x'
-  Enabled: false
+  Enabled: true
 
 Style/CommentAnnotation:
   Description: 'Checks formatting of annotation comments.'
