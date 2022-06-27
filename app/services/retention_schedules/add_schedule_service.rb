@@ -30,7 +30,7 @@ module RetentionSchedules
     private
 
     def case_is_open
-      if !@kase.closed?
+      unless @kase.closed?
         @result = :invalid_as_case_is_open
         true
       end

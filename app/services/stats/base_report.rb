@@ -95,7 +95,7 @@ module Stats
     end
 
     def set_results(stats)
-      if !@stats.nil?
+      unless @stats.nil?
         @stats.stats = stats 
       end
     end

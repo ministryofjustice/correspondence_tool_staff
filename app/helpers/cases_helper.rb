@@ -18,10 +18,10 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     if uri.query.present?
       queries << uri.query
     end
-    if !csv_report.blank?
+    unless csv_report.blank?
       queries << "report=#{csv_report}"
     end
-    if !queries.empty?
+    unless queries.empty?
       csv_path += "?#{queries.join('&')}"
     end
     link_to download_link_name || 'Download cases', csv_path
