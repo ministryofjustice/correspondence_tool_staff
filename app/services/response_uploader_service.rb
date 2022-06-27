@@ -28,7 +28,7 @@ class ResponseUploaderService
   #rubocop:enable Metrics/ParameterLists
 
   class << self
-    # TODO - this appears to be only used in tests
+    # TODO: - this appears to be only used in tests
     def seed!(kase:, current_user:, filepath:)
       uploader = S3Uploader.new(kase, current_user)
       uploader.add_file_to_case(filepath, RESPONSE_TYPE)

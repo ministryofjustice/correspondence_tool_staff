@@ -11,10 +11,10 @@ module CaseFilter
 
     def available_choices
       priorities = {}
-      Case::SAR::OffenderComplaint.complaint_types.map  do |key, _| 
+      Case::SAR::OffenderComplaint.complaint_types.map do |key, _| 
         priorities[key] = "Complaint - #{complaint_type_text(key)}"
       end
-      { :filter_complaint_type => priorities}
+      { filter_complaint_type: priorities}
     end
 
     def is_permitted_for_user?

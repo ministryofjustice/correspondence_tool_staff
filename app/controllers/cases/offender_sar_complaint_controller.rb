@@ -12,13 +12,12 @@ module Cases
 
       @correspondence_type = CorrespondenceType.offender_sar_complaint
       @correspondence_type_key = 'offender_sar_complaint'
-      @creation_optional_flags = {:flag_for_creation_from_sar_page => 0 }
+      @creation_optional_flags = {flag_for_creation_from_sar_page: 0 }
     end
 
-
     def start_complaint
-      params.merge!(:current_step => "link-offender-sar-case", :flag_for_creation_from_sar_page => true)
-      params.merge!(:commit => true)
+      params.merge!(current_step: "link-offender-sar-case", flag_for_creation_from_sar_page: true)
+      params.merge!(commit: true)
       params[@correspondence_type_key] = {}
       params[@correspondence_type_key].merge!("original_case_number" => params["number"])
       create
@@ -88,7 +87,6 @@ module Cases
     def session_state
       "#{@correspondence_type_key}_state".to_sym
     end
-
 
     def case_updater_service
       # overides base class method to utilise specific

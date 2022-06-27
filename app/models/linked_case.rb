@@ -24,7 +24,7 @@ class LinkedCase < ApplicationRecord
          original_appeal: 'original_appeal'
        }
 
-  scope :related_and_appeal, -> {  related.or(original_appeal).order(:type, :id) }
+  scope :related_and_appeal, -> { related.or(original_appeal).order(:type, :id) }
 
   before_validation :find_linked_case_by_number
   after_create :create_reverse_link

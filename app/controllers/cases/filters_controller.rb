@@ -118,7 +118,6 @@ module Cases
           :responding_team
         )
 
-
       service = call_search_service(full_list_of_cases, cookies[:search_result_order])
       @query = service.query
 
@@ -161,7 +160,6 @@ module Cases
 
     private
 
-
     def set_non_current_tab_counts
       @global_nav_manager.current_page.tabs.each do |tab| 
         tab.set_count(filtered_count_for_tab(tab.cases))
@@ -191,8 +189,8 @@ module Cases
 
     def set_order_cookie(order)
       cookies[:search_result_order] = {
-        :value => order,
-        :secure => true 
+        value: order,
+        secure: true 
       }
     end
 

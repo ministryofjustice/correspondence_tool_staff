@@ -503,36 +503,36 @@ Layout/ClosingParenthesisIndentation:
 Style/ColonMethodCall:
   Description: 'Do not use :: for method call.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#double-colons'
-  Enabled: false
+  Enabled: true
 
 Style/CommandLiteral:
   Description: 'Use `` or %x around command literals.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#percent-x'
-  Enabled: false
+  Enabled: true
 
 Style/CommentAnnotation:
   Description: 'Checks formatting of annotation comments.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#annotate-keywords'
-  Enabled: false
+  Enabled: true
 
 Layout/CommentIndentation:
   Description: 'Indentation of comments.'
-  Enabled: false
+  Enabled: true
 
 Naming/ConstantName:
   Description: 'Constants should use SCREAMING_SNAKE_CASE.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#screaming-snake-case'
-  Enabled: false
+  Enabled: true
 
 Style/DefWithParentheses:
   Description: 'Use def with parentheses when there are arguments.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#method-parens'
-  Enabled: false
+  Enabled: true
 
 Style/PreferredHashMethods:
   Description: 'Checks for use of deprecated Hash methods.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#hash-key'
-  Enabled: false
+  Enabled: true
 
 Style/Documentation:
   Description: 'Document classes and non-namespace modules.'
@@ -557,32 +557,32 @@ Style/DoubleNegation:
 
 Style/EachWithObject:
   Description: 'Prefer `each_with_object` over `inject` or `reduce`.'
-  Enabled: false
+  Enabled: true
 
 Layout/ElseAlignment:
   Description: 'Align elses and elsifs correctly.'
-  Enabled: false
+  Enabled: true
 
 Style/EmptyElse:
   Description: 'Avoid empty else-clauses.'
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLineBetweenDefs:
   Description: 'Use empty lines between defs.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#empty-lines-between-methods'
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLines:
   Description: "Don't use several empty lines in a row."
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundAccessModifier:
   Description: "Keep blank lines around access modifiers."
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundBlockBody:
   Description: "Keeps track of empty lines around block bodies."
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundClassBody:
   Description: "Keeps track of empty lines around class bodies."
@@ -609,16 +609,16 @@ Style/EndBlock:
 Layout/EndOfLine:
   Description: 'Use Unix-style line endings.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#crlf'
-  Enabled: false
+  Enabled: true
 
 Style/EvenOdd:
   Description: 'Favor the use of Fixnum#even? && Fixnum#odd?'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#predicate-methods'
-  Enabled: false
+  Enabled: true
 
 Layout/ExtraSpacing:
   Description: 'Do not use unnecessary spacing.'
-  Enabled: false
+  Enabled: true
 
 Naming/FileName:
   Description: 'Use snake_case for source file names.'
@@ -637,7 +637,7 @@ Layout/FirstArgumentIndentation:
 Style/For:
   Description: 'Checks use of for or each in multiline loops.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-for-loops'
-  Enabled: false
+  Enabled: true
 
 Style/FormatString:
   Description: 'Enforce the use of Kernel#sprintf, Kernel#format or String#%.'
@@ -648,8 +648,9 @@ Style/GlobalVars:
   Description: 'Do not introduce global variables.'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#instance-vars'
   Reference: 'http://www.zenspider.com/Languages/Ruby/QuickRef.html'
-  Enabled: false
+  Enabled: true
 
+# 150 offences
 Style/GuardClause:
   Description: 'Check for conditionals that can be replaced with guard clauses'
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#no-nested-conditionals'
@@ -660,7 +661,7 @@ Style/HashSyntax:
                  Prefer Ruby 1.9 hash syntax { a: 1, b: 2 } over 1.8 syntax
                  { :a => 1, :b => 2 }.
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#hash-literals'
-  Enabled: false
+  Enabled: true
 
 Style/IfUnlessModifier:
   Description: >-

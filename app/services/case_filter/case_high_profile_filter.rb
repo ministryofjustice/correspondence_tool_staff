@@ -11,7 +11,7 @@ module CaseFilter
 
     def available_choices
       {
-        :filter_high_profile => {
+        filter_high_profile: {
           'high-profile' => I18n.t('filters.filter_high_profile.high-profile'),
           'not-high-profile'     => I18n.t('filters.filter_high_profile.not-high-profile')
         }

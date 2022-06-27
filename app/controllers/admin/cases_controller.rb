@@ -1,7 +1,6 @@
 require 'cts/cases/create'
 require 'cts/cases/constants'
 
-
 class Admin::CasesController < AdminController
 
   before_action :set_correspondence_type,
@@ -56,7 +55,7 @@ class Admin::CasesController < AdminController
   private
 
   def count_cases_created_on(date)
-    Case::Base.where(created_at:  date.beginning_of_day..date.end_of_day).count
+    Case::Base.where(created_at: date.beginning_of_day..date.end_of_day).count
   end
 
   def select_type

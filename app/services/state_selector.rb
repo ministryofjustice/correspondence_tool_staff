@@ -26,7 +26,6 @@ class StateSelector
     @selected_states.uniq.join(',')
   end
 
-
   private
 
   def set_states_from_form_input(params)
@@ -36,7 +35,5 @@ class StateSelector
   def set_states_from_url(params)
     params[:states].split(',').each { |state| @selected_states << state.to_sym }
   end
-
-
 
 end

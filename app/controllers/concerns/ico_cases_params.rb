@@ -213,7 +213,7 @@ module ICOCasesParams
   def ico_original_case_error(ico_class_name)
     allowed_case_class_names = []
     CaseLinkTypeValidator::ALLOWED_LINKS_BY_TYPE["original"][ico_class_name].each do | class_name |
-      allowed_case_class_names <<  I18n.t("helpers.label.types.#{class_name}")
+      allowed_case_class_names << I18n.t("helpers.label.types.#{class_name}")
     end
     I18n.t('activerecord.errors.models.case/ico.original_case_number.wrong_type', 
       case_types: allowed_case_class_names.join(", "))

@@ -36,7 +36,6 @@ class Case::OverturnedICO::Base < Case::Base
     self.workflow = 'standard' if workflow.nil?
   end
 
-
   jsonb_accessor :properties,
                  ico_officer_name: :string,
                  escalation_deadline: :date,
@@ -140,7 +139,7 @@ class Case::OverturnedICO::Base < Case::Base
       errors.add(:received_date, :blank)
     elsif received_date > Date.today
       errors.add(:received_date, :future)
-    elsif received_date < Date.today - 4.weeks  && self.new_record?
+    elsif received_date < Date.today - 4.weeks && self.new_record?
       errors.add(:received_date, :past)
     end
   end

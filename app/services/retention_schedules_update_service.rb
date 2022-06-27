@@ -31,7 +31,7 @@ class RetentionSchedulesUpdateService
 
   def call
     if @state_change_event.nil?
-      @error_message =  "Requested retention schedule status action is incorrect"
+      @error_message = "Requested retention schedule status action is incorrect"
       @result = :error
     else
       begin

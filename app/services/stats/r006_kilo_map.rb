@@ -40,7 +40,7 @@ module Stats
       report_type.filename(self.class.report_format)
     end
 
-    # Note: Does not run parent constructor
+    # NOTE: Does not run parent constructor
     def initialize(**)
       @result_set = [COLUMN_HEADINGS]
     end

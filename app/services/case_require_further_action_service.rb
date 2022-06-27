@@ -12,7 +12,6 @@ class CaseRequireFurtherActionService
     @target_team = nil
   end
 
-
   def call
     begin
       ActiveRecord::Base.transaction do
@@ -115,7 +114,7 @@ class CaseRequireFurtherActionService
 
   def check_responder_state
     @target_team = @kase.responding_team
-    responder_active =  !@kase.responder.deactivated? 
+    responder_active = !@kase.responder.deactivated? 
     case_responder_in_responding_team = @kase.responding_team.users.include?(@kase.responder)
     if responder_active && case_responder_in_responding_team
       @trigger_event_name = 'require_further_action'
@@ -124,7 +123,6 @@ class CaseRequireFurtherActionService
       @trigger_event_name = 'require_further_action_to_responder_team'
     end
   end 
-
 
 end
 

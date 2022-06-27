@@ -33,7 +33,6 @@ class UserDeletionService
     roles.destroy_all
   end
 
-
   def delete_user_if_not_member_of_other_team
     delete_memberships_of_team
     @target_user.soft_delete

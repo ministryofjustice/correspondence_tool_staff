@@ -146,13 +146,12 @@ module Warehouse
             count += 1
           end
 
-          GC.start  # Clear up allocated objects
+          GC.start # Clear up allocated objects
           sleep(10) if throttle
         end
 
         count
       end
-
 
       # Methods copied from CSVExporter
 

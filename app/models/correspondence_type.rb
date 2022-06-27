@@ -30,7 +30,6 @@ class CorrespondenceType < ApplicationRecord
                  show_on_menu: [:boolean, default: true],
                  display_order: [:integer, default: nil]
 
-
   enum deadline_calculator_class: {
          'BusinessDays' => 'BusinessDays',
          'CalendarDays' => 'CalendarDays',
@@ -52,7 +51,6 @@ class CorrespondenceType < ApplicationRecord
            through: :correspondence_type_roles
 
   scope :menu_visible, -> { where("properties->>'show_on_menu' = 'true'") }
-
 
   # Mapping of correspondence type to the available sub-classes that may be
   # created when creating that type of correspondence. e.g. when creating an

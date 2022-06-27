@@ -40,7 +40,6 @@ module ConfigurableStateMachine
       @current_indent = -2
     end
 
-
     def run
       line_number = 0
       File.open(@filename, 'r') do |fp|
@@ -60,7 +59,7 @@ module ConfigurableStateMachine
     def dupe_details
       lines = []
       @duplicate_keys.line_numbers.each do |key, line_number|
-        lines <<  " #{key} on line #{line_number} duplicates line #{@seen_keys.line_numbers[key]}"
+        lines << " #{key} on line #{line_number} duplicates line #{@seen_keys.line_numbers[key]}"
       end
       lines
     end

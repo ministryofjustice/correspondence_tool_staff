@@ -34,7 +34,6 @@ class Case::SAR::Offender < Case::Base
   VETTING_IN_PROCESS_EVENT = 'mark_as_vetting_in_progress'.freeze
   READY_FOR_COPY_EVENT = 'mark_as_ready_to_copy'.freeze
 
-
   GOV_UK_DATE_FIELDS = %i[
     date_of_birth
     date_responded

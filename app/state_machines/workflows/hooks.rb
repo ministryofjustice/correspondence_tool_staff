@@ -36,7 +36,7 @@ class Workflows::Hooks
   end
 
   def reassign_user_email
-    if @user !=  @metadata[:target_user]
+    if @user != @metadata[:target_user]
         ActionNotificationsMailer
           .case_assigned_to_another_user(@kase, @metadata[:target_user])
           .deliver_later

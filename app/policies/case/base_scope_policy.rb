@@ -24,7 +24,7 @@ class Case::BaseScopePolicy
     scopes = []
     user.roles.each do | role | 
       resolve_func_name  = "resolve_#{role}_default"
-      resolve_func_feature_name  = "resolve_#{role}_#{@feature.present? ? @feature.to_s : 'default' }"
+      resolve_func_feature_name = "resolve_#{role}_#{@feature.present? ? @feature.to_s : 'default' }"
       if respond_to?(resolve_func_feature_name)
         scopes << send(resolve_func_feature_name)
       else

@@ -12,7 +12,6 @@ class NextStepInfo
     @next_team = get_next_team
   end
 
-
   private
 
   def get_next_state
@@ -38,6 +37,7 @@ class NextStepInfo
       raise "Unexpected next state: #{@next_state}"
     end
   end
+
   def translate_action_param(action_param)
     case action_param
     when 'approve'

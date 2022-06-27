@@ -11,7 +11,7 @@ module CaseFilter
 
     def available_choices
       {
-        :filter_sensitivity => {
+        filter_sensitivity: {
           'non-trigger' => I18n.t('filters.filter_sensitivity.non-trigger'),
           'trigger'     => I18n.t('filters.filter_sensitivity.trigger')
         }

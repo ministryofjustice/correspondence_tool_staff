@@ -22,7 +22,6 @@ module Closable
     ]
   end
 
-
   # Pre-populate date if it was entered by the KILO
   def close
     authorize @case, :can_close_case?
@@ -181,7 +180,6 @@ module Closable
     end
   end
 
-
   protected
 
   def process_closure_params
@@ -195,7 +193,6 @@ module Closable
   def process_date_responded_params
     raise NotImplementedError
   end
-
 
   private
 

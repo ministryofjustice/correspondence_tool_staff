@@ -69,7 +69,7 @@ class CaseSearchService
   def process_params(params)
     params[:search_text]&.strip!
 
-    SearchQuery::filter_classes.each do |filter_class |
+    SearchQuery.filter_classes.each do |filter_class|
       filter_class.process_params!(params)
     end
     params

@@ -4,20 +4,20 @@ module Stats
     module Callbacks
       def self.calculate_overall_columns(stats)
         stats.stats.each do |_team_id, row|
-          Calculations::calculate_overall_figure(row, :responded_in_time)
-          Calculations::calculate_overall_figure(row, :responded_late)
-          Calculations::calculate_overall_figure(row, :open_in_time)
-          Calculations::calculate_overall_figure(row, :open_late)
+          Calculations.calculate_overall_figure(row, :responded_in_time)
+          Calculations.calculate_overall_figure(row, :responded_late)
+          Calculations.calculate_overall_figure(row, :open_in_time)
+          Calculations.calculate_overall_figure(row, :open_late)
         end
       end
 
       def self.calculate_total_columns(stats)
         stats.stats.each do | _team_id, row |
-          row[:non_trigger_total] = Calculations::sum_all_received(:non_trigger, row)
-          row[:trigger_total] = Calculations::sum_all_received(:trigger, row)
-          row[:overall_total] = Calculations::sum_all_received(:overall, row)
+          row[:non_trigger_total] = Calculations.sum_all_received(:non_trigger, row)
+          row[:trigger_total] = Calculations.sum_all_received(:trigger, row)
+          row[:overall_total] = Calculations.sum_all_received(:overall, row)
           if row.key?(:bu_total)
-            row[:bu_total] = Calculations::sum_all_received(:bu, row)
+            row[:bu_total] = Calculations.sum_all_received(:bu, row)
           end
         end
       end
@@ -25,25 +25,25 @@ module Stats
       def self.calculate_percentages(stats)
         stats.stats.each do | _team_id, row |
           if row.key?(:business_group)
-            Calculations::calculate_percentages_for_bu(row)
+            Calculations.calculate_percentages_for_bu(row)
           else
-            Calculations::calculate_percentages_for_month(row)
+            Calculations.calculate_percentages_for_month(row)
           end 
           if row.key?(:bu_total)
-            row[:bu_performance] = Calculations::calculate_bu(row)
+            row[:bu_performance] = Calculations.calculate_bu(row)
           end
         end
       end
     end
 
     def self.calculate_percentages_for_month(row)
-      row[:non_trigger_performance]  = calculate_non_trigger(row)
+      row[:non_trigger_performance] = calculate_non_trigger(row)
       row[:trigger_performance]  = calculate_trigger(row)
       row[:overall_performance]  = calculate_overall_performance(row)  
     end
 
     def self.calculate_percentages_for_bu(row)
-      row[:non_trigger_performance]  = calculate_bu_non_trigger(row)
+      row[:non_trigger_performance] = calculate_bu_non_trigger(row)
       row[:trigger_performance]  = calculate_bu_trigger(row)
       row[:overall_performance]  = calculate_bu_overall_performance(row)  
     end 

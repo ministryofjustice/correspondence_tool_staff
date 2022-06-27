@@ -20,7 +20,6 @@ class BusinessUnit < Team
   validates :parent_id, presence: true
   validates_presence_of :correspondence_type_roles
 
-
   belongs_to :directorate, foreign_key: 'parent_id'
 
   has_one :business_group, through: :directorate
@@ -30,16 +29,16 @@ class BusinessUnit < Team
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
   has_many :responder_user_roles,
-           -> { responder_roles  },
+           -> { responder_roles },
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
   has_many :approver_user_roles,
-           -> { approver_roles  },
+           -> { approver_roles },
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
 
   has_many :team_admin_user_roles,
-           -> { team_admin_roles  },
+           -> { team_admin_roles },
            class_name: 'TeamsUsersRole',
            foreign_key: :team_id
 
@@ -77,7 +76,6 @@ class BusinessUnit < Team
 
   has_many :open_cases, -> { in_open_state }, through: :pending_accepted_assignments, source: :case
   has_many :assigned_open_cases, -> { in_open_or_responded_state }, through: :pending_accepted_assignments, source: :case
-
 
   scope :managing, -> { where(role: 'manager') }
   scope :approving, -> { where(role: 'approver') }

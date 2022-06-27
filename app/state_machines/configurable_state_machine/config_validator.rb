@@ -49,10 +49,10 @@ module ConfigurableStateMachine
     end
 
     def add_error(section_name, message)
-      @errors <<  "File #{@filename} section #{section_name}: #{message}"
+      @errors << "File #{@filename} section #{section_name}: #{message}"
     end
 
-    def  validate_is_hash(config, section, *keys)
+    def validate_is_hash(config, section, *keys)
       keys.each do |key|
         unless config.__send__(key).is_a?(RecursiveOpenStruct)
           add_error section, "Expected #{key} to be a Hash, is a #{config.__send__(key).class}"
@@ -330,7 +330,7 @@ module ConfigurableStateMachine
 
     def validate_predicate_config(event_config, path)
       if event_config && event_config.if.present?
-        result =  validate_predicate_method(event_config.if)
+        result = validate_predicate_method(event_config.if)
         unless result.nil?
           add_error(path, result)
         end
@@ -360,7 +360,7 @@ module ConfigurableStateMachine
 
     def validate_after_transition_config(event_config, path)
       if event_config && event_config.after_transition.present?
-        result =  validate_predicate_method(event_config.after_transition)
+        result = validate_predicate_method(event_config.after_transition)
         unless result.nil?
           add_error(path, result)
         end

@@ -20,7 +20,6 @@ module RetentionSchedulePageOrdering
     end
   end
 
-
   def reset_default_order_from_retention_schedule_order_flag
     if order_flag_is_not_applicable_to_retention_schedules
       set_cookie_order_flag

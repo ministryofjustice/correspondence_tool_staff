@@ -328,7 +328,7 @@ class Case::BasePolicy < ApplicationPolicy
   def can_perform_retention_actions?
     clear_failed_checks
 
-    # Note: the feature flag check is temporary, as a precaution
+    # NOTE: the feature flag check is temporary, as a precaution
     FeatureSet.branston_retention_scheduling.enabled? &&
       show? && user.team_admin? && self.case.closed?
   end

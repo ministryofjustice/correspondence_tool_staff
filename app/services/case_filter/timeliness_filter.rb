@@ -11,7 +11,7 @@ module CaseFilter
 
     def available_choices
       {
-        :filter_timeliness => {
+        filter_timeliness: {
           'in_time' => I18n.t('filters.filter_timeliness.in_time'),
           'late'    => I18n.t('filters.filter_timeliness.late'),
         }

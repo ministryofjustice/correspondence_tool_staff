@@ -84,7 +84,6 @@ class DataRequest < ApplicationRecord
     end
   end
 
-
   def validate_request_type_note
     if request_type == 'other' && request_type_note.blank?
       errors.add(

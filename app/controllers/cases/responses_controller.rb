@@ -71,7 +71,6 @@ module Cases
       @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
       @case = @case.decorate
 
-
       case service.result
       when :blank
         flash.now[:alert] = t('alerts.response_upload_blank?')
@@ -85,7 +84,6 @@ module Cases
         redirect_to case_path @case
       end
     end
-
 
     private
 

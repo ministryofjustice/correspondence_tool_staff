@@ -37,7 +37,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     link_to t("common.show_#{new_option}"), uri.to_s
   end
 
-
   def accepted_case_attachment_types
     Settings.case_uploads_accepted_types.join ','
   end
@@ -241,7 +240,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     else
       content_tag(:span, preview_copy, class: 'ellipsis-preview') +
           content_tag(:span,'...', class:'ellipsis-delimiter js-hidden') +
-          content_tag(:span, remaining_copy,  class: 'ellipsis-complete js-hidden' ) +
+          content_tag(:span, remaining_copy, class: 'ellipsis-complete js-hidden' ) +
           link_to('Show more', '#', class: 'ellipsis-button js-hidden')
     end
   end
@@ -313,7 +312,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   def action_buttons_for_allowed_events(kase, *events)
     events
       .find_all { |name| policy(kase).send("#{name}?") }
-      .map  { |name| send("action_button_for_#{name}", kase) }
+      .map { |name| send("action_button_for_#{name}", kase) }
   end
 
   def action_link_for_destroy_case(kase)
@@ -448,6 +447,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   private
+
   def get_first_number_in_string(number_string)
     return number_string.split(",").first&.upcase if number_string&.include?(",")
     number_string&.upcase
@@ -458,7 +458,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     default_newest = 'search_result_order_by_newest_first'
     destruction_oldest = 'search_result_order_by_oldest_destruction_date'
     destruction_newest = 'search_result_order_by_newest_destruction_date'
-
 
     if current_order_option == destruction_newest
       destruction_oldest

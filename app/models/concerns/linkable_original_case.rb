@@ -2,10 +2,8 @@ module LinkableOriginalCase
   extend ActiveSupport::Concern
 
   included do
-
     validate :validate_original_case
     validate :validate_original_case_not_already_related
-
 
     has_one :original_case_link,
             -> { original },
@@ -40,6 +38,5 @@ module LinkableOriginalCase
       self.errors.add(:linked_cases, :original_case_already_related)
     end
   end
-
 
 end
