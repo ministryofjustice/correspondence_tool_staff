@@ -121,7 +121,7 @@ class Case::BaseDecorator < Draper::Decorator
     if object.message.size < num_chars
       [object.message]
     else
-      [object.message[0..num_chars-1] , object.message[num_chars..-1]]
+      [object.message[0..num_chars-1], object.message[num_chars..-1]]
     end
   end
 
