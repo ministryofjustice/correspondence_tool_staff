@@ -517,7 +517,7 @@ Style/CommentAnnotation:
 
 Layout/CommentIndentation:
   Description: 'Indentation of comments.'
-  Enabled: false
+  Enabled: true
 
 Naming/ConstantName:
   Description: 'Constants should use SCREAMING_SNAKE_CASE.'

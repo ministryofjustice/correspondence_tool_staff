@@ -65,7 +65,7 @@ class Case::BaseDecorator < Draper::Decorator
     end
   end
 
-   # we only display the marker for flagged cases
+  # we only display the marker for flagged cases
   def trigger_case_marker
     if object.flagged?
       h.content_tag :div, class: "#{object.type_abbreviation.downcase}-trigger" do
