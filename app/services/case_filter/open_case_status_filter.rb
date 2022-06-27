@@ -27,7 +27,7 @@ module CaseFilter
           end
         end 
       end 
-      { :filter_open_case_status => state_choices }
+      { filter_open_case_status: state_choices }
     end
 
     private

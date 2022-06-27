@@ -22,7 +22,7 @@ module Cases
       @case.remove_response(current_user, @attachment)
 
       if @case.attachments.empty? && request.format == :js
-        render :js => "window.location = '#{case_path(@case)}'"
+        render js: "window.location = '#{case_path(@case)}'"
       else
         respond_to do |format|
           format.js

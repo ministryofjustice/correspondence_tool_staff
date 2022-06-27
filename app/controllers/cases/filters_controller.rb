@@ -189,8 +189,8 @@ module Cases
 
     def set_order_cookie(order)
       cookies[:search_result_order] = {
-        :value => order,
-        :secure => true 
+        value: order,
+        secure: true 
       }
     end
 

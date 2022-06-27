@@ -11,7 +11,7 @@ module TeamsHelper
     team_name = team.class.name.underscore
     if Pundit.policy(current_user, team).destroy?
       link_to "Deactivate #{team.pretty_type&.downcase}", team_path(team.id),
-                            data: {:confirm => I18n.t(".teams.#{team_name}_detail.destroy")},
+                            data: {confirm: I18n.t(".teams.#{team_name}_detail.destroy")},
                             method: :delete,
                             id: 'deactivate-team-link'
     else

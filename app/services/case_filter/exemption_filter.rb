@@ -30,8 +30,8 @@ module CaseFilter
 
     def available_choices
       {
-        :common_exemption_ids => self.class.available_common_exemptions,
-        :exemption_ids => self.class.available_exemptions
+        common_exemption_ids: self.class.available_common_exemptions,
+        exemption_ids: self.class.available_exemptions
       }
     end
 

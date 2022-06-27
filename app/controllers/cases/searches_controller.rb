@@ -46,7 +46,7 @@ module Cases
 
     def set_cookie_order_flag
       if params["order"].present?
-        cookies[:search_result_order] = {:value => params["order"], :secure => true }
+        cookies[:search_result_order] = {value: params["order"], secure: true }
       end
     end
 

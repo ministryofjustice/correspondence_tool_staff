@@ -257,7 +257,7 @@ module ConfigurableStateMachine
       end
       if !can_trigger_event?(
             event_name: event, 
-            metadata: {:acting_user => user, :acting_team => acting_team},
+            metadata: {acting_user: user, acting_team: acting_team},
             roles: [role])
         return false
       end

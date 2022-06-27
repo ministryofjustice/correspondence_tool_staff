@@ -14,7 +14,7 @@ module CaseFilter
       Case::SAR::OffenderComplaint.priorities.map do |key, value| 
         priorities[key] = value.humanize
       end
-      { :filter_complaint_priority => priorities}
+      { filter_complaint_priority: priorities}
     end
 
     def is_permitted_for_user?
