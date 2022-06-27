@@ -12,7 +12,6 @@ class NextStepInfo
     @next_team = get_next_team
   end
 
-
   private
 
   def get_next_state

@@ -1,7 +1,6 @@
 require 'cts/cases/create'
 require 'cts/cases/constants'
 
-
 class Admin::CasesController < AdminController
 
   before_action :set_correspondence_type,

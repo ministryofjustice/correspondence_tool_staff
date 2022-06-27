@@ -36,7 +36,6 @@ class Case::OverturnedICO::Base < Case::Base
     self.workflow = 'standard' if workflow.nil?
   end
 
-
   jsonb_accessor :properties,
                  ico_officer_name: :string,
                  escalation_deadline: :date,

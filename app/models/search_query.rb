@@ -100,7 +100,6 @@ class SearchQuery < ApplicationRecord
 
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
 
-
   acts_as_tree
 
   def self.parent_search_query_id(case_search_service)

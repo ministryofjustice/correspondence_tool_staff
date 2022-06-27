@@ -60,5 +60,4 @@ class TeamCorrespondenceTypeRole < ApplicationRecord
     end
   end
 
-
 end

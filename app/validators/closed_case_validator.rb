@@ -79,9 +79,6 @@ class ClosedCaseValidator < ActiveModel::Validator
     end
   end
 
-
-
-
   def validate(rec)
     if closure_details_are_validatable?(rec)
       if rec.current_state == 'closed'

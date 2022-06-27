@@ -1,6 +1,5 @@
 class CaseAttachmentUploadGroupCollection
 
-
   def initialize(kase, attachments, role)
     groups_keyed_by_array_of_time_and_user_id = attachments.group_by { |at| [at.upload_group, at.user_id] }
     @grouped_collection = []

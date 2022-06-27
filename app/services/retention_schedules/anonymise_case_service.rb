@@ -25,7 +25,6 @@ module RetentionSchedules
 
   class AnonymiseCaseService
 
-
     ANON_VALUES = {
       case_reference_number: '123456',
       date_of_birth: Date.new(01, 01, 0001),
@@ -43,7 +42,6 @@ module RetentionSchedules
       subject_full_name: 'XXXX XXXX',
       third_party_name: 'Anon requester',
       third_party_relationship: 'Anon relationship',
-
 
       # Offender SAR Complaint specific fields
       gld_contact_email: 'anon.email@cms-gdpr.justice.gov.uk',

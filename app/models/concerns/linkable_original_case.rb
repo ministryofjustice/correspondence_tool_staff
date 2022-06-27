@@ -6,7 +6,6 @@ module LinkableOriginalCase
     validate :validate_original_case
     validate :validate_original_case_not_already_related
 
-
     has_one :original_case_link,
             -> { original },
             class_name: 'LinkedCase',
@@ -40,6 +39,5 @@ module LinkableOriginalCase
       self.errors.add(:linked_cases, :original_case_already_related)
     end
   end
-
 
 end

@@ -8,5 +8,4 @@ module CaseAttachmentParams
     )
   end
 
-
 end

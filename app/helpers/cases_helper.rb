@@ -458,7 +458,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     destruction_oldest = 'search_result_order_by_oldest_destruction_date'
     destruction_newest = 'search_result_order_by_newest_destruction_date'
 
-
     if current_order_option == destruction_newest
       destruction_oldest
     elsif current_order_option == destruction_oldest

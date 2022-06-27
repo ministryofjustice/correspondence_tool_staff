@@ -574,7 +574,7 @@ Layout/EmptyLineBetweenDefs:
 
 Layout/EmptyLines:
   Description: "Don't use several empty lines in a row."
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundAccessModifier:
   Description: "Keep blank lines around access modifiers."

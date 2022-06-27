@@ -124,6 +124,5 @@ class CaseRequireFurtherActionService
     end
   end 
 
-
 end
 

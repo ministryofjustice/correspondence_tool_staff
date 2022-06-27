@@ -38,5 +38,4 @@ class StateMachineConfigConcatenator
     last_modified_time
   end
 
-
 end

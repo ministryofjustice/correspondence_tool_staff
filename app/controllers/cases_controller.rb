@@ -148,7 +148,6 @@ class CasesController < ApplicationController
   end
   alias t4c translate_for_case
 
-
   protected
 
   def case_updater_service

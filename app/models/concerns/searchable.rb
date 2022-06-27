@@ -42,5 +42,4 @@ module Searchable
     self.class.connection.execute update_sql
   end
 
-
 end

@@ -6,7 +6,6 @@ class Case::BaseDecorator < Draper::Decorator
   decorates_association :original_ico_appeal
   decorates_association :original_appeal_and_related_cases
 
-
   # if the case is with a responding team and the current user is a responder
   # in that team, display the name of the specific user it's with instead of
   # the team name

@@ -218,7 +218,6 @@ class Case::Base < ApplicationRecord
 
   validates_presence_of :reason_for_deletion, if: -> { deleted }
 
-
   has_many :assignments, inverse_of: :case, dependent: :destroy, foreign_key: :case_id
 
   has_many :teams, through: :assignments
@@ -404,7 +403,6 @@ class Case::Base < ApplicationRecord
   has_many :original_appeal_and_related_cases,
            through: :original_appeal_and_related_case_links,
            source: :linked_case
-
 
   after_initialize do
     self.workflow = default_workflow if self.workflow.nil?

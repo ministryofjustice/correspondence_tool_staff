@@ -55,5 +55,4 @@ class CaseClosure::Metadatum < ApplicationRecord
     end
   end
 
-
 end

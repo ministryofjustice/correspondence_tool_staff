@@ -51,7 +51,6 @@ class Case::ICO::Base < Case::Base
                  original_external_deadline: :date,
                  original_date_responded: :date
 
-
   acts_as_gov_uk_date :date_ico_decision_received,
                       :date_responded,
                       :date_draft_compliant,
@@ -95,8 +94,6 @@ class Case::ICO::Base < Case::Base
            -> { ico_decision },
            class_name: 'CaseAttachment',
            foreign_key: :case_id
-
-
 
   before_save do
     self.workflow = 'trigger'

@@ -16,7 +16,6 @@ class MarkResponseAsSentService
     end
   end
 
-
   private
 
   def respond_to_ico
@@ -39,7 +38,5 @@ class MarkResponseAsSentService
       @result = :error
     end
   end
-
-
 
 end

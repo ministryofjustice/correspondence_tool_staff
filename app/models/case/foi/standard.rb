@@ -48,7 +48,6 @@ class Case::FOI::Standard < Case::Base
     self.wokflow = 'standard' if workflow.nil?
   end
 
-
   jsonb_accessor :properties,
                  escalation_deadline: :date,
                  internal_deadline: :date,

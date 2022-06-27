@@ -153,7 +153,6 @@ module Warehouse
         count
       end
 
-
       # Methods copied from CSVExporter
 
       def extension_count(kase)

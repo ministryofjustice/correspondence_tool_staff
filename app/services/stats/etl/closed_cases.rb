@@ -5,7 +5,6 @@ module Stats
     class ClosedCases < BaseClosedCases
       RESULT_NAME = 'closed-cases'.freeze
 
-
       def result_name
         RESULT_NAME
       end
