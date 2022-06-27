@@ -293,7 +293,7 @@ module ConfigurableStateMachine
                 kase: @kase,
                 user: params[:acting_user],
                 event: event,
-                message: "No event #{event} for role #{role} and case state " +
+                message: "No event #{event} for role #{role} and case state " \
                          "#{@kase.current_state}"
               )
       end
@@ -313,7 +313,7 @@ module ConfigurableStateMachine
                 kase: @kase,
                 user: params[:acting_user],
                 event: event,
-                message: "Event #{event} not permitted for role #{role} and " +
+                message: "Event #{event} not permitted for role #{role} and " \
                          "case state #{@kase.current_state}"
               )
       end

@@ -105,13 +105,13 @@ module Stats
         '3.S44'       => "S(44) - Prohibitions on disclosure",
         '_SPACER_8'   => '',
         '_USE OF SECTION 21 EXEMPTIONS' => '',
-        '4.A'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" +
+        '4.A'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" \
                             "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the ONLY exemption marked for this case",
-        '4.B'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of " +
-                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " +
+        '4.B'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of " \
+                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " \
                               "ONLY exemption marked for this case and the case was processed IN TIME against the external deadline",
-        '4.C'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" +
-                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " +
+        '4.C'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" \
+                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " \
                               "ONLY exemption marked for this case and the case was processed OUT OF TIME against the external deadline",
         '_SPACER_3'   => '',
         '_ICO APPEAL CASES'  => '',
@@ -121,9 +121,9 @@ module Stats
         '_SPACER_5'   => '',
         '_REFUSAL REASON' => '',
         '_USE OF SECTION 12/14 EXEMPTIONS' => '',
-        '6.S12'       => "Number of cases created in this period that have been with a 'reason for refusal' of " +
+        '6.S12'       => "Number of cases created in this period that have been with a 'reason for refusal' of " \
                             "'S(12(12)) - Exceeded cost to investigate' or '(s12(1)) - Exceeded cost to obtain'",
-        '6.S14'       => "Number of cases created in this period that have been with a 'reason for refusal' of " +
+        '6.S14'       => "Number of cases created in this period that have been with a 'reason for refusal' of " \
                             "'S(14(1)) - Vexatious' or 'S(14(2)) - Repeated request' ",
         '_SPACER_6'   => '',
         '_USE OF THE FOLLOWING EXEMPTIONS LISTED AT PART II OF THE FOI ACT FROM ORIGINAL CASE' => '',

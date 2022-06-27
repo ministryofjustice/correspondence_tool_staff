@@ -718,7 +718,7 @@ Style/LineEndConcatenation:
   Description: >-
                  Use \ instead of + or << to concatenate two string literals at
                  line end.
-  Enabled: false
+  Enabled: true
 
 Style/MethodDefParentheses:
   Description: >-
