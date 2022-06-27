@@ -109,7 +109,7 @@ class GlobalNavManager
     def scopes_for(user_teams_or_roles, from_scope:)
       user_teams_or_roles.map do |user_team_or_role|
 
-        if from_scope.has_key? user_team_or_role
+        if from_scope.key? user_team_or_role
           from_scope[user_team_or_role]
         end
 
