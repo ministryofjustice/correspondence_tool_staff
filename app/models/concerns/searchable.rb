@@ -20,7 +20,6 @@ module Searchable
                               }
                             }
     end
-
   end
 
   class_methods do

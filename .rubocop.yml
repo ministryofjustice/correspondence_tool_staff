@@ -582,7 +582,7 @@ Layout/EmptyLinesAroundAccessModifier:
 
 Layout/EmptyLinesAroundBlockBody:
   Description: "Keeps track of empty lines around block bodies."
-  Enabled: false
+  Enabled: true
 
 Layout/EmptyLinesAroundClassBody:
   Description: "Keeps track of empty lines around class bodies."

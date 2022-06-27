@@ -64,7 +64,6 @@ class CaseLinkingService
                                             linked_case_id: @case.id)
 
       @result = :ok
-
     end
 
     @result

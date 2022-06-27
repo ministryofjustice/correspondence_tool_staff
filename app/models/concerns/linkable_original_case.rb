@@ -2,7 +2,6 @@ module LinkableOriginalCase
   extend ActiveSupport::Concern
 
   included do
-
     validate :validate_original_case
     validate :validate_original_case_not_already_related
 

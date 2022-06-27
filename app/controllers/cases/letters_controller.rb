@@ -15,7 +15,6 @@ class Cases::LettersController < ApplicationController
     respond_to do |format|
       format.html
       format.docx do
-
         template_data = {          
           values: @letter.values, 
           recipient: @letter.name,
