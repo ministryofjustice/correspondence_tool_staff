@@ -4,15 +4,17 @@ module CaseFilter
     def self.identifier
         'filter_status'
     end
-    
+
     def self.filter_attributes
       [:filter_status]
     end
 
     def available_choices
       {
-        filter_status:           {'open'   => I18n.t('filters.filter_status.open'),
-          'closed' => I18n.t('filters.filter_status.closed')}
+        filter_status: {
+          'open'   => I18n.t('filters.filter_status.open'),
+          'closed' => I18n.t('filters.filter_status.closed')
+        }
       }
     end
 
