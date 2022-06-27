@@ -27,7 +27,7 @@ module CaseFilter
 
     def is_permitted_for_user?
       @user.permitted_correspondence_types.any? { 
-        | c_type | ['FOI', 'SAR', 'ICO','OVERTURNED_FOI', 'OVERTURNED_SAR'].include? c_type.abbreviation 
+        | c_type | %w[FOI SAR ICO OVERTURNED_FOI OVERTURNED_SAR].include? c_type.abbreviation 
       }
     end
 

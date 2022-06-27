@@ -22,14 +22,14 @@ class Letter
   def values
     cloned_case = @case.dup
 
-    attributes = [
-      'prison_number',
-      'recipient',
-      'request_dated', 
-      'subject_address', 
-      'subject_full_name', 
-      'third_party_company_name', 
-      'third_party_name'
+    attributes = %w[
+      prison_number
+      recipient
+      request_dated
+      subject_address
+      subject_full_name
+      third_party_company_name
+      third_party_name
     ]
 
     attributes.each do |attr|

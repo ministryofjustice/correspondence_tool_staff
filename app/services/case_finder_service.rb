@@ -104,7 +104,7 @@ class CaseFinderService
     get_root_scope('open_cases_scope')
     .presented_as_open
     .joins(:assignments)
-    .where(assignments: { state: ['pending', 'accepted']})
+    .where(assignments: { state: %w[pending accepted]})
     .distinct('case.id')
   end
 

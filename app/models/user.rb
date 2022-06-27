@@ -190,7 +190,7 @@ class User < ApplicationRecord
   end
 
   def has_live_cases_for_team?(team)
-    cases.with_teams(team).where.not(current_state: ['closed', 'responded']).any?
+    cases.with_teams(team).where.not(current_state: %w[closed responded]).any?
   end
 
   def multiple_team_member?

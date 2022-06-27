@@ -378,7 +378,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   check :user_is_a_responder_for_case do
     user.responding_teams.include?(self.case.responding_team) &&
-        !self.case.current_state.in?(['closed', 'responded'])
+        !self.case.current_state.in?(%w[closed responded])
   end
 
   check :user_is_an_approver_for_case do
@@ -501,7 +501,7 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   check :case_is_not_responded_or_closed do
-    !self.case.current_state.in?( ['responded', 'closed'] )
+    !self.case.current_state.in?( %w[responded closed] )
   end
 
   check :case_is_not_closed do
