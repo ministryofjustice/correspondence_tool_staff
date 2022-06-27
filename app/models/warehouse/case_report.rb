@@ -156,7 +156,8 @@ module Warehouse
       # Methods copied from CSVExporter
 
       def extension_count(kase)
-        pit_count, sar_count = 0, 0
+        pit_count = 0
+        sar_count = 0
         kase.transitions.map(&:event).each do |event|
           case event
           when CaseTransition::EXTEND_FOR_PIT_EVENT
