@@ -11,7 +11,7 @@ class Letter
   def initialize(letter_template_id, kase = nil)
     @letter_template_id = letter_template_id
     @case = kase
-    @letter_template = LetterTemplate.find_by_id(letter_template_id)
+    @letter_template = LetterTemplate.find_by(id: letter_template_id)
   end
 
   def body
@@ -68,7 +68,7 @@ class Letter
   end
 
   def company_name
-    values.third_party_company_name if values.third_party_company_name.present?
+    values.third_party_company_name.presence
   end
 
   def format_address(address)

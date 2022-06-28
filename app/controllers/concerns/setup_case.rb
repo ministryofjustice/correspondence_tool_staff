@@ -41,7 +41,7 @@ module SetupCase
   end
 
   def set_correspondence_type(type)
-    @correspondence_type = CorrespondenceType.find_by_abbreviation(type.upcase)
+    @correspondence_type = CorrespondenceType.find_by(abbreviation: type.upcase)
     @correspondence_type_key = type
   end
 

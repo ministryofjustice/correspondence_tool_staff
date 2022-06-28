@@ -671,7 +671,7 @@ class Case::Base < ApplicationRecord
   def default_clearance_team
     case_type = "#{type_abbreviation.downcase}_cases"
     team_code = Settings.__send__(case_type).default_clearance_team
-    Team.find_by_code team_code
+    Team.find_by code: team_code
   end
 
   def responded_in_time_for_stats_purposes?
@@ -761,7 +761,7 @@ class Case::Base < ApplicationRecord
   def correspondence_type
     # CorrespondenceType.find_by_abbreviation! is overloaded to look in a
     # global cache of all (probably 6) correspondence types
-    CorrespondenceType.find_by_abbreviation! type_abbreviation.parameterize.underscore.upcase
+    CorrespondenceType.find_by! abbreviation: type_abbreviation.parameterize.underscore.upcase
   end
 
   # Override this method if you want to make this correspondence type

@@ -100,39 +100,39 @@ class CorrespondenceType < ApplicationRecord
   end
 
   def self.foi
-    find_by_abbreviation! 'FOI'
+    find_by! abbreviation: 'FOI'
   end
 
   def self.gq
-    find_by_abbreviation! 'GQ'
+    find_by! abbreviation: 'GQ'
   end
 
   def self.sar
-    find_by_abbreviation! 'SAR'
+    find_by! abbreviation: 'SAR'
   end
 
   def self.offender_sar
-    find_by_abbreviation! 'OFFENDER_SAR'
+    find_by! abbreviation: 'OFFENDER_SAR'
   end
 
   def self.offender_sar_complaint
-    find_by_abbreviation! 'OFFENDER_SAR_COMPLAINT'
+    find_by! abbreviation: 'OFFENDER_SAR_COMPLAINT'
   end
 
   def self.ico
-    find_by_abbreviation! 'ICO'
+    find_by! abbreviation: 'ICO'
   end
 
   def self.overturned_sar
-    find_by_abbreviation! 'OVERTURNED_SAR'
+    find_by! abbreviation: 'OVERTURNED_SAR'
   end
 
   def self.overturned_foi
-    find_by_abbreviation! 'OVERTURNED_FOI'
+    find_by! abbreviation: 'OVERTURNED_FOI'
   end
 
   def self.sar_internal_review
-    find_by_abbreviation! 'SAR_INTERNAL_REVIEW'
+    find_by! abbreviation: 'SAR_INTERNAL_REVIEW'
   end
 
   def abbreviation_and_name
