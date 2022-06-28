@@ -48,7 +48,7 @@ module RetentionSchedules
     end
 
     def add_retention_schedule(linked_case: nil)
-      kase = linked_case.present? ? linked_case : @kase
+      kase = linked_case.presence || @kase
 
       rs = RetentionSchedule.find_or_initialize_by(case: kase)
       rs.planned_destruction_date = @planned_destruction_date
@@ -92,11 +92,7 @@ module RetentionSchedules
     end
 
     def closure_date
-      if @kase.date_responded.present?
-        @kase.date_responded
-      else
-        @kase.received_date
-      end
+      @kase.date_responded.presence || @kase.received_date
     end
 
     # This service class can also be called via a rake task to populate or update

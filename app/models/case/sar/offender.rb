@@ -300,7 +300,7 @@ class Case::SAR::Offender < Case::Base
 
   def recipient_name
     return subject_name if subject_recipient?
-    third_party_name.present? ? third_party_name : ''
+    third_party_name.presence || ''
   end
 
   def recipient_address
