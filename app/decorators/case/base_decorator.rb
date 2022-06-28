@@ -205,7 +205,7 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def closed_case_name
-    self.name.blank? ? self.subject : self.name
+    self.name.presence || self.subject
   end
 
   private
