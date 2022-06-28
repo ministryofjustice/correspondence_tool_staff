@@ -157,7 +157,7 @@ module ConfigurableStateMachine
                                     role: role,
                                     message: "No such role") if user_role_config.nil? ###
         state_config = user_role_config.states[@kase.current_state]
-        if state_config.nil? || !state_config.to_hash.keys.include?(event)
+        if state_config.nil? || state_config.to_hash.keys.exclude?(event)
           raise InvalidEventError.new(role: role,
                                       kase: @kase,
                                       user: params[:acting_user],
@@ -252,7 +252,7 @@ module ConfigurableStateMachine
         return false
       end
       state_config = user_role_config.states[@kase.current_state]
-      if state_config.nil? || !state_config.to_hash.keys.include?(event)
+      if state_config.nil? || state_config.to_hash.keys.exclude?(event)
         return false
       end
       unless can_trigger_event?(
@@ -287,7 +287,7 @@ module ConfigurableStateMachine
       end
       user = extract_user_from_metadata(params)
       state_config = user_role_config.states[@kase.current_state]
-      if state_config.nil? || !state_config.to_hash.keys.include?(event)
+      if state_config.nil? || state_config.to_hash.keys.exclude?(event)
         raise InvalidEventError.new(
                 role: role,
                 kase: @kase,
