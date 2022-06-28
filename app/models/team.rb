@@ -61,7 +61,7 @@ class Team < ApplicationRecord
   end
 
   def valid_role
-    unless role.blank?
+    if role.present?
       errors.add(:role, :present)
     end
   end
