@@ -26,40 +26,40 @@ class SearchQuery < ApplicationRecord
       CaseFilter::CaseTypeFilter,
       CaseFilter::CaseTriggerFlagFilter,
       CaseFilter::TimelinessFilter,
-      CaseFilter::ExternalDeadlineFilter, 
-      CaseFilter::InternalDeadlineFilter, 
-      CaseFilter::CaseHighProfileFilter,       
+      CaseFilter::ExternalDeadlineFilter,
+      CaseFilter::InternalDeadlineFilter,
+      CaseFilter::CaseHighProfileFilter,
       CaseFilter::CaseComplaintTypeFilter,
       CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter,
       CaseFilter::CaseworkerFilter],
     "closed" => [
-      CaseFilter::ReceivedDateFilter, 
-      CaseFilter::DateRespondedFilter, 
-      CaseFilter::CaseTypeFilter, 
-      CaseFilter::ExemptionFilter, 
-      CaseFilter::CaseHighProfileFilter,       
+      CaseFilter::ReceivedDateFilter,
+      CaseFilter::DateRespondedFilter,
+      CaseFilter::CaseTypeFilter,
+      CaseFilter::ExemptionFilter,
+      CaseFilter::CaseHighProfileFilter,
       CaseFilter::CaseComplaintTypeFilter,
-      CaseFilter::CaseComplaintSubtypeFilter, 
-      CaseFilter::CaseComplaintPriorityFilter, 
+      CaseFilter::CaseComplaintSubtypeFilter,
+      CaseFilter::CaseComplaintPriorityFilter,
       CaseFilter::CasePartialCaseFlagFilter],
     "my_cases" => [
-      CaseFilter::OpenCaseStatusFilter, 
+      CaseFilter::OpenCaseStatusFilter,
       CaseFilter::CaseComplaintTypeFilter,
-      CaseFilter::CaseComplaintSubtypeFilter, 
+      CaseFilter::CaseComplaintSubtypeFilter,
       CaseFilter::CaseComplaintPriorityFilter],
     "search_cases" => [
-      CaseFilter::CaseStatusFilter, 
+      CaseFilter::CaseStatusFilter,
       CaseFilter::OpenCaseStatusFilter,
-      CaseFilter::CaseTypeFilter, 
+      CaseFilter::CaseTypeFilter,
       CaseFilter::CaseTriggerFlagFilter,
       CaseFilter::TimelinessFilter,
       CaseFilter::ExternalDeadlineFilter,
-      CaseFilter::ExemptionFilter, 
-      CaseFilter::CaseHighProfileFilter,       
+      CaseFilter::ExemptionFilter,
+      CaseFilter::CaseHighProfileFilter,
       CaseFilter::CaseComplaintTypeFilter,
-      CaseFilter::CaseComplaintSubtypeFilter, 
-      CaseFilter::CaseComplaintPriorityFilter, 
+      CaseFilter::CaseComplaintSubtypeFilter,
+      CaseFilter::CaseComplaintPriorityFilter,
       CaseFilter::CasePartialCaseFlagFilter],
     "retention_pending_removal" => [
       CaseFilter::CaseRetentionDeadlineFilter,
@@ -92,8 +92,8 @@ class SearchQuery < ApplicationRecord
   jsonb_accessor(:query, **@@typed_filter_fields)
 
   # Define the list of date fields
-  GOV_UK_DATE_FIELDS = CaseFilter::ReceivedDateFilter.date_fields + 
-                        CaseFilter::DateRespondedFilter.date_fields + 
+  GOV_UK_DATE_FIELDS = CaseFilter::ReceivedDateFilter.date_fields +
+                        CaseFilter::DateRespondedFilter.date_fields +
                         CaseFilter::ExternalDeadlineFilter.date_fields +
                         CaseFilter::InternalDeadlineFilter.date_fields +
                         CaseFilter::CaseRetentionDeadlineFilter.date_fields
@@ -162,7 +162,7 @@ class SearchQuery < ApplicationRecord
                             query_type: merged_params[:query_type])
                      .where('created_at >= ? AND created_at < ?',
                             Date.today, Date.tomorrow)
-                     .where('query = ?', params_to_match_on.to_json)
+                     .where(query: params_to_match_on.to_json)
                      .first
     if search_query.nil?
       search_query = SearchQuery.create(merged_params)
@@ -175,7 +175,7 @@ class SearchQuery < ApplicationRecord
       cases_list ||= Pundit.policy_scope(user, Case::Base.all)
       cases_list = cases_list.__send__(SearchHelper.get_order_option(search_order_choice.to_s), search_text)
     elsif cases_list.nil?
-      raise ArgumentError.new("cannot perform filters without list of cases")    
+      raise ArgumentError.new("cannot perform filters without list of cases")
     else
       if search_order_choice.present?
         order_fields = SearchHelper.get_order_fields(search_order_choice)
@@ -216,7 +216,7 @@ class SearchQuery < ApplicationRecord
   def available_filters(user, scope_type)
     collected_filters = []
     if FILTER_CLASSES_MAP.to_hash.key?(scope_type)
-      FILTER_CLASSES_MAP[scope_type].each do | filter_class | 
+      FILTER_CLASSES_MAP[scope_type].each do | filter_class |
         filter_class_instance = filter_class.new(self, user, Case::Base.none)
         collected_filters << filter_class_instance if filter_class_instance.is_permitted_for_user?
       end

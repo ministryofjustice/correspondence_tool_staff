@@ -110,28 +110,28 @@ class CaseFinderService
 
   def erasable_cases_scope
     retention_cases_scope.where(
-      retention_schedule: { 
+      retention_schedule: {
         state: RetentionSchedule::STATE_TO_BE_ANONYMISED,
-        planned_destruction_date: RetentionSchedule.erasable_cases_viewable_range 
+        planned_destruction_date: RetentionSchedule.erasable_cases_viewable_range
       })
   end
 
   def triagable_cases_scope
     triagable_statuses = [
-      RetentionSchedule::STATE_REVIEW, 
-      RetentionSchedule::STATE_RETAIN, 
+      RetentionSchedule::STATE_REVIEW,
+      RetentionSchedule::STATE_RETAIN,
       RetentionSchedule::STATE_NOT_SET
     ]
 
     retention_cases_scope.where(
-      retention_schedule: { 
+      retention_schedule: {
         state: triagable_statuses
       }).or(triagable_destroy_cases_scope)
   end
 
   def triagable_destroy_cases_scope
     retention_cases_scope.where(
-      retention_schedule: { 
+      retention_schedule: {
         state: RetentionSchedule::STATE_TO_BE_ANONYMISED,
         planned_destruction_date: RetentionSchedule.triagable_destroy_cases_range
       })
@@ -171,7 +171,7 @@ class CaseFinderService
           .joins(:transitions)
           .where(type: CASE_TYPES_ONLY_VISIBLE_WITH_FURTHER_CLEARANCE)
           .where("(properties ->> 'escalation_deadline')::date >= ?", Date.today)
-          .where('case_transitions.event = ?', :request_further_clearance)
+          .where(case_transitions: { event: :request_further_clearance })
       )
       .not_with_teams(team)
       .order(created_at: :desc)

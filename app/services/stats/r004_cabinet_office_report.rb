@@ -191,7 +191,7 @@ module Stats
       exemption = CaseClosure::Exemption.__send__('s21')
       scope
         .where(id: cases_with_only_one_exemption)
-        .joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+        .joins(:exemptions).where(cases_exemptions: { exemption_id: exemption.id })
     end
 
     def scope_with_pit_extension(scope)
@@ -439,15 +439,15 @@ module Stats
     end
 
     def fully_refused_cases_received_and_closed_in_period_with_exemption(exemption)
-      fully_refused_cases_received_and_closed_in_period.left_outer_joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+      fully_refused_cases_received_and_closed_in_period.left_outer_joins(:exemptions).where(cases_exemptions: { exemption_id: exemption.id })
     end
 
     def part_refused_cases_received_and_closed_in_period_with_exemption(exemption)
-      part_refused_cases_received_and_closed_in_period.left_outer_joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+      part_refused_cases_received_and_closed_in_period.left_outer_joins(:exemptions).where(cases_exemptions: { exemption_id: exemption.id })
     end
 
     def fully_and_part_refused_cases_received_and_closed_in_period_with_exemption(exemption)
-      fully_or_part_refused_cases_received_and_closed_in_period.left_outer_joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+      fully_or_part_refused_cases_received_and_closed_in_period.left_outer_joins(:exemptions).where(cases_exemptions: { exemption_id: exemption.id })
     end
 
     def info_not_confirmed_cases_received_and_closed_in_period
@@ -481,7 +481,7 @@ module Stats
     end
 
     def fully_and_part_refused_cases_received_in_period_with_exemption_ico(exemption)
-      fully_and_part_refused_cases_received_in_period_ico.left_outer_joins(:exemptions).where('cases_exemptions.exemption_id = ?', exemption.id)
+      fully_and_part_refused_cases_received_in_period_ico.left_outer_joins(:exemptions).where(cases_exemptions: { exemption_id: exemption.id })
     end
 
     def fully_and_part_refused_cases_received_in_period_ico
