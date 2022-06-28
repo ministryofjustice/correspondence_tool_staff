@@ -63,6 +63,9 @@ Rails/Validation:
 Rails/Date:
   Enabled: false
 
+Rails/TimeZone:
+  Enabled: false
+
 Lint/AmbiguousOperator:
   Description: >-
                  Checks for ambiguous operators in the first argument of a
