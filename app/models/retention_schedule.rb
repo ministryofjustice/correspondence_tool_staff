@@ -44,9 +44,7 @@ class RetentionSchedule < ApplicationRecord
     end
   end
 
-  def human_state
-    aasm.human_state
-  end
+  delegate :human_state, to: :aasm
 
   class << self
     def common_date_viewable_from_range
