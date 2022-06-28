@@ -229,7 +229,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
       counter = self.original_case.case_links.count
       counter_str = counter > 0 ? "-#{counter.to_s.rjust(3, "0")}" : ""
       new_case_number = "Q#{self.original_case.number}#{counter_str}"
-      raise "Duplicate case number, please try again " if Case::Base.find_by_number(new_case_number).present?
+      raise "Duplicate case number, please try again " if Case::Base.find_by(number: new_case_number).present?
       new_case_number
     rescue
       retry if (retries += 1) < 3
