@@ -72,6 +72,9 @@ Rails/LexicallyScopedActionFilter:
 Rails/DuplicateAssociation:
   Enabled: false
 
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: false
+
 # TODO CT-2608:- rubocop-rails
 # This block commented out - restore when we add the Rubocop Rails gem
 ##################### Rails ##################################
