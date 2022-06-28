@@ -15,7 +15,7 @@ class CaseRequireFurtherActionService
   def call
     begin
       ActiveRecord::Base.transaction do
-        update_attributes
+        update
         if validate_dates?
           save_attributes
           trigger_flow_action
