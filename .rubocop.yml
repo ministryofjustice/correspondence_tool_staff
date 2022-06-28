@@ -78,6 +78,9 @@ Rails/ActiveRecordCallbacksOrder:
 Rails/ReflectionClassName:
   Enabled: false
 
+Rails/Blank:
+  Enabled: false
+
 # Rubocop linting
 
 Lint/AmbiguousOperator:
