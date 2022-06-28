@@ -18,7 +18,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     if uri.query.present?
       queries << uri.query
     end
-    unless csv_report.blank?
+    if csv_report.present?
       queries << "report=#{csv_report}"
     end
     unless queries.empty?
