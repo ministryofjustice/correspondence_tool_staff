@@ -254,10 +254,6 @@ class Case::Base < ApplicationRecord
           class_name: 'Assignment',
           foreign_key: :case_id
 
-  has_one :responder,
-          through: :responder_assignment,
-          source: :user
-
   has_one :responding_team,
           through: :responder_assignment,
           source: :team
@@ -974,7 +970,7 @@ class Case::Base < ApplicationRecord
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.not_in_future')
       )
-    elsif (self.date_responded.present? && self.date_draft_compliant > self.date_responded) 
+    elsif (self.date_responded.present? && self.date_draft_compliant > self.date_responded)
       errors.add(
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.after_date_responded')
@@ -1093,10 +1089,10 @@ class Case::Base < ApplicationRecord
   end
 
   def delete_reverse_links(related_case)
-    # When the related cases are managed by collections way, the after_destroy callback 
-    # won't be called as the object is deleted directly. We introduce this call back 
+    # When the related cases are managed by collections way, the after_destroy callback
+    # won't be called as the object is deleted directly. We introduce this call back
     # to make sure the reverse link is removed.
-    reverse_links = LinkedCase.where(case_id: related_case.id, linked_case_id: self.id)    
+    reverse_links = LinkedCase.where(case_id: related_case.id, linked_case_id: self.id)
     reverse_links.each do | reverse_link |
       reverse_link.delete
     end
