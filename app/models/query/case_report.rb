@@ -30,7 +30,7 @@ module Query
       limit << "OFFSET #{@offset}" if @offset.present?
       limit << "LIMIT #{@limit}" if @limit.present?
 
-      <<~SQL
+      <<~SQL.squish
         WITH retrieved_cases AS (#{@retrieval_scope.select(:id).to_sql} #{limit.join(' ')})        
         SELECT 
           #{@columns.join(', ').chomp(',')}
