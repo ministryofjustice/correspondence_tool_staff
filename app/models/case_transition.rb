@@ -25,8 +25,7 @@ class CaseTransition < ApplicationRecord
 
   belongs_to :case,
              inverse_of: :transitions,
-             class_name: 'Case::Base',
-             foreign_key: :case_id
+             class_name: 'Case::Base'
 
   # This list should be bigger, but don't have time or inclination to move all event names here (yet)
   EXTEND_FOR_PIT_EVENT = 'extend_for_pit'.freeze

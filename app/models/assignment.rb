@@ -34,7 +34,6 @@ class Assignment < ApplicationRecord
 
   belongs_to :case,
              inverse_of: :assignments,
-             foreign_key: :case_id,
              class_name: 'Case::Base'
 
   belongs_to :team

@@ -8,7 +8,6 @@ class RetentionSchedule < ApplicationRecord
   # as this retention_schedule is expanded
   # to other / all case types
   belongs_to :case,
-             foreign_key: :case_id,
              class_name: 'Case::SAR::Offender'
 
   # Event `anonymise` will update the `erasure_date` automatically.
