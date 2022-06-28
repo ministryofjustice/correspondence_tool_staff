@@ -414,7 +414,6 @@ class Case::Base < ApplicationRecord
   after_create :create_init_transition, :trigger_reindexing_after_creation
   before_update :update_deadlines
 
-
   delegate :available_events, to: :state_machine
 
   include CaseStates
