@@ -76,7 +76,7 @@ class S3Uploader
   end
 
   def create_attachments(uploaded_files, type)
-    @attachments ||= uploaded_files.reject(&:blank?).map do |uploads_key|
+    @attachments ||= uploaded_files.compact_blank.map do |uploads_key|
       move_uploaded_file(uploads_key, type)
       CaseAttachment.create!(
         type: type.to_s,
