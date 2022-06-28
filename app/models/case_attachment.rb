@@ -21,6 +21,7 @@ class CaseAttachment < ApplicationRecord
   self.inheritance_column = :_type_not_used
   belongs_to :case,
              class_name: 'Case::Base',
+             foreign_key: :case_id,
              inverse_of: :attachments
 
   validates :type, presence: true
