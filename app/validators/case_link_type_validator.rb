@@ -74,7 +74,7 @@ class CaseLinkTypeValidator < ActiveModel::Validator
 
   # Validate whether type of case link is valid or not for a pair of cases.
   def validate(case_link)
-    unless case_link.linked_case.present?
+    if case_link.linked_case.blank?
       return
     end
 

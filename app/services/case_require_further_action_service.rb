@@ -83,7 +83,7 @@ class CaseRequireFurtherActionService
         )
       end 
     end
-    !@kase.errors.present?
+    @kase.errors.blank?
   end
 
   def trigger_flow_action

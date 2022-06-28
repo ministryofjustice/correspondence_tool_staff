@@ -325,7 +325,7 @@ class Case::SAR::Offender < Case::Base
   end
 
   def first_prison_number
-    return '' unless prison_number.present?
+    return '' if prison_number.blank?
     prison_number.gsub(/[,]/, ' ').split(' ').first.upcase
   end
 

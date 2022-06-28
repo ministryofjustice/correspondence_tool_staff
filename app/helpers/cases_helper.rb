@@ -146,7 +146,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               class: 'button'
     when :reassign_user
       path = nil
-      return '' unless @assignments.present?
+      return '' if @assignments.blank?
       if @assignments.size > 1
         path = select_team_case_assignments_path(@case, assignment_ids: @assignments.map(&:id).join('+'))
       else
@@ -361,7 +361,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       if kase.type == "Case::SAR::Offender"
         if kase.third_party? && kase.third_party_company_name.present?
           content_tag(:div, kase.third_party_company_name, class: 'data-detail')
-        elsif kase.third_party? && !kase.third_party_company_name.present?
+        elsif kase.third_party? && kase.third_party_company_name.blank?
           content_tag(:div, kase.third_party_name, class: 'data-detail')
         else
           content_tag(:div, kase.subject, class: 'data-detail')

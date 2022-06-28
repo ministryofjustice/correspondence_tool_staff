@@ -62,7 +62,7 @@ module Stats
     # Using a job allows processing to be offloaded into a separate
     # server/container instance, increasing responsiveness of the web app.
     def run(**args)
-      raise ArgumentError.new('Missing report_guid') unless args[:report_guid].present?
+      raise ArgumentError.new('Missing report_guid') if args[:report_guid].blank?
 
       @background_job = true
       @status = Stats::BaseReport::WAITING
