@@ -15,9 +15,7 @@ class CaseRequireFurtherActionService
   def call
     begin
       ActiveRecord::Base.transaction do
-        # rubocop:disable Rails/ActiveRecordAliases
-        update_attributes
-        # rubocop:enable Rails/ActiveRecordAliases
+        do_update
 
         if validate_dates?
           save_attributes
@@ -38,7 +36,7 @@ class CaseRequireFurtherActionService
 
   private
 
-  def update_attributes
+  def do_update
     update_deadline_attributes
     @kase.assign_attributes(@update_parameters)
   end
