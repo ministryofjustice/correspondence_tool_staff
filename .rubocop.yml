@@ -52,6 +52,10 @@ Rails/HelperInstanceVariable:
 Rails/LexicallyScopedActionFilter:
   Enabled: false
 
+# TODO: enable this back (did break specs)
+Rails/DuplicateAssociation:
+  Enabled: false
+
 # TODO: enable this back:
 Rails/Validation:
   Enabled: false
