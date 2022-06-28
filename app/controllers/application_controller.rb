@@ -69,7 +69,7 @@ class ApplicationController < ActionController::Base
     policy_name = exception.policy.class.to_s.underscore
 
     flash[:alert] = t "pundit.#{policy_name}.#{exception.query}"
-    redirect_to(redirect_path || request.referrer || root_path)
+    redirect_to(redirect_path || request.referer || root_path)
   end
 
   def set_global_nav
