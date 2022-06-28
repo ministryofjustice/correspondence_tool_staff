@@ -57,7 +57,7 @@ module OffenderFormValidators
   end
 
   def set_empty_value_if_unset(params, field)
-    params.merge!(field => "") unless params[field].present?
+    params.merge!(field => "") if params[field].blank?
   end
 
   def set_empty_value_if_unset_for_date(params, field)
