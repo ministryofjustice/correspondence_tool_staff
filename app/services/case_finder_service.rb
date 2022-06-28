@@ -7,7 +7,7 @@ class CaseFinderService
     @scope = get_root_scope
   end
 
-  def for_scopes scope_names
+  def for_scopes(scope_names)
     # This takes a list of scope names:
     #
     #   ['open_cases', 'open_flagged_for_approval']

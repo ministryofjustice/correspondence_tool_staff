@@ -83,7 +83,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: team.email)
   end
 
-  def case_assigned_to_another_user(kase,recipient)
+  def case_assigned_to_another_user(kase, recipient)
     SentryContextProvider.set_context
 
     set_template(Settings.assigned_to_another_user_template)

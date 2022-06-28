@@ -60,7 +60,7 @@ class S3Uploader
       attachments.reject(&:valid?).each do |attachment|
         Rails.logger.error "invalid attachment for case #{@case.id}: #{attachment}"
       end
-      raise RuntimeError, "Cannot add invalid attachments to case."
+      raise "Cannot add invalid attachments to case."
     end
 
     @case.attachments << attachments
@@ -72,8 +72,7 @@ class S3Uploader
   end
 
   def transition_state(_attachments)
-    raise RuntimeError,
-          "Please define the 'transition_state' method in your service."
+    raise "Please define the 'transition_state' method in your service."
   end
 
   def create_attachments(uploaded_files, type)
@@ -93,7 +92,7 @@ class S3Uploader
     when :request  then 'requests'
     when :ico_decision then 'ico_decision'
     else
-      raise RuntimeError, "unknown file type '#{type}'"
+      raise "unknown file type '#{type}'"
     end
   end
 

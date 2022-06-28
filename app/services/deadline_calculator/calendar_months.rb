@@ -73,7 +73,7 @@ module DeadlineCalculator
 
       def calculate_final_date_from_time_units(time_units, base_date)
         months_later = time_units.month.since(base_date)
-        while !months_later.workday?
+        until months_later.workday?
           months_later = months_later.tomorrow
         end
         months_later

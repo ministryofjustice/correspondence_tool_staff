@@ -67,7 +67,7 @@ module ConfigurableStateMachine
 
     def can_trigger_event?(event_name:, metadata:, roles: nil)
       configs = configs_for_event(event_name: event_name, metadata: metadata, roles: roles)
-      configs.map{ |config| event_triggerable_in_config?(config: config, user: @user ) }.any?
+      configs.map { |config| event_triggerable_in_config?(config: config, user: @user ) }.any?
     end
 
     def configs_for_event(event_name:, metadata:, roles:)
@@ -142,7 +142,7 @@ module ConfigurableStateMachine
     def call_guards_for_target_state(target_state, metadata)
       guards = target_state[:guards]
       guards.blank? ||
-        guards.all? { |g| g.call(object,last_transition,metadata) }
+        guards.all? { |g| g.call(object, last_transition, metadata) }
     end
 
     def next_state_for_event(event, params) #rubocop:disable Metrics/MethodLength
@@ -255,7 +255,7 @@ module ConfigurableStateMachine
       if state_config.nil? || !state_config.to_hash.keys.include?(event)
         return false
       end
-      if !can_trigger_event?(
+      unless can_trigger_event?(
             event_name: event, 
             metadata: {acting_user: user, acting_team: acting_team},
             roles: [role])
@@ -293,7 +293,7 @@ module ConfigurableStateMachine
                 kase: @kase,
                 user: params[:acting_user],
                 event: event,
-                message: "No event #{event} for role #{role} and case state " +
+                message: "No event #{event} for role #{role} and case state " \
                          "#{@kase.current_state}"
               )
       end
@@ -313,7 +313,7 @@ module ConfigurableStateMachine
                 kase: @kase,
                 user: params[:acting_user],
                 event: event,
-                message: "Event #{event} not permitted for role #{role} and " +
+                message: "Event #{event} not permitted for role #{role} and " \
                          "case state #{@kase.current_state}"
               )
       end

@@ -15,7 +15,7 @@ module AvailableCaseReports
   end 
 
   def get_cases_reports
-    ReportType.where("abbr like ? ","R90%").all
+    ReportType.where("abbr like ? ", "R90%").all
   end
 
 end

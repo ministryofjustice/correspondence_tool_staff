@@ -166,7 +166,7 @@ class User < ApplicationRecord
   end
 
   def roles_for_case(kase)
-    user_assignments = kase.assignments.where(user_id: self.id).map{ |a| a.team.role }
+    user_assignments = kase.assignments.where(user_id: self.id).map { |a| a.team.role }
     if self.teams.include?(kase.managing_team)
       user_assignments << 'manager'
     end

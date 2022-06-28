@@ -84,7 +84,7 @@ class CorrespondenceType < ApplicationRecord
     end
 
     # This method is used by Case::Base to find its correspondence type
-    def find_by_abbreviation! abbreviation
+    def find_by_abbreviation!(abbreviation)
       all_cached.detect { |ct| ct.abbreviation == abbreviation } || super
     end
   end

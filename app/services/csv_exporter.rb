@@ -125,7 +125,7 @@ class CSVExporter
         @kase.info_held_status&.name,
         @kase.outcome&.name,
         @kase.refusal_reason&.name,
-        @kase.exemptions.map{ |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(','),
+        @kase.exemptions.map { |x| CaseClosure::Exemption.section_number_from_id(x.abbreviation) }.join(','),
         @kase.postal_address,
         @kase.email,
         @kase.appeal_outcome&.name,
@@ -177,7 +177,8 @@ class CSVExporter
   private
 
   def extension_count(kase)
-    pit_count, sar_count = 0, 0
+    pit_count = 0
+    sar_count = 0
     kase.transitions.map(&:event).each do |event|
       case event
       when CaseTransition::EXTEND_FOR_PIT_EVENT

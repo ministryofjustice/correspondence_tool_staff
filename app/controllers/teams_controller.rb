@@ -110,7 +110,7 @@ class TeamsController < ApplicationController
 
     respond_to do |format|
       if area.destroy
-        format.js { render 'teams/business_areas/destroy', locals: { area:area}}
+        format.js { render 'teams/business_areas/destroy', locals: { area: area}}
       end
     end
   end
@@ -121,7 +121,7 @@ class TeamsController < ApplicationController
     area = @team.areas.find(params[:area_id])
 
     respond_to do |format|
-      format.js { render 'teams/business_areas/get_update_form', locals: { area:area}}
+      format.js { render 'teams/business_areas/get_update_form', locals: { area: area}}
     end
   end
 

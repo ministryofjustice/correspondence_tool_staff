@@ -80,7 +80,7 @@ module Stats
         '_SPACER_7'   => '',
         '3.A'         => "Number of cases created and closed in this period that were fully or partly refused. = 2.H + 2.I",
         '_USE OF THE FOLLOWING EXEMPTIONS LISTED AT PART II OF THE FOI ACT' => '',
-        '_Number of cases created and closed in this period that have been marked as refused fully or refused in part with the exemption of ' => '', 
+        '_Number of cases created and closed in this period that have been marked as refused fully or refused in part with the exemption of ' => '',
         '3.S22'       => "S(22) - Information intended for future publication",
         '3.S22A'      => "S(22A) - Research intended for future publication.",
         '3.S23'       => "S(23) - Information supplied by, or relating to, bodies dealing with security matters",
@@ -105,13 +105,13 @@ module Stats
         '3.S44'       => "S(44) - Prohibitions on disclosure",
         '_SPACER_8'   => '',
         '_USE OF SECTION 21 EXEMPTIONS' => '',
-        '4.A'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" +
+        '4.A'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" \
                             "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the ONLY exemption marked for this case",
-        '4.B'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of " +
-                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " +
+        '4.B'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of " \
+                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " \
                               "ONLY exemption marked for this case and the case was processed IN TIME against the external deadline",
-        '4.C'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" +
-                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " +
+        '4.C'         => "Number of requests created and closed this period that have been marked as 'Refused fully' or 'Refused in part' with a 'reason for refusal' of" \
+                              "'Exemption applied' and 'What exemption applied' selection of '(s21) - Information accessible by other means' and this was the " \
                               "ONLY exemption marked for this case and the case was processed OUT OF TIME against the external deadline",
         '_SPACER_3'   => '',
         '_ICO APPEAL CASES'  => '',
@@ -121,13 +121,13 @@ module Stats
         '_SPACER_5'   => '',
         '_REFUSAL REASON' => '',
         '_USE OF SECTION 12/14 EXEMPTIONS' => '',
-        '6.S12'       => "Number of cases created in this period that have been with a 'reason for refusal' of " +
+        '6.S12'       => "Number of cases created in this period that have been with a 'reason for refusal' of " \
                             "'S(12(12)) - Exceeded cost to investigate' or '(s12(1)) - Exceeded cost to obtain'",
-        '6.S14'       => "Number of cases created in this period that have been with a 'reason for refusal' of " +
+        '6.S14'       => "Number of cases created in this period that have been with a 'reason for refusal' of " \
                             "'S(14(1)) - Vexatious' or 'S(14(2)) - Repeated request' ",
         '_SPACER_6'   => '',
         '_USE OF THE FOLLOWING EXEMPTIONS LISTED AT PART II OF THE FOI ACT FROM ORIGINAL CASE' => '',
-        '_Number of cases created and closed in this period that have been marked as refused fully or refused in part with the exemption of  ' => '', 
+        '_Number of cases created and closed in this period that have been marked as refused fully or refused in part with the exemption of  ' => '',
         '7.S21'   => "S(21) - Information accessible by other means",
         '7.S22'   => "S(22) - Information intended for future publication",
         '7.S22A'  => "S(22A) - Research intended for future publication.",
@@ -185,7 +185,7 @@ module Stats
         .select('cases.id')
         .group('cases.id')
         .having("count(cases_exemptions.id) = ?", 1)
-    end 
+    end
 
     def scope_with_exemption_s21_only(scope)
       exemption = CaseClosure::Exemption.__send__('s21')
@@ -198,6 +198,15 @@ module Stats
       scope.where("properties->>'has_pit_extension'::text = ?", true.to_s)
     end
 
+    def responded_in_time_with_pit_extension
+      scope_with_pit_extension(cases_received_and_closed_in_period_responded_in_time)
+    end
+
+    def responded_late_with_pit_extension
+      scope_with_pit_extension(cases_received_and_closed_in_period_responded_late)
+    end
+
+    # rubocop:disable Naming/MethodName
     def get_value_1_A
       cases_received_in_period.count - scope_with_exemption_s21_only(cases_received_in_period).count
     end
@@ -231,7 +240,7 @@ module Stats
     end
 
     def get_value_1_Ci
-      (cases_received_and_closed_in_period_responded_in_time.count - scope_with_exemption_s21_only(cases_received_and_closed_in_period_responded_in_time).count) - 
+      (cases_received_and_closed_in_period_responded_in_time.count - scope_with_exemption_s21_only(cases_received_and_closed_in_period_responded_in_time).count) -
       (responded_in_time_with_pit_extension.count - scope_with_exemption_s21_only(responded_in_time_with_pit_extension).count)
     end
 
@@ -241,16 +250,8 @@ module Stats
       scope_with_exemption_s21_only(responded_late_with_pit_extension).count
     end
 
-    def responded_in_time_with_pit_extension
-      scope_with_pit_extension(cases_received_and_closed_in_period_responded_in_time)
-    end
-
-    def responded_late_with_pit_extension
-      scope_with_pit_extension(cases_received_and_closed_in_period_responded_late)
-    end
-
     def get_value_1_Ciii
-      (cases_received_and_closed_in_period_responded_late.count - scope_with_exemption_s21_only(cases_received_and_closed_in_period_responded_late).count ) - 
+      (cases_received_and_closed_in_period_responded_late.count - scope_with_exemption_s21_only(cases_received_and_closed_in_period_responded_late).count ) -
       (responded_late_with_pit_extension.count - scope_with_exemption_s21_only(responded_late_with_pit_extension).count)
     end
 
@@ -289,25 +290,10 @@ module Stats
       num_s12_fully_refused_with_exemptions + num_s12_part_refused_with_exemptions + num_s12_refusal_reasons
     end
 
-    def num_s12_fully_refused_with_exemptions
-      exemption = CaseClosure::Exemption.s12
-      fully_refused_cases_received_and_closed_in_period_with_exemption(exemption).count
-    end
-
-    def num_s12_part_refused_with_exemptions
-      exemption = CaseClosure::Exemption.s12
-      part_refused_cases_received_and_closed_in_period_with_exemption(exemption).count
-    end
-
-    def num_s12_refusal_reasons
-      reason = CaseClosure::RefusalReason.cost
-      info_not_confirmed_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
-    end
-
     def get_value_2_H
       # part refused_cases with an exemption - just count number of part refused cases, because each
       # part refused case must have at least on exemption
-      part_refused_cases_closed_in_period.count - num_s12_part_refused_with_exemptions - 
+      part_refused_cases_closed_in_period.count - num_s12_part_refused_with_exemptions -
       scope_with_exemption_s21_only(part_refused_cases_closed_in_period).count
     end
 
@@ -343,18 +329,39 @@ module Stats
       num_s12_exemptions_ico + num_s12_refusal_reasons_ico
     end
 
+    def get_value_6_S14
+      num_s14_1_refusal_reason + num_s14_2_refusal_reason
+    end
+
+    def get_value_3_S21
+      exemption = CaseClosure::Exemption.__send__('s21')
+      fully_refused_cases_received_in_period_with_exemption_ico(exemption).count
+    end
+    # rubocop:enable Naming/MethodName
+
+    def num_s12_fully_refused_with_exemptions
+      exemption = CaseClosure::Exemption.s12
+      fully_refused_cases_received_and_closed_in_period_with_exemption(exemption).count
+    end
+
+    def num_s12_part_refused_with_exemptions
+      exemption = CaseClosure::Exemption.s12
+      part_refused_cases_received_and_closed_in_period_with_exemption(exemption).count
+    end
+
+    def num_s12_refusal_reasons
+      reason = CaseClosure::RefusalReason.cost
+      info_not_confirmed_cases_received_and_closed_in_period.where(refusal_reason_id: reason.id).count
+    end
+
     def num_s12_exemptions_ico
       exemption = CaseClosure::Exemption.s12
       fully_and_part_refused_cases_received_in_period_with_exemption_ico(exemption).count
-    end 
+    end
 
     def num_s12_refusal_reasons_ico
       refusal_reason = CaseClosure::RefusalReason.cost
       cases_received_in_period_ico.where(refusal_reason_id: refusal_reason.id).count
-    end
-
-    def get_value_6_S14
-      num_s14_1_refusal_reason + num_s14_2_refusal_reason
     end
 
     def num_s14_1_refusal_reason
@@ -365,11 +372,6 @@ module Stats
     def num_s14_2_refusal_reason
       refusal_reason = CaseClosure::RefusalReason.repeat
       cases_received_in_period_ico.where(refusal_reason_id: refusal_reason.id).count
-    end
-
-    def get_value_3_S21
-      exemption = CaseClosure::Exemption.__send__('s21')
-      fully_refused_cases_received_in_period_with_exemption_ico(exemption).count
     end
 
     def cases_received_and_closed_in_period_responded_late
@@ -466,11 +468,11 @@ module Stats
     end
 
     def cases_original_foi_with_linked_ico_appeal
-      Case::FOI::Standard.joins("join linked_cases on cases.id=linked_cases.linked_case_id")
-            .where("linked_cases": {type: 'original' })
-            .joins("join cases as ico_appeal_foi on ico_appeal_foi.id = linked_cases.case_id")
-            .where("ico_appeal_foi": {type: 'Case::ICO::FOI', 
-                                      "deleted": false})
+      Case::FOI::Standard
+        .joins("join linked_cases on cases.id=linked_cases.linked_case_id")
+        .where("linked_cases": {type: 'original' })
+        .joins("join cases as ico_appeal_foi on ico_appeal_foi.id = linked_cases.case_id")
+        .where("ico_appeal_foi": {type: 'Case::ICO::FOI', "deleted": false})
     end
 
     def fully_and_part_refused_with_exemption_ico(exemption_number)

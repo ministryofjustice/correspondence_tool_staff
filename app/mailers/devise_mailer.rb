@@ -5,7 +5,7 @@ class DeviseMailer < Devise::Mailer
   # Optional. eg. `confirmation_url`
   include Devise::Controllers::UrlHelpers
 
-  def reset_password_instructions record, token, _opts={}
+  def reset_password_instructions(record, token, _opts={})
     SentryContextProvider.set_context
     set_template(Settings.reset_password_instructions_notify_template)
 

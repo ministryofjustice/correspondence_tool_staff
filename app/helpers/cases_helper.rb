@@ -18,10 +18,10 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     if uri.query.present?
       queries << uri.query
     end
-    if !csv_report.blank?
+    unless csv_report.blank?
       queries << "report=#{csv_report}"
     end
-    if !queries.empty?
+    unless queries.empty?
       csv_path += "?#{queries.join('&')}"
     end
     link_to download_link_name || 'Download cases', csv_path
@@ -130,7 +130,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               class: 'button-secondary'
     when :add_responses
       link_to t('common.case.upload_response'),
-              new_case_responses_path(@case,response_action: :upload_responses),
+              new_case_responses_path(@case, response_action: :upload_responses),
               id: 'action--upload-response',
               class: 'button'
     when :create_overturned
@@ -239,7 +239,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
       kase.message
     else
       content_tag(:span, preview_copy, class: 'ellipsis-preview') +
-          content_tag(:span,'...', class:'ellipsis-delimiter js-hidden') +
+          content_tag(:span, '...', class: 'ellipsis-delimiter js-hidden') +
           content_tag(:span, remaining_copy, class: 'ellipsis-complete js-hidden' ) +
           link_to('Show more', '#', class: 'ellipsis-button js-hidden')
     end
@@ -258,7 +258,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   end
 
   def attachment_preview_link(attachment)
-    if attachment.preview_key != nil
+    if !attachment.preview_key.nil?
       link_to "View",
         case_attachment_path(attachment.case, attachment),
         { target: "_blank", class: "view" }
@@ -270,7 +270,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
   def attachment_remove_link(kase, attachment)
     link_to t('common.case.remove_link_html', filename: attachment.filename),
             case_attachment_path(kase, attachment),
-            {method: :delete, class:"delete",
+            {method: :delete, class: "delete",
             remote: true,
             data: {
               confirm: "Are you sure you want to remove #{attachment.filename}?"

@@ -12,7 +12,7 @@ class Workflows::Hooks
   end
 
   def notify_responder_message_received
-    if !is_hook_disabled?
+    unless is_hook_disabled?
       if @user != @kase.responder_assignment&.user
         NotifyResponderService.new(@kase, 'Message received').call
       end

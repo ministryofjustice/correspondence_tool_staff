@@ -66,7 +66,7 @@ module Stats
       .offset(offset)
       .includes(:responded_transitions, :approver_assignments, :assign_responder_transitions) 
       .each { |kase| analyse_case(kase) }
-      if !report_job_guid.nil?
+      unless report_job_guid.nil?
         redis = Redis.new
         redis.set(report_job_guid, @stats.stats.to_json)
       end
@@ -227,7 +227,7 @@ module Stats
           month_key = month.to_s.to_i > 0 ? month.to_s.to_i : month
           stats.each do |stat_item, value|
             if merged_stats.key?(month_key)
-              if !merged_stats[month_key].key?(stat_item)
+              unless merged_stats[month_key].key?(stat_item)
                 merged_stats[month_key][stat_item] = 0
               end
               merged_stats[month_key][stat_item] += value

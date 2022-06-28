@@ -59,7 +59,7 @@ module Stats
       end
     end
 
-    def header_cell row_index, item
+    def header_cell(row_index, item)
       case row_index
       when 0..self.class.start_position_for_main_body
         OpenStruct.new value: item
@@ -95,7 +95,7 @@ module Stats
     end
 
     def set_results(stats)
-      if !@stats.nil?
+      unless @stats.nil?
         @stats.stats = stats 
       end
     end
