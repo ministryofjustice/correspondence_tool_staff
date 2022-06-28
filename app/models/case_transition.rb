@@ -88,7 +88,7 @@ class CaseTransition < ApplicationRecord
 
   def update_most_recent
     last_transition = self.case.transitions.order(:sort_key).last
-    return if last_transition.blank?
+    return unless last_transition.present?
     last_transition.update_column(:most_recent, true)
   end
 end

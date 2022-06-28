@@ -1,7 +1,7 @@
 class PasswordsController < Devise::PasswordsController
 
   def create
-    if resource_params[:email].blank?
+    if !resource_params[:email].present?
       super
     else
       user = User.find_by(email: resource_params[:email].downcase)

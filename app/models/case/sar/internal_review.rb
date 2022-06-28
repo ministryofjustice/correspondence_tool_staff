@@ -85,7 +85,7 @@ class Case::SAR::InternalReview < Case::SAR::Standard
       )
     end
 
-    if other_is_selected && other_option_details.blank?
+    if other_is_selected && !other_option_details.present?
       errors.add(
         :other_option_details,
         message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.absent')

@@ -536,7 +536,7 @@ class Case::Base < ApplicationRecord
   # Cases do not have draft timeliness information set and
   # therefore cannot be considered to be in/out of draft deadline
   def within_draft_deadline?
-    return if date_draft_compliant.blank?
+    return unless date_draft_compliant.present?
 
     date_draft_compliant <= internal_deadline
   end

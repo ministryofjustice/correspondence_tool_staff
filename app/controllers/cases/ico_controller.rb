@@ -61,7 +61,7 @@ module Cases
     # Can only be determined during case creation. Note defaulting to FOI
     # to allow subsequent validation to be performed during Case#Create
     def case_type
-      return Case::ICO::FOI if original_case_id.blank?
+      return Case::ICO::FOI unless original_case_id.present?
       Case::Base.find(original_case_id).class.ico_model
     end
 

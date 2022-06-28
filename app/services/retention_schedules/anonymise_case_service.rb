@@ -121,7 +121,7 @@ module RetentionSchedules
     def guard_clause_checks
       raise RetentionSchedules::WrongCaseTypeError unless @kase.type_of_offender_sar? 
       raise RetentionSchedules::CaseNotClosedError unless @kase.closed?
-      raise RetentionSchedules::NoRetentionScheduleError if @kase.retention_schedule.blank?
+      raise RetentionSchedules::NoRetentionScheduleError unless @kase.retention_schedule.present?
       raise RetentionSchedules::UnactionableStateError unless @kase.retention_schedule.to_be_anonymised?
     end
   end
