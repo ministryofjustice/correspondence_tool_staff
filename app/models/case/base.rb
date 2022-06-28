@@ -405,15 +405,15 @@ class Case::Base < ApplicationRecord
     @deadline_calculator = create_deadline_calculator
   end
 
+  before_save :prevent_number_change,
+              :trigger_reindexing
   before_create :set_initial_state,
                 :set_number,
                 :set_managing_team,
                 :set_deadlines
-  before_update :update_deadlines
-  before_save :prevent_number_change,
-              :trigger_reindexing
-
   after_create :create_init_transition, :trigger_reindexing_after_creation
+  before_update :update_deadlines
+
 
   delegate :available_events, to: :state_machine
 
