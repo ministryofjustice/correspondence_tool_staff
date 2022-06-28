@@ -38,6 +38,9 @@ Rails/Validation:
 Rails/HasManyOrHasOneDependent:
   Enabled: false
 
+Rails/WhereEquals:
+  Enabled: false
+
 # TODO CT-2608:- rubocop-rails
 # This block commented out - restore when we add the Rubocop Rails gem
 ##################### Rails ##################################
