@@ -72,6 +72,9 @@ Rails/Blank:
 Rails/RedundantForeignKey:
   Enabled: false
 
+Rails/ActiveRecordAliases:
+  Enabled: false
+
 Lint/AmbiguousOperator:
   Description: >-
                  Checks for ambiguous operators in the first argument of a
