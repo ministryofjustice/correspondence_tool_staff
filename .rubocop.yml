@@ -45,6 +45,10 @@ Rails/InverseOf:
 Rails/DuplicateScope:
   Enabled: false
 
+# TODO: enable this back
+Rails/HelperInstanceVariable:
+  Enabled: false
+
 Lint/AmbiguousOperator:
   Description: >-
                  Checks for ambiguous operators in the first argument of a
