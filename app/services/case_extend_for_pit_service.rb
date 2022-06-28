@@ -35,7 +35,7 @@ class CaseExtendForPITService
   private
 
   def validate_params
-    if @reason.blank?
+    unless @reason.present?
       @case.errors.add(:reason_for_extending, "cannot be blank")
       @result = :validation_error
     end

@@ -60,7 +60,7 @@ class TeamJoinService
   end
 
   def create_role(team, ur)
-    if team.user_roles.where(user_id: ur.user.id, role: ur.role).blank?
+    unless team.user_roles.where(user_id: ur.user.id, role: ur.role).present?
       TeamsUsersRole.create(team: team, user: ur.user, role: ur.role)
     end
   end
