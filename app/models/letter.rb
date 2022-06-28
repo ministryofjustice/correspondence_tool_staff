@@ -11,7 +11,7 @@ class Letter
   def initialize(letter_template_id, kase = nil)
     @letter_template_id = letter_template_id
     @case = kase
-    @letter_template = LetterTemplate.find_by_id(letter_template_id)
+    @letter_template = LetterTemplate.find_by(id: letter_template_id)
   end
 
   def body

@@ -33,7 +33,7 @@ class Report < ApplicationRecord
   attr_accessor :correspondence_type
  
   def self.last_by_abbr(abbr)
-    report_type = ReportType.find_by_abbr(abbr)
+    report_type = ReportType.find_by(abbr: abbr)
     where(report_type_id: report_type.id).order(id: :desc).limit(1).singular
   end
 

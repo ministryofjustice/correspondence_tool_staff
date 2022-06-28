@@ -99,7 +99,7 @@ class ApplicationController < ActionController::Base
 
   def send_csv_case_by_specific_report(specific_report)
     headers["Content-Type"] = 'text/csv; charset=utf-8'
-    report_type = ReportType.find_by_abbr(specific_report)
+    report_type = ReportType.find_by(abbr: specific_report)
     report_service_class = report_type.class_name.constantize
     report_service = report_service_class.new(case_scope: @cases)
     headers["Content-Disposition"] =

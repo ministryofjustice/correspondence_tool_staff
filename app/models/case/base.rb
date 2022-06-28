@@ -671,7 +671,7 @@ class Case::Base < ApplicationRecord
   def default_clearance_team
     case_type = "#{type_abbreviation.downcase}_cases"
     team_code = Settings.__send__(case_type).default_clearance_team
-    Team.find_by_code team_code
+    Team.find_by code: team_code
   end
 
   def responded_in_time_for_stats_purposes?
@@ -758,11 +758,13 @@ class Case::Base < ApplicationRecord
     self.class.type_abbreviation
   end
 
+  #rubocop:disable Rails/DynamicFindBy
   def correspondence_type
     # CorrespondenceType.find_by_abbreviation! is overloaded to look in a
     # global cache of all (probably 6) correspondence types
     CorrespondenceType.find_by_abbreviation! type_abbreviation.parameterize.underscore.upcase
   end
+  #rubocop:enable Rails/DynamicFindBy
 
   # Override this method if you want to make this correspondence type
   # assignable by the same business units as another correspondence type. e.x.
@@ -974,7 +976,7 @@ class Case::Base < ApplicationRecord
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.not_in_future')
       )
-    elsif (self.date_responded.present? && self.date_draft_compliant > self.date_responded) 
+    elsif (self.date_responded.present? && self.date_draft_compliant > self.date_responded)
       errors.add(
         :date_draft_compliant,
         I18n.t('activerecord.errors.models.case.attributes.date_draft_compliant.after_date_responded')
@@ -1093,10 +1095,10 @@ class Case::Base < ApplicationRecord
   end
 
   def delete_reverse_links(related_case)
-    # When the related cases are managed by collections way, the after_destroy callback 
-    # won't be called as the object is deleted directly. We introduce this call back 
+    # When the related cases are managed by collections way, the after_destroy callback
+    # won't be called as the object is deleted directly. We introduce this call back
     # to make sure the reverse link is removed.
-    reverse_links = LinkedCase.where(case_id: related_case.id, linked_case_id: self.id)    
+    reverse_links = LinkedCase.where(case_id: related_case.id, linked_case_id: self.id)
     reverse_links.each do | reverse_link |
       reverse_link.delete
     end
