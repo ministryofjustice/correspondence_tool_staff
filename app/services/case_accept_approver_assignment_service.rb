@@ -19,7 +19,7 @@ class CaseAcceptApproverAssignmentService
       @result = :ok
       true
     rescue => err
-      Rails.logger.debug ">>>> error #{err.class} #{__FILE__}:#{__LINE__} <<<<\n"
+      Rails.logger.debug { ">>>> error #{err.class} #{__FILE__}:#{__LINE__} <<<<\n" }
       Rails.logger.debug err.message
       Rails.logger.debug err.backtrace
       raise
