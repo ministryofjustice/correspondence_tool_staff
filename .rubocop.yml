@@ -49,6 +49,13 @@ Rails/DuplicateScope:
 Rails/HelperInstanceVariable:
   Enabled: false
 
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+
+# TODO: enable this back:
+Rails/Validation:
+  Enabled: false
+
 Lint/AmbiguousOperator:
   Description: >-
                  Checks for ambiguous operators in the first argument of a
