@@ -1,7 +1,9 @@
 require:
   - rubocop-performance
+  - rubocop-rails
 
 AllCops:
+  NewCops: enable
   DisabledByDefault: true
 
   Exclude:
@@ -12,9 +14,9 @@ AllCops:
     - 'vendor/**/*' # this prevents version mismatch in circleci
     - 'vendor/bundle/**/*' # this prevents rubocop being run on dependencies in circleci
 
-# TODO CT-2608:- rubocop-rails
-# This block commented out - restore when we add the Rubocop Rails gem
-##################### Rails ##################################
+Rails:
+  Enabled: true
+
 
 # Rails/ActionFilter:
 #   Description: 'Enforces consistent use of action filter methods.'

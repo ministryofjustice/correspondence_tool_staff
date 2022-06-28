@@ -57,8 +57,8 @@ gem 'rails-data-migrations', '~> 1.2.0'
 gem 'recursive-open-struct'
 gem 'sablon'
 gem 'sass-rails', '~> 6.0'
-gem 'sentry-ruby' 
-gem 'sentry-rails' 
+gem 'sentry-ruby'
+gem 'sentry-rails'
 gem 'slim-rails', '~> 3.4'
 gem 'shell-spinner'
 gem 'sidekiq', '~> 6.4.0'
@@ -106,7 +106,7 @@ group :development, :test do
   gem 'rubocop', '~> 1.29', require: false
   gem 'rubocop-rspec', '~> 2.10', require: false
   gem 'rubocop-performance', require: false
-  # TODO: CT-2608: gem 'rubocop-rails', require: false
+  gem 'rubocop-rails', require: false
   gem 'selenium-webdriver', '~> 4.1.0'
   gem 'spring-commands-rspec'
 end
