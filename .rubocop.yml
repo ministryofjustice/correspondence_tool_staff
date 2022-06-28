@@ -60,6 +60,9 @@ Rails/DuplicateAssociation:
 Rails/Validation:
   Enabled: false
 
+Rails/Date:
+  Enabled: false
+
 Lint/AmbiguousOperator:
   Description: >-
                  Checks for ambiguous operators in the first argument of a
