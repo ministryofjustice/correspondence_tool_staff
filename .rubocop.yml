@@ -59,6 +59,9 @@ Rails/InverseOf:
 Rails/OutputSafety:
   Enabled: false
 
+Rails/RedundantForeignKey:
+  Enabled: false
+
 # TODO CT-2608:- rubocop-rails
 # This block commented out - restore when we add the Rubocop Rails gem
 ##################### Rails ##################################
