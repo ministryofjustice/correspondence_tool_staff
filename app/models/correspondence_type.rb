@@ -99,6 +99,7 @@ class CorrespondenceType < ApplicationRecord
     CorrespondenceType.properties_where_not(report_category_name: '').order(Arel.sql("(correspondence_types.properties -> 'report_category_name') asc"))
   end
 
+  # rubocop:disable Rails/DynamicFindBy
   def self.foi
     find_by_abbreviation! 'FOI'
   end
@@ -134,6 +135,7 @@ class CorrespondenceType < ApplicationRecord
   def self.sar_internal_review
     find_by_abbreviation! 'SAR_INTERNAL_REVIEW'
   end
+  # rubocop:enable Rails/DynamicFindBy
 
   def abbreviation_and_name
     "#{abbreviation.tr('_', '-')} - #{name}"

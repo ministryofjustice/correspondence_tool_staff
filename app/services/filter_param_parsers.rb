@@ -4,7 +4,7 @@ module FilterParamParsers
   class_methods do
     def process_array_param(params, name)
       if params.key?(name)
-        params[name] = params[name].reject(&:blank?).sort
+        params[name] = params[name].compact_blank.sort
       end
     end
 

@@ -16,7 +16,7 @@ class DataRequestUpdateService
         @result = :unprocessed
 
         @data_request.assign_attributes(@params.merge!(user_id: @user.id))
-        return unless @data_request.changed?
+        next unless @data_request.changed?
 
         @data_request.save!
 

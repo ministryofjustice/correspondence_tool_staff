@@ -12,7 +12,7 @@ class DataRequestCreateService
     ActiveRecord::Base.transaction do
       begin
         @result = :unprocessed
-        return if @data_request.blank?
+        next if @data_request.blank?
 
         @case.save!
 

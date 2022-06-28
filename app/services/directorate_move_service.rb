@@ -78,7 +78,7 @@ class DirectorateMoveService
     # Team.name does not allow duplicates on validation for active teams,
     #  so to allow us to save the new team we must give it a unique name
     @new_directorate.name = "(Moved from #{@directorate.name})"
-    @new_directorate.code = "#{@directorate.code}-NEW" unless @directorate.code.blank?
+    @new_directorate.code = "#{@directorate.code}-NEW" if @directorate.code.present?
     @new_directorate.properties = @directorate.properties
     @new_directorate.save
   end
@@ -98,7 +98,7 @@ class DirectorateMoveService
   def restore_new_directorate_name_to_original_name
     # New directorate gets original directorate name to retain consistency for the users
     @new_directorate.name = @directorate.original_team_name
-    @new_directorate.code = @new_directorate.code.sub(/-NEW$/, "") unless @directorate.code.blank?
+    @new_directorate.code = @new_directorate.code.sub(/-NEW$/, "") if @directorate.code.present?
     @new_directorate.save
   end
 

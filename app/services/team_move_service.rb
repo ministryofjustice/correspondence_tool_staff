@@ -68,7 +68,7 @@ class TeamMoveService
     #  so to allow us to save the new team we must give it a unique name
     @new_team.name = "(Moved from #{@team.directorate.name})"
     # Duplicate @team.code is a problem too
-    @new_team.code = "#{@team.code}-NEW" unless @team.code.blank?
+    @new_team.code = "#{@team.code}-NEW" if @team.code.present?
     @new_team.correspondence_type_roles = @team.correspondence_type_roles
     @new_team.properties = @team.properties
     @new_team.user_roles = @team.user_roles
@@ -100,14 +100,14 @@ class TeamMoveService
   def restore_new_team_name_to_original_name
     # New team gets original team name to retain consistency for the users
     @new_team.name = @team.original_team_name
-    @new_team.code = @new_team.code.sub(/-NEW$/, "") unless @team.code.blank?
+    @new_team.code = @new_team.code.sub(/-NEW$/, "") if @team.code.present?
     @new_team.save
   end
 
   def restore_users_for_old_team
     @keep_user_roles.each do |team_id, user_id, role|
-      team = Team.find_by_id(team_id)
-      user = User.find_by_id(user_id)
+      team = Team.find_by(id: team_id)
+      user = User.find_by(id: user_id)
       if team && user
         TeamsUsersRole.create!(team: team, user: user, role: role)
       end

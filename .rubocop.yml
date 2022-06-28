@@ -1,7 +1,9 @@
 require:
   - rubocop-performance
+  - rubocop-rails
 
 AllCops:
+  NewCops: enable
   DisabledByDefault: true
 
   Exclude:
@@ -12,62 +14,74 @@ AllCops:
     - 'vendor/**/*' # this prevents version mismatch in circleci
     - 'vendor/bundle/**/*' # this prevents rubocop being run on dependencies in circleci
 
-# TODO CT-2608:- rubocop-rails
-# This block commented out - restore when we add the Rubocop Rails gem
-##################### Rails ##################################
+Rails:
+  Enabled: true
 
-# Rails/ActionFilter:
-#   Description: 'Enforces consistent use of action filter methods.'
-#   Enabled: true
+Rails/Date:
+  Enabled: false
 
-# Rails/Date:
-#   Description: >-
-#                   Checks the correct usage of date aware methods,
-#                   such as Date.today, Date.current etc.
-#   Enabled: true
+Rails/TimeZone:
+  Enabled: false
 
-# Rails/Delegate:
-#   Description: 'Prefer delegate method for delegations.'
-#   Enabled: true
+Rails/I18nLocaleTexts:
+  Enabled: false
 
-# Rails/FindBy:
-#   Description: 'Prefer find_by over where.first.'
-#   Enabled: true
+Rails/SkipsModelValidations:
+  Enabled: false
 
-# Rails/FindEach:
-#   Description: 'Prefer all.find_each over all.find.'
-#   Enabled: true
+Rails/DuplicateScope:
+  Enabled: false
 
-# Rails/HasAndBelongsToMany:
-#   Description: 'Prefer has_many :through to has_and_belongs_to_many.'
-#   Enabled: true
+Rails/Validation:
+  Enabled: false
 
-# Rails/Output:
-#   Description: 'Checks for calls to puts, print, etc.'
-#   Enabled: true
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
 
-# Rails/ReadWriteAttribute:
-#   Description: >-
-#                  Checks for read_attribute(:attr) and
-#                  write_attribute(:attr, val).
-#   Enabled: true
+Rails/WhereEquals:
+  Enabled: false
 
-# Rails/ScopeArgs:
-#   Description: 'Checks the arguments of ActiveRecord scopes.'
-#   Enabled: false
+Rails/FilePath:
+  Enabled: false
 
-# Rails/TimeZone:
-#   Description: 'Checks the correct usage of time zone aware methods.'
-#   StyleGuide: 'https://github.com/bbatsov/rails-style-guide#time'
-#   Reference: 'http://danilenko.org/2012/7/6/rails_timezones'
-#   Enabled: true
+Rails/Delegate:
+  Enabled: false
 
-# Rails/Validation:
-#   Description: 'Use validates :attribute, hash of validations.'
-#   Enabled: true
+Rails/FindEach:
+  Enabled: false
 
+Rails/RedundantPresenceValidationOnBelongsTo:
+  Enabled: false
 
-#################### Lint ################################
+Rails/InverseOf:
+  Enabled: false
+
+Rails/OutputSafety:
+  Enabled: false
+
+Rails/RedundantForeignKey:
+  Enabled: false
+
+# TODO: enable this
+Rails/HelperInstanceVariable:
+  Enabled: false
+
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+
+Rails/DuplicateAssociation:
+  Enabled: false
+
+Rails/ActiveRecordCallbacksOrder:
+  Enabled: false
+
+Rails/ReflectionClassName:
+  Enabled: false
+
+Rails/Blank:
+  Enabled: false
+
+# Rubocop linting
 
 Lint/AmbiguousOperator:
   Description: >-
