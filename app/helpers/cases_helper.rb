@@ -261,7 +261,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     if !attachment.preview_key.nil?
       link_to "View",
         case_attachment_path(attachment.case, attachment),
-        { target: "_blank", class: "view" }
+        { target: "_blank", class: "view", rel: "noopener" }
     else
       ''
     end
