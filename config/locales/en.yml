@@ -545,6 +545,7 @@ en:
           <div class="heading-medium">Where the information should be sent</div>
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+        request_method: How was the SAR request received by MOJ?
       sar_internal_review:
         sar_ir_subtypes:
           compliance: Compliance
@@ -746,6 +747,7 @@ en:
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
         subject_type: Who is the person the information is being requested about?      
         third_party: Is the information being requested on someone's behalf?      
+        request_method: How was the SAR request received by MOJ?
       sar:
         email: "Recipient email address"
         message: Full case details
@@ -757,6 +759,7 @@ en:
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+        request_method: How was the SAR request received by MOJ?
       case_sar_offender:
         postal_address: Recipient postal address
         request_dated: What is the date on the complaint?
