@@ -1029,6 +1029,7 @@ en:
       request: "Request"
       request_amends: Request amends
       request_dated: "Date on the request"
+      request_method: How was the SAR request received by MOJ?
       requester_reference: Requester reference
       requester_type: "Type of requester"
       respond: Mark response as sent

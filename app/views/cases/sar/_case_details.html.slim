@@ -15,6 +15,7 @@
         - if case_details.third_party?
           = render partial: 'cases/sar/third_party_relationship', locals: { case_details: case_details }
         = render partial: 'cases/shared/date_received', locals: { case_details: case_details }
+        = render partial: 'cases/shared/request_method', locals: { case_details: case_details }
         = render partial: 'cases/shared/case_deadlines', locals: { case_details: case_details }
         = render partial: 'cases/sar/response_address', locals: { case_details: case_details }
         - if case_details.has_date_draft_compliant?
