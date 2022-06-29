@@ -50,6 +50,9 @@
 
     = f.hidden_field :flag_for_disclosure_specialists, value: 'no'
 
+    = f.radio_button_fieldset :request_method,
+                              choices: Case::SAR::Standard.request_methods.keys
+
     h2.heading-medium 
       = t('admin.cases.new.sar.headings.where_information_should_be_sent')
     = f.radio_button_fieldset :reply_method, choices: [:send_by_email, :send_by_post], legend_options: { class: 'visually-hidden' } do |fieldset|

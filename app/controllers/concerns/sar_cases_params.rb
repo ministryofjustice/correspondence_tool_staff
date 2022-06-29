@@ -35,6 +35,7 @@ module SARCasesParams
       :message,
       :flag_for_disclosure_specialists,
       :reply_method,
+      :request_method,
       :email,
       :postal_address
     )
