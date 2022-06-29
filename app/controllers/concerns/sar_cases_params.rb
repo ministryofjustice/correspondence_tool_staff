@@ -17,6 +17,7 @@ module SARCasesParams
       :third_party,
       :third_party_relationship,
       :reply_method,
+      :request_method,
       uploaded_request_files: [],
     )
   end

@@ -12,4 +12,7 @@
   - if FeatureSet.trigger_sars.enabled?
     = f.radio_button_fieldset :flag_for_disclosure_specialists
 
+  = f.radio_button_fieldset :request_method,
+    choices: Case::SAR::Standard.request_methods.keys
+
   = f.submit t('button.next_page_assign'), { class: 'button' }
