@@ -220,6 +220,8 @@ en:
           attributes:
             subject_full_name:
               blank: cannot be blank
+            request_method:
+              blank: cannot be blank
             subject_type:
               blank: cannot be blank
             email:

@@ -54,6 +54,7 @@ FactoryBot.define do
     sequence(:postal_address)     { |n| "#{identifier} postal address #{n}" }
     sequence(:subject_full_name)  { |n| "Subject #{n}" }
     subject_type                  { 'offender' }
+    request_method                { 'post' }
     third_party                   { false }
     created_at                    { creation_time }
     creator                       { create(:user, :orphan) }
