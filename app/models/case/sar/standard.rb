@@ -57,7 +57,7 @@ class Case::SAR::Standard < Case::Base
                  third_party: :boolean,
                  third_party_relationship: :string,
                  reply_method: :string,
-                 request_method: :string,
+                 # request_method: :string,
                  late_team_id: :integer,
                  date_draft_compliant: :date,
                  # indicate whether the deadline has been extended
@@ -100,7 +100,7 @@ class Case::SAR::Standard < Case::Base
 
   validates_presence_of :reply_method
   validates_presence_of :subject_type
-  validates_presence_of :request_method
+  validates_presence_of :request_method, unless: :sar_internal_review?
 
   validate :validate_name
   validate :validate_third_party_relationship

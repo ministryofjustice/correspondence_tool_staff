@@ -32,12 +32,6 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     self.workflow = 'trigger'
   end
 
-  # because we inherit from SAR::Standard, request method is required field
-  # but this should not be tracked for SAR IR cases
-  before_validation do
-    self.request_method = 'post'
-  end
-
   class << self
     def type_abbreviation
       # This string is used when constructing paths or methods in other parts of
