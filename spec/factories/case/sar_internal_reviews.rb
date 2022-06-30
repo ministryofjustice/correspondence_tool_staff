@@ -49,6 +49,7 @@ FactoryBot.define do
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(name: identifier) }
     reply_method                  { 'send_by_email' }
+    request_method                { 'post' }
     sar_ir_subtype                { 'compliance' }
     sequence(:subject)            { |n| "#{identifier} subject #{n}" }
     sequence(:message)            { |n| "#{identifier} message #{n}" }
