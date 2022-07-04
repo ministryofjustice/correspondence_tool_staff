@@ -22,6 +22,7 @@ module OffenderSARCasesParams
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :recipient,
       :requester_type,
+      :request_method,
       :subject,
       :subject_address,
       :subject_aliases,

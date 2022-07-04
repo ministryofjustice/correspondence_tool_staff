@@ -58,6 +58,7 @@ class Case::SAR::Offender < Case::Base
                  recipient: :string,
                  subject_address: :string,
                  request_dated: :date,
+                 request_method: :string,
                  requester_reference: :string,
                  subject_aliases: :string,
                  subject_full_name: :string,
@@ -96,6 +97,12 @@ class Case::SAR::Offender < Case::Base
     no: 'no',
     awaiting_response: 'awaiting_response',
   }
+  
+  enum request_method: {
+    post: 'post',
+    email: 'email',
+    web_portal: 'web_portal',
+  }
 
   has_paper_trail only: [
     :name,
@@ -113,10 +120,12 @@ class Case::SAR::Offender < Case::Base
   validates :date_of_birth, presence: true
 
   validates_presence_of :subject_address
+  validates :request_method, presence: true
 
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
   validates :recipient, presence: true
+  
   validate :validate_date_of_birth
   validate :validate_received_date
   validate :validate_third_party_names
@@ -289,6 +298,7 @@ class Case::SAR::Offender < Case::Base
   def third_party_address
     postal_address
   end
+
 
   def requester_name
     third_party ? third_party_name : subject_name
