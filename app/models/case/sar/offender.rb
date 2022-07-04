@@ -121,7 +121,7 @@ class Case::SAR::Offender < Case::Base
   validates :date_of_birth, presence: true
 
   validates_presence_of :subject_address
-#  validates_presence_of :request_method, inclusion: { in: ['post','email','web_portal','unknown'], message: "cannot be blank" }
+  #  validates_presence_of :request_method, inclusion: { in: ['post','email','web_portal','unknown'], message: "cannot be blank" }
 
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
@@ -160,7 +160,6 @@ class Case::SAR::Offender < Case::Base
     end
     errors[:recipient].any?
   end
-
 
   def validate_received_date
     super
@@ -301,7 +300,6 @@ class Case::SAR::Offender < Case::Base
   def third_party_address
     postal_address
   end
-
 
   def requester_name
     third_party ? third_party_name : subject_name
