@@ -73,6 +73,34 @@ describe Case::SAR::Offender do
       end
     end
   end
+  
+  describe '#request_method' do
+    context 'valid values' do
+      it 'does not error' do
+        expect(build(:sar_case, request_method: 'verbal')).to be_valid
+        expect(build(:sar_case, request_method: 'post')).to be_valid
+        expect(build(:sar_case, request_method: 'email')).to be_valid
+        expect(build(:sar_case, request_method: 'web_portal')).to be_valid
+        expect(build(:sar_case, request_method: 'unknown')).to be_valid
+      end
+    end
+
+    context 'invalid value' do
+      it 'errors' do
+        expect {
+          build(:sar_case, request_method: 'plumber')
+        }.to raise_error ArgumentError
+      end
+    end
+
+    context 'nil' do
+      it 'errors' do
+        kase = build(:sar_case, request_method: nil)
+        expect(kase).not_to be_valid
+        expect(kase.errors[:request_method]).to eq ["cannot be blank"]
+      end
+    end
+  end
 
   describe '#subject_type' do
     context 'valid values' do

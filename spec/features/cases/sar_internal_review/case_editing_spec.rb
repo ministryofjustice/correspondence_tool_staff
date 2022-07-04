@@ -84,7 +84,7 @@ feature 'SAR Internal Review Case can be edited', js:true do
       then_they_expect_the_new_details_to_be_reflected_on_the_case_show_page
     end
 
-    fit 'will allow me to edit the details of a case closure' do
+    it 'will allow me to edit the details of a case closure' do
       when_an_approver_logs_in
       and_loads_the_case_show_page(closed_sar_ir)
       and_they_edit_case_closure_details

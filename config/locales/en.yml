@@ -513,6 +513,7 @@ en:
         info_held_status_abbreviation: Was the information held?
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
+        request_method: How was the request received by MOJ?
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -768,6 +769,7 @@ en:
         subject_full_name: "Full name of data subject"
         subject_address: "What is the location of the data subject?"        
         subject_type: What is their relationship to the MOJ?
+        request_method: How was the request received by MOJ?
       offender_sar:
         case_reference_number: Case reference number (CRN)
         external_reference: Requester reference (optional)
@@ -977,6 +979,7 @@ en:
       date_responded: Date response sent to requester
       data_subject: Full name of subject
       data_subject_type: Subject type
+      request_method: request_method
       draft_timeliness: Draft timeliness
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>

@@ -24,7 +24,12 @@ tr.date-of-birth
 
 = render partial: 'cases/sar/subject_type', locals: { case_details: case_details }
 
-tr.subject-address
+tr.request_method
+  th = t('common.case.request_method')
+  td = case_details.request_method
+
+
+tr.subject-type
   th = t('common.case.subject_address')
   td
     pre = case_details.subject_address
