@@ -101,7 +101,7 @@ class Case::SAR::Offender < Case::Base
   enum request_method: {
     post: 'post',
     email: 'email',
-    web_portal: 'web_portal',
+    web_portal: 'web portal',
     unknown: 'unknown',
   }
 

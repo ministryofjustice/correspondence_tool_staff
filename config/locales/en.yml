@@ -798,6 +798,11 @@ en:
           ex_probation_service_user: "Ex-probation service user"
           offender: Offender
           probation_service_user: "Probation service user"
+        request_method:
+           post: "Post"
+           email: "Email"
+           web_portal: "Web portal"
+           unknown: "Unknown"
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative (optional)"
