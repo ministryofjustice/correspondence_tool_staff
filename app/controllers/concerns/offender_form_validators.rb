@@ -5,6 +5,7 @@ module OffenderFormValidators
 
   def validate_subject_details(params)
     set_empty_value_if_unset(params, "subject_type")
+    set_empty_value_if_unset(params, "request_method")
     set_empty_value_if_unset_for_date(params, "date_of_birth")
     set_empty_value_if_unset(params, "flag_as_high_profile")
     object.assign_attributes(params)
