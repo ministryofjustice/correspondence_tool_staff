@@ -102,6 +102,7 @@ class Case::SAR::Offender < Case::Base
     post: 'post',
     email: 'email',
     web_portal: 'web_portal',
+    unknown: 'unknown',
   }
 
   has_paper_trail only: [
