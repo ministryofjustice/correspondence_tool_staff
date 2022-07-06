@@ -61,7 +61,11 @@ module PageObjects
           section :subject_address, 'tr.subject-address' do
             element :data, 'td'
           end
-
+          
+          section :request_method, 'tr.request-method' do
+            element :data, 'td'
+          end
+          
           section :date_received, 'tr.date-received' do
             element :data, 'td:first'
           end
