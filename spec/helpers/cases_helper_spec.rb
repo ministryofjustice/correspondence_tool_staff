@@ -506,4 +506,10 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       expect(result.last).to be(ct2)
     end
   end
+
+  describe '#request_methods_for_display' do
+    it 'does not return the "unknown" request method' do
+      expect(request_methods_for_display).to match_array ["verbal", "post", "email", "web_portal"]
+    end
+  end
 end
