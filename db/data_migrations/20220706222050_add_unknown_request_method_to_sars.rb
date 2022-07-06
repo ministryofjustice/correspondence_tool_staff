@@ -1,7 +1,7 @@
 class AddUnknownRequestMethodToSars < ActiveRecord::DataMigration
   def up
-    Case::Base.non_offender_sar.each { |k| p k.update_attribute(:request_method, "unknown") }
-    Case::Base.offender_sar.each { |k| p k.update_attribute(:request_method, "unknown") }
+    Case::Base.non_offender_sar.each { |k| k.update_attribute(:request_method, "unknown") }
+    Case::Base.offender_sar.each { |k| k.update_attribute(:request_method, "unknown") }
   end
 
   def down
