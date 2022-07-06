@@ -225,6 +225,7 @@ class Case::SAR::OffenderComplaint < Case::SAR::Offender
     # it is not worth trying to track the counter per cases level at DB like case number for other types, 
     # simple appoach here is to try 2 times only if the case number somehow is duplicated by any chance
     begin
+      
       retries ||= 0
       counter = self.original_case.case_links.count
       counter_str = counter > 0 ? "-#{counter.to_s.rjust(3, "0")}" : ""
