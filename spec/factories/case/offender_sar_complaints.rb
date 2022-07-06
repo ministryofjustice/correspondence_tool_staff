@@ -33,6 +33,7 @@ FactoryBot.define do
     request_dated                   { Date.parse('13-07-2010') }
     requester_reference             { '456 ABC 123' }
     subject_type                    { 'offender' }
+    request_method                  { 'email' }
     recipient                       { 'subject_recipient' }
     complaint_type                  { 'standard_complaint' }
     complaint_subtype               { 'missing_data' }
