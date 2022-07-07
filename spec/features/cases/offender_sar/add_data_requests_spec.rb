@@ -28,7 +28,6 @@ feature 'Data Requests for an Offender SAR' do
     data_request_page.form.set_date_requested(request_values[:date_requested])
     data_request_page.form.set_date_from(request_values[:date_from])
     data_request_page.form.set_date_to(request_values[:date_to])
-    data_request_page.form.choose_request_method(request_values[:request_method])
 
     click_on 'Continue'
 
