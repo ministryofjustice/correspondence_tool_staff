@@ -22,8 +22,9 @@ feature 'offender sar complaint case editing by a manager' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'editing an offender sar complaint case' do
+  scenario 'editing an offender sar complaint case', js: true do
     expect(cases_show_page).to be_displayed(id: offender_sar_complaint.id)
+    sleep 10
     cases_show_page.offender_sar_subject_details.change_link.click
     expect(cases_edit_offender_sar_complaint_subject_details_page).to be_displayed
 
