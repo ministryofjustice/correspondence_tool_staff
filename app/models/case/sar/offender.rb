@@ -125,7 +125,7 @@ class Case::SAR::Offender < Case::Base
 
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
-  validates :request_method, presence: true , unless: :offender_sar_complaint?
+  validates :request_method, presence: true, unless: :offender_sar_complaint?
   validates :recipient, presence: true
   
   validate :validate_date_of_birth
