@@ -20,4 +20,9 @@ class Case::SAR::StandardDecorator < Case::BaseDecorator
   def time_taken
     calendar_days_taken
   end
+
+  def request_methods_for_display
+    request_methods = Case::SAR::Standard.request_methods.keys
+    request_methods - ['unknown']
+  end
 end
