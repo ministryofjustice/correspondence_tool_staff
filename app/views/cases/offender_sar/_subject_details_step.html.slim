@@ -26,7 +26,7 @@
     choices: Case::SAR::Offender::subject_types.keys
     
   = f.radio_button_fieldset :request_method,
-    choices: Case::SAR::Offender.request_methods.keys
+    choices: @case.request_methods_for_display
 
   = f.text_area :subject_address, rows: '4', class: 'address_input' 
   = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "prison,probation" }
