@@ -446,11 +446,6 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     prison_number
   end
 
-  def request_methods_for_display
-    request_methods = Case::SAR::Standard.request_methods.keys
-    request_methods - ['unknown']
-  end
-
   private
 
   def get_first_number_in_string(number_string)
