@@ -51,7 +51,7 @@
     = f.hidden_field :flag_for_disclosure_specialists, value: 'no'
 
     = f.radio_button_fieldset :request_method,
-                              choices: request_methods_for_display
+                              choices: @case.request_methods_for_display
 
     h2.heading-medium 
       = t('admin.cases.new.sar.headings.where_information_should_be_sent')
