@@ -220,6 +220,8 @@ en:
           attributes:
             subject_full_name:
               blank: cannot be blank
+            request_method:
+              blank: cannot be blank
             subject_type:
               blank: cannot be blank
             email:
@@ -511,6 +513,7 @@ en:
         info_held_status_abbreviation: Was the information held?
         subject_type: "What is their relationship to the MOJ?"
         third_party: Please choose yes or no
+        request_method: How was the request received by MOJ?
       assignment:
         state: What do you want to do?
         team_id: Assign to
@@ -543,6 +546,7 @@ en:
           <div class="heading-medium">Where the information should be sent</div>
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+        request_method: How was the request received by MOJ?
       sar_internal_review:
         sar_ir_subtypes:
           compliance: Compliance
@@ -744,6 +748,7 @@ en:
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
         subject_type: Who is the person the information is being requested about?      
         third_party: Is the information being requested on someone's behalf?      
+        request_method: How was the request received by MOJ?
       sar:
         email: "Recipient email address"
         message: Full case details
@@ -755,6 +760,7 @@ en:
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
         subject_type: Who is the person the information is being requested about?
         third_party: Is the information being requested on someone's behalf?
+        request_method: How was the request received by MOJ?
       case_sar_offender:
         postal_address: Recipient postal address
         request_dated: What is the date on the complaint?
@@ -763,6 +769,7 @@ en:
         subject_full_name: "Full name of data subject"
         subject_address: "What is the location of the data subject?"        
         subject_type: What is their relationship to the MOJ?
+        request_method: How was the request received by MOJ?
       offender_sar:
         case_reference_number: Case reference number (CRN)
         external_reference: Requester reference (optional)
@@ -796,6 +803,11 @@ en:
           ex_probation_service_user: "Ex-probation service user"
           offender: Offender
           probation_service_user: "Probation service user"
+        request_method:
+           post: "Post"
+           email: "Email"
+           web_portal: "Web portal"
+           unknown: "Unknown"
         third_party: Is this information being requested on someone else's behalf?
         third_party_company_name: Company name (optional)
         third_party_name: "Full name of the representative (optional)"
@@ -972,6 +984,7 @@ en:
       date_responded: Date response sent to requester
       data_subject: Full name of subject
       data_subject_type: Subject type
+      request_method: request_method
       draft_timeliness: Draft timeliness
       download_link_html: |
         Download <span class="visuallyhidden">file %{filename}.</span>
@@ -1024,6 +1037,7 @@ en:
       request: "Request"
       request_amends: Request amends
       request_dated: "Date on the request"
+      request_method: How was the request received by MOJ?
       requester_reference: Requester reference
       requester_type: "Type of requester"
       respond: Mark response as sent
@@ -1059,6 +1073,7 @@ en:
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
       other_option_details: More details on other reason for outcome
+
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO

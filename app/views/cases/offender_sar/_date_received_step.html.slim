@@ -14,7 +14,10 @@
         form_hint_text: t('helpers.hint.shared.date_example'),
         today_button: { class: '' } \
       }
+    = f.radio_button_fieldset :request_method,
+    choices: @case.request_methods_for_display
 
   input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'
+  

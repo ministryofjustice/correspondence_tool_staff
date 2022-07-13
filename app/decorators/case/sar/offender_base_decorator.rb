@@ -10,6 +10,10 @@ class Case::SAR::OffenderBaseDecorator < Case::BaseDecorator
   def subject_type_display
     I18n.t('helpers.label.offender_sar.subject_type.' + object.subject_type)
   end
+
+  def request_method_display
+    I18n.t('helpers.label.offender_sar.request_method.' + object.request_method)
+  end
  
   def third_party_display
     object.third_party ? 'Yes' : 'No'

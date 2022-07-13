@@ -53,4 +53,10 @@ describe Case::SAR::OffenderDecorator do
     end
   end
 
+  describe '#request_method_for_display' do
+    it 'does not return the "unknown" request method' do
+      expect(offender_sar_case.request_methods_for_display).to match_array ["post", "email", "web_portal"]
+    end
+  end
+
 end

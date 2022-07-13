@@ -17,6 +17,7 @@ module SARCasesParams
       :third_party,
       :third_party_relationship,
       :reply_method,
+      :request_method,
       uploaded_request_files: [],
     )
   end
@@ -34,6 +35,7 @@ module SARCasesParams
       :message,
       :flag_for_disclosure_specialists,
       :reply_method,
+      :request_method,
       :email,
       :postal_address
     )

@@ -24,6 +24,8 @@
 
   = f.radio_button_fieldset :subject_type,
     choices: Case::SAR::Offender::subject_types.keys
+  = f.radio_button_fieldset :request_method,
+    choices: Case::SAR::Offender::request_methods.keys
 
   = f.text_area :subject_address, rows: '4'
 

@@ -18,6 +18,8 @@ module PageObjects
                   '//fieldset[contains(.,"Who is the person the information is being requested about?")]'
           element :third_party, :xpath,
                   "//fieldset[contains(.,\"being requested on someone's behalf\")]"
+          element :request_method, :xpath,
+                  '//fieldset[contains(.,"How was the request received")]'
           element :requester_full_name, '#sar_name'
           element :third_party_relationship, '#sar_third_party_relationship'
 
@@ -72,6 +74,7 @@ module PageObjects
               choose_reply_method 'send_by_post'
               postal_address.set kase.postal_address
             end
+            choose_request_method 'post'
 
             kase
           end

@@ -30,6 +30,7 @@ FactoryBot.define do
     case_reference_number           { '123 ABC 456' }
     subject_address                 { '22 Sample Address, Test Lane, Testingington, TE57ST' }
     request_dated                   { Date.parse('13-07-2010') }
+    request_method                  { 'email' }
     requester_reference             { '456 ABC 123' }
     subject_type                    { 'offender' }
     recipient                       { 'subject_recipient' }

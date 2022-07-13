@@ -16,13 +16,15 @@ module PageObjects
           element :date_received_day, '#offender_sar_received_date_dd'
           element :date_received_month, '#offender_sar_received_date_mm'
           element :date_received_year, '#offender_sar_received_date_yyyy'
-
+          element :request_method, '#offender_sar_request_method'
+          
           element :submit_button, '.button'
 
           def fill_in_case_details(params={})
             kase = FactoryBot.build :offender_sar_case, params
 
             set_received_date(kase.received_date)
+            choose('offender_sar_request_method_email', visible: false)
           end
 
           def set_received_date(received_date)
