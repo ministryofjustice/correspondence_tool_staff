@@ -32,6 +32,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.external_deadline.data.text)
           .to eq unassigned_case.external_deadline
       expect(partial.third_party.data.text).to eq 'No'
+      expect(partial.request_method.data.text).to eq 'Post'
     end
 
     it 'displays third party details if present' do

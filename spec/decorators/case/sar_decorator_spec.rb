@@ -12,4 +12,10 @@ describe Case::SAR::StandardDecorator do
   it 'formats the requester type' do
     expect(decorated_sar_case.subject_type_display).to eq 'Member of the public'
   end
+
+  describe '#request_methods_for_display' do
+    it 'does not return the "unknown" request method' do
+      expect(decorated_sar_case.request_methods_for_display).to match_array ["verbal", "post", "email", "web_portal"]
+    end
+  end
 end

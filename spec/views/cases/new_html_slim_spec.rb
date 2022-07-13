@@ -62,6 +62,7 @@ describe 'cases/new.html.slim', type: :view do
       expect(page).to have_date_received_day
       expect(page).to have_date_received_month
       expect(page).to have_date_received_year
+      expect(page).to have_request_method
 
       expect(page).to have_subject
       expect(page).to have_full_request

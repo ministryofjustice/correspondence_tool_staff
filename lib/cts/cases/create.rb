@@ -116,6 +116,7 @@ module CTS::Cases
         received_date:     get_sar_received_date,
         created_at:        get_created_at_date,
         reply_method:      options.fetch(:reply_method, 'send_by_email'),
+        request_method:    options.fetch(:request_method, 'post'),
         dirty:             options.fetch(:dirty, true),
         creator:           options[:creator]
       )

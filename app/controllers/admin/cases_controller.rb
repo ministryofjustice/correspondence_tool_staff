@@ -71,7 +71,7 @@ class Admin::CasesController < AdminController
       creator: creator
     )
 
-    @case = case_creator.new_case
+    @case = case_creator.new_case.decorate
     @case.responding_team = BusinessUnit
                               .responding
                               .responding_for_correspondence_type(correspondence_type_for_case)
