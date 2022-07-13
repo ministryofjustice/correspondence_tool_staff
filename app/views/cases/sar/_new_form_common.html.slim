@@ -22,6 +22,8 @@ section
                     form_hint_text: t('helpers.hint.shared.date_example'),
                     today_button: {class: ''} }
 
+  = f.radio_button_fieldset :request_method,
+    choices: @case.request_methods_for_display
 
   = f.text_field :subject
 

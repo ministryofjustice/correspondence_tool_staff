@@ -19,6 +19,8 @@ module PageObjects
           element :requester_full_name, '#case_sar_name'
 
           element :received_date, '#case_sar_received_date'
+          element :request_method, :xpath,
+                  "//fieldset[contains(.,\"How was the request received\")]"
           element :created_at, '#case_sar_created_at'
 
           element :subject, '#case_sar_subject'

@@ -65,6 +65,10 @@ module PageObjects
             element :data, 'td'
           end
 
+          section :request_method, 'tr.request-method' do
+            element :data, 'td'
+          end
+
           section :internal_deadline, 'tr.case-internal-deadline' do
             element :data, 'td:nth-child(2)'
           end
