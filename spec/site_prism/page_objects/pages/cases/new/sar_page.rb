@@ -19,7 +19,7 @@ module PageObjects
           element :third_party, :xpath,
                   "//fieldset[contains(.,\"being requested on someone's behalf\")]"
           element :request_method, :xpath,
-                  '//fieldset[contains(.,"How was the request received?")]'
+                  '//fieldset[contains(.,"How was the request received")]'
           element :requester_full_name, '#sar_name'
           element :third_party_relationship, '#sar_third_party_relationship'
 
