@@ -52,7 +52,7 @@ module OffenderFormValidators
 
   def validate_date_received(params)
     set_empty_value_if_unset_for_date(params, "received_date")
-    set_empty_value_if_unset(params, "request_method")
+    set_empty_value_if_unset(params, "request_method") unless object.offender_sar_complaint?
     object.assign_attributes(params)
     object.validate_received_date
   end

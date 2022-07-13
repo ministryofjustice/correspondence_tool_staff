@@ -31,10 +31,7 @@ module PageObjects
           element :subject_address, '#offender_sar_subject_address'
 
           element :date_of_birth_yyyy, '#offender_sar_date_of_birth_yyyy'
-
-          element :request_method, :xpath,
-                  '//fieldset[contains(.,"How was the request received?")]'
-          
+ 
           element :find_an_address_button, '#open-button'
 
           element :submit_button, '[value=Continue]'
@@ -56,8 +53,6 @@ module PageObjects
              
             choose('offender_sar_subject_type_offender', visible: false)
             choose('offender_sar_flag_as_high_profile_false', visible: false)
-            choose('offender_sar_request_method_email', visible: false)
-
           end
             
           def set_date_of_birth(date_of_birth)
