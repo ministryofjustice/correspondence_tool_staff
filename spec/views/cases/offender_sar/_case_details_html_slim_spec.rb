@@ -43,7 +43,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.requester_reference.data.text).to eq '456 ABC 123'
       expect(partial.request_dated.data.text).to eq '13 Jul 2010'
       expect(partial.date_of_birth.data.text).to eq '1 Sep 2019'
-      expect(partial.request_method.data.text).to eq 'Email'
+      expect(partial.request_method.data.text).to eq 'email'
     end
 
     it 'displays third party details if present' do
