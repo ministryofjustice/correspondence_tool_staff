@@ -5,4 +5,4 @@ tr.date-received.section.section-date-received
     td = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "date_received")
 tr.request-method
   th = t('common.case.request_method')
-  td = case_details.request_method
+  td = case_details.request_method.humanize
