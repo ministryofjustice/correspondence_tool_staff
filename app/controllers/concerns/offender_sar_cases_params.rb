@@ -22,7 +22,6 @@ module OffenderSARCasesParams
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :recipient,
       :requester_type,
-      :request_method,
       :subject,
       :subject_address,
       :subject_aliases,
@@ -35,6 +34,7 @@ module OffenderSARCasesParams
       :date_responded_dd, :date_responded_mm, :date_responded_yyyy,
       :date_of_birth_dd, :date_of_birth_mm, :date_of_birth_yyyy,
       :request_dated_dd, :request_dated_mm, :request_dated_yyyy,
+      :request_method,
       :requester_reference,
       uploaded_request_files: [],
       )

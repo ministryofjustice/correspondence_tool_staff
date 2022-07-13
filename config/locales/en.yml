@@ -1032,6 +1032,7 @@ en:
       request: "Request"
       request_amends: Request amends
       request_dated: "Date on the request"
+      request_method: "How was the request received by MOJ?"
       requester_reference: Requester reference
       requester_type: "Type of requester"
       respond: Mark response as sent
@@ -1067,6 +1068,7 @@ en:
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
       other_option_details: More details on other reason for outcome
+
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
