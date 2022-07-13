@@ -20,6 +20,7 @@ feature 'Data Requests for an Offender SAR' do
       date_requested: Date.new(2020, 8, 15),
       date_from: Date.new(2018, 8, 15),
       date_to: Date.new(2019, 8, 15),
+      
     }
 
     data_request_page.form.location.fill_in(with: request_values[:location])
@@ -36,6 +37,7 @@ feature 'Data Requests for an Offender SAR' do
     expect(record.request_type_note).to eq ''
     expect(record.date_from).to eq Date.new(2018, 8, 15)
     expect(record.date_to).to eq Date.new(2019, 8, 15)
+   
 
     expect(cases_show_page).to be_displayed
     data_requests = cases_show_page.data_requests.rows

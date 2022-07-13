@@ -35,7 +35,6 @@ describe 'cases/sar/case_details.html.slim', type: :view do
           .to eq offender_sar_case.external_deadline
       expect(partial.third_party.data.text).to eq 'No'
       expect(partial.prison_number.data.text).to eq '123465'
-
       expect(partial.subject_aliases.data.text).to eq 'John Smith'
       expect(partial.previous_case_numbers.data.text).to eq '54321'
       expect(partial.other_subject_ids.data.text).to eq 'ABC 123 DEF'
@@ -44,6 +43,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       expect(partial.requester_reference.data.text).to eq '456 ABC 123'
       expect(partial.request_dated.data.text).to eq '13 Jul 2010'
       expect(partial.date_of_birth.data.text).to eq '1 Sep 2019'
+      expect(partial.request_method.data.text).to eq 'Email'
     end
 
     it 'displays third party details if present' do
