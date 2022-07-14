@@ -1,4 +1,4 @@
-FROM ruby:2.7.2-alpine # we need to update this
+FROM ruby:2.7.2-alpine
 LABEL key="Ministry of Justice, Track a Query <correspondence@digital.justice.gov.uk>"
 RUN set -ex
 
