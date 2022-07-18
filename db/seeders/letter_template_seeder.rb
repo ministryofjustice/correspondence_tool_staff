@@ -17,7 +17,7 @@ class LetterTemplateSeeder
     rec.update!(name: 'Prisoner acknowledgement letter',
                 abbreviation: 'prisoner-acknowledgement',
                 template_type: 'acknowledgement',
-                base_template_file_ref: 'ims003.docx',
+                base_template_file_ref: 'ims001.docx',
                 body: <<~EOF
                   <p>
                   <br><br>Dear <%= values.requester_name %>
@@ -27,8 +27,6 @@ class LetterTemplateSeeder
                   <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
                   <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.   
-                  <br>
-                  <br>Her Majesty’s Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided to you by your keyworker in the prison or your probation office. As some of the information requested can be disclosed directly to you, we will be forwarding your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
                   <br>
                   <br>Please also note if you have requested medical information as part of the request, the responsibility for providing medical information has transferred to the National Health Service/ Clinical Commissioning Groups. If you require medical information, please contact the Healthcare Services team in the prison.
                   <br>
@@ -51,10 +49,10 @@ class LetterTemplateSeeder
 
     rec = LetterTemplate.find_by(abbreviation: 'prisoner-acknowledgement-restricted')
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Prisoner acknowledgement letter - RESTRICTED',
+    rec.update!(name: 'Prisoner acknowledgement letter - RESTRICTED SAR',
                 abbreviation: 'prisoner-acknowledgement-restricted',
                 template_type: 'acknowledgement',
-                base_template_file_ref: 'ims003.docx',
+                base_template_file_ref: 'ims001.docx',
                 body: <<~EOF
                   <p>
                   <br><br>Dear <%= values.requester_name %>
@@ -66,8 +64,6 @@ class LetterTemplateSeeder
                   <br>As you have previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
                   <br>
                   <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.
-                  <br>
-                  <br>Her Majesty’s Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you as part of business-as-usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided to you by your keyworker in the prison or your probation office. As some of the information requested can be disclosed directly to you, we will be forwarding your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
                   <br>
                   <br>Please also note if you have requested medical information as part of the request, the responsibility for providing medical information has transferred to the National Health Service / Clinical Commissioning Groups. If you require medical information, please contact the Healthcare Services team in the prison.
                   <br>
@@ -176,7 +172,7 @@ class LetterTemplateSeeder
     rec.update!(name: 'Solicitor acknowledgement letter',
                 abbreviation: 'solicitor-acknowledgement',
                 template_type: 'acknowledgement',
-                base_template_file_ref: 'ims003.docx',
+                base_template_file_ref: 'ims001.docx',
                 body: <<~EOF
                   <p>
                   <br><br>Dear <%= values.requester_name %>
@@ -188,8 +184,6 @@ class LetterTemplateSeeder
                   <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
                   <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period. 
-                  <br>
-                  <br>Her Majesty’s Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you or your client as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your client’s keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we will be forwarding your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.  
                   <br>
                   <br>Please note, if you have requested medical information as part of the request, responsibility for providing medical information has transferred to the National Health Service / Clinical Commissioning Groups. If you require medical data please contact the Healthcare Services team at the establishment.
                   <br>
@@ -212,10 +206,10 @@ class LetterTemplateSeeder
 
     rec = LetterTemplate.find_by(abbreviation: 'solicitor-acknowledgement-restricted')
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Solicitor acknowledgement letter - RESTRICTED',
+    rec.update!(name: 'Solicitor acknowledgement letter - RESTRICTED SAR',
                 abbreviation: 'solicitor-acknowledgement-restricted',
                 template_type: 'acknowledgement',
-                base_template_file_ref: 'ims003.docx',
+                base_template_file_ref: 'ims001.docx',
                 body: <<~EOF
                   <p>
                   <br><br>Dear <%= values.requester_name %>
@@ -229,8 +223,6 @@ class LetterTemplateSeeder
                   <br>As your client has previously submitted a SAR and have been supplied with information, we will only be providing you with information not previously received, i.e. information from the date of the previous request. The previous request was started on [INSERT DATE PREVIOUS REQUEST RECEIVED].
                   <br>
                   <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.
-                  <br>
-                  <br>Her Majesty’s Prison and Probation Service (HMPPS) holds routine information that can be disclosed to you or your client as part of business as usual requests, without submitting a formal SAR. Please find enclosed a list of documents that can be provided by your client’s keyworker in the prison or probation office. As some of the information requested can be disclosed directly, we will be forwarding your request to the relevant business area to take forward and the documents listed will not be included in your SAR response.
                   <br>
                   <br>Please also note if you have requested medical information as part of the request, the responsibility for providing medical information has transferred to the National Health Service/ Clinical Commissioning Groups. If you require medical information, please contact the Healthcare Services team in the prison.
                   <br>
