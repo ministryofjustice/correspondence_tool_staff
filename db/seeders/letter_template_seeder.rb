@@ -50,7 +50,7 @@ class LetterTemplateSeeder
     rec = LetterTemplate.find_by(abbreviation: 'prisoner-acknowledgement-restricted')
     rec = LetterTemplate.new if rec.nil?
     rec.update!(name: 'Prisoner acknowledgement letter - RESTRICTED SAR',
-                abbreviation: 'prisoner-acknowledgement-restricted sar',
+                abbreviation: 'prisoner-acknowledgement-restricted',
                 template_type: 'acknowledgement',
                 base_template_file_ref: 'ims001.docx',
                 body: <<~EOF
@@ -207,7 +207,7 @@ class LetterTemplateSeeder
     rec = LetterTemplate.find_by(abbreviation: 'solicitor-acknowledgement-restricted')
     rec = LetterTemplate.new if rec.nil?
     rec.update!(name: 'Solicitor acknowledgement letter - RESTRICTED SAR',
-                abbreviation: 'solicitor-acknowledgement-restricted sar',
+                abbreviation: 'solicitor-acknowledgement-restricted',
                 template_type: 'acknowledgement',
                 base_template_file_ref: 'ims001.docx',
                 body: <<~EOF
