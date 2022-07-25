@@ -6,4 +6,5 @@ FactoryBot.define do
     display_order { 1 }
     deactivated { false }
   end
+  
 end

@@ -14,7 +14,9 @@ feature 'Contacts address book', js: true do
                            town: 'bakersville',
                            county: 'Mercia',
                            postcode: 'FE2 9JK',
-                           contact_type: CategoryReference.find_by(code: 'probation')) 
+                           contact_type: CategoryReference.find_by(code: 'probation'), 
+                           contact_name: 'test contact1',
+                           contact_email: 'testemail1@email.com')
   }
 
   given!(:contact_2) { create(:contact, 
@@ -57,6 +59,11 @@ feature 'Contacts address book', js: true do
     and_fill_in_and_submit_new_contact_details
     and_expect_to_see_success_message
     then_expect_new_details_to_be_present
+
+    click_on 'Add new address'
+    and_fill_in_and_submit_new_contact_details_type_prison
+    and_expect_to_see_success_message
+    then_expect_new_details_to_be_present
   end
 
   scenario 'user can edit an existing address' do
@@ -66,6 +73,8 @@ feature 'Contacts address book', js: true do
     then_expect_to_see_the_edit_success_message
     then_expect_to_see_edited_details_on_the_index_page
   end
+
+
 
 
   scenario 'user can delete an address' do
@@ -357,12 +366,24 @@ feature 'Contacts address book', js: true do
     click_on 'Submit'
   end
 
+  def and_fill_in_and_submit_new_contact_details_type_prison
+    details = {
+      name: 'John\'s law',
+      address_line_1: '345 some road',
+      postcode: 'FG9 5IK',
+      contact_type: 'prison'
+    }
+    contacts_new_page.new_contact(details)
+    click_on 'Submit'
+  end
+  
   def and_expect_to_see_success_message
     expect(page).to have_content("Contact was successfully created.")
   end
 
   def then_expect_new_details_to_be_present 
     expect(page).to have_content("345 some road")
-    expect(page).to have_content('FG9 5IK')
+    expect(page).to have_content('prison')
+    expect(page).to have_content('test contact1')
   end
 end

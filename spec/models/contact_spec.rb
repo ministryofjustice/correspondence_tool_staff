@@ -9,20 +9,31 @@ RSpec.describe Contact, type: :model do
                              address_line_2: 'little heath',
                              town: 'bakersville',
                              county: 'Mercia',
-                             postcode: 'FE2 9JK')}
+                             postcode: 'FE2 9JK') }
 
     let(:contact_3) { build(:contact,
                              name: 'HMP halifax',
                              address_line_1: '123 test road',
                              postcode: 'FE2 9JK',
                              contact_type: 'university') }
-
+    let(:contact_4) { build(:contact, 
+                             name: 'HMP halifax',
+                             address_line_1: '123 test road',
+                             address_line_2: 'little heath',
+                             town: 'bakersville',
+                             county: 'Mercia',
+                             postcode: 'FE2 9JK',
+                             email: 'test@test.com' ) }
   context 'validations' do
-    it 'is valid if it is has a name, address_line_1 and postcode, and contact_type' do
+    it 'is valid if it is has a name, address_line_1 and postcode, contact_type and email if of type prison' do
       should validate_presence_of(:name)
       should validate_presence_of(:address_line_1)
       should validate_presence_of(:postcode)
       should validate_presence_of(:contact_type)
+      byebug
+      if contact.contact_type.code == 'prison' 
+      should validate_presence_of(:email)
+      end
       expect(contact).to be_valid
     end
 
@@ -61,6 +72,18 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.email).to match("fake.email@test098.gov.uk")
       expect(contact_2.contact_type).to be_a(CategoryReference)
       expect(contact_2.contact_type.value).to eq("Probation Office")
+    end
+
+     it 'can validate email if contact type is prison' do
+      expect(contact_4.name).to match("HMP halifax")
+      expect(contact_4.address_line_1).to match("123 test road")
+      expect(contact_4.address_line_2).to match("little heath")
+      expect(contact_4.town).to match("bakersville")
+      expect(contact_4.county).to match("Mercia")
+      expect(contact_4.postcode).to match("FE2 9JK")
+      expect(contact_4.email).to match("test@test.com")
+      expect(contact_4.contact_type).to be_a(CategoryReference)
+      expect(contact_4.contact_type.value).to eq("Probation Office")
     end
 
     it 'can output the contact display value' do

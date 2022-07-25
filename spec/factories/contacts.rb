@@ -9,4 +9,5 @@ FactoryBot.define do
     email { "fake.email@test098.gov.uk" }
     contact_type { build(:category_reference) }
   end
+
 end

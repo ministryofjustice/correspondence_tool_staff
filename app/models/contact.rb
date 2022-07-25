@@ -4,7 +4,8 @@ class Contact < ApplicationRecord
   validates :address_line_1, presence: true
   validates :postcode, presence: true
   validates :contact_type, presence: true
-
+  validates :email, presence: true, if: -> {contact_type_id == 1}
+  
   belongs_to :contact_type, class_name: 'CategoryReference', inverse_of: :contacts 
 
   def address
