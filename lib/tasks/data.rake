@@ -143,6 +143,16 @@ namespace :data do
       CTS::Teams::RolesSeeder.new.run
     end
 
+    desc 'Fix invalid Offender SAR cases'
+    task fix_invalid_offender_sar_cases: :environment do
+      fix_invalid_offender_sar_cases
+    end
+
+    desc 'Fix invalid Standard SAR cases'
+    task fix_invalid_standard_sar_cases: :environment do
+      fix_invalid_standard_sar_cases
+    end
+
     namespace :import do
       desc 'Import hierarchical team data'
       task :teams => :environment do
@@ -180,6 +190,60 @@ def update_development_users
       user.full_name = user_details[role].first
       user.save!
       puts "User #{user.full_name} updated with email #{user.email}"
+    end
+  end
+end
+
+def fix_invalid_offender_sar_cases
+  Case::Base.offender_sar.find_each do |k|
+    k.save unless k.valid?
+    unless k.valid?
+      p "Item #{k.id}, #{k.type}, #{k.current_state}, Number: #{k.number}, #{k.errors.messages}"
+      p "Fixing case..."
+
+      if k.errors.messages[:subject_address] == ["cannot be blank"]
+        k.update_attribute(:subject_address, "NO ADDRESS SUPPLIED")
+        p "subject_address"
+      end
+
+      if k.errors.messages[:postal_address] == ["cannot be blank"]
+        k.update_attribute(:postal_address, "NO ADDRESS SUPPLIED")
+        p "postal_address"
+      end
+
+      if k.errors.messages[:third_party_company_name] == ["cannot be blank if representative name not given"]
+        k.update_attribute(:third_party_company_name, "NO COMPANY NAME SUPPLIED")
+        p "third_party_company_name"
+      end
+
+      if k.errors.messages[:third_party_relationship] == ["cannot be blank"]
+        k.update_attribute(:third_party_relationship, "NO RELATIONSHIP SUPPLIED")
+        p "third_party_relationship"
+      end
+
+      if k.errors.messages[:late_team_id] == ["blank_invalid_if_case_late"]
+        k.update_attribute :late_team_id, 0
+        p "late_team_id"
+      end
+
+      p "Case valid - #{k.reload.valid?}"
+    end
+  end
+end
+
+def fix_invalid_standard_sar_cases
+  Case::Base.non_offender_sar.find_each do |k|
+    k.save unless k.valid?
+    unless k.valid?
+      p "Item #{k.id}, #{k.type}, #{k.current_state}, Number: #{k.number}, #{k.errors.messages}"
+      p "Fixing case..."
+
+      if k.errors.messages[:late_team_id] == ["blank_invalid_if_case_late"]
+        k.update_attribute :late_team_id, 0
+        p "late_team_id"
+      end
+
+      p "Case valid - #{k.reload.valid?}"
     end
   end
 end
