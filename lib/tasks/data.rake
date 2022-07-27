@@ -226,6 +226,12 @@ def fix_invalid_offender_sar_cases
         p "late_team_id"
       end
 
+      if k.errors.messages[:date_responded] == ["cannot be blank"]
+        last_known_date = k.transitions.order(:sort_key)&.last&.created_at&.to_date
+        k.update_attribute :date_responded, last_known_date
+        p "date_responded"
+      end
+
       p "Case valid - #{k.reload.valid?}"
     end
   end
