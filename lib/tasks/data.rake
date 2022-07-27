@@ -221,11 +221,6 @@ def fix_invalid_offender_sar_cases
         p "third_party_relationship"
       end
 
-      if k.errors.messages[:late_team_id] == ["blank_invalid_if_case_late"]
-        k.update_attribute :late_team_id, 0
-        p "late_team_id"
-      end
-
       if k.errors.messages[:date_responded] == ["cannot be blank"]
         last_known_date = k.transitions.order(:sort_key)&.last&.created_at&.to_date
         k.update_attribute :date_responded, last_known_date
