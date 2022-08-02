@@ -74,22 +74,23 @@ feature 'Require further action for ICO-SAR responded case' do
 
   def fill_details_for_require_further_action(kase, test_inputs)
     cases_show_page.load(id: kase.id)
+    byebug
     cases_show_page.actions.require_further_action.click
-    expect(cases_ico_foi_record_futher_actoin_page).to be_displayed
-    cases_ico_foi_record_futher_actoin_page.upload_file(
+    expect(cases_ico_sar_record_futher_actoin_page).to be_displayed
+    cases_ico_sar_record_futher_actoin_page.upload_file(
       kase: kase,
       file_path: test_inputs[:upload_file]
     )
 
-    cases_ico_foi_record_futher_actoin_page.fill_in_message(test_inputs[:testing_message])
-    cases_ico_foi_record_futher_actoin_page.click_on 'Continue'
+    cases_ico_sar_record_futher_actoin_page.fill_in_message(test_inputs[:testing_message])
+    cases_ico_sar_record_futher_actoin_page.click_on 'Continue'
 
-    expect(cases_ico_foi_require_further_action_page).to be_displayed
+    expect(cases_ico_sar_require_further_action_page).to be_displayed
 
-    cases_ico_foi_require_further_action_page.fill_in_internal_deadline(test_inputs[:interal_deadlinen])
-    cases_ico_foi_require_further_action_page.fill_in_external_deadline(test_inputs[:external_deadline])
+    cases_ico_sar_require_further_action_page.fill_in_internal_deadline(test_inputs[:interal_deadlinen])
+    cases_ico_sar_require_further_action_page.fill_in_external_deadline(test_inputs[:external_deadline])
 
-    cases_ico_foi_require_further_action_page.click_on 'Continue'
+    cases_ico_sar_require_further_action_page.click_on 'Continue'
   end
 
   def validate_results(kase, test_inputs, event_name, post_action_state)

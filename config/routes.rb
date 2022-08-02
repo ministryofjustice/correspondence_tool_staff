@@ -134,6 +134,13 @@ Rails.application.routes.draw do
       patch 'require_further_action', on: :member, to: 'ico_foi#confirm_require_further_action'
     end
 
+    resources :ico_sars, only: only, controller: 'ico_sar', as: :case_ico_sar do
+      get 'record_further_action', on: :member, to: 'ico_sar#record_further_action'
+      patch 'record_further_action', on: :member, to: 'ico_sar#confirm_record_further_action'
+      get 'require_further_action', on: :member, to: 'ico_sar#require_further_action'
+      patch 'require_further_action', on: :member, to: 'ico_sar#confirm_require_further_action'
+    end
+
     resources :overturned_ico_fois, only: [:create], controller: 'overturned_ico_foi', as: :case_overturned_ico_fois do
       get 'new/:id', as: 'new', to: 'overturned_ico_foi#new', on: :collection
     end

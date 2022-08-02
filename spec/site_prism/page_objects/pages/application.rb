@@ -36,6 +36,8 @@ module PageObjects
 
         cases_ico_foi_require_further_action: 'Cases::ICOFOIRequireFurtherActionPage',
         cases_ico_foi_record_futher_actoin: 'Cases::ICOFOIRecordFurtherActionPage',
+        cases_ico_sar_require_further_action: 'Cases::ICOSARRequireFurtherActionPage',
+        cases_ico_sar_record_futher_actoin: 'Cases::ICOSARRecordFurtherActionPage',
 
         case_new_sar_ir_link_case: 'Cases::New::SarInternalReviewLinkCasePage',
         case_new_sar_ir_confirm_sar: 'Cases::New::SarInternalReviewConfirmSarCasePage',
