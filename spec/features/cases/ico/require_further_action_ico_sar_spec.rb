@@ -7,7 +7,7 @@ feature 'Require further action for ICO-SAR responded case' do
   given(:kase)           { create(:responded_ico_sar_case, manager: manager, responder: responder) }
 
 
-  fscenario '1 - Send the case back to the responder', js: true do
+  scenario '1 - Send the case back to the responder', js: true do
     login_as manager
 
     testing_inputs = generate_input_values(kase)
