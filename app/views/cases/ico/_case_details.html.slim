@@ -22,7 +22,7 @@
       - if case_details.responded? || case_details.closed?
         = render partial: 'cases/shared/closed_case_details', locals: { case_details: case_details }
 
-      - if case_details.ico? && case_details.original_case_type == 'FOI'
+      - if case_details.ico?
         = render partial: 'cases/ico_foi/original_deadlines_details', locals: { case_details: case_details }
 
 

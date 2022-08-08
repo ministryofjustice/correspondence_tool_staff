@@ -12,9 +12,7 @@ feature 'Require further action for ICO-SAR responded case' do
 
     testing_inputs = generate_input_values(kase)
     fill_details_for_require_further_action(kase, testing_inputs)
-    byebug
-    validate_results(kase, testing_inputs, "require_further_action", 'Draft in progress')
-
+    validate_results(kase, testing_inputs, "require_further_action_to_responder_team", 'To be accepted')
   end
 
 
@@ -74,7 +72,6 @@ feature 'Require further action for ICO-SAR responded case' do
 
   def fill_details_for_require_further_action(kase, test_inputs)
     cases_show_page.load(id: kase.id)
-    byebug
     cases_show_page.actions.require_further_action.click
     expect(cases_ico_sar_record_futher_actoin_page).to be_displayed
     cases_ico_sar_record_futher_actoin_page.upload_file(
