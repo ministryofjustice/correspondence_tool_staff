@@ -64,8 +64,7 @@ module ReopenICOCase
       end
     end
 
-    private
-
+  private
 
     def init_deadlines
       @case.internal_deadline = nil

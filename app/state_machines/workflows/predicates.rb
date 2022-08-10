@@ -150,7 +150,6 @@ class Workflows::Predicates
   end
 
   def can_require_further_action_for_ico?
-    type = @kase.original_case_type
     (@kase.ico?) && (@user.in? @kase.managing_team.users)
   end
 
