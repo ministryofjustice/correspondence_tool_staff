@@ -82,11 +82,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
             id: "action--move_case_back",
             class: 'button state-action-button'
     when :record_further_action
-      if @case.original_case_type == 'SAR'
-        action_url = record_further_action_case_ico_sar_path(@case)
-      else
-        action_url = record_further_action_case_ico_foi_path(@case)
-      end
+      action_url = record_further_action_case_ico_path(@case)
       link_to t("common.case/ico_foi.record_further_action"),
             action_url,
             id: "action--record_further_action",

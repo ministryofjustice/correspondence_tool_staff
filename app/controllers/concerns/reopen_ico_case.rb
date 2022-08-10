@@ -1,11 +1,7 @@
-module Cases
-  class IcoSarController < IcoController
-    # def new
-    #   authorize case_type, :can_add_case?
+module ReopenICOCase
+  extend ActiveSupport::Concern
 
-    #   permitted_correspondence_types
-    #   new_case_for @correspondence_type, case_type
-    # end
+  included do
     before_action -> { set_decorated_case(params[:id]) }, only: [
       :record_further_action,
       :require_further_action
@@ -15,6 +11,7 @@ module Cases
       :confirm_record_further_action,
       :confirm_require_further_action
     ]
+  end
 
     def record_further_action
       authorize @case, :can_record_further_action?
@@ -22,7 +19,7 @@ module Cases
       set_permitted_events
       read_info_from_session
       @s3_direct_post = S3Uploader.for(@case, 'requests')
-      render 'cases/ico_sar/record_further_action'
+      render 'cases/ico/record_further_action'
     end
 
     def confirm_record_further_action
@@ -30,7 +27,7 @@ module Cases
       set_permitted_events
       if params_valid?
         session_persist_state(params_for_record_further_action)
-        redirect_to require_further_action_case_ico_sar_path(@case)
+        redirect_to require_further_action_case_ico_path(@case)
       else
         @case = @case.decorate
         @s3_direct_post = S3Uploader.for(@case, 'requests')
@@ -43,7 +40,7 @@ module Cases
 
       set_permitted_events
       init_deadlines
-      render 'cases/ico_sar/require_further_action'
+      render 'cases/ico/require_further_action'
     end
 
     def confirm_require_further_action
@@ -67,11 +64,8 @@ module Cases
       end
     end
 
-    def case_type
-      Case::ICO::SAR
-    end
-
     private
+
 
     def init_deadlines
       @case.internal_deadline = nil
@@ -110,8 +104,13 @@ module Cases
       )
     end
 
+    def params_valid?
+      @case.assign_attributes(params_for_record_further_action)
+      @case.valid?
+    end
+
     def session_info_key
-      "ico_sar_requir_further_action"
+      "ico_foi_requir_further_action"
     end
 
     def session_persist_state(params)
@@ -135,11 +134,6 @@ module Cases
       end
     end
 
-    def params_valid?
-      @case.assign_attributes(params_for_record_further_action)
-      @case.valid?
-    end
-
     def read_info_from_session
       clear_up_files_params
       if session[session_info_key].present?
@@ -150,5 +144,5 @@ module Cases
     def clear_up_session
       session[session_info_key] = {}
     end
-  end
+
 end

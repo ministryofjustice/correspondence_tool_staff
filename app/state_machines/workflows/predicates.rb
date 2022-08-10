@@ -151,7 +151,7 @@ class Workflows::Predicates
 
   def can_require_further_action_for_ico?
     type = @kase.original_case_type
-    (@kase.ico?) && (type == 'FOI' || type == 'SAR') && (@user.in? @kase.managing_team.users)
+    (@kase.ico?) && (@user.in? @kase.managing_team.users)
   end
 
   def not_overturned?

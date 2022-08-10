@@ -73,21 +73,21 @@ feature 'Require further action for ICO-SAR responded case' do
   def fill_details_for_require_further_action(kase, test_inputs)
     cases_show_page.load(id: kase.id)
     cases_show_page.actions.require_further_action.click
-    expect(cases_ico_sar_record_futher_actoin_page).to be_displayed
-    cases_ico_sar_record_futher_actoin_page.upload_file(
+    expect(cases_ico_foi_record_futher_actoin_page).to be_displayed
+    cases_ico_foi_record_futher_actoin_page.upload_file(
       kase: kase,
       file_path: test_inputs[:upload_file]
     )
 
-    cases_ico_sar_record_futher_actoin_page.fill_in_message(test_inputs[:testing_message])
-    cases_ico_sar_record_futher_actoin_page.click_on 'Continue'
+    cases_ico_foi_record_futher_actoin_page.fill_in_message(test_inputs[:testing_message])
+    cases_ico_foi_record_futher_actoin_page.click_on 'Continue'
 
-    expect(cases_ico_sar_require_further_action_page).to be_displayed
+    expect(cases_ico_foi_require_further_action_page).to be_displayed
 
-    cases_ico_sar_require_further_action_page.fill_in_internal_deadline(test_inputs[:interal_deadlinen])
-    cases_ico_sar_require_further_action_page.fill_in_external_deadline(test_inputs[:external_deadline])
+    cases_ico_foi_require_further_action_page.fill_in_internal_deadline(test_inputs[:interal_deadlinen])
+    cases_ico_foi_require_further_action_page.fill_in_external_deadline(test_inputs[:external_deadline])
 
-    cases_ico_sar_require_further_action_page.click_on 'Continue'
+    cases_ico_foi_require_further_action_page.click_on 'Continue'
   end
 
   def validate_results(kase, test_inputs, event_name, post_action_state)
@@ -117,15 +117,15 @@ feature 'Require further action for ICO-SAR responded case' do
   end
 
   def validate_error_message_not_in_past
-    expect(cases_ico_sar_require_further_action_page).to be_displayed
-    expect(cases_ico_sar_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case/ico.attributes.external_deadline.past')
-    expect(cases_ico_sar_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case/ico.attributes.internal_deadline.past')
+    expect(cases_ico_foi_require_further_action_page).to be_displayed
+    expect(cases_ico_foi_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case/ico.attributes.external_deadline.past')
+    expect(cases_ico_foi_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case/ico.attributes.internal_deadline.past')
   end
 
   def validate_error_message_value_of_deadlines
-    expect(cases_ico_sar_require_further_action_page).to be_displayed
-    expect(cases_ico_sar_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case.attributes.internal_deadline.after_external')
-    expect(cases_ico_sar_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case.attributes.external_deadline.before_internal')
+    expect(cases_ico_foi_require_further_action_page).to be_displayed
+    expect(cases_ico_foi_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case.attributes.internal_deadline.after_external')
+    expect(cases_ico_foi_require_further_action_page).to have_text I18n.t('activerecord.errors.models.case.attributes.external_deadline.before_internal')
   end
 
 end
