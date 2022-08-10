@@ -75,11 +75,8 @@ function _build() {
           $git_fetch_url
 
   # 7. Tag and push the image to the ECR
-  docker tag $docker_registry_tag $latest_tag
-
   p "Beginning push to ECR..."
   docker push ${docker_registry_tag}
-  docker push $latest_tag
 
   if [[ $current_branch == "main" ]]
   then
@@ -88,6 +85,7 @@ function _build() {
     p $latest_tag
     docker tag $docker_registry_tag $latest_tag
     docker push $latest_tag
+    p "Push latest tag complete"
   fi
 
  
@@ -96,6 +94,8 @@ function _build() {
   # 8. Display the tag to use for deployment
   p "Pushed to ${docker_registry_tag}"
   p "Image created with unique tag: \e[32m$docker_build_tag\e[0m\n"
+
+}tag: \e[32m$docker_build_tag\e[0m\n"
 
 }
 
