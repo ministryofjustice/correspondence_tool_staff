@@ -34,10 +34,8 @@ module PageObjects
         cases_new_foi_overturned_ico:   'Cases::New::FoiOverturnedIcoPage',
         cases_new_sar:                  'Cases::New::SARPage',
 
-        cases_ico_foi_require_further_action: 'Cases::ICOFOIRequireFurtherActionPage',
-        cases_ico_foi_record_further_action: 'Cases::ICOFOIRecordFurtherActionPage',
-        cases_ico_sar_require_further_action: 'Cases::ICOSARRequireFurtherActionPage',
-        cases_ico_sar_record_further_action: 'Cases::ICOSARRecordFurtherActionPage',
+        cases_ico_require_further_action: 'Cases::ICORequireFurtherActionPage',
+        cases_ico_record_further_action: 'Cases::ICORecordFurtherActionPage',
 
         case_new_sar_ir_link_case: 'Cases::New::SarInternalReviewLinkCasePage',
         case_new_sar_ir_confirm_sar: 'Cases::New::SarInternalReviewConfirmSarCasePage',
