@@ -73,14 +73,14 @@ feature 'Require further action for ICO-FOI responded case' do
   def fill_details_for_require_further_action(kase, test_inputs)
     cases_show_page.load(id: kase.id)
     cases_show_page.actions.require_further_action.click
-    expect(cases_ico_foi_record_futher_actoin_page).to be_displayed
-    cases_ico_foi_record_futher_actoin_page.upload_file(
+    expect(cases_ico_foi_record_further_action_page).to be_displayed
+    cases_ico_foi_record_further_action_page.upload_file(
       kase: kase,
       file_path: test_inputs[:upload_file]
     )
 
-    cases_ico_foi_record_futher_actoin_page.fill_in_message(test_inputs[:testing_message])
-    cases_ico_foi_record_futher_actoin_page.click_on 'Continue'
+    cases_ico_foi_record_further_action_page.fill_in_message(test_inputs[:testing_message])
+    cases_ico_foi_record_further_action_page.click_on 'Continue'
 
     expect(cases_ico_foi_require_further_action_page).to be_displayed
 
