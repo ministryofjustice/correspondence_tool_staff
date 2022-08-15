@@ -70,8 +70,8 @@ class Case::SAR::Offender < Case::Base
                  third_party_name: :string,
                  number_final_pages: :integer,
                  number_exempt_pages: :integer,
-                 is_partial_case: :boolean, 
-                 partial_case_letter_sent_dated: :date, 
+                 is_partial_case: :boolean,
+                 partial_case_letter_sent_dated: :date,
                  further_actions_required: :string
 
   attribute :number_final_pages, :integer, default: 0
@@ -97,10 +97,10 @@ class Case::SAR::Offender < Case::Base
     no: 'no',
     awaiting_response: 'awaiting_response',
   }
-  
+
   enum request_method: {
-    post: 'post',
     email: 'email',
+    post: 'post',
     web_portal: 'web portal',
     unknown: 'unknown',
   }
@@ -121,11 +121,11 @@ class Case::SAR::Offender < Case::Base
   validates :date_of_birth, presence: true
 
   validates_presence_of :subject_address
-  
+
   validates :subject_full_name, presence: true
   validates :subject_type, presence: true
   validates :recipient, presence: true
-  
+
   validate :validate_date_of_birth
   validate :validate_received_date
   validate :validate_third_party_names
@@ -134,7 +134,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_address
   validate :validate_request_dated
   validates :request_method, presence: true, unless: :offender_sar_complaint?
-  
+
   validates :number_final_pages,
             numericality: { only_integer: true, greater_than: -1,
                             message: 'must be a positive whole number' }
@@ -356,7 +356,7 @@ class Case::SAR::Offender < Case::Base
     # Calculate the days taken for vetting process
     days = nil
     if start_date_for_vetting
-      days = start_date_for_vetting.business_days_until(end_date_for_vetting, true) 
+      days = start_date_for_vetting.business_days_until(end_date_for_vetting, true)
     end
     days
   end

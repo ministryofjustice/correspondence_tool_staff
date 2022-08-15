@@ -14,6 +14,10 @@ describe Case::SAR::StandardDecorator do
   end
 
   describe '#request_methods_for_display' do
+    it 'returns an ordered request method list of options' do
+      expect(decorated_sar_case.request_methods_for_display).to eq %w[email post verbal web_portal]
+    end
+
     it 'does not return the "unknown" request method' do
       expect(decorated_sar_case.request_methods_for_display).to match_array %w[email post verbal web_portal]
     end
