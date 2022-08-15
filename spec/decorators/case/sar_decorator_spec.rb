@@ -15,7 +15,7 @@ describe Case::SAR::StandardDecorator do
 
   describe '#request_methods_for_display' do
     it 'does not return the "unknown" request method' do
-      expect(decorated_sar_case.request_methods_for_display).to match_array ["verbal", "post", "email", "web_portal"]
+      expect(decorated_sar_case.request_methods_for_display).to match_array %w[email post verbal web_portal]
     end
   end
 end
