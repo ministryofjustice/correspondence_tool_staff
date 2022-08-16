@@ -80,8 +80,8 @@ class Case::SAR::Standard < Case::Base
 
   enum request_method: {
     email: 'email',
-    post: 'post',
     verbal: 'verbal',
+    post: 'post',
     web_portal: 'web_portal',
     unknown: 'unknown'
   }

@@ -1,7 +1,12 @@
 require "rails_helper"
 
 describe Case::SAR::OffenderDecorator do
-  let(:offender_sar_case) {build_stubbed(:offender_sar_case, date_responded: Date.new(2020,1,10), received_date: Date.new(2020,1,1)).decorate}
+  let(:offender_sar_case) {
+    build_stubbed(
+      :offender_sar_case,
+      date_responded: Date.new(2020, 1, 10),
+      received_date: Date.new(2020, 1, 1)).decorate
+  }
 
   it 'instantiates the correct decorator' do
     expect(Case::SAR::Offender.new.decorate).to be_instance_of Case::SAR::OffenderDecorator
@@ -53,14 +58,19 @@ describe Case::SAR::OffenderDecorator do
     end
   end
 
-  describe '#request_method_for_display' do
-
-    it 'returns an ordered request method list of options' do
-      expect(offender_sar_case.request_methods_for_display).to eq %w[email post web_portal]
+  describe '#request_methods_sorted' do
+    it 'returns an ordered request methods list of options' do
+      expect(offender_sar_case.request_methods_sorted).to eq %w[email post unknown web_portal]
     end
+  end
 
+  describe '#request_method_for_display' do
     it 'does not return the "unknown" request method' do
       expect(offender_sar_case.request_methods_for_display).to match_array %w[email post web_portal]
+    end
+
+    it 'returns an ordered request methods list of options for display' do
+      expect(offender_sar_case.request_methods_for_display).to eq %w[email post web_portal]
     end
   end
 
