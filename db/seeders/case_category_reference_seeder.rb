@@ -2,7 +2,6 @@ module CaseCategoryReferenceSeeder
   class ReasonsForLateness
 
     def self.seed!
-      puts "----Seeding Basic Category reference records ----"
       seed_reasons_for_lateness
     end
 
