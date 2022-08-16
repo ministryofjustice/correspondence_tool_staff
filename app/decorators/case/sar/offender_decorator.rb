@@ -10,7 +10,11 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
     h.step_case_sar_offender_index_path
   end
 
+  def request_methods_sorted
+    Case::SAR::Offender.request_methods.keys.sort
+  end
+
   def request_methods_for_display
-    Case::SAR::Offender.request_methods.keys - ['unknown']
-  end 
+    request_methods_sorted - ['unknown']
+  end
 end
