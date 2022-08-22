@@ -67,4 +67,16 @@ describe Case::ICO::SAR do
 
     end
   end
+
+  describe '#reset_responding_assignment_flag' do
+    let(:ico_sar_case)    { create :closed_ico_sar_case }
+
+    before(:each)   {ico_sar_case.linked_cases << create(:sar_case) }
+
+    it 'updates the responder assignment state to pending' do
+      expect(ico_sar_case.responder_assignment.state).to eq 'accepted'
+      ico_sar_case.reset_responding_assignment_flag
+      expect(ico_sar_case.responder_assignment.state).to eq 'pending'
+    end
+  end
 end

@@ -9,7 +9,7 @@
     = t('common.case.header_case_number')
   = "#{@case.number} - #{@case.pretty_type}"
 
-= link_to("Back", record_further_action_case_ico_foi_path(@case), class: 'govuk-back-link')
+= link_to("Back", record_further_action_case_ico_path(@case), class: 'govuk-back-link')
 
 = render partial: 'layouts/header'
 
@@ -17,7 +17,7 @@
 
 div class="case-#{@correspondence_type_key}"
 
-= form_for @case, as: :"#{@correspondence_type_key}", url: require_further_action_case_ico_foi_path(@case) do |f|
+= form_for @case, as: :"#{@correspondence_type_key}", url: require_further_action_case_ico_path(@case) do |f|
   .form-group
     = f.gov_uk_date_field :internal_deadline, { legend_text: t('cases.ico_foi.extend_internal_deadline'),
             form_hint_text: t('helpers.hint.shared.date_example'),

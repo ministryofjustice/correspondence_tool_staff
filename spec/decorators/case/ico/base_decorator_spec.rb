@@ -32,4 +32,24 @@ describe Case::ICO::BaseDecorator do
     end
   end
 
+  describe '#original_internal_deadline' do
+    it 'returns a formatted date' do
+      closed_ico_foi_case.object.original_internal_deadline = Date.new(2017, 8, 13)
+      expect(closed_ico_foi_case.original_internal_deadline).to eq '13 Aug 2017'
+    end
+  end
+
+  describe '#original_external_deadline' do
+    it 'returns a formatted date' do
+      closed_ico_foi_case.object.original_external_deadline = Date.new(2017, 8, 13)
+      expect(closed_ico_foi_case.original_external_deadline).to eq '13 Aug 2017'
+    end
+  end
+
+  describe '#original_date_responded' do
+    it 'returns a formatted date' do
+      closed_ico_foi_case.object.original_date_responded = Date.new(2017, 8, 13)
+      expect(closed_ico_foi_case.original_date_responded).to eq '13 Aug 2017'
+    end
+  end
 end
