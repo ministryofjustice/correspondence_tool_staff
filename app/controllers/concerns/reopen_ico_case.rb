@@ -109,7 +109,7 @@ module ReopenICOCase
     end
 
     def session_info_key
-      "ico_foi_requir_further_action"
+      "ico_foi_require_further_action"
     end
 
     def session_persist_state(params)
