@@ -1249,7 +1249,7 @@ en:
       form:
         uploaded_request_files: Upload relevant files (optional)
     ico_foi: 
-      recored_further_action:
+      record_further_action:
         heading: Further ICO request
       require_further_action:
         heading: Set new deadlines

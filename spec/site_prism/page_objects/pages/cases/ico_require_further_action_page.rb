@@ -1,9 +1,9 @@
 module PageObjects
   module Pages
     module Cases
-      class ICOFOIRequireFurtherActionPage < PageObjects::Pages::Base
+      class ICORequireFurtherActionPage < PageObjects::Pages::Base
 
-        set_url '/cases/ico_fois/{id}/require_further_action'
+        set_url '/cases/icos/{id}/require_further_action'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection, '.global-nav'

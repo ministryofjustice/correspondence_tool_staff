@@ -7,5 +7,4 @@ class Case::ICO::SARDecorator < Case::ICO::BaseDecorator
   def requester_name_and_type
     pretty_type
   end
-
 end

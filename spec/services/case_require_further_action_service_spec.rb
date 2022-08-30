@@ -39,7 +39,7 @@ describe CaseRequireFurtherActionService do
         expect(state_machine).to have_received(:require_further_action!).with(
           acting_user: user, 
           acting_team: managing_team, 
-          message: I18n.t("event.case/ico.require_further_action_message") , 
+          message: I18n.t("event.case/ico.require_further_action_message", team: team.name) ,
           target_team: team)
         expect(service.result).to eq :ok
       end
