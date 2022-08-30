@@ -72,6 +72,7 @@ spec:
                 - 'sidekiqmon | grep "track-a-query-jobs"'
             initialDelaySeconds: 40
             periodSeconds: 60
+            timeoutSeconds: 15
           livenessProbe:
             exec:
               command:
@@ -80,3 +81,4 @@ spec:
                 - 'sidekiqmon | grep "track-a-query-jobs"'
             initialDelaySeconds: 40
             periodSeconds: 60
+            timeoutSeconds: 15
