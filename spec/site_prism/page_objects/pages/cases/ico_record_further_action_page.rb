@@ -2,10 +2,10 @@ module PageObjects
   module Pages
     module Cases
 
-      class ICOFOIRecordFurtherActionPage < PageObjects::Pages::Base
+      class ICORecordFurtherActionPage < PageObjects::Pages::Base
         include SitePrism::Support::DropInDropzone
 
-        set_url '/cases/ico_fois/{id}/record_further_action'
+        set_url '/cases/icos/{id}/record_further_action'
 
         section :primary_navigation,
                 PageObjects::Sections::PrimaryNavigationSection,

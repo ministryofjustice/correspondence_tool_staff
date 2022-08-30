@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-feature 'Require further action for ICO-FOI responded case' do
+feature 'Require further action for ICO-SAR responded case' do
   given(:team_dacu)      { find_or_create :team_dacu }
   given(:manager)        { create :manager, managing_teams: [ team_dacu ] }
-  given(:responder)      { find_or_create(:foi_responder) }
-  given(:kase)           { create(:responded_ico_foi_case, manager: manager, responder: responder) }
+  given(:responder)      { find_or_create(:sar_responder) }
+  given(:kase)           { create(:responded_ico_sar_case, manager: manager, responder: responder) }
 
 
   scenario '1 - Send the case back to the responder', js: true do
