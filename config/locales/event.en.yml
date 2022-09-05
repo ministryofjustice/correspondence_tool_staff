@@ -43,7 +43,7 @@ en:
     upload_response_approve_and_bypass: Response uploaded and cleared - further clearance not required
     case/ico:
       respond: Response sent to ICO
-      require_further_action_message: Case details updated. Assigned back the responder
+      require_further_action_message: Case details updated. Assigned back to %{team}
       require_further_action_unassigned_message: Case details updated. Need to reassign the case to a team
       require_further_action_to_responder_team_message: Case details updated. Assigned to %{team}
 

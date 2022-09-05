@@ -79,9 +79,9 @@ class Case::SAR::Standard < Case::Base
   }
 
   enum request_method: {
+    email: 'email',
     verbal: 'verbal',
     post: 'post',
-    email: 'email',
     web_portal: 'web_portal',
     unknown: 'unknown'
   }
@@ -188,11 +188,11 @@ class Case::SAR::Standard < Case::Base
 
   def extension_time_limit
     self.correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
-  end 
+  end
 
   def extension_time_default
     self.correspondence_type.extension_time_default || Settings.sar_extension_default_time_gap
-  end 
+  end
 
   def self.factory(type)
     case type&.downcase
@@ -220,7 +220,7 @@ class Case::SAR::Standard < Case::Base
 
   def max_time_limit
     self.correspondence_type.extension_time_limit || Settings.sar_extension_default_limit
-  end 
+  end
 
   def use_subject_as_requester
     self.name = self.subject_full_name

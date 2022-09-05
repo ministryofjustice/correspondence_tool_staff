@@ -38,7 +38,7 @@ module Stats
         commands = [
           "cd #{folder}",
           "cat *.csv > #{self.result_name}.csv",
-          "zip #{self.result_name}.zip #{self.result_name}.csv"
+          "zip -q #{self.result_name}.zip #{self.result_name}.csv"
         ].join('; ')
 
         if system(commands)
@@ -50,7 +50,7 @@ module Stats
 
       def result_name
         raise 'This method should be defined in the child class'
-      end 
+      end
 
       def filename
         self.result_name + '.zip'

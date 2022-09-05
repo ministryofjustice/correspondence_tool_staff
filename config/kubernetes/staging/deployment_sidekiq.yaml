@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: jobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
           command: ["./config/docker/entrypoint-background-jobs.sh"]
           env:
             - name: DATABASE_URL
@@ -70,6 +70,7 @@ spec:
                 - 'sidekiqmon | grep "track-a-query-jobs"'
             initialDelaySeconds: 40
             periodSeconds: 60
+            timeoutSeconds: 15
           livenessProbe:
             exec:
               command:
@@ -78,3 +79,4 @@ spec:
                 - 'sidekiqmon | grep "track-a-query-jobs"'
             initialDelaySeconds: 40
             periodSeconds: 60
+            timeoutSeconds: 15
