@@ -168,6 +168,11 @@ en:
               can now only link other FOI cases or internal reviews as related
               to this cases.
         case/ico/sar:
+          attributes:
+            date_responded:
+              before_received: "cannot be before date received"
+              future: "cannot be in the future"
+              blank: cannot be blank
           related_case_number:
             does_not_match_original: >-
               You've linked a SAR case as the original for this appeal. You
