@@ -1,9 +1,12 @@
 # default is: localhost
-#host: 'some host'
+host: 'app'
+hosts: 'app'
 
 # default is: 3000
-#port: 1234
+port: 3000
 
 # either watch this files along with `app/assets` and `app/views`
-#files:
-#  - 'some/file/**/*.css'
+files:
+  - 'config/locales/*'
+
+open: false

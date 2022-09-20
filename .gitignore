@@ -12,6 +12,8 @@
 /tmp/*
 /log/*
 .idea/*
+.docker-sync
+.local-dev/.setup-complete
 
 
 # Ignore concatenated state machine config file - it will be regenerated
