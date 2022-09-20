@@ -75,7 +75,6 @@ class CaseRequireFurtherActionService
           :internal_deadline,
           "cannot be blank"
         )
-      end
       else @kase.interal_deadline.present? && @kase.internal_deadline <= Date.today
         @kase.errors.add(
           :internal_deadline,
