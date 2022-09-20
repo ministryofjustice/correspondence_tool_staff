@@ -331,10 +331,10 @@ enabled_features:
   branston_retention_scheduling:
     Local: true
     Host-dev: true
-    Host-demo: false
-    Host-staging: false
+    Host-demo: true
+    Host-staging: true
     Host-qa: true
-    Host-prod: false
+    Host-prod: true
   # Before enabling a host, make sure the necessary ENV variables are exposed in the environment
   # through config_map / secrets. Refer to `config/initializers/devise.rb`, omniauth section.
   devise_azure_activedirectory:
