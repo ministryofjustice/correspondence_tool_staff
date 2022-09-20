@@ -75,7 +75,7 @@ class CaseRequireFurtherActionService
           :internal_deadline,
           "cannot be blank"
         )
-      else @kase.internal_deadline.present? && @kase.internal_deadline <= Date.today
+      elsif @kase.internal_deadline.present? && @kase.internal_deadline <= Date.today
         @kase.errors.add(
           :internal_deadline,
           I18n.t('activerecord.errors.models.case/ico.attributes.internal_deadline.past')
