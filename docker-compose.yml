@@ -100,7 +100,7 @@ services:
 
   db_admin:
     container_name: cts_pgadmin4
-    image: dpage/pgadmin4
+    image: dpage/pgadmin4:6.10
     restart: always
     ports:
       - "5050:80"
