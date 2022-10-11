@@ -16,12 +16,14 @@ approve it, and the CI tests passing, before it can be merged. Feel free to use
 the issue tags on your PR to indicate if it is a WIP or if it is ready for
 reviewing.
 
-### Basic Setup
+Please consider using the provided Docker environment to develop this app over your core linux environment. There are [huge benefits using Docker](https://greatminds.consulting/insight/top-10-benefits-you-will-get-by-using-docker) in development including standardisation, increased productivity and CI efficiencies.
+
+### Basic setup using Docker
 
 #### Requirements
 
 * [Docker](https://docs.docker.com/desktop/install/mac-install/)
-* [Dory Proxy](https://github.com/FreedomBen/dory) - _provides named hosts via reverse proxy_
+* [Dory Proxy](https://github.com/FreedomBen/dory) - _provides named hosts via reverse proxy, allowing multiple apps to use localhost at one time._
 * [Docker Sync](https://docker-sync.readthedocs.io/en/latest/index.html) - _provides high-performance 2-way synchronisation of files between host and app containers._
 
 Setup is simple; local-dev is configured to manage the implementation of both Dory and Docker Sync. 
@@ -157,6 +159,7 @@ installation.
 
 ---------------
 
+> Below is the normal setup outside of Docker. Please consider using Docker as the environment can more closely match production, rather than your machines environment.  
 
 ### Testing
 
