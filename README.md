@@ -124,7 +124,7 @@ Once set up has completed you won't have to run that again unless the volumes ar
 
 There are several `make` commands configured in the `Makefile`. These are mostly just convenience wrappers for longer or more complicated commands.
 
-Nb. all `make` commands are run from the host machine, i.e. outside the containers.
+Nb. with exception to `make spec-setup`, all other `make` commands are run from the host machine, i.e. outside the containers.
 
 | Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 |---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
