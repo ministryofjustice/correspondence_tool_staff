@@ -8,7 +8,7 @@ export SETTINGS__GIT_SOURCE="$APP_BUILD_TAG"
 
 
 rails db:migrate
-rails data:migrate
+# rails data:migrate
 
 set -ex
 
