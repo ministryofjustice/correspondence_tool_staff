@@ -83,7 +83,7 @@ group :test do
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 5.1'
   gem 'site_prism', '= 3.1'
-  gem 'webdrivers', '~> 5.0.0'
+  gem 'webdrivers', '~> 5.2.0'
   gem 'simplecov', '~> 0.21.2'
 end
 
