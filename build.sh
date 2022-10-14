@@ -71,7 +71,6 @@ function _build() {
           --build-arg BUILD_TAG=$docker_build_tag \
           --pull \
           --tag ${docker_registry_tag} \
-          --platform linux/amd64 \
           --file ./Dockerfile \
           $git_fetch_url
 
