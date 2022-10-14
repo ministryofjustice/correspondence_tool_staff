@@ -598,7 +598,7 @@ bundle exec yardoc
 
 If you need to you can edit settings for Yard in `Rakefile`. The documentation
 is generated in the `doc` folder, to view it on OSX run:
-export DOCKER_DEFAULT_PLATFORM=linux/amd64export DOCKER_DEFAULT_PLATFORM=linux/amd64
+
 ```
 open doc/index.html
 ```
