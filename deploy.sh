@@ -163,6 +163,7 @@ function _deploy() {
 
   # Apply image specific config
   kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
+          migrations=${docker_image_tag} \
           webapp=${docker_image_tag} \
           uploads=${docker_image_tag} \
           quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
