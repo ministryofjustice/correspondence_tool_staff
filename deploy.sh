@@ -161,6 +161,10 @@ function _deploy() {
   kubectl apply \
     -f config/kubernetes/${environment}/configmap.yaml -n $namespace
 
+  # Apply migrations config
+  kubectl set image -f config/kubernetes/${environment}/migrations.yaml \
+          migrations=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+
   # Apply image specific config
   kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
           migrations=${docker_image_tag} \
