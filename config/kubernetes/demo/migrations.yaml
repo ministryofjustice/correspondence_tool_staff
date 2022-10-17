@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+apiVersion: batch/v1
 kind: Job
 metadata:
   name: track-a-query
@@ -6,7 +6,7 @@ spec:
   template:
     spec:
       containers:
-      - name: main
+      - name: migrations
         image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
         command: ["./config/docker/entrypoint-migrations.sh"]
         env:
