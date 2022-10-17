@@ -3,6 +3,7 @@ kind: Job
 metadata:
   name: track-a-query-migrations
 spec:
+  ttlSecondsAfterFinished: 60
   template:
     spec:
       containers:
