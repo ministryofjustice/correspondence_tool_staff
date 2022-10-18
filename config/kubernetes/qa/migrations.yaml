@@ -10,6 +10,11 @@ spec:
       - name: migrations
         image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
         command: ["./config/docker/entrypoint-migrations.sh"]
+        resources:
+          limits:
+            memory: 1500Mi
+          requests:
+            memory: 500Mi
         env:
           - name: DATABASE_URL
             valueFrom:
