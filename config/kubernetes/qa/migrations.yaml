@@ -12,9 +12,9 @@ spec:
         command: ["./config/docker/entrypoint-migrations.sh"]
         resources:
           limits:
-            memory: 1500Mi
+            memory: 3Gi
           requests:
-            memory: 500Mi
+            memory: 1Gi
         env:
           - name: DATABASE_URL
             valueFrom:
