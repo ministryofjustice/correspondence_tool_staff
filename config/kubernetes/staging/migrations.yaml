@@ -26,6 +26,16 @@ spec:
               secretKeyRef:
                 name: track-a-query-rds-output
                 key: database_password
+          - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-s3-output
+                  key: access_key_id
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: track-a-query-s3-output
+                key: secret_access_key
         envFrom:
           - configMapRef:
               name: environment-variables
