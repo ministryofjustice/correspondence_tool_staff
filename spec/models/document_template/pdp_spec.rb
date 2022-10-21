@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DocumentTemplate::PDP do
+RSpec.describe DocumentTemplate::Pdp do
   let(:kase) do
     FactoryBot.build(:offender_sar_case,
       case_reference_number: "20062007",

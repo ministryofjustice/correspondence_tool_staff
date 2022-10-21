@@ -1,5 +1,5 @@
 module DocumentTemplate
-  class CCTV < DocumentTemplate::Base
+  class Cctv < DocumentTemplate::Base
     def context
       super.merge(
         addressee_location: data_request.location,

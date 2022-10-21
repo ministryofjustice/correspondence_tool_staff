@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DocumentTemplate::MAPPA do
+RSpec.describe DocumentTemplate::Mappa do
   let(:kase) do
     FactoryBot.build(:offender_sar_case,
       case_reference_number: "20062007",
