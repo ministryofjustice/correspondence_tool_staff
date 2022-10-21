@@ -1,12 +1,13 @@
 module DocumentTemplate
   class Base
     DOCUMENT_TEMPLATE_TYPE = {
-      prison_records: 0,
+      prison: 0,
       security: 1,
       probation: 2,
       cctv: 3,
       mappa: 4,
-      cat_a: 5
+      cat_a: 5,
+      cross_border: 6,
     }.freeze
 
     attr_reader :data_request

@@ -1,7 +1,7 @@
 module DocumentTemplate
-  class PrisonRecords < DocumentTemplate::Base
+  class Prison < DocumentTemplate::Base
     def template_name
-      "prison_records.docx"
+      "prison.docx"
     end
 
     def context

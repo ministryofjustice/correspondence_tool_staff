@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DocumentTemplate::PrisonRecords do
+RSpec.describe DocumentTemplate::CrossBorder do
   let(:kase) do
     FactoryBot.build(:offender_sar_case,
       case_reference_number: "20062007",
@@ -10,7 +10,7 @@ RSpec.describe DocumentTemplate::PrisonRecords do
       prison_number: "AB12345"
     )
   end
-  let(:data_request) { FactoryBot.build(:data_request, offender_sar_case: kase, location: "HMP Brixton") }
+  let(:data_request) { FactoryBot.build(:data_request, offender_sar_case: kase) }
   subject { described_class.new(data_request: data_request) }
 
   describe "#path" do
@@ -22,7 +22,6 @@ RSpec.describe DocumentTemplate::PrisonRecords do
   describe "#context" do
     let(:expected_context) do
       {
-        addressee_location: "HMP Brixton",
         dpa_reference: "20062007",
         offender_name: "Robert Badson",
         date_of_birth: "11/03/2000",
@@ -37,6 +36,13 @@ RSpec.describe DocumentTemplate::PrisonRecords do
       Timecop.freeze(Date.new(2022, 10, 21)) do
         expect(subject.context).to eq expected_context
       end
+    end
+  end
+
+  describe "create file" do
+    it "creates a file" do
+      template = Sablon.template(subject.path)
+      template.render_to_file File.expand_path("~/Desktop/tx_test.docx"), subject.context
     end
   end
 end
