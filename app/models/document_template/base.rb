@@ -25,7 +25,7 @@ module DocumentTemplate
 
     def context
       {
-        dpa_reference: kase.case_reference_number,
+        dpa_reference: kase.number,
         offender_name: kase.subject_full_name,
         date_of_birth: date_format(kase.date_of_birth),
         date: today,
