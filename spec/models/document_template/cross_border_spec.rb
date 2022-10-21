@@ -38,11 +38,4 @@ RSpec.describe DocumentTemplate::CrossBorder do
       end
     end
   end
-
-  describe "create file" do
-    it "creates a file" do
-      template = Sablon.template(subject.path)
-      template.render_to_file File.expand_path("~/Desktop/tx_test.docx"), subject.context
-    end
-  end
 end
