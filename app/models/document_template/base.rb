@@ -1,7 +1,8 @@
 module DocumentTemplate
   class Base
     DOCUMENT_TEMPLATE_TYPE = {
-      prison_records: 0
+      prison_records: 0,
+      security: 1,
     }
 
     attr_reader :data_request
