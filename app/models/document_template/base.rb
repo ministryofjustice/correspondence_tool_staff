@@ -3,6 +3,7 @@ module DocumentTemplate
     DOCUMENT_TEMPLATE_TYPE = {
       prison_records: 0,
       security: 1,
+      probation: 2,
     }
 
     attr_reader :data_request
