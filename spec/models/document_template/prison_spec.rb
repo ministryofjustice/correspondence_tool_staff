@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe DocumentTemplate::Prison do
   let(:kase) do
     FactoryBot.build(:offender_sar_case,
-      case_reference_number: "20062007",
+      number: "20062007",
       subject_full_name: "Robert Badson",
       date_of_birth: "2000-03-11",
       subject_aliases: "Bad Bob",
