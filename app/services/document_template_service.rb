@@ -16,7 +16,7 @@ class DocumentTemplateService
     @template_type = template_type
 
     raise InvalidDataRequestError.new unless @data_request.is_a?(DataRequest)
-    raise InvalidTemplateError.new unless mapping.include?(@template_type)
+    raise InvalidTemplateError.new unless DocumentTemplate::Base::DOCUMENT_TEMPLATE_TYPES.include?(@template_type)
   end
 
   def context
@@ -26,12 +26,7 @@ class DocumentTemplateService
   private
 
   def template
-    @template ||= mapping[@template_type].new(data_request: @data_request)
-  end
-
-  def mapping
-    {
-      DocumentTemplate::Base::DOCUMENT_TEMPLATE_TYPE[:prison_records] => DocumentTemplate::PrisonRecords,
-    }
+    klass = Object.const_get("#{DocumentTemplate}::#{@template_type.to_s.classify}")
+    @template ||= klass.new(data_request: @data_request)
   end
 end
