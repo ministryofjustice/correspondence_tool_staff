@@ -13,4 +13,5 @@
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.uncountable 'feedback'
   inflect.acronym 'CCTV'
+  inflect.acronym 'MAPPA'
 end

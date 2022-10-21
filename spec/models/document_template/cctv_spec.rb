@@ -39,11 +39,4 @@ RSpec.describe DocumentTemplate::CCTV do
       end
     end
   end
-
-  describe "create file" do
-    it "creates a file" do
-      template = Sablon.template(subject.path)
-      template.render_to_file File.expand_path("~/Desktop/cctv_test.docx"), subject.context
-    end
-  end
 end

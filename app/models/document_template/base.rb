@@ -5,6 +5,7 @@ module DocumentTemplate
       security: 1,
       probation: 2,
       cctv: 3,
+      mappa: 4,
     }.freeze
 
     attr_reader :data_request
