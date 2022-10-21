@@ -6,8 +6,9 @@ module DocumentTemplate
       probation: 2,
       cctv: 3,
       mappa: 4,
-      cat_a: 5,
-      cross_border: 6,
+      pdp: 5,
+      cat_a: 6,
+      cross_border: 7,
     }.freeze
 
     attr_reader :data_request
