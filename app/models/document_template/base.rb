@@ -4,16 +4,15 @@ module DocumentTemplate
       prison_records: 0,
       security: 1,
       probation: 2,
-    }
+      cctv: 3,
+    }.freeze
 
     attr_reader :data_request
 
+    delegate :kase, to: :data_request
+
     def initialize(data_request:)
       @data_request = data_request
-    end
-
-    def kase
-      data_request.kase
     end
 
     def path
