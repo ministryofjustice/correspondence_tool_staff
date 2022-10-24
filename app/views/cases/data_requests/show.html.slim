@@ -20,7 +20,7 @@ span.visually-hidden
       = "#{@case.number} - #{@case.subject_full_name}"
     .form-group
       label.form-label
-        = t("helpers.fieldset.data_request.location")
+        = t("helpers.label.data_request.location")
       p.data_request_location
         = @data_request.location
     .form-group
@@ -52,7 +52,7 @@ span.visually-hidden
     hr
     .form-group
       label.form-label
-        = t("helpers.label.data_request.pages_received")
+        = t("helpers.label.data_request.cached_num_pages")
       p.data_request_pages_received
         = @data_request.cached_num_pages
     .form-group
@@ -65,7 +65,7 @@ span.visually-hidden
           = t('cases.offender_sar.flag_choice_no')
     hr
     div.button-holder
-      = link_to t('button.data_request_select_document'), case_path(@case), class: 'button select-document', style: 'margin-top: -6px'
+      = link_to t('button.select_document'), case_path(@case), class: 'button data_request_select_document', style: 'margin-top: -6px'
       - if @case.editable?
         = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
 
