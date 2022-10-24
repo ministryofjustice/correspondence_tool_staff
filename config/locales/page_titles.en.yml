@@ -14,7 +14,7 @@ en:
     close_case_page: Closing a case - %{case_number} - Track-a-query
     closed_cases_page: All closed cases - Track-a-query
     retention_schedules_page: Case retention schedules - Track-a-query
-    create_case_page: 
+    create_case_page:
       foi: Creating an FOI case - Track-a-query
       ico: Creating an ICO case - Track-a-query
       offender_sar:
@@ -25,25 +25,26 @@ en:
         request_details_step: Request details - Creating an Offender SAR case - Track-a-query
         date_received_step: Date SAR received - Creating an Offender SAR case - Track-a-query
       offender_sar_complaint:
-        link_offender_sar_case_step: Link Offender SAR case - Creating an Offender SAR Complaint case - Track-a-query       
+        link_offender_sar_case_step: Link Offender SAR case - Creating an Offender SAR Complaint case - Track-a-query
         confirm_offender_sar_step: Confirm Offender SAR details - Creating an Offender SAR Complaint case - Track-a-query
         complaint_type_step: Complaint type - Creating an Offender SAR Complaint case - Track-a-query
         requester_details_step: Requester details - Creating an Offender SAR Complaint case - Track-a-query
         recipient_details_step: Recipient details - Creating an Offender SAR Complaint case - Track-a-query
-        requested_info_step: Request information - Creating an Offender SAR Complaint case - Track-a-query        
+        requested_info_step: Request information - Creating an Offender SAR Complaint case - Track-a-query
         request_details_step: Request details - Creating an Offender SAR Complaint case - Track-a-query
         date_received_step: Date received - Creating an Offender SAR Complaint case - Track-a-query
         set_deadline_step: Set deadline - Creating an Offender SAR Complaint case - Track-a-query
       sar: Creating a SAR case - Track-a-query
-      sar_internal_review: 
-        link_sar_case_step: Link SAR case - Creating a SAR Internal Review case - Track-a-query       
-        confirm_sar_step: Confirm Linked SAR details - Creating a SAR Internal Review case - Track-a-query       
-        case_details_step: Add SAR IR details - Creating a SAR Internal Review case - Track-a-query       
-        edit_case_details: Edit SAR IR details - Editing a SAR Internal Review case - Track-a-query       
+      sar_internal_review:
+        link_sar_case_step: Link SAR case - Creating a SAR Internal Review case - Track-a-query
+        confirm_sar_step: Confirm Linked SAR details - Creating a SAR Internal Review case - Track-a-query
+        case_details_step: Add SAR IR details - Creating a SAR Internal Review case - Track-a-query
+        edit_case_details: Edit SAR IR details - Editing a SAR Internal Review case - Track-a-query
     create_overturned_ico_page: Creating an overturned ICO appeal case - Track-a-query
     custom_report: Creating a custom report - Track-a-query
     data_request_page: Record data request
     data_request_edit_page: Update page count
+    data_request_show_page: View data request
     destroy_case_page: Deleting a case - %{case_number} - Track-a-query
     edit_assignment_page: Accepting or rejecting a case - %{case_number} - Track-a-query
     edit_org_entity: Edit %{team_type} - %{team_name} - Track-a-query
@@ -88,6 +89,6 @@ en:
     address_book: Organisation Address book - Track-a-query
     add_an_address: Add an address - Track-a-query
     edit_an_address: Edit an address - Track-a-query
-    partial_case_flags: Edit partial case information - %{case_number} - Track-a-query 
+    partial_case_flags: Edit partial case information - %{case_number} - Track-a-query
     ico_foi:
       require_further_action: Require further action - %{case_number} - Track-a-query

@@ -67,6 +67,32 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     end
   end
 
+  describe '#show' do
+    let(:data_request) {
+      create(
+        :data_request,
+        cached_num_pages: 10,
+        completed: true,
+        cached_date_received: Date.yesterday
+      )
+    }
+
+    let(:params) {
+      {
+        id: data_request.id,
+        case_id: data_request.case_id,
+      }
+    }
+
+    it 'builds a new data_request with last received values' do
+      get :show, params: params
+
+      expect(assigns(:data_request)).to be_a DataRequest
+      expect(assigns(:data_request).cached_num_pages).to eq 10
+      expect(assigns(:data_request).cached_date_received).to eq Date.yesterday
+    end
+  end
+
   describe '#edit' do
     let(:data_request) {
       create(
