@@ -106,6 +106,7 @@ module PageObjects
         cases_extend_sar_deadline:      'Cases::ExtendSARDeadlinePage',
         data_request:                   'Cases::DataRequestPage',
         data_request_edit:              'Cases::DataRequestEditPage',
+        data_request_show:              'Cases::DataRequestShowPage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',
