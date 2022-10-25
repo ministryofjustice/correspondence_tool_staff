@@ -84,7 +84,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       }
     }
 
-    it 'builds a new data_request with last received values' do
+    it 'loads the correct data_request' do
       get :show, params: params
 
       expect(assigns(:data_request)).to be_a DataRequest
