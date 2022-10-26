@@ -504,6 +504,7 @@ en:
     delete: Delete
     update_partial_flags: Update partial case
     select_document: Select Day 1 request document
+    download_document: Download Day 1 request document
 
   helpers:
     fieldset:
@@ -517,6 +518,8 @@ en:
         date_from: Date from
         date_to: Date to
         date_requested: Date requested
+      commissioning_document:
+        document_type: "Which data request document would you like to use for the Day 1 email?"
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
         info_held_status_abbreviation: Was the information held?
@@ -687,6 +690,16 @@ en:
         completed: "Yes, all data received"
       data_request_log:
         num_pages: Number of pages
+      commissioning_document:
+        document_type:
+          prison: Prison Records
+          security: Security records
+          probation: Probation records
+          cctv: CCTV, BWCF, telephone recordings, etc
+          mappa: MAPPA
+          pdp: PDP
+          cat_a: CAT A
+          cross_border: Cross Border
       types:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
@@ -1511,6 +1524,9 @@ en:
         success: Data request updated
         unprocessed: No changes made
       upto: "Up to"
+    commissioning_documents:
+      new:
+        heading: Select Day 1 request document
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness

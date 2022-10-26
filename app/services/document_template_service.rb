@@ -16,7 +16,7 @@ class DocumentTemplateService
     @template_type = template_type
 
     raise InvalidDataRequestError.new unless @data_request.is_a?(DataRequest)
-    raise InvalidTemplateError.new unless DocumentTemplate::Base::DOCUMENT_TEMPLATE_TYPES.include?(@template_type)
+    raise InvalidTemplateError.new unless CommissioningDocument::TEMPLATE_TYPES.include?(@template_type)
   end
 
   def context
