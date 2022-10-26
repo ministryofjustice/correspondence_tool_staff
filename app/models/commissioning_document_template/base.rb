@@ -1,4 +1,4 @@
-module DocumentTemplate
+module CommissioningDocumentTemplate
   class Base
     attr_reader :data_request
 

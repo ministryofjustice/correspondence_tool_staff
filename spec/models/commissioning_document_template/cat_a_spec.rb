@@ -1,16 +1,15 @@
 require 'rails_helper'
 
-RSpec.describe DocumentTemplate::Security do
+RSpec.describe CommissioningDocumentTemplate::CatA do
   let(:kase) do
     FactoryBot.build(:offender_sar_case,
       number: "20062007",
       subject_full_name: "Robert Badson",
       date_of_birth: "2000-03-11",
-      subject_aliases: "Bad Bob",
       prison_number: "AB12345"
     )
   end
-  let(:data_request) { FactoryBot.build(:data_request, offender_sar_case: kase, location: "HMP Brixton") }
+  let(:data_request) { FactoryBot.build(:data_request, offender_sar_case: kase) }
   subject { described_class.new(data_request: data_request) }
 
   describe "#path" do
@@ -22,11 +21,9 @@ RSpec.describe DocumentTemplate::Security do
   describe "#context" do
     let(:expected_context) do
       {
-        addressee_location: "HMP Brixton",
         dpa_reference: "20062007",
         offender_name: "Robert Badson",
         date_of_birth: "11/03/2000",
-        aliases: "Bad Bob",
         date: "21/10/2022",
         prison_numbers: "AB12345",
         deadline: "26/10/2022",

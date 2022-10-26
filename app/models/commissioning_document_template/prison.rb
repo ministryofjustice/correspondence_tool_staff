@@ -1,5 +1,5 @@
-module DocumentTemplate
-  class Prison < DocumentTemplate::Base
+module CommissioningDocumentTemplate
+  class Prison < CommissioningDocumentTemplate::Base
     def context
       super.merge(
         addressee_location: data_request.location,

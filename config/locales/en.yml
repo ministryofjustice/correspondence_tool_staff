@@ -519,7 +519,7 @@ en:
         date_to: Date to
         date_requested: Date requested
       commissioning_document:
-        document_type: "Which data request document would you like to use for the Day 1 email?"
+        template: "Which data request document would you like to use for the Day 1 email?"
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
         info_held_status_abbreviation: Was the information held?
@@ -691,7 +691,7 @@ en:
       data_request_log:
         num_pages: Number of pages
       commissioning_document:
-        document_type:
+        template:
           prison: Prison Records
           security: Security records
           probation: Probation records

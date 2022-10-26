@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe DocumentTemplate::Prison do
+RSpec.describe CommissioningDocumentTemplate::Cctv do
   let(:kase) do
     FactoryBot.build(:offender_sar_case,
       number: "20062007",
