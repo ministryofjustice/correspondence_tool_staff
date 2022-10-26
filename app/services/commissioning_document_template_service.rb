@@ -1,4 +1,4 @@
-class DocumentTemplateService
+class CommissioningDocumentTemplateService
   class InvalidDataRequestError < RuntimeError
     def initialize
       super("data request is invalid")
@@ -26,7 +26,7 @@ class DocumentTemplateService
   private
 
   def template
-    klass = Object.const_get("#{DocumentTemplate}::#{@template_type.to_s.classify}")
+    klass = Object.const_get("#{CommissioningDocumentTemplate}::#{@template_type.to_s.classify}")
     @template ||= klass.new(data_request: @data_request)
   end
 end
