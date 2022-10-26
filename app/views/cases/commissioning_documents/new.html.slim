@@ -19,8 +19,9 @@ span.visually-hidden
     h2.bold-medium.data-request__number
       = "#{@case.number} - #{@case.subject_full_name}"
 
-    = form_for CommissioningDocument.new(data_request: @data_request), url: case_path(@case) do |f|
-      = f.radio_button_fieldset :document_type, choices: CommissioningDocument::TEMPLATE_TYPES
+    - url = case_data_request_commissioning_documents_path(@case, @data_request)
+    = form_for @commissioning_document, url: url do |f|
+      = f.radio_button_fieldset :template, choices: CommissioningDocument::TEMPLATE_TYPES
       = f.submit t('button.download_document'), class: 'button'
 
 

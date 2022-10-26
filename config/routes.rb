@@ -211,7 +211,7 @@ Rails.application.routes.draw do
 
     resource :cover_page, only: [:show], path: "cover-page"
     resources :data_requests do
-      resources :commissioning_documents, only: [:new]
+      resources :commissioning_documents, only: [:new, :create]
     end
 
     resource :letters, only: [:new, :show], path: "letters/:type"

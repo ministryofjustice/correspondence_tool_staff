@@ -3,7 +3,9 @@ module Cases
     before_action :set_case
     before_action :set_data_request
 
-    def new; end
+    def new
+      @commissioning_document = CommissioningDocument.new(data_request: @data_request)
+    end
 
     private
 

@@ -17,5 +17,5 @@ TEMPLATE_TYPES = %i[
     @data_request = data_request
   end
 
-  def document_type; end
+  def template; end
 end
