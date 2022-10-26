@@ -107,6 +107,7 @@ module PageObjects
         data_request:                   'Cases::DataRequestPage',
         data_request_edit:              'Cases::DataRequestEditPage',
         data_request_show:              'Cases::DataRequestShowPage',
+        commissioning_document:         'Cases::CommissioningDocumentPage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',
