@@ -2,7 +2,7 @@ class CommissioningDocument
   include ActiveModel::Conversion
   extend  ActiveModel::Naming
 
-TEMPLATE_TYPES = %i[
+  TEMPLATE_TYPES = %i[
     prison
     security
     probation
