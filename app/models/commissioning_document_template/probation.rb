@@ -1,5 +1,9 @@
 module CommissioningDocumentTemplate
   class Probation < CommissioningDocumentTemplate::Base
+    def request_type
+      "Probation"
+    end
+
     def context
       super.merge(
         pnc: kase.other_subject_ids,
