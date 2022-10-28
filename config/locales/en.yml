@@ -376,8 +376,14 @@ en:
       retention_schedule_form:
         planned_destruction_date: Destruction date
         state: Status
+      commissioning_document:
+        template_name: Data request document
     errors:
       models:
+        commissioning_document:
+          attributes:
+            template_name:
+              blank: is required
         retention_schedule_form:
           attributes:
             planned_destruction_date:
@@ -691,8 +697,8 @@ en:
       data_request_log:
         num_pages: Number of pages
       commissioning_document:
-        template:
-          prison: Prison Records
+        template_name:
+          prison: Prison records
           security: Security records
           probation: Probation records
           cctv: CCTV, BWCF, telephone recordings, etc
@@ -1528,8 +1534,6 @@ en:
     commissioning_documents:
       new:
         heading: Select Day 1 request document
-      create:
-        error: An error has occurred and your document could not be created
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness
