@@ -1528,6 +1528,8 @@ en:
     commissioning_documents:
       new:
         heading: Select Day 1 request document
+      create:
+        error: An error has occurred and your document could not be created
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness
