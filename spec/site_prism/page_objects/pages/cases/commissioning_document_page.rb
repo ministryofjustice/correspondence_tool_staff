@@ -7,8 +7,6 @@ module PageObjects
         section :primary_navigation,
           PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
-        element :alert, '.error-summary-heading'
-
         section :page_heading,
           PageObjects::Sections::PageHeadingSection, '.page-heading'
 

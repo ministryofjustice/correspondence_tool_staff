@@ -16,8 +16,7 @@ module Cases
           type: @commissioning_document.mime_type,
         )
       else
-        flash[:alert] = t('.error')
-        redirect_to new_case_data_request_commissioning_document_path(@case, @data_request)
+        render :new
       end
     end
 
