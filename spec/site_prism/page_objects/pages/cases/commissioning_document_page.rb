@@ -7,11 +7,28 @@ module PageObjects
         section :primary_navigation,
           PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+        element :alert, '.error-summary-heading'
+
         section :page_heading,
           PageObjects::Sections::PageHeadingSection, '.page-heading'
 
         section :form, '#new_commissioning_document' do
-          element :template, :xpath, '//fieldset[contains(.,"Which data request document would you like to use")]'
+          elements :template_name, 'input[name*="[template_name]"]'
+
+          def choose_template_name(template_name)
+            make_radio_button_choice("commissioning_document_template_name_#{template_name}")
+          end
+
+          def make_radio_button_choice(choice_id)
+            selector = "input##{choice_id}"
+
+            if Capybara.current_driver == Capybara.javascript_driver
+              find(selector, visible: false).click
+            else
+              find(selector).set(true)
+            end
+          end
+
           element :submit_button, '.button'
         end
       end
