@@ -31,7 +31,7 @@ class CommissioningDocument
   def filename
     return unless valid?
 
-    "Day1_#{request_type}_#{case_number}_#{subject.name}_#{timestamp}.#{mime_type}"
+    "Day1_#{request_type}_#{case_number}_#{subject_name}_#{timestamp}.#{mime_type}"
   end
 
   def mime_type
