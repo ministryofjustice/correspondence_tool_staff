@@ -31,11 +31,7 @@ class CommissioningDocument
   def filename
     return unless valid?
 
-    number = @data_request.kase.number
-    name = @data_request.kase.subject_full_name.tr(' ', '-')
-    timestamp = Time.current.strftime('%Y%m%dT%H%M')
-    type = template.request_type
-    "Day1_#{type}_#{number}_#{name}_#{timestamp}.docx"
+    "Day1_#{request_type}_#{case_number}_#{subject.name}_#{timestamp}.#{mime_type}"
   end
 
   def mime_type
@@ -46,5 +42,21 @@ class CommissioningDocument
 
   def template
     TEMPLATE_TYPES[@template_name].new(data_request: @data_request)
+  end
+
+  def request_type
+    template.request_type
+  end
+
+  def timestamp
+    Time.current.strftime('%Y%m%dT%H%M')
+  end
+
+  def subject_name
+    @data_request.kase.subject_full_name.tr(' ', '-')
+  end
+
+  def case_number
+    @data_request.kase.number
   end
 end
