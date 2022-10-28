@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: track-a-query-ingress
@@ -9,6 +9,7 @@ metadata:
     external-dns.alpha.kubernetes.io/set-identifier: track-a-query-ingress-track-a-query-staging-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
 spec:
+  ingressClassName: default
   tls:
     - hosts:
       - staging.track-a-query.service.justice.gov.uk
@@ -18,6 +19,9 @@ spec:
     http:
       paths:
       - path: /
-        backend:
-          serviceName: track-a-query-service
-          servicePort: 3000
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: track-a-query-service
+              port:
+                number: 3000
