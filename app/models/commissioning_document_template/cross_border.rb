@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class CrossBorder < CommissioningDocumentTemplate::Base
     def request_type
-      "TX"
+      'TX'
     end
 
     def context

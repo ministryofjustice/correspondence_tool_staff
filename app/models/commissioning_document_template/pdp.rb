@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class Pdp < CommissioningDocumentTemplate::Base
     def request_type
-      "PDP"
+      'PDP'
     end
 
     def context

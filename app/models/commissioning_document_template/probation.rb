@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class Probation < CommissioningDocumentTemplate::Base
     def request_type
-      "Probation"
+      'Probation'
     end
 
     def context

@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class Security < CommissioningDocumentTemplate::Base
     def request_type
-      "Security"
+      'Security'
     end
 
     def context

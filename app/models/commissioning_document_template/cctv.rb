@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class Cctv < CommissioningDocumentTemplate::Base
     def request_type
-      "CCTV"
+      'CCTV'
     end
 
     def context

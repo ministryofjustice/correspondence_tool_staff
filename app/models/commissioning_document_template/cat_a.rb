@@ -1,7 +1,7 @@
 module CommissioningDocumentTemplate
   class CatA < CommissioningDocumentTemplate::Base
     def request_type
-      "CATA"
+      'CATA'
     end
 
     def context
