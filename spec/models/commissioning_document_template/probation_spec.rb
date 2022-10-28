@@ -1,13 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe DocumentTemplate::CrossBorder do
+RSpec.describe CommissioningDocumentTemplate::Probation do
   let(:kase) do
     FactoryBot.build(:offender_sar_case,
       number: "20062007",
       subject_full_name: "Robert Badson",
       date_of_birth: "2000-03-11",
-      subject_aliases: "Bad Bob",
-      prison_number: "AB12345"
+      prison_number: "AB12345",
+      other_subject_ids: "CD98765",
+      case_reference_number: "EF45678",
     )
   end
   let(:data_request) { FactoryBot.build(:data_request, offender_sar_case: kase) }
@@ -25,10 +26,11 @@ RSpec.describe DocumentTemplate::CrossBorder do
         dpa_reference: "20062007",
         offender_name: "Robert Badson",
         date_of_birth: "11/03/2000",
-        aliases: "Bad Bob",
         date: "21/10/2022",
         prison_numbers: "AB12345",
         deadline: "26/10/2022",
+        pnc: "CD98765",
+        crn: "EF45678",
       }
     end
 

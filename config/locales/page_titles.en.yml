@@ -59,6 +59,7 @@ en:
     marking_response_as_sent: Mark response as sent
     my_cases: My open cases - Track-a-query
     bu_areas: Areas covered for %{team_name} - Track-a-query
+    new_commissioning_document_page: Select Day 1 request document
     new_letter_page: Generate a letter - Track-a-query
     new_org_entity: New %{team_type} - Track-a-query
     new_user_page: New team member - %{team_name} - Track-a-query

@@ -1,0 +1,28 @@
+- content_for :page_title do
+  = t('page_title.new_commissioning_document_page')
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+.grid-row.data-request
+  .column-full
+    h2.bold-medium.data-request__number
+      = "#{@case.number} - #{@case.subject_full_name}"
+
+    - url = case_data_request_commissioning_documents_path(@case, @data_request)
+    = form_for @commissioning_document, url: url do |f|
+      = f.radio_button_fieldset :template, choices: CommissioningDocument::TEMPLATE_TYPES
+      = f.submit t('button.download_document'), class: 'button'
+
+
+

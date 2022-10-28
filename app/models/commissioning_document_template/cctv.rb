@@ -1,5 +1,5 @@
-module DocumentTemplate
-  class Cctv < DocumentTemplate::Base
+module CommissioningDocumentTemplate
+  class Cctv < CommissioningDocumentTemplate::Base
     def context
       super.merge(
         addressee_location: data_request.location,

@@ -1,5 +1,5 @@
-module DocumentTemplate
-  class Probation < DocumentTemplate::Base
+module CommissioningDocumentTemplate
+  class Probation < CommissioningDocumentTemplate::Base
     def context
       super.merge(
         pnc: kase.other_subject_ids,

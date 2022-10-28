@@ -1,5 +1,5 @@
-module DocumentTemplate
-  class Security < DocumentTemplate::Base
+module CommissioningDocumentTemplate
+  class Security < CommissioningDocumentTemplate::Base
     def context
       super.merge(
         addressee_location: data_request.location,

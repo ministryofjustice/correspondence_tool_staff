@@ -1,14 +1,13 @@
 require 'rails_helper'
 
-RSpec.describe DocumentTemplate::Mappa do
+RSpec.describe CommissioningDocumentTemplate::CrossBorder do
   let(:kase) do
     FactoryBot.build(:offender_sar_case,
       number: "20062007",
       subject_full_name: "Robert Badson",
       date_of_birth: "2000-03-11",
       subject_aliases: "Bad Bob",
-      prison_number: "AB12345",
-      other_subject_ids: "CD98765",
+      prison_number: "AB12345"
     )
   end
   let(:data_request) { FactoryBot.build(:data_request, offender_sar_case: kase) }
@@ -29,8 +28,7 @@ RSpec.describe DocumentTemplate::Mappa do
         aliases: "Bad Bob",
         date: "21/10/2022",
         prison_numbers: "AB12345",
-        pnc: "CD98765",
-        deadline: "10/11/2022",
+        deadline: "26/10/2022",
       }
     end
 

@@ -1,5 +1,5 @@
-module DocumentTemplate
-  class Mappa < DocumentTemplate::Base
+module CommissioningDocumentTemplate
+  class Mappa < CommissioningDocumentTemplate::Base
     def context
       super.merge(
         aliases: kase.subject_aliases,

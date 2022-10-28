@@ -1,16 +1,5 @@
-module DocumentTemplate
+module CommissioningDocumentTemplate
   class Base
-    DOCUMENT_TEMPLATE_TYPES = %i[
-      prison
-      security
-      probation
-      cctv
-      mappa
-      pdp
-      cat_a
-      cross_border
-    ].freeze
-
     attr_reader :data_request
 
     delegate :kase, to: :data_request
