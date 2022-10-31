@@ -39,9 +39,10 @@
               td
                 = data_request.status
               td
-                = link_to t('cases.data_requests.show.link'), case_data_request_path(case_details, data_request), class: 'data-requests__show'
-              - if allow_editing
-                td
+                - if FeatureSet.view_data_request.enabled?
+                  = link_to t('cases.data_requests.show.link'), case_data_request_path(case_details, data_request), class: 'data-requests__show'
+              td
+                - if allow_editing
                   = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__edit'
 
           - if case_details.data_requests.many?
