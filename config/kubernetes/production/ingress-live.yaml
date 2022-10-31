@@ -16,11 +16,11 @@ spec:
     - host: track-a-query.service.justice.gov.uk
       http:
         paths:
-          - path: /
-              pathType: ImplementationSpecific
-              backend:
-                service:
-                  name: track-a-query-service
-                  port:
-                    number: 3000
+        - path: /
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: track-a-query-service
+              port:
+                number: 3000
 

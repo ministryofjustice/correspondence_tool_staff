@@ -17,9 +17,9 @@ spec:
       http:
         paths:
         - path: /
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: track-a-query-service
-                port:
-                  number: 3000
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: track-a-query-service
+              port:
+                number: 3000 
