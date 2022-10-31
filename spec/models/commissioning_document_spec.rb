@@ -59,11 +59,11 @@ RSpec.describe CommissioningDocument, type: :model do
 
     context 'valid object' do
       it 'sets the filename as expected' do
-        Timecop.freeze(Time.local(2022, 10, 27, 9, 20)) do
+        Timecop.freeze(Time.new(2022, 10, 31, 9, 20)) do
           commissioning_document = described_class.new(data_request: data_request)
           commissioning_document.template_name = template_type
           number = offender_sar_case.number
-          expect(commissioning_document.filename).to eq "Day1_HMPS_#{number}_Robert-Badson_20221027T0920.docx"
+          expect(commissioning_document.filename).to eq "Day1_HMPS_#{number}_Robert-Badson_20221031T0920.docx"
         end
       end
     end
