@@ -17,7 +17,7 @@ describe 'cases/commissioning_documents/new', type: :view do
 
     it 'has required content' do
       expect(@page.page_heading.heading.text).to eq 'Select Day 1 request document'
-      expect(@page.form).to have_template
+      expect(@page.form).to have_template_name
       expect(@page.form.submit_button.value).to eq 'Download Day 1 request document'
     end
   end
