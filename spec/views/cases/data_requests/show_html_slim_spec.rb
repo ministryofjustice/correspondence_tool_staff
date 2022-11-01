@@ -42,6 +42,8 @@ describe 'cases/data_requests/show', type: :view do
       expect(@page.data.date_to.text).to eq 'N/A'
       expect(@page.data.pages_received.text).to eq '32'
       expect(@page.data.completed.text).to eq 'Yes'
+      expect(@page.link_edit.text).to eq "Edit data request"
+      expect(@page.button_select_document.text).to eq "Select Day 1 request document"
     end
   end
 end

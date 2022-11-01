@@ -63,7 +63,7 @@ span.visually-hidden
         - else
           = t('cases.offender_sar.flag_choice_no')
     - if @case.editable?
-        = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
+        = link_to t('cases.data_requests.show.edit_link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
     hr
     div.button-holder
       = link_to t('button.select_document'), new_case_data_request_commissioning_document_path(@case, @data_request), class: 'button data_request_select_document', style: 'margin-top: -6px'
