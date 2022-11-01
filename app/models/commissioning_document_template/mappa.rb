@@ -1,5 +1,9 @@
 module CommissioningDocumentTemplate
   class Mappa < CommissioningDocumentTemplate::Base
+    def request_type
+      'MAPPA'
+    end
+
     def context
       super.merge(
         aliases: kase.subject_aliases,

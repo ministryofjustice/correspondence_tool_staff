@@ -6,7 +6,7 @@
 
 - content_for :sub_heading
 
-= link_to("Back", case_path(@case), class: 'govuk-back-link')
+= link_to("Back", case_data_request_path(@case, @data_request), class: 'govuk-back-link')
 
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -21,8 +21,9 @@ span.visually-hidden
 
     - url = case_data_request_commissioning_documents_path(@case, @data_request)
     = form_for @commissioning_document, url: url do |f|
-      = f.radio_button_fieldset :template, choices: CommissioningDocument::TEMPLATE_TYPES
-      = f.submit t('button.download_document'), class: 'button'
+      = f.hidden_field :template_name, value: ""
+      = f.radio_button_fieldset :template_name, choices: CommissioningDocument::TEMPLATE_TYPES.keys
+      = f.submit t('button.download_document'), class: 'button', data: { disable_with: false }
 
 
 
