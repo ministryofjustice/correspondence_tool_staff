@@ -1510,7 +1510,7 @@ en:
         link: View
       edit:
         heading: Edit data request
-        link: Edit
+        link: Edit data request
       form:
         record_request: Continue
       index:
