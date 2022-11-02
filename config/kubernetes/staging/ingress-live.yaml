@@ -15,13 +15,13 @@ spec:
       - staging.track-a-query.service.justice.gov.uk
       secretName: track-a-query-certificate
   rules:
-  - host: staging.track-a-query.service.justice.gov.uk
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: track-a-query-service
-            port:
-              number: 3000 
+    - host: staging.track-a-query.service.justice.gov.uk
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: track-a-query-service
+                port:
+                  number: 3000

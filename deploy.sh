@@ -161,8 +161,13 @@ function _deploy() {
   kubectl apply \
     -f config/kubernetes/${environment}/configmap.yaml -n $namespace
 
+  # Apply migrations job config
+  kubectl set image -f config/kubernetes/${environment}/migrations.yaml \
+          migrations=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+
   # Apply image specific config
   kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
+          pending-migrations=${docker_image_tag} \
           webapp=${docker_image_tag} \
           uploads=${docker_image_tag} \
           quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
@@ -170,10 +175,12 @@ function _deploy() {
   if [ $environment == "production" ]
   then
     kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            pending-migrations=${docker_image_tag} \
             anonjobs=${docker_image_tag} \
             jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
   else
     kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            pending-migrations=${docker_image_tag} \
             jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
   fi
 

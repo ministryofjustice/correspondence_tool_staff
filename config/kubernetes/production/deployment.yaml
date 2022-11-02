@@ -21,7 +21,7 @@ spec:
         - name: webapp
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
           ports:
-          - containerPort: 3000
+            - containerPort: 3000
           command: ["./config/docker/entrypoint-webapp.sh"]
           env:
             - name: DATABASE_URL
@@ -66,7 +66,7 @@ spec:
                 name: app-secrets
           readinessProbe:
             httpGet:
-              path: /healthcheck
+              path: /ping
               port: 3000
               httpHeaders:
                 - name: X-Forwarded-Proto
@@ -77,7 +77,7 @@ spec:
             periodSeconds: 60
           livenessProbe:
             httpGet:
-              path: /healthcheck
+              path: /ping
               port: 3000
               httpHeaders:
                 - name: X-Forwarded-Proto
@@ -159,6 +159,38 @@ spec:
                 secretKeyRef:
                   name: track-a-query-s3-output
                   key: bucket_name
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-s3-output
+                  key: access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-s3-output
+                  key: secret_access_key
+          envFrom:
+            - configMapRef:
+                name: environment-variables
+            - secretRef:
+                name: app-secrets
+      initContainers:
+        - name: pending-migrations
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          command: 
+            - rake
+            - db:abort_if_pending_migrations
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-rds-output
+                  key: url
+            - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-rds-output
+                  key: database_password
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
