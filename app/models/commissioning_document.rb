@@ -16,7 +16,8 @@ class CommissioningDocument
 
   attr_accessor :template_name
 
-  validates :template_name, presence: true, inclusion: { in: CommissioningDocument::TEMPLATE_TYPES.keys }
+  validates :template_name, presence: true
+  validates :template_name, inclusion: { in: CommissioningDocument::TEMPLATE_TYPES.keys }, if: -> { template_name.present? }
 
   def initialize(data_request:)
     @data_request = data_request

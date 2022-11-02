@@ -15,6 +15,11 @@ RSpec.describe CommissioningDocument, type: :model do
       it 'is not valid' do
         expect(subject).to_not be_valid
       end
+
+      it 'has one error' do
+        subject.valid?
+        expect(subject.errors.count).to eq 1
+      end
     end
 
     context 'invalid template value' do
@@ -23,12 +28,17 @@ RSpec.describe CommissioningDocument, type: :model do
       it 'is not valid' do
         expect(subject).to_not be_valid
       end
+
+      it 'has one error' do
+        subject.valid?
+        expect(subject.errors.count).to eq 1
+      end
     end
 
     context 'valid template value' do
       before { subject.template_name = template_type }
 
-      it 'is not valid' do
+      it 'is valid' do
         expect(subject).to be_valid
       end
     end

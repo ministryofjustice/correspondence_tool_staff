@@ -14,6 +14,9 @@ span.visually-hidden
 
 = render partial: 'layouts/header'
 
+= GovukElementsErrorsHelper.error_summary @commissioning_document,
+    "#{pluralize(@commissioning_document.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
 .grid-row.data-request
   .column-full
     h2.bold-medium.data-request__number
