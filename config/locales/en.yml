@@ -525,7 +525,7 @@ en:
         date_to: Date to
         date_requested: Date requested
       commissioning_document:
-        template_name: "Which data request document would you like to use for the Day 1 email?"
+        template_name: Which data request document would you like to use for the Day 1 email?
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
         info_held_status_abbreviation: Was the information held?

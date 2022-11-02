@@ -37,7 +37,7 @@ module CommissioningDocumentTemplate
     end
 
     def date_format(date)
-      date.strftime("%d/%m/%Y")
+      date.strftime('%d/%m/%Y')
     end
   end
 end

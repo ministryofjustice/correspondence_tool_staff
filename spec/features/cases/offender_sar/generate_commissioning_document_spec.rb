@@ -22,7 +22,7 @@ feature 'Generate a commissioning document for a data request' do
     expect(commissioning_document_page.form).to have_content('Prison records')
     expect(commissioning_document_page.form).to have_content('Security records')
     expect(commissioning_document_page.form).to have_content('Probation records')
-    expect(commissioning_document_page.form).to have_content("CCTV, BWCF, telephone recordings, etc")
+    expect(commissioning_document_page.form).to have_content('CCTV, BWCF, telephone recordings, etc')
     expect(commissioning_document_page.form).to have_content('MAPPA')
     expect(commissioning_document_page.form).to have_content('PDP')
     expect(commissioning_document_page.form).to have_content('CAT A')
@@ -44,6 +44,6 @@ feature 'Generate a commissioning document for a data request' do
 
     expect(commissioning_document_page).to be_displayed
     click_on 'Download Day 1 request document'
-    expect(page).to have_content("Data request document is required")
+    expect(page).to have_content('Data request document is required')
   end
 end

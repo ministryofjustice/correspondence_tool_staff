@@ -20,43 +20,43 @@ span.visually-hidden
       = "#{@case.number} - #{@case.subject_full_name}"
     .form-group
       label.form-label
-        = t("helpers.label.data_request.location")
+        = t('helpers.label.data_request.location')
       p.data_request_location
         = @data_request.location
     .form-group
       label.form-label
-        = t("helpers.fieldset.data_request.request_type")
+        = t('helpers.fieldset.data_request.request_type')
       p.data_request_request_type
         = t("data_request.request_type.#{@data_request.request_type}")
     .form-group
       label.form-label
-        = t("helpers.fieldset.data_request.date_requested")
+        = t('helpers.fieldset.data_request.date_requested')
       p.data_request_date_requested
         = l @data_request.date_requested, format: :default
     .form-group
       label.form-label
-        = t("helpers.fieldset.data_request.date_from")
+        = t('helpers.fieldset.data_request.date_from')
       p.data_request_date_from
         - if @data_request.date_from.nil?
-          = "N/A"
+          = 'N/A'
         - else
           = l @data_request.date_from, format: :default
     .form-group
       label.form-label
-        = t("helpers.fieldset.data_request.date_to")
+        = t('helpers.fieldset.data_request.date_to')
       p.data_request_date_to
         - if @data_request.date_to.nil?
-          = "N/A"
+          = 'N/A'
         - else
           = l @data_request.date_to, format: :default
     .form-group
       label.form-label
-        = t("helpers.label.data_request.cached_num_pages")
+        = t('helpers.label.data_request.cached_num_pages')
       p.data_request_pages_received
         = @data_request.cached_num_pages
     .form-group
       label.form-label
-        = t("helpers.fieldset.data_request.completed")
+        = t('helpers.fieldset.data_request.completed')
       p.data_request_completed
         - if @data_request.completed
           = t('cases.offender_sar.flag_choice_yes')
