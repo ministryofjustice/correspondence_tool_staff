@@ -621,6 +621,8 @@ describe 'cases/show.html.slim', type: :view do
           expect(data_requests.first.date_requested.text).to eq '15 Aug 2020'
           expect(data_requests.first.date_requested_time['datetime']).to eq '2020-08-15'
           expect(data_requests.first.pages.text).to eq '0'
+          expect(data_requests.first.show.text).to eq 'View'
+          expect(data_requests.first.edit.text).to eq 'Edit'
         end
       end
     end

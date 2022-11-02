@@ -539,11 +539,19 @@ control aspects of the build. The available build arguments are:
 
   Required to run closed case reports
 
- ```
-  	postgresql-client-12.6-r0
- ```
+  ```
+      postgresql-client-12.6-r0
+  ```
 
- Required for debugging database by developers within the running container - app will work without this.
+  Required for debugging database by developers within the running container - app will work without this.
+
+#### ARM Mac Users
+
+If you are creating a local image for deploying to an environment, you will need to change the target platform by running:
+
+```
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+```
 
 #### Generating Documentation
  
