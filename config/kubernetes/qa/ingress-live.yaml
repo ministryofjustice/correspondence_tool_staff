@@ -16,7 +16,7 @@ spec:
     - host: qa.track-a-query.service.justice.gov.uk
       http:
         paths:
-        - path: /
+          - path: /
             pathType: ImplementationSpecific
             backend:
               service:
