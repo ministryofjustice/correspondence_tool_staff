@@ -49,7 +49,6 @@ span.visually-hidden
           = "N/A"
         - else
           = l @data_request.date_to, format: :default
-    hr
     .form-group
       label.form-label
         = t("helpers.label.data_request.cached_num_pages")
@@ -63,10 +62,10 @@ span.visually-hidden
           = t('cases.offender_sar.flag_choice_yes')
         - else
           = t('cases.offender_sar.flag_choice_no')
+    - if @case.editable?
+        = link_to t('cases.data_requests.show.edit_link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
     hr
     div.button-holder
       = link_to t('button.select_document'), new_case_data_request_commissioning_document_path(@case, @data_request), class: 'button data_request_select_document', style: 'margin-top: -6px'
-      - if @case.editable?
-        = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
 
 
