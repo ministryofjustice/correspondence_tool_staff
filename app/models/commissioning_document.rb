@@ -32,7 +32,7 @@ class CommissioningDocument
   def filename
     return unless valid?
 
-    "Day1_#{request_type}_#{case_number}_#{subject_name}_#{timestamp}.#{mime_type}"
+    "Day1_#{request_type}_#{case_number}_#{subject_name}.#{mime_type}"
   end
 
   def mime_type
@@ -47,10 +47,6 @@ class CommissioningDocument
 
   def request_type
     template.request_type
-  end
-
-  def timestamp
-    Time.current.strftime('%Y%m%dT%H%M')
   end
 
   def subject_name
