@@ -3,7 +3,7 @@ module Cases
     NUM_NEW_DATA_REQUESTS = 3
 
     before_action :set_case
-    before_action :set_data_request, only: [:edit, :update, :destroy]
+    before_action :set_data_request, only: [:show, :edit, :update, :destroy]
     before_action :authorize_action
     after_action  :verify_authorized
 
@@ -30,6 +30,9 @@ module Cases
       else
         raise ArgumentError.new("Unknown result: #{service.result.inspect}")
       end
+    end
+
+    def show
     end
 
     def edit

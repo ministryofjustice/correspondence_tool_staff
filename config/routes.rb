@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
 
-  resources :contacts, except: :show 
+  resources :contacts, except: :show
 
   get '/contacts_search', to: 'contacts#contacts_search'
 
@@ -118,7 +118,7 @@ Rails.application.routes.draw do
 
     resources :sar_internal_review, only: only, controller: 'sar_internal_review', as: :case_sar_internal_review do
       get '/(:step)', on: :collection, to: 'sar_internal_review#new', as: 'step'
-      get '/edit', on: :member, to: 'sar_internal_review#edit' 
+      get '/edit', on: :member, to: 'sar_internal_review#edit'
       post '/update', on: :member, to: 'sar_internal_review#update'
     end
 
@@ -210,7 +210,9 @@ Rails.application.routes.draw do
     end
 
     resource :cover_page, only: [:show], path: "cover-page"
-    resources :data_requests
+    resources :data_requests do
+      resources :commissioning_documents, only: [:new, :create]
+    end
 
     resource :letters, only: [:new, :show], path: "letters/:type"
   end
@@ -300,7 +302,7 @@ Rails.application.routes.draw do
   get 'healthcheck',    to: 'heartbeat#healthcheck',  as: 'healthcheck', format: :json
   post '/feedback' => 'feedback#create'
   get '/accessibility' => 'pages#accessibility'
-  
+
   get '/maintenance', to: 'application#maintenance_mode'
 
   root to: redirect('/users/sign_in')

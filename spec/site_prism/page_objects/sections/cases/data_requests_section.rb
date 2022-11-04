@@ -15,8 +15,8 @@ module PageObjects
           element :pages, 'td:nth-child(4)'
           element :date_received, 'td:nth-child(5)'
           element :status, 'td:nth-child(6)'
-          element :date_received, 'td:nth-child(5)'
-          element :action, '.data-requests__action'
+          element :show, '.data-requests__show'
+          element :edit, '.data-requests__edit'
           element :total_label, 'td:nth-child(1)'
           element :total_value, 'td:nth-child(2)'
         end
