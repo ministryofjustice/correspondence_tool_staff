@@ -13,8 +13,8 @@ references:
     docker:
       - image: circleci/ruby:2.7.2-node-browsers-legacy
         environment:
-          GITHUB_TEAM_NAME_SLUG: pq-team
-          APPLICATION_DEPLOY_NAME: pq
+          GITHUB_TEAM_NAME_SLUG: correspondence
+          APPLICATION_DEPLOY_NAME: Track-a-query
           RAILS_ENV: test
           RACK_ENV: test
           PGHOST: 127.0.0.1
