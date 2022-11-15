@@ -694,6 +694,7 @@ en:
         cached_date_received: Date when data request is complete
         cached_num_pages: Number of pages received
         completed: "Yes, all data received"
+        date_completed: Date completed
       data_request_log:
         num_pages: Number of pages
       commissioning_document:

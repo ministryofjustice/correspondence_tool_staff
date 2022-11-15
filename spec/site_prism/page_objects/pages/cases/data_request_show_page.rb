@@ -20,6 +20,7 @@ module PageObjects
           element :date_to, '.data_request_date_to'
           element :pages_received, '.data_request_pages_received'
           element :completed, '.data_request_completed'
+          element :date_completed, '.data_request_date_completed'
         end
 
         element :button_select_document, '.data_request_select_document'

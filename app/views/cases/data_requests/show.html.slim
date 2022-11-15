@@ -27,7 +27,7 @@ span.visually-hidden
       label.form-label
         = t('helpers.fieldset.data_request.request_type')
       p.data_request_request_type
-        = t("data_request.request_type.#{@data_request.request_type}")
+        = t("helpers.label.data_request.request_type.#{@data_request.request_type}")
     .form-group
       label.form-label
         = t('helpers.fieldset.data_request.date_requested')
@@ -62,6 +62,12 @@ span.visually-hidden
           = t('cases.offender_sar.flag_choice_yes')
         - else
           = t('cases.offender_sar.flag_choice_no')
+    - if @data_request.completed
+      .form-group
+        label.form-label
+          = t('helpers.label.data_request.date_completed')
+        p.data_request_date_completed
+          = l @data_request.cached_date_received, format: :default
     - if @case.editable?
         = link_to t('cases.data_requests.show.edit_link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
     hr
