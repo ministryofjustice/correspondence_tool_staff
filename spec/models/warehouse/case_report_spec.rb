@@ -52,8 +52,17 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
         compare_output(kase)
       end
     end
+
+    it 'handles a race condition when a new case is updated straight away' do
+      kase = create(:accepted_sar)
+      Warehouse::CaseReport.generate(kase)
+      kase.warehouse_case_report = nil # mimic the case object not being updated with the associated warehouse case report
+      expect {
+        Warehouse::CaseReport.generate(kase)
+      }.not_to raise_error
+    end
   end
-  
+
   describe '#generate_all' do
     it 'generates CaseReport for all existing Case::Base' do
       kases
@@ -62,13 +71,13 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(described_class.generate_all).to eq num_cases
     end
   end
-  
+
   describe '#reconcile' do
     it 'returns a tuple of number of processed missing and deleted cases' do
       expect(described_class.reconcile).to eq [0, 0]
     end
   end
-  
+
   describe '#reconcile_missing_cases' do
     it 'reconciles all undeleted missing cases' do
       new_kases = [create(:closed_case), create(:closed_sar)]
@@ -143,19 +152,19 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
   def compare_closuredetails(kase, result, case_report)
     if kase.ico?
       original_case_csv_row = CSVExporter.new(kase.original_case).to_csv
-      original_case_result = CSVExporter::CSV_COLUMN_HEADINGS.zip(original_case_csv_row).to_h  
+      original_case_result = CSVExporter::CSV_COLUMN_HEADINGS.zip(original_case_csv_row).to_h
       expect(original_case_result['Info held']).to eq case_report.info_held
       expect(original_case_result['Outcome']).to eq case_report.outcome
       expect(original_case_result['Refusal reason']).to eq case_report.refusal_reason
       expect(original_case_result['Exemptions']).to eq case_report.exemptions
       expect(case_report.appeal_outcome).to eq kase.decorate.pretty_ico_decision
-    else 
+    else
       expect(result['Info held']).to eq case_report.info_held
       expect(result['Outcome']).to eq case_report.outcome
       expect(result['Refusal reason']).to eq case_report.refusal_reason
       expect(result['Exemptions']).to eq case_report.exemptions
       expect(result['Appeal outcome']).to eq case_report.appeal_outcome
-    end 
+    end
   end
 
   # Compares CSVExporter output with CaseReport output
@@ -176,7 +185,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(result['Name']).to eq case_report.name
       expect(result['Requester type']).to eq case_report.requester_type
       expect(result['Message']).to eq case_report.message
-      
+
       compare_closuredetails(kase, result, case_report)
 
       expect(result['Postal address']).to eq case_report.postal_address
