@@ -106,8 +106,9 @@ module Warehouse
           process_class_related_process(kase, case_report)
           case_report.save!
           case_report
-        rescue ActiveRecord::RecordNotUnique => err
+        rescue ActiveRecord::RecordNotUnique
           retry if (retries += 1) < 2
+          raise
         end
       end
       #rubocop:enable Metrics/PerceivedComplexity
