@@ -195,7 +195,7 @@ class Case::ICO::Base < Case::Base
           :external_deadline,
           I18n.t('activerecord.errors.models.case.attributes.external_deadline.before_received')
         )
-      elsif external_deadline > received_date + 1.years
+      elsif external_deadline > received_date + 1.year
         errors.add(
           :external_deadline,
           I18n.t('activerecord.errors.models.case.attributes.external_deadline.too_far_past_received')
