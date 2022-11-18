@@ -99,10 +99,10 @@ describe Case::ICO::Base do
         .to eq ['cannot be before date received']
     end
 
-    it 'cannot be more than two years past received_date' do
+    it 'cannot be more than a year past received_date' do
       kase.update(
         received_date: Date.today,
-        external_deadline: Date.today + 2.years + 1.day,
+        external_deadline: Date.today + 1.year + 1.day,
       )
       expect(kase).not_to be_valid
       expect(kase.errors[:external_deadline])
