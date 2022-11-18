@@ -205,7 +205,7 @@ en:
             <<: *foi_attr
             received_date:
               future: cannot be in the future
-              past: is too far in the past
+              past: ICO overturned decision received date is too far in the past (more than 29 days)
               blank: cannot be blank
             external_deadline:
               past: cannot be in the past
