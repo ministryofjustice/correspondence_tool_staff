@@ -99,6 +99,23 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
                    })
       end
     end
+
+    context 'deleted case' do
+      let(:assigned_case) do
+        create :assigned_case,
+          name: 'Fyodor Ognievich Ilichion',
+          received_date: 10.business_days.ago,
+          subject: 'The anatomy of man'
+      end
+      let!(:assignment) { assigned_case.responder_assignment }
+
+      it 'does not error' do
+        assigned_case.destroy!
+        expect {
+          described_class.new.new_assignment(assignment, responder.email)
+        }.not_to raise_error
+      end
+    end
   end
 
   describe 'ready_for_press_or_private_review' do
