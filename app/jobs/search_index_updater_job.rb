@@ -7,7 +7,7 @@ class SearchIndexUpdaterJob < ApplicationJob
     kase=Case::Base.find(case_id)
     if kase
       kase.update_index
-      kase.mark_as_clean!
+      kase.mark_as_clean! if kase.dirty?
     end
   end
 end
