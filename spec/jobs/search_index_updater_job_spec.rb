@@ -3,7 +3,7 @@ require 'rails_helper'
 describe SearchIndexUpdaterJob, type: :job do
   include ActiveJob::TestHelper
 
-  let!(:k1)     { create :case }
+  let!(:k1) { create :case }
 
   describe '#perform' do
     it 'processes k1' do
@@ -13,7 +13,7 @@ describe SearchIndexUpdaterJob, type: :job do
       SearchIndexUpdaterJob.new.perform(k1.id)
     end
 
-    it 'sets k1 and k4 to clean' do
+    it 'sets k1 to clean' do
       SearchIndexUpdaterJob.new.perform(k1.id)
       expect(k1.reload).to be_clean
     end
