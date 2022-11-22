@@ -27,14 +27,12 @@ module DeadlineCalculator
     end
 
     def extension_deadline(time_limit)
-      days_after_day_one = (time_limit + kase.correspondence_type.external_time_limit) - 1
-      calculate(days_after_day_one)
+      calculate(kase.correspondence_type.external_time_limit + time_limit)
     end
 
     def escalation_deadline(start_from=kase.created_at.to_date)
       start = start_date(start_from)
-      days_after_day_one = kase.correspondence_type.escalation_time_limit - 1
-      calculate(days_after_day_one, start)
+      calculate(kase.correspondence_type.escalation_time_limit, start)
     end
 
     def business_unit_deadline_for_date(date)
@@ -46,19 +44,16 @@ module DeadlineCalculator
     end
 
     def internal_deadline_for_date(correspondence_type, date=nil)
-      days_after_day_one = correspondence_type.internal_time_limit - 1
-      calculate(days_after_day_one, date)
+      calculate(correspondence_type.internal_time_limit, date)
     end
 
     def external_deadline_for_date(correspondence_type, date=nil)
-      days_after_day_one = correspondence_type.external_time_limit - 1
-      calculate(days_after_day_one, date)
+      calculate(correspondence_type.external_time_limit, date)
     end
 
     def max_allowed_deadline_date(time_limit=nil)
-      time_limit ||= (kase.correspondence_type.extension_time_limit || 0)
-      days_after_day_one = (time_limit + kase.correspondence_type.external_time_limit) - 1
-      calculate(days_after_day_one)
+      time_limit ||= kase.correspondence_type.extension_time_limit || 0
+      extension_deadline(time_limit)
     end
 
     def time_units_desc_for_deadline(time_limit=1)
@@ -69,7 +64,7 @@ module DeadlineCalculator
 
     def calculate(days, from=nil)
       from ||= start_date(kase.received_date)
-      days.business_days.after(from)
+      (days - 1).business_days.after(from)
     end
 
     def start_date(received_date)
