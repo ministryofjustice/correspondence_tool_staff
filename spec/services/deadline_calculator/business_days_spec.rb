@@ -100,59 +100,59 @@ describe DeadlineCalculator::BusinessDays do
 
     context 'received on a Saturday' do
 
-      let(:sat_jul_01) { Time.utc(2017, 7, 1, 12, 0, 0) }
-      let(:thu_jul_06) { Time.utc(2017, 7, 6, 12, 0, 0) }
-      let(:mon_jul_17) { Time.utc(2017, 7, 17, 12, 0, 0) }
-      let(:mon_jul_31) { Time.utc(2017, 7, 31, 12, 0, 0) }
+      let(:sat_jul_03) { Time.utc(2021, 7, 3, 12, 0, 0) }
+      let(:wed_jul_07) { Time.utc(2021, 7, 7, 12, 0, 0) }
+      let(:fri_jul_16) { Time.utc(2021, 7, 16, 12, 0, 0) }
+      let(:fri_jul_30) { Time.utc(2021, 7, 30, 12, 0, 0) }
       let(:sat_may_01) { Time.utc(2021, 5, 1, 12, 0, 0) }
-      let(:wed_jun_02) { Time.utc(2021, 6, 2, 12, 0, 0) }
-      let(:tue_may_18) { Time.utc(2021, 5, 18, 12, 0, 0) }
-      let(:fri_may_07) { Time.utc(2021, 5, 7, 12, 0, 0) }
+      let(:tue_jun_01) { Time.utc(2021, 6, 1, 12, 0, 0) }
+      let(:mon_may_17) { Time.utc(2021, 5, 17, 12, 0, 0) }
+      let(:thu_may_06) { Time.utc(2021, 5, 6, 12, 0, 0) }
 
       describe '.escalation_deadline' do
-        it 'is 3 days after first working day after received date' do
-          Timecop.freeze sat_jul_01 do
+        it 'is 3 working days after received date' do
+          Timecop.freeze sat_jul_03 do
             expect(deadline_calculator.escalation_deadline)
-              .to eq thu_jul_06.to_date
+              .to eq wed_jul_07.to_date
           end
         end
 
-        it 'is 3 days after first working day after received date - not counting bank holiday Mon May 03' do
+        it 'is 3 working days after received date - bank holiday Mon May 03 is not counted' do
           Timecop.freeze sat_may_01 do
             expect(deadline_calculator.escalation_deadline)
-              .to eq fri_may_07.to_date
+              .to eq thu_may_06.to_date
           end
         end
       end
 
       describe '.external_deadline' do
-        it 'is 20 working days first working day after received date' do
-          Timecop.freeze sat_jul_01 do
+        it 'is 20 working days after received date' do
+          Timecop.freeze sat_jul_03 do
             expect(deadline_calculator.external_deadline)
-              .to eq mon_jul_31.to_date
+              .to eq fri_jul_30.to_date
           end
         end
 
-        it 'is 20 working days first working day after received date - not counting bank holiday Mon May 03' do
+        it 'is 20 working days after received date - bank holidays Mon May 03 and Mon May 31 are not counted' do
           Timecop.freeze sat_may_01 do
             expect(deadline_calculator.external_deadline)
-              .to eq wed_jun_02.to_date
+              .to eq tue_jun_01.to_date
           end
         end
       end
 
       describe '.internal_deadline' do
-        it 'is 10 working days first working day after received date' do
-          Timecop.freeze sat_jul_01 do
+        it 'is 10 working days after received date' do
+          Timecop.freeze sat_jul_03 do
             expect(deadline_calculator.internal_deadline)
-              .to eq mon_jul_17.to_date
+              .to eq fri_jul_16.to_date
           end
         end
 
-        it 'is 10 working days first working day after received date' do
+        it 'is 10 working days after received date - bank holiday Mon May 03 is not counted' do
           Timecop.freeze sat_may_01 do
             expect(deadline_calculator.internal_deadline)
-              .to eq tue_may_18.to_date
+              .to eq mon_may_17.to_date
           end
         end
       end

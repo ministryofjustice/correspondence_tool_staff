@@ -5,14 +5,14 @@ module DeadlineCalculator
     class << self
 
       def days_taken(start_date, end_date)
-        start_date.business_days_until(end_date, true) 
-      end 
-  
-      def days_late(start_date, end_date)
-        start_date.business_days_until(end_date, false) 
-      end 
+        start_date.business_days_until(end_date, true)
+      end
 
-    end 
+      def days_late(start_date, end_date)
+        start_date.business_days_until(end_date, false)
+      end
+
+    end
 
     def initialize(kase)
       @kase = kase
@@ -48,7 +48,7 @@ module DeadlineCalculator
       days_after_day_one = (time_limit + kase.correspondence_type.external_time_limit) - 1
       days_after_day_one.business_days.after(start_date(kase.received_date))
     end
-    
+
     def max_allowed_deadline_date(time_limit=nil)
       time_limit ||= (kase.correspondence_type.extension_time_limit || 0)
       days_after_day_one = (time_limit + kase.correspondence_type.external_time_limit) - 1
@@ -62,11 +62,9 @@ module DeadlineCalculator
     private
 
     def start_date(received_date)
-      actual_received_date = received_date
-      actual_received_date += 1 until actual_received_date.workday?
-      date = actual_received_date + 1
-      date += 1 until date.workday?
-      date
+      received_date += 1
+      received_date += 1 until received_date.workday?
+      received_date
     end
   end
 end
