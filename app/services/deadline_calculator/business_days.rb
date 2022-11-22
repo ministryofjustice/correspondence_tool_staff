@@ -19,50 +19,46 @@ module DeadlineCalculator
     end
 
     def internal_deadline # aka draft deadline
-      start = start_date(kase.received_date)
-      internal_deadline_for_date(kase.correspondence_type, start)
+      internal_deadline_for_date(kase.correspondence_type)
     end
 
     def external_deadline # aka final deadline
-      start = start_date(kase.received_date)
-      external_deadline_for_date(kase.correspondence_type, start)
+      external_deadline_for_date(kase.correspondence_type)
     end
 
     def extension_deadline(time_limit)
-      start = start_date(kase.received_date)
       days_after_day_one = (time_limit + kase.correspondence_type.external_time_limit) - 1
-      days_after_day_one.business_days.after(start)
+      calculate(days_after_day_one)
     end
 
-    def escalation_deadline(start_from=kase.created_at)
+    def escalation_deadline(start_from=kase.created_at.to_date)
       start = start_date(start_from)
       days_after_day_one = kase.correspondence_type.escalation_time_limit - 1
-      days_after_day_one.business_days.after(start)
+      calculate(days_after_day_one, start)
     end
 
     def business_unit_deadline_for_date(date)
       if kase.flagged?
-        internal_deadline_for_date(kase.correspondence_type, date)
+        internal_deadline_for_date(kase.correspondence_type, date.to_date)
       else
-        external_deadline_for_date(kase.correspondence_type, date)
+        external_deadline_for_date(kase.correspondence_type, date.to_date)
       end
     end
 
-    def internal_deadline_for_date(correspondence_type, date)
+    def internal_deadline_for_date(correspondence_type, date=nil)
       days_after_day_one = correspondence_type.internal_time_limit - 1
-      days_after_day_one.business_days.after(date)
+      calculate(days_after_day_one, date)
     end
 
-    def external_deadline_for_date(correspondence_type, date)
+    def external_deadline_for_date(correspondence_type, date=nil)
       days_after_day_one = correspondence_type.external_time_limit - 1
-      days_after_day_one.business_days.after(date)
+      calculate(days_after_day_one, date)
     end
 
     def max_allowed_deadline_date(time_limit=nil)
-      start = start_date(kase.received_date)
       time_limit ||= (kase.correspondence_type.extension_time_limit || 0)
       days_after_day_one = (time_limit + kase.correspondence_type.external_time_limit) - 1
-      days_after_day_one.business_days.after(start)
+      calculate(days_after_day_one)
     end
 
     def time_units_desc_for_deadline(time_limit=1)
@@ -70,6 +66,11 @@ module DeadlineCalculator
     end
 
     private
+
+    def calculate(days, from=nil)
+      from ||= start_date(kase.received_date)
+      days.business_days.after(from)
+    end
 
     def start_date(received_date)
       actual_received_date = received_date
