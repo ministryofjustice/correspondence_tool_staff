@@ -39,16 +39,16 @@ module DeadlineCalculator
       calculate(correspondence_type.external_time_limit, date)
     end
 
-    def extension_deadline(time_limit)
-      calculate(kase.correspondence_type.external_time_limit + time_limit)
-    end
-
     def business_unit_deadline_for_date(date)
       if kase.flagged?
         internal_deadline_for_date(kase.correspondence_type, date.to_date)
       else
         external_deadline_for_date(kase.correspondence_type, date.to_date)
       end
+    end
+
+    def extension_deadline(time_limit)
+      calculate(kase.correspondence_type.external_time_limit + time_limit)
     end
 
     def max_allowed_deadline_date(time_limit=nil)
