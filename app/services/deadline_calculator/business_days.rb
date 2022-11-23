@@ -19,7 +19,7 @@ module DeadlineCalculator
     end
 
     def escalation_deadline(start_from=kase.created_at.to_date)
-      start = start_date(start_from)
+      start = next_working_day(start_from)
       calculate(kase.correspondence_type.escalation_time_limit, start)
     end
 
@@ -59,14 +59,14 @@ module DeadlineCalculator
     private
 
     def calculate(days, from=nil)
-      from ||= start_date(kase.received_date)
+      from ||= next_working_day(kase.received_date)
       (days - 1).business_days.after(from)
     end
 
-    def start_date(received_date)
-      received_date += 1
-      received_date += 1 until received_date.workday?
-      received_date
+    def next_working_day(date)
+      new_date = date + 1
+      new_date += 1 until new_date.workday?
+      new_date
     end
 
     def external_deadline_for_date(correspondence_type, date=nil)
