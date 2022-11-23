@@ -1,14 +1,11 @@
 require 'rails_helper'
 
 describe DeadlineCalculator::BusinessDays do
-
   context 'FOI requests' do
-
     let(:foi_case) { build :foi_case,
                            received_date: Date.today,
                            created_at: Date.today
     }
-
     let(:deadline_calculator) { described_class.new foi_case }
 
     context 'received on a workday' do
@@ -20,7 +17,6 @@ describe DeadlineCalculator::BusinessDays do
       let(:thu_jun_15) { Time.utc(2017, 6, 15, 12, 0, 0) }
       let(:fri_jun_30) { Time.utc(2017, 6, 30, 12, 0, 0) }
       let(:fri_jul_14) { Time.utc(2017, 7, 14, 12, 0, 0) }
-
 
       describe '#time_units_desc_for_deadline' do
         it 'single' do
@@ -99,7 +95,6 @@ describe DeadlineCalculator::BusinessDays do
     end
 
     context 'received on a Saturday' do
-
       let(:sat_jul_03) { Time.utc(2021, 7, 3, 12, 0, 0) }
       let(:wed_jul_07) { Time.utc(2021, 7, 7, 12, 0, 0) }
       let(:fri_jul_16) { Time.utc(2021, 7, 16, 12, 0, 0) }
@@ -199,7 +194,7 @@ describe DeadlineCalculator::BusinessDays do
           .to eq 0
       end
 
-      it 'start date ealier than end day' do
+      it 'start date earlier than end day' do
         expect(deadline_calculator.class.days_late(thu_may_18.to_date, tue_may_23.to_date))
           .to eq 3
       end
