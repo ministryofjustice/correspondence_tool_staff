@@ -1,11 +1,5 @@
 require "rails_helper"
 
-def freeze_time(&block)
-  Timecop.freeze(Time.new(2022, 10, 1)) do
-    yield
-  end
-end
-
 feature 'when extending a SAR case deadline' do
   include Features::Interactions
 
