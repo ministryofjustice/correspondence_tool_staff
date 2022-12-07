@@ -373,8 +373,8 @@ describe Case::SAR::InternalReview do
 
 
     describe 'Update the deadline due to the change of received_date' do
-      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar_internal_review) }
-      let(:new_received_date)      { 10.days.ago(extended_sar.received_date) }
+      let(:extended_sar) { freeze_time { create(:sar_internal_review, :extended_deadline_sar_internal_review) } }
+      let(:new_received_date) { freeze_time { 10.days.ago(extended_sar.received_date) } }
 
       it 'Change the received date to trigger resetting the deadline' do
         extended_sar.update!(received_date: new_received_date)
@@ -385,15 +385,15 @@ describe Case::SAR::InternalReview do
     end
 
     describe 'The external_deadline is always based on the latest received_date' do
-      let(:extended_sar)      { create(:sar_internal_review, :extended_deadline_sar_internal_review) }
-      let(:new_received_date)      { 5.days.ago(extended_sar.received_date) }
+      let(:extended_sar) { freeze_time { create(:sar_internal_review, :extended_deadline_sar_internal_review) } }
+      let(:new_received_date) { freeze_time { 5.days.ago(extended_sar.received_date) } }
 
       it 'external_deadline based on the latest received date after editing/extending/reseting actions' do
         extended_sar.update!(received_date: new_received_date)
         expect(extended_sar.external_deadline).to eq get_expected_deadline(1.month.since(new_received_date))
         expect(extended_sar.deadline_extended).to eq false
         expect(extended_sar.extended_times).to eq 0
-        
+
         extended_sar.extend_deadline!(get_expected_deadline(2.month.since(extended_sar.received_date)), 2)
         expect(extended_sar.deadline_extended).to eq true
         expect(extended_sar.extended_times).to eq 2
@@ -403,7 +403,7 @@ describe Case::SAR::InternalReview do
         expect(extended_sar.deadline_extended).to eq false
         expect(extended_sar.extended_times).to eq 0
       end
-    end 
+    end
   end
 
   describe '#is_sar_internal_review?' do
@@ -485,7 +485,7 @@ describe Case::SAR::InternalReview do
       sar_internal_review.outcome_reason_ids = [other_id]
 
       expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.absent')
-        
+
       expect(sar_internal_review).to be_invalid
       expect(sar_internal_review.errors.first.options[:message]).to include(expected_error)
     end
@@ -496,7 +496,7 @@ describe Case::SAR::InternalReview do
       sar_internal_review.outcome_reason_ids.delete(other_id)
 
       expected_error = I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.present')
-        
+
       expect(sar_internal_review).to be_invalid
       expect(sar_internal_review.errors.first.options[:message]).to include(expected_error)
     end

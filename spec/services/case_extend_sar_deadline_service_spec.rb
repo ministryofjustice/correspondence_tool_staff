@@ -1,11 +1,5 @@
 require "rails_helper"
 
-def freeze_time(&block)
-  Timecop.freeze(Time.new(2022, 10, 1)) do
-    yield
-  end
-end
-
 describe CaseExtendSARDeadlineService do
   let!(:team_disclosure_bmt) { find_or_create :team_disclosure_bmt }
   let!(:manager)             { find_or_create :disclosure_bmt_user }
