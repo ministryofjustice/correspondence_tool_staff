@@ -91,27 +91,27 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
-    context 'date when data request is complete' do 
+    context 'date when data request is complete' do
       subject(:data_request) { build(:data_request, completed: true) }
 
-      it 'required if the case is marked as completed' do 
+      it 'required if the case is marked as completed' do
         data_request.cached_date_received = nil
         expect(subject).not_to be_valid
-        expect(subject.errors[:cached_date_received]).to eq ["must be provided if request is complete"]        
-      end 
+        expect(subject.errors[:cached_date_received]).to eq ["must be provided if request is complete"]
+      end
 
-      it 'The value cannot be in the future' do 
+      it 'The value cannot be in the future' do
         data_request.cached_date_received = 1.day.from_now
         expect(subject).not_to be_valid
-        expect(subject.errors[:cached_date_received]).to eq ["cannot be in the future"]        
-      end 
+        expect(subject.errors[:cached_date_received]).to eq ["cannot be in the future"]
+      end
 
-      it 'The value should be blank if data is not complete' do 
+      it 'The value should be blank if data is not complete' do
         data_request.completed = false
         data_request.cached_date_received = 1.day.from_now
         expect(subject).not_to be_valid
-        expect(subject.errors[:cached_date_received]).to eq ["should be blank if the request is not complete"]        
-      end 
+        expect(subject.errors[:cached_date_received]).to eq ["should be blank if the request is not complete"]
+      end
     end
 
     context 'when request_type is other' do
@@ -179,6 +179,9 @@ RSpec.describe DataRequest, type: :model do
         expect(build(:data_request, request_type: 'mappa')).to be_valid
         expect(build(:data_request, request_type: 'pdp')).to be_valid
         expect(build(:data_request, request_type: 'court')).to be_valid
+        expect(build(:data_request, request_type: 'cross_borders')).to be_valid
+        expect(build(:data_request, request_type: 'cat_a')).to be_valid
+        expect(build(:data_request, request_type: 'ndelius')).to be_valid
         expect(build(:data_request, request_type: 'other', request_type_note: 'test')).to be_valid
       end
     end
