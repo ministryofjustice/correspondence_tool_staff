@@ -62,7 +62,10 @@ CREATE TYPE public.request_types AS ENUM (
     'mappa',
     'pdp',
     'court',
-    'other'
+    'other',
+    'cross_borders',
+    'cat_a',
+    'ndelius'
 );
 
 
@@ -2292,6 +2295,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220401091216'),
 ('20220506131034'),
 ('20220511130149'),
-('20220928103707');
+('20220928103707'),
+('20221205165722');
 
 
