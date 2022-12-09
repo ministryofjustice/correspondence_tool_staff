@@ -12,6 +12,7 @@ class CommissioningDocument
     pdp: CommissioningDocumentTemplate::Pdp,
     cat_a: CommissioningDocumentTemplate::CatA,
     cross_border: CommissioningDocumentTemplate::CrossBorder,
+    telephone: CommissioningDocumentTemplate::Telephone,
   }.freeze
 
   attr_accessor :template_name
