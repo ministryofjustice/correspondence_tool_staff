@@ -702,14 +702,15 @@ en:
         num_pages: Number of pages
       commissioning_document:
         template_name:
-          prison: Prison records
-          security: Security records
-          probation: Probation records
-          cctv: CCTV, BWCF, telephone recordings, etc
+          cat_a: CAT A
+          cctv: CCTV & BWCF
+          cross_border: Cross Borders
           mappa: MAPPA
           pdp: PDP
-          cat_a: CAT A
-          cross_border: Cross Border
+          prison: Prison records
+          probation: Probation records
+          security: Security records
+          telephone: Telephone recordings
       types:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
