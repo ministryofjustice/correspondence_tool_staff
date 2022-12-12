@@ -329,6 +329,7 @@ feature 'Contacts address book', js: true do
       name: 'Granary law',
       address_line_1: '789 another road',
       postcode: 'AF6 9JO',
+      data_request_name: 'Sue Jones',
       contact_type: 'probation'
     }
 
@@ -350,7 +351,7 @@ feature 'Contacts address book', js: true do
       name: 'John\'s law',
       address_line_1: '345 some road',
       postcode: 'FG9 5IK',
-      data_request_name: 'John Smith'
+      data_request_name: 'John Smith',
       contact_type: 'solicitor'
     }
 
@@ -365,6 +366,5 @@ feature 'Contacts address book', js: true do
   def then_expect_new_details_to_be_present
     expect(page).to have_content("345 some road")
     expect(page).to have_content('FG9 5IK')
-    expect(page).to have_content('John Smith')
   end
 end
