@@ -1,7 +1,7 @@
 class ContactsController < ApplicationController
   before_action :set_contact, only: %i[ edit update destroy ]
   before_action :set_contact_type_options, only: %i[ create edit new update ]
-  before_action :set_new_contact_from_params, only: :create 
+  before_action :set_new_contact_from_params, only: :create
   before_action :set_contact_type, only: %i[ update create ]
 
   def index
@@ -77,13 +77,14 @@ class ContactsController < ApplicationController
 
     def contact_params
       params.require(:contact).permit(
-        :name, 
+        :name,
         :address_line_1,
-        :address_line_2, 
+        :address_line_2,
         :town,
         :county,
         :postcode,
-        :email
+        :email,
+        :data_request_name
       )
     end
 
