@@ -7,7 +7,7 @@ module CommissioningDocumentTemplate
     def context
       super.merge(
         date_range: data_request.request_dates.capitalize,
-        deadline: deadline(5.days)
+        deadline: deadline(5)
       )
     end
   end
