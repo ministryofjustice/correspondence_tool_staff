@@ -5,7 +5,10 @@ module CommissioningDocumentTemplate
     end
 
     def context
-      super.merge(aliases: kase.subject_aliases)
+      super.merge(
+        aliases: kase.subject_aliases,
+        date_range: data_request.request_dates,
+      )
     end
   end
 end

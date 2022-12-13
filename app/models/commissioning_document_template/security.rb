@@ -8,7 +8,8 @@ module CommissioningDocumentTemplate
       super.merge(
         addressee_location: data_request.location,
         aliases: kase.subject_aliases,
-        deadline: deadline(5),
+        date_range: data_request.request_dates,
+        deadline: deadline(5.days),
       )
     end
   end

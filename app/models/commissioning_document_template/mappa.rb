@@ -8,7 +8,7 @@ module CommissioningDocumentTemplate
       super.merge(
         aliases: kase.subject_aliases,
         pnc: kase.other_subject_ids,
-        deadline: deadline(20),
+        deadline: deadline(20.days),
       )
     end
   end
