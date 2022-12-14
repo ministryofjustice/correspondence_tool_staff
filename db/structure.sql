@@ -530,7 +530,7 @@ CREATE TABLE public.contacts (
     town character varying,
     county character varying,
     postcode character varying,
-    email character varying,
+    data_request_emails character varying,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     contact_type_id bigint,
@@ -2298,6 +2298,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220511130149'),
 ('20220928103707'),
 ('20221205165722'),
-('20221212155458');
+('20221212155458'),
+('20221214144147');
 
 
