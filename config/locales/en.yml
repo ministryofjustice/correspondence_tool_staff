@@ -613,6 +613,8 @@ en:
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
+      contact:
+        data_request_emails: Add multiple email addresses on separate lines
       data_request:
         location: Where is the data held?
       data_request_log:

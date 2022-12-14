@@ -4,6 +4,7 @@ class Contact < ApplicationRecord
   validates :address_line_1, presence: true
   validates :postcode, presence: true
   validates :contact_type, presence: true
+  validate :validate_emails
 
   belongs_to :contact_type, class_name: 'CategoryReference', inverse_of: :contacts
 
@@ -45,5 +46,18 @@ class Contact < ApplicationRecord
     ].compact
      .reject(&:empty?)
      .join(separator)
+  end
+
+  def validate_emails
+    return unless data_request_emails.present?
+
+    data_request_emails.split.each do |email|
+      next if email =~ /\A([^@,]+)@([^@,]+)\z/ # regex disallows commas and additional @s
+
+      errors.add(
+        :data_request_emails,
+        :invalid
+      )
+    end
   end
 end

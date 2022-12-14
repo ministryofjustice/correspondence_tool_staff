@@ -7,6 +7,7 @@
     = f.text_field :county
     = f.text_field :postcode
     = f.text_area :data_request_name
+    = f.text_area :data_request_emails
     = f.radio_button_fieldset :contact_type_id,
       choices: @contact_types,
       value_method: :id,
