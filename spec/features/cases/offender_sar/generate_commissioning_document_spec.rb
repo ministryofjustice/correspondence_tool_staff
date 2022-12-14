@@ -22,11 +22,12 @@ feature 'Generate a commissioning document for a data request' do
     expect(commissioning_document_page.form).to have_content('Prison records')
     expect(commissioning_document_page.form).to have_content('Security records')
     expect(commissioning_document_page.form).to have_content('Probation records')
-    expect(commissioning_document_page.form).to have_content('CCTV, BWCF, telephone recordings, etc')
+    expect(commissioning_document_page.form).to have_content('CCTV & BWCF')
+    expect(commissioning_document_page.form).to have_content('Telephone recordings')
     expect(commissioning_document_page.form).to have_content('MAPPA')
     expect(commissioning_document_page.form).to have_content('PDP')
     expect(commissioning_document_page.form).to have_content('CAT A')
-    expect(commissioning_document_page.form).to have_content('Cross Border')
+    expect(commissioning_document_page.form).to have_content('Cross Borders')
 
     commissioning_document_page.form.choose_template_name('prison')
     click_on 'Download Day 1 request document'
