@@ -4,14 +4,15 @@ class CommissioningDocument
   include ActiveModel::Validations
 
   TEMPLATE_TYPES = {
-    prison: CommissioningDocumentTemplate::Prison,
-    security: CommissioningDocumentTemplate::Security,
-    probation: CommissioningDocumentTemplate::Probation,
+    cat_a: CommissioningDocumentTemplate::CatA,
     cctv: CommissioningDocumentTemplate::Cctv,
+    cross_border: CommissioningDocumentTemplate::CrossBorder,
     mappa: CommissioningDocumentTemplate::Mappa,
     pdp: CommissioningDocumentTemplate::Pdp,
-    cat_a: CommissioningDocumentTemplate::CatA,
-    cross_border: CommissioningDocumentTemplate::CrossBorder,
+    prison: CommissioningDocumentTemplate::Prison,
+    probation: CommissioningDocumentTemplate::Probation,
+    security: CommissioningDocumentTemplate::Security,
+    telephone: CommissioningDocumentTemplate::Telephone,
   }.freeze
 
   attr_accessor :template_name
