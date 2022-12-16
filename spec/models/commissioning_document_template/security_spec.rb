@@ -29,6 +29,7 @@ RSpec.describe CommissioningDocumentTemplate::Security do
         aliases: 'Bad Bob',
         date: '21/10/2022',
         prison_numbers: 'AB12345',
+        date_range: '',
         deadline: '26/10/2022',
       }
     end
