@@ -28,6 +28,7 @@ RSpec.describe CommissioningDocumentTemplate::Probation do
         date_of_birth: '11/03/2000',
         date: '21/10/2022',
         prison_numbers: 'AB12345',
+        date_range: '',
         deadline: '26/10/2022',
         pnc: 'CD98765',
         crn: 'EF45678',
