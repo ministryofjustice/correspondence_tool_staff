@@ -330,7 +330,7 @@ feature 'Contacts address book', js: true do
       address_line_1: '789 another road',
       postcode: 'AF6 9JO',
       data_request_name: 'Sue Jones',
-      data_request_name: 'sue.jones@gmail.com',
+      data_request_emails: 'sue.jones@gmail.com',
       contact_type: 'probation'
     }
 
