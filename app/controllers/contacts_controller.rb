@@ -83,8 +83,8 @@ class ContactsController < ApplicationController
         :town,
         :county,
         :postcode,
-        :email,
-        :data_request_name
+        :data_request_name,
+        :data_request_emails
       )
     end
 

@@ -330,6 +330,7 @@ feature 'Contacts address book', js: true do
       address_line_1: '789 another road',
       postcode: 'AF6 9JO',
       data_request_name: 'Sue Jones',
+      data_request_emails: 'sue.jones@gmail.com',
       contact_type: 'probation'
     }
 
@@ -352,6 +353,7 @@ feature 'Contacts address book', js: true do
       address_line_1: '345 some road',
       postcode: 'FG9 5IK',
       data_request_name: 'John Smith',
+      data_request_emails: 'john.smith@gmail.com',
       contact_type: 'solicitor'
     }
 
