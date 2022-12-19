@@ -7,34 +7,34 @@ feature 'Contacts address book', js: true do
 
   given(:foi_manager)     { find_or_create :disclosure_bmt_user }
 
-  given!(:contact) { create(:contact, 
+  given!(:contact) { create(:contact,
                            name: 'HMP halifax',
                            address_line_1: '123 test road',
                            address_line_2: 'little heath',
                            town: 'bakersville',
                            county: 'Mercia',
                            postcode: 'FE2 9JK',
-                           contact_type: CategoryReference.find_by(code: 'probation')) 
+                           contact_type: CategoryReference.find_by(code: 'probation'))
   }
 
-  given!(:contact_2) { create(:contact, 
+  given!(:contact_2) { create(:contact,
                            name: 'Solicitors LLP',
                            address_line_1: '456 fake street',
                            address_line_2: 'little heath',
                            town: 'bakersville',
                            county: 'Mercia',
                            postcode: 'FL7 0YK',
-                           contact_type: CategoryReference.find_by(code: 'solicitor')) 
+                           contact_type: CategoryReference.find_by(code: 'solicitor'))
   }
 
-  given!(:contact_3) { create(:contact, 
+  given!(:contact_3) { create(:contact,
                            name: 'HMP Wellingsville',
                            address_line_1: '789 some lane',
                            address_line_2: 'little heath',
                            town: 'bakersville',
                            county: 'Mercia',
                            postcode: 'TH8 9KO',
-                           contact_type: CategoryReference.find_by(code: 'prison')) 
+                           contact_type: CategoryReference.find_by(code: 'prison'))
   }
 
   before :all do
@@ -62,7 +62,7 @@ feature 'Contacts address book', js: true do
   scenario 'user can edit an existing address' do
     click_on 'Addresses'
     and_user_can_edit_a_contact
-    
+
     then_expect_to_see_the_edit_success_message
     then_expect_to_see_edited_details_on_the_index_page
   end
@@ -94,8 +94,8 @@ feature 'Contacts address book', js: true do
 
   scenario "a default relationship type and address can be selected on the requester_details page" do
     when_i_navigate_to_offender_sar_subject_page
- 
-    and_fill_in_subject_details_page 
+
+    and_fill_in_subject_details_page
 
     when_i_select_info_is_requested_on_someone_elses_behalf
     then_relationship_to_subject_should_be_defaulted_to_solictor
@@ -124,8 +124,8 @@ feature 'Contacts address book', js: true do
 
   scenario "a default relationship type and address can be selected on the recipient_details page" do
     when_i_navigate_to_offender_sar_subject_page
- 
-    and_fill_in_subject_details_page 
+
+    and_fill_in_subject_details_page
 
     when_i_select_info_is_not_requested_on_someone_elses_behalf
     and_continue_to_recipient_details_page
@@ -163,7 +163,7 @@ feature 'Contacts address book', js: true do
 
   def and_the_other_radio_is_still_checked
     result = page.evaluate_script("document.getElementById('offender_sar_is_solicitor_other').checked;")
-    expect(result).to be true 
+    expect(result).to be true
   end
 
   def and_the_state_remains_the_same
@@ -175,7 +175,7 @@ feature 'Contacts address book', js: true do
     choose('offender_sar_recipient_subject_recipient', visible: false)
   end
 
-  def when_i_select_that_the_recipient_is_a_third_party 
+  def when_i_select_that_the_recipient_is_a_third_party
     choose('offender_sar_recipient_third_party_recipient', visible: false)
   end
 
@@ -206,7 +206,7 @@ feature 'Contacts address book', js: true do
 
   def then_relationship_to_subject_should_be_defaulted_to_solictor
     result = page.evaluate_script("document.getElementById('offender_sar_is_solicitor_solicitor').checked;")
-    expect(result).to be true 
+    expect(result).to be true
   end
 
   def when_i_set_relationship_to_subject_to_other
@@ -235,7 +235,7 @@ feature 'Contacts address book', js: true do
 
   def then_i_am_able_to_select_an_address_from_the_dropown
     click_button("Use Solicitors LLP")
-    
+
     selected_address_in_textbox = page.find(:css, '#offender_sar_postal_address').value
     expect(selected_address_in_textbox).to include("456 fake street\nlittle heath")
   end
@@ -264,10 +264,10 @@ feature 'Contacts address book', js: true do
   def then_i_expect_the_address_i_searched_for_to_have_been_entered_into_the_form
     expect(cases_new_offender_sar_subject_details_page.subject_address).to have_content(contact.address)
   end
-  
+
   def when_i_open_the_address_dialogue_only_prison_and_probation_addresses_should_load
     click_link 'Back'
-    cases_new_offender_sar_subject_details_page.find_an_address_button.click 
+    cases_new_offender_sar_subject_details_page.find_an_address_button.click
     expect(page).to have_content('HMP halifax')
     expect(page).to have_content('HMP Wellingsville')
     expect(page).to_not have_content('Solicitors LLP')
@@ -298,11 +298,11 @@ feature 'Contacts address book', js: true do
   def then_address_book_link_is_not_visible
     expect(page).not_to have_content('Addresses')
   end
-  
+
   def then_expect_to_see_delete_success_message
     expect(page).to have_content("Address was successfully destroyed.")
   end
-  
+
   def and_user_deletes_an_address
     accept_confirm do
       click_on 'Delete', match: :first
@@ -329,6 +329,7 @@ feature 'Contacts address book', js: true do
       name: 'Granary law',
       address_line_1: '789 another road',
       postcode: 'AF6 9JO',
+      data_request_name: 'Sue Jones',
       contact_type: 'probation'
     }
 
@@ -350,6 +351,7 @@ feature 'Contacts address book', js: true do
       name: 'John\'s law',
       address_line_1: '345 some road',
       postcode: 'FG9 5IK',
+      data_request_name: 'John Smith',
       contact_type: 'solicitor'
     }
 
@@ -361,7 +363,7 @@ feature 'Contacts address book', js: true do
     expect(page).to have_content("Contact was successfully created.")
   end
 
-  def then_expect_new_details_to_be_present 
+  def then_expect_new_details_to_be_present
     expect(page).to have_content("345 some road")
     expect(page).to have_content('FG9 5IK')
   end

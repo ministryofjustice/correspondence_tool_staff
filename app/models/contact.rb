@@ -5,7 +5,7 @@ class Contact < ApplicationRecord
   validates :postcode, presence: true
   validates :contact_type, presence: true
 
-  belongs_to :contact_type, class_name: 'CategoryReference', inverse_of: :contacts 
+  belongs_to :contact_type, class_name: 'CategoryReference', inverse_of: :contacts
 
   def address
     format_address("\n")
