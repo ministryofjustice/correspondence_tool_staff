@@ -262,7 +262,7 @@ FactoryBot.define do
   factory :closed_sar_with_response, parent: :closed_sar do
     transient do
       identifier { "closed sar case with response" }
-      responses { [build_stubbed(:correspondence_response, type: 'response', user_id: responder.id)] }
+      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|

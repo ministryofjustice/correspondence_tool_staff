@@ -114,7 +114,7 @@ FactoryBot.define do
   factory :ico_foi_case_with_response, parent: :accepted_ico_foi_case do
     transient do
       identifier { "ico foi case with response" }
-      responses { [build_stubbed(:correspondence_response, type: 'response', user_id: responder.id)] }
+      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|
@@ -208,7 +208,7 @@ FactoryBot.define do
   factory :closed_ico_foi_case, parent: :responded_ico_foi_case do
     transient do
       identifier  { 'closed ICO FOI case' }
-      attachments {[ build_stubbed(:case_ico_decision) ]}
+      attachments {[ build(:case_ico_decision) ]}
     end
 
     received_date { 22.business_days.ago }
