@@ -377,7 +377,7 @@ RSpec.describe User, type: :model do
 
   context 'password setting' do
 
-    let(:user) { build_stubbed :user }
+    let(:user) { build :user }
 
     context 'in blacklist' do
       it 'errors' do

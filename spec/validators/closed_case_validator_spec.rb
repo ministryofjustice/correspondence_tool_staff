@@ -432,7 +432,7 @@ describe 'ClosedCaseValidator' do
 
   context 'ICO Appeal cases' do
 
-    let(:responded_ico)       { build_stubbed :responded_ico_foi_case }
+    let(:responded_ico)       { build :responded_ico_foi_case }
 
     before(:each) do
       responded_ico.prepare_for_close

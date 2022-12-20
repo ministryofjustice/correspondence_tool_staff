@@ -4,7 +4,7 @@ feature 'downloading a response from response details' do
   given(:manager)   { find_or_create :disclosure_bmt_user }
   given(:responder) { find_or_create :foi_responder  }
 
-  given(:response) { build_stubbed :case_response, user_id: responder.id }
+  given(:response) { build :case_response, user_id: responder.id }
   given(:presigned_url) do
     URI.join(CASE_UPLOADS_S3_BUCKET.url, "#{response.key}&temporary")
   end

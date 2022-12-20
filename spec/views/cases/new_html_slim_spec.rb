@@ -80,7 +80,7 @@ describe 'cases/new.html.slim', type: :view do
 
   context 'ICOs' do
     it 'displays the new case page' do
-      kase = build_stubbed(:ico_foi_case).decorate
+      kase = build(:ico_foi_case).decorate
       assign(:case, kase)
       assign(:correspondence_type, kase.correspondence_type)
       assign(:s3_direct_post, S3Uploader.s3_direct_post_for_case(kase, :request))
