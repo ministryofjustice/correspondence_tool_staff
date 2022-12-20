@@ -97,7 +97,7 @@ describe Case::SAR::OffenderComplaint do
 
   describe '#normal_priority?' do
     it 'delegates to normal?' do
-      kase = build_stubbed(:offender_sar_complaint, priority: 'normal')
+      kase = build(:offender_sar_complaint, priority: 'normal')
       expect(kase.normal_priority?).to be true
       kase.high!
       expect(kase.normal_priority?).to be false
@@ -106,7 +106,7 @@ describe Case::SAR::OffenderComplaint do
 
   describe '#high_priority?' do
     it 'delegates to high?' do
-      kase = build_stubbed(:offender_sar_complaint, priority: 'high')
+      kase = build(:offender_sar_complaint, priority: 'high')
       expect(kase.high_priority?).to be true
       kase.normal!
       expect(kase.high_priority?).to be false
@@ -553,7 +553,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe '#reassign_gov_uk_dates' do
-    let(:kase) { build_stubbed :offender_sar_complaint }
+    let(:kase) { build :offender_sar_complaint }
 
     it 'only re-assigns Gov UK date fields that are unchanged' do
       original_dob = kase.date_of_birth
@@ -614,7 +614,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe '#page_count' do
-    let(:kase) { build_stubbed :offender_sar_complaint }
+    let(:kase) { build :offender_sar_complaint }
 
     it 'no data request' do
       expect(kase.page_count).to eq 0
@@ -646,7 +646,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe '#data_requests_completed' do
-    let(:kase) { build_stubbed :offender_sar_complaint }
+    let(:kase) { build :offender_sar_complaint }
 
     it 'no data request' do
       expect(kase.data_requests_completed?).to eq false
@@ -708,7 +708,7 @@ describe Case::SAR::OffenderComplaint do
   describe '#ensure_third_party_states_consistent' do
     context 'when a case is saved with third_party and third_party_recipient' do
       let(:offender_sar_complaint) do
-        build_stubbed(:offender_sar_complaint, :third_party,
+        build(:offender_sar_complaint, :third_party,
           recipient: 'third_party_recipient' # would fail validation
         )
       end
@@ -810,7 +810,7 @@ describe Case::SAR::OffenderComplaint do
 
     it 'cannot be past day for new record' do
       offender_sar = create(:offender_sar_case)
-      complaint = build_stubbed(:offender_sar_complaint,
+      complaint = build(:offender_sar_complaint,
                         original_case: offender_sar,
                         received_date: Date.today - 10.day,
                         external_deadline: Date.today - 1.day)
