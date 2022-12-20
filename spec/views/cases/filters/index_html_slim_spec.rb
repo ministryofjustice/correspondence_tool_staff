@@ -11,8 +11,8 @@ describe 'cases/filters/index.html.slim', type: :view do
   let(:accepted_case)           { create(:accepted_case, :flagged_accepted,
                                     responder: responder)
                                     .decorate }
-  
-  let(:search_query)            { build :search_query }
+
+  let(:search_query)            { build_stubbed :search_query }
   let(:unflagged_case)          { create(:case,
                                     responding_team: responding_team)
                                     .decorate }
@@ -21,13 +21,13 @@ describe 'cases/filters/index.html.slim', type: :view do
 
   let(:branston_responder)      { find_or_create :branston_user }
   let(:offender_sar_case)       { create :offender_sar_case}
-  let(:offender_sar_case_third_party_name)    { create :offender_sar_case, 
+  let(:offender_sar_case_third_party_name)    { create :offender_sar_case,
                                                         third_party_relationship: 'family',
-                                                        third_party: true, 
+                                                        third_party: true,
                                                         third_party_name: "third_party_name"}
-  let(:offender_sar_case_third_party_company) { create :offender_sar_case, 
+  let(:offender_sar_case_third_party_company) { create :offender_sar_case,
                                                         third_party_relationship: 'solicitor',
-                                                        third_party: true, 
+                                                        third_party: true,
                                                         third_party_company_name: "third_party_company_name"}
 
   let(:request)                  { instance_double ActionDispatch::Request,
@@ -65,7 +65,7 @@ describe 'cases/filters/index.html.slim', type: :view do
     assigned_case
     accepted_case
     unflagged_case
-    ovt_foi_trigger_case    
+    ovt_foi_trigger_case
     init_setting
     render
     cases_page.load(rendered)
@@ -92,18 +92,18 @@ describe 'cases/filters/index.html.slim', type: :view do
     cases_page.load(rendered)
 
     validate_offender_sar_related_cases_fields_displayed(
-      cases_page.case_list[0], 
-      offender_sar_case, 
+      cases_page.case_list[0],
+      offender_sar_case,
       offender_sar_case.subject)
 
     validate_offender_sar_related_cases_fields_displayed(
-      cases_page.case_list[1], 
-      offender_sar_case_third_party_name, 
+      cases_page.case_list[1],
+      offender_sar_case_third_party_name,
       offender_sar_case_third_party_name.third_party_name)
 
     validate_offender_sar_related_cases_fields_displayed(
-      cases_page.case_list[2], 
-      offender_sar_case_third_party_company, 
+      cases_page.case_list[2],
+      offender_sar_case_third_party_company,
       offender_sar_case_third_party_company.third_party_company_name)
   end
 
@@ -184,7 +184,7 @@ describe 'cases/filters/index.html.slim', type: :view do
     end
   end
 
-  private 
+  private
 
   def init_setting
     assign(:cases, PaginatingDecorator.new(Case::Base.all.page.order(:number)))
@@ -195,7 +195,7 @@ describe 'cases/filters/index.html.slim', type: :view do
 
     disallow_case_policy :can_add_case?
   end
-  
+
   def validate_cases_common_fields_displayed(displayed_case, compared_case, who_its_with: nil)
       expect(displayed_case.number.text).to eq "Case number #{compared_case.number}"
       expect(displayed_case.type.text).to eq "#{compared_case.decorate.pretty_type} "

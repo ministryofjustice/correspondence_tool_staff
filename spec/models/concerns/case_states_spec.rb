@@ -83,7 +83,7 @@ RSpec.describe Case, type: :model do
 
       context 'two attachments' do
         before(:each) do
-          kase.attachments << build(:correspondence_response, type: 'response')
+          kase.attachments << build_stubbed(:correspondence_response, type: 'response')
           allow(attachment).to receive(:remove_from_storage_bucket)
         end
 
@@ -109,7 +109,7 @@ RSpec.describe Case, type: :model do
 
       context 'two attachments' do
         before(:each) do
-          kase.attachments << build(:correspondence_response, type: 'response')
+          kase.attachments << build_stubbed(:correspondence_response, type: 'response')
           allow(attachment).to receive(:remove_from_storage_bucket)
         end
 
@@ -225,7 +225,7 @@ RSpec.describe Case, type: :model do
 
     context 'initial state' do
       it 'is set to unassigned' do
-        kase = build(:case, current_state: nil)
+        kase = build_stubbed(:case, current_state: nil)
         expect(kase.current_state).to be_nil
         kase.save!
         expect(kase.current_state).to eq 'unassigned'

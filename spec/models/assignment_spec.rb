@@ -35,7 +35,7 @@ RSpec.describe Assignment, type: :model do
   let(:responder)       { responding_team.responders.first }
   let(:responding_team) { assignment.team }
 
-  subject { build(:assignment) }
+  subject { build_stubbed(:assignment) }
 
   it { should validate_presence_of(:state) }
   it { should validate_presence_of(:case)  }
@@ -92,8 +92,8 @@ RSpec.describe Assignment, type: :model do
   end
 
   describe 'scope last_responding' do
-    let(:assignment1) { build(:assignment, :responding) }
-    let(:assignment2) { build(:assignment, :responding) }
+    let(:assignment1) { build_stubbed(:assignment, :responding) }
+    let(:assignment2) { build_stubbed(:assignment, :responding) }
     let(:kase) { create(:case).tap {|kase| kase.assignments << assignment1; kase.assignments << assignment2} }
     it 'returns the last responding assignment' do
       expect(kase.responder_assignment).to eq assignment2

@@ -65,7 +65,7 @@ FactoryBot.define do
           parent: :accepted_ot_ico_foi do
     transient do
       identifier { "overturned ico foi case with response" }
-      responses  { [build(:correspondence_response,
+      responses  { [build_stubbed(:correspondence_response,
                           type: 'response',
                           user_id: responder.id)] }
     end

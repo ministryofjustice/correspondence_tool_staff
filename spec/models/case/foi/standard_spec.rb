@@ -31,9 +31,9 @@
 require "rails_helper"
 
 describe Case::FOI::Standard do
-  let(:no_postal)          { build :case, postal_address: nil             }
-  let(:no_postal_or_email) { build :case, postal_address: nil, email: nil }
-  let(:no_email)           { build :case, email: nil                      }
+  let(:no_postal)          { build_stubbed :case, postal_address: nil             }
+  let(:no_postal_or_email) { build_stubbed :case, postal_address: nil, email: nil }
+  let(:no_email)           { build_stubbed :case, email: nil                      }
 
   context 'without a postal or email address' do
     it 'is invalid' do

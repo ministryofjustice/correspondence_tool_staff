@@ -215,12 +215,12 @@ RSpec.describe User, type: :model do
         kase = create :accepted_case
         check_user = kase.responder
         another_team = create :business_unit, name:'testing team'
-        
+
         responding_assignment = Assignment.new(
           case_id: kase.id,
           team: another_team,
-          user: check_user, 
-          state: 'rejected', 
+          user: check_user,
+          state: 'rejected',
           role: 'responding',
           reasons_for_rejection: 'testing'
         )
@@ -377,7 +377,7 @@ RSpec.describe User, type: :model do
 
   context 'password setting' do
 
-    let(:user) { build :user }
+    let(:user) { build_stubbed :user }
 
     context 'in blacklist' do
       it 'errors' do

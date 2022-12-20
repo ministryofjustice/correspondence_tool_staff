@@ -85,6 +85,7 @@ group :test do
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 5.2.0'
   gem 'simplecov', '~> 0.21.2'
+  gem 'test-prof'
 end
 
 group :development, :test do

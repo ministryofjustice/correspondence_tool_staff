@@ -145,7 +145,7 @@ FactoryBot.define do
   factory :closed_ico_sar_case, parent: :responded_ico_sar_case do
     transient do
       identifier { 'closed ICO SAR case - upheld' }
-      attachments {[ build(:case_ico_decision) ]}
+      attachments {[ build_stubbed(:case_ico_decision) ]}
     end
 
     received_date { 22.business_days.ago }

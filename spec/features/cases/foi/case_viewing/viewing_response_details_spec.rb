@@ -44,7 +44,7 @@ feature 'viewing response details' do
       given(:responses) { case_with_many_responses.attachments }
 
       scenario 'with a case with multiple uploaded responses' do
-        responded_case.attachments << build(:case_attachment)
+        responded_case.attachments << build_stubbed(:case_attachment)
         cases_show_page.load(id: responded_case.id)
 
         rendered_filenames = cases_show_page.case_attachments.first.collection

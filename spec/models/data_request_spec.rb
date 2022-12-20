@@ -5,8 +5,8 @@ RSpec.describe DataRequest, type: :model do
     context 'with valid params' do
       subject(:data_request) {
         described_class.new(
-          offender_sar_case: build(:offender_sar_case),
-          user: build(:user),
+          offender_sar_case: build_stubbed(:offender_sar_case),
+          user: build_stubbed(:user),
           location: 'X' * 500, # Max length
           request_type: 'all_prison_records',
           request_type_note: '',
@@ -47,7 +47,7 @@ RSpec.describe DataRequest, type: :model do
     end
 
     context 'validation' do
-      subject(:data_request) { build :data_request }
+      subject(:data_request) { build_stubbed :data_request }
 
       it { should be_valid }
 
@@ -92,7 +92,7 @@ RSpec.describe DataRequest, type: :model do
     end
 
     context 'date when data request is complete' do
-      subject(:data_request) { build(:data_request, completed: true) }
+      subject(:data_request) { build_stubbed(:data_request, completed: true) }
 
       it 'required if the case is marked as completed' do
         data_request.cached_date_received = nil
@@ -115,7 +115,7 @@ RSpec.describe DataRequest, type: :model do
     end
 
     context 'when request_type is other' do
-      subject(:data_request) { build(:data_request, request_type: 'other', request_type_note: nil) }
+      subject(:data_request) { build_stubbed(:data_request, request_type: 'other', request_type_note: nil) }
 
       it 'ensures the note is present' do
         expect(subject).not_to be_valid
@@ -124,7 +124,7 @@ RSpec.describe DataRequest, type: :model do
     end
 
     context 'when both from and to date is set' do
-      subject(:data_request) { build(:data_request, date_from: 1.year.ago, date_to: 2.years.ago)}
+      subject(:data_request) { build_stubbed(:data_request, date_from: 1.year.ago, date_to: 2.years.ago)}
 
       it 'ensures the to date is after the from date' do
         expect(subject).not_to be_valid
@@ -133,7 +133,7 @@ RSpec.describe DataRequest, type: :model do
     end
 
     context 'with note' do
-      subject(:data_request) { build :data_request, :other }
+      subject(:data_request) { build_stubbed :data_request, :other }
 
       it { should be_valid }
       it 'has a note' do
@@ -142,7 +142,7 @@ RSpec.describe DataRequest, type: :model do
     end
 
     context 'with date range' do
-      subject(:data_request) { build :data_request, :with_date_range }
+      subject(:data_request) { build_stubbed :data_request, :with_date_range }
 
       it { should be_valid }
       it 'has date from and to' do
@@ -152,13 +152,13 @@ RSpec.describe DataRequest, type: :model do
     end
 
     context 'with date range' do
-      subject(:data_request) { build :data_request, :with_date_from }
+      subject(:data_request) { build_stubbed :data_request, :with_date_from }
 
       it { should be_valid }
     end
 
     context 'with date range' do
-      subject(:data_request) { build :data_request, :with_date_to }
+      subject(:data_request) { build_stubbed :data_request, :with_date_to }
 
       it { should be_valid }
     end
@@ -167,36 +167,36 @@ RSpec.describe DataRequest, type: :model do
   describe '#request_type' do
     context 'valid values' do
       it 'does not error' do
-        expect(build(:data_request, request_type: 'all_prison_records')).to be_valid
-        expect(build(:data_request, request_type: 'security_records')).to be_valid
-        expect(build(:data_request, request_type: 'nomis_records')).to be_valid
-        expect(build(:data_request, request_type: 'nomis_other')).to be_valid
-        expect(build(:data_request, request_type: 'nomis_contact_logs')).to be_valid
-        expect(build(:data_request, request_type: 'probation_records')).to be_valid
-        expect(build(:data_request, request_type: 'cctv_and_bwcf')).to be_valid
-        expect(build(:data_request, request_type: 'telephone_recordings')).to be_valid
-        expect(build(:data_request, request_type: 'probation_archive')).to be_valid
-        expect(build(:data_request, request_type: 'mappa')).to be_valid
-        expect(build(:data_request, request_type: 'pdp')).to be_valid
-        expect(build(:data_request, request_type: 'court')).to be_valid
-        expect(build(:data_request, request_type: 'cross_borders')).to be_valid
-        expect(build(:data_request, request_type: 'cat_a')).to be_valid
-        expect(build(:data_request, request_type: 'ndelius')).to be_valid
-        expect(build(:data_request, request_type: 'other', request_type_note: 'test')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'all_prison_records')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'security_records')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'nomis_records')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'nomis_other')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'nomis_contact_logs')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'probation_records')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'cctv_and_bwcf')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'telephone_recordings')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'probation_archive')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'mappa')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'pdp')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'court')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'cross_borders')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'cat_a')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'ndelius')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'other', request_type_note: 'test')).to be_valid
       end
     end
 
     context 'invalid value' do
       it 'errors' do
         expect {
-          build(:data_request, request_type: 'user')
+          build_stubbed(:data_request, request_type: 'user')
         }.to raise_error ArgumentError
       end
     end
 
     context 'nil' do
       it 'errors' do
-        kase = build(:data_request, request_type: nil)
+        kase = build_stubbed(:data_request, request_type: nil)
         expect(kase).not_to be_valid
         expect(kase.errors[:request_type]).to eq ["cannot be blank"]
       end
@@ -204,7 +204,7 @@ RSpec.describe DataRequest, type: :model do
   end
 
   describe '#clean_attributes' do
-    subject(:data_request) { build :data_request }
+    subject(:data_request) { build_stubbed :data_request }
 
     it 'ensures string attributes do not have leading/trailing spaces' do
       data_request.location = '  The location'
@@ -226,13 +226,13 @@ RSpec.describe DataRequest, type: :model do
 
   describe '#status' do
     context 'when data request is in progress' do
-      let!(:data_request) { build(:data_request) }
+      let!(:data_request) { build_stubbed(:data_request) }
       it 'returns completed' do
         expect(data_request.status).to eq 'In progress'
       end
     end
     context 'when data request is completed' do
-      let!(:data_request) { build(:data_request, :completed) }
+      let!(:data_request) { build_stubbed(:data_request, :completed) }
       it 'returns completed' do
         expect(data_request.status).to eq 'Completed'
       end
@@ -259,102 +259,102 @@ RSpec.describe DataRequest, type: :model do
 
   describe '#request_dates_either_present?' do
     context 'when no request dates available' do
-      subject(:data_request) { build :data_request }
+      subject(:data_request) { build_stubbed :data_request }
       it { expect(subject.request_dates_either_present?).to eq false }
     end
 
     context 'when from request date available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15) }
       it { expect(subject.request_dates_either_present?).to eq true }
     end
 
     context 'when to request date available' do
-      subject(:data_request) { build :data_request, date_to: Date.new(2019, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_to: Date.new(2019, 8, 15) }
       it { expect(subject.request_dates_either_present?).to eq true }
     end
 
     context 'when both request dates available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
       it { expect(subject.request_dates_either_present?).to eq true }
     end
   end
 
   describe '#request_dates_both_present?' do
     context 'when no request dates available' do
-      subject(:data_request) { build :data_request }
+      subject(:data_request) { build_stubbed :data_request }
       it { expect(subject.request_dates_both_present?).to eq false }
     end
     context 'when one request date available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15) }
       it { expect(subject.request_dates_both_present?).to eq false }
     end
     context 'when both request dates available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
       it { expect(subject.request_dates_both_present?).to eq true }
     end
   end
 
   describe '#request_date_from_only?' do
     context 'when no request dates available' do
-      subject(:data_request) { build :data_request }
+      subject(:data_request) { build_stubbed :data_request }
       it { expect(subject.request_date_from_only?).to eq false }
     end
 
     context 'when from request date available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15) }
       it { expect(subject.request_date_from_only?).to eq true }
     end
 
     context 'when to request date available' do
-      subject(:data_request) { build :data_request, date_to: Date.new(2019, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_to: Date.new(2019, 8, 15) }
       it { expect(subject.request_date_from_only?).to eq false }
     end
 
     context 'when both request dates available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
       it { expect(subject.request_date_from_only?).to eq false }
     end
   end
 
   describe '#request_date_to_only?' do
     context 'when no request dates available' do
-      subject(:data_request) { build :data_request }
+      subject(:data_request) { build_stubbed :data_request }
       it { expect(subject.request_date_to_only?).to eq false }
     end
 
     context 'when from request date available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15) }
       it { expect(subject.request_date_to_only?).to eq false }
     end
 
     context 'when to request date available' do
-      subject(:data_request) { build :data_request, date_to: Date.new(2019, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_to: Date.new(2019, 8, 15) }
       it { expect(subject.request_date_to_only?).to eq true }
     end
 
     context 'when both request dates available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
       it { expect(subject.request_date_to_only?).to eq false }
     end
   end
 
   describe '#request_dates_absent?' do
     context 'when no request dates available' do
-      subject(:data_request) { build :data_request }
+      subject(:data_request) { build_stubbed :data_request }
       it { expect(subject.request_dates_absent?).to eq true }
     end
     context 'when from request date available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15) }
       it { expect(subject.request_dates_absent?).to eq false }
     end
 
     context 'when to request date available' do
-      subject(:data_request) { build :data_request, date_to: Date.new(2019, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_to: Date.new(2019, 8, 15) }
       it { expect(subject.request_dates_absent?).to eq false }
     end
 
     context 'when both request dates available' do
-      subject(:data_request) { build :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
+      subject(:data_request) { build_stubbed :data_request, date_from: Date.new(2019, 8, 15), date_to: Date.new(2020, 8, 15) }
       it { expect(subject.request_dates_absent?).to eq false }
     end
   end

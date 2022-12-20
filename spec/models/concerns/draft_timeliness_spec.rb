@@ -5,7 +5,7 @@ describe DraftTimeliness::ResponseAdded do
                       when_response_uploaded: 1.business_day.ago }
 
   let(:new_response) do
-    response = build(:correspondence_response,
+    response = build_stubbed(:correspondence_response,
                      type: 'response',
                      user_id: kase.responder.id)
     kase.attachments.push(response)

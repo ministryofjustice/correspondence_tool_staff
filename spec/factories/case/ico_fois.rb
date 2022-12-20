@@ -114,7 +114,7 @@ FactoryBot.define do
   factory :ico_foi_case_with_response, parent: :accepted_ico_foi_case do
     transient do
       identifier { "ico foi case with response" }
-      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+      responses { [build_stubbed(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|
@@ -208,7 +208,7 @@ FactoryBot.define do
   factory :closed_ico_foi_case, parent: :responded_ico_foi_case do
     transient do
       identifier  { 'closed ICO FOI case' }
-      attachments {[ build(:case_ico_decision) ]}
+      attachments {[ build_stubbed(:case_ico_decision) ]}
     end
 
     received_date { 22.business_days.ago }
@@ -234,18 +234,18 @@ FactoryBot.define do
     transient do
       identifier { 'ICO FOI case required further action' }
     end
-    
+
     after(:create) do |kase, evaluator|
       create :case_transition_require_further_action,
              case: kase
       kase.update!(
-        original_external_deadline: kase.external_deadline, 
+        original_external_deadline: kase.external_deadline,
         original_internal_deadline: kase.internal_deadline,
         original_date_responded: kase.date_responded
       )
       kase.reload
       kase.update!(
-        external_deadline: 20.business_days.after(evaluator.original_external_deadline), 
+        external_deadline: 20.business_days.after(evaluator.original_external_deadline),
         internal_deadline: 10.business_days.after(evaluator.original_external_deadline),
         date_responded: nil
       )

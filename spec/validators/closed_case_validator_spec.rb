@@ -432,7 +432,7 @@ describe 'ClosedCaseValidator' do
 
   context 'ICO Appeal cases' do
 
-    let(:responded_ico)       { build :responded_ico_foi_case }
+    let(:responded_ico)       { build_stubbed :responded_ico_foi_case }
 
     before(:each) do
       responded_ico.prepare_for_close
@@ -583,7 +583,7 @@ describe 'ClosedCaseValidator' do
         it 'has no errors' do
           sar_ir.sar_ir_outcome = 'Upheld'
           sar_ir.valid?
-          expect(sar_ir.errors[:sar_ir_outcome]).to eq [] 
+          expect(sar_ir.errors[:sar_ir_outcome]).to eq []
         end
       end
     end
@@ -602,7 +602,7 @@ describe 'ClosedCaseValidator' do
           sar_ir.sar_ir_outcome = 'Upheld in part'
           sar_ir.outcome_reason_ids = outcome_reason_ids
           sar_ir.valid?
-          expect(sar_ir.errors[:outcome_reasons]).to eq [] 
+          expect(sar_ir.errors[:outcome_reasons]).to eq []
         end
       end
     end
@@ -621,7 +621,7 @@ describe 'ClosedCaseValidator' do
           sar_ir.sar_ir_outcome = 'Upheld in part'
           sar_ir.team_responsible_for_outcome_id = 1
           sar_ir.valid?
-          expect(sar_ir.errors[:team_responsible_for_outcome_id]).to eq [] 
+          expect(sar_ir.errors[:team_responsible_for_outcome_id]).to eq []
         end
       end
     end

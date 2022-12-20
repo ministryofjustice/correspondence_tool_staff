@@ -63,7 +63,7 @@ module PageObjects
           def fill_in_case_details(params={})
             type = params.delete(:type) || 'standard'
             flag_for_disclosure_specialists = params.delete(:flag_for_disclosure_specialists)
-            kase = FactoryBot.build :case, params
+            kase = FactoryBot.build_stubbed :case, params
 
             set_received_date(kase.received_date)
 
@@ -76,7 +76,7 @@ module PageObjects
             kase.uploaded_request_files.each do |file|
               drop_in_dropzone(file)
             end
-          
+
             if kase.sent_by_email?
               full_request.set kase.message
             elsif !kase.sent_by_email? && !kase.sent_by_post?

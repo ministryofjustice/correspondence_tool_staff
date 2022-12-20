@@ -201,7 +201,7 @@ FactoryBot.define do
   factory :case_with_response, parent: :accepted_case do
     transient do
       identifier { "case with response" }
-      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+      responses { [build_stubbed(:correspondence_response, type: 'response', user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|
@@ -295,7 +295,7 @@ FactoryBot.define do
           parent: :accepted_case do
     transient do
       identifier { "approved case requiring disclosure approval" }
-      responses { [build(:correspondence_response,
+      responses { [build_stubbed(:correspondence_response,
                          type: 'response',
                          user_id: responder.id)] }
     end
@@ -859,7 +859,7 @@ FactoryBot.define do
 
   trait :_transition_to_pending_dacu_clearance do
     transient do
-      responses  { [build(:correspondence_response,
+      responses  { [build_stubbed(:correspondence_response,
                           type: 'response',
                           user_id: responder.id)] }
       when_response_uploaded { DateTime.now }
