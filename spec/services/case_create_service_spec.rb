@@ -5,7 +5,7 @@ describe CaseCreateService do
   let!(:team_dacu) { find_or_create :team_dacu }
   let!(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
-  let(:unsaved_sar_ir_case) { build_stubbed(:sar_internal_review)}
+  let(:unsaved_sar_ir_case) { build(:sar_internal_review)}
 
   let(:regular_params) do
     ActionController::Parameters.new(

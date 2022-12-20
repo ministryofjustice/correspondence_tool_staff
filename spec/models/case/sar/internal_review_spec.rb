@@ -157,7 +157,7 @@ describe Case::SAR::InternalReview do
     end
 
     it 'can be empty on create if uploaded_request_files is present' do
-      kase = build_stubbed :sar_internal_review,
+      kase = build :sar_internal_review,
                    uploaded_request_files: ["#{Faker::Internet.slug}.pdf"],
                    message: ''
       expect(kase).to be_valid
@@ -183,7 +183,7 @@ describe Case::SAR::InternalReview do
 
   describe '#uploaded_request_files' do
     it 'validates presence if message is missing' do
-      kase = build_stubbed :sar_internal_review, uploaded_request_files: [], message: ''
+      kase = build :sar_internal_review, uploaded_request_files: [], message: ''
       expect(kase).not_to be_valid
       expect(kase.errors[:uploaded_request_files])
         .to eq ["cannot be blank if no case details entered"]

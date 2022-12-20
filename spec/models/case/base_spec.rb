@@ -45,7 +45,7 @@ RSpec.describe Case::Base, type: :model do
   let(:approving_team)     { create :approving_team                       }
   let(:press_officer)      { find_or_create :press_officer }
   let(:press_office)       { press_officer.approving_team }
-  let(:non_trigger_foi)    { build_stubbed :case, received_date: Date.parse('16/11/2016') }
+  let(:non_trigger_foi)    { build :case, received_date: Date.parse('16/11/2016') }
   let(:assigned_case)      { create :assigned_case,
                                     responding_team: responding_team }
   let(:accepted_case)      { create :accepted_case,
@@ -170,7 +170,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it 'does validate presence of message for email foi' do
-      email_foi = build_stubbed :case
+      email_foi = build :case
       email_foi.delivery_method = 'sent_by_email'
       expect(email_foi).to be_valid
       email_foi.message = nil
@@ -239,11 +239,11 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe '#received_date' do
-    let(:case_received_yesterday)   { build_stubbed(:case, received_date: Date.yesterday.to_s) }
-    let(:case_received_long_ago)    { build_stubbed(:case, received_date: 370.days.ago) }
-    let(:case_received_today)       { build_stubbed(:case, received_date: Date.today.to_s) }
-    let(:case_received_tomorrow)    { build_stubbed(:case, received_date: (Date.today + 1.day).to_s) }
-    let(:old_offender_sar_case)     { build_stubbed(:offender_sar_case, received_date: 370.days.ago) }
+    let(:case_received_yesterday)   { build(:case, received_date: Date.yesterday.to_s) }
+    let(:case_received_long_ago)    { build(:case, received_date: 370.days.ago) }
+    let(:case_received_today)       { build(:case, received_date: Date.today.to_s) }
+    let(:case_received_tomorrow)    { build(:case, received_date: (Date.today + 1.day).to_s) }
+    let(:old_offender_sar_case)     { build(:offender_sar_case, received_date: 370.days.ago) }
 
     it 'can be received in the past' do
       expect(case_received_yesterday).to be_valid
@@ -568,10 +568,10 @@ RSpec.describe Case::Base, type: :model do
     end
 
     describe '#set_deadlines' do
-      let(:kase)                { build_stubbed :case }
+      let(:kase)                { build :case }
       let(:escalation_deadline) { Date.today - 1.day }
-      let(:internal_deadline) { Date.today - 2.day }
-      let(:external_deadline) { Date.today - 3.day }
+      let(:internal_deadline)   { Date.today - 2.day }
+      let(:external_deadline)   { Date.today - 3.day }
       let(:deadline_calculator) do
         double DeadlineCalculator::BusinessDays,
                escalation_deadline: escalation_deadline,
@@ -1395,7 +1395,7 @@ RSpec.describe Case::Base, type: :model do
   describe '#trigger_reindexing' do
     context 'creating a new record' do
 
-      let(:kase)  { build_stubbed :case }
+      let(:kase)  { build :case }
 
       it 'sets the dirty flag' do
         expect(kase).not_to be_dirty

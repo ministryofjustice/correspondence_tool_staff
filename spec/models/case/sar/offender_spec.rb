@@ -515,7 +515,7 @@ describe Case::SAR::Offender do
   end
 
   describe '#reassign_gov_uk_dates' do
-    let(:kase) { build_stubbed :offender_sar_case }
+    let(:kase) { build :offender_sar_case }
 
     it 'only re-assigns Gov UK date fields that are unchanged' do
       original_dob = kase.date_of_birth
@@ -555,7 +555,7 @@ describe Case::SAR::Offender do
   end
 
   describe '#page_count' do
-    let(:kase) { build_stubbed :offender_sar_case }
+    let(:kase) { build :offender_sar_case }
 
     it 'no data request' do
       expect(kase.page_count).to eq 0
@@ -587,7 +587,7 @@ describe Case::SAR::Offender do
   end
 
   describe '#data_requests_completed' do
-    let(:kase) { build_stubbed :offender_sar_case }
+    let(:kase) { build :offender_sar_case }
 
     it 'no data request' do
       expect(kase.data_requests_completed?).to eq false
@@ -649,7 +649,7 @@ describe Case::SAR::Offender do
   describe '#ensure_third_party_states_consistent' do
     context 'when a case is saved with third_party and third_party_recipient' do
       let(:offender_sar_case) do
-        build_stubbed(:offender_sar_case, :third_party,
+        build(:offender_sar_case, :third_party,
           recipient: 'third_party_recipient' # would fail validation
         )
       end
