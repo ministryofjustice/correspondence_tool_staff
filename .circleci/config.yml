@@ -114,6 +114,10 @@ references:
         # fallback to using the latest cache if no exact match is found
         - correspondence-tool-staff-
 
+  store_artifact: &store_artifact
+    store_artifacts:
+      path: /tmp/parallel_runtime_rspec.log
+
   install_dependencies: &install_dependencies
     run:
       name: Install dependencies
@@ -154,8 +158,6 @@ references:
         bundle exec rails parallel:create
         bundle exec rails parallel:load_structure
         bundle exec rails parallel:spec
-    store_artifacts:
-      path: /tmp/parallel_runtime_rspec.log
 
   upload_test_coverage: &upload_test_coverage
     run:
@@ -246,7 +248,9 @@ jobs:
       - *update_chromedriver
       - *setup_test_reporter
       - *run_unit_and_feature_tests
+      - *store_artifact
       - *upload_test_coverage
+
 
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
