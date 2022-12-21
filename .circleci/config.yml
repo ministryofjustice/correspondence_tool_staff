@@ -38,7 +38,7 @@ references:
       name: Install psql client
       command: |
          sudo apt update && sudo apt install postgresql-client
-
+  
   update_chromedriver: &update_chromedriver
     run:
       name: Update chrome and the chromedriver
@@ -153,7 +153,7 @@ references:
         export COVERAGE=1
         bundle exec rails parallel:create
         bundle exec rails parallel:load_structure
-        bundle exec rails parallel:spec --group-by runtime
+        bundle exec rails parallel:spec
 
   upload_test_coverage: &upload_test_coverage
     run:
