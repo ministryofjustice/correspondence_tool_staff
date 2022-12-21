@@ -154,7 +154,14 @@ module Warehouse
           end
 
           GC.start # Clear up allocated objects
-          sleep(10) if throttle
+
+          if throttle
+            if Rails.env.test?
+              sleep(1)
+            else
+              sleep(10)
+            end
+          end
         end
 
         count

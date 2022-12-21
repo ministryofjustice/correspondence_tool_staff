@@ -138,14 +138,14 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       expect(described_class.process_cases(Case::Base.all, throttle: false)).to eq 3
     end
 
-    it 'throttles the processing by 10 seconds' do
+    it 'throttles the processing' do
       started = Time.now
       create :foi_case
       expect(Case::Base.all.size).to eq 1 # Ensure just 1 batch is processed
       described_class.process_cases(Case::Base.all, throttle: true)
       time_taken = (Time.now.to_f - started.to_f).to_f
 
-      expect(time_taken).to be >= 10.0 # seconds to wait before next batch
+      expect(time_taken).to be >= 1 # seconds to wait before next batch
     end
   end
 
