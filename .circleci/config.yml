@@ -114,10 +114,6 @@ references:
         # fallback to using the latest cache if no exact match is found
         - correspondence-tool-staff-
 
-  store_artifact: &store_artifact
-    store_artifacts:
-      path: parallel_runtime_rspec.log
-
   install_dependencies: &install_dependencies
     run:
       name: Install dependencies
@@ -248,7 +244,6 @@ jobs:
       - *update_chromedriver
       - *setup_test_reporter
       - *run_unit_and_feature_tests
-      - *store_artifact
       - *upload_test_coverage
 
 
