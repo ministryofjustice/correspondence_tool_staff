@@ -116,7 +116,7 @@ references:
 
   store_artifact: &store_artifact
     store_artifacts:
-      path: /tmp/parallel_runtime_rspec.log
+      path: parallel_runtime_rspec.log
 
   install_dependencies: &install_dependencies
     run:
