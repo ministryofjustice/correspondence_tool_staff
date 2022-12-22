@@ -225,6 +225,8 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
+                remove_response:
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
               awaiting_dispatch:
                  add_message_to_case:
