@@ -1517,7 +1517,6 @@ describe 'state machine' do
                  [:responder, :trig_draft_foi_accepted],
                  [:responder, :trig_awdis_foi],
                  [:responder, :full_draft_foi],
-                 [:responder, :full_awdis_foi],
                  [:another_responder_in_same_team, :std_draft_foi],
                  [:another_responder_in_same_team, :std_draft_foi_in_escalation_period],
                  [:another_responder_in_same_team, :std_awdis_foi],
@@ -1525,7 +1524,6 @@ describe 'state machine' do
                  [:another_responder_in_same_team, :trig_draft_foi_accepted],
                  [:another_responder_in_same_team, :trig_awdis_foi],
                  [:another_responder_in_same_team, :full_draft_foi],
-                 [:another_responder_in_same_team, :full_awdis_foi],
                )}
     end
 
