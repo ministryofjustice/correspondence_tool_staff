@@ -1510,11 +1510,21 @@ describe 'state machine' do
     describe :remove_response do
       it {
         should permit_event_to_be_triggered_only_by(
+                 [:responder, :std_draft_foi],
+                 [:responder, :std_draft_foi_in_escalation_period],
                  [:responder, :std_awdis_foi],
+                 [:responder, :trig_draft_foi],
+                 [:responder, :trig_draft_foi_accepted],
                  [:responder, :trig_awdis_foi],
+                 [:responder, :full_draft_foi],
                  [:responder, :full_awdis_foi],
+                 [:another_responder_in_same_team, :std_draft_foi],
+                 [:another_responder_in_same_team, :std_draft_foi_in_escalation_period],
                  [:another_responder_in_same_team, :std_awdis_foi],
+                 [:another_responder_in_same_team, :trig_draft_foi],
+                 [:another_responder_in_same_team, :trig_draft_foi_accepted],
                  [:another_responder_in_same_team, :trig_awdis_foi],
+                 [:another_responder_in_same_team, :full_draft_foi],
                  [:another_responder_in_same_team, :full_awdis_foi],
                )}
     end
