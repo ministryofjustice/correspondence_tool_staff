@@ -275,7 +275,7 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 remove_response:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_approved?
                   transition_to_using: Workflows::Conditionals#remove_response_next_state
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -373,7 +373,7 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                  remove_linked_case:
                  remove_response:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_approved?
                    transition_to_using: Workflows::Conditionals#remove_response_next_state
                  respond:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?

@@ -304,7 +304,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
                 remove_response:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_approved?
                   transition_to_using: Workflows::Conditionals#remove_response_next_state
                 respond:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
