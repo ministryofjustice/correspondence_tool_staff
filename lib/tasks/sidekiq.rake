@@ -21,5 +21,15 @@ namespace :sidekiq do
     end
 
   end
+
+  desc 'Clear sidekiq processed and failed queues to save memory'
+  task :clearQueues => :environment do
+
+    require 'sidekiq/api'
+
+    Sidekiq::Stats.new.reset
+    Sidekiq::DeadSet.new.clear
+
+  end
 end
 

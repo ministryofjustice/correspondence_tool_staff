@@ -1,0 +1,32 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: clear-sidekiq-queues
+spec:
+  schedule: "0 5 * * 1"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: jobs
+            image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
+            imagePullPolicy: IfNotPresent
+            command:
+              - sh
+              - "-c"
+              - "bundle exec rake sidekiq:clearQueues"
+            env:
+              - name: REDIS_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: track-a-query-elasticache-redis-output
+                    key: url
+              - name: REDIS_AUTH_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: track-a-query-elasticache-redis-output
+                    key: auth_token
