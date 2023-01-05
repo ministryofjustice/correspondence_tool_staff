@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe Case::ICO::FOIDecorator do
-  let(:ico_foi_case) { build :ico_foi_case }
+  let(:ico_foi_case) { build_stubbed :ico_foi_case }
 
   it 'instantiates the correct decorator' do
     expect(Case::ICO::FOI.new.decorate).to be_instance_of Case::ICO::FOIDecorator

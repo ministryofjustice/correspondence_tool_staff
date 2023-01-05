@@ -35,7 +35,7 @@ describe Case::SAR::Standard do
   context 'validates that SAR-specific fields are not blank' do
     it 'is not valid' do
 
-      kase = build :sar_case, subject_full_name: nil, subject_type: nil, third_party: nil
+      kase = build_stubbed :sar_case, subject_full_name: nil, subject_type: nil, third_party: nil
 
       expect(kase).not_to be_valid
       expect(kase.errors[:subject_full_name]).to eq(["cannot be blank"])
@@ -51,25 +51,25 @@ describe Case::SAR::Standard do
   describe '#request_method' do
     context 'valid values' do
       it 'does not error' do
-        expect(build(:sar_case, request_method: 'verbal')).to be_valid
-        expect(build(:sar_case, request_method: 'post')).to be_valid
-        expect(build(:sar_case, request_method: 'email')).to be_valid
-        expect(build(:sar_case, request_method: 'web_portal')).to be_valid
-        expect(build(:sar_case, request_method: 'unknown')).to be_valid
+        expect(build_stubbed(:sar_case, request_method: 'verbal')).to be_valid
+        expect(build_stubbed(:sar_case, request_method: 'post')).to be_valid
+        expect(build_stubbed(:sar_case, request_method: 'email')).to be_valid
+        expect(build_stubbed(:sar_case, request_method: 'web_portal')).to be_valid
+        expect(build_stubbed(:sar_case, request_method: 'unknown')).to be_valid
       end
     end
 
     context 'invalid value' do
       it 'errors' do
         expect {
-          build(:sar_case, request_method: 'plumber')
+          build_stubbed(:sar_case, request_method: 'plumber')
         }.to raise_error ArgumentError
       end
     end
 
     context 'nil' do
       it 'errors' do
-        kase = build(:sar_case, request_method: nil)
+        kase = build_stubbed(:sar_case, request_method: nil)
         expect(kase).not_to be_valid
         expect(kase.errors[:request_method]).to eq ["cannot be blank"]
       end
@@ -79,23 +79,23 @@ describe Case::SAR::Standard do
   describe '#subject_type' do
     context 'valid values' do
       it 'does not error' do
-        expect(build(:sar_case, subject_type: 'offender')).to be_valid
-        expect(build(:sar_case, subject_type: 'staff')).to be_valid
-        expect(build(:sar_case, subject_type: 'member_of_the_public')).to be_valid
+        expect(build_stubbed(:sar_case, subject_type: 'offender')).to be_valid
+        expect(build_stubbed(:sar_case, subject_type: 'staff')).to be_valid
+        expect(build_stubbed(:sar_case, subject_type: 'member_of_the_public')).to be_valid
       end
     end
 
     context 'invalid value' do
       it 'errors' do
         expect {
-          build(:sar_case, subject_type: 'plumber')
+          build_stubbed(:sar_case, subject_type: 'plumber')
         }.to raise_error ArgumentError
       end
     end
 
     context 'nil' do
       it 'errors' do
-        kase = build(:sar_case, subject_type: nil)
+        kase = build_stubbed(:sar_case, subject_type: nil)
         expect(kase).not_to be_valid
         expect(kase.errors[:subject_type]).to eq ["cannot be blank"]
       end
@@ -109,7 +109,7 @@ describe Case::SAR::Standard do
 
   describe '#email' do
     it 'validates presence of email when reply is to be sent by email' do
-      kase = build :sar_case, reply_method: :send_by_email, email: ''
+      kase = build_stubbed :sar_case, reply_method: :send_by_email, email: ''
       expect(kase).not_to be_valid
       expect(kase.errors[:email]).to eq ["cannot be blank"]
     end
@@ -117,7 +117,7 @@ describe Case::SAR::Standard do
 
   describe '#postal_address' do
     it 'validates presence of postal address when reply is to be sent by post' do
-      kase = build :sar_case, reply_method: :send_by_post, postal_address: ''
+      kase = build_stubbed :sar_case, reply_method: :send_by_post, postal_address: ''
       expect(kase).not_to be_valid
       expect(kase.errors[:postal_address]).to eq ["cannot be blank"]
     end
@@ -126,26 +126,26 @@ describe Case::SAR::Standard do
   describe 'third party details' do
     describe '#name' do
       it 'validates presence of name when third party is true' do
-        kase = build :sar_case, third_party: true, name: ''
+        kase = build_stubbed :sar_case, third_party: true, name: ''
         expect(kase).not_to be_valid
         expect(kase.errors[:name]).to eq ["cannot be blank"]
       end
 
       it 'does not validates presence of name when third party is false' do
-        kase = build :sar_case, third_party: false, name: ''
+        kase = build_stubbed :sar_case, third_party: false, name: ''
         expect(kase).to be_valid
       end
     end
 
     describe 'third party relationship' do
       it 'must be persent when thrid party is true' do
-        kase = build :sar_case, third_party: true, third_party_relationship: ''
+        kase = build_stubbed :sar_case, third_party: true, third_party_relationship: ''
         expect(kase).not_to be_valid
         expect(kase.errors[:third_party_relationship]).to eq ["cannot be blank"]
       end
 
       it 'does not validates presence of third party relationship when third party is false' do
-        kase = build :sar_case, third_party: false, third_party_relationship: ''
+        kase = build_stubbed :sar_case, third_party: false, third_party_relationship: ''
         expect(kase).to be_valid
       end
     end
@@ -153,7 +153,7 @@ describe Case::SAR::Standard do
 
   describe '#message' do
     it 'validates presence if uploaded_request_files is missing on create' do
-      kase = build :sar_case, uploaded_request_files: [], message: ''
+      kase = build_stubbed :sar_case, uploaded_request_files: [], message: ''
       expect(kase).not_to be_valid
       expect(kase.errors[:message])
         .to eq ["cannot be blank if no request files attached"]
@@ -188,7 +188,7 @@ describe Case::SAR::Standard do
 
   describe '#within_escalation_deadline?' do
     it 'returns false' do
-      sar = build(:sar_case)
+      sar = build_stubbed(:sar_case)
       expect(sar.within_escalation_deadline?).to be_falsey
     end
   end
@@ -202,7 +202,7 @@ describe Case::SAR::Standard do
     end
 
     it 'does validates presence if message is present' do
-      kase = build :sar_case,
+      kase = build_stubbed :sar_case,
                    uploaded_request_files: [],
                    message: 'A message'
       expect(kase).to be_valid

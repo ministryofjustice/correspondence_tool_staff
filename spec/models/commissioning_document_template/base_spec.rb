@@ -9,8 +9,8 @@ module CommissioningDocumentTemplate
 end
 
 RSpec.describe CommissioningDocumentTemplate::TestClass do
-  let(:kase) { build(:offender_sar_case) }
-  let(:data_request) { build(:data_request, offender_sar_case: kase) }
+  let(:kase) { build_stubbed(:offender_sar_case) }
+  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }
   subject { described_class.new(data_request: data_request) }
 
   describe 'deadlines' do

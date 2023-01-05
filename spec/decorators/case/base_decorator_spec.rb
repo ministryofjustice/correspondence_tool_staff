@@ -456,7 +456,7 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe '#closed_case_name' do
-    let(:offender_sar_case) { build(:offender_sar_case, subject: 'The case subject') }
+    let(:offender_sar_case) { build_stubbed(:offender_sar_case, subject: 'The case subject') }
 
     context 'when name' do
       context 'is not empty' do

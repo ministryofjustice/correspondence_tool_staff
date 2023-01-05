@@ -16,9 +16,9 @@ module PageObjects
           element :third_party_name, '#offender_sar_third_party_name'
           element :third_party_company_name, '#offender_sar_third_party_company_name'
           element :postal_address, '#offender_sar_postal_address'
-        
+
           def fill_in_case_details(params={})
-            kase = FactoryBot.build :offender_sar_case, params
+            kase = FactoryBot.build_stubbed :offender_sar_case, params
 
             if kase.third_party?
               choose('offender_sar_recipient_third_party_recipient', visible: false)
