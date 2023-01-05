@@ -17,7 +17,7 @@ module PageObjects
           element :submit_button, '.button'
 
           def fill_in_case_details(params={})
-            kase = FactoryBot.build :offender_sar_complaint, params
+            kase = FactoryBot.build_stubbed :offender_sar_complaint, params
 
             full_request.set kase.message
           end

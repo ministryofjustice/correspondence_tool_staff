@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe DeadlineCalculator::BusinessDays do
   context 'FOI requests' do
-    let(:foi_case) { build :foi_case,
+    let(:foi_case) { build_stubbed :foi_case,
                            received_date: Date.today,
                            created_at: Date.today
     }

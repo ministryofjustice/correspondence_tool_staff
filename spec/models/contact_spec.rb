@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Contact, type: :model do
-    let(:contact) { build(:contact) }
+    let(:contact) { build_stubbed(:contact) }
 
-    let(:contact_2) { build(:contact,
+    let(:contact_2) { build_stubbed(:contact,
                              name: 'HMP halifax',
                              address_line_1: '123 test road',
                              address_line_2: 'little heath',
@@ -11,7 +11,7 @@ RSpec.describe Contact, type: :model do
                              county: 'Mercia',
                              postcode: 'FE2 9JK')}
 
-    let(:contact_3) { build(:contact,
+    let(:contact_3) { build_stubbed(:contact,
                              name: 'HMP halifax',
                              address_line_1: '123 test road',
                              postcode: 'FE2 9JK',

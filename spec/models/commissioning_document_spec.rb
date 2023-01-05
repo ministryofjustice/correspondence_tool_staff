@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CommissioningDocument, type: :model do
   let(:offender_sar_case) { create(:offender_sar_case, subject_full_name: 'Robert Badson').decorate }
-  let(:data_request) { FactoryBot.build(:data_request, offender_sar_case: offender_sar_case) }
+  let(:data_request) { build_stubbed(:data_request, offender_sar_case: offender_sar_case) }
   let(:template_type) { :prison }
   subject { described_class.new(data_request: data_request) }
 

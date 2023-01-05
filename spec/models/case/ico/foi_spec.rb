@@ -59,8 +59,8 @@ describe Case::ICO::FOI do
 
     it 'returns correct number of days late for open case' do
       Timecop.freeze(Time.new(2020, 9, 11, 9, 45, 33)) do
-        tase = build :require_further_action_ico_foi_case, 
-                      created_at: Time.new(2020, 8, 1, 9, 45, 00), 
+        tase = build_stubbed :require_further_action_ico_foi_case,
+                      created_at: Time.new(2020, 8, 1, 9, 45, 00),
                       received_date: Time.new(2020, 8, 1, 9, 45, 33)
         tase.original_external_deadline = Time.new(2020, 9, 4, 9, 00, 33)
         expect(tase.num_days_late_against_original_deadline).to eq 5
