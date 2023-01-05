@@ -85,16 +85,6 @@ references:
         command: ¬
           rm PRIVATE_GPG_KEY.asc
 
-  decrypt_secrets: &decrypt_secrets
-    run:
-      name: Decrypt secrets file
-      command: |
-        gpgconf --kill gpg-agent
-        gpg-agent --daemon --allow-preset-passphrase
-        /usr/libexec/gpg-preset-passphrase --preset --passphrase $GPG_PASSPHRASE $GPG_KEY_KEYGRIP_ID
-        expect -c "spawn gpg --edit-key $GPG_KEY_ID trust quit; send \"5\ry\r\"; expect eof"
-        git-crypt unlock
-
   install_bundler: &install_bundler
     run:
       name: Install bundler
@@ -288,7 +278,6 @@ jobs:
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
-      - *decrypt_secrets
       - *deploy_to_dev
       - slack/notify:
           color: '#1d990c'
@@ -308,7 +297,6 @@ jobs:
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
-      - *decrypt_secrets
       - *deploy_to_staging
       - slack/notify:
           color: '#1d990c'
@@ -328,7 +316,6 @@ jobs:
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
-      - *decrypt_secrets
       - *deploy_to_qa
       - slack/notify:
           color: '#1d990c'
@@ -348,7 +335,6 @@ jobs:
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
-      - *decrypt_secrets
       - *deploy_to_demo
       - slack/notify:
           color: '#1d990c'
@@ -368,7 +354,6 @@ jobs:
       - *install_expect
       - *create_gpg_key_file
       - *configure_gpg
-      - *decrypt_secrets
       - *deploy_to_production
       - slack/notify:
           color: '#1d990c'
