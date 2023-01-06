@@ -67,24 +67,6 @@ references:
           --no-progress \
           expect
 
-  create_gpg_key_file: &create_gpg_key_file
-    run:
-      name: Create GPG Key file from Environment variable
-      command: |
-        echo -e ${GPG_PRIVATE_KEY} > PRIVATE_GPG_KEY.asc
-
-  configure_gpg: &configure_gpg
-    run:
-      name: Configure GPG
-      command: |
-        gpg --import --batch --allow-secret-key-import PRIVATE_GPG_KEY.asc
-
-  delete_gpg_key_file: &delete_gpg_key_file
-    run:
-        name: Delete GPG Key file after import
-        command: ¬
-          rm PRIVATE_GPG_KEY.asc
-
   install_bundler: &install_bundler
     run:
       name: Install bundler
@@ -276,8 +258,6 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
       - *deploy_to_dev
       - slack/notify:
           color: '#1d990c'
@@ -295,8 +275,6 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
       - *deploy_to_staging
       - slack/notify:
           color: '#1d990c'
@@ -314,8 +292,6 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
       - *deploy_to_qa
       - slack/notify:
           color: '#1d990c'
@@ -333,8 +309,6 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
       - *deploy_to_demo
       - slack/notify:
           color: '#1d990c'
@@ -352,8 +326,6 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - *install_expect
-      - *create_gpg_key_file
-      - *configure_gpg
       - *deploy_to_production
       - slack/notify:
           color: '#1d990c'
