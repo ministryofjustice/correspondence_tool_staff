@@ -222,7 +222,7 @@ describe Case::SAR::Standard do
                     subject: 'subject B'
     end
 
-    xit 'saves all values in the versions object hash' do
+    it 'saves all values in the versions object hash' do
       version_hash = YAML.load(@kase.versions.last.object)
       expect(version_hash['email']).to eq 'aa@moj.com'
       expect(version_hash['received_date']).to eq Date.today
@@ -283,7 +283,7 @@ describe Case::SAR::Standard do
   end
 
   describe 'deadline' do
-    subject             { create :sar_case }
+    subject { freeze_time { create :sar_case } }
 
     describe '#deadline_extended' do
       it 'is false by default' do
@@ -300,7 +300,7 @@ describe Case::SAR::Standard do
       end
 
       it 'is false when already extended equal or beyond satutory limit' do
-        sar = create :approved_sar
+        sar = freeze_time { create :approved_sar }
         sar.external_deadline = subject.max_allowed_deadline_date
 
         expect(sar.deadline_extendable?).to eq false
