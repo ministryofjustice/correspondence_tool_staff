@@ -272,7 +272,7 @@ describe Case::SAR::InternalReview do
   end
 
   describe 'deadline' do
-    subject             { create :sar_internal_review }
+    subject { freeze_time { create :sar_internal_review } }
 
     describe '#deadline_extended' do
       it 'is false by default' do
@@ -289,7 +289,7 @@ describe Case::SAR::InternalReview do
       end
 
       it 'is false when already extended equal or beyond satutory limit' do
-        sar = create :approved_sar
+        sar = freeze_time { create :approved_sar }
         sar.external_deadline = subject.max_allowed_deadline_date
 
         expect(sar.deadline_extendable?).to eq false
