@@ -211,7 +211,6 @@ class User < ApplicationRecord
     types = all_possible_user_correspondence_types
 
     types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
-    types.delete(CorrespondenceType.offender_sar) unless FeatureSet.offender_sars.enabled?
     types.delete(CorrespondenceType.sar_internal_review) unless FeatureSet.sar_internal_review.enabled?
     types << CorrespondenceType.overturned_foi if types.include?(CorrespondenceType.foi)
     types << CorrespondenceType.overturned_sar if types.include?(CorrespondenceType.sar)
