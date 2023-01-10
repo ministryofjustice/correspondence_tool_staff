@@ -49,7 +49,7 @@ class GlobalNavManager
 
   def pages_for_user(pages)
     pages.map do |page_name, page_settings|
-      unless page_name == :rrd_pending && FeatureSet.branston_retention_scheduling.disabled?
+      unless page_name == :rrd_pending
         Page.new(name: page_name, parent: self, attrs: page_settings)
       end
     end.compact.select(&:visible?)
