@@ -210,12 +210,6 @@ class Workflows::Predicates
   end
 
   def overturned_enabled?(kase)
-    if kase.original_case.sar?
-      FeatureSet.overturned_sars.enabled?
-    elsif kase.original_case.foi?
-      FeatureSet.overturned_fois.enabled?
-    else
-      false
-    end
+    kase.original_case.sar? || kase.original_case.foi?
   end
 end

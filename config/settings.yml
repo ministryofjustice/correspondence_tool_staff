@@ -250,20 +250,6 @@ enabled_features:
     Host-staging: false
     Host-qa: true
     Host-prod: false
-  overturned_sars:
-    Local: true
-    Host-dev: true
-    Host-demo: true
-    Host-staging: true
-    Host-qa: true
-    Host-prod: true
-  overturned_fois:
-    Local: true
-    Host-dev: true
-    Host-demo: true
-    Host-staging: true
-    Host-qa: true
-    Host-prod: true
   overturned_trigger_fois:
     Local: true
     Host-dev: true
