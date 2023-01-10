@@ -1,6 +1,6 @@
 class Case::OverturnedICO::FOIPolicy < Case::FOI::StandardPolicy
   def new?
-    FeatureSet.ico.enabled? && @user.manager?
+    @user.manager?
   end
 
   # this method only needs to exist here until such time as we have
