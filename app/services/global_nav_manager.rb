@@ -49,9 +49,7 @@ class GlobalNavManager
 
   def pages_for_user(pages)
     pages.map do |page_name, page_settings|
-      unless page_name == :rrd_pending
-        Page.new(name: page_name, parent: self, attrs: page_settings)
-      end
+      Page.new(name: page_name, parent: self, attrs: page_settings)
     end.compact.select(&:visible?)
   end
 end
