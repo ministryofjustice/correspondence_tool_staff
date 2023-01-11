@@ -1,13 +1,18 @@
-.form-group
+- has_error = kase.errors[:outcome_reasons].present?
+- id = has_error ? 'error_case_sar_internal_review_outcome_reasons' : nil
+div class=(has_error ? 'form-group form-group-error' : 'form-group') id=id
   fieldset
     legend
       span.form-label-bold
         = heading
+      - if has_error
+        span.error-message
+          = kase.errors.full_messages_for(:outcome_reasons).first
       span.form-hint
         = hint
 
     = collection_check_boxes(:sar_internal_review, :outcome_reason_ids, outcome_reasons, :id, :name) do |b|
       - check_box_id = "sar_internal_review_#{b.object.abbreviation}"
       - content_tag :div, class: "multiple-choice" do
-          - b.check_box(checked: b.object.id.in?(kase.outcome_reason_ids), id: check_box_id) \
-              + b.label(for: "sar_internal_review_outcome_reason_ids_#{b.object.id}") 
+        - b.check_box(checked: b.object.id.in?(kase.outcome_reason_ids), id: check_box_id) \
+          + b.label(for: "sar_internal_review_outcome_reason_ids_#{b.object.id}")
