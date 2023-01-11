@@ -15,11 +15,11 @@ class Cases::LettersController < ApplicationController
     respond_to do |format|
       format.html
       format.docx do
-        template_data = {          
-          values: @letter.values, 
+        template_data = {
+          values: @letter.values,
           recipient: @letter.name,
-          'html:body': @letter.body, 
-          letter_date: @letter.letter_date, 
+          'html:body': @letter.body,
+          letter_date: @letter.letter_date,
           requester_reference: @letter.values.requester_reference,
           'html:letter_address': @letter.letter_address
         }
@@ -35,7 +35,7 @@ class Cases::LettersController < ApplicationController
 
   def check_template_selected
     unless params.dig(:letter, :letter_template_id)
-      flash[:notice] = 'Please select a template.'
+      flash[:alert] = 'Please select a template.'
       redirect_to new_case_letters_path(@case.id, @type) and return
     end
   end

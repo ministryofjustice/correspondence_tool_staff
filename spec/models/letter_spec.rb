@@ -40,7 +40,7 @@ RSpec.describe Letter, type: :model do
       end
 
       context 'when third party is requester' do
-        let(:kase) { build(:offender_sar_case, :third_party, third_party_name: "Bob") }
+        let(:kase) { build_stubbed(:offender_sar_case, :third_party, third_party_name: "Bob") }
         it 'returns the third_party name' do
           letter = Letter.new(letter_template.id, kase)
           expect(letter.name).to eq kase.requester_name
@@ -61,7 +61,7 @@ RSpec.describe Letter, type: :model do
       end
 
       context 'when third party is recipient' do
-        let(:kase) { build(:offender_sar_case, :third_party, third_party_name: "Bob") }
+        let(:kase) { build_stubbed(:offender_sar_case, :third_party, third_party_name: "Bob") }
 
         it 'returns the third_party name' do
           letter = Letter.new(letter_template.id, kase)
@@ -83,7 +83,7 @@ RSpec.describe Letter, type: :model do
       end
 
       context 'when third party is requester' do
-        let(:kase) { build(:offender_sar_case, :third_party, postal_address: "33 High Street") }
+        let(:kase) { build_stubbed(:offender_sar_case, :third_party, postal_address: "33 High Street") }
         it 'returns the third_party address' do
           letter = Letter.new(letter_template.id, kase)
           expect(letter.address).to eq kase.requester_address
@@ -104,7 +104,7 @@ RSpec.describe Letter, type: :model do
       end
 
       context 'when third party is recipient' do
-        let(:kase) { build(:offender_sar_case, :third_party, postal_address: "33 High Street") }
+        let(:kase) { build_stubbed(:offender_sar_case, :third_party, postal_address: "33 High Street") }
 
         it 'returns the third_party address' do
           letter = Letter.new(letter_template.id, kase)
@@ -117,7 +117,7 @@ RSpec.describe Letter, type: :model do
 
   describe '#company_name' do
     context 'when no company_name is present' do
-     let(:kase) { build(:offender_sar_case) }
+     let(:kase) { build_stubbed(:offender_sar_case) }
       it 'returns nil' do
         letter = Letter.new(letter_template.id, kase)
         expect(letter.company_name).to be_nil
@@ -125,7 +125,7 @@ RSpec.describe Letter, type: :model do
     end
 
     context 'when company_name is blank' do
-     let(:kase) { build(:offender_sar_case, :third_party, third_party_company_name: '') }
+     let(:kase) { build_stubbed(:offender_sar_case, :third_party, third_party_company_name: '') }
       it 'returns nil' do
         letter = Letter.new(letter_template.id, kase)
         expect(letter.company_name).to be_nil
@@ -133,7 +133,7 @@ RSpec.describe Letter, type: :model do
     end
 
     context 'when company_name is present' do
-     let(:kase) { build(:offender_sar_case, :third_party, third_party_company_name: 'Wibble') }
+     let(:kase) { build_stubbed(:offender_sar_case, :third_party, third_party_company_name: 'Wibble') }
       it 'returns the company name' do
         letter = Letter.new(letter_template.id, kase)
         expect(letter.company_name).to eq "Wibble"
@@ -142,7 +142,7 @@ RSpec.describe Letter, type: :model do
   end
 
   describe '#format_address' do
-    let(:kase_two) { create(:offender_sar_case, name: 'Waylon Smithers', 
+    let(:kase_two) { create(:offender_sar_case, name: 'Waylon Smithers',
                         subject_address: '22 Sample Address, Test Lane, Testingington, TE57ST') }
 
     it 'formats address into new lines' do

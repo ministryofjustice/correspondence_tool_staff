@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CommissioningDocumentTemplate::Probation do
   let(:kase) do
-    FactoryBot.build(:offender_sar_case,
+    build_stubbed(:offender_sar_case,
       number: '20062007',
       subject_full_name: 'Robert Badson',
       date_of_birth: '2000-03-11',
@@ -11,7 +11,7 @@ RSpec.describe CommissioningDocumentTemplate::Probation do
       case_reference_number: 'EF45678',
     )
   end
-  let(:data_request) { FactoryBot.build(:data_request, offender_sar_case: kase) }
+  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }
   subject { described_class.new(data_request: data_request) }
 
   describe '#path' do

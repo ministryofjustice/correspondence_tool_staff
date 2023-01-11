@@ -45,7 +45,7 @@ module PageObjects
           end
 
           def fill_in_case_details(params={})
-            kase = FactoryBot.build :sar_case, params
+            kase = FactoryBot.build_stubbed :sar_case, params
 
             subject_full_name.set kase.subject_full_name
             choose_subject_type kase.subject_type
