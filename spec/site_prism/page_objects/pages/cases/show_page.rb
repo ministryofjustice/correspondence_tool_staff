@@ -72,7 +72,7 @@ module PageObjects
 
         sections :case_attachments,
                 PageObjects::Sections::Cases::CaseAttachmentSection,
-                '.case-attachments-group'
+                '.case-attachments .case-attachments-group'
 
         section :what_do_you_want_to_do,
                 PageObjects::Sections::Cases::WhatDoYouWantToDoSection,
