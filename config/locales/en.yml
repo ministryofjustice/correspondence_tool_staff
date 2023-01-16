@@ -613,6 +613,8 @@ en:
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
+      contact:
+        data_request_emails: Add multiple email addresses on separate lines
       data_request:
         location: Where is the data held?
       data_request_log:
@@ -690,22 +692,27 @@ en:
           probation_records: Probation records
           probation_archive: Probation archive
           other: Other
+          cross_borders: Cross Borders
+          cat_a: CAT A
+          ndelius: Ndelius
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
         cached_num_pages: Number of pages received
         completed: "Yes, all data received"
+        date_completed: Date completed
       data_request_log:
         num_pages: Number of pages
       commissioning_document:
         template_name:
-          prison: Prison records
-          security: Security records
-          probation: Probation records
-          cctv: CCTV, BWCF, telephone recordings, etc
+          cat_a: CAT A
+          cctv: CCTV & BWCF
+          cross_border: Cross Borders
           mappa: MAPPA
           pdp: PDP
-          cat_a: CAT A
-          cross_border: Cross Border
+          prison: Prison records
+          probation: Probation records
+          security: Security records
+          telephone: Telephone recordings
       types:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness

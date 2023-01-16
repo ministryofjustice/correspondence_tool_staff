@@ -7,6 +7,7 @@ module CommissioningDocumentTemplate
     def context
       super.merge(
         aliases: kase.subject_aliases,
+        date_range: data_request.request_dates.capitalize,
         deadline: deadline(5),
       )
     end

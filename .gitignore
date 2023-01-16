@@ -60,6 +60,7 @@ node_modules
 !public/robots.txt
 !lib/assets/kilo_map.csv
 !spec/fixtures/*.xlsx
+!tmp/parallel_runtime_rspec.log
 
 # Generated documentation.
 doc

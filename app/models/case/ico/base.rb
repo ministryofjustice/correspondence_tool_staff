@@ -46,7 +46,7 @@ class Case::ICO::Base < Case::Base
                  ico_decision: :string,
                  ico_decision_comment: :string,
                  late_team_id: :integer,
-                 date_draft_compliant: :date, 
+                 date_draft_compliant: :date,
                  original_internal_deadline: :date,
                  original_external_deadline: :date,
                  original_date_responded: :date
@@ -183,7 +183,7 @@ class Case::ICO::Base < Case::Base
   def external_deadline_within_limits?
     if original_external_deadline.present?
       validate_external_deadline_after_further_action?
-    else 
+    else
       validate_external_deadline_before_further_action?
     end
   end
@@ -202,7 +202,7 @@ class Case::ICO::Base < Case::Base
         )
       end
     end
-  end 
+  end
 
   def validate_external_deadline_after_further_action?
     if external_deadline.present? && internal_deadline > external_deadline
@@ -258,7 +258,7 @@ class Case::ICO::Base < Case::Base
     # For ICOs deadlines are manually set and don't need to be automatically
     # calculated. So this method called by a before_update hook in Case::Base
     # becomes a nop.
-    self.internal_deadline ||= @deadline_calculator.internal_deadline
+    nil
   end
 
   def update_deadlines

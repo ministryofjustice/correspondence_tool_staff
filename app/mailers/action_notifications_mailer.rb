@@ -4,6 +4,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     SentryContextProvider.set_context
     @assignment = assignment
     kase = @assignment.case
+    return unless kase
 
     set_template(Settings.new_assignment_notify_template)
     set_personalisation(
@@ -45,7 +46,9 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
   def notify_information_officers(kase, type)
     SentryContextProvider.set_context
 
-    recipient = kase.assignments.responding.accepted.first.user
+    recipient = kase.assignments.responding.accepted.first&.user
+    return unless recipient
+
     find_template(type)
 
     set_personalisation(

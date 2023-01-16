@@ -8,7 +8,7 @@ feature 'offender sar complaint case creation by a manager', js: true do
   given(:complaint_subtype) { Case::SAR::OffenderComplaint.complaint_subtypes.keys().sample }
   given(:complaint_priority) { Case::SAR::OffenderComplaint.priorities.keys().sample }
   given(:default_params) { { complaint_type: complaint_type, complaint_subtype: complaint_subtype, priority: complaint_priority } }
-  given(:target_case) { build(:offender_sar_complaint, default_params).decorate }
+  given(:target_case) { build_stubbed(:offender_sar_complaint, default_params).decorate }
 
   background do
     find_or_create :team_branston
@@ -519,10 +519,10 @@ feature 'offender sar complaint case creation by a manager', js: true do
 
   def then_expect_no_third_party_info_stored(uniq_subject_full_name)
     kase = Case::SAR::OffenderComplaint.where("properties->>'subject_full_name' = ? ", uniq_subject_full_name).first
-    expect(kase.third_party).to eq false 
-    expect(kase.third_party_relationship).to eq "" 
-    expect(kase.third_party_company_name).to eq "" 
-    expect(kase.third_party_name).to eq "" 
+    expect(kase.third_party).to eq false
+    expect(kase.third_party_relationship).to eq ""
+    expect(kase.third_party_company_name).to eq ""
+    expect(kase.third_party_name).to eq ""
   end
 
 end

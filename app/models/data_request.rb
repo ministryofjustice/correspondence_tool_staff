@@ -31,6 +31,9 @@ class DataRequest < ApplicationRecord
     mappa: 'mappa',
     pdp: 'pdp',
     court: 'court',
+    cross_borders: 'cross_borders',
+    cat_a: 'cat_a',
+    ndelius: 'ndelius',
     other: 'other'
   }
 

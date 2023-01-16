@@ -18,7 +18,7 @@ describe 'cases/overturned_shared/_new.html.slim' do
   before(:all) do
     # Creating an Overturned FOI case fixture is slow because it has to create
     # the original cases, etc. Let's only do this once.
-    @overturned_foi = build(:overturned_ico_foi)
+    @overturned_foi = build_stubbed(:overturned_ico_foi)
   end
 
   after(:all) do

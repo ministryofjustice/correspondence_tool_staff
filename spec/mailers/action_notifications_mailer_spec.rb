@@ -99,6 +99,23 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
                    })
       end
     end
+
+    context 'deleted case' do
+      let(:assigned_case) do
+        create :assigned_case,
+          name: 'Fyodor Ognievich Ilichion',
+          received_date: 10.business_days.ago,
+          subject: 'The anatomy of man'
+      end
+      let!(:assignment) { assigned_case.responder_assignment }
+
+      it 'does not error' do
+        assigned_case.destroy!
+        expect {
+          described_class.new.new_assignment(assignment, responder.email)
+        }.not_to raise_error
+      end
+    end
   end
 
   describe 'ready_for_press_or_private_review' do
@@ -282,6 +299,21 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       end
     end
 
+    context 'no assigned user' do
+      let(:approved_case)   { create :approved_case,
+                                     name: 'Fyodor Ognievich Ilichion',
+                                     received_date: 10.business_days.ago,
+                                     subject: 'The anatomy of man' }
+      let(:assignment)      { approved_case.responder_assignment }
+
+      it "does not error" do
+        approved_case.responder_assignment.update(state: "pending")
+
+        expect {
+          described_class.new.notify_information_officers(approved_case, 'Ready to send')
+        }.not_to raise_error
+      end
+    end
   end
 
   describe 'notify_team' do

@@ -5,7 +5,7 @@ module CommissioningDocumentTemplate
     delegate :kase, to: :data_request
 
     def initialize(data_request:)
-      @data_request = data_request
+      @data_request = data_request.decorate
     end
 
     def path
@@ -32,8 +32,10 @@ module CommissioningDocumentTemplate
       date_format(Date.current)
     end
 
-    def deadline(count)
-      date_format(Date.current + count.days)
+    def deadline(days)
+      due = Date.current + days
+      due += 1 until due.workday?
+      date_format(due)
     end
 
     def date_format(date)

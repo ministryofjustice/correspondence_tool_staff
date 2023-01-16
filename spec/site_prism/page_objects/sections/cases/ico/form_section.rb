@@ -88,7 +88,7 @@ module PageObjects
           end
 
           def fill_in_case_details(params={})
-            kase = FactoryBot.build :ico_foi_case, params
+            kase = FactoryBot.build_stubbed :ico_foi_case, params
 
             set_received_date(kase.received_date)
             set_draft_deadline_date(kase.internal_deadline)

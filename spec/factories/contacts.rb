@@ -6,7 +6,6 @@ FactoryBot.define do
     town {}
     county {}
     postcode { 'FE2 9JK' }
-    email { "fake.email@test098.gov.uk" }
     contact_type { build(:category_reference) }
   end
 end

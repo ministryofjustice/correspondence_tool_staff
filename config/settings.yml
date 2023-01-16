@@ -350,7 +350,7 @@ enabled_features:
     Host-demo: true
     Host-staging: true
     Host-qa: true
-    Host-prod: false
+    Host-prod: true
 
 # Timing definitions for RetentionSchedule (GDPR / DPA)
 retention_timings:

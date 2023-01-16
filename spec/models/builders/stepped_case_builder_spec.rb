@@ -3,30 +3,27 @@ require 'rails_helper'
 module Builders
   describe SteppedCaseBuilder do
     let(:user)      { find_or_create(:sar_responder) }
-
     let(:sar_case) { create(:sar_case) }
-   
     let(:case_type) { Case::SAR::InternalReview }
-
     let(:step) { 'link-sar-case' }
-
     let(:last_step) { 'case-details' }
+    let(:received_data) { Date.current }
 
     let(:params) do
       params = ActionController::Parameters.new(
-        { 
+        {
           email: "asd@casd.com",
-          message: "Some case details", 
-          name: "Tom Jones", 
-          postal_address: "", 
-          received_date_dd: "15", 
-          received_date_mm: "12", 
-          received_date_yyyy: "2021", 
-          sar_ir_subtype: "timeliness", 
-          subject: "IR of 211208003 - This is a case", 
-          subject_type: "offender", 
-          third_party: "true", 
-          third_party_relationship: "Solicitor", 
+          message: "Some case details",
+          name: "Tom Jones",
+          postal_address: "",
+          received_date_dd: received_data.day.to_s,
+          received_date_mm: received_data.month.to_s,
+          received_date_yyyy: received_data.year.to_s,
+          sar_ir_subtype: "timeliness",
+          subject: "IR of 211208003 - This is a case",
+          subject_type: "offender",
+          third_party: "true",
+          third_party_relationship: "Solicitor",
           reply_method: "send_by_email"
         })
       params.permit!
@@ -34,7 +31,7 @@ module Builders
 
     let(:invalid_params) do
       params = ActionController::Parameters.new(
-        { 
+        {
           delivery_method: nil,
           email: "test@test.com",
           name: "Tom Jones",
@@ -50,9 +47,9 @@ module Builders
       params.permit!
     end
 
-    let(:session) do 
+    let(:session) do
       ActiveSupport::HashWithIndifferentAccess.new(
-        { 
+        {
           sar_internal_review_state: {
             flag_for_disclosure_specialists: "yes",
             original_case_number: "#{sar_case.number}",
@@ -72,7 +69,7 @@ module Builders
        })
     end
 
-    let(:builder_without_params) do 
+    let(:builder_without_params) do
       SteppedCaseBuilder.new(
         case_type: case_type,
         session: session,
@@ -81,7 +78,7 @@ module Builders
       )
     end
 
-    let(:builder_not_on_last_step) do 
+    let(:builder_not_on_last_step) do
       SteppedCaseBuilder.new(
         case_type: case_type,
         session: session,
@@ -91,7 +88,7 @@ module Builders
       )
     end
 
-    let(:invalid_builder_on_last_step) do 
+    let(:invalid_builder_on_last_step) do
       SteppedCaseBuilder.new(
         case_type: case_type,
         session: session,
@@ -101,7 +98,7 @@ module Builders
       )
     end
 
-    let(:valid_builder_on_last_step) do 
+    let(:valid_builder_on_last_step) do
       SteppedCaseBuilder.new(
         case_type: case_type,
         session: session,

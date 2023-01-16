@@ -152,7 +152,7 @@ describe Case::ICO::Base do
 
     it 'validates that the case can be associated as an original case' do
       linked_case = create(:ico_foi_case)
-      ico = build(:ico_foi_case, original_case: linked_case)
+      ico = build_stubbed(:ico_foi_case, original_case: linked_case)
       expect(ico).not_to be_valid
       expect(ico.errors[:original_case])
         .to eq ["cannot link a ICO Appeal - FOI case to a ICO Appeal - FOI as a original case"]
@@ -160,7 +160,7 @@ describe Case::ICO::Base do
 
     it "validates that a case isn't both original and related" do
       foi = create(:foi_case)
-      ico = build(:ico_foi_case, original_case: foi, related_cases: [foi])
+      ico = build_stubbed(:ico_foi_case, original_case: foi, related_cases: [foi])
       expect(ico).not_to be_valid
       expect(ico.errors[:linked_cases])
         .to eq ['already linked as the original case']
@@ -183,7 +183,7 @@ describe Case::ICO::Base do
   describe '#original_case_id' do
     it 'finds case and assigns to original_case' do
       foi = create(:foi_case)
-      ico = build(:ico_foi_case, original_case: nil)
+      ico = build_stubbed(:ico_foi_case, original_case: nil)
       ico.original_case_id = foi.id
       expect(ico).to be_valid
       expect(ico.original_case).to eq foi
