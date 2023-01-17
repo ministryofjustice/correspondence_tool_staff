@@ -1,0 +1,24 @@
+- content_for :page_title do
+  = t('page_title.sent_to_sscl', case_number: @case.number)
+
+= link_to "Back", case_path(@case.id), class: 'govuk-back-link'
+
+- content_for :heading, flush: true
+  = t('cases.offender_sar.sent_to_sscl_heading')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @case, url: confirm_sent_to_sscl_case_sar_offender_path(@case), as: :offender_sar do |f|
+
+  .form-group
+    = f.gov_uk_date_field :sent_to_sscl_at, { \
+        legend_text: t('cases.new.date_sent_to_sscl_legend'),
+        form_hint_text: t('helpers.hint.shared.date_example'),
+        today_button: { class: '' } \
+      }
+
+  = f.submit 'Continue', class: 'button'
+

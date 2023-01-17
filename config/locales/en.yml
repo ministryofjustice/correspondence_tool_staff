@@ -108,6 +108,8 @@ en:
               blank: must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
+            sent_to_sscl_at:
+              not_in_future: "cannot be in the future."
 
         case/foi/standard:
           attributes: &foi_attr
@@ -446,6 +448,7 @@ en:
       can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
       can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
       can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
+      can_mark_as_sent_to_sscl?: You are not authorised to mark the this case as sent to SSCL.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.
@@ -1085,6 +1088,7 @@ en:
         time_taken_result:
           one: "%{count} calendar day"
           other: "%{count} calendar days"
+      sent_to_sscl:
       status: Status
       subject_address: Location
       subject_aliases: Alias
@@ -1357,6 +1361,7 @@ en:
       complaint_request_dated_legend: What is the date on the complaint?
       date_sar_received_legend: When was the complaint received at MOJ?
       date_offender_sar_received_legend: When was the SAR received?
+      date_sent_to_sscl_legend: When was the SAR sent to SSCL?
       date_of_birth: "Date of birth"
       external_deadline: "Final deadline"
       internal_deadline: Draft deadline
@@ -1478,6 +1483,7 @@ en:
       further_actions_required_heading: SSCL managing case
       flag_choice_yes: "Yes"
       flag_choice_no: "No"
+      sent_to_sscl_heading: "SAR sent to SSCL"
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR

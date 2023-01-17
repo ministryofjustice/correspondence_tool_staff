@@ -6,14 +6,16 @@ module Cases
     before_action :set_case_types, only: [:new, :create]
 
     before_action -> { set_decorated_case(params[:id]) }, only: [
-      :transition, 
-      :edit, 
-      :update, 
-      :move_case_back, 
-      :confirm_move_case_back, 
+      :transition,
+      :edit,
+      :update,
+      :move_case_back,
+      :confirm_move_case_back,
       :record_reason_for_lateness,
       :confirm_record_reason_for_lateness,
-      :confirm_update_partial_flags
+      :confirm_update_partial_flags,
+      :sent_to_sscl,
+      :confirm_sent_to_sscl
     ]
 
     def initialize
@@ -39,7 +41,7 @@ module Cases
       @case.creator = current_user #to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
       load_optional_flags_from_params
-      if steps_are_completed? 
+      if steps_are_completed?
         if @case.valid_attributes?(create_params) && @case.valid?
           create_case
         else
@@ -103,8 +105,8 @@ module Cases
     def confirm_update_partial_flags
       authorize @case, :can_edit_case?
       service = CaseUpdatePartialFlagsService.new(
-        user: current_user, 
-        kase: @case, 
+        user: current_user,
+        kase: @case,
         flag_params: flags_process(partial_case_flags_params))
       service.call()
 
@@ -113,14 +115,14 @@ module Cases
           flash[:alert] = service.message
         end
         @case = @case.decorate
-        preserve_step_state    
+        preserve_step_state
         render "cases/edit" and return
       elsif service.result == :ok
         flash[:notice] = t('cases.update.case_partial_flag_updated')
       elsif service.result == :no_changes
         flash[:alert] = "No changes were made"
       end
-      redirect_to case_path(@case) and return 
+      redirect_to case_path(@case) and return
     end
 
     def edit
@@ -134,7 +136,7 @@ module Cases
     def move_case_back
       authorize @case, :can_move_case_back?
       render :move_case_back
-    end 
+    end
 
     def confirm_move_case_back
       authorize @case, :can_move_case_back?
@@ -151,7 +153,7 @@ module Cases
     def record_reason_for_lateness
       check_authorization
       render :record_reason_for_lateness
-    end 
+    end
 
     def confirm_record_reason_for_lateness
       check_authorization
@@ -159,22 +161,40 @@ module Cases
         validate_reason(record_reason_params)
         service = case_updater_service.new(current_user, @case, record_reason_params)
         service.call(get_extra_message_for_reason_for_lateness_field)
-    
+
         if service.result == :error
           if service.error_message.present?
             flash[:alert] = service.error_message
           end
           render :record_reason_for_lateness
-        end  
+        end
         if service.result == :ok
           flash[:notice] = t('cases.update.case_updated')
         elsif service.result == :no_changes
           flash[:alert] = "No changes were made"
         end
-        redirect_to case_path(@case) and return 
+        redirect_to case_path(@case) and return
       rescue InputValidationError => err
         flash.now[:alert] = err.message
         render :record_reason_for_lateness
+      end
+    end
+
+    def sent_to_sscl
+      authorize @case, :can_mark_as_sent_to_sscl?
+
+      if @case.sent_to_sscl_at.nil?
+        @case.sent_to_sscl_at = ''
+      end
+    end
+
+    def confirm_sent_to_sscl
+      authorize @case, :can_mark_as_sent_to_sscl?
+
+      if @case.update(update_params)
+        redirect_to case_path(@case) and return
+      else
+        render :sent_to_sscl
       end
     end
 
@@ -260,7 +280,7 @@ module Cases
 
     def params_for_move_case_back
       message = "(Reason: #{params[:extra_comment]})"
-      
+
       { acting_user: current_user, acting_team: @case.default_managing_team, message: message }
     end
 
@@ -331,9 +351,9 @@ module Cases
     def has_optional_flags?
       @creation_optional_flags.present? && @creation_optional_flags.values.all? {|x| x.present?}
     end
-  
+
     def back_link_url
-      if @case.get_previous_step       
+      if @case.get_previous_step
         "#{@case.case_route_path}/#{@case.get_previous_step}#{build_url_params_from_flags}"
       else
         new_case_path

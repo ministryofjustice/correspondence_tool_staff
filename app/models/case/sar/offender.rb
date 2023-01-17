@@ -41,6 +41,7 @@ class Case::SAR::Offender < Case::Base
     request_dated
     partial_case_letter_sent_dated
     received_date
+    sent_to_sscl_at
   ].freeze
 
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
@@ -60,6 +61,7 @@ class Case::SAR::Offender < Case::Base
                  request_dated: :date,
                  request_method: :string,
                  requester_reference: :string,
+                 sent_to_sscl_at: :date,
                  subject_aliases: :string,
                  subject_full_name: :string,
                  subject_type: :string,
@@ -144,6 +146,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_states_consistent
   validate :validate_partial_flags
   validate :validate_partial_case_letter_sent_dated
+  validate :validate_sent_to_sscl_at
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -250,6 +253,16 @@ class Case::SAR::Offender < Case::Base
       )
     end
     errors[:partial_case_letter_sent_dated].any?
+  end
+
+  def validate_sent_to_sscl_at
+    if sent_to_sscl_at.present? && self.sent_to_sscl_at > Date.today
+      errors.add(
+        :sent_to_sscl_at,
+        I18n.t('activerecord.errors.models.case.attributes.sent_to_sscl_at.not_in_future')
+      )
+    end
+    errors[:request_dated].any?
   end
 
   def default_managing_team
