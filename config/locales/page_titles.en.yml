@@ -87,7 +87,6 @@ en:
     add_request_attachment_page: Upload new files for this request
     move_case_back: Revert case back - %{case_number} - Track-a-query
     record_reason_for_lateness: Reason for lateness - %{case_number} - Track-a-query
-    sent_to_sscl: Sent to SSCL - %{case_number} - Track-a-query
     address_book: Organisation Address book - Track-a-query
     add_an_address: Add an address - Track-a-query
     edit_an_address: Edit an address - Track-a-query
