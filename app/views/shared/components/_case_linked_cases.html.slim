@@ -1,13 +1,7 @@
 - if @case.ico?
-  - if case_attachments_visible_for_case?
-    section.case-info
-      = render partial: 'cases/case_attachments', locals: { case_details: @case }
   section.case-info
     = render partial: 'cases/ico/show_linked_cases', locals: { case_details: @case }
 - elsif @case.overturned_ico?
-  - if case_attachments_visible_for_case?
-    section.case-info
-      = render partial: 'cases/case_attachments', locals: { case_details: @case.original_ico_appeal.decorate }
   section.case-info
     = render partial: 'cases/ico/show_linked_cases', locals: { case_details: @case.decorate }
 - else
