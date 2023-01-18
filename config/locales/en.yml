@@ -1482,7 +1482,7 @@ en:
       further_actions_required_heading: SSCL managing case
       flag_choice_yes: "Yes"
       flag_choice_no: "No"
-      sent_to_sscl_heading: "SAR sent to SSCL"
+      sent_to_sscl_heading: "Data sent to SSCL"
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
