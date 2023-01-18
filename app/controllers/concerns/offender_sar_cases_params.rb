@@ -22,7 +22,6 @@ module OffenderSARCasesParams
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :recipient,
       :requester_type,
-      :sent_to_sscl_at_dd, :sent_to_sscl_at_mm, :sent_to_sscl_at_yyyy,
       :subject,
       :subject_address,
       :subject_aliases,
@@ -66,6 +65,12 @@ module OffenderSARCasesParams
       :further_actions_required,
       :partial_case_letter_sent_dated_dd, :partial_case_letter_sent_dated_mm, :partial_case_letter_sent_dated_yyyy,
       )
+  end
+
+  def sent_to_sscl_params
+    params.require(:offender_sar).permit(
+      :sent_to_sscl_at_dd, :sent_to_sscl_at_mm, :sent_to_sscl_at_yyyy,
+    )
   end
 
   def respond_offender_sar_params

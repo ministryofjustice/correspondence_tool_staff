@@ -14,6 +14,7 @@ module Cases
       :record_reason_for_lateness,
       :confirm_record_reason_for_lateness,
       :confirm_update_partial_flags,
+      :confirm_sent_to_sscl
     ]
 
     def initialize
@@ -176,6 +177,31 @@ module Cases
         flash.now[:alert] = err.message
         render :record_reason_for_lateness
       end
+    end
+
+    def confirm_sent_to_sscl
+      authorize @case, :can_edit_case?
+      service = CaseUpdateSentToSsclService.new(
+        user: current_user,
+        kase: @case,
+        params: sent_to_sscl_params
+      )
+
+      service.call
+
+      if service.result == :error
+        if service.message.present?
+          flash[:alert] = service.message
+        end
+        @case = @case.decorate
+        preserve_step_state
+        render "cases/edit" and return
+      elsif service.result == :ok
+        flash[:notice] = t('cases.update.case_updated')
+      elsif service.result == :no_changes
+        flash[:alert] = "No changes were made"
+      end
+      redirect_to case_path(@case) and return
     end
 
     private

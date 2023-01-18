@@ -24,6 +24,7 @@ en:
     link_a_case: Case linked
     progress_for_clearance: Progress for clearance
     reassign_user: Reassign user
+    record_sent_to_sscl: Sent to SSCL for Vetting
     reject_responder_assignment: Rejected by Business unit
     remove_last_response: File removed
     remove_linked_case: Linked case removed
