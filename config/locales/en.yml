@@ -448,7 +448,6 @@ en:
       can_mark_as_partial_case?: You cannot mark the case as confirmed SSCL COVID-19 partial case.
       can_mark_as_further_actions_required?: You cannot mark the case as SSCL managing case.
       can_perform_retention_actions?: You are not authorised to edit the retention details of this case.
-      can_record_sent_to_sscl?: You are not authorised to mark the this case as sent to SSCL.
     case/sar/offender_complaint_policy:
       <<: *case_policy
       can_record_data_request?: You cannot edit data request once the case has been closed.

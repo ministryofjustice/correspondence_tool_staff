@@ -14,8 +14,6 @@ module Cases
       :record_reason_for_lateness,
       :confirm_record_reason_for_lateness,
       :confirm_update_partial_flags,
-      :record_sent_to_sscl,
-      :confirm_record_sent_to_sscl
     ]
 
     def initialize
@@ -177,25 +175,6 @@ module Cases
       rescue InputValidationError => err
         flash.now[:alert] = err.message
         render :record_reason_for_lateness
-      end
-    end
-
-    def record_sent_to_sscl
-      authorize @case, :can_record_sent_to_sscl?
-      apply_date_workaround
-    end
-
-    def confirm_record_sent_to_sscl
-      authorize @case, :can_record_sent_to_sscl?
-
-      @case.assign_attributes(update_params)
-
-      if @case.valid?
-        @case.save
-        flash[:notice] = t('cases.update.case_updated')
-        redirect_to case_path(@case) and return
-      else
-        render :record_sent_to_sscl
       end
     end
 

@@ -225,7 +225,7 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     when :record_sent_to_sscl
       return if @case.sent_to_sscl_at.present?
       link_to 'Sent to SSCL',
-              record_sent_to_sscl_case_sar_offender_path(@case),
+              edit_step_case_sar_offender_path(@case, "sent_to_sscl"),
               id: 'action--send-sent-to-sscl',
               class: 'button-secondary'
     when :preview_cover_page

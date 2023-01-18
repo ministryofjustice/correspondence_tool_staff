@@ -1,8 +1,3 @@
-- content_for :page_title do
-  = t('page_title.sent_to_sscl', case_number: @case.number)
-
-= link_to "Back", case_path(@case.id), class: 'govuk-back-link'
-
 - content_for :heading, flush: true
   = t('cases.offender_sar.sent_to_sscl_heading')
 
@@ -11,7 +6,7 @@
 = GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= form_for @case, url: confirm_record_sent_to_sscl_case_sar_offender_path(@case), as: :offender_sar do |f|
+= form_for @case, url: url, as: :offender_sar do |f|
 
   .form-group
     = f.gov_uk_date_field :sent_to_sscl_at, { \
@@ -19,6 +14,12 @@
         form_hint_text: t('helpers.hint.shared.date_example'),
         today_button: { class: '' } \
       }
+
+    - if @case.sent_to_sscl_at.present?
+      .div
+        = f.button 'Remove', class: 'button-secondary'
+
+  input name="current_step" type="hidden" value=@case.current_step
 
   = f.submit 'Continue', class: 'button'
 
