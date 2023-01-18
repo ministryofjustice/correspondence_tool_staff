@@ -4,13 +4,17 @@ describe CaseFilter::CaseUpdateSentToSsclService do
   let(:kase) { create :offender_sar_case, :closed }
   let(:user) { kase.responding_team.users.first }
   let(:team) { kase.responding_team }
-  let(:state_machine) { double ConfigurableStateMachine::Machine, record_sent_to_sscl!: true }
+  let(:state_machine) { double ConfigurableStateMachine::Machine, record_sent_to_sscl!: true, edit_case!: true }
   let(:params) { { sent_to_sscl_at: Date.current - 1.day } }
   let(:service) { CaseUpdateSentToSsclService.new(user: user, kase: kase, params: params) }
 
   before(:each) do
     allow(kase).to receive(:state_machine).and_return(state_machine)
     allow(state_machine).to receive(:record_sent_to_sscl!).with(
+      acting_user: user,
+      acting_team: team
+    )
+    allow(state_machine).to receive(:edit_case!).with(
       acting_user: user,
       acting_team: team
     )
@@ -65,6 +69,14 @@ describe CaseFilter::CaseUpdateSentToSsclService do
           acting_team: team
         )
         expect(service.result).to eq :ok
+      end
+
+      it "records a case updated event" do
+        service.call
+        expect(state_machine).to have_received(:edit_case!).with(
+          acting_user: user,
+          acting_team: team
+        )
       end
     end
   end
