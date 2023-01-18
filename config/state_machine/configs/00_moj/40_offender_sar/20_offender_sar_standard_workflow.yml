@@ -36,7 +36,7 @@
                 edit_case:
                 move_case_back:
                   transition_to: waiting_for_data
-                mark_as_sent_to_sscl:
+                record_sent_to_sscl:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               vetting_in_progress:
@@ -48,7 +48,7 @@
                 edit_case:
                 move_case_back:
                   transition_to: ready_for_vetting
-                mark_as_sent_to_sscl:
+                record_sent_to_sscl:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               ready_to_copy:
@@ -63,7 +63,7 @@
                   transition_to: vetting_in_progress
                 capture_reason_for_lateness:
                   if: Workflows::Predicates#already_late?
-                mark_as_sent_to_sscl:
+                record_sent_to_sscl:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               ready_to_dispatch:
@@ -76,7 +76,7 @@
                 edit_case:
                 move_case_back:
                   transition_to: ready_to_copy
-                mark_as_sent_to_sscl:
+                record_sent_to_sscl:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
               closed:
@@ -84,7 +84,7 @@
                 send_dispatch_letter:
                 preview_cover_page:
                 edit_case:
-                mark_as_sent_to_sscl:
+                record_sent_to_sscl:
                 start_complaint:
                   if: Workflows::Predicates#can_start_complaint?
                 mark_as_partial_case:

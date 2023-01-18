@@ -14,8 +14,8 @@ module Cases
       :record_reason_for_lateness,
       :confirm_record_reason_for_lateness,
       :confirm_update_partial_flags,
-      :sent_to_sscl,
-      :confirm_sent_to_sscl
+      :record_sent_to_sscl,
+      :confirm_record_sent_to_sscl
     ]
 
     def initialize
@@ -180,21 +180,22 @@ module Cases
       end
     end
 
-    def sent_to_sscl
-      authorize @case, :can_mark_as_sent_to_sscl?
-
-      if @case.sent_to_sscl_at.nil?
-        @case.sent_to_sscl_at = ''
-      end
+    def record_sent_to_sscl
+      authorize @case, :can_record_sent_to_sscl?
+      apply_date_workaround
     end
 
-    def confirm_sent_to_sscl
-      authorize @case, :can_mark_as_sent_to_sscl?
+    def confirm_record_sent_to_sscl
+      authorize @case, :can_record_sent_to_sscl?
 
-      if @case.update(update_params)
+      @case.assign_attributes(update_params)
+
+      if @case.valid?
+        @case.save
+        flash[:notice] = t('cases.update.case_updated')
         redirect_to case_path(@case) and return
       else
-        render :sent_to_sscl
+        render :record_sent_to_sscl
       end
     end
 
@@ -272,6 +273,7 @@ module Cases
       @case.external_deadline = @case.external_deadline
       @case.external_deadline = @case.external_deadline
       @case.partial_case_letter_sent_dated = @case.partial_case_letter_sent_dated
+      @case.sent_to_sscl_at = @case.sent_to_sscl_at
     end
 
     def params_for_transition

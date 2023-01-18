@@ -11,7 +11,7 @@
 = GovukElementsErrorsHelper.error_summary @case.object,
         "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-= form_for @case, url: confirm_sent_to_sscl_case_sar_offender_path(@case), as: :offender_sar do |f|
+= form_for @case, url: confirm_record_sent_to_sscl_case_sar_offender_path(@case), as: :offender_sar do |f|
 
   .form-group
     = f.gov_uk_date_field :sent_to_sscl_at, { \

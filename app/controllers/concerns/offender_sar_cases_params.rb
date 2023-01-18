@@ -22,7 +22,7 @@ module OffenderSARCasesParams
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :recipient,
       :requester_type,
-      :sent_to_sscl_at,
+      :sent_to_sscl_at_dd, :sent_to_sscl_at_mm, :sent_to_sscl_at_yyyy,
       :subject,
       :subject_address,
       :subject_aliases,

@@ -222,9 +222,10 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
               new_case_letters_path(@case.id, "dispatch"),
               id: 'action--send-dispatch-letter',
               class: 'button-secondary'
-    when :sent_to_sscl
+    when :record_sent_to_sscl
+      return if @case.sent_to_sscl_at.present?
       link_to 'Sent to SSCL',
-              sent_to_sscl_case_sar_offender_path(@case),
+              record_sent_to_sscl_case_sar_offender_path(@case),
               id: 'action--send-sent-to-sscl',
               class: 'button-secondary'
     when :preview_cover_page
