@@ -27,7 +27,7 @@ describe ConfigurableStateMachine::Machine do
           :preview_cover_page,
           :mark_as_vetting_in_progress,
           :move_case_back,
-          :record_sent_to_sscl
+          :record_sent_to_sscl,
           :date_sent_to_sscl_removed
         ]
       },
@@ -37,7 +37,7 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_ready_to_copy,
           :preview_cover_page,
           :move_case_back,
-          :record_sent_to_sscl
+          :record_sent_to_sscl,
           :date_sent_to_sscl_removed
         ]
       },
@@ -47,7 +47,7 @@ describe ConfigurableStateMachine::Machine do
           :preview_cover_page,
           :mark_as_ready_to_dispatch,
           :move_case_back,
-          :record_sent_to_sscl
+          :record_sent_to_sscl,
           :date_sent_to_sscl_removed
         ]
       },
@@ -58,7 +58,7 @@ describe ConfigurableStateMachine::Machine do
           :close,
           :send_dispatch_letter,
           :move_case_back,
-          :record_sent_to_sscl
+          :record_sent_to_sscl,
           :date_sent_to_sscl_removed
         ]
       },
@@ -77,7 +77,7 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_awaiting_response_for_partial_case,
           :annotate_retention_changes,
           :annotate_system_retention_changes,
-          :record_sent_to_sscl
+          :record_sent_to_sscl,
           :date_sent_to_sscl_removed
         ]
       },
