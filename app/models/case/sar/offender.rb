@@ -149,6 +149,7 @@ class Case::SAR::Offender < Case::Base
   validate :validate_partial_flags
   validate :validate_partial_case_letter_sent_dated
   validate :validate_sent_to_sscl_at
+  validate :validate_remove_sent_to_sscl_reason
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -271,7 +272,9 @@ class Case::SAR::Offender < Case::Base
         I18n.t('activerecord.errors.models.case.attributes.sent_to_sscl_at.not_allowed')
       )
     end
+  end
 
+  def validate_remove_sent_to_sscl_reason
     if sent_to_sscl_at.blank? && sent_to_sscl_at_was.present? && remove_sent_to_sscl_reason.blank?
       errors.add(
         :remove_sent_to_sscl_reason,
