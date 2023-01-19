@@ -15,7 +15,7 @@ class CaseClosureService
       @kase.close(@user)
       @flash_message = I18n.t('notices.case_closed')
       add_ico_decision_files if @kase.ico?
-      add_retention_schedule if FeatureSet.branston_retention_scheduling.enabled?
+      add_retention_schedule
       @result = :ok
     else
       @result = :error

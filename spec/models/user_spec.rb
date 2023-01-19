@@ -330,27 +330,6 @@ RSpec.describe User, type: :model do
       expect(manager.permitted_correspondence_types)
         .to match_array([foi, ico, sar, sar_internal_review, overturned_foi, overturned_sar])
     end
-
-    it 'does not include SAR if that feature is disabled' do
-      disable_feature(:sars)
-
-      expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, sar_internal_review, overturned_foi])
-    end
-
-    it 'does not include ICO if that feature is disabled' do
-      disable_feature(:ico)
-
-      expect(manager.permitted_correspondence_types)
-        .to match_array([foi, sar, sar_internal_review, overturned_foi, overturned_sar])
-    end
-
-    it 'does not include SAR Internal Review if that feature is disabled' do
-      disable_feature(:sar_internal_review)
-
-      expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, sar, overturned_foi, overturned_sar])
-    end
   end
 
   describe 'paper_trail versions', versioning: true do
