@@ -195,10 +195,6 @@ class Workflows::Predicates
     @kase.type == 'Case::SAR::Offender' && (still_in_time? || has_caught_reason_for_lateness?)
   end
 
-  def not_recorded_sent_to_sscl?
-    @kase.sent_to_sscl_at.nil?
-  end
-
   private
 
   def case_already_late?

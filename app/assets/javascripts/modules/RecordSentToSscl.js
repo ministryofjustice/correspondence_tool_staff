@@ -8,6 +8,10 @@ moj.Modules.RecordSentToSscl = {
   init: function () {
     var self = this;
 
+    self.initializeRemoveDateButton(self);
+  },
+
+  initializeRemoveDateButton: function(self) {
     self.$removeDateButton.click(function(e) {
       e.preventDefault();
       self.removeDate(self);
