@@ -234,7 +234,7 @@ GEM
     ffi (1.15.5)
     foreman (0.87.2)
     formatador (1.1.0)
-    globalid (1.0.0)
+    globalid (1.0.1)
       activesupport (>= 5.0)
     gov_uk_date_fields (3.2.0)
       rails (>= 5.2)
@@ -288,7 +288,7 @@ GEM
       domain_name (~> 0.5)
     humanize_boolean (0.0.2)
       i18n
-    i18n (1.11.0)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     i18n-tasks (1.0.10)
       activesupport (>= 4.0.2)
@@ -365,7 +365,7 @@ GEM
     mime-types-data (3.2022.0105)
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
-    minitest (5.16.2)
+    minitest (5.17.0)
     msgpack (1.5.1)
     multi_json (1.15.0)
     multi_xml (0.6.0)
@@ -612,7 +612,7 @@ GEM
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
-    tzinfo (2.0.4)
+    tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     tzinfo-data (1.2022.1)
       tzinfo (>= 1.0.0)
@@ -643,7 +643,7 @@ GEM
       nokogiri (~> 1.8)
     yard (0.9.27)
       webrick (~> 1.7.0)
-    zeitwerk (2.6.0)
+    zeitwerk (2.6.6)
 
 PLATFORMS
   ruby
