@@ -70,6 +70,7 @@ module OffenderSARCasesParams
   def sent_to_sscl_params
     params.require(:offender_sar).permit(
       :sent_to_sscl_at_dd, :sent_to_sscl_at_mm, :sent_to_sscl_at_yyyy,
+      :remove_sent_to_sscl_reason
     )
   end
 

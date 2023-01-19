@@ -15,6 +15,7 @@ en:
     assign_to_new_team: Assign to new team
     close: Case closed
     create: Case created
+    date_sent_to_sscl_removed: SSCL date sent removed
     destroy_case: Case deleted
     destroy: Destroyed
     edit_case: Case details edited

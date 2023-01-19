@@ -79,6 +79,8 @@ class Case::SAR::Offender < Case::Base
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
 
+  attr_accessor :remove_sent_to_sscl_reason
+
   enum subject_type: {
     offender: 'offender',
     ex_offender: 'ex_offender',
@@ -262,7 +264,20 @@ class Case::SAR::Offender < Case::Base
         I18n.t('activerecord.errors.models.case.attributes.sent_to_sscl_at.not_in_future')
       )
     end
-    errors[:request_dated].any?
+
+    if remove_sent_to_sscl_reason.present? && sent_to_sscl_at.present?
+      errors.add(
+        :sent_to_sscl_at,
+        I18n.t('activerecord.errors.models.case.attributes.sent_to_sscl_at.not_allowed')
+      )
+    end
+
+    if sent_to_sscl_at.blank? && sent_to_sscl_at_was.present? && remove_sent_to_sscl_reason.blank?
+      errors.add(
+        :remove_sent_to_sscl_reason,
+        I18n.t('activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank')
+      )
+    end
   end
 
   def default_managing_team

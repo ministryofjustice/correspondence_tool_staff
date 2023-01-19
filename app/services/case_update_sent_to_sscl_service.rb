@@ -10,13 +10,13 @@ class CaseUpdateSentToSsclService
   end
 
   def call
-    event = get_event
     ActiveRecord::Base.transaction do
       @case.assign_attributes(@params)
+      event = get_event
 
-      if has_changed?
+      if date_changed? || reason_added?
         @case.save!
-        trigger_event(event)
+        trigger_event(event, reason)
         @result = :ok
       else
         @result = :no_changes
@@ -29,15 +29,29 @@ class CaseUpdateSentToSsclService
 
   private
 
-  def get_event
-    @case.sent_to_sscl_at.present? ? 'edit_case' : 'record_sent_to_sscl'
+  def reason
+    if reason_added?
+      "(Reason: #{@case.remove_sent_to_sscl_reason})"
+    end
   end
 
-  def has_changed?
+  def get_event
+    if reason_added?
+      'date_sent_to_sscl_removed'
+    else
+      @case.sent_to_sscl_at_was.present? ? 'edit_case' : 'record_sent_to_sscl'
+    end
+  end
+
+  def date_changed?
     @case.changed_attributes.keys.include?('sent_to_sscl_at')
   end
 
-  def trigger_event(event)
-    @case.state_machine.send("#{event}!", acting_user: @user, acting_team: @case.managing_team)
+  def reason_added?
+    @case.remove_sent_to_sscl_reason.present?
+  end
+
+  def trigger_event(event, message=nil)
+    @case.state_machine.send("#{event}!", acting_user: @user, acting_team: @case.managing_team, message: message)
   end
 end
