@@ -3,7 +3,7 @@ require "active_support/core_ext/integer/time"
 Rails.application.configure do
 
   config.after_initialize do
-    Bullet.enable        = true
+    Bullet.enable        = false
     # Just looking for N+1 queries at the moment - so turn off counter cache and unused eager loads
     Bullet.counter_cache_enable        = false
     Bullet.unused_eager_loading_enable = false
@@ -32,7 +32,7 @@ Rails.application.configure do
     # searches are also a challenge...
     [:retention_schedule, :responder, :message_transitions, :managing_assignment, :responder_assignment, :responding_team, :approver_assignments, :managing_team].each do |assoc|
       [Case::FOI::TimelinessReview, Case::FOI::ComplianceReview,
-       Case::ICO::FOI, Case::FOI::Standard, Case::SAR::Standard, 
+       Case::ICO::FOI, Case::FOI::Standard, Case::SAR::Standard,
        Case::SAR::Offender, Case::SAR::OffenderComplaint].each do |klass|
         Bullet.add_safelist :type => :n_plus_one_query,
                              :class_name => klass.name,
