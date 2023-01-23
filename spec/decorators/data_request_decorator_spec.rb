@@ -34,4 +34,30 @@ describe DataRequestDecorator, type: :model do
       end
     end
   end
+
+  describe '#location' do
+    let(:data_request) { create(:data_request) }
+
+    context "without linked organisation" do
+      let(:decorated) { data_request.decorate }
+
+      it "uses location string" do
+        expect(decorated.location).to eq data_request.location
+      end
+    end
+
+    context "with linked organisation" do
+      let(:contact) { create(:contact) }
+      let(:decorated) { data_request.decorate }
+
+      before do
+        data_request.update_attribute(:contact, contact)
+      end
+
+      it "uses name of organisation" do
+        expect(decorated.location).to eq contact.name
+      end
+    end
+  end
+
 end
