@@ -137,7 +137,7 @@ describe ConfigurableStateMachine::Machine do
                   :edit_case,
                   :link_a_case,
                   :remove_linked_case,
-                  :send_back, 
+                  :send_back,
                   :unassign_from_user]
         end
       end
@@ -253,6 +253,7 @@ describe ConfigurableStateMachine::Machine do
                                                                           :link_a_case,
                                                                           :reassign_user,
                                                                           :remove_linked_case,
+                                                                          :remove_response,
                                                                           :upload_responses]
           end
         end
@@ -507,7 +508,7 @@ describe ConfigurableStateMachine::Machine do
           expect(k.state_machine.permitted_events(approver.id)).to eq [:add_message_to_case,
                                                                        :link_a_case,
                                                                        :reassign_user,
-                                                                       :remove_linked_case, 
+                                                                       :remove_linked_case,
                                                                        :send_back]
         end
       end

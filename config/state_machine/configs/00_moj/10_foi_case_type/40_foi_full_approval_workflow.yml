@@ -178,6 +178,8 @@
                 reassign_user:
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
+                remove_response:
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 take_on_for_approval:
                   if: Case::BasePolicy#can_take_on_for_approval?
                 unflag_for_clearance:               # needed for press/private office to unaccept
@@ -273,7 +275,7 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
                 remove_response:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_approved?
                   transition_to_using: Workflows::Conditionals#remove_response_next_state
                 unaccept_approver_assignment:
                   if: Case::BasePolicy#can_unaccept_approval_assignment?
@@ -325,6 +327,8 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
+                remove_response:
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 upload_responses:
 
               pending_dacu_clearance:
@@ -369,7 +373,7 @@
                   after_transition: Workflows::Hooks#reassign_user_email
                  remove_linked_case:
                  remove_response:
-                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_approved?
                    transition_to_using: Workflows::Conditionals#remove_response_next_state
                  respond:
                    if: Workflows::Predicates#responder_is_member_of_assigned_team?
