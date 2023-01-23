@@ -651,7 +651,8 @@ CREATE TABLE public.data_requests (
     request_type_note text DEFAULT ''::text NOT NULL,
     date_from date,
     date_to date,
-    completed boolean DEFAULT false NOT NULL
+    completed boolean DEFAULT false NOT NULL,
+    contact_id bigint
 );
 
 
@@ -1894,6 +1895,13 @@ CREATE INDEX index_data_requests_on_case_id_and_user_id ON public.data_requests 
 
 
 --
+-- Name: index_data_requests_on_contact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_requests_on_contact_id ON public.data_requests USING btree (contact_id);
+
+
+--
 -- Name: index_data_requests_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2131,6 +2139,14 @@ ALTER TABLE ONLY public.contacts
 
 
 --
+-- Name: data_requests fk_rails_e762904f02; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_requests
+    ADD CONSTRAINT fk_rails_e762904f02 FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
+
+
+--
 -- Name: data_request_logs fk_rails_fc711a84cc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2299,6 +2315,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220928103707'),
 ('20221205165722'),
 ('20221212155458'),
-('20221214144147');
+('20221214144147'),
+('20230123110812');
 
 

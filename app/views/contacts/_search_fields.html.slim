@@ -4,9 +4,9 @@ br
 form#contacts_search_form data-remote="true" action="/contacts_search" role="search"
   fieldset
     label.bold-small for="popup-search"
-      = t('common.contacts.address_search_label') 
+      = t('common.contacts.address_search_label')
     br
-    input#popup-search.form-control type="text" name="contacts_search_value" 
+    input#popup-search.form-control type="text" name="contacts_search_value"
     input#popup-search-button.button.button-no-margin type="submit" value="Search"
 
     hr
@@ -15,7 +15,7 @@ ul.report-list role="list"
   - if @contacts.any?
     - @contacts.each do |contact|
       li
-        h4.bold-small.contact-name
+        h4.bold-small.contact-name[id=contact.id]
           = contact.name
         pre.contact-address
           = contact.address

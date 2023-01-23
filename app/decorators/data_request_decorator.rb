@@ -17,6 +17,10 @@ class DataRequestDecorator < Draper::Decorator
     return ""
   end
 
+  def location
+    contact&.name || super
+  end
+
   private
 
   def date_format(date)
