@@ -53,6 +53,10 @@ class Workflows::Predicates
     responder_is_member_of_assigned_team? && not_overturned?
   end
 
+  def responder_is_member_of_assigned_team_and_not_approved?
+    responder_is_member_of_assigned_team? && not_approved?
+  end
+
   def user_is_assigned_responder?
     @kase.responder == @user
   end
@@ -143,6 +147,10 @@ class Workflows::Predicates
 
   def not_overturned?
     !@kase.overturned_ico?
+  end
+
+  def not_approved?
+    @kase.assignments.approving.approved.none?
   end
 
   def overturned_editing_enabled?
