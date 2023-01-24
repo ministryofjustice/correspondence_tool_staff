@@ -89,7 +89,6 @@ describe DataRequestDecorator, type: :model do
 
       context 'contact does not have data_request_name' do
         it 'uses name of organisation' do
-
           expect(decorated.data_request_name).to eq contact.name
         end
       end

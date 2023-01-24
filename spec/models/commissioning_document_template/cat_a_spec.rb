@@ -9,7 +9,7 @@ RSpec.describe CommissioningDocumentTemplate::CatA do
       prison_number: 'AB12345'
     )
   end
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }
+  let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase, location: 'HMP Brixton') }
   subject { described_class.new(data_request: data_request) }
 
   describe '#path' do
@@ -21,6 +21,7 @@ RSpec.describe CommissioningDocumentTemplate::CatA do
   describe '#context' do
     let(:expected_context) do
       {
+        addressee_location: 'HMP Brixton',
         dpa_reference: '20062007',
         offender_name: 'Robert Badson',
         date_of_birth: '11/03/2000',
