@@ -3,7 +3,7 @@ moj.Modules.RecordSentToSscl = {
   $dayField: $('#offender_sar_sent_to_sscl_at_dd'),
   $monthField: $('#offender_sar_sent_to_sscl_at_mm'),
   $yearField: $('#offender_sar_sent_to_sscl_at_yyyy'),
-  $reasonBlock: $('#remove-send-to-sscl-reason'),
+  $reasonBlock: $('#remove-sent-to-sscl-reason'),
 
   init: function () {
     var self = this;

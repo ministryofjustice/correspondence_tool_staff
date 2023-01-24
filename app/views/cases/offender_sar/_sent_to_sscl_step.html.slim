@@ -17,8 +17,8 @@
 
     - if @case.sent_to_sscl_at.present? || @case.sent_to_sscl_at_was.present?
       div
-        = f.button 'Remove date', class: 'button-secondary sent-to-sscl-remove-date'
-      div[class = "#{'hidden' if @case.remove_sent_to_sscl_reason.blank? && @case.sent_to_sscl_at.present?}", id = 'remove-send-to-sscl-reason']
+        = link_to 'Remove date', '', class: 'button-secondary sent-to-sscl-remove-date'
+      div[class = "#{'hidden' if @case.remove_sent_to_sscl_reason.blank? && @case.sent_to_sscl_at.present?}" id = 'remove-sent-to-sscl-reason']
         = f.text_field :remove_sent_to_sscl_reason
 
   input name = 'current_step' type = 'hidden' value = @case.current_step
