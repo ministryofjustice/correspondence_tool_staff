@@ -4,10 +4,10 @@
       = f.text_field :location,
           maxlength: 500,
           class: 'contact_input',
-          disabled: @data_request.contact.present?
+          disabled: true
 
       = f.hidden_field :contact_id, class: 'contact_id_input'
-      = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "prison,probation" }
+      = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "" }
 
       = f.radio_button_fieldset :request_type,
           choices: DataRequest::request_types.keys do |fieldset|
