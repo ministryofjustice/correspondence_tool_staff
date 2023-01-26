@@ -1,4 +1,4 @@
-def record_a_data_request_of_nomis_other(checked_case, request_values, contact)
+def record_a_data_request_of_nomis_other(checked_case, request_values)
   cases_show_page.load(id: checked_case.id)
   click_on 'Record data request'
 

@@ -21,7 +21,6 @@ feature 'Data Requests for an Offender SAR' do
       date_requested: Date.new(2020, 8, 15),
       date_from: Date.new(2018, 8, 15),
       date_to: Date.new(2019, 8, 15),
-
     }
 
     click_on 'Find an address'
@@ -31,7 +30,6 @@ feature 'Data Requests for an Offender SAR' do
     data_request_page.form.set_date_requested(request_values[:date_requested])
     data_request_page.form.set_date_from(request_values[:date_from])
     data_request_page.form.set_date_to(request_values[:date_to])
-
     click_on 'Continue'
 
     record = DataRequest.last
@@ -81,9 +79,9 @@ feature 'Data Requests for an Offender SAR' do
     click_on 'Record data request'
 
     # Note only filling in date fields, ommitting location field
-    data_request_page.form.set_date_requested(request_values[:date_requested])
-    data_request_page.form.set_date_from(request_values[:date_from])
-    data_request_page.form.set_date_to(request_values[:date_to])
+    data_request_page.form.set_date_requested(Date.new(2020, 8, 15))
+    data_request_page.form.set_date_from(Date.new(2020, 8, 15))
+    data_request_page.form.set_date_to(Date.new(2020, 8, 15))
     click_on 'Continue'
 
     expect(data_request_page).to be_displayed

@@ -641,7 +641,7 @@ CREATE TABLE public.data_requests (
     id integer NOT NULL,
     case_id integer NOT NULL,
     user_id integer NOT NULL,
-    location character varying NOT NULL,
+    location character varying,
     request_type public.request_types NOT NULL,
     date_requested date NOT NULL,
     cached_date_received date,
@@ -2316,6 +2316,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221205165722'),
 ('20221212155458'),
 ('20221214144147'),
-('20230123110812');
+('20230123110812'),
+('20230126140604');
 
 

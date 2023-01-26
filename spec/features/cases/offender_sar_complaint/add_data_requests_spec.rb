@@ -44,7 +44,7 @@ feature 'Data Requests for an Offender SAR complaint' do
     click_on 'Continue'
 
     record = DataRequest.last
-    expect(record.location).to eq contact.name
+    expect(record.contact_id).to eq contact.id
     expect(record.request_type).to eq 'all_prison_records'
     expect(record.request_type_note).to eq ''
     expect(record.date_from).to eq Date.new(2018, 8, 15)
@@ -90,9 +90,9 @@ feature 'Data Requests for an Offender SAR complaint' do
     click_on 'Record data request'
 
     # Note only filling in date fields, ommitting location field
-    data_request_page.form.set_date_requested(request_values[:date_requested])
-    data_request_page.form.set_date_from(request_values[:date_from])
-    data_request_page.form.set_date_to(request_values[:date_to])
+    data_request_page.form.set_date_requested(Date.new(2020, 8, 15))
+    data_request_page.form.set_date_from(Date.new(2020, 8, 15))
+    data_request_page.form.set_date_to(Date.new(2020, 8, 15))
     click_on 'Continue'
 
     expect(data_request_page).to be_displayed
