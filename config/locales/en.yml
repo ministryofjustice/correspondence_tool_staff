@@ -347,6 +347,8 @@ en:
               not_empty: should be blank if the request is not complete
             request_type:
               blank: cannot be blank
+            location:
+              blank: cannot be blank
         linked_case:
           missing: "does not exist"
           references_self: "cannot link to the same case"
