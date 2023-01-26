@@ -25,6 +25,7 @@ feature 'Data Requests for an Offender SAR' do
     }
 
     click_on 'Find an address'
+    binding.pry
     click_on "Use #{contact.name}"
 
     data_request_page.form.choose_request_type(request_values[:request_type])
@@ -80,9 +81,10 @@ feature 'Data Requests for an Offender SAR' do
     cases_show_page.load(id: offender_sar_case.id)
     click_on 'Record data request'
 
-    # Note only filling in Location field, ommitting corresponding Data field
-    click_on 'Find an address'
-    click_on "Use #{contact.name}"
+    # Note only filling in date fields, ommitting location field
+    data_request_page.form.set_date_requested(request_values[:date_requested])
+    data_request_page.form.set_date_from(request_values[:date_from])
+    data_request_page.form.set_date_to(request_values[:date_to])
     click_on 'Continue'
 
     expect(data_request_page).to be_displayed
@@ -101,7 +103,7 @@ feature 'Data Requests for an Offender SAR' do
 
   scenario 'record data request with data type of NOMIS other and notes', js: true do
     request_values = {
-      location: 'HMP testing',
+      location: contact.name,
       request_type: 'all_prison_records',
       request_type_note: 'Testing nomis-other note',
       date_requested: Date.new(2020, 8, 15),
