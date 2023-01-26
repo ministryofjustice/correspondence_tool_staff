@@ -25,7 +25,6 @@ feature 'Data Requests for an Offender SAR' do
     }
 
     click_on 'Find an address'
-    binding.pry
     click_on "Use #{contact.name}"
 
     data_request_page.form.choose_request_type(request_values[:request_type])

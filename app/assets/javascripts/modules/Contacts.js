@@ -69,7 +69,6 @@ moj.Modules.Contacts = {
 
             $address.val(formatted_address);
             $contact.val(name);
-            $contact.attr('disabled', 'disabled');
             $contactId.val(id);
 
             if(self.is_page_with_revealing_address_panel()){
