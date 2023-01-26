@@ -3,6 +3,7 @@ require 'rails_helper'
 feature 'Data Requests for an Offender SAR' do
   given(:manager) { find_or_create :branston_user }
   given(:offender_sar_case) { create(:offender_sar_case).decorate }
+  given!(:contact) { create(:contact) }
 
   background do
     login_as manager
@@ -14,7 +15,7 @@ feature 'Data Requests for an Offender SAR' do
     expect(data_request_page).to be_displayed
 
     request_values = {
-      location: 'HMP Leicester  ',
+      location: contact.name,
       request_type: 'all_prison_records',
       request_type_note: 'Lorem ipsum',
       date_requested: Date.new(2020, 8, 15),
@@ -23,7 +24,9 @@ feature 'Data Requests for an Offender SAR' do
 
     }
 
-    data_request_page.form.location.fill_in(with: request_values[:location])
+    click_on 'Find an address'
+    click_on "Use #{contact.name}"
+
     data_request_page.form.choose_request_type(request_values[:request_type])
     data_request_page.form.set_date_requested(request_values[:date_requested])
     data_request_page.form.set_date_from(request_values[:date_from])
@@ -32,7 +35,7 @@ feature 'Data Requests for an Offender SAR' do
     click_on 'Continue'
 
     record = DataRequest.last
-    expect(record.location).to eq 'HMP Leicester'
+    expect(record.contact_id).to eq contact.id
     expect(record.request_type).to eq 'all_prison_records'
     expect(record.request_type_note).to eq ''
     expect(record.date_from).to eq Date.new(2018, 8, 15)
@@ -50,7 +53,8 @@ feature 'Data Requests for an Offender SAR' do
     expect(row.pages).to have_text '0'
 
     click_on 'Record data request'
-    data_request_page.form.location.fill_in(with: request_values[:location])
+    click_on 'Find an address'
+    click_on "Use #{contact.name}"
     data_request_page.form.choose_request_type('other')
     data_request_page.form.request_type_note.fill_in(with: request_values[:request_type_note])
     data_request_page.form.set_date_requested(request_values[:date_requested])
@@ -58,7 +62,7 @@ feature 'Data Requests for an Offender SAR' do
 
     expect(cases_show_page).to be_displayed
     row = cases_show_page.data_requests.rows[1]
-    expect(row.location).to have_text 'HMP Leicester'
+    expect(row.location).to have_text contact.name
     expect(row.request_type).to have_text 'Other'
     expect(row.request_type).to have_text 'Lorem ipsum'
     expect(row.date_requested).to have_text '15 Aug 2020'
@@ -77,7 +81,8 @@ feature 'Data Requests for an Offender SAR' do
     click_on 'Record data request'
 
     # Note only filling in Location field, ommitting corresponding Data field
-    data_request_page.form.location.fill_in(with: 'HMP Brixton')
+    click_on 'Find an address'
+    click_on "Use #{contact.name}"
     click_on 'Continue'
 
     expect(data_request_page).to be_displayed
@@ -87,8 +92,6 @@ feature 'Data Requests for an Offender SAR' do
   scenario 'no data entry fails', js: true do
     cases_show_page.load(id: offender_sar_case.id)
     click_on 'Record data request'
-
-    data_request_page.form.location.fill_in(with: '    ')
 
     click_on 'Continue'
 
@@ -109,6 +112,4 @@ feature 'Data Requests for an Offender SAR' do
     record_a_data_request_of_nomis_other(offender_sar_case, request_values)
     validate_nomis_other_info(request_values)
   end
-
-
 end
