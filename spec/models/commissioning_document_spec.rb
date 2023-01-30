@@ -23,10 +23,10 @@ RSpec.describe CommissioningDocument, type: :model do
     end
 
     context 'invalid template value' do
-      before { subject.template_name = :invalid }
-
       it 'is not valid' do
-        expect(subject).to_not be_valid
+        expect {
+          subject.template_name = :invalid
+        }.to raise_error(ArgumentError)
       end
 
       it 'has one error' do

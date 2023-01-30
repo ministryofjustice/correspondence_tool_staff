@@ -119,6 +119,24 @@ CREATE TYPE public.team_roles AS ENUM (
 
 
 --
+-- Name: template_name; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.template_name AS ENUM (
+    'template_name',
+    'cat_a',
+    'cctv',
+    'cross_border',
+    'mappa',
+    'pdp',
+    'prison',
+    'probation',
+    'security',
+    'telephone'
+);
+
+
+--
 -- Name: user_role; Type: TYPE; Schema: public; Owner: -
 --
 
@@ -519,6 +537,39 @@ ALTER SEQUENCE public.category_references_id_seq OWNED BY public.category_refere
 
 
 --
+-- Name: commissioning_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.commissioning_documents (
+    id bigint NOT NULL,
+    data_request_id bigint,
+    template_name public.template_name,
+    sent boolean DEFAULT false,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: commissioning_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.commissioning_documents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: commissioning_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.commissioning_documents_id_seq OWNED BY public.commissioning_documents.id;
+
+
+--
 -- Name: contacts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -641,7 +692,7 @@ CREATE TABLE public.data_requests (
     id integer NOT NULL,
     case_id integer NOT NULL,
     user_id integer NOT NULL,
-    location character varying NOT NULL,
+    location character varying,
     request_type public.request_types NOT NULL,
     date_requested date NOT NULL,
     cached_date_received date,
@@ -651,7 +702,8 @@ CREATE TABLE public.data_requests (
     request_type_note text DEFAULT ''::text NOT NULL,
     date_from date,
     date_to date,
-    completed boolean DEFAULT false NOT NULL
+    completed boolean DEFAULT false NOT NULL,
+    contact_id bigint
 );
 
 
@@ -1330,6 +1382,13 @@ ALTER TABLE ONLY public.category_references ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: commissioning_documents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.commissioning_documents ALTER COLUMN id SET DEFAULT nextval('public.commissioning_documents_id_seq'::regclass);
+
+
+--
 -- Name: contacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1541,6 +1600,14 @@ ALTER TABLE ONLY public.cases_users_transitions_trackers
 
 ALTER TABLE ONLY public.category_references
     ADD CONSTRAINT category_references_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: commissioning_documents commissioning_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.commissioning_documents
+    ADD CONSTRAINT commissioning_documents_pkey PRIMARY KEY (id);
 
 
 --
@@ -1852,6 +1919,20 @@ CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON public.cases_u
 
 
 --
+-- Name: index_commissioning_documents_on_data_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_commissioning_documents_on_data_request_id ON public.commissioning_documents USING btree (data_request_id);
+
+
+--
+-- Name: index_commissioning_documents_on_template_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_commissioning_documents_on_template_name ON public.commissioning_documents USING btree (template_name);
+
+
+--
 -- Name: index_contacts_on_contact_type_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1891,6 +1972,13 @@ CREATE INDEX index_data_requests_on_case_id ON public.data_requests USING btree 
 --
 
 CREATE INDEX index_data_requests_on_case_id_and_user_id ON public.data_requests USING btree (case_id, user_id);
+
+
+--
+-- Name: index_data_requests_on_contact_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_data_requests_on_contact_id ON public.data_requests USING btree (contact_id);
 
 
 --
@@ -2131,6 +2219,14 @@ ALTER TABLE ONLY public.contacts
 
 
 --
+-- Name: data_requests fk_rails_e762904f02; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_requests
+    ADD CONSTRAINT fk_rails_e762904f02 FOREIGN KEY (contact_id) REFERENCES public.contacts(id);
+
+
+--
 -- Name: data_request_logs fk_rails_fc711a84cc; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -2299,6 +2395,9 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20220928103707'),
 ('20221205165722'),
 ('20221212155458'),
-('20221214144147');
+('20221214144147'),
+('20230123110812'),
+('20230126140604'),
+('20230127153614');
 
 

@@ -37,4 +37,75 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       expect(assigns(:data_request)).to eq data_request
     end
   end
+
+  describe '#create' do
+    context 'valid params' do
+      let(:params) do
+        {
+          case_id: data_request.case_id,
+          data_request_id: data_request.id,
+          commissioning_document: {
+            template_name: 'prison'
+          }
+        }
+      end
+
+      it 'creates a commissioning_document' do
+        expect {
+          post :create, params: params
+        }.to change {
+          CommissioningDocument.count
+        }.by 1
+      end
+
+      it 'redirects to data request page' do
+        post :create, params: params
+        expect(response).to redirect_to(case_data_request_path(offender_sar_case, data_request))
+      end
+    end
+
+    context 'invalid params' do
+      let(:params) do
+        {
+          case_id: data_request.case_id,
+          data_request_id: data_request.id,
+          commissioning_document: {
+            template_name: ''
+          }
+        }
+      end
+
+      it 'creates a commissioning_document' do
+        post :create, params: params
+        expect(response).to render_template(:new)
+      end
+    end
+  end
+
+  describe '#update' do
+    let(:commissioning_document) { create(:commissioning_document, data_request: data_request) }
+    let(:params) do
+      {
+        id: commissioning_document.id,
+        case_id: data_request.case_id,
+        data_request_id: data_request.id,
+        commissioning_document: {
+          template_name: 'probation'
+        }
+      }
+    end
+
+    it 'updates a commissioning_document' do
+      expect {
+        patch :update, params: params
+      }.to change {
+        commissioning_document.reload.template_name
+      }.to 'probation'
+    end
+
+    it 'redirects to data request page' do
+      patch :update, params: params
+      expect(response).to redirect_to(case_data_request_path(offender_sar_case, data_request))
+    end
+  end
 end

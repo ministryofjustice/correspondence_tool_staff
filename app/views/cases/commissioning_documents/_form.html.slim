@@ -1,0 +1,3 @@
+= f.hidden_field :template_name, value: ""
+= f.radio_button_fieldset :template_name, choices: CommissioningDocument::TEMPLATE_TYPES.keys
+= f.submit t('button.download_document'), class: 'button', data: { disable_with: false }

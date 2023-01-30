@@ -69,9 +69,27 @@ span.visually-hidden
         p.data_request_date_completed
           = l @data_request.cached_date_received, format: :default
     - if @case.editable?
-        = link_to t('cases.data_requests.show.edit_link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
+        = link_to t('.edit_link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
     hr
-    div.button-holder
-      = link_to t('button.select_document'), new_case_data_request_commissioning_document_path(@case, @data_request), class: 'button data_request_select_document', style: 'margin-top: -6px'
+    - if @commissioning_document.present?
+      h2.heading-medium
+        = t('.emails_header')
+      table
+        thead
+          th = t('.commissioning_documents.table_headings.request_document')
+          th = t('.commissioning_documents.table_headings.last_updated')
+          th = t('.commissioning_documents.table_headings.sent')
+          th = t('.commissioning_documents.table_headings.action')
+        tbody
+          td = @commissioning_document.request_document
+          td = @commissioning_document.updated_at
+          td = @commissioning_document.sent?
+          td = @commissioning_document.download_link
+      hr
+      div.button-holder
+        = link_to t('button.select_document'), edit_case_data_request_commissioning_document_path(@case, @data_request, @commissioning_document), class: 'button data_request_select_document', style: 'margin-top: -6px'
+    - else
+      div.button-holder
+        = link_to t('button.select_document'), new_case_data_request_commissioning_document_path(@case, @data_request), class: 'button data_request_select_document', style: 'margin-top: -6px'
 
 

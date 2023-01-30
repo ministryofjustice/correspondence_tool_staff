@@ -510,7 +510,7 @@ en:
     delete: Delete
     update_partial_flags: Update partial case
     select_document: Select Day 1 request document
-    download_document: Download Day 1 request document
+    download_document: Generate Day 1 request document
 
   helpers:
     fieldset:
@@ -1516,6 +1516,7 @@ en:
         heading: View data request
         link: View
         edit_link: Edit data request
+        emails_header: Commissioning emails
       edit:
         heading: Edit data request
         link: Edit
@@ -1542,6 +1543,14 @@ en:
     commissioning_documents:
       new:
         heading: Select Day 1 request document
+      edit:
+        heading: Select Day 1 request document
+      table_headings:
+        request_document: Request document
+        last_updated: Last updated
+        sent: Sent
+        action: Action
+
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness
