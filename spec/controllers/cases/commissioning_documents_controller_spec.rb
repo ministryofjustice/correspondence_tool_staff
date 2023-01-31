@@ -12,6 +12,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       cached_date_received: Date.yesterday
     )
   end
+  let(:commissioning_document) { create(:commissioning_document, data_request: data_request) }
 
   let(:params) do
     {
@@ -83,7 +84,6 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
   end
 
   describe '#update' do
-    let(:commissioning_document) { create(:commissioning_document, data_request: data_request) }
     let(:params) do
       {
         id: commissioning_document.id,
@@ -106,6 +106,21 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
     it 'redirects to data request page' do
       patch :update, params: params
       expect(response).to redirect_to(case_data_request_path(offender_sar_case, data_request))
+    end
+  end
+
+  describe "#download" do
+    let(:params) do
+      {
+        id: commissioning_document.id,
+        case_id: data_request.case_id,
+        data_request_id: data_request.id,
+      }
+    end
+
+    it "downloads the commissioning document" do
+      get :download, params: params
+      expect(response.headers['Content-Disposition']).to match(/filename=\".*docx\"/)
     end
   end
 end
