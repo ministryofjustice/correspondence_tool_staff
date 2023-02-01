@@ -86,7 +86,7 @@ spec:
             failureThreshold: 3
       initContainers:
         - name: pending-migrations
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
           command: 
             - rake
             - db:abort_if_pending_migrations
