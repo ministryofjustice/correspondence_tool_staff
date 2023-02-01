@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: jobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
           command: ["./config/docker/entrypoint-background-jobs.sh"]
           resources:
             limits:
@@ -77,20 +77,24 @@ spec:
                 - /bin/sh
                 - -c
                 - 'sidekiqmon | grep "track-a-query-jobs"'
-            initialDelaySeconds: 40
-            periodSeconds: 60
+            initialDelaySeconds: 30
+            periodSeconds: 90
             timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
           livenessProbe:
             exec:
               command:
                 - /bin/sh
                 - -c
                 - 'sidekiqmon | grep "track-a-query-jobs"'
-            initialDelaySeconds: 40
-            periodSeconds: 60
+            initialDelaySeconds: 30
+            periodSeconds: 90
             timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
         - name: anonjobs
-          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
           command: ["./config/docker/entrypoint-anonymizer-jobs.sh"]
           resources:
             limits:
@@ -143,18 +147,22 @@ spec:
                 - /bin/sh
                 - -c
                 - 'sidekiqmon | grep "track-a-query-jobs"'
-            initialDelaySeconds: 40
-            periodSeconds: 60
+            initialDelaySeconds: 30
+            periodSeconds: 90
             timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
           livenessProbe:
             exec:
               command:
                 - /bin/sh
                 - -c
                 - 'sidekiqmon | grep "track-a-query-jobs"'
-            initialDelaySeconds: 40
-            periodSeconds: 60
+            initialDelaySeconds: 30
+            periodSeconds: 90
             timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
       initContainers:
         - name: pending-migrations
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:latest
