@@ -259,13 +259,6 @@ class Case::SAR::Offender < Case::Base
   end
 
   def validate_sent_to_sscl_at
-    if sent_to_sscl_at.present? && self.sent_to_sscl_at > Date.today
-      errors.add(
-        :sent_to_sscl_at,
-        I18n.t('activerecord.errors.models.case.attributes.sent_to_sscl_at.not_in_future')
-      )
-    end
-
     if remove_sent_to_sscl_reason.present? && sent_to_sscl_at.present?
       errors.add(
         :sent_to_sscl_at,

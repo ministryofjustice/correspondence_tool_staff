@@ -61,7 +61,7 @@ describe CaseFilter::CaseUpdateSentToSsclService do
     end
 
     context 'invalid change made' do
-      let(:params) { { sent_to_sscl_at: Date.current + 100.years} }
+      let(:params) { { sent_to_sscl_at: "invalid"} }
 
       it 'does not record as sent to SSCL' do
         service.call

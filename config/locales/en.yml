@@ -109,7 +109,6 @@ en:
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
             sent_to_sscl_at:
-              not_in_future: "cannot be in the future."
               not_allowed: "not allowed if there is a removal reason"
             remove_sent_to_sscl_reason:
               blank: "cannot be blank if sent date is removed"
