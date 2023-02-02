@@ -37,7 +37,7 @@ module OffenderSARCasesParams
       :request_method,
       :requester_reference,
       uploaded_request_files: [],
-      )
+    )
   end
   #rubocop:enable Metrics/MethodLength
 
@@ -67,6 +67,13 @@ module OffenderSARCasesParams
       )
   end
 
+  def sent_to_sscl_params
+    params.require(:offender_sar).permit(
+      :sent_to_sscl_at_dd, :sent_to_sscl_at_mm, :sent_to_sscl_at_yyyy,
+      :remove_sent_to_sscl_reason
+    )
+  end
+
   def respond_offender_sar_params
     params.require(:offender_sar).permit(
       :date_responded_dd,
@@ -81,7 +88,7 @@ module OffenderSARCasesParams
       error_message = t('alerts.offender_sar.reason_for_lateness.blank')
     else
       reason = @reasons_for_lateness[reason_params["reason_for_lateness_id"].to_i]
-      if reason.present? 
+      if reason.present?
         if reason == "other" && reason_params["reason_for_lateness_note"].blank?
           error_message = t('alerts.offender_sar.reason_for_lateness.blank')
         end
