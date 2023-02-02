@@ -35,6 +35,9 @@ module Cases
       )
     end
 
+    def upload
+    end
+
     private
 
     def set_case
