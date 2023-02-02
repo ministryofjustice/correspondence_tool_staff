@@ -93,6 +93,7 @@ Rails.application.routes.draw do
       get '/record_reason_for_lateness', on: :member, to: 'offender_sar#record_reason_for_lateness', as: 'record_reason_for_lateness'
       patch '/record_reason_for_lateness', on: :member, to: 'offender_sar#confirm_record_reason_for_lateness', as: 'confirm_record_reason_for_lateness'
       patch '/confirm_update_partial_flags', on: :member, to: 'offender_sar#confirm_update_partial_flags', as: 'confirm_update_partial_flags'
+      patch '/confirm_sent_to_sscl', on: :member, to: 'offender_sar#confirm_sent_to_sscl', as: 'confirm_sent_to_sscl'
       member do
         patch '/transitions/:transition_name', to: 'offender_sar#transition', as: :transition
       end

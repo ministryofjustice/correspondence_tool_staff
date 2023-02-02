@@ -351,6 +351,41 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
 
   end
 
+  describe '#confirm_sent_to_sscl' do
+    let(:offender_sar_case) { create(:offender_sar_case).decorate }
+    let(:params) do
+      {
+        id: offender_sar_case.id,
+        offender_sar: {
+          sent_to_sscl_at_dd: '10',
+          sent_to_sscl_at_mm: '01',
+          sent_to_sscl_at_yyyy: '2023'
+        }
+      }
+    end
+    let(:service) { double(CaseUpdateSentToSsclService, call: nil, result: :ok, message: nil)}
+
+    before do
+      sign_in responder
+      allow(CaseUpdateSentToSsclService).to receive(:new).and_return(service)
+    end
+
+    context 'with valid params' do
+      before(:each) do
+        patch :confirm_sent_to_sscl, params: params
+        expect(assigns(:case)).to be_a Case::SAR::Offender
+      end
+
+      it 'sets the flash' do
+        expect(flash[:notice]).to eq 'Case updated'
+      end
+
+      it 'redirects to the new case assignment page' do
+        expect(response).to redirect_to(case_path(offender_sar_case))
+      end
+    end
+  end
+
   # Utility methods
 
   def third_party_validations_found(errors)

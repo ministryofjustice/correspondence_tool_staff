@@ -1,0 +1,27 @@
+- content_for :heading, flush: true
+  = t('cases.offender_sar.sent_to_sscl_heading')
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @case.object,
+        "#{pluralize(@case.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+= form_for @case, url: confirm_sent_to_sscl_case_sar_offender_path(@case), as: :offender_sar do |f|
+
+  .form-group
+    = f.gov_uk_date_field :sent_to_sscl_at, { \
+        legend_text: t('cases.new.date_sent_to_sscl_legend'),
+        form_hint_text: t('helpers.hint.shared.date_example'),
+        today_button: { class: '' } \
+      }
+
+    - if @case.sent_to_sscl_at.present? || @case.sent_to_sscl_at_was.present?
+      div
+        = link_to 'Remove date', '', class: 'button-secondary sent-to-sscl-remove-date'
+      div[class = "#{'hidden' if @case.remove_sent_to_sscl_reason.blank? && @case.sent_to_sscl_at.present?}" id = 'remove-sent-to-sscl-reason']
+        = f.text_field :remove_sent_to_sscl_reason
+
+  input name = 'current_step' type = 'hidden' value = @case.current_step
+
+  = f.submit 'Continue', class: 'button'
+

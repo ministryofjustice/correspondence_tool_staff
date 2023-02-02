@@ -7,7 +7,7 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :data_to_be_requested,
         specific_events: [
-          :preview_cover_page, 
+          :preview_cover_page,
           :mark_as_waiting_for_data,
           :send_acknowledgement_letter
         ]
@@ -15,7 +15,7 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :waiting_for_data,
         specific_events: [
-          :preview_cover_page, 
+          :preview_cover_page,
           :mark_as_ready_for_vetting,
           :send_acknowledgement_letter,
           :move_case_back
@@ -24,9 +24,11 @@ describe ConfigurableStateMachine::Machine do
       {
         state: :ready_for_vetting,
         specific_events: [
-          :preview_cover_page, 
+          :preview_cover_page,
           :mark_as_vetting_in_progress,
-          :move_case_back
+          :move_case_back,
+          :record_sent_to_sscl,
+          :date_sent_to_sscl_removed
         ]
       },
       {
@@ -34,30 +36,36 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :mark_as_ready_to_copy,
           :preview_cover_page,
-          :move_case_back
+          :move_case_back,
+          :record_sent_to_sscl,
+          :date_sent_to_sscl_removed
         ]
       },
       {
         state: :ready_to_copy,
         specific_events: [
-          :preview_cover_page, 
+          :preview_cover_page,
           :mark_as_ready_to_dispatch,
-          :move_case_back
+          :move_case_back,
+          :record_sent_to_sscl,
+          :date_sent_to_sscl_removed
         ]
       },
       {
         state: :ready_to_dispatch,
         specific_events: [
-          :preview_cover_page, 
+          :preview_cover_page,
           :close,
           :send_dispatch_letter,
-          :move_case_back
+          :move_case_back,
+          :record_sent_to_sscl,
+          :date_sent_to_sscl_removed
         ]
       },
       {
         state: :closed,
         full_events: [
-          :preview_cover_page, 
+          :preview_cover_page,
           :add_note_to_case,
           :edit_case,
           :send_dispatch_letter,
@@ -69,6 +77,8 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_awaiting_response_for_partial_case,
           :annotate_retention_changes,
           :annotate_system_retention_changes,
+          :record_sent_to_sscl,
+          :date_sent_to_sscl_removed
         ]
       },
     ].freeze
@@ -95,7 +105,7 @@ describe ConfigurableStateMachine::Machine do
           end
 
           it 'only allows permitted events' do
-            permitted_events = (transition[:full_events] || UNIVERSAL_EVENTS) + 
+            permitted_events = (transition[:full_events] || UNIVERSAL_EVENTS) +
                                 (transition[:specific_events] || [])
 
             expect(kase.state_machine.permitted_events(responder))
