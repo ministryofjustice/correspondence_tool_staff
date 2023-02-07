@@ -17,6 +17,7 @@ class CommissioningDocument < ApplicationRecord
   }
 
   belongs_to :data_request
+  belongs_to :attachment, class_name: 'CaseAttachment'
 
   validates :data_request, presence: true
   validates :template_name, presence: true

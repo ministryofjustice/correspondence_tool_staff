@@ -123,4 +123,34 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       expect(response.headers['Content-Disposition']).to match(/filename=\".*docx\"/)
     end
   end
+
+  describe "#upload" do
+    let(:uploader) { double(CommissioningDocumentUploaderService, upload!: nil, result: :ok) }
+    let(:uploads_key) { "uploads/10574/commissioning_document/Day1_CATA_211029002_Ole-Out_20230203T1127.docx" }
+    let(:params) do
+      {
+        id: commissioning_document.id,
+        case_id: offender_sar_case.id,
+        data_request_id: data_request.id,
+        commissioning_document: {
+          upload: [uploads_key]
+        }
+      }
+    end
+
+    before do
+      allow(CommissioningDocumentUploaderService).to receive(:new).and_return(uploader)
+      post :upload, params: params
+    end
+
+    it "calls the uploader service" do
+      expect(CommissioningDocumentUploaderService).to have_received(:new).with(
+        kase: offender_sar_case,
+        commissioning_document: commissioning_document,
+        current_user: manager,
+        uploaded_file: [uploads_key],
+      )
+      expect(uploader).to have_received(:upload!)
+    end
+  end
 end
