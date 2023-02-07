@@ -87,7 +87,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
     let(:params) do
       {
         id: commissioning_document.id,
-        case_id: data_request.case_id,
+        case_id: offender_sar_case.id,
         data_request_id: data_request.id,
         commissioning_document: {
           template_name: 'probation'
@@ -109,24 +109,50 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
     end
   end
 
-  describe "#download" do
+  describe '#download' do
     let(:params) do
       {
         id: commissioning_document.id,
-        case_id: data_request.case_id,
+        case_id: offender_sar_case.id,
         data_request_id: data_request.id,
       }
     end
 
-    it "downloads the commissioning document" do
+    it 'downloads the commissioning document' do
       get :download, params: params
       expect(response.headers['Content-Disposition']).to match(/filename=\".*docx\"/)
     end
   end
 
-  describe "#upload" do
+  describe '#replace' do
+    let(:params) do
+      {
+        id: commissioning_document.id,
+        case_id: offender_sar_case.id,
+        data_request_id: data_request.id,
+      }
+    end
+
+    before do
+      get :replace, params: params
+    end
+
+    it 'sets @case' do
+      expect(assigns(:case)).to eq offender_sar_case
+    end
+
+    it 'sets @data_request' do
+      expect(assigns(:data_request)).to eq data_request
+    end
+
+    it 'sets @commissioning_document' do
+      expect(assigns(:commissioning_document)).to eq commissioning_document
+    end
+  end
+
+  describe '#upload' do
     let(:uploader) { double(CommissioningDocumentUploaderService, upload!: nil, result: :ok) }
-    let(:uploads_key) { "uploads/10574/commissioning_document/Day1_CATA_211029002_Ole-Out_20230203T1127.docx" }
+    let(:uploads_key) { 'uploads/10574/commissioning_document/Day1_CATA_211029002_Ole-Out_20230203T1127.docx' }
     let(:params) do
       {
         id: commissioning_document.id,
@@ -143,7 +169,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       post :upload, params: params
     end
 
-    it "calls the uploader service" do
+    it 'calls the uploader service' do
       expect(CommissioningDocumentUploaderService).to have_received(:new).with(
         kase: offender_sar_case,
         commissioning_document: commissioning_document,
