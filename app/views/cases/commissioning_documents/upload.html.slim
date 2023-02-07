@@ -1,0 +1,17 @@
+- content_for :page_title do
+  = t('page_title.new_commissioning_document_page')
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+
+= link_to("Back", case_data_request_path(@case, @data_request), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= @params
