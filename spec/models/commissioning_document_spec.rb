@@ -84,4 +84,16 @@ RSpec.describe CommissioningDocument, type: :model do
       expect(subject.mime_type).to eq :docx
     end
   end
+
+  describe '#stored?' do
+    it 'returns true if attachment exists' do
+      subject.attachment = create(:commissioning_document_attachment)
+      expect(subject).to be_stored
+    end
+
+    it 'returns false if attachment does not exist' do
+      subject.attachment = nil
+      expect(subject).to_not be_stored
+    end
+  end
 end

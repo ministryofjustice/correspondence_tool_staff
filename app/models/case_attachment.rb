@@ -73,6 +73,10 @@ class CaseAttachment < ApplicationRecord
     save!
   end
 
+  def download
+    download_original_file
+  end
+
   private
 
   def not_convertible_file_type?

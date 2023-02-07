@@ -107,6 +107,27 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       patch :update, params: params
       expect(response).to redirect_to(case_data_request_path(offender_sar_case, data_request))
     end
+
+    context 'attachment exists' do
+      let(:attachment) { create(:commissioning_document_attachment) }
+
+      before do
+        commissioning_document.update(attachment: attachment)
+      end
+
+      it 'sets attachment to nil' do
+        expect {
+          patch :update, params: params
+        }.to change {
+          commissioning_document.reload.attachment
+        }.to nil
+      end
+
+      it 'destroys uploaded file' do
+        patch :update, params: params
+        expect{ attachment.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
   end
 
   describe '#download' do

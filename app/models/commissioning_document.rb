@@ -38,6 +38,10 @@ class CommissioningDocument < ApplicationRecord
     :docx
   end
 
+  def stored?
+    attachment.present?
+  end
+
   private
 
   def template

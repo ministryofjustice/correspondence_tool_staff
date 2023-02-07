@@ -17,8 +17,11 @@ module Cases
 
     def update
       @commissioning_document.template_name = create_params[:template_name].to_sym
+      existing_attachment = @commissioning_document.attachment
+      @commissioning_document.attachment_id = nil
 
       if @commissioning_document.valid?
+        existing_attachment&.destroy!
         @commissioning_document.save
         redirect_to case_data_request_path(@case, @data_request), notice: "Document was updated"
       else
@@ -29,7 +32,9 @@ module Cases
     def download
       return unless @commissioning_document.persisted?
 
-      send_data(@commissioning_document.document,
+      document = @commissioning_document.stored? ? @commissioning_document.attachment.download : @commissioning_document.document
+
+      send_data(document,
         filename: @commissioning_document.filename,
         type: @commissioning_document.mime_type,
       )
