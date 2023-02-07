@@ -215,7 +215,8 @@ Rails.application.routes.draw do
       resources :commissioning_documents, only: [:new, :edit, :create, :update] do
         member do
           get :download
-          get :upload
+          get :replace
+          patch :upload
         end
       end
     end

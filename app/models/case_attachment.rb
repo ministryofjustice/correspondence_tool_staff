@@ -32,7 +32,7 @@ class CaseAttachment < ApplicationRecord
 
   scope :ico_decisions, -> { where(type: :ico_decision) }
 
-  enum type: { response: 'response', request: 'request', ico_decision: 'ico_decision' }
+  enum type: { response: 'response', request: 'request', ico_decision: 'ico_decision', commissioning_document: 'commissioning_document' }
 
   def filename
     File.basename(key)

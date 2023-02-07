@@ -39,7 +39,7 @@ describe CommissioningDocumentDecorator, type: :model do
 
   describe :replace_link do
     it "returns a replace link" do
-      path = "/cases/#{commissioning_document_sent.data_request.case_id}/data_requests/#{commissioning_document_sent.data_request_id}/commissioning_documents/#{commissioning_document_sent.id}/upload"
+      path = "/cases/#{commissioning_document_sent.data_request.case_id}/data_requests/#{commissioning_document_sent.data_request_id}/commissioning_documents/#{commissioning_document_sent.id}/replace"
       expect(commissioning_document_sent.replace_link).to include(path)
       expect(commissioning_document_sent.replace_link).to include('<a href')
     end

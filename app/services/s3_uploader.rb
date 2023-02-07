@@ -91,6 +91,7 @@ class S3Uploader
     when :response then 'responses'
     when :request  then 'requests'
     when :ico_decision then 'ico_decision'
+    when :commissioning_document then 'commissioning_document'
     else
       raise "unknown file type '#{type}'"
     end

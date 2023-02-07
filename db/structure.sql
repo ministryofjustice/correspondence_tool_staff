@@ -30,7 +30,8 @@ COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings
 CREATE TYPE public.attachment_type AS ENUM (
     'response',
     'request',
-    'ico_decision'
+    'ico_decision',
+    'commissioning_document'
 );
 
 
@@ -2398,6 +2399,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214144147'),
 ('20230123110812'),
 ('20230126140604'),
-('20230127153614');
+('20230127153614'),
+('20230203153008');
 
 
