@@ -25,7 +25,11 @@ class CommissioningDocument < ApplicationRecord
   def document
     return unless valid?
 
-    Sablon.template(template.path).render_to_string(template.context)
+    if stored?
+      attachment.s3_object.get.body.read
+    else
+      Sablon.template(template.path).render_to_string(template.context)
+    end
   end
 
   def filename

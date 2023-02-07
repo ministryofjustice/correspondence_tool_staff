@@ -32,9 +32,7 @@ module Cases
     def download
       return unless @commissioning_document.persisted?
 
-      document = @commissioning_document.stored? ? @commissioning_document.attachment.download : @commissioning_document.document
-
-      send_data(document,
+      send_data(@commissioning_document.document,
         filename: @commissioning_document.filename,
         type: @commissioning_document.mime_type,
       )
