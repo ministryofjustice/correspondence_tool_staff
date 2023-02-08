@@ -58,7 +58,6 @@ describe CommissioningDocumentUploaderService do
         it 'returns a result of :blank' do
           service.upload!
           expect(service.result).to eq :blank
-
         end
       end
 

@@ -18,7 +18,7 @@ class CommissioningDocumentUploaderService
     begin
       if @uploaded_file.blank?
         @result = :blank
-        @attachment = []
+        @attachment = nil
       else
         @attachment = @uploader.process_files(@uploaded_file, REQUEST_TYPE).first
         @commissioning_document.update(attachment: @attachment)
@@ -27,7 +27,7 @@ class CommissioningDocumentUploaderService
     rescue Aws::S3::Errors::ServiceError,
            ActiveRecord::RecordInvalid,
            ActiveRecord::RecordNotUnique => err
-      @error_message = "Error processing uploaded files: #{err.message}"
+      @error_message = "Error processing uploaded file: #{err.message}"
       Rails.logger.error(@error_message)
       @result = :error
       @attachment = nil

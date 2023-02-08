@@ -17,12 +17,10 @@ module Cases
 
     def update
       @commissioning_document.template_name = create_params[:template_name].to_sym
-      existing_attachment = @commissioning_document.attachment
-      @commissioning_document.attachment_id = nil
 
       if @commissioning_document.valid?
-        existing_attachment&.destroy!
         @commissioning_document.save
+        @commissioning_document.remove_attachment
         redirect_to case_data_request_path(@case, @data_request), notice: "Document was updated"
       else
         render :edit

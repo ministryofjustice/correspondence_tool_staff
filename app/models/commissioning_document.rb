@@ -25,8 +25,8 @@ class CommissioningDocument < ApplicationRecord
   def document
     return unless valid?
 
-    if stored?
-      attachment.s3_object.get.body.read
+    if attachment.present?
+      attachment.to_string
     else
       Sablon.template(template.path).render_to_string(template.context)
     end
@@ -42,8 +42,10 @@ class CommissioningDocument < ApplicationRecord
     :docx
   end
 
-  def stored?
-    attachment.present?
+  def remove_attachment
+    attachment.destroy!
+    self.attachment_id = nil
+    save!
   end
 
   private

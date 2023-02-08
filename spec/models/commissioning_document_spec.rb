@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CommissioningDocument, type: :model do
   let(:offender_sar_case) { create(:offender_sar_case, subject_full_name: 'Robert Badson').decorate }
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: offender_sar_case) }
+  let(:data_request) { create(:data_request, offender_sar_case: offender_sar_case) }
   let(:template_type) { :prison }
   subject { described_class.new(data_request: data_request) }
 
@@ -85,15 +85,21 @@ RSpec.describe CommissioningDocument, type: :model do
     end
   end
 
-  describe '#stored?' do
-    it 'returns true if attachment exists' do
-      subject.attachment = create(:commissioning_document_attachment)
-      expect(subject).to be_stored
+  describe '#remove_attachment' do
+    let(:attachment) { create(:commissioning_document_attachment) }
+
+    before do
+      subject.update(attachment: attachment, template_name: template_type)
     end
 
-    it 'returns false if attachment does not exist' do
-      subject.attachment = nil
-      expect(subject).to_not be_stored
+    it 'sets attachment to nil' do
+      subject.remove_attachment
+      expect(subject.attachment_id).to be_nil
+    end
+
+    it 'destroys the attachment' do
+      subject.remove_attachment
+      expect{ attachment.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end

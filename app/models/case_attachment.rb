@@ -73,8 +73,8 @@ class CaseAttachment < ApplicationRecord
     save!
   end
 
-  def download
-    download_original_file
+  def to_string
+    s3_object.get.body.read
   end
 
   private
