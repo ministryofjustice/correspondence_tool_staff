@@ -64,10 +64,9 @@ class S3Uploader
     end
 
     @case.attachments << attachments
+
     remove_leftover_upload_files
-    Rails.logger.warn "Queueing PDF maker job for attachments: " +
-                      attachments.map {|a| "#{a.id}:#{a.key}" }.join(', ')
-    attachments.each { |ra| PdfMakerJob.perform_later(ra.id) }
+    make_pdfs(attachments)
     attachments
   end
 
@@ -122,5 +121,15 @@ class S3Uploader
 
   def create_upload_group
     Time.now.strftime('%Y%m%d%H%M%S')
+  end
+
+  def make_pdfs(attachments)
+    needs_conversion = attachments.reject { |a| a.commissioning_document? }
+    return if needs_conversion.empty?
+
+    Rails.logger.warn(
+      "Queueing PDF maker job for attachments: #{needs_conversion.map {|a| "#{a.id}:#{a.key}" }.join(', ')}"
+    )
+    needs_conversion.each { |ra| PdfMakerJob.perform_later(ra.id) }
   end
 end
