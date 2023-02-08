@@ -8,8 +8,15 @@ module Cases
       @commissioning_document.template_name = create_params[:template_name].to_sym
 
       if @commissioning_document.valid?
-        @commissioning_document.save
-        redirect_to case_data_request_path(@case, @data_request), notice: "Document was created"
+        if FeatureSet.email_commissioning_document.enabled?
+          @commissioning_document.save
+          redirect_to case_data_request_path(@case, @data_request), notice: "Document was created"
+        else
+          send_data(@commissioning_document.document,
+            filename: @commissioning_document.filename,
+            type: @commissioning_document.mime_type,
+          )
+        end
       else
         render :new
       end
