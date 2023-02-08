@@ -36,21 +36,24 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as vetting in progress"
     expect(cases_show_page).to have_content "Preview cover page"
+    expect(cases_show_page).to have_content "Sent to SSCL"
     click_on "Mark as vetting in progress"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready to copy"
     expect(cases_show_page).to have_content "Preview cover page"
+    expect(cases_show_page).to have_content "Sent to SSCL"
     click_on "Mark as ready to copy"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready to dispatch"
-
+    expect(cases_show_page).to have_content "Sent to SSCL"
     click_on "Mark as ready to dispatch"
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Send dispatch letter"
     expect(cases_show_page).to have_content "Close case"
+    expect(cases_show_page).to have_content "Sent to SSCL"
 
     move_back_to_data_to_be_requested_then_move_to_same_step_agin
 
@@ -65,12 +68,13 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Closed"
     expect(cases_show_page).to have_content "Send dispatch letter"
+    expect(cases_show_page).to have_content "Sent to SSCL"
     # TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
     # expect(cases_show_page).to have_content "Was the information held?"
     # expect(cases_show_page).to have_content "Yes"
   end
 
-  private 
+  private
 
   def move_back_to_data_to_be_requested_then_move_to_same_step_agin
     reason = 'move back to ready_to_copy'
@@ -86,7 +90,7 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready to copy"
     expect(cases_show_page).to have_content reason
-    
+
     reason = 'move back to ready_for_vetting'
     move_back_step(reason)
 
@@ -149,7 +153,7 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to have_content "Mark as ready to dispatch"
     expect(cases_show_page).to have_content "Reason for lateness added"
   end
-  
+
   def move_back_step(reason)
     click_on "Move case back"
 
@@ -168,9 +172,9 @@ feature 'Offender SAR Case creation by a manager' do
 
     expect(cases_edit_offender_sar_move_back_page)
       .to have_content "Please provide the reason for reverting the case back"
-    
+
       click_on "Back"
-    
+
     expect(cases_edit_offender_sar_move_back_page)
       .to_not have_content "Please provide the reason for reverting the case back"
 
