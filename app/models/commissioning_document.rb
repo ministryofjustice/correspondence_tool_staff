@@ -43,6 +43,8 @@ class CommissioningDocument < ApplicationRecord
   end
 
   def remove_attachment
+    return if attachment.nil?
+
     attachment.destroy!
     self.attachment_id = nil
     save!
