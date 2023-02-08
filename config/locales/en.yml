@@ -514,7 +514,8 @@ en:
     delete: Delete
     update_partial_flags: Update partial case
     select_document: Select Day 1 request document
-    download_document: Generate Day 1 request document
+    download_document: Download Day 1 request document
+    generate_document: Generate Day 1 request document
 
   helpers:
     fieldset:

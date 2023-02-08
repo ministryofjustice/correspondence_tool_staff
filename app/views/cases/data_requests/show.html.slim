@@ -71,7 +71,7 @@ span.visually-hidden
     - if @case.editable?
         = link_to t('.edit_link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
     hr
-    - if @commissioning_document.present?
+    - if @commissioning_document.present? && FeatureSet.email_commissioning_document.enabled?
       div.commissioning-document
         h2.heading-medium
           = t('.emails_header')
