@@ -65,3 +65,6 @@ node_modules
 # Generated documentation.
 doc
 .yardoc
+
+# ignore secret files
+*secret*.*

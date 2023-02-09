@@ -41,6 +41,7 @@ class Case::SAR::Offender < Case::Base
     request_dated
     partial_case_letter_sent_dated
     received_date
+    sent_to_sscl_at
   ].freeze
 
   acts_as_gov_uk_date(*GOV_UK_DATE_FIELDS)
@@ -60,6 +61,7 @@ class Case::SAR::Offender < Case::Base
                  request_dated: :date,
                  request_method: :string,
                  requester_reference: :string,
+                 sent_to_sscl_at: :date,
                  subject_aliases: :string,
                  subject_full_name: :string,
                  subject_type: :string,
@@ -76,6 +78,8 @@ class Case::SAR::Offender < Case::Base
 
   attribute :number_final_pages, :integer, default: 0
   attribute :number_exempt_pages, :integer, default: 0
+
+  attr_accessor :remove_sent_to_sscl_reason
 
   enum subject_type: {
     offender: 'offender',
@@ -144,6 +148,8 @@ class Case::SAR::Offender < Case::Base
   validate :validate_third_party_states_consistent
   validate :validate_partial_flags
   validate :validate_partial_case_letter_sent_dated
+  validate :validate_sent_to_sscl_at
+  validate :validate_remove_sent_to_sscl_reason
 
   before_validation :ensure_third_party_states_consistent
   before_validation :reassign_gov_uk_dates
@@ -250,6 +256,24 @@ class Case::SAR::Offender < Case::Base
       )
     end
     errors[:partial_case_letter_sent_dated].any?
+  end
+
+  def validate_sent_to_sscl_at
+    if remove_sent_to_sscl_reason.present? && sent_to_sscl_at.present?
+      errors.add(
+        :sent_to_sscl_at,
+        I18n.t('activerecord.errors.models.case.attributes.sent_to_sscl_at.not_allowed')
+      )
+    end
+  end
+
+  def validate_remove_sent_to_sscl_reason
+    if sent_to_sscl_at.blank? && sent_to_sscl_at_was.present? && remove_sent_to_sscl_reason.blank?
+      errors.add(
+        :remove_sent_to_sscl_reason,
+        I18n.t('activerecord.errors.models.case.attributes.remove_sent_to_sscl_reason.blank')
+      )
+    end
   end
 
   def default_managing_team

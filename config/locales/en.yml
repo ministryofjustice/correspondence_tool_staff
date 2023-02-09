@@ -108,6 +108,10 @@ en:
               blank: must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
+            sent_to_sscl_at:
+              not_allowed: "not allowed if there is a removal reason"
+            remove_sent_to_sscl_reason:
+              blank: "cannot be blank if sent date is removed"
 
         case/foi/standard:
           attributes: &foi_attr
@@ -826,6 +830,7 @@ en:
           data_subject: The data subject
           recipient: Requester
           third_party: Third party
+        remove_sent_to_sscl_reason: Reason for removing date
         requester_reference: Requester reference (optional)
         subject: "Case summary"
         subject_address: "What is the location of the data subject?"
@@ -1085,6 +1090,7 @@ en:
         time_taken_result:
           one: "%{count} calendar day"
           other: "%{count} calendar days"
+      sent_to_sscl: Sent to SSCL
       status: Status
       subject_address: Location
       subject_aliases: Alias
@@ -1357,6 +1363,7 @@ en:
       complaint_request_dated_legend: What is the date on the complaint?
       date_sar_received_legend: When was the complaint received at MOJ?
       date_offender_sar_received_legend: When was the SAR received?
+      date_sent_to_sscl_legend: Date data sent to SSCL for Vetting?
       date_of_birth: "Date of birth"
       external_deadline: "Final deadline"
       internal_deadline: Draft deadline
@@ -1478,6 +1485,7 @@ en:
       further_actions_required_heading: SSCL managing case
       flag_choice_yes: "Yes"
       flag_choice_no: "No"
+      sent_to_sscl_heading: "Data sent to SSCL"
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR

@@ -1,4 +1,4 @@
-- if retention_schedule.present? && FeatureSet.branston_retention_scheduling.enabled?
+- if retention_schedule.present?
   tbody.retention-details
     tr.section.planned-destruction-date
       th = t('common.case.retention_details.destruction_date')

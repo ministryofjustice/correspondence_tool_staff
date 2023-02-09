@@ -1,6 +1,6 @@
 class Case::OverturnedICO::FOIPolicy < Case::FOI::StandardPolicy
   def new?
-    FeatureSet.ico.enabled? && @user.manager?
+    @user.manager?
   end
 
   # this method only needs to exist here until such time as we have
@@ -10,9 +10,7 @@ class Case::OverturnedICO::FOIPolicy < Case::FOI::StandardPolicy
   def request_further_clearance?
     clear_failed_checks
 
-    FeatureSet.overturned_trigger_fois.enabled? &&
-      check_user_is_a_manager_for_case &&
-          check_can_trigger_event(:request_further_clearance)
+    check_user_is_a_manager_for_case && check_can_trigger_event(:request_further_clearance)
   end
 
 end
