@@ -23,6 +23,15 @@ module PageObjects
           element :date_completed, '.data_request_date_completed'
         end
 
+        section :commissioning_document, '.commissioning-document' do
+          section :row, 'tbody tr' do
+            element :request_document, 'td:nth-child(1)'
+            element :last_updated, 'td:nth-child(2)'
+            element :sent, 'td:nth-child(3)'
+            element :actions, 'td:nth-child(4)'
+          end
+        end
+
         element :button_select_document, '.data_request_select_document'
         element :link_edit, '.data-requests__action'
       end

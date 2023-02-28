@@ -1,8 +1,4 @@
-class CommissioningDocument
-  include ActiveModel::Conversion
-  extend  ActiveModel::Naming
-  include ActiveModel::Validations
-
+class CommissioningDocument < ApplicationRecord
   TEMPLATE_TYPES = {
     cat_a: CommissioningDocumentTemplate::CatA,
     cctv: CommissioningDocumentTemplate::Cctv,
@@ -15,14 +11,15 @@ class CommissioningDocument
     telephone: CommissioningDocumentTemplate::Telephone,
   }.freeze
 
-  attr_accessor :template_name
+  enum template_name: {
+    cat_a: 'cat_a', cctv: 'cctv', cross_border: 'cross_border', mappa: 'mappa', pdp: 'pdp',
+    prison: 'prison', probation: 'probation', security: 'security', telephone: 'telephone'
+  }
 
+  belongs_to :data_request
+
+  validates :data_request, presence: true
   validates :template_name, presence: true
-  validates :template_name, inclusion: { in: CommissioningDocument::TEMPLATE_TYPES.keys }, if: -> { template_name.present? }
-
-  def initialize(data_request:)
-    @data_request = data_request
-  end
 
   def document
     return unless valid?
@@ -43,7 +40,7 @@ class CommissioningDocument
   private
 
   def template
-    TEMPLATE_TYPES[@template_name].new(data_request: @data_request)
+    TEMPLATE_TYPES[template_name.to_sym].new(data_request: data_request)
   end
 
   def request_type
@@ -55,10 +52,10 @@ class CommissioningDocument
   end
 
   def subject_name
-    @data_request.kase.subject_full_name.tr(' ', '-')
+    data_request.kase.subject_full_name.tr(' ', '-')
   end
 
   def case_number
-    @data_request.kase.number
+    data_request.kase.number
   end
 end

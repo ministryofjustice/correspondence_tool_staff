@@ -43,6 +43,8 @@ en:
         external_deadline: Final deadline
       case/sar:
         third_party: ''
+      commissioning_document:
+        template_name: Data request document
       report:
         correspondence_type: Case type
       case/sar/offender:
@@ -336,6 +338,10 @@ en:
             url:
               bad_file_type: "unnacceptable type %{type} for file: %{filename}"
               invalid_url: "url is invalid for file: %{filename}"
+        commissioning_document:
+          attributes:
+            template_name:
+              blank: is required
         data_request:
           attributes:
             date_from:
@@ -380,14 +386,8 @@ en:
       retention_schedule_form:
         planned_destruction_date: Destruction date
         state: Status
-      commissioning_document:
-        template_name: Data request document
     errors:
       models:
-        commissioning_document:
-          attributes:
-            template_name:
-              blank: is required
         retention_schedule_form:
           attributes:
             planned_destruction_date:
@@ -515,6 +515,7 @@ en:
     update_partial_flags: Update partial case
     select_document: Select Day 1 request document
     download_document: Download Day 1 request document
+    generate_document: Generate Day 1 request document
 
   helpers:
     fieldset:
@@ -1524,6 +1525,7 @@ en:
         heading: View data request
         link: View
         edit_link: Edit data request
+        emails_header: Commissioning emails
       edit:
         heading: Edit data request
         link: Edit
@@ -1550,6 +1552,14 @@ en:
     commissioning_documents:
       new:
         heading: Select Day 1 request document
+      edit:
+        heading: Select Day 1 request document
+      table_headings:
+        request_document: Request document
+        last_updated: Last updated
+        sent: Sent
+        action: Action
+
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness

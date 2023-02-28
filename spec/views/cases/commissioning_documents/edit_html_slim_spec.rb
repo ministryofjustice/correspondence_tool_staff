@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-describe 'cases/commissioning_documents/new', type: :view do
-  context '#new' do
+describe 'cases/commissioning_documents/edit', type: :view do
+  context '#edit' do
     let(:data_request) { create(:data_request) }
-    let(:commissioning_document) { CommissioningDocument.new(data_request: data_request) }
+    let(:commissioning_document) { create(:commissioning_document, data_request: data_request) }
 
     before do
       assign(:data_request, data_request)
@@ -11,8 +11,8 @@ describe 'cases/commissioning_documents/new', type: :view do
       assign(:commissioning_document, commissioning_document)
 
       render
-      new_commissioning_document_page.load(rendered)
-      @page = new_commissioning_document_page
+      edit_commissioning_document_page.load(rendered)
+      @page = edit_commissioning_document_page
     end
 
     it 'has required content' do
