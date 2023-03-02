@@ -30,7 +30,8 @@ COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings
 CREATE TYPE public.attachment_type AS ENUM (
     'response',
     'request',
-    'ico_decision'
+    'ico_decision',
+    'commissioning_document'
 );
 
 
@@ -546,7 +547,8 @@ CREATE TABLE public.commissioning_documents (
     template_name public.template_name,
     sent boolean DEFAULT false,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    attachment_id bigint
 );
 
 
@@ -1919,6 +1921,13 @@ CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON public.cases_u
 
 
 --
+-- Name: index_commissioning_documents_on_attachment_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_commissioning_documents_on_attachment_id ON public.commissioning_documents USING btree (attachment_id);
+
+
+--
 -- Name: index_commissioning_documents_on_data_request_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -2398,6 +2407,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221214144147'),
 ('20230123110812'),
 ('20230126140604'),
-('20230127153614');
-
+('20230127153614'),
+('20230203153008'),
+('20230207153942');
 

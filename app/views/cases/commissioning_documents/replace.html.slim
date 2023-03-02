@@ -1,0 +1,32 @@
+- content_for :page_title do
+  = t('page_title.new_commissioning_document_page')
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+
+= link_to("Back", case_data_request_path(@case, @data_request), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+= GovukElementsErrorsHelper.error_summary @commissioning_document,
+    "#{pluralize(@commissioning_document.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
+
+- url = upload_case_data_request_commissioning_document_path(@case, @data_request)
+= form_for @commissioning_document, url: url do |f|
+
+  .grid-row
+    .column-two-thirds
+      #upload-commissioning-document-fields
+        = render partial: 'shared/dropzone_form',
+                locals: { s3_direct_post: @s3_direct_post,
+                        file_input_name: 'commissioning_document[upload][]' }
+
+  .grid-row
+    .column-two-thirds
+      = f.submit 'Update document', { class: 'button' }

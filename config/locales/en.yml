@@ -986,6 +986,8 @@ en:
     case_cleared: "%{team} has been notified that the response is %{status}."
     case_closed: "You've closed this case"
     closure_details_updated: You have updated the closure details for this case.
+    commissioning_document_uploaded: You have uploaded the document.
+    no_commissioning_document_uploaded: No changes were made.
     response_uploaded: You have uploaded the response for this case.
     request_uploaded: You have uploaded the request files for this case.
     no_request_uploaded: No changes were made.
@@ -1554,6 +1556,8 @@ en:
         heading: Select Day 1 request document
       edit:
         heading: Select Day 1 request document
+      replace:
+        heading: Upload document
       table_headings:
         request_document: Request document
         last_updated: Last updated
