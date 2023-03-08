@@ -17,6 +17,7 @@ class CommissioningDocument < ApplicationRecord
   }
 
   belongs_to :data_request
+  belongs_to :attachment, class_name: 'CaseAttachment'
 
   validates :data_request, presence: true
   validates :template_name, presence: true
@@ -24,7 +25,11 @@ class CommissioningDocument < ApplicationRecord
   def document
     return unless valid?
 
-    Sablon.template(template.path).render_to_string(template.context)
+    if attachment.present?
+      attachment.to_string
+    else
+      Sablon.template(template.path).render_to_string(template.context)
+    end
   end
 
   def filename
@@ -35,6 +40,14 @@ class CommissioningDocument < ApplicationRecord
 
   def mime_type
     :docx
+  end
+
+  def remove_attachment
+    return if attachment.nil?
+
+    attachment.destroy!
+    self.attachment_id = nil
+    save!
   end
 
   private

@@ -110,6 +110,7 @@ module PageObjects
         data_request_show:              'Cases::DataRequestShowPage',
         new_commissioning_document:     'Cases::NewCommissioningDocumentPage',
         edit_commissioning_document:    'Cases::EditCommissioningDocumentPage',
+        upload_commissioning_document:  'Cases::UploadCommissioningDocumentPage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',

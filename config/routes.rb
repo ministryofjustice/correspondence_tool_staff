@@ -213,7 +213,11 @@ Rails.application.routes.draw do
     resource :cover_page, only: [:show], path: "cover-page"
     resources :data_requests do
       resources :commissioning_documents, only: [:new, :edit, :create, :update] do
-        get :download, on: :member
+        member do
+          get :download
+          get :replace
+          patch :upload
+        end
       end
     end
 

@@ -110,20 +110,23 @@ describe S3Uploader do
     end
 
     describe 'pdf job queueing' do
-      it 'queues a job for each file' do
+      it 'queues a job for each file that is not a commissioning_document' do
         Timecop.freeze(time) do
-          response_attachments = [
+          attachments = [
             create(:correspondence_response, case_id: kase.id),
+            create(:commissioning_document_attachment, case_id: kase.id),
             create(:correspondence_response, case_id: kase.id)
           ]
           uploader.process_files(uploaded_files, :response)
           allow(uploader).to receive(:create_attachments)
-                               .and_return(response_attachments)
+                               .and_return(attachments)
 
           expect(PdfMakerJob).to receive(:perform_later)
-                                   .with(response_attachments.first.id)
+                                   .with(attachments[0].id)
+          expect(PdfMakerJob).to_not receive(:perform_later)
+                                   .with(attachments[1].id)
           expect(PdfMakerJob).to receive(:perform_later)
-                                   .with(response_attachments.last.id)
+                                   .with(attachments[2].id)
           uploader.process_files(uploaded_files, :response)
         end
       end
