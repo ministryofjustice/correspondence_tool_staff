@@ -699,7 +699,7 @@ en:
           other: Other
           cross_borders: Cross Borders
           cat_a: CAT A
-          ndelius: Ndelius
+          ndelius: Ndelius contact lists
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
         cached_num_pages: Number of pages received
