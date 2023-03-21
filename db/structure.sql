@@ -30,7 +30,8 @@ COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings
 CREATE TYPE public.attachment_type AS ENUM (
     'response',
     'request',
-    'ico_decision'
+    'ico_decision',
+    'commissioning_document'
 );
 
 
@@ -115,6 +116,24 @@ CREATE TYPE public.team_roles AS ENUM (
     'managing',
     'responding',
     'approving'
+);
+
+
+--
+-- Name: template_name; Type: TYPE; Schema: public; Owner: -
+--
+
+CREATE TYPE public.template_name AS ENUM (
+    'template_name',
+    'cat_a',
+    'cctv',
+    'cross_border',
+    'mappa',
+    'pdp',
+    'prison',
+    'probation',
+    'security',
+    'telephone'
 );
 
 
@@ -516,6 +535,40 @@ CREATE SEQUENCE public.category_references_id_seq
 --
 
 ALTER SEQUENCE public.category_references_id_seq OWNED BY public.category_references.id;
+
+
+--
+-- Name: commissioning_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.commissioning_documents (
+    id bigint NOT NULL,
+    data_request_id bigint,
+    template_name public.template_name,
+    sent boolean DEFAULT false,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL,
+    attachment_id bigint
+);
+
+
+--
+-- Name: commissioning_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.commissioning_documents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: commissioning_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.commissioning_documents_id_seq OWNED BY public.commissioning_documents.id;
 
 
 --
@@ -1331,6 +1384,13 @@ ALTER TABLE ONLY public.category_references ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: commissioning_documents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.commissioning_documents ALTER COLUMN id SET DEFAULT nextval('public.commissioning_documents_id_seq'::regclass);
+
+
+--
 -- Name: contacts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -1542,6 +1602,14 @@ ALTER TABLE ONLY public.cases_users_transitions_trackers
 
 ALTER TABLE ONLY public.category_references
     ADD CONSTRAINT category_references_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: commissioning_documents commissioning_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.commissioning_documents
+    ADD CONSTRAINT commissioning_documents_pkey PRIMARY KEY (id);
 
 
 --
@@ -1850,6 +1918,27 @@ CREATE INDEX index_cases_users_transitions_trackers_on_case_id ON public.cases_u
 --
 
 CREATE INDEX index_cases_users_transitions_trackers_on_user_id ON public.cases_users_transitions_trackers USING btree (user_id);
+
+
+--
+-- Name: index_commissioning_documents_on_attachment_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_commissioning_documents_on_attachment_id ON public.commissioning_documents USING btree (attachment_id);
+
+
+--
+-- Name: index_commissioning_documents_on_data_request_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_commissioning_documents_on_data_request_id ON public.commissioning_documents USING btree (data_request_id);
+
+
+--
+-- Name: index_commissioning_documents_on_template_name; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_commissioning_documents_on_template_name ON public.commissioning_documents USING btree (template_name);
 
 
 --
@@ -2317,6 +2406,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20221212155458'),
 ('20221214144147'),
 ('20230123110812'),
-('20230126140604');
-
+('20230126140604'),
+('20230127153614'),
+('20230203153008'),
+('20230207153942');
 

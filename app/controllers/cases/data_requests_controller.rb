@@ -33,6 +33,7 @@ module Cases
     end
 
     def show
+      @commissioning_document = @data_request.commissioning_document&.decorate
     end
 
     def edit

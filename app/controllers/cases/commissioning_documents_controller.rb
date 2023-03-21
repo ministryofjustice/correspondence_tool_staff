@@ -4,19 +4,70 @@ module Cases
     before_action :set_data_request
     before_action :set_commissioning_document
 
-    def new
-    end
-
     def create
       @commissioning_document.template_name = create_params[:template_name].to_sym
 
       if @commissioning_document.valid?
-        send_data(@commissioning_document.document,
-          filename: @commissioning_document.filename,
-          type: @commissioning_document.mime_type,
-        )
+        if FeatureSet.email_commissioning_document.enabled?
+          @commissioning_document.save
+          redirect_to case_data_request_path(@case, @data_request), notice: "Document was created"
+        else
+          send_data(@commissioning_document.document,
+            filename: @commissioning_document.filename,
+            type: @commissioning_document.mime_type,
+          )
+        end
       else
         render :new
+      end
+    end
+
+    def update
+      @commissioning_document.template_name = create_params[:template_name].to_sym
+
+      if @commissioning_document.valid?
+        @commissioning_document.save
+        @commissioning_document.remove_attachment
+        redirect_to case_data_request_path(@case, @data_request), notice: "Document was updated"
+      else
+        render :edit
+      end
+    end
+
+    def download
+      return unless @commissioning_document.persisted?
+
+      send_data(@commissioning_document.document,
+        filename: @commissioning_document.filename,
+        type: @commissioning_document.mime_type,
+      )
+    end
+
+    def replace
+      @s3_direct_post = S3Uploader.for(@case, 'commissioning_document')
+    end
+
+    def upload
+      @params = params
+      service = CommissioningDocumentUploaderService.new(
+        kase: @case,
+        commissioning_document: @commissioning_document,
+        current_user: current_user,
+        uploaded_file: create_params[:upload]
+      )
+      service.upload!
+
+      case service.result
+      when :ok
+        flash[:notice] = t('notices.commissioning_document_uploaded')
+        redirect_to case_data_request_path(@case, @data_request)
+      when :blank
+        flash[:alert] = t('notices.no_commissioning_document_uploaded')
+        redirect_to case_data_request_path(@case, @data_request)
+      else
+        @s3_direct_post = S3Uploader.for(@case, 'commissioning_document')
+        flash.now[:alert] = service.error_message
+        render :replace
       end
     end
 
@@ -31,11 +82,11 @@ module Cases
     end
 
     def set_commissioning_document
-      @commissioning_document = CommissioningDocument.new(data_request: @data_request)
+      @commissioning_document = CommissioningDocument.find_or_initialize_by(data_request: @data_request)
     end
 
     def create_params
-      params.require(:commissioning_document).permit(:template_name)
+      params.require(:commissioning_document).permit(:template_name, upload: [])
     end
   end
 end

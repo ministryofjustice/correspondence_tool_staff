@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CommissioningDocument, type: :model do
   let(:offender_sar_case) { create(:offender_sar_case, subject_full_name: 'Robert Badson').decorate }
-  let(:data_request) { build_stubbed(:data_request, offender_sar_case: offender_sar_case) }
+  let(:data_request) { create(:data_request, offender_sar_case: offender_sar_case) }
   let(:template_type) { :prison }
   subject { described_class.new(data_request: data_request) }
 
@@ -23,10 +23,10 @@ RSpec.describe CommissioningDocument, type: :model do
     end
 
     context 'invalid template value' do
-      before { subject.template_name = :invalid }
-
       it 'is not valid' do
-        expect(subject).to_not be_valid
+        expect {
+          subject.template_name = :invalid
+        }.to raise_error(ArgumentError)
       end
 
       it 'has one error' do
@@ -82,6 +82,24 @@ RSpec.describe CommissioningDocument, type: :model do
   describe 'setting mime type' do
     it 'sets the mime type as expected' do
       expect(subject.mime_type).to eq :docx
+    end
+  end
+
+  describe '#remove_attachment' do
+    let(:attachment) { create(:commissioning_document_attachment) }
+
+    before do
+      subject.update(attachment: attachment, template_name: template_type)
+    end
+
+    it 'sets attachment to nil' do
+      subject.remove_attachment
+      expect(subject.attachment_id).to be_nil
+    end
+
+    it 'destroys the attachment' do
+      subject.remove_attachment
+      expect{ attachment.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 end
