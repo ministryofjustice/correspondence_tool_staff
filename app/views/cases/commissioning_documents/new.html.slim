@@ -23,7 +23,7 @@ span.visually-hidden
       = "#{@case.number} - #{@case.subject_full_name}"
 
     - url = case_data_request_commissioning_documents_path(@case, @data_request)
-    = form_for @commissioning_document, url: url do |f|
+    = form_for @commissioning_document, url: url, method: :post do |f|
       = render 'form', f: f
 
 
