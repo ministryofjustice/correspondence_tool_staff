@@ -187,7 +187,7 @@ en:
           attributes:
             received_date:
               future: cannot be in the future
-              past: is too far in the past
+              past: decision received from ICO must be within 40 days of today
               blank: cannot be blank
             external_deadline:
               past: cannot be in the past
