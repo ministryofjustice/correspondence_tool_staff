@@ -87,7 +87,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
     let(:params) do
       {
         id: commissioning_document.id,
-        case_id: data_request.case_id,
+        case_id: offender_sar_case.id,
         data_request_id: data_request.id,
         commissioning_document: {
           template_name: 'probation'
@@ -107,20 +107,97 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       patch :update, params: params
       expect(response).to redirect_to(case_data_request_path(offender_sar_case, data_request))
     end
+
+    context 'attachment exists' do
+      let(:attachment) { create(:commissioning_document_attachment) }
+
+      before do
+        commissioning_document.update(attachment: attachment)
+      end
+
+      it 'sets attachment to nil' do
+        expect {
+          patch :update, params: params
+        }.to change {
+          commissioning_document.reload.attachment
+        }.to nil
+      end
+
+      it 'destroys uploaded file' do
+        patch :update, params: params
+        expect{ attachment.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
   end
 
-  describe "#download" do
+  describe '#download' do
     let(:params) do
       {
         id: commissioning_document.id,
-        case_id: data_request.case_id,
+        case_id: offender_sar_case.id,
         data_request_id: data_request.id,
       }
     end
 
-    it "downloads the commissioning document" do
+    it 'downloads the commissioning document' do
       get :download, params: params
       expect(response.headers['Content-Disposition']).to match(/filename=\".*docx\"/)
+    end
+  end
+
+  describe '#replace' do
+    let(:params) do
+      {
+        id: commissioning_document.id,
+        case_id: offender_sar_case.id,
+        data_request_id: data_request.id,
+      }
+    end
+
+    before do
+      get :replace, params: params
+    end
+
+    it 'sets @case' do
+      expect(assigns(:case)).to eq offender_sar_case
+    end
+
+    it 'sets @data_request' do
+      expect(assigns(:data_request)).to eq data_request
+    end
+
+    it 'sets @commissioning_document' do
+      expect(assigns(:commissioning_document)).to eq commissioning_document
+    end
+  end
+
+  describe '#upload' do
+    let(:uploader) { double(CommissioningDocumentUploaderService, upload!: nil, result: :ok) }
+    let(:uploads_key) { 'uploads/10574/commissioning_document/Day1_CATA_211029002_Ole-Out_20230203T1127.docx' }
+    let(:params) do
+      {
+        id: commissioning_document.id,
+        case_id: offender_sar_case.id,
+        data_request_id: data_request.id,
+        commissioning_document: {
+          upload: [uploads_key]
+        }
+      }
+    end
+
+    before do
+      allow(CommissioningDocumentUploaderService).to receive(:new).and_return(uploader)
+      post :upload, params: params
+    end
+
+    it 'calls the uploader service' do
+      expect(CommissioningDocumentUploaderService).to have_received(:new).with(
+        kase: offender_sar_case,
+        commissioning_document: commissioning_document,
+        current_user: manager,
+        uploaded_file: [uploads_key],
+      )
+      expect(uploader).to have_received(:upload!)
     end
   end
 end

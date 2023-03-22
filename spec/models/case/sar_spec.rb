@@ -354,7 +354,7 @@ describe Case::SAR::Standard do
     end
 
     describe '#reset_deadline!' do
-      let(:extended_sar)      { create(:sar_case, :extended_deadline_sar) }
+      let(:extended_sar)      { freeze_time { create(:sar_case, :extended_deadline_sar) } }
       let(:initial_deadline)  { extended_sar.initial_deadline }
       let(:extended_deadline) { extended_sar.external_deadline }
       let(:reset_external_deadline) { get_expected_deadline(1.month.since(extended_sar.received_date)) }

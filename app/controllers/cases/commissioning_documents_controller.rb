@@ -27,6 +27,7 @@ module Cases
 
       if @commissioning_document.valid?
         @commissioning_document.save
+        @commissioning_document.remove_attachment
         redirect_to case_data_request_path(@case, @data_request), notice: "Document was updated"
       else
         render :edit
@@ -40,6 +41,34 @@ module Cases
         filename: @commissioning_document.filename,
         type: @commissioning_document.mime_type,
       )
+    end
+
+    def replace
+      @s3_direct_post = S3Uploader.for(@case, 'commissioning_document')
+    end
+
+    def upload
+      @params = params
+      service = CommissioningDocumentUploaderService.new(
+        kase: @case,
+        commissioning_document: @commissioning_document,
+        current_user: current_user,
+        uploaded_file: create_params[:upload]
+      )
+      service.upload!
+
+      case service.result
+      when :ok
+        flash[:notice] = t('notices.commissioning_document_uploaded')
+        redirect_to case_data_request_path(@case, @data_request)
+      when :blank
+        flash[:alert] = t('notices.no_commissioning_document_uploaded')
+        redirect_to case_data_request_path(@case, @data_request)
+      else
+        @s3_direct_post = S3Uploader.for(@case, 'commissioning_document')
+        flash.now[:alert] = service.error_message
+        render :replace
+      end
     end
 
     private
@@ -57,7 +86,7 @@ module Cases
     end
 
     def create_params
-      params.require(:commissioning_document).permit(:template_name)
+      params.require(:commissioning_document).permit(:template_name, upload: [])
     end
   end
 end

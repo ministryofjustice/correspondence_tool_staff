@@ -21,11 +21,11 @@ RUN gem install bundler -v '~> 2.2.13'
 
 RUN bundle config set --global frozen 1 && \
     bundle config set without 'development test' && \
-    bundle install  
+    bundle install
 
 COPY . .
 
-RUN mkdir log tmp
+RUN mkdir -p log tmp
 RUN chown -R appuser:appgroup /usr/src/app/
 USER appuser
 USER 1000

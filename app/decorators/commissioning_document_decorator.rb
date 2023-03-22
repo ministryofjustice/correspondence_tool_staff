@@ -18,4 +18,8 @@ class CommissioningDocumentDecorator < Draper::Decorator
   def download_link
     link_to('Download', h.download_case_data_request_commissioning_document_path(self.data_request.case_id, self.data_request, self))
   end
+
+  def replace_link
+    link_to('Replace', h.replace_case_data_request_commissioning_document_path(self.data_request.case_id, self.data_request, self))
+  end
 end
