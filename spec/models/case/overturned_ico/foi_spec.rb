@@ -108,14 +108,14 @@ describe Case::OverturnedICO::FOI do
           it 'errors' do
             new_case.received_date = 41.days.ago
             expect(new_case).not_to be_valid
-            expect(new_case.errors[:received_date]).to eq ['decision received from ICO must be within 40 days of today']
+            expect(new_case.errors[:received_date]).to eq ['is too far in the past']
           end
         end
 
         context 'on create' do
           it 'errors' do
             record = described_class.create(received_date: 41.days.ago)
-            expect(record.errors[:received_date]).to eq ['decision received from ICO must be within 40 days of today']
+            expect(record.errors[:received_date]).to eq ['is too far in the past']
           end
         end
 
