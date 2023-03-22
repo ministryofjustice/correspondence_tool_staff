@@ -267,13 +267,6 @@ enabled_features:
     Host-staging: true
     Host-qa: true
     Host-prod: false
-  date_request_contact:
-    Local: true
-    Host-dev: true
-    Host-demo: true
-    Host-staging: true
-    Host-qa: true
-    Host-prod: false
 
 
 # Timing definitions for RetentionSchedule (GDPR / DPA)
