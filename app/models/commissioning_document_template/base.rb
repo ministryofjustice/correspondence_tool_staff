@@ -32,10 +32,15 @@ module CommissioningDocumentTemplate
       date_format(Date.current)
     end
 
+<<<<<<< HEAD
     def deadline(days)
       due = Date.current + days
       due += 1 until due.workday?
       date_format(due)
+=======
+    def deadline(count)
+      date_format(Date.current + count.days)
+>>>>>>> parent of cea7e386 (CDPT-367 Set due day to next working day (#2111))
     end
 
     def date_format(date)
