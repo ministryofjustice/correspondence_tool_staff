@@ -50,13 +50,13 @@ legend .heading-small{
 }
 
 @include media(mobile) {
-  #search_query_search_text { 
+  #search_query_search_text {
     width: calc(100% - 12px)
   }
-  #search-button { margin: 10px 0 0 0; width: 100%;} 
+  #search-button { margin: 10px 0 0 0; width: 100%;}
 }
 
-.case-info .request { 
+.case-info .request {
   max-width: 700px;
 }
 
@@ -66,7 +66,7 @@ main, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-smal
 }
 
 .table-font-xsmall th {
-  font-size: 90%;  
+  font-size: 90%;
 }
 
 .form-group {
@@ -78,7 +78,7 @@ main, .form-label, .form-label-bold, .heading-small, .heading-medium, .bold-smal
 }
 
 .form-date .form-group-year {
-  width: 3.5em; 
+  width: 3.5em;
 }
 
 table td, table th, .error-message {
@@ -164,4 +164,8 @@ td {
       }
     }
   }
+}
+
+.data-request #data_request_location:disabled {
+  border-color: $grey-2;
 }
