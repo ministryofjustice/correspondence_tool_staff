@@ -110,7 +110,7 @@ describe Case::OverturnedICO::SAR do
 
         context 'existing record' do
           it 'does not error' do
-            record = described_class.create(received_date: 40.days.ago)
+            record = described_class.create(received_date: 41.days.ago)
             allow(record).to receive(:new_record?).and_return(false)
             record.valid?
             expect(record.errors[:received_date]).to be_empty
