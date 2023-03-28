@@ -139,7 +139,6 @@ class Case::OverturnedICO::Base < Case::Base
       errors.add(:received_date, :blank)
     elsif received_date > Date.today
       errors.add(:received_date, :future)
-      byebug
     elsif received_date <= Date.today - 41.days && self.new_record?
       errors.add(:received_date, :past)
     end
