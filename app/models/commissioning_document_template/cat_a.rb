@@ -6,6 +6,7 @@ module CommissioningDocumentTemplate
 
     def context
       super.merge(
+        addressee_location: data_request.data_request_name,
         date_range: data_request.request_dates.capitalize,
         deadline: deadline(5)
       )
