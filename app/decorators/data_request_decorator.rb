@@ -25,6 +25,10 @@ class DataRequestDecorator < Draper::Decorator
     contact&.data_request_name || location
   end
 
+  def data_required
+    request_type_note if request_type == 'other'
+  end
+
   private
 
   def date_format(date)

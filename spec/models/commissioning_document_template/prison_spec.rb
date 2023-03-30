@@ -31,6 +31,7 @@ RSpec.describe CommissioningDocumentTemplate::Prison do
         prison_numbers: 'AB12345',
         date_range: '',
         deadline: '26/10/2022',
+        data_required: 'All paper & electronic information including Security',
       }
     end
 
