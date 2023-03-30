@@ -32,10 +32,8 @@ module CommissioningDocumentTemplate
       date_format(Date.current)
     end
 
-    def deadline(days)
-      due = Date.current + days
-      due += 1 until due.workday?
-      date_format(due)
+    def deadline(count)
+      date_format(Date.current + count.days)
     end
 
     def date_format(date)

@@ -32,12 +32,12 @@ moj.Modules.Contacts = {
         self.$remote_content.load("/contacts_search?search_filters=" + self.$search_filters, function() {
             self.$dialog.dialog( "open" );
 
-            setTimeout(function() { 
-                $('#popup-search-button').focus(); 
+            setTimeout(function() {
+                $('#popup-search-button').focus();
             }, 1); // fix voiceover focus issue
 
-            setTimeout(function() { 
-                $('#popup-search').focus(); 
+            setTimeout(function() {
+                $('#popup-search').focus();
             }, 2); // fix voiceover focus issue
         });
     },
@@ -57,13 +57,19 @@ moj.Modules.Contacts = {
         var self = this;
         $('.use-address-button').on('click', function(e){
             var name = $($(this).parent().find('.contact-name')[0]).text();
+            var id = $($(this).parent().find('.contact-name')[0]).attr('id');
             var address = $($(this).parent().find('.contact-address')[0]).text();
+            var $address = $('.address_input').first();
+            var $contact = $('.contact_input').first();
+            var $contactId = $('.contact_id_input').first();
 
             var formatted_address = name + "\n" + address;
 
             $('#dialog-content').dialog( "close" );
 
-            $('.address_input').first().val(formatted_address);
+            $address.val(formatted_address);
+            $contact.val(name);
+            $contactId.val(id);
 
             if(self.is_page_with_revealing_address_panel()){
                 $('#offender_sar_third_party_company_name').val(name);
