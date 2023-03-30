@@ -94,4 +94,24 @@ describe DataRequestDecorator, type: :model do
       end
     end
   end
+
+  describe '#data_required' do
+    context 'when request_type = other' do
+      let(:data_request) { create(:data_request, request_type: 'other', request_type_note: 'some information') }
+      let(:decorated) { data_request.decorate }
+
+      it 'uses location string' do
+        expect(decorated.data_required).to eq data_request.request_type_note
+      end
+    end
+
+    context 'when request_type != other' do
+      let(:data_request) { create(:data_request) }
+      let(:decorated) { data_request.decorate }
+
+      it 'uses location string' do
+        expect(decorated.data_required).to be_nil
+      end
+    end
+  end
 end
