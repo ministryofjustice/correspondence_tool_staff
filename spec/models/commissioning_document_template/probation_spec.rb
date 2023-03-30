@@ -33,6 +33,7 @@ RSpec.describe CommissioningDocumentTemplate::Probation do
         deadline: '26/10/2022',
         pnc: 'CD98765',
         crn: 'EF45678',
+        data_required: 'All paper and electronic information',
       }
     end
 
