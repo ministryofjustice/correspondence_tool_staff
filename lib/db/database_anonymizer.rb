@@ -14,9 +14,9 @@ class DatabaseAnonymizer
       compile_to_copy_sql(extract_data)
     end
 
-    private 
-    # The reason for disabling the checking is that 
-    # 'delete' being suggest doesn't remove double quotes I need 
+    private
+    # The reason for disabling the checking is that
+    # 'delete' being suggest doesn't remove double quotes I need
     # rubocop:disable Performance/StringReplacement
     def process_value(data)
       if data.nil?
@@ -37,7 +37,7 @@ class DatabaseAnonymizer
           value.each do | sub_attr, sub_value |
             value[sub_attr] = process_value(sub_value) unless sub_value.blank?
           end
-          attrs[attribute] = @type_caster.type_cast_for_database(attribute, value) 
+          attrs[attribute] = @type_caster.type_cast_for_database(attribute, value)
         else
           real_value = @type_caster.type_cast_for_database(attribute, value)
           attrs[attribute] = process_value(real_value)
@@ -50,7 +50,7 @@ class DatabaseAnonymizer
       extract_data.values().join("\t").gsub("'", '''')
     end
   end
- 
+
   class RecordToInsertSql
 
     def initialize(record)
@@ -63,8 +63,8 @@ class DatabaseAnonymizer
       @table.compile_insert(extract_data).to_sql
     end
 
-    private 
-    
+    private
+
 
     def extract_data
       # note attributes_for_creater is a private method
@@ -157,7 +157,7 @@ class DatabaseAnonymizer
     fp.puts "\n"
   end
 
-  # The key function for producing the insert sqls 
+  # The key function for producing the insert sqls
   def raw_sql_from_record(record)
     record = self.send("anonymize_#{record.class.table_name}", record)
     RecordToCopySql.new(record).to_sql
@@ -195,7 +195,7 @@ class DatabaseAnonymizer
   def is_internal_admin_user?(user)
     (user.email =~ /@digital.justice.gov.uk$/ || user.email =~ /@justice.gov.uk$/) &&
     user.roles.include?("admin")
-  end 
+  end
 
   # Anonymize Cases table including all those case types
   def anonymize_cases(kase)
@@ -217,7 +217,7 @@ class DatabaseAnonymizer
   def anonymize_case_sar_standard(kase)
     kase.subject_full_name = Faker::Name.name
   end
-  
+
   # rubocop:disable Metrics/CyclomaticComplexity
   def anonymize_case_sar_offender(kase)
     kase.subject_address = fake_address unless kase.subject_address.blank?
@@ -263,7 +263,7 @@ class DatabaseAnonymizer
   def anonymize_case_overturnedico_sar(kase)
     anonymize_case_overturnedico_foi(kase)
   end
-  
+
   # Anonymize case_transition table
   def anonymize_case_transitions(ct)
     ct.message = initial_letters(ct.message) + "\n\n" + Faker::Lorem.paragraph unless ct.message.blank?
@@ -272,9 +272,9 @@ class DatabaseAnonymizer
 
 
   # Anonymize warehouse_case_reports table
-  # This table is difficult one, as it contains the informaton from multiple tables 
+  # This table is difficult one, as it contains the informaton from multiple tables
   # like cases, teams, users which cannot be easily cooperated during this anonymization process
-  # The approach is to anonymize this table anyway, it wil cause the inconsistences between this 
+  # The approach is to anonymize this table anyway, it wil cause the inconsistences between this
   # table and other main entries table, which can be fixed later by triggering the syncing process manually
   # after dumping the anonymized data into target database
   # rubocop:disable Metrics/CyclomaticComplexity
@@ -298,7 +298,7 @@ class DatabaseAnonymizer
     team.email = Faker::Internet.email(name:team.name) unless team.email.blank?
     team
   end
-  
+
   def anonymize_team_properties(tp)
     tp.value = Faker::Name.name
     tp
@@ -310,7 +310,7 @@ class DatabaseAnonymizer
   end
 
   def anonymize_case_attachments(ca)
-    ca.key = Faker::File.file_name + SecureRandom.uuid 
+    ca.key = Faker::File.file_name + SecureRandom.uuid
     ca.preview_key = Faker::File.file_name
     ca
   end
