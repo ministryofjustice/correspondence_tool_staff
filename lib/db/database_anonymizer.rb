@@ -183,7 +183,7 @@ class DatabaseAnonymizer
 
   def anonymize_contacts(contact)
     contact.name = Faker::Company.name unless contact.name.blank?
-    contact.email = Faker::Internet.email(name: contact.email) unless contact.email.blank?
+    contact.data_request_emails = Faker::Internet.email(name: contact.name) unless contact.data_request_emails.blank?
     contact.address_line_1 = Faker::Address.street_address unless contact.address_line_1.blank?
     contact.address_line_2 = ""
     contact.postcode = Faker::Address.zip unless contact.postcode.blank?
