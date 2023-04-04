@@ -8,6 +8,7 @@ module CommissioningDocumentTemplate
       super.merge(
         aliases: kase.subject_aliases,
         pnc: kase.other_subject_ids,
+        date_range: data_request.request_dates,
         deadline: deadline(20),
       )
     end
