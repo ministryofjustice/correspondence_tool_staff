@@ -40,14 +40,7 @@ class CaseTransition < ApplicationRecord
 
   after_destroy :update_most_recent, if: :most_recent?
 
-  validates :message, presence: true, if: -> {
-    [
-      ADD_MESSAGE_TO_CASE_EVENT,
-      ADD_NOTE_TO_CASE_EVENT,
-      ANNOTATE_RETENTION_CHANGES,
-      ANNOTATE_SYSTEM_RETENTION_CHANGES,
-    ].include? event
-  }
+  validates :message, presence: true, if: :requires_message?
 
   jsonb_accessor :metadata,
                  message:                    :text,
@@ -89,5 +82,14 @@ class CaseTransition < ApplicationRecord
     last_transition = self.case.transitions.order(:sort_key).last
     return unless last_transition.present?
     last_transition.update_column(:most_recent, true)
+  end
+
+  def requires_message?
+    [
+      ADD_MESSAGE_TO_CASE_EVENT,
+      ADD_NOTE_TO_CASE_EVENT,
+      ANNOTATE_RETENTION_CHANGES,
+      ANNOTATE_SYSTEM_RETENTION_CHANGES,
+    ].include? event
   end
 end

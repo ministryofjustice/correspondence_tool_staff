@@ -138,7 +138,7 @@ class User < ApplicationRecord
   def case_team(kase)
     # need to sort with manager first so that if we are both manager and something else, we don't
     # try to execute the action with our lower authority (which might fail)
-    # When designing the state flow,  the permission for each state and actions should follow the 
+    # When designing the state flow,  the permission for each state and actions should follow the
     # hierarchy of roles which is manager - approver - responder
     if teams_for_case(kase).any?
       case_teams = teams_for_case(kase)
@@ -149,11 +149,11 @@ class User < ApplicationRecord
   end
 
   def case_team_for_event(kase, event)
-    # Return the team which have the permission for performing the event for 
-    # a particular kase under current state. If multiple teams are found 
+    # Return the team which have the permission for performing the event for
+    # a particular kase under current state. If multiple teams are found
     # the team with highest authority will be returned
     available_teams = kase.state_machine.teams_that_can_trigger_event_on_case(
-      event_name: event, 
+      event_name: event,
       user: self)
     self.class.sort_teams_by_roles(available_teams).first
   end
@@ -209,11 +209,7 @@ class User < ApplicationRecord
 
   def permitted_correspondence_types
     types = all_possible_user_correspondence_types
-    
-    types.delete(CorrespondenceType.sar) unless FeatureSet.sars.enabled?
-    types.delete(CorrespondenceType.ico) unless FeatureSet.ico.enabled?
-    types.delete(CorrespondenceType.offender_sar) unless FeatureSet.offender_sars.enabled?
-    types.delete(CorrespondenceType.sar_internal_review) unless FeatureSet.sar_internal_review.enabled?
+
     types << CorrespondenceType.overturned_foi if types.include?(CorrespondenceType.foi)
     types << CorrespondenceType.overturned_sar if types.include?(CorrespondenceType.sar)
     types

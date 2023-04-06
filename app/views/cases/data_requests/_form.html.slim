@@ -3,23 +3,30 @@
 
       = f.text_field :location,
           maxlength: 500,
-          class: 'js-data-request__location'
+          class: 'contact_input',
+          disabled: true
+
+      = f.hidden_field :contact_id, class: 'contact_id_input'
+      = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "" }
 
       = f.radio_button_fieldset :request_type,
           choices: DataRequest::request_types.keys do |fieldset|
         - fieldset.radio_input('all_prison_records')
-        - fieldset.radio_input('security_records')
-        - fieldset.radio_input('nomis_records')
+        - fieldset.radio_input('cat_a')
+        - fieldset.radio_input('cctv_and_bwcf')
+        - fieldset.radio_input('court')
+        - fieldset.radio_input('cross_borders')
+        - fieldset.radio_input('mappa')
+        - fieldset.radio_input('ndelius')
         - fieldset.radio_input('nomis_contact_logs')
+        - fieldset.radio_input('nomis_records')
         - fieldset.radio_input('nomis_other')
           = f.text_area :request_type_note, id: 'data_request_request_type_note_for_nomis'
-        - fieldset.radio_input('probation_records')
-        - fieldset.radio_input('cctv_and_bwcf')
-        - fieldset.radio_input('telephone_recordings')
-        - fieldset.radio_input('probation_archive')
-        - fieldset.radio_input('mappa')
         - fieldset.radio_input('pdp')
-        - fieldset.radio_input('court')
+        - fieldset.radio_input('probation_archive')
+        - fieldset.radio_input('probation_records')
+        - fieldset.radio_input('security_records')
+        - fieldset.radio_input('telephone_recordings')
         - fieldset.radio_input('other')
           = f.text_area :request_type_note
 

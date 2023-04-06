@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Contact, type: :model do
-    let(:contact) { build(:contact) }
+    let(:contact) { build_stubbed(:contact) }
 
-    let(:contact_2) { build(:contact, 
+    let(:contact_2) { build_stubbed(:contact,
                              name: 'HMP halifax',
                              address_line_1: '123 test road',
                              address_line_2: 'little heath',
@@ -11,7 +11,7 @@ RSpec.describe Contact, type: :model do
                              county: 'Mercia',
                              postcode: 'FE2 9JK')}
 
-    let(:contact_3) { build(:contact,
+    let(:contact_3) { build_stubbed(:contact,
                              name: 'HMP halifax',
                              address_line_1: '123 test road',
                              postcode: 'FE2 9JK',
@@ -29,6 +29,33 @@ RSpec.describe Contact, type: :model do
     it 'must have a valid contact_type' do
       expect(contact_2).to be_valid
       expect{ contact_3 }.to raise_exception(ActiveRecord::AssociationTypeMismatch)
+    end
+
+    context "data_request_emails" do
+      it 'is valid with one correctly formatted email' do
+        contact_2.data_request_emails = "oscar@thegrouch.com"
+        expect(contact_2).to be_valid
+      end
+
+      it 'is valid with multiple correctly formatted emails delimited by newline' do
+        contact_2.data_request_emails = "oscar@grouch.com\nbig@bird.com"
+        expect(contact_2).to be_valid
+      end
+
+      it 'is invalid if the only email is incorrectly formatted' do
+        contact_2.data_request_emails = "bigbird.com"
+        expect(contact_2).to_not be_valid
+      end
+
+      it 'is invalid if any email is incorrectly formatted' do
+        contact_2.data_request_emails = "oscar@grouch.com\nbigbird.com"
+        expect(contact_2).to_not be_valid
+      end
+
+      it 'is invalid if the wrong delimiter is used with multiple emails' do
+        contact_2.data_request_emails = "oscar@grouch.com,big@bird.com"
+        expect(contact_2).to_not be_valid
+      end
     end
   end
 
@@ -58,7 +85,6 @@ RSpec.describe Contact, type: :model do
       expect(contact_2.town).to match("bakersville")
       expect(contact_2.county).to match("Mercia")
       expect(contact_2.postcode).to match("FE2 9JK")
-      expect(contact_2.email).to match("fake.email@test098.gov.uk")
       expect(contact_2.contact_type).to be_a(CategoryReference)
       expect(contact_2.contact_type.value).to eq("Probation Office")
     end
@@ -71,7 +97,7 @@ RSpec.describe Contact, type: :model do
 
   context 'class methods' do
     it 'returns expected sql from #search_by_contact_name' do
-      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" WHERE (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC" 
+      expected_sql = "SELECT \"contacts\".* FROM \"contacts\" WHERE (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC"
       expect(Contact.search_by_contact_name('LLP').to_sql).to match(expected_sql)
     end
 

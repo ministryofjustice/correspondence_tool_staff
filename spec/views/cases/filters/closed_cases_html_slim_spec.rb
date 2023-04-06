@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'cases/filters/closed.html.slim' do
   let!(:case_1) { create :closed_case, received_date: 20.business_days.ago }
   let!(:case_2) { create :closed_case }
-  let(:search_query) { build :search_query }
+  let(:search_query) { build_stubbed :search_query }
   let(:request)         { instance_double ActionDispatch::Request,
                                           path: '/cases/closed',
                                           fullpath: '/cases/closed',
@@ -31,7 +31,7 @@ describe 'cases/filters/closed.html.slim' do
 
     closed_cases_page.load(rendered)
     page = closed_cases_page
-    
+
     expect(page.page_heading.heading.text).to eq 'Closed cases'
     expect(page.page_heading).to have_no_sub_heading
 

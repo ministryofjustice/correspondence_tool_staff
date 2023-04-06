@@ -228,15 +228,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   def can_remove_attachment?
     clear_failed_checks
-    case self.case.current_state
-    when 'awaiting_dispatch'
-      user.responding_teams.include?(self.case.responding_team) &&
-        self.case.assignments.approving.approved.none?
-    when 'drafting'
-      user.responding_teams.include?(self.case.responding_team)
-    else
-      false
-    end
+    check_can_trigger_event(:remove_response)
   end
 
   def can_upload_request_attachment?
@@ -328,9 +320,7 @@ class Case::BasePolicy < ApplicationPolicy
   def can_perform_retention_actions?
     clear_failed_checks
 
-    # NOTE: the feature flag check is temporary, as a precaution
-    FeatureSet.branston_retention_scheduling.enabled? &&
-      show? && user.team_admin? && self.case.closed?
+    show? && user.team_admin? && self.case.closed?
   end
 
   def method_missing(method, *args)

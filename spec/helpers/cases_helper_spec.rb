@@ -383,11 +383,11 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       def type_of_offender_sar?
         @is_offender_sar || @is_offender_sar_complaint
       end
-      
+
       def offender_sar_complaint?
         @is_offender_sar_complaint
       end
-      
+
       def offender_sar_complaint?
         @is_offender_sar_complaint
       end
@@ -436,7 +436,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
         expect(show_escalation_deadline?(kase)).to eq false
       end
     end
-    
+
     context 'when case is an Offender SAR Complaint' do
       it 'is always false' do
         kase = MockCase.new(
@@ -462,7 +462,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
       expect(output).to eq 'PNCTEST1'
       expect(output_2).to eq 'PNCTEST1'
     end
-  
+
     it 'returns upcased prison number if it is not blank or empty' do
       prison_number = 'PrisonNum1'
       pnc_number = 'PncTest1'
@@ -487,9 +487,9 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
 
   describe '#sort_correspondence_types_for_display' do
     it 'sorts correspondence types by their #display_order' do
-      ct1 = build(:correspondence_type, display_order: 0)
-      ct2 = build(:correspondence_type, display_order: 1)
-      ct3 = build(:correspondence_type, display_order: 2)
+      ct1 = build_stubbed(:correspondence_type, display_order: 0)
+      ct2 = build_stubbed(:correspondence_type, display_order: 1)
+      ct3 = build_stubbed(:correspondence_type, display_order: 2)
 
       result = sort_correspondence_types_for_display([ct3, ct1, ct2])
       expect(result.first).to be(ct1)
@@ -497,9 +497,9 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
     end
 
     it 'does not sort if members of collection have nil #display_order' do
-      ct1 = build(:correspondence_type, display_order: nil)
-      ct2 = build(:correspondence_type, display_order: nil)
-      ct3 = build(:correspondence_type, display_order: 2)
+      ct1 = build_stubbed(:correspondence_type, display_order: nil)
+      ct2 = build_stubbed(:correspondence_type, display_order: nil)
+      ct3 = build_stubbed(:correspondence_type, display_order: 2)
 
       result = sort_correspondence_types_for_display([ct3, ct1, ct2])
       expect(result.first).to be(ct3)

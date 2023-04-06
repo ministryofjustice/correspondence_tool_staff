@@ -46,6 +46,10 @@ FactoryBot.define do
 
   end
 
+  factory :commissioning_document_attachment, parent: :case_attachment do
+    type { 'commissioning_document' }
+  end
+
   factory :case_postal_request, parent: :case_attachment do
     type { 'response' }
     key { "#{SecureRandom.hex(16)}/requests/" +

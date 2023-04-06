@@ -1,0 +1,4 @@
+tr.section.section-sent-to-sscl
+  th = t('common.case.sent_to_sscl')
+  td = l case_details.sent_to_sscl_at, format: :default
+  td = link_to t('common.links.change'), edit_step_case_sar_offender_path(case_details, "sent_to_sscl")

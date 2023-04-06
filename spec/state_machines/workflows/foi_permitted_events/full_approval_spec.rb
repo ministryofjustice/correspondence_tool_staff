@@ -281,6 +281,7 @@ describe ConfigurableStateMachine::Machine do
                                                                           :link_a_case,
                                                                           :reassign_user,
                                                                           :remove_linked_case,
+                                                                          :remove_response,
                                                                           :upload_responses]
           end
         end

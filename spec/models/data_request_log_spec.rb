@@ -5,8 +5,8 @@ RSpec.describe DataRequestLog, type: :model do
     context 'with valid params' do
       subject(:data_request_log) {
         described_class.new(
-          data_request: build(:data_request),
-          user: build(:user),
+          data_request: build_stubbed(:data_request),
+          user: build_stubbed(:user),
           date_received: Date.current,
           num_pages: 21,
         )
@@ -17,7 +17,7 @@ RSpec.describe DataRequestLog, type: :model do
   end
 
   describe '#validate_date_received?' do
-    let(:data_request_log) { build :data_request_log, :received }
+    let(:data_request_log) { build_stubbed :data_request_log, :received }
     subject { data_request_log.send(:validate_date_received?) }
 
     it { should eq false }
@@ -37,7 +37,7 @@ RSpec.describe DataRequestLog, type: :model do
   end
 
   describe 'validation' do
-    let(:data_request_log) { build :data_request_log, :received }
+    let(:data_request_log) { build_stubbed :data_request_log, :received }
 
     it 'ensure date_received is in the past' do
       data_request_log.date_received = Date.today + 1.day

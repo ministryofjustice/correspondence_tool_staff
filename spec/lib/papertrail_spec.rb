@@ -34,7 +34,7 @@ describe 'papertrail', versioning: true do
 
 
   describe 'reify' do
-    it 'recreates the record and stores the previsou values' do
+    it 'recreates the record and stores the previous values' do
       Timecop.freeze(run_time) do
         kase = create_dummy_case
         expect(kase.received_date).to eq Date.parse('2018-04-19')
@@ -45,8 +45,8 @@ describe 'papertrail', versioning: true do
         update_dummy_case(kase)
         expect(kase.received_date).to eq Date.parse('2018-04-15')
         expect(kase.escalation_deadline).to eq Date.parse('2018-04-18')
-        expect(kase.internal_deadline).to eq Date.parse('2018-04-30')
-        expect(kase.external_deadline).to eq Date.parse('2018-05-15')
+        expect(kase.internal_deadline).to eq Date.parse('2018-04-27')
+        expect(kase.external_deadline).to eq Date.parse('2018-05-14')
 
         reified_kase = kase.versions.last.reify
 

@@ -33,6 +33,7 @@ module Cases
     end
 
     def show
+      @commissioning_document = @data_request.commissioning_document&.decorate
     end
 
     def edit
@@ -72,12 +73,13 @@ module Cases
     end
 
     def set_data_request
-      @data_request = DataRequest.find(params[:id])
+      @data_request = DataRequest.find(params[:id]).decorate
     end
 
     def create_params
       params.require(:data_request).permit(
         :location,
+        :contact_id,
         :request_type,
         :request_type_note,
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,
@@ -90,6 +92,7 @@ module Cases
     def update_params
       params.require(:data_request).permit(
         :location,
+        :contact_id,
         :request_type,
         :request_type_note,
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,

@@ -215,12 +215,12 @@ RSpec.describe User, type: :model do
         kase = create :accepted_case
         check_user = kase.responder
         another_team = create :business_unit, name:'testing team'
-        
+
         responding_assignment = Assignment.new(
           case_id: kase.id,
           team: another_team,
-          user: check_user, 
-          state: 'rejected', 
+          user: check_user,
+          state: 'rejected',
           role: 'responding',
           reasons_for_rejection: 'testing'
         )
@@ -329,27 +329,6 @@ RSpec.describe User, type: :model do
     it 'returns any correspondence types associated with users teams' do
       expect(manager.permitted_correspondence_types)
         .to match_array([foi, ico, sar, sar_internal_review, overturned_foi, overturned_sar])
-    end
-
-    it 'does not include SAR if that feature is disabled' do
-      disable_feature(:sars)
-
-      expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, sar_internal_review, overturned_foi])
-    end
-
-    it 'does not include ICO if that feature is disabled' do
-      disable_feature(:ico)
-
-      expect(manager.permitted_correspondence_types)
-        .to match_array([foi, sar, sar_internal_review, overturned_foi, overturned_sar])
-    end
-
-    it 'does not include SAR Internal Review if that feature is disabled' do
-      disable_feature(:sar_internal_review)
-
-      expect(manager.permitted_correspondence_types)
-        .to match_array([foi, ico, sar, overturned_foi, overturned_sar])
     end
   end
 

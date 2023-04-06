@@ -9,7 +9,6 @@
 = form_for kase.object, as: :sar, url: case_create_action(kase.object)  do |f|
   = render partial: 'cases/sar/new_form_common', locals: { f: f, dropzone: true, kase: kase }
 
-  - if FeatureSet.trigger_sars.enabled?
-    = f.radio_button_fieldset :flag_for_disclosure_specialists
+  = f.radio_button_fieldset :flag_for_disclosure_specialists
 
   = f.submit t('button.next_page_assign'), { class: 'button' }
