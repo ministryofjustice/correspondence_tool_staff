@@ -51,15 +51,9 @@ RSpec.describe DataRequest, type: :model do
 
       it { should be_valid }
 
-      it 'requires location' do
-        invalid_values = ['', ' ', nil]
-
-        invalid_values.each do |bad_location|
-          data_request.location = bad_location
-          expect(data_request.valid?).to be false
-        end
-
-        data_request.location = 'ABCD' * 500 # Exceed max 500 chars
+      it 'requires contact when there is no location' do
+        data_request.location = nil
+        data_request.contact_id = nil
         expect(data_request.valid?).to be false
       end
 

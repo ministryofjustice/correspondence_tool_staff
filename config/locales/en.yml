@@ -187,7 +187,7 @@ en:
           attributes:
             received_date:
               future: cannot be in the future
-              past: is too far in the past
+              past: decision received from ICO must be within 40 days of today
               blank: cannot be blank
             external_deadline:
               past: cannot be in the past
@@ -211,7 +211,7 @@ en:
             <<: *foi_attr
             received_date:
               future: cannot be in the future
-              past: is too far in the past
+              past: decision received from ICO must be within 40 days of today
               blank: cannot be blank
             external_deadline:
               past: cannot be in the past
@@ -356,6 +356,8 @@ en:
               future: cannot be in the future
               not_empty: should be blank if the request is not complete
             request_type:
+              blank: cannot be blank
+            location:
               blank: cannot be blank
         linked_case:
           missing: "does not exist"
@@ -699,7 +701,7 @@ en:
           other: Other
           cross_borders: Cross Borders
           cat_a: CAT A
-          ndelius: Ndelius
+          ndelius: Ndelius contact lists
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
         cached_num_pages: Number of pages received
@@ -1153,6 +1155,7 @@ en:
       address_page_subheading: Private addresses should not be entered
       add_new_address: Add new address
       delete_address_confirmation: Are you sure you want to delete this address?
+      delete_error: Cannot delete an address that is in use
       find_address: Find an address
       find_solicitor_address: Find a solicitor address
       add_or_edit_address: Add or edit addresses (opens in new window)

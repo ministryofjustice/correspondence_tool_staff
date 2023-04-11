@@ -3,7 +3,11 @@
 
       = f.text_field :location,
           maxlength: 500,
-          class: 'js-data-request__location'
+          class: 'contact_input',
+          disabled: true
+
+      = f.hidden_field :contact_id, class: 'contact_id_input'
+      = render partial: 'contacts/open_search_dialogue_button', locals: { search_filters: "" }
 
       = f.radio_button_fieldset :request_type,
           choices: DataRequest::request_types.keys do |fieldset|
