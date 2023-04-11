@@ -651,3 +651,7 @@ To use this: "Actions" > "All workflows" > on the left "Combine PRs" > "Run work
 
 See here for the [original developers README](https://github.com/hrvey/combine-prs-workflow)
 
+## Addendum
+
+Please note: the file upload functionality will not work locally without an AWS S3 bucket setup as a file store.
+
