@@ -49,6 +49,40 @@ $ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
 $ cd correspondence_tool_staff
 ```
 
+Environment settings will need the following:
+
+***.env***
+```
+# App specific
+RAILS_ENV=development
+RACK_ENV=development
+DATABASE_URL=postgres://postgres@db/correspondence_tool_staff_${RAILS_ENV}
+REDIS_URL=redis://redis@log:6379
+REDIS_URL_SIDEKIQ=${REDIS_URL}/1
+RAILS_DEVELOPMENT_HOSTS=app
+POSTGRES_DB=db
+AWS_ACCESS_KEY_ID=not_real
+AWS_SECRET_ACCESS_KEY=not_real
+SECRET_KEY_BASE=not_real
+DEV_PASSWORD="a-h!p-sw!ng!ng-pAssword"
+
+
+# Google Analytics
+GA_TRACKING_ID=
+SETTINGS__SMOKE_TESTS__USERNAME=
+SETTINGS__SMOKE_TESTS__PASSWORD=
+SETTINGS__GOVUK_NOTIFY_API_KEY=
+
+# Devise OmniAuth - Azure Active Directory
+# Ask a colleague in the team to provide these to you.
+OMNIAUTH_AZURE_TENANT_ID=
+OMNIAUTH_AZURE_CLIENT_ID=
+OMNIAUTH_AZURE_CLIENT_SECRET= 
+```
+
+> When the service is up and running, an array of pseudo accounts will have been created.
+> The password that is defined in the variable `DEV_PASSWORD` will be needed to access all pseudo accounts.
+ 
 ### Installation
 
 The easiest way to get the app running is to execute Makefile commands.
