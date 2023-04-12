@@ -9,6 +9,8 @@ if ! bundle show rspec-core 2>/dev/null; then
   source ~/.bashrc
 
   sub_header_divider "${YELLOW}Installing Gems${NC}"
+  # fix for Nokogiri on arm64; helps to install platform agnostic/specific software
+  bundle config set force_ruby_platform true
   # install gems under current user
   bundler install | indent
 
