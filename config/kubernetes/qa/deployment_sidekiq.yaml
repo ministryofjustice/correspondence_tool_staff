@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: track-a-query-jobs
 spec:
-  replicas: 4
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -70,15 +70,51 @@ spec:
                 - /bin/sh
                 - -c
                 - 'sidekiqmon | grep "track-a-query-jobs"'
-            initialDelaySeconds: 40
-            periodSeconds: 60
+            initialDelaySeconds: 30
+            periodSeconds: 90
             timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
           livenessProbe:
             exec:
               command:
                 - /bin/sh
                 - -c
                 - 'sidekiqmon | grep "track-a-query-jobs"'
-            initialDelaySeconds: 40
-            periodSeconds: 60
+            initialDelaySeconds: 30
+            periodSeconds: 90
             timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 3
+      initContainers:
+        - name: pending-migrations
+          image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
+          command: 
+            - rake
+            - db:abort_if_pending_migrations
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-rds-output
+                  key: url
+            - name: CORRESPONDENCE_PLATFORM_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-rds-output
+                  key: database_password
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-s3-output
+                  key: access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: track-a-query-s3-output
+                  key: secret_access_key
+          envFrom:
+            - configMapRef:
+                name: environment-variables
+            - secretRef:
+                name: app-secrets

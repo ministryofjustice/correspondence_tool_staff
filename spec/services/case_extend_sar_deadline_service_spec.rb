@@ -3,7 +3,7 @@ require "rails_helper"
 describe CaseExtendSARDeadlineService do
   let!(:team_disclosure_bmt) { find_or_create :team_disclosure_bmt }
   let!(:manager)             { find_or_create :disclosure_bmt_user }
-  let!(:sar_case)            { create(:approved_sar) }
+  let!(:sar_case)            { freeze_time { create(:approved_sar) } }
   let!(:initial_deadline)    { sar_case.initial_deadline }
   let!(:max_extension_time_limit)  { sar_case.correspondence_type.extension_time_limit }
 

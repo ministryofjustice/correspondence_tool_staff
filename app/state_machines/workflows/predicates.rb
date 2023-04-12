@@ -13,24 +13,12 @@ class Workflows::Predicates
     end
   end
 
-  def responder_is_member_of_assigned_team_and_assigned?
-    if @kase.responding_team && @kase.assigned?
-      @kase.responding_team.users.include?(@user)
-    else
-      false
-    end
-  end
-
   def is_tmm_case?
     @kase.sar? && @kase.refusal_reason == CaseClosure::RefusalReason.sar_tmm
   end
 
-  def responder_is_member_of_assigned_team_and_not_assigned?
-    if @kase.responding_team && !@kase.assigned?
-      @kase.responding_team.users.include?(@user)
-    else
-      false
-    end
+  def responder_is_not_assigned?
+    !@kase.assigned?
   end
 
   def is_litigation_complaint?
@@ -63,6 +51,10 @@ class Workflows::Predicates
 
   def responder_is_member_of_assigned_team_and_not_overturned?
     responder_is_member_of_assigned_team? && not_overturned?
+  end
+
+  def responder_is_member_of_assigned_team_and_not_approved?
+    responder_is_member_of_assigned_team? && not_approved?
   end
 
   def user_is_assigned_responder?
@@ -157,6 +149,10 @@ class Workflows::Predicates
     !@kase.overturned_ico?
   end
 
+  def not_approved?
+    @kase.assignments.approving.approved.none?
+  end
+
   def overturned_editing_enabled?
     if @kase.overturned_ico?
       FeatureSet.edit_overturned.enabled?
@@ -196,7 +192,7 @@ class Workflows::Predicates
   end
 
   def can_start_complaint?
-    FeatureSet.offender_sar_complaints.enabled? && @kase.offender_sar? && (@kase.already_late? || @kase.current_state == 'closed')
+    @kase.offender_sar? && (@kase.already_late? || @kase.current_state == 'closed')
   end
 
   def already_late?
@@ -222,12 +218,6 @@ class Workflows::Predicates
   end
 
   def overturned_enabled?(kase)
-    if kase.original_case.sar?
-      FeatureSet.overturned_sars.enabled?
-    elsif kase.original_case.foi?
-      FeatureSet.overturned_fois.enabled?
-    else
-      false
-    end
+    kase.original_case.sar? || kase.original_case.foi?
   end
 end

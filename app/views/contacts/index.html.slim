@@ -1,5 +1,5 @@
 - content_for :page_title do
-  = t('page_title.address_book') 
+  = t('page_title.address_book')
 
 
 - content_for :heading
@@ -20,6 +20,7 @@ table.report
       th Organisation name
       th Address
       th Contact type
+      th Email exists?
       th
       th
 
@@ -29,6 +30,7 @@ table.report
         td = contact.name
         td = contact.inline_address
         td = contact.contact_type_display_value
+        td = contact.has_emails?
         td = link_to t('button.edit'), edit_contact_path(contact)
         td = link_to t('button.delete'), contact, data: { confirm: t('common.contacts.delete_address_confirmation') }, method: :delete
 br

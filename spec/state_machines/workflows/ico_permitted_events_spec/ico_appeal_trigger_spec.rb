@@ -64,6 +64,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :edit_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
+                                                                      :remove_response,
                                                                       :unassign_from_user]
         end
       end
@@ -78,6 +79,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :edit_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
+                                                                      :remove_response,
                                                                       :unassign_from_user]
         end
       end
@@ -96,6 +98,7 @@ describe ConfigurableStateMachine::Machine do
             :link_a_case,
             :record_further_action,
             :remove_linked_case,
+            :remove_response,
             :require_further_action,
             :require_further_action_to_responder_team,
             :require_further_action_unassigned,
@@ -114,6 +117,7 @@ describe ConfigurableStateMachine::Machine do
                                                                       :edit_case,
                                                                       :link_a_case,
                                                                       :remove_linked_case,
+                                                                      :remove_response,
                                                                       :update_closure]
         end
       end

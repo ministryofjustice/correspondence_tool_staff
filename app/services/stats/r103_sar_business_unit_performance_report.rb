@@ -18,6 +18,7 @@ module Stats
                   :responding_team,
                   :approver_assignments)
         .where('refusal_reason_id IS NULL OR refusal_reason_id != ?', sar_tmm.id)
+        .where.not(type: "Case::SAR::InternalReview")
     end
 
     def report_type

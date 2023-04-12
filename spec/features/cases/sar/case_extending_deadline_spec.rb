@@ -8,7 +8,7 @@ feature 'when extending a SAR case deadline' do
   given!(:received_date)  { kase.received_date }
 
   context 'a manager' do
-    given!(:kase)     { create :accepted_sar }
+    given!(:kase) { freeze_time { create :accepted_sar } }
 
     scenario 'extending a SAR case by 30 days twice then removing extension deadline' do
       # Expected dates for display
@@ -75,11 +75,13 @@ feature 'when extending a SAR case deadline' do
 
   context 'an approver' do
     given!(:approver) { find_or_create :disclosure_specialist }
-    given!(:kase) {
-      create :accepted_sar,
-      :flagged_accepted,
-      approver: approver
-    }
+    given!(:kase) do
+      freeze_time do
+        create :accepted_sar,
+          :flagged_accepted,
+          approver: approver
+      end
+    end
 
     scenario 'can extend a SAR deadline' do
       login_as approver
@@ -97,7 +99,7 @@ feature 'when extending a SAR case deadline' do
 
   context 'a responder' do
     given(:responder) { kase.responder }
-    given!(:kase)     { create :accepted_sar }
+    given!(:kase)     { freeze_time { create :accepted_sar } }
 
     scenario 'cannot extend a SAR deadline' do
       login_as responder
@@ -117,16 +119,18 @@ feature 'when extending a SAR case deadline' do
   context 'multiple roles' do
     given!(:multi_roles) { find_or_create :disclosure_specialist }
     given!(:kase) {
-      create :accepted_sar,
-      :flagged_accepted,
-      approver: multi_roles
+      freeze_time do
+        create :accepted_sar,
+          :flagged_accepted,
+          approver: multi_roles
+      end
     }
 
     scenario 'a user who is approver and responder can extend a SAR deadline' do
       multi_roles.team_roles << TeamsUsersRole.new(team: kase.responding_team, role: 'responder')
-      multi_roles.reload  
+      multi_roles.reload
       login_as multi_roles
-      
+
       cases_show_page.load(id: kase.id)
 
       extend_sar_deadline_for(kase: kase, num_calendar_months: 1) do |page|
@@ -139,9 +143,9 @@ feature 'when extending a SAR case deadline' do
     scenario 'a user who is manager, approver and responder can extend a SAR deadline' do
       multi_roles.team_roles << TeamsUsersRole.new(team: kase.responding_team, role: 'responder')
       multi_roles.team_roles << TeamsUsersRole.new(team: manager.teams.first, role: 'manager')
-      multi_roles.reload  
+      multi_roles.reload
       login_as multi_roles
-      
+
       cases_show_page.load(id: kase.id)
 
       extend_sar_deadline_for(kase: kase, num_calendar_months: 1) do |page|

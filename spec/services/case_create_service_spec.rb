@@ -371,7 +371,7 @@ describe CaseCreateService do
   end
 
   context 'prebuilt case for stepped cases' do
-    let(:minimal_params) { 
+    let(:minimal_params) {
       ActionController::Parameters.new({
           flag_for_disclosure_specialists: 'yes'
     })}
@@ -382,7 +382,7 @@ describe CaseCreateService do
       expect(unsaved_sar_ir_case.workflow).to eq('standard')
 
       ccs.call
-      new_case = Case::SAR::InternalReview.last 
+      new_case = Case::SAR::InternalReview.last
 
       expect(new_case.id).to match(unsaved_sar_ir_case.id)
       expect(new_case.workflow).to match('trigger')

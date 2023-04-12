@@ -136,6 +136,21 @@ FactoryBot.define do
     end
   end
 
+  factory :team_sscl, parent: :business_unit do
+    name { 'SSCL' }
+    email { 'sscl@localhost' }
+    code { 'SSCL' }
+    directorate { find_or_create :dacu_directorate }
+    responders { [find_or_create(:sscl_user, :orphan)] }
+
+    after(:create) do |bu, _evaluator|
+      bu.correspondence_types = []
+      bu.correspondence_types << find_or_create(:offender_sar_correspondence_type)
+      bu.correspondence_types << find_or_create(:offender_sar_complaint_correspondence_type)
+      bu.save!
+    end
+  end
+
   factory :team_disclosure, aliases: [:team_dacu_disclosure], parent: :approving_team do
     name { 'Disclosure' }
     email { 'dacu.disclosure@localhost' }

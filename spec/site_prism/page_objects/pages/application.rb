@@ -54,6 +54,7 @@ module PageObjects
         cases_edit_offender_sar_date_received:        'Cases::Edit::OffenderSARPageDateReceived',
         cases_edit_offender_sar_move_back:            'Cases::Edit::OffenderSARPageMoveCaseBack',
         cases_edit_offender_sar_reason_for_lateness:  'Cases::Edit::OffenderSARPageRecordReasonForLateness',
+        cases_edit_offender_sar_sent_to_sscl:         'Cases::Edit::OffenderSARPageSentToSscl',
 
         cases_new_offender_sar_complaint_confirm_case:       'Cases::New::OffenderSARComplaintPageConfirmCase',
         cases_new_offender_sar_complaint_link_offender_sar:  'Cases::New::OffenderSARComplaintPageLinkSarCase',
@@ -106,6 +107,10 @@ module PageObjects
         cases_extend_sar_deadline:      'Cases::ExtendSARDeadlinePage',
         data_request:                   'Cases::DataRequestPage',
         data_request_edit:              'Cases::DataRequestEditPage',
+        data_request_show:              'Cases::DataRequestShowPage',
+        new_commissioning_document:     'Cases::NewCommissioningDocumentPage',
+        edit_commissioning_document:    'Cases::EditCommissioningDocumentPage',
+        upload_commissioning_document:  'Cases::UploadCommissioningDocumentPage',
         global_nav_partial:             'Partials::GlobalNavPartial',
         header_partial:                 'Partials::HeaderPartial',
         incoming_cases:                 'Cases::IncomingCasesPage',

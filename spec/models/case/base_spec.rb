@@ -34,7 +34,7 @@ require 'rails_helper'
 RSpec.describe Case::Base, type: :model do
 
   let(:general_enquiry) do
-    build :case, received_date: Date.parse('16/11/2016')
+    build_stubbed :case, received_date: Date.parse('16/11/2016')
   end
 
   let(:responding_team)    { create :responding_team                      }
@@ -60,7 +60,7 @@ RSpec.describe Case::Base, type: :model do
                               responder: responder,
                               responding_team: responding_team,
                               received_date: 5.days.ago }
-  
+
   let(:trigger_foi)        { create :case,
                               :flagged,
                               # Valid if within 1 year of today
@@ -85,36 +85,36 @@ RSpec.describe Case::Base, type: :model do
     it { should validate_presence_of(:type)          }
   end
 
-  describe 'a default transition is created after a case is created' do 
+  describe 'a default transition is created after a case is created' do
     shared_examples 'case has default transition' do |case_type|
-      let(:created_case) { create case_type } 
+      let(:created_case) { create case_type }
       it "default transition for #{case_type}" do
           expect(created_case.transitions.size).to be >= 1
           expect(created_case.transitions.first.event).to eq "create"
       end
     end
 
-    describe "default transition" do 
-      case_types = [:sar_case, 
-                    :offender_sar_case, 
-                    :foi_case, 
-                    :ico_foi_case, 
-                    :ico_sar_case, 
-                    :overturned_ico_foi, 
+    describe "default transition" do
+      case_types = [:sar_case,
+                    :offender_sar_case,
+                    :foi_case,
+                    :ico_foi_case,
+                    :ico_sar_case,
+                    :overturned_ico_foi,
                     :overturned_ico_sar]
       case_types.each do |case_type|
         include_examples 'case has default transition', case_type
       end
-    end 
-  end 
+    end
+  end
 
   context 'deleting' do
     it 'is not valid without a reason' do
-      expect(build(:case, deleted: true)).not_to be_valid
+      expect(build_stubbed(:case, deleted: true)).not_to be_valid
     end
 
     it 'is valid with a reason' do
-      expect(build(:case, deleted: true, reason_for_deletion: 'It needs to go')).to be_valid
+      expect(build_stubbed(:case, deleted: true, reason_for_deletion: 'It needs to go')).to be_valid
     end
   end
 
@@ -158,14 +158,14 @@ RSpec.describe Case::Base, type: :model do
     # TODO write spec 'does not validate presence of message for postal foi'
 
     # xit 'does not validate presence of message for postal foi' do
-    #   postal_foi = build :case
+    #   postal_foi = build_stubbed :case
     #   postal_foi.delivery_method = 'sent_by_post'
     #   # need to stub out request attachment
     #   expect(postal_foi).to be_valid
     # end
 
     it 'does validate presence of deafult type' do
-      foi = build :case
+      foi = build_stubbed :case
       expect(foi.type).to eq 'Case::FOI::Standard'
     end
 
@@ -519,7 +519,7 @@ RSpec.describe Case::Base, type: :model do
       linked_case = create(:case)
       allow(CaseLinkTypeValidator).to receive(:classes_can_be_linked_with_type?)
                                     .and_return(false)
-      kase = build(:case, related_cases: [linked_case])
+      kase = build_stubbed(:case, related_cases: [linked_case])
       expect(kase).not_to be_valid
       expect(kase.errors[:related_cases])
         .to eq ["cannot link a FOI case to a FOI as a related case"]
@@ -570,8 +570,8 @@ RSpec.describe Case::Base, type: :model do
     describe '#set_deadlines' do
       let(:kase)                { build :case }
       let(:escalation_deadline) { Date.today - 1.day }
-      let(:internal_deadline) { Date.today - 2.day }
-      let(:external_deadline) { Date.today - 3.day }
+      let(:internal_deadline)   { Date.today - 2.day }
+      let(:external_deadline)   { Date.today - 3.day }
       let(:deadline_calculator) do
         double DeadlineCalculator::BusinessDays,
                escalation_deadline: escalation_deadline,
@@ -640,7 +640,7 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe 'querying current state' do
-    let(:kase)  { build(:case) }
+    let(:kase)  { build_stubbed(:case) }
 
     it 'any defined state can be used' do
       ConfigurableStateMachine::Machine.states.each do |state|
@@ -746,8 +746,8 @@ RSpec.describe Case::Base, type: :model do
       responding_assignment = Assignment.new(
         case_id: case_being_drafted_trigger.id,
         team: another_team,
-        user: responder, 
-        state: 'rejected', 
+        user: responder,
+        state: 'rejected',
         role: 'responding',
         reasons_for_rejection: 'testing'
       )
@@ -757,14 +757,14 @@ RSpec.describe Case::Base, type: :model do
       case_being_drafted_trigger.reload
 
       expect(case_being_drafted_trigger.teams).to match_array [
-        responding_team, 
+        responding_team,
         managing_team,
         approving_team,
         another_team]
 
       expect(case_being_drafted_trigger.permitted_teams).to match_array [
-        responding_team, 
-        managing_team, 
+        responding_team,
+        managing_team,
         approving_team]
     end
   end
@@ -1457,7 +1457,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe '#to_csv' do
     it 'delegates to CSVExporter' do
-      kase = build :assigned_case
+      kase = build_stubbed :assigned_case
       exporter = double(CSVExporter)
       expect(CSVExporter).to receive(:new).with(kase).and_return(exporter)
       expect(exporter).to receive(:to_csv)
@@ -1538,8 +1538,8 @@ RSpec.describe Case::Base, type: :model do
 
     it 'returns correct number of days late for open case' do
       Timecop.freeze(Time.new(2020, 9, 11, 9, 45, 33)) do
-        tase = build :case, 
-                      created_at: Time.new(2020, 8, 1, 9, 45, 00), 
+        tase = build_stubbed :case,
+                      created_at: Time.new(2020, 8, 1, 9, 45, 00),
                       received_date: Time.new(2020, 8, 1, 9, 45, 33)
         tase.external_deadline = Time.new(2020, 9, 4, 9, 00, 33)
         expect(tase.num_days_late).to eq 5
@@ -1559,27 +1559,27 @@ RSpec.describe Case::Base, type: :model do
 
     it 'is 1 when case is received today' do
       Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
-        tase = build :case, 
-                      created_at: Time.new(2020, 9, 11, 9, 45, 00), 
+        tase = build_stubbed :case,
+                      created_at: Time.new(2020, 9, 11, 9, 45, 00),
                       received_date: Time.new(2020, 9, 11, 9, 45, 33)
         expect(tase.num_days_taken).to be 1
-      end 
+      end
     end
 
     it 'returns correct number of days for open case' do
       Timecop.freeze(Time.new(2020, 9, 15, 9, 50, 33)) do
-        tase = build :case, 
-                      created_at: Time.new(2020, 9, 11, 9, 45, 00), 
+        tase = build_stubbed :case,
+                      created_at: Time.new(2020, 9, 11, 9, 45, 00),
                       received_date: Time.new(2020, 9, 11, 9, 45, 33)
         expect(tase.num_days_taken).to be 3
-      end 
+      end
     end
 
     it 'returns correct number of days late for closed case' do
       Timecop.freeze(Time.new(2020, 9, 15, 9, 45, 33)) do
-        closed_tase = build :closed_case, 
+        closed_tase = build_stubbed :closed_case,
                             created_at: Date.new(2020, 9, 11),
-                            received_date: Date.new(2020, 9, 4), 
+                            received_date: Date.new(2020, 9, 4),
                             date_responded: Date.new(2020, 9, 11)
         expect(closed_tase.num_days_taken).to eq 6
       end
@@ -1593,7 +1593,7 @@ RSpec.describe Case::Base, type: :model do
         tase = create :case_being_drafted
         expect(tase.has_pit_extension?).to be false
         expect(tase.num_days_taken_after_extension).to be nil
-      end 
+      end
     end
 
     it 'is 1 when case is received today' do
@@ -1601,7 +1601,7 @@ RSpec.describe Case::Base, type: :model do
         tase = create :case_being_drafted, :extended_for_pit
         expect(tase.has_pit_extension?).to be true
         expect(tase.num_days_taken_after_extension).to be 1
-      end 
+      end
     end
 
     it 'returns correct number of days for open case' do
@@ -1609,10 +1609,10 @@ RSpec.describe Case::Base, type: :model do
       Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
         tase = create :case_being_drafted, :extended_for_pit
         expect(tase.has_pit_extension?).to be true
-      end 
+      end
       Timecop.freeze(Time.new(2020, 9, 15, 9, 50, 33)) do
         expect(tase.num_days_taken_after_extension).to be 3
-      end 
+      end
     end
 
     it 'returns correct number of days late for closed case' do
@@ -1620,11 +1620,11 @@ RSpec.describe Case::Base, type: :model do
       Timecop.freeze(Time.new(2020, 9, 4, 9, 50, 33)) do
         closed_tase = create :closed_case, :extended_for_pit
         expect(closed_tase.has_pit_extension?).to be true
-      end 
+      end
       Timecop.freeze(Time.new(2020, 9, 11, 9, 50, 33)) do
         closed_tase.date_responded = Date.new(2020, 9, 11)
         closed_tase.save!
-      end 
+      end
       Timecop.freeze(Time.new(2020, 9, 15, 9, 45, 33)) do
         expect(closed_tase.num_days_taken_after_extension).to eq 6
       end

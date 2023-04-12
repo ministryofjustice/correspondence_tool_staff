@@ -43,6 +43,8 @@ en:
         external_deadline: Final deadline
       case/sar:
         third_party: ''
+      commissioning_document:
+        template_name: Data request document
       report:
         correspondence_type: Case type
       case/sar/offender:
@@ -108,24 +110,28 @@ en:
               blank: must be selected
             flag_for_disclosure_specialists:
               blank: Please choose yes or no
+            sent_to_sscl_at:
+              not_allowed: "not allowed if there is a removal reason"
+            remove_sent_to_sscl_reason:
+              blank: "cannot be blank if sent date is removed"
 
         case/foi/standard:
           attributes: &foi_attr
             received_date:
               blank: cannot be blank
-            email: 
+            email:
               blank: cannot be blank
-            name: 
+            name:
               blank: cannot be blank
-            postal_address: 
+            postal_address:
               blank: cannot be blank
-            requester_type: 
+            requester_type:
               blank: cannot be blank
-            delivery_method: 
+            delivery_method:
               blank: cannot be blank
-            subject: 
+            subject:
               blank: cannot be blank
-            flag_for_disclosure_specialists: 
+            flag_for_disclosure_specialists:
               blank: cannot be blank
             date_responded:
               before_received: "cannot be before date received"
@@ -181,7 +187,7 @@ en:
           attributes:
             received_date:
               future: cannot be in the future
-              past: is too far in the past
+              past: decision received from ICO must be within 40 days of today
               blank: cannot be blank
             external_deadline:
               past: cannot be in the past
@@ -205,7 +211,7 @@ en:
             <<: *foi_attr
             received_date:
               future: cannot be in the future
-              past: is too far in the past
+              past: decision received from ICO must be within 40 days of today
               blank: cannot be blank
             external_deadline:
               past: cannot be in the past
@@ -275,7 +281,7 @@ en:
               blank: cannot be blank
             third_party_address:
               blank: cannot be blank
-            is_partial_case: 
+            is_partial_case:
               invalid: Cannot be marked if case is marked as SSCL managing case
             subject_full_name:
               blank: cannot be blank
@@ -332,6 +338,10 @@ en:
             url:
               bad_file_type: "unnacceptable type %{type} for file: %{filename}"
               invalid_url: "url is invalid for file: %{filename}"
+        commissioning_document:
+          attributes:
+            template_name:
+              blank: is required
         data_request:
           attributes:
             date_from:
@@ -346,6 +356,8 @@ en:
               future: cannot be in the future
               not_empty: should be blank if the request is not complete
             request_type:
+              blank: cannot be blank
+            location:
               blank: cannot be blank
         linked_case:
           missing: "does not exist"
@@ -369,7 +381,7 @@ en:
         case_transition:
           attributes:
             message:
-              blank: cannot be blank            
+              blank: cannot be blank
 
   activemodel:
     attributes:
@@ -503,6 +515,9 @@ en:
     edit: Edit
     delete: Delete
     update_partial_flags: Update partial case
+    select_document: Select Day 1 request document
+    download_document: Download Day 1 request document
+    generate_document: Generate Day 1 request document
 
   helpers:
     fieldset:
@@ -513,6 +528,11 @@ en:
       data_request:
         completed: Is this request now complete?
         request_type: What data is needed?
+        date_from: Date from
+        date_to: Date to
+        date_requested: Date requested
+      commissioning_document:
+        template_name: Which data request document would you like to use for the Day 1 email?
       offender_sar:
         flag_for_disclosure_specialists: "Flag as high profile case?"
         info_held_status_abbreviation: Was the information held?
@@ -600,6 +620,8 @@ en:
       case:
         linked_case_number: " For example 170131001"
         upload_comment: This will be added to the converstation section of the case.
+      contact:
+        data_request_emails: Add multiple email addresses on separate lines
       data_request:
         location: Where is the data held?
       data_request_log:
@@ -677,12 +699,27 @@ en:
           probation_records: Probation records
           probation_archive: Probation archive
           other: Other
+          cross_borders: Cross Borders
+          cat_a: CAT A
+          ndelius: Ndelius contact lists
         request_type_note: Please provide more details
         cached_date_received: Date when data request is complete
         cached_num_pages: Number of pages received
         completed: "Yes, all data received"
+        date_completed: Date completed
       data_request_log:
         num_pages: Number of pages
+      commissioning_document:
+        template_name:
+          cat_a: CAT A
+          cctv: CCTV & BWCF
+          cross_border: Cross Borders
+          mappa: MAPPA
+          pdp: PDP
+          prison: Prison records
+          probation: Probation records
+          security: Security records
+          telephone: Telephone recordings
       types:
         Case::FOI::Standard: FOI
         Case::FOI::TimelinessReview: FOI - Internal review for timeliness
@@ -718,7 +755,7 @@ en:
         ico_officer_name: Name of the ICO information officer who's handling this case
         ico_reference_number: ICO case reference number
         message: ICO's request details cannot be blank
-        original_case: 
+        original_case:
         received_date: Date received at MOJ
       ico:
         email: "Recipient email address"
@@ -745,14 +782,14 @@ en:
         <<: *overturned_ico
       overturned_sar:
         <<: *overturned_ico
-      case_sar_standard: 
+      case_sar_standard:
         message: Full case details
         postal_address: Recipient postal address
-        reply_method: How and where should the information be sent?        
+        reply_method: How and where should the information be sent?
         subject: Case summary
         subject_full_name: "Full name of the person about whom information is being requested (data subject)"
-        subject_type: Who is the person the information is being requested about?      
-        third_party: Is the information being requested on someone's behalf?      
+        subject_type: Who is the person the information is being requested about?
+        third_party: Is the information being requested on someone's behalf?
         request_method: How was the request received by MOJ?
       sar:
         email: "Recipient email address"
@@ -772,7 +809,7 @@ en:
         received_date: When was the SAR received?
         recipient: The information should be sent to
         subject_full_name: "Full name of data subject"
-        subject_address: "What is the location of the data subject?"        
+        subject_address: "What is the location of the data subject?"
         subject_type: What is their relationship to the MOJ?
         request_method: How was the request received by MOJ?
       offender_sar:
@@ -796,6 +833,7 @@ en:
           data_subject: The data subject
           recipient: Requester
           third_party: Third party
+        remove_sent_to_sscl_reason: Reason for removing date
         requester_reference: Requester reference (optional)
         subject: "Case summary"
         subject_address: "What is the location of the data subject?"
@@ -944,12 +982,14 @@ en:
       reason_for_lateness:
         blank: Please provide the detail of the reason
         invalid: Invalid reason
-        
+
 
   notices:
     case_cleared: "%{team} has been notified that the response is %{status}."
     case_closed: "You've closed this case"
     closure_details_updated: You have updated the closure details for this case.
+    commissioning_document_uploaded: You have uploaded the document.
+    no_commissioning_document_uploaded: No changes were made.
     response_uploaded: You have uploaded the response for this case.
     request_uploaded: You have uploaded the request files for this case.
     no_request_uploaded: No changes were made.
@@ -1055,6 +1095,7 @@ en:
         time_taken_result:
           one: "%{count} calendar day"
           other: "%{count} calendar days"
+      sent_to_sscl: Sent to SSCL
       status: Status
       subject_address: Location
       subject_aliases: Alias
@@ -1110,10 +1151,11 @@ en:
       view_case: "Case number "
       who_its_with: With
     contacts:
-      address_page_heading: Organisation address book 
+      address_page_heading: Organisation address book
       address_page_subheading: Private addresses should not be entered
       add_new_address: Add new address
       delete_address_confirmation: Are you sure you want to delete this address?
+      delete_error: Cannot delete an address that is in use
       find_address: Find an address
       find_solicitor_address: Find a solicitor address
       add_or_edit_address: Add or edit addresses (opens in new window)
@@ -1253,7 +1295,7 @@ en:
         date_ico_decision_received_date: Date decision was received at MoJ
       form:
         uploaded_request_files: Upload relevant files (optional)
-    ico_foi: 
+    ico_foi:
       record_further_action:
         heading: Further ICO request
       require_further_action:
@@ -1327,6 +1369,7 @@ en:
       complaint_request_dated_legend: What is the date on the complaint?
       date_sar_received_legend: When was the complaint received at MOJ?
       date_offender_sar_received_legend: When was the SAR received?
+      date_sent_to_sscl_legend: Date data sent to SSCL for Vetting?
       date_of_birth: "Date of birth"
       external_deadline: "Final deadline"
       internal_deadline: Draft deadline
@@ -1419,10 +1462,10 @@ en:
       edit_case_details: Edit case details
       new_form_common:
         dropzone: Requestor's proof of ID and other documents
-      outcome_reasons: 
+      outcome_reasons:
         heading: Reason(s) for outcome being partially upheld or overturned?
         hint: Select all that apply
-      other_option_details: Please provide more details 
+      other_option_details: Please provide more details
     search_bar:
       heading: Case number, requester name or keyword
       hint: For example, 170113001, John Smith or prison meals
@@ -1448,6 +1491,7 @@ en:
       further_actions_required_heading: SSCL managing case
       flag_choice_yes: "Yes"
       flag_choice_no: "No"
+      sent_to_sscl_heading: "Data sent to SSCL"
     offender_sar_complaint:
       link_offender_sar_heading: Link SAR case
       check_sar_details_heading: Check details of the SAR
@@ -1482,6 +1526,11 @@ en:
     data_requests:
       create:
         success: Data request successfully recorded
+      show:
+        heading: View data request
+        link: View
+        edit_link: Edit data request
+        emails_header: Commissioning emails
       edit:
         heading: Edit data request
         link: Edit
@@ -1505,6 +1554,19 @@ en:
         success: Data request updated
         unprocessed: No changes made
       upto: "Up to"
+    commissioning_documents:
+      new:
+        heading: Select Day 1 request document
+      edit:
+        heading: Select Day 1 request document
+      replace:
+        heading: Upload document
+      table_headings:
+        request_document: Request document
+        last_updated: Last updated
+        sent: Sent
+        action: Action
+
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness

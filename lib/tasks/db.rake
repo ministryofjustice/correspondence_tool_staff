@@ -4,7 +4,7 @@ namespace :db do
   task :clear => :environment do
     if is_on_production?
       puts "Cannot run this command on production environment!"
-    else          
+    else
       HostEnv.safe do
         clear_database
       end
@@ -24,18 +24,18 @@ namespace :db do
       Rake::Task['db:seed:dev:users'].invoke
     end
   end
-  
+
   task :structure_load => :environment do
     if is_on_production?
       puts "Cannot run this command on production environment!"
-    else          
+    else
       structure_file = "#{Rails.root}/db/structure.sql"
       db_connection_url = ENV['DATABASE_URL'] || 'postgres://postgres:@localhost/correspondence_platform_development'
       command = "psql #{db_connection_url} < #{structure_file}"
       system command
     end
   end
- 
+
   def clear_database
     conn = ActiveRecord::Base.connection
     tables = conn.tables
@@ -48,8 +48,6 @@ namespace :db do
       attachment_type
       cases_delivery_methods
       requester_type
-      request_types_enum
-      request_types
       search_query_type
       state
       team_roles

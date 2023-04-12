@@ -17,6 +17,8 @@ module PageObjects
         element :town, '#contact_town'
         element :county, '#contact_county'
         element :postcode, '#contact_postcode'
+        element :data_request_name, '#contact_data_request_name'
+        element :data_request_emails, '#contact_data_request_emails'
         element :contact_type, '#countact_contact_type'
 
         element :submit, '.button'

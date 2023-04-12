@@ -18,7 +18,7 @@ module PageObjects
           element :postal_address, '#offender_sar_complaint_postal_address'
 
           def fill_in_case_details(params={})
-            kase = FactoryBot.build :offender_sar_complaint, params
+            kase = FactoryBot.build_stubbed :offender_sar_complaint, params
 
             if kase.third_party?
               choose('offender_sar_complaint_recipient_third_party_recipient', visible: false)

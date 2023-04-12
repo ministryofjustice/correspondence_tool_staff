@@ -12,7 +12,7 @@ require 'rails_helper'
 
 RSpec.describe Feedback, type: :model do
 
-  let(:feedback) { build :feedback}
+  let(:feedback) { build_stubbed :feedback}
 
   describe 'has a factory' do
     it 'that produces a valid object by default' do

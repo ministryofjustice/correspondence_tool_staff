@@ -68,13 +68,6 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
   end
 
   describe '#create' do
-    before do
-      sign_in responder
-      post :create, params: params
-      expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
-      expect(flash[:notice]).to eq nil
-    end
-
     context 'partial validations' do
       let(:errors) { assigns(:case).errors.messages }
       let(:complaint) { create(:offender_sar_complaint) }
@@ -86,6 +79,13 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
           third_party_company_name: '',
           postal_address: '',
         }
+      end
+
+      before do
+        sign_in responder
+        post :create, params: params
+        expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
+        expect(flash[:notice]).to eq nil
       end
 
       context 'for step link-offender-sar-case' do
@@ -343,6 +343,57 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         end
       end
     end
+
+    context "created by sscl user" do
+      let(:original_case) { find_or_create :offender_sar_case }
+      let(:sscl_user) { create :sscl_user }
+      let(:future_date) { 1.day.from_now }
+      let(:deadline_date) { 1.month.from_now }
+      let(:params) do
+        {
+          current_step: 'set-deadline',
+          offender_sar_complaint: {
+            external_deadline_dd: deadline_date.day,
+            external_deadline_mm: deadline_date.month,
+            external_deadline_yyyy: deadline_date.year,
+          }
+        }
+      end
+
+      let(:session) do
+        {
+          offender_sar_complaint_state: {
+            received_date_dd: '1',
+            received_date_mm: '1',
+            received_date_yyyy: '2022',
+            third_party: false,
+            flag_as_high_profile: false,
+            date_of_birth_dd: '1',
+            date_of_birth_mm: '1',
+            date_of_birth_yyyy: '1990',
+            subject_address: "subject address",
+            subject_full_name: "full name",
+            subject_type: "detainee",
+            recipient: "subject_recipient",
+            original_case: original_case,
+            complaint_type: 'standard_complaint',
+            complaint_subtype: 'sscl_partial_case',
+            priority: 'normal',
+            external_deadline_dd: deadline_date.day.to_s,
+            external_deadline_mm: deadline_date.month.to_s,
+            external_deadline_yyyy: deadline_date.year.to_s,
+          }
+        }
+      end
+
+      it "creates case and redirects" do
+        sign_in sscl_user
+        post :create, params: params, session: session
+        expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
+        expect(flash[:notice]).to eq 'Case created successfully'
+        expect(response).to be_redirect
+      end
+    end
   end
 
   describe 'transitions' do
@@ -378,7 +429,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
   end
 
   describe '#update' do
-    let(:errors) { assigns(:case).errors.messages }  
+    let(:errors) { assigns(:case).errors.messages }
 
     let(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
     let(:params) {{ id: offender_sar_complaint.id }}

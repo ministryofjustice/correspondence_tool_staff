@@ -6,7 +6,7 @@ RSpec.describe DataRequest, type: :model do
       subject(:data_request) {
         described_class.new(
           offender_sar_case: build(:offender_sar_case),
-          user: build(:user),
+          user: build_stubbed(:user),
           location: 'X' * 500, # Max length
           request_type: 'all_prison_records',
           request_type_note: '',
@@ -51,15 +51,9 @@ RSpec.describe DataRequest, type: :model do
 
       it { should be_valid }
 
-      it 'requires location' do
-        invalid_values = ['', ' ', nil]
-
-        invalid_values.each do |bad_location|
-          data_request.location = bad_location
-          expect(data_request.valid?).to be false
-        end
-
-        data_request.location = 'ABCD' * 500 # Exceed max 500 chars
+      it 'requires contact when there is no location' do
+        data_request.location = nil
+        data_request.contact_id = nil
         expect(data_request.valid?).to be false
       end
 
@@ -91,31 +85,31 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
-    context 'date when data request is complete' do 
-      subject(:data_request) { build(:data_request, completed: true) }
+    context 'date when data request is complete' do
+      subject(:data_request) { build_stubbed(:data_request, completed: true) }
 
-      it 'required if the case is marked as completed' do 
+      it 'required if the case is marked as completed' do
         data_request.cached_date_received = nil
         expect(subject).not_to be_valid
-        expect(subject.errors[:cached_date_received]).to eq ["must be provided if request is complete"]        
-      end 
+        expect(subject.errors[:cached_date_received]).to eq ["must be provided if request is complete"]
+      end
 
-      it 'The value cannot be in the future' do 
+      it 'The value cannot be in the future' do
         data_request.cached_date_received = 1.day.from_now
         expect(subject).not_to be_valid
-        expect(subject.errors[:cached_date_received]).to eq ["cannot be in the future"]        
-      end 
+        expect(subject.errors[:cached_date_received]).to eq ["cannot be in the future"]
+      end
 
-      it 'The value should be blank if data is not complete' do 
+      it 'The value should be blank if data is not complete' do
         data_request.completed = false
         data_request.cached_date_received = 1.day.from_now
         expect(subject).not_to be_valid
-        expect(subject.errors[:cached_date_received]).to eq ["should be blank if the request is not complete"]        
-      end 
+        expect(subject.errors[:cached_date_received]).to eq ["should be blank if the request is not complete"]
+      end
     end
 
     context 'when request_type is other' do
-      subject(:data_request) { build(:data_request, request_type: 'other', request_type_note: nil) }
+      subject(:data_request) { build_stubbed(:data_request, request_type: 'other', request_type_note: nil) }
 
       it 'ensures the note is present' do
         expect(subject).not_to be_valid
@@ -124,7 +118,7 @@ RSpec.describe DataRequest, type: :model do
     end
 
     context 'when both from and to date is set' do
-      subject(:data_request) { build(:data_request, date_from: 1.year.ago, date_to: 2.years.ago)}
+      subject(:data_request) { build_stubbed(:data_request, date_from: 1.year.ago, date_to: 2.years.ago)}
 
       it 'ensures the to date is after the from date' do
         expect(subject).not_to be_valid
@@ -167,33 +161,36 @@ RSpec.describe DataRequest, type: :model do
   describe '#request_type' do
     context 'valid values' do
       it 'does not error' do
-        expect(build(:data_request, request_type: 'all_prison_records')).to be_valid
-        expect(build(:data_request, request_type: 'security_records')).to be_valid
-        expect(build(:data_request, request_type: 'nomis_records')).to be_valid
-        expect(build(:data_request, request_type: 'nomis_other')).to be_valid
-        expect(build(:data_request, request_type: 'nomis_contact_logs')).to be_valid
-        expect(build(:data_request, request_type: 'probation_records')).to be_valid
-        expect(build(:data_request, request_type: 'cctv_and_bwcf')).to be_valid
-        expect(build(:data_request, request_type: 'telephone_recordings')).to be_valid
-        expect(build(:data_request, request_type: 'probation_archive')).to be_valid
-        expect(build(:data_request, request_type: 'mappa')).to be_valid
-        expect(build(:data_request, request_type: 'pdp')).to be_valid
-        expect(build(:data_request, request_type: 'court')).to be_valid
-        expect(build(:data_request, request_type: 'other', request_type_note: 'test')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'all_prison_records')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'security_records')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'nomis_records')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'nomis_other')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'nomis_contact_logs')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'probation_records')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'cctv_and_bwcf')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'telephone_recordings')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'probation_archive')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'mappa')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'pdp')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'court')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'cross_borders')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'cat_a')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'ndelius')).to be_valid
+        expect(build_stubbed(:data_request, request_type: 'other', request_type_note: 'test')).to be_valid
       end
     end
 
     context 'invalid value' do
       it 'errors' do
         expect {
-          build(:data_request, request_type: 'user')
+          build_stubbed(:data_request, request_type: 'user')
         }.to raise_error ArgumentError
       end
     end
 
     context 'nil' do
       it 'errors' do
-        kase = build(:data_request, request_type: nil)
+        kase = build_stubbed(:data_request, request_type: nil)
         expect(kase).not_to be_valid
         expect(kase.errors[:request_type]).to eq ["cannot be blank"]
       end
@@ -223,13 +220,13 @@ RSpec.describe DataRequest, type: :model do
 
   describe '#status' do
     context 'when data request is in progress' do
-      let!(:data_request) { build(:data_request) }
+      let!(:data_request) { build_stubbed(:data_request) }
       it 'returns completed' do
         expect(data_request.status).to eq 'In progress'
       end
     end
     context 'when data request is completed' do
-      let!(:data_request) { build(:data_request, :completed) }
+      let!(:data_request) { build_stubbed(:data_request, :completed) }
       it 'returns completed' do
         expect(data_request.status).to eq 'Completed'
       end

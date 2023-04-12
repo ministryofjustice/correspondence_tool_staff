@@ -208,7 +208,7 @@ class CasesController < ApplicationController
       @permitted_correspondence_types += correspondence_types_for_current_user
     elsif policy(Case::Base).can_manage_offender_sar?
       @permitted_correspondence_types << CorrespondenceType.offender_sar
-      @permitted_correspondence_types << CorrespondenceType.offender_sar_complaint 
+      @permitted_correspondence_types << CorrespondenceType.offender_sar_complaint
     end
   end
 
@@ -221,25 +221,21 @@ class CasesController < ApplicationController
   private
 
   def correspondence_types_for_current_user
-    types = current_user.  
-              managing_teams.  
-              first.  
-              correspondence_types.  
+    types = current_user.
+              managing_teams.
+              first.
+              correspondence_types.
               menu_visible.
               order(:name).to_a
 
     add_sar_ir_to_permitted_types_if_sars_allowed(types)
-
-    sar_ir_enabled = FeatureSet.sar_internal_review.enabled?
-
-    types.delete(CorrespondenceType.sar_internal_review) unless sar_ir_enabled
     types
   end
 
   def add_sar_ir_to_permitted_types_if_sars_allowed(types)
     does_not_have_sar_ir = types.exclude?(CorrespondenceType.sar_internal_review)
     has_sar = types.include?(CorrespondenceType.sar)
-    if has_sar && does_not_have_sar_ir 
+    if has_sar && does_not_have_sar_ir
       types << CorrespondenceType.sar_internal_review
     end
   end

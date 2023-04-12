@@ -73,17 +73,17 @@ describe SearchQuery do
                                                  :filter_open_case_status,
                                                  :filter_sensitivity,
                                                  :filter_status,
-                                                 :filter_timeliness, 
+                                                 :filter_timeliness,
                                                  :filter_high_profile,
                                                  :filter_complaint_type,
-                                                 :filter_complaint_priority, 
-                                                 :filter_complaint_subtype, 
+                                                 :filter_complaint_priority,
+                                                 :filter_complaint_subtype,
                                                  :filter_caseworker,
                                                  :filter_partial_case_flag,
                                                  :filter_retention_state,
-                                                 :date_responded_from, 
-                                                 :date_responded_to, 
-                                                 :received_date_from, 
+                                                 :date_responded_from,
+                                                 :date_responded_to,
+                                                 :received_date_from,
                                                  :received_date_to
                                                 ]
     end
@@ -239,14 +239,14 @@ describe SearchQuery do
                                                 :filter_timeliness,
                                                 :filter_high_profile,
                                                 :filter_complaint_type,
-                                                :filter_complaint_priority, 
+                                                :filter_complaint_priority,
                                                 :filter_complaint_subtype,
                                                 :filter_caseworker,
                                                 :filter_partial_case_flag,
                                                 :filter_retention_state,
-                                                :date_responded_from, 
-                                                :date_responded_to, 
-                                                :received_date_from, 
+                                                :date_responded_from,
+                                                :date_responded_to,
+                                                :received_date_from,
                                                 :received_date_to
                                               ]
     end
@@ -577,7 +577,7 @@ describe SearchQuery do
   end
 
   describe '#available_filters' do
-    context 'FOI/SAR/ICO case type related for London users' do      
+    context 'FOI/SAR/ICO case type related for London users' do
 
       it 'Open cases tab' do
         search_query = create :search_query
@@ -586,17 +586,17 @@ describe SearchQuery do
           CaseFilter::CaseTypeFilter,
           CaseFilter::CaseTriggerFlagFilter,
           CaseFilter::TimelinessFilter,
-          CaseFilter::ExternalDeadlineFilter, 
-          CaseFilter::InternalDeadlineFilter, 
+          CaseFilter::ExternalDeadlineFilter,
+          CaseFilter::InternalDeadlineFilter,
         ]
       end
 
       it 'Closed cases tab' do
         search_query = create :search_query
         expect(search_query.available_filters(search_query.user, 'closed').map(&:class)).to eq [
-          CaseFilter::ReceivedDateFilter, 
-          CaseFilter::DateRespondedFilter, 
-          CaseFilter::CaseTypeFilter, 
+          CaseFilter::ReceivedDateFilter,
+          CaseFilter::DateRespondedFilter,
+          CaseFilter::CaseTypeFilter,
           CaseFilter::ExemptionFilter,
         ]
       end
@@ -604,16 +604,16 @@ describe SearchQuery do
       it 'My open tab' do
         search_query = create :search_query
         expect(search_query.available_filters(search_query.user, 'my_cases').map(&:class)).to eq [
-          CaseFilter::OpenCaseStatusFilter, 
+          CaseFilter::OpenCaseStatusFilter,
         ]
       end
 
       it 'Search tab' do
         search_query = create :search_query
         expect(search_query.available_filters(search_query.user, 'search_cases').map(&:class)).to eq [
-          CaseFilter::CaseStatusFilter, 
+          CaseFilter::CaseStatusFilter,
           CaseFilter::OpenCaseStatusFilter,
-          CaseFilter::CaseTypeFilter, 
+          CaseFilter::CaseTypeFilter,
           CaseFilter::CaseTriggerFlagFilter,
           CaseFilter::TimelinessFilter,
           CaseFilter::ExternalDeadlineFilter,
@@ -622,7 +622,7 @@ describe SearchQuery do
       end
     end
 
-    context 'Offender / Complaint case types related for Branson users' do 
+    context 'Offender / Complaint case types related for Branston users' do
       let(:user) { find_or_create(:branston_user) }
 
       it 'Open cases tab' do
@@ -631,8 +631,8 @@ describe SearchQuery do
           CaseFilter::OpenCaseStatusFilter,
           CaseFilter::CaseTypeFilter,
           CaseFilter::TimelinessFilter,
-          CaseFilter::ExternalDeadlineFilter, 
-          CaseFilter::CaseHighProfileFilter,       
+          CaseFilter::ExternalDeadlineFilter,
+          CaseFilter::CaseHighProfileFilter,
           CaseFilter::CaseComplaintTypeFilter,
           CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
@@ -643,12 +643,12 @@ describe SearchQuery do
       it 'Closed cases tab' do
         search_query = create :search_query
         expect(search_query.available_filters(user, 'closed').map(&:class)).to eq [
-          CaseFilter::ReceivedDateFilter, 
-          CaseFilter::DateRespondedFilter, 
-          CaseFilter::CaseTypeFilter, 
-          CaseFilter::CaseHighProfileFilter,       
+          CaseFilter::ReceivedDateFilter,
+          CaseFilter::DateRespondedFilter,
+          CaseFilter::CaseTypeFilter,
+          CaseFilter::CaseHighProfileFilter,
           CaseFilter::CaseComplaintTypeFilter,
-          CaseFilter::CaseComplaintSubtypeFilter, 
+          CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
           CaseFilter::CasePartialCaseFlagFilter,
         ]
@@ -657,9 +657,9 @@ describe SearchQuery do
       it 'My open tab' do
         search_query = create :search_query
         expect(search_query.available_filters(user, 'my_cases').map(&:class)).to eq [
-          CaseFilter::OpenCaseStatusFilter, 
+          CaseFilter::OpenCaseStatusFilter,
           CaseFilter::CaseComplaintTypeFilter,
-          CaseFilter::CaseComplaintSubtypeFilter, 
+          CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
         ]
       end
@@ -684,14 +684,14 @@ describe SearchQuery do
       it 'Search tab' do
         search_query = create :search_query
         expect(search_query.available_filters(user, 'search_cases').map(&:class)).to eq [
-          CaseFilter::CaseStatusFilter, 
+          CaseFilter::CaseStatusFilter,
           CaseFilter::OpenCaseStatusFilter,
-          CaseFilter::CaseTypeFilter, 
+          CaseFilter::CaseTypeFilter,
           CaseFilter::TimelinessFilter,
           CaseFilter::ExternalDeadlineFilter,
-          CaseFilter::CaseHighProfileFilter,       
+          CaseFilter::CaseHighProfileFilter,
           CaseFilter::CaseComplaintTypeFilter,
-          CaseFilter::CaseComplaintSubtypeFilter, 
+          CaseFilter::CaseComplaintSubtypeFilter,
           CaseFilter::CaseComplaintPriorityFilter,
           CaseFilter::CasePartialCaseFlagFilter,
         ]
