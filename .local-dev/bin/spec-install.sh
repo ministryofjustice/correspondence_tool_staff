@@ -9,7 +9,7 @@ if ! bundle show rspec-core 2>/dev/null; then
   source ~/.bashrc
 
   sub_header_divider "${YELLOW}Installing Gems${NC}"
-  # fix for Nokogiri on arm64; helps to install platform agnostic/specific software
+  # fix for Nokogiri on arm64; helps to install platform agnostic/non-specific gems
   bundle config set force_ruby_platform true
   # install gems under current user
   bundler install | indent
@@ -30,9 +30,9 @@ if ! bundle show rspec-core 2>/dev/null; then
   sub_header_divider "${YELLOW}Attempting to update webdriver version for chrome${NC}"
   bin/rails webdrivers:chromedriver:update | indent
 
-  sub_header "${GREEN}Installation complete! Use ${DARK_GRAY}rspec ${GREEN}like ${NC} bundle exec rspec [spec/path/to/_spec.rb][:line-number]\n\n${DARK_GRAY}******     ${GREEN}Or, use ${DARK_GRAY} parallel testing${GREEN} like${NC} bundle exec rails parallel:spec"
+  sub_header "${GREEN}Installation complete! Use ${YELLOW}rspec ${GREEN}like ${NC} bundle exec rspec [spec/path/to/_spec.rb][:line-number]\n\n${DARK_GRAY}******     ${GREEN}Or, use ${YELLOW}parallel testing${GREEN} like${NC} bundle exec rails parallel:spec"
 
   exit;
 fi
 
-sub_header "${GREEN}Ready to play? Use ${DARK_GRAY}rspec ${GREEN}like ${NC} bundle exec rspec [spec/path/to/_spec.rb][:line-number]"
+sub_header "${GREEN}Ready to play? Use ${YELLOW}rspec ${GREEN}like ${NC} bundle exec rspec [spec/path/to/_spec.rb][:line-number]"
