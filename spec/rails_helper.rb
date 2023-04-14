@@ -27,23 +27,60 @@ require 'capybara/rspec'
 # See https://stackoverflow.com/questions/55406656
 # and https://www.rubydoc.info/gems/capybara/Capybara/Node/Element#scroll_to-instance_method
 require 'webdrivers'
-
 require 'rails-controller-testing'
 require 'paper_trail/frameworks/rspec'
-Webdrivers.cache_time = 86_400
 
+Webdrivers.cache_time = 86_400
 Capybara.default_max_wait_time = 4
+
+options = Selenium::WebDriver::Chrome::Options.new
+options.add_argument('--headless')
+options.add_argument('--disable-gpu')
+options.add_argument('--no-sandbox')
+options.add_argument('--start-maximized')
+options.add_argument('--window-size=1980,2080')
+options.add_argument('--enable-features=NetworkService,NetworkServiceInProcess')
+
+# Add a configuration to connect to Chrome remotely through Selenium Grid
+Capybara.register_driver :remote_selenium do |app|
+
+  Capybara.app_host = "http://#{IPSocket.getaddress(Socket.gethostname)}:3000"
+
+  # Set the host and port
+  Capybara.server_host = '0.0.0.0'
+  Capybara.server_port = '3000'
+
+  # and point capybara at our chromium docker container
+  Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://chrome:4444/wd/hub", capabilities: options)
+
+end
+
+
+Capybara.asset_host = 'http://localhost:3000'
+
+Capybara.register_driver :chrome do |app|
+  Capybara::Selenium::Driver.new(app, browser: :chrome)
+end
+
+Capybara.register_driver :headless_chrome do |app|
+  options = Selenium::WebDriver::Chrome::Options.new
+
+  unless ENV["CHROME_DEBUG"]
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--start-maximized')
+    options.add_argument('--window-size=1980,2080')
+    options.add_argument('--enable-features=NetworkService,NetworkServiceInProcess')
+  end
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: options)
+
+end
 
 Capybara.server = :puma, { Silent: true }
 
-if ENV.has_key?('CHROME_IS_REMOTE')
-  puts 'Chrome is remote'
-  require 'capybara_remote_helper'
-else
-  puts 'Chrome is headless'
-  require 'capybara_headless_helper'
-end
-
+Capybara.javascript_driver = ENV['CHROME_IS_REMOTE'] ? :remote_selenium : :headless_chrome
 
 
 # Set these env variables to push screenshots for failed tests to S3.

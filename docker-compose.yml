@@ -62,7 +62,7 @@ services:
 
   chrome:
     container_name: cts_chrome
-    image: seleniarm/standalone-chromium
+    image: ${CHROME_CONTAINER_IMAGE}
     environment:
       VIRTUAL_HOST: "chrome.track-a-query.docker"
       VIRTUAL_PORT: "4444"
