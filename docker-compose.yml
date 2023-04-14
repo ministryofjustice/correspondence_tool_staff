@@ -126,6 +126,7 @@ services:
       - db
     environment:
       VIRTUAL_HOST: ${CTS_HOST_NAME}:5050
+      VIRTUAL_PORT: 5050
       PGADMIN_DEFAULT_EMAIL: cts@pgadmin.com
       PGADMIN_DEFAULT_PASSWORD: let-me-in
     links:
