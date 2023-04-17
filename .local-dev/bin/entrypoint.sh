@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# fix for Nokogiri on arm64; helps to install platform agnostic/specific software
+bundle config set force_ruby_platform true
 bundler install
 
 # Make these available via Settings in the app

@@ -40,7 +40,7 @@ services:
 
   spec:
     container_name: cts_spec
-    shm_size: '1g'
+    shm_size: '2g'
     build:
       args:
         development_mode: "true"
@@ -48,12 +48,30 @@ services:
       dockerfile: .local-dev/Dockerfile
       target: spec
     tty: true
+    environment:
+      CHROME_IS_REMOTE: 1
+    ports:
+      - "3010:3010"
     depends_on:
       - db
+      - chrome
     volumes:
       - .:/usr/src/app/
       - ~/.aws:/root/.aws
       - spec-gems:/home/circleci/.rubygems
+
+  chrome:
+    container_name: cts_chrome
+    image: ${CHROME_CONTAINER_IMAGE}
+    environment:
+      VIRTUAL_HOST: "chrome.track-a-query.docker"
+      VIRTUAL_PORT: "4444"
+      VNC_NO_PASSWORD: 1
+    ports:
+      - '4444:4444'
+      - '7900:7900'
+      - '5900:5900'
+
   db:
     container_name: cts_postgres
     image: postgres:12.5
@@ -108,6 +126,7 @@ services:
       - db
     environment:
       VIRTUAL_HOST: ${CTS_HOST_NAME}:5050
+      VIRTUAL_PORT: 5050
       PGADMIN_DEFAULT_EMAIL: cts@pgadmin.com
       PGADMIN_DEFAULT_PASSWORD: let-me-in
     links:

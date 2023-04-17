@@ -11,7 +11,7 @@ build: env docker-sync dc-build servers
 launch: docker-check docker-sync up-daemon servers
 
 # destroy everything and start again
-rebuild: docker-sync dc-reset-bg servers
+rebuild: dc-reset-bg servers
 
 # a collection of server starters
 servers: docker-check setup browser-sync server
@@ -22,24 +22,25 @@ env:
 docker-sync:
 	docker-sync start
 
-dc:
+dc: dory
 	docker compose up -d app
 	docker compose run --rm --entrypoint=/bin/sh app
 
 dc-clean:
 	rm -rf ./log* ./tmp* ./.local-dev/.setup-complete
 	docker compose down -v
+	docker-sync stop
 	docker-sync clean
 	docker system prune -f
 	clear
 
-dc-reset: dc-clean
+dc-reset: dc-clean dory docker-sync
 	docker compose up --build
 
-dc-reset-bg: dc-clean
+dc-reset-bg: dc-clean dory docker-sync
 	docker compose up -d --build
 
-dc-build: # no cleaning
+dc-build: dory # no cleaning
 	docker compose up -d --build
 
 down:
@@ -47,10 +48,9 @@ down:
 	docker-sync clean
 	docker compose down
 
-up: env
-	docker compose up
+up: launch
 
-up-daemon: env
+up-daemon: env dory
 	docker compose up -d
 
 setup:
@@ -95,8 +95,12 @@ specs: docker-check
 	@docker compose exec --workdir /usr/src/app spec bash
 
 docker-check:
-	@chmod +x ./.local-dev/bin/check-docker-running.sh
-	@./.local-dev/bin/check-docker-running.sh
+	@chmod +x ./.local-dev/bin/check-docker.sh
+	@./.local-dev/bin/check-docker.sh
+
+dory:
+	@chmod +x ./.local-dev/bin/check-dory.sh
+	@./.local-dev/bin/check-dory.sh
 
 #####
 ## Production CI mock
