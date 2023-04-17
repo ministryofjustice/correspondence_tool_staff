@@ -16,31 +16,10 @@ approve it, and the CI tests passing, before it can be merged. Feel free to use
 the issue tags on your PR to indicate if it is a WIP or if it is ready for
 reviewing.
 
-Please consider using the provided Docker environment to develop this app over your core linux environment. There are [huge benefits using Docker](https://greatminds.consulting/insight/top-10-benefits-you-will-get-by-using-docker) in development including standardisation, increased productivity and CI efficiencies.
 
-### Basic setup using Docker
+### Basic Setup
 
-#### Requirements
-
-* [Docker](https://docs.docker.com/desktop/install/mac-install/)
-* [Dory Proxy](https://github.com/FreedomBen/dory) - _provides named hosts via reverse proxy, allowing multiple apps to use localhost at one time._
-* [Docker Sync](https://docker-sync.readthedocs.io/en/latest/index.html) - _provides high-performance 2-way synchronisation of files between host and app containers._
-
-Setup is simple; local-dev is configured to manage the implementation of both Dory and Docker Sync. 
-
-Install Dory
-
-```
-brew install dory
-```
-
-Install Docker Sync
-
-```
-gem install docker-sync
-```
-
-### Getting started  
+#### Cloning This Repository
 
 Clone this repository then `cd` into the new directory
 
@@ -49,109 +28,115 @@ $ git clone git@github.com:ministryofjustice/correspondence_tool_staff.git
 $ cd correspondence_tool_staff
 ```
 
-Environment settings for Docker reside in `.env.example`. When starting Docker the environment will be created for you.
+### Installing the app for development
 
+Create a `.env` file in the root of the application and give it the following vars:
 
-> When the service is up and running, an array of pseudo accounts will have been created.
-> The password that is defined in the variable `DEV_PASSWORD` will be needed to access all pseudo accounts.
- 
-### Installation
-
-The easiest way to get the app running is to execute Makefile commands.
-
->The `make` utility is commonly used as a compiler however we use it as a stage to combine, execute and compress
-more cumbersome commands. 
-
-Running the following will get the application started. Please be patient, this process may take a good few minutes to
-complete and `dory up` will require root access to write to the host resolver - this is expected.
-
+***.env***
 ```
-dory up
+# App specific
+RAILS_ENV=development
+RACK_ENV=development
+DATABASE_URL=postgres://postgres@db/correspondence_tool_staff_${RAILS_ENV}
+REDIS_URL=redis://redis@log:6379
+REDIS_URL_SIDEKIQ=${REDIS_URL}/1
+RAILS_DEVELOPMENT_HOSTS=app
+POSTGRES_DB=db
+AWS_ACCESS_KEY_ID=not_real
+AWS_SECRET_ACCESS_KEY=not_real
+SECRET_KEY_BASE=not_real
+DEV_PASSWORD="a-h!p-sw!ng!ng-pAssword"
+
+
+# Google Analytics
+GA_TRACKING_ID=
+SETTINGS__SMOKE_TESTS__USERNAME=
+SETTINGS__SMOKE_TESTS__PASSWORD=
+SETTINGS__GOVUK_NOTIFY_API_KEY=
+
+# Devise OmniAuth - Azure Active Directory
+# Ask a colleague in the team to provide these to you.
+OMNIAUTH_AZURE_TENANT_ID=
+OMNIAUTH_AZURE_CLIENT_ID=
+OMNIAUTH_AZURE_CLIENT_SECRET= 
+```
+
+Get the application up and running:
+```
 make build
 ```
-Once the installation process has completed, a Puma server will be running in your terminal.
 
 The application will be available at the following addresses:
 
-**Application:**
 ```
-http://track-a-query.docker/users/sign_in
+Application
+http://localhost:3000/
+
+BrowserSync: 
+http://localhost:3001/
+
+BrowserSync UI: 
+http://localhost:3002/
 ```
 
-**DB Admin** (login details in `docker-compose.yml`):
-```
-http://pgadmin.track-a-query.docker:5050/
-```
-
-**Selenium Grid UI** (feature tests):
-```
-http://chrome.track-a-query.docker/ui
-```
-
-**BrowserSync:**
-```
-http://track-a-query.docker:3001/
-```
-
-**BrowserSync UI:** 
-```
-http://track-a-query.docker:3002/
-```
-
-> During usual operation it is normal to `make down` and `make launch` to stop and start the application, respectively.
-
-### Working in the terminal 
-
-Run the following in a separate terminal window.
+To gain access to a command prompt in your running application, please, run the following in a separate
+terminal window.
 
 ```
-make shell
+make docker-shell
 ```
+... this is the default make command so you could simply run
+``` 
+make
+```
+From this prompt, You can run `irb` and a host of other commands.
 
-From this prompt, You can run `irb`, `rails c` and a host of other commands.
+Once the installation process has completed, a Puma server will be running in your terminal.
 
-**IMPORTANT**; the following removes all data and volumes... to nuke the entire installation and rebuild the app, run:
+IMPORTANT; the following removes all data and volumes... to nuke the entire installation and rebuild the app, run:
 
 ```
 make rebuild 
 ```
 
-### The Testing Environment
+#### Changing Environments
 
-The `docker compose` environment comes packed with a dedicated testing environment that requires an initial setup.
+You can switch from a development to testing environment by exiting Puma server (if running in the default development
+env) and executing the following.
 
-In a separate terminal window, execute:
-
-```
-make specs
-```
-
-Once the interface has initialised, execute:
+First, change the RAILS_ENV environment variable in your .env file to
 
 ```
-make spec-setup
+RAILS_ENV=test
 ```
 
-Once set up has completed you won't have to run that again unless the volumes are removed.
+Then execute;
+
+```
+make down && make build
+```
+
+The environment will be recreated for you. Please be patient with this, it may take a good few minutes to complete due
+to environments requiring a different database and Gems to function correctly. 
 
 ------------
 
-### Make commands
+#### Make commands
 
 There are several `make` commands configured in the `Makefile`. These are mostly just convenience wrappers for longer or more complicated commands.
 
-Nb. with exception to `make spec-setup`, all other `make` commands are run from the host machine, i.e. outside the containers.
+Nb. all `make` commands are run from the host machine, i.e. outside the containers.
 
-| Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-|---------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `make docker-shell`                                                                                                                   | Generate an .env file (if not exist), run the app in the background and open an interactive shell.<br/>***Nb.*** does not launch servers for browser viewing, run `make build` instead. This command is for accessing a detached app container in order to execute administrative operations. You may like to run `make shell` to open a prompt in the container launched by `docker compose up`. From within you can run commands such as  `irb` and `rails c` |
-| `make`                                                                                                                                | Alias of `make docker-shell`.                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| `make build`                                                                                                                          | Build and run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                                                                                                                                                                          |
-| `make launch`                                                                                                                         | Run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                                                                                                                                                                                    |
-| `make rebuild`                                                                                                                        | Runs `make dc-clean` and then rebuilds the application from the ground up and brings it online.                                                                                                                                                                                                                                                                                                                                                                 |
+| Command&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description                                                                                                                                                                                                                                                                                                  |
+|---------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `make docker-shell`                                                                                                                   | Generate an .env file (if not exist), run the app in the background and open an interactive shell.<br/>***Nb.*** does not launch servers for browser viewing, run `make build` instead. This command is for accessing a detached app container in order to execute administrative operations, such as  `irb` |
+| `make`                                                                                                                                | Alias of `make docker-shell`.                                                                                                                                                                                                                                                                                |
+| `make build`                                                                                                                          | Build and run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                       |
+| `make launch`                                                                                                                         | Run the application in the background, launch Sidekiq, BrowserSync and Puma.                                                                                                                                                                                                                                 |
+| `make rebuild`                                                                                                                        | Runs `make dc-clean` and then rebuilds the application from the ground up and brings it online.                                                                                                                                                                                                              |
 
 
-### Other helpers
+##### Helpers
 Whilst these can be used independently, they are generally used in the commands above to help overcome complex
 installation.
 
@@ -170,14 +155,12 @@ installation.
 | `make restart`                                                                                                                        | Stop docker compose (`down`), relaunch (`up`) and display an interactive shell on the app container                                                                   |
 | `make shell-app`                                                                                                                      | Open an interactive command prompt on the app container                                                                                                               |
 | `make test`                                                                                                                           | Run tests on the application.                                                                                                                                         |
-| `make docker-sync`                                                                                                                    | Starts a docker-sync container used to speed up development on the front end.                                                                                         |
 
 
 ---------------
 
-> Below is the normal setup outside of Docker. Please consider using Docker as the environment can more closely match production, rather than your machines environment.  
 
-### Testing
+#### Testing
 
 This project can produce code coverage data (w/o JS or views) using the `simplecov` gem
 set COVERAGE=1 (or any value) to generate a coverage report.
@@ -190,7 +173,7 @@ in order to speed up execution. Otherwise running the tests takes an unacceptabl
 The default parallelism is 8 (override by setting PARALLEL_TEST_PROCESSORS) which seems to be about
 right for a typical Macbook Pro (10,1 single processor with 4 cores)
 
-#### To set up parallel testing
+##### To set up parallel testing
 
 Create the required number of extra test databases:
 ```
@@ -200,20 +183,20 @@ Load the schema into all of the extra test databases:
 ```
 rails parallel:load_structure
 ```
-##### To run all the tests in parallel
+###### To run all the tests in parallel
 ```
 rails parallel:spec
 ```
-##### To run only feature tests in parallel
+###### To run only feature tests in parallel
 ```
 rails parallel:spec:features
 ```
-##### To run only the non-feature tests in parallel
+###### To run only the non-feature tests in parallel
 ```
 rails parallel:spec:non_features
 ```
 
-#### Browser testing
+###### Browser testing
 
 We use [headless chrome](https://developers.google.com/web/updates/2017/04/headless-chrome)
 for Capybara tests, which require JavaScript. You will need to install Chrome >= 59.
@@ -234,6 +217,27 @@ When you have set `CHROME_DEBUG`, you should notice chrome start up and appear o
 taskbar/Docker. You can now click on chrome and watch it run through your tests.
 If you have a `binding.pry`  in your tests the browser will stop at that point.
 
+##### Migrations
+
+Only the most recent migrations will be present in [db/migrate](db/migrate), as when setting up the application locally, the `structure.sql` will be used instead.  
+You only need to run migrations (`db:migrate`) when pulling new code that may include them.
+
+Older migrations, unlikely to be needed anymore, are archived in [db/archived_migrations](db/archived_migrations) for reference.
+
+Some of these older migrations made use of the gem `schema_plus_enums` which is no longer used due to incompatibilities with other gem versions.
+
+##### Creating individual test correspondence items
+
+Individual correspondence items can be quickly created by logging in as David Attenborough, and using the admin tab to create any kind of case in any state.
+
+##### Creating bulk test correspondence items
+
+To create 200 cases in various states with various responders for search testing, you can use the following rake task:
+```
+rake seed:search:data
+```
+It appears that redis needs to be running to attempt this task - but it doesn't currently work for unknown reasons.
+
 ### Additional Setup
 
 #### Libreoffice
@@ -250,61 +254,6 @@ cd /Applications/LibreOffice.app/Contents/MacOS && ./soffice $1 $2 $3 $4 $5 $6
 ```
 
 The above script is needed by the libreconv gem to do the conversion.
-
-#### BrowserSync Setup
-
-[BrowserSync](https://www.browsersync.io/) is setup and configured for local development
-using the [BrowserSync Rails gem](https://github.com/brunoskonrad/browser-sync-rails).
-BrowserSync helps us test across different browsers and devices and sync the
-various actions that take place.
-
-##### Dependencies
-
-Node.js:
-Install using `brew install node` and then check its installed using `node -v` and `npm -v`
-
-- [Team Treehouse](http://blog.teamtreehouse.com/install-node-js-npm-mac)
-- [Dy Classroom](https://www.dyclassroom.com/howto-mac/how-to-install-nodejs-and-npm-on-mac-using-homebrew)
-
-##### Installing and running:
-
-Bundle install as normal then
-After bundle install:
-
-```bash
-bundle exec rails generate browser_sync_rails:install
-```
-
-This will use Node.js npm (Node Package Manager(i.e similar to Bundle or Pythons PIP))
-to install BrowserSync and this command is only required once. If you run into
-problems with your setup visit the [Gems README](https://github.com/brunoskonrad/browser-sync-rails#problems).
-
-To run BrowserSync start your rails server as normal then in a separate terminal window
-run the following rake task:
-
-```bash
-bundle exec rails browser_sync:start
-```
-
-You should see the following output:
-```
-browser-sync start --proxy localhost:3000 --files 'app/assets, app/views'
-[Browsersync] Proxying: http://localhost:3000
-[Browsersync] Access URLs:
- ------------------------------------
-       Local: http://localhost:3001
-    External: http://xxx.xxx.xxx.x:3001
- ------------------------------------
-          UI: http://localhost:3002
- UI External: http://xxx.xxx.xxx.x:3002
- ------------------------------------
-[Browsersync] Watching files...
-```
-Open any number of browsers and use either the local or external address and your
-browser windows should be sync. If you make any changes to assets or views then all
-the browsers should automatically update and sync.
-
-The UI URL are there if you would like to tweak the BrowserSync server and configure it further
 
 #### Emails
 
@@ -328,17 +277,17 @@ $ export SETTINGS__CTS_EMAIL_PORT=5000
 
 #### Devise OmniAuth - Azure Active Directory
 
-In addition to sign in with email and password, there is an integration with 
+In addition to sign in with email and password, there is an integration with
 Azure Active Directory through Devise OmniAuth.
 
 For this to work in your local machine, you will need to set 3 ENV variables.  
 See the instructions in the `.env.example` file.
 
-A colleague can provide this to you. Usually, the tenant and client will be 
-the same for all local/dev environments, but the secret should be unique to 
+A colleague can provide this to you. Usually, the tenant and client will be
+the same for all local/dev environments, but the secret should be unique to
 your machine, as this makes it easier to revoke it in case of a leak.
 
-This feature can be enabled/disabled through the `enabled_features` mechanism 
+This feature can be enabled/disabled through the `enabled_features` mechanism
 configured in [config/settings.yml](config/settings.yml).
 
 #### Uploads
@@ -356,9 +305,9 @@ it, there are two ways of doing this:
 
 In order to perform certain actions, you need to have valid S3 credentials active
 You can configure the aws-sdk with your access and secret key by placing them in
- the `[default]` section in `.aws/credentials`:
+the `[default]` section in `.aws/credentials`:
 
-Retrieve details from the secret created in Kubernetes in the  [s3.tf terraform resource](https://github.com/ministryofjustice/cloud-platform-environments/blob/master/namespaces/live.cloud-platform.service.justice.gov.uk/track-a-query-development/resources/s3.tf#L74)
+Retrieve details from the secret created in Kubernetes in the  [s3.tf terraform resource](https://github.com/ministryofjustice/cloud-platform-environments/blob/master/namespaces/live-1.cloud-platform.service.justice.gov.uk/track-a-query-development/resources/s3.tf#L74)
 
 
 `kubectl -n track-a-query-production get secret track-a-query-ecr-credentials-output -o yaml`
@@ -546,31 +495,23 @@ control aspects of the build. The available build arguments are:
       nodejs
   ```
 
-  Required to run Puma with ExecJS
+Required to run Puma with ExecJS
 
 
   ```
       zip
   ```
 
-  Required to run closed case reports
+Required to run closed case reports
 
-  ```
-      postgresql-client-12.6-r0
-  ```
+ ```
+  	postgresql-client-12.6-r0
+ ```
 
-  Required for debugging database by developers within the running container - app will work without this.
-
-#### ARM Mac Users
-
-If you are creating a local image for deploying to an environment, you will need to change the target platform by running:
-
-```
-export DOCKER_DEFAULT_PLATFORM=linux/amd64
-```
+Required for debugging database by developers within the running container - app will work without this.
 
 #### Generating Documentation
- 
+
 You can generate documentation for the project with:
 
 ```
@@ -590,7 +531,85 @@ For our deploy process please see the our [confluence page](https://dsdmoj.atlas
 
 ## Keeping secrets and sensitive information secure
 
-There should be *absolutely no secure credentials* committed in this repo. Information about secret management can be found in the related confluence pages.
+### Uninstall overcommit
+
+If you have installed overcommit in the past, then you need to uninstall it in order to get git-secrets' hooks work properly, the steps are:-
+
+Uninstall the gem
+
+    $ gem uninstall overcommit
+
+Remove the rules from .git/config file under [overcommit] section
+Remove the following hooks from ./git/hooks (Do check them before deleting them)
+```
+commit-msg		
+post-commit		
+post-rewrite		
+pre-push		
+prepare-commit-msg
+overcommit-hook		
+post-checkout		
+post-merge		
+pre-commit		
+pre-rebase
+```
+
+### git-secrets
+
+To prevent the commitment of secrets and credentials into git repositories we use awslabs / git-secrets (https://github.com/awslabs/git-secrets)
+
+For MacOS, git-secrets can be install via Homebrew.  From the terminal run the following:
+
+    $ brew install git-secrets
+
+Then install the git hooks:
+
+    $ cd /path/to/my/repo
+    $ git secrets --install
+    $ git secrets --register-aws
+
+A 'canary' string has been added to the first line of the secrets.yaml files on all environments.  Git Secrets has to be set to look for this string with:
+
+    $ git secrets --add --literal '#WARNING_Secrets_Are_Not_Encrypted!'
+
+**Please note** please make sure use --literal with exact string, forget to use this flag and change any bit of the string will cause the checking for those files skippped
+
+Finally checking the installation result:-
+First, check the hooks, open your local repository .git/hooks/, a few new hooks should have installed: pre-commit, commit-msg, prepare-commit-msg, each file should look something like this:
+
+    #!/usr/bin/env bash
+    git secrets --pre_commit_hook -- "$@"
+
+Second, check the .git/config, a new section called [secrets] should have been added by end of this file, you should be able to see the rules from aws and the one for 'canary' string.
+
+**How it works**
+
+When committing a branch change git-secrets scans the whole repository for a specific set of strings.  In this case, the 'canary' string (described above) has been placed in all the secrets files. So, if the encrypted secrets files are unlocked, you will be warned before pushing the branch.
+
+
+### git-crypt
+
+The tool is used for encryping sensitive information such as secrets or keys information
+e.g.
+Sensitive information required to deploy the application into Cloud Platform
+are stored in the appropriate environment settings folders found in
+
+```
+config/kubernetes/<environment>/secrets.yaml
+```
+For MacOS brew users: `brew install git-crypt`
+
+For other installation guides: https://github.com/AGWA/git-crypt
+
+To decrypt secrets, you must require authorization from your line manager.
+
+**Are about to add new secret files?**
+Please remember:
+Add the 'canary' string into the new secret file.
+Make sure this file is within the scope defined in the .gitattributes, if not, you need to add it in
+
+If in doubt about handling any secure credentials please do not hesitate to `#ask-cloud-platform`
+or `#security` in MOJ Slack.
 
 # Case Journey
 1. **unassigned**
@@ -618,7 +637,7 @@ There should be *absolutely no secure credentials* committed in this repo. Infor
 1. **closed**
    The kilo has marked the case as closed.
 
-# How to upgrade Ruby 2.5.x to Ruby 2.7.x on local environment 
+# How to upgrade Ruby 2.5.x to Ruby 2.7.x on local environment
 
 1. Checkout the branch with ruby version defined as 2.7.2 in .ruby-version
 
@@ -627,7 +646,7 @@ There should be *absolutely no secure credentials* committed in this repo. Infor
 ```
 $ rbenv install
 ```
-it should pick up the version defined in .ruby-version 
+it should pick up the version defined in .ruby-version
 
 If you get error somehow telling you not being able to find available stable relesae 2.7.2, you could try the following commands
 
@@ -642,12 +661,12 @@ $ rbenv install --list-all
 ```
 once you confirm, you can re-run `rbenv install` comand to continue the process.
 
-3. Update the gem system 
+3. Update the gem system
 ```
 $ gem update --system
 ```
 
-4. Install bundle 2.2.11 and install those gems 
+4. Install bundle 2.2.11 and install those gems
 ```
 $ gem install bundler -v 2.2.11
 $ bundler install
@@ -657,7 +676,7 @@ $ bundler install
 
 ## Dependabot
 
-Dependabot creates PRs to help us keep track of our dependency updates. This is great but can lead to a little bit of work if you integrate these changes one by one (for instance, having to run the test suite over and over again). 
+Dependabot creates PRs to help us keep track of our dependency updates. This is great but can lead to a little bit of work if you integrate these changes one by one (for instance, having to run the test suite over and over again).
 
 You can manually combine the changes into one PR and then push this and wait for the tests to run, but this is admin that can be automated so why bother?
 
@@ -666,8 +685,4 @@ The app has a github action "Combine PRs" which automatically combines dependabo
 To use this: "Actions" > "All workflows" > on the left "Combine PRs" > "Run workflows"
 
 See here for the [original developers README](https://github.com/hrvey/combine-prs-workflow)
-
-## Addendum
-
-Please note: the file upload functionality will not work locally without an AWS S3 bucket setup as a file store.
 
