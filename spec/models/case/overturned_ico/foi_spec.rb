@@ -109,6 +109,7 @@ describe Case::OverturnedICO::FOI do
             new_case.received_date = 41.days.ago
             expect(new_case).not_to be_valid
             expect(new_case.errors[:received_date]).to eq ["of decision from ICO must be within 40 days of today"]
+          end
         end
 
         context 'on create' do
