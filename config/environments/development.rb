@@ -1,5 +1,13 @@
 require "active_support/core_ext/integer/time"
 
+Rails.application.config.hosts = [
+  IPAddr.new("0.0.0.0/0"),        # All IPv4 addresses.
+  IPAddr.new("::/0"),             # All IPv6 addresses.
+  "localhost",                    # The localhost reserved domain.
+  ENV["RAILS_DEVELOPMENT_HOST_DNS"], # Additional host for development.
+  ENV["RAILS_DEVELOPMENT_HOST_NAME"]
+]
+
 Rails.application.configure do
   config.after_initialize do
     Bullet.enable        = true

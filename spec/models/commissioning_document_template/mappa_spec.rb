@@ -26,6 +26,7 @@ RSpec.describe CommissioningDocumentTemplate::Mappa do
         dpa_reference: '20062007',
         offender_name: 'Robert Badson',
         date_of_birth: '11/03/2000',
+        date_range: '',
         aliases: 'Bad Bob',
         date: '21/10/2022',
         prison_numbers: 'AB12345',
