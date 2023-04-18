@@ -187,7 +187,7 @@ en:
           attributes:
             received_date:
               future: cannot be in the future
-              past: decision received from ICO must be within 40 days of today
+              past: of decision from ICO must be within 40 days of today
               blank: cannot be blank
             external_deadline:
               past: cannot be in the past
@@ -211,7 +211,7 @@ en:
             <<: *foi_attr
             received_date:
               future: cannot be in the future
-              past: decision received from ICO must be within 40 days of today
+              past: of decision from ICO must be within 40 days of today
               blank: cannot be blank
             external_deadline:
               past: cannot be in the past
