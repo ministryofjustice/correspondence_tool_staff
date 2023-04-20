@@ -19,7 +19,7 @@ module PageObjects
           element :submit_button, '.button'
 
           def fill_in_case_details(params={})
-            kase = FactoryBot.build :offender_sar_complaint, params
+            kase = FactoryBot.build_stubbed :offender_sar_complaint, params
 
             if kase.third_party?
               choose('offender_sar_complaint_third_party_true', visible: false)

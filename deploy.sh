@@ -75,13 +75,6 @@ function _deploy() {
       ;;
   esac
 
-  # Ensure that the git-crypt secrets are unlocked ready for deployment
-  if grep -rq "\x0GITCRYPT" config/kubernetes/$environment/secrets.yaml; then
-    p "\e[31mFatal error: repository is locked with git-crypt\e[0m"
-    p "\e[31mUnlock using 'git-crypt unlock'\e[0m\n"
-    return 1
-  fi
-
   # Confirm what's going to happen and ask for confirmation
   docker_image_tag=${docker_registry}:${image_tag}
 
@@ -161,8 +154,13 @@ function _deploy() {
   kubectl apply \
     -f config/kubernetes/${environment}/configmap.yaml -n $namespace
 
+  # Apply migrations job config
+  kubectl set image -f config/kubernetes/${environment}/migrations.yaml \
+          migrations=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
+
   # Apply image specific config
   kubectl set image -f config/kubernetes/${environment}/deployment.yaml \
+          pending-migrations=${docker_image_tag} \
           webapp=${docker_image_tag} \
           uploads=${docker_image_tag} \
           quickjobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
@@ -170,10 +168,12 @@ function _deploy() {
   if [ $environment == "production" ]
   then
     kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            pending-migrations=${docker_image_tag} \
             anonjobs=${docker_image_tag} \
             jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
   else
     kubectl set image -f config/kubernetes/${environment}/deployment_sidekiq.yaml \
+            pending-migrations=${docker_image_tag} \
             jobs=${docker_image_tag} --local --output yaml | kubectl apply -n $namespace -f -
   fi
 
@@ -181,7 +181,6 @@ function _deploy() {
   kubectl apply \
     -f config/kubernetes/${environment}/service.yaml \
     -f config/kubernetes/${environment}/ingress-live.yaml \
-    -f config/kubernetes/${environment}/secrets.yaml \
     -n $namespace
 
   if [ $environment == "production" ]

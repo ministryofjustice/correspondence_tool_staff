@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 describe 'cases/sar/new.html.slim', type: :view do
-  let(:sar_case)                { build :sar_case }
+  let(:sar_case)                { build_stubbed :sar_case }
   let(:disclosure_specialist)   { find_or_create :disclosure_specialist }
 
   def login_as(user)

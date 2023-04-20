@@ -3,7 +3,7 @@ module Cases
     NUM_NEW_DATA_REQUESTS = 3
 
     before_action :set_case
-    before_action :set_data_request, only: [:edit, :update, :destroy]
+    before_action :set_data_request, only: [:show, :edit, :update, :destroy]
     before_action :authorize_action
     after_action  :verify_authorized
 
@@ -30,6 +30,10 @@ module Cases
       else
         raise ArgumentError.new("Unknown result: #{service.result.inspect}")
       end
+    end
+
+    def show
+      @commissioning_document = @data_request.commissioning_document&.decorate
     end
 
     def edit
@@ -69,12 +73,13 @@ module Cases
     end
 
     def set_data_request
-      @data_request = DataRequest.find(params[:id])
+      @data_request = DataRequest.find(params[:id]).decorate
     end
 
     def create_params
       params.require(:data_request).permit(
         :location,
+        :contact_id,
         :request_type,
         :request_type_note,
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,
@@ -87,6 +92,7 @@ module Cases
     def update_params
       params.require(:data_request).permit(
         :location,
+        :contact_id,
         :request_type,
         :request_type_note,
         :date_requested_dd, :date_requested_mm, :date_requested_yyyy,

@@ -19,7 +19,7 @@ module PageObjects
 
 
           def fill_in_case_details(params={})
-            kase = FactoryBot.build :offender_sar_complaint, params
+            kase = FactoryBot.build_stubbed :offender_sar_complaint, params
 
             request_dated_day.set(kase.request_dated_dd)
             request_dated_month.set(kase.request_dated_mm)

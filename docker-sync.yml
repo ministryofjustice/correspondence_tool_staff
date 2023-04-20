@@ -1,0 +1,7 @@
+version: "2"
+options:
+  verbose: true
+syncs:
+  cts-app-sync:
+    src: .
+    sync_excludes: ['dumps', '.circle-ci', '.git-crypt', '.git', '.github']

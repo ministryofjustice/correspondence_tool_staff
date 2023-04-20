@@ -72,7 +72,7 @@ module PageObjects
 
         sections :case_attachments,
                 PageObjects::Sections::Cases::CaseAttachmentSection,
-                '.case-attachments-group'
+                '.case-attachments .case-attachments-group'
 
         section :what_do_you_want_to_do,
                 PageObjects::Sections::Cases::WhatDoYouWantToDoSection,
@@ -133,6 +133,10 @@ module PageObjects
         end
 
         section :offender_sar_reason_for_lateness, '.section-reason-for-lateness' do
+          element :change_link, 'a'
+        end
+
+        section :offender_sar_sent_to_sscl, '.section-sent-to-sscl' do
           element :change_link, 'a'
         end
 

@@ -76,7 +76,7 @@
                   if: Workflows::Predicates#not_overturned?
                 extend_for_pit:
                 flag_for_clearance:
-                  # This even defined here is purely because of current implementation for 
+                  # This even defined here is purely because of current implementation for
                   # request_further_clearance for non-triggered case otherwise, such event
                   # shouldn't need to be defined for triggered case
                   transition_to_using: Workflows::Conditionals#next_state_for_non_trigger
@@ -274,6 +274,9 @@
                   if: Workflows::Predicates#case_is_assigned_to_responder_or_approver_in_same_team_as_current_user
                   after_transition: Workflows::Hooks#reassign_user_email
                 remove_linked_case:
+                remove_response:
+                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                   transition_to_using: Workflows::Conditionals#remove_response_next_state
                 upload_responses:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
 
@@ -301,7 +304,7 @@
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?
                 remove_linked_case:
                 remove_response:
-                  if: Workflows::Predicates#responder_is_member_of_assigned_team?
+                  if: Workflows::Predicates#responder_is_member_of_assigned_team_and_not_approved?
                   transition_to_using: Workflows::Conditionals#remove_response_next_state
                 respond:
                   if: Workflows::Predicates#responder_is_member_of_assigned_team?

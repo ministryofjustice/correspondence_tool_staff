@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe Case::ICO::SARDecorator do
-  let(:ico_sar_case) { build :ico_sar_case }
+  let(:ico_sar_case) { build_stubbed :ico_sar_case }
 
   it 'instantiates the correct decorator' do
     expect(Case::ICO::SAR.new.decorate).to be_instance_of Case::ICO::SARDecorator

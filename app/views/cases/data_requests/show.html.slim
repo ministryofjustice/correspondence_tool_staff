@@ -1,0 +1,100 @@
+- content_for :page_title do
+  = t('page_title.data_request_show_page')
+
+- content_for :heading
+  = t('.heading')
+
+- content_for :sub_heading
+
+= link_to("Back", case_path(@case), class: 'govuk-back-link')
+
+span.visually-hidden
+  = t('common.case.header_case_number')
+  = @case.number
+
+= render partial: 'layouts/header'
+
+.grid-row.data-request
+  .column-full
+    h2.bold-medium.data-request__number
+      = "#{@case.number} - #{@case.subject_full_name}"
+    .form-group
+      label.form-label
+        = t('helpers.label.data_request.location')
+      p.data_request_location
+        = @data_request.location
+    .form-group
+      label.form-label
+        = t('helpers.fieldset.data_request.request_type')
+      p.data_request_request_type
+        = t("helpers.label.data_request.request_type.#{@data_request.request_type}")
+    .form-group
+      label.form-label
+        = t('helpers.fieldset.data_request.date_requested')
+      p.data_request_date_requested
+        = l @data_request.date_requested, format: :default
+    .form-group
+      label.form-label
+        = t('helpers.fieldset.data_request.date_from')
+      p.data_request_date_from
+        - if @data_request.date_from.nil?
+          = 'N/A'
+        - else
+          = l @data_request.date_from, format: :default
+    .form-group
+      label.form-label
+        = t('helpers.fieldset.data_request.date_to')
+      p.data_request_date_to
+        - if @data_request.date_to.nil?
+          = 'N/A'
+        - else
+          = l @data_request.date_to, format: :default
+    .form-group
+      label.form-label
+        = t('helpers.label.data_request.cached_num_pages')
+      p.data_request_pages_received
+        = @data_request.cached_num_pages
+    .form-group
+      label.form-label
+        = t('helpers.fieldset.data_request.completed')
+      p.data_request_completed
+        - if @data_request.completed
+          = t('cases.offender_sar.flag_choice_yes')
+        - else
+          = t('cases.offender_sar.flag_choice_no')
+    - if @data_request.completed
+      .form-group
+        label.form-label
+          = t('helpers.label.data_request.date_completed')
+        p.data_request_date_completed
+          = l @data_request.cached_date_received, format: :default
+    - if @case.editable?
+        = link_to t('.edit_link'), edit_case_data_request_path(@case, @data_request), class: 'data-requests__action'
+    hr
+    - if @commissioning_document.present? && FeatureSet.email_commissioning_document.enabled?
+      div.commissioning-document
+        h2.heading-medium
+          = t('.emails_header')
+        table.report
+          thead
+            tr
+              th = t('cases.commissioning_documents.table_headings.request_document')
+              th = t('cases.commissioning_documents.table_headings.last_updated')
+              th = t('cases.commissioning_documents.table_headings.sent')
+              th = t('cases.commissioning_documents.table_headings.action')
+          tbody
+            tr
+              td = @commissioning_document.request_document
+              td = @commissioning_document.updated_at
+              td = @commissioning_document.sent?
+              td
+                span = @commissioning_document.download_link
+                = ' | '
+                span = @commissioning_document.replace_link
+        div.button-holder
+          = link_to t('button.select_document'), edit_case_data_request_commissioning_document_path(@case, @data_request, @commissioning_document), class: 'button data_request_select_document', style: 'margin-top: -6px'
+    - else
+      div.button-holder
+        = link_to t('button.select_document'), new_case_data_request_commissioning_document_path(@case, @data_request), class: 'button data_request_select_document', style: 'margin-top: -6px'
+
+

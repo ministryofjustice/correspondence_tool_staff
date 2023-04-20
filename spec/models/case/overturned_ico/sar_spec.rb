@@ -95,22 +95,22 @@ describe Case::OverturnedICO::SAR do
       context 'too far in the past' do
         context 'new record' do
           it 'errors' do
-            new_case.received_date = 29.days.ago
+            new_case.received_date = 41.days.ago
             expect(new_case).not_to be_valid
-            expect(new_case.errors[:received_date]).to eq ['is too far in the past']
+            expect(new_case.errors[:received_date]).to eq ["of decision from ICO must be within 40 days of today"]
           end
         end
 
         context 'on create' do
           it 'errors' do
-            record = described_class.create(received_date: 29.days.ago)
-            expect(record.errors[:received_date]).to eq ['is too far in the past']
+            record = described_class.create(received_date: 41.days.ago)
+            expect(record.errors[:received_date]).to eq ["of decision from ICO must be within 40 days of today"]
           end
         end
 
         context 'existing record' do
           it 'does not error' do
-            record = described_class.create(received_date: 29.days.ago)
+            record = described_class.create(received_date: 41.days.ago)
             allow(record).to receive(:new_record?).and_return(false)
             record.valid?
             expect(record.errors[:received_date]).to be_empty

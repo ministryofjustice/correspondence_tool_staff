@@ -4,7 +4,7 @@ require 'rails_helper'
 module Stats
   describe R103SarBusinessUnitPerformanceReport do
 
-    before(:all) { 
+    before(:all) {
       create_report_type(abbr: :r103)
 
       @bizgrp_ab = create :business_group, name: 'BGAB'
@@ -28,8 +28,8 @@ module Stats
       @vex = create :refusal_reason, :vex
 
       # create cases based on today's date of 30/6/2017
-      create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, type: :vex, ident: 'case for team a - responded late')
-      create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, type: :vex, ident: 'case for team a - responded late')
+      case_1 = create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, type: :vex, ident: 'case for team a - responded late')
+      case_2 = create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, type: :vex, ident: 'case for team a - responded late')
       create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late')
       create_case(received: '20170605', responded: nil,        deadline: '20170625', team: @team_a, responder: @responder_a, ident: 'case for team a - open late')
       create_case(received: '20170605', responded: nil,        deadline: '20170702', team: @team_a, responder: @responder_a, ident: 'case for team a - open in time')
@@ -45,6 +45,10 @@ module Stats
       create_case(received: '20170601', responded: '20170628', deadline: '20170625', team: @team_a, responder: @responder_a, type: :sar_tmm, ident: 'case for team a - responded late')
       create_case(received: '20170604', responded: '20170629', deadline: '20170625', team: @team_a, responder: @responder_a, type: :sar_tmm, ident: 'case for team a - responded late')
       create_case(received: '20170606', responded: '20170625', deadline: '20170630', team: @team_a, responder: @responder_a, type: :sar_tmm, ident: 'case for team a - responded in time')
+
+      # create some SAR IR cases which should be ignored
+      create(:sar_internal_review, original_case: case_1)
+      create(:closed_sar_internal_review, original_case: case_2)
 
       # create some FOI cases which should be ignored
       create :closed_case
@@ -105,7 +109,7 @@ module Stats
           before do
             Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
               d1 = Date.new(2017, 6, 4)
-              d2 = Date.new(2017, 6, 30)    
+              d2 = Date.new(2017, 6, 30)
               report = R103SarBusinessUnitPerformanceReport.new(period_start: d1, period_end: d2)
               @scope = report.case_scope
             end
@@ -119,7 +123,6 @@ module Stats
           it 'excludes TMM cases' do
             expect(@scope.map(&:refusal_reason_id)).not_to include(@sar_tmm.id)
           end
-
         end
       end
 
@@ -132,11 +135,11 @@ module Stats
               @results = report.results
             end
           end
-  
+
           it 'generates hierarchy starting with business_groups' do
             expect(@results.keys).to eq Team.hierarchy.map(&:id) + [:total]
           end
-  
+
           it 'adds up directorate stats in each business_group' do
             expect(@results[@bizgrp_ab.id])
               .to eq({
@@ -174,7 +177,7 @@ module Stats
                 bu_open_late:                  0
               })
           end
-  
+
           it 'adds up business_unit stats in each directorate' do
             expect(@results[@bizgrp_cd.id])
               .to eq({
@@ -212,7 +215,7 @@ module Stats
                 bu_open_late:                  0
               })
           end
-  
+
           it 'adds up individual business_unit stats' do
             expect(@results[@team_c.id])
               .to eq({
@@ -251,7 +254,7 @@ module Stats
               })
           end
         end
-  
+
         describe '#to_csv' do
           it 'outputs results as a csv lines' do
             Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
@@ -290,15 +293,15 @@ module Stats
             end
           end
         end
-  
-  
+
+
         context 'with a case in the db that is unassigned' do
           before do
             Timecop.freeze Time.new(2017, 6, 30, 12, 0, 0) do
               create :case, identifier: 'unassigned case'
             end
           end
-  
+
           it 'does not raise an error' do
             report = R103SarBusinessUnitPerformanceReport.new
             expect { report.run }.not_to raise_error
@@ -332,6 +335,7 @@ module Stats
         kase.refusal_reason = refusal_reason
       end
       kase.save!
+      kase
     end
     #rubocop:enable Metrics/ParameterLists
 

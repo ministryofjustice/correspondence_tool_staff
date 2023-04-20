@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'cases/sar/case_details.html.slim', type: :view do
+describe 'cases/offender_sar/case_details.html.slim', type: :view do
   let(:offender_sar_case) {
     (create :offender_sar_case, subject_aliases: 'John Smith',
             date_of_birth: '2019-09-01').decorate
@@ -51,7 +51,7 @@ describe 'cases/sar/case_details.html.slim', type: :view do
       assign(:case, third_party_case)
       render partial: 'cases/offender_sar/case_details', locals: {
         case_details: third_party_case,
-        link_type: nil, 
+        link_type: nil,
         allow_editing: true
       }
       partial = offender_sar_case_details_section(rendered).sar_basic_details

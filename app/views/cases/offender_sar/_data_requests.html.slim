@@ -18,8 +18,9 @@
             th Date completed
             th Status
             th
+            th
         tbody
-          - case_details.data_requests.order(date_requested: :asc).each do |data_request|
+          - case_details.data_requests.includes([:contact]).decorate.order(date_requested: :asc).each do |data_request|
             tr
               td
                 = data_request.location
@@ -37,9 +38,11 @@
                     = l data_request.cached_date_received, format: :default
               td
                 = data_request.status
-              - if allow_editing
-                td
-                  = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__action'
+              td
+                = link_to t('cases.data_requests.show.link'), case_data_request_path(case_details, data_request), class: 'data-requests__show'
+              td
+                - if allow_editing
+                  = link_to t('cases.data_requests.edit.link'), edit_case_data_request_path(case_details, data_request), class: 'data-requests__edit'
 
           - if case_details.data_requests.many?
             = render partial: 'shared/table_total_row', locals: { total: case_details.data_requests.sum(:cached_num_pages), label_span: '3', value_span: '3' }

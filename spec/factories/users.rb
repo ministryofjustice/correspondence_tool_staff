@@ -99,6 +99,16 @@ FactoryBot.define do
       managing_teams { [find_or_create(:team_branston, :empty)] }
     end
 
+    factory :sscl_user, parent: :user do
+      transient do
+        identifier { 'sscl responding user' }
+      end
+
+      full_name      { identifier }
+      email          { email_from_name(full_name) }
+      responding_teams { [find_or_create(:team_sscl, :empty)] }
+    end
+
     factory :team_admin, parent: :user do
       transient do
         identifier { 'team-admin user ' }
