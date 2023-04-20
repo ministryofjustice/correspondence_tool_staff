@@ -26,12 +26,12 @@ describe 'cases/data_requests/show', type: :view do
     let(:commissioning_document) {
       create(
         :commissioning_document,
-        template_name: "prison",
-        updated_at: "2023-04-20 15:27"
+        template_name: 'prison',
+        updated_at: '2023-04-20 15:27'
       )
     }
 
-    context "data request without commissioning document" do
+    context 'data request without commissioning document' do
       before do
         assign(:data_request, data_request)
         assign(:case, data_request.kase)
@@ -56,7 +56,7 @@ describe 'cases/data_requests/show', type: :view do
       end
     end
 
-    context "commissiong document has been selected" do
+    context 'commissiong document has been selected' do
       before do
         assign(:commissioning_document, commissioning_document.decorate)
         assign(:data_request, data_request)
@@ -67,7 +67,7 @@ describe 'cases/data_requests/show', type: :view do
         @page = data_request_show_page
       end
 
-      it "displays details of the commissioning document" do
+      it 'displays details of the commissioning document' do
         expect(@page.commissioning_document.row.request_document.text).to eq 'Prison records'
         expect(@page.commissioning_document.row.last_updated.text).to eq '20 Apr 2023 15:27'
         expect(@page.commissioning_document.row.sent.text).to eq 'No'
