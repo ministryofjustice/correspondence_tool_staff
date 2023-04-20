@@ -50,21 +50,22 @@ services:
     tty: true
     environment:
       CHROME_IS_REMOTE: 1
+      SELENIUM_HOST: "selenium"
     ports:
       - "3010:3010"
     depends_on:
       - db
-      - chrome
+      - selenium
     volumes:
       - .:/usr/src/app/
       - ~/.aws:/root/.aws
-      - spec-gems:/home/circleci/.rubygems
+      - spec-gems:/usr/local/bundle
 
-  chrome:
-    container_name: cts_chrome
+  selenium:
+    container_name: cts_selenium
     image: ${CHROME_CONTAINER_IMAGE}
     environment:
-      VIRTUAL_HOST: "chrome.track-a-query.docker"
+      VIRTUAL_HOST: "selenium.track-a-query.docker"
       VIRTUAL_PORT: "4444"
       VNC_NO_PASSWORD: 1
     ports:

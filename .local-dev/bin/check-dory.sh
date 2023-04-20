@@ -1,7 +1,5 @@
 #!/bin/bash
 
-. functions.sh
-
 # Search for the Dory Proxy container
 DORY_RUNNING=$(docker ps | grep dory_dnsmasq)
 

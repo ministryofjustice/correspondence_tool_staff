@@ -1,4 +1,4 @@
-FROM ruby:2.7.8-alpine AS base
+FROM ruby:2.7.6-alpine AS base
 
 RUN set -ex
 RUN apk update
@@ -41,34 +41,26 @@ ENV APP_BUILD_TAG=${BUILD_TAG}
 
 
 
-FROM cimg/ruby:2.7-browsers AS base-test
-RUN sudo apt --allow-releaseinfo-change-suite update && sudo apt install postgresql-client
+FROM ruby:2.7 AS spec
 
-RUN sudo curl https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-RUN sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
-RUN sudo apt --allow-releaseinfo-change-suite update
-RUN sudo apt-get install -y google-chrome-stable
+RUN apt-get update && apt-get install -y firefox-esr bash bash-completion postgresql-client make nodejs gzip curl
 
-# docker compose, spec service; required for ease of running an rspec dedicated environment
-RUN echo "export DATABASE_URL=postgres://postgres@db" >> ~/.bashrc && \
-    echo "export RAILS_ENV=test" >> ~/.bashrc && \
-    echo "export RAKE_ENV=test" >> ~/.bashrc && \
-    echo "export PARALLEL_TEST_PROCESSORS=8" >> ~/.bashrc && \
-    echo "export COVERAGE=1" >> ~/.bashrc && \
-    echo "export AWS_ACCESS_KEY_ID=not_real" >> ~/.bashrc && \
-    echo "export AWS_SECRET_ACCESS_KEY=not_real" >> ~/.bashrc && \
-    echo "export SECRET_KEY_BASE=not_real" >> ~/.bashrc
+ENV GECKO_DRIVER_VERSION="v0.33.0"
+ENV DATABASE_URL="postgres://postgres@db"
+ENV RAILS_ENV="test"
+ENV RAKE_ENV="test"
+ENV PARALLEL_TEST_PROCESSORS=8
+ENV COVERAGE=1
+ENV AWS_ACCESS_KEY_ID="not_real"
+ENV AWS_SECRET_ACCESS_KEY="not_real"
+ENV SECRET_KEY_BASE="not_real"
 
-
-FROM base-test AS spec
-
-RUN sudo mkdir -p /usr/src/app
+RUN mkdir -p /usr/src/app
 ADD . /usr/src/app/
 WORKDIR /usr/src/app/
 
-RUN sudo gem install bundler -v '~> 2.2.13'
+RUN gem install bundler -v '~> 2.2.13'
 
 # Add a script to be executed every time the container starts.
 COPY .local-dev/bin/*.sh /usr/bin/
-RUN sudo chmod +x /usr/bin/*
-
+RUN chmod +x /usr/bin/*
