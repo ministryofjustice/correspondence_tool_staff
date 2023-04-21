@@ -518,6 +518,7 @@ en:
     select_document: Select Day 1 request document
     download_document: Download Day 1 request document
     generate_document: Generate Day 1 request document
+    send_email: Send commissioning email
 
   helpers:
     fieldset:
