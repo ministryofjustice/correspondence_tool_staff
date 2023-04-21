@@ -32,7 +32,6 @@ module PageObjects
           end
         end
 
-        element :button_select_document, '.data_request_select_document'
         element :link_edit, '.data-requests__action'
       end
     end
