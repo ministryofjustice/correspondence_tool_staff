@@ -30,6 +30,7 @@ module PageObjects
             element :sent, 'td:nth-child(3)'
             element :actions, 'td:nth-child(4)'
           end
+          element :button_send_email, '.data_request_send_email'
         end
 
         element :link_edit, '.data-requests__action'
