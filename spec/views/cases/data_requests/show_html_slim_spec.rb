@@ -73,6 +73,10 @@ describe 'cases/data_requests/show', type: :view do
         expect(@page.commissioning_document.row.sent.text).to eq 'No'
         expect(@page.commissioning_document.row.actions.text).to eq 'Download | Replace | Change'
       end
+
+      it 'displays send email button' do
+        expect(@page.commissioning_document.button_send_email.text).to eq 'Send commissioning email'
+      end
     end
   end
 end
