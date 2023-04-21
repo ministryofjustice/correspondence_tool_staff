@@ -79,7 +79,7 @@ gem 'ruby-progressbar'
 
 group :test do
   gem 'capybara', '~> 3.37'
-  gem 'i18n-tasks', '~> 1.0.9'
+  gem 'i18n-tasks', '~> 1.0.12'
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 5.1'
   gem 'site_prism', '= 3.1'
