@@ -22,4 +22,8 @@ class CommissioningDocumentDecorator < Draper::Decorator
   def replace_link
     link_to('Replace', h.replace_case_data_request_commissioning_document_path(self.data_request.case_id, self.data_request, self))
   end
+
+  def change_link
+    link_to('Change', h.edit_case_data_request_commissioning_document_path(self.data_request.case_id, self.data_request, self))
+  end
 end
