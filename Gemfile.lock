@@ -567,7 +567,7 @@ GEM
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
-    simplecov (0.21.2)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
@@ -728,7 +728,7 @@ DEPENDENCIES
   shell-spinner
   shoulda-matchers (~> 5.1)
   sidekiq (~> 6.4.0)
-  simplecov (~> 0.21.2)
+  simplecov (~> 0.22.0)
   site_prism (= 3.1)
   slim-rails (~> 3.4)
   spring
