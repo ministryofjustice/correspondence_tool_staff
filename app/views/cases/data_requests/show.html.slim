@@ -86,16 +86,18 @@ span.visually-hidden
             tr
               td = @commissioning_document.request_document
               td = @commissioning_document.updated_at
-              td = @commissioning_document.sent?
+              td = @commissioning_document.sent
               td
                 span = @commissioning_document.download_link
-                = ' | '
-                span = @commissioning_document.replace_link
-                = ' | '
-                span = @commissioning_document.change_link
-        div.button-holder
-        / TODO: Link to email confirmation page once it exists
-        = link_to t('button.send_email'), "#", class: 'button data_request_send_email', style: 'margin-top: -6px'
+                - unless @commissioning_document.sent?
+                  = ' | '
+                  span = @commissioning_document.replace_link
+                  = ' | '
+                  span = @commissioning_document.change_link
+        - unless @commissioning_document.sent?
+          div.button-holder
+          / TODO: Link to email confirmation page once it exists
+          = link_to t('button.send_email'), "#", class: 'button data_request_send_email', style: 'margin-top: -6px'
     - else
       div.button-holder
         = link_to t('button.select_document'), new_case_data_request_commissioning_document_path(@case, @data_request), class: 'button data_request_select_document', style: 'margin-top: -6px'
