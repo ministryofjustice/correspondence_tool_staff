@@ -17,5 +17,6 @@ span.visually-hidden
 = GovukElementsErrorsHelper.error_summary @data_request,
   "#{pluralize(@data_request.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
 
-.column-full
-
+.grid-row.data-request
+  .column-full
+    
