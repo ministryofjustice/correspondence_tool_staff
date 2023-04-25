@@ -1185,6 +1185,7 @@ en:
     summary_error: 'prevented this form from being submitted:'
     view_case: "Case number "
     note: "Note:"
+    concel: Cancel
 
   admin:
     cases:
