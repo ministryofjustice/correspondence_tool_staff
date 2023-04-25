@@ -75,7 +75,7 @@ describe 'cases/data_requests/show', type: :view do
       end
 
       it 'displays send email button' do
-        expect(@page.commissioning_document.button_send_email.text).to eq 'Send commissioning email'
+        expect(@page.commissioning_document.button_send_email.value).to eq 'Send commissioning email'
       end
     end
 
