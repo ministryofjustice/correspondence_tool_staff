@@ -708,7 +708,7 @@ en:
         cached_num_pages: Number of pages received
         completed: "Yes, all data received"
         date_completed: Date completed
-        send_email_note_text: Email will be sent to the following recipients:
+        send_email_note_text: "Email will be sent to the following recipients:"
 
       data_request_log:
         num_pages: Number of pages
