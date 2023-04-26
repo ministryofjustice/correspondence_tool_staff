@@ -8,10 +8,15 @@ class CommissioningDocumentEmailService
   end
 
   def send!
+    send_email
     email_sent
   end
 
   private
+
+  def send_email
+    # placeholder method
+  end
 
   def email_sent
     commissioning_document.update_attribute(:sent, true)
