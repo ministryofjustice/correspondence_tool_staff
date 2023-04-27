@@ -108,6 +108,7 @@ module PageObjects
         data_request:                   'Cases::DataRequestPage',
         data_request_edit:              'Cases::DataRequestEditPage',
         data_request_show:              'Cases::DataRequestShowPage',
+        data_request_email_confirmation:'Cases::DataRequestEmailConfirmationPage'
         new_commissioning_document:     'Cases::NewCommissioningDocumentPage',
         edit_commissioning_document:    'Cases::EditCommissioningDocumentPage',
         upload_commissioning_document:  'Cases::UploadCommissioningDocumentPage',
