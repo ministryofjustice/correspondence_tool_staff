@@ -212,6 +212,7 @@ Rails.application.routes.draw do
 
     resource :cover_page, only: [:show], path: "cover-page"
     resources :data_requests do
+      get 'send_email', on: :member
       resources :commissioning_documents, only: [:new, :edit, :create, :update] do
         member do
           get :download

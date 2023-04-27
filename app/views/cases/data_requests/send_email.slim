@@ -6,7 +6,7 @@
 
 - content_for :sub_heading
 
-= link_to("Back", case_path(@case), class: 'govuk-back-link')
+= link_to("Back", case_data_request_path(@case, @data_request), class: 'govuk-back-link')
 
 span.visually-hidden
   = t('common.case.header_case_number')
@@ -28,7 +28,7 @@ span.visually-hidden
       = t('helpers.label.data_request.send_email_note_text')
 
     ul
-      - if data_request_emails.present?.present?
+      - if @data_request.contact.data_request_emails.present?
 
         li
-          data_request
+          datarequest

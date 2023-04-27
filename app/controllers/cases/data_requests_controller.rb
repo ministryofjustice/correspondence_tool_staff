@@ -3,7 +3,7 @@ module Cases
     NUM_NEW_DATA_REQUESTS = 3
 
     before_action :set_case
-    before_action :set_data_request, only: [:show, :edit, :update, :destroy]
+    before_action :set_data_request, only: [:show, :edit, :update, :destroy, :send_email]
     before_action :authorize_action
     after_action  :verify_authorized
 
@@ -64,6 +64,10 @@ module Cases
 
     def destroy
       raise NotImplementedError.new 'Data request delete unavailable'
+    end
+
+    def send_email
+
     end
 
     private
