@@ -32,7 +32,7 @@ gem 'govuk_notify_rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'humanize_boolean'
 gem 'jbuilder', '~> 2.11'
-gem 'jquery-rails', '~> 4.4'
+gem 'jquery-rails', '~> 4.5'
 gem 'jquery-ui-rails'
 gem 'jsonb_accessor', '~> 1.3.2'
 gem 'kaminari'
@@ -79,12 +79,12 @@ gem 'ruby-progressbar'
 
 group :test do
   gem 'capybara', '~> 3.37'
-  gem 'i18n-tasks', '~> 1.0.9'
+  gem 'i18n-tasks', '~> 1.0.12'
   gem 'rails-controller-testing', require: false
   gem 'shoulda-matchers', '~> 5.1'
   gem 'site_prism', '= 3.1'
   gem 'webdrivers', '~> 5.2.0'
-  gem 'simplecov', '~> 0.21.2'
+  gem 'simplecov', '~> 0.22.0'
 end
 
 group :development, :test do
