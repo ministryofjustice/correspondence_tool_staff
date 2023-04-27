@@ -27,8 +27,6 @@ span.visually-hidden
         = t('common.note')
       = t('helpers.label.data_request.send_email_note_text')
 
-    ul
-      - if @data_request.contact.data_request_emails.present?
 
-        li
-          datarequest
+    = raw @data_request.contact.data_request_emails
+
