@@ -11,6 +11,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
+                send_day_1_email:
                 preview_cover_page:
                 edit_case:
                 start_complaint:
@@ -21,6 +22,7 @@
                 add_data_received:
                 add_note_to_case:
                 send_acknowledgement_letter:
+                send_day_1_email:
                 preview_cover_page:
                 edit_case:
                 move_case_back:
@@ -32,6 +34,7 @@
                   transition_to: vetting_in_progress
                 add_data_received:
                 add_note_to_case:
+                send_day_1_email:
                 preview_cover_page:
                 edit_case:
                 move_case_back:
@@ -45,6 +48,7 @@
                   transition_to: ready_to_copy
                 add_data_received:
                 add_note_to_case:
+                send_day_1_email:
                 preview_cover_page:
                 edit_case:
                 move_case_back:
@@ -59,6 +63,7 @@
                   transition_to: ready_to_dispatch
                 add_data_received:
                 add_note_to_case:
+                send_day_1_email:
                 preview_cover_page:
                 edit_case:
                 move_case_back:
@@ -74,6 +79,7 @@
                   transition_to: closed
                 add_data_received:
                 add_note_to_case:
+                send_day_1_email:
                 send_dispatch_letter:
                 preview_cover_page:
                 edit_case:

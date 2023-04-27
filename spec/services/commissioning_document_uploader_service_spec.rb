@@ -1,9 +1,8 @@
 require 'rails_helper'
 
 describe CommissioningDocumentUploaderService do
-  let(:upload_group) { '20170615102233' }
-  let(:responder) { find_or_create :foi_responder }
-  let(:kase) { create(:accepted_case, responder: responder) }
+  let(:responder) { find_or_create :sar_responder }
+  let(:kase) { create(:offender_sar_case, responder: responder) }
   let(:commissioning_document) { create(:commissioning_document) }
   let(:user) { kase.responder }
   let(:filename) { "#{Faker::Internet.slug}.jpg" }
@@ -118,5 +117,4 @@ describe CommissioningDocumentUploaderService do
       end
     end
   end
-
 end

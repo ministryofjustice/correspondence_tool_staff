@@ -4,13 +4,13 @@ describe CommissioningDocumentDecorator, type: :model do
   let(:commissioning_document_sent) { create(:commissioning_document, sent: true).decorate }
   let(:commissioning_document_unsent) { create(:commissioning_document, sent: false).decorate }
 
-  describe :sent? do
+  describe :sent do
     it 'returns No if the commissioning document has not been sent' do
-      expect(commissioning_document_unsent.sent?).to eq 'No'
+      expect(commissioning_document_unsent.sent).to eq 'No'
     end
 
     it 'returns Yes if the commissioning document has been sent' do
-      expect(commissioning_document_sent.sent?).to eq 'Yes'
+      expect(commissioning_document_sent.sent).to eq 'Yes'
     end
   end
 
@@ -42,6 +42,14 @@ describe CommissioningDocumentDecorator, type: :model do
       path = "/cases/#{commissioning_document_sent.data_request.case_id}/data_requests/#{commissioning_document_sent.data_request_id}/commissioning_documents/#{commissioning_document_sent.id}/replace"
       expect(commissioning_document_sent.replace_link).to include(path)
       expect(commissioning_document_sent.replace_link).to include('<a href')
+    end
+  end
+
+  describe :change_link do
+    it "returns a change link" do
+      path = "/cases/#{commissioning_document_sent.data_request.case_id}/data_requests/#{commissioning_document_sent.data_request_id}/commissioning_documents/#{commissioning_document_sent.id}/edit"
+      expect(commissioning_document_sent.change_link).to include(path)
+      expect(commissioning_document_sent.change_link).to include('<a href')
     end
   end
 end

@@ -71,6 +71,17 @@ module Cases
       end
     end
 
+    def send_email
+      service = CommissioningDocumentEmailService.new(
+        data_request: @data_request,
+        current_user: current_user,
+        commissioning_document: @commissioning_document
+      )
+      service.send!
+
+      redirect_to case_path(@case), flash: { notice: 'Day 1 commissioning email sent' }
+    end
+
     private
 
     def set_case
