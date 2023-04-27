@@ -1,5 +1,5 @@
 - content_for :page_title do
-  = t('page_title.data_request_send_email_page', case_number: @case.number)
+  = t('page_title.data_request_send_email_page')
 
 - content_for :heading
   = t('.heading')
@@ -19,4 +19,10 @@ span.visually-hidden
 
 .grid-row.data-request
   .column-full
-    
+    h2.bold-medium.data-request__number
+    = "#{@case.number} - #{@case.subject_full_name}"
+
+    p
+      span 
+        = t('common.note')
+      =t('helpers.label.data_request.send_email_note_text')
