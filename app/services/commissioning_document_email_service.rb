@@ -8,11 +8,21 @@ class CommissioningDocumentEmailService
   end
 
   def send!
+    upload_document
     send_email
     email_sent
   end
 
   private
+
+  def upload_document
+    return if commissioning_document.attachment.present?
+
+    file = Tempfile.new
+    file.write(commissioning_document.document.force_encoding('UTF-8'))
+    uploader = S3Uploader.new(data_request.kase, current_user)
+    uploader.upload_file_to_case(:commissioning_document, file, commissioning_document.filename)
+  end
 
   def send_email
     # placeholder method
