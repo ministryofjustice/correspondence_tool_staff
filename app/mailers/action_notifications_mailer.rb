@@ -105,6 +105,20 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
+  def commissioning_email(kase, commissioning_document, recipient)
+    SentryContextProvider.set_context
+
+    find_template('Commissioning')
+
+    set_personalisation(
+      case_number: kase.number,
+      case_subject: kase.subject_full_name,
+      case_received_date: kase.received_date,
+    )
+
+    mail(to: recipient.email)
+  end
+
   private
 
   def format_subject(kase)
@@ -128,6 +142,8 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
       set_template(Settings.case_ready_to_send_notify_template)
     when 'Message received'
       set_template(Settings.message_received_notify_template)
+    when 'Commissioning'
+      set_template(Settings.commissioning_notify_template)
     end
   end
 end
