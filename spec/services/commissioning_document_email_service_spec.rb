@@ -7,12 +7,17 @@ describe CommissioningDocumentEmailService do
   let(:data_request) { create(:data_request, offender_sar_case: kase, contact: contact) }
   let(:commissioning_document) { create(:commissioning_document, ) }
   let(:user) { kase.responder }
+  let(:uploader) { instance_double(S3Uploader, upload_file_to_case: nil) }
   let(:service) do
     CommissioningDocumentEmailService.new(
       data_request: data_request,
       current_user: responder,
       commissioning_document: commissioning_document,
     )
+  end
+
+  before do
+    allow(S3Uploader).to receive(:new).and_return(uploader)
   end
 
   after(:all) { DbHousekeeping.clean(seed: true) }
