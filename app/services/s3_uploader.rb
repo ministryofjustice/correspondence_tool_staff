@@ -34,7 +34,8 @@ class S3Uploader
       type: type.to_s,
       key: key,
       upload_group: @upload_group,
-      user_id: @user.id)
+      user_id: @user.id
+    )
     @case.attachments << attachment
     attachment
   end

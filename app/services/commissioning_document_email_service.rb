@@ -29,6 +29,7 @@ class CommissioningDocumentEmailService
     ActionNotificationsMailer.commissioning_email(
       data_request.kase,
       data_request.contact.data_request_emails,
+      commissioning_document,
     ).deliver_later
   end
 
