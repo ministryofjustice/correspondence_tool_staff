@@ -30,11 +30,13 @@ class S3Uploader
     uploads_object = CASE_UPLOADS_S3_BUCKET.object(key)
     uploads_object.upload_file(file)
 
-    @case.attachments << CaseAttachment.create!(
+    attachment << CaseAttachment.create!(
       type: type.to_s,
       key: key,
       upload_group: @upload_group,
       user_id: @user.id)
+    @case.attachments << attachment
+    attachment
   end
 
   def process_files(uploaded_files, type)

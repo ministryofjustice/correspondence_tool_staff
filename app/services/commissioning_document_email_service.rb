@@ -21,7 +21,8 @@ class CommissioningDocumentEmailService
     file = Tempfile.new
     file.write(commissioning_document.document.force_encoding('UTF-8'))
     uploader = S3Uploader.new(data_request.kase, current_user)
-    uploader.upload_file_to_case(:commissioning_document, file, commissioning_document.filename)
+    attachment = uploader.upload_file_to_case(:commissioning_document, file, commissioning_document.filename)
+    commissioning_document.update_attribute(:attachment, attachment)
   end
 
   def send_email

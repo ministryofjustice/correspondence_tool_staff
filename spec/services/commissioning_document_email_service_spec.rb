@@ -7,7 +7,8 @@ describe CommissioningDocumentEmailService do
   let(:data_request) { create(:data_request, offender_sar_case: kase, contact: contact) }
   let(:commissioning_document) { create(:commissioning_document, ) }
   let(:user) { kase.responder }
-  let(:uploader) { instance_double(S3Uploader, upload_file_to_case: nil) }
+  let(:attachment) { create(:commissioning_document_attachment) }
+  let(:uploader) { instance_double(S3Uploader, upload_file_to_case: attachment) }
   let(:service) do
     CommissioningDocumentEmailService.new(
       data_request: data_request,
@@ -33,6 +34,12 @@ describe CommissioningDocumentEmailService do
       transistion = kase.transitions.last
       expect(transistion.event).to eq "send_day_1_email"
       expect(transistion.metadata["message"]).to eq "Prison records requested from #{contact.name}"
+    end
+
+    it 'adds the file to the commissioning document' do
+      expect {
+        service.send!
+      }.to change { commissioning_document.attachment }
     end
   end
 end
