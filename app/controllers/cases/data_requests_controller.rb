@@ -67,7 +67,6 @@ module Cases
     end
 
     def send_email
-
     end
 
     private
