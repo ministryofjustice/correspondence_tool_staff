@@ -10,10 +10,12 @@ module PageObjects
         section :page_heading,
           PageObjects::Sections::PageHeadingSection, '.page-heading'
 
+        # element :location, '.data-request__location' 
+        element :location, '.data-request__email' 
 
         section :data, '.grid-row.data-request' do
           element :number, '.data-request__number'
-          element :location, '.data_request_email'
+          element :location, '.data_request_location'
           element :request_type, '.data_request_request_type'
           element :date_requested, '.data_request_date_requested'
           element :date_from, '.data_request_date_from'

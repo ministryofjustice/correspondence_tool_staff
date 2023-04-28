@@ -4,7 +4,7 @@
 - content_for :heading
   = t('page_title.data_request_send_email_page')
 
-- content_for :sub_heading
+- content_for :heading
 
 = link_to("Back", case_data_request_path(@case, @data_request), class: 'govuk-back-link')
 
@@ -31,3 +31,5 @@ span.visually-hidden
       = raw @data_request.contact.data_request_emails.gsub(/\s\s/, "<br>").html_safe
 
 
+    div.button-holder
+      = link_to t('button.send_email'), "#", class: 'button data_request_send_email', style: 'margin-top: -6px'

@@ -1,8 +1,14 @@
 require 'rails_helper'
-# require 'site_prism/page_objects/pages/application.rb'
 
 describe 'cases/data_requests/send_email', type: :view do
   context '#send_email' do
+    let(:contact) { 
+      create(
+        :contact,
+        data_request_emails: "oscar@grouch.com\nbig@bird.com"
+      )
+    }
+
     let(:kase) {
       create(
         :offender_sar_case,
@@ -14,25 +20,11 @@ describe 'cases/data_requests/send_email', type: :view do
       create(
         :data_request,
         offender_sar_case: kase,
-        location: 'HMP Leicester',
-        request_type: 'all_prison_records',
-        date_requested: Date.new(2022, 10, 21),
-        date_from: Date.new(2018, 8, 15),
-        cached_num_pages: 32,
-        completed: true,
-        cached_date_received: Date.new(2022, 11, 02),
+        contact: contact
       )
     }
 
-    let(:commissioning_document) {
-      create(
-        :commissioning_document,
-        template_name: 'prison',
-        updated_at: '2023-04-20 15:27'
-      )
-    }
-
-    context 'data request with commissioning document' do
+    context 'data request with contact which has email address' do
       before do
         assign(:data_request, data_request)
         assign(:case, data_request.kase)
@@ -43,9 +35,8 @@ describe 'cases/data_requests/send_email', type: :view do
       end
 
       it 'has required content' do
-      
         expect(@page.page_heading.heading.text).to eq 'Are you sure you want to send the commissioning email?'
-        # expect(@page.submit_button.value).to eq 'Send Commissioning Email'
+        expect(@page.send_email.button.value).to eq 'Send commissioning email'
       end
     end  
   end
