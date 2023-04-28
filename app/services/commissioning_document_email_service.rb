@@ -27,7 +27,6 @@ class CommissioningDocumentEmailService
   def send_email
     ActionNotificationsMailer.commissioning_email(
       data_request.kase,
-      commissioning_document,
       data_request.contact.data_request_emails,
     ).deliver_later
   end

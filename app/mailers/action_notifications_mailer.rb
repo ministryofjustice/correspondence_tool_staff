@@ -105,7 +105,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-  def commissioning_email(kase, commissioning_document, recipient)
+  def commissioning_email(kase, recipient)
     SentryContextProvider.set_context
 
     find_template('Commissioning')
