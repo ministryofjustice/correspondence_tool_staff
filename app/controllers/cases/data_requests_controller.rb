@@ -4,6 +4,7 @@ module Cases
 
     before_action :set_case
     before_action :set_data_request, only: [:show, :edit, :update, :destroy, :send_email]
+    before_action :set_commissioning_document, only: [:show, :send_email]
     before_action :authorize_action
     after_action  :verify_authorized
 
@@ -33,7 +34,6 @@ module Cases
     end
 
     def show
-      @commissioning_document = @data_request.commissioning_document&.decorate
     end
 
     def edit
@@ -77,6 +77,10 @@ module Cases
 
     def set_data_request
       @data_request = DataRequest.find(params[:id]).decorate
+    end
+
+    def set_commissioning_document
+      @commissioning_document = @data_request.commissioning_document&.decorate
     end
 
     def create_params
