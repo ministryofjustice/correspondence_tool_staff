@@ -7,6 +7,8 @@ module PageObjects
         section :primary_navigation,
           PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
 
+        element :page_warning, '.govuk-warning-text'
+
         section :page_heading,
           PageObjects::Sections::PageHeadingSection, '.page-heading'
 
@@ -18,7 +20,6 @@ module PageObjects
 
         element :button_send_email, '.data_request_send_email'
         element :link_cancel, '.data_request_cancel'
-
       end
     end
   end

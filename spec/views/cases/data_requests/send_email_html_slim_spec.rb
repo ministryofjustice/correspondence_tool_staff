@@ -31,6 +31,31 @@ describe 'cases/data_requests/send_email', type: :view do
       )
     }
 
+    context 'data request with contact without email address' do
+      let(:contact) {
+        create(
+          :contact,
+          data_request_emails: nil
+        )
+      }
+      before do
+        assign(:data_request, data_request)
+        assign(:case, data_request.kase)
+        assign(:commissioning_document, commissioning_document)
+
+        render
+        data_request_email_confirmation_page.load(rendered)
+        @page = data_request_email_confirmation_page
+      end
+
+      it 'has required content' do
+        expect(@page.page_heading.heading.text).to eq 'Are you sure you want to send the commissioning email?'
+        expect(@page.page_warning.text).to eq '!selected location does not have an email address.'
+        expect(@page.button_send_email.disabled?).to eq true
+        expect(@page.link_cancel.text).to eq 'Cancel'
+      end
+    end
+
     context 'data request with contact which has email address' do
       before do
         assign(:data_request, data_request)
