@@ -36,9 +36,7 @@ describe 'cases/data_requests/send_email', type: :view do
 
       it 'has required content' do
         expect(@page.page_heading.heading.text).to eq 'Are you sure you want to send the commissioning email?'
-        expect(@page.send_email.submit_button.value).to eq 'Send commissioning email'
-
-          # send_email.button.value).to eq 'Send commissioning email'
+        expect(@page.button_send_email.text).to eq 'Send commissioning email'
       end
     end  
   end
