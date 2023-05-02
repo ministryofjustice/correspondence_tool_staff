@@ -110,19 +110,15 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     find_template('Commissioning')
 
-    File.open(commissioning_document.filename, 'w+', encoding: 'ASCII-8BIT') do |f|
-      f.write(commissioning_document.document)
+    file = StringIO.new(commissioning_document.document)
 
-      set_personalisation(
-        case_number: kase.number,
-        case_subject: kase.subject_full_name,
-        case_received_date: kase.received_date,
-        email_address: recipient,
-        link_to_file: Notifications.prepare_upload(f, retention_period: '1 week'),
-      )
-
-      File.delete(f)
-    end
+    set_personalisation(
+      case_number: kase.number,
+      case_subject: kase.subject_full_name,
+      case_received_date: kase.received_date,
+      email_address: recipient,
+      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true, retention_period: '1 weeks'),
+    )
 
     mail(to: recipient)
   end
