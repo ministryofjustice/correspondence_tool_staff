@@ -34,6 +34,10 @@ class Contact < ApplicationRecord
     filter_by_contact_type(filters).search_by_contact_name(search_term)
   end
 
+  def all_emails
+    data_request_emails.split("\n")
+  end
+
   private
 
   def format_address(separator)

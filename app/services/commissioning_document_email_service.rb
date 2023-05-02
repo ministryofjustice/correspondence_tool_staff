@@ -26,11 +26,13 @@ class CommissioningDocumentEmailService
   end
 
   def send_email
-    ActionNotificationsMailer.commissioning_email(
-      data_request.kase,
-      data_request.contact.data_request_emails,
-      commissioning_document,
-    ).deliver_later
+    data_request.contact.all_emails.map do |to|
+      ActionNotificationsMailer.commissioning_email(
+        data_request.kase,
+        to,
+        commissioning_document,
+      ).deliver_later
+    end
   end
 
   def email_sent
