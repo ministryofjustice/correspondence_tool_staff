@@ -15,7 +15,9 @@ module PageObjects
             element :email, '.data-request__email'
           end  
         end  
-        section :button_holder, '.data_request_send_email' 
+         
+        section :button_send_email, '.data_request_send_email'
+        
       end
     end
   end
