@@ -16,7 +16,7 @@ module PageObjects
           end  
         end  
          
-        section :button_send_email, '.data_request_send_email'
+        element :button_send_email, '.data_request_send_email'
         
       end
     end
