@@ -200,4 +200,41 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       expect(uploader).to have_received(:upload!)
     end
   end
+
+  describe '#send_email' do
+    let(:params) do
+      {
+        id: commissioning_document.id,
+        case_id: offender_sar_case.id,
+        data_request_id: data_request.id,
+      }
+    end
+    let(:service) { instance_double(CommissioningDocumentEmailService) }
+
+    before do
+      post :send_email, params: params
+    end
+
+    it 'sets @case' do
+      expect(assigns(:case)).to eq offender_sar_case
+    end
+
+    it 'sets @data_request' do
+      expect(assigns(:data_request)).to eq data_request
+    end
+
+    it 'sets @commissioning_document' do
+      expect(assigns(:commissioning_document)).to eq commissioning_document
+    end
+
+    it 'calls the send email service' do
+      expect(CommissioningDocumentEmailService).to receive(:new).and_return(service)
+      expect(service).to receive(:send!)
+      post :send_email, params: params
+    end
+
+    it 'redirects to the case page' do
+      expect(response).to redirect_to(case_path(offender_sar_case))
+    end
+  end
 end

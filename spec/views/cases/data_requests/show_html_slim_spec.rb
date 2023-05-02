@@ -56,7 +56,7 @@ describe 'cases/data_requests/show', type: :view do
       end
     end
 
-    context 'commissiong document has been selected' do
+    context 'commissioning document has been selected' do
       before do
         assign(:commissioning_document, commissioning_document.decorate)
         assign(:data_request, data_request)
@@ -75,7 +75,28 @@ describe 'cases/data_requests/show', type: :view do
       end
 
       it 'displays send email button' do
-        expect(@page.commissioning_document.button_send_email.text).to eq 'Send commissioning email'
+        expect(@page.commissioning_document.button_send_email.value).to eq 'Send commissioning email'
+      end
+    end
+
+    context 'commissioning email has been sent' do
+      before do
+        commissioning_document.sent = true
+        assign(:commissioning_document, commissioning_document.decorate)
+        assign(:data_request, data_request)
+        assign(:case, data_request.kase)
+
+        render
+        data_request_show_page.load(rendered)
+        @page = data_request_show_page
+      end
+
+      it 'only displays Download link' do
+        expect(@page.commissioning_document.row.actions.text).to eq 'Download'
+      end
+
+      it 'does not display send email button' do
+        expect{@page.commissioning_document.button_send_email}.to raise_error(Capybara::ElementNotFound)
       end
     end
   end

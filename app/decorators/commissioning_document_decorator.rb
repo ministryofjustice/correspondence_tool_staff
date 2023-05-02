@@ -3,7 +3,7 @@ class CommissioningDocumentDecorator < Draper::Decorator
 
   delegate_all
 
-  def sent?
+  def sent
     super ? 'Yes': 'No'
   end
 

@@ -4,13 +4,13 @@ describe CommissioningDocumentDecorator, type: :model do
   let(:commissioning_document_sent) { create(:commissioning_document, sent: true).decorate }
   let(:commissioning_document_unsent) { create(:commissioning_document, sent: false).decorate }
 
-  describe :sent? do
+  describe :sent do
     it 'returns No if the commissioning document has not been sent' do
-      expect(commissioning_document_unsent.sent?).to eq 'No'
+      expect(commissioning_document_unsent.sent).to eq 'No'
     end
 
     it 'returns Yes if the commissioning document has been sent' do
-      expect(commissioning_document_sent.sent?).to eq 'Yes'
+      expect(commissioning_document_sent.sent).to eq 'Yes'
     end
   end
 

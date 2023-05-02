@@ -9,7 +9,8 @@ describe ConfigurableStateMachine::Machine do
         specific_events: [
           :preview_cover_page,
           :mark_as_waiting_for_data,
-          :send_acknowledgement_letter
+          :send_acknowledgement_letter,
+          :send_day_1_email
         ]
       },
       {
@@ -18,7 +19,8 @@ describe ConfigurableStateMachine::Machine do
           :preview_cover_page,
           :mark_as_ready_for_vetting,
           :send_acknowledgement_letter,
-          :move_case_back
+          :move_case_back,
+          :send_day_1_email
         ]
       },
       {
@@ -28,7 +30,8 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_vetting_in_progress,
           :move_case_back,
           :record_sent_to_sscl,
-          :date_sent_to_sscl_removed
+          :date_sent_to_sscl_removed,
+          :send_day_1_email
         ]
       },
       {
@@ -38,7 +41,8 @@ describe ConfigurableStateMachine::Machine do
           :preview_cover_page,
           :move_case_back,
           :record_sent_to_sscl,
-          :date_sent_to_sscl_removed
+          :date_sent_to_sscl_removed,
+          :send_day_1_email
         ]
       },
       {
@@ -48,7 +52,8 @@ describe ConfigurableStateMachine::Machine do
           :mark_as_ready_to_dispatch,
           :move_case_back,
           :record_sent_to_sscl,
-          :date_sent_to_sscl_removed
+          :date_sent_to_sscl_removed,
+          :send_day_1_email
         ]
       },
       {
@@ -59,7 +64,8 @@ describe ConfigurableStateMachine::Machine do
           :send_dispatch_letter,
           :move_case_back,
           :record_sent_to_sscl,
-          :date_sent_to_sscl_removed
+          :date_sent_to_sscl_removed,
+          :send_day_1_email
         ]
       },
       {
