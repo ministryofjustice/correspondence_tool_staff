@@ -30,7 +30,6 @@ span.visually-hidden
     div
       = raw @data_request.contact.data_request_emails.gsub(/\s\s/, "<br>").html_safe
 
-
     div.button-holder
       = link_to t('button.send_email'), "#", class: 'button data_request_send_email'
-      
+      = link_to('Cancel', case_data_request_path(@case, @data_request), class: 'acts-like-button button-left-spacing data_request_cancel')

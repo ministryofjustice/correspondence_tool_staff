@@ -10,14 +10,15 @@ module PageObjects
         section :page_heading,
           PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-        section :commissioning_document, '.commissioning-document' do  
+        section :commissioning_document, '.commissioning-document' do
           section :data, '.grid-row.data-request' do
             element :email, '.data-request__email'
-          end  
-        end  
-         
+          end
+        end
+
         element :button_send_email, '.data_request_send_email'
-        
+        element :link_cancel, '.data_request_cancel'
+
       end
     end
   end

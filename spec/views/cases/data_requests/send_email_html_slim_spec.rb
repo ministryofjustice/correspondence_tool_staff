@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'cases/data_requests/send_email', type: :view do
   context '#send_email' do
-    let(:contact) { 
+    let(:contact) {
       create(
         :contact,
         data_request_emails: "oscar@grouch.com\nbig@bird.com"
@@ -37,7 +37,8 @@ describe 'cases/data_requests/send_email', type: :view do
       it 'has required content' do
         expect(@page.page_heading.heading.text).to eq 'Are you sure you want to send the commissioning email?'
         expect(@page.button_send_email.text).to eq 'Send commissioning email'
+        expect(@page.link_cancel.text).to eq 'Cancel'
       end
-    end  
+    end
   end
 end
