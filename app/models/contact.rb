@@ -35,7 +35,7 @@ class Contact < ApplicationRecord
   end
 
   def all_emails
-    data_request_emails.split("\n")
+    data_request_emails&.split("\n")
   end
 
   private
