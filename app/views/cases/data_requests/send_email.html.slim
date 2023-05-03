@@ -4,8 +4,6 @@
 - content_for :heading
   = t('page_title.data_request_send_email_page')
 
-- content_for :heading
-
 = link_to("Back", case_data_request_path(@case, @data_request), class: 'govuk-back-link')
 
 span.visually-hidden
@@ -14,11 +12,16 @@ span.visually-hidden
 
 = render partial: 'layouts/header'
 
-= GovukElementsErrorsHelper.error_summary @data_request,
-  "#{pluralize(@data_request.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 .grid-row.data-request
   .column-full
+
+    - unless @data_request.has_emails?
+      div.govuk-warning-text
+        span.govuk-warning-text__icon (aria-hidden="true") !
+        strong.govuk-warning-text__text
+          span.govuk-warning-text__assistive Warning
+          span The selected location does not have an email address.
+
     h2.bold-medium.data-request__number
       = "#{@case.number} - #{@case.subject_full_name}"
 
@@ -27,10 +30,13 @@ span.visually-hidden
         = t('common.note')
       = t('helpers.label.data_request.send_email_note_text')
 
-    div
-      = raw @data_request.contact.data_request_emails.gsub(/\s\s/, "<br>").html_safe
+    - if @data_request.has_emails?
+      div
+        = raw @data_request.contact.data_request_emails.gsub(/\s\s/, "<br>").html_safe
 
     div.button-holder
       = form_for @commissioning_document, method: :post, url: send_email_case_data_request_commissioning_document_path(@case, @data_request, @commissioning_document) do |f|
-        = submit_tag t('button.send_email'), class: 'button data_request_send_email'
+
+        = submit_tag t('button.send_email'), class: 'button data_request_send_email', disabled:!@data_request.has_emails?
+
         = link_to('Cancel', case_data_request_path(@case, @data_request), class: 'acts-like-button button-left-spacing data_request_cancel')
