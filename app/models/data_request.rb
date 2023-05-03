@@ -77,8 +77,10 @@ class DataRequest < ApplicationRecord
     date_from.blank? && date_to.blank?
   end
 
-  def has_emails?
-    !!contact&.data_request_emails.present?
+  def recipient_emails
+    emails = contact&.data_request_emails&.split(%r/\s/) || []
+    emails += commissioning_document.recipient_emails if commissioning_document.present?
+    emails
   end
 
   private

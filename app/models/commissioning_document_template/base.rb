@@ -22,6 +22,10 @@ module CommissioningDocumentTemplate
       }
     end
 
+    def recipient_emails
+      []
+    end
+
     private
 
     def template_name
