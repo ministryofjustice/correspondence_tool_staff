@@ -39,4 +39,4 @@ span.visually-hidden
 
         = submit_tag t('button.send_email'), class: 'button data_request_send_email', disabled:!@data_request.has_emails?
 
-        = link_to('Cancel', case_data_request_path(@case, @data_request), class: 'acts-like-button button-left-spacing data_request_cancel')
+        = link_to(t('common.cancel'), case_data_request_path(@case, @data_request), class: 'acts-like-button button-left-spacing data_request_cancel')

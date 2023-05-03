@@ -1536,10 +1536,6 @@ en:
       edit:
         heading: Edit data request
         link: Edit
-      # send_email:
-      #   heading: 'Are you sure you want to send the commissioning email?'
-      #   link: Blah
-      #   success: Data request sent
       form:
         record_request: Continue
       index:
