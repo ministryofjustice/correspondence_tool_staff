@@ -8,14 +8,30 @@ class CommissioningDocumentEmailService
   end
 
   def send!
+    upload_document
     send_email
     email_sent
   end
 
   private
 
+  def upload_document
+    return if commissioning_document.attachment.present?
+
+    file = Tempfile.new
+    file.write(commissioning_document.document.force_encoding('UTF-8'))
+    uploader = S3Uploader.new(data_request.kase, current_user)
+    attachment = uploader.upload_file_to_case(:commissioning_document, file, commissioning_document.filename)
+    commissioning_document.update_attribute(:attachment, attachment)
+  end
+
   def send_email
-    # placeholder method
+    data_request.contact.all_emails.map do |email|
+      ActionNotificationsMailer.commissioning_email(
+        commissioning_document,
+        email,
+      ).deliver_later
+    end
   end
 
   def email_sent

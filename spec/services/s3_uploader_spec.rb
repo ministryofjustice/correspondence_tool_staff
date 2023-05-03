@@ -18,8 +18,7 @@ describe S3Uploader do
   let(:uploaded_files)     { [uploads_key] }
   let(:attachment_type)    { :response }
 
-  before(:each) do
-
+  before do
     allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                        .with(uploads_key)
                                        .and_return(uploads_object)
@@ -62,8 +61,7 @@ describe S3Uploader do
   end
 
   describe '#process_files' do
-
-    before(:each) { ActiveJob::Base.queue_adapter = :test }
+    before { ActiveJob::Base.queue_adapter = :test }
 
     it 'creates a new case attachment' do
       Timecop.freeze(time) do
@@ -90,7 +88,6 @@ describe S3Uploader do
 
     context 'request files' do
       it 'makes the attachment type a request' do
-
         request_uploads_key = "uploads/#{kase.id}/requests/#{filename}"
         request_destination_key =
           "#{kase.id}/requests/#{upload_group}/#{filename}"
@@ -190,6 +187,56 @@ describe S3Uploader do
           expect {
             uploader.process_files(uploaded_files, :response) rescue nil
           }.not_to change{ CaseAttachment.count }
+        end
+      end
+    end
+  end
+
+  describe '#upload_file_to_case' do
+    let(:file) { double(File) }
+    let(:filename) { 'test.docx' }
+    let(:key) { uploader.send(:destination_key, filename, attachment_type)}
+
+    before do
+      allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
+                                       .with(key)
+                                       .and_return(uploads_object)
+      allow(uploads_object).to receive(:upload_file).with(file)
+    end
+
+    it 'creates a new case attachment' do
+      Timecop.freeze(time) do
+        expect{
+          uploader.upload_file_to_case(attachment_type, file, filename) }
+        .to change {
+          kase.reload.attachments.count
+        }.by(1)
+      end
+    end
+
+    context 'error when uploading file in S3' do
+      before do
+        allow(uploads_object).to receive(:upload_file)
+                                   .with(file)
+                                   .and_raise(
+                                     Aws::S3::Errors::ServiceError.new(:foo, :bar)
+                                   )
+      end
+
+      it 'passes exception through to the caller' do
+        Timecop.freeze(time) do
+          expect { uploader.upload_file_to_case(attachment_type, file, filename) }
+            .to raise_error(Aws::S3::Errors::ServiceError)
+        end
+      end
+
+      it 'does not create a new case_attachment object' do
+        Timecop.freeze(time) do
+          expect {
+            uploader.upload_file_to_case(attachment_type, file, filename) rescue nil
+          }.not_to change {
+            CaseAttachment.count
+          }
         end
       end
     end
