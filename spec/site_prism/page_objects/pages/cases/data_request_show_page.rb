@@ -10,7 +10,6 @@ module PageObjects
         section :page_heading,
           PageObjects::Sections::PageHeadingSection, '.page-heading'
 
-
         section :data, '.grid-row.data-request' do
           element :number, '.data-request__number'
           element :location, '.data_request_location'
