@@ -9,7 +9,8 @@ RSpec.describe Contact, type: :model do
                              address_line_2: 'little heath',
                              town: 'bakersville',
                              county: 'Mercia',
-                             postcode: 'FE2 9JK')}
+                             postcode: 'FE2 9JK',
+                             data_request_emails: "test@test.com\ntest1@test.com")}
 
     let(:contact_3) { build_stubbed(:contact,
                              name: 'HMP halifax',
@@ -93,6 +94,9 @@ RSpec.describe Contact, type: :model do
       expect(contact.contact_type_display_value).to eq("Probation Office")
     end
 
+    it 'can return an array with all email addresses' do
+      expect(contact_2.all_emails).to eq ['test@test.com', 'test1@test.com']
+    end
   end
 
   context 'class methods' do

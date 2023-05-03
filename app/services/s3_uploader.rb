@@ -25,6 +25,21 @@ class S3Uploader
     end
   end
 
+  def upload_file_to_case(type, file, filename)
+    key = destination_key(filename, type)
+    uploads_object = CASE_UPLOADS_S3_BUCKET.object(key)
+    uploads_object.upload_file(file)
+
+    attachment = CaseAttachment.create!(
+      type: type.to_s,
+      key: key,
+      upload_group: @upload_group,
+      user_id: @user.id
+    )
+    @case.attachments << attachment
+    attachment
+  end
+
   def process_files(uploaded_files, type)
     ActiveRecord::Base.transaction do
       add_attachments(uploaded_files, type)

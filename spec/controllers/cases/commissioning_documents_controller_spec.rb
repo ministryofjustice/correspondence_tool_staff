@@ -209,9 +209,10 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
         data_request_id: data_request.id,
       }
     end
-    let(:service) { instance_double(CommissioningDocumentEmailService) }
+    let(:service) { instance_double(CommissioningDocumentEmailService, send!: nil) }
 
     before do
+      allow(CommissioningDocumentEmailService).to receive(:new).and_return(service)
       post :send_email, params: params
     end
 
@@ -228,7 +229,6 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
     end
 
     it 'calls the send email service' do
-      expect(CommissioningDocumentEmailService).to receive(:new).and_return(service)
       expect(service).to receive(:send!)
       post :send_email, params: params
     end
