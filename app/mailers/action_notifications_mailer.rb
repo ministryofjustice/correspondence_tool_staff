@@ -105,7 +105,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     mail(to: recipient.email)
   end
 
-  def commissioning_email(kase, recipient, commissioning_document)
+  def commissioning_email(commissioning_document, recipient)
     SentryContextProvider.set_context
 
     find_template('Commissioning')
@@ -113,11 +113,8 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     file = StringIO.new(commissioning_document.document)
 
     set_personalisation(
-      case_number: kase.number,
-      case_subject: kase.subject_full_name,
-      case_received_date: kase.received_date,
       email_address: recipient,
-      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true, retention_period: '1 weeks'),
+      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true, retention_period: '3 weeks'),
     )
 
     mail(to: recipient)

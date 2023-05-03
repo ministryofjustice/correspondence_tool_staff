@@ -386,4 +386,24 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       expect(mail.to).to include responder.email
     end
   end
+
+  describe 'commissioning_email' do
+    let(:commissioning_document) { create :commissioning_document }
+    let(:email_address) { "test@test.com" }
+    let(:mail) { described_class.commissioning_email(commissioning_document, email_address) }
+
+    it 'sets the template' do
+      expect(mail.govuk_notify_template)
+        .to eq '94b66c61-feff-42f5-950d-d0af0a8205ef'
+    end
+
+    it 'personalises the email' do
+      expect(mail.govuk_notify_personalisation[:email_address]).to eq email_address
+      expect(mail.govuk_notify_personalisation[:link_to_file][:retention_period]).to eq '3 weeks'
+    end
+
+    it 'sets the To address of the email using the provided user' do
+      expect(mail.to).to include email_address
+    end
+  end
 end
