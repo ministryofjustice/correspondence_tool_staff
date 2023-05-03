@@ -50,7 +50,7 @@ describe 'cases/data_requests/send_email', type: :view do
 
       it 'has required content' do
         expect(@page.page_heading.heading.text).to eq 'Are you sure you want to send the commissioning email?'
-        expect(@page.page_warning.text).to eq '!selected location does not have an email address.'
+        expect(@page.page_warning.text).to include 'The selected location does not have an email address.'
         expect(@page.button_send_email.disabled?).to eq true
         expect(@page.link_cancel.text).to eq 'Cancel'
       end
