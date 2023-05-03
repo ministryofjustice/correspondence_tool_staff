@@ -708,6 +708,8 @@ en:
         cached_num_pages: Number of pages received
         completed: "Yes, all data received"
         date_completed: Date completed
+        send_email_note_text: "Email will be sent to the following recipients:"
+
       data_request_log:
         num_pages: Number of pages
       commissioning_document:
@@ -984,7 +986,6 @@ en:
         blank: Please provide the detail of the reason
         invalid: Invalid reason
 
-
   notices:
     case_cleared: "%{team} has been notified that the response is %{status}."
     case_closed: "You've closed this case"
@@ -1120,7 +1121,6 @@ en:
       original_internal_deadline: Original internal deadline
       original_date_responded: Original date response sent to ICO
       other_option_details: More details on other reason for outcome
-
     case/ico:
       close: "Record ICO's decision"
       respond: Mark as sent to ICO
@@ -1165,7 +1165,6 @@ en:
       is_solicitor_label: Solicitor
       is_other_label: Other
       third_party_relationship_text_field_label: Please specify relationship to the subject
-
     choose: Choose...
     choose_file: Choose a file
     close: Close case
@@ -1185,6 +1184,8 @@ en:
     stats_custom_button: Create report
     summary_error: 'prevented this form from being submitted:'
     view_case: "Case number "
+    note: "Note: "
+    cancel: Cancel
 
   admin:
     cases:

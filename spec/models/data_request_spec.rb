@@ -352,4 +352,22 @@ RSpec.describe DataRequest, type: :model do
       it { expect(subject.request_dates_absent?).to eq false }
     end
   end
+
+  describe '#has_emails' do
+    let(:contact_without_email) { build(:contact, data_request_emails:nil) }
+    let(:contact_with_email) { build(:contact , data_request_emails: 'a.smith@email.com') }
+
+    context 'when there is a contact with no email' do
+      subject(:data_request) { build :data_request, contact:contact_without_email}
+      it { expect(subject.has_emails?).to eq false }
+    end
+    context 'when there is a contact with one email' do
+      subject(:data_request) { build :data_request, contact:contact_with_email}
+      it { expect(subject.has_emails?).to eq true }
+    end
+    context 'when there is no contact' do
+      subject(:data_request) { build :data_request}
+      it { expect(subject.has_emails?).to eq false }
+    end
+  end
 end

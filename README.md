@@ -670,4 +670,3 @@ See here for the [original developers README](https://github.com/hrvey/combine-p
 ## Addendum
 
 Please note: the file upload functionality will not work locally without an AWS S3 bucket setup as a file store.
-

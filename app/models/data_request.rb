@@ -77,6 +77,10 @@ class DataRequest < ApplicationRecord
     date_from.blank? && date_to.blank?
   end
 
+  def has_emails?
+    !!contact&.data_request_emails.present?
+  end
+
   private
 
   def validate_from_date_before_to_date
