@@ -22,6 +22,8 @@ class CommissioningDocument < ApplicationRecord
   validates :data_request, presence: true
   validates :template_name, presence: true
 
+  delegate :recipient_emails, to: :template
+
   def document
     return unless valid?
 
