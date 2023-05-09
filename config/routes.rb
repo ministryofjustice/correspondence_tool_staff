@@ -217,7 +217,7 @@ Rails.application.routes.draw do
         member do
           get :download
           get :replace
-          post :upload
+          patch :upload
           post :send_email
         end
       end
