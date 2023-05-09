@@ -43,4 +43,10 @@ RSpec.describe CommissioningDocumentTemplate::Probation do
       end
     end
   end
+
+  describe "#recipient_emails" do
+    it "returns an array of email addresses" do
+      expect(subject.recipient_emails).to eq ["BranstonRegistryRequests2@justice.gov.uk"]
+    end
+  end
 end
