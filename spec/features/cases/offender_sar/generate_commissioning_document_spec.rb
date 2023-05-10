@@ -31,7 +31,7 @@ feature 'Generate a commissioning document record for a data request' do
 
     new_commissioning_document_page.form.choose_template_name('prison')
     click_on 'Generate Day 1 request document'
-    expect(page).to have_content('Document was created')
+    expect(page).to have_content('Day 1 request document selected')
   end
 
   scenario 'attempts to download without selecting a template type' do
