@@ -10,7 +10,7 @@ module Cases
       if @commissioning_document.valid?
         if FeatureSet.email_commissioning_document.enabled?
           @commissioning_document.save
-          redirect_to case_data_request_path(@case, @data_request), notice: "Document was created"
+          redirect_to case_data_request_path(@case, @data_request), notice: "Day 1 commissioning document selected"
         else
           send_data(@commissioning_document.document,
             filename: @commissioning_document.filename,
@@ -28,7 +28,7 @@ module Cases
       if @commissioning_document.valid?
         @commissioning_document.save
         @commissioning_document.remove_attachment
-        redirect_to case_data_request_path(@case, @data_request), notice: "Document was updated"
+        redirect_to case_data_request_path(@case, @data_request), notice: "Day 1 commissioning document updated"
       else
         render :edit
       end
