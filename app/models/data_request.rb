@@ -78,7 +78,7 @@ class DataRequest < ApplicationRecord
   end
 
   def recipient_emails
-    emails = contact&.data_request_emails&.split(%r/\s/) || []
+    emails = contact&.data_request_emails&.split(" ") || []
     emails += commissioning_document.recipient_emails if commissioning_document.present?
     emails
   end
