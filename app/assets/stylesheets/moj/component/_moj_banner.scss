@@ -1,0 +1,25 @@
+.moj-banner {
+    border: 5px solid #1d70b8;
+    color: #1d70b8;
+    font-size: 0;
+    margin-bottom: 30px;
+    padding: 10px;
+}
+
+.moj-banner__icon {
+	fill: #1d70b8;
+	float: left;
+	margin-right: 10px;
+}
+
+.moj-banner__message {
+	font-family: "GDS Transport",arial,sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-weight: 400;
+	font-size: 19px;
+	line-height: 25px;
+	color: #0b0c0c;
+	display: block;
+	overflow: hidden;
+}
