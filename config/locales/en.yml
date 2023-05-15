@@ -1556,6 +1556,8 @@ en:
         success: Data request updated
         unprocessed: No changes made
       upto: "Up to"
+      send_email:
+        no_email_address: The selected location does not have an email address.
     commissioning_documents:
       new:
         heading: Select Day 1 request document
@@ -1568,7 +1570,6 @@ en:
         last_updated: Last updated
         sent: Sent
         action: Action
-
     types:
       Case::FOI::Standard: FOI
       Case::FOI::TimelinessReview: FOI - Internal review for timeliness

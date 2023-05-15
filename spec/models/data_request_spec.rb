@@ -357,9 +357,11 @@ RSpec.describe DataRequest, type: :model do
     let(:email_1) { 'a.smith@email.com' }
     let(:email_2) { 'b.jones@email.com' }
     let(:email_3) { 'c.evans@gmail.com' }
+
     let(:contact_without_email) { build(:contact, data_request_emails:nil) }
     let(:contact_with_one_email) { build(:contact , data_request_emails: email_1) }
     let(:contact_with_two_emails) { build(:contact , data_request_emails: "#{email_1}\n#{email_2}") }
+    let(:contact_with_two_emails_including_spaces) { build(:contact , data_request_emails: " #{email_1}    #{email_2}") }
     let(:commissioning_document) { build(:commissioning_document) }
 
     context 'when there is a contact with no email' do
@@ -389,6 +391,11 @@ RSpec.describe DataRequest, type: :model do
 
       subject(:data_request) { build :data_request, commissioning_document: commissioning_document}
       it { expect(subject.recipient_emails).to eq [email_3] }
+    end
+
+    context 'when there is a contact with two emails, separated by many spaces' do
+      subject(:data_request) { build :data_request, contact:contact_with_two_emails_including_spaces}
+      it { expect(subject.recipient_emails).to eq [email_1, email_2] }
     end
   end
 end
