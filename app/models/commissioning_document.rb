@@ -37,7 +37,11 @@ class CommissioningDocument < ApplicationRecord
   def filename
     return unless valid?
 
-    "Day1_#{request_type}_#{case_number}_#{subject_name}_#{timestamp}.#{mime_type}"
+    if attachment.present?
+      attachment.filename
+    else
+      "Day1_#{request_type}_#{case_number}_#{subject_name}_#{timestamp}.#{mime_type}"
+    end
   end
 
   def mime_type
