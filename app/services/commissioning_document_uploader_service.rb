@@ -15,6 +15,8 @@ class CommissioningDocumentUploaderService
   end
 
   def upload!
+    @uploaded_file = nil unless valid?
+
     begin
       if @uploaded_file.blank?
         @result = :blank
@@ -34,5 +36,9 @@ class CommissioningDocumentUploaderService
     end
 
     @attachment
+  end
+
+  def valid?
+    @uploaded_file[0].ends_with?(".docx")
   end
 end

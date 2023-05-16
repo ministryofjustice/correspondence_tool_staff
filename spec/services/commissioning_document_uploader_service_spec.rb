@@ -60,6 +60,15 @@ describe CommissioningDocumentUploaderService do
         end
       end
 
+      context "Invalid filetype to upload" do
+        let(:uploaded_file) { ["test.jpg"] }
+
+        it 'returns a result of :blank' do
+          service.upload!
+          expect(service.result).to eq :blank
+        end
+      end
+
       describe 'uploader raises an S3 service error' do
         before do
           allow(uploader)
