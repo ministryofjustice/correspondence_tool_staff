@@ -41,6 +41,10 @@ module CasesHelper #rubocop:disable Metrics/ModuleLength
     Settings.case_uploads_accepted_types.join ','
   end
 
+  def docx_content_type
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  end
+
   def case_link_with_hash(kase, field, page, position)
     span = content_tag(:span,
           t('common.case_list.view_case'),

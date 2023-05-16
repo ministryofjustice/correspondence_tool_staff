@@ -41,7 +41,7 @@ feature 'Upload response' do
     cases_show_page.actions.upload_response.click
 
     expect(cases_upload_responses_page).to be_displayed
-    
+
     upload_file = "#{Faker::Internet.slug}.jpg"
     cases_upload_responses_page.upload_file(
       kase: kase,

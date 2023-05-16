@@ -1,7 +1,5 @@
 module Cases
   class CommissioningDocumentsController < ApplicationController
-    DOCX_CONTENT_TYPE = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'.freeze
-
     before_action :set_case
     before_action :set_data_request
     before_action :set_commissioning_document
