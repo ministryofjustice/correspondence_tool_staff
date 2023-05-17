@@ -39,6 +39,6 @@ class CommissioningDocumentUploaderService
   end
 
   def valid?
-    @uploaded_file[0].ends_with?(".docx")
+    Array(@uploaded_file).first&.ends_with?(".docx")
   end
 end

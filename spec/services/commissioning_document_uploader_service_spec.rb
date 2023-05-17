@@ -5,7 +5,7 @@ describe CommissioningDocumentUploaderService do
   let(:kase) { create(:offender_sar_case, responder: responder) }
   let(:commissioning_document) { create(:commissioning_document) }
   let(:user) { kase.responder }
-  let(:filename) { "#{Faker::Internet.slug}.jpg" }
+  let(:filename) { "#{Faker::Internet.slug}.docx" }
   let(:uploads_key) { "uploads/#{kase.id}/requests/#{filename}" }
   let(:uploaded_file) { uploads_key }
   let(:service) do
