@@ -24,8 +24,9 @@ span.visually-hidden
     .column-two-thirds
       #upload-commissioning-document-fields
         = render partial: 'shared/dropzone_form',
-                locals: { s3_direct_post: @s3_direct_post,
-                        file_input_name: 'commissioning_document[upload][]' }
+                 locals: { s3_direct_post: @s3_direct_post,
+                           accepted_case_attachment_types: docx_content_type,
+                           file_input_name: 'commissioning_document[upload][]' }
 
   .grid-row
     .column-two-thirds

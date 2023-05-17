@@ -97,7 +97,11 @@ module Cases
     end
 
     def create_params
-      params.require(:commissioning_document).permit(:template_name, upload: [])
+      if params[:commissioning_document]
+        params.require(:commissioning_document).permit(:template_name, upload: [])
+      else
+        ActiveSupport::HashWithIndifferentAccess.new
+      end
     end
   end
 end

@@ -5,7 +5,7 @@ describe CommissioningDocumentUploaderService do
   let(:kase) { create(:offender_sar_case, responder: responder) }
   let(:commissioning_document) { create(:commissioning_document) }
   let(:user) { kase.responder }
-  let(:filename) { "#{Faker::Internet.slug}.jpg" }
+  let(:filename) { "#{Faker::Internet.slug}.docx" }
   let(:uploads_key) { "uploads/#{kase.id}/requests/#{filename}" }
   let(:uploaded_file) { uploads_key }
   let(:service) do
@@ -53,6 +53,15 @@ describe CommissioningDocumentUploaderService do
 
       context 'No valid files to upload' do
         let(:uploaded_file) { [] }
+
+        it 'returns a result of :blank' do
+          service.upload!
+          expect(service.result).to eq :blank
+        end
+      end
+
+      context "Invalid filetype to upload" do
+        let(:uploaded_file) { ["test.jpg"] }
 
         it 'returns a result of :blank' do
           service.upload!
