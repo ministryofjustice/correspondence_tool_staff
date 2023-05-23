@@ -41,13 +41,13 @@ gem 'logstash-event'
 gem 'lograge'
 gem 'loofah', '>= 2.3.1'
 gem 'mechanize', '>= 2.7.7'
+gem 'net-smtp', require: false
 gem 'notifications-ruby-client', '>= 5.4'
 gem 'omniauth-azure-activedirectory-v2', '~> 1.0.0'
 gem 'omniauth-rails_csrf_protection'
 gem 'paper_trail', '~> 12.3'
 gem 'pg', '~> 1.3'
 gem 'pg_search', '~> 2.3.6'
-gem 'pry-rails'
 gem 'puma', '~> 5.6'
 gem 'pundit', '~>2.1'
 gem 'rails', '~> 6.1.6'
@@ -95,13 +95,10 @@ group :development, :test do
   gem 'binding_of_caller'
   # Used to try and track down N+1 query problems
   gem 'bullet', '~> 7.0.1'
-  gem 'byebug', platform: :mri
   gem 'colorize'
-  gem 'guard-jasmine'
+  gem 'debug', '>= 1.0.0'
   gem 'launchy'
   gem 'parallel_tests', '~> 3.7'
-  gem 'pry'
-  gem 'pry-byebug', "3.9.0"
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
   gem 'rubocop', '~> 1.29', require: false
@@ -114,9 +111,6 @@ end
 
 group :development do
   gem 'browser_sync_rails'
-  gem 'guard-brakeman'
-  gem 'guard-rspec'
-  gem 'guard-rubocop'
   gem 'listen', '~> 3.7.1'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'

@@ -215,7 +215,7 @@ $ CHROME_DEBUG=1 bundle exec rspec
 ```
 When you have set `CHROME_DEBUG`, you should notice chrome start up and appear on your
 taskbar/Docker. You can now click on chrome and watch it run through your tests.
-If you have a `binding.pry`  in your tests the browser will stop at that point.
+If you have a `debugger`  in your tests the browser will stop at that point.
 
 ##### Migrations
 

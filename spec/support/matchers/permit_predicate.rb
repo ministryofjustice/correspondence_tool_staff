@@ -24,7 +24,7 @@ module PermitPredicate
           predicates = Workflows::Predicates.new(user: user, kase: kase)
           result = predicates.send(predicate)
           if [user_type, case_type].in?(permitted_combinations) ^ result
-            (binding).pry if @debug_on_error && $stdout.tty?
+            debugger if @debug_on_error && $stdout.tty?
             @errors << [user_type, case_type, result]
           end
         end
@@ -32,7 +32,7 @@ module PermitPredicate
       @errors.empty?
     end
 
-    # Use this to run binding.pry if a particular combination fails a test.
+    # Use this to run debugger if a particular combination fails a test.
     # Handy to be able to get a peek into the context where the error occured.
     # The debugger is also protected so that it doesn't appear if STDOUT is not
     # a TTY.
