@@ -8,9 +8,15 @@ if ! bundle show rspec-core 2>/dev/null; then
   # shellcheck source=/dev/null
   source ~/.bashrc
 
+  GECKO_DRIVER_FILENAME="geckodriver-$GECKO_DRIVER_VERSION-linux64.tar"
+
+  if [ "$(arch | sed s/aarch64/arm64/)" == 'arm64' ]; then
+      # fix for Nokogiri on arm64; helps to install platform agnostic/non-specific gems
+      bundle config set force_ruby_platform true
+      GECKO_DRIVER_FILENAME="geckodriver-$GECKO_DRIVER_VERSION-linux-aarch64.tar"
+  fi
+
   sub_header_divider "${YELLOW}Installing Gems${NC}"
-  # fix for Nokogiri on arm64; helps to install platform agnostic/non-specific gems
-  bundle config set force_ruby_platform true
   # install gems under current user
   bundler install | indent
 
@@ -27,8 +33,10 @@ if ! bundle show rspec-core 2>/dev/null; then
   sub_header_divider "${YELLOW}Loading DB schema across multiple test databases${NC}"
   bundle exec rails parallel:load_schema | indent
 
-  sub_header_divider "${YELLOW}Attempting to update webdriver version for chrome${NC}"
-  bin/rails webdrivers:chromedriver:update | indent
+  sub_header_divider "${YELLOW}Attempting to update webdriver version${NC}"
+  # geckodriver download URL
+  URL="https://github.com/mozilla/geckodriver/releases/download/$GECKO_DRIVER_VERSION/$GECKO_DRIVER_FILENAME.gz"
+  (cd /usr/local/bin && curl -O -L "$URL" && gunzip "$GECKO_DRIVER_FILENAME.gz" && mv "$GECKO_DRIVER_FILENAME" geckodriver && chmod +x geckodriver)
 
   sub_header "${GREEN}Installation complete! Use ${YELLOW}rspec ${GREEN}like ${NC} bundle exec rspec [spec/path/to/_spec.rb][:line-number]\n\n${DARK_GRAY}******     ${GREEN}Or, use ${YELLOW}parallel testing${GREEN} like${NC} bundle exec rails parallel:spec"
 

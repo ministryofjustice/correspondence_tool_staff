@@ -8,6 +8,8 @@ Rails.application.config.hosts = [
   ENV["RAILS_DEVELOPMENT_HOST_NAME"]
 ]
 
+Rails.application.config.web_console.whitelisted_ips = IPSocket.getaddress('app') || '0.0.0.0'
+
 Rails.application.configure do
   config.after_initialize do
     Bullet.enable        = true

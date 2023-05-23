@@ -5,7 +5,7 @@
 docker-shell: env dc
 
 # build the application
-build: env docker-sync dc-build servers
+build: env docker-check docker-sync dc-build servers
 
 # start docker and the app server
 launch: docker-check docker-sync up-daemon servers
