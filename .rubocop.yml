@@ -676,6 +676,7 @@ Style/HashSyntax:
                  { :a => 1, :b => 2 }.
   StyleGuide: 'https://github.com/bbatsov/ruby-style-guide#hash-literals'
   Enabled: true
+  EnforcedShorthandSyntax: 'either'
 
 Style/IfUnlessModifier:
   Description: >-
