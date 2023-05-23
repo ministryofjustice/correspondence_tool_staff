@@ -11,7 +11,7 @@ references:
 # Sets up the docker images and environment variables that we use
   test_container_config: &test_container_config
     docker:
-      - image: circleci/ruby:2.7.2-node-browsers-legacy
+      - image: cimg/ruby:3.2.2-browsers
         environment:
           GITHUB_TEAM_NAME_SLUG: correspondence
           APPLICATION_DEPLOY_NAME: Track-a-query
