@@ -7,7 +7,7 @@ module CtsPapertrailSerializer
   extend self # makes all instance methods become module methods as well
 
   def load(string)
-    hash = ::YAML.load string
+    hash = ::YAML.load(string, permitted_classes: [Time, Date], aliases: true)
     if hash.key?('properties')
       properties_hash = ::JSON.parse(hash['properties'])
       properties_hash.each do | key, value|
