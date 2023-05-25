@@ -24,10 +24,10 @@ spec:
           resources:
             limits:
               cpu: 1000m
-              memory: 1500Mi
+              memory: 2000Mi
             requests:
               cpu: 10m
-              memory: 500Mi
+              memory: 1000Mi
           env:
             - name: MALLOC_ARENA_MAX
               value: "2"
@@ -99,10 +99,10 @@ spec:
           resources:
             limits:
               cpu: 1000m
-              memory: 1500Mi
+              memory: 2000Mi
             requests:
               cpu: 10m
-              memory: 500Mi
+              memory: 1000Mi
           env:
             - name: MALLOC_ARENA_MAX
               value: "2"
@@ -166,7 +166,7 @@ spec:
       initContainers:
         - name: pending-migrations
           image: 754256621582.dkr.ecr.eu-west-2.amazonaws.com/correspondence/track-a-query-ecr:track-a-query-latest
-          command: 
+          command:
             - rake
             - db:abort_if_pending_migrations
           env:
