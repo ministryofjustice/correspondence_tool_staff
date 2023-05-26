@@ -1,4 +1,4 @@
-RSpec::Matchers.define :have_copy do |expected|
+RSpec::Matchers.define :have_text(:all, do |expected|
   match do |actual|
     begin
       # return true or false here
@@ -8,5 +8,5 @@ RSpec::Matchers.define :have_copy do |expected|
     ensure
       Capybara.ignore_hidden_elements = true
     end
-  end
+  end)
 end
