@@ -66,7 +66,7 @@ class RetentionScheduleCaseNote
   private_class_method :new
 
   def self.log!(**args)
-    new(args)
+    new(**args)
   end
 
   private
