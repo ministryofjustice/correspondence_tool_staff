@@ -22,7 +22,7 @@ references:
           PGUSER: postgres
           POSTGRES_DB: correspondence_platform_test
 
-      - image: circleci/postgres:12.3-postgis
+      - image: cimg/postgres:12.15-postgis
         environment:
           PG_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
@@ -38,7 +38,7 @@ references:
       name: Install psql client
       command: |
          sudo apt update && sudo apt install postgresql-client
-  
+
   update_chromedriver: &update_chromedriver
     run:
       name: Update chrome and the chromedriver
