@@ -26,7 +26,7 @@ Please consider using the provided Docker environment to develop this app over y
 * [Dory Proxy](https://github.com/FreedomBen/dory) - _provides named hosts via reverse proxy, allowing multiple apps to use localhost at one time._
 * [Docker Sync](https://docker-sync.readthedocs.io/en/latest/index.html) - _provides high-performance 2-way synchronisation of files between host and app containers._
 
-Setup is simple; local-dev is configured to manage the implementation of both Dory and Docker Sync. 
+Setup is simple; local-dev is configured to manage the implementation of both Dory and Docker Sync.
 
 Install Dory
 
@@ -40,7 +40,7 @@ Install Docker Sync
 gem install docker-sync
 ```
 
-### Getting started  
+### Getting started
 
 Clone this repository then `cd` into the new directory
 
@@ -54,13 +54,13 @@ Environment settings for Docker reside in `.env.example`. When starting Docker t
 
 > When the service is up and running, an array of pseudo accounts will have been created.
 > The password that is defined in the variable `DEV_PASSWORD` will be needed to access all pseudo accounts.
- 
+
 ### Installation
 
 The easiest way to get the app running is to execute Makefile commands.
 
 >The `make` utility is commonly used as a compiler however we use it as a stage to combine, execute and compress
-more cumbersome commands. 
+more cumbersome commands.
 
 Running the following will get the application started. Please be patient, this process may take a good few minutes to
 complete and `dory up` will require root access to write to the host resolver - this is expected.
@@ -93,14 +93,14 @@ http://chrome.track-a-query.docker/ui
 http://track-a-query.docker:3001/
 ```
 
-**BrowserSync UI:** 
+**BrowserSync UI:**
 ```
 http://track-a-query.docker:3002/
 ```
 
 > During usual operation it is normal to `make down` and `make launch` to stop and start the application, respectively.
 
-### Working in the terminal 
+### Working in the terminal
 
 Run the following in a separate terminal window.
 
@@ -113,7 +113,7 @@ From this prompt, You can run `irb`, `rails c` and a host of other commands.
 **IMPORTANT**; the following removes all data and volumes... to nuke the entire installation and rebuild the app, run:
 
 ```
-make rebuild 
+make rebuild
 ```
 
 ### The Testing Environment
@@ -175,7 +175,7 @@ installation.
 
 ---------------
 
-> Below is the normal setup outside of Docker. Please consider using Docker as the environment can more closely match production, rather than your machines environment.  
+> Below is the normal setup outside of Docker. Please consider using Docker as the environment can more closely match production, rather than your machines environment.
 
 ### Testing
 
@@ -328,17 +328,17 @@ $ export SETTINGS__CTS_EMAIL_PORT=5000
 
 #### Devise OmniAuth - Azure Active Directory
 
-In addition to sign in with email and password, there is an integration with 
+In addition to sign in with email and password, there is an integration with
 Azure Active Directory through Devise OmniAuth.
 
-For this to work in your local machine, you will need to set 3 ENV variables.  
+For this to work in your local machine, you will need to set 3 ENV variables.
 See the instructions in the `.env.example` file.
 
-A colleague can provide this to you. Usually, the tenant and client will be 
-the same for all local/dev environments, but the secret should be unique to 
+A colleague can provide this to you. Usually, the tenant and client will be
+the same for all local/dev environments, but the secret should be unique to
 your machine, as this makes it easier to revoke it in case of a leak.
 
-This feature can be enabled/disabled through the `enabled_features` mechanism 
+This feature can be enabled/disabled through the `enabled_features` mechanism
 configured in [config/settings.yml](config/settings.yml).
 
 #### Uploads
@@ -570,7 +570,7 @@ export DOCKER_DEFAULT_PLATFORM=linux/amd64
 ```
 
 #### Generating Documentation
- 
+
 You can generate documentation for the project with:
 
 ```
@@ -618,7 +618,7 @@ There should be *absolutely no secure credentials* committed in this repo. Infor
 1. **closed**
    The kilo has marked the case as closed.
 
-# How to upgrade Ruby 2.5.x to Ruby 2.7.x on local environment 
+# How to upgrade Ruby 2.5.x to Ruby 2.7.x on local environment
 
 1. Checkout the branch with ruby version defined as 2.7.2 in .ruby-version
 
@@ -627,13 +627,13 @@ There should be *absolutely no secure credentials* committed in this repo. Infor
 ```
 $ rbenv install
 ```
-it should pick up the version defined in .ruby-version 
+it should pick up the version defined in .ruby-version
 
 If you get error somehow telling you not being able to find available stable relesae 2.7.2, you could try the following commands
 
 ```
 $ brew unlink ruby-build
-$ brew install --HEAD ruby-build 
+$ brew install --HEAD ruby-build
 ```
 
 then run following command to check whether you can see 2.7.2 in the list
@@ -642,14 +642,14 @@ $ rbenv install --list-all
 ```
 once you confirm, you can re-run `rbenv install` comand to continue the process.
 
-3. Update the gem system 
+3. Update the gem system
 ```
 $ gem update --system
 ```
 
-4. Install bundle 2.2.11 and install those gems 
+4. Install bundle 2.4.13 and install those gems
 ```
-$ gem install bundler -v 2.2.11
+$ gem install bundler -v 2.4.13
 $ bundler install
 ```
 
@@ -657,7 +657,7 @@ $ bundler install
 
 ## Dependabot
 
-Dependabot creates PRs to help us keep track of our dependency updates. This is great but can lead to a little bit of work if you integrate these changes one by one (for instance, having to run the test suite over and over again). 
+Dependabot creates PRs to help us keep track of our dependency updates. This is great but can lead to a little bit of work if you integrate these changes one by one (for instance, having to run the test suite over and over again).
 
 You can manually combine the changes into one PR and then push this and wait for the tests to run, but this is admin that can be automated so why bother?
 
