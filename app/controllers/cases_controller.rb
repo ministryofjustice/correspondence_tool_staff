@@ -142,12 +142,6 @@ class CasesController < ApplicationController
     authorize @case
   end
 
-  def translate_for_case(*args, **options)
-    options[:translator] ||= public_method(:t)
-    TranslateForCase.translate(*args, **options)
-  end
-  alias t4c translate_for_case
-
   protected
 
   def case_updater_service
