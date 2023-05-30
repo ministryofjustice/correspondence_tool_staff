@@ -22,7 +22,7 @@ references:
           PGUSER: postgres
           POSTGRES_DB: correspondence_platform_test
 
-      - image: cimg/postgres:12.15-postgis
+      - image: cimg/postgres:12.15
         environment:
           PG_PASSWORD: ""
           POSTGRES_HOST_AUTH_METHOD: trust
