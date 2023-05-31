@@ -618,25 +618,23 @@ There should be *absolutely no secure credentials* committed in this repo. Infor
 1. **closed**
    The kilo has marked the case as closed.
 
-# How to upgrade Ruby 2.5.x to Ruby 2.7.x on local environment
+# How to upgrade Ruby 2.7.x to Ruby 3.x on local environment
 
-1. Checkout the branch with ruby version defined as 2.7.2 in .ruby-version
-
-2. Install Ruby 2.7.2
+1. Install Ruby 3.x
 
 ```
 $ rbenv install
 ```
 it should pick up the version defined in .ruby-version
 
-If you get error somehow telling you not being able to find available stable relesae 2.7.2, you could try the following commands
+If you get error somehow telling you not being able to find available stable release 3.x, you could try the following commands
 
 ```
 $ brew unlink ruby-build
 $ brew install --HEAD ruby-build
 ```
 
-then run following command to check whether you can see 2.7.2 in the list
+then run following command to check whether you can see 3.x in the list
 ```
 $ rbenv install --list-all
 ```
