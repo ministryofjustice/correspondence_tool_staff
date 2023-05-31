@@ -1,4 +1,4 @@
-FROM ruby:3.1.3-alpine
+FROM ruby:3.1.4-alpine
 LABEL key="Ministry of Justice, Track a Query <correspondence@digital.justice.gov.uk>"
 RUN set -ex
 
