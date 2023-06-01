@@ -1,5 +1,3 @@
-require 'pry'
-
 namespace :retention_schedules do
   desc 'create a dummy Offender Sar with retention schedules case'
   task :create => :environment do

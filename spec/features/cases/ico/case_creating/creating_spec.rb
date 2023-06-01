@@ -43,7 +43,7 @@ feature 'ICO case creation' do
       cases_new_ico_page.form.link_original_case.click
       expect(cases_new_ico_page.form).to have_no_original_case_number_error
       expect(cases_new_ico_page.form.original_case.linked_records.first.link)
-        .to have_copy original_foi.number
+        .to have_text(:all, original_foi.number)
     end
 
     scenario ' - linking Original SAR case', js: true do
@@ -58,7 +58,7 @@ feature 'ICO case creation' do
       cases_new_ico_page.form.link_original_case.click
       expect(cases_new_ico_page.form).to have_no_original_case_number_error
       expect(cases_new_ico_page.form.original_case.linked_records.first.link)
-        .to have_copy original_sar.number
+        .to have_text(:all, original_sar.number)
     end
 
     scenario ' - linking Original FOI - Internal review for timeliness case', js: true do
@@ -72,7 +72,7 @@ feature 'ICO case creation' do
       cases_new_ico_page.form.link_original_case.click
       expect(cases_new_ico_page.form).to have_no_original_case_number_error
       expect(cases_new_ico_page.form.original_case.linked_records.first.link)
-        .to have_copy original_foi_ir_timeless.number
+        .to have_text(:all, original_foi_ir_timeless.number)
     end
 
     scenario ' - linking Original FOI - Internal review for compliance case', js: true do
@@ -86,7 +86,7 @@ feature 'ICO case creation' do
       cases_new_ico_page.form.link_original_case.click
       expect(cases_new_ico_page.form).to have_no_original_case_number_error
       expect(cases_new_ico_page.form.original_case.linked_records.first.link)
-        .to have_copy original_foi_ir_compliance.number
+        .to have_text(:all, original_foi_ir_compliance.number)
     end
 
     scenario ' - removing Original case', js: true do
@@ -120,7 +120,7 @@ feature 'ICO case creation' do
       expect(cases_new_ico_page.form).to have_related_cases
       expect(cases_new_ico_page.form.related_cases).to have_linked_records
       expect(cases_new_ico_page.form.related_cases.linked_records.first.link)
-        .to have_copy related_foi.number
+        .to have_text(:all, related_foi.number)
     end
 
 

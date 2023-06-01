@@ -108,7 +108,7 @@ module Stats
     private
 
     def spacer_or_section_header?(row)
-      row =~ /^_/
+      row.to_s =~ /^_/
     end
 
     def populate_spacer_or_section_header_row(row)

@@ -1,5 +1,4 @@
-require 'spec_helper'
-require_relative '../support/forms/form_validation_shared_examples'
+require 'rails_helper'
 
 RSpec.describe RetentionScheduleForm do
   it_behaves_like 'a date question form', attribute_name: :planned_destruction_date do

@@ -100,7 +100,6 @@ class RetentionSchedulesUpdateService
         :related_cases, 
         :case_links
       ]).where(case_id: @case_ids)
-
     retention_schedules.each do |retention_schedule|
       retention_schedule.public_send(@state_change_event)
 
@@ -113,6 +112,7 @@ class RetentionSchedulesUpdateService
         )
       end
     end
+
   end
 
   def annotate_case!(kase, changes)

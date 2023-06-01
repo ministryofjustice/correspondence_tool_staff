@@ -81,14 +81,14 @@ FactoryBot.define do
       # Sometimes these factories don't behave as expected. They're a little
       # complicated. Sorry. This is especially annoying when a gazillion cases
       # are being created, such as in the StandardSetup module ... sticking a
-      # binding.pry somewhere in here is useless, so here's what you do.
+      # debugger somewhere in here is useless, so here's what you do.
       # Temporarily add the debug attribute where the case is being created{}
       #
       #   create :full_awresp_foi_accepted, debug: true
       #
       # And then, in the after(:create) block you need to debug, add the line:
       #
-      #   binding.pry if evaluator.debug
+      #   debugger if evaluator.debug
       #
       # Et voila! You can now debug individual case setups within the context
       # of a large and unwieldy test (framework).

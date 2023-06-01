@@ -18,7 +18,7 @@ def edit_foi_case_step(kase:, subject:)
 
   if subject
     expect(cases_show_page.page_heading.heading)
-      .to have_copy "Case subject, #{subject}"
+      .to have_text(:all, "Case subject, #{subject}")
   end
 end
 
