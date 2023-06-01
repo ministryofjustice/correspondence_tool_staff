@@ -1309,7 +1309,8 @@ CREATE TABLE public.warehouse_case_reports (
     original_external_deadline date,
     original_internal_deadline date,
     num_days_late_against_original_deadline integer,
-    request_method character varying
+    request_method character varying,
+    sent_to_sscl date
 );
 
 
@@ -2409,5 +2410,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20230126140604'),
 ('20230127153614'),
 ('20230203153008'),
-('20230207153942');
+('20230207153942'),
+('20230601125430');
+
 
