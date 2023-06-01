@@ -223,7 +223,7 @@ describe Case::SAR::Standard do
     end
 
     it 'saves all values in the versions object hash' do
-      version_hash = YAML.load(@kase.versions.last.object)
+      version_hash = YAML.load(@kase.versions.last.object, permitted_classes: [Time, Date])
       expect(version_hash['email']).to eq 'aa@moj.com'
       expect(version_hash['received_date']).to eq Date.today
       expect(version_hash['subject']).to eq 'subject A'

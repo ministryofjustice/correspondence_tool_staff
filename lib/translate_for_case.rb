@@ -1,6 +1,6 @@
 module TranslateForCase
   class << self
-    def translate(kase_or_klass, path, key, options = {})
+    def translate(kase_or_klass, path, key, **options)
       translator = options.fetch(:translator, I18n.public_method(:t))
 
       if kase_or_klass.is_a? Class
@@ -14,7 +14,7 @@ module TranslateForCase
       default = translation_paths
                   .map { |case_path| :"#{path}.#{case_path}.#{key}" }
                   .concat([:"#{path}.#{key}"])
-      translator.call(default.shift, options.merge(default: default))
+      translator.call(default.shift, **options.merge(default: default))
     end
 
     alias t translate

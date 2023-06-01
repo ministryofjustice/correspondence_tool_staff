@@ -1,4 +1,4 @@
-FROM ruby:2.7.8-alpine AS base
+FROM ruby:3.1.4-alpine AS base
 
 RUN set -ex
 RUN apk update

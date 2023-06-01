@@ -52,7 +52,7 @@ class BaseFormObject
   # If the logic is any more complex than this, override in subclasses
   def persist!
     record.update(
-      attributes
+      **attributes
     )
   end
 end

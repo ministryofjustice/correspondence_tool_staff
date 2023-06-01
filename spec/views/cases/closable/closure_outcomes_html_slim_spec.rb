@@ -72,8 +72,8 @@ describe 'cases/closable/closure_outcomes.html.slim' do
       render
       cases_close_page.load(rendered)
       expect(cases_close_page.ico).to have_ico_decision
-      expect(cases_close_page.ico.ico_decision.overturned_label).to have_copy 'Overturned by ICO'
-      expect(cases_close_page.ico.ico_decision.upheld_label).to have_copy 'Upheld by ICO'
+      expect(cases_close_page.ico.ico_decision.overturned_label).to have_text(:all, 'Overturned by ICO')
+      expect(cases_close_page.ico.ico_decision.upheld_label).to have_text(:all, 'Upheld by ICO')
 
     end
 

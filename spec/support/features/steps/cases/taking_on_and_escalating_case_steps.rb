@@ -10,7 +10,7 @@ def take_on_case_step(kase:)
 
   expect(row.actions).to have_undo_assign_link
   expect(row.actions.success_message)
-    .to have_copy "Case taken on Undo taking on of case #{kase.number}"
+    .to have_text(:all, "Case taken on Undo taking on of case #{kase.number}")
   expect(row.highlight_row.size).to eq 3
 end
 
@@ -35,7 +35,7 @@ def de_escalate_case_step(kase:)
   row = incoming_cases_page.row_for_case_number(kase.number)
   expect(row.actions).to have_undo_de_escalate_link
   expect(row.actions).to have_no_take_on_case
-  expect(row.actions).to have_copy 'Case de-escalated Undo'
+  expect(row.actions).to have_text(:all, 'Case de-escalated Undo')
   expect(row.highlight_row.size).to eq 3
 end
 

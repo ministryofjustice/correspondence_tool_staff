@@ -214,8 +214,7 @@ class Case::BaseDecorator < Draper::Decorator
     translation_path = translation_path(kase.class.to_s.underscore)
     default = translation_path.map { |case_path| :"#{path}.#{case_path}.#{key}" } + [:"#{path}.#{key}"]
     options.merge(default: default)
-    I18n.t("#{path}.#{translation_path.shift}.#{key}",
-      default: default)
+    I18n.t("#{path}.#{translation_path.shift}.#{key}", default: default)
   end
 
   def translation_path(case_type)

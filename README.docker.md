@@ -58,7 +58,7 @@ SETTINGS__GOVUK_NOTIFY_API_KEY=
 # Ask a colleague in the team to provide these to you.
 OMNIAUTH_AZURE_TENANT_ID=
 OMNIAUTH_AZURE_CLIENT_ID=
-OMNIAUTH_AZURE_CLIENT_SECRET= 
+OMNIAUTH_AZURE_CLIENT_SECRET=
 ```
 
 Get the application up and running:
@@ -72,10 +72,10 @@ The application will be available at the following addresses:
 Application
 http://localhost:3000/
 
-BrowserSync: 
+BrowserSync:
 http://localhost:3001/
 
-BrowserSync UI: 
+BrowserSync UI:
 http://localhost:3002/
 ```
 
@@ -86,7 +86,7 @@ terminal window.
 make docker-shell
 ```
 ... this is the default make command so you could simply run
-``` 
+```
 make
 ```
 From this prompt, You can run `irb` and a host of other commands.
@@ -96,7 +96,7 @@ Once the installation process has completed, a Puma server will be running in yo
 IMPORTANT; the following removes all data and volumes... to nuke the entire installation and rebuild the app, run:
 
 ```
-make rebuild 
+make rebuild
 ```
 
 #### Changing Environments
@@ -117,7 +117,7 @@ make down && make build
 ```
 
 The environment will be recreated for you. Please be patient with this, it may take a good few minutes to complete due
-to environments requiring a different database and Gems to function correctly. 
+to environments requiring a different database and Gems to function correctly.
 
 ------------
 
@@ -215,11 +215,11 @@ $ CHROME_DEBUG=1 bundle exec rspec
 ```
 When you have set `CHROME_DEBUG`, you should notice chrome start up and appear on your
 taskbar/Docker. You can now click on chrome and watch it run through your tests.
-If you have a `binding.pry`  in your tests the browser will stop at that point.
+If you have a `debugger`  in your tests the browser will stop at that point.
 
 ##### Migrations
 
-Only the most recent migrations will be present in [db/migrate](db/migrate), as when setting up the application locally, the `structure.sql` will be used instead.  
+Only the most recent migrations will be present in [db/migrate](db/migrate), as when setting up the application locally, the `structure.sql` will be used instead.
 You only need to run migrations (`db:migrate`) when pulling new code that may include them.
 
 Older migrations, unlikely to be needed anymore, are archived in [db/archived_migrations](db/archived_migrations) for reference.
@@ -280,7 +280,7 @@ $ export SETTINGS__CTS_EMAIL_PORT=5000
 In addition to sign in with email and password, there is an integration with
 Azure Active Directory through Devise OmniAuth.
 
-For this to work in your local machine, you will need to set 3 ENV variables.  
+For this to work in your local machine, you will need to set 3 ENV variables.
 See the instructions in the `.env.example` file.
 
 A colleague can provide this to you. Usually, the tenant and client will be
@@ -542,15 +542,15 @@ Uninstall the gem
 Remove the rules from .git/config file under [overcommit] section
 Remove the following hooks from ./git/hooks (Do check them before deleting them)
 ```
-commit-msg		
-post-commit		
-post-rewrite		
-pre-push		
+commit-msg
+post-commit
+post-rewrite
+pre-push
 prepare-commit-msg
-overcommit-hook		
-post-checkout		
-post-merge		
-pre-commit		
+overcommit-hook
+post-checkout
+post-merge
+pre-commit
 pre-rebase
 ```
 
@@ -637,42 +637,6 @@ or `#security` in MOJ Slack.
 1. **closed**
    The kilo has marked the case as closed.
 
-# How to upgrade Ruby 2.5.x to Ruby 2.7.x on local environment
-
-1. Checkout the branch with ruby version defined as 2.7.2 in .ruby-version
-
-2. Install Ruby 2.7.2
-
-```
-$ rbenv install
-```
-it should pick up the version defined in .ruby-version
-
-If you get error somehow telling you not being able to find available stable relesae 2.7.2, you could try the following commands
-
-```
-$ brew unlink ruby-build
-$ brew install --HEAD ruby-build 
-```
-
-then run following command to check whether you can see 2.7.2 in the list
-```
-$ rbenv install --list-all
-```
-once you confirm, you can re-run `rbenv install` comand to continue the process.
-
-3. Update the gem system
-```
-$ gem update --system
-```
-
-4. Install bundle 2.2.11 and install those gems
-```
-$ gem install bundler -v 2.2.11
-$ bundler install
-```
-
-5. run `rails s` check the app
 
 ## Dependabot
 
