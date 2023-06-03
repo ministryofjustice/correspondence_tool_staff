@@ -69,6 +69,9 @@ module Cases
     def send_email
     end
 
+    def probation_send_email
+    end
+
     private
 
     def set_case
