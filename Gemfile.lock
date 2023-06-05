@@ -161,6 +161,7 @@ GEM
       dry-validation (~> 1.0, >= 1.0.0)
     connection_pool (2.2.5)
     crass (1.0.6)
+    date (3.3.3)
     debug (1.8.0)
       irb (>= 1.5.0)
       reline (>= 0.3.1)
@@ -317,8 +318,11 @@ GEM
     loofah (2.19.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    mail (2.7.1)
+    mail (2.8.1)
       mini_mime (>= 0.1.1)
+      net-imap
+      net-pop
+      net-smtp
     marcel (1.0.2)
     matrix (0.4.2)
     mechanize (2.8.5)
@@ -345,6 +349,11 @@ GEM
     net-http-digest_auth (1.4.1)
     net-http-persistent (4.0.1)
       connection_pool (~> 2.2)
+    net-imap (0.3.4)
+      date
+      net-protocol
+    net-pop (0.1.2)
+      net-protocol
     net-protocol (0.2.1)
       timeout
     net-smtp (0.3.3)
@@ -659,8 +668,8 @@ DEPENDENCIES
   lograge
   logstash-event
   loofah (>= 2.3.1)
+  mail (>= 2.8)
   mechanize (>= 2.7.7)
-  net-smtp
   notifications-ruby-client (>= 5.4)
   omniauth-azure-activedirectory-v2 (~> 1.0.0)
   omniauth-rails_csrf_protection
