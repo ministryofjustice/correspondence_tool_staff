@@ -18,7 +18,7 @@ module PageObjects
           end
         end
 
-        element :button_send_email, '.data_request_send_email'
+        element :button_continue, '.data_request_send_email'
         element :link_cancel, '.data_request_cancel'
       end
     end

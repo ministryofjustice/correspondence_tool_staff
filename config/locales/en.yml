@@ -504,6 +504,7 @@ en:
     move: Move to %{directorate}
     move_directorate: Move to %{business_group}
     confirm: Confirm
+    continue: Continue
     create_case: Create case
     feedback: Send feedback
     final_page_count: Update final page count

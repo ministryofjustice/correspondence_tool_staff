@@ -39,15 +39,14 @@ describe 'cases/data_requests/probation_send_email', type: :view do
         assign(:commissioning_document, commissioning_document)
 
         render
-        data_request_probation_email_confirmation_page.load(rendered)
-        @page = data_request_probation_email_confirmation_page
+        data_request_send_probation_email_page.load(rendered)
+        @page = data_request_send_probation_email_page
       end
 
       it 'has required content' do
         expect(@page.page_heading.heading.text).to eq 'Do you want to send the commissioning email to Branston Archives?'
-        # expect(@page.page_banner.text).to include 'The selected location does not have an email address.'
-        # expect(@page.button_send_email.disabled?).to eq true
-        # expect(@page.link_cancel.text).to eq 'Cancel'
+        expect(@page.button_continue.value).to eq 'Continue'
+        expect(@page.link_cancel.text).to eq 'Cancel'
       end
     end
 
