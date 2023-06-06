@@ -45,7 +45,7 @@ describe 'cases/data_requests/probation_send_email', type: :view do
 
       it 'has required content' do
         expect(@page.page_heading.heading.text).to eq 'Do you want to send the commissioning email to Branston Archives?'
-        expect(@page.button_continue.value).to eq 'Continue'
+        expect(@page.button_continue.text).to eq 'Continue'
         expect(@page.link_cancel.text).to eq 'Cancel'
       end
     end
