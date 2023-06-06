@@ -221,6 +221,10 @@ Rails.application.routes.draw do
           post :send_email
         end
       end
+      end
+
+    resources :data_requests do
+      get 'probation_send_email', on: :member
     end
 
     resource :letters, only: [:new, :show], path: "letters/:type"
