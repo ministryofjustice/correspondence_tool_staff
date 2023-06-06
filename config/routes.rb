@@ -214,8 +214,8 @@ Rails.application.routes.draw do
 
     resources :data_requests do
       member do
-        get :probation_send_email
         get :send_email
+        post :send_email
       end
 
       resources :commissioning_documents, only: [:new, :edit, :create, :update] do

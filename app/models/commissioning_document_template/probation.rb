@@ -18,9 +18,5 @@ module CommissioningDocumentTemplate
         data_required: data_request.data_required || default_data_required
       )
     end
-
-    def recipient_emails
-      ["BranstonRegistryRequests2@justice.gov.uk"]
-    end
   end
 end

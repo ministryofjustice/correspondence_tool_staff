@@ -67,9 +67,22 @@ module Cases
     end
 
     def send_email
-    end
+      if request.get? && @commissioning_document.probation?
+        @email = ProbationCommissioningDocumentEmail.new(probation: 1)
+        render :probation_send_email and return
+      end
 
-    def probation_send_email
+      @recipient_emails = @data_request.recipient_emails
+
+      if @commissioning_document.probation?
+        @email = ProbationCommissioningDocumentEmail.new(email_params)
+
+        if !@email.valid?
+          render :probation_send_email and return
+        elsif @email.email_branston_archives == "yes"
+          @recipient_emails << "BranstonRegistryRequests2@justice.gov.uk"
+        end
+      end
     end
 
     private
@@ -84,6 +97,10 @@ module Cases
 
     def set_commissioning_document
       @commissioning_document = @data_request.commissioning_document&.decorate
+    end
+
+    def email_params
+      params.require(:probation_commissioning_document_email).permit(:probation, :email_branston_archives)
     end
 
     def create_params
