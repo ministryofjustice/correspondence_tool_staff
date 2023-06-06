@@ -211,8 +211,13 @@ Rails.application.routes.draw do
     end
 
     resource :cover_page, only: [:show], path: "cover-page"
+
     resources :data_requests do
-      get 'send_email', on: :member
+      member do
+        get :probation_send_email
+        get :send_email
+      end
+
       resources :commissioning_documents, only: [:new, :edit, :create, :update] do
         member do
           get :download
@@ -221,10 +226,6 @@ Rails.application.routes.draw do
           post :send_email
         end
       end
-      end
-
-    resources :data_requests do
-      get 'probation_send_email', on: :member
     end
 
     resource :letters, only: [:new, :show], path: "letters/:type"
