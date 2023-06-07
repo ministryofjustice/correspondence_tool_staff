@@ -105,7 +105,7 @@ group :development, :test do
   gem 'rubocop-rspec', '~> 2.10', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rails', require: false
-  gem 'selenium-webdriver', '~> 4.1.0'
+  gem 'selenium-webdriver', '~> 4.9.1'
   gem 'spring-commands-rspec'
 end
 
