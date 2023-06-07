@@ -67,25 +67,30 @@ module Cases
     end
 
     def send_email
-      if request.get? && @commissioning_document.probation?
-        @email = ProbationCommissioningDocumentEmail.new(probation: 1)
-        render :probation_send_email and return
-      end
-
       @recipient_emails = @data_request.recipient_emails
 
-      if @commissioning_document.probation?
-        @email = ProbationCommissioningDocumentEmail.new(email_params)
-
-        if !@email.valid?
-          render :probation_send_email and return
-        elsif @email.email_branston_archives == "yes"
-          @recipient_emails << "BranstonRegistryRequests2@justice.gov.uk"
-        end
+      if @commissioning_document.probation? && !handled_sending_to_branston_archives?
+        render :probation_send_email and return
       end
     end
 
     private
+
+    def handled_sending_to_branston_archives?
+      if request.get?
+        @email = ProbationCommissioningDocumentEmail.new(probation: 1)
+        return false
+      end
+
+      @email = ProbationCommissioningDocumentEmail.new(email_params)
+      return false unless @email.valid?
+
+      if @email.email_branston_archives == "yes"
+        @recipient_emails << CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL
+      end
+
+      true
+    end
 
     def set_case
       @case = Case::Base.find(params[:case_id])
