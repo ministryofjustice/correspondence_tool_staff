@@ -78,7 +78,7 @@ module Cases
 
     def handled_sending_to_branston_archives?
       if request.get?
-        @email = ProbationCommissioningDocumentEmail.new(probation: 1)
+        @email = ProbationCommissioningDocumentEmail.new
         return false
       end
 
@@ -105,7 +105,7 @@ module Cases
     end
 
     def email_params
-      params.require(:probation_commissioning_document_email).permit(:probation, :email_branston_archives)
+      params.require(:probation_commissioning_document_email).permit(:email_branston_archives)
     end
 
     def create_params

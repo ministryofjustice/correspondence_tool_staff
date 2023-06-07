@@ -7,4 +7,9 @@ class ProbationCommissioningDocumentEmail
   attribute :probation
 
   validates :email_branston_archives, presence: true
+
+  def initialize(*)
+    @probation = 1
+    super
+  end
 end
