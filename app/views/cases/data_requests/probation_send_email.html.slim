@@ -8,9 +8,6 @@
 
 = render partial: 'layouts/header'
 
-= GovukElementsErrorsHelper.error_summary @email,
-  "#{pluralize(@email.errors.count, t('common.error'))} #{ t('common.summary_error')}", ""
-
 .grid-row.data-request
   .column-full
     div.button-holder
