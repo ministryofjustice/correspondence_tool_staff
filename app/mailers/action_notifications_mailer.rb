@@ -112,8 +112,14 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     file = StringIO.new(commissioning_document.document)
 
+    deadline_text = ""
+    if commissioning_document.deadline.present?
+      deadline_text = "The information is required in Branston no later than #{commissioning_document.deadline}"
+    end
+
     set_personalisation(
       email_address: recipient,
+      deadline_text: deadline_text,
       link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
     )
 
