@@ -114,7 +114,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     set_personalisation(
       email_address: recipient,
-      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true, retention_period: '3 weeks'),
+      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
     )
 
     mail(to: recipient)

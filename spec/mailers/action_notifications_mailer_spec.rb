@@ -399,7 +399,6 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
 
     it 'personalises the email' do
       expect(mail.govuk_notify_personalisation[:email_address]).to eq email_address
-      expect(mail.govuk_notify_personalisation[:link_to_file][:retention_period]).to eq '3 weeks'
     end
 
     it 'sets the To address of the email using the provided user' do
