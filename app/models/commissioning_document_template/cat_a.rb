@@ -5,7 +5,7 @@ module CommissioningDocumentTemplate
     end
 
     def deadline
-      deadline(5)
+      calculate_deadline(5)
     end
 
     def context
