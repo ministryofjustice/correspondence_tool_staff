@@ -4,6 +4,10 @@ module CommissioningDocumentTemplate
       'PDP'
     end
 
+    def deadline
+      nil
+    end
+
     def context
       super.merge(
         aliases: kase.subject_aliases,

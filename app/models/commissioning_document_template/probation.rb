@@ -8,13 +8,17 @@ module CommissioningDocumentTemplate
       'All paper and electronic information'
     end
 
+    def deadline
+      deadline(5)
+    end
+
     def context
       super.merge(
         addressee_location: data_request.location,
         pnc: kase.other_subject_ids,
         crn: kase.case_reference_number,
         date_range: data_request.request_dates,
-        deadline: deadline(5),
+        deadline: deadline,
         data_required: data_request.data_required || default_data_required
       )
     end

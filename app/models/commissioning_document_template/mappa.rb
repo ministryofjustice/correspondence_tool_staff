@@ -4,12 +4,16 @@ module CommissioningDocumentTemplate
       'MAPPA'
     end
 
+    def deadline
+      deadline(20)
+    end
+
     def context
       super.merge(
         aliases: kase.subject_aliases,
         pnc: kase.other_subject_ids,
         date_range: data_request.request_dates,
-        deadline: deadline(20),
+        deadline: deadline,
       )
     end
   end
