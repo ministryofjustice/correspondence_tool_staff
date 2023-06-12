@@ -112,7 +112,7 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     deadline_text = ''
     if commissioning_document.deadline.present?
-      deadline_text = I18n.t("mailer.commissioning_email.deadline(deadline: #{commissioning_document.deadline} )")
+      deadline_text = I18n.t('mailer.commissioning_email.deadline', date: commissioning_document.deadline)
     end
 
     file = StringIO.new(commissioning_document.document)
