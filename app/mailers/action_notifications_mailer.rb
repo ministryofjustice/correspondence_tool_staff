@@ -110,12 +110,12 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     find_template('Commissioning')
 
-    file = StringIO.new(commissioning_document.document)
-
-    deadline_text = ""
+    deadline_text = ''
     if commissioning_document.deadline.present?
-      deadline_text = "The information is required in Branston no later than #{commissioning_document.deadline}"
+      deadline_text = I18n.t(mailer.commissioning_email.deadline(deadline: commissioning_document.deadline))
     end
+
+    file = StringIO.new(commissioning_document.document)
 
     set_personalisation(
       email_address: recipient,
