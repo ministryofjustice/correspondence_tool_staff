@@ -197,8 +197,43 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     it 'is not implemented' do
       data_request = create :data_request, offender_sar_case: offender_sar_case
 
-      expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request.id }}
+      expect { delete :destroy, params: { case_id: offender_sar_case.id, id: data_request.id } }
         .to raise_error NotImplementedError, 'Data request delete unavailable'
+    end
+  end
+
+  describe '#send_email' do
+    let(:data_request) {
+      create(
+        :data_request,
+        cached_num_pages: 10,
+        completed: true,
+        cached_date_received: Date.yesterday,
+        commissioning_document: commissioning_document
+      )
+    }
+    let(:params) {
+      {
+        id: data_request.id,
+        case_id: data_request.case_id,
+      }
+    }
+    let(:commissioning_document) { create(:commissioning_document, template_name: template_name) }
+
+    context 'probation document selected' do
+      let(:template_name) { 'probation' }
+      it 'routes to the send_email branston probation page' do
+        get :send_email, params: params
+        expect(response).to render_template(:probation_send_email)
+      end
+    end
+
+    context 'non-probation document' do
+      let(:template_name) { 'prison' }
+      it 'routes to the send_email confirmation page' do
+        get :send_email, params: params
+        expect(response).to render_template(:send_email)
+      end
     end
   end
 end
