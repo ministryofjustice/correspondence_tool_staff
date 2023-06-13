@@ -1778,3 +1778,7 @@ en:
   pagination:
     next: "Next "
     previous: "Previous "
+
+  mailer:
+    commissioning_email:
+      deadline: "The information is required in Branston no later than %{date}"

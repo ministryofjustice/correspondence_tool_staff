@@ -110,11 +110,17 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     find_template('Commissioning')
 
+    deadline_text = ''
+    if commissioning_document.deadline.present?
+      deadline_text = I18n.t('mailer.commissioning_email.deadline', date: commissioning_document.deadline)
+    end
+
     file = StringIO.new(commissioning_document.document)
 
     set_personalisation(
       email_address: recipient,
-      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true, retention_period: '3 weeks'),
+      deadline_text: deadline_text,
+      link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
     )
 
     mail(to: recipient)
