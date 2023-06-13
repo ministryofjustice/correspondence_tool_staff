@@ -209,7 +209,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         cached_num_pages: 10,
         completed: true,
         cached_date_received: Date.yesterday,
-        commissioning_document: commissioning_document
+        commissioning_document: commissioning_document,
       )
     }
     let(:params) {
@@ -219,12 +219,72 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       }
     }
     let(:commissioning_document) { create(:commissioning_document, template_name: template_name) }
+    let(:template_name) {'prison'}
+
+    it 'assigns value to recipient emails' do
+      allow_any_instance_of(DataRequest).to receive(:recipient_emails).and_return('test@email.com')
+      get :send_email, params: params
+      expect(assigns(:recipient_emails)).to eq('test@email.com')
+    end
 
     context 'probation document selected' do
       let(:template_name) { 'probation' }
       it 'routes to the send_email branston probation page' do
         get :send_email, params: params
         expect(response).to render_template(:probation_send_email)
+      end
+
+      context 'confirm probation email' do
+        let(:params) {
+          {
+            id: data_request.id,
+            case_id: data_request.case_id,
+            probation_commissioning_document_email: {
+              probation: 1,
+              email_branston_archives: 'yes'
+            }
+          }
+        }
+        it 'adds the branston probation email to recipients' do
+          post :send_email, params: params
+          expect(response).to render_template(:send_email)
+          expect(assigns(:recipient_emails)).to include(CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL)
+        end
+      end
+
+      context 'decline probation email' do
+        let(:params) {
+          {
+            id: data_request.id,
+            case_id: data_request.case_id,
+            probation_commissioning_document_email: {
+              probation: 1,
+              email_branston_archives: 'no'
+            }
+          }
+        }
+        it 'doesnt add the branston probation email to recipients' do
+          post :send_email, params: params
+          expect(response).to render_template(:send_email)
+          expect(assigns(:recipient_emails)).to_not include(CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL)
+        end
+      end
+
+      context 'no options chosen' do
+        let(:params) {
+          {
+            id: data_request.id,
+            case_id: data_request.case_id,
+            probation_commissioning_document_email: {
+              probation: 1
+            }
+          }
+        }
+        it 'raises error message' do
+          post :send_email, params: params
+          expect(response).to render_template(:probation_send_email)
+          expect(assigns(:email)).to_not be_valid
+        end
       end
     end
 
