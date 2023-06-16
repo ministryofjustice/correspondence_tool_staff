@@ -1,13 +1,13 @@
 require "rails_helper"
 
-feature 'Searching for cases' do
+feature "Searching for cases" do
   given(:approver)        { find_or_create :disclosure_specialist }
   given(:manager)         { find_or_create :disclosure_bmt_user }
   given(:responder)       { kase.responder }
-  given!(:kase_earlier)   { create :case_being_drafted, name: 'testing', received_date: 1.month.ago}
-  given!(:kase)           { create :case_being_drafted, name: 'testing' }
+  given!(:kase_earlier)   { create :case_being_drafted, name: "testing", received_date: 1.month.ago }
+  given!(:kase)           { create :case_being_drafted, name: "testing" }
 
-  scenario 'searching by case number' do
+  scenario "searching by case number" do
     login_as manager
 
     cases_page.load
@@ -25,7 +25,7 @@ feature 'Searching for cases' do
     expect(cases_search_page.case_list.first.number).to have_text kase.number
   end
 
-  scenario 'searching as a responder' do
+  scenario "searching as a responder" do
     login_as responder
 
     kase.update_index
@@ -39,7 +39,7 @@ feature 'Searching for cases' do
     expect(cases_search_page.case_list.first.number).to have_text kase.number
   end
 
-  scenario 'searching as an approver' do
+  scenario "searching as an approver" do
     login_as approver
 
     kase.update_index
@@ -53,7 +53,7 @@ feature 'Searching for cases' do
     expect(cases_search_page.case_list.first.number).to have_text kase.number
   end
 
-  scenario 'searching by case name with choice of ordering the search result' do
+  scenario "searching by case name with choice of ordering the search result" do
     login_as manager
 
     cases_page.load
@@ -75,5 +75,4 @@ feature 'Searching for cases' do
     expect(cases_search_page.case_list.first.number).to have_text kase.number
     expect(cases_search_page.case_list.second.number).to have_text kase_earlier.number
   end
-
 end

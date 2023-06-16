@@ -8,31 +8,30 @@ class RemoveCategoryIdFromCases < ActiveRecord::Migration[5.0]
 
     Case.all.each do |kase|
       case kase.type
-      when 'Case::FOI' then
-        foi_category ||= Category.find_by! abbreviation: 'FOI'
-        kase.update category_id: foi_category.id
-      when 'Case::SAR' then
-        sar_category ||= Category.find_by! abbreviation: 'SAR'
-        kase.update category_id: sar_category.id
+      when "Case::FOI"
+        foi_category ||= Category.find_by! abbreviation: "FOI"
+        kase.update! category_id: foi_category.id
+      when "Case::SAR"
+        sar_category ||= Category.find_by! abbreviation: "SAR"
+        kase.update! category_id: sar_category.id
       else
-        $stderr.puts "Warning: type '#{kase.type}' for case #{kase.id} unrecognised, unable to reinstate category"
+        warn "Warning: type '#{kase.type}' for case #{kase.id} unrecognised, unable to reinstate category"
       end
     end
   end
-
 end
 
 # Ensure continuity in case this migration is ever run at a time when the
 # Category model has been renamed/removed.
 unless defined? Category
-  class Category < ActiveRecord::Base
+  class Category < ApplicationRecord
   end
 end
 
 # Ensure continuity in case this migration is ever run at a time when the
 # Case models have been renamed/removed.
 unless defined? Case
-  class Case < ActiveRecord::Base
+  class Case < ApplicationRecord
   end
 
   class Case::FOI < Case

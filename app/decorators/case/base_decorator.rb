@@ -25,20 +25,20 @@ class Case::BaseDecorator < Draper::Decorator
   # 21 working days (bug CT-2119)
   def time_taken
     business_days = received_date.business_days_until(date_responded, true)
-    I18n.t('common.case.time_taken_result', count: business_days)
+    I18n.t("common.case.time_taken_result", count: business_days)
   end
 
   def calendar_days_taken
     calendar_days = (date_responded - received_date).to_i
-    calendar_days = 1 if calendar_days == 0
-    I18n.t('common.case.sar/offender.time_taken_result', count: calendar_days)
+    calendar_days = 1 if calendar_days.zero?
+    I18n.t("common.case.sar/offender.time_taken_result", count: calendar_days)
   end
 
   def timeliness
     if within_external_deadline?
-      I18n.t('common.case.answered_in_time')
+      I18n.t("common.case.answered_in_time")
     else
-      I18n.t('common.case.answered_late')
+      I18n.t("common.case.answered_late")
     end
   end
 
@@ -47,11 +47,11 @@ class Case::BaseDecorator < Draper::Decorator
   def draft_timeliness
     case within_draft_deadline?
     when true
-      I18n.t('common.case.compliant_in_time')
+      I18n.t("common.case.compliant_in_time")
     when false
-      I18n.t('common.case.compliant_late')
+      I18n.t("common.case.compliant_late")
     else
-      I18n.t('common.case.compliant_unknown')
+      I18n.t("common.case.compliant_unknown")
     end
   end
 
@@ -60,7 +60,7 @@ class Case::BaseDecorator < Draper::Decorator
     if object.flagged?
       I18n.l(object.internal_deadline, format: :default)
     else
-      ' '
+      " "
     end
   end
 
@@ -68,12 +68,10 @@ class Case::BaseDecorator < Draper::Decorator
   def trigger_case_marker
     if object.flagged?
       h.content_tag :div, class: "#{object.type_abbreviation.downcase}-trigger" do
-        h.content_tag(:span, 'This is a ', class: 'visually-hidden') +
-          "Trigger" +
-          h.content_tag(:span, ' case', class: 'visually-hidden' )
+        "#{h.content_tag(:span, 'This is a ', class: 'visually-hidden')}Trigger#{h.content_tag(:span, ' case', class: 'visually-hidden')}"
       end
     else
-      ' '
+      " "
     end
   end
 
@@ -98,7 +96,7 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def error_summary_message
-    "#{h.pluralize(errors.count, I18n.t('common.error'))} #{ I18n.t('common.summary_error')}"
+    "#{h.pluralize(errors.count, I18n.t('common.error'))} #{I18n.t('common.summary_error')}"
   end
 
   def requester_type
@@ -121,12 +119,12 @@ class Case::BaseDecorator < Draper::Decorator
     if object.message.size < num_chars
       [object.message]
     else
-      [object.message[0..num_chars-1], object.message[num_chars..-1]]
+      [object.message[0..num_chars - 1], object.message[num_chars..]]
     end
   end
 
   def shortened_message
-    (part1, part2) = self.message_extract
+    (part1, part2) = message_extract
 
     if part2.nil?
       object.message
@@ -136,8 +134,8 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def status
-    if object.ico? && current_state == 'closed' && ico_decision.present?
-      I18n.t('state.case/ico.closed', ico_decision: ico_decision.downcase)
+    if object.ico? && current_state == "closed" && ico_decision.present?
+      I18n.t("state.case/ico.closed", ico_decision: ico_decision.downcase)
     else
       translation_for_case(object, "state", object.current_state)
     end
@@ -173,19 +171,19 @@ class Case::BaseDecorator < Draper::Decorator
   end
 
   def admin_created_at
-    object.created_at.strftime('%Y-%m-%d %H:%M:%S')
+    object.created_at.strftime("%Y-%m-%d %H:%M:%S")
   end
 
   def admin_received_date
-    object.received_date.strftime('%Y-%m-%d')
+    object.received_date.strftime("%Y-%m-%d")
   end
 
   def admin_external_deadline
-    object.external_deadline.strftime('%Y-%m-%d')
+    object.external_deadline.strftime("%Y-%m-%d")
   end
 
   def admin_internal_deadline
-    object.internal_deadline.present? ? object.internal_deadline.strftime('%Y-%m-%d') : ''
+    object.internal_deadline.present? ? object.internal_deadline.strftime("%Y-%m-%d") : ""
   end
 
   def pretty_type
@@ -195,26 +193,26 @@ class Case::BaseDecorator < Draper::Decorator
   def late_team_name
     if object.responded_late?
       if object.late_team.nil?
-        'Unspecified'
+        "Unspecified"
       else
         object.late_team.name
       end
     else
-      'N/A'
+      "N/A"
     end
   end
 
   def closed_case_name
-    self.name.presence || self.subject
+    name.presence || subject
   end
 
-  private
+private
 
   def translation_for_case(kase, path, key, options = {})
     translation_path = translation_path(kase.class.to_s.underscore)
     default = translation_path.map { |case_path| :"#{path}.#{case_path}.#{key}" } + [:"#{path}.#{key}"]
-    options.merge(default: default)
-    I18n.t("#{path}.#{translation_path.shift}.#{key}", default: default)
+    options.merge(default:)
+    I18n.t("#{path}.#{translation_path.shift}.#{key}", default:)
   end
 
   def translation_path(case_type)
@@ -224,6 +222,6 @@ class Case::BaseDecorator < Draper::Decorator
       paths << case_type_segments.join("/")
       case_type_segments.pop
     end
-    return paths
+    paths
   end
 end

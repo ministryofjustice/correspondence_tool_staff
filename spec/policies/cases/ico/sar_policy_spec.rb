@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Case::ICO::SARPolicy do
   let(:manager) { create :manager }
@@ -12,14 +12,14 @@ RSpec.describe Case::ICO::SARPolicy do
               .and_return(sar_standard_scope)
     end
 
-    it 'instantiates Case::SARPolicy::Scope' do
+    it "instantiates Case::SARPolicy::Scope" do
       described_class.new(manager, Case::ICO::SAR.all).resolve
 
       expect(Case::SARPolicy::Scope)
         .to have_received(:new).with(manager, Case::ICO::SAR.all, nil)
     end
 
-    it 'defers to resolving with Case::SARPolicy::Scope' do
+    it "defers to resolving with Case::SARPolicy::Scope" do
       result = described_class.new(manager, Case::ICO::SAR.all).resolve
 
       expect(sar_standard_scope).to have_received(:resolve)
@@ -28,7 +28,7 @@ RSpec.describe Case::ICO::SARPolicy do
   end
 
   permissions :show? do
-    it 'defers to Case::SARPolicy' do
+    it "defers to Case::SARPolicy" do
       expect_any_instance_of(Case::SARPolicy).to receive(:show?)
       Pundit.policy(manager, Case::ICO::SAR).show?
     end

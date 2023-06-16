@@ -19,7 +19,7 @@ class CaseUnflagForClearanceService
       @case.approver_assignments.with_teams(@team).destroy_all
       @result = :ok
     end
-  rescue
+  rescue StandardError
     @result = :error
     raise
   end

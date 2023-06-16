@@ -1,13 +1,12 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'users/confirm_destroy.html.slim', type: :view do
-  let(:responder)     { find_or_create :foi_responder}
-  let(:team)          { find_or_create :foi_responding_team}
+describe "users/confirm_destroy.html.slim", type: :view do
+  let(:responder)     { find_or_create :foi_responder }
+  let(:team)          { find_or_create :foi_responding_team }
   let!(:kase)         { create :accepted_case }
 
-
-  context 'user has one team' do
-    it 'shows' do
+  context "user has one team" do
+    it "shows" do
       assign(:user, responder)
       assign(:team, team)
       render
@@ -26,15 +25,19 @@ describe 'users/confirm_destroy.html.slim', type: :view do
     end
   end
 
-  context 'user has one team' do
-      let(:multiple_team_responder)   { find_or_create :responder,
-                                                      responding_teams: [team1, team2]}
-      let!(:team1)                    { find_or_create :responding_team }
-      let!(:team2)                    { create :responding_team }
-      let!(:kase)                     { create :accepted_case,
-                                              responder: multiple_team_responder }
+  context "user has one team" do
+    let(:multiple_team_responder) do
+      find_or_create :responder,
+                     responding_teams: [team1, team2]
+    end
+    let!(:team1)                    { find_or_create :responding_team }
+    let!(:team2)                    { create :responding_team }
+    let!(:kase)                     do
+      create :accepted_case,
+             responder: multiple_team_responder
+    end
 
-    it 'shows' do
+    it "shows" do
       assign(:user, multiple_team_responder)
       assign(:team, team1)
       render
@@ -48,7 +51,8 @@ describe 'users/confirm_destroy.html.slim', type: :view do
         .to have_text "#{multiple_team_responder.full_name} has 1 open cases assigned to them. If you deactivate them, their cases will still be assigned to #{team1.name} but a new team member will need to be assigned."
       expect(users_destroy_page.other_team_info)
         .to have_text(
-        "They are also a member of #{team2.name}")
+          "They are also a member of #{team2.name}",
+        )
       expect(users_destroy_page)
         .to have_deactivate_user_button
     end

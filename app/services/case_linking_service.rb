@@ -1,5 +1,4 @@
 class CaseLinkingService
-
   class CaseLinkingError < RuntimeError; end
 
   attr_reader :result, :error
@@ -14,25 +13,22 @@ class CaseLinkingService
 
   def create
     ActiveRecord::Base.transaction do
-      begin
-
-        # By using a LinkedCase object here we can retrieve validation errors
-        # from the models
-        @case_link = LinkedCase.new(
-            linked_case_number: @link_case_number.to_s&.strip
-        )
-        create_links
-        @result
-      # rescue CaseLinkingError => err
-      #   @case.errors.add(:linked_case_number, err.message)
-      #   @error = err
-      #   @result = :error
-      rescue ActiveRecord::RecordInvalid => err
-        Rails.logger.error err.to_s
-        Rails.logger.error err.backtrace.join("\n\t")
-        @error = err
-        @result = :error
-      end
+      # By using a LinkedCase object here we can retrieve validation errors
+      # from the models
+      @case_link = LinkedCase.new(
+        linked_case_number: @link_case_number.to_s&.strip,
+      )
+      create_links
+      @result
+    # rescue CaseLinkingError => err
+    #   @case.errors.add(:linked_case_number, err.message)
+    #   @error = err
+    #   @result = :error
+    rescue ActiveRecord::RecordInvalid => e
+      Rails.logger.error e.to_s
+      Rails.logger.error e.backtrace.join("\n\t")
+      @error = e
+      @result = :error
     end
   end
 
@@ -42,7 +38,7 @@ class CaseLinkingService
                       case_link.errors[:linked_case_number].first)
     elsif case_link.errors[:linked_case].present?
       kase.errors.add(:linked_case_number,
-                       case_link.errors[:linked_case].first)
+                      case_link.errors[:linked_case].first)
     end
   end
 
@@ -57,24 +53,24 @@ class CaseLinkingService
       # Log event in both cases
       acting_team = acting_team_for_case_and_user
       @case.state_machine.remove_linked_case!(acting_user: @user,
-                                       acting_team: acting_team,
-                                       linked_case_id: @link_case.id)
+                                              acting_team:,
+                                              linked_case_id: @link_case.id)
       @link_case.state_machine.remove_linked_case!(acting_user: @user,
-                                            acting_team: acting_team,
-                                            linked_case_id: @case.id)
+                                                   acting_team:,
+                                                   linked_case_id: @case.id)
 
       @result = :ok
     end
 
     @result
-  rescue => err
-    Rails.logger.error err.to_s
-    Rails.logger.error err.backtrace.join("\n\t")
-    @error = err
+  rescue StandardError => e
+    Rails.logger.error e.to_s
+    Rails.logger.error e.backtrace.join("\n\t")
+    @error = e
     @result = :error
   end
 
-  private
+private
 
   def create_links
     @case.related_case_links << @case_link
@@ -84,10 +80,10 @@ class CaseLinkingService
       # Log event in both cases
       acting_team = acting_team_for_case_and_user
       @case.state_machine.link_a_case!(acting_user: @user,
-                                       acting_team: acting_team,
+                                       acting_team:,
                                        linked_case_id: @linked_case.id)
       @linked_case.state_machine.link_a_case!(acting_user: @user,
-                                              acting_team: acting_team,
+                                              acting_team:,
                                               linked_case_id: @case.id)
       @result = :ok
     else
@@ -98,12 +94,12 @@ class CaseLinkingService
 
   def acting_team_for_case_and_user
     if @case.sar? || @case.overturned_ico_sar?
-      team = @user.teams_for_case(@case).detect { |t| t.role == 'manager'}
-      raise CaseLinkingError.new('User requires manager role for linking SAR cases') if team.nil?
+      team = @user.teams_for_case(@case).detect { |t| t.role == "manager" }
+      raise CaseLinkingError, "User requires manager role for linking SAR cases" if team.nil?
+
       team
     else
       @user.teams_for_case(@case).first
     end
   end
-
 end

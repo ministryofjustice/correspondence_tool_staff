@@ -8,7 +8,7 @@ module ReportingPeriod
     #   non-inclusive dates at present
     def initialize(period_start:, period_end:)
       unless valid_date?(period_start) && valid_date?(period_end)
-        raise ArgumentError.new 'period_start and period_end must be a Date type'
+        raise ArgumentError, "period_start and period_end must be a Date type"
       end
 
       @period_start = period_start.beginning_of_day
@@ -26,15 +26,15 @@ module ReportingPeriod
     def self.build(period_start: nil, period_end: nil, period_name: nil)
       if period_start.present? && period_end.present?
         ReportingPeriod::DateInterval.new(
-          period_start: period_start,
-          period_end: period_end
+          period_start:,
+          period_end:,
         )
       else
         "ReportingPeriod::#{period_name.to_s.camelize}".constantize.new
       end
     end
 
-    private
+  private
 
     def valid_date?(date)
       date.methods.include?(:strftime)

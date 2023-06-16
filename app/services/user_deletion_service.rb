@@ -1,5 +1,4 @@
 class UserDeletionService
-
   attr_reader :result
 
   def initialize(params, acting_user)
@@ -23,7 +22,7 @@ class UserDeletionService
     end
   end
 
-  private
+private
 
   def delete_memberships_of_team
     team_ids = @team.previous_teams
@@ -40,11 +39,11 @@ class UserDeletionService
 
   def unassign_cases
     @target_user.cases.opened.each do |kase|
-      unless kase.has_responded?
-        kase.responder_assignment.update!(state: 'pending', team_id: @team.id, user_id: nil)
-        kase.state_machine.unassign_from_user!(acting_user: @acting_user, acting_team: kase.managing_team)
-        NotifyNewAssignmentService.new(team: @team, assignment: kase.responder_assignment).run
-      end
+      next if kase.has_responded?
+
+      kase.responder_assignment.update!(state: "pending", team_id: @team.id, user_id: nil)
+      kase.state_machine.unassign_from_user!(acting_user: @acting_user, acting_team: kase.managing_team)
+      NotifyNewAssignmentService.new(team: @team, assignment: kase.responder_assignment).run
     end
   end
 end

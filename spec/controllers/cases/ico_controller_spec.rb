@@ -1,127 +1,127 @@
-require 'rails_helper'
-require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+require "rails_helper"
+require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
 RSpec.describe Cases::IcoController, type: :controller do
-  describe 'FOI' do
-    describe '#edit' do
+  describe "FOI" do
+    describe "#edit" do
       let(:kase) { create :accepted_ico_foi_case }
 
-      include_examples 'edit case spec'
+      include_examples "edit case spec"
     end
 
-    describe '#update' do
+    describe "#update" do
       let(:manager) { find_or_create :disclosure_bmt_user }
-      let(:now)     { Time.local(2018, 5, 30, 10, 23, 33) }
+      let(:now)     { Time.zone.local(2018, 5, 30, 10, 23, 33) }
 
       before do
         sign_in manager
       end
 
-      let(:kase)  do
+      let(:kase) do
         create :accepted_ico_foi_case
       end
 
       let(:params) do
         {
-          'correspondence_type'=>'ico',
-          'ico' => {
-            'ico_officer_name' => 'C00KYM0N',
-            'ico_reference_number' => 'NEWREFNOMNOMNOM',
-            'received_date_dd' => '1',
-            'received_date_mm' => '5',
-            'received_date_yyyy' => '2018',
-            'date_draft_compliant_dd' => '13',
-            'date_draft_compliant_mm' => '5',
-            'date_draft_compliant_yyyy' => '2018',
-            'internal_deadline_dd' => '15',
-            'internal_deadline_mm' => '5',
-            'internal_deadline_yyyy' => '2018',
-            'external_deadline_dd' => '26',
-            'external_deadline_mm' => '5',
-            'external_deadline_yyyy' => '2018',
-            'message' => 'modified full request'
+          "correspondence_type"  =>  "ico",
+          "ico" => {
+            "ico_officer_name" => "C00KYM0N",
+            "ico_reference_number" => "NEWREFNOMNOMNOM",
+            "received_date_dd" => "1",
+            "received_date_mm" => "5",
+            "received_date_yyyy" => "2018",
+            "date_draft_compliant_dd" => "13",
+            "date_draft_compliant_mm" => "5",
+            "date_draft_compliant_yyyy" => "2018",
+            "internal_deadline_dd" => "15",
+            "internal_deadline_mm" => "5",
+            "internal_deadline_yyyy" => "2018",
+            "external_deadline_dd" => "26",
+            "external_deadline_mm" => "5",
+            "external_deadline_yyyy" => "2018",
+            "message" => "modified full request",
           },
-          'commit' => 'Submit',
-          'id' =>  kase.id.to_s
+          "commit" => "Submit",
+          "id" => kase.id.to_s,
         }
       end
 
-      context 'valid params' do
-        it 'updates the case' do
-          patch :update, params: params
+      context "valid params" do
+        it "updates the case" do
+          patch(:update, params:)
           kase.reload
 
-          expect(kase.ico_officer_name).to eq 'C00KYM0N'
-          expect(kase.ico_reference_number).to eq 'NEWREFNOMNOMNOM'
-          expect(kase.message).to eq 'modified full request'
+          expect(kase.ico_officer_name).to eq "C00KYM0N"
+          expect(kase.ico_reference_number).to eq "NEWREFNOMNOMNOM"
+          expect(kase.message).to eq "modified full request"
           expect(kase.received_date).to eq Date.new(2018, 5, 1)
           expect(kase.internal_deadline).to eq Date.new(2018, 5, 15)
           expect(kase.external_deadline).to eq Date.new(2018, 5, 26)
           expect(kase.date_draft_compliant).to eq Date.new(2018, 5, 13)
         end
 
-        it 'redirects to show page' do
-          patch :update, params: params
+        it "redirects to show page" do
+          patch(:update, params:)
           expect(response).to redirect_to case_path(kase.id)
         end
       end
     end
 
-    describe 'closable' do
-      describe '#close' do
+    describe "closable" do
+      describe "#close" do
         let(:kase) { create :responded_ico_foi_case }
 
-        include_examples 'close spec', described_class
+        include_examples "close spec", described_class
       end
 
-      describe '#closure_outcomes' do
+      describe "#closure_outcomes" do
         let(:kase) { create :responded_ico_foi_case }
 
-        include_examples 'closure outcomes spec', described_class
+        include_examples "closure outcomes spec", described_class
       end
 
-      describe '#edit_closure' do
+      describe "#edit_closure" do
         let(:kase)    { create :closed_ico_foi_case }
         let(:manager) { find_or_create :disclosure_bmt_user }
 
-        include_examples 'edit closure spec', described_class
+        include_examples "edit closure spec", described_class
       end
 
-      describe '#confirm_respond' do
+      describe "#confirm_respond" do
         let(:approver) { find_or_create :disclosure_specialist }
         let(:approved_ico) { create :approved_ico_foi_case }
         let(:date_responded) { approved_ico.received_date + 2.days }
         let(:params) do
           {
-            correspondence_type: 'ico',
-            ico:  {
+            correspondence_type: "ico",
+            ico: {
               date_responded_dd: date_responded.day,
               date_responded_mm: date_responded.month,
               date_responded_yyyy: date_responded.year,
             },
-            commit: 'Submit',
-            id:  approved_ico.id.to_s
+            commit: "Submit",
+            id: approved_ico.id.to_s,
           }
         end
 
-        context 'as the assigned approver' do
+        context "as the assigned approver" do
           before { sign_in approver }
 
           it 'transitions current_state to "responded"' do
             stub_find_case(approved_ico.id) do |kase|
               expect(kase).to receive(:respond).with(approver)
             end
-            patch :confirm_respond, params: params
+            patch :confirm_respond, params:
           end
 
-          it 'redirects to the case list view' do
-            expect(patch :confirm_respond, params: params).
-              to redirect_to(case_path(approved_ico))
+          it "redirects to the case list view" do
+            expect(patch(:confirm_respond, params:)))
+              .to redirect_to(case_path(approved_ico))
           end
         end
       end
 
-      describe '#update_closure' do
+      describe "#update_closure" do
         before(:all) do
           CaseClosure::MetadataSeeder.seed!
         end
@@ -135,137 +135,146 @@ RSpec.describe Cases::IcoController, type: :controller do
         let(:kase) { create :closed_ico_foi_case, :overturned_by_ico }
         let(:new_date_responded) { 1.business_day.before(kase.date_ico_decision_received) }
 
-        context 'closed ICO' do
-          context 'change to upheld' do
-            let(:params)             { {
+        context "closed ICO" do
+          context "change to upheld" do
+            let(:params)             { 
+              {
               id: kase.id,
               ico: {
                 date_ico_decision_received_yyyy: kase.created_at.year,
                 date_ico_decision_received_mm: kase.created_at.month,
                 date_ico_decision_received_dd: kase.created_at.day,
-                ico_decision: 'upheld',
-                ico_decision_comment: 'ayt',
-                uploaded_ico_decision_files: ['uploads/71/request/request.pdf']
-              }
-            } }
+                ico_decision: "upheld",
+                ico_decision_comment: "ayt",
+                uploaded_ico_decision_files: ["uploads/71/request/request.pdf"],
+              },
+            }
+}
+
             before do
               sign_in manager
-              patch :update_closure, params: params
+              patch :update_closure, params:
             end
 
-            it 'updates the cases date responded field' do
+            it "updates the cases date responded field" do
               kase.reload
               expect(kase.date_ico_decision_received).to eq kase.created_at.to_date
             end
 
-            it 'updates the cases refusal reason' do
+            it "updates the cases refusal reason" do
               kase.reload
-              expect(kase.ico_decision).to eq 'upheld'
+              expect(kase.ico_decision).to eq "upheld"
             end
 
-            it 'redirects to the case details page' do
+            it "redirects to the case details page" do
               expect(response).to redirect_to case_path(id: kase.id)
             end
           end
 
-          context 'no ico decison files specified' do
-            let(:params)             { {
+          context "no ico decison files specified" do
+            let(:params) { 
+              {
               id: kase.id,
               ico: {
                 date_ico_decision_received_yyyy: kase.created_at.year,
                 date_ico_decision_received_mm: kase.created_at.month,
                 date_ico_decision_received_dd: kase.created_at
                   .day,
-                ico_decision: 'upheld',
-                ico_decision_comment: 'ayt',
-              }
-            } }
+                ico_decision: "upheld",
+                ico_decision_comment: "ayt",
+              },
+            }
+}
+
             before do
               sign_in manager
-              patch :update_closure, params: params
+              patch :update_closure, params:
             end
 
-            it 'updates the cases date responded field' do
+            it "updates the cases date responded field" do
               kase.reload
               expect(kase.date_ico_decision_received).to eq kase.created_at.to_date
             end
 
-            it 'updates the cases refusal reason' do
+            it "updates the cases refusal reason" do
               kase.reload
-              expect(kase.ico_decision).to eq 'upheld'
+              expect(kase.ico_decision).to eq "upheld"
             end
 
-            it 'redirects to the case details page' do
+            it "redirects to the case details page" do
               expect(response).to redirect_to case_path(id: kase.id)
             end
           end
 
-          context 'change to overturned' do
+          context "change to overturned" do
             let(:kase)         { create :closed_ico_foi_case, date_ico_decision_received: Date.today }
-            let(:params)       { {
+            let(:params)       { 
+              {
               id: kase.id,
               ico: {
                 date_ico_decision_received_yyyy: new_date_responded.year,
                 date_ico_decision_received_mm: new_date_responded.month,
                 date_ico_decision_received_dd: new_date_responded.day,
-                ico_decision: 'overturned',
-                ico_decision_comment: 'ayt',
-                uploaded_ico_decision_files: ['uploads/71/request/request.pdf']
-              }
-            } }
+                ico_decision: "overturned",
+                ico_decision_comment: "ayt",
+                uploaded_ico_decision_files: ["uploads/71/request/request.pdf"],
+              },
+            }
+}
+
             before do
               sign_in manager
-              patch :update_closure, params: params
+              patch :update_closure, params:
             end
 
-            it 'updates the cases date responded field' do
+            it "updates the cases date responded field" do
               kase.reload
               expect(kase.date_ico_decision_received).to eq new_date_responded
             end
 
-            it 'updates the cases refusal reason' do
+            it "updates the cases refusal reason" do
               kase.reload
-              expect(kase.ico_decision).to eq 'overturned'
+              expect(kase.ico_decision).to eq "overturned"
             end
 
-            it 'redirects to the case details page' do
+            it "redirects to the case details page" do
               expect(response).to redirect_to case_path(id: kase.id)
             end
           end
         end
 
-        context 'open ICO' do
+        context "open ICO" do
           let(:kase) { create :accepted_ico_foi_case }
           let(:new_date_responded) { 1.business_day.ago }
 
-          let(:params)             { {
+          let(:params)             { 
+            {
             id: kase.id,
             ico: {
               date_ico_decision_received_yyyy: new_date_responded.year,
               date_ico_decision_received_mm: new_date_responded.month,
               date_ico_decision_received_dd: new_date_responded.day,
-              ico_decision: 'overturned',
-            }
-          } }
-
+              ico_decision: "overturned",
+            },
+          }
+}
 
           before do
             sign_in manager
-            patch :update_closure, params: params
+            patch :update_closure, params:
           end
 
-
-          it 'updates the cases date responded field' do
+          it "updates the cases date responded field" do
             kase.reload
             expect(kase.date_ico_decision_received).not_to eq new_date_responded
           end
 
-          it 'updates the cases refusal reason' do
+          it "updates the cases refusal reason" do
             kase.reload
-            expect(kase.ico_decision).not_to eq 'upheld'
+            expect(kase.ico_decision).not_to eq "upheld"
           end
 
-          it 'redirects to the case details page' do
+          it "redirects to the case details page" do
             expect(response).to redirect_to case_path(id: kase.id)
           end
         end
@@ -273,38 +282,40 @@ RSpec.describe Cases::IcoController, type: :controller do
     end
   end
 
-  describe 'SAR' do
-    describe '#edit' do
+  describe "SAR" do
+    describe "#edit" do
       let(:kase) { create :accepted_ico_sar_case }
 
-      include_examples 'edit case spec'
+      include_examples "edit case spec"
     end
 
-    describe 'closable' do
-      describe '#closure_outcomes' do
+    describe "closable" do
+      describe "#closure_outcomes" do
         let(:kase) { create :responded_ico_sar_case }
 
-        include_examples 'closure outcomes spec', described_class
+        include_examples "closure outcomes spec", described_class
       end
 
-      describe '#edit_closure' do
+      describe "#edit_closure" do
         let(:kase)    { create :closed_ico_sar_case }
         let(:manager) { find_or_create :disclosure_bmt_user }
 
-        include_examples 'edit closure spec', described_class
+        include_examples "edit closure spec", described_class
       end
     end
   end
 
-  describe '#new_linked_cases_for' do
+  describe "#new_linked_cases_for" do
     let(:sar_case)      { create :sar_case }
     let(:sar_case2)     { create :sar_case }
     let(:foi_case)      { create :foi_case }
     let(:foi_case2)     { create :foi_case }
     let(:foi)           { find_or_create(:foi_correspondence_type) }
 
-    let(:foi_only_team) { create :business_unit,
-      correspondence_type_ids: [foi.id] }
+    let(:foi_only_team) { 
+      create :business_unit,
+                                 correspondence_type_ids: [foi.id]
+}
     # Case managed by foi-only team.
     let(:foi_only_case) { create :foi_case, managing_team: foi_only_team }
     let(:foi_only_user) { create :manager, managing_teams: [foi_only_team] }
@@ -314,121 +325,121 @@ RSpec.describe Cases::IcoController, type: :controller do
 
     def new_linked_cases_for_request(additional_params = {})
       get :new_linked_cases_for,
-        xhr: true,
-        format: :js,
-        params: params.merge(additional_params)
+          xhr: true,
+          format: :js,
+          params: params.merge(additional_params)
     end
 
-    context 'ico correspondences' do
+    context "ico correspondences" do
       before do
         sign_in user
       end
 
-      context 'linking original case' do
+      context "linking original case" do
         let(:params) {
           {
-            correspondence_type: 'ico',
-            link_type: 'original',
+            correspondence_type: "ico",
+            link_type: "original",
           }
         }
 
-        it 'renders the partial on success' do
+        it "renders the partial on success" do
           new_linked_cases_for_request(original_case_number: foi_case.number)
 
-          expect(response).to have_http_status 200
+          expect(response).to have_http_status :ok
           expect(response).to render_template("cases/ico/case_linking/_linked_cases")
           expect(assigns[:linked_cases]).to eq [foi_case]
         end
 
-        it 'returns an error if original_case_number is blank' do
-          new_linked_cases_for_request(original_case_number: '')
+        it "returns an error if original_case_number is blank" do
+          new_linked_cases_for_request(original_case_number: "")
 
-          expect(response).to have_http_status 400
-          expect(json_response['linked_case_error'])
-            .to eq 'Enter original case number'
+          expect(response).to have_http_status :bad_request
+          expect(json_response["linked_case_error"])
+            .to eq "Enter original case number"
         end
 
         it "returns an error if original_case_number doesn't exist" do
-          new_linked_cases_for_request(original_case_number: 'n283nau')
+          new_linked_cases_for_request(original_case_number: "n283nau")
 
-          expect(response).to have_http_status 400
-          expect(json_response['linked_case_error'])
-            .to eq 'Original case not found'
+          expect(response).to have_http_status :bad_request
+          expect(json_response["linked_case_error"])
+            .to eq "Original case not found"
         end
 
         it "doesn't allow linking of case that isn't an FOI or SAR or FOI internal review" do
           offender_sar = create(:offender_sar_case)
           new_linked_cases_for_request(original_case_number: offender_sar.number)
 
-          expect(response).to have_http_status 400
-          expect(json_response['linked_case_error'])
-            .to eq 'Original case must be one of the [FOI, FOI - Internal review for timeliness, FOI - Internal review for compliance, SAR - Non-offender].'
+          expect(response).to have_http_status :bad_request
+          expect(json_response["linked_case_error"])
+            .to eq "Original case must be one of the [FOI, FOI - Internal review for timeliness, FOI - Internal review for compliance, SAR - Non-offender]."
         end
 
-        context 'as a user only allowed to view FOI cases' do
+        context "as a user only allowed to view FOI cases" do
           let(:user) { foi_only_user }
 
           it "doesn't allow viewing original cases if not authorised" do
             new_linked_cases_for_request(original_case_number: sar_case.number)
 
-            expect(response).to have_http_status 400
-            expect(json_response['linked_case_error'])
-              .to eq 'Not authorised to view case'
+            expect(response).to have_http_status :bad_request
+            expect(json_response["linked_case_error"])
+              .to eq "Not authorised to view case"
           end
         end
       end
 
-      context 'linking related case' do
+      context "linking related case" do
         let(:params) {
           {
-            correspondence_type: 'ico',
-            link_type: 'related',
+            correspondence_type: "ico",
+            link_type: "related",
           }
         }
 
-        it 'renders the partial on success' do
+        it "renders the partial on success" do
           new_linked_cases_for_request(
             original_case_number: foi_case.number,
             related_case_number: foi_case2.number,
-            related_case_ids: nil
+            related_case_ids: nil,
           )
 
-          expect(response).to have_http_status 200
+          expect(response).to have_http_status :ok
           expect(response).to render_template("cases/ico/case_linking/_linked_cases")
           expect(assigns[:linked_cases]).to eq [foi_case2]
         end
 
-        it 'returns an error if related_case_number is blank' do
+        it "returns an error if related_case_number is blank" do
           new_linked_cases_for_request(
             original_case_number: foi_case.number,
-            related_case_number: ''
+            related_case_number: "",
           )
 
-          expect(response).to have_http_status 400
-          expect(json_response['linked_case_error'])
-            .to eq 'Enter related case number'
+          expect(response).to have_http_status :bad_request
+          expect(json_response["linked_case_error"])
+            .to eq "Enter related case number"
         end
 
         it "returns an error if related_case_number doesn't exist" do
           new_linked_cases_for_request(
             original_case_number: foi_case.number,
-            related_case_number: '2nnahk'
+            related_case_number: "2nnahk",
           )
 
-          expect(response).to have_http_status 400
-          expect(json_response['linked_case_error'])
-            .to eq 'Related case not found'
+          expect(response).to have_http_status :bad_request
+          expect(json_response["linked_case_error"])
+            .to eq "Related case not found"
         end
 
         it "doesn't allow linking of SAR case to FOI ICO" do
           new_linked_cases_for_request(
             original_case_number: foi_case.number,
             related_case_number: sar_case.number,
-            related_case_ids: nil
+            related_case_ids: nil,
           )
 
-          expect(response).to have_http_status 400
-          expect(json_response['linked_case_error'])
+          expect(response).to have_http_status :bad_request
+          expect(json_response["linked_case_error"])
             .to eq "You've linked an FOI case as the original for this " \
                    "appeal. You can now only link other FOI cases or " \
                    "internal reviews as related to this cases."
@@ -438,11 +449,11 @@ RSpec.describe Cases::IcoController, type: :controller do
           new_linked_cases_for_request(
             original_case_number: foi_case.number,
             related_case_number: foi_case.number,
-            related_case_ids: nil
+            related_case_ids: nil,
           )
 
-          expect(response).to have_http_status 400
-          expect(json_response['linked_case_error'])
+          expect(response).to have_http_status :bad_request
+          expect(json_response["linked_case_error"])
             .to eq "Case is already linked"
         end
 
@@ -450,37 +461,37 @@ RSpec.describe Cases::IcoController, type: :controller do
           new_linked_cases_for_request(
             original_case_number: foi_case.number,
             related_case_number: foi_case2.number,
-            related_case_ids: foi_case2.id
+            related_case_ids: foi_case2.id,
           )
 
-          expect(response).to have_http_status 400
-          expect(json_response['linked_case_error'])
+          expect(response).to have_http_status :bad_request
+          expect(json_response["linked_case_error"])
             .to eq "Case is already linked"
         end
 
-        context 'as a user only allowed to view FOI cases' do
+        context "as a user only allowed to view FOI cases" do
           let(:user) { foi_only_user }
 
           it "doesn't allow viewing related cases if not authorised" do
             new_linked_cases_for_request(
               original_case_number: foi_case.number,
               related_case_number: sar_case.number,
-              related_case_ids: nil
+              related_case_ids: nil,
             )
 
-            expect(response).to have_http_status 400
-            expect(json_response['linked_case_error'])
-              .to eq 'Not authorised to view case'
+            expect(response).to have_http_status :bad_request
+            expect(json_response["linked_case_error"])
+              .to eq "Not authorised to view case"
           end
 
-          it 'removes any existing linked related cases if not authorised' do
+          it "removes any existing linked related cases if not authorised" do
             new_linked_cases_for_request(
               original_case_number: foi_case.number,
               related_case_number: foi_case2.number,
-              related_case_ids: sar_case.number
+              related_case_ids: sar_case.number,
             )
 
-            expect(response).to have_http_status 200
+            expect(response).to have_http_status :ok
             expect(response).to render_template("cases/ico/case_linking/_linked_cases")
             expect(assigns[:linked_cases]).not_to include(sar_case)
           end
@@ -489,7 +500,7 @@ RSpec.describe Cases::IcoController, type: :controller do
     end
   end
 
-  describe '#record_late_team' do
+  describe "#record_late_team" do
     before do
       sign_in approver
     end
@@ -498,38 +509,38 @@ RSpec.describe Cases::IcoController, type: :controller do
     let(:approving_team)      { approved_ico.approving_teams.first }
     let(:approver)            { approving_team.users.first }
 
-    it 'authorizes' do
+    it "authorizes" do
       expect {
         patch :record_late_team, params: { id: approved_ico.id }
-      } .to require_permission(:can_respond?)
+      }.to require_permission(:can_respond?)
         .with_args(approver, approved_ico)
     end
 
-    it 'sets @case' do
+    it "sets @case" do
       patch :record_late_team, params: { id: approved_ico.id }
       expect(assigns(:case)).to eq approved_ico
     end
 
-    it 'redirects to case details page' do
+    it "redirects to case details page" do
       patch :record_late_team, params: { id: approved_ico.id }
       expect(response).to redirect_to(case_path(approved_ico))
     end
 
-    it 'calls the state_machine method' do
+    it "calls the state_machine method" do
       patch :record_late_team, params: { id: approved_ico.id }
 
       stub_find_case(approved_ico.id) do |kase|
         expect(kase.state_machine).to have_received(:respond!)
           .with(acting_user: approver,
-            acting_team: approving_team)
+                    acting_team: approving_team)
       end
     end
 
-    it 'sets the late team' do
+    it "sets the late team" do
       patch :record_late_team, params: {
         id: approved_ico.id,
         ico: {
-          late_team_id: approving_team.id
+          late_team_id: approving_team.id,
         },
       }
 

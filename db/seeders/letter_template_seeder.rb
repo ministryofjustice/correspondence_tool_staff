@@ -1,24 +1,23 @@
-#rubocop:disable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength
+# rubocop:disable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength
 class LetterTemplateSeeder
-
   def seed!
-    puts "---- Seeding Letter Templates ----"
+    Rails.logger.debug "---- Seeding Letter Templates ----"
     intial_letters_seed
     bau_disclosed_letter_seed
   end
 
   def intial_letters_seed
-    prison_receiver = prison_receiver_string()
-    solictor_receiver = solictor_receiver_string()
-    address = address_string()
+    prison_receiver = prison_receiver_string
+    solictor_receiver = solictor_receiver_string
+    address = address_string
 
-    rec = LetterTemplate.find_by(abbreviation: 'prisoner-acknowledgement')
+    rec = LetterTemplate.find_by(abbreviation: "prisoner-acknowledgement")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Prisoner acknowledgement letter',
-                abbreviation: 'prisoner-acknowledgement',
-                template_type: 'acknowledgement',
-                base_template_file_ref: 'ims001.docx',
-                body: <<~EOF
+    rec.update!(name: "Prisoner acknowledgement letter",
+                abbreviation: "prisoner-acknowledgement",
+                template_type: "acknowledgement",
+                base_template_file_ref: "ims001.docx",
+                body: <<~EOF,
                   <p>
                   <br><br>Dear <%= values.requester_name %>
                   <br>
@@ -26,7 +25,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your Subject Access Request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.   
+                  <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.#{'   '}
                   <br>
                   <br>Please also note if you have requested medical information as part of the request, the responsibility for providing medical information has transferred to the National Health Service/ Clinical Commissioning Groups. If you require medical information, please contact the Healthcare Services team in the prison.
                   <br>
@@ -40,20 +39,20 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{prison_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{prison_receiver}
+      <br>#{address}
+    EOF
+               )
 
-    rec = LetterTemplate.find_by(abbreviation: 'prisoner-acknowledgement-restricted')
+    rec = LetterTemplate.find_by(abbreviation: "prisoner-acknowledgement-restricted")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Prisoner acknowledgement letter - RESTRICTED SAR',
-                abbreviation: 'prisoner-acknowledgement-restricted',
-                template_type: 'acknowledgement',
-                base_template_file_ref: 'ims001.docx',
-                body: <<~EOF
+    rec.update!(name: "Prisoner acknowledgement letter - RESTRICTED SAR",
+                abbreviation: "prisoner-acknowledgement-restricted",
+                template_type: "acknowledgement",
+                base_template_file_ref: "ims001.docx",
+                body: <<~EOF,
                   <p>
                   <br><br>Dear <%= values.requester_name %>
                   <br>
@@ -77,19 +76,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{prison_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{prison_receiver}
+      <br>#{address}
+    EOF
+               )
 
-    rec = LetterTemplate.find_by(abbreviation: 'prisoner-disclosed-cover-letter')
+    rec = LetterTemplate.find_by(abbreviation: "prisoner-disclosed-cover-letter")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Prisoner disclosed cover letter',
-                abbreviation: 'prisoner-disclosed-cover-letter',
-                template_type: 'dispatch',
-                body: <<~EOF
+    rec.update!(name: "Prisoner disclosed cover letter",
+                abbreviation: "prisoner-disclosed-cover-letter",
+                template_type: "dispatch",
+                body: <<~EOF,
                   <p>
                   <br><br>Dear Colleague
                   <br>
@@ -116,19 +115,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  EO Custody Office
-                  <br><%= letter.format_address(values.subject_address).gsub("\n", "<br>").html_safe %>
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      EO Custody Office
+      <br><%= letter.format_address(values.subject_address).gsub("\n", "<br>").html_safe %>
+    EOF
+               )
 
-    rec = LetterTemplate.find_by(abbreviation: 'prisoner-disclosed')
+    rec = LetterTemplate.find_by(abbreviation: "prisoner-disclosed")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Prisoner disclosed letter',
-                abbreviation: 'prisoner-disclosed',
-                template_type: 'dispatch',
-                body: <<~EOF
+    rec.update!(name: "Prisoner disclosed letter",
+                abbreviation: "prisoner-disclosed",
+                template_type: "dispatch",
+                body: <<~EOF,
                   <p>
                   <br><br>Dear <%= values.recipient_name %>
                   <br>
@@ -159,21 +158,20 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{prison_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{prison_receiver}
+      <br>#{address}
+    EOF
+               )
 
-
-    rec = LetterTemplate.find_by(abbreviation: 'solicitor-acknowledgement')
+    rec = LetterTemplate.find_by(abbreviation: "solicitor-acknowledgement")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Solicitor acknowledgement letter',
-                abbreviation: 'solicitor-acknowledgement',
-                template_type: 'acknowledgement',
-                base_template_file_ref: 'ims001.docx',
-                body: <<~EOF
+    rec.update!(name: "Solicitor acknowledgement letter",
+                abbreviation: "solicitor-acknowledgement",
+                template_type: "acknowledgement",
+                base_template_file_ref: "ims001.docx",
+                body: <<~EOF,
                   <p>
                   <br><br>Dear <%= values.requester_name %>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
@@ -183,7 +181,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Thank you for your subject access request (SAR) dated <%= values.request_dated&.strftime('%e %B %Y') %>.
                   <br>
-                  <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period. 
+                  <br>To complete the SAR we will have to identify information from a number of business areas, including prison establishments. In view of this there is very little information we can provide in response to enquiries. We aim to process your SAR within one calendar month, and it would be helpful if you could limit any communication with the office during this period.#{' '}
                   <br>
                   <br>Please note, if you have requested medical information as part of the request, responsibility for providing medical information has transferred to the National Health Service / Clinical Commissioning Groups. If you require medical data please contact the Healthcare Services team at the establishment.
                   <br>
@@ -197,20 +195,20 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
 
-    rec = LetterTemplate.find_by(abbreviation: 'solicitor-acknowledgement-restricted')
+    rec = LetterTemplate.find_by(abbreviation: "solicitor-acknowledgement-restricted")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Solicitor acknowledgement letter - RESTRICTED SAR',
-                abbreviation: 'solicitor-acknowledgement-restricted',
-                template_type: 'acknowledgement',
-                base_template_file_ref: 'ims001.docx',
-                body: <<~EOF
+    rec.update!(name: "Solicitor acknowledgement letter - RESTRICTED SAR",
+                abbreviation: "solicitor-acknowledgement-restricted",
+                template_type: "acknowledgement",
+                base_template_file_ref: "ims001.docx",
+                body: <<~EOF,
                   <p>
                   <br><br>Dear <%= values.requester_name %>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% end %>
@@ -236,19 +234,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
 
-    rec = LetterTemplate.find_by(abbreviation: 'solicitor-disclosed')
+    rec = LetterTemplate.find_by(abbreviation: "solicitor-disclosed")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Solicitor disclosed letter',
-                abbreviation: 'solicitor-disclosed',
-                template_type: 'dispatch',
-                body: <<~EOF
+    rec.update!(name: "Solicitor disclosed letter",
+                abbreviation: "solicitor-disclosed",
+                template_type: "dispatch",
+                body: <<~EOF,
                   <p>
                   <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
                   <br>
@@ -280,20 +278,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
 
-
-    rec = LetterTemplate.find_by(abbreviation: 'complaint-acknowledgement')
+    rec = LetterTemplate.find_by(abbreviation: "complaint-acknowledgement")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Complaint acknowledgement letter',
-                abbreviation: 'complaint-acknowledgement',
-                template_type: 'acknowledgement',
-                body: <<~EOF
+    rec.update!(name: "Complaint acknowledgement letter",
+                abbreviation: "complaint-acknowledgement",
+                template_type: "acknowledgement",
+                body: <<~EOF,
                   <p>
                   <% if values.recipient == "requester_recipient" %><br><br>Dear Sirs<% else %><br><br>Dear <%= values.recipient_name %><% end %>
                   <br>
@@ -316,20 +313,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
 
-
-    rec = LetterTemplate.find_by(abbreviation: 'despatch-change-of-address')
+    rec = LetterTemplate.find_by(abbreviation: "despatch-change-of-address")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Change of address',
-                abbreviation: 'despatch-change-of-address',
-                template_type: 'dispatch',
-                body: <<~EOF
+    rec.update!(name: "Change of address",
+                abbreviation: "despatch-change-of-address",
+                template_type: "dispatch",
+                body: <<~EOF,
                   <p>
                   <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
                   <br>
@@ -340,8 +336,8 @@ class LetterTemplateSeeder
                   <br>
                   <br>In order to ensure safe receipt of the data can you please confirm the address to which you would like your documents sent.
                   <br>
-                  <br>In addition can you also send proof of your identity, a copy of one of the following: 
-                  Photograph page of your passport or driving license                  
+                  <br>In addition can you also send proof of your identity, a copy of one of the following:#{' '}
+                  Photograph page of your passport or driving license#{'                  '}
                   <br>
                   <br><strong>And</strong> a document with your current address on dated within the last six months:
                   <br>Copy of electricity bill
@@ -361,21 +357,20 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
 
-
-    rec = LetterTemplate.find_by(abbreviation: 'dispatch-letter-delivery-request-form')
+    rec = LetterTemplate.find_by(abbreviation: "dispatch-letter-delivery-request-form")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Special/Recorded delivery request',
-                abbreviation: 'dispatch-letter-delivery-request-form',
-                template_type: 'dispatch',
-                base_template_file_ref: 'ims002.docx',
-                body: <<~EOF
+    rec.update!(name: "Special/Recorded delivery request",
+                abbreviation: "dispatch-letter-delivery-request-form",
+                template_type: "dispatch",
+                base_template_file_ref: "ims002.docx",
+                body: <<~EOF,
                   <p>
                   <br><br>Please check following information which will be used in the form.
                   <br>
@@ -391,19 +386,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
 
-    rec = LetterTemplate.find_by(abbreviation: 'complaint-inaccurate-data')
+    rec = LetterTemplate.find_by(abbreviation: "complaint-inaccurate-data")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Complaint: Inaccurate data',
-                abbreviation: 'complaint-inaccurate-data',
-                template_type: 'dispatch',
-                body: <<~EOF
+    rec.update!(name: "Complaint: Inaccurate data",
+                abbreviation: "complaint-inaccurate-data",
+                template_type: "dispatch",
+                body: <<~EOF,
                   <p>
                   <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
                   <br>
@@ -425,19 +420,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
 
-    rec = LetterTemplate.find_by(abbreviation: 'complaint-no-further-data')
+    rec = LetterTemplate.find_by(abbreviation: "complaint-no-further-data")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Complaint: No further data',
-                abbreviation: 'complaint-no-further-data',
-                template_type: 'dispatch',
-                body: <<~EOF
+    rec.update!(name: "Complaint: No further data",
+                abbreviation: "complaint-no-further-data",
+                template_type: "dispatch",
+                body: <<~EOF,
                   <p>
                   <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
                   <br>
@@ -465,19 +460,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
 
-    rec = LetterTemplate.find_by(abbreviation: 'complaint-additional-data')
+    rec = LetterTemplate.find_by(abbreviation: "complaint-additional-data")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'Complaint: Additional data enclosed',
-                abbreviation: 'complaint-additional-data',
-                template_type: 'dispatch',
-                body: <<~EOF
+    rec.update!(name: "Complaint: Additional data enclosed",
+                abbreviation: "complaint-additional-data",
+                template_type: "dispatch",
+                body: <<~EOF,
                   <p>
                   <br><br><% if values.recipient == "requester_recipient" %>Dear Sirs <% else %>Dear <%= values.recipient_name %> <% end %>
                   <br>
@@ -510,25 +505,25 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
   end
 
   def bau_disclosed_letter_seed
-    prison_receiver = prison_receiver_string()
-    solictor_receiver = solictor_receiver_string()
-    address = address_string()
+    prison_receiver = prison_receiver_string
+    solictor_receiver = solictor_receiver_string
+    address = address_string
 
-    rec = LetterTemplate.find_by(abbreviation: 'bau-prisoner-disclosed-letter')
+    rec = LetterTemplate.find_by(abbreviation: "bau-prisoner-disclosed-letter")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'BAU Prisoner disclosed letter Aug 2021',
-                abbreviation: 'bau-prisoner-disclosed-letter',
-                template_type: 'dispatch',
-                body: <<~EOF
+    rec.update!(name: "BAU Prisoner disclosed letter Aug 2021",
+                abbreviation: "bau-prisoner-disclosed-letter",
+                template_type: "dispatch",
+                body: <<~EOF,
                   <p>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
@@ -548,7 +543,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any future SARs.
                   <br>
-                  <br>Finally I would like to suggest that you do not keep this information where it can be accessed by others. Once you have read through the information it can be placed in your stored property. When you no longer require this information it must be destroyed securely. If you are unsure how to do this please speak to a member of staff within the prison. 
+                  <br>Finally I would like to suggest that you do not keep this information where it can be accessed by others. Once you have read through the information it can be placed in your stored property. When you no longer require this information it must be destroyed securely. If you are unsure how to do this please speak to a member of staff within the prison.#{' '}
                   <br>
                   <br>Yours sincerely
                   <br>
@@ -560,19 +555,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{prison_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{prison_receiver}
+      <br>#{address}
+    EOF
+               )
 
-    rec = LetterTemplate.find_by(abbreviation: 'bau-solicitor-disclosed-letter')
+    rec = LetterTemplate.find_by(abbreviation: "bau-solicitor-disclosed-letter")
     rec = LetterTemplate.new if rec.nil?
-    rec.update!(name: 'BAU Solicitor disclosed letter Aug 2021',
-                abbreviation: 'bau-solicitor-disclosed-letter',
-                template_type: 'dispatch',
-                body: <<~EOF
+    rec.update!(name: "BAU Solicitor disclosed letter Aug 2021",
+                abbreviation: "bau-solicitor-disclosed-letter",
+                template_type: "dispatch",
+                body: <<~EOF,
                   <p>
                   <br>
                   <br><strong>DATA PROTECTION ACT 2018: SUBJECT ACCESS REQUEST</strong>
@@ -593,7 +588,7 @@ class LetterTemplateSeeder
                   <br>
                   <br>Please note that copies of the data provided to you will be retained for no longer than nine months. Once this period has passed, we will be unable to answer any questions you may have or provide duplicates of this information. It will not normally be disclosed in any future SARs.
                   <br>
-                  <br>Finally I would like to suggest that you do not keep this information where it can be accessed by others. It would be helpful to remind your client of this. In a prison establishment the information can be placed in stored property. 
+                  <br>Finally I would like to suggest that you do not keep this information where it can be accessed by others. It would be helpful to remind your client of this. In a prison establishment the information can be placed in stored property.#{' '}
                   <br>
                   <br>Yours sincerely
                   <br>
@@ -605,19 +600,19 @@ class LetterTemplateSeeder
                   <br>Ministry of Justice
                   </p>
                 EOF
-                )
-    rec.update!(letter_address: <<~EOF
-                  #{solictor_receiver}
-                  <br>#{address}
-                EOF
-                )
+               )
+    rec.update!(letter_address: <<~EOF,
+      #{solictor_receiver}
+      <br>#{address}
+    EOF
+               )
   end
 
-  private 
+private
 
   def prison_receiver_string
     <<~EOF
-        <%= letter.name %><% if values.prison_number.present? %> - <%= values.first_prison_number %><% end %>
+      <%= letter.name %><% if values.prison_number.present? %> - <%= values.first_prison_number %><% end %>
     EOF
   end
 
@@ -634,6 +629,5 @@ class LetterTemplateSeeder
       <%= letter.address.gsub("\n", "<br>").html_safe %>
     EOF
   end
-
 end
-#rubocop:enable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength
+# rubocop:enable Lint/RedundantCopDisableDirective, Metrics/ClassLength, Metrics/CyclomaticComplexity, Metrics/MethodLength

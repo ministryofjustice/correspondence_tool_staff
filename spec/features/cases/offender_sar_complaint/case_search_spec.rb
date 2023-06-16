@@ -1,7 +1,7 @@
 require "rails_helper"
 
-feature 'Searching for cases' do
-  given(:responder) { find_or_create :branston_user}
+feature "Searching for cases" do
+  given(:responder) { find_or_create :branston_user }
   given(:manager) { find_or_create :disclosure_bmt_user }
 
   given!(:kase) { create :case_being_drafted, subject: "Common text" }
@@ -28,33 +28,33 @@ feature 'Searching for cases' do
     expect(cases_search_page).to be_displayed
   end
 
-  context 'searching for case number' do
+  context "searching for case number" do
     let(:searcher) { responder }
     let(:search_term) { offender_sar_complaint.number }
 
-    scenario 'finds offender sar complaint case by case number' do
+    scenario "finds offender sar complaint case by case number" do
       expect(cases_search_page.search_results_count.text).to eq "1 case found"
       expect(cases_search_page.case_list.count).to eq 1
       expect(cases_search_page.case_list.first.number).to have_text offender_sar_complaint.number
     end
   end
 
-  context 'searching for partial name' do
+  context "searching for partial name" do
     let(:searcher) { responder }
-    let(:search_term) { 'Terren' }
+    let(:search_term) { "Terren" }
 
-    scenario 'finds a single case' do
+    scenario "finds a single case" do
       expect(cases_search_page.search_results_count.text).to eq "1 case found"
       expect(cases_search_page.case_list.count).to eq 1
       expect(cases_search_page.case_list.first.number).to have_text offender_sar_complaint_ted.number
     end
   end
 
-  context 'searching for shared year of birth' do
+  context "searching for shared year of birth" do
     let(:searcher) { responder }
     let(:search_term) { "1970" }
 
-    scenario 'finds two cases' do
+    scenario "finds two cases" do
       expect(cases_search_page.search_results_count.text).to eq "2 cases found"
       expect(cases_search_page.case_list.count).to eq 2
       expect(cases_search_page.case_list.first.number).to have_text offender_sar_complaint_bill.number
@@ -62,11 +62,11 @@ feature 'Searching for cases' do
     end
   end
 
-  context 'searching for subject full name' do
+  context "searching for subject full name" do
     let(:searcher) { responder }
     let(:search_term) { "Bill" }
 
-    scenario 'finds two cases' do
+    scenario "finds two cases" do
       expect(cases_search_page.search_results_count.text).to eq "2 cases found"
       expect(cases_search_page.case_list.count).to eq 2
       expect(cases_search_page.case_list.first.number).to have_text offender_sar_complaint_bill.number
@@ -74,33 +74,33 @@ feature 'Searching for cases' do
     end
   end
 
-  context 'searching multiple terms narrows the search' do
+  context "searching multiple terms narrows the search" do
     let(:searcher) { responder }
     let(:search_term) { "Bill 1970" }
 
-    scenario 'finds a single case' do
+    scenario "finds a single case" do
       expect(cases_search_page.search_results_count.text).to eq "1 case found"
       expect(cases_search_page.case_list.count).to eq 1
       expect(cases_search_page.case_list.first.number).to have_text offender_sar_complaint_bill.number
     end
   end
 
-  context 'searching for common text as manager' do
+  context "searching for common text as manager" do
     let(:searcher) { manager }
     let(:search_term) { "Common text" }
 
-    scenario 'finds FOI case but not offender sar complaint case' do
+    scenario "finds FOI case but not offender sar complaint case" do
       expect(cases_search_page.search_results_count.text).to eq "1 case found"
       expect(cases_search_page.case_list.count).to eq 1
       expect(cases_search_page.case_list.first.number).to have_text kase.number
     end
   end
 
-  context 'searching for common text as branston responder' do
+  context "searching for common text as branston responder" do
     let(:searcher) { responder }
     let(:search_term) { "Common text" }
 
-    scenario 'finds offender_sar_complaint but not FOI' do
+    scenario "finds offender_sar_complaint but not FOI" do
       expect(cases_search_page.search_results_count.text).to eq "1 case found"
       expect(cases_search_page.case_list.count).to eq 1
       expect(cases_search_page.case_list.first.number).to have_text offender_sar_complaint.number

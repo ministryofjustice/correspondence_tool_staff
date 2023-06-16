@@ -1,8 +1,7 @@
 module Cases
   class OffenderSarComplaintController < OffenderSarController
-
-    before_action -> { set_decorated_case(params[:id]) }, only: [
-      :reopen, :confirm_reopen
+    before_action -> { set_decorated_case(params[:id]) }, only: %i[
+      reopen confirm_reopen
     ]
 
     include OffenderSARComplaintCasesParams
@@ -11,8 +10,8 @@ module Cases
       super
 
       @correspondence_type = CorrespondenceType.offender_sar_complaint
-      @correspondence_type_key = 'offender_sar_complaint'
-      @creation_optional_flags = {flag_for_creation_from_sar_page: 0 }
+      @correspondence_type_key = "offender_sar_complaint"
+      @creation_optional_flags = { flag_for_creation_from_sar_page: 0 }
     end
 
     def start_complaint
@@ -20,7 +19,7 @@ module Cases
       params.merge!(commit: true)
       params[@correspondence_type_key] = {}
       params[@correspondence_type_key].merge!("original_case_number" => params["number"])
-      create
+      create!
     end
 
     def reopen
@@ -30,7 +29,7 @@ module Cases
         @case.object.external_deadline = @case.object.deadline_calculator.external_deadline
       end
       render :reopen
-    end 
+    end
 
     def confirm_reopen
       authorize @case, :can_be_reopened?
@@ -40,13 +39,13 @@ module Cases
         service = CaseReopenService.new(
           current_user,
           @case,
-          reopen_offender_sar_complaint_params
+          reopen_offender_sar_complaint_params,
         )
         service.call
-    
+
         if service.result == :ok
           flash[:notice] = "You have reopened case #{@case.number}."
-          redirect_to case_path(@case) and return 
+          redirect_to case_path(@case) and return
         end
       end
       render :reopen
@@ -94,7 +93,7 @@ module Cases
       ComplaintCaseUpdaterService
     end
 
-    private 
+  private
 
     def clean_empty_approval_flags(permitted_params)
       if permitted_params["approval_flag_ids"].present?
@@ -104,7 +103,7 @@ module Cases
     end
 
     def back_link_url
-      if has_optional_flags? && @case.current_step == 'confirm-offender-sar'
+      if has_optional_flags? && @case.current_step == "confirm-offender-sar"
         case_path @case.original_case.id
       else
         super

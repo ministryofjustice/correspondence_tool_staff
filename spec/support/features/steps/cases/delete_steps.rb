@@ -8,19 +8,19 @@ def delete_case_step(kase:, has_linked_case: false)
   expect(confirm_destroy_page).to have_reason_for_deletion
 
   if has_linked_case
-    confirm_destroy_page.fill_in_delete_reason(delete_reason: 'testing delete case')
+    confirm_destroy_page.fill_in_delete_reason(delete_reason: "testing delete case")
     confirm_destroy_page.confirm_button.click
 
     expect(confirm_destroy_page)
-      .to have_content(I18n.t('activerecord.errors.models.case.attributes.related_case_links.not_empty'))
+      .to have_content(I18n.t("activerecord.errors.models.case.attributes.related_case_links.not_empty"))
     expect(confirm_destroy_page).to have_reason_for_deletion
-    expect(confirm_destroy_page.reason_for_deletion).to have_content('testing delete case')
+    expect(confirm_destroy_page.reason_for_deletion).to have_content("testing delete case")
   else
     confirm_destroy_page.confirm_button.click
     # Without a reason for deletion, page debounces back to user
     expect(confirm_destroy_page).to have_reason_for_deletion_error
 
-    confirm_destroy_page.fill_in_delete_reason(delete_reason: 'testing delete case')
+    confirm_destroy_page.fill_in_delete_reason(delete_reason: "testing delete case")
     confirm_destroy_page.confirm_button.click
 
     expect(open_cases_page).to be_displayed

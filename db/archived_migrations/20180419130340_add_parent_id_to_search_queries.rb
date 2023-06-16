@@ -1,6 +1,5 @@
 class AddParentIdToSearchQueries < ActiveRecord::Migration[5.0]
-
-  create_enum :search_query_type, 'search', 'filter'
+  create_enum :search_query_type, "search", "filter"
 
   def change
     add_column :search_queries, :parent_id, :integer
@@ -8,4 +7,3 @@ class AddParentIdToSearchQueries < ActiveRecord::Migration[5.0]
     add_column :search_queries, :filter_type, :string
   end
 end
-

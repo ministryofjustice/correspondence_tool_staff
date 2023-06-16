@@ -2,7 +2,7 @@ module Cases
   class SarExtensionsController < ApplicationController
     include SetupCase
 
-    before_action :set_case, only: [:new, :create, :destroy]
+    before_action :set_case, only: %i[new create destroy]
 
     def new
       authorize @case, :extend_sar_deadline?
@@ -15,19 +15,20 @@ module Cases
         user: current_user,
         kase: @case,
         extension_period: params[:case][:extension_period],
-        reason: params[:case][:reason_for_extending]
+        reason: params[:case][:reason_for_extending],
       )
       service.call
 
-      if service.result == :ok
-        flash[:notice] = t('.success')
+      case service.result
+      when :ok
+        flash[:notice] = t(".success")
         redirect_to case_path(@case.id)
-      elsif service.result == :validation_error
+      when :validation_error
         @case = CaseExtendSARDeadlineDecorator.decorate @case
         @case.reason_for_extending = params[:case][:reason_for_extending]
         render :new
       else
-        flash[:alert] = t('.error', case_number: @case.number)
+        flash[:alert] = t(".error", case_number: @case.number)
         redirect_to case_path(@case.id)
       end
     end
@@ -39,12 +40,11 @@ module Cases
       service.call
 
       if service.result == :ok
-        flash[:notice] = t('.success')
-        redirect_to case_path(@case.id)
+        flash[:notice] = t(".success")
       else
-        flash[:alert] = t('.error')
-        redirect_to case_path(@case.id)
+        flash[:alert] = t(".error")
       end
+      redirect_to case_path(@case.id)
     end
   end
 end

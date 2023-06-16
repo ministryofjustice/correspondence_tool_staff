@@ -1,6 +1,5 @@
 class ContactsSearchService
-
-  def initialize(filters: '', search_term: '', contact: Contact)
+  def initialize(filters: "", search_term: "", contact: Contact)
     @contact = contact
     @filters = filters
     @search_term = search_term
@@ -14,7 +13,7 @@ class ContactsSearchService
     end
   end
 
-  private 
+private
 
   def filters_present?
     @filters&.any?

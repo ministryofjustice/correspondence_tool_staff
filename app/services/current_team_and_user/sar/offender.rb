@@ -9,7 +9,6 @@ module CurrentTeamAndUser
         @team = @case.managing_team
         @user = @case&.responder_assignment&.user
       end
-
     end
   end
 end

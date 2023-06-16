@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe AssignmentsController, type: :controller do
   let(:responding_team)   { unassigned_case.responding_team }
@@ -6,32 +6,31 @@ RSpec.describe AssignmentsController, type: :controller do
 
   let(:unassigned_case)     { create :offender_sar_complaint }
 
-  describe 'GET assign_to_team_member' do
-    let(:params)     { { case_id: unassigned_case.id } }
+  describe "GET assign_to_team_member" do
+    let(:params) { { case_id: unassigned_case.id } }
 
-    before(:each) do
+    before do
       sign_in responder
     end
 
-    it 'authorises' do
+    it "authorises" do
       expect {
-        get :assign_to_team_member, params: params
-      } .to require_permission(:can_assign_to_team_member?)
+        get :assign_to_team_member, params:
+      }.to require_permission(:can_assign_to_team_member?)
               .with_args(responder, unassigned_case)
     end
 
-    it 'renders the page' do
-      get :assign_to_team_member, params: params
+    it "renders the page" do
+      get(:assign_to_team_member, params:)
       expect(response).to render_template :assign_to_team_member
     end
 
-    it 'sets the @team_users' do
-      get :assign_to_team_member, params: params
+    it "sets the @team_users" do
+      get(:assign_to_team_member, params:)
       expect(assigns(:current_user)).to eq responder
       expect(assigns(:case)).to eq unassigned_case
       expect(assigns(:team_users))
         .to eq responder.case_team(unassigned_case).users.order(:full_name)
     end
-
   end
 end

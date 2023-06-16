@@ -1,8 +1,7 @@
 module CaseFilter
   class CaseStatusFilter < CaseMultiChoicesFilterBase
-
     def self.identifier
-        'filter_status'
+      "filter_status"
     end
 
     def self.filter_attributes
@@ -12,9 +11,9 @@ module CaseFilter
     def available_choices
       {
         filter_status: {
-          'open'   => I18n.t('filters.filter_status.open'),
-          'closed' => I18n.t('filters.filter_status.closed')
-        }
+          "open" => I18n.t("filters.filter_status.open"),
+          "closed" => I18n.t("filters.filter_status.closed"),
+        },
       }
     end
 
@@ -22,14 +21,14 @@ module CaseFilter
       filter_status(@records)
     end
 
-    private
+  private
 
     def filter_open?
-      'open'.in? @query.filter_status
+      "open".in? @query.filter_status
     end
 
     def filter_closed?
-      'closed'.in? @query.filter_status
+      "closed".in? @query.filter_status
     end
 
     def filter_status(records)

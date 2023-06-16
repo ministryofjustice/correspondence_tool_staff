@@ -1,6 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'cases/ico/case_details.html.slim', type: :view do
+describe "cases/ico/case_details.html.slim", type: :view do
   let(:ico_foi_case)      { (create :ico_foi_case).decorate }
   let(:ico_sar_case)      { (create :ico_sar_case).decorate }
   let(:accepted_case)     { (create :accepted_ico_foi_case).decorate }
@@ -9,28 +9,27 @@ describe 'cases/ico/case_details.html.slim', type: :view do
   let(:closed_foi_appeal) { (create :closed_ico_foi_case).decorate }
   let(:closed_sar_appeal) { (create :closed_ico_sar_case).decorate }
 
-  context 'FOI' do
-
-    describe 'edit case link' do
+  context "FOI" do
+    describe "edit case link" do
       before do
         assign(:case, ico_foi_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details',
+        render partial: "cases/ico/case_details",
                locals: { case_details: ico_foi_case,
                          link_type: nil }
       end
 
-      it 'displays edit case link' do
+      it "displays edit case link" do
         partial = case_details_section(rendered)
         expect(partial).to have_edit_case_link
       end
     end
 
-    describe 'basic_details' do
-      it 'displays the initial case details' do
+    describe "basic_details" do
+      it "displays the initial case details" do
         assign(:case, ico_foi_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details',
+        render partial: "cases/ico/case_details",
                locals: { case_details: ico_foi_case,
                          link_type: nil }
 
@@ -45,14 +44,13 @@ describe 'cases/ico/case_details.html.slim', type: :view do
         expect(partial.external_deadline.data.text)
           .to eq ico_foi_case.external_deadline
       end
-
     end
 
-    describe 'responders details' do
-      it 'displays the responders team name' do
+    describe "responders details" do
+      it "displays the responders team name" do
         assign(:case, accepted_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details',
+        render partial: "cases/ico/case_details",
                locals: { case_details: accepted_case,
                          link_type: nil }
 
@@ -64,11 +62,11 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       end
     end
 
-    describe 'closure details' do
-      it 'displays the date,time taken, timeliness and final outcome' do
+    describe "closure details" do
+      it "displays the date,time taken, timeliness and final outcome" do
         assign(:case, closed_foi_appeal)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details',
+        render partial: "cases/ico/case_details",
                locals: { case_details: closed_foi_appeal,
                          link_type: nil }
 
@@ -81,14 +79,14 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       end
     end
 
-    describe 'draft compliance details' do
-      it 'displays the date compliant' do
+    describe "draft compliance details" do
+      it "displays the date compliant" do
         login_as create(:manager)
         assign(:case, responded_case)
 
-        render partial: 'cases/ico/case_details',
-               locals:{ case_details: responded_case,
-                        link_type: nil }
+        render partial: "cases/ico/case_details",
+               locals: { case_details: responded_case,
+                         link_type: nil }
 
         partial = case_details_section(rendered).compliance_details
 
@@ -98,28 +96,27 @@ describe 'cases/ico/case_details.html.slim', type: :view do
     end
   end
 
-  context 'SAR' do
-
-    describe 'edit case link' do
+  context "SAR" do
+    describe "edit case link" do
       before do
         assign(:case, ico_sar_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details',
+        render partial: "cases/ico/case_details",
                locals: { case_details: ico_sar_case,
                          link_type: nil }
       end
 
-      it 'displays edit case link' do
+      it "displays edit case link" do
         partial = case_details_section(rendered)
         expect(partial).to have_edit_case_link
       end
     end
 
-    describe 'basic_details' do
-      it 'displays the initial case details' do
+    describe "basic_details" do
+      it "displays the initial case details" do
         assign(:case, ico_sar_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details',
+        render partial: "cases/ico/case_details",
                locals: { case_details: ico_sar_case,
                          link_type: nil }
 
@@ -134,14 +131,13 @@ describe 'cases/ico/case_details.html.slim', type: :view do
         expect(partial.external_deadline.data.text)
           .to eq ico_sar_case.external_deadline
       end
-
     end
 
-    describe 'responders details' do
-      it 'displays the responders team name' do
+    describe "responders details" do
+      it "displays the responders team name" do
         assign(:case, accepted_sar_case)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details',
+        render partial: "cases/ico/case_details",
                locals: { case_details: accepted_sar_case,
                          link_type: nil }
 
@@ -153,11 +149,11 @@ describe 'cases/ico/case_details.html.slim', type: :view do
       end
     end
 
-    describe 'closure details' do
-      it 'displays the date,time taken, timeliness and final outcome' do
+    describe "closure details" do
+      it "displays the date,time taken, timeliness and final outcome" do
         assign(:case, closed_sar_appeal)
         login_as create(:manager)
-        render partial: 'cases/ico/case_details',
+        render partial: "cases/ico/case_details",
                locals: { case_details: closed_sar_appeal,
                          link_type: nil }
 
@@ -169,7 +165,5 @@ describe 'cases/ico/case_details.html.slim', type: :view do
         expect(partial.outcome.data.text).to eq "#{closed_sar_appeal.ico_decision.capitalize} by ICO"
       end
     end
-
   end
-
 end

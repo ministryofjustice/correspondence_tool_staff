@@ -1,15 +1,15 @@
-require 'rspec/expectations'
+require "rspec/expectations"
 
 RSpec::Matchers.define :match_the_case do |kase|
   define_method :case_states do
     {
-      'unassigned' => 'Needs reassigning',
-      'awaiting_dispatch' => 'Ready to send',
-      'awaiting_responder' => 'To be accepted',
-      'awaiting_responder_email' => 'Waiting to be accepted',
-      'drafting' => 'Draft in progress',
-      'responded' => 'Ready to close',
-      'closed' => 'Closed'
+      "unassigned" => "Needs reassigning",
+      "awaiting_dispatch" => "Ready to send",
+      "awaiting_responder" => "To be accepted",
+      "awaiting_responder_email" => "Waiting to be accepted",
+      "drafting" => "Draft in progress",
+      "responded" => "Ready to close",
+      "closed" => "Closed",
     }
   end
 
@@ -19,10 +19,10 @@ RSpec::Matchers.define :match_the_case do |kase|
     if kase.requires_clearance?
       expect(actual.draft_deadline.text).to have_content(kase.internal_deadline.strftime(Settings.default_date_format))
     else
-      expect(actual.draft_deadline.text).to eq ''
+      expect(actual.draft_deadline.text).to eq ""
     end
     expect(actual.external_deadline.text).to have_content(kase.external_deadline.strftime(Settings.default_date_format))
-    expect(actual.number).to have_link("#{kase.number}", href: case_path(kase.id))
+    expect(actual.number).to have_link(kase.number.to_s, href: case_path(kase.id))
     expect(actual.who_its_with.text).to eq @with_text if @with_text
   end
 
@@ -31,7 +31,7 @@ RSpec::Matchers.define :match_the_case do |kase|
   end
 
   failure_message do |actual|
-    message = ''
+    message = ""
     message += request_detail_message(kase, actual) unless actual.request_detail.text == "#{kase.subject}#{kase.name}"
     message += status_message(kase, actual) unless actual.status.text == case_states[kase.current_state]
     message += external_deadline_message(kase, actual) unless actual.external_deadline.text.include? kase.external_deadline.strftime(Settings.default_date_format)
@@ -40,7 +40,7 @@ RSpec::Matchers.define :match_the_case do |kase|
     if kase.requires_clearance?
       message += draft_deadline_incorrect_message(kase, actual) unless actual.draft_deadline.text.include?(kase.external_deadline.strftime(Settings.default_date_format))
     else
-      message += draft_deadline_not_blank_message(kase, actual) unless actual.draft_deadline.text == ''
+      message += draft_deadline_not_blank_message(kase, actual) unless actual.draft_deadline.text == ""
     end
     message
   end
@@ -81,8 +81,8 @@ RSpec::Matchers.define :match_the_case do |kase|
 
   def draft_deadline_incorrect_message(kase, actual)
     <<~EOM
-        expected case draft deadline: #{kase.internal_deadline.strftime(Settings.default_date_format)}
-          actual case internal deadline: #{actual.draft_deadline.text}
+      expected case draft deadline: #{kase.internal_deadline.strftime(Settings.default_date_format)}
+        actual case internal deadline: #{actual.draft_deadline.text}
     EOM
   end
 

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-feature 'pagination' do
+feature "pagination" do
   background :all do
     @cases = 30.times.map { create :accepted_case }
     @responder = find_or_create :foi_responder
@@ -10,10 +10,10 @@ feature 'pagination' do
     DbHousekeeping.clean
   end
 
-  context 'open cases page' do
-    scenario 'going to page two' do
+  context "open cases page" do
+    scenario "going to page two" do
       login_as @responder
-      visit '/cases/open'
+      visit "/cases/open"
 
       expect(open_cases_page.case_list.count).to eq 20
       expect(open_cases_page.pagination).to have_next_page_link
@@ -25,10 +25,10 @@ feature 'pagination' do
     end
   end
 
-  context 'my open cases page' do
-    scenario 'going to page two' do
+  context "my open cases page" do
+    scenario "going to page two" do
       login_as @responder
-      visit '/cases/my_open/in_time'
+      visit "/cases/my_open/in_time"
 
       expect(my_open_cases_page.tabs[0].tab_link[:href])
         .to eq my_open_filter_path(tab: :in_time)

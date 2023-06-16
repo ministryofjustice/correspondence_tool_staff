@@ -1,13 +1,12 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'joining business units' do
-
+feature "joining business units" do
   before(:all) do
     @open_cases = {
-      std_draft_foi:              { received_date: 6.business_days.ago },
+      std_draft_foi: { received_date: 6.business_days.ago },
     }
     @closed_cases = {
-      std_closed_foi:  { received_date: 18.business_days.ago },
+      std_closed_foi: { received_date: 18.business_days.ago },
     }
     @all_cases = @open_cases.merge(@closed_cases)
     @setup = StandardSetup.new(only_cases: @all_cases)
@@ -23,7 +22,7 @@ feature 'joining business units' do
   given!(:target_team) { create(:responding_team, name: "Target Team", directorate: bu.directorate) }
   given!(:deactivated_team) { create(:business_unit, :deactivated, name: "Deactivated Team", directorate: bu.directorate) }
 
-  scenario 'manager joins a business unit to another', js: true do
+  scenario "manager joins a business unit to another", js: true do
     # verify responder can see cases before move
     login_as responder
     cases_page.load

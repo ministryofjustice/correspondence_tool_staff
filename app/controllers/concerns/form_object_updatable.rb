@@ -1,13 +1,13 @@
 module FormObjectUpdatable
   extend ActiveSupport::Concern
 
-  private
+private
 
   def update_and_advance(form_class, opts = {}, &block)
     hash = permitted_params(form_class).to_h
 
     @form_object = form_class.new(
-      hash.merge(record: opts[:record])
+      hash.merge(record: opts[:record]),
     )
 
     if @form_object.save
@@ -24,9 +24,9 @@ module FormObjectUpdatable
   end
 
   def form_attribute_names(form_class)
-    form_class.attribute_types.map do |(attr_name, primitive)|
+    form_class.attribute_types.map { |(attr_name, primitive)|
       primitive.is_a?(ActiveModel::Type::Date) ? date_params(attr_name) : attr_name
-    end.flatten
+    }.flatten
   end
 
   def date_params(attr_name)

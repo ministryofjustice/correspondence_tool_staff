@@ -11,23 +11,21 @@ module RetentionSchedules
       return if case_is_open
 
       ActiveRecord::Base.transaction do
-        begin
-          if @kase.offender_sar? || @kase.offender_sar_complaint?
-            @planned_destruction_date = planned_destruction_date
-            add_retention_schedules
-            @result = :success
-          else
-            @result = :invalid_case_type
-          end
-        rescue ActiveRecord::RecordInvalid => err
-          Rails.logger.error err.to_s
-          Rails.logger.error err.backtrace.join("\n\t")
-          @result = :error
+        if @kase.offender_sar? || @kase.offender_sar_complaint?
+          @planned_destruction_date = planned_destruction_date
+          add_retention_schedules
+          @result = :success
+        else
+          @result = :invalid_case_type
         end
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.error e.to_s
+        Rails.logger.error e.backtrace.join("\n\t")
+        @result = :error
       end
     end
 
-    private
+  private
 
     def case_is_open
       unless @kase.closed?
@@ -52,7 +50,7 @@ module RetentionSchedules
 
       rs = RetentionSchedule.find_or_initialize_by(case: kase)
       rs.planned_destruction_date = @planned_destruction_date
-      rs.save
+      rs.save!
 
       annotate_case!(
         kase, rs.saved_changes
@@ -77,8 +75,8 @@ module RetentionSchedules
     def collect_linked_cases
       # i.e. is an offender sar complaint
       if @kase.original_cases.present?
-       ([@kase.original_case] + 
-        @kase.original_case.linked_cases).to_a
+        ([@kase.original_case] +
+         @kase.original_case.linked_cases).to_a
       else
         @kase.linked_cases.to_a
       end
@@ -87,7 +85,7 @@ module RetentionSchedules
     def planned_destruction_date
       closure_date.advance(
         years: Settings.retention_timings.off_sars.erasure.years,
-        months: Settings.retention_timings.off_sars.erasure.months
+        months: Settings.retention_timings.off_sars.erasure.months,
       )
     end
 
@@ -103,7 +101,7 @@ module RetentionSchedules
       return unless @user
 
       RetentionScheduleCaseNote.log!(
-        kase: kase, user: @user, changes: changes, is_system: true
+        kase:, user: @user, changes:, is_system: true,
       )
     end
   end

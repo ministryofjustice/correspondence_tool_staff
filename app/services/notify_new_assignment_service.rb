@@ -1,5 +1,4 @@
 class NotifyNewAssignmentService
-
   def initialize(team:, assignment:)
     @team = team
     @assignment = assignment
@@ -16,5 +15,4 @@ class NotifyNewAssignmentService
       ActionNotificationsMailer.new_assignment(@assignment, @team.email).deliver_later
     end
   end
-
 end

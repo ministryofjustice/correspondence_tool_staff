@@ -15,11 +15,12 @@ class CaseAssignToTeamMemberService
       @assignment = @case.assignments.new(team: target_team, role: @role, user: @target_user)
       if @assignment.valid?
         managing_team = @user.responding_teams.first
-        @case.state_machine.assign_to_team_member!( 
-            acting_user: @user, 
-            acting_team: managing_team, 
-            target_team: target_team, 
-            target_user: @target_user)
+        @case.state_machine.assign_to_team_member!(
+          acting_user: @user,
+          acting_team: managing_team,
+          target_team:,
+          target_user: @target_user,
+        )
         @assignment.accepted!
         @assignment.save!
         @result = :ok
@@ -29,5 +30,4 @@ class CaseAssignToTeamMemberService
     end
     @result == :ok
   end
-
 end

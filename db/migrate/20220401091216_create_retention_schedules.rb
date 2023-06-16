@@ -5,7 +5,7 @@ class CreateRetentionSchedules < ActiveRecord::Migration[6.1]
     SQL
 
     create_table :retention_schedules do |t|
-      t.references :case, null: false, foreign_key: true 
+      t.references :case, null: false, foreign_key: true
       t.date :planned_erasure_date
       t.date :erasure_date
       t.column :status, :retention_status

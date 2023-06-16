@@ -14,36 +14,35 @@
 #
 
 class Report < ApplicationRecord
-
   jsonb_accessor :properties,
                  background_job: :boolean,
                  status: :string,
-                 job_ids: [:string, array: true, default: []],
+                 job_ids: [:string, { array: true, default: [] }],
                  filename: :string,
                  persist_results: :boolean,
                  user_id: :integer,
                  report_format: :string
-        
-  validates_presence_of :report_type_id, :period_start, :period_end
+
+  validates :report_type_id, :period_start, :period_end, presence: true
 
   acts_as_gov_uk_date :period_start, :period_end, validate_if: :period_within_acceptable_range?
 
   belongs_to :report_type
-  
+
   attr_accessor :correspondence_type
- 
+
   def self.last_by_abbr(abbr)
-    report_type = ReportType.find_by(abbr: abbr)
+    report_type = ReportType.find_by(abbr:)
     where(report_type_id: report_type.id).order(id: :desc).limit(1).singular
   end
 
   def report_type_abbr=(abbr)
-    self.report_type = ReportType.find_by(abbr: abbr)
+    self.report_type = ReportType.find_by(abbr:)
   end
 
   def run(report_guid: SecureRandom.uuid, **args)
     report_service = report_type.class_constant.new(**args)
-    report_service.run(report_guid: report_guid)
+    report_service.run(report_guid:)
     report_service
   end
 
@@ -63,64 +62,64 @@ class Report < ApplicationRecord
     self.period_start = report_service.period_start
     self.period_end = report_service.period_end
     self.persist_results = report_service.persist_results?
-    self.save! if report_service.persist_results?
+    save! if report_service.persist_results?
   end
 
   def to_csv
     report_service = report_type.class_constant.new(
-      period_start: self.period_start,
-      period_end: self.period_end
+      period_start:,
+      period_end:,
     )
-    report_service.set_results(JSON.parse(self.report_data, symbolize_names: true))
+    report_service.set_results(JSON.parse(report_data, symbolize_names: true))
     report_service.to_csv
-  end 
+  end
 
   def report_details
-    if self.background_job?
+    if background_job?
       report_service = report_type.class_constant.new(
-        period_start: self.period_start,
-        period_end: self.period_end
+        period_start:,
+        period_end:,
       )
       data = report_service.report_details(self)
     else
-      data = self.report_data
+      data = report_data
     end
 
-    [data, self.filename]
+    [data, filename]
   end
 
   def ready?
-    self.status == Stats::BaseReport::COMPLETE
+    status == Stats::BaseReport::COMPLETE
   end
 
   def persist_results?
-    self.persist_results
+    persist_results
   end
 
   # ETL (Extract Transform Load) based reports are generated using
   # the Warehouse, and therefore require processing before making
   # available for download
   def etl?
-    self.report_type&.etl?
+    report_type&.etl?
   end
 
   def background_job?
-    self.background_job
+    background_job
   end
 
-  private
+private
 
   def period_within_acceptable_range?
-    i18n_prefix = 'activerecord.errors.models.report.attributes'
+    i18n_prefix = "activerecord.errors.models.report.attributes"
     if period_in_the_future?(period_start)
       errors.add :period_start,
-        I18n.t("#{i18n_prefix}.period_start.in_future")
+                 I18n.t("#{i18n_prefix}.period_start.in_future")
     elsif period_in_the_future?(period_end)
       errors.add :period_end,
-        I18n.t("#{i18n_prefix}.period_end.in_future")
+                 I18n.t("#{i18n_prefix}.period_end.in_future")
     elsif period_end_before_period_start?(period_start, period_end)
       errors.add :period_end,
-        I18n.t("#{i18n_prefix}.period_end.before_start_date")
+                 I18n.t("#{i18n_prefix}.period_end.before_start_date")
     end
     errors[:period_start].any?
   end

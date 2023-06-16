@@ -1,12 +1,12 @@
 require "rails_helper"
 
-feature 'searching for SAR cases' do
+feature "searching for SAR cases" do
   given(:manager)   { find_or_create :disclosure_bmt_user }
   given(:responder) { kase.responder }
   given!(:kase)     { create :accepted_sar }
 
-  context 'a manager' do
-    scenario 'searching for a SAR case' do
+  context "a manager" do
+    scenario "searching for a SAR case" do
       login_as manager
       cases_page.load
       cases_page.primary_navigation.search.click
@@ -24,10 +24,10 @@ feature 'searching for SAR cases' do
     end
   end
 
-  context 'a responder' do
+  context "a responder" do
     given!(:other_kase) { create :sar_case }
 
-    scenario 'searching for a SAR case assigned to my team' do
+    scenario "searching for a SAR case assigned to my team" do
       login_as responder
       cases_page.load
       cases_page.primary_navigation.search.click
@@ -44,7 +44,7 @@ feature 'searching for SAR cases' do
       expect(cases_search_page.case_list.first.number).to have_text kase.number
     end
 
-    scenario 'searching for a SAR case not assigned to my team' do
+    scenario "searching for a SAR case not assigned to my team" do
       login_as responder
       cases_page.load
       cases_page.primary_navigation.search.click

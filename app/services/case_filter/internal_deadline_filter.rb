@@ -3,26 +3,26 @@ module CaseFilter
     PERMITTED_CORRESPONDENCE_TYPES = %w[FOI SAR ICO OVERTURNED_FOI OVERTURNED_SAR].freeze
 
     def self.date_field_name
-      'internal_deadline'
+      "internal_deadline"
     end
 
     def available_choices
       {
         today: {
-          name: 'Today',
+          name: "Today",
           from: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json,
           to: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json,
         },
         three_days: {
-          name: 'In the next 3 days',
+          name: "In the next 3 days",
           from: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json,
           to: { day: 3.business_days.from_now.strftime("%d"), month: 3.business_days.from_now.strftime("%m"), year: 3.business_days.from_now.strftime("%Y") }.to_json,
         },
         ten_days: {
-          name: 'In the next 10 days',
+          name: "In the next 10 days",
           from: { day: Date.today.strftime("%d"), month: Date.today.strftime("%m"), year: Date.today.strftime("%Y") }.to_json,
-          to: { day: 10.business_days.from_now.strftime("%d"), month: 10.business_days.from_now.strftime("%m"), year: 10.business_days.from_now.strftime("%Y") }.to_json
-        }
+          to: { day: 10.business_days.from_now.strftime("%d"), month: 10.business_days.from_now.strftime("%m"), year: 10.business_days.from_now.strftime("%Y") }.to_json,
+        },
       }
     end
 
@@ -41,7 +41,7 @@ module CaseFilter
       end
     end
 
-    private
+  private
 
     def deadline_is_within_period(from_date, to_date)
       @records.internal_deadline_within(from_date, to_date)

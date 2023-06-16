@@ -1,44 +1,43 @@
 module Stats
   class BaseBusinessUnitPerformanceReport < BaseReport
-
     R003_SPECIFIC_COLUMNS = {
-      business_group:                  'Business group',
-      directorate:                     'Directorate',
-      business_unit:                   'Business unit',
-      business_unit_id:                'Business unit ID',
-      new_business_unit_id:       'New business unit ID',
-      responsible:                     'Responsible',
-      deactivated:                     'Deactivated',
-      moved:                           'Moved to',
+      business_group: "Business group",
+      directorate: "Directorate",
+      business_unit: "Business unit",
+      business_unit_id: "Business unit ID",
+      new_business_unit_id: "New business unit ID",
+      responsible: "Responsible",
+      deactivated: "Deactivated",
+      moved: "Moved to",
     }.freeze
 
     R003_BU_PERFORMANCE_COLUMNS = {
-      bu_performance:             'Performance %',
-      bu_total:                   'Total received',
-      bu_responded_in_time:       'Responded - in time',
-      bu_responded_late:          'Responded - late',
-      bu_open_in_time:            'Open - in time',
-      bu_open_late:               'Open - late',
+      bu_performance: "Performance %",
+      bu_total: "Total received",
+      bu_responded_in_time: "Responded - in time",
+      bu_responded_late: "Responded - late",
+      bu_open_in_time: "Open - in time",
+      bu_open_late: "Open - late",
     }.freeze
 
     R003_SPECIFIC_SUPERHEADINGS = {
-      business_group:                  '',
-      directorate:                     '',
-      business_unit:                   '',
-      business_unit_id:                '',
-      new_business_unit_id:       '',
-      responsible:                     '',
-      deactivated:                     '',
-      moved:                           '',
+      business_group: "",
+      directorate: "",
+      business_unit: "",
+      business_unit_id: "",
+      new_business_unit_id: "",
+      responsible: "",
+      deactivated: "",
+      moved: "",
     }.freeze
 
     R003_BU_PERFORMANCE_SUPERHEADINGS = {
-      bu_performance:             'Business unit',
-      bu_total:                   'Business unit',
-      bu_responded_in_time:       'Business unit',
-      bu_responded_late:          'Business unit',
-      bu_open_in_time:            'Business unit',
-      bu_open_late:               'Business unit',
+      bu_performance: "Business unit",
+      bu_total: "Business unit",
+      bu_responded_in_time: "Business unit",
+      bu_responded_late: "Business unit",
+      bu_open_in_time: "Business unit",
+      bu_open_late: "Business unit",
     }.freeze
 
     class << self
@@ -68,9 +67,9 @@ module Stats
 
     def superheadings
       headings = if @generate_bu_columns
-                   (R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).merge(R003_BU_PERFORMANCE_SUPERHEADINGS)).values
+                   R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).merge(R003_BU_PERFORMANCE_SUPERHEADINGS).values
                  else
-                   (R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS)).values
+                   R003_SPECIFIC_SUPERHEADINGS.merge(CaseAnalyser::COMMON_SUPERHEADINGS).values
                  end
 
       [
@@ -79,13 +78,13 @@ module Stats
     end
 
     def case_scope
-      raise '#case_scope method must be defined in derived class'
+      raise "#case_scope method must be defined in derived class"
     end
 
     def run(*)
       CaseSelector.new(case_scope)
         .cases_received_in_period(@period_start, @period_end)
-        .reject { |kase| kase.unassigned? }.each do |kase|
+        .reject(&:unassigned?).each do |kase|
         analyse_case(kase)
       end
       @stats.finalise
@@ -95,7 +94,7 @@ module Stats
 
     # This method needs to return a grid of 'cells' with value and rag_rating properties
     def to_csv
-      csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+      csv = @stats.to_csv(row_names_as_first_column: false, superheadings:)
       csv.map.with_index do |row, row_index|
         row.map.with_index do |item, item_index|
           # data rows start after 2 superheadings + 1 heading
@@ -103,7 +102,7 @@ module Stats
             header_cell row_index, item
           # item at index+1 is the case count - don't mark 0/0 as Red RAG rating
           # These are the positions of the 3 items which need a RAG rating
-          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index+1] != 0
+          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index + 1] != 0
             OpenStruct.new value: item, rag_rating: rag_rating(item)
           else
             OpenStruct.new value: item
@@ -112,7 +111,7 @@ module Stats
       end
     end
 
-    private
+  private
 
     def analyse_case(kase)
       analyser = CaseAnalyser.new(kase)
@@ -127,16 +126,16 @@ module Stats
     end
 
     def add_trigger_state(kase, timeliness)
-      status = kase.flagged? ? 'trigger_' + timeliness : 'non_trigger_' + timeliness
+      status = kase.flagged? ? "trigger_#{timeliness}" : "non_trigger_#{timeliness}"
       status.to_sym
     end
 
     def analyse_closed_case(kase)
-      kase.responded_in_time? ? 'responded_in_time' : 'responded_late'
+      kase.responded_in_time? ? "responded_in_time" : "responded_late"
     end
 
     def analyse_open_case(kase)
-      kase.already_late? ? 'open_late' : 'open_in_time'
+      kase.already_late? ? "open_late" : "open_in_time"
     end
   end
 end

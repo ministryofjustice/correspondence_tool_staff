@@ -1,9 +1,9 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'cases/foi/case_details.html.slim', type: :view do
+describe "cases/foi/case_details.html.slim", type: :view do
   let(:unassigned_case)         { create(:case).decorate }
   let(:accepted_case)           { create(:accepted_case).decorate }
-  let(:approved_case)          { create(:approved_case).decorate }
+  let(:approved_case) { create(:approved_case).decorate }
   let(:trigger_case)            { create(:case, :flagged_accepted).decorate }
 
   let(:closed_case)             { create(:closed_case).decorate }
@@ -14,21 +14,18 @@ describe 'cases/foi/case_details.html.slim', type: :view do
     super(user)
   end
 
+  before { login_as disclosure_specialist }
 
-  before(:each) { login_as disclosure_specialist }
-
-
-
-  describe 'foi_basic_details' do
-    it 'displays the initial case details' do
+  describe "foi_basic_details" do
+    it "displays the initial case details" do
       assign(:case, unassigned_case)
-      render partial: 'cases/foi/case_details',
+      render partial: "cases/foi/case_details",
              locals: { case_details: unassigned_case,
                        link_type: nil }
 
       partial = case_details_section(rendered).foi_basic_details
 
-      expect(case_details_section(rendered).section_heading.text).to eq 'Case details'
+      expect(case_details_section(rendered).section_heading.text).to eq "Case details"
 
       expect(partial).to be_all_there
 
@@ -53,13 +50,12 @@ describe 'cases/foi/case_details.html.slim', type: :view do
 
       expect(partial.delivery_method.data.text)
           .to eq unassigned_case.delivery_method.humanize
-
     end
 
-    it 'displays a trigger badge if the case has been triggered' do
+    it "displays a trigger badge if the case has been triggered" do
       trigger_case
       assign(:case, trigger_case)
-      render partial: 'cases/foi/case_details',
+      render partial: "cases/foi/case_details",
              locals: { case_details: trigger_case,
                        link_type: nil }
 
@@ -72,10 +68,10 @@ describe 'cases/foi/case_details.html.slim', type: :view do
       expect(partial.case_type.data.text).to eq "FOI This is a Trigger case"
     end
 
-    it 'does not display the email address if one is not provided' do
+    it "does not display the email address if one is not provided" do
       unassigned_case.email = nil
       assign(:case, unassigned_case)
-      render partial: 'cases/foi/case_details',
+      render partial: "cases/foi/case_details",
              locals: { case_details: unassigned_case,
                        link_type: nil }
 
@@ -85,10 +81,10 @@ describe 'cases/foi/case_details.html.slim', type: :view do
       expect(partial).to have_address
     end
 
-    it 'does not display the postal address if one is not provided' do
+    it "does not display the postal address if one is not provided" do
       unassigned_case.postal_address = nil
       assign(:case, unassigned_case)
-      render partial: 'cases/foi/case_details',
+      render partial: "cases/foi/case_details",
              locals: { case_details: unassigned_case,
                        link_type: nil }
 
@@ -99,12 +95,12 @@ describe 'cases/foi/case_details.html.slim', type: :view do
     end
   end
 
-  describe 'responders details' do
-    it 'displays the responders team name' do
+  describe "responders details" do
+    it "displays the responders team name" do
       assign(:case, accepted_case)
-      render partial: 'cases/foi/case_details',
-             locals:{ case_details: accepted_case,
-                      link_type: nil }
+      render partial: "cases/foi/case_details",
+             locals: { case_details: accepted_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).responders_details
 
@@ -114,12 +110,12 @@ describe 'cases/foi/case_details.html.slim', type: :view do
     end
   end
 
-  describe 'draft compliance details' do
-    it 'displays the date compliant' do
+  describe "draft compliance details" do
+    it "displays the date compliant" do
       assign(:case, approved_case)
-      render partial: 'cases/foi/case_details',
-             locals:{ case_details: approved_case,
-                      link_type: nil }
+      render partial: "cases/foi/case_details",
+             locals: { case_details: approved_case,
+                       link_type: nil }
 
       partial = case_details_section(rendered).compliance_details
 
@@ -128,12 +124,11 @@ describe 'cases/foi/case_details.html.slim', type: :view do
     end
   end
 
-  describe 'Final response details' do
-
-    it 'displays all the case closure details' do
+  describe "Final response details" do
+    it "displays all the case closure details" do
       closed_case
       assign(:case, closed_case)
-      render partial: 'cases/foi/case_details',
+      render partial: "cases/foi/case_details",
              locals: { case_details: closed_case,
                        link_type: nil }
 
@@ -142,31 +137,29 @@ describe 'cases/foi/case_details.html.slim', type: :view do
       expect(partial.timeliness.data.text).to eq closed_case.timeliness
       expect(partial.outcome.data.text).to eq closed_case.outcome.name
     end
-
   end
 
-  describe 'original case details' do
-    let(:ico_case) { create :ico_foi_case}
+  describe "original case details" do
+    let(:ico_case) { create :ico_foi_case }
 
-    it 'displays as original case' do
+    it "displays as original case" do
       assign(:case, ico_case)
-      render partial: 'cases/foi/case_details',
-             locals:{ case_details: ico_case.original_case.decorate,
-                      link_type: 'original' }
+      render partial: "cases/foi/case_details",
+             locals: { case_details: ico_case.original_case.decorate,
+                       link_type: "original" }
 
       partial = case_details_section(rendered)
       expect(partial.original_section_heading.text).to eq "Original case details"
     end
 
-    it 'displays a link to original case' do
+    it "displays a link to original case" do
       assign(:case, ico_case)
-      render partial: 'cases/foi/case_details',
-             locals:{ case_details: ico_case.original_case.decorate,
-                      link_type: 'original' }
+      render partial: "cases/foi/case_details",
+             locals: { case_details: ico_case.original_case.decorate,
+                       link_type: "original" }
 
       partial = case_details_section(rendered)
       expect(partial).to have_view_original_case_link
     end
-
   end
 end

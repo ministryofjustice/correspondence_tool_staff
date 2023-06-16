@@ -1,4 +1,4 @@
-require 'cts'
+require "cts"
 
 module CTS::Cases
   class Reindex
@@ -15,7 +15,7 @@ module CTS::Cases
       logger.info "\n#{@count} cases reindexed"
     end
 
-    private 
+  private
 
     def process_indexes
       if @options[:non_indexed]
@@ -27,7 +27,7 @@ module CTS::Cases
           logger.info("The task of updateing the case with id: #{kase.id} (#{kase.number}) has been triggered")
         end
         cases.count
-      else 
+      else
         logger.info "Start to query all the cases."
         Case::Base.update_all_indexes.count
       end

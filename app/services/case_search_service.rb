@@ -9,25 +9,23 @@ class CaseSearchService
               :search_query
 
   def initialize(user:, query_type:, query_params:)
-    begin
-      @query_params = process_params(query_params)
-      @current_user = user
-      @query_type = query_type
-      @error = false
-      @error_message = nil
-      @result_set = Case::Base.none
-      setup_search_query
-    rescue ArgumentError
-      @error = true
-      @error_message = 'Invalid date'
-      @query = SearchQuery.new
-    end
+    @query_params = process_params(query_params)
+    @current_user = user
+    @query_type = query_type
+    @error = false
+    @error_message = nil
+    @result_set = Case::Base.none
+    setup_search_query
+  rescue ArgumentError
+    @error = true
+    @error_message = "Invalid date"
+    @query = SearchQuery.new
   end
 
   def call(full_list_of_cases = nil, order: nil)
     if @error == false && @query.valid?
       @result_set = @query.results(full_list_of_cases, order)
-      @query.update num_results: @result_set.size
+      @query.update! num_results: @result_set.size
     else
       @result_set = Case::Base.none
     end
@@ -38,7 +36,7 @@ class CaseSearchService
     @error
   end
 
-  private
+private
 
   def setup_search_query
     if query_params.blank?
@@ -46,15 +44,15 @@ class CaseSearchService
       @query.user_id = @current_user.id
     else
       @query = SearchQuery.find_or_create(@query_params.merge(
-          user_id: @current_user.id,
-          query_type: @query_type,
-          ))
+                                            user_id: @current_user.id,
+                                            query_type: @query_type,
+                                          ))
       @parent = @query.parent
 
       unless @query.valid?
         @error = true
         if @query.search_text.blank?
-          @error_message = 'Specify what you want to search for'
+          @error_message = "Specify what you want to search for"
         end
       end
     end
@@ -74,5 +72,4 @@ class CaseSearchService
     end
     params
   end
-
 end

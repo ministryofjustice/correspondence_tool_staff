@@ -1,4 +1,4 @@
-require 'rspec/expectations'
+require "rspec/expectations"
 
 RSpec::Matchers.define :transition_from do |from_state|
   def check_target_states(target_states)
@@ -13,7 +13,7 @@ RSpec::Matchers.define :transition_from do |from_state|
 
   def check_to_state_populated
     if @to_state.nil?
-      @error = 'cannot check default policy without to_state'
+      @error = "cannot check default policy without to_state"
       false
     else
       true
@@ -25,7 +25,7 @@ RSpec::Matchers.define :transition_from do |from_state|
       true
     else
       @error = "policy class #{@policy_class} does not have policy method " \
-               + "#{@check_policy}"
+               + @check_policy.to_s
       false
     end
   end
@@ -59,14 +59,14 @@ RSpec::Matchers.define :transition_from do |from_state|
       @check_policy = "#{event_name}_from_#{from_state}_to_#{@to_state}?"
     end
 
-    user_id = spy('user_id')
+    user_id = spy("user_id")
     user    = stubbed_out_user_for_id(user_id)
     object  = object_with_stubbed_out_policy(@check_policy, user)
 
     state_info = target_states.find { |si| si[:state] == @to_state }
     guards     = state_info[:guards]
-    options    = { acting_user_id: user_id}
-    guards.each { |g| g.call(object, spy('last_transition'), options) }
+    options    = { acting_user_id: user_id }
+    guards.each { |g| g.call(object, spy("last_transition"), options) }
   end
 
   chain :to do |to_state|
@@ -84,18 +84,18 @@ RSpec::Matchers.define :transition_from do |from_state|
   end
 
   failure_message do |event_name|
-    @error ||= 'unknown error'
+    @error ||= "unknown error"
     "Expected event #{event_name} to transition from state #{from_state}: #{@error}"
   end
 
   def stubbed_out_user_for_id(user_id)
-    user = spy('user')
+    user = spy("user")
     allow(User).to receive(:find).with(user_id).and_return(user)
     user
   end
 
   def object_with_stubbed_out_policy(policy_name, user)
-    object = spy('object')
+    object = spy("object")
     allow(object).to receive(:policy_class).and_return(@policy_class)
     policy = spy(@policy_class)
     expect(policy).to receive(policy_name)
@@ -104,10 +104,10 @@ RSpec::Matchers.define :transition_from do |from_state|
   end
 
   def state_machine_name
-    RSpec::current_example.example_group.top_level_description
+    RSpec.current_example.example_group.top_level_description
   end
 
   def default_policy_class
-    state_machine_name.sub('StateMachine', 'Policy').constantize
+    state_machine_name.sub("StateMachine", "Policy").constantize
   end
 end

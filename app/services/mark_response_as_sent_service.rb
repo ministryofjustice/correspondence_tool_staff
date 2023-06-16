@@ -1,5 +1,4 @@
 class MarkResponseAsSentService
-
   attr_reader :result
 
   def initialize(kase, user, params)
@@ -16,10 +15,10 @@ class MarkResponseAsSentService
     end
   end
 
-  private
+private
 
   def respond_to_ico
-    @kase.update(@params)
+    @kase.update!(@params)
     if !@kase.valid?
       @result = :error
     elsif @kase.responded_late?
@@ -38,5 +37,4 @@ class MarkResponseAsSentService
       @result = :error
     end
   end
-
 end

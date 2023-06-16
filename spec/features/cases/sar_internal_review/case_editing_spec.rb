@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'SAR Internal Review Case can be edited', js:true do
-
+feature "SAR Internal Review Case can be edited", js: true do
   given(:responder)       { find_or_create(:sar_responder) }
   given(:responding_team) { find_or_create :responding_team, responders: [responder] }
   given(:manager)         { find_or_create :disclosure_bmt_user }
@@ -9,43 +8,43 @@ feature 'SAR Internal Review Case can be edited', js:true do
   given(:approving_team)  { find_or_create :team_dacu_disclosure }
   given(:approver)        { approving_team.users.first }
 
-  given(:outcome_reasons)  { 
-    [ find(:outcome_reason, :excess_redacts), 
-      find(:outcome_reason, :wrong_exemp)]
-  }
+  given(:outcome_reasons) do
+    [find(:outcome_reason, :excess_redacts),
+     find(:outcome_reason, :wrong_exemp)]
+  end
 
   let(:sar_ir) { create(:sar_internal_review) }
 
-  let(:approved_sar_ir) { 
+  let(:approved_sar_ir) do
     create(:approved_sar_internal_review,
-           approver: approver) 
-  }
+           approver:)
+  end
 
-  let(:responding_sar_ir) { 
+  let(:responding_sar_ir) do
     create(:approved_sar_internal_review,
-           responder: responder,
-           responding_team: responding_team) 
-  }
+           responder:,
+           responding_team:)
+  end
 
-  let(:closed_sar_ir) {
-    kase = create(:closed_sar_internal_review, 
-           responder: responder,
-           responding_team: responding_team,
-           outcome_reasons: outcome_reasons,
-           approver: approver,
-           approving_team: approving_team,
-           team_responsible_for_outcome: responding_team,
-           team_responsible_for_outcome_id: responding_team.id,
-           late_team: responding_team)
+  let(:closed_sar_ir) do
+    kase = create(:closed_sar_internal_review,
+                  responder:,
+                  responding_team:,
+                  outcome_reasons:,
+                  approver:,
+                  approving_team:,
+                  team_responsible_for_outcome: responding_team,
+                  team_responsible_for_outcome_id: responding_team.id,
+                  late_team: responding_team)
     appeal_outcome = CaseClosure::AppealOutcome.overturned
     kase.appeal_outcome_id = appeal_outcome.id
     kase.save!
     kase
-  }
-  
-  let(:new_message) { 'This is an updated message' }
-  let(:new_name) { 'Newthaniel Newname' }
-  let(:new_third_party_relationship) { 'Barrister' }
+  end
+
+  let(:new_message) { "This is an updated message" }
+  let(:new_name) { "Newthaniel Newname" }
+  let(:new_third_party_relationship) { "Barrister" }
 
   background do
     responding_team
@@ -53,23 +52,22 @@ feature 'SAR Internal Review Case can be edited', js:true do
   end
 
   before :all do
-    require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+    require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
     CaseClosure::MetadataSeeder.seed!
   end
-
 
   after :all do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  context 'as a manager' do
-    it 'will allow me to edit a SAR IR case details' do
+  context "as a manager" do
+    it "will allow me to edit a SAR IR case details" do
       when_a_manager_logs_in
       and_they_edit_the_case_details(sar_ir)
       then_they_expect_the_new_details_to_be_reflected_on_the_case_show_page
     end
 
-    it 'will allow me to edit the details of a case closure' do
+    it "will allow me to edit the details of a case closure" do
       when_a_manager_logs_in
       and_loads_the_case_show_page(closed_sar_ir)
       and_they_edit_case_closure_details
@@ -77,14 +75,14 @@ feature 'SAR Internal Review Case can be edited', js:true do
     end
   end
 
-  context 'as an approver' do
-    it 'will allow me to edit a SAR IR case details' do
+  context "as an approver" do
+    it "will allow me to edit a SAR IR case details" do
       when_an_approver_logs_in
       and_they_edit_the_case_details(approved_sar_ir)
       then_they_expect_the_new_details_to_be_reflected_on_the_case_show_page
     end
 
-    it 'will allow me to edit the details of a case closure' do
+    it "will allow me to edit the details of a case closure" do
       when_an_approver_logs_in
       and_loads_the_case_show_page(closed_sar_ir)
       and_they_edit_case_closure_details
@@ -92,21 +90,21 @@ feature 'SAR Internal Review Case can be edited', js:true do
     end
   end
 
-  context 'as a responder' do
-    it 'won\'t allow me to edit a SAR IR case details' do
+  context "as a responder" do
+    it "won't allow me to edit a SAR IR case details" do
       when_a_responder_logs_in
       and_loads_the_case_show_page(responding_sar_ir)
       they_cannot_edit_the_case
     end
 
-    it 'won\'t allow me to edit the details of a case closure' do
+    it "won't allow me to edit the details of a case closure" do
       when_a_responder_logs_in
       and_loads_the_case_show_page(closed_sar_ir)
       then_they_should_not_be_able_to_edit_the_case_closure_details
     end
   end
 
-  private
+private
 
   def when_a_manager_logs_in
     login_as manager
@@ -114,7 +112,7 @@ feature 'SAR Internal Review Case can be edited', js:true do
   end
 
   def then_they_should_not_be_able_to_edit_the_case_closure_details
-    expect(page).to_not have_content("Edit closure details")
+    expect(page).not_to have_content("Edit closure details")
   end
 
   def when_an_approver_logs_in
@@ -134,7 +132,7 @@ feature 'SAR Internal Review Case can be edited', js:true do
   def they_cannot_edit_the_case
     page = case_new_sar_ir_case_details_page
     expect(page).to have_content(responding_sar_ir.number.to_s)
-    expect(page).to_not have_content('Edit case details')
+    expect(page).not_to have_content("Edit case details")
   end
 
   def and_they_edit_case_closure_details
@@ -167,7 +165,7 @@ feature 'SAR Internal Review Case can be edited', js:true do
   end
 
   def then_they_expect_the_new_details_to_be_reflected_on_the_case_show_page
-    expect(page).to have_content('Case updated')
+    expect(page).to have_content("Case updated")
     expect(page).to have_content(new_message)
     expect(page).to have_content(new_name)
     expect(page).to have_content(new_third_party_relationship)

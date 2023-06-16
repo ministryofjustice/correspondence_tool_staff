@@ -1,5 +1,4 @@
 class CaseApprovalService
-
   attr_accessor :result
 
   def initialize(user:, kase:, bypass_params:)
@@ -10,11 +9,10 @@ class CaseApprovalService
   end
 
   def call
-    if @bypass_params.present?
-      unless @bypass_params.valid?
-        return
-      end
+    if @bypass_params.present? && !@bypass_params.valid?
+      return
     end
+
     process_approval
   end
 
@@ -22,7 +20,7 @@ class CaseApprovalService
     @bypass_params.error_message
   end
 
-  private
+private
 
   def process_approval
     begin
@@ -44,7 +42,7 @@ class CaseApprovalService
       @result = :error
     end
     notify_next_approver if @result == :ok
-    return result
+    result
   end
 
   def approve_and_progress_as_normal(assignment)
@@ -64,7 +62,7 @@ class CaseApprovalService
 
   def notify_next_approver
     if @kase.current_state
-           .in?(%w( pending_press_office_clearance pending_private_office_clearance ))
+           .in?(%w[pending_press_office_clearance pending_private_office_clearance])
 
       current_info = CurrentTeamAndUserService.new(@kase)
       assignment = @kase.approver_assignments

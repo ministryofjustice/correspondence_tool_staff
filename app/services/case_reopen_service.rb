@@ -9,23 +9,21 @@ class CaseReopenService
   end
 
   def call
-    begin 
+    begin
       @kase.state_machine.reopen!(
-        acting_user: @user, 
-        acting_team: @user.case_team(@kase)
+        acting_user: @user,
+        acting_team: @user.case_team(@kase),
       )
-      if @kase.update(@update_parameters.merge(date_responded: nil))
-        @result = :ok
-      else
-        @result = :error
-      end
-    rescue InvalidEventError => err
-      @kase.errors.add(:external_deadline, err.message)
+      @result = if @kase.update(@update_parameters.merge(date_responded: nil))
+                  :ok
+                else
+                  :error
+                end
+    rescue InvalidEventError => e
+      @kase.errors.add(:external_deadline, e.message)
       @result = :error
     end
 
     @result
   end
-
 end
-

@@ -1,11 +1,10 @@
-require 'rails_helper'
+require "rails_helper"
 
 feature "Signing Out" do
   scenario "Signing out from login page" do
     login_page.load
 
     expect(login_page).to have_no_user_card
-
   end
 
   scenario "Signed in and need to sign out" do
@@ -17,8 +16,6 @@ feature "Signing Out" do
 
     cases_page.user_card.signout.click
 
-    expect(page).to have_content('Signed out successfully.')
-
+    expect(page).to have_content("Signed out successfully.")
   end
-
 end

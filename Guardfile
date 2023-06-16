@@ -5,12 +5,12 @@ rspec_options = {
   cmd: "bundle exec rspec",
   run_all: {
     cmd: "bundle exec parallel_rspec -n #{ncpu} -o '",
-    cmd_additional_args: "'"
+    cmd_additional_args: "'",
   },
   failed_mode: :focus,
 }
 
-guard 'livereload' do
+guard "livereload" do
   watch(%r{app/views/.+\.(erb|haml|slim)})
   watch(%r{app/helpers/.+\.rb})
   watch(%r{public/.+\.(css|js|html)})
@@ -36,7 +36,7 @@ guard :rspec, rspec_options do
   watch(%r{^app/interfaces/api/(.+)\.rb$}) { |m| "spec/api/#{m[1]}_spec.rb" }
 end
 
-guard :rubocop, all_on_start: false, cli: ['--format', 'clang', '--rails'] do
+guard :rubocop, all_on_start: false, cli: ["--format", "clang", "--rails"] do
   watch(%r{.*\.rb$})
 end
 
@@ -44,17 +44,16 @@ guard :brakeman, run_on_start: true, quiet: true do
   watch(%r{^app/.+\.(erb|haml|rhtml|rb|slim|js)$})
   watch(%r{^config/.+\.rb$})
   watch(%r{^lib/.+\.rb$})
-  watch('Gemfile')
+  watch("Gemfile")
 end
 
 guard :jasmine do
-  watch(%r{spec/javascripts/spec\.(js\.coffee|js|coffee)$}) { 'spec/javascripts' }
+  watch(%r{spec/javascripts/spec\.(js\.coffee|js|coffee)$}) { "spec/javascripts" }
   watch(%r{spec/javascripts/modules/.*(?:_s|S)\.(js\.coffee|js|coffee)$})
   watch(%r{spec/javascripts/.*(?:_s|S)\.(js\.coffee|js|coffee)$})
 
   watch(%r{spec/javascripts/fixtures/.+$})
   watch(%r{app/assets/javascripts/(.+?)\.(js\.coffee|js|coffee)(?:\.\w+)*$}) do |m|
-    "spec/javascripts/jasmine/#{ m[1] }_spec.#{ m[2] }"
+    "spec/javascripts/jasmine/#{m[1]}_spec.#{m[2]}"
   end
 end
-

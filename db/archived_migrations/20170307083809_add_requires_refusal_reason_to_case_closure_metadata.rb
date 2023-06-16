@@ -1,5 +1,4 @@
 class AddRequiresRefusalReasonToCaseClosureMetadata < ActiveRecord::Migration[5.0]
-
   def change
     add_column :case_closure_metadata, :requires_refusal_reason, :boolean, default: false
 

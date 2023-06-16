@@ -20,7 +20,7 @@ def disallow_case_policies(case_or_class, *policy_names)
 end
 
 def allow_case_policies_in_view(case_or_class, *policy_names)
-  @policy ||= double 'Pundit::Policy'
+  @policy ||= double "Pundit::Policy"
   policy_names.each do |policy_name|
     allow(@policy).to receive(policy_name).and_return(true)
   end
@@ -28,7 +28,7 @@ def allow_case_policies_in_view(case_or_class, *policy_names)
 end
 
 def disallow_case_policies_in_view(case_or_class, *policy_names)
-  @policy ||= double 'Pundit::Policy'
+  @policy ||= double "Pundit::Policy"
   policy_names.each do |policy_name|
     allow(@policy).to receive(policy_name).and_return(false)
   end

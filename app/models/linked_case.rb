@@ -13,16 +13,16 @@ class LinkedCase < ApplicationRecord
 
   attr_accessor :linked_case_number
 
-  belongs_to :case, class_name: 'Case::Base',
-             inverse_of: :linked_cases
+  belongs_to :case, class_name: "Case::Base",
+                    inverse_of: :linked_cases
 
-  belongs_to :linked_case, class_name: 'Case::Base'
+  belongs_to :linked_case, class_name: "Case::Base"
 
   enum type: {
-         related: 'related',
-         original: 'original',
-         original_appeal: 'original_appeal'
-       }
+    related: "related",
+    original: "original",
+    original_appeal: "original_appeal",
+  }
 
   scope :related_and_appeal, -> { related.or(original_appeal).order(:type, :id) }
 
@@ -38,19 +38,21 @@ class LinkedCase < ApplicationRecord
             if: -> { linked_case_number.nil? }
 
   validates_with ::CaseLinkTypeValidator,
-                 if: -> { self.case_id.present? &&
-                          (self.linked_case_id.present? ||
-                           self.linked_case_number.present?) }
+                 if: lambda {
+                       case_id.present? &&
+                         (linked_case_id.present? ||
+                          linked_case_number.present?)
+                     }
   validate :validate_case_not_linked_back_to_itself,
-           if: -> { self.case_id.present? }
+           if: -> { case_id.present? }
 
-  private
+private
 
   def find_linked_case_by_number
     if linked_case_number.present?
       self.linked_case = Case::Base.find_by(number: linked_case_number)
-      if self.linked_case.nil?
-        self.errors.add(:linked_case_number, :missing)
+      if linked_case.nil?
+        errors.add(:linked_case_number, :missing)
       end
     end
   end
@@ -60,16 +62,14 @@ class LinkedCase < ApplicationRecord
       if self.case.number == linked_case_number
         errors.add(:linked_case_number, :references_self)
       end
-    else
-      if self.case_id == linked_case_id
-        errors.add(:linked_case, :references_self)
-      end
+    elsif case_id == linked_case_id
+      errors.add(:linked_case, :references_self)
     end
   end
 
   def create_reverse_link
     self.class.skip_callback(:create, :after, :create_reverse_link)
-    self.class.create!(case_id: linked_case_id, linked_case_id: self.case_id)
+    self.class.create!(case_id: linked_case_id, linked_case_id: case_id)
   rescue ActiveRecord::RecordNotUnique
     nil
   ensure
@@ -79,8 +79,8 @@ class LinkedCase < ApplicationRecord
   def destroy_reverse_link
     self.class.skip_callback(:destroy, :after, :destroy_reverse_link)
     reverse_link = self.class.find_by(case_id: linked_case_id,
-                                      linked_case_id: self.case_id)
-    reverse_link&.destroy
+                                      linked_case_id: case_id)
+    reverse_link&.destroy!
   ensure
     self.class.set_callback(:destroy, :after, :destroy_reverse_link)
   end

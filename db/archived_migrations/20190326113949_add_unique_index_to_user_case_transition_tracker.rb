@@ -5,7 +5,7 @@ class AddUniqueIndexToUserCaseTransitionTracker < ActiveRecord::Migration[5.0]
     change_table :cases_users_transitions_trackers do |t|
       # add timestamps late to the party - so they have to be nullable
       t.timestamps null: true
-      t.index [:case_id, :user_id], unique: true
+      t.index %i[case_id user_id], unique: true
     end
   end
 end

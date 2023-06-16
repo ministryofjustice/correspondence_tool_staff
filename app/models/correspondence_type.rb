@@ -24,29 +24,29 @@ class CorrespondenceType < ApplicationRecord
                  deadline_calculator_class: :string,
                  default_press_officer: :string,
                  default_private_officer: :string,
-                 report_category_name: [:string, default: ''],
+                 report_category_name: [:string, { default: "" }],
                  extension_time_limit: :integer,
-                 extension_time_default:  :integer,
-                 show_on_menu: [:boolean, default: true],
-                 display_order: [:integer, default: nil]
+                 extension_time_default: :integer,
+                 show_on_menu: [:boolean, { default: true }],
+                 display_order: [:integer, { default: nil }]
 
   enum deadline_calculator_class: {
-         'BusinessDays' => 'BusinessDays',
-         'CalendarDays' => 'CalendarDays',
-         'CalendarMonths' => 'CalendarMonths',
-       }
+    "BusinessDays" => "BusinessDays",
+    "CalendarDays" => "CalendarDays",
+    "CalendarMonths" => "CalendarMonths",
+  }
 
-  validates_presence_of :name,
-                        :abbreviation,
-                        :escalation_time_limit,
-                        :internal_time_limit,
-                        :external_time_limit,
-                        :deadline_calculator_class,
-                        on: :create
+  validates :name,
+            :abbreviation,
+            :escalation_time_limit,
+            :internal_time_limit,
+            :external_time_limit,
+            :deadline_calculator_class,
+            presence: { on: :create }
 
   has_many :correspondence_type_roles,
            -> { distinct },
-           class_name: 'TeamCorrespondenceTypeRole'
+           class_name: "TeamCorrespondenceTypeRole"
   has_many :teams,
            through: :correspondence_type_roles
 
@@ -96,44 +96,43 @@ class CorrespondenceType < ApplicationRecord
 
   def self.by_report_category
     # CorrespondenceType.properties_where_not(report_category_name: '').properties_order(:report_category_name)
-    CorrespondenceType.properties_where_not(report_category_name: '').order(Arel.sql("(correspondence_types.properties -> 'report_category_name') asc"))
+    CorrespondenceType.properties_where_not(report_category_name: "").order(Arel.sql("(correspondence_types.properties -> 'report_category_name') asc"))
   end
 
-  # rubocop:disable Rails/DynamicFindBy
   def self.foi
-    find_by_abbreviation! 'FOI'
+    find_by_abbreviation! "FOI"
   end
 
   def self.gq
-    find_by_abbreviation! 'GQ'
+    find_by_abbreviation! "GQ"
   end
 
   def self.sar
-    find_by_abbreviation! 'SAR'
+    find_by_abbreviation! "SAR"
   end
 
   def self.offender_sar
-    find_by_abbreviation! 'OFFENDER_SAR'
+    find_by_abbreviation! "OFFENDER_SAR"
   end
 
   def self.offender_sar_complaint
-    find_by_abbreviation! 'OFFENDER_SAR_COMPLAINT'
+    find_by_abbreviation! "OFFENDER_SAR_COMPLAINT"
   end
 
   def self.ico
-    find_by_abbreviation! 'ICO'
+    find_by_abbreviation! "ICO"
   end
 
   def self.overturned_sar
-    find_by_abbreviation! 'OVERTURNED_SAR'
+    find_by_abbreviation! "OVERTURNED_SAR"
   end
 
   def self.overturned_foi
-    find_by_abbreviation! 'OVERTURNED_FOI'
+    find_by_abbreviation! "OVERTURNED_FOI"
   end
 
   def self.sar_internal_review
-    find_by_abbreviation! 'SAR_INTERNAL_REVIEW'
+    find_by_abbreviation! "SAR_INTERNAL_REVIEW"
   end
   # rubocop:enable Rails/DynamicFindBy
 
@@ -146,6 +145,6 @@ class CorrespondenceType < ApplicationRecord
   end
 
   def self.custom_reporting_types
-    self.by_report_category
+    by_report_category
   end
 end

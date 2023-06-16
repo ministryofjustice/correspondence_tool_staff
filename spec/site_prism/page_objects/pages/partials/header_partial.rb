@@ -18,13 +18,9 @@ module PageObjects
   module Pages
     module Partials
       class HeaderPartial < SitePrism::Page
-
         section :page_heading,
-                PageObjects::Sections::PageHeadingSection, '.page-heading'
-
+                PageObjects::Sections::PageHeadingSection, ".page-heading"
       end
     end
   end
 end
-
-

@@ -21,7 +21,7 @@ module SARInternalReviewCasesParams
       :reply_method,
       :original_case_number,
       :original_case_id,
-      uploaded_request_files: [],
+      uploaded_request_files: []
     )
   end
 
@@ -43,7 +43,7 @@ module SARInternalReviewCasesParams
       :third_party,
       :third_party_relationship,
       :reply_method,
-      uploaded_request_files: [],
+      uploaded_request_files: []
     )
   end
 
@@ -57,7 +57,7 @@ module SARInternalReviewCasesParams
       :late_team_id,
       :team_responsible_for_outcome_id,
       :other_option_details,
-      outcome_reason_ids: []
+      outcome_reason_ids: [],
     )
   end
 
@@ -69,7 +69,7 @@ module SARInternalReviewCasesParams
     )
   end
 
-  private
+private
 
   def remove_reasons_and_responsible_team_if_upheld
     if params[:sar_internal_review][:sar_ir_outcome] == "Upheld"
@@ -80,7 +80,7 @@ module SARInternalReviewCasesParams
 
   def process_third_party_details(params)
     third_party = params[:sar_internal_review][:third_party]
-    request_not_on_others_behalf = third_party == "false" 
+    request_not_on_others_behalf = third_party == "false"
 
     if request_not_on_others_behalf
       params[:sar_internal_review][:name] = nil

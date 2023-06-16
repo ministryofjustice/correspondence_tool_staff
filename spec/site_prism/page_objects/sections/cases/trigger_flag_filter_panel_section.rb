@@ -6,10 +6,10 @@ module PageObjects
         # elements. Check for visibility on the panel section, not the
         # checkboxes
         element :non_trigger_checkbox,
-                '#search_query_filter_sensitivity_non-trigger',
+                "#search_query_filter_sensitivity_non-trigger",
                 visible: false
         element :trigger_checkbox,
-                '#search_query_filter_sensitivity_trigger',
+                "#search_query_filter_sensitivity_trigger",
                 visible: false
       end
     end

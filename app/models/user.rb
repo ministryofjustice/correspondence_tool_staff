@@ -28,10 +28,10 @@ class User < ApplicationRecord
   # :confirmable, :lockable and :omniauthable
 
   devise :database_authenticatable, :timeoutable,
-    :trackable, :validatable, :recoverable, :lockable,
-    :omniauthable, omniauth_providers: [:azure_activedirectory_v2]
+         :trackable, :validatable, :recoverable, :lockable,
+         :omniauthable, omniauth_providers: [:azure_activedirectory_v2]
 
-  has_paper_trail only: [:email, :encrypted_password, :full_name, :deleted_at]
+  has_paper_trail only: %i[email encrypted_password full_name deleted_at]
 
   # Most uses of User are in authentication - so preload team_roles and teams
   # so that we don't issue lots of DB queries when constantly asking what a user can do.
@@ -51,20 +51,20 @@ class User < ApplicationRecord
 
   has_many :assignments
   has_many :cases, through: :assignments
-  has_many :team_roles, class_name: 'TeamsUsersRole'
+  has_many :team_roles, class_name: "TeamsUsersRole"
   has_many :teams, through: :team_roles
   has_many :managing_team_roles,
            -> { active_manager_roles },
-           class_name: 'TeamsUsersRole'
+           class_name: "TeamsUsersRole"
   has_many :responding_team_roles,
            -> { responder_roles },
-           class_name: 'TeamsUsersRole'
+           class_name: "TeamsUsersRole"
   has_one :approving_team_roles,
-           -> { active_approver_roles },
-           class_name: 'TeamsUsersRole'
+          -> { active_approver_roles },
+          class_name: "TeamsUsersRole"
   has_one :team_admin_team_roles,
-           -> { team_admin_roles },
-           class_name: 'TeamsUsersRole'
+          -> { team_admin_roles },
+          class_name: "TeamsUsersRole"
   has_many :team_admin_teams, through: :team_admin_team_roles, source: :team
   has_many :managing_teams, through: :managing_team_roles, source: :team
   has_many :responding_teams, through: :responding_team_roles, source: :team
@@ -74,21 +74,21 @@ class User < ApplicationRecord
   validates :full_name, presence: true
   validate :password_blacklist
 
-  scope :managers, -> {
-    joins(:team_roles).where(teams_users_roles: { role: 'manager' })
+  scope :managers, lambda {
+    joins(:team_roles).where(teams_users_roles: { role: "manager" })
   }
-  scope :responders, -> {
-    joins(:team_roles).where(teams_users_roles: { role: 'responder' })
+  scope :responders, lambda {
+    joins(:team_roles).where(teams_users_roles: { role: "responder" })
   }
-  scope :approvers, -> {
-    joins(:team_roles).where(teams_users_roles: { role: 'approver' })
+  scope :approvers, lambda {
+    joins(:team_roles).where(teams_users_roles: { role: "approver" })
   }
   scope :active_users, -> { where(deleted_at: nil) }
 
   ROLE_WEIGHTINGS = {
-    'manager'   => 100,
-    'approver'  => 200,
-    'responder' => 300
+    "manager" => 100,
+    "approver" => 200,
+    "responder" => 300,
   }.freeze
 
   def admin?
@@ -140,11 +140,11 @@ class User < ApplicationRecord
     # try to execute the action with our lower authority (which might fail)
     # When designing the state flow,  the permission for each state and actions should follow the
     # hierarchy of roles which is manager - approver - responder
-    if teams_for_case(kase).any?
-      case_teams = teams_for_case(kase)
-    else
-      case_teams = teams
-    end
+    case_teams = if teams_for_case(kase).any?
+                   teams_for_case(kase)
+                 else
+                   teams
+                 end
     self.class.sort_teams_by_roles(case_teams).first
   end
 
@@ -154,7 +154,8 @@ class User < ApplicationRecord
     # the team with highest authority will be returned
     available_teams = kase.state_machine.teams_that_can_trigger_event_on_case(
       event_name: event,
-      user: self)
+      user: self,
+    )
     self.class.sort_teams_by_roles(available_teams).first
   end
 
@@ -166,9 +167,9 @@ class User < ApplicationRecord
   end
 
   def roles_for_case(kase)
-    user_assignments = kase.assignments.where(user_id: self.id).map { |a| a.team.role }
-    if self.teams.include?(kase.managing_team)
-      user_assignments << 'manager'
+    user_assignments = kase.assignments.where(user_id: id).map { |a| a.team.role }
+    if teams.include?(kase.managing_team)
+      user_assignments << "manager"
     end
     user_assignments
   end
@@ -178,11 +179,11 @@ class User < ApplicationRecord
   end
 
   def decorated_roles_for_team(team)
-    team_roles.where(team_id: team.id).map(&:role).uniq.join(', ')
+    team_roles.where(team_id: team.id).map(&:role).uniq.join(", ")
   end
 
   def soft_delete
-   update_attribute(:deleted_at, Time.current)
+    update_attribute(:deleted_at, Time.current)
   end
 
   def active_for_authentication?
@@ -216,28 +217,27 @@ class User < ApplicationRecord
   end
 
   def other_teams_names(current_team)
-    self.teams.delete(current_team)
-    self.teams.map(&:name).to_sentence
+    teams.delete(current_team)
+    teams.map(&:name).to_sentence
   end
 
-  private
+private
 
   def all_possible_user_correspondence_types
-    self.teams.collect(&:correspondence_types).flatten.uniq
+    teams.collect(&:correspondence_types).flatten.uniq
   end
 
   def bad_passwords
-    %w{
-        1234567890
-        qwertyuiop
-        1q2w3e4r5t
-        q1w2e3r4t5
-        password12
-        password123
-        aaaaaaaaaa
-        zzzzzzzzzz
-        1111111111
-    }
+    %w[
+      1234567890
+      qwertyuiop
+      1q2w3e4r5t
+      q1w2e3r4t5
+      password12
+      password123
+      aaaaaaaaaa
+      zzzzzzzzzz
+      1111111111
+    ]
   end
-
 end

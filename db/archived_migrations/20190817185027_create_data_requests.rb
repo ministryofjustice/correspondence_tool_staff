@@ -5,7 +5,7 @@ class CreateDataRequests < ActiveRecord::Migration[5.0]
       t.references :user, null: false # Creator for this request
 
       t.string :location, null: false, length: 500
-      t.text :data,  null: false
+      t.text :data, null: false
       t.date :date_requested, null: false
       t.date :cached_date_received, null: true
       t.integer :cached_num_pages, default: 0, null: false
@@ -22,8 +22,8 @@ class CreateDataRequests < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    add_index :data_requests, [:case_id, :user_id]
-    add_index :data_request_logs, [:data_request_id, :user_id]
+    add_index :data_requests, %i[case_id user_id]
+    add_index :data_request_logs, %i[data_request_id user_id]
   end
 
   def down

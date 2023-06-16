@@ -1,5 +1,4 @@
 class ActionNotificationsMailer < GovukNotifyRails::Mailer
-
   def new_assignment(assignment, recipient)
     SentryContextProvider.set_context
     @assignment = assignment
@@ -8,14 +7,14 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
     set_template(Settings.new_assignment_notify_template)
     set_personalisation(
-        email_subject:      format_subject(kase),
-        team_name:          @assignment.team.name,
-        case_current_state: I18n.t("state.#{kase.current_state}").downcase,
-        case_number:        kase.number,
-        case_abbr:          kase.decorate.pretty_type,
-        case_received_date: kase.received_date.strftime(Settings.default_date_format),
-        case_subject:       kase.subject,
-        case_link:          edit_case_assignment_url(@assignment.case_id, @assignment.id)
+      email_subject: format_subject(kase),
+      team_name: @assignment.team.name,
+      case_current_state: I18n.t("state.#{kase.current_state}").downcase,
+      case_number: kase.number,
+      case_abbr: kase.decorate.pretty_type,
+      case_received_date: kase.received_date.strftime(Settings.default_date_format),
+      case_subject: kase.subject,
+      case_link: edit_case_assignment_url(@assignment.case_id, @assignment.id),
     )
 
     mail(to: recipient)
@@ -30,14 +29,14 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     set_template(Settings.ready_for_press_or_private_review_notify_template)
 
     set_personalisation(
-        email_subject:          format_subject(kase),
-        approver_full_name:     recipient.full_name,
-        case_number:            kase.number,
-        case_type:              kase.decorate.pretty_type,
-        case_subject:           kase.subject,
-        case_received_date:     kase.received_date.strftime(Settings.default_date_format),
-        case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
-        case_link:              case_url(kase.id)
+      email_subject: format_subject(kase),
+      approver_full_name: recipient.full_name,
+      case_number: kase.number,
+      case_type: kase.decorate.pretty_type,
+      case_subject: kase.subject,
+      case_received_date: kase.received_date.strftime(Settings.default_date_format),
+      case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
+      case_link: case_url(kase.id),
     )
 
     mail(to: recipient.email)
@@ -52,16 +51,16 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     find_template(type)
 
     set_personalisation(
-        email_subject:          format_subject_type(kase, type),
-        responder_full_name:    recipient.full_name,
-        case_current_state:     I18n.t("state.#{kase.current_state}").downcase,
-        case_number:            kase.number,
-        case_subject:           kase.subject,
-        case_abbr:              kase.decorate.pretty_type,
-        case_received_date:     kase.received_date.strftime(Settings.default_date_format),
-        case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
-        case_link:              case_url(kase.id),
-        case_draft_deadline:    kase.internal_deadline.strftime(Settings.default_date_format)
+      email_subject: format_subject_type(kase, type),
+      responder_full_name: recipient.full_name,
+      case_current_state: I18n.t("state.#{kase.current_state}").downcase,
+      case_number: kase.number,
+      case_subject: kase.subject,
+      case_abbr: kase.decorate.pretty_type,
+      case_received_date: kase.received_date.strftime(Settings.default_date_format),
+      case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
+      case_link: case_url(kase.id),
+      case_draft_deadline: kase.internal_deadline.strftime(Settings.default_date_format),
     )
 
     mail(to: recipient.email)
@@ -73,14 +72,14 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     find_template(notification_type)
 
     set_personalisation(
-      email_subject:          format_subject_type(kase, notification_type),
-      name:                   team.name,
-      case_number:            kase.number,
-      case_abbr:              kase.decorate.pretty_type,
-      case_subject:           kase.subject,
-      case_received_date:     kase.received_date.strftime(Settings.default_date_format),
+      email_subject: format_subject_type(kase, notification_type),
+      name: team.name,
+      case_number: kase.number,
+      case_abbr: kase.decorate.pretty_type,
+      case_subject: kase.subject,
+      case_received_date: kase.received_date.strftime(Settings.default_date_format),
       case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
-      case_link:              case_url(kase.id),
+      case_link: case_url(kase.id),
     )
 
     mail(to: team.email)
@@ -92,14 +91,14 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
     set_template(Settings.assigned_to_another_user_template)
 
     set_personalisation(
-        email_subject:          format_subject_type(kase, "Assigned to you"),
-        user_name:              recipient.full_name,
-        case_number:            kase.number,
-        case_subject:           kase.subject,
-        case_abbr:              kase.decorate.pretty_type,
-        case_received_date:     kase.received_date.strftime(Settings.default_date_format),
-        case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
-        case_link:              case_url(kase.id),
+      email_subject: format_subject_type(kase, "Assigned to you"),
+      user_name: recipient.full_name,
+      case_number: kase.number,
+      case_subject: kase.subject,
+      case_abbr: kase.decorate.pretty_type,
+      case_received_date: kase.received_date.strftime(Settings.default_date_format),
+      case_external_deadline: kase.external_deadline.strftime(Settings.default_date_format),
+      case_link: case_url(kase.id),
     )
 
     mail(to: recipient.email)
@@ -108,25 +107,25 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
   def commissioning_email(commissioning_document, recipient)
     SentryContextProvider.set_context
 
-    find_template('Commissioning')
+    find_template("Commissioning")
 
-    deadline_text = ''
+    deadline_text = ""
     if commissioning_document.deadline.present?
-      deadline_text = I18n.t('mailer.commissioning_email.deadline', date: commissioning_document.deadline)
+      deadline_text = I18n.t("mailer.commissioning_email.deadline", date: commissioning_document.deadline)
     end
 
     file = StringIO.new(commissioning_document.document)
 
     set_personalisation(
       email_address: recipient,
-      deadline_text: deadline_text,
+      deadline_text:,
       link_to_file: Notifications.prepare_upload(file, confirm_email_before_download: true),
     )
 
     mail(to: recipient)
   end
 
-  private
+private
 
   def format_subject(kase)
     translation_key = "state.#{kase.current_state}"
@@ -139,17 +138,17 @@ class ActionNotificationsMailer < GovukNotifyRails::Mailer
 
   def find_template(type)
     case type
-    when 'Case closed'
+    when "Case closed"
       set_template(Settings.case_closed_notify_template)
-    when 'Redraft requested'
+    when "Redraft requested"
       set_template(Settings.redraft_requested_notify_template)
-    when 'Responses have been sent back'
+    when "Responses have been sent back"
       set_template(Settings.responses_sent_back_notify_template)
-    when 'Ready to send'
+    when "Ready to send"
       set_template(Settings.case_ready_to_send_notify_template)
-    when 'Message received'
+    when "Message received"
       set_template(Settings.message_received_notify_template)
-    when 'Commissioning'
+    when "Commissioning"
       set_template(Settings.commissioning_notify_template)
     end
   end

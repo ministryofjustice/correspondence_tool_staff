@@ -1,62 +1,59 @@
-if !!ENV['COVERAGE']
-  require 'simplecov'
-  SimpleCov.start 'rails' do
+unless ENV["COVERAGE"].nil?
+  require "simplecov"
+  SimpleCov.start "rails" do
     add_group "Services", "app/services"
     add_group "Policies", "app/policies"
     add_group "Decorators", "app/decorators"
     add_group "Validators", "app/validators"
     # application doesn't use action cable
-    add_filter '/app/channels/'
+    add_filter "/app/channels/"
     # all emails (including devise ones) get sent via gov.uk notify service
-    add_filter '/app/mailers/application_mailer.rb'
+    add_filter "/app/mailers/application_mailer.rb"
   end
 end
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
-require 'spec_helper'
-require File.expand_path("../../config/environment", __FILE__)
-require 'rspec/rails'
-require 'capybara/rails'
+ENV["RAILS_ENV"] ||= "test"
+require "spec_helper"
+require File.expand_path("../config/environment", __dir__)
+require "rspec/rails"
+require "capybara/rails"
 # Add additional requires below this line. Rails is not loaded until this point!
-require 'capybara/rspec'
+require "capybara/rspec"
 
 # Webdrivers - Moved from deprecated chrome-helpers gem. Behaviour changed to require you to
 # explicitly issue a scroll command to bring off-screen elements below the fold up into view
 # before you click on them in feature specs
 # See https://stackoverflow.com/questions/55406656
 # and https://www.rubydoc.info/gems/capybara/Capybara/Node/Element#scroll_to-instance_method
-require 'webdrivers'
-require 'rails-controller-testing'
-require 'paper_trail/frameworks/rspec'
+require "webdrivers"
+require "rails-controller-testing"
+require "paper_trail/frameworks/rspec"
 
 Webdrivers.cache_time = 86_400
 Capybara.default_max_wait_time = 4
 
 options = Selenium::WebDriver::Chrome::Options.new
-options.add_argument('--headless')
-options.add_argument('--disable-gpu')
-options.add_argument('--no-sandbox')
-options.add_argument('--start-maximized')
-options.add_argument('--window-size=1980,2080')
-options.add_argument('--enable-features=NetworkService,NetworkServiceInProcess')
+options.add_argument("--headless")
+options.add_argument("--disable-gpu")
+options.add_argument("--no-sandbox")
+options.add_argument("--start-maximized")
+options.add_argument("--window-size=1980,2080")
+options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
 
 # Add a configuration to connect to Chrome remotely through Selenium Grid
 Capybara.register_driver :remote_selenium do |app|
-
   Capybara.app_host = "http://#{IPSocket.getaddress(Socket.gethostname)}:3000"
 
   # Set the host and port
-  Capybara.server_host = '0.0.0.0'
-  Capybara.server_port = '3000'
+  Capybara.server_host = "0.0.0.0"
+  Capybara.server_port = "3000"
 
   # and point capybara at our chromium docker container
   Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://chrome:4444/wd/hub", capabilities: options)
-
 end
 
-
-Capybara.asset_host = 'http://localhost:3000'
+Capybara.asset_host = "http://localhost:3000"
 
 Capybara.register_driver :chrome do |app|
   Capybara::Selenium::Driver.new(app, browser: :chrome)
@@ -66,22 +63,20 @@ Capybara.register_driver :headless_chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
 
   unless ENV["CHROME_DEBUG"]
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--start-maximized')
-    options.add_argument('--window-size=1980,2080')
-    options.add_argument('--enable-features=NetworkService,NetworkServiceInProcess')
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--start-maximized")
+    options.add_argument("--window-size=1980,2080")
+    options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
   end
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, capabilities: options)
-
 end
 
 Capybara.server = :puma, { Silent: true }
 
-Capybara.javascript_driver = ENV['CHROME_IS_REMOTE'] ? :remote_selenium : :headless_chrome
-
+Capybara.javascript_driver = ENV["CHROME_IS_REMOTE"] ? :remote_selenium : :headless_chrome
 
 # Set these env variables to push screenshots for failed tests to S3.
 # if ENV['S3_TEST_SCREENSHOT_ACCESS_KEY_ID'].present? &&
@@ -102,7 +97,7 @@ Capybara.javascript_driver = ENV['CHROME_IS_REMOTE'] ? :remote_selenium : :headl
 Timecop.safe_mode = true
 
 # include missing module because of load order issues on CI
-require Rails.root.join('spec/support/features/interactions/overturned_ico.rb')
+require Rails.root.join("spec/support/features/interactions/overturned_ico.rb")
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -112,12 +107,12 @@ require Rails.root.join('spec/support/features/interactions/overturned_ico.rb')
 # end with _spec.rb. You can configure this pattern with the --pattern
 # option on the command line or in ~/.rspec, .rspec or `.rspec-local`.
 Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
-$LOAD_PATH.unshift(File.join(File.expand_path('..', __FILE__), 'site_prism'))
-require 'site_prism/page_objects/pages/application.rb'
+$LOAD_PATH.unshift(File.join(File.expand_path(__dir__), "site_prism"))
+require "site_prism/page_objects/pages/application"
 
 # include linked_cases_section specifically to avoid machine-specific load order issues
-require "site_prism/page_objects/sections/cases/linked_cases_section.rb"
-require "site_prism/page_objects/sections/cases/case_attachment_section.rb"
+require "site_prism/page_objects/sections/cases/linked_cases_section"
+require "site_prism/page_objects/sections/cases/case_attachment_section"
 
 Dir[Rails.root.join("spec/site_prism/support/**/*.rb")].each { |f| require f }
 Dir[Rails.root.join("spec/site_prism/page_objects/sections/shared/**/*.rb")].each { |f| require f }
@@ -135,16 +130,15 @@ RSpec.configure do |config|
   config.include PageObjects::Pages::Application
   config.include Rails.application.routes.url_helpers
 
-
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
   config.use_transactional_fixtures = true
 
-  [:controller, :view, :request].each do |type|
-    config.include Rails::Controller::Testing::TestProcess, :type => type
-    config.include Rails::Controller::Testing::TemplateAssertions, :type => type
-    config.include Rails::Controller::Testing::Integration, :type => type
+  %i[controller view request].each do |type|
+    config.include(Rails::Controller::Testing::TestProcess, type:)
+    config.include(Rails::Controller::Testing::TemplateAssertions, type:)
+    config.include Rails::Controller::Testing::Integration, type:
   end
 
   # RSpec Rails can automatically mix in different behaviours to your tests
@@ -170,19 +164,19 @@ RSpec.configure do |config|
   config.include ViewSpecHelpers, type: :view
   config.after(:example, type: :view) do |example|
     if example.exception
-      now = DateTime.now
-      date_string = now.strftime('%F')
-      time_string = now.strftime('%H%M%S.%3N')
-      todays_dir = Rails.root.join('tmp', 'rendered-content', date_string)
+      now = Time.zone.now
+      date_string = now.strftime("%F")
+      time_string = now.strftime("%H%M%S.%3N")
+      todays_dir = Rails.root.join("tmp", "rendered-content", date_string)
       FileUtils.mkdir_p(todays_dir)
 
       template = example.example_group.top_level_description
       renderer = File.extname(template)
-      format = File.extname(File.basename(template, renderer)).sub(/^\./, '')
+      format = File.extname(File.basename(template, renderer)).sub(/^\./, "")
       filename = "#{template.gsub(%r{[/.]}, '_')}-#{time_string}.#{format}"
-      renderer.sub!(/^\./, '')
+      renderer.sub!(/^\./, "")
       fullpath = todays_dir.join(filename)
-      File.open(fullpath, 'w') { |f| f.write response }
+      File.open(fullpath, "w") { |f| f.write response }
       puts "\033[0;33mrendered #{renderer} content: #{fullpath}\033[0m"
     end
   end
@@ -246,4 +240,3 @@ Shoulda::Matchers.configure do |config|
     with.library :rails
   end
 end
-

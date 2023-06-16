@@ -1,139 +1,162 @@
 require "rails_helper"
 
 describe CaseFilter::CaseStatusFilter do
-
-  let(:user)               { find_or_create :disclosure_specialist_bmt }
+  let(:user) { find_or_create :disclosure_specialist_bmt }
+  let(:case_status_filter) { described_class.new search_query, user, Case::Base.all }
 
   before :all do
     DbHousekeeping.clean
-    @setup = StandardSetup.new(only_cases: [
-                                 :std_draft_foi,
-                                 :std_closed_foi,
-                               ])
+    @setup = StandardSetup.new(only_cases: %i[
+      std_draft_foi
+      std_closed_foi
+    ])
   end
 
   after(:all) { DbHousekeeping.clean }
 
-  let(:case_status_filter)  { described_class.new search_query, user, Case::Base.all }
-
-  describe '#applied?' do
+  describe "#applied?" do
     subject { case_status_filter }
 
-    context 'filter_status not present' do
-      let(:search_query)      { create :search_query }
-      it { should_not be_applied }
+    context "filter_status not present" do
+      let(:search_query) { create :search_query }
+
+      it { is_expected.not_to be_applied }
     end
 
-    context 'filter_status present' do
-      let(:search_query)      { create :search_query,
-                                       filter_status: ['open'] }
-      it { should be_applied }
+    context "filter_status present" do
+      let(:search_query) do
+        create :search_query,
+               filter_status: %w[open]
+      end
+
+      it { is_expected.to be_applied }
     end
   end
 
-  describe '#call' do
-    context 'filter not enabled' do
-      let(:search_query)      { create :search_query,
-                                       filter_status: [] }
-      it 'returns all cases' do
+  describe "#call" do
+    context "filter not enabled" do
+      let(:search_query) do
+        create :search_query,
+               filter_status: []
+      end
+
+      it "returns all cases" do
         results = case_status_filter.call
         expect(results).to match_array [
-                             @setup.std_draft_foi,
-                             @setup.std_closed_foi,
-                           ]
+          @setup.std_draft_foi,
+          @setup.std_closed_foi,
+        ]
       end
     end
 
-    context 'filtering for open cases' do
-      let(:search_query)      { create :search_query,
-                                       filter_status: ['open'] }
+    context "filtering for open cases" do
+      let(:search_query) do
+        create :search_query,
+               filter_status: %w[open]
+      end
 
-      it 'returns the correct list of cases' do
+      it "returns the correct list of cases" do
         results = case_status_filter.call
         expect(results).to match_array [
-                             @setup.std_draft_foi,
-                           ]
+          @setup.std_draft_foi,
+        ]
       end
     end
 
-    context 'filtering for closed cases' do
-      let(:search_query)      { create :search_query,
-                                       filter_status: ['closed'] }
+    context "filtering for closed cases" do
+      let(:search_query) do
+        create :search_query,
+               filter_status: %w[closed]
+      end
 
-      it 'returns the correct list of cases' do
+      it "returns the correct list of cases" do
         results = case_status_filter.call
         expect(results).to match_array [
-                             @setup.std_closed_foi,
-                           ]
+          @setup.std_closed_foi,
+        ]
       end
     end
 
-    context 'filtering for both open and closed cases' do
-      let(:search_query)      { create :search_query,
-                                       filter_status: ['open', 'closed'] }
+    context "filtering for both open and closed cases" do
+      let(:search_query) do
+        create :search_query,
+               filter_status: %w[open closed]
+      end
 
-      it 'returns the correct list of cases' do
+      it "returns the correct list of cases" do
         results = case_status_filter.call
         expect(results).to match_array [
-                             @setup.std_draft_foi,
-                             @setup.std_closed_foi,
-                           ]
+          @setup.std_draft_foi,
+          @setup.std_closed_foi,
+        ]
       end
     end
   end
 
-  describe '#crumbs' do
-    context 'filter not enabled' do
-      let(:search_query)      { create :search_query,
-                                       filter_status: [] }
+  describe "#crumbs" do
+    context "filter not enabled" do
+      let(:search_query) do
+        create :search_query,
+               filter_status: []
+      end
 
-      it 'returns no crumbs' do
+      it "returns no crumbs" do
         expect(case_status_filter.crumbs).to be_empty
       end
     end
 
-    context 'filtering for open cases' do
-      let(:search_query)      { create :search_query,
-                                       filter_status: ['open'] }
-      it 'returns a single crumb' do
+    context "filtering for open cases" do
+      let(:search_query) do
+        create :search_query,
+               filter_status: %w[open]
+      end
+
+      it "returns a single crumb" do
         expect(case_status_filter.crumbs).to have(1).items
       end
 
       it 'uses "Open" text for the crumb text' do
-        expect(case_status_filter.crumbs[0].first).to eq 'Open'
+        expect(case_status_filter.crumbs[0].first).to eq "Open"
       end
 
-      describe 'params that will be submitted when clicking on the crumb' do
+      describe "params that will be submitted when clicking on the crumb" do
         subject { case_status_filter.crumbs[0].second }
 
-        it { should eq 'filter_status' => [''],
-                       'parent_id'     => search_query.id }
+        it {
+          expect(subject).to eq "filter_status" => [""],
+                                "parent_id" => search_query.id
+        }
       end
     end
 
-    context 'filtering for closed cases' do
-      let(:search_query)      { create :search_query,
-                                       filter_status: ['closed'] }
+    context "filtering for closed cases" do
+      let(:search_query) do
+        create :search_query,
+               filter_status: %w[closed]
+      end
+
       it 'uses "Closed" text for the crumb text' do
-        expect(case_status_filter.crumbs[0].first).to eq 'Closed'
+        expect(case_status_filter.crumbs[0].first).to eq "Closed"
       end
     end
 
-    context 'filtering for both open and closed cases' do
-      let(:search_query)      { create :search_query,
-                                       filter_status: ['open', 'closed'] }
+    context "filtering for both open and closed cases" do
+      let(:search_query) do
+        create :search_query,
+               filter_status: %w[open closed]
+      end
 
       it 'uses "Open + 1 more" text for the crumb text' do
-        expect(case_status_filter.crumbs[0].first).to eq 'Open + 1 more'
+        expect(case_status_filter.crumbs[0].first).to eq "Open + 1 more"
       end
     end
   end
 
-  describe '.process_params!' do
-    it 'processes filter_status, sorting and removing blanks' do
-      params = { filter_status: ['', 'open', 'closed'] }
+  describe ".process_params!" do
+    it "processes filter_status, sorting and removing blanks" do
+      params = { filter_status: ["", "open", "closed"] }
       described_class.process_params!(params)
-      expect(params).to eq filter_status: ['closed', 'open']
+      expect(params).to eq filter_status: %w[closed open]
     end
   end
 end

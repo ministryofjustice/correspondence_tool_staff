@@ -13,7 +13,7 @@ module FOICasesParams
       :received_date_dd, :received_date_mm, :received_date_yyyy,
       :delivery_method,
       :flag_for_disclosure_specialists,
-      uploaded_request_files: [],
+      uploaded_request_files: []
     )
   end
 
@@ -30,7 +30,7 @@ module FOICasesParams
       :date_draft_compliant_dd, :date_draft_compliant_mm, :date_draft_compliant_yyyy,
       :delivery_method,
       :flag_for_disclosure_specialists,
-      uploaded_request_files: [],
+      uploaded_request_files: []
     )
   end
 
@@ -51,19 +51,19 @@ module FOICasesParams
     outcome          = closure_params[:outcome_abbreviation]
     refusal_reason   = closure_params[:refusal_reason_abbreviation]
 
-    unless ClosedCaseValidator.outcome_required?(info_held_status: info_held_status)
+    unless ClosedCaseValidator.outcome_required?(info_held_status:)
       closure_params.merge!(outcome_id: nil)
       closure_params.delete(:outcome_abbreviation)
     end
 
-    unless ClosedCaseValidator.refusal_reason_required?(info_held_status: info_held_status)
+    unless ClosedCaseValidator.refusal_reason_required?(info_held_status:)
       closure_params.merge!(refusal_reason_id: nil)
       closure_params.delete(:refusal_reason_abbreviation)
     end
 
-    unless ClosedCaseValidator.exemption_required?(info_held_status: info_held_status,
-                                                   outcome: outcome,
-                                                   refusal_reason: refusal_reason)
+    unless ClosedCaseValidator.exemption_required?(info_held_status:,
+                                                   outcome:,
+                                                   refusal_reason:)
       closure_params.merge!(exemption_ids: [])
     end
 

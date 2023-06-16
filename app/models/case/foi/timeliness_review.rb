@@ -29,7 +29,6 @@
 #
 
 class Case::FOI::TimelinessReview < Case::FOI::InternalReview
-
   def self.decorator_class
     Case::FOI::TimelinessReviewDecorator
   end

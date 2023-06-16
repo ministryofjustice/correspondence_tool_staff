@@ -2,7 +2,7 @@ module PageObjects
   module Sections
     module Cases
       class ExemptionFilterPanelSection < SitePrism::Section
-        section :most_used, '#common_exemption_ids_group' do
+        section :most_used, "#common_exemption_ids_group" do
           # The following checkboxes are invisible because ... govuk form
           # elements. Check for visibility on the panel section, not the
           # checkboxes
@@ -21,7 +21,7 @@ module PageObjects
           element :s40_checkbox, :xpath, '//div[@id="common_exemption_ids_group"]//label[contains(.,"s40")]'
         end
 
-        section :exemption_all, '#exemption_ids_group' do
+        section :exemption_all, "#exemption_ids_group" do
           # The following checkboxes are invisible because ... govuk form
           # elements. Check for visibility on the panel section, not the
           # checkboxes
@@ -63,4 +63,3 @@ module PageObjects
     end
   end
 end
-

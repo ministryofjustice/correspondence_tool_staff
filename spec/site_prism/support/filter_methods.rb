@@ -60,22 +60,20 @@ module PageObjects
         to_date   = preset_or_args.delete(:to)
 
         if preset_or_args.any?
-          raise ArgumentError.new(
-                  "unrecognised parameters: #{preset_or_args}"
-                )
+          raise ArgumentError, "unrecognised parameters: #{preset_or_args}"
         end
       else
         preset = preset_or_args
       end
 
-      self.open_filter(:external_deadline)
+      open_filter(:external_deadline)
       if preset.present?
-        self.filter_external_deadline_content.click_on preset
+        filter_external_deadline_content.click_on preset
       elsif from_date.present? && to_date.present?
-        self.filter_external_deadline_content.from_date = from_date
-        self.filter_external_deadline_content.to_date   = to_date
+        filter_external_deadline_content.from_date = from_date
+        filter_external_deadline_content.to_date   = to_date
       else
-        raise ArgumentError.new("please provide preset or from/to")
+        raise ArgumentError, "please provide preset or from/to"
       end
       case_filters.apply_filters_button.click
     end

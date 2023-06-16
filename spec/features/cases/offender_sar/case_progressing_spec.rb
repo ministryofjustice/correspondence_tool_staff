@@ -1,11 +1,11 @@
-require 'rails_helper'
-require File.join(Rails.root, 'db', 'seeders', 'case_category_reference_seeder')
+require "rails_helper"
+require File.join(Rails.root, "db", "seeders", "case_category_reference_seeder")
 
-feature 'Offender SAR Case creation by a manager' do
+feature "Offender SAR Case creation by a manager" do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
   given(:offender_sar_case) { create(:offender_sar_case).decorate }
-  given(:late_offender_sar_case) { create(:offender_sar_case, received_date: 2.month.ago).decorate }
+  given(:late_offender_sar_case) { create(:offender_sar_case, received_date: 2.months.ago).decorate }
 
   background do
     find_or_create :team_branston
@@ -19,7 +19,7 @@ feature 'Offender SAR Case creation by a manager' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'progressing an offender sar case' do
+  scenario "progressing an offender sar case" do
     cases_show_page.load(id: offender_sar_case.id)
 
     expect(cases_show_page).to have_content "Mark as waiting for data"
@@ -69,43 +69,43 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_show_page).to have_content "Closed"
     expect(cases_show_page).to have_content "Send dispatch letter"
     expect(cases_show_page).to have_content "Sent to SSCL"
-    # TODO - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
+    # TODO: - pending decision on closure outcomes https://dsdmoj.atlassian.net/browse/CT-2502
     # expect(cases_show_page).to have_content "Was the information held?"
     # expect(cases_show_page).to have_content "Yes"
   end
 
-  private
+private
 
   def move_back_to_data_to_be_requested_then_move_to_same_step_agin
-    reason = 'move back to ready_to_copy'
+    reason = "move back to ready_to_copy"
     move_back_step(reason)
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready to dispatch"
     expect(cases_show_page).to have_content reason
 
-    reason = 'move back to vetting_in_progress'
+    reason = "move back to vetting_in_progress"
     move_back_step(reason)
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready to copy"
     expect(cases_show_page).to have_content reason
 
-    reason = 'move back to ready_for_vetting'
+    reason = "move back to ready_for_vetting"
     move_back_step(reason)
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as vetting in progress"
     expect(cases_show_page).to have_content reason
 
-    reason = 'move back to waiting_for_data'
+    reason = "move back to waiting_for_data"
     move_back_step(reason)
 
     expect(cases_show_page).to be_displayed
     expect(cases_show_page).to have_content "Mark as ready for vetting"
     expect(cases_show_page).to have_content reason
 
-    reason = 'move back to data_to_be_requested'
+    reason = "move back to data_to_be_requested"
     move_back_step_without_reason_initially(reason)
 
     expect(cases_show_page).to be_displayed
@@ -119,7 +119,7 @@ feature 'Offender SAR Case creation by a manager' do
     click_on "Mark as ready to dispatch"
   end
 
-  scenario 'progressing an offender sar case which is beyond the deadline', js: true do
+  scenario "progressing an offender sar case which is beyond the deadline", js: true do
     cases_show_page.load(id: late_offender_sar_case.id)
 
     click_on "Mark as waiting for data"
@@ -173,14 +173,13 @@ feature 'Offender SAR Case creation by a manager' do
     expect(cases_edit_offender_sar_move_back_page)
       .to have_content "Please provide the reason for reverting the case back"
 
-      click_on "Back"
+    click_on "Back"
 
     expect(cases_edit_offender_sar_move_back_page)
-      .to_not have_content "Please provide the reason for reverting the case back"
+      .not_to have_content "Please provide the reason for reverting the case back"
 
     click_on "Move case back"
     cases_edit_offender_sar_move_back_page.fill_in_reason(reason)
     click_on "Continue"
   end
-
 end

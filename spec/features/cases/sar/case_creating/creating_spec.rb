@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'SAR Case creation by a manager' do
-
+feature "SAR Case creation by a manager" do
   given(:responder)       { find_or_create(:foi_responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }
   given(:manager)         { find_or_create :disclosure_bmt_user }
@@ -14,7 +13,7 @@ feature 'SAR Case creation by a manager' do
     cases_page.load
   end
 
-  scenario 'creating a case that does not need clearance', js: true do
+  scenario "creating a case that does not need clearance", js: true do
     create_sar_case_step
 
     responding_team = responder.responding_teams.first
@@ -25,10 +24,10 @@ feature 'SAR Case creation by a manager' do
       .to include responding_team.team_lead
   end
 
-  scenario 'creating a non-trigger SAR case with only uploaded files', js: true do
-    request_attachment = Rails.root.join('spec', 'fixtures', 'request-1.pdf')
+  scenario "creating a non-trigger SAR case with only uploaded files", js: true do
+    request_attachment = Rails.root.join("spec", "fixtures", "request-1.pdf")
 
-    create_sar_case_step(message: '',
+    create_sar_case_step(message: "",
                          uploaded_request_files: [request_attachment])
 
     responding_team = responder.responding_teams.first
@@ -39,7 +38,7 @@ feature 'SAR Case creation by a manager' do
       .to include responding_team.team_lead
   end
 
-  scenario 'creating a case that needs clearance', js: true do
+  scenario "creating a case that needs clearance", js: true do
     create_sar_case_step flag_for_disclosure: true
 
     new_case = Case::Base.last

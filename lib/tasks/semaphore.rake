@@ -10,14 +10,14 @@
 # https://semaphoreci.com/aliuk2012/correspondence_tool_staff/settings
 
 namespace :semaphore do
-  task :prepare_db_config do |_t, _args|
-    file_name = 'config/database.yml'
+  task prepare_db_config: :environment do |_t, _args|
+    file_name = "config/database.yml"
     db_suffix = "<%= ENV['TEST_ENV_NUMBER'] %>"
     database_yml = YAML.load_file(file_name)
 
-    unless database_yml['test']['database'].ends_with? db_suffix
-      database_yml['test']['database'] += db_suffix
+    unless database_yml["test"]["database"].ends_with? db_suffix
+      database_yml["test"]["database"] += db_suffix
     end
-    File.open(file_name, 'w') { |f| f.write database_yml.to_yaml }
+    File.open(file_name, "w") { |f| f.write database_yml.to_yaml }
   end
 end

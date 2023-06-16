@@ -1,5 +1,4 @@
 class StateMachineConfigConcatenator
-
   def initialize
     @part_files = Dir["#{Rails.root}/config/state_machine/configs/**/*.yml"].sort
     @output_file_name = "#{Rails.root}/config/state_machine/moj.yml"
@@ -11,10 +10,10 @@ class StateMachineConfigConcatenator
     end
   end
 
-  private
+private
 
   def refresh!
-    File.open(@output_file_name, 'w') do |fp|
+    File.open(@output_file_name, "w") do |fp|
       @part_files.each do |f|
         fp.puts IO.read(f)
       end
@@ -37,5 +36,4 @@ class StateMachineConfigConcatenator
     end
     last_modified_time
   end
-
 end

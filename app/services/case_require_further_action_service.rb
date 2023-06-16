@@ -13,28 +13,26 @@ class CaseRequireFurtherActionService
   end
 
   def call
-    begin
-      ActiveRecord::Base.transaction do
-        do_update
+    ActiveRecord::Base.transaction do
+      do_update
 
-        if validate_dates?
-          save_attributes
-          trigger_flow_action
-          @result = :ok
-        else
-          @result = :error
-        end
+      if validate_dates?
+        save_attributes
+        trigger_flow_action
+        @result = :ok
+      else
+        @result = :error
       end
-    rescue ConfigurableStateMachine::InvalidEventError => err
-      @kase.errors.add(:external_deadline, err.message)
-      @result = :error
-    rescue ActiveRecord::RecordInvalid => error
-      @error_message = error.message
-      @result = :error
     end
+  rescue ConfigurableStateMachine::InvalidEventError => e
+    @kase.errors.add(:external_deadline, e.message)
+    @result = :error
+  rescue ActiveRecord::RecordInvalid => e
+    @error_message = e.message
+    @result = :error
   end
 
-  private
+private
 
   def do_update
     update_deadline_attributes
@@ -73,33 +71,33 @@ class CaseRequireFurtherActionService
       if @kase.internal_deadline.nil?
         @kase.errors.add(
           :internal_deadline,
-          "cannot be blank"
+          "cannot be blank",
         )
       elsif @kase.internal_deadline.present? && @kase.internal_deadline <= Date.today
         @kase.errors.add(
           :internal_deadline,
-          I18n.t('activerecord.errors.models.case/ico.attributes.internal_deadline.past')
+          I18n.t("activerecord.errors.models.case/ico.attributes.internal_deadline.past"),
         )
       end
 
       if @kase.external_deadline <= Date.today
         @kase.errors.add(
           :external_deadline,
-          I18n.t('activerecord.errors.models.case/ico.attributes.external_deadline.past')
+          I18n.t("activerecord.errors.models.case/ico.attributes.external_deadline.past"),
         )
       end
     end
-    !@kase.errors.present?
+    @kase.errors.blank?
   end
 
   def trigger_flow_action
-    team = @user.case_team_for_event(@kase, 'record_further_action')
+    team = @user.case_team_for_event(@kase, "record_further_action")
     determine_event_name
-    @kase.state_machine.send(@trigger_event_name + '!', {
+    @kase.state_machine.send("#{@trigger_event_name}!", {
       acting_user: @user,
       acting_team: team,
       target_team: @target_team,
-      message: I18n.t("event.case/ico.#{@trigger_event_name}_message", team: @target_team.nil? ? '' : @target_team.name)
+      message: I18n.t("event.case/ico.#{@trigger_event_name}_message", team: @target_team.nil? ? "" : @target_team.name),
     })
   end
 
@@ -114,7 +112,7 @@ class CaseRequireFurtherActionService
     if @kase.responding_team.active?
       check_responder_state
     else
-      @trigger_event_name = 'require_further_action_unassigned'
+      @trigger_event_name = "require_further_action_unassigned"
     end
   end
 
@@ -123,11 +121,10 @@ class CaseRequireFurtherActionService
     responder_active = !@kase.responder.deactivated?
     case_responder_in_responding_team = @kase.responding_team.users.include?(@kase.responder)
     if responder_active && case_responder_in_responding_team
-      @trigger_event_name = 'require_further_action'
+      @trigger_event_name = "require_further_action"
     else
       @kase.reset_responding_assignment_flag
-      @trigger_event_name = 'require_further_action_to_responder_team'
+      @trigger_event_name = "require_further_action_to_responder_team"
     end
   end
-
 end

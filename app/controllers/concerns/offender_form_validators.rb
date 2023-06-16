@@ -1,7 +1,7 @@
 module OffenderFormValidators
   extend ActiveSupport::Concern
 
-  private
+private
 
   def validate_subject_details(params)
     set_empty_value_if_unset(params, "subject_type")
@@ -58,17 +58,16 @@ module OffenderFormValidators
   end
 
   def set_empty_value_if_unset(params, field)
-    params.merge!(field => "") unless params[field].present?
+    params.merge!(field => "") if params[field].blank?
   end
 
   def set_empty_value_if_unset_for_date(params, field)
     params.merge!(field => "") unless params["#{field}_yyyy"].present? &&
-                                params["#{field}_mm"].present? &&
-                                params["#{field}_dd"].present?
+      params["#{field}_mm"].present? &&
+      params["#{field}_dd"].present?
   end
 
   def clear_param_if_condition(params, target_field, check_field, value)
     params.delete(target_field) unless params[check_field] == value
   end
-
 end

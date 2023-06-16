@@ -22,7 +22,7 @@
 #
 
 def email_from_name(name)
-  email_name = name.tr(' ', '.').gsub(/\.{2,}/, '.')
+  email_name = name.tr(" ", ".").gsub(/\.{2,}/, ".")
   "correspondence-staff-dev+#{email_name}@digital.justice.gov.uk"
 end
 
@@ -38,16 +38,16 @@ FactoryBot.define do
   sequence(:approver_responder_manager_name)  { |n| "Mgr Approver-Responder #{n}" }
 
   factory :user do
-    initialize_with { User.find_or_create_by(email: email) }
+    initialize_with { User.find_or_create_by(email:) }
 
     transient do
-      identifier { 'user' }
+      identifier { "user" }
     end
 
     # NB: when using either 'find' or 'find_or_create' strategies, the existing
     #     user that is found will have it's password set to 'nil'.
-    ENV['TESTSPEC_LOGIN_PASSWORD'] = SecureRandom.random_number(36**13).to_s(36)
-    password { ENV['TESTSPEC_LOGIN_PASSWORD'] }
+    ENV["TESTSPEC_LOGIN_PASSWORD"] = SecureRandom.random_number(36**13).to_s(36)
+    password { ENV["TESTSPEC_LOGIN_PASSWORD"] }
     sequence(:full_name) { |n| "#{identifier} #{n}" }
     email { Faker::Internet.email(name: full_name) }
 
@@ -62,7 +62,7 @@ FactoryBot.define do
 
     factory :manager, parent: :user do
       transient do
-        identifier { 'managing user' }
+        identifier { "managing user" }
       end
 
       full_name      { generate(:manager_name) }
@@ -71,7 +71,7 @@ FactoryBot.define do
 
     factory :manager_approver do
       transient do
-        identifier { 'managing-approving user' }
+        identifier { "managing-approving user" }
       end
 
       full_name      { generate(:manager_name) }
@@ -81,7 +81,7 @@ FactoryBot.define do
 
     factory :disclosure_bmt_user, parent: :manager do
       transient do
-        identifier { 'disclosure-bmt managing user' }
+        identifier { "disclosure-bmt managing user" }
       end
 
       full_name      { identifier }
@@ -91,7 +91,7 @@ FactoryBot.define do
 
     factory :branston_user, parent: :user do
       transient do
-        identifier { 'branston registry responding user' }
+        identifier { "branston registry responding user" }
       end
 
       full_name      { identifier }
@@ -101,7 +101,7 @@ FactoryBot.define do
 
     factory :sscl_user, parent: :user do
       transient do
-        identifier { 'sscl responding user' }
+        identifier { "sscl responding user" }
       end
 
       full_name      { identifier }
@@ -111,7 +111,7 @@ FactoryBot.define do
 
     factory :team_admin, parent: :user do
       transient do
-        identifier { 'team-admin user ' }
+        identifier { "team-admin user " }
       end
 
       full_name      { identifier }
@@ -128,16 +128,16 @@ FactoryBot.define do
 
     factory :responder do
       transient do
-        identifier { 'responding user' }
+        identifier { "responding user" }
       end
 
-      full_name      { generate(:responder_name) }
+      full_name { generate(:responder_name) }
       responding_teams { [find_or_create(:responding_team)] }
     end
 
     factory :foi_responder do
       transient do
-        identifier { 'foi responding user' }
+        identifier { "foi responding user" }
       end
 
       full_name        { identifier }
@@ -147,7 +147,7 @@ FactoryBot.define do
 
     factory :sar_responder do
       transient do
-        identifier { 'sar responding user' }
+        identifier { "sar responding user" }
       end
 
       full_name        { identifier }
@@ -157,7 +157,7 @@ FactoryBot.define do
 
     factory :approver do
       transient do
-        identifier { 'approving user' }
+        identifier { "approving user" }
       end
 
       full_name      { generate(:approver_name) }
@@ -166,39 +166,39 @@ FactoryBot.define do
 
     factory :approver_responder do
       transient do
-        identifier { 'approving-responding user' }
+        identifier { "approving-responding user" }
       end
 
       full_name         { generate(:approver_responder_name) }
       approving_team    { find_or_create(:approving_team) }
-      responding_teams  { [ find_or_create(:responding_team) ] }
+      responding_teams  { [find_or_create(:responding_team)] }
     end
 
     factory :approver_responder_manager do
       transient do
-        identifier { 'approving-responding-managing user' }
+        identifier { "approving-responding-managing user" }
       end
 
       full_name         { generate(:approver_responder_manager_name) }
       approving_team    { find_or_create(:approving_team) }
-      responding_teams  { [ find_or_create(:responding_team) ] }
-      managing_teams    { [ find_or_create(:team_dacu) ] }
+      responding_teams  { [find_or_create(:responding_team)] }
+      managing_teams    { [find_or_create(:team_dacu)] }
     end
 
     factory :sar_multi_role_user do
       transient do
-        identifier { 'approving-responding-managing user' }
+        identifier { "approving-responding-managing user" }
       end
 
       full_name         { generate(:approver_responder_manager_name) }
       approving_team    { find_or_create(:approving_team) }
-      responding_teams  { [ find_or_create(:sar_responding_team) ] }
-      managing_teams    { [ find_or_create(:team_dacu) ] }
+      responding_teams  { [find_or_create(:sar_responding_team)] }
+      managing_teams    { [find_or_create(:team_dacu)] }
     end
 
     factory :disclosure_specialist do
       transient do
-        identifier { 'disclosure-specialist approving user' }
+        identifier { "disclosure-specialist approving user" }
       end
 
       full_name      { identifier }
@@ -208,7 +208,7 @@ FactoryBot.define do
 
     factory :disclosure_specialist_bmt do
       transient do
-        identifier { 'disclosure-specialist-bmt managing user' }
+        identifier { "disclosure-specialist-bmt managing user" }
       end
 
       full_name      { identifier }
@@ -219,7 +219,7 @@ FactoryBot.define do
 
     factory :press_officer do
       transient do
-        identifier { 'press-office approving user' }
+        identifier { "press-office approving user" }
       end
 
       # full_name      { generate(:press_officer_name) }
@@ -237,7 +237,7 @@ FactoryBot.define do
 
     factory :private_officer do
       transient do
-        identifier { 'private-office approving user' }
+        identifier { "private-office approving user" }
       end
 
       # full_name      { generate(:private_officer_name) }
@@ -255,24 +255,23 @@ FactoryBot.define do
 
     factory :deactivated_user do
       transient do
-        identifier { 'deactivated user' }
+        identifier { "deactivated user" }
       end
 
       full_name      { generate(:manager_name) }
       managing_teams { [create(:managing_team)] }
-      deleted_at { Time.now }
+      deleted_at { Time.zone.now }
     end
 
     factory :admin do
       transient do
-        identifier { 'admin user' }
+        identifier { "admin user" }
       end
 
       full_name      { generate(:manager_name) }
       after(:create) do |user|
-        user.team_roles.create role: 'admin'
+        user.team_roles.create role: "admin"
       end
     end
-
   end
 end

@@ -2,15 +2,14 @@
 
 require "yaml"
 
-
 module CtsPapertrailSerializer
-  extend self # makes all instance methods become module methods as well
+module_function # makes all instance methods become module methods as well
 
   def load(string)
     hash = ::YAML.load(string, permitted_classes: [Time, Date, BigDecimal], aliases: true)
-    if hash.key?('properties')
-      properties_hash = ::JSON.parse(hash['properties'])
-      properties_hash.each do | key, value|
+    if hash.key?("properties")
+      properties_hash = ::JSON.parse(hash["properties"])
+      properties_hash.each do |key, value|
         hash[key] = value
       end
     end
@@ -39,4 +38,3 @@ module CtsPapertrailSerializer
     STR
   end
 end
-

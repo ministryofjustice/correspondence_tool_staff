@@ -1,15 +1,13 @@
 namespace :sidekiq do
-
   task status: :environment do
-
-    require 'sidekiq/api'
+    require "sidekiq/api"
 
     queue_names = Sidekiq::Queue.all.map(&:name)
 
     queue_names.each do |qn|
       q = Sidekiq::Queue.new(qn)
       puts "Queue name: #{qn}"
-      if q.size == 0
+      if q.empty?
         puts "   No queued jobs"
       else
         q.each do |job|
@@ -19,7 +17,5 @@ namespace :sidekiq do
       end
       puts "  "
     end
-
   end
 end
-

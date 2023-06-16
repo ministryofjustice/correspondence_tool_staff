@@ -35,101 +35,102 @@ describe Case::FOI::Standard do
   let(:no_postal_or_email) { build :case, postal_address: nil, email: nil }
   let(:no_email)           { build :case, email: nil                      }
 
-  context 'without a postal or email address' do
-    it 'is invalid' do
+  context "without a postal or email address" do
+    it "is invalid" do
       expect(no_postal_or_email).not_to be_valid
     end
   end
 
-  context 'without a postal_address' do
-    it 'is valid with an email address' do
+  context "without a postal_address" do
+    it "is valid with an email address" do
       expect(no_postal).to be_valid
     end
   end
 
-  context 'without an email address' do
-    it 'is valid with a postal address' do
+  context "without an email address" do
+    it "is valid with a postal address" do
       expect(no_email).to be_valid
     end
   end
 
-  describe 'papertrail versioning', versioning: true do
-
-    before(:each) do
-      @kase = create :foi_case, name: 'aaa', email: 'aa@moj.com', received_date: Date.today, subject: 'subject A', postal_address: '10 High Street', requester_type: 'journalist'
-      @kase.update!(name: 'bbb', email: 'bb@moj.com', received_date: 1.day.ago, subject: 'subject B', postal_address: '20 Low Street', requester_type: 'offender')
+  describe "papertrail versioning", versioning: true do
+    before do
+      @kase = create :foi_case, name: "aaa", email: "aa@moj.com", received_date: Date.today, subject: "subject A", postal_address: "10 High Street", requester_type: "journalist"
+      @kase.update!(name: "bbb", email: "bb@moj.com", received_date: 1.day.ago, subject: "subject B", postal_address: "20 Low Street", requester_type: "offender")
     end
 
-    it 'saves all values in the versions object hash' do
+    it "saves all values in the versions object hash" do
       version_hash = YAML.load(@kase.versions.last.object, permitted_classes: [Time, Date])
-      expect(version_hash['email']).to eq 'aa@moj.com'
-      expect(version_hash['received_date']).to eq Date.today
-      expect(version_hash['subject']).to eq 'subject A'
-      expect(version_hash['postal_address']).to eq '10 High Street'
-      expect(version_hash['requester_type']).to eq 'journalist'
+      expect(version_hash["email"]).to eq "aa@moj.com"
+      expect(version_hash["received_date"]).to eq Date.today
+      expect(version_hash["subject"]).to eq "subject A"
+      expect(version_hash["postal_address"]).to eq "10 High Street"
+      expect(version_hash["requester_type"]).to eq "journalist"
     end
 
-    it 'can reconsititue a record from a version (except for received_date)' do
+    it "can reconsititue a record from a version (except for received_date)" do
       original_kase = @kase.versions.last.reify
-      expect(original_kase.email).to eq 'aa@moj.com'
-      expect(original_kase.subject).to eq 'subject A'
-      expect(original_kase.postal_address).to eq '10 High Street'
-      expect(original_kase.requester_type).to eq 'journalist'
+      expect(original_kase.email).to eq "aa@moj.com"
+      expect(original_kase.subject).to eq "subject A"
+      expect(original_kase.postal_address).to eq "10 High Street"
+      expect(original_kase.requester_type).to eq "journalist"
     end
 
-    it 'reconstitutes the received date' do
+    it "reconstitutes the received date" do
       original_kase = @kase.versions.last.reify
       expect(original_kase.received_date).to eq Date.today
     end
   end
 
-  describe 'name attribute' do
-    it { should validate_presence_of(:name) }
+  describe "name attribute" do
+    it { is_expected.to validate_presence_of(:name) }
   end
 
-  describe 'subject attribute' do
-    it { should validate_presence_of(:subject) }
-    it { should validate_length_of(:subject).is_at_most(100) }
+  describe "subject attribute" do
+    it { is_expected.to validate_presence_of(:subject) }
+    it { is_expected.to validate_length_of(:subject).is_at_most(100) }
   end
 
-  describe 'requester_type' do
-    it { should validate_presence_of(:requester_type)  }
+  describe "requester_type" do
+    it { is_expected.to validate_presence_of(:requester_type) }
 
-    it { should have_enum(:requester_type).
-                  with_values(
-                    [
-                      'academic_business_charity',
-                      'journalist',
-                      'member_of_the_public',
-                      'offender',
-                      'solicitor',
-                      'staff_judiciary',
-                      'what_do_they_know'
-                    ]
+    it {
+      expect(subject).to have_enum(:requester_type)
+                  .with_values(
+                    %w[
+                      academic_business_charity
+                      journalist
+                      member_of_the_public
+                      offender
+                      solicitor
+                      staff_judiciary
+                      what_do_they_know
+                    ],
                   )
     }
   end
 
-  describe 'delivery_method' do
-    it { should validate_presence_of(:delivery_method) }
+  describe "delivery_method" do
+    it { is_expected.to validate_presence_of(:delivery_method) }
 
-    it { should have_enum(:delivery_method).
-                  with_values(
-                    [
-                      'sent_by_email',
-                      'sent_by_post'
-                    ]
+    it {
+      expect(subject).to have_enum(:delivery_method)
+                  .with_values(
+                    %w[
+                      sent_by_email
+                      sent_by_post
+                    ],
                   )
     }
   end
 
-  describe '#business_unit_responded_in_time?' do
-
-    before(:each) do
+  describe "#business_unit_responded_in_time?" do
+    before do
       @manager = create :manager
     end
-    context 'case not yet responded' do
-      it 'raises' do
+
+    context "case not yet responded" do
+      it "raises" do
         assigned_case = create :assigned_case
         expect {
           assigned_case.business_unit_responded_in_time?
@@ -137,11 +138,11 @@ describe Case::FOI::Standard do
       end
     end
 
-    context 'case has been responded' do
-      context 'just one assignment to a team' do
-        context 'in time' do
-          context 'flagged' do
-            it 'returns true' do
+    context "case has been responded" do
+      context "just one assignment to a team" do
+        context "in time" do
+          context "flagged" do
+            it "returns true" do
               # given
               kase = create_case(flagged: true,
                                  assignment_times: [7.business_days.ago],
@@ -150,17 +151,18 @@ describe Case::FOI::Standard do
 
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq 'accepted'
+              expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses').last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be true
             end
           end
-          context 'unflagged' do
-            it 'returns true' do
+
+          context "unflagged" do
+            it "returns true" do
               # given
               kase = create_case(flagged: false,
                                  assignment_times: [7.business_days.ago],
@@ -169,10 +171,10 @@ describe Case::FOI::Standard do
 
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq 'accepted'
+              expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses').last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be true
@@ -180,9 +182,9 @@ describe Case::FOI::Standard do
           end
         end
 
-        context 'late' do
-          context 'flagged' do
-            it 'returns false' do
+        context "late" do
+          context "flagged" do
+            it "returns false" do
               # given
               kase = create_case(flagged: true,
                                  assignment_times: [14.business_days.ago],
@@ -191,18 +193,18 @@ describe Case::FOI::Standard do
 
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq 'accepted'
+              expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 14.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses').last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be false
             end
           end
 
-          context 'unflagged' do
-            it 'returns false' do
+          context "unflagged" do
+            it "returns false" do
               # given
               kase = create_case(flagged: false,
                                  assignment_times: [15.business_days.ago],
@@ -211,24 +213,22 @@ describe Case::FOI::Standard do
 
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq 'accepted'
+              expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 15.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses').last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be false
             end
           end
-
         end
       end
 
-
-      context 'multiple assignments and rejections' do
-        context 'in time' do
-          context 'flagged' do
-            it 'returns true' do
+      context "multiple assignments and rejections" do
+        context "in time" do
+          context "flagged" do
+            it "returns true" do
               # given
               kase = create_case(flagged: true,
                                  assignment_times: [12.business_days.ago, 10.business_days.ago, 7.business_days.ago],
@@ -236,20 +236,20 @@ describe Case::FOI::Standard do
               expect(kase).to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq 'rejected'
-              expect(responder_assignments[1].state).to eq 'rejected'
-              expect(responder_assignments[2].state).to eq 'accepted'
+              expect(responder_assignments[0].state).to eq "rejected"
+              expect(responder_assignments[1].state).to eq "rejected"
+              expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses').last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be true
             end
           end
 
-          context 'unflagged' do
-            it 'returns true' do
+          context "unflagged" do
+            it "returns true" do
               # given
               kase = create_case(flagged: false,
                                  assignment_times: [12.business_days.ago, 10.business_days.ago, 7.business_days.ago],
@@ -257,12 +257,12 @@ describe Case::FOI::Standard do
               expect(kase).not_to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq 'rejected'
-              expect(responder_assignments[1].state).to eq 'rejected'
-              expect(responder_assignments[2].state).to eq 'accepted'
+              expect(responder_assignments[0].state).to eq "rejected"
+              expect(responder_assignments[1].state).to eq "rejected"
+              expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 7.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses').last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 7.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be true
@@ -270,9 +270,9 @@ describe Case::FOI::Standard do
           end
         end
 
-        context 'late' do
-          context 'flagged' do
-            it 'returns false' do
+        context "late" do
+          context "flagged" do
+            it "returns false" do
               # given
               kase = create_case(flagged: true,
                                  assignment_times: [17.business_days.ago, 16.business_days.ago, 14.business_days.ago],
@@ -280,20 +280,20 @@ describe Case::FOI::Standard do
               expect(kase).to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq 'rejected'
-              expect(responder_assignments[1].state).to eq 'rejected'
-              expect(responder_assignments[2].state).to eq 'accepted'
+              expect(responder_assignments[0].state).to eq "rejected"
+              expect(responder_assignments[1].state).to eq "rejected"
+              expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 14.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses').last.created_at.to_date).to eq 1.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 14.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 1.business_days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be false
             end
           end
 
-          context 'unflagged' do
-            it 'returns false' do
+          context "unflagged" do
+            it "returns false" do
               # given
               kase = create_case(flagged: false,
                                  assignment_times: [17.business_days.ago, 16.business_days.ago, 15.business_days.ago],
@@ -301,43 +301,41 @@ describe Case::FOI::Standard do
               expect(kase).not_to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq 'rejected'
-              expect(responder_assignments[1].state).to eq 'rejected'
-              expect(responder_assignments[2].state).to eq 'accepted'
+              expect(responder_assignments[0].state).to eq "rejected"
+              expect(responder_assignments[1].state).to eq "rejected"
+              expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 15.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses').last.created_at.to_date).to eq 3.business_days.ago.to_date
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 15.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses").last.created_at.to_date).to eq 3.business_days.ago.to_date
 
               # then
               expect(kase.business_unit_responded_in_time?).to be false
             end
           end
-
         end
       end
     end
   end
 
-  describe '#business_unit_already_late?' do
-
-    before(:each) do
+  describe "#business_unit_already_late?" do
+    before do
       @manager = create :manager
     end
 
-    context 'responded case' do
-      it 'raises' do
+    context "responded case" do
+      it "raises" do
         responded_kase = create :responded_case
-        expect{
+        expect {
           responded_kase.business_unit_already_late?
-        }.to raise_error ArgumentError, 'Cannot call #business_unit_already_late? on a case for which the response has been sent'
+        }.to raise_error ArgumentError, "Cannot call #business_unit_already_late? on a case for which the response has been sent"
       end
     end
 
-    context 'open cases' do
-      context 'just one assignment to responding team' do
-        context 'in time' do
-          context 'non trigger cases' do
-            it 'returns true' do
+    context "open cases" do
+      context "just one assignment to responding team" do
+        context "in time" do
+          context "non trigger cases" do
+            it "returns true" do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
                 kase = create_case(flagged: false,
@@ -345,10 +343,10 @@ describe Case::FOI::Standard do
                 expect(kase).not_to be_flagged
                 responder_assignments = kase.assignments.responding.order(:id)
                 expect(responder_assignments.size).to eq 1
-                expect(responder_assignments.first.state).to eq 'accepted'
+                expect(responder_assignments.first.state).to eq "accepted"
 
-                expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 18.business_days.ago.to_date
-                expect(kase.transitions.where(event: 'add_responses')).to be_empty
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 18.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses")).to be_empty
 
                 # then
                 expect(kase.business_unit_already_late?).to be false
@@ -356,8 +354,8 @@ describe Case::FOI::Standard do
             end
           end
 
-          context 'trigger cases' do
-            it 'returns true' do
+          context "trigger cases" do
+            it "returns true" do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
                 kase = create_case(flagged: true,
@@ -365,10 +363,10 @@ describe Case::FOI::Standard do
                 expect(kase).to be_flagged
                 responder_assignments = kase.assignments.responding.order(:id)
                 expect(responder_assignments.size).to eq 1
-                expect(responder_assignments.first.state).to eq 'accepted'
+                expect(responder_assignments.first.state).to eq "accepted"
 
-                expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 8.business_days.ago.to_date
-                expect(kase.transitions.where(event: 'add_responses')).to be_empty
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 8.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses")).to be_empty
 
                 # then
                 expect(kase.business_unit_already_late?).to be false
@@ -377,37 +375,37 @@ describe Case::FOI::Standard do
           end
         end
 
-        context 'late' do
-          context 'non trigger cases' do
-            it 'returns true' do
+        context "late" do
+          context "non trigger cases" do
+            it "returns true" do
               # given
               kase = create_case(flagged: false,
                                  assignment_times: [21.business_days.ago])
               expect(kase).not_to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq 'accepted'
+              expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 21.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses')).to be_empty
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses")).to be_empty
 
               # then
               expect(kase.business_unit_already_late?).to be true
             end
           end
 
-          context 'trigger cases' do
-            it 'returns true' do
+          context "trigger cases" do
+            it "returns true" do
               # given
               kase = create_case(flagged: true,
                                  assignment_times: [11.business_days.ago])
               expect(kase).to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 1
-              expect(responder_assignments.first.state).to eq 'accepted'
+              expect(responder_assignments.first.state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 11.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses')).to be_empty
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses")).to be_empty
 
               # then
               expect(kase.business_unit_already_late?).to be true
@@ -416,10 +414,10 @@ describe Case::FOI::Standard do
         end
       end
 
-      context 'multiple assignments to responding teams' do
-        context 'in time' do
-          context 'non trigger cases' do
-            it 'returns true' do
+      context "multiple assignments to responding teams" do
+        context "in time" do
+          context "non trigger cases" do
+            it "returns true" do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
                 kase = create_case(flagged: false,
@@ -427,12 +425,12 @@ describe Case::FOI::Standard do
                 expect(kase).not_to be_flagged
                 responder_assignments = kase.assignments.responding.order(:id)
                 expect(responder_assignments.size).to eq 3
-                expect(responder_assignments[0].state).to eq 'rejected'
-                expect(responder_assignments[1].state).to eq 'rejected'
-                expect(responder_assignments[2].state).to eq 'accepted'
+                expect(responder_assignments[0].state).to eq "rejected"
+                expect(responder_assignments[1].state).to eq "rejected"
+                expect(responder_assignments[2].state).to eq "accepted"
 
-                expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 18.business_days.ago.to_date
-                expect(kase.transitions.where(event: 'add_responses')).to be_empty
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 18.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses")).to be_empty
 
                 # then
                 expect(kase.business_unit_already_late?).to be false
@@ -440,8 +438,8 @@ describe Case::FOI::Standard do
             end
           end
 
-          context 'trigger cases' do
-            it 'returns true' do
+          context "trigger cases" do
+            it "returns true" do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
                 kase = create_case(flagged: true,
@@ -449,12 +447,12 @@ describe Case::FOI::Standard do
                 expect(kase).to be_flagged
                 responder_assignments = kase.assignments.responding.order(:id)
                 expect(responder_assignments.size).to eq 3
-                expect(responder_assignments[0].state).to eq 'rejected'
-                expect(responder_assignments[1].state).to eq 'rejected'
-                expect(responder_assignments[2].state).to eq 'accepted'
+                expect(responder_assignments[0].state).to eq "rejected"
+                expect(responder_assignments[1].state).to eq "rejected"
+                expect(responder_assignments[2].state).to eq "accepted"
 
-                expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 8.business_days.ago.to_date
-                expect(kase.transitions.where(event: 'add_responses')).to be_empty
+                expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 8.business_days.ago.to_date
+                expect(kase.transitions.where(event: "add_responses")).to be_empty
 
                 # then
                 expect(kase.business_unit_already_late?).to be false
@@ -462,41 +460,42 @@ describe Case::FOI::Standard do
             end
           end
         end
-        context 'late' do
-          context 'non trigger cases' do
-            it 'returns true' do
+
+        context "late" do
+          context "non trigger cases" do
+            it "returns true" do
               # given
               kase = create_case(flagged: false,
                                  assignment_times: [30.business_days.ago, 25.business_days.ago, 21.business_days.ago])
               expect(kase).not_to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq 'rejected'
-              expect(responder_assignments[1].state).to eq 'rejected'
-              expect(responder_assignments[2].state).to eq 'accepted'
+              expect(responder_assignments[0].state).to eq "rejected"
+              expect(responder_assignments[1].state).to eq "rejected"
+              expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 21.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses')).to be_empty
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 21.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses")).to be_empty
 
               # then
               expect(kase.business_unit_already_late?).to be true
             end
           end
 
-          context 'trigger cases' do
-            it 'returns true' do
+          context "trigger cases" do
+            it "returns true" do
               # given
               kase = create_case(flagged: true,
                                  assignment_times: [30.business_days.ago, 25.business_days.ago, 11.business_days.ago])
               expect(kase).to be_flagged
               responder_assignments = kase.assignments.responding.order(:id)
               expect(responder_assignments.size).to eq 3
-              expect(responder_assignments[0].state).to eq 'rejected'
-              expect(responder_assignments[1].state).to eq 'rejected'
-              expect(responder_assignments[2].state).to eq 'accepted'
+              expect(responder_assignments[0].state).to eq "rejected"
+              expect(responder_assignments[1].state).to eq "rejected"
+              expect(responder_assignments[2].state).to eq "accepted"
 
-              expect(kase.transitions.where(event: 'accept_responder_assignment').first.created_at.to_date).to eq 11.business_days.ago.to_date
-              expect(kase.transitions.where(event: 'add_responses')).to be_empty
+              expect(kase.transitions.where(event: "accept_responder_assignment").first.created_at.to_date).to eq 11.business_days.ago.to_date
+              expect(kase.transitions.where(event: "add_responses")).to be_empty
 
               # then
               expect(kase.business_unit_already_late?).to be true
@@ -504,7 +503,6 @@ describe Case::FOI::Standard do
           end
         end
       end
-
     end
   end
 
@@ -522,9 +520,9 @@ describe Case::FOI::Standard do
     kase = nil
     Timecop.freeze(creation_time) do
       kase = flagged ? create_flagged_case : create_unflagged_case
-      create_responder_assignments(kase: kase, assignment_times: assignment_times)
-      create_responder_acceptance(kase: kase.reload, acceptance_time: acceptance_time)
-      create_response(kase: kase, responded_time: responded_time) unless responded_time.nil?
+      create_responder_assignments(kase:, assignment_times:)
+      create_responder_acceptance(kase: kase.reload, acceptance_time:)
+      create_response(kase:, responded_time:) unless responded_time.nil?
     end
     kase.reload
   end
@@ -533,11 +531,9 @@ describe Case::FOI::Standard do
     create :case, :flagged, approving_team: find_or_create(:team_dacu_disclosure)
   end
 
-
   def create_unflagged_case
     create :case
   end
-
 
   def create_responder_assignments(kase:, assignment_times:)
     while assignment_times.any?
@@ -545,14 +541,14 @@ describe Case::FOI::Standard do
       Timecop.freeze assignment_time do
         responding_team = create :responding_team
         responder_service = CaseAssignResponderService.new(team: responding_team,
-                                                           kase: kase,
-                                                           role: 'responding',
+                                                           kase:,
+                                                           role: "responding",
                                                            user: @manager)
         responder_service.call
         if assignment_times.any?
           Timecop.travel 15.minutes
           responder_service.assignment.case.reload
-          responder_service.assignment.reject(responding_team.users.first, 'XXX')
+          responder_service.assignment.reject(responding_team.users.first, "XXX")
           kase.reload
         end
       end
@@ -571,7 +567,7 @@ describe Case::FOI::Standard do
     kase.reload
 
     Timecop.freeze(responded_time) do
-      filenames = [ "#{Rails.root}/spec/fixtures/test_file.txt" ]
+      filenames = ["#{Rails.root}/spec/fixtures/test_file.txt"]
       if kase.flagged?
         respond_to_flagged_case(kase, filenames)
       else
@@ -592,10 +588,10 @@ describe Case::FOI::Standard do
 
     kase.state_machine.add_responses!(acting_user: responder,
                                       acting_team: responding_team,
-                                      filenames: filenames)
+                                      filenames:)
     kase.state_machine.accept_approver_assignment!(acting_user: approver, acting_team: approving_team)
     approver_assignment = kase.assignments.approving.where(team_id: approving_team.id).first
-    approver_assignment.update(state: 'accepted', user_id: approver.id)
+    approver_assignment.update!(state: "accepted", user_id: approver.id)
     kase.state_machine.approve!(acting_user: approver, acting_team: approving_team)
   end
 
@@ -604,7 +600,7 @@ describe Case::FOI::Standard do
     responder = responding_team.users.first
     kase.state_machine.add_responses!(acting_user: responder,
                                       acting_team: responding_team,
-                                      filenames: filenames,
-                                      message: 'DDDD')
+                                      filenames:,
+                                      message: "DDDD")
   end
 end

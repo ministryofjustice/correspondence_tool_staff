@@ -30,7 +30,7 @@ class CaseFlagForClearanceService
     @result = :ok
   end
 
-  private
+private
 
   def validate_case_is_unflagged
     if @case.approving_teams.exclude?(@team)
@@ -43,21 +43,21 @@ class CaseFlagForClearanceService
   end
 
   def assign_approver(acting_user:, acting_team:, target_team:)
-    @case.state_machine.flag_for_clearance! acting_user: acting_user,
-                                            acting_team: acting_team,
-                                            target_team: target_team
+    @case.state_machine.flag_for_clearance!(acting_user:,
+                                            acting_team:,
+                                            target_team:)
 
     @case.approving_teams << target_team
   end
 
   def assign_and_accept_approver(acting_user:, acting_team:, target_team:)
-    @case.state_machine.take_on_for_approval! acting_user: acting_user,
-                                              acting_team: acting_team,
-                                              target_team: target_team
+    @case.state_machine.take_on_for_approval!(acting_user:,
+                                              acting_team:,
+                                              target_team:)
     @case.approving_teams << target_team
     @case.reload
     team_assignment = @case.approver_assignments.for_team(target_team).last
-    team_assignment.update!(state: 'accepted', user_id: acting_user.id)
+    team_assignment.update!(state: "accepted", user_id: acting_user.id)
   end
 
   def associate_team(associate_team, associate_user)

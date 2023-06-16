@@ -1,38 +1,37 @@
 class RetentionSchedule < ApplicationRecord
   include AASM
 
-  validates_presence_of(:case)
-  validates_presence_of(:planned_destruction_date)
+  validates(:case, presence: true)
+  validates(:planned_destruction_date, presence: true)
 
   # this should change to Case::Base
   # as this retention_schedule is expanded
   # to other / all case types
   belongs_to :case,
-             foreign_key: :case_id,
-             class_name: 'Case::SAR::Offender'
+             class_name: "Case::SAR::Offender"
 
   # Event `anonymise` will update the `erasure_date` automatically.
   # We alias it because for this update to magically work, the date attribute
   # should have followed the convention `[new_state]_at` instead.
   alias_attribute :anonymised_at, :erasure_date
 
-  aasm column: 'state', timestamps: true, logger: Rails.logger do
-    state :not_set, initial: true, display: 'Not set'
-    state :retain, display: 'Retain'
-    state :review, display: 'Review'
-    state :to_be_anonymised, display: 'Destroy'
-    state :anonymised, display: 'Anonymised'
-    
+  aasm column: "state", timestamps: true, logger: Rails.logger do
+    state :not_set, initial: true, display: "Not set"
+    state :retain, display: "Retain"
+    state :review, display: "Review"
+    state :to_be_anonymised, display: "Destroy"
+    state :anonymised, display: "Anonymised"
+
     event :mark_for_retention do
-      transitions from: [:not_set, :review, :to_be_anonymised], to: :retain
+      transitions from: %i[not_set review to_be_anonymised], to: :retain
     end
 
     event :mark_for_review do
-      transitions from: [:not_set, :retain, :to_be_anonymised], to: :review
+      transitions from: %i[not_set retain to_be_anonymised], to: :review
     end
 
     event :mark_for_anonymisation do
-      transitions from: [:not_set, :retain, :review], to: :to_be_anonymised
+      transitions from: %i[not_set retain review], to: :to_be_anonymised
     end
 
     event :unlist do
@@ -44,9 +43,7 @@ class RetentionSchedule < ApplicationRecord
     end
   end
 
-  def human_state
-    aasm.human_state
-  end
+  delegate :human_state, to: :aasm
 
   class << self
     def common_date_viewable_from_range

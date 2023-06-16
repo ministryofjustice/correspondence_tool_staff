@@ -1,13 +1,12 @@
 module Stats
   class R205OffenderSarMonthlyPerformanceReport < BaseMonthlyPerformanceReport
-
     class << self
       def title
-        'Monthly report'
+        "Monthly report"
       end
 
       def description
-        'Includes performance data about Offender SAR requests we received and responded to from the beginning of the year by month.'
+        "Includes performance data about Offender SAR requests we received and responded to from the beginning of the year by month."
       end
 
       def indexes_for_percentage_columns

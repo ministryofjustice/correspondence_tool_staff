@@ -10,39 +10,39 @@ describe CaseRemoveSARDeadlineExtensionService do
     allow(sar_case.state_machine).to receive(:remove_sar_deadline_extension!)
   end
 
-  describe '#initialize' do
-    let(:sar_extension_remove_service) {
+  describe "#initialize" do
+    let(:sar_extension_remove_service) do
       remove_sar_extension_service(manager, sar_case)
-    }
+    end
 
     it { expect(sar_case.external_deadline).not_to eq initial_deadline }
     it { expect(sar_extension_remove_service.result).to eq :incomplete }
   end
 
-  describe '#call' do
-    context 'with expected params' do
-      let!(:sar_extension_remove_service_result) {
+  describe "#call" do
+    context "with expected params" do
+      let!(:sar_extension_remove_service_result) do
         remove_sar_extension_service(manager, sar_case).call
-      }
+      end
 
       it { expect(sar_extension_remove_service_result).to eq :ok }
 
-      it 'creates new SAR extension removal transition' do
+      it "creates new SAR extension removal transition" do
         expect(sar_case.state_machine)
           .to have_received(:remove_sar_deadline_extension!)
           .with(
             acting_user: manager,
-            acting_team: team_dacu
+            acting_team: team_dacu,
           )
       end
 
-      it 'resets SAR deadline date' do
+      it "resets SAR deadline date" do
         expect(sar_case.external_deadline).to eq initial_deadline
       end
     end
 
-    context 'after initial deadline' do
-      it 'allows retrospective removal' do
+    context "after initial deadline" do
+      it "allows retrospective removal" do
         expect(sar_case.external_deadline).to be > sar_case.initial_deadline
         expect(sar_case.deadline_extended?).to be true
 
@@ -56,23 +56,23 @@ describe CaseRemoveSARDeadlineExtensionService do
       end
     end
 
-    context 'on any transaction exception' do
+    context "on any transaction exception" do
       before do
         # Force #call transaction block to fail, can be any kind of StandardError
         allow(sar_case).to receive(:reset_deadline!).and_throw(ArgumentError)
       end
 
-      let(:service) {
+      let(:service) do
         remove_sar_extension_service(
           manager,
-          sar_case
+          sar_case,
         )
-      }
+      end
 
-      it 'does not transition SAR state' do
+      it "does not transition SAR state" do
         result = service.call
         transitions = sar_case.transitions.where(
-          event: 'remove_sar_deadline_extension'
+          event: "remove_sar_deadline_extension",
         )
 
         expect(result).to eq :error
@@ -81,12 +81,12 @@ describe CaseRemoveSARDeadlineExtensionService do
     end
   end
 
-  private
+private
 
   def remove_sar_extension_service(user, kase)
     CaseRemoveSARDeadlineExtensionService.new(
       user,
-      kase
+      kase,
     )
   end
 end

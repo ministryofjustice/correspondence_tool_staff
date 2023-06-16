@@ -1,6 +1,5 @@
 class Workflows::Predicates
   def initialize(user:, kase:)
-
     @user = user
     @kase = kase
   end
@@ -136,13 +135,13 @@ class Workflows::Predicates
 
   def can_create_new_overturned_ico?
     @kase.ico? &&
-        @kase.ico_decision == 'overturned' &&
-        overturned_enabled?(@kase) &&
-        @kase.lacks_overturn?
+      @kase.ico_decision == "overturned" &&
+      overturned_enabled?(@kase) &&
+      @kase.lacks_overturn?
   end
 
   def can_require_further_action_for_ico?
-    (@kase.ico?) && (@user.in? @kase.managing_team.users)
+    @kase.ico? && (@user.in? @kase.managing_team.users)
   end
 
   def not_overturned?
@@ -192,7 +191,7 @@ class Workflows::Predicates
   end
 
   def can_start_complaint?
-    @kase.offender_sar? && (@kase.already_late? || @kase.current_state == 'closed')
+    @kase.offender_sar? && (@kase.already_late? || @kase.current_state == "closed")
   end
 
   def already_late?
@@ -200,10 +199,10 @@ class Workflows::Predicates
   end
 
   def is_ready_to_dispatch?
-    @kase.type == 'Case::SAR::Offender' && (still_in_time? || has_caught_reason_for_lateness?)
+    @kase.type == "Case::SAR::Offender" && (still_in_time? || has_caught_reason_for_lateness?)
   end
 
-  private
+private
 
   def case_already_late?
     Date.current >= @kase.external_deadline
@@ -214,7 +213,7 @@ class Workflows::Predicates
   end
 
   def has_caught_reason_for_lateness?
-    @kase.reason_for_lateness_id.present? && @kase.reason_for_lateness_id > 0
+    @kase.reason_for_lateness_id.present? && @kase.reason_for_lateness_id.positive?
   end
 
   def overturned_enabled?(kase)

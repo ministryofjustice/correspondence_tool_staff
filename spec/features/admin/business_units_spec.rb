@@ -1,11 +1,11 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'editing teams' do
+feature "editing teams" do
   given(:manager) { create :manager }
   given(:bu)      { create :business_unit }
 
   # Needs JS to add business areas covered which uses ajax
-  scenario 'editing a business unit', js: true do
+  scenario "editing a business unit", js: true do
     bu
     login_as manager
 
@@ -25,7 +25,7 @@ feature 'editing teams' do
     expect(business_unit_row.name.text).to eq(bu.name)
     business_unit_row.edit.click
     expect(teams_edit_page.page_heading.heading)
-      .to have_text 'Edit Business unit'
+      .to have_text "Edit Business unit"
     expect(teams_edit_page.page_heading.sub_heading)
       .to have_text "Directorate: #{bu.directorate.name}"
 
@@ -37,12 +37,12 @@ feature 'editing teams' do
     teams_edit_page.deputy_director.set new_lead
     teams_edit_page.submit_button.click
 
-    teams_areas_page.add_area_field.set 'This is another area'
+    teams_areas_page.add_area_field.set "This is another area"
     teams_areas_page.add_button.click
     sleep(2)
-    expect(teams_areas_page.descriptions).to include 'This is another area'
+    expect(teams_areas_page.descriptions).to include "This is another area"
 
-    teams_areas_page.create.click
+    teams_areas_page.create!.click
 
     expect(teams_show_page.page_heading.heading.text).to eq new_name
     expect(teams_show_page.team_email.text).to eq new_email

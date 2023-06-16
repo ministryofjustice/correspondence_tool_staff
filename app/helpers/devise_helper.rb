@@ -4,6 +4,6 @@ module DeviseHelper
     if resource.errors.full_messages.any?
       flash.now[:alert] = resource.errors.full_messages.join("\n")
     end
-    return ''
+    ""
   end
 end

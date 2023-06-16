@@ -25,10 +25,10 @@ module Builders
       @ready_for_creation
     end
 
-    private
+  private
 
     def build_from_session
-      values = @session[session_state] 
+      values = @session[session_state]
       @kase = @case_type.new(values).decorate
     end
 

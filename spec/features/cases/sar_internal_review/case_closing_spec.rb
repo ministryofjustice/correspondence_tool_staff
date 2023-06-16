@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'SAR Internal Review Case can be closed', js:true do
-
+feature "SAR Internal Review Case can be closed", js: true do
   given(:responder)       { find_or_create(:sar_responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }
   given(:manager)         { find_or_create :disclosure_bmt_user }
@@ -10,9 +9,9 @@ feature 'SAR Internal Review Case can be closed', js:true do
 
   let!(:sar_ir) { create(:ready_to_close_sar_internal_review) }
 
-  let!(:late_sar_ir) { 
-    create(:ready_to_close_and_late_sar_internal_review) 
-  }
+  let!(:late_sar_ir) do
+    create(:ready_to_close_and_late_sar_internal_review)
+  end
 
   background do
     responding_team
@@ -20,7 +19,7 @@ feature 'SAR Internal Review Case can be closed', js:true do
   end
 
   before :all do
-    require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+    require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
     CaseClosure::MetadataSeeder.seed!
   end
 
@@ -28,12 +27,12 @@ feature 'SAR Internal Review Case can be closed', js:true do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  describe 'as a manager closing a SAR IR' do
-    context 'for late case' do
-      scenario 'page loads with correct fields asking who is responsible for lateness' do
+  describe "as a manager closing a SAR IR" do
+    context "for late case" do
+      scenario "page loads with correct fields asking who is responsible for lateness" do
         login_as manager
         cases_page.load
-        click_link "#{late_sar_ir.number}"
+        click_link late_sar_ir.number.to_s
         cases_show_page.actions.close_case.click
         cases_close_page.submit_button.click
 
@@ -68,11 +67,11 @@ feature 'SAR Internal Review Case can be closed', js:true do
       end
     end
 
-    context 'for in-time case' do
-      scenario 'page loads with correct fields asking' do
+    context "for in-time case" do
+      scenario "page loads with correct fields asking" do
         login_as manager
         cases_page.load
-        click_link "#{sar_ir.number}"
+        click_link sar_ir.number.to_s
         cases_show_page.actions.close_case.click
         cases_close_page.submit_button.click
 
@@ -89,13 +88,13 @@ feature 'SAR Internal Review Case can be closed', js:true do
     end
   end
 
-  private
+private
 
-  def on_load_field_expectations(lateness: false) 
+  def on_load_field_expectations(lateness: false)
     if lateness
       expect(page).to have_content("Who was responsible for lateness?")
     else
-      expect(page).to_not have_content("Who was responsible for lateness?")
+      expect(page).not_to have_content("Who was responsible for lateness?")
     end
 
     expect(page).to have_content("SAR IR Outcome?")
@@ -106,8 +105,8 @@ feature 'SAR Internal Review Case can be closed', js:true do
       expect(page).to have_content("Who was responsible for outcome being partially upheld or overturned?")
       expect(page).to have_content("Reason(s) for outcome being partially upheld or overturned?")
     else
-      expect(page).to_not have_content("Who was responsible for outcome being partially upheld or overturned?")
-      expect(page).to_not have_content("Reason(s) for outcome being partially upheld or overturned?")
+      expect(page).not_to have_content("Who was responsible for outcome being partially upheld or overturned?")
+      expect(page).not_to have_content("Reason(s) for outcome being partially upheld or overturned?")
     end
   end
 end

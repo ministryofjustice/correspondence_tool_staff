@@ -5,20 +5,20 @@ module Closable
   include SetupCase
 
   included do
-    before_action -> { set_case(params[:id]) }, only: [
-      :closure_outcomes,
-      :edit_closure,
-      :process_date_responded,
-      :update_closure
+    before_action -> { set_case(params[:id]) }, only: %i[
+      closure_outcomes
+      edit_closure
+      process_date_responded
+      update_closure
     ]
 
-    before_action -> { set_decorated_case(params[:id]) }, only: [
-      :close,
-      :confirm_respond,
-      :process_closure,
-      :process_respond_and_close,
-      :respond,
-      :respond_and_close
+    before_action -> { set_decorated_case(params[:id]) }, only: %i[
+      close
+      confirm_respond
+      process_closure
+      process_respond_and_close
+      respond
+      respond_and_close
     ]
   end
 
@@ -27,11 +27,11 @@ module Closable
     authorize @case, :can_close_case?
 
     if @case.ico?
-      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, "responses")
     end
 
     set_permitted_events
-    render 'cases/closable/close'
+    render "cases/closable/close"
   end
 
   def close_case(fallback_path)
@@ -39,13 +39,12 @@ module Closable
     service = CaseClosureService.new(@case, current_user, close_params)
     service.call
 
+    set_permitted_events
     if service.result == :ok
-      set_permitted_events
       flash[:notice] = service.flash_message
       redirect_to case_path(@case)
     else
-      set_permitted_events
-      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, "responses")
       @team_collection = CaseTeamCollection.new(@case)
       render fallback_path
     end
@@ -56,11 +55,11 @@ module Closable
     authorize @case, :can_close_case?
 
     if @case.ico?
-      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, "responses")
     end
     @team_collection = CaseTeamCollection.new(@case)
 
-    render 'cases/closable/closure_outcomes'
+    render "cases/closable/closure_outcomes"
   end
 
   def confirm_respond
@@ -72,27 +71,27 @@ module Closable
 
     case service.result
     when :ok
-      flash[:notice] = t('cases.confirm_respond.success')
+      flash[:notice] = t("cases.confirm_respond.success")
       redirect_to case_path(@case)
     when :late
       @team_collection = CaseTeamCollection.new(@case)
-      render 'cases/ico/late_team'
+      render "cases/ico/late_team"
     when :error
       set_correspondence_type(@case.type_abbreviation.downcase)
-      render 'cases/closable/respond'
+      render "cases/closable/respond"
     else
-      raise 'unexpected result from MarkResponseAsSentService'
+      raise "unexpected result from MarkResponseAsSentService"
     end
   end
 
   def edit_closure
     authorize @case, :update_closure?
 
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'responses')
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, "responses")
     @case = @case.decorate
     @team_collection = CaseTeamCollection.new(@case)
 
-    render 'cases/closable/edit_closure'
+    render "cases/closable/edit_closure"
   end
 
   def process_closure
@@ -100,7 +99,7 @@ module Closable
 
     @case = @case.decorate
 
-    close_case('cases/closable/closure_outcomes')
+    close_case("cases/closable/closure_outcomes")
   end
 
   def process_date_responded
@@ -110,12 +109,12 @@ module Closable
     @case.prepare_for_respond
 
     if !@case.update process_date_responded_params
-      render 'cases/closable/close'
+      render "cases/closable/close"
     else
       @team_collection = CaseTeamCollection.new(@case)
-      @case.update(late_team_id: @case.responding_team.id)
+      @case.update!(late_team_id: @case.responding_team.id)
       if @case.type_of_offender_sar?
-        close_case('cases/closable/close')
+        close_case("cases/closable/close")
       else
         redirect_to polymorphic_path(@case, action: :closure_outcomes)
       end
@@ -131,24 +130,24 @@ module Closable
     if @case.update(close_params)
       @case.respond_and_close(current_user)
       set_permitted_events
-      @close_flash_message = t('notices.case_closed')
-      if @permitted_events.include?(:update_closure)
-        flash[:notice] = "#{@close_flash_message}. #{get_edit_close_link}".html_safe
-      else
-        flash[:notice] = @close_flash_message
-      end
+      @close_flash_message = t("notices.case_closed")
+      flash[:notice] = if @permitted_events.include?(:update_closure)
+                         "#{@close_flash_message}. #{get_edit_close_link}".html_safe
+                       else
+                         @close_flash_message
+                       end
       redirect_to case_path(@case)
     else
       set_permitted_events
       @team_collection = CaseTeamCollection.new(@case)
-      render 'cases/closable/closure_outcomes'
+      render "cases/closable/closure_outcomes"
     end
   end
 
   def respond
     authorize @case, :can_respond?
     set_correspondence_type(@case.type_abbreviation.downcase)
-    render 'cases/closable/respond'
+    render "cases/closable/respond"
   end
 
   def respond_and_close
@@ -156,7 +155,7 @@ module Closable
 
     @case.date_responded = nil
     set_permitted_events
-    render 'cases/closable/close'
+    render "cases/closable/close"
   end
 
   def update_closure
@@ -167,20 +166,20 @@ module Closable
 
     service = UpdateClosureService.new(@case, current_user, close_params)
     service.call
-    
+
     @team_collection = CaseTeamCollection.new(@case)
 
     if service.result == :ok
       set_permitted_events
-      flash[:notice] = t('notices.closure_details_updated')
+      flash[:notice] = t("notices.closure_details_updated")
       redirect_to case_path(@case)
     else
       @case = @case.decorate
-      render 'cases/closable/edit_closure'
+      render "cases/closable/edit_closure"
     end
   end
 
-  protected
+protected
 
   def process_closure_params
     raise NotImplementedError
@@ -194,13 +193,13 @@ module Closable
     raise NotImplementedError
   end
 
-  private
+private
 
   def get_edit_close_link
     view_context.link_to(
       "Edit case closure details",
       polymorphic_path(@case, action: :edit_closure),
-      { class: "undo-take-on-link" }
+      { class: "undo-take-on-link" },
     )
   end
 end

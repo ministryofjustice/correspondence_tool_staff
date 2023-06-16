@@ -3,22 +3,20 @@ module PageObjects
     module Cases
       module Edit
         class OffenderSARComplaintPageDateReceived < PageObjects::Pages::Base
-
-          set_url '/cases/offender_sar_complaints/{id}/edit/date_received'
+          set_url "/cases/offender_sar_complaints/{id}/edit/date_received"
 
           section :primary_navigation,
-                  PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+                  PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
           section :page_heading,
-                  PageObjects::Sections::PageHeadingSection, '.page-heading'
+                  PageObjects::Sections::PageHeadingSection, ".page-heading"
 
-          element :subject_full_name, '#offender_sar_complaint_subject_full_name'
-          element :date_received_day, '#offender_sar_complaint_received_date_dd'
-          element :date_received_month, '#offender_sar_complaint_received_date_mm'
-          element :date_received_year, '#offender_sar_complaint_received_date_yyyy'
+          element :subject_full_name, "#offender_sar_complaint_subject_full_name"
+          element :date_received_day, "#offender_sar_complaint_received_date_dd"
+          element :date_received_month, "#offender_sar_complaint_received_date_mm"
+          element :date_received_year, "#offender_sar_complaint_received_date_yyyy"
 
-          element :submit_button, '.button'
-
+          element :submit_button, ".button"
 
           def edit_received_date(received_date)
             date_received_day.set(received_date.day)

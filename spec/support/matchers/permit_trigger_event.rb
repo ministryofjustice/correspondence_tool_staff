@@ -13,7 +13,6 @@ module PermitTriggerEvent
         end
       end
 
-
       @errors = []
       all_user_teams.each do |user_type, user_and_team|
         all_cases.each do |case_type, kase|
@@ -22,7 +21,7 @@ module PermitTriggerEvent
           config = state_machine.config_for_event(event_name: event,
                                                   metadata: {
                                                     acting_user: user,
-                                                    acting_team: team
+                                                    acting_team: team,
                                                   })
 
           # config.present? would return false for {}, which we don't want.
@@ -36,14 +35,14 @@ module PermitTriggerEvent
             result = !config.nil?
           end
 
-          if [user_type, case_type].in?(permitted_combinations) ^ result
-            debugger if @debug_on_error && $stdout.tty?
-            # this is handy to be able to step through what failed
-            #
-            #    kase : the case currently being tested
-            #    user : the user currently being tested
-            @errors << [user_type, case_type, !config.nil?]
-          end
+          next unless [user_type, case_type].in?(permitted_combinations) ^ result
+
+          debugger if @debug_on_error && $stdout.tty?
+          # this is handy to be able to step through what failed
+          #
+          #    kase : the case currently being tested
+          #    user : the user currently being tested
+          @errors << [user_type, case_type, !config.nil?]
         end
       end
       @errors.empty?
@@ -62,16 +61,14 @@ module PermitTriggerEvent
     end
 
     failure_message do |event|
-      unless @errors.nil? || @errors.empty?
+      if @errors.present?
         @error_message = "Event #{event} failed for the combinations:\n"
         @errors.each do |user_type, kase_type, result|
-          if result
-            @error_message <<
-                "  We did not expect the event to be triggerable for #{user_type} on #{kase_type} cases, but it is.\n"
-          else
-            @error_message <<
-                "  We expected the event to be triggerable for #{user_type} on #{kase_type} cases, but it is not.\n"
-          end
+          @error_message << if result
+                              "  We did not expect the event to be triggerable for #{user_type} on #{kase_type} cases, but it is.\n"
+                            else
+                              "  We expected the event to be triggerable for #{user_type} on #{kase_type} cases, but it is not.\n"
+                            end
         end
       end
       @error_message

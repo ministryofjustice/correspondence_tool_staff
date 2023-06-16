@@ -1,33 +1,33 @@
 class UpdateCasesEscalationDateToUseCreatedAt < ActiveRecord::Migration[5.0]
-  class Case < ActiveRecord::Base
-     belongs_to :category, required: true
+  class Case < ApplicationRecord
+    belongs_to :category, optional: false
 
-     jsonb_accessor :properties,
-                    escalation_deadline: :date,
-                    internal_deadline: :date,
-                    external_deadline: :date
+    jsonb_accessor :properties,
+                   escalation_deadline: :date,
+                   internal_deadline: :date,
+                   external_deadline: :date
 
-     self.inheritance_column = :_type_not_used
+    self.inheritance_column = :_type_not_used
   end
 
-  class Category < ActiveRecord::Base
+  class Category < ApplicationRecord
   end
 
   def up
     cases = Case.all
-    cases.each do | kase |
+    cases.each do |kase|
       new_escalation_date(kase)
     end
   end
 
   def down
     cases = Case.all
-    cases.each do | kase |
+    cases.each do |kase|
       old_escalation_date(kase)
     end
   end
 
-  private
+private
 
   def new_escalation_date(kase)
     kase.escalation_deadline = calculate_date(kase, kase.created_at.to_date)
@@ -50,4 +50,3 @@ class UpdateCasesEscalationDateToUseCreatedAt < ActiveRecord::Migration[5.0]
     date
   end
 end
-

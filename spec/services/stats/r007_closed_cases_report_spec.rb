@@ -1,31 +1,31 @@
-require 'rails_helper'
+require "rails_helper"
 
 module Stats
   describe R007ClosedCasesReport do
-    before(:all) { create_report_type(abbr: :r007)}
+    before(:all) { create_report_type(abbr: :r007) }
     after(:all) { DbHousekeeping.clean(seed: true) }
 
-    describe '.title' do
-      it 'returns correct title' do
-        expect(R007ClosedCasesReport.title).to eq 'Closed cases report'
+    describe ".title" do
+      it "returns correct title" do
+        expect(described_class.title).to eq "Closed cases report"
       end
     end
 
-    describe '.description' do
-      it 'returns correct description' do
-        expect(R007ClosedCasesReport.description)
-          .to eq 'Entire list of closed cases'
+    describe ".description" do
+      it "returns correct description" do
+        expect(described_class.description)
+          .to eq "Entire list of closed cases"
       end
     end
-    
-    describe '.etl_handler' do
-      it 'returns correct etl_handler' do
-        expect(R007ClosedCasesReport.etl_handler)
+
+    describe ".etl_handler" do
+      it "returns correct etl_handler" do
+        expect(described_class.etl_handler)
           .to eq Stats::ETL::ClosedCases
       end
     end
 
-    describe 'reporting' do
+    describe "reporting" do
       before(:all) do
         @period_start = Date.new(2018, 12, 20)
         @period_end = Date.new(2018, 12, 31)
@@ -34,7 +34,7 @@ module Stats
         @cases = {
           closed_sar: {
             type: :closed_sar,
-            received: @period_end - 1.hours,
+            received: @period_end - 1.hour,
           },
           closed_foi: {
             type: :closed_case,
@@ -42,7 +42,7 @@ module Stats
           },
           outside_period_foi: {
             type: :closed_case,
-            received: @period_end + 1.days
+            received: @period_end + 1.day,
           },
           responded_foi: {
             type: :responded_case,
@@ -50,8 +50,8 @@ module Stats
           },
           open_foi: {
             type: :accepted_case,
-            received: @period_start + 1.days,
-            state: 'totally-not-accepted-really'
+            received: @period_start + 1.day,
+            state: "totally-not-accepted-really",
           },
         }
 
@@ -60,29 +60,29 @@ module Stats
             options[:type],
             name: key,
             received_date: options[:received],
-            current_state: options[:state] || 'closed'
+            current_state: options[:state] || "closed",
           )
 
-          kase.save(validate: false)
+          kase.save!(validate: false)
           @cases[key][:case] = kase
         end
 
-        @report = R007ClosedCasesReport.new(
+        @report = described_class.new(
           user: @user,
           period_start: @period_start,
-          period_end: @period_end
+          period_end: @period_end,
         )
       end
 
-      context '#case_scope' do
-        it 'ignores any selected periods' do
+      describe "#case_scope" do
+        it "ignores any selected periods" do
           expected = %w[closed_sar closed_foi outside_period_foi responded_foi]
           expect(@report.case_scope.map(&:name)).to match_array(expected)
         end
       end
 
-      context '#run' do
-        it 'creates a job to generate closed cases' do
+      describe "#run" do
+        it "creates a job to generate closed cases" do
           expect {
             @report.run(report_guid: SecureRandom.uuid)
           }.to change {

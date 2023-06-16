@@ -1,12 +1,12 @@
 module ApplicationHelper
   def active_link_class(url)
-    #home page
+    # home page
     if current_page?(url)
-      'active'
+      "active"
     elsif request.fullpath.start_with?(url)
-      'active'
+      "active"
     else
-      ''
+      ""
     end
   end
 

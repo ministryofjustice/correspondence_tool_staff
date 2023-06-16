@@ -1,21 +1,21 @@
 require "rails_helper"
 
-feature 'filtering cases by timeliness' do
+feature "filtering cases by timeliness" do
   include PageObjects::Pages::Support
 
   before(:all) do
-    @setup = StandardSetup.new(only_cases: [
-                                 :std_draft_foi,
-                                 :std_draft_foi_late,
-                                 :std_responded_foi,
-                                 :std_responded_foi_late,
-                                 :std_closed_foi,
-                                 :std_closed_foi_late,
-                                 :trig_draft_foi_accepted,
-                                 :trig_draft_foi_accepted_late,
-                                 :trig_closed_foi,
-                                 :trig_closed_foi_late,
-                               ])
+    @setup = StandardSetup.new(only_cases: %i[
+      std_draft_foi
+      std_draft_foi_late
+      std_responded_foi
+      std_responded_foi_late
+      std_closed_foi
+      std_closed_foi_late
+      trig_draft_foi_accepted
+      trig_draft_foi_accepted_late
+      trig_closed_foi
+      trig_closed_foi_late
+    ])
   end
 
   after(:all) do
@@ -26,7 +26,7 @@ feature 'filtering cases by timeliness' do
     login_step user: @setup.disclosure_bmt_user
   end
 
-  scenario 'listing cases on open cases page', js: true do
+  scenario "listing cases on open cases page", js: true do
     expect(open_cases_page).to be_displayed
 
     expect(open_cases_page.case_numbers)
@@ -50,7 +50,7 @@ feature 'filtering cases by timeliness' do
       .to be_checked
 
     # remove in_time filter
-    open_cases_page.filter_crumb_for('In time').click
+    open_cases_page.filter_crumb_for("In time").click
 
     open_cases_page.open_filter(:timeliness)
     expect(open_cases_page.filter_timeliness_content.in_time_checkbox)

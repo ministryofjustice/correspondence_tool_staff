@@ -1,5 +1,4 @@
 class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
-
   include OffenderSARCaseForm
 
   def pretty_type
@@ -15,6 +14,6 @@ class Case::SAR::OffenderDecorator < Case::SAR::OffenderBaseDecorator
   end
 
   def request_methods_for_display
-    request_methods_sorted - ['unknown']
+    request_methods_sorted - %w[unknown]
   end
 end

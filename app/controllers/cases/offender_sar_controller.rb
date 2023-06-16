@@ -3,24 +3,24 @@ module Cases
     include NewCase
     include OffenderSARCasesParams
 
-    before_action :set_case_types, only: [:new, :create]
+    before_action :set_case_types, only: %i[new create]
 
-    before_action -> { set_decorated_case(params[:id]) }, only: [
-      :transition,
-      :edit,
-      :update,
-      :move_case_back,
-      :confirm_move_case_back,
-      :record_reason_for_lateness,
-      :confirm_record_reason_for_lateness,
-      :confirm_update_partial_flags,
-      :confirm_sent_to_sscl
+    before_action -> { set_decorated_case(params[:id]) }, only: %i[
+      transition
+      edit
+      update
+      move_case_back
+      confirm_move_case_back
+      record_reason_for_lateness
+      confirm_record_reason_for_lateness
+      confirm_update_partial_flags
+      confirm_sent_to_sscl
     ]
 
     def initialize
       super
       @correspondence_type = CorrespondenceType.offender_sar
-      @correspondence_type_key = 'offender_sar'
+      @correspondence_type_key = "offender_sar"
       @creation_optional_flags = {}
       get_reasons_for_lateness
     end
@@ -37,7 +37,7 @@ module Cases
     def create
       authorize case_type, :can_add_case?
       @case = build_case_from_session(case_type)
-      @case.creator = current_user #to-do Remove when we use the case create service
+      @case.creator = current_user # to-do Remove when we use the case create service
       @case.current_step = params[:current_step]
       load_optional_flags_from_params
       if steps_are_completed?
@@ -46,12 +46,10 @@ module Cases
         else
           render :new
         end
+      elsif @case.valid_attributes?(create_params)
+        go_next_step
       else
-        if @case.valid_attributes?(create_params)
-          go_next_step
-        else
-          render :new
-        end
+        render :new
       end
     end
 
@@ -94,10 +92,10 @@ module Cases
 
       set_permitted_events
       if @permitted_events.include?(params[:transition_name].to_sym)
-        @case.state_machine.send(params[:transition_name] + '!', params_for_transition)
+        @case.state_machine.send("#{params[:transition_name]}!", params_for_transition)
         reload_case_page_on_success
       else
-        raise ArgumentError.new("Bad transition, the action #{params[:transition_name]}is not allowed.")
+        raise ArgumentError, "Bad transition, the action #{params[:transition_name]}is not allowed."
       end
     end
 
@@ -106,19 +104,21 @@ module Cases
       service = CaseUpdatePartialFlagsService.new(
         user: current_user,
         kase: @case,
-        flag_params: flags_process(partial_case_flags_params))
-      service.call()
+        flag_params: flags_process(partial_case_flags_params),
+      )
+      service.call
 
-      if service.result == :error
+      case service.result
+      when :error
         if service.message.present?
           flash[:alert] = service.message
         end
         @case = @case.decorate
         preserve_step_state
         render "cases/edit" and return
-      elsif service.result == :ok
-        flash[:notice] = t('cases.update.case_partial_flag_updated')
-      elsif service.result == :no_changes
+      when :ok
+        flash[:notice] = t("cases.update.case_partial_flag_updated")
+      when :no_changes
         flash[:alert] = "No changes were made"
       end
       redirect_to case_path(@case) and return
@@ -139,7 +139,7 @@ module Cases
 
     def confirm_move_case_back
       authorize @case, :can_move_case_back?
-      if params['extra_comment'].present?
+      if params["extra_comment"].present?
         @case.state_machine.move_case_back!(params_for_move_case_back)
         flash[:notice] = "Case has been moved back."
         redirect_to case_path(@case) and return
@@ -167,14 +167,15 @@ module Cases
           end
           render :record_reason_for_lateness
         end
-        if service.result == :ok
-          flash[:notice] = t('cases.update.case_updated')
-        elsif service.result == :no_changes
+        case service.result
+        when :ok
+          flash[:notice] = t("cases.update.case_updated")
+        when :no_changes
           flash[:alert] = "No changes were made"
         end
         redirect_to case_path(@case) and return
-      rescue InputValidationError => err
-        flash.now[:alert] = err.message
+      rescue InputValidationError => e
+        flash.now[:alert] = e.message
         render :record_reason_for_lateness
       end
     end
@@ -184,47 +185,48 @@ module Cases
       service = CaseUpdateSentToSsclService.new(
         user: current_user,
         kase: @case,
-        params: sent_to_sscl_params
+        params: sent_to_sscl_params,
       )
 
       service.call
 
-      if service.result == :error
+      case service.result
+      when :error
         if service.message.present?
           flash[:alert] = service.message
         end
         @case = @case.decorate
         preserve_step_state
         render "cases/edit" and return
-      elsif service.result == :ok
-        flash[:notice] = t('cases.update.case_updated')
-      elsif service.result == :no_changes
+      when :ok
+        flash[:notice] = t("cases.update.case_updated")
+      when :no_changes
         flash[:alert] = "No changes were made"
       end
       redirect_to case_path(@case) and return
     end
 
-    private
+  private
 
     def flags_process(flag_params)
       if is_reqired_clear_up_second_partial_flag(flag_params)
-        if flag_params['further_actions_required'].present?
-          flag_params.delete('further_actions_required')
+        if flag_params["further_actions_required"].present?
+          flag_params.delete("further_actions_required")
         end
-        flag_params = flag_params.merge('further_actions_required' => nil)
+        flag_params = flag_params.merge("further_actions_required" => nil)
       end
       flag_params
     end
 
     def is_reqired_clear_up_second_partial_flag(flag_params)
-      flag_params['is_partial_case'].present? && flag_params['is_partial_case'].to_s.downcase == 'false'
+      flag_params["is_partial_case"].present? && flag_params["is_partial_case"].to_s.downcase == "false"
     end
 
     def get_extra_message_for_reason_for_lateness_field
       if @case.reason_for_lateness.present?
-        t('event.capture_reason_for_lateness_change')
+        t("event.capture_reason_for_lateness_change")
       else
-        t('event.capture_reason_for_lateness_add')
+        t("event.capture_reason_for_lateness_add")
       end
     end
 
@@ -239,7 +241,7 @@ module Cases
     def get_reasons_for_lateness
       @reasons_for_lateness_items = CategoryReference.list_by_category(:reasons_for_lateness)
       @reasons_for_lateness = CategoryReference.list_by_category(:reasons_for_lateness).pluck(:id, :code).to_h
-      @reason_of_other = @reasons_for_lateness_items.find_by(code: 'other')
+      @reason_of_other = @reasons_for_lateness_items.find_by(code: "other")
     end
 
     def steps_are_completed?
@@ -255,7 +257,7 @@ module Cases
     end
 
     def create_case
-      @case.save
+      @case.save!
       assign_case_to_creator if @case.offender_sar_complaint?
       session[session_state] = nil
       flash[:notice] = "Case created successfully"
@@ -265,7 +267,7 @@ module Cases
     def assign_case_to_creator
       assign_service = CaseAssignToTeamMemberService
                               .new kase: @case,
-                                   role: 'responding',
+                                   role: "responding",
                                    user: current_user
       assign_service.call
     end
@@ -288,11 +290,11 @@ module Cases
     def params_for_move_case_back
       message = "(Reason: #{params[:extra_comment]})"
 
-      { acting_user: current_user, acting_team: @case.default_managing_team, message: message }
+      { acting_user: current_user, acting_team: @case.default_managing_team, message: }
     end
 
     def reload_case_page_on_success
-      flash[:notice] = t('cases.update.case_updated')
+      flash[:notice] = t("cases.update.case_updated")
       redirect_to case_path(@case)
     end
 
@@ -322,8 +324,8 @@ module Cases
       values = session[session_state] || { date_of_birth: nil }
 
       # similar workaround needed for request dated
-      request_dated_exists = values.fetch('request_dated', false)
-      values['request_dated'] = nil unless request_dated_exists
+      request_dated_exists = values.fetch("request_dated", false)
+      values["request_dated"] = nil unless request_dated_exists
       correspondence_type.new(values).decorate
     end
 
@@ -334,7 +336,7 @@ module Cases
     end
 
     def preserve_step_state
-      @case.current_step = params['current_step']
+      @case.current_step = params["current_step"]
     end
 
     def session_state
@@ -356,7 +358,7 @@ module Cases
     end
 
     def has_optional_flags?
-      @creation_optional_flags.present? && @creation_optional_flags.values.all? {|x| x.present?}
+      @creation_optional_flags.present? && @creation_optional_flags.values.all?(&:present?)
     end
 
     def back_link_url
@@ -366,6 +368,5 @@ module Cases
         new_case_path
       end
     end
-
   end
 end

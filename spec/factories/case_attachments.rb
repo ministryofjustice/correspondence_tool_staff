@@ -25,11 +25,11 @@ FactoryBot.define do
     #       number we generate here.
     key { "#{SecureRandom.hex(16)}/responses/#{Faker::Internet.slug}.pdf" }
     preview_key { "#{SecureRandom.hex(16)}/response_previews/#{Faker::Internet.slug}.pdf" }
-    upload_group { Time.now.strftime('%Y%m%d%H%M%S') }
+    upload_group { Time.zone.now.strftime("%Y%m%d%H%M%S") }
   end
 
   factory :correspondence_response, parent: :case_attachment do
-    type { 'response' }
+    type { "response" }
 
     trait :without_preview_key do
       preview_key { nil }
@@ -43,26 +43,33 @@ FactoryBot.define do
     trait :jpg do
       key { "#{SecureRandom.hex(16)}/responses/#{Faker::Internet.slug}.jpg" }
     end
-
   end
 
   factory :commissioning_document_attachment, parent: :case_attachment do
-    type { 'commissioning_document' }
+    type { "commissioning_document" }
   end
 
   factory :case_postal_request, parent: :case_attachment do
-    type { 'response' }
-    key { "#{SecureRandom.hex(16)}/requests/" +
-          "#{upload_group}/#{Faker::Internet.slug}.pdf" }
-    preview_key { "#{SecureRandom.hex(16)}/request_previews/" +
-                  "#{upload_group}/#{Faker::Internet.slug}.pdf" }
+    type { "response" }
+    key do
+      "#{SecureRandom.hex(16)}/requests/" \
+      "#{upload_group}/#{Faker::Internet.slug}.pdf"
+    end
+    preview_key do
+      "#{SecureRandom.hex(16)}/request_previews/" \
+      "#{upload_group}/#{Faker::Internet.slug}.pdf"
+    end
   end
 
   factory :case_ico_decision, parent: :case_attachment do
-    type { 'ico_decision' }
-    key { "#{SecureRandom.hex(16)}/ico_decision/" +
-          "#{upload_group}/#{Faker::Internet.slug}.pdf" }
-    preview_key { "#{SecureRandom.hex(16)}/ico_decision_previews/" +
-                  "#{upload_group}/#{Faker::Internet.slug}.pdf" }
+    type { "ico_decision" }
+    key do
+      "#{SecureRandom.hex(16)}/ico_decision/" \
+      "#{upload_group}/#{Faker::Internet.slug}.pdf"
+    end
+    preview_key do
+      "#{SecureRandom.hex(16)}/ico_decision_previews/" \
+      "#{upload_group}/#{Faker::Internet.slug}.pdf"
+    end
   end
 end

@@ -17,19 +17,20 @@ module OffenderSARComplaintCaseForm
     STEPS
   end
 
-  private
+private
 
   def validate_link_offender_sar_case(params)
-    original_case_number = (params[:original_case_number] || '').strip
+    original_case_number = (params[:original_case_number] || "").strip
     case_link = LinkedCase.new(
       linked_case_number: original_case_number,
-      type: :original
+      type: :original,
     )
     if case_link.valid?
       original_case = case_link.linked_case
-      if not Pundit.policy(object.creator, original_case).show?
+      if !Pundit.policy(object.creator, original_case).show?
         add_errors_for_original_case(
-          I18n.t('activerecord.errors.models.case/sar/offender_complaint.attributes.original_case.not_authorised'))
+          I18n.t("activerecord.errors.models.case/sar/offender_complaint.attributes.original_case.not_authorised"),
+        )
       else
         object.original_case_id = original_case.id
         object.validate_original_case
@@ -70,7 +71,7 @@ module OffenderSARComplaintCaseForm
       flag_as_high_profile
       date_of_birth
     ]
-    fields_subject_details.each do | single_field |
+    fields_subject_details.each do |single_field|
       params[single_field] = object.original_case.send(single_field)
     end
     params
@@ -88,5 +89,4 @@ module OffenderSARComplaintCaseForm
     object.assign_attributes(params)
     object.validate_external_deadline
   end
-
 end

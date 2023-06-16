@@ -28,55 +28,54 @@
 #  dirty                :boolean          default(FALSE)
 #
 
-require 'rails_helper'
+require "rails_helper"
 
 describe Case::ICO::SAR do
-  let(:kase) { described_class.new() }
+  let(:kase) { described_class.new }
 
-  describe '.decorator_class' do
+  describe ".decorator_class" do
     subject { described_class.decorator_class }
-    it { should eq Case::ICO::SARDecorator }
+
+    it { is_expected.to eq Case::ICO::SARDecorator }
   end
 
-  describe '#original_case_type' do
+  describe "#original_case_type" do
     subject { kase.original_case_type }
-    it { should eq 'SAR' }
+
+    it { is_expected.to eq "SAR" }
   end
 
-  describe '#has_overturn? and #lacks?' do
+  describe "#has_overturn? and #lacks?" do
+    let(:ico_sar_case) { create :closed_ico_sar_case }
 
-    let(:ico_sar_case)    { create :closed_ico_sar_case }
+    before { ico_sar_case.linked_cases << create(:sar_case) }
 
-    before(:each)   {ico_sar_case.linked_cases << create(:sar_case) }
-
-    context 'no overturn' do
-      it 'returns false' do
+    context "no overturn" do
+      it "returns false" do
         expect(ico_sar_case.has_overturn?).to be false
         expect(ico_sar_case.lacks_overturn?).to be true
       end
     end
 
-    context 'overturn exists' do
-
+    context "overturn exists" do
       before { create :overturned_ico_sar, original_ico_appeal: ico_sar_case }
 
-      it 'returns true' do
+      it "returns true" do
         expect(ico_sar_case.has_overturn?).to be true
         expect(ico_sar_case.lacks_overturn?).to be false
       end
-
     end
   end
 
-  describe '#reset_responding_assignment_flag' do
-    let(:ico_sar_case)    { create :closed_ico_sar_case }
+  describe "#reset_responding_assignment_flag" do
+    let(:ico_sar_case) { create :closed_ico_sar_case }
 
-    before(:each)   {ico_sar_case.linked_cases << create(:sar_case) }
+    before { ico_sar_case.linked_cases << create(:sar_case) }
 
-    it 'updates the responder assignment state to pending' do
-      expect(ico_sar_case.responder_assignment.state).to eq 'accepted'
+    it "updates the responder assignment state to pending" do
+      expect(ico_sar_case.responder_assignment.state).to eq "accepted"
       ico_sar_case.reset_responding_assignment_flag
-      expect(ico_sar_case.responder_assignment.state).to eq 'pending'
+      expect(ico_sar_case.responder_assignment.state).to eq "pending"
     end
   end
 end

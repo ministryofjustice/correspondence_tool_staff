@@ -23,17 +23,16 @@ class StateSelector
   end
 
   def states_for_url
-    @selected_states.uniq.join(',')
+    @selected_states.uniq.join(",")
   end
 
-  private
+private
 
   def set_states_from_form_input(params)
-    params[:state_selector].each { |state, set| @selected_states << state.to_sym if set == '1' }
+    params[:state_selector].each { |state, set| @selected_states << state.to_sym if set == "1" }
   end
 
   def set_states_from_url(params)
-    params[:states].split(',').each { |state| @selected_states << state.to_sym }
+    params[:states].split(",").each { |state| @selected_states << state.to_sym }
   end
-
 end

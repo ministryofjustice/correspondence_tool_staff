@@ -1,5 +1,5 @@
 class AddTypeToTeams < ActiveRecord::Migration[5.0]
-  class Team < ActiveRecord::Base
+  class Team < ApplicationRecord
   end
 
   def up
@@ -7,7 +7,7 @@ class AddTypeToTeams < ActiveRecord::Migration[5.0]
       add_column :teams, :type, :string
 
       Team.all.each do |team|
-        team.update(type: 'BusinessUnit')
+        team.update(type: "BusinessUnit")
       end
 
       add_index :teams, :type

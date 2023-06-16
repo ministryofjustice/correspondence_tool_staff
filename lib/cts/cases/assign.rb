@@ -1,4 +1,4 @@
-require 'cts'
+require "cts"
 
 module CTS::Cases
   class Assign
@@ -12,16 +12,16 @@ module CTS::Cases
 
     def call
       case @role
-      when 'managing' then
+      when "managing"
         raise "approving assign not implemented yet"
 
-      when 'responding' then
+      when "responding"
         @kase.responding_team = @team
-        @kase.assign_responder(CTS::dacu_manager, @team)
+        @kase.assign_responder(CTS.dacu_manager, @team)
         @kase.reload
         @kase.responder_assignment.accept(@user)
 
-      when 'approving' then
+      when "approving"
         raise "approving assign not implemented yet"
       end
     end

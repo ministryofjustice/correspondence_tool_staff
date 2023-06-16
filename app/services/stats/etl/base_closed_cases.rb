@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 module Stats
   module ETL
@@ -14,10 +14,9 @@ module Stats
         @retrieval_scope = retrieval_scope
         @current_fragment_num = 0
 
-        self
-          .extract
-          .transform
-          .load
+        extract
+        .transform
+        .load
       end
 
       def extract
@@ -37,9 +36,9 @@ module Stats
       def load
         commands = [
           "cd #{folder}",
-          "cat *.csv > #{self.result_name}.csv",
-          "zip -q #{self.result_name}.zip #{self.result_name}.csv"
-        ].join('; ')
+          "cat *.csv > #{result_name}.csv",
+          "zip -q #{result_name}.zip #{result_name}.csv",
+        ].join("; ")
 
         if system(commands)
           @results_filepath = "#{folder}/#{filename}"
@@ -49,24 +48,24 @@ module Stats
       end
 
       def result_name
-        raise 'This method should be defined in the child class'
+        raise "This method should be defined in the child class"
       end
 
       def filename
-        self.result_name + '.zip'
+        "#{result_name}.zip"
       end
 
-      protected
+    protected
 
       def columns
-        raise 'This method should be defined in the child class'
+        raise "This method should be defined in the child class"
       end
 
       def heading
-        raise 'This method should be defined in the child class'
+        raise "This method should be defined in the child class"
       end
 
-      private
+    private
 
       def folder
         @_folder ||= begin
@@ -76,16 +75,14 @@ module Stats
       end
 
       def num_fragments
-        @_num_fragments ||= begin
-          (@retrieval_scope.size.to_f/ROWS_PER_FRAGMENT).ceil
-        end
+        @_num_fragments ||= (@retrieval_scope.size.to_f / ROWS_PER_FRAGMENT).ceil
       end
 
       def new_fragment(data)
-        filename = "#{'%02d' % @current_fragment_num}-fragment-"
+        filename = "#{sprintf('%02d', @current_fragment_num)}-fragment-"
         @current_fragment_num += 1
 
-        file = Tempfile.new([filename, '.csv'], folder)
+        file = Tempfile.new([filename, ".csv"], folder)
         file.write(data)
         file.close
         file
@@ -102,9 +99,9 @@ module Stats
           data = CSV.generate(force_quotes: true) do |csv|
             Query::CaseReport.new(
               retrieval_scope: @retrieval_scope,
-              columns: columns,
-              offset: offset,
-              limit: ROWS_PER_FRAGMENT
+              columns:,
+              offset:,
+              limit: ROWS_PER_FRAGMENT,
             ).execute { |row| csv << row }
 
             offset += ROWS_PER_FRAGMENT

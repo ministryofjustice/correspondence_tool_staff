@@ -15,23 +15,22 @@
 #  etl                      :boolean          default(FALSE)
 
 class ReportType < ApplicationRecord
-
-  VALID_DEFAULT_REPORTING_PERIODS = %w{
-                                        year_to_date
-                                        quarter_to_date
-                                        last_quarter
-                                        last_month
-                                      }.freeze
+  VALID_DEFAULT_REPORTING_PERIODS = %w[
+    year_to_date
+    quarter_to_date
+    last_quarter
+    last_month
+  ].freeze
 
   has_many :reports
 
-  scope :custom,   -> { where( custom_report: true ) }
-  scope :standard, -> { where( standard_report: true ) }
-  scope :foi, -> { where( foi: true ) }
-  scope :sar, -> { where( sar: true ) }
-  scope :offender_sar, -> { where( offender_sar: true ) }
-  scope :offender_sar_complaint, -> { where( offender_sar_complaint: true ) }
-  scope :closed_cases_report, -> { where(abbr: 'R007') }
+  scope :custom,   -> { where(custom_report: true) }
+  scope :standard, -> { where(standard_report: true) }
+  scope :foi, -> { where(foi: true) }
+  scope :sar, -> { where(sar: true) }
+  scope :offender_sar, -> { where(offender_sar: true) }
+  scope :offender_sar_complaint, -> { where(offender_sar_complaint: true) }
+  scope :closed_cases_report, -> { where(abbr: "R007") }
 
   validates :default_reporting_period, presence: true, inclusion: { in: VALID_DEFAULT_REPORTING_PERIODS }
 
@@ -45,7 +44,7 @@ class ReportType < ApplicationRecord
 
   def self.method_missing(meth, *args)
     if meth.to_s =~ /^r\d\d\d$/
-      self.find_by!(abbr: meth.to_s.upcase)
+      find_by!(abbr: meth.to_s.upcase)
     else
       super
     end
@@ -63,8 +62,5 @@ class ReportType < ApplicationRecord
     class_constant.report_format
   end
 
-  def description
-    class_constant.description
-  end
-
+  delegate :description, to: :class_constant
 end

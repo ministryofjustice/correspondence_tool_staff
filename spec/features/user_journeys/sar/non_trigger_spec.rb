@@ -4,12 +4,10 @@
 #
 ###################################
 
+require "rails_helper"
+require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
-require 'rails_helper'
-require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
-
-
-feature 'Non-Offender SAR case that does not require clearance' do
+feature "Non-Offender SAR case that does not require clearance" do
   include CaseDateManipulation
   include Features::Interactions
   given(:responder)                { responding_team.responders.first }
@@ -25,21 +23,21 @@ feature 'Non-Offender SAR case that does not require clearance' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'end-to-end journey', js: true do
-    kase = create_and_assign_sar_case user: manager,
-                                      responding_team: responding_team
-    accept_case kase: kase,
+  scenario "end-to-end journey", js: true do
+    kase = create_and_assign_sar_case(user: manager,
+                                      responding_team:)
+    accept_case kase:,
                 user: responder,
                 do_logout: false
 
     set_case_dates_back_by(kase, 7.days)
 
-    add_message_to_case kase: kase,
-                        message: 'This. Is. A. Test.',
+    add_message_to_case kase:,
+                        message: "This. Is. A. Test.",
                         do_logout: true
 
     close_sar_case user: responder,
-                   kase: kase,
-                   timeliness: 'in time'
+                   kase:,
+                   timeliness: "in time"
   end
 end

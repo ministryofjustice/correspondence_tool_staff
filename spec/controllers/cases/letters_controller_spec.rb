@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Cases::LettersController, type: :controller do
   let(:manager) { find_or_create :disclosure_bmt_user }
@@ -20,11 +20,11 @@ RSpec.describe Cases::LettersController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      it 'sets @case' do
+      it "sets @case" do
         expect(assigns(:case)).to eq offender_sar_case
       end
 
-      it 'sets @letter_templates' do
+      it "sets @letter_templates" do
         expect(assigns(:letter_templates)).to include letter_template_acknowledgement
         expect(assigns(:letter_templates)).not_to include letter_template_dispatch
       end
@@ -37,7 +37,7 @@ RSpec.describe Cases::LettersController, type: :controller do
         get :show, params: {
           case_id: offender_sar_case.id,
           type: "acknowledgement",
-          letter:  { letter_template_id: letter_template_acknowledgement.id }
+          letter: { letter_template_id: letter_template_acknowledgement.id },
         }
       end
 
@@ -45,29 +45,30 @@ RSpec.describe Cases::LettersController, type: :controller do
         expect(response).to have_http_status(:success)
       end
 
-      it 'sets @case' do
+      it "sets @case" do
         expect(assigns(:case)).to eq offender_sar_case
       end
 
-      it 'sets @letter' do
+      it "sets @letter" do
         expect(assigns(:letter)).to be_a Letter
       end
     end
 
-    context 'word doc with valid params' do
+    context "word doc with valid params" do
       before do
         get :show, as: :docx, params: {
           case_id: offender_sar_case.id,
           type: "acknowledgement",
-          letter:  { letter_template_id: letter_template_acknowledgement.id }
+          letter: { letter_template_id: letter_template_acknowledgement.id },
         }
       end
 
-      it 'generates' do
+      it "generates" do
         expect(response).to have_http_status(:success)
         expect(response.headers["Content-Type"]).to eq "application/vnd.openxmlformats-officedocument.wordprocessingml.document; charset=utf-8"
       end
     end
+
     context "with invalid params" do
       before do
         get :show, params: { case_id: offender_sar_case.id, type: "acknowledgement" }
@@ -78,5 +79,4 @@ RSpec.describe Cases::LettersController, type: :controller do
       end
     end
   end
-
 end

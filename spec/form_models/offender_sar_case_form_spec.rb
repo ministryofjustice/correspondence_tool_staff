@@ -1,15 +1,15 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe OffenderSARCaseForm do
-  let(:case_form) {create(:offender_sar_case).decorate }
+  let(:case_form) { create(:offender_sar_case).decorate }
 
-  it 'can be created' do
+  it "can be created" do
     expect(case_form).to be_an_instance_of Case::SAR::Offender
   end
 
   describe "#steps" do
     it "returns the list of steps" do
-      expect(case_form.steps).to eq ["subject-details", "requester-details", "recipient-details", "requested-info", "request-details", "date-received"]
+      expect(case_form.steps).to eq %w[subject-details requester-details recipient-details requested-info request-details date-received]
     end
   end
 
@@ -31,9 +31,11 @@ RSpec.describe OffenderSARCaseForm do
     end
 
     context "when params is set and not valid" do
-      let(:params) { ActionController::Parameters.new(
-        case_form: { name: "", postal_address: "address" }
-      ).require(:case_form).permit(:name, :postal_address)}
+      let(:params) do
+        ActionController::Parameters.new(
+          case_form: { name: "", postal_address: "address" },
+        ).require(:case_form).permit(:name, :postal_address)
+      end
 
       context "and the form model has the values merged" do
         it "returns false" do

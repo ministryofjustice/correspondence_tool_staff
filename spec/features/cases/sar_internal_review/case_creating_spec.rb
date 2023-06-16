@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'SAR Internal Review Case creation by a manager' do
-
+feature "SAR Internal Review Case creation by a manager" do
   given(:responder)       { find_or_create(:sar_responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }
   given(:manager)         { find_or_create :disclosure_bmt_user }
@@ -23,7 +22,7 @@ feature 'SAR Internal Review Case creation by a manager' do
   end
 
   before :all do
-    require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+    require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
     CaseClosure::MetadataSeeder.seed!
   end
 
@@ -31,7 +30,7 @@ feature 'SAR Internal Review Case creation by a manager' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'creating a SAR internal review case', js: true do
+  scenario "creating a SAR internal review case", js: true do
     when_i_start_sar_ir_case_journey
     and_i_try_to_link_an_foi_case
     then_i_shoul_expect_to_see_an_error
@@ -77,16 +76,16 @@ feature 'SAR Internal Review Case creation by a manager' do
   end
 
   def then_they_can_take_the_case_on_and_clear_the_response
-    click_link 'New cases'
-    click_link 'Take case on'
+    click_link "New cases"
+    click_link "Take case on"
 
     expect(page).to have_content(latest_sar_ir_number)
     click_link latest_sar_ir_number
 
-    expect(page).not_to have_content('Close case')
+    expect(page).not_to have_content("Close case")
 
-    click_link 'Clear response'
-    click_button 'Clear response'
+    click_link "Clear response"
+    click_button "Clear response"
   end
 
   def then_they_can_mark_the_case_as_sent
@@ -104,18 +103,18 @@ feature 'SAR Internal Review Case creation by a manager' do
     cases_page.load
   end
 
-  def when_an_approver_logs_in 
+  def when_an_approver_logs_in
     login_as approver
     cases_page.load
   end
 
   def then_they_can_accept_and_clear_the_case
-    click_link "#{Case::SAR::InternalReview.first.number}"
+    click_link Case::SAR::InternalReview.first.number.to_s
 
     assignments_edit_page.accept_radio.click
     assignments_edit_page.confirm_button.click
 
-    click_link 'Ready for Disclosure clearance'
+    click_link "Ready for Disclosure clearance"
   end
 
   def when_i_sign_in_as_a_responder
@@ -138,7 +137,7 @@ feature 'SAR Internal Review Case creation by a manager' do
   end
 
   def when_i_start_sar_ir_case_journey
-    click_link 'Create case', match: :first
+    click_link "Create case", match: :first
 
     expect(page).to have_content("SAR IR - Subject access request internal review")
 
@@ -155,11 +154,11 @@ feature 'SAR Internal Review Case creation by a manager' do
 
   def then_i_shoul_expect_to_see_an_error
     page = case_new_sar_ir_link_case_page
-    error_message = "The original case must be a SAR (Subject Access Request) correspondence type" 
+    error_message = "The original case must be a SAR (Subject Access Request) correspondence type"
     expect(page).to have_content(error_message)
   end
 
-  def when_i_try_to_link_a_regular_sar_case 
+  def when_i_try_to_link_a_regular_sar_case
     page = case_new_sar_ir_link_case_page
     page.fill_in_original_case_number(sar_case.number)
     page.submit_button.click
@@ -174,12 +173,12 @@ feature 'SAR Internal Review Case creation by a manager' do
     when_i_try_to_link_a_regular_sar_case
   end
 
-  def then_i_should_see_the_linked_sar_case_details_on_the_confirm_page 
+  def then_i_should_see_the_linked_sar_case_details_on_the_confirm_page
     page = case_new_sar_ir_confirm_sar_page
     expect(page).to have_content(sar_case.subject_full_name)
     expect(page).to have_content(sar_case.subject)
     expect(page).to have_content(sar_case.email)
-    expect(page).to have_content('Check details of the SAR')
+    expect(page).to have_content("Check details of the SAR")
   end
 
   def when_i_confirm_the_linked_sar_details

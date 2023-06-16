@@ -22,12 +22,12 @@ class CaseUpdateSentToSsclService
         @result = :no_changes
       end
     end
-  rescue => err
-    @message = err.message
+  rescue StandardError => e
+    @message = e.message
     @result = :error
   end
 
-  private
+private
 
   def reason
     if reason_added?
@@ -37,21 +37,21 @@ class CaseUpdateSentToSsclService
 
   def get_event
     if reason_added?
-      'date_sent_to_sscl_removed'
+      "date_sent_to_sscl_removed"
     else
-      @case.sent_to_sscl_at_was.present? ? 'edit_case' : 'record_sent_to_sscl'
+      @case.sent_to_sscl_at_was.present? ? "edit_case" : "record_sent_to_sscl"
     end
   end
 
   def date_changed?
-    @case.changed_attributes.keys.include?('sent_to_sscl_at')
+    @case.changed_attributes.keys.include?("sent_to_sscl_at")
   end
 
   def reason_added?
     @case.remove_sent_to_sscl_reason.present?
   end
 
-  def trigger_event(event, message=nil)
-    @case.state_machine.send("#{event}!", acting_user: @user, acting_team: @case.managing_team, message: message)
+  def trigger_event(event, message = nil)
+    @case.state_machine.send("#{event}!", acting_user: @user, acting_team: @case.managing_team, message:)
   end
 end

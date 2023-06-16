@@ -1,19 +1,16 @@
 module DeadlineCalculator
   class CalendarDays
-
     attr_reader :kase
 
     class << self
-
       def days_taken(start_date, end_date)
         (end_date - start_date).to_i + 1
-      end 
-  
+      end
+
       def days_late(start_date, end_date)
         (end_date - start_date).to_i
-      end 
-
-    end 
+      end
+    end
 
     def initialize(kase)
       @kase = kase
@@ -23,7 +20,8 @@ module DeadlineCalculator
       kase.created_at.to_date + kase.correspondence_type.escalation_time_limit.days
     end
 
-    def internal_deadline     # aka draft deadline
+    # aka draft deadline
+    def internal_deadline
       kase.received_date + kase.correspondence_type.internal_time_limit.days
     end
 
@@ -39,8 +37,8 @@ module DeadlineCalculator
     def extension_deadline(time_limit)
       kase.received_date + (time_limit + kase.correspondence_type.external_time_limit).days
     end
-    
-    def max_allowed_deadline_date(time_limit=nil)
+
+    def max_allowed_deadline_date(time_limit = nil)
       time_limit ||= (kase.correspondence_type.extension_time_limit || 0)
       kase.received_date + (time_limit + kase.correspondence_type.external_time_limit).days
     end
@@ -51,9 +49,8 @@ module DeadlineCalculator
       date + num_days.days
     end
 
-    def time_units_desc_for_deadline(time_limit=1)
+    def time_units_desc_for_deadline(time_limit = 1)
       "calendar #{'day'.pluralize(time_limit)}".freeze
     end
-
   end
 end

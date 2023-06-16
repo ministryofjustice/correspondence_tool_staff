@@ -1,10 +1,10 @@
 require "rails_helper"
 
 describe Case::SAR::OffenderComplaintDecorator do
-  let(:offender_sar_complaint) {build_stubbed(:offender_sar_complaint, date_responded: Date.new(2020,1,10), received_date: Date.new(2020,1,1)).decorate}
+  let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, date_responded: Date.new(2020, 1, 10), received_date: Date.new(2020, 1, 1)).decorate }
 
-  it 'instantiates the correct decorator' do
-    expect(Case::SAR::OffenderComplaint.new.decorate).to be_instance_of Case::SAR::OffenderComplaintDecorator
+  it "instantiates the correct decorator" do
+    expect(Case::SAR::OffenderComplaint.new.decorate).to be_instance_of described_class
   end
 
   describe "#current_step" do
@@ -51,55 +51,54 @@ describe Case::SAR::OffenderComplaintDecorator do
     end
   end
 
-  describe '#complaint_type' do
-    context 'for standard complaint' do
-      it 'returns Standard' do
-        expect(offender_sar_complaint.complaint_type).to eq 'Standard'
+  describe "#complaint_type" do
+    context "for standard complaint" do
+      it "returns Standard" do
+        expect(offender_sar_complaint.complaint_type).to eq "Standard"
       end
     end
 
-    context 'for ICO complaint' do
-      let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, complaint_type: 'ico_complaint', date_responded: Date.new(2020,1,10), received_date: Date.new(2020,1,1)).decorate }
+    context "for ICO complaint" do
+      let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, complaint_type: "ico_complaint", date_responded: Date.new(2020, 1, 10), received_date: Date.new(2020, 1, 1)).decorate }
 
-      it 'returns ICO' do
-        expect(offender_sar_complaint.complaint_type).to eq 'ICO'
+      it "returns ICO" do
+        expect(offender_sar_complaint.complaint_type).to eq "ICO"
       end
     end
 
-    context 'for litigation complaint' do
-      let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, complaint_type: 'litigation', date_responded: Date.new(2020,1,10), received_date: Date.new(2020,1,1)).decorate }
+    context "for litigation complaint" do
+      let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, complaint_type: "litigation", date_responded: Date.new(2020, 1, 10), received_date: Date.new(2020, 1, 1)).decorate }
 
-      it 'returns Litigation' do
-        expect(offender_sar_complaint.complaint_type).to eq 'Litigation'
+      it "returns Litigation" do
+        expect(offender_sar_complaint.complaint_type).to eq "Litigation"
       end
     end
   end
 
-  describe '#type_printer' do
-    it 'pretty prints Case - Standard' do
-      expect(offender_sar_complaint.pretty_type).to eq 'Complaint - Standard'
+  describe "#type_printer" do
+    it "pretty prints Case - Standard" do
+      expect(offender_sar_complaint.pretty_type).to eq "Complaint - Standard"
     end
 
-    it 'pretty prints Case - ICO' do
-      offender_sar_complaint.complaint_type = 'ico_complaint'
-      expect(offender_sar_complaint.pretty_type).to eq 'Complaint - ICO'
+    it "pretty prints Case - ICO" do
+      offender_sar_complaint.complaint_type = "ico_complaint"
+      expect(offender_sar_complaint.pretty_type).to eq "Complaint - ICO"
     end
 
-    it 'pretty prints Case - Litigation' do
-      offender_sar_complaint.complaint_type = 'litigation_complaint'
-      expect(offender_sar_complaint.pretty_type).to eq 'Complaint - Litigation'
+    it "pretty prints Case - Litigation" do
+      offender_sar_complaint.complaint_type = "litigation_complaint"
+      expect(offender_sar_complaint.pretty_type).to eq "Complaint - Litigation"
     end
   end
 
-  describe '#highlight_flag' do
-    it 'returns blank string when priority is normal' do
-      expect(offender_sar_complaint.highlight_flag).to eq ''
+  describe "#highlight_flag" do
+    it "returns blank string when priority is normal" do
+      expect(offender_sar_complaint.highlight_flag).to eq ""
     end
 
     it 'returns string of "High" when priority is high' do
-      offender_sar_complaint.priority = 'high'
-      expect(offender_sar_complaint.highlight_flag).to eq 'High'
+      offender_sar_complaint.priority = "high"
+      expect(offender_sar_complaint.highlight_flag).to eq "High"
     end
   end
-
 end

@@ -5,13 +5,13 @@ module CurrentTeamAndUser
     def initialize(kase)
       @case = kase
       @dts = DefaultTeamService.new(@case)
-      @team = nil 
+      @team = nil
       @user = nil
     end
 
     # use method missing to get default value when the case type doesn't implement state-method
     def method_missing(method_name, *args)
-      super unless @case.class.permitted_states.include?(method_name.to_s) && !self.respond_to?(method_name.to_s)
+      super unless @case.class.permitted_states.include?(method_name.to_s) && !respond_to?(method_name.to_s)
     end
 
     def unassigned

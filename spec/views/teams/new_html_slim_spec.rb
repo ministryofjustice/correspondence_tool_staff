@@ -1,14 +1,13 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'teams/new.html.slim', type: :view do
-
-  let(:manager)   { create :manager }
+describe "teams/new.html.slim", type: :view do
+  let(:manager) { create :manager }
 
   def login_as(user)
     allow(view).to receive(:current_user).and_return(user)
   end
 
-  context 'creating a new business group' do
+  context "creating a new business group" do
     before do
       login_as manager
       assign(:team, BusinessGroup.new)
@@ -16,8 +15,7 @@ describe 'teams/new.html.slim', type: :view do
       teams_new_page.load(rendered)
     end
 
-    it 'displays the new business group page and all its fields' do
-
+    it "displays the new business group page and all its fields" do
       expect(teams_new_page.page_heading.text)
         .to eq "New Business group"
 
@@ -36,10 +34,9 @@ describe 'teams/new.html.slim', type: :view do
 
       expect(teams_new_page).to have_submit_button
     end
-
   end
 
-  context 'creating a new directorate' do
+  context "creating a new directorate" do
     before do
       login_as manager
       assign(:team, Directorate.new)
@@ -47,8 +44,7 @@ describe 'teams/new.html.slim', type: :view do
       teams_new_page.load(rendered)
     end
 
-    it 'displays the new directorate page and all its fields' do
-
+    it "displays the new directorate page and all its fields" do
       expect(teams_new_page.page_heading.text)
         .to eq "New Directorate"
 
@@ -65,14 +61,11 @@ describe 'teams/new.html.slim', type: :view do
       expect(teams_new_page).to have_no_approving_role_option
       expect(teams_new_page).to have_no_managing_role_option
 
-
       expect(teams_new_page).to have_submit_button
     end
-
   end
 
-
-  context 'creating a new business unit' do
+  context "creating a new business unit" do
     before do
       login_as manager
       assign(:team, BusinessUnit.new)
@@ -80,8 +73,7 @@ describe 'teams/new.html.slim', type: :view do
       teams_new_page.load(rendered)
     end
 
-    it 'displays the new business unit page and all its fields' do
-
+    it "displays the new business unit page and all its fields" do
       expect(teams_new_page.page_heading.text)
         .to eq "New Business unit"
 
@@ -99,8 +91,6 @@ describe 'teams/new.html.slim', type: :view do
       expect(teams_new_page).to have_managing_role_option
 
       expect(teams_new_page).to have_submit_button
-
     end
-
   end
 end

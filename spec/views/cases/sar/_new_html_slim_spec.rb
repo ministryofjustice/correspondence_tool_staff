@@ -1,6 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'cases/sar/new.html.slim', type: :view do
+describe "cases/sar/new.html.slim", type: :view do
   let(:sar_case)                { build_stubbed :sar_case }
   let(:disclosure_specialist)   { find_or_create :disclosure_specialist }
 
@@ -9,19 +9,16 @@ describe 'cases/sar/new.html.slim', type: :view do
     super(user)
   end
 
-  before(:each) { login_as disclosure_specialist }
+  before { login_as disclosure_specialist }
 
-  xdescribe 'sar form' do
-    it 'asks for data subjects info' do
-      render partial: 'cases/sar/new_form_common',
-             locals:{ kase: sar_case}
-
+  xdescribe "sar form" do
+    it "asks for data subjects info" do
+      render partial: "cases/sar/new_form_common",
+             locals: { kase: sar_case }
     end
 
     # expect()
   end
-
-
 
   # describe 'basic_details' do
   #   it 'displays the initial case details' do
@@ -123,6 +120,4 @@ describe 'cases/sar/new.html.slim', type: :view do
   #   end
   #
   # end
-
-
 end

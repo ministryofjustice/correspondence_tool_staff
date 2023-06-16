@@ -14,7 +14,7 @@ class DataRequestDecorator < Draper::Decorator
       return "from #{date_format(date_from)} to #{date_format(date_to)}"
     end
 
-    return ""
+    ""
   end
 
   def location
@@ -26,12 +26,12 @@ class DataRequestDecorator < Draper::Decorator
   end
 
   def data_required
-    request_type_note if request_type == 'other'
+    request_type_note if request_type == "other"
   end
 
-  private
+private
 
   def date_format(date)
-    date.strftime('%d/%m/%Y')
+    date.strftime("%d/%m/%Y")
   end
 end

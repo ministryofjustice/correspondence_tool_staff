@@ -1,12 +1,12 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'moving business units' do
+feature "moving business units" do
   before(:all) do
     @open_cases = {
-      std_draft_foi:              { received_date: 6.business_days.ago },
+      std_draft_foi: { received_date: 6.business_days.ago },
     }
     @closed_cases = {
-      std_closed_foi:  { received_date: 18.business_days.ago },
+      std_closed_foi: { received_date: 18.business_days.ago },
     }
     @all_cases = @open_cases.merge(@closed_cases)
     @setup = StandardSetup.new(only_cases: @all_cases)
@@ -21,7 +21,7 @@ feature 'moving business units' do
   given(:responder) { find_or_create :foi_responder }
   given!(:target_directorate) { find_or_create :responder_directorate, name: "Target Directorate" }
 
-  scenario 'manager moves a business unit', js: true do
+  scenario "manager moves a business unit", js: true do
     # verify responder can see cases before move
     login_as responder
     cases_page.load

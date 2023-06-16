@@ -11,12 +11,12 @@ class DataRequestLog < ApplicationRecord
   acts_as_gov_uk_date :date_received
 
   def validate_date_received?
-    return false if self.date_received.blank?
+    return false if date_received.blank?
 
-    if self.date_received > Date.today
+    if date_received > Date.today
       errors.add(
         :date_received,
-        I18n.t('activerecord.errors.models.data_request.attributes.date_received.future')
+        I18n.t("activerecord.errors.models.data_request.attributes.date_received.future"),
       )
     end
     errors[:date_received].any?

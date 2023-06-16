@@ -11,10 +11,10 @@ module CaseStates
 
   def instantiate_configurable_state_machine
     @state_machine = ConfigurableStateMachine::Manager.instance.state_machine(
-      org: 'moj',
+      org: "moj",
       case_type: self.class.state_machine_name,
-      workflow: workflow.nil? ? 'standard' : workflow,
-      kase: self
+      workflow: workflow.nil? ? "standard" : workflow,
+      kase: self,
     )
   end
 
@@ -23,7 +23,7 @@ module CaseStates
                                     message)
     state_machine.reject_responder_assignment! acting_user: current_user,
                                                acting_team: responding_team,
-                                               message: message
+                                               message:
   end
 
   def responder_assignment_accepted(current_user, responding_team)
@@ -32,11 +32,11 @@ module CaseStates
 
   def remove_response(current_user, attachment, acting_team: nil)
     attachment.destroy!
-    acting_team = acting_team || current_user.case_team(self)
+    acting_team ||= current_user.case_team(self)
     state_machine.remove_response! acting_user: current_user,
-                                   acting_team: acting_team,
+                                   acting_team:,
                                    filenames: attachment.filename,
-                                   num_attachments: self.reload.attachments.size
+                                   num_attachments: reload.attachments.size
   end
 
   def response_attachments
@@ -44,7 +44,7 @@ module CaseStates
   end
 
   def respond(current_user)
-    role = self.ico? ? :approver : :responder
+    role = ico? ? :approver : :responder
     team = team_for_unassigned_user(current_user, role)
     ActiveRecord::Base.transaction do
       state_machine.respond!(acting_user: current_user, acting_team: team)
@@ -52,10 +52,10 @@ module CaseStates
   end
 
   def close(current_user)
-    state_machine.close!(acting_user: current_user, acting_team: self.managing_team)
+    state_machine.close!(acting_user: current_user, acting_team: managing_team)
   end
 
-  private
+private
 
   def reset_state_machine
     @state_machine = nil

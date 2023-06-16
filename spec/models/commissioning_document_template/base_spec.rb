@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 module CommissioningDocumentTemplate
   class TestClass < CommissioningDocumentTemplate::Base
@@ -9,22 +9,23 @@ module CommissioningDocumentTemplate
 end
 
 RSpec.describe CommissioningDocumentTemplate::TestClass do
+  subject { described_class.new(data_request:) }
+
   let(:kase) { build_stubbed(:offender_sar_case) }
   let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }
-  subject { described_class.new(data_request: data_request) }
 
-  describe 'deadlines' do
-    it 'sets deadline to 5 days time', :aggregate_failures do
+  describe "deadlines" do
+    it "sets deadline to 5 days time", :aggregate_failures do
       Timecop.freeze(Date.new(2022, 11, 15)) do # Tuesday
-        expect(subject.context[:deadline]).to eq '20/11/2022' # Sunday
+        expect(subject.context[:deadline]).to eq "20/11/2022" # Sunday
       end
 
       Timecop.freeze(Date.new(2022, 11, 18)) do # Friday
-        expect(subject.context[:deadline]).to eq '23/11/2022' # Wednesday
+        expect(subject.context[:deadline]).to eq "23/11/2022" # Wednesday
       end
 
       Timecop.freeze(Date.new(2022, 8, 22)) do # Monday
-        expect(subject.context[:deadline]).to eq '27/08/2022' # Saturday
+        expect(subject.context[:deadline]).to eq "27/08/2022" # Saturday
       end
     end
   end

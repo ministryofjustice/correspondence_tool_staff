@@ -1,6 +1,5 @@
 class CaseCreateService
-  attr_reader :case, :result, :message
-  attr_reader :case_type # Used for tests
+  attr_reader :case, :result, :message, :case_type # Used for tests
 
   def initialize(user:, case_type:, params:, prebuilt_case: nil)
     @user = user
@@ -29,12 +28,12 @@ class CaseCreateService
     @result != :error
   end
 
-  private
+private
 
   def return_new_or_prebuilt_case
     return @prebuilt_case if @prebuilt_case.present? && @case_type.steppable?
 
-    @case_type.new(@params.to_unsafe_h.merge(creator: @user).except!('type'))
+    @case_type.new(@params.to_unsafe_h.merge(creator: @user).except!("type"))
   end
 
   # TODO: Move to relevant controller
@@ -56,11 +55,11 @@ class CaseCreateService
     @case.save!
     @message = "#{@case.decorate.pretty_type} case created<br/>Case number: #{@case.number}".html_safe
 
-    if @params[:flag_for_disclosure_specialists] == 'yes'
+    if @params[:flag_for_disclosure_specialists] == "yes"
       CaseFlagForClearanceService.new(
         user: @user,
         kase: @case,
-        team: BusinessUnit.dacu_disclosure
+        team: BusinessUnit.dacu_disclosure,
       ).call
     end
     flag_for_disclosure if @case.is_a?(Case::ICO::Base)
@@ -70,7 +69,7 @@ class CaseCreateService
     service = CaseFlagForClearanceService.new(
       user: @user,
       kase: @case,
-      team: BusinessUnit.dacu_disclosure
+      team: BusinessUnit.dacu_disclosure,
     )
     result = service.call
 

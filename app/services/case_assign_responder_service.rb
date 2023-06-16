@@ -15,7 +15,7 @@ class CaseAssignResponderService
       if @assignment.valid?
         managing_team = @user.managing_teams.first
         @case.state_machine.assign_responder! acting_user: @user, acting_team: managing_team, target_team: @team
-        @assignment.save
+        @assignment.save!
         @result = :ok
       else
         @result = :could_not_create_assignment
@@ -23,5 +23,4 @@ class CaseAssignResponderService
     end
     @result == :ok
   end
-
 end

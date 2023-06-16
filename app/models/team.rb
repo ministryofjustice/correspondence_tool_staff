@@ -21,32 +21,32 @@ class Team < ApplicationRecord
   validate :valid_role
   validate :deletion_validation
 
-  DEACTIVATED_LABEL = '[DEACTIVATED]'.freeze
+  DEACTIVATED_LABEL = "[DEACTIVATED]".freeze
 
   acts_as_tree
 
-  has_paper_trail ignore: [:created_at, :updated_at]
+  has_paper_trail ignore: %i[created_at updated_at]
 
-  has_many :user_roles, class_name: 'TeamsUsersRole'
+  has_many :user_roles, class_name: "TeamsUsersRole"
   has_many :users, -> { order(:full_name) }, through: :user_roles
-  has_many :properties, class_name: 'TeamProperty', dependent: :delete_all
-  has_many :areas, -> { area }, class_name: 'TeamProperty'
+  has_many :properties, class_name: "TeamProperty", dependent: :delete_all
+  has_many :areas, -> { area }, class_name: "TeamProperty"
 
   # This can be eager loaded using includes
   has_one :team_leader,
           -> { lead },
           class_name: TeamProperty.to_s
 
-  has_one :old_team, class_name: 'Team', foreign_key: :moved_to_unit_id
-  belongs_to :moved_to_unit, class_name: 'Team', optional: true
+  has_one :old_team, class_name: "Team", foreign_key: :moved_to_unit_id
+  belongs_to :moved_to_unit, class_name: "Team", optional: true
 
-  scope :with_user, ->(user) {
+  scope :with_user, lambda { |user|
     includes(:user_roles)
       .where(teams_users_roles: { user_id: user.id })
       .order(:name)
   }
 
-  scope :active, -> { where(deleted_at: nil)}
+  scope :active, -> { where(deleted_at: nil) }
 
   def self.hierarchy
     result_set = []
@@ -68,30 +68,30 @@ class Team < ApplicationRecord
 
   def can_allocate?(correspondence_type)
     properties.where(
-      key: 'can_allocate',
-      value: correspondence_type.abbreviation
+      key: "can_allocate",
+      value: correspondence_type.abbreviation,
     ).any?
   end
 
   def enable_allocation(correspondence_type)
     unless can_allocate?(correspondence_type)
-      properties << TeamProperty.create!(key: 'can_allocate',
+      properties << TeamProperty.create!(key: "can_allocate",
                                          value: correspondence_type.abbreviation)
     end
   end
 
   def disable_allocation(correspondence_type)
     properties.where(
-      key: 'can_allocate',
-      value: correspondence_type.abbreviation
+      key: "can_allocate",
+      value: correspondence_type.abbreviation,
     ).delete_all
   end
 
   def self.allocatable(correspondence_type)
     Team.joins(:properties).where(team_properties: {
-                                    key: 'can_allocate',
-                                    value: correspondence_type.abbreviation
-                                  })
+      key: "can_allocate",
+      value: correspondence_type.abbreviation,
+    })
   end
 
   def policy_class
@@ -107,18 +107,18 @@ class Team < ApplicationRecord
   end
 
   def team_leader_name
-    team_leader&.value || ''
+    team_leader&.value || ""
   end
 
   def team_lead
-    properties.lead.singular_or_nil&.value || ''
+    properties.lead.singular_or_nil&.value || ""
   end
 
   def team_lead=(name)
     if properties.lead.exists?
-      properties.lead.singular.update value: name
+      properties.lead.singular.update! value: name
     else
-      TeamProperty.new(key: 'lead', value: name).tap do |property|
+      TeamProperty.new(key: "lead", value: name).tap do |property|
         properties << property
       end
     end
@@ -154,20 +154,20 @@ class Team < ApplicationRecord
   end
 
   def deactivated
-    deleted_at&.strftime("%d/%m/%Y") || ''
+    deleted_at&.strftime("%d/%m/%Y") || ""
   end
 
   def moved
-    moved_to_unit&.parent&.name || ''
+    moved_to_unit&.parent&.name || ""
   end
 
-  private
+private
 
   # This method applies to Business Groups and Directorates only.
   # It is overridden in BusinessUnit.
   def deletion_validation
     if deleted_at.present? && has_active_children?
-      errors.add(:base, 'Unable to delete team: team still has active children')
+      errors.add(:base, "Unable to delete team: team still has active children")
     end
   end
 end

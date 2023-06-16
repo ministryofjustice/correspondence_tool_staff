@@ -1,23 +1,22 @@
 module CaseFilter
   class ExemptionFilter < CaseMultiChoicesFilterBase
-
     class << self
       def identifier
         "filter_exemption"
       end
-    
+
       def filter_attributes
-        [:common_exemption_ids, :exemption_ids]
+        %i[common_exemption_ids exemption_ids]
       end
 
       def filter_fields(filter_fields)
-        filter_fields[:common_exemption_ids] = [:integer, array: true, default: []]
-        filter_fields[:exemption_ids] = [:integer, array: true, default: []]
+        filter_fields[:common_exemption_ids] = [:integer, { array: true, default: [] }]
+        filter_fields[:exemption_ids] = [:integer, { array: true, default: [] }]
       end
 
       def process_params!(params)
-        process_ids_param(params, 'common_exemption_ids')
-        process_ids_param(params, 'exemption_ids')
+        process_ids_param(params, "common_exemption_ids")
+        process_ids_param(params, "exemption_ids")
       end
     end
 
@@ -31,12 +30,12 @@ module CaseFilter
     def available_choices
       {
         common_exemption_ids: self.class.available_common_exemptions,
-        exemption_ids: self.class.available_exemptions
+        exemption_ids: self.class.available_exemptions,
       }
     end
 
     def is_permitted_for_user?
-      @user.permitted_correspondence_types.any? { | c_type | %w[FOI OVERTURNED_FOI].include? c_type.abbreviation }
+      @user.permitted_correspondence_types.any? { |c_type| %w[FOI OVERTURNED_FOI].include? c_type.abbreviation }
     end
 
     def call
@@ -50,7 +49,7 @@ module CaseFilter
 
     def self.available_common_exemptions
       choices = {}
-      CaseClosure::Exemption.most_frequently_used.each do | item |
+      CaseClosure::Exemption.most_frequently_used.each do |item|
         choices[item.id] = item.name
       end
       choices
@@ -58,7 +57,7 @@ module CaseFilter
 
     def self.available_exemptions
       choices = {}
-      CaseClosure::Metadatum.exemption_ncnd_refusal.each do | item |
+      CaseClosure::Metadatum.exemption_ncnd_refusal.each do |item|
         choices[item.id] = item.name
       end
       choices
@@ -72,9 +71,9 @@ module CaseFilter
                             first_value: first_exemption.name,
                             remaining_values_count: @exemption_ids.count - 1
         params = {
-          'common_exemption_ids' => [''],
-          'exemption_ids'        => [''],
-          'parent_id'            => @query.id,
+          "common_exemption_ids" => [""],
+          "exemption_ids" => [""],
+          "parent_id" => @query.id,
         }
         [[crumb_text, params]]
       else
@@ -82,7 +81,7 @@ module CaseFilter
       end
     end
 
-    private
+  private
 
     def ids_of_cases_with_all_exemptions
       sql = "select case_id from cases_exemptions where exemption_id in (?) group by case_id having count(*) >= ?"

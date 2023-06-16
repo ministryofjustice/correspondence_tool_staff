@@ -3,12 +3,14 @@ module Enumerable
   end
 
   def singular
-    raise NotSingular.new("length #{length} is not 1") if length != 1
-    self.first
+    raise NotSingular, "length #{length} is not 1" if length != 1
+
+    first
   end
 
   def singular_or_nil
-    raise NotSingular.new("length #{length} is greater than 1") if length > 1
-    self.first
+    raise NotSingular, "length #{length} is greater than 1" if length > 1
+
+    first
   end
 end

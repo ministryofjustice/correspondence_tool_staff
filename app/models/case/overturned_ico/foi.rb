@@ -29,25 +29,24 @@
 #
 
 class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
-
   include DraftTimeliness::ResponseAdded
 
   attr_accessor :flag_for_disclosure_specialists
 
   delegate :message, to: :original_case
 
-  has_paper_trail only: [
-    :ico_reference,
-    :escalation_deadline,
-    :external_deadline,
-    :internal_deadline,
-    :reply_method,
-    :email,
-    :post_address,
-    :original_ico_appeal,
-    :original_case,
-    :date_received
-]
+  has_paper_trail only: %i[
+    ico_reference
+    escalation_deadline
+    external_deadline
+    internal_deadline
+    reply_method
+    email
+    post_address
+    original_ico_appeal
+    original_case
+    date_received
+  ]
 
   def correspondence_type_for_business_unit_assignment
     CorrespondenceType.foi
@@ -58,11 +57,11 @@ class Case::OverturnedICO::FOI < Case::OverturnedICO::Base
   end
 
   def self.state_machine_name
-    'foi'
+    "foi"
   end
 
   def self.type_abbreviation
-    'OVERTURNED_FOI'
+    "OVERTURNED_FOI"
   end
 
   def validate_original_ico_appeal

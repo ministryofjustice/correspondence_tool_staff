@@ -19,27 +19,27 @@
 module CaseClosure
   class OffenderComplaintAppealOutcome < Metadatum
     def self.upheld
-      where(abbreviation: 'upheld').singular
+      where(abbreviation: "upheld").singular
     end
 
     def self.not_upheld
-      where(abbreviation: 'not_upheld').singular
+      where(abbreviation: "not_upheld").singular
     end
 
     def self.not_response_received
-      where(abbreviation: 'not_response_received').singular
+      where(abbreviation: "not_response_received").singular
     end
 
     def upheld?
-      abbreviation == 'upheld'
+      abbreviation == "upheld"
     end
 
     def not_upheld?
-      abbreviation == 'not_upheld'
+      abbreviation == "not_upheld"
     end
 
     def not_response_received?
-      abbreviation == 'not_response_received'
+      abbreviation == "not_response_received"
     end
   end
 end

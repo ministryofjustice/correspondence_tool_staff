@@ -15,24 +15,22 @@
 #
 
 class CaseAttachment < ApplicationRecord
-
-  UNCONVERTIBLE_EXTENSIONS = %w( .pdf .jpg .jpeg .bmp .gif .png ).freeze
+  UNCONVERTIBLE_EXTENSIONS = %w[.pdf .jpg .jpeg .bmp .gif .png].freeze
 
   self.inheritance_column = :_type_not_used
   belongs_to :case,
-             class_name: 'Case::Base',
-             foreign_key: :case_id,
+             class_name: "Case::Base",
              inverse_of: :attachments
 
   validates :type, presence: true
   validates :key, presence: true
-  validate :validate_file_extension, unless: Proc.new { |a| a.key.nil? }
+  validate :validate_file_extension, unless: proc { |a| a.key.nil? }
 
   after_destroy :remove_from_storage_bucket
 
   scope :ico_decisions, -> { where(type: :ico_decision) }
 
-  enum type: { response: 'response', request: 'request', ico_decision: 'ico_decision', commissioning_document: 'commissioning_document' }
+  enum type: { response: "response", request: "request", ico_decision: "ico_decision", commissioning_document: "commissioning_document" }
 
   def filename
     File.basename(key)
@@ -63,10 +61,10 @@ class CaseAttachment < ApplicationRecord
       begin
         Libreconv.convert original_filepath, preview_filepath
         self.preview_key = upload_preview(preview_filepath, retry_count)
-      rescue StandardError => err
-        Rails.logger.error "Error converting CaseAttachment #{self.id} to PDF"
-        Rails.logger.error "#{err.class} - #{err.message}"
-        Rails.logger.error err.backtrace
+      rescue StandardError => e
+        Rails.logger.error "Error converting CaseAttachment #{id} to PDF"
+        Rails.logger.error "#{e.class} - #{e.message}"
+        Rails.logger.error e.backtrace
         self.preview_key = nil
       end
     end
@@ -77,7 +75,7 @@ class CaseAttachment < ApplicationRecord
     s3_object.get.body.read
   end
 
-  private
+private
 
   def not_convertible_file_type?
     File.extname(key).downcase.in? UNCONVERTIBLE_EXTENSIONS
@@ -89,7 +87,7 @@ class CaseAttachment < ApplicationRecord
 
   def download_original_file
     extname = File.extname(key)
-    original_file_tmpfile = Tempfile.new(['orig', extname])
+    original_file_tmpfile = Tempfile.new(["orig", extname])
     original_file_tmpfile.close
     attachment_object = CASE_UPLOADS_S3_BUCKET.object(key)
     attachment_object.get(response_target: original_file_tmpfile.path)
@@ -97,7 +95,7 @@ class CaseAttachment < ApplicationRecord
   end
 
   def make_preview_filename
-    preview_file = Tempfile.new(['preview', '.pdf'])
+    preview_file = Tempfile.new(["preview", ".pdf"])
     preview_file.close
     preview_file.path
   end
@@ -108,9 +106,9 @@ class CaseAttachment < ApplicationRecord
     result = preview_object.upload_file(filepath)
     if result == false
       if retry_count == Settings.s3_upload_max_tries
-        raise "Max upload retry exceeded for CaseAttachment #{self.id}"
+        raise "Max upload retry exceeded for CaseAttachment #{id}"
       else
-        PdfMakerJob.perform_with_delay(self.id, retry_count + 1)
+        PdfMakerJob.perform_with_delay(id, retry_count + 1)
         pdf_key = nil
       end
     end
@@ -119,19 +117,19 @@ class CaseAttachment < ApplicationRecord
 
   def remove_from_storage_bucket
     s3_object.delete
-    unless preview_key.nil?
-      s3_preview_object.delete unless preview_key == key
+    if !preview_key.nil? && preview_key != key
+      s3_preview_object.delete
     end
   end
 
   def validate_file_extension
-    mime_type = Rack::Mime.mime_type(File.extname filename)
+    mime_type = Rack::Mime.mime_type(File.extname(filename))
     unless Settings.case_uploads_accepted_types.include? mime_type
       errors.add(:url, I18n.t(
-        'activerecord.errors.models.case_attachment.attributes.url.bad_file_type',
-        type: mime_type,
-        filename: filename
-      ))
+                         "activerecord.errors.models.case_attachment.attributes.url.bad_file_type",
+                         type: mime_type,
+                         filename:,
+                       ))
     end
   end
 end

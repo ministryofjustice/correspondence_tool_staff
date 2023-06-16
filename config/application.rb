@@ -1,4 +1,4 @@
-require_relative 'boot'
+require_relative "boot"
 
 require "rails"
 # Pick the frameworks you want:		 +
@@ -23,7 +23,7 @@ module CorrespondencePlatform
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
 
-    config.ga_tracking_id = (ENV['GA_TRACKING_ID'] || '')
+    config.ga_tracking_id = (ENV["GA_TRACKING_ID"] || "")
 
     ActionView::Base.default_form_builder = GovukElementsFormBuilder::FormBuilder
 
@@ -31,10 +31,10 @@ module CorrespondencePlatform
     # work.
     config.active_record.schema_format = :sql
 
-    config.autoload_paths += %W(#{config.root}/lib #{config.root}/app/validators #{config.root}/app/form_models)
+    config.autoload_paths += %W[#{config.root}/lib #{config.root}/app/validators #{config.root}/app/form_models]
     config.active_job.queue_adapter = :sidekiq
 
-    Dir[config.root.join('lib', 'extensions', '**', '*.rb')].each do |file|
+    Dir[config.root.join("lib", "extensions", "**", "*.rb")].each do |file|
       require file
     end
     config.generators.javascript_engine = :js
@@ -61,8 +61,5 @@ module CorrespondencePlatform
 
     # Make `form_with` generate id attributes for any generated HTML tags.
     config.action_view.form_with_generates_ids = true
-
   end
 end
-
-

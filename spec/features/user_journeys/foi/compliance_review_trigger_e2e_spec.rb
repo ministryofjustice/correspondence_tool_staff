@@ -12,10 +12,10 @@
 # KILO marks as response
 # Manager view case and closes the case
 
-require 'rails_helper'
-require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
+require "rails_helper"
+require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
-feature 'FOI compliance review case that requires clearance' do
+feature "FOI compliance review case that requires clearance" do
   include CaseDateManipulation
   include Features::Interactions
   given(:responder)             { responding_team.responders.first }
@@ -38,46 +38,46 @@ feature 'FOI compliance review case that requires clearance' do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  scenario 'end-to-end journey', js: true do
+  scenario "end-to-end journey", js: true do
     kase = create_and_assign_foi_case type: Case::FOI::ComplianceReview,
                                       user: manager,
-                                      responding_team: responding_team,
+                                      responding_team:,
                                       flag_for_disclosure: true
 
-    take_case_on kase: kase,
+    take_case_on kase:,
                  user: disclosure_specialist,
                  test_undo: true
 
-    edit_case kase: kase,
+    edit_case kase:,
               user: manager,
-              subject: 'new test subject'
+              subject: "new test subject"
 
-    accept_case kase: kase,
+    accept_case kase:,
                 user: responder,
                 do_logout: false
 
     set_case_dates_back_by(kase, 5.business_days)
 
-    add_message_to_case kase: kase,
-                        message: 'This. Is. A. Test.'
+    add_message_to_case kase:,
+                        message: "This. Is. A. Test."
 
-    extend_for_pit kase: kase,
+    extend_for_pit kase:,
                    user: manager,
                    new_deadline: 30.business_days.from_now
 
-    upload_response kase: kase,
+    upload_response kase:,
                     user: responder,
                     file: UPLOAD_RESPONSE_DOCX_FIXTURE
 
-    clear_response kase: kase,
+    clear_response kase:,
                    user: disclosure_specialist,
                    expected_team: responding_team,
-                   expected_status: 'Ready to send'
+                   expected_status: "Ready to send"
 
-    mark_case_as_sent kase: kase,
+    mark_case_as_sent kase:,
                       user: responder
 
-    close_case kase: kase,
+    close_case kase:,
                user: manager
   end
 end

@@ -2,7 +2,7 @@ class GlobalNavManager
   class Page
     attr_reader :name, :path, :tabs
 
-    IGNORE_QUERY_PARAMS = ['page'].freeze
+    IGNORE_QUERY_PARAMS = %w[page].freeze
 
     # 'parent' here is actually a GlobalNavManager instance
     def initialize(name:, parent:, attrs:)
@@ -55,7 +55,7 @@ class GlobalNavManager
     end
 
     def matches_path?(match_path)
-      normalized_match_path = match_path.sub('.csv', '')
+      normalized_match_path = match_path.sub(".csv", "")
       fullpath == normalized_match_path
     end
 
@@ -63,18 +63,16 @@ class GlobalNavManager
       @parent.request
     end
 
-    private
+  private
 
     # This 'method' is tested, so only exists for that reason
     attr_reader :scope_names
 
     def build_tabs(tabs_settings)
       tabs_settings ||= []
-      tabs_settings.map do |tab_name, tab_settings|
+      tabs_settings.map { |tab_name, tab_settings|
         Tab.new(name: tab_name, parent: self, attrs: tab_settings)
-      end.find_all do |tab|
-        tab.visible?
-      end
+      }.find_all(&:visible?)
     end
 
     def user_teams
@@ -91,27 +89,27 @@ class GlobalNavManager
       else
         visibility = Array(visibility)
         @visible = (user_teams & visibility).any? ||
-                   (user_roles & visibility).any?
+          (user_roles & visibility).any?
       end
     end
 
     def process_scope(scope)
-      if scope.respond_to? :keys
-        @scope_names = (
-          scopes_for(user_teams, from_scope: scope.to_h.with_indifferent_access) +
-          scopes_for(user_roles, from_scope: scope.to_h.with_indifferent_access)
-        ).uniq
-      else
-        @scope_names = [scope]
-      end
+      @scope_names = if scope.respond_to? :keys
+                       (
+                         scopes_for(user_teams, from_scope: scope.to_h.with_indifferent_access) +
+                         scopes_for(user_roles, from_scope: scope.to_h.with_indifferent_access)
+                       ).uniq
+                     else
+                       [scope]
+                     end
     end
 
     def scopes_for(user_teams_or_roles, from_scope:)
-      user_teams_or_roles.map do |user_team_or_role|
+      user_teams_or_roles.map { |user_team_or_role|
         if from_scope.key? user_team_or_role
           from_scope[user_team_or_role]
         end
-      end.compact.uniq
+      }.compact.uniq
     end
   end
 end

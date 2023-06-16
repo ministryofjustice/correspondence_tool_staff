@@ -1,16 +1,14 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe CaseAttachmentUploadGroup do
   before(:all) do
-
     DbHousekeeping.clean
 
-    @upload_group = '20170608101112'
-    @timestamp = '12 Jun 2017 11:42'
+    @upload_group = "20170608101112"
+    @timestamp = "12 Jun 2017 11:42"
     @kase = create :case_with_response
     @responder = @kase.responding_team.users.first
     @kase.attachments.first.update!(upload_group: @upload_group, user_id: @responder.id)
-
 
     2.times do
       @kase.attachments << create(:correspondence_response, upload_group: @upload_group, user_id: @responder.id)
@@ -19,36 +17,35 @@ describe CaseAttachmentUploadGroup do
 
   after(:all) { DbHousekeeping.clean }
 
+  let(:upload_group) { described_class.new([@upload_group, @responder.id], :responder, @kase, @kase.attachments) }
 
-  let(:upload_group) { CaseAttachmentUploadGroup.new([@upload_group, @responder.id], :responder, @kase, @kase.attachments) }
-
-  describe '#user' do
-    it 'returns the user specified by the id' do
+  describe "#user" do
+    it "returns the user specified by the id" do
       expect(upload_group.user).to eq @responder
     end
   end
 
-  describe '#collection' do
-    it 'returns the same collection as it was initialisec with' do
+  describe "#collection" do
+    it "returns the same collection as it was initialisec with" do
       expect(upload_group.collection).to eq @kase.attachments
     end
   end
 
-  describe 'date_time' do
-    it 'returns the formatted upload group time converted to BST' do
-      expect(upload_group.date_time).to eq '08 Jun 2017 11:11'
+  describe "date_time" do
+    it "returns the formatted upload group time converted to BST" do
+      expect(upload_group.date_time).to eq "08 Jun 2017 11:11"
     end
   end
 
-  describe '#delete!' do
-    it 'deletes the specified case attachment from the collection' do
+  describe "#delete!" do
+    it "deletes the specified case attachment from the collection" do
       expect(upload_group.collection.size).to eq 3
       original_ids = upload_group.collection.map(&:id)
       upload_group.delete!(original_ids.first)
-      expect(upload_group.collection.map(&:id)).to eq [ original_ids[1], original_ids[2] ]
+      expect(upload_group.collection.map(&:id)).to eq [original_ids[1], original_ids[2]]
     end
 
-    it 'raises if case_attachment id is not in collection' do
+    it "raises if case_attachment id is not in collection" do
       non_existing_id = upload_group.collection.map(&:id).max + 10
       expect {
         upload_group.delete!(non_existing_id)
@@ -56,18 +53,17 @@ describe CaseAttachmentUploadGroup do
     end
   end
 
-  describe '#any?' do
-    it 'returns true if records in the collection' do
+  describe "#any?" do
+    it "returns true if records in the collection" do
       expect(upload_group.any?).to be true
     end
 
-    it 'returns false if no records in the collection' do
+    it "returns false if no records in the collection" do
       ids = upload_group.collection.map(&:id)
-      ids.each { | ca_id |
+      ids.each do |ca_id|
         upload_group.delete!(ca_id)
-      }
+      end
       expect(upload_group.any?).to be false
     end
   end
-
 end

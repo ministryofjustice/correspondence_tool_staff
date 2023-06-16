@@ -1,6 +1,5 @@
 module Warehouse
   class CaseSyncJob < ApplicationJob
-
     queue_as :warehouse
 
     def perform(active_record_type, model_id)

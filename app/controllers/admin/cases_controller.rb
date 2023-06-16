@@ -1,12 +1,11 @@
-require 'cts/cases/create'
-require 'cts/cases/constants'
+require "cts/cases/create"
+require "cts/cases/constants"
 
 class Admin::CasesController < AdminController
-
   before_action :set_correspondence_type,
-                only: [
-                  :create,
-                  :new,
+                only: %i[
+                  create
+                  new
                 ]
 
   def create
@@ -25,17 +24,17 @@ class Admin::CasesController < AdminController
       redirect_to(admin_cases_path)
     else
       @case.responding_team = BusinessUnit.find(
-        case_params[:responding_team]
+        case_params[:responding_team],
       )
       prepare_flagged_options_for_displaying
       @target_states = available_target_states
-      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+      @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, "requests")
       render :new
     end
   end
 
   def index
-    @dates = { }
+    @dates = {}
     5.times do |n|
       date = n.business_days.ago.to_date
       @dates[date] = count_cases_created_on(date)
@@ -52,7 +51,7 @@ class Admin::CasesController < AdminController
     end
   end
 
-  private
+private
 
   def count_cases_created_on(date)
     Case::Base.where(created_at: date.all_day).count
@@ -68,7 +67,7 @@ class Admin::CasesController < AdminController
     case_creator = CTS::Cases::Create.new(
       Rails.logger,
       type: class_for_case,
-      creator: creator
+      creator:,
     )
 
     @case = case_creator.new_case.decorate
@@ -77,10 +76,10 @@ class Admin::CasesController < AdminController
                               .responding_for_correspondence_type(correspondence_type_for_case)
                               .active
                               .sample
-    @case.flag_for_disclosure_specialists = 'no'
+    @case.flag_for_disclosure_specialists = "no"
     @target_states = available_target_states
-    @selected_state = 'drafting'
-    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, 'requests')
+    @selected_state = "drafting"
+    @s3_direct_post = S3Uploader.s3_direct_post_for_case(@case, "requests")
   end
 
   def permitted_correspondence_types
@@ -89,28 +88,28 @@ class Admin::CasesController < AdminController
       CorrespondenceType.sar,
       CorrespondenceType.ico,
       CorrespondenceType.overturned_sar,
-      CorrespondenceType.overturned_foi, 
+      CorrespondenceType.overturned_foi,
     ]
   end
 
   def correspondence_type_for_case
-    correspondence_types ={
-      'foi'             => CorrespondenceType.foi,
-      'sar'             => CorrespondenceType.sar,
-      'ico'             => CorrespondenceType.ico,
-      'overturned_foi'  => CorrespondenceType.foi,
-      'overturned_sar'  => CorrespondenceType.sar, 
+    correspondence_types = {
+      "foi" => CorrespondenceType.foi,
+      "sar" => CorrespondenceType.sar,
+      "ico" => CorrespondenceType.ico,
+      "overturned_foi" => CorrespondenceType.foi,
+      "overturned_sar" => CorrespondenceType.sar,
     }
     correspondence_types[@correspondence_type_key]
   end
 
   def class_for_case
     case_classes = {
-      'foi'              => 'Case::FOI::Standard',
-      'sar'              => 'Case::SAR::Standard',
-      'ico'              => 'Case::ICO::FOI',
-      'overturned_foi'   => 'Case::OverturnedICO::FOI',
-      'overturned_sar'   => 'Case::OverturnedICO::SAR',
+      "foi" => "Case::FOI::Standard",
+      "sar" => "Case::SAR::Standard",
+      "ico" => "Case::ICO::FOI",
+      "overturned_foi" => "Case::OverturnedICO::FOI",
+      "overturned_sar" => "Case::OverturnedICO::SAR",
     }
     case_classes[@correspondence_type_key]
   end
@@ -120,23 +119,23 @@ class Admin::CasesController < AdminController
   end
 
   def param_flag_for_ds?
-    params[case_and_type][:flagged_for_disclosure_specialist_clearance] == '1' ||
-        case_and_type == :case_ico
+    params[case_and_type][:flagged_for_disclosure_specialist_clearance] == "1" ||
+      case_and_type == :case_ico
   end
 
   def param_flag_for_press?
-    params[case_and_type][:flagged_for_press_office_clearance] == '1'
+    params[case_and_type][:flagged_for_press_office_clearance] == "1"
   end
 
   def param_flag_for_private?
-    params[case_and_type][:flagged_for_private_office_clearance] == '1'
+    params[case_and_type][:flagged_for_private_office_clearance] == "1"
   end
 
   def gather_teams_for_flagging
     teams_for_flagging = []
-    teams_for_flagging << 'disclosure' if param_flag_for_ds?
-    teams_for_flagging << 'press' if param_flag_for_press?
-    teams_for_flagging << 'private' if param_flag_for_private?
+    teams_for_flagging << "disclosure" if param_flag_for_ds?
+    teams_for_flagging << "press" if param_flag_for_press?
+    teams_for_flagging << "private" if param_flag_for_private?
     teams_for_flagging
   end
 
@@ -144,7 +143,7 @@ class Admin::CasesController < AdminController
     if param_flag_for_ds? && !param_flag_for_press? && !param_flag_for_private?
       params[case_and_type][:flag_for_disclosure] = true
     else
-      params[case_and_type][:flag_for_team] = gather_teams_for_flagging.join(',')
+      params[case_and_type][:flag_for_team] = gather_teams_for_flagging.join(",")
     end
   end
 
@@ -161,7 +160,7 @@ class Admin::CasesController < AdminController
   def set_correspondence_type
     if params[:correspondence_type].present?
       @correspondence_type = CorrespondenceType.find_by(
-        abbreviation: params[:correspondence_type].upcase
+        abbreviation: params[:correspondence_type].upcase,
       )
     end
   end

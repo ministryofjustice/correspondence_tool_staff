@@ -1,24 +1,23 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'Business Unit factories' do
+describe "Business Unit factories" do
+  let(:sar) { CorrespondenceType.sar }
 
-  let(:sar)   { CorrespondenceType.sar }
-
-  describe ':business_unit' do
-    context 'without params' do
-      it 'creates responding team with responding team correspondence_type role for FOI' do
+  describe ":business_unit" do
+    context "without params" do
+      it "creates responding team with responding team correspondence_type role for FOI" do
         bu = create :business_unit
-        expect(bu.role).to eq 'responder'
+        expect(bu.role).to eq "responder"
         expect(bu.correspondence_type_roles.size).to eq 4
         tcr = bu.correspondence_type_roles.first
         expect(tcr).to match_tcr_attrs(:foi, :view, :respond)
       end
     end
 
-    context 'with correspondence_types param' do
-      it 'creates a responding team with correspondence_type role for SAR' do
+    context "with correspondence_types param" do
+      it "creates a responding team with correspondence_type role for SAR" do
         bu = create :business_unit, correspondence_type_ids: [sar.id]
-        expect(bu.role).to eq 'responder'
+        expect(bu.role).to eq "responder"
         expect(bu.correspondence_type_roles.size).to eq 1
         tcr = bu.correspondence_type_roles.first
         expect(tcr).to match_tcr_attrs(:sar, :view, :respond)
@@ -26,32 +25,32 @@ describe 'Business Unit factories' do
     end
   end
 
-  describe 'managing_team' do
-    context 'no params' do
-      it 'creates a managing team with correct team correspondence_type roles' do
+  describe "managing_team" do
+    context "no params" do
+      it "creates a managing team with correct team correspondence_type roles" do
         bu = create :managing_team
-        expect(bu.role).to eq 'manager'
+        expect(bu.role).to eq "manager"
         expect(bu.correspondence_type_roles.first)
           .to match_tcr_attrs(:foi, :view, :edit, :manage)
       end
     end
 
-    context 'setting correspondence_type param' do
-      it 'creates a managing team with correct team correspondence_type roles' do
+    context "setting correspondence_type param" do
+      it "creates a managing team with correct team correspondence_type roles" do
         bu = create :managing_team, correspondence_type_ids: [sar.id]
-        expect(bu.role).to eq 'manager'
+        expect(bu.role).to eq "manager"
         expect(bu.correspondence_type_roles.first)
           .to match_tcr_attrs(:sar, :view, :edit, :manage)
       end
     end
   end
 
-  describe 'responding_team' do
-    context 'no params' do
-      it 'creates a responding team with correct team correspondence_type roles for both FOI and SAR' do
+  describe "responding_team" do
+    context "no params" do
+      it "creates a responding team with correct team correspondence_type roles for both FOI and SAR" do
         bu = create :responding_team
 
-        expect(bu.role).to eq 'responder'
+        expect(bu.role).to eq "responder"
         expect(bu.correspondence_type_roles.size).to eq 6
         foi_tcr = bu.correspondence_type_roles.detect do |r|
           r.correspondence_type_id == CorrespondenceType.foi.id
@@ -80,5 +79,4 @@ describe 'Business Unit factories' do
       end
     end
   end
-
 end

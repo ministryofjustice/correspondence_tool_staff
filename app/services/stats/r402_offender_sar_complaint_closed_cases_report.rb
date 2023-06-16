@@ -2,11 +2,11 @@ module Stats
   class R402OffenderSarComplaintClosedCasesReport < BaseClosedCasesReport
     class << self
       def title
-        'Closed complaint cases report'
+        "Closed complaint cases report"
       end
 
       def description
-        'Entire list of closed complaint cases'
+        "Entire list of closed complaint cases"
       end
 
       def etl_handler
@@ -15,13 +15,11 @@ module Stats
     end
 
     def case_scope
-      CaseFinderService.new(@user).closed_cases_scope.where(type: 'Case::SAR::OffenderComplaint')
+      CaseFinderService.new(@user).closed_cases_scope.where(type: "Case::SAR::OffenderComplaint")
     end
 
     def report_type
       ReportType.r402
     end
-
   end
 end
-

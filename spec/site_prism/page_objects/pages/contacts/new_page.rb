@@ -4,24 +4,24 @@ module PageObjects
       class NewPage < PageObjects::Pages::Base
         include SitePrism::Support::AssignToBusinessUnitHelpers
 
-        set_url '/contacts/new'
+        set_url "/contacts/new"
 
-        section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+        section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
         section :page_heading,
-                PageObjects::Sections::PageHeadingSection, '.page-heading'
+                PageObjects::Sections::PageHeadingSection, ".page-heading"
 
-        element :name, '#contact_name'
-        element :address_line_1, '#contact_address_line_1'
-        element :address_line_2, '#contact_address_line_2'
-        element :town, '#contact_town'
-        element :county, '#contact_county'
-        element :postcode, '#contact_postcode'
-        element :data_request_name, '#contact_data_request_name'
-        element :data_request_emails, '#contact_data_request_emails'
-        element :contact_type, '#countact_contact_type'
+        element :name, "#contact_name"
+        element :address_line_1, "#contact_address_line_1"
+        element :address_line_2, "#contact_address_line_2"
+        element :town, "#contact_town"
+        element :county, "#contact_county"
+        element :postcode, "#contact_postcode"
+        element :data_request_name, "#contact_data_request_name"
+        element :data_request_emails, "#contact_data_request_emails"
+        element :contact_type, "#countact_contact_type"
 
-        element :submit, '.button'
+        element :submit, ".button"
 
         def new_contact(details)
           name.set details[:name] if details[:name]
@@ -33,18 +33,18 @@ module PageObjects
           set_contact_type(details[:contact_type])
         end
 
-        private
+      private
+
         def set_contact_type(contact_type)
           return unless contact_type
+
           case contact_type
-          when 'prison'
-            choose 'Prison', visible: false
-          when 'probation'
-            choose 'Probation', visible: false
-          when 'solicitor'
-            choose 'Solicitor', visible: false
-          else
-            return
+          when "prison"
+            choose "Prison", visible: false
+          when "probation"
+            choose "Probation", visible: false
+          when "solicitor"
+            choose "Solicitor", visible: false
           end
         end
       end

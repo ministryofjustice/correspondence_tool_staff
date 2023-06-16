@@ -1,7 +1,6 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe Case::SAR::InternalReviewPolicy do
-
   subject { described_class }
 
   let(:managing_team)         { find_or_create :team_dacu }
@@ -9,84 +8,87 @@ describe Case::SAR::InternalReviewPolicy do
   let(:responding_team)       { create :responding_team }
   let(:responder)             { responding_team.responders.first }
   let(:dacu_disclosure)       { find_or_create :team_dacu_disclosure }
-  let(:approver)   { dacu_disclosure.approvers.first }
+  let(:approver) { dacu_disclosure.approvers.first }
 
-  let(:sar_ir)   { 
+  let(:sar_ir) do
     create(:sar_internal_review,
-           managing_team: managing_team,
-           responding_team: responding_team,
-           approver: approver)
-  }
+           managing_team:,
+           responding_team:,
+           approver:)
+  end
 
-  let(:approved_sar_ir) { 
+  let(:approved_sar_ir) do
     create(:approved_sar_internal_review,
-           managing_team: managing_team,
-           responding_team: responding_team,
-           approver: approver) 
-  }
+           managing_team:,
+           responding_team:,
+           approver:)
+  end
 
-  let(:awaiting_dispatch_approved_sar_ir) { 
+  let(:awaiting_dispatch_approved_sar_ir) do
     create(:approved_sar_internal_review,
-           managing_team: managing_team,
-           responding_team: responding_team,
-           approver: approver,
-           current_state: 'awaiting_dispatch') 
-  }
+           managing_team:,
+           responding_team:,
+           approver:,
+           current_state: "awaiting_dispatch")
+  end
 
-  after(:each) do |example|
+  after do |example|
     if example.exception
-      failed_checks = described_class.failed_checks rescue []
-      puts "Failed CasePolicy checks: " +
-           failed_checks.map(&:first).map(&:to_s).join(', ')
+      failed_checks = begin
+        described_class.failed_checks
+      rescue StandardError
+        []
+      end
+      puts "Failed CasePolicy checks: #{failed_checks.map(&:first).map(&:to_s).join(', ')}"
     end
   end
 
-  context 'case type' do
-    it 'has sar internal review as scope correspondence type' do
+  context "case type" do
+    it "has sar internal review as scope correspondence type" do
       type = subject::Scope.new(
-        manager, 
-        Case::SAR::InternalReview
+        manager,
+        Case::SAR::InternalReview,
       ).correspondence_type
 
       expect(type).to be(CorrespondenceType.sar_internal_review)
     end
   end
 
-  context 'unapproved sar ir' do
+  context "unapproved sar ir" do
     permissions :edit? do
-      it { should_not permit(responder, sar_ir) }
-      it { should     permit(manager,   sar_ir) }
-      it { should_not permit(approver,  sar_ir) }
+      it { is_expected.not_to permit(responder, sar_ir) }
+      it { is_expected.to     permit(manager,   sar_ir) }
+      it { is_expected.not_to permit(approver,  sar_ir) }
     end
   end
 
-  context 'approved sar ir' do
+  context "approved sar ir" do
     permissions :edit? do
-      it { should_not permit(responder, approved_sar_ir) }
-      it { should     permit(manager,   approved_sar_ir) }
-      it { should     permit(approver,  approved_sar_ir) }
+      it { is_expected.not_to permit(responder, approved_sar_ir) }
+      it { is_expected.to     permit(manager,   approved_sar_ir) }
+      it { is_expected.to     permit(approver,  approved_sar_ir) }
     end
   end
 
-  context 'closing a case' do
+  context "closing a case" do
     permissions :can_close_case? do
-      it { should_not permit(responder, sar_ir) }
-      it { should     permit(manager,   sar_ir) }
-      it { should_not permit(approver,  sar_ir) }
+      it { is_expected.not_to permit(responder, sar_ir) }
+      it { is_expected.to     permit(manager,   sar_ir) }
+      it { is_expected.not_to permit(approver,  sar_ir) }
     end
 
     permissions :respond_and_close? do
-      it { should_not permit(responder, sar_ir) }
-      it { should     permit(manager,   sar_ir) }
-      it { should_not permit(approver,  sar_ir) }
+      it { is_expected.not_to permit(responder, sar_ir) }
+      it { is_expected.to     permit(manager,   sar_ir) }
+      it { is_expected.not_to permit(approver,  sar_ir) }
     end
   end
 
-  context 'case in awaiting_dispatch state' do
+  context "case in awaiting_dispatch state" do
     permissions :can_respond? do
-      it { should     permit(responder, awaiting_dispatch_approved_sar_ir) }
-      it { should_not permit(manager,   awaiting_dispatch_approved_sar_ir) }
-      it { should_not permit(approver,  awaiting_dispatch_approved_sar_ir) }
+      it { is_expected.to     permit(responder, awaiting_dispatch_approved_sar_ir) }
+      it { is_expected.not_to permit(manager,   awaiting_dispatch_approved_sar_ir) }
+      it { is_expected.not_to permit(approver,  awaiting_dispatch_approved_sar_ir) }
     end
   end
 end

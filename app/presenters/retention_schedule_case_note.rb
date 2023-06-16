@@ -5,7 +5,7 @@ class RetentionScheduleCaseNote
     attr_accessor :from, :to
 
     def initialize(changes)
-      @from, @to = changes.dig(self.class::ATTR_NAME)
+      @from, @to = changes[self.class::ATTR_NAME]
     end
 
     def blank?
@@ -17,29 +17,29 @@ class RetentionScheduleCaseNote
 
       if @from && @to
         I18n.t(
-          self.class::ATTR_NAME, scope: scope_for_update, from: from, to: to
+          self.class::ATTR_NAME, scope: scope_for_update, from:, to:
         )
       else
         I18n.t(
-          self.class::ATTR_NAME, scope: scope_for_create, to: to
+          self.class::ATTR_NAME, scope: scope_for_create, to:
         )
       end
     end
 
     def scope_for_update
-      [:retention_schedule_case_notes, :update]
+      %i[retention_schedule_case_notes update]
     end
 
     def scope_for_create
-      [:retention_schedule_case_notes, :create]
+      %i[retention_schedule_case_notes create]
     end
   end
 
   class StateChange < AttrChange
     ATTR_NAME = :state
 
-    def from; I18n.t(@from, scope: 'dictionary.retention_schedule_states'); end
-    def to; I18n.t(@to, scope: 'dictionary.retention_schedule_states'); end
+    def from = I18n.t(@from, scope: "dictionary.retention_schedule_states")
+    def to = I18n.t(@to, scope: "dictionary.retention_schedule_states")
 
     # On creation, the state is always `Not set` and this has no interest
     # in the case history, so we skip the message (from `nil` to `not_set`)
@@ -51,8 +51,8 @@ class RetentionScheduleCaseNote
   class DateChange < AttrChange
     ATTR_NAME = :planned_destruction_date
 
-    def from; I18n.l(@from, format: :compact); end
-    def to; I18n.l(@to, format: :compact); end
+    def from = I18n.l(@from, format: :compact)
+    def to = I18n.l(@to, format: :compact)
   end
 
   def initialize(kase:, user:, changes:, is_system: false)
@@ -69,7 +69,7 @@ class RetentionScheduleCaseNote
     new(**args)
   end
 
-  private
+private
 
   def trigger_event!
     return if changes.empty?
@@ -78,7 +78,7 @@ class RetentionScheduleCaseNote
       "#{event_name}!",
       acting_user: user,
       acting_team: user.case_team(kase),
-      message: message
+      message:,
     )
   end
 

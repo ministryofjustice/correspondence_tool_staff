@@ -1,16 +1,16 @@
-require 'rails_helper'
-require 'thor'
+require "rails_helper"
+require "thor"
 
-require 'cts'
-require 'cts/cases/create'
+require "cts"
+require "cts/cases/create"
 
 describe CTS::Cases::Create, tag: :cli do
-  let(:case_params) {{ type: 'Case::ICO::FOI', creator: create(:user, :orphan) }}
-  let(:cts_creator) { CTS::Cases::Create.new(Rails.logger, case_params) }
+  let(:case_params) { { type: "Case::ICO::FOI", creator: create(:user, :orphan) } }
+  let(:cts_creator) { described_class.new(Rails.logger, case_params) }
 
-  describe '#new_ico_case' do
-    context 'new default FOI ICO appeal' do
-      it 'returns a valid new ICO case' do
+  describe "#new_ico_case" do
+    context "new default FOI ICO appeal" do
+      it "returns a valid new ICO case" do
         foi = create(:rejected_case)
         kase = cts_creator.new_case
 

@@ -1,13 +1,17 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'stats/new.html.slim', type: :view do
-  let(:report_1)      { instance_double ReportType,
-                                        id: 1,
-                                        full_name: "Report 1" }
-  let(:report_2)      { instance_double ReportType,
-                                        id: 2,
-                                        full_name: "Report 2" }
-  let(:reports)       { [report_1, report_2]  }
+describe "stats/new.html.slim", type: :view do
+  let(:report_1) do
+    instance_double ReportType,
+                    id: 1,
+                    full_name: "Report 1"
+  end
+  let(:report_2) do
+    instance_double ReportType,
+                    id: 2,
+                    full_name: "Report 2"
+  end
+  let(:reports) { [report_1, report_2] }
   let(:new_report) { Report.new }
 
   let!(:page) do
@@ -21,7 +25,7 @@ describe 'stats/new.html.slim', type: :view do
       CorrespondenceType.foi,
       CorrespondenceType.sar,
       CorrespondenceType.offender_sar,
-      StatsController.closed_cases_correspondence_type
+      StatsController.closed_cases_correspondence_type,
     ])
 
     render
@@ -29,24 +33,24 @@ describe 'stats/new.html.slim', type: :view do
     stats_new_page
   end
 
-  context 'valid page' do
-    it 'has a heading' do
+  context "valid page" do
+    it "has a heading" do
       expect(page.page_heading.heading.text).to eq "Create custom report"
       expect(page.page_heading).to have_no_sub_heading
     end
 
-    it 'has a list of custom reports' do
+    it "has a list of custom reports" do
       expect(page.options_foi.reports.size).to eq reports.size
       expect(page.options_sar.reports.size).to eq reports.size
       expect(page.options_closed_cases.reports.size).to eq reports.size
     end
 
-    it 'has a start/end date' do
+    it "has a start/end date" do
       expect(page).to have_period_start
       expect(page).to have_period_end
     end
 
-    it 'has a submit button' do
+    it "has a submit button" do
       expect(page).to have_submit_button
     end
   end

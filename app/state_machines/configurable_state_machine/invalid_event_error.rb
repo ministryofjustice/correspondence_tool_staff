@@ -1,6 +1,5 @@
 module ConfigurableStateMachine
   class InvalidEventError < RuntimeError
-
     def initialize(role:, kase:, user:, event:, message: nil)
       description = <<~EOS
 
@@ -17,8 +16,5 @@ module ConfigurableStateMachine
       end
       super(description)
     end
-
   end
 end
-
-

@@ -1,15 +1,14 @@
 class Case::SAR::InternalReview < Case::SAR::Standard
-
   include LinkableOriginalCase
 
   # override parent class callback behaviour
   # as not required for SAR::InternalReview cases
   skip_callback :save, :before, :use_subject_as_requester
 
-  belongs_to :sar_ir_outcome, class_name: 'CaseClosure::AppealOutcome'
+  belongs_to :sar_ir_outcome, class_name: "CaseClosure::AppealOutcome"
 
-  validates_presence_of :original_case
-  validates_presence_of :sar_ir_subtype
+  validates :original_case, presence: true
+  validates :sar_ir_subtype, presence: true
 
   validate :validate_other_option_details
 
@@ -19,17 +18,16 @@ class Case::SAR::InternalReview < Case::SAR::Standard
                  sar_ir_subtype: :string,
                  team_responsible_for_outcome_id: :integer,
                  other_option_details: :string
-                
 
   HUMANIZED_ATTRIBUTES = {
-    sar_ir_subtype: 'Case type',
-    subject: 'Case summary',
-    message: 'Full case details',
-    original_case: 'The original case'
+    sar_ir_subtype: "Case type",
+    subject: "Case summary",
+    message: "Full case details",
+    original_case: "The original case",
   }.freeze
 
   before_save do
-    self.workflow = 'trigger'
+    self.workflow = "trigger"
   end
 
   class << self
@@ -37,11 +35,11 @@ class Case::SAR::InternalReview < Case::SAR::Standard
       # This string is used when constructing paths or methods in other parts of
       # the system. Ensure that it does not come from a user-supplied parameter,
       # and does not contain special chars like slashes, etc.
-      'SAR_INTERNAL_REVIEW'
+      "SAR_INTERNAL_REVIEW"
     end
 
     def state_machine_name
-      'sar_internal_review'
+      "sar_internal_review"
     end
 
     def human_attribute_name(attr, options = {})
@@ -54,8 +52,8 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   end
 
   enum sar_ir_subtype: {
-    timeliness: 'timeliness',
-    compliance: 'compliance'
+    timeliness: "timeliness",
+    compliance: "compliance",
   }
 
   def sar_ir_outcome
@@ -75,20 +73,20 @@ class Case::SAR::InternalReview < Case::SAR::Standard
   end
 
   def validate_other_option_details
-    other_is_selected = outcome_reasons.map(&:abbreviation).include?('other')
-    other_not_selected = !other_is_selected 
+    other_is_selected = outcome_reasons.map(&:abbreviation).include?("other")
+    other_not_selected = !other_is_selected
 
     if other_not_selected && other_option_details.present?
       errors.add(
         :other_option_details,
-        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.present')
+        message: I18n.t("activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.present"),
       )
     end
 
-    if other_is_selected && !other_option_details.present?
+    if other_is_selected && other_option_details.blank?
       errors.add(
         :other_option_details,
-        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.absent')
+        message: I18n.t("activerecord.errors.models.case/sar/internal_review.attributes.other_option_details.absent"),
       )
     end
   end
@@ -97,14 +95,14 @@ class Case::SAR::InternalReview < Case::SAR::Standard
     linkable = CaseLinkTypeValidator.classes_can_be_linked_with_type?(
       klass: self.class.to_s,
       linked_klass: linked_case.class.to_s,
-      type: type
+      type:,
     )
 
     unless linkable
       errors.add(
         attribute,
         :wrong_type,
-        message: I18n.t('activerecord.errors.models.case/sar/internal_review.attributes.linked_case.wrong_type')
+        message: I18n.t("activerecord.errors.models.case/sar/internal_review.attributes.linked_case.wrong_type"),
       )
     end
   end

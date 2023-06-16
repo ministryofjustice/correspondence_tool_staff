@@ -13,10 +13,10 @@ module Cases
       permitted_correspondence_types
       authorize case_type, :can_add_case?
 
-      builder = build_case(session: session, step: params[:step])
+      builder = build_case(session:, step: params[:step])
 
       @case = builder.build
-      @s3_direct_post = S3Uploader.for(@case, 'requests')
+      @s3_direct_post = S3Uploader.for(@case, "requests")
       @back_link = back_link_url
     end
 
@@ -25,35 +25,33 @@ module Cases
       default_disclosure_specialists_flag
 
       builder = build_case(
-        session: session, 
-        step: params[:current_step], 
-        params: create_params
+        session:,
+        step: params[:current_step],
+        params: create_params,
       )
 
       @case = builder.build
 
-      @s3_direct_post = S3Uploader.for(builder.kase, 'requests')
+      @s3_direct_post = S3Uploader.for(builder.kase, "requests")
 
-      if builder.kase_ready_for_creation? 
+      if builder.kase_ready_for_creation?
         default_disclosure_specialists_flag
 
         service = CaseCreateService.new(
           user: current_user,
-          case_type: case_type,
+          case_type:,
           params: create_params,
-          prebuilt_case: builder.kase
+          prebuilt_case: builder.kase,
         )
         service.call
         @case = service.case
 
         session[session_state] = nil
         handle_case_service_result(service)
+      elsif builder.kase.valid_attributes?(create_params)
+        go_next_step
       else
-        if builder.kase.valid_attributes?(create_params)
-          go_next_step
-        else
-          render :new
-        end
+        render :new
       end
     end
 
@@ -65,7 +63,7 @@ module Cases
         redirect_to new_case_assignment_path @case
       else
         @case = @case.decorate
-        @s3_direct_post = S3Uploader.for(@case, 'requests')
+        @s3_direct_post = S3Uploader.for(@case, "requests")
         render :new
       end
     end
@@ -76,16 +74,16 @@ module Cases
 
     def build_case(session:, step:, params: nil)
       Builders::SteppedCaseBuilder.new(
-        case_type: case_type,
-        session: session,
-        step: step,
+        case_type:,
+        session:,
+        step:,
         creator: current_user,
-        params: params
+        params:,
       )
     end
 
     def default_disclosure_specialists_flag
-      params[:sar_internal_review].merge!(flag_for_disclosure_specialists: 'yes')
+      params[:sar_internal_review].merge!(flag_for_disclosure_specialists: "yes")
     end
 
     def create_params
@@ -137,12 +135,11 @@ module Cases
     end
 
     def back_link_url
-      if @case.get_previous_step       
+      if @case.get_previous_step
         "#{@case.case_route_path}/#{@case.get_previous_step}"
       else
         new_case_path
       end
     end
-
   end
 end

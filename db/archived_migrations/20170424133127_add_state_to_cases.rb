@@ -6,11 +6,11 @@ class AddStateToCases < ActiveRecord::Migration[5.0]
     Case::Base.unscoped.all.each do |kase|
       transition = kase.transitions.order(:sort_key).last
       if transition.nil?
-        kase.update!(current_state: 'unassigned', last_transitioned_at: kase.created_at)
+        kase.update!(current_state: "unassigned", last_transitioned_at: kase.created_at)
       else
         transition.record_state_change(kase) unless transition.nil?
       end
-      puts "Updated Case Id #{kase.id} with state #{kase.current_state}"
+      Rails.logger.debug "Updated Case Id #{kase.id} with state #{kase.current_state}"
     end
   end
 

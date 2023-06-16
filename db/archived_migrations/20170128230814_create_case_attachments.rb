@@ -1,6 +1,6 @@
 class CreateCaseAttachments < ActiveRecord::Migration[5.0]
   def up
-    create_enum :attachment_type, 'response'
+    create_enum :attachment_type, "response"
 
     create_table :case_attachments do |t|
       t.belongs_to :case

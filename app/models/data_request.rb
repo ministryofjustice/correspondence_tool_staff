@@ -1,5 +1,5 @@
 class DataRequest < ApplicationRecord
-  belongs_to :offender_sar_case, class_name: 'Case::Base', foreign_key: 'case_id'
+  belongs_to :offender_sar_case, class_name: "Case::Base", foreign_key: "case_id"
   belongs_to :user
   belongs_to :contact
   has_one    :commissioning_document
@@ -21,40 +21,40 @@ class DataRequest < ApplicationRecord
   scope :in_progress, -> { where(completed: false) }
 
   enum request_type: {
-    all_prison_records: 'all_prison_records',
-    security_records: 'security_records',
-    nomis_records: 'nomis_records',
-    nomis_other: 'nomis_other',
-    nomis_contact_logs: 'nomis_contact_logs',
-    probation_records: 'probation_records',
-    cctv_and_bwcf: 'cctv_and_bwcf',
-    telephone_recordings: 'telephone_recordings',
-    probation_archive: 'probation_archive',
-    mappa: 'mappa',
-    pdp: 'pdp',
-    court: 'court',
-    cross_borders: 'cross_borders',
-    cat_a: 'cat_a',
-    ndelius: 'ndelius',
-    other: 'other'
+    all_prison_records: "all_prison_records",
+    security_records: "security_records",
+    nomis_records: "nomis_records",
+    nomis_other: "nomis_other",
+    nomis_contact_logs: "nomis_contact_logs",
+    probation_records: "probation_records",
+    cctv_and_bwcf: "cctv_and_bwcf",
+    telephone_recordings: "telephone_recordings",
+    probation_archive: "probation_archive",
+    mappa: "mappa",
+    pdp: "pdp",
+    court: "court",
+    cross_borders: "cross_borders",
+    cat_a: "cat_a",
+    ndelius: "ndelius",
+    other: "other",
   }
 
   acts_as_gov_uk_date(:date_requested, :cached_date_received, :date_from, :date_to)
 
   def logs
-    self.data_request_logs
+    data_request_logs
   end
 
   def kase
-    self.offender_sar_case
+    offender_sar_case
   end
 
   def status
-    completed? ? 'Completed' : 'In progress'
+    completed? ? "Completed" : "In progress"
   end
 
   def other?
-    request_type == 'other'
+    request_type == "other"
   end
 
   def request_dates_either_present?
@@ -81,23 +81,23 @@ class DataRequest < ApplicationRecord
     contact&.data_request_emails&.split(" ") || []
   end
 
-  private
+private
 
   def validate_from_date_before_to_date
     if request_dates_both_present? && date_from > date_to
       errors.add(
         :date_from,
-        I18n.t('activerecord.errors.models.data_request.attributes.date_from.order')
+        I18n.t("activerecord.errors.models.data_request.attributes.date_from.order"),
       )
       errors[:date_from].any?
     end
   end
 
   def validate_request_type_note
-    if request_type == 'other' && request_type_note.blank?
+    if request_type == "other" && request_type_note.blank?
       errors.add(
         :request_type_note,
-        I18n.t('activerecord.errors.models.data_request.attributes.request_type_note.blank')
+        I18n.t("activerecord.errors.models.data_request.attributes.request_type_note.blank"),
       )
       errors[:request_type_note].any?
     end
@@ -108,30 +108,30 @@ class DataRequest < ApplicationRecord
       if cached_date_received.nil?
         errors.add(
           :cached_date_received,
-          I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.blank')
+          I18n.t("activerecord.errors.models.data_request.attributes.cached_date_received.blank"),
         )
       elsif cached_date_received > Date.today
         errors.add(
           :cached_date_received,
-          I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.future')
+          I18n.t("activerecord.errors.models.data_request.attributes.cached_date_received.future"),
         )
       end
     end
-    if (not completed?) && cached_date_received.present?
+    if !completed? && cached_date_received.present?
       errors.add(
         :cached_date_received,
-        I18n.t('activerecord.errors.models.data_request.attributes.cached_date_received.not_empty')
+        I18n.t("activerecord.errors.models.data_request.attributes.cached_date_received.not_empty"),
       )
     end
   end
 
   def validate_location
     if contact_id.present?
-      return
+      nil
     elsif location.blank?
       errors.add(
         :location,
-        I18n.t('activerecord.errors.models.data_request.attributes.location.blank')
+        I18n.t("activerecord.errors.models.data_request.attributes.location.blank"),
       )
     end
   end
@@ -142,8 +142,8 @@ class DataRequest < ApplicationRecord
   end
 
   def clean_attributes
-    [:location, :request_type_note]
-      .each { |f| self.send("#{f}=", self.send("#{f}")&.strip) }
-      .each { |f| self.send("#{f}=", self.send("#{f}")&.upcase_first) }
+    %i[location request_type_note]
+      .each { |f| send("#{f}=", send(f.to_s)&.strip) }
+      .each { |f| send("#{f}=", send(f.to_s)&.upcase_first) }
   end
 end

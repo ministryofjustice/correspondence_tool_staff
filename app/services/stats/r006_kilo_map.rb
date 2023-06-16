@@ -1,21 +1,20 @@
-require 'csv'
+require "csv"
 
 module Stats
   class R006KiloMap < BaseReport
-
     COLUMN_HEADINGS = [
-        'Business group',
-        'Directorate',
-        'Business unit',
-        'Director General / Director / Deputy Director',
-        'Areas covered',
-        'Group email',
-        'Team member name',
-        'Team member email'
+      "Business group",
+      "Directorate",
+      "Business unit",
+      "Director General / Director / Deputy Director",
+      "Areas covered",
+      "Group email",
+      "Team member name",
+      "Team member email",
     ].freeze
 
     def self.description
-      'Includes a list of all teams and users that respond to requests for information'
+      "Includes a list of all teams and users that respond to requests for information"
     end
 
     class << self
@@ -36,7 +35,7 @@ module Stats
       ReportType.r006
     end
 
-    def filename 
+    def filename
       report_type.filename(self.class.report_format)
     end
 
@@ -56,20 +55,20 @@ module Stats
     end
 
     def period_start
-      Time.now
+      Time.zone.now
     end
 
     def period_end
-      Time.now
+      Time.zone.now
     end
 
-    private
+  private
 
     def process_business_group(bg)
       line = []
       line << bg.name
-      line << ''
-      line << ''
+      line << ""
+      line << ""
       line << bg.team_lead
       @result_set << line
       bg.directorates.order(:name).each { |dir| process_directorate(dir) }
@@ -77,9 +76,9 @@ module Stats
 
     def process_directorate(dir)
       line = []
-      line << ''
+      line << ""
       line << dir.name
-      line << ''
+      line << ""
       line << dir.team_lead
       areas = dir.areas.to_a
       if areas.any?
@@ -95,26 +94,26 @@ module Stats
 
     def process_area(area)
       line = []
-      line << ''
-      line << ''
-      line << ''
-      line << ''
+      line << ""
+      line << ""
+      line << ""
+      line << ""
       line << area.value
       @result_set << line
     end
 
     def process_business_unit(bu)
       line = []
-      line << ''
-      line << ''
+      line << ""
+      line << ""
       line << bu.name
       line << bu.team_lead
       areas = bu.areas.to_a
-      if areas.any?
-        line << areas.shift.value
-      else
-        line << ''
-      end
+      line << if areas.any?
+                areas.shift.value
+              else
+                ""
+              end
       line << bu.email
       users = bu.users.to_a.sort { |a, b| a.full_name <=> b.full_name }
       if users.any?
@@ -129,17 +128,17 @@ module Stats
     def process_areas_and_users(areas, users)
       while areas.any? || users.any?
         line = []
-        line << ''
-        line << ''
-        line << ''
-        line << ''
-        if areas.any?
-          line << areas.shift.value
-        else
-          line << ''
-        end
+        line << ""
+        line << ""
+        line << ""
+        line << ""
+        line << if areas.any?
+                  areas.shift.value
+                else
+                  ""
+                end
         if users.any?
-          line << ''
+          line << ""
           user = users.shift
           line << user.full_name
           line << user.email

@@ -4,18 +4,17 @@ module AvailableCaseReports
     before_action -> { get_available_reports }
   end
 
-  private 
+private
 
   def get_available_reports
-    if current_user
-      @available_reports = Pundit.policy_scope(current_user, get_cases_reports)
-    else
-      @available_reports = []
-    end
-  end 
+    @available_reports = if current_user
+                           Pundit.policy_scope(current_user, get_cases_reports)
+                         else
+                           []
+                         end
+  end
 
   def get_cases_reports
     ReportType.where("abbr like ? ", "R90%").all
   end
-
 end

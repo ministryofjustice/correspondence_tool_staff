@@ -1,19 +1,19 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'listing open cases on the system' do
+feature "listing open cases on the system" do
   background :all do
     @responding_team_a = create :responding_team,
-                                name: 'Responding Team A'
+                                name: "Responding Team A"
     @responding_team_b = create :responding_team,
-                                name: 'Responding Team B'
+                                name: "Responding Team B"
     @responder_a = create :responder,
-                          full_name: 'Responder A',
+                          full_name: "Responder A",
                           responding_teams: [@responding_team_a]
     @responder_b = create :responder,
-                          full_name: 'Responder B',
+                          full_name: "Responder B",
                           responding_teams: [@responding_team_b]
     @coresponder_a = create :responder,
-                            full_name: 'Co-Responder A',
+                            full_name: "Co-Responder A",
                             responding_teams: [@responding_team_a]
     @team_dacu_disclosure = find_or_create :team_dacu_disclosure
     @disclosure_specialist = find_or_create :disclosure_specialist
@@ -40,16 +40,16 @@ feature 'listing open cases on the system' do
              :flagged,
              :press_office,
              created_at: 2.business_days.ago,
-             identifier: 'assigned_case_flagged_for_press_office_accepted'
+             identifier: "assigned_case_flagged_for_press_office_accepted"
     @closed_case = create :closed_case, responder: @responder_a
   end
 
   after(:all) { DbHousekeeping.clean }
 
-  context 'for managers' do
-    scenario 'shows all cases' do
+  context "for managers" do
+    scenario "shows all cases" do
       login_as create(:manager)
-      visit '/cases/open'
+      visit "/cases/open"
       cases = cases_page.case_list
       expect(cases.count).to eq 7
       expect(cases[0].number).to have_text @assigned_case_late.number
@@ -62,9 +62,9 @@ feature 'listing open cases on the system' do
     end
   end
 
-  scenario 'for responder A on team A' do
+  scenario "for responder A on team A" do
     login_as @responder_a
-    visit '/cases/open'
+    visit "/cases/open"
 
     cases = cases_page.case_list
     expect(cases.count).to eq 3
@@ -73,11 +73,11 @@ feature 'listing open cases on the system' do
     expect(cases[2].number).to have_text @assigned_case_dd_flagged.number
   end
 
-  context 'press officer' do
-    scenario 'only shows their cases' do
+  context "press officer" do
+    scenario "only shows their cases" do
       login_as @press_officer
 
-      visit '/cases/open'
+      visit "/cases/open"
 
       cases = cases_page.case_list
       expect(cases.count).to eq 1
@@ -86,11 +86,11 @@ feature 'listing open cases on the system' do
     end
   end
 
-  context 'disclosure specialist' do
-    scenario 'only shows their cases' do
+  context "disclosure specialist" do
+    scenario "only shows their cases" do
       login_as @disclosure_specialist
 
-      visit '/cases/open'
+      visit "/cases/open"
 
       cases = cases_page.case_list
 

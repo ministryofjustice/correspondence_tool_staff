@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Case::ICO::FOIPolicy do
   let(:manager) { create :manager }
@@ -12,14 +12,14 @@ RSpec.describe Case::ICO::FOIPolicy do
               .and_return(foi_standard_scope)
     end
 
-    it 'instantiates Case::FOI::StandardPolicy::Scope' do
+    it "instantiates Case::FOI::StandardPolicy::Scope" do
       described_class.new(manager, Case::ICO::FOI.all).resolve
 
       expect(Case::FOI::StandardPolicy::Scope)
         .to have_received(:new).with(manager, Case::ICO::FOI.all, nil)
     end
 
-    it 'defers to resolving with Case::FOI::StandardPolicy::Scope' do
+    it "defers to resolving with Case::FOI::StandardPolicy::Scope" do
       result = described_class.new(manager, Case::ICO::FOI.all).resolve
 
       expect(foi_standard_scope).to have_received(:resolve)
@@ -28,7 +28,7 @@ RSpec.describe Case::ICO::FOIPolicy do
   end
 
   permissions :show? do
-    it 'defers to Case::FOI::StandardPolicy' do
+    it "defers to Case::FOI::StandardPolicy" do
       expect_any_instance_of(Case::FOI::StandardPolicy).to receive(:show?)
       Pundit.policy(manager, Case::ICO::FOI).show?
     end

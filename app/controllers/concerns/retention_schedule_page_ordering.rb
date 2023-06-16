@@ -5,7 +5,7 @@ module RetentionSchedulePageOrdering
     set_initial_retention_shedule_order_flag
     if order_flag_is_not_applicable_to_retention_schedules
       set_order_cookie(
-        SearchHelper::RETENTION_SCHEDULE_DEFAULT_SEARCH_RESULT_ORDER_FLAG
+        SearchHelper::RETENTION_SCHEDULE_DEFAULT_SEARCH_RESULT_ORDER_FLAG,
       )
     else
       set_cookie_order_flag
@@ -15,7 +15,7 @@ module RetentionSchedulePageOrdering
   def set_initial_retention_shedule_order_flag
     if cookies[:search_result_order].nil? || order_flag_is_not_applicable_to_retention_schedules
       set_order_cookie(
-        SearchHelper::RETENTION_SCHEDULE_DEFAULT_SEARCH_RESULT_ORDER_FLAG
+        SearchHelper::RETENTION_SCHEDULE_DEFAULT_SEARCH_RESULT_ORDER_FLAG,
       )
     end
   end
@@ -25,7 +25,7 @@ module RetentionSchedulePageOrdering
       set_cookie_order_flag
     else
       set_order_cookie(
-        SearchHelper::DEFAULT_SEARCH_RESULT_ORDER_FLAG
+        SearchHelper::DEFAULT_SEARCH_RESULT_ORDER_FLAG,
       )
     end
   end
@@ -34,7 +34,7 @@ module RetentionSchedulePageOrdering
     # 'destruction_date' is the common part of the SEARCH_SCOPE_SET
     # for the RetentionSchedule page. See the SearchHelper module.
     if cookies[:search_result_order]
-      cookies[:search_result_order].exclude?('destruction_date')
+      cookies[:search_result_order].exclude?("destruction_date")
     end
   end
 end

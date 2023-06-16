@@ -1,5 +1,4 @@
 class Case::ICO::BaseDecorator < Case::BaseDecorator
-
   attr_accessor :related_case_number
 
   def formatted_date_ico_decision_received
@@ -31,5 +30,4 @@ class Case::ICO::BaseDecorator < Case::BaseDecorator
       I18n.l(object.original_date_responded, format: :default)
     end
   end
-
 end

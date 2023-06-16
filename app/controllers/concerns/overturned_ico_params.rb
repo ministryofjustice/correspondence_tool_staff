@@ -23,16 +23,18 @@ module OverturnedICOParams
     )
   end
 
-  private
+private
 
   def create_overturned_ico_params_list
-    [
-      :original_ico_appeal_id,
-      :reply_method,
-      :email,
-      :postal_address,
-      :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
-      :flag_for_disclosure_specialists
+    %i[
+      original_ico_appeal_id
+      reply_method
+      email
+      postal_address
+      external_deadline_dd
+      external_deadline_mm
+      external_deadline_yyyy
+      flag_for_disclosure_specialists
     ]
   end
 
