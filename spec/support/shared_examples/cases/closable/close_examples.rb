@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.shared_examples "close spec" do |klass|
   describe klass do
-    let(:today)               { Date.today }
+    let(:today)               { Time.zone.today }
     let(:manager)             { find_or_create :disclosure_bmt_user }
     let(:responder)           { kase.responder }
     let(:approver)            { find_or_create :disclosure_specialist }

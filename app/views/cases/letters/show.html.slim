@@ -21,7 +21,7 @@ section.letter--from-section
     | Our Reference:  DPA #{@case.number}
 
   p
-    | Date: #{Date.today.strftime('%e %B %Y')}
+    | Date: #{Time.zone.today.strftime('%e %B %Y')}
 
 = raw @letter.letter_address
 

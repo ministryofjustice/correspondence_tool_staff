@@ -8,7 +8,7 @@ describe CaseReopenService do
     let(:state_machine) { double ConfigurableStateMachine::Machine, reopen!: true }
 
     before do
-      @service = described_class.new(user, kase, external_deadline: Date.today)
+      @service = described_class.new(user, kase, external_deadline: Time.zone.today)
       allow(kase).to receive(:state_machine).and_return(state_machine)
     end
 

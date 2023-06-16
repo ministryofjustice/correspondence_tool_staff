@@ -30,7 +30,7 @@ RSpec.describe DataRequestLog, type: :model do
     end
 
     it "sets the error message when invalid" do
-      data_request_log.date_received = Date.today + 1.day
+      data_request_log.date_received = Time.zone.today + 1.day
 
       expect(subject).to be true
       expect(data_request_log.errors[:date_received]).to eq ["cannot be in the future"]
@@ -41,13 +41,13 @@ RSpec.describe DataRequestLog, type: :model do
     let(:data_request_log) { build_stubbed :data_request_log, :received }
 
     it "ensure date_received is in the past" do
-      data_request_log.date_received = Date.today + 1.day
+      data_request_log.date_received = Time.zone.today + 1.day
       expect(data_request_log.valid?).to be false
 
-      data_request_log.date_received = Date.today
+      data_request_log.date_received = Time.zone.today
       expect(data_request_log.valid?).to be true
 
-      data_request_log.date_received = Date.today - 1.day
+      data_request_log.date_received = Time.zone.today - 1.day
       expect(data_request_log.valid?).to be true
     end
 

@@ -48,15 +48,15 @@ class RetentionSchedule < ApplicationRecord
   class << self
     def common_date_viewable_from_range
       viewable_from = Settings.retention_timings.common.viewable_from
-      (..(Date.today + viewable_from.months))
+      (..(Time.zone.today + viewable_from.months))
     end
 
     def erasable_cases_viewable_range
-      (..Date.today)
+      (..Time.zone.today)
     end
 
     def triagable_destroy_cases_range
-      ((Date.today + 1)..)
+      ((Time.zone.today + 1)..)
     end
 
     def states_map

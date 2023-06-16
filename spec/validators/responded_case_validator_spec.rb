@@ -49,7 +49,7 @@ describe RespondedCaseValidator do
 
   context "valid date" do
     it "is valid" do
-      ico.date_responded = Date.today
+      ico.date_responded = Time.zone.today
       expect(ico).to be_valid
     end
   end

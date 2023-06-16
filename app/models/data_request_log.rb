@@ -13,7 +13,7 @@ class DataRequestLog < ApplicationRecord
   def validate_date_received?
     return false if date_received.blank?
 
-    if date_received > Date.today
+    if date_received > Time.zone.today
       errors.add(
         :date_received,
         I18n.t("activerecord.errors.models.data_request.attributes.date_received.future"),

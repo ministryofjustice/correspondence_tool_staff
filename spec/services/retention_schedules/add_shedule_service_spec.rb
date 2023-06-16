@@ -62,7 +62,7 @@ describe RetentionSchedules::AddScheduleService do
       Case::SAR::Standard,
       offender_sar?: false,
       offender_sar_complaint?: false,
-      last_transitioned_at: Date.today,
+      last_transitioned_at: Time.zone.today,
       closed?: true,
     )
   end
@@ -72,7 +72,7 @@ describe RetentionSchedules::AddScheduleService do
       Case::SAR::Offender,
       offender_sar?: true,
       offender_sar_complaint?: false,
-      last_transitioned_at: Date.today,
+      last_transitioned_at: Time.zone.today,
       closed?: false,
     )
   end

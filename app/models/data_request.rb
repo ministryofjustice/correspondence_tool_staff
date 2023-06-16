@@ -110,7 +110,7 @@ private
           :cached_date_received,
           I18n.t("activerecord.errors.models.data_request.attributes.cached_date_received.blank"),
         )
-      elsif cached_date_received > Date.today
+      elsif cached_date_received > Time.zone.today
         errors.add(
           :cached_date_received,
           I18n.t("activerecord.errors.models.data_request.attributes.cached_date_received.future"),

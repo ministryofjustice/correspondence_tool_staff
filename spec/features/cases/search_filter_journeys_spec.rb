@@ -248,7 +248,7 @@ feature "filters whittle down search results" do
       cases_search_page.filter_on_deadline("Today")
 
       @s40_exemption = "(s40) - Personal information"
-      @from_to_date = "Deadline #{I18n.l Date.today} - #{I18n.l Date.today}"
+      @from_to_date = "Deadline #{I18n.l Time.zone.today} - #{I18n.l Time.zone.today}"
     end
 
     scenario "clearing individual filters", js: true do

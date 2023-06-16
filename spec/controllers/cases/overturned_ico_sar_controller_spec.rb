@@ -10,7 +10,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
     create(
       :ico_sar_case,
       original_case: sar,
-      date_ico_decision_received: Date.today,
+      date_ico_decision_received: Time.zone.today,
     )
   end
 
@@ -155,9 +155,9 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
           external_deadline_mm: deadline.month.to_s,
           external_deadline_yyyy: deadline.year.to_s,
           original_ico_appeal_id: ico_sar_case.id.to_s,
-          received_date_dd: Date.today.day.to_s,
-          received_date_mm: Date.today.month.to_s,
-          received_date_yyyy: Date.today.year.to_s,
+          received_date_dd: Time.zone.today.day.to_s,
+          received_date_mm: Time.zone.today.month.to_s,
+          received_date_yyyy: Time.zone.today.year.to_s,
         },
         correspondence_type: "overturned_sar",
       }
@@ -259,9 +259,9 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         {
           id: @drafting_ovt_sar_case.id.to_s,
           sar: {
-            date_responded_dd: Date.today.day.to_s,
-            date_responded_mm: Date.today.month.to_s,
-            date_responded_yyyy: Date.today.year.to_s,
+            date_responded_dd: Time.zone.today.day.to_s,
+            date_responded_mm: Time.zone.today.month.to_s,
+            date_responded_yyyy: Time.zone.today.year.to_s,
             missing_info: "no",
           },
         }
@@ -303,7 +303,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         it "updates case" do
           patch(:process_respond_and_close, params:)
           @drafting_ovt_sar_case.reload
-          expect(@drafting_ovt_sar_case.date_responded).to eq Date.today
+          expect(@drafting_ovt_sar_case.date_responded).to eq Time.zone.today
           expect(@drafting_ovt_sar_case.current_state).to eq "closed"
           expect(@drafting_ovt_sar_case.refusal_reason).to be_nil
         end
@@ -319,7 +319,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
             params[:sar][:missing_info] = "yes"
             patch(:process_respond_and_close, params:)
             @drafting_ovt_sar_case.reload
-            expect(@drafting_ovt_sar_case.date_responded).to eq Date.today
+            expect(@drafting_ovt_sar_case.date_responded).to eq Time.zone.today
             expect(@drafting_ovt_sar_case.current_state).to eq "closed"
             expect(@drafting_ovt_sar_case.refusal_reason).to eq tmm_refusal_reason
           end

@@ -34,7 +34,7 @@ class DatabaseAnonymizerTasks
       "number_of_tasks": tasks_ids.size,
       "tasks": tasks_ids,
     }
-    anonymizer_job_id = "anonymizer_job_#{task_arguments[:tag]}_#{Date.today.strftime('%Y%m%d')}"
+    anonymizer_job_id = "anonymizer_job_#{task_arguments[:tag]}_#{Time.zone.today.strftime('%Y%m%d')}"
     redis.set(anonymizer_job_id, anonymizer_job_info.to_json)
   end
 
@@ -161,7 +161,7 @@ private
       response = @s3_bucket.put_object(
         "dumps/#{@tag}/#{actual_upload_file_name}",
         File.read(upload_file),
-        metadata: { "created_at" => Date.today.to_s },
+        metadata: { "created_at" => Time.zone.today.to_s },
       )
       if response && response["etag"].present?
         puts "done".green

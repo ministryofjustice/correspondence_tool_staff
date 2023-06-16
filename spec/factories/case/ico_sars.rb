@@ -133,7 +133,7 @@ FactoryBot.define do
       identifier { "responded ICO SAR case" }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, _evaluator|
       create :case_transition_respond_to_ico, case: kase

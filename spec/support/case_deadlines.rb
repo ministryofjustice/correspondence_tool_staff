@@ -1,6 +1,6 @@
 def generate_start_date(month, day)
   current_year = Date.current.year
-  chosen_year = if Date.new(current_year, month, day) > Date.today
+  chosen_year = if Date.new(current_year, month, day) > Time.zone.today
                   current_year - 1
                 else
                   current_year

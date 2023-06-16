@@ -27,8 +27,8 @@ describe CaseFilter::ReceivedDateFilter do
     context "both from and to received_date present" do
       let(:search_query)      do
         create :search_query,
-               received_date_from: Date.today,
-               received_date_to: Date.today
+               received_date_from: Time.zone.today,
+               received_date_to: Time.zone.today
       end
 
       it { is_expected.to be_applied }
@@ -37,7 +37,7 @@ describe CaseFilter::ReceivedDateFilter do
     context "only received_date_from present" do
       let(:search_query) do
         create :search_query,
-               received_date_from: Date.today
+               received_date_from: Time.zone.today
       end
 
       it { is_expected.not_to be_applied }
@@ -46,7 +46,7 @@ describe CaseFilter::ReceivedDateFilter do
     context "only received_date_to present" do
       let(:search_query) do
         create :search_query,
-               received_date_to: Date.today
+               received_date_to: Time.zone.today
       end
 
       it { is_expected.not_to be_applied }

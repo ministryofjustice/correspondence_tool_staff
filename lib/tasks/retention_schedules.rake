@@ -12,7 +12,7 @@ namespace :retention_schedules do
         case_with_retention_schedule(
           case_type: :offender_sar_case,
           state:,
-          planned_destruction_date: (Date.today - (3.months + rand(1..10).days)),
+          planned_destruction_date: (Time.zone.today - (3.months + rand(1..10).days)),
         )
 
         count += 1

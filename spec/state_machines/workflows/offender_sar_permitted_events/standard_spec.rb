@@ -119,7 +119,7 @@ describe ConfigurableStateMachine::Machine do
 
           it "allow start_complaints when the case is open late or closed" do
             if transition[:state] != "closed"
-              kase.external_deadline = Date.today - 1.day
+              kase.external_deadline = Time.zone.today - 1.day
               kase.save!
             end
 

@@ -108,7 +108,7 @@ FactoryBot.define do
   end
 
   trait :ready_to_dispatch do
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
     info_held_status { find_or_create :info_status, :held }
     transient do
       identifier { "Ready to dispatch Offender SAR" }
@@ -145,7 +145,7 @@ FactoryBot.define do
 
   trait :with_retention_schedule do
     transient do
-      planned_destruction_date { Date.today }
+      planned_destruction_date { Time.zone.today }
       state {}
     end
 

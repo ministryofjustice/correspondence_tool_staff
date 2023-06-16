@@ -42,19 +42,19 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
     end
 
     context "both from and to planned_destruction_date present" do
-      let(:search_query) { create :search_query, planned_destruction_date_from: Date.today, planned_destruction_date_to: Date.today }
+      let(:search_query) { create :search_query, planned_destruction_date_from: Time.zone.today, planned_destruction_date_to: Time.zone.today }
 
       it { is_expected.to be_applied }
     end
 
     context "only planned_destruction_date_from present" do
-      let(:search_query) { create :search_query, planned_destruction_date_from: Date.today }
+      let(:search_query) { create :search_query, planned_destruction_date_from: Time.zone.today }
 
       it { is_expected.not_to be_applied }
     end
 
     context "only planned_destruction_date_to present" do
-      let(:search_query) { create :search_query, planned_destruction_date_to: Date.today }
+      let(:search_query) { create :search_query, planned_destruction_date_to: Time.zone.today }
 
       it { is_expected.not_to be_applied }
     end

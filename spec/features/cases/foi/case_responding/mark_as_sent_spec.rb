@@ -26,7 +26,7 @@ feature "Mark response as sent" do
 
     cases_show_page.actions.mark_as_sent.click
 
-    cases_respond_page.fill_in_date_responded(Date.today)
+    cases_respond_page.fill_in_date_responded(Time.zone.today)
 
     cases_respond_page.submit_button.click
 
@@ -58,7 +58,7 @@ feature "Mark response as sent" do
 
       cases_show_page.actions.mark_as_sent.click
 
-      cases_respond_page.fill_in_date_responded(Date.today)
+      cases_respond_page.fill_in_date_responded(Time.zone.today)
 
       cases_respond_page.submit_button.click
 

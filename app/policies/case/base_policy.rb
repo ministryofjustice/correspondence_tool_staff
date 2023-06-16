@@ -464,7 +464,7 @@ private
   end
 
   check :escalation_deadline_has_expired do
-    self.case.escalation_deadline < Date.today
+    self.case.escalation_deadline < Time.zone.today
   end
 
   check :within_escalation_deadline do

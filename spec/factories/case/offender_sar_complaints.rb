@@ -229,7 +229,7 @@ FactoryBot.define do
 
     trait :with_retention_schedule do
       transient do
-        planned_destruction_date { Date.today }
+        planned_destruction_date { Time.zone.today }
         state {}
       end
 

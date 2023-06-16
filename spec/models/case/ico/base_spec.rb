@@ -92,8 +92,8 @@ describe Case::ICO::Base do
 
     it "cannot be before than received_date" do
       kase.update!(
-        received_date: Date.today,
-        external_deadline: Date.today - 1.day,
+        received_date: Time.zone.today,
+        external_deadline: Time.zone.today - 1.day,
       )
       expect(kase).not_to be_valid
       expect(kase.errors[:external_deadline])
@@ -102,8 +102,8 @@ describe Case::ICO::Base do
 
     it "cannot be more than a year past received_date" do
       kase.update!(
-        received_date: Date.today,
-        external_deadline: Date.today + 1.year + 1.day,
+        received_date: Time.zone.today,
+        external_deadline: Time.zone.today + 1.year + 1.day,
       )
       expect(kase).not_to be_valid
       expect(kase.errors[:external_deadline])
@@ -126,8 +126,8 @@ describe Case::ICO::Base do
 
       it "cannot be before received_date" do
         kase.update!(
-          received_date: Date.today,
-          internal_deadline: Date.today - 1.day,
+          received_date: Time.zone.today,
+          internal_deadline: Time.zone.today - 1.day,
         )
         expect(kase).not_to be_valid
         expect(kase.errors[:internal_deadline])
@@ -136,8 +136,8 @@ describe Case::ICO::Base do
 
       it "cannot be after than external_deadline" do
         kase.update!(
-          external_deadline: Date.today + 20.days,
-          internal_deadline: Date.today + 21.days,
+          external_deadline: Time.zone.today + 20.days,
+          internal_deadline: Time.zone.today + 21.days,
         )
         expect(kase).not_to be_valid
         expect(kase.errors[:internal_deadline])
@@ -233,14 +233,14 @@ describe Case::ICO::Base do
     end
 
     it "cannot be more than 10 years in the past" do
-      kase.received_date = Date.today - 10.years - 1.day
+      kase.received_date = Time.zone.today - 10.years - 1.day
       expect(kase).not_to be_valid
       expect(kase.errors[:received_date])
         .to eq ["cannot be over 10 years in the past"]
     end
 
     it "cannot be in the future" do
-      kase.received_date = Date.today + 1.day
+      kase.received_date = Time.zone.today + 1.day
       expect(kase).not_to be_valid
       expect(kase.errors[:received_date])
         .to eq ["cannot be in the future."]

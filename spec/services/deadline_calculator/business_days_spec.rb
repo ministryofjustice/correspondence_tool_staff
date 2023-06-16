@@ -4,8 +4,8 @@ describe DeadlineCalculator::BusinessDays do
   context "FOI requests" do
     let(:foi_case) do
       build_stubbed :foi_case,
-                    received_date: Date.today,
-                    created_at: Date.today
+                    received_date: Time.zone.today,
+                    created_at: Time.zone.today
     end
     let(:deadline_calculator) { described_class.new foi_case }
 

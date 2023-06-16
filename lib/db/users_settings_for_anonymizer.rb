@@ -59,7 +59,7 @@ class UsersSettingsForAnonymizer
       response = s3_bucket.put_object(
         USER_SETTINGS_JSON_S3_PATH,
         File.read(setting_file),
-        metadata: { "created_at" => Date.today.to_s },
+        metadata: { "created_at" => Time.zone.today.to_s },
       )
       if response && response["etag"].present?
         puts "done".green
@@ -78,7 +78,7 @@ private
     new_user_list.each do |record|
       next unless new_user?(record["email"])
 
-      timestamp = Date.today.strftime("%Y-%m-%d")
+      timestamp = Time.zone.today.strftime("%Y-%m-%d")
       user.password = record["password"]
       query1 = "insert into users (full_name, email, encrypted_password, created_at, updated_at)
                 values ('#{record['full_name']}', '#{record['email']}', '#{user.encrypted_password}',

@@ -15,9 +15,9 @@ feature "Editing a case" do
     click_link "Edit case details"
     expect(cases_edit_page).to be_displayed
 
-    cases_edit_page.foi_detail.date_received_day.set(Date.today.day)
-    cases_edit_page.foi_detail.date_received_month.set(Date.today.month)
-    cases_edit_page.foi_detail.date_received_year.set(Date.today.year)
+    cases_edit_page.foi_detail.date_received_day.set(Time.zone.today.day)
+    cases_edit_page.foi_detail.date_received_month.set(Time.zone.today.month)
+    cases_edit_page.foi_detail.date_received_year.set(Time.zone.today.year)
     cases_edit_page.foi_detail.subject.set("Aardvarks for sale")
     cases_edit_page.foi_detail.full_request.set("I have heard that prisoners are selling baby aardvarks.  Is that true?")
     cases_edit_page.foi_detail.full_name.set("John Doe")
@@ -27,7 +27,7 @@ feature "Editing a case" do
     expect(cases_show_page).to be_displayed
     expect(cases_show_page.notice.text).to eq "Case updated"
     expect(cases_show_page.page_heading.heading.text).to eq "Case subject, Aardvarks for sale"
-    expect(cases_show_page.case_details.foi_basic_details.date_received.data.text).to eq Date.today.strftime(Settings.default_date_format)
+    expect(cases_show_page.case_details.foi_basic_details.date_received.data.text).to eq Time.zone.today.strftime(Settings.default_date_format)
     expect(cases_show_page.case_details.foi_basic_details.name.data.text).to eq "John Doe"
     expect(cases_show_page.case_details.foi_basic_details.email.data.text).to eq "john.doe@moj.com"
   end

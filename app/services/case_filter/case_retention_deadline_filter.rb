@@ -31,7 +31,7 @@ module CaseFilter
     end
 
     def json_date(args)
-      date = args.is_a?(Hash) ? Date.today.advance(args) : args
+      date = args.is_a?(Hash) ? Time.zone.today.advance(args) : args
 
       {
         day: date.strftime("%d"),

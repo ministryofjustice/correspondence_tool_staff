@@ -18,8 +18,8 @@ describe CaseRequireFurtherActionService do
       it "Same responder" do
         params = {
           "message": "require further action",
-          "internal_deadline": Date.today + 1.day,
-          "external_deadline": Date.today + 10.days,
+          "internal_deadline": Time.zone.today + 1.day,
+          "external_deadline": Time.zone.today + 10.days,
         }
         service = described_class.new(user, kase, params)
         expect(service.result).to eq :incomplete
@@ -49,8 +49,8 @@ describe CaseRequireFurtherActionService do
       it "Same responder team if responder has been deactivated" do
         params = {
           "message": "require further action",
-          "internal_deadline": Date.today + 1.day,
-          "external_deadline": Date.today + 10.days,
+          "internal_deadline": Time.zone.today + 1.day,
+          "external_deadline": Time.zone.today + 10.days,
         }
         service = described_class.new(user, kase, params)
         expect(service.result).to eq :incomplete
@@ -81,8 +81,8 @@ describe CaseRequireFurtherActionService do
       it "Need to reassigned if the responding_team has been deactivated" do
         params = {
           "message": "require further action",
-          "internal_deadline": Date.today + 1.day,
-          "external_deadline": Date.today + 10.days,
+          "internal_deadline": Time.zone.today + 1.day,
+          "external_deadline": Time.zone.today + 10.days,
         }
         service = described_class.new(user, kase, params)
         expect(service.result).to eq :incomplete
@@ -116,8 +116,8 @@ describe CaseRequireFurtherActionService do
       it "raises an error when it saves" do
         params = {
           "message": "require further action",
-          "internal_deadline": Date.today + 10.days,
-          "external_deadline": Date.today + 1.day,
+          "internal_deadline": Time.zone.today + 10.days,
+          "external_deadline": Time.zone.today + 1.day,
         }
         service = described_class.new(user, kase, params)
         expect(service.result).to eq :incomplete

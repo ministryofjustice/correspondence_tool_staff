@@ -50,7 +50,7 @@ describe Case::ICO::FOI do
     let(:require_further_action_case) { create :require_further_action_ico_foi_case }
 
     it "is nil when 0 days late" do
-      require_further_action_case.original_external_deadline = Date.today
+      require_further_action_case.original_external_deadline = Time.zone.today
       expect(require_further_action_case.num_days_late_against_original_deadline).to be nil
     end
 

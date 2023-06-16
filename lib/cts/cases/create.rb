@@ -509,7 +509,7 @@ module CTS::Cases
     def transition_to_closed_for_foi(kase)
       kase.prepare_for_close
       kase.update!(
-        date_responded: Date.today,
+        date_responded: Time.zone.today,
         info_held_status: CaseClosure::InfoHeldStatus.held,
         outcome_abbreviation: "granted",
       )
@@ -519,7 +519,7 @@ module CTS::Cases
     def transition_to_closed_for_ico(kase)
       kase.prepare_for_close
       ico_decision = options.fetch(:ico_decision, Case::ICO::Base.ico_decisions.keys.sample)
-      kase.update!(date_ico_decision_received: Date.today, ico_decision:)
+      kase.update!(date_ico_decision_received: Time.zone.today, ico_decision:)
 
       if kase.overturned?
         uploader = S3Uploader.new(kase, CTS.dacu_manager)
@@ -533,7 +533,7 @@ module CTS::Cases
 
     def transition_to_closed_for_sar(kase)
       kase.prepare_for_close
-      kase.update!(date_responded: Date.today, missing_info: false)
+      kase.update!(date_responded: Time.zone.today, missing_info: false)
       kase.respond_and_close(responder)
     end
 

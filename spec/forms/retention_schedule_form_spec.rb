@@ -19,7 +19,7 @@ RSpec.describe RetentionScheduleForm do
              not_set?: schedule_not_set,
              anonymised?: state_anonymised)
     end
-    let(:case_double) { double(Case::Base, date_responded: Date.today) }
+    let(:case_double) { double(Case::Base, date_responded: Time.zone.today) }
 
     let(:planned_destruction_date) { Date.tomorrow }
     let(:state) { RetentionSchedule::STATE_NOT_SET.to_s }

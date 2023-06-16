@@ -21,7 +21,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
   describe "#create" do
     let(:deadline) { 1.month.ago }
     let(:manager) { create :manager }
-    let(:received_date) { Date.today }
+    let(:received_date) { Time.zone.today }
 
     let(:ico_overturned_foi_params) do
       {
@@ -45,7 +45,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
       create(
         :ico_foi_case,
         original_case: foi,
-        date_ico_decision_received: Date.today
+        date_ico_decision_received: Time.zone.today
       )
     end
 

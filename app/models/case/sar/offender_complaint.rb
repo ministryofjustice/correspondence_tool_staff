@@ -178,7 +178,7 @@ private
     if received_date.present? && external_deadline.present? && external_deadline < received_date
       errors.add(:external_deadline, :before_received)
     end
-    if external_deadline.present? && external_deadline < Date.today && new_record?
+    if external_deadline.present? && external_deadline < Time.zone.today && new_record?
       errors.add(:external_deadline, :past)
     end
   end

@@ -9,7 +9,7 @@ describe "ClosedCaseValidator" do
   after(:all) { CaseClosure::Metadatum.destroy_all }
 
   context "preparing for close validations" do
-    let(:kase) { create :case, date_responded: Date.today }
+    let(:kase) { create :case, date_responded: Time.zone.today }
 
     before { kase.prepare_for_close }
 
@@ -432,7 +432,7 @@ describe "ClosedCaseValidator" do
     context "ico_decision" do
       before do
         responded_ico.update(
-          date_ico_decision_received: Date.today,
+          date_ico_decision_received: Time.zone.today,
           ico_decision: "upheld",
           uploaded_ico_decision_files: %w[file_1 file2],
         )
@@ -502,7 +502,7 @@ describe "ClosedCaseValidator" do
 
     context "uploaded ico decision files" do
       before do
-        responded_ico.date_ico_decision_received = Date.today
+        responded_ico.date_ico_decision_received = Time.zone.today
         responded_ico.uploaded_ico_decision_files = nil
         responded_ico.ico_decision_comment = nil
       end

@@ -135,7 +135,7 @@ describe "ICO cases factory" do
 
         expect(kase.current_state).to eq "responded"
         expect(kase.assignments.size).to eq 3
-        expect(kase.date_responded).to eq Date.today
+        expect(kase.date_responded).to eq Time.zone.today
 
         expect(kase.transitions.size).to eq 7
         transition = kase.transitions.last

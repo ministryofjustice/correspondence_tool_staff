@@ -27,8 +27,8 @@ describe CaseFilter::DateRespondedFilter do
     context "both from and to date_responded present" do
       let(:search_query)      do
         create :search_query,
-               date_responded_from: Date.today,
-               date_responded_to: Date.today
+               date_responded_from: Time.zone.today,
+               date_responded_to: Time.zone.today
       end
 
       it { is_expected.to be_applied }
@@ -37,7 +37,7 @@ describe CaseFilter::DateRespondedFilter do
     context "only date_responded_from present" do
       let(:search_query) do
         create :search_query,
-               date_responded_from: Date.today
+               date_responded_from: Time.zone.today
       end
 
       it { is_expected.not_to be_applied }
@@ -46,7 +46,7 @@ describe CaseFilter::DateRespondedFilter do
     context "only date_responded_to present" do
       let(:search_query) do
         create :search_query,
-               date_responded_to: Date.today
+               date_responded_to: Time.zone.today
       end
 
       it { is_expected.not_to be_applied }

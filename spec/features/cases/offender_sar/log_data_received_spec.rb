@@ -76,13 +76,13 @@ feature "Log data received for an Offender SAR Data Request" do
       click_link "Edit"
       expect(data_request_edit_page).to be_displayed
       data_request_edit_page.form.mark_complete
-      data_request_edit_page.form.set_date_received(Date.today)
+      data_request_edit_page.form.set_date_received(Time.zone.today)
       click_on "Continue"
       expect(cases_show_page).to be_displayed
       row = cases_show_page.data_requests.rows[0]
 
       expect(row.status).to have_text "Completed"
-      expect(row.date_received).to have_text Date.today.strftime(Settings.default_date_format)
+      expect(row.date_received).to have_text Time.zone.today.strftime(Settings.default_date_format)
     end
   end
 end

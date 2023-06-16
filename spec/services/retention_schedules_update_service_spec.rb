@@ -8,7 +8,7 @@ describe RetentionSchedulesUpdateService do
     case_with_retention_schedule(
       case_type: :offender_sar_case,
       state: "not_set",
-      date: Date.today - 4.months,
+      date: Time.zone.today - 4.months,
     )
   end
 
@@ -16,7 +16,7 @@ describe RetentionSchedulesUpdateService do
     case_with_retention_schedule(
       case_type: :offender_sar_case,
       state: "review",
-      date: Date.today - (4.months - 7.days),
+      date: Time.zone.today - (4.months - 7.days),
     )
   end
 
@@ -24,7 +24,7 @@ describe RetentionSchedulesUpdateService do
     case_with_retention_schedule(
       case_type: :offender_sar_case,
       state: "retain",
-      date: Date.today - (4.months - 7.days),
+      date: Time.zone.today - (4.months - 7.days),
     )
   end
 

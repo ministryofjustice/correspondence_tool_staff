@@ -212,7 +212,7 @@ describe Case::SAR::Standard do
       @kase = create :sar_case,
                      name: "aaa",
                      email: "aa@moj.com",
-                     received_date: Date.today,
+                     received_date: Time.zone.today,
                      subject: "subject A"
       @kase.update! name: "bbb",
                     email: "bb@moj.com",
@@ -223,7 +223,7 @@ describe Case::SAR::Standard do
     it "saves all values in the versions object hash" do
       version_hash = YAML.load(@kase.versions.last.object, permitted_classes: [Time, Date])
       expect(version_hash["email"]).to eq "aa@moj.com"
-      expect(version_hash["received_date"]).to eq Date.today
+      expect(version_hash["received_date"]).to eq Time.zone.today
       expect(version_hash["subject"]).to eq "subject A"
     end
 
@@ -235,7 +235,7 @@ describe Case::SAR::Standard do
 
     it "reconstitutes the received date properly" do
       original_kase = @kase.versions.last.reify
-      expect(original_kase.received_date).to eq Date.today
+      expect(original_kase.received_date).to eq Time.zone.today
     end
   end
 

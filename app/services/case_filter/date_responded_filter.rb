@@ -5,10 +5,10 @@ module CaseFilter
     end
 
     def available_choices
-      nine_months_start = beginning_of_month(Date.today, 9)
-      nine_months_end = end_of_month(Date.today, 9)
-      two_years_start = beginning_of_month(Date.today, 24)
-      two_years_end = end_of_month(Date.today, 24)
+      nine_months_start = beginning_of_month(Time.zone.today, 9)
+      nine_months_end = end_of_month(Time.zone.today, 9)
+      two_years_start = beginning_of_month(Time.zone.today, 24)
+      two_years_end = end_of_month(Time.zone.today, 24)
       {
         up_to_nine_month: {
           name: "9 months ago",

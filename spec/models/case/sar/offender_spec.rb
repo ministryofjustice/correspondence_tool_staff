@@ -431,7 +431,7 @@ describe Case::SAR::Offender do
       create :offender_sar_case,
              name: "aaa",
              email: "aa@moj.com",
-             received_date: Date.today,
+             received_date: Time.zone.today,
              subject_full_name: "subject A"
     end
 
@@ -451,7 +451,7 @@ describe Case::SAR::Offender do
 
     it "reconstitutes the received date properly" do
       original_kase = kase.versions.last.reify
-      expect(original_kase.received_date).to eq Date.today
+      expect(original_kase.received_date).to eq Time.zone.today
     end
   end
 
@@ -665,17 +665,17 @@ describe Case::SAR::Offender do
     let(:kase) { create :offender_sar_case }
 
     it "is 1 when case is received today" do
-      kase.received_date = Date.today
+      kase.received_date = Time.zone.today
       expect(kase.num_days_taken).to be 1
     end
 
     it "returns correct number of days for open case" do
-      kase.received_date = 3.days.before(Date.today)
+      kase.received_date = 3.days.before(Time.zone.today)
       expect(kase.num_days_taken).to eq 4
     end
 
     it "returns correct number of days late for closed case" do
-      closed_kase.received_date = 10.days.before(Date.today)
+      closed_kase.received_date = 10.days.before(Time.zone.today)
       closed_kase.date_responded = Date.yesterday
       expect(closed_kase.num_days_taken).to eq 10
     end
@@ -686,7 +686,7 @@ describe Case::SAR::Offender do
     let(:closed_kase) { create :offender_sar_case, :closed }
 
     it "is nil when 0 days late" do
-      kase.external_deadline = Date.today
+      kase.external_deadline = Time.zone.today
       expect(kase.num_days_late).to be nil
     end
 
@@ -701,7 +701,7 @@ describe Case::SAR::Offender do
     end
 
     it "returns correct number of days late for closed case" do
-      closed_kase.external_deadline = 3.days.before(Date.today)
+      closed_kase.external_deadline = 3.days.before(Time.zone.today)
       closed_kase.date_responded = Date.yesterday
       expect(closed_kase.num_days_late).to eq 2
     end

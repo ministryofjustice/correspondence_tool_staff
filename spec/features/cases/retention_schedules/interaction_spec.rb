@@ -9,7 +9,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "not_set",
-      date: Date.today - 4.months,
+      date: Time.zone.today - 4.months,
     )
   end
   # review
@@ -18,7 +18,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "review",
-      date: Date.today,
+      date: Time.zone.today,
     )
   end
   let!(:reviewable_untimely_kase) do
@@ -26,7 +26,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "review",
-      date: Date.today + 5.months,
+      date: Time.zone.today + 5.months,
     )
   end
   # retain
@@ -35,7 +35,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "retain",
-      date: Date.today - 4.months,
+      date: Time.zone.today - 4.months,
     )
   end
   let!(:retain_untimely_kase) do
@@ -43,7 +43,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "retain",
-      date: Date.today + 5.months,
+      date: Time.zone.today + 5.months,
     )
   end
   # erasable
@@ -52,7 +52,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "to_be_anonymised",
-      date: Date.today - 4.months,
+      date: Time.zone.today - 4.months,
     )
   end
   let!(:erasable_timely_kase_two) do
@@ -60,7 +60,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "to_be_anonymised",
-      date: Date.today - 3.months,
+      date: Time.zone.today - 3.months,
     )
   end
   let!(:erasable_untimely_kase) do
@@ -68,7 +68,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "to_be_anonymised",
-      date: Date.today + 5.months,
+      date: Time.zone.today + 5.months,
     )
   end
   let!(:erasable_pending_kases) do
@@ -77,7 +77,7 @@ feature "Case retention schedules for GDPR", :js do
         case_type: :offender_sar_case,
         case_state: :closed,
         rs_state: "to_be_anonymised",
-        date: Date.today + 2,
+        date: Time.zone.today + 2,
       )
     end
   end
@@ -212,7 +212,7 @@ feature "Case retention schedules for GDPR", :js do
     kase = create(
       case_type,
       current_state: case_state,
-      date_responded: Date.today,
+      date_responded: Time.zone.today,
       retention_schedule:
         RetentionSchedule.new(
           state: rs_state,

@@ -53,7 +53,7 @@ describe CaseExtendForPITService do
         described_class.new(
           manager,
           case_being_drafted,
-          10.business_days.after(Date.today),
+          10.business_days.after(Time.zone.today),
           "",
         )
       end

@@ -279,7 +279,7 @@ private
     click_on "Close case"
 
     expect(cases_close_page).to be_displayed
-    cases_close_page.fill_in_date_responded(Date.today)
+    cases_close_page.fill_in_date_responded(Time.zone.today)
     click_on "Continue"
 
     expect(cases_closure_outcomes_page).not_to be_displayed

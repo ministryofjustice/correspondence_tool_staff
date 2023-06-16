@@ -83,7 +83,7 @@ module CTS
     end
 
     def create_case(flagged:)
-      puts ">>>>>>>>>>>>>> creating case received #{Date.today} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
+      puts ">>>>>>>>>>>>>> creating case received #{Time.zone.today} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
       responding_team = @responding_teams.sample
       responder = responding_team.users.sample
       kase = if flagged
@@ -131,7 +131,7 @@ module CTS
         puts ">>>>>> closing case #{kase.id} #{__FILE__}:#{__LINE__} <<<<<<<<<<<<<<<<<\n"
         kase.state_machine.respond!(acting_user: kase.responder, acting_team: kase.responding_team)
         granted = CaseClosure::Outcome.where(abbreviation: "granted").first
-        kase.update!(date_responded: Date.today, outcome_id: granted.id)
+        kase.update!(date_responded: Time.zone.today, outcome_id: granted.id)
         kase.state_machine.close!(@managing_team.users.sample)
       end
     end

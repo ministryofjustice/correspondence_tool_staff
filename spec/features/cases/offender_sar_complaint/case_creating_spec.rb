@@ -257,7 +257,7 @@ feature "offender sar complaint case creation by a manager", js: true do
         and_fill_in_requested_info_page
         and_fill_in_request_details_page
         and_fill_in_date_received_page
-        and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline: Date.today + 10.days)
+        and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline: Time.zone.today + 10.days)
         then_basic_details_of_show_page_are_correct
         then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
         then_expect_linked_original_case_has_stamp_for_linkage
@@ -281,7 +281,7 @@ feature "offender sar complaint case creation by a manager", js: true do
         and_fill_in_requested_info_page
         and_fill_in_request_details_page
         and_fill_in_date_received_page
-        and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline: Date.today + 10.days)
+        and_fill_and_check_external_deadline_is_prefilled("", "", "", external_deadline: Time.zone.today + 10.days)
         then_basic_details_of_show_page_are_correct
         then_expect_cases_show_page_to_be_correct_for_data_subject_requesting_own_record
         then_expect_linked_original_case_has_stamp_for_linkage
@@ -336,7 +336,7 @@ feature "offender sar complaint case creation by a manager", js: true do
     expect(cases_show_page.case_history.entries.first)
       .to have_content I18n.t(
         "common.case/offender_sar.complaint_case_link_message",
-        received_date: Date.today,
+        received_date: Time.zone.today,
       )
   end
 
@@ -422,7 +422,7 @@ feature "offender sar complaint case creation by a manager", js: true do
     if @chosen_complaint_type == "standard_complaint"
       cases_new_offender_sar_complaint_external_deadline_page.fill_in_case_details
     else
-      cases_new_offender_sar_complaint_external_deadline_page.fill_in_case_details(external_deadline: Date.today + 10.days)
+      cases_new_offender_sar_complaint_external_deadline_page.fill_in_case_details(external_deadline: Time.zone.today + 10.days)
     end
     click_on "Continue"
   end

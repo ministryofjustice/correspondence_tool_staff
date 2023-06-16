@@ -125,7 +125,7 @@ private
   end
 
   def period_in_the_future?(period_date)
-    period_date.present? && period_date > Date.today
+    period_date.present? && period_date > Time.zone.today
   end
 
   def period_end_before_period_start?(period_start, period_end)

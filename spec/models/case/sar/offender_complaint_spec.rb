@@ -470,7 +470,7 @@ describe Case::SAR::OffenderComplaint do
       create :offender_sar_complaint,
              name: "aaa",
              email: "aa@moj.com",
-             received_date: Date.today,
+             received_date: Time.zone.today,
              subject_full_name: "subject A"
     end
 
@@ -490,7 +490,7 @@ describe Case::SAR::OffenderComplaint do
 
     it "reconstitutes the received date properly" do
       original_kase = kase.versions.last.reify
-      expect(original_kase.received_date).to eq Date.today
+      expect(original_kase.received_date).to eq Time.zone.today
     end
   end
 
@@ -801,7 +801,7 @@ describe Case::SAR::OffenderComplaint do
       offender_sar = create(:offender_sar_case)
       complaint = create(:offender_sar_complaint,
                          original_case: offender_sar,
-                         received_date: Date.today - 10)
+                         received_date: Time.zone.today - 10)
       complaint.valid?
       expect(complaint).to be_valid
       complaint.external_deadline = complaint.received_date - 1.day
@@ -814,8 +814,8 @@ describe Case::SAR::OffenderComplaint do
       offender_sar = create(:offender_sar_case)
       complaint = build(:offender_sar_complaint,
                         original_case: offender_sar,
-                        received_date: Date.today - 10.days,
-                        external_deadline: Date.today - 1.day)
+                        received_date: Time.zone.today - 10.days,
+                        external_deadline: Time.zone.today - 1.day)
       complaint.valid?
       expect(complaint).not_to be_valid
       expect(complaint.errors[:external_deadline])

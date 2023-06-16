@@ -62,7 +62,7 @@ describe CaseUpdatePartialFlagsService do
       it "Mark as partial case and waiting for response" do
         flags = { "is_partial_case" => "true",
                   "further_actions_required" => "awaiting_response",
-                  "partial_case_letter_sent_dated" => Date.today }
+                  "partial_case_letter_sent_dated" => Time.zone.today }
         service = described_class.new(user:, kase:, flag_params: flags)
         expect(service.result).to eq :incomplete
 

@@ -21,7 +21,7 @@ module Stats
     attr_reader :period_start, :period_end, :user
 
     def process(report_guid:)
-      @period_end ||= Date.today
+      @period_end ||= Time.zone.today
       scope = case_scope
           .where(received_date: [@period_start..@period_end])
           .order(received_date: :asc)

@@ -128,15 +128,15 @@ RSpec.describe StatsController, type: :controller do
           period_start_dd: Date.yesterday.day,
           period_start_mm: Date.yesterday.month,
           period_start_yyyy: Date.yesterday.year,
-          period_end_dd: Date.today.day,
-          period_end_mm: Date.today.month,
-          period_end_yyyy: Date.today.year,
+          period_end_dd: Time.zone.today.day,
+          period_end_mm: Time.zone.today.month,
+          period_end_yyyy: Time.zone.today.year,
         },
       }
     end
 
     let(:report) do
-      create :r003_report, period_start: Date.yesterday, period_end: Date.today
+      create :r003_report, period_start: Date.yesterday, period_end: Time.zone.today
     end
 
     let(:dummy_report_type) do
@@ -156,11 +156,11 @@ RSpec.describe StatsController, type: :controller do
       allow(dummy_report_type).to receive(:filename).and_return("test.csv")
       allow(dummy_report_type).to receive(:user).and_return(manager)
       allow(dummy_report_type).to receive(:period_start).and_return(Date.yesterday)
-      allow(dummy_report_type).to receive(:period_end).and_return(Date.today)
+      allow(dummy_report_type).to receive(:period_end).and_return(Time.zone.today)
 
       post(:create, params:)
       expect(report).to have_received(:run).with(period_start: Date.yesterday,
-                                                 period_end: Date.today, user: manager, report_guid: report.guid)
+                                                 period_end: Time.zone.today, user: manager, report_guid: report.guid)
     end
 
     context "invalid params passed in" do
@@ -273,9 +273,9 @@ RSpec.describe StatsController, type: :controller do
             period_start_dd: Date.yesterday.day,
             period_start_mm: Date.yesterday.month,
             period_start_yyyy: Date.yesterday.year,
-            period_end_dd: Date.today.day,
-            period_end_mm: Date.today.month,
-            period_end_yyyy: Date.today.year,
+            period_end_dd: Time.zone.today.day,
+            period_end_mm: Time.zone.today.month,
+            period_end_yyyy: Time.zone.today.year,
           },
         }
       end

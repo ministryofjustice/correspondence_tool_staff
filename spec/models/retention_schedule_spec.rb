@@ -9,21 +9,21 @@ RSpec.describe RetentionSchedule, type: :model do
   let(:retention_schedule) do
     described_class.new(
       case: kase,
-      planned_destruction_date: Date.today,
+      planned_destruction_date: Time.zone.today,
     )
   end
 
   let(:retention_schedule_for_complaint) do
     described_class.new(
       case: complaint_kase,
-      planned_destruction_date: Date.today,
+      planned_destruction_date: Time.zone.today,
     )
   end
 
   let(:retention_schedule_foi) do
     described_class.new(
       case: foi_kase,
-      planned_destruction_date: Date.today,
+      planned_destruction_date: Time.zone.today,
     )
   end
 
@@ -31,7 +31,7 @@ RSpec.describe RetentionSchedule, type: :model do
     it "has correct display values for its states" do
       retention_schedule = described_class.new(
         case: kase,
-        planned_destruction_date: Date.today,
+        planned_destruction_date: Time.zone.today,
       )
 
       expect(retention_schedule.aasm.human_state).to match("Not set")
@@ -94,7 +94,7 @@ RSpec.describe RetentionSchedule, type: :model do
 
       expect {
         retention_schedule.anonymise!
-      }.to change(retention_schedule, :erasure_date).from(nil).to(Date.today)
+      }.to change(retention_schedule, :erasure_date).from(nil).to(Time.zone.today)
 
       expect(retention_schedule).to have_state(:anonymised)
       expect(retention_schedule.persisted?).to eq(true)
@@ -139,7 +139,7 @@ RSpec.describe RetentionSchedule, type: :model do
     describe "date ranges" do
       it 'returns a range that is correct to view non "destroy" triagable cases' do
         class_range = described_class.common_date_viewable_from_range
-        expected_range = ..Date.today + 4.months
+        expected_range = ..Time.zone.today + 4.months
 
         expect(class_range.class).to be(Range)
         expect(class_range.begin).to be(nil)
@@ -148,7 +148,7 @@ RSpec.describe RetentionSchedule, type: :model do
 
       it "returns a range that is correct to erasable cases" do
         class_range = described_class.erasable_cases_viewable_range
-        expected_range = ..Date.today
+        expected_range = ..Time.zone.today
 
         expect(class_range.class).to be(Range)
         expect(class_range.begin).to be(nil)
@@ -157,7 +157,7 @@ RSpec.describe RetentionSchedule, type: :model do
 
       it 'returns a range that is correct to view triagable "destroy" cases' do
         class_range = described_class.triagable_destroy_cases_range
-        expected_range = ((Date.today + 1)..)
+        expected_range = ((Time.zone.today + 1)..)
 
         expect(class_range).to be_a(Range)
         expect(class_range.begin).to match(expected_range.begin)

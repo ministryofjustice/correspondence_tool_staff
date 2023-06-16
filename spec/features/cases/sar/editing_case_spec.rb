@@ -18,9 +18,9 @@ feature "Editing a SAR case" do
     detail = cases_edit_page.sar_detail
     detail.subject_name.set("Stepriponikas Bonstart")
 
-    cases_edit_page.sar_detail.date_received_day.set(Date.today.day)
-    cases_edit_page.sar_detail.date_received_month.set(Date.today.month)
-    cases_edit_page.sar_detail.date_received_year.set(Date.today.year)
+    cases_edit_page.sar_detail.date_received_day.set(Time.zone.today.day)
+    cases_edit_page.sar_detail.date_received_month.set(Time.zone.today.month)
+    cases_edit_page.sar_detail.date_received_year.set(Time.zone.today.year)
 
     cases_edit_page.sar_detail.case_summary.set("Aardvarks for sale")
     cases_edit_page.sar_detail.full_request.set("I have heard that prisoners are selling baby aardvarks.  Is that true?")
@@ -31,7 +31,7 @@ feature "Editing a SAR case" do
 
     expect(cases_show_page.page_heading.heading.text).to eq "Case subject, Aardvarks for sale"
     expect(cases_show_page.case_details.sar_basic_details.data_subject.data.text).to eq "Stepriponikas Bonstart"
-    expect(cases_show_page.case_details.sar_basic_details.date_received.data.text).to eq Date.today.strftime(Settings.default_date_format)
+    expect(cases_show_page.case_details.sar_basic_details.date_received.data.text).to eq Time.zone.today.strftime(Settings.default_date_format)
   end
 
   scenario "Uploading new request files", js: true do

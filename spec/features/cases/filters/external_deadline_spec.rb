@@ -1,7 +1,7 @@
 require "rails_helper"
 
 def working_hours
-  Date.today.workday? && Time.zone.now.during_business_hours?
+  Time.zone.today.workday? && Time.zone.now.during_business_hours?
 end
 
 feature "filtering by external deadline", if: working_hours do
@@ -101,8 +101,8 @@ feature "filtering by external deadline", if: working_hours do
     end
 
     def filter_today_and_expect_correct_results(page, case_numbers)
-      from_date = Date.today
-      to_date   = Date.today
+      from_date = Time.zone.today
+      to_date   = Time.zone.today
 
       expect(page.case_numbers).to match_array case_numbers
 
@@ -127,7 +127,7 @@ feature "filtering by external deadline", if: working_hours do
     end
 
     def filter_next_three_days_and_expect_correct_results(page, case_numbers)
-      from_date = Date.today
+      from_date = Time.zone.today
       to_date   = 3.business_days.from_now.to_date
 
       page.filter_on_deadline("In the next 3 days")
@@ -152,7 +152,7 @@ feature "filtering by external deadline", if: working_hours do
     end
 
     def filter_next_ten_days_and_expect_correct_results(page, case_numbers)
-      from_date = Date.today
+      from_date = Time.zone.today
       to_date   = 10.business_days.from_now.to_date
 
       page.filter_on_deadline("In the next 10 days")

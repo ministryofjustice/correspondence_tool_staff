@@ -39,7 +39,7 @@ def edit_ico_case_step(kase:, original_case:)
 end
 
 def edit_foi_case_closure_step(kase:,
-                               date_responded: Date.today,
+                               date_responded: Time.zone.today,
                                info_held_status: "not_confirmed",
                                refusal_reason: "tmm",
                                outcome: nil,
@@ -121,7 +121,7 @@ def edit_foi_case_closure_step(kase:,
   end
 end
 
-def edit_sar_ir_case_closure_step(kase:, date_responded: Date.today)
+def edit_sar_ir_case_closure_step(kase:, date_responded: Time.zone.today)
   expect(cases_show_page.case_details).to have_edit_closure
   expect(cases_show_page.case_details).to have_content("Business unit responsible for appeal outcome")
   expect(cases_show_page.case_details).to have_content("Disclosure")
@@ -154,7 +154,7 @@ def edit_sar_ir_case_closure_step(kase:, date_responded: Date.today)
   expect(cases_show_page.case_details).not_to have_content("Reason for appeal outcome Proper searches not carried out/missing information")
 end
 
-def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false)
+def edit_sar_case_closure_step(kase:, date_responded: Time.zone.today, tmm: false)
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_closure
 
@@ -196,7 +196,7 @@ def edit_sar_case_closure_step(kase:, date_responded: Date.today, tmm: false)
   end
 end
 
-def edit_ico_case_closure_step(kase:, decision_received_date: Date.today, ico_decision: "upheld")
+def edit_ico_case_closure_step(kase:, decision_received_date: Time.zone.today, ico_decision: "upheld")
   expect(cases_show_page).to be_displayed(id: kase.id)
   expect(cases_show_page.case_details).to have_edit_closure
 

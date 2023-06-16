@@ -230,7 +230,7 @@ private
   end
 
   def received_date_within_limits?
-    if received_date < Date.today - 10.years
+    if received_date < Time.zone.today - 10.years
       errors.add(
         :received_date,
         TranslateForCase.t(
@@ -239,7 +239,7 @@ private
           "attributes.received_date.past",
         ),
       )
-    elsif received_date > Date.today
+    elsif received_date > Time.zone.today
       errors.add(
         :received_date,
         TranslateForCase.t(

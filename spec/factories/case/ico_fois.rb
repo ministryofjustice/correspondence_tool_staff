@@ -174,7 +174,7 @@ FactoryBot.define do
       date_draft_compliant { received_date + 2.days }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, evaluator|
       create :case_transition_respond_to_ico,
@@ -193,7 +193,7 @@ FactoryBot.define do
       date_draft_compliant { received_date + 2.days }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, evaluator|
       create :case_transition_await_dispatch_ico,

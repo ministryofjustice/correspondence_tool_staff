@@ -135,9 +135,9 @@ private
   def validate_received_date
     if received_date.blank?
       errors.add(:received_date, :blank)
-    elsif received_date > Date.today
+    elsif received_date > Time.zone.today
       errors.add(:received_date, :future)
-    elsif received_date <= Date.today - 41.days && new_record?
+    elsif received_date <= Time.zone.today - 41.days && new_record?
       errors.add(:received_date, :past)
     end
   end
@@ -145,9 +145,9 @@ private
   def validate_external_deadline
     if external_deadline.blank?
       errors.add(:external_deadline, :blank)
-    elsif external_deadline < Date.today && new_record?
+    elsif external_deadline < Time.zone.today && new_record?
       errors.add(:external_deadline, :past)
-    elsif external_deadline > Date.today + 50.days
+    elsif external_deadline > Time.zone.today + 50.days
       errors.add(:external_deadline, :future)
     end
   end

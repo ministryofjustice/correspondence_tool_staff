@@ -529,22 +529,22 @@ describe SearchQuery do
 
     it "includes external deadline filters" do
       search_query = create :search_query,
-                            external_deadline_from: Date.today,
-                            external_deadline_to: Date.today
+                            external_deadline_from: Time.zone.today,
+                            external_deadline_to: Time.zone.today
       expect(search_query.applied_filters).to eq [CaseFilter::ExternalDeadlineFilter]
     end
 
     it "includes received date filters" do
       search_query = create :search_query,
-                            received_date_from: Date.today,
-                            received_date_to: Date.today
+                            received_date_from: Time.zone.today,
+                            received_date_to: Time.zone.today
       expect(search_query.applied_filters).to eq [CaseFilter::ReceivedDateFilter]
     end
 
     it "includes date responded filters" do
       search_query = create :search_query,
-                            date_responded_from: Date.today,
-                            date_responded_to: Date.today
+                            date_responded_from: Time.zone.today,
+                            date_responded_to: Time.zone.today
       expect(search_query.applied_filters).to eq [CaseFilter::DateRespondedFilter]
     end
 
@@ -559,7 +559,7 @@ describe SearchQuery do
     end
 
     it "includes retention deadline filter" do
-      search_query = create :search_query, planned_destruction_date_from: Date.today, planned_destruction_date_to: Date.today
+      search_query = create :search_query, planned_destruction_date_from: Time.zone.today, planned_destruction_date_to: Time.zone.today
       expect(search_query.applied_filters).to eq [CaseFilter::CaseRetentionDeadlineFilter]
     end
   end

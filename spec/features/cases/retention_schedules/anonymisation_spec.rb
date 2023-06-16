@@ -20,7 +20,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "to_be_anonymised",
-      date: Date.today - 4.months,
+      date: Time.zone.today - 4.months,
     )
   end
 
@@ -29,7 +29,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "to_be_anonymised",
-      date: Date.today,
+      date: Time.zone.today,
     )
   end
 
@@ -38,7 +38,7 @@ feature "Case retention schedules for GDPR", :js do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: "to_be_anonymised",
-      date: Date.today + 5.months,
+      date: Time.zone.today + 5.months,
     )
   end
 
@@ -94,14 +94,14 @@ feature "Case retention schedules for GDPR", :js do
     expect(show_page.retention_details.retention_schedule_state)
       .to have_content("Retention status Anonymised")
     expect(show_page.retention_details.anonymised_at)
-      .to have_content("Anonymised on #{I18n.l(Date.today)}")
+      .to have_content("Anonymised on #{I18n.l(Time.zone.today)}")
   end
 
   def case_with_retention_schedule(case_type:, case_state:, rs_state:, date:)
     kase = create(
       case_type,
       current_state: case_state,
-      date_responded: Date.today,
+      date_responded: Time.zone.today,
       retention_schedule:
         RetentionSchedule.new(
           state: rs_state,

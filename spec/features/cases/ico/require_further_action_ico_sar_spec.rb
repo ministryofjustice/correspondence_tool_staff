@@ -37,8 +37,8 @@ feature "Require further action for ICO-SAR responded case" do
     login_as manager
 
     testing_inputs = generate_input_values(kase)
-    testing_inputs[:interal_deadlinen] = Date.today - 10.days
-    testing_inputs[:external_deadline] = Date.today - 5.days
+    testing_inputs[:interal_deadlinen] = Time.zone.today - 10.days
+    testing_inputs[:external_deadline] = Time.zone.today - 5.days
     fill_details_for_require_further_action(kase, testing_inputs)
     validate_error_message_not_in_past
   end
@@ -47,8 +47,8 @@ feature "Require further action for ICO-SAR responded case" do
     login_as manager
 
     testing_inputs = generate_input_values(kase)
-    testing_inputs[:interal_deadlinen] = Date.today + 10.days
-    testing_inputs[:external_deadline] = Date.today + 5.days
+    testing_inputs[:interal_deadlinen] = Time.zone.today + 10.days
+    testing_inputs[:external_deadline] = Time.zone.today + 5.days
     fill_details_for_require_further_action(kase, testing_inputs)
     validate_error_message_value_of_deadlines
   end
@@ -62,8 +62,8 @@ private
       original_internal_deadline: kase.internal_deadline,
       original_external_deadline: kase.external_deadline,
       original_date_responded: kase.date_responded,
-      interal_deadlinen: Date.today + 10.days,
-      external_deadline: Date.today + 20.days,
+      interal_deadlinen: Time.zone.today + 10.days,
+      external_deadline: Time.zone.today + 20.days,
       team_name: kase.responding_team.name,
     }
   end

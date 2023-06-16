@@ -9,7 +9,7 @@ describe "assignments/new.html.slim", type: :view do
   let!(:business_unit_3)   { create :responding_team, directorate: dir }
 
   it "displays the new assignment page for a new case" do
-    deactivated_bg = create :business_group, deleted_at: Date.today, name: "[DEACTIVATED] testing"
+    deactivated_bg = create :business_group, deleted_at: Time.zone.today, name: "[DEACTIVATED] testing"
     assign(:case, unassigned_case)
     assign(:assignment, unassigned_case.assignments.new)
     flash[:notice] = true

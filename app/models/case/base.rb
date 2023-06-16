@@ -147,13 +147,13 @@ class Case::Base < ApplicationRecord
   scope :in_time, lambda {
     where(
       "CASE WHEN current_state = 'closed' THEN date_responded <= (properties->>'external_deadline')::date ELSE ? <= properties->>'external_deadline' END",
-      Date.today,
+      Time.zone.today,
     )
   }
   scope :late, lambda {
     where(
       "CASE WHEN current_state = 'closed' THEN date_responded > (properties->>'external_deadline')::date ELSE ? > properties->>'external_deadline' END",
-      Date.today,
+      Time.zone.today,
     )
   }
 
@@ -663,7 +663,7 @@ class Case::Base < ApplicationRecord
     else
       responding_team_assignment_date = assign_responder_transitions.last&.created_at&.to_date || received_date
       internal_deadline = @deadline_calculator.business_unit_deadline_for_date(responding_team_assignment_date)
-      internal_deadline < Date.today
+      internal_deadline < Time.zone.today
     end
   end
 
@@ -947,12 +947,12 @@ private
   end
 
   def validate_received_date
-    if received_date.present? && received_date > Date.today
+    if received_date.present? && received_date > Time.zone.today
       errors.add(
         :received_date,
         I18n.t("activerecord.errors.models.case.attributes.received_date.not_in_future"),
       )
-    elsif received_date.present? && received_date < Date.today - 1.year
+    elsif received_date.present? && received_date < Time.zone.today - 1.year
       unless type_of_offender_sar?
         errors.add(
           :received_date,
@@ -978,7 +978,7 @@ private
         :date_draft_compliant,
         I18n.t("activerecord.errors.models.case.attributes.date_draft_compliant.before_received"),
       )
-    elsif date_draft_compliant > Date.today
+    elsif date_draft_compliant > Time.zone.today
       errors.add(
         :date_draft_compliant,
         I18n.t("activerecord.errors.models.case.attributes.date_draft_compliant.not_in_future"),
@@ -1097,7 +1097,7 @@ private
   end
 
   def benchmark_date_value_for_days_metrics
-    date_responded.nil? ? Date.today : date_responded
+    date_responded.nil? ? Time.zone.today : date_responded
   end
 
   def delete_reverse_links(related_case)

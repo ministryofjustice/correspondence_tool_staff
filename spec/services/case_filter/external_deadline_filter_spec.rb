@@ -27,8 +27,8 @@ describe CaseFilter::ExternalDeadlineFilter do
     context "both from and to external_deadline present" do
       let(:search_query)      do
         create :search_query,
-               external_deadline_from: Date.today,
-               external_deadline_to: Date.today
+               external_deadline_from: Time.zone.today,
+               external_deadline_to: Time.zone.today
       end
 
       it { is_expected.to be_applied }
@@ -37,7 +37,7 @@ describe CaseFilter::ExternalDeadlineFilter do
     context "only external_deadline_from present" do
       let(:search_query) do
         create :search_query,
-               external_deadline_from: Date.today
+               external_deadline_from: Time.zone.today
       end
 
       it { is_expected.not_to be_applied }
@@ -46,7 +46,7 @@ describe CaseFilter::ExternalDeadlineFilter do
     context "only external_deadline_to present" do
       let(:search_query) do
         create :search_query,
-               external_deadline_to: Date.today
+               external_deadline_to: Time.zone.today
       end
 
       it { is_expected.not_to be_applied }

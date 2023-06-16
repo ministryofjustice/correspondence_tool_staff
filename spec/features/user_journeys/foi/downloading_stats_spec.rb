@@ -167,7 +167,7 @@ private
 
   def create_custom_r003_report
     r003 = ReportType.where(abbr: "R003").first
-    stats_new_page.fill_in_form("foi", r003.id, Date.yesterday, Date.today)
+    stats_new_page.fill_in_form("foi", r003.id, Date.yesterday, Time.zone.today)
     stats_new_page.submit_button.click
 
     expect(stats_new_page.success_message).to have_download_link
@@ -175,7 +175,7 @@ private
 
   def create_custom_r004_report
     r004 = ReportType.r004
-    stats_new_page.fill_in_form("foi", r004.id, Date.yesterday, Date.today)
+    stats_new_page.fill_in_form("foi", r004.id, Date.yesterday, Time.zone.today)
     stats_new_page.submit_button.click
 
     expect(stats_new_page.success_message).to have_download_link

@@ -74,7 +74,7 @@ RSpec.describe Case::Base, type: :model do
     create :case,
            :flagged,
            # Valid if within 1 year of today
-           received_date: Date.today - 6.months
+           received_date: Time.zone.today - 6.months
   end
 
   let(:ot_ico_foi_draft)   { create :ot_ico_foi_noff_draft }
@@ -255,8 +255,8 @@ RSpec.describe Case::Base, type: :model do
   describe "#received_date" do
     let(:case_received_yesterday)   { build(:case, received_date: Date.yesterday.to_s) }
     let(:case_received_long_ago)    { build(:case, received_date: 370.days.ago) }
-    let(:case_received_today)       { build(:case, received_date: Date.today.to_s) }
-    let(:case_received_tomorrow)    { build(:case, received_date: (Date.today + 1.day).to_s) }
+    let(:case_received_today)       { build(:case, received_date: Time.zone.today.to_s) }
+    let(:case_received_tomorrow)    { build(:case, received_date: (Time.zone.today + 1.day).to_s) }
     let(:old_offender_sar_case)     { build(:offender_sar_case, received_date: 370.days.ago) }
 
     it "can be received in the past" do
@@ -615,9 +615,9 @@ RSpec.describe Case::Base, type: :model do
 
     describe "#set_deadlines" do
       let(:kase)                { build :case }
-      let(:escalation_deadline) { Date.today - 1.day }
-      let(:internal_deadline)   { Date.today - 2.days }
-      let(:external_deadline)   { Date.today - 3.days }
+      let(:escalation_deadline) { Time.zone.today - 1.day }
+      let(:internal_deadline)   { Time.zone.today - 2.days }
+      let(:external_deadline)   { Time.zone.today - 3.days }
       let(:deadline_calculator) do
         double DeadlineCalculator::BusinessDays,
                escalation_deadline:,
@@ -929,7 +929,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it "returns false if escalation date is today" do
-      kase.update!(external_deadline: Date.today)
+      kase.update!(external_deadline: Time.zone.today)
       expect(kase.already_late?).to be false
     end
 
@@ -1149,7 +1149,7 @@ RSpec.describe Case::Base, type: :model do
         it "changes the internal and external deadlines (but not escalation deadline)" do
           kase = nil
           Timecop.freeze(Time.zone.local(2017, 12, 1, 12, 0, 0)) do
-            kase = create :case, :flagged, received_date: Date.today, created_at: Time.zone.now
+            kase = create :case, :flagged, received_date: Time.zone.today, created_at: Time.zone.now
           end
           expect(kase.received_date).to eq Date.new(2017, 12, 1)
           expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
@@ -1157,7 +1157,7 @@ RSpec.describe Case::Base, type: :model do
           expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
 
           Timecop.freeze(Time.zone.local(2017, 11, 23, 13, 13, 56)) do
-            kase.update!(received_date: Date.today)
+            kase.update!(received_date: Time.zone.today)
           end
           expect(kase.received_date).to eq Date.new(2017, 11, 23)
           expect(kase.external_deadline).to eq Date.new(2017, 12, 21)
@@ -1174,7 +1174,7 @@ RSpec.describe Case::Base, type: :model do
             kase = create :case_being_drafted,
                           :flagged_accepted,
                           approver: manager,
-                          received_date: Date.today,
+                          received_date: Time.zone.today,
                           created_at: Time.zone.now
 
             CaseExtendForPITService.new(
@@ -1191,7 +1191,7 @@ RSpec.describe Case::Base, type: :model do
           expect(kase.escalation_deadline).to eq Date.new(2017, 12, 6)
 
           Timecop.freeze(Time.zone.local(2017, 11, 23, 13, 13, 56)) do
-            kase.update!(received_date: Date.today)
+            kase.update!(received_date: Time.zone.today)
           end
 
           expect(kase.received_date).to       eq Date.new(2017, 11, 23)
@@ -1206,7 +1206,7 @@ RSpec.describe Case::Base, type: :model do
       it "does not update deadlines" do
         kase = nil
         Timecop.freeze(Time.zone.local(2017, 12, 1, 12, 0, 0)) do
-          kase = create :case, :flagged, received_date: Date.today, created_at: Time.zone.now
+          kase = create :case, :flagged, received_date: Time.zone.today, created_at: Time.zone.now
         end
         expect(kase.received_date).to eq Date.new(2017, 12, 1)
         expect(kase.external_deadline).to eq Date.new(2018, 1, 3)
@@ -1469,14 +1469,14 @@ RSpec.describe Case::Base, type: :model do
 
       context "fields requiring search reindex not updated" do
         it "does not set the dirty flag" do
-          kase.update!(date_responded: Date.today, workflow: "trigger")
+          kase.update!(date_responded: Time.zone.today, workflow: "trigger")
           expect(kase).not_to be_dirty
         end
 
         it "does not queue the job" do
           kase # need this here so that the job triggered by create is outside the expect block
           expect {
-            kase.update(date_responded: Date.today, workflow: "trigger")
+            kase.update(date_responded: Time.zone.today, workflow: "trigger")
           }.not_to have_enqueued_job(SearchIndexUpdaterJob)
         end
       end
@@ -1550,7 +1550,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     context "date responded is present" do
-      let(:kase)    { find_or_create :closed_case, date_responded: Date.today }
+      let(:kase)    { find_or_create :closed_case, date_responded: Time.zone.today }
 
       context "date responded > external deadline" do
         it "is true" do
@@ -1568,7 +1568,7 @@ RSpec.describe Case::Base, type: :model do
 
       context "date_responded = external deadline" do
         it "is false" do
-          kase.external_deadline = Date.today
+          kase.external_deadline = Time.zone.today
           expect(kase.responded_late?).to be false
         end
       end
@@ -1579,7 +1579,7 @@ RSpec.describe Case::Base, type: :model do
     let(:closed_kase) { create :closed_case }
 
     it "is nil when 0 days late" do
-      kase.external_deadline = Date.today
+      kase.external_deadline = Time.zone.today
       expect(kase.num_days_late).to be nil
     end
 

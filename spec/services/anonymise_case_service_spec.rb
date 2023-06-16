@@ -9,7 +9,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: :to_be_anonymised,
-      date: Date.today - 4.months,
+      date: Time.zone.today - 4.months,
     )
   end
 
@@ -19,7 +19,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       case_state: :closed,
       rs_state: :to_be_anonymised,
       third_party: true,
-      date: Date.today - 4.months,
+      date: Time.zone.today - 4.months,
     )
   end
 
@@ -28,7 +28,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       case_type: :offender_sar_case,
       case_state: :closed,
       rs_state: :to_be_anonymised,
-      date: Date.today - 4.months,
+      date: Time.zone.today - 4.months,
     )
   end
 
@@ -37,7 +37,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       case_type: :offender_sar_complaint,
       case_state: :closed,
       rs_state: :to_be_anonymised,
-      date: Date.today - 4.months,
+      date: Time.zone.today - 4.months,
     )
   end
 
@@ -224,7 +224,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
     it "updates the cases retention schedule to anonymised" do
       retention_schedule = offender_sar_case.retention_schedule
       expect(retention_schedule.aasm.current_state).to eq(:anonymised)
-      expect(retention_schedule.erasure_date).to eq(Date.today)
+      expect(retention_schedule.erasure_date).to eq(Time.zone.today)
     end
   end
 
@@ -316,7 +316,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
                case_type,
                :third_party,
                current_state: case_state,
-               date_responded: Date.today,
+               date_responded: Time.zone.today,
                retention_schedule:
                  RetentionSchedule.new(
                    state: rs_state,
@@ -327,7 +327,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
              create(
                case_type,
                current_state: case_state,
-               date_responded: Date.today,
+               date_responded: Time.zone.today,
                retention_schedule:
                  RetentionSchedule.new(
                    state: rs_state,

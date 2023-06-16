@@ -210,7 +210,7 @@ describe MarkResponseAsSentService do
       end
 
       context "responded late" do
-        let(:response_date) { Date.today }
+        let(:response_date) { Time.zone.today }
 
         it "updates the date responded in the model" do
           service.call

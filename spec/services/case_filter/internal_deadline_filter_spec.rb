@@ -27,8 +27,8 @@ describe CaseFilter::InternalDeadlineFilter do
     context "both from and to internal_deadline present" do
       let(:search_query)      do
         create :search_query,
-               internal_deadline_from: Date.today,
-               internal_deadline_to: Date.today
+               internal_deadline_from: Time.zone.today,
+               internal_deadline_to: Time.zone.today
       end
 
       it { is_expected.to be_applied }
@@ -37,7 +37,7 @@ describe CaseFilter::InternalDeadlineFilter do
     context "only internal_deadline_from present" do
       let(:search_query) do
         create :search_query,
-               internal_deadline_from: Date.today
+               internal_deadline_from: Time.zone.today
       end
 
       it { is_expected.not_to be_applied }
@@ -46,7 +46,7 @@ describe CaseFilter::InternalDeadlineFilter do
     context "only internal_deadline_to present" do
       let(:search_query) do
         create :search_query,
-               internal_deadline_to: Date.today
+               internal_deadline_to: Time.zone.today
       end
 
       it { is_expected.not_to be_applied }

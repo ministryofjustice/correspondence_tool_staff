@@ -240,7 +240,7 @@ RSpec.describe DataRequest, type: :model do
 
   describe "scope completed" do
     let!(:data_request_in_progress) { create(:data_request) }
-    let!(:data_request_completed) { create(:data_request, :completed, cached_date_received: Date.today) }
+    let!(:data_request_completed) { create(:data_request, :completed, cached_date_received: Time.zone.today) }
 
     it "returns completed data requests" do
       expect(described_class.completed).to match_array [data_request_completed]
@@ -250,7 +250,7 @@ RSpec.describe DataRequest, type: :model do
 
   describe "scope in_progress" do
     let!(:data_request_in_progress) { create(:data_request) }
-    let!(:data_request_completed) { create(:data_request, :completed, cached_date_received: Date.today) }
+    let!(:data_request_completed) { create(:data_request, :completed, cached_date_received: Time.zone.today) }
 
     it "returns in progress data requests" do
       expect(described_class.in_progress).to match_array [data_request_in_progress]

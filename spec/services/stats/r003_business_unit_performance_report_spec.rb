@@ -303,7 +303,7 @@ module Stats
       describe "#results" do
         before do
           Timecop.freeze Time.zone.local(2017, 6, 30, 12, 0, 0) do
-            report = described_class.new(period_start: Date.new(2017, 6, 2), period_end: Date.today, generate_bu_columns: true)
+            report = described_class.new(period_start: Date.new(2017, 6, 2), period_end: Time.zone.today, generate_bu_columns: true)
             report.run
             @results = report.results
           end
@@ -459,7 +459,7 @@ module Stats
               BGDoom,DRDoom,Doomed,#{@team_e.id},,#{@team_e.team_lead},"","",100.0,1,1,0,0,0,,0,0,0,0,0,100.0,1,1,0,0,0,0.0,1,0,1,0,0
               Total,"","",,,"","","",70.0,10,4,0,3,3,75.0,4,1,0,2,1,71.4,14,5,0,5,4,0.0,14,0,5,0,9
             EOCSV
-            report = described_class.new(period_start: Date.new(2017, 6, 5), period_end: Date.today, generate_bu_columns: true)
+            report = described_class.new(period_start: Date.new(2017, 6, 5), period_end: Time.zone.today, generate_bu_columns: true)
             report.run
             actual_lines = report.to_csv.map { |row| row.map(&:value) }
             expected_lines = expected_text.split("\n")

@@ -70,7 +70,7 @@ describe DeadlineCalculator::CalendarMonths do
         it "deadline falls on weekend and final_deadline should be next working day" do
           Timecop.freeze Time.zone.local(2019, 9, 27, 13, 21, 33) do
             test_case = double("sar_case")
-            allow(test_case).to receive(:received_date).and_return(Date.today)
+            allow(test_case).to receive(:received_date).and_return(Time.zone.today)
             allow(test_case).to receive(:correspondence_type).and_return(sar)
             deadline_calculator_local = described_class.new test_case
 
@@ -114,7 +114,7 @@ describe DeadlineCalculator::CalendarMonths do
       it "1 months" do
         Timecop.freeze Time.zone.local(2019, 8, 27, 13, 21, 33) do
           test_case = double("sar_case")
-          allow(test_case).to receive(:received_date).and_return(Date.today)
+          allow(test_case).to receive(:received_date).and_return(Time.zone.today)
           allow(test_case).to receive(:correspondence_type).and_return(sar)
           deadline_calculator_local = described_class.new test_case
 
@@ -126,7 +126,7 @@ describe DeadlineCalculator::CalendarMonths do
       it "2 months" do
         Timecop.freeze Time.zone.local(2019, 9, 26, 13, 21, 33) do
           test_case = double("sar_case")
-          allow(test_case).to receive(:received_date).and_return(Date.today)
+          allow(test_case).to receive(:received_date).and_return(Time.zone.today)
           allow(test_case).to receive(:correspondence_type).and_return(sar)
           deadline_calculator_local = described_class.new test_case
 
@@ -140,7 +140,7 @@ describe DeadlineCalculator::CalendarMonths do
       it "2 months" do
         Timecop.freeze Time.zone.local(2019, 10, 1, 13, 21, 33) do
           test_case = double("sar_case")
-          allow(test_case).to receive(:received_date).and_return(Date.today)
+          allow(test_case).to receive(:received_date).and_return(Time.zone.today)
           allow(test_case).to receive(:correspondence_type).and_return(sar)
           deadline_calculator_local = described_class.new test_case
 

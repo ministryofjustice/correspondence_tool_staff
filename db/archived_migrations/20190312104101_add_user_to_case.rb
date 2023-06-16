@@ -15,7 +15,7 @@ class AddUserToCase < ActiveRecord::Migration[5.0]
       email: Settings.default_user_email, # ideally dud emails
       full_name: "",
       password: SecureRandom.base64(20),
-      deleted_at: Date.today, # to prevent login attempts
+      deleted_at: Time.zone.today, # to prevent login attempts
     )
     .save!(validate: false)
 

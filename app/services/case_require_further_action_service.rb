@@ -73,14 +73,14 @@ private
           :internal_deadline,
           "cannot be blank",
         )
-      elsif @kase.internal_deadline.present? && @kase.internal_deadline <= Date.today
+      elsif @kase.internal_deadline.present? && @kase.internal_deadline <= Time.zone.today
         @kase.errors.add(
           :internal_deadline,
           I18n.t("activerecord.errors.models.case/ico.attributes.internal_deadline.past"),
         )
       end
 
-      if @kase.external_deadline <= Date.today
+      if @kase.external_deadline <= Time.zone.today
         @kase.errors.add(
           :external_deadline,
           I18n.t("activerecord.errors.models.case/ico.attributes.external_deadline.past"),

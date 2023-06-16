@@ -32,7 +32,7 @@ def mark_case_as_sent_step(responded_date:,
   expect(cases_show_page.case_status.details.copy.text).to eq expected_status
 end
 
-def close_case_step(responded_date: Date.today)
+def close_case_step(responded_date: Time.zone.today)
   cases_show_page.actions.close_case.click
   cases_close_page.fill_in_date_responded(responded_date)
   cases_close_page.click_on "Continue"
@@ -47,7 +47,7 @@ end
 
 def close_sar_case_step(timeliness: "in time", tmm: false, editable: true)
   cases_show_page.actions.close_case.click
-  cases_close_page.fill_in_date_responded(Date.today)
+  cases_close_page.fill_in_date_responded(Time.zone.today)
   cases_close_page.click_on "Continue"
   expect(cases_closure_outcomes_page).to be_displayed
 
@@ -66,7 +66,7 @@ def close_sar_case_step(timeliness: "in time", tmm: false, editable: true)
     expect(cases_show_page.notice.text).to eq("You've closed this case")
   end
 
-  expect(show_page.response_details.date_responded.data.text).to eq Date.today.strftime(Settings.default_date_format)
+  expect(show_page.response_details.date_responded.data.text).to eq Time.zone.today.strftime(Settings.default_date_format)
   expect(show_page.response_details.timeliness.data.text).to eq "Answered #{timeliness}"
 
   # Regex required to handle both cases of 1 or more days to respond
@@ -85,7 +85,7 @@ end
 def close_ico_appeal_case_step(timeliness: "in time", decision: "upheld")
   cases_show_page.actions.close_case.click
   expect(cases_close_page).to be_displayed
-  cases_close_page.fill_in_ico_date_responded(Date.today)
+  cases_close_page.fill_in_ico_date_responded(Time.zone.today)
   cases_close_page.click_on "Continue"
 
   case decision
@@ -100,7 +100,7 @@ def close_ico_appeal_case_step(timeliness: "in time", decision: "upheld")
   show_page = cases_show_page.case_details
   expect(cases_show_page.notice.text).to eq("You've closed this case")
   expect(show_page.response_details.date_responded.data.text)
-    .to eq Date.today.strftime(Settings.default_date_format)
+    .to eq Time.zone.today.strftime(Settings.default_date_format)
   expect(show_page.response_details.timeliness.data.text)
     .to eq "Answered #{timeliness}"
   expect(show_page.response_details.time_taken.data.text).to match(/\d+ working days?/)

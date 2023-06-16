@@ -55,14 +55,14 @@ describe Case::FOI::Standard do
 
   describe "papertrail versioning", versioning: true do
     before do
-      @kase = create :foi_case, name: "aaa", email: "aa@moj.com", received_date: Date.today, subject: "subject A", postal_address: "10 High Street", requester_type: "journalist"
+      @kase = create :foi_case, name: "aaa", email: "aa@moj.com", received_date: Time.zone.today, subject: "subject A", postal_address: "10 High Street", requester_type: "journalist"
       @kase.update!(name: "bbb", email: "bb@moj.com", received_date: 1.day.ago, subject: "subject B", postal_address: "20 Low Street", requester_type: "offender")
     end
 
     it "saves all values in the versions object hash" do
       version_hash = YAML.load(@kase.versions.last.object, permitted_classes: [Time, Date])
       expect(version_hash["email"]).to eq "aa@moj.com"
-      expect(version_hash["received_date"]).to eq Date.today
+      expect(version_hash["received_date"]).to eq Time.zone.today
       expect(version_hash["subject"]).to eq "subject A"
       expect(version_hash["postal_address"]).to eq "10 High Street"
       expect(version_hash["requester_type"]).to eq "journalist"
@@ -78,7 +78,7 @@ describe Case::FOI::Standard do
 
     it "reconstitutes the received date" do
       original_kase = @kase.versions.last.reify
-      expect(original_kase.received_date).to eq Date.today
+      expect(original_kase.received_date).to eq Time.zone.today
     end
   end
 

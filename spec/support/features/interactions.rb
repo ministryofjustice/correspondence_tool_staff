@@ -130,7 +130,7 @@ module Features
         expect(cases_show_page.user_card.greetings)
           .to have_content user.full_name
       end
-      mark_case_as_sent_step(responded_date: Date.today,
+      mark_case_as_sent_step(responded_date: Time.zone.today,
                              expected_status:,
                              expected_to_be_with:)
       logout_step

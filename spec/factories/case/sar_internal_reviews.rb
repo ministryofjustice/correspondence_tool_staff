@@ -201,7 +201,7 @@ FactoryBot.define do
       identifier { "responded case" }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, evaluator|
       create :case_transition_respond,

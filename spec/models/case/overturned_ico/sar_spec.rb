@@ -56,7 +56,7 @@ describe Case::OverturnedICO::SAR do
 
       context "created with params" do
         it "is valid" do
-          received = Date.today
+          received = Time.zone.today
           deadline = 1.month.from_now
           params = ActionController::Parameters.new(
             {
@@ -254,7 +254,7 @@ describe Case::OverturnedICO::SAR do
     it "sets the internal deadline from the external deadline" do
       Timecop.freeze(2018, 7, 23, 10, 0, 0) do
         kase = create :overturned_ico_sar,
-                      received_date: Date.today,
+                      received_date: Time.zone.today,
                       external_deadline: 1.month.from_now.to_date
         expect(kase.internal_deadline).to eq 20.business_days.before(1.month.from_now).to_date
       end
@@ -281,7 +281,7 @@ describe Case::OverturnedICO::SAR do
       @kase = create :overturned_ico_sar,
                      original_ico_appeal:,
                      original_case: original_ico_appeal.original_case,
-                     received_date: Date.today,
+                     received_date: Time.zone.today,
                      external_deadline: 1.month.from_now.to_date
 
       @kase.original_case.linked_cases << link_case_1

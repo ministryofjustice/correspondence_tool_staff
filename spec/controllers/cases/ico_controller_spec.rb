@@ -137,7 +137,7 @@ RSpec.describe Cases::IcoController, type: :controller do
 
         context "closed ICO" do
           context "change to upheld" do
-            let(:params)             { 
+            let(:params)             {
               {
               id: kase.id,
               ico: {
@@ -172,7 +172,7 @@ RSpec.describe Cases::IcoController, type: :controller do
           end
 
           context "no ico decison files specified" do
-            let(:params) { 
+            let(:params) {
               {
               id: kase.id,
               ico: {
@@ -207,8 +207,8 @@ RSpec.describe Cases::IcoController, type: :controller do
           end
 
           context "change to overturned" do
-            let(:kase)         { create :closed_ico_foi_case, date_ico_decision_received: Date.today }
-            let(:params)       { 
+            let(:kase)         { create :closed_ico_foi_case, date_ico_decision_received: Time.zone.today }
+            let(:params)       {
               {
               id: kase.id,
               ico: {
@@ -247,7 +247,7 @@ RSpec.describe Cases::IcoController, type: :controller do
           let(:kase) { create :accepted_ico_foi_case }
           let(:new_date_responded) { 1.business_day.ago }
 
-          let(:params)             { 
+          let(:params)             {
             {
             id: kase.id,
             ico: {
@@ -312,7 +312,7 @@ RSpec.describe Cases::IcoController, type: :controller do
     let(:foi_case2)     { create :foi_case }
     let(:foi)           { find_or_create(:foi_correspondence_type) }
 
-    let(:foi_only_team) { 
+    let(:foi_only_team) {
       create :business_unit,
                                  correspondence_type_ids: [foi.id]
 }
