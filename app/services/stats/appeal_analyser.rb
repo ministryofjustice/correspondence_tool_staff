@@ -54,11 +54,6 @@ module Stats
       sar_ir_appeal_open_late: "SAR Internal reviews",
     }.freeze
 
-    def initialize(kase)
-      @kase = kase
-      @result = nil
-    end
-
     def result
       analyse_case
       @result

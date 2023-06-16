@@ -1,5 +1,6 @@
 require "./lib/translate_for_case"
 
+# rubocop:disable Rails/HelperInstanceVariable
 module CasesHelper
   def sort_correspondence_types_for_display(types)
     types_have_display_order = types.all? do |t|
@@ -147,7 +148,6 @@ module CasesHelper
               id: "action--mark-response-as-sent",
               class: "button"
     when :reassign_user
-      path = nil
       return "" if @assignments.blank?
 
       path = if @assignments.size > 1
@@ -238,8 +238,6 @@ module CasesHelper
               class: "button-secondary"
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
-  # rubocop:enable Metrics/PerceivedComplexity
 
   def show_hide_message(kase)
     (preview_copy, remaining_copy) = kase.message_extract
@@ -295,10 +293,10 @@ module CasesHelper
     end
   end
 
-  def case_attachments_visible_for_case?
-    return false if @case.attachments.response.blank?
+  def case_attachments_visible_for_case?(kase)
+    return false if kase.attachments.response.blank?
 
-    policy(@case).can_view_attachments?
+    policy(kase).can_view_attachments?
   end
 
   def case_uploaded_request_files_class
@@ -485,3 +483,4 @@ private
     end
   end
 end
+# rubocop:enable Rails/HelperInstanceVariable

@@ -33,9 +33,7 @@ class Team < ApplicationRecord
   has_many :areas, -> { area }, class_name: "TeamProperty"
 
   # This can be eager loaded using includes
-  has_one :team_leader,
-          -> { lead },
-          class_name: TeamProperty.to_s
+  has_one :team_leader, -> { lead }, class_name: "TeamProperty"
 
   has_one :old_team, class_name: "Team", foreign_key: :moved_to_unit_id
   belongs_to :moved_to_unit, class_name: "Team", optional: true

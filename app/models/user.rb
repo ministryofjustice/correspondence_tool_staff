@@ -183,7 +183,7 @@ class User < ApplicationRecord
   end
 
   def soft_delete
-    update_attribute(:deleted_at, Time.current)
+    update_attribute(:deleted_at, Time.current) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def active_for_authentication?

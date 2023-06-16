@@ -75,6 +75,7 @@ class CorrespondenceType < ApplicationRecord
 
   # Keep a cache of all (6!) items to prevent endless N+1 queries using this tiny class
   class << self
+    # rubocop:disable Naming/MemoizedInstanceVariableName
     def all_cached
       @all ||= all
     end
@@ -82,6 +83,7 @@ class CorrespondenceType < ApplicationRecord
     def clear_cache
       @all = nil
     end
+    # rubocop:enable Naming/MemoizedInstanceVariableName
 
     # This method is used by Case::Base to find its correspondence type
     def find_by_abbreviation!(abbreviation)

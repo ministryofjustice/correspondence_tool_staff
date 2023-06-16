@@ -10,7 +10,7 @@ module ApplicationHelper
     end
   end
 
-  def show_disclosure_radios_for_ovt?
-    @case.is_a?(Case::OverturnedICO::FOI) || @case.is_a?(Case::OverturnedICO::SAR)
+  def show_disclosure_radios_for_ovt?(kase)
+    kase.is_a?(Case::OverturnedICO::FOI) || kase.is_a?(Case::OverturnedICO::SAR)
   end
 end

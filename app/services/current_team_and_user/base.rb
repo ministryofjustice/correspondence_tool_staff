@@ -14,6 +14,10 @@ module CurrentTeamAndUser
       super unless @case.class.permitted_states.include?(method_name.to_s) && !respond_to?(method_name.to_s)
     end
 
+    def respond_to_missing?(method_name, include_private: false)
+      @case.class.permitted_states.include?(method_name.to_s) || super
+    end
+
     def unassigned
       @team = @case.managing_team
       @user = nil

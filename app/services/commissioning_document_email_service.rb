@@ -22,7 +22,7 @@ private
     file.write(commissioning_document.document.force_encoding("UTF-8"))
     uploader = S3Uploader.new(data_request.kase, current_user)
     attachment = uploader.upload_file_to_case(:commissioning_document, file, commissioning_document.filename)
-    commissioning_document.update_attribute(:attachment, attachment)
+    commissioning_document.update_attribute(:attachment, attachment) # rubocop:disable Rails/SkipsModelValidations
   end
 
   def send_email
@@ -35,7 +35,7 @@ private
   end
 
   def email_sent
-    commissioning_document.update_attribute(:sent, true)
+    commissioning_document.update_attribute(:sent, true) # rubocop:disable Rails/SkipsModelValidations
     data_request.kase.state_machine.send_day_1_email!(
       acting_user: current_user,
       acting_team: BusinessUnit.dacu_branston,

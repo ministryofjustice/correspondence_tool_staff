@@ -29,6 +29,6 @@ private
       deleted_at: Time.current,
       name: "#{Team::DEACTIVATED_LABEL} #{@team.name} @(#{deletion_date})",
     )
-    @team.update_attribute(:code, "#{@team.code}-OLD-#{@team.id}") if @team.code.present?
+    @team.update_attribute(:code, "#{@team.code}-OLD-#{@team.id}") if @team.code.present? # rubocop:disable Rails/SkipsModelValidations
   end
 end

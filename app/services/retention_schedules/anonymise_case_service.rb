@@ -81,7 +81,7 @@ module RetentionSchedules
       PaperTrail.request(enabled: false) do
         ANON_VALUES.each do |key, value|
           if @kase.respond_to?(key) && @kase.send(key).present?
-            @kase.update_attribute(key, value)
+            @kase.update_attribute(key, value) # rubocop:disable Rails/SkipsModelValidations
           end
         end
       end

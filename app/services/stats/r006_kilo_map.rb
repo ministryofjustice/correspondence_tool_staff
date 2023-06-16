@@ -40,9 +40,11 @@ module Stats
     end
 
     # NOTE: Does not run parent constructor
+    # rubocop:disable Lint/MissingSuper
     def initialize(**)
       @result_set = [COLUMN_HEADINGS]
     end
+    # rubocop:enable Lint/MissingSuper
 
     def run(*)
       BusinessGroup.order(:name).each { |bg| process_business_group(bg) }
@@ -64,12 +66,12 @@ module Stats
 
   private
 
-    def process_business_group(bg)
+    def process_business_group(business_group)
       line = []
-      line << bg.name
+      line << business_group.name
       line << ""
       line << ""
-      line << bg.team_lead
+      line << business_group.team_lead
       @result_set << line
       bg.directorates.order(:name).each { |dir| process_directorate(dir) }
     end
@@ -102,20 +104,20 @@ module Stats
       @result_set << line
     end
 
-    def process_business_unit(bu)
+    def process_business_unit(business_unit)
       line = []
       line << ""
       line << ""
-      line << bu.name
-      line << bu.team_lead
-      areas = bu.areas.to_a
+      line << business_unit.name
+      line << business_unit.team_lead
+      areas = business_unit.areas.to_a
       line << if areas.any?
                 areas.shift.value
               else
                 ""
               end
-      line << bu.email
-      users = bu.users.to_a.sort { |a, b| a.full_name <=> b.full_name }
+      line << business_unit.email
+      users = business_unit.users.to_a.sort { |a, b| a.full_name <=> b.full_name }
       if users.any?
         user = users.shift
         line << user.full_name

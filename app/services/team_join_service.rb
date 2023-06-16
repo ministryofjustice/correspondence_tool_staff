@@ -57,9 +57,9 @@ private
     link_old_team_to_new_team
   end
 
-  def create_role(team, ur)
-    if team.user_roles.where(user_id: ur.user.id, role: ur.role).blank?
-      TeamsUsersRole.create!(team:, user: ur.user, role: ur.role)
+  def create_role(team, user_role)
+    if team.user_roles.where(user_id: user_role.user.id, role: user_role.role).blank?
+      TeamsUsersRole.create!(team:, user: user_role.user, role: user_role.role)
     end
   end
 

@@ -1,12 +1,14 @@
 class Case::BasePolicy < ApplicationPolicy
   attr_reader :user, :case, :failed_checks, :policy_workflow
 
+  # rubocop:disable Lint/MissingSuper
   def initialize(user_obj = nil, kase_obj = nil, user: nil, kase: nil)
     @user = user_obj || user
     @case = kase_obj || kase
     raise Pundit::NotAuthorizedError, "must be logged in" if @user.nil?
     raise "Missing param" if @user.nil? || @case.nil?
   end
+  # rubocop:enable Lint/MissingSuper
 
   # Use this as a standard way to re-use an existing policy in another policy
   # class, for example ICO SARs policies which can re-use the same login that's
@@ -328,6 +330,10 @@ class Case::BasePolicy < ApplicationPolicy
     else
       super
     end
+  end
+
+  def respond_to_missing?(method, include_private = false)
+    method.to_s =~ /can_(.+)\?$/ || super
   end
 
 private

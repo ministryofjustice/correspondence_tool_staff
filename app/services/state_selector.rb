@@ -22,6 +22,10 @@ class StateSelector
     end
   end
 
+  def respond_to_missing?(meth, include_private: false)
+    meth.in?(@available_states) || super
+  end
+
   def states_for_url
     @selected_states.uniq.join(",")
   end

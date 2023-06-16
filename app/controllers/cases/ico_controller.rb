@@ -98,9 +98,9 @@ module Cases
     end
 
     def original_case_id
-      @_original_case_id ||= if params && params[:ico].present? && params[:ico][:original_case_ids].present?
-                               params[:ico][:original_case_ids].first
-                             end
+      @original_case_id ||= if params && params[:ico].present? && params[:ico][:original_case_ids].present?
+                              params[:ico][:original_case_ids].first
+                            end
     end
   end
 end

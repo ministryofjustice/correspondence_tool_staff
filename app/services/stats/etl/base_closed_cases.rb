@@ -68,14 +68,14 @@ module Stats
     private
 
       def folder
-        @_folder ||= begin
+        @folder ||= begin
           path = "#{Dir.tmpdir}/cts-reports/#{SecureRandom.uuid}"
           FileUtils.mkdir_p(path).first
         end
       end
 
       def num_fragments
-        @_num_fragments ||= (@retrieval_scope.size.to_f / ROWS_PER_FRAGMENT).ceil
+        @num_fragments ||= (@retrieval_scope.size.to_f / ROWS_PER_FRAGMENT).ceil
       end
 
       def new_fragment(data)

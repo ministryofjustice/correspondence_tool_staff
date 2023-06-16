@@ -47,15 +47,11 @@ class TeamCorrespondenceTypeRole < ApplicationRecord
 private
 
   def roles_for_team(team)
-    case team.role
-    when "manager"
-      %i[view edit manage]
-    when "responder"
-      %i[view respond]
-    when "approver"
-      %i[view approve]
-    when "team_admin"
-      %i[view administer_team]
-    end
+    {
+      "manager": %i[view edit manage],
+      "responder": %i[view respond],
+      "approver": %i[view approve],
+      "team_admin": %i[view administer_team],
+    }[team.role]
   end
 end

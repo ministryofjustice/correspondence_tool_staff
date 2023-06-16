@@ -188,11 +188,10 @@ class SearchQuery < ApplicationRecord
 
   def filter_crumbs
     filter_crumbs = []
-    applied_filters.map { |filter_class|
+    filters = applied_filters.map do |filter_class|
       filter_class.new(self, user, Case::Base.none)
-    }.each do |filter|
-      filter_crumbs += filter.crumbs
     end
+    filters.each { |filter| filter_crumbs += filter.crumbs }
     filter_crumbs
   end
 

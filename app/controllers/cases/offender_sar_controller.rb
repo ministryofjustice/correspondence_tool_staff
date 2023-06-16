@@ -5,6 +5,7 @@ module Cases
 
     before_action :set_case_types, only: %i[new create]
 
+    # rubocop:disable Rails/LexicallyScopedActionFilter
     before_action -> { set_decorated_case(params[:id]) }, only: %i[
       transition
       edit
@@ -16,6 +17,7 @@ module Cases
       confirm_update_partial_flags
       confirm_sent_to_sscl
     ]
+    # rubocop:enable Rails/LexicallyScopedActionFilter
 
     def initialize
       super

@@ -54,7 +54,7 @@ private
   end
 
   def current_retention_schedule
-    @_current_retention_schedule ||= RetentionSchedule.find(
+    @current_retention_schedule ||= RetentionSchedule.find(
       params.require(:id),
     )
   end

@@ -1,5 +1,6 @@
 # require 'aws-sdk-s3'
 
+# rubocop:disable Rails/HelperInstanceVariable
 module S3BucketHelper
   Credentials = Struct.new(:access_key_id, :secret_access_key, :bucket)
 
@@ -47,3 +48,4 @@ module S3BucketHelper
     end
   end
 end
+# rubocop:enable Rails/HelperInstanceVariable

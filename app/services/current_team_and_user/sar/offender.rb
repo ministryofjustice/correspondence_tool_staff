@@ -4,8 +4,7 @@ module CurrentTeamAndUser
       attr_reader :team, :user
 
       def initialize(kase)
-        @case = kase
-        @dts = DefaultTeamService.new(@case)
+        super(kase)
         @team = @case.managing_team
         @user = @case&.responder_assignment&.user
       end

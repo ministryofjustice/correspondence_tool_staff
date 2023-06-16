@@ -1,4 +1,4 @@
-require File.join(Rails.root, "lib", "db", "database_anonymizer_tasks")
+require Rails.root.join("lib/db/database_anonymizer_tasks")
 
 class AnonymiserDBJob < ApplicationJob
   queue_as :anonymiser

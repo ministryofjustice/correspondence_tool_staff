@@ -167,6 +167,17 @@ module Stats
       end
     end
 
+    def respond_to_missing?(method_name, include_private = false)
+      case method_name.to_s
+      when /^get_value_3_S(.*)/
+        true
+      when /^get_value_7_S(.*)/
+        true
+      else
+        super
+      end
+    end
+
     def populate_category(category)
       value = __send__("get_value_#{category.sub('.', '_')}")
       description = @report_lines[category]

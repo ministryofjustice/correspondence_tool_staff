@@ -1,7 +1,7 @@
 module ConfigurableStateMachine
   class InvalidEventError < RuntimeError
     def initialize(role:, kase:, user:, event:, message: nil)
-      description = <<~EOS
+      description = <<~EVENT
 
         Invalid event: type: #{kase.type_abbreviation}
                        workflow: #{kase.workflow}
@@ -10,7 +10,7 @@ module ConfigurableStateMachine
                        event: #{event}
                        kase_id: #{kase.id}
                        user_id: #{user.id}
-      EOS
+      EVENT
       if message
         description += "               message: #{message}\n"
       end

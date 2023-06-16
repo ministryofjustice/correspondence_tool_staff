@@ -42,11 +42,11 @@ module Stats
     private
 
       def columns
-        @_columns ||= OffenderSarClosedCases::FIELD_COLUMNS
+        @columns ||= OffenderSarClosedCases::FIELD_COLUMNS
       end
 
       def heading
-        @_heading ||= CSV.generate_line(OffenderSarClosedCases::CSV_COLUMN_HEADINGS, force_quotes: true)
+        @heading ||= CSV.generate_line(OffenderSarClosedCases::CSV_COLUMN_HEADINGS, force_quotes: true)
       end
     end
   end

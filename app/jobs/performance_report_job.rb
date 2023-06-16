@@ -10,7 +10,7 @@ class PerformanceReportJob < ApplicationJob
         period_end: Time.zone.at(period_end_ts).to_date,
       )
       report_service.process(offset, report_job_guid:)
-    rescue NoMethodError, NameError => e
+    rescue NameError => e
       Rails.logger.error "#{report_service_class_name}: #{e.class} - #{e.message}"
     end
   end

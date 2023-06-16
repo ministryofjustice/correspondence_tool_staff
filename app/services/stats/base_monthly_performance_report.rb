@@ -122,7 +122,7 @@ module Stats
     end
 
     def num_fragments
-      @_num_fragments ||=
+      @num_fragments ||=
         (data_size / ROWS_PER_FRAGMENT).ceil
     end
 
@@ -179,7 +179,7 @@ module Stats
     end
 
     def construct_year_month(the_date)
-      month_str = "%02i" % the_date.month
+      month_str = sprintf("%02i", the_date.month)
       start_month = "#{the_date.year}#{month_str}"
       start_month.to_i
     end
