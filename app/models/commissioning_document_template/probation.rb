@@ -1,5 +1,7 @@
 module CommissioningDocumentTemplate
   class Probation < CommissioningDocumentTemplate::Base
+    BRANSTON_ARCHIVES_EMAIL = "BranstonRegistryRequests2@justice.gov.uk".freeze
+
     def request_type
       'Probation'
     end
@@ -21,10 +23,6 @@ module CommissioningDocumentTemplate
         deadline: deadline,
         data_required: data_request.data_required || default_data_required
       )
-    end
-
-    def recipient_emails
-      ["BranstonRegistryRequests2@justice.gov.uk"]
     end
   end
 end

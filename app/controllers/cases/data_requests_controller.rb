@@ -67,9 +67,30 @@ module Cases
     end
 
     def send_email
+      @recipient_emails = @data_request.recipient_emails
+
+      if @commissioning_document.probation? && !handled_sending_to_branston_archives?
+        render :probation_send_email and return
+      end
     end
 
     private
+
+    def handled_sending_to_branston_archives?
+      if request.get?
+        @email = ProbationCommissioningDocumentEmail.new
+        return false
+      end
+
+      @email = ProbationCommissioningDocumentEmail.new(email_params)
+      return false unless @email.valid?
+
+      if @email.email_branston_archives == "yes"
+        @recipient_emails << CommissioningDocumentTemplate::Probation::BRANSTON_ARCHIVES_EMAIL
+      end
+
+      true
+    end
 
     def set_case
       @case = Case::Base.find(params[:case_id])
@@ -81,6 +102,10 @@ module Cases
 
     def set_commissioning_document
       @commissioning_document = @data_request.commissioning_document&.decorate
+    end
+
+    def email_params
+      params.require(:probation_commissioning_document_email).permit(:email_branston_archives)
     end
 
     def create_params

@@ -22,7 +22,6 @@ class CommissioningDocument < ApplicationRecord
   validates :data_request, presence: true
   validates :template_name, presence: true
 
-  delegate :recipient_emails, to: :template
   delegate :deadline, to: :template
 
   def document

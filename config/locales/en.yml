@@ -385,6 +385,8 @@ en:
 
   activemodel:
     attributes:
+      probation_commissioning_document_email:
+        email_branston_archives: Select yes if you want the commissioning email sent to Branston Archives
       retention_schedule_form:
         planned_destruction_date: Destruction date
         state: Status
@@ -398,6 +400,10 @@ en:
             state:
               inclusion: is not a valid status
               forbidden: cannot be changed once case is anonymised
+        probation_commissioning_document_email:
+          attributes:
+            email_branston_archives:
+              blank: ""
 
   pundit:
     assignment_policy:
@@ -504,6 +510,7 @@ en:
     move: Move to %{directorate}
     move_directorate: Move to %{business_group}
     confirm: Confirm
+    continue: Continue
     create_case: Create case
     feedback: Send feedback
     final_page_count: Update final page count
