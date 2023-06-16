@@ -4,11 +4,15 @@ module CommissioningDocumentTemplate
       'CCTV'
     end
 
+    def deadline
+      calculate_deadline(5)
+    end
+
     def context
       super.merge(
         addressee_location: data_request.location,
         aliases: kase.subject_aliases,
-        deadline: deadline(5),
+        deadline: deadline,
       )
     end
   end

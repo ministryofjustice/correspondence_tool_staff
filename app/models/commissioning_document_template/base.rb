@@ -32,7 +32,7 @@ module CommissioningDocumentTemplate
       date_format(Date.current)
     end
 
-    def deadline(count)
+    def calculate_deadline(count)
       date_format(Date.current + count.days)
     end
 
