@@ -65,15 +65,10 @@ gem 'shell-spinner'
 gem 'sidekiq', '~> 6.4.0'
 
 gem 'table_print'
-# gem 'thor-rails'
 gem 'timecop'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 gem 'uglifier', '>= 1.3.0'
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 3.0'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
 # Alpine does not include zoneinfo files (probably) - it asked for tinfo-data, so bundle the tzinfo-data gem
 gem 'tzinfo-data'
 gem 'ruby-progressbar'
@@ -89,7 +84,6 @@ group :test do
 end
 
 group :development, :test do
-  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'annotate', '~> 3.2.0'
   gem 'better_errors'
   gem 'binding_of_caller'
@@ -97,14 +91,10 @@ group :development, :test do
   gem 'bullet', '~> 7.0.1'
   gem 'colorize'
   gem 'debug', '>= 1.0.0'
-  gem 'launchy'
   gem 'parallel_tests', '~> 3.7'
   gem 'rspec-collection_matchers'
   gem 'rspec-rails', '~> 5.0'
-  gem 'rubocop', '~> 1.29', require: false
-  gem 'rubocop-rspec', '~> 2.10', require: false
-  gem 'rubocop-performance', require: false
-  gem 'rubocop-rails', require: false
+  gem 'rubocop-govuk', require: false
   gem 'selenium-webdriver', '~> 4.1.0'
   gem 'spring-commands-rspec'
 end
@@ -115,7 +105,5 @@ group :development do
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen'
-  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console'
   gem 'yard'
 end
