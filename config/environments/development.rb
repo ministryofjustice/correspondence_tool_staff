@@ -42,7 +42,7 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join("tmp", "caching-dev.txt").exist?
+  if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
@@ -105,7 +105,7 @@ Rails.application.configure do
   # specified in /config/intializers/lograge.rb
   #
   config.lograge.keep_original_rails_log = true
-  config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
+  config.lograge.logger = ActiveSupport::Logger.new Rails.root.join("log/lograge_#{Rails.env}.log")
 
   if defined?(BetterErrors) && (ENV.key? "SHOW_BETTER_ERRORS_TO")
     BetterErrors::Middleware.allow_ip! ENV["SHOW_BETTER_ERRORS_TO"]

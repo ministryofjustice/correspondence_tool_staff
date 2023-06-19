@@ -1,3 +1,4 @@
+# rubocop:disable Style/ClassVars
 module CategoryReferenceSeeder
   class ContactTypeSeeder
     @@category_references = [
@@ -56,3 +57,4 @@ module CategoryReferenceSeeder
     end
   end
 end
+# rubocop:enable Style/ClassVars

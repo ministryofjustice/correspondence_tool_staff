@@ -23,7 +23,7 @@ module CaseClosure
       rec3 = Outcome.find_or_create_by!(subtype: nil, name: "Clarification needed - Section 1(3)", abbreviation: "clarify", sequence_id: 15)
       rec3.update!(active: false)
 
-      [rec1, rec2].each { |r| r.update_attribute(:requires_refusal_reason, true) }
+      [rec1, rec2].each { |r| r.update_attribute(:requires_refusal_reason, true) } # rubocop:disable Rails/SkipsModelValidations
     end
 
     def self.seed_appeal_outcomes(verbose)
@@ -44,7 +44,7 @@ module CaseClosure
         active: false,
       )
 
-      exemption.update_attribute(:requires_exemption, true)
+      exemption.update_attribute(:requires_exemption, true) # rubocop:disable Rails/SkipsModelValidations
 
       RefusalReason.find_or_create_by!(
         subtype: nil,

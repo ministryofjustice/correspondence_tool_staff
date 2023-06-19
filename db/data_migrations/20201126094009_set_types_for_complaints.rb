@@ -1,4 +1,5 @@
 class SetTypesForComplaints < ActiveRecord::DataMigration
+  # rubocop:disable Rails/SkipsModelValidations
   def up
     kases = Case::Base.offender_sar_complaint.all
     kases.each do |kase|
@@ -7,4 +8,5 @@ class SetTypesForComplaints < ActiveRecord::DataMigration
       kase.update_attribute(:priority, "normal") if kase.priority.blank?
     end
   end
+  # rubocop:enable Rails/SkipsModelValidations
 end

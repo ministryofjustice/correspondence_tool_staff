@@ -8,6 +8,6 @@ module ConfigurableStateMachine
   rescue ConfigurationError => e
     Rails.logger.debug e.class
     Rails.logger.debug e.message
-    exit
+    exit # rubocop:disable Rails/Exit
   end
 end

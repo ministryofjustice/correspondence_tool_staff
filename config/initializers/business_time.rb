@@ -3,7 +3,6 @@
 # or you can configure it manually:  look at me!  I'm Tim Ferriss!
 BusinessTime::Config.work_week = %w[mon tue wed thu fri]
 
-hols = nil
 hols = if Rails.env.production?
          BankHoliday.all.map(&:date)
        else

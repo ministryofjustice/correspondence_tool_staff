@@ -8,7 +8,7 @@ class ChangeCaseAttachmentsUrlToKey < ActiveRecord::Migration[5.0]
       add_column :case_attachments, :key, :string
       CaseAttachment.all.each do |attachment|
         attachment.update(
-          key: URI.decode(URI.parse(attachment.url).path.sub(%r{^/}, "")),
+          key: CGI.unescape(URI.parse(attachment.url).path.sub(%r{^/}, "")),
         )
       end
       add_index :case_attachments, :key, unique: true

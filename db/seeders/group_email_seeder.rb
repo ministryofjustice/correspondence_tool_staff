@@ -1,5 +1,5 @@
 require "csv"
-require File.join(Rails.root, "lib", "rake_task_helpers", "host_env")
+require Rails.root.join("lib/rake_task_helpers/host_env")
 
 class GroupEmailSeeder
   PATH = ENV["TEAM_IMPORT_CSV"]
