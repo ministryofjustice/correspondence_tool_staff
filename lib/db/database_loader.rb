@@ -1,4 +1,4 @@
-require File.join(Rails.root, "lib", "db", "users_settings_for_anonymizer")
+require Rails.root.join("lib/db/users_settings_for_anonymizer")
 
 class DatabaseLoader
   def initialize(env, folder_for_load)

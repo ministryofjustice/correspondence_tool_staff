@@ -10,6 +10,7 @@
 # https://semaphoreci.com/aliuk2012/correspondence_tool_staff/settings
 
 namespace :semaphore do
+  desc "prepare db config"
   task prepare_db_config: :environment do |_t, _args|
     file_name = "config/database.yml"
     db_suffix = "<%= ENV['TEST_ENV_NUMBER'] %>"

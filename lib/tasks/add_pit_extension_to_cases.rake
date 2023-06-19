@@ -1,6 +1,32 @@
 require "csv"
 require "json"
 
+def get_records_having_extension_events
+  case_ids = CaseTransition.where(event: %w[extend_for_pit remove_pit_extension])
+  .distinct(:case_id)
+  .pluck(:case_id)
+  Case::Base.where(id: case_ids)
+end
+
+def check_record_extension_flag(record)
+  calculated_flag = false
+  num_extend_for_pit = 0
+  num_remove_pit_extension = 0
+  record.transitions.order(:id).each do |transaction|
+    if transaction.event == "extend_for_pit"
+      calculated_flag = true
+      num_extend_for_pit += 1
+    end
+    if transaction.event == "remove_pit_extension"
+      calculated_flag = false
+      num_remove_pit_extension += 1
+    end
+  end
+  { calculated_flag:,
+    num_extend_for_pit:,
+    num_remove_pit_extension: }
+end
+
 namespace :cases do
   namespace :pit_extension do
     desc "Add the pit extension flag if the case has been extended and the flag is missing"
@@ -54,34 +80,6 @@ namespace :cases do
         end
       end
       puts "Totally #{counter} extended FOI cases."
-    end
-
-  private
-
-    def get_records_having_extension_events
-      case_ids = CaseTransition.where(event: %w[extend_for_pit remove_pit_extension])
-      .distinct(:case_id)
-      .pluck(:case_id)
-      Case::Base.where(id: case_ids)
-    end
-
-    def check_record_extension_flag(record)
-      calculated_flag = false
-      num_extend_for_pit = 0
-      num_remove_pit_extension = 0
-      record.transitions.order(:id).each do |transaction|
-        if transaction.event == "extend_for_pit"
-          calculated_flag = true
-          num_extend_for_pit += 1
-        end
-        if transaction.event == "remove_pit_extension"
-          calculated_flag = false
-          num_remove_pit_extension += 1
-        end
-      end
-      { calculated_flag:,
-        num_extend_for_pit:,
-        num_remove_pit_extension: }
     end
   end
 end

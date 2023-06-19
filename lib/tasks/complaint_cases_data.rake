@@ -1,6 +1,32 @@
 require "csv"
 require "json"
 
+def fake_offender_complaint_data_object(record)
+  record.delete("id")
+  record.delete("document_tsvector")
+  properties = JSON.parse(record["properties"])
+  record.delete("properties")
+  original_case = Case::Base.find(record["linked_case_id"])
+  record["original_case"] = original_case
+  record.delete("linked_case_id")
+  properties.each do |key, value|
+    record[key] = value
+  end
+  Case::SAR::OffenderComplaint.new(record)
+end
+
+def locate_offender_sar_case(dpa_ref_no)
+  offender = Case::SAR::Offender.find_by_number("MIG#{dpa_ref_no}")
+  if offender.nil?
+    offender = Case::SAR::Offender.find_by_number(dpa_ref_no)
+  end
+  if offender.nil? && dpa_ref_no.length > 5
+    offenders = Case::SAR::Offender.where("number like ? ", "%#{dpa_ref_no}")
+    offender = offenders.first unless offenders.count > 1
+  end
+  offender
+end
+
 namespace :complaints do
   namespace :links do
     desc "Check whether the offender sar being referred to in Complaint case exists in DB or not."
@@ -46,20 +72,6 @@ namespace :complaints do
       end
       puts "Totally #{counter} complaints cases couldn't find the linked offender SAR case."
     end
-
-  private
-
-    def locate_offender_sar_case(dpa_ref_no)
-      offender = Case::SAR::Offender.find_by_number("MIG#{dpa_ref_no}")
-      if offender.nil?
-        offender = Case::SAR::Offender.find_by_number(dpa_ref_no)
-      end
-      if offender.nil? && dpa_ref_no.length > 5
-        offenders = Case::SAR::Offender.where("number like ? ", "%#{dpa_ref_no}")
-        offender = offenders.first unless offenders.count > 1
-      end
-      offender
-    end
   end
 
   namespace :validation do
@@ -97,22 +109,6 @@ namespace :complaints do
         end
       end
       puts "Totally #{counter} complaints cases couldn't pass the validation."
-    end
-
-  private
-
-    def fake_offender_complaint_data_object(record)
-      record.delete("id")
-      record.delete("document_tsvector")
-      properties = JSON.parse(record["properties"])
-      record.delete("properties")
-      original_case = Case::Base.find(record["linked_case_id"])
-      record["original_case"] = original_case
-      record.delete("linked_case_id")
-      properties.each do |key, value|
-        record[key] = value
-      end
-      Case::SAR::OffenderComplaint.new(record)
     end
   end
 end

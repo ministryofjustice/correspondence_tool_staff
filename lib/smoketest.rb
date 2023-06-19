@@ -4,6 +4,7 @@ require "mechanize"
 # SETTINGS__SMOKE_TESTS__PASSWORD - Users password
 # SETTINGS__SMOKE_TESTS__SITE_URL - Applications url
 
+# rubocop:disable Rails/Exit
 class Smoketest
   def initialize
     check_settings
@@ -139,3 +140,4 @@ private
     puts "!!! ERROR - #{message}"
   end
 end
+# rubocop:enable Rails/Exit

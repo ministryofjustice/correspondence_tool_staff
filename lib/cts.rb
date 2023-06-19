@@ -1,3 +1,4 @@
+# rubocop:disable Rails/Exit
 module CTS
   class << self
     def info(statement)
@@ -173,3 +174,4 @@ module CTS
     end
   end
 end
+# rubocop:enable Rails/Exit

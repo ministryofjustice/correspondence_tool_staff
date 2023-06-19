@@ -13,7 +13,7 @@ namespace :db do
         puts e.message
         puts "... continuing anyway."
       end
-      require File.join(Rails.root, "spec", "support", "db_housekeeping")
+      require Rails.root.join("spec/support/db_housekeeping")
       DbHousekeeping.clean(seed: false)
     end
 
@@ -24,41 +24,41 @@ namespace :db do
     namespace :prod do
       desc "Seed categories and closure metadata"
       task misc: :environment do
-        require File.join(Rails.root, "db", "seeders", "correspondence_type_seeder")
+        require Rails.root.join("db/seeders/correspondence_type_seeder")
         puts "Seeding Correspondence Types"
         CorrespondenceTypeSeeder.new.seed!
-        require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+        require Rails.root.join("db/seeders/case_closure_metadata_seeder")
         puts "Seeding Case closure metadata"
         CaseClosure::MetadataSeeder.seed!
       end
 
       desc "Seed teams for production environment"
       task teams: :environment do
-        require File.join(Rails.root, "db", "seeders", "team_seeder")
+        require Rails.root.join("db/seeders/team_seeder")
         TeamSeeder.new.seed!
       end
 
       desc "Seed users, teams, roles for production environemnt"
       task users: :environment do
-        require File.join(Rails.root, "db", "seeders", "user_seeder")
+        require Rails.root.join("db/seeders/user_seeder")
         UserSeeder.new.seed!
       end
 
       desc "Add group emails to teams"
       task group_emails: :environment do
-        require File.join(Rails.root, "db", "seeders", "group_email_seeder")
+        require Rails.root.join("db/seeders/group_email_seeder")
         GroupEmailSeeder.new.seed!
       end
 
       desc "Seed letter templates for production environment"
       task letter_templates: :environment do
-        require File.join(Rails.root, "db", "seeders", "letter_template_seeder")
+        require Rails.root.join("db/seeders/letter_template_seeder")
         LetterTemplateSeeder.new.seed!
       end
 
       desc "Seed correspondence_types for production environments"
       task correspondence_types: :environment do
-        require File.join(Rails.root, "db", "seeders", "correspondence_type_seeder")
+        require Rails.root.join("db/seeders/correspondence_type_seeder")
         puts "Seeding Correspondence Types"
         CorrespondenceTypeSeeder.new.seed!
       end
@@ -70,25 +70,25 @@ namespace :db do
     namespace :dev do
       desc "Seed teams for dev environment"
       task teams: :environment do
-        require File.join(Rails.root, "db", "seeders", "dev_team_seeder")
+        require Rails.root.join("db/seeders/dev_team_seeder")
         DevTeamSeeder.new.seed!
       end
 
       desc "Seed users, teams, roles for dev environemnt"
       task users: :environment do
-        require File.join(Rails.root, "db", "seeders", "dev_user_seeder")
+        require Rails.root.join("db/seeders/dev_user_seeder")
         DevUserSeeder.new.seed!
       end
 
       desc "Seed letter templates for dev environment"
       task letter_templates: :environment do
-        require File.join(Rails.root, "db", "seeders", "letter_template_seeder")
+        require Rails.root.join("db/seeders/letter_template_seeder")
         LetterTemplateSeeder.new.seed!
       end
 
       desc "Seed correspondence_types for development environments"
       task correspondence_types: :environment do
-        require File.join(Rails.root, "db", "seeders", "correspondence_type_seeder")
+        require Rails.root.join("db/seeders/correspondence_type_seeder")
         puts "Seeding Correspondence Types"
         CorrespondenceTypeSeeder.new.seed!
       end

@@ -26,23 +26,23 @@ class SarsLoader
 
 private
 
-  def process_business_group(bg)
-    @bg = BusinessGroup.find_by(name: bg)
+  def process_business_group(business_group)
+    @bg = BusinessGroup.find_by(name: business_group)
     if @bg.nil?
       puts ">>>>>>>>>> ERROR <<<<<<<<<<<< Unable to find BG #{@bg.name}"
     end
   end
 
-  def process_business_unit(bu)
-    bus = @bg.business_units.where("teams.name LIKE ?", "%#{bu}%")
+  def process_business_unit(business_unit)
+    bus = @bg.business_units.where("teams.name LIKE ?", "%#{business_unit}%")
     if bus.empty?
-      puts ">>>>>>>>>> ERROR <<<<<<<<<<<< Unable to find BU #{bu} under BG #{@bg.name}"
+      puts ">>>>>>>>>> ERROR <<<<<<<<<<<< Unable to find BU #{business_unit} under BG #{@bg.name}"
     elsif bus.size > 1
-      puts ">>>>>>>>>> ERROR <<<<<<<<<<<< Mulitple business units found with name matchng %#{bu}% under BG #{@bg.name}"
+      puts ">>>>>>>>>> ERROR <<<<<<<<<<<< Mulitple business units found with name matchng %#{business_unit}% under BG #{@bg.name}"
     else
-      bu = bus.first
-      bu.update!(correspondence_type_ids: [@foi.id, @sar.id])
-      bu.save!
+      business_unit = bus.first
+      business_unit.update!(correspondence_type_ids: [@foi.id, @sar.id])
+      business_unit.save!
     end
   end
 end

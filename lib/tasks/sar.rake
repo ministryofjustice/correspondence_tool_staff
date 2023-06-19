@@ -1,3 +1,20 @@
+def get_sar_category
+  if CorrespondenceType.find_by_abbreviation("SAR").nil?
+    CorrespondenceType.create!(
+      name: "Subject Access Request",
+      abbreviation: "SAR",
+      internal_time_limit: 10,
+      external_time_limit: 1,
+      escalation_time_limit: 0,
+      extension_time_limit: 2,
+      extension_time_default: 1,
+      deadline_calculator_class: "CalendarMonths",
+    )
+  else
+    CorrespondenceType.sar
+  end
+end
+
 namespace :sar do
   desc "create a dummy SAR case"
   task create: :environment do
@@ -22,23 +39,6 @@ namespace :sar do
       kase.delivery_method = "sent_by_email"
       kase.save!
       puts "Case no #{kase.number} created with id #{kase.id}"
-    end
-  end
-
-  def get_sar_category
-    if CorrespondenceType.find_by_abbreviation("SAR").nil?
-      CorrespondenceType.create!(
-        name: "Subject Access Request",
-        abbreviation: "SAR",
-        internal_time_limit: 10,
-        external_time_limit: 1,
-        escalation_time_limit: 0,
-        extension_time_limit: 2,
-        extension_time_default: 1,
-        deadline_calculator_class: "CalendarMonths",
-      )
-    else
-      CorrespondenceType.sar
     end
   end
 end

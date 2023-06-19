@@ -3,7 +3,7 @@ module CTS
     include Thor::Rails unless SKIP_RAILS
 
     desc "check USER CASE", "Check policies for a user/case combination"
-    long_desc <<~EOD
+    long_desc <<~DESC
       Check the policies for a given user and case. Runs all the policies
       and displays whether it succeeded or not, and if not which checks failed.
       This is meant as a handy debugging tool to understand why a user cannot do
@@ -21,7 +21,7 @@ module CTS
         ./cts policies check 'Preston Offman' 170621004
         ./cts policies check 19 239 can_view_case_details
         ./cts policies check 19 239 can_view_case_details can_approve_case
-    EOD
+    DESC
     def check(*args)
       raise("No user provided.") if args.empty?
       raise("No case provided.") if args.length == 1
@@ -41,7 +41,7 @@ module CTS
       policy_method_padding = policy_methods.max_by(&:length).length
       policy_methods.each do |policy_method|
         result = policy.__send__(policy_method)
-        printf "%#{policy_method_padding}s: " % policy_method
+        printf("%#{policy_method_padding}s: ", policy_method)
         if result
           puts "YES"
         else

@@ -1,4 +1,5 @@
 namespace :reports do
+  desc "run r003 report"
   task r003: :environment do
     report = Stats::R003BusinessUnitPerformanceReport.new
     report.run

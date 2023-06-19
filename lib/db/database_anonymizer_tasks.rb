@@ -1,6 +1,6 @@
-require File.join(Rails.root, "lib", "tasks", "rake_task_helpers", "dumper_utils")
-require File.join(Rails.root, "lib", "db", "database_anonymizer")
-require File.join(Rails.root, "lib", "db", "users_settings_for_anonymizer")
+require Rails.root.join("lib/tasks/rake_task_helpers/dumper_utils")
+require Rails.root.join("lib/db/database_anonymizer")
+require Rails.root.join("lib/db/users_settings_for_anonymizer")
 
 class DatabaseAnonymizerTasks
   def initialize

@@ -1,8 +1,13 @@
+def header_row?(row)
+  bg, _bu, _sar = row
+  bg == "Business group"
+end
+
 namespace :kilo_map do
   desc "Updates business units requiring rights to respond to SARs"
   task :load_sars, [:filename] => :environment do |_task, args|
     if args[:filename].present?
-      require File.join(Rails.root, "lib", "tasks", "rake_task_helpers", "sars_loader.rb")
+      require Rails.root.join("lib/tasks/rake_task_helpers/sars_loader.rb")
       loader = SarsLoader.new(args[:filename])
       loader.run
     else
@@ -18,10 +23,5 @@ namespace :kilo_map do
         puts sprintf("%-4d %-40s %-60s %s", bu.id, bg.name, bu.name, bu.correspondence_types.map(&:abbreviation).join(", "))
       end
     end
-  end
-
-  def header_row?(row)
-    bg, _bu, _sar = row
-    bg == "Business group"
   end
 end

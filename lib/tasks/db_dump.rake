@@ -35,8 +35,80 @@
 # - wrapper:
 #   This task is to wrap the above tasks into a task to export data from live and anonymize it
 
-require File.join(Rails.root, "lib", "tasks", "rake_task_helpers", "dumper_utils")
-require File.join(Rails.root, "lib", "db", "users_settings_for_anonymizer")
+require Rails.root.join("lib/tasks/rake_task_helpers/dumper_utils")
+require Rails.root.join("lib/db/users_settings_for_anonymizer")
+
+def set_up_bucket_setting(args)
+  { "bucket_key_id": args[:bucket_key_id] || ENV["AWS_ACCESS_KEY_ID"],
+    "bucket_access_key": args[:bucket_access_key] || ENV["AWS_SECRET_ACCESS_KEY"],
+    "bucket": args[:bucket] || Settings.case_uploads_s3_bucket }
+end
+
+def safeguard_dump
+  puts "Are you sure you need to do this data dump?"
+  puts ""
+  DumperUtils.question_user("is the issue covered with existing feature tests? ")
+  DumperUtils.question_user("can you track problem through Kibana? ")
+  DumperUtils.question_user("can you recreate the problem locally? ")
+  DumperUtils.question_user("can you recreate the problem on staging with an anonymised dump? ")
+  confirm_data_dump
+end
+
+def confirm_data_dump
+  print "If you are still certain that you need to make a dump of the database please confirm y/n "
+  input = $stdin.gets.chomp
+  exit unless input.downcase.start_with?("y") || input.nil?
+end
+
+def confirm_delete_dumps_file
+  print "If you are still certain that you need to delete the files, please confirm Y/n?"
+  input = $stdin.gets.chomp
+  exit unless input.start_with?("Y") || input.nil?
+end
+
+def get_first_pod(working_env)
+  require "open3"
+
+  pod_name = nil
+  output = Open3.popen3("kubectl get pods -n track-a-query-#{working_env}") { |_, stdout, _, _| stdout.read }
+  if output.present?
+    output_lines = output.split('\n')
+    if output_lines.count >= 2
+      pod_name = output_lines[1].split(" ")[0].delete(" ")
+    end
+  end
+  pod_name
+end
+
+def init_s3_bucket(args)
+  args.with_defaults(bucket_key_id: ENV["AWS_ACCESS_KEY_ID"])
+  args.with_defaults(bucket_access_key: ENV["AWS_SECRET_ACCESS_KEY"])
+  args.with_defaults(bucket: Settings.case_uploads_s3_bucket)
+  S3BucketHelper::S3Bucket.new(
+    args[:bucket_key_id],
+    args[:bucket_access_key],
+    bucket: args[:bucket],
+  )
+end
+
+def is_on_production?
+  ENV["ENV"].present? && ENV["ENV"] == "prod"
+end
+
+def safeguard_restore
+  puts "Are you sure you need to retore a dump of database into the current database the app is connecting to?"
+  puts "Precondition: a dump of entire database has been done before carryihng this task"
+  puts "NOTES: rstoring process will destroy the previous data entirely, backup the data first if there is need"
+  DumperUtils.question_user("Are you sure the current environment is not production? ")
+  confirm_data_restore
+  puts "After action: you may need to restart your app server instance in order to making it work properly"
+end
+
+def confirm_data_restore
+  print "If you are still certain that you need to restore the data from dump files please confirm Y/n "
+  input = $stdin.gets.chomp
+  exit unless input.start_with?("Y") || input.nil?
+end
 
 namespace :db do
   namespace :dump do
@@ -54,7 +126,7 @@ namespace :db do
     desc "makes a sql dump of the production database and copies to the local machine"
     task prod: :environment do |_task|
       require File.expand_path("#{File.dirname(__FILE__)}/../../lib/db/database_dumper")
-      safeguard
+      safeguard_dump
       chosen_first_pod = get_first_pod("production")
       raise "Cannot find the available pod from this env" if chosen_first_pod.blank?
 
@@ -80,7 +152,7 @@ namespace :db do
       if is_store_to_s3_bucket
         s3_bucket_setting = set_up_bucket_setting(args)
       end
-      dumper = DatabaseDumper.new(args[:tag], "tasks", is_store_to_s3_bucket, s3_bucket_setting)
+      dumper = DatabaseDumper.new(args[:tag], "tasks", is_store_to_s3_bucket:, s3_bucket_setting:)
       dumper.run
     end
 
@@ -178,61 +250,6 @@ namespace :db do
         end
       end
     end
-
-  private
-
-    def set_up_bucket_setting(args)
-      { "bucket_key_id": args[:bucket_key_id] || ENV["AWS_ACCESS_KEY_ID"],
-        "bucket_access_key": args[:bucket_access_key] || ENV["AWS_SECRET_ACCESS_KEY"],
-        "bucket": args[:bucket] || Settings.case_uploads_s3_bucket }
-    end
-
-    def safeguard
-      puts "Are you sure you need to do this data dump?"
-      puts ""
-      DumperUtils.question_user("is the issue covered with existing feature tests? ")
-      DumperUtils.question_user("can you track problem through Kibana? ")
-      DumperUtils.question_user("can you recreate the problem locally? ")
-      DumperUtils.question_user("can you recreate the problem on staging with an anonymised dump? ")
-      confirm_data_dump
-    end
-
-    def confirm_data_dump
-      print "If you are still certain that you need to make a dump of the database please confirm y/n "
-      input = $stdin.gets.chomp
-      exit unless input.downcase.start_with?("y") || input.nil?
-    end
-
-    def confirm_delete_dumps_file
-      print "If you are still certain that you need to delete the files, please confirm Y/n?"
-      input = $stdin.gets.chomp
-      exit unless input.start_with?("Y") || input.nil?
-    end
-
-    def get_first_pod(working_env)
-      require "open3"
-
-      pod_name = nil
-      output = Open3.popen3("kubectl get pods -n track-a-query-#{working_env}") { |_, stdout, _, _| stdout.read }
-      if output.present?
-        output_lines = output.split('\n')
-        if output_lines.count >= 2
-          pod_name = output_lines[1].split(" ")[0].delete(" ")
-        end
-      end
-      pod_name
-    end
-
-    def init_s3_bucket(args)
-      args.with_defaults(bucket_key_id: ENV["AWS_ACCESS_KEY_ID"])
-      args.with_defaults(bucket_access_key: ENV["AWS_SECRET_ACCESS_KEY"])
-      args.with_defaults(bucket: Settings.case_uploads_s3_bucket)
-      S3BucketHelper::S3Bucket.new(
-        args[:bucket_key_id],
-        args[:bucket_access_key],
-        bucket: args[:bucket],
-      )
-    end
   end
 
   namespace :restore do
@@ -244,7 +261,7 @@ namespace :db do
         args.with_defaults(requie_confirmation: "true")
         args.with_defaults(dir: "dumps_latest_from_#{Settings.case_uploads_s3_bucket}")
         if args[:requie_confirmation].to_s == "true"
-          safeguard
+          safeguard_restore
         end
         dirname = Rails.root.join(args[:dir])
 
@@ -259,27 +276,6 @@ namespace :db do
         user_settings.load_user_settings_from_local(setting_filename)
         user_settings.add_roles
       end
-    end
-
-  private
-
-    def is_on_production?
-      ENV["ENV"].present? && ENV["ENV"] == "prod"
-    end
-
-    def safeguard
-      puts "Are you sure you need to retore a dump of database into the current database the app is connecting to?"
-      puts "Precondition: a dump of entire database has been done before carryihng this task"
-      puts "NOTES: rstoring process will destroy the previous data entirely, backup the data first if there is need"
-      DumperUtils.question_user("Are you sure the current environment is not production? ")
-      confirm_data_restore
-      puts "After action: you may need to restart your app server instance in order to making it work properly"
-    end
-
-    def confirm_data_restore
-      print "If you are still certain that you need to restore the data from dump files please confirm Y/n "
-      input = $stdin.gets.chomp
-      exit unless input.start_with?("Y") || input.nil?
     end
   end
 end

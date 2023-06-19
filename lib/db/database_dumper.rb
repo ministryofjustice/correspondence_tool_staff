@@ -1,8 +1,8 @@
 #  This class is to provide easy functin to get the data out of environent and anonymize them
 #  initial plan is to not provide clear option
 #
-require File.join(Rails.root, "lib", "tasks", "rake_task_helpers", "dumper_utils")
-require File.join(Rails.root, "lib", "db", "database_anonymizer_tasks")
+require Rails.root.join("lib/tasks/rake_task_helpers/dumper_utils")
+require Rails.root.join("lib/db/database_anonymizer_tasks")
 
 class DatabaseDumper
   attr_reader :outcome_files, :bucket_key_id, :bucket_access_key, :bucket
@@ -11,7 +11,7 @@ class DatabaseDumper
   TABLES_TO_BE_EXCLUDED = %w[reports search_queries sessions versions].freeze
   CLASSES_TO_ANONYMISE = [Team, TeamProperty, ::Warehouse::CaseReport, Case::Base, User, CaseTransition, CaseAttachment, Contact].freeze
 
-  def initialize(tag, running_mode = "tasks", is_store_to_s3_bucket = true, s3_bucket_setting = nil)
+  def initialize(tag, running_mode = "tasks", is_store_to_s3_bucket: true, s3_bucket_setting: nil)
     ####
     # tag:  part of the file name for  the anonymised data, it is ID of the anonymised db copy on s3 bucket
     # is_store_to_s3_bucket: this flag is default to true, if you want to debug it at local, you can turn it off

@@ -1,6 +1,75 @@
 require "csv"
 require "json"
 
+def is_valid_ids?(ico_appeal_id, foi_type_case_id)
+  valid_ico_appeal = Case::ICO::Base.exists?(ico_appeal_id)
+  valid_foi_type_case = Case::Base.exists?(foi_type_case_id)
+  puts "#{ico_appeal_id} does not exist!" unless valid_ico_appeal
+  puts "#{foi_type_case_id} does not exist!" unless valid_foi_type_case
+
+  valid_ico_appeal && valid_foi_type_case
+end
+
+def find_related_foi_ir_case_id(ico_appeal, ico_appeal_foi_ids_map)
+  if ico_appeal_foi_ids_map[ico_appeal.id].present?
+    ico_appeal_foi_ids_map[ico_appeal.id]
+  elsif ico_appeal.original_case.blank?
+    puts "ico appeal(#{ico_appeal.id}) has no original case."
+    elseif is_foi_ir_case?(ico_appeal.original_case.type)
+    puts "ico appeal(#{ico_appeal.id}) has linked to a FOI internal review case(#{ico_appeal.original_case.id})."
+  else
+    check_related_foi_ir_cases(ico_appeal)
+  end
+end
+
+def check_related_foi_ir_cases(ico_appeal)
+  result = nil
+  related_ir_cases = filter_related_cases(
+    ico_appeal.original_case,
+    ["Case::FOI::ComplianceReview", "Case::FOI::TimelinessReview"],
+  )
+  case related_ir_cases.count
+  when 1
+    result = related_ir_cases.first.id
+  when 0
+    puts "ico appeal(#{ico_appeal.id}) has no FOI internal review to be linked with."
+  else
+    puts "ico appeal(#{ico_appeal.id}) has 2 choices for FOI internal review [#{related_ir_cases.map(&:id).join(', ')}]"
+  end
+  result
+end
+
+def filter_related_cases(record, case_types)
+  if record.present?
+    related_ir_cases = []
+    (record.related_cases || []).each do |related_case|
+      related_ir_cases << related_case if case_types.include?(related_case.type)
+    end
+    related_ir_cases
+  else
+    []
+  end
+end
+
+def is_foi_ir_case?(case_type)
+  ["Case::FOI::ComplianceReview", "Case::FOI::TimelinessReview"].include?(case_type)
+end
+
+def clear_up_old_links(ico_appeal, link_type)
+  case_linkage_records = LinkedCase.where(type: link_type, case_id: ico_appeal.id)
+  case_linkage_records.each(&:destroy)
+end
+
+def clear_up_old_related_link(ico_appeal_id, foi_ir_id)
+  case_linkage_records = LinkedCase.where(type: "related", case_id: ico_appeal_id, linked_case_id: foi_ir_id)
+  case_linkage_records.each(&:destroy)
+end
+
+def create_new_case_link(ico_appeal, link_case_id, link_type)
+  new_original_case_link = LinkedCase.new(case_id: ico_appeal.id, linked_case_id: link_case_id, type: link_type.to_sym)
+  new_original_case_link.save!
+end
+
 namespace :ico_appeal do
   namespace :relink do
     desc "Relink the ico appeal case to related FOI internal review case if it has or from input csv file."
@@ -95,77 +164,6 @@ namespace :ico_appeal do
         end
       end
       puts "Totally #{counter} ico appeal cases."
-    end
-
-  private
-
-    def is_valid_ids?(ico_appeal_id, foi_type_case_id)
-      valid_ico_appeal = Case::ICO::Base.exists?(ico_appeal_id)
-      valid_foi_type_case = Case::Base.exists?(foi_type_case_id)
-      puts "#{ico_appeal_id} does not exist!" unless valid_ico_appeal
-      puts "#{foi_type_case_id} does not exist!" unless valid_foi_type_case
-
-      valid_ico_appeal && valid_foi_type_case
-    end
-
-    def find_related_foi_ir_case_id(ico_appeal, ico_appeal_foi_ids_map)
-      if ico_appeal_foi_ids_map[ico_appeal.id].present?
-        ico_appeal_foi_ids_map[ico_appeal.id]
-      elsif ico_appeal.original_case.blank?
-        puts "ico appeal(#{ico_appeal.id}) has no original case."
-        elseif is_foi_ir_case?(ico_appeal.original_case.type)
-        puts "ico appeal(#{ico_appeal.id}) has linked to a FOI internal review case(#{ico_appeal.original_case.id})."
-      else
-        check_related_foi_ir_cases(ico_appeal)
-      end
-    end
-
-    def check_related_foi_ir_cases(ico_appeal)
-      result = nil
-      related_ir_cases = filter_related_cases(
-        ico_appeal.original_case,
-        ["Case::FOI::ComplianceReview", "Case::FOI::TimelinessReview"],
-      )
-      case related_ir_cases.count
-      when 1
-        result = related_ir_cases.first.id
-      when 0
-        puts "ico appeal(#{ico_appeal.id}) has no FOI internal review to be linked with."
-      else
-        puts "ico appeal(#{ico_appeal.id}) has 2 choices for FOI internal review [#{related_ir_cases.map(&:id).join(', ')}]"
-      end
-      result
-    end
-
-    def filter_related_cases(record, case_types)
-      if record.present?
-        related_ir_cases = []
-        (record.related_cases || []).each do |related_case|
-          related_ir_cases << related_case if case_types.include?(related_case.type)
-        end
-        related_ir_cases
-      else
-        []
-      end
-    end
-
-    def is_foi_ir_case?(case_type)
-      ["Case::FOI::ComplianceReview", "Case::FOI::TimelinessReview"].include?(case_type)
-    end
-
-    def clear_up_old_links(ico_appeal, link_type)
-      case_linkage_records = LinkedCase.where(type: link_type, case_id: ico_appeal.id)
-      case_linkage_records.each(&:destroy)
-    end
-
-    def clear_up_old_related_link(ico_appeal_id, foi_ir_id)
-      case_linkage_records = LinkedCase.where(type: "related", case_id: ico_appeal_id, linked_case_id: foi_ir_id)
-      case_linkage_records.each(&:destroy)
-    end
-
-    def create_new_case_link(ico_appeal, link_case_id, link_type)
-      new_original_case_link = LinkedCase.new(case_id: ico_appeal.id, linked_case_id: link_case_id, type: link_type.to_sym)
-      new_original_case_link.save!
     end
   end
 end

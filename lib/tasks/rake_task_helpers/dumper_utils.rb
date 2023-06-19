@@ -38,7 +38,7 @@ module DumperUtils
     input = $stdin.gets.chomp
     if input.downcase.start_with?("n") || input.nil?
       puts "exiting"
-      exit
+      exit # rubocop:disable Rails/Exit
     end
   end
 end

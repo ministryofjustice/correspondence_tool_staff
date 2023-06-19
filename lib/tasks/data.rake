@@ -136,7 +136,7 @@ namespace :data do
 
     desc "Add Business Unit roles"
     task add_business_unit_roles: :environment do
-      require File.join(Rails.root, "lib", "cts", "teams", "roles_seeder")
+      require Rails.root.join("lib/cts/teams/roles_seeder")
       CTS::Teams::RolesSeeder.new.run
     end
 
@@ -153,7 +153,7 @@ namespace :data do
     namespace :import do
       desc "Import hierarchical team data"
       task teams: :environment do
-        require File.join(Rails.root, "lib", "rake_task_helpers", "team_importer")
+        require Rails.root.join("lib/rake_task_helpers/team_importer")
         TeamSeeder.new.run
       end
     end
@@ -164,7 +164,7 @@ def fix_transition_user_metadata(transition, field)
   if transition.metadata[field].respond_to? :has_key?
     if transition.metadata[field].key? "id"
       puts "CaseTransition #{transition.id}: fixing #{field}"
-      transition.update_attribute field, transition.metadata[field]["id"]
+      transition.update_attribute field, transition.metadata[field]["id"] # rubocop:disable Rails/SkipsModelValidations
     else
       puts "CaseTransition #{transition.id}: #{field} is a hash but could not find 'id' entry"
     end
@@ -199,28 +199,28 @@ def fix_invalid_offender_sar_cases
       p "Fixing case..."
 
       if k.errors.messages[:subject_address] == ["cannot be blank"]
-        k.update_attribute(:subject_address, "NO ADDRESS SUPPLIED")
+        k.update_attribute(:subject_address, "NO ADDRESS SUPPLIED") # rubocop:disable Rails/SkipsModelValidations
         p "subject_address"
       end
 
       if k.errors.messages[:postal_address] == ["cannot be blank"]
-        k.update_attribute(:postal_address, "NO ADDRESS SUPPLIED")
+        k.update_attribute(:postal_address, "NO ADDRESS SUPPLIED") # rubocop:disable Rails/SkipsModelValidations
         p "postal_address"
       end
 
       if k.errors.messages[:third_party_company_name] == ["cannot be blank if representative name not given"]
-        k.update_attribute(:third_party_company_name, "NO COMPANY NAME SUPPLIED")
+        k.update_attribute(:third_party_company_name, "NO COMPANY NAME SUPPLIED") # rubocop:disable Rails/SkipsModelValidations
         p "third_party_company_name"
       end
 
       if k.errors.messages[:third_party_relationship] == ["cannot be blank"]
-        k.update_attribute(:third_party_relationship, "NO RELATIONSHIP SUPPLIED")
+        k.update_attribute(:third_party_relationship, "NO RELATIONSHIP SUPPLIED") # rubocop:disable Rails/SkipsModelValidations
         p "third_party_relationship"
       end
 
       if k.errors.messages[:date_responded] == ["cannot be blank"]
         last_known_date = k.transitions.order(:sort_key)&.last&.created_at&.to_date
-        k.update_attribute :date_responded, last_known_date
+        k.update_attribute :date_responded, last_known_date # rubocop:disable Rails/SkipsModelValidations
         p "date_responded"
       end
 
@@ -237,7 +237,7 @@ def fix_invalid_standard_sar_cases
       p "Fixing case..."
 
       if k.errors.messages[:late_team_id] == %w[blank_invalid_if_case_late]
-        k.update_attribute :late_team_id, 0
+        k.update_attribute :late_team_id, 0 # rubocop:disable Rails/SkipsModelValidations
         p "late_team_id"
       end
 

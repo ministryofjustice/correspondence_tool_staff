@@ -1,4 +1,4 @@
-require File.join(Rails.root, "spec", "support", "find_or_create_strategy")
+require Rails.root.join("spec/support/find_or_create_strategy")
 require "timecop"
 
 module CTS
@@ -49,8 +49,8 @@ module CTS
 
   private
 
-    def least_of(a, b)
-      a < b ? a : b
+    def least_of(aaa, bbb)
+      aaa < bbb ? aaa : bbb
     end
 
     def random_response_time

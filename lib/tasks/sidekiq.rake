@@ -1,4 +1,5 @@
 namespace :sidekiq do
+  desc "sidekiq status"
   task status: :environment do
     require "sidekiq/api"
 

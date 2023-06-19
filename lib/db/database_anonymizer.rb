@@ -44,7 +44,7 @@ class DatabaseAnonymizer
     end
 
     def compile_to_copy_sql(extract_data)
-      extract_data.values.join("\t").gsub("'", """")
+      extract_data.values.join("\t").gsub("'", '""')
     end
   end
 
@@ -129,27 +129,27 @@ private
     (Float(klass.all.count) / @max_num_of_records_per_group).ceil
   end
 
-  def sql_settings_start(fp, class_model)
+  def sql_settings_start(path, class_model)
     # Search path with public space
-    fp.puts "SELECT pg_catalog.set_config('search_path', 'public', false);"
+    path.puts "SELECT pg_catalog.set_config('search_path', 'public', false);"
 
-    fp.puts "\n"
-    fp.puts "\n"
+    path.puts "\n"
+    path.puts "\n"
 
     # Set the fields for copy command
-    fp.puts "COPY #{class_model.table_name} ( #{class_model.column_names.join(', ')} ) FROM stdin;"
+    path.puts "COPY #{class_model.table_name} ( #{class_model.column_names.join(', ')} ) FROM stdin;"
   end
 
-  def sql_settings_end(fp, class_model, last_primary_value: nil)
-    fp.puts '\.'
-    fp.puts "\n"
-    fp.puts "\n"
+  def sql_settings_end(path, class_model, last_primary_value: nil)
+    path.puts '\.'
+    path.puts "\n"
+    path.puts "\n"
 
     if last_primary_value.present? && class_model.sequence_name.present?
-      fp.puts "SELECT pg_catalog.setval('#{class_model.sequence_name}', #{last_primary_value}, true);"
+      path.puts "SELECT pg_catalog.setval('#{class_model.sequence_name}', #{last_primary_value}, true);"
     end
-    fp.puts "\n"
-    fp.puts "\n"
+    path.puts "\n"
+    path.puts "\n"
   end
 
   # The key function for producing the insert sqls
@@ -257,9 +257,9 @@ private
   end
 
   # Anonymize case_transition table
-  def anonymize_case_transitions(ct)
-    ct.message = "#{initial_letters(ct.message)}\n\n#{Faker::Lorem.paragraph}" if ct.message.present?
-    ct
+  def anonymize_case_transitions(case_transititions)
+    case_transititions.message = "#{initial_letters(case_transititions.message)}\n\n#{Faker::Lorem.paragraph}" if case_transititions.message.present?
+    case_transititions
   end
 
   # Anonymize warehouse_case_reports table
@@ -288,9 +288,9 @@ private
     team
   end
 
-  def anonymize_team_properties(tp)
-    tp.value = Faker::Name.name
-    tp
+  def anonymize_team_properties(team_properties)
+    team_properties.value = Faker::Name.name
+    team_properties
   end
 
   def anonymize_data_requests(data_request)
@@ -298,10 +298,10 @@ private
     data_request
   end
 
-  def anonymize_case_attachments(ca)
-    ca.key = Faker::File.file_name + SecureRandom.uuid
-    ca.preview_key = Faker::File.file_name
-    ca
+  def anonymize_case_attachments(case_attachment)
+    case_attachment.key = Faker::File.file_name + SecureRandom.uuid
+    case_attachment.preview_key = Faker::File.file_name
+    case_attachment
   end
 
   def initial_letters(*)

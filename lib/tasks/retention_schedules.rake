@@ -1,3 +1,20 @@
+def case_with_retention_schedule(case_type:, state:, planned_destruction_date:)
+  kase = FactoryBot.create(
+    case_type,
+    retention_schedule:
+    RetentionSchedule.new(
+      state:,
+      planned_destruction_date:,
+    ),
+  )
+  kase.save!
+  kase
+end
+
+def is_on_production?
+  ENV["ENV"].present? && ENV["ENV"] == "prod"
+end
+
 namespace :retention_schedules do
   desc "create a dummy Offender Sar with retention schedules case"
   task create: :environment do
@@ -87,22 +104,5 @@ namespace :retention_schedules do
 
     puts "\n Case errors: \n--------------\n\n" if errors.any?
     errors.each { |error| puts error }
-  end
-
-  def case_with_retention_schedule(case_type:, state:, planned_destruction_date:)
-    kase = FactoryBot.create(
-      case_type,
-      retention_schedule:
-      RetentionSchedule.new(
-        state:,
-        planned_destruction_date:,
-      ),
-    )
-    kase.save!
-    kase
-  end
-
-  def is_on_production?
-    ENV["ENV"].present? && ENV["ENV"] == "prod"
   end
 end
