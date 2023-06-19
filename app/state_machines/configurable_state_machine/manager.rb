@@ -5,6 +5,7 @@
 #   ConfigurableStateMachine::Manager.instance(config_dir)
 #
 
+# rubocop:disable Style/ClassVars
 module ConfigurableStateMachine
   class Manager
     # include Singleton
@@ -52,3 +53,4 @@ module ConfigurableStateMachine
     end
   end
 end
+# rubocop:enable Style/ClassVars

@@ -1,3 +1,4 @@
+# rubocop:disable Style/ClassVars
 class ApplicationPolicy
   @@failed_checks = []
 
@@ -40,3 +41,4 @@ class ApplicationPolicy
     user.manager?
   end
 end
+# rubocop:enable Style/ClassVars
