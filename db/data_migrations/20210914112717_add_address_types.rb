@@ -56,7 +56,6 @@ class AddAddressTypes < ActiveRecord::DataMigration
       rec.update!(category_reference)
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   def down
     CategoryReference.where(category: "contact_type").delete_all

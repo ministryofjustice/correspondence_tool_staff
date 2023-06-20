@@ -38,7 +38,6 @@ module OffenderSARCasesParams
       uploaded_request_files: []
     )
   end
-  # rubocop:enable Metrics/MethodLength
 
   # @todo: Replace with appropriate edit params
   def update_offender_sar_params

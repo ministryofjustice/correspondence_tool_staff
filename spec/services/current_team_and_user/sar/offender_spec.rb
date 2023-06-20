@@ -4,7 +4,7 @@ describe "CurrentTeamAndUserSAROffenderService" do
   let(:team_branston) { find_or_create :team_branston }
   let(:service) { CurrentTeamAndUserService.new(kase) }
 
-  context "data to be requested state" do
+  context "when data to be requested state" do
     let(:kase)  { create :offender_sar_case } # default state
 
     it "returns the correct team and user" do
@@ -14,7 +14,7 @@ describe "CurrentTeamAndUserSAROffenderService" do
     end
   end
 
-  context "data to be requested state" do
+  context "when data to be requested state" do
     let(:kase)  { create :offender_sar_case, :waiting_for_data }
 
     it "returns the correct team and user" do
@@ -24,7 +24,7 @@ describe "CurrentTeamAndUserSAROffenderService" do
     end
   end
 
-  context "unknown_state" do
+  context "when unknown_state" do
     let(:kase)  { create :offender_sar_case }
 
     it "raises" do
@@ -38,7 +38,7 @@ describe "CurrentTeamAndUserSAROffenderService" do
     end
   end
 
-  context "offender sar complaint unassigned" do
+  context "when offender sar complaint unassigned" do
     let(:kase)  { create :offender_sar_complaint }
 
     it "returns the correct team and user" do
@@ -48,7 +48,7 @@ describe "CurrentTeamAndUserSAROffenderService" do
     end
   end
 
-  context "offender sar complaint assigned" do
+  context "when offender sar complaint assigned" do
     let(:kase)  { create :accepted_complaint_case }
 
     it "returns the correct team and user" do

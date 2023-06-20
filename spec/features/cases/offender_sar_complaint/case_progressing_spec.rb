@@ -13,7 +13,7 @@ feature "offender sar complaint case creation by a manager" do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  context "Standard offender sar complaint case", js: true do
+  context "when standard offender sar complaint case", js: true do
     let(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
 
     before do
@@ -63,7 +63,7 @@ feature "offender sar complaint case creation by a manager" do
     end
   end
 
-  context "ICO offender sar complaint case", js: true do
+  context "when ICO offender sar complaint case", js: true do
     let(:offender_sar_complaint) { create(:offender_sar_complaint, complaint_type: "ico_complaint").decorate }
 
     before do
@@ -113,7 +113,7 @@ feature "offender sar complaint case creation by a manager" do
     end
   end
 
-  context "Litigation offender sar complaint case", js: true do
+  context "when litigation offender sar complaint case", js: true do
     let(:offender_sar_complaint) { create(:offender_sar_complaint, complaint_type: "litigation_complaint").decorate }
 
     before do

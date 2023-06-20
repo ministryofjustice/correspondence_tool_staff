@@ -149,7 +149,7 @@ describe Case::BasePolicy do
   end
 
   describe ".new" do
-    context "initialized with old style" do
+    context "when initialized with old style" do
       it "instantiates the policy using positional parameters" do
         policy = described_class.new(manager, accepted_case)
         expect(policy.user).to eq manager
@@ -157,7 +157,7 @@ describe Case::BasePolicy do
       end
     end
 
-    context "initialized with new style" do
+    context "when initialized with new style" do
       it "instantiates the policy using named parameters" do
         policy = described_class.new(user: manager, kase: accepted_case)
         expect(policy.user).to eq manager
@@ -167,7 +167,7 @@ describe Case::BasePolicy do
   end
 
   permissions :can_view_attachments? do
-    context "flagged cases" do
+    context "when flagged cases" do
       it { is_expected.to permit(manager,            awaiting_dispatch_flagged_case)  }
       it { is_expected.to permit(responder,          awaiting_dispatch_flagged_case)  }
       it { is_expected.to permit(another_responder,  awaiting_dispatch_flagged_case)  }
@@ -175,15 +175,15 @@ describe Case::BasePolicy do
       it { is_expected.to permit(co_approver,        awaiting_dispatch_flagged_case)  }
     end
 
-    context "unflagged cases" do
-      context "in awaiting_dispatch state" do
+    context "when unflagged cases" do
+      context "and in awaiting_dispatch state" do
         it { is_expected.to     permit(responder,         awaiting_dispatch_case) }
         it { is_expected.to     permit(coworker,          awaiting_dispatch_case) }
         it { is_expected.not_to permit(manager,           awaiting_dispatch_case) }
         it { is_expected.not_to permit(approver,          awaiting_dispatch_case) }
       end
 
-      context "in other states" do
+      context "and in other states" do
         it { is_expected.to permit(manager,            responded_case) }
         it { is_expected.to permit(responder,          responded_case)  }
         it { is_expected.to permit(another_responder,  responded_case)  }
@@ -243,22 +243,22 @@ describe Case::BasePolicy do
   end
 
   permissions :can_add_attachment? do
-    context "in drafting state" do
+    context "when in drafting state" do
       it { is_expected.not_to permit(manager,           accepted_case) }
       it { is_expected.to     permit(responder,         accepted_case) }
       it { is_expected.to     permit(coworker,          accepted_case) }
       it { is_expected.not_to permit(another_responder, accepted_case) }
     end
 
-    context "in awaiting_dispatch state" do
-      context "flagged case" do
+    context "when in awaiting_dispatch state" do
+      context "and flagged case" do
         it { is_expected.not_to permit(manager,           flagged_accepted_case) }
         it { is_expected.not_to permit(responder,         flagged_accepted_case) }
         it { is_expected.not_to permit(coworker,          flagged_accepted_case) }
         it { is_expected.not_to permit(another_responder, flagged_accepted_case) }
       end
 
-      context "unflagged_case" do
+      context "and unflagged_case" do
         it { is_expected.not_to permit(manager,           case_with_response) }
         it { is_expected.to     permit(responder,         case_with_response) }
         it { is_expected.to     permit(coworker,          case_with_response) }
@@ -268,8 +268,8 @@ describe Case::BasePolicy do
   end
 
   permissions :can_add_attachment_to_flagged_and_unflagged_cases? do
-    context "in awaiting dispatch_state" do
-      context "flagged case" do
+    context "when in awaiting dispatch_state" do
+      context "and flagged case" do
         it { is_expected.not_to permit(manager,           flagged_accepted_case) }
         it { is_expected.to     permit(responder,         flagged_accepted_case) }
         it { is_expected.to     permit(coworker,          flagged_accepted_case) }
@@ -277,7 +277,7 @@ describe Case::BasePolicy do
         it { is_expected.not_to permit(approver,          flagged_accepted_case) }
       end
 
-      context "unflagged case" do
+      context "and unflagged case" do
         it { is_expected.not_to permit(manager,           accepted_case) }
         it { is_expected.to     permit(responder,         accepted_case) }
         it { is_expected.to     permit(coworker,          accepted_case) }
@@ -285,7 +285,7 @@ describe Case::BasePolicy do
         it { is_expected.not_to permit(approver,          accepted_case) }
       end
 
-      context "pending clearance case" do
+      context "and pending clearance case" do
         it { is_expected.not_to permit(manager,           pending_dacu_clearance_case) }
         it { is_expected.not_to permit(responder,         pending_dacu_clearance_case) }
         it { is_expected.not_to permit(coworker,          pending_dacu_clearance_case) }
@@ -293,7 +293,7 @@ describe Case::BasePolicy do
         it { is_expected.to     permit(approver,          pending_dacu_clearance_case) }
       end
 
-      context "case being re-drafted after approval" do
+      context "and case being re-drafted after approval" do
         it { is_expected.to     permit(responder,         redrafting_case) }
         it { is_expected.to     permit(coworker,          redrafting_case) }
         it { is_expected.not_to permit(manager,           redrafting_case) }
@@ -332,13 +332,13 @@ describe Case::BasePolicy do
   end
 
   permissions :can_remove_attachment? do
-    context "case is still being drafted" do
+    context "when case is still being drafted" do
       it { is_expected.to     permit(responder,         case_with_response) }
       it { is_expected.not_to permit(another_responder, case_with_response) }
       it { is_expected.not_to permit(manager,           case_with_response) }
     end
 
-    context "case has been marked as responded" do
+    context "when case has been marked as responded" do
       it { is_expected.not_to permit(another_responder, responded_case) }
       it { is_expected.not_to permit(manager,           responded_case) }
     end
@@ -353,7 +353,7 @@ describe Case::BasePolicy do
     it { is_expected.not_to permit(coworker,          accepted_case) }
   end
 
-  context "unflag for clearance event" do
+  context "when unflag for clearance event" do
     permissions :unflag_for_clearance? do
       it { is_expected.not_to permit(manager,               unassigned_flagged_case) }
       it { is_expected.to     permit(disclosure_specialist, unassigned_flagged_case) }
@@ -366,12 +366,12 @@ describe Case::BasePolicy do
   end
 
   permissions :assignments_reassign_user? do
-    context "unflagged case" do
+    context "when unflagged case" do
       it { is_expected.to     permit(responder, accepted_case) }
       it { is_expected.not_to permit(approver, accepted_case) }
     end
 
-    context "flagged by not yet taken by approver" do
+    context "when flagged by not yet taken by approver" do
       it { is_expected.to  permit(responder, flagged_accepted_case) }
 
       it "does not permit" do
@@ -381,7 +381,7 @@ describe Case::BasePolicy do
       end
     end
 
-    context "flagged case taken on" do
+    context "when flagged case taken on" do
       it "does not permit" do
         expect(subject).to permit(responder, pending_dacu_clearance_case)
       end
@@ -395,14 +395,14 @@ describe Case::BasePolicy do
       end
     end
 
-    context "case is being finalised" do
+    context "when case is being finalised" do
       it { is_expected.not_to permit(responder, responded_case) }
       it { is_expected.not_to permit(coworker, responded_case) }
       it { is_expected.not_to permit(approver, responded_case) }
       it { is_expected.not_to permit(approver, awaiting_dispatch_flagged_case) }
     end
 
-    context "case is closed" do
+    context "when case is closed" do
       it { is_expected.not_to permit(responder,         closed_case) }
       it { is_expected.not_to permit(coworker,          closed_case) }
       it { is_expected.not_to permit(another_responder, closed_case) }
@@ -410,7 +410,7 @@ describe Case::BasePolicy do
       it { is_expected.not_to permit(co_approver,       closed_case) }
     end
 
-    context "managers should not need to assign to another team member" do
+    context "when managers should not need to assign to another team member" do
       it { is_expected.not_to permit(manager, assigned_case) }
       it { is_expected.not_to permit(manager, assigned_trigger_case) }
       it { is_expected.not_to permit(manager, closed_case) }
@@ -430,13 +430,13 @@ describe Case::BasePolicy do
     # let(:flagged_case_responder)  { pending_dacu_clearance_case.responder }
     # let(:other_responder) { create :responder }
 
-    context "closed case" do
+    context "when closed case" do
       it { is_expected.to     permit(manager,     closed_case) }
       it { is_expected.to     permit(approver,    closed_case) }
       it { is_expected.to     permit(responder,   closed_case) }
     end
 
-    context "open case" do
+    context "when open case" do
       it { is_expected.to     permit(manager,                   pending_dacu_clearance_case) }
       it { is_expected.to     permit(approver,                  pending_dacu_clearance_case) }
       it { is_expected.to     permit(responder, pending_dacu_clearance_case) }

@@ -6,7 +6,7 @@ RSpec.shared_examples "process closure spec" do |klass|
     describe "#process_closure" do
       let(:manager) { find_or_create :disclosure_bmt_user }
 
-      context "as an authenticated manager" do
+      context "when an authenticated manager" do
         before { sign_in manager }
 
         it "authorizes using can_close_case?" do

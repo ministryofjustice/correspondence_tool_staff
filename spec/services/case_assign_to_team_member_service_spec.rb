@@ -26,7 +26,7 @@ describe CaseAssignToTeamMemberService, type: :service do
       allow(unassigned_case.state_machine).to receive(:accept_approver_assignment!)
     end
 
-    context "assignment is valid" do
+    context "when assignment is valid" do
       before do
         allow(new_assignment).to receive_messages valid?: true,
                                                   save!: true,

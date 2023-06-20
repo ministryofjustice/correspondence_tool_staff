@@ -9,7 +9,7 @@ describe "state machine" do
     @setup.cases
   end
 
-  context "usual suspects" do
+  context "when usual suspects" do
     before(:all) do
       DbHousekeeping.clean
       @setup = StandardSetup.new(
@@ -35,20 +35,9 @@ describe "state machine" do
     after(:all) { DbHousekeeping.clean }
 
     describe "setup" do
-      context "FOI" do
-        context "trigger workflow" do
-          context "awaiting dispatch" do
-            it "is trigger workflow" do
-              kase = @setup.ico_foi_awaiting_dispatch
-              expect(kase.current_state).to eq "awaiting_dispatch"
-              expect(kase.workflow).to eq "trigger"
-              expect(kase.approver_assignments.for_team(@setup.disclosure_team).first.state).to eq "accepted"
-              expect(kase.approver_assignments.for_team(@setup.press_office_team)).to be_empty
-              expect(kase.approver_assignments.for_team(@setup.private_office_team)).to be_empty
-            end
-          end
-
-          context "awaiting dispatch" do
+      context "when FOI" do
+        context "and trigger workflow" do
+          context "and awaiting dispatch" do
             it "is trigger workflow" do
               kase = @setup.ico_sar_awaiting_dispatch
               expect(kase.current_state).to eq "awaiting_dispatch"
@@ -59,7 +48,7 @@ describe "state machine" do
             end
           end
 
-          context "pending dacu clearance" do
+          context "and pending dacu clearance" do
             it "is trigger workflow" do
               kase = @setup.ico_foi_pending_dacu
               expect(kase.current_state).to eq "pending_dacu_clearance"
@@ -73,7 +62,7 @@ describe "state machine" do
       end
     end
 
-    describe :accept_approver_assignment do
+    describe "accept_approver_assignment" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_unassigned],
@@ -92,7 +81,7 @@ describe "state machine" do
       }
     end
 
-    describe :accept_responder_assignment do
+    describe "accept_responder_assignment" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[responder ico_foi_awaiting_responder],
@@ -103,7 +92,7 @@ describe "state machine" do
       }
     end
 
-    describe :add_message_to_case do
+    describe "add_message_to_case" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
@@ -176,7 +165,7 @@ describe "state machine" do
       }
     end
 
-    describe :approve do
+    describe "approve" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_pending_dacu],
@@ -185,7 +174,7 @@ describe "state machine" do
       }
     end
 
-    describe :assign_responder do
+    describe "assign_responder" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
@@ -194,7 +183,7 @@ describe "state machine" do
       }
     end
 
-    describe :assign_to_new_team do
+    describe "assign_to_new_team" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_awaiting_responder],
@@ -207,7 +196,7 @@ describe "state machine" do
       }
     end
 
-    describe :close do
+    describe "close" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_responded],
@@ -216,28 +205,7 @@ describe "state machine" do
       }
     end
 
-    describe :destroy_case do
-      it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
-          %i[disclosure_bmt ico_foi_unassigned],
-          %i[disclosure_bmt ico_foi_awaiting_responder],
-          %i[disclosure_bmt ico_foi_accepted],
-          %i[disclosure_bmt ico_foi_pending_dacu],
-          %i[disclosure_bmt ico_foi_awaiting_dispatch],
-          %i[disclosure_bmt ico_foi_responded],
-          %i[disclosure_bmt ico_foi_closed],
-          %i[disclosure_bmt ico_sar_unassigned],
-          %i[disclosure_bmt ico_sar_awaiting_responder],
-          %i[disclosure_bmt ico_sar_accepted],
-          %i[disclosure_bmt ico_sar_pending_dacu],
-          %i[disclosure_bmt ico_sar_awaiting_dispatch],
-          %i[disclosure_bmt ico_sar_responded],
-          %i[disclosure_bmt ico_sar_closed],
-        )
-      }
-    end
-
-    describe :edit_case do
+    describe "destroy_case" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
@@ -258,7 +226,28 @@ describe "state machine" do
       }
     end
 
-    describe :flag_for_clearance do
+    describe "edit_case" do
+      it {
+        expect(subject).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_foi_awaiting_responder],
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_foi_pending_dacu],
+          %i[disclosure_bmt ico_foi_awaiting_dispatch],
+          %i[disclosure_bmt ico_foi_responded],
+          %i[disclosure_bmt ico_foi_closed],
+          %i[disclosure_bmt ico_sar_unassigned],
+          %i[disclosure_bmt ico_sar_awaiting_responder],
+          %i[disclosure_bmt ico_sar_accepted],
+          %i[disclosure_bmt ico_sar_pending_dacu],
+          %i[disclosure_bmt ico_sar_awaiting_dispatch],
+          %i[disclosure_bmt ico_sar_responded],
+          %i[disclosure_bmt ico_sar_closed],
+        )
+      }
+    end
+
+    describe "flag_for_clearance" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
@@ -267,7 +256,7 @@ describe "state machine" do
       }
     end
 
-    describe :link_a_case do
+    describe "link_a_case" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
@@ -445,7 +434,7 @@ describe "state machine" do
       }
     end
 
-    describe :reassign_user do
+    describe "reassign_user" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[responder ico_foi_accepted],
@@ -484,7 +473,7 @@ describe "state machine" do
       }
     end
 
-    describe :reject_responder_assignment do
+    describe "reject_responder_assignment" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[responder ico_foi_awaiting_responder],
@@ -495,7 +484,7 @@ describe "state machine" do
       }
     end
 
-    describe :remove_linked_case do
+    describe "remove_linked_case" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
@@ -673,7 +662,7 @@ describe "state machine" do
       }
     end
 
-    describe :respond do
+    describe "respond" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_awaiting_dispatch],
@@ -684,7 +673,7 @@ describe "state machine" do
       }
     end
 
-    describe :unaccept_approver_assignment do
+    describe "unaccept_approver_assignment" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_pending_dacu],
@@ -693,7 +682,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_and_approve do
+    describe "upload_response_and_approve" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_pending_dacu],
@@ -702,7 +691,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_and_return_for_redraft do
+    describe "upload_response_and_return_for_redraft" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_pending_dacu],
@@ -713,7 +702,7 @@ describe "state machine" do
 
     ############## EMAIL TESTS ################
 
-    describe :add_message_to_case do
+    describe "add_message_to_case" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_bmt ico_foi_accepted],
@@ -760,7 +749,7 @@ describe "state machine" do
       }
     end
 
-    describe :approve do
+    describe "approve" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_specialist ico_sar_pending_dacu],
@@ -769,7 +758,7 @@ describe "state machine" do
       }
     end
 
-    describe :assign_responder do
+    describe "assign_responder" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_bmt ico_foi_unassigned],
@@ -778,7 +767,7 @@ describe "state machine" do
       }
     end
 
-    describe :assign_to_new_team do
+    describe "assign_to_new_team" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_bmt ico_foi_awaiting_responder],
@@ -789,7 +778,7 @@ describe "state machine" do
       }
     end
 
-    describe :reassign_user do
+    describe "reassign_user" do
       it {
         expect(subject).to have_after_hook(
           %i[responder ico_foi_accepted],
@@ -828,7 +817,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_and_return_for_redraft do
+    describe "upload_response_and_return_for_redraft" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_specialist ico_sar_pending_dacu],
@@ -837,7 +826,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_and_approve do
+    describe "upload_response_and_approve" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_specialist ico_sar_pending_dacu],

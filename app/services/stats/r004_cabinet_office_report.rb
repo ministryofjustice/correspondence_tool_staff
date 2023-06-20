@@ -151,7 +151,6 @@ module Stats
         "7.S44" => "S(44) - Prohibitions on disclosure",
       }
     end
-    # rubocop:enable Metrics/MethodLength
 
     # use method missing to get values for 3_S22 - to 3_S44
     def method_missing(method_name, *args)

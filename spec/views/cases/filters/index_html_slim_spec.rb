@@ -175,7 +175,7 @@ describe "cases/filters/index.html.slim", type: :view do
     # framework tries to create links for a controller called 'kaminari'. Until
     # we have a way to override that, we test here and test that other views
     # include pagination.
-    context "one pages worth of cases" do
+    context "with one pages worth of cases" do
       before :all do
         create_list(:case, 20)
         @cases = Case::Base.all.page.decorate

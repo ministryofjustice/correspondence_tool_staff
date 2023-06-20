@@ -9,7 +9,7 @@ describe "state machine" do
     @setup.cases
   end
 
-  context "usual suspects" do
+  context "with usual suspects" do
     before(:all) do
       DbHousekeeping.clean
       @setup = StandardSetup.new(
@@ -62,9 +62,9 @@ describe "state machine" do
     end
 
     describe "setup" do
-      context "FOI" do
-        context "standard workflow" do
-          context "awaiting dispatch" do
+      describe "FOI" do
+        describe "standard workflow" do
+          context "when awaiting dispatch" do
             it "is in awiting dispatch state with no approver assignments" do
               kase = @setup.std_awdis_foi
               expect(kase.current_state).to eq "awaiting_dispatch"
@@ -74,8 +74,8 @@ describe "state machine" do
           end
         end
 
-        context "trigger workflow" do
-          context "awaiting dispatch" do
+        describe "trigger workflow" do
+          context "when awaiting dispatch" do
             let(:kase) { @setup.trig_awdis_foi }
 
             it "is trigger workflow" do
@@ -88,9 +88,9 @@ describe "state machine" do
           end
         end
 
-        context "full_approval workflow" do
-          context "pending dacu clearance" do
-            context "accepted by disclosure specialist" do
+        describe "full_approval workflow" do
+          context "when pending dacu clearance" do
+            context "and accepted by disclosure specialist" do
               let(:kase) { @setup.full_pdacu_foi_accepted }
 
               it "accepted by all three approving teams " do
@@ -102,7 +102,7 @@ describe "state machine" do
               end
             end
 
-            context "not accepted yet by dacu disclosure" do
+            context "and not accepted yet by dacu disclosure" do
               let(:kase) { @setup.full_pdacu_foi_unaccepted }
 
               it "accepted by press and private but not disclosure" do
@@ -115,7 +115,7 @@ describe "state machine" do
             end
           end
 
-          context "awaiting dispatch" do
+          context "when awaiting dispatch" do
             let(:kase) { @setup.full_awdis_foi }
 
             it "is full approval workflow accepted by press, private and disclosure" do
@@ -130,7 +130,7 @@ describe "state machine" do
       end
     end
 
-    describe :accept_approver_assignment do
+    describe "accept_approver_assignment" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist trig_unassigned_foi],
@@ -153,7 +153,7 @@ describe "state machine" do
       }
     end
 
-    describe :accept_responder_assignment do
+    describe "accept_responder_assignment" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[responder std_awresp_foi],
@@ -170,7 +170,7 @@ describe "state machine" do
       }
     end
 
-    describe :add_message_to_case do
+    describe "add_message_to_case" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_unassigned_foi],
@@ -359,7 +359,7 @@ describe "state machine" do
       }
     end
 
-    describe :add_responses do
+    describe "add_responses" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist full_awdis_foi],
@@ -381,7 +381,7 @@ describe "state machine" do
       }
     end
 
-    describe :approve do
+    describe "approve" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist trig_pdacu_foi_accepted],
@@ -392,7 +392,7 @@ describe "state machine" do
       }
     end
 
-    describe :approve_and_bypass do
+    describe "approve_and_bypass" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist full_pdacu_foi_accepted],
@@ -400,7 +400,7 @@ describe "state machine" do
       }
     end
 
-    describe :assign_responder do
+    describe "assign_responder" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_unassigned_foi],
@@ -411,7 +411,7 @@ describe "state machine" do
       }
     end
 
-    describe :assign_to_new_team do
+    describe "assign_to_new_team" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_awresp_foi],
@@ -431,7 +431,7 @@ describe "state machine" do
       }
     end
 
-    describe :close do
+    describe "close" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_responded_foi],
@@ -441,43 +441,7 @@ describe "state machine" do
       }
     end
 
-    describe :destroy_case do
-      it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
-          %i[disclosure_bmt std_unassigned_foi],
-          %i[disclosure_bmt std_awresp_foi],
-          %i[disclosure_bmt std_draft_foi],
-          %i[disclosure_bmt std_draft_foi_in_escalation_period],
-          %i[disclosure_bmt std_awdis_foi],
-          %i[disclosure_bmt std_responded_foi],
-          %i[disclosure_bmt std_closed_foi],
-          %i[disclosure_bmt trig_unassigned_foi],
-          %i[disclosure_bmt trig_unassigned_foi_accepted],
-          %i[disclosure_bmt trig_awresp_foi],
-          %i[disclosure_bmt trig_awresp_foi_accepted],
-          %i[disclosure_bmt trig_draft_foi],
-          %i[disclosure_bmt trig_draft_foi_accepted],
-          %i[disclosure_bmt trig_pdacu_foi],
-          %i[disclosure_bmt trig_pdacu_foi_accepted],
-          %i[disclosure_bmt trig_awdis_foi],
-          %i[disclosure_bmt trig_responded_foi],
-          %i[disclosure_bmt trig_closed_foi],
-          %i[disclosure_bmt full_unassigned_foi],
-          %i[disclosure_bmt full_awresp_foi],
-          %i[disclosure_bmt full_awresp_foi_accepted],
-          %i[disclosure_bmt full_draft_foi],
-          %i[disclosure_bmt full_pdacu_foi_accepted],
-          %i[disclosure_bmt full_pdacu_foi_unaccepted],
-          %i[disclosure_bmt full_ppress_foi],
-          %i[disclosure_bmt full_pprivate_foi],
-          %i[disclosure_bmt full_awdis_foi],
-          %i[disclosure_bmt full_responded_foi],
-          %i[disclosure_bmt full_closed_foi],
-        )
-      }
-    end
-
-    describe :edit_case do
+    describe "destroy_case" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_unassigned_foi],
@@ -513,7 +477,43 @@ describe "state machine" do
       }
     end
 
-    describe :extend_for_pit do
+    describe "edit_case" do
+      it {
+        expect(subject).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_bmt std_unassigned_foi],
+          %i[disclosure_bmt std_awresp_foi],
+          %i[disclosure_bmt std_draft_foi],
+          %i[disclosure_bmt std_draft_foi_in_escalation_period],
+          %i[disclosure_bmt std_awdis_foi],
+          %i[disclosure_bmt std_responded_foi],
+          %i[disclosure_bmt std_closed_foi],
+          %i[disclosure_bmt trig_unassigned_foi],
+          %i[disclosure_bmt trig_unassigned_foi_accepted],
+          %i[disclosure_bmt trig_awresp_foi],
+          %i[disclosure_bmt trig_awresp_foi_accepted],
+          %i[disclosure_bmt trig_draft_foi],
+          %i[disclosure_bmt trig_draft_foi_accepted],
+          %i[disclosure_bmt trig_pdacu_foi],
+          %i[disclosure_bmt trig_pdacu_foi_accepted],
+          %i[disclosure_bmt trig_awdis_foi],
+          %i[disclosure_bmt trig_responded_foi],
+          %i[disclosure_bmt trig_closed_foi],
+          %i[disclosure_bmt full_unassigned_foi],
+          %i[disclosure_bmt full_awresp_foi],
+          %i[disclosure_bmt full_awresp_foi_accepted],
+          %i[disclosure_bmt full_draft_foi],
+          %i[disclosure_bmt full_pdacu_foi_accepted],
+          %i[disclosure_bmt full_pdacu_foi_unaccepted],
+          %i[disclosure_bmt full_ppress_foi],
+          %i[disclosure_bmt full_pprivate_foi],
+          %i[disclosure_bmt full_awdis_foi],
+          %i[disclosure_bmt full_responded_foi],
+          %i[disclosure_bmt full_closed_foi],
+        )
+      }
+    end
+
+    describe "extend_for_pit" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_draft_foi],
@@ -534,7 +534,7 @@ describe "state machine" do
       }
     end
 
-    describe :flag_for_clearance do
+    describe "flag_for_clearance" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_unassigned_foi],
@@ -633,7 +633,7 @@ describe "state machine" do
       }
     end
 
-    describe :link_a_case do
+    describe "link_a_case" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_unassigned_foi],
@@ -988,7 +988,7 @@ describe "state machine" do
       }
     end
 
-    describe :reassign_user do
+    describe "reassign_user" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist trig_unassigned_foi_accepted],
@@ -1096,7 +1096,7 @@ describe "state machine" do
       }
     end
 
-    describe :reject_responder_assignment do
+    describe "reject_responder_assignment" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[responder std_awresp_foi],
@@ -1113,7 +1113,7 @@ describe "state machine" do
       }
     end
 
-    describe :remove_linked_case do
+    describe "remove_linked_case" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_unassigned_foi],
@@ -1468,7 +1468,7 @@ describe "state machine" do
       }
     end
 
-    describe :remove_response do
+    describe "remove_response" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[responder std_draft_foi],
@@ -1489,7 +1489,7 @@ describe "state machine" do
       }
     end
 
-    describe :request_amends do
+    describe "request_amends" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[press_officer full_ppress_foi],
@@ -1498,7 +1498,7 @@ describe "state machine" do
       }
     end
 
-    describe :request_further_clearance do
+    describe "request_further_clearance" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_unassigned_foi],
@@ -1519,7 +1519,7 @@ describe "state machine" do
       }
     end
 
-    describe :respond do
+    describe "respond" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[responder std_awdis_foi],
@@ -1532,7 +1532,7 @@ describe "state machine" do
       }
     end
 
-    describe :take_on_for_approval do
+    describe "take_on_for_approval" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[press_officer std_unassigned_foi],
@@ -1591,7 +1591,7 @@ describe "state machine" do
       }
     end
 
-    describe :update_closure do
+    describe "update_closure" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt std_closed_foi],
@@ -1601,7 +1601,7 @@ describe "state machine" do
       }
     end
 
-    describe :unaccept_approver_assignment do
+    describe "unaccept_approver_assignment" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist trig_unassigned_foi_accepted],
@@ -1615,7 +1615,7 @@ describe "state machine" do
       }
     end
 
-    describe :unflag_for_clearance do
+    describe "unflag_for_clearance" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist trig_unassigned_foi],
@@ -1656,7 +1656,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_and_approve do
+    describe "upload_response_and_approve" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist full_pdacu_foi_accepted],
@@ -1665,7 +1665,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_and_return_for_redraft do
+    describe "upload_response_and_return_for_redraft" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist full_pdacu_foi_accepted],
@@ -1674,7 +1674,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_approve_and_bypass do
+    describe "upload_response_approve_and_bypass" do
       it {
         expect(subject).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist full_pdacu_foi_accepted],
@@ -1684,7 +1684,7 @@ describe "state machine" do
 
     ############## EMAIL TESTS ################
 
-    describe :add_message_to_case do
+    describe "add_message_to_case" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_bmt std_draft_foi],
@@ -1791,7 +1791,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_and_return_for_redraft do
+    describe "upload_response_and_return_for_redraft" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_specialist full_pdacu_foi_accepted],
@@ -1800,7 +1800,7 @@ describe "state machine" do
       }
     end
 
-    describe :reassign_user do
+    describe "reassign_user" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_specialist trig_unassigned_foi_accepted],
@@ -1908,7 +1908,7 @@ describe "state machine" do
       }
     end
 
-    describe :approve do
+    describe "approve" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_specialist trig_pdacu_foi_accepted],
@@ -1916,7 +1916,7 @@ describe "state machine" do
       }
     end
 
-    describe :assign_responder do
+    describe "assign_responder" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_bmt std_unassigned_foi],
@@ -1927,7 +1927,7 @@ describe "state machine" do
       }
     end
 
-    describe :assign_to_new_team do
+    describe "assign_to_new_team" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_bmt std_awresp_foi],
@@ -1944,7 +1944,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_and_approve do
+    describe "upload_response_and_approve" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_specialist trig_pdacu_foi_accepted],
@@ -1952,7 +1952,7 @@ describe "state machine" do
       }
     end
 
-    describe :upload_response_approve_and_bypass do
+    describe "upload_response_approve_and_bypass" do
       it {
         expect(subject).to have_after_hook(
           %i[disclosure_specialist full_pdacu_foi_accepted],

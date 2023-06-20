@@ -36,7 +36,7 @@ describe "cases/responses/upload_response_and_approve.html.slim", type: :view do
     expect(response).to have_rendered("_response_upload_form")
   end
 
-  context "trigger foi case" do
+  context "with trigger foi case" do
     let(:kase) { create :pending_dacu_clearance_case }
 
     it "does not display the bypass options" do
@@ -47,7 +47,7 @@ describe "cases/responses/upload_response_and_approve.html.slim", type: :view do
     end
   end
 
-  context "full approval foi case" do
+  context "with full approval foi case" do
     let(:kase) { create :pending_dacu_clearance_case, :full_approval }
 
     it "displays the bypass options" do

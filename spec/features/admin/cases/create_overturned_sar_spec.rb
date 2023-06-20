@@ -57,7 +57,7 @@ feature "creating ICO Overturned SAR case" do
     expect(sar_case_row.status.text).to eq "Closed"
   end
 
-  context "Case::OverturnedICO::SAR" do
+  context "when Case::OverturnedICO::SAR" do
     scenario "creating a case with the default values" do
       create_ico_overturned_sar(target_state: "closed")
     end

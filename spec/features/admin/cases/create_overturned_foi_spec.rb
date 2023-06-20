@@ -59,7 +59,7 @@ feature "creating ICO Overturned FOI case" do
     expect(foi_case_row.status.text).to eq "Closed"
   end
 
-  context "Case::OverturnedICO::FOI" do
+  context "when Case::OverturnedICO::FOI" do
     scenario "creating a case with the default values" do
       create_ico_overturned_foi(target_state: "closed")
     end

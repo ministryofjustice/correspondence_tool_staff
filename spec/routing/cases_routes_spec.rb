@@ -11,19 +11,19 @@ describe "cases routes", type: :routing do
       get "/cases"
     end
 
-    context "manager user" do
+    context "when manager user" do
       let(:user) { manager }
 
       it { is_expected.to redirect_to "/cases/my_open" }
     end
 
-    context "responder user" do
+    context "when responder user" do
       let(:user) { responder }
 
       it { is_expected.to redirect_to "/cases/my_open" }
     end
 
-    context "approver user" do
+    context "when approver user" do
       let(:user) { approver }
 
       it { is_expected.to redirect_to "/cases/my_open" }

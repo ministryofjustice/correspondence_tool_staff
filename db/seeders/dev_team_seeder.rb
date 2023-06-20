@@ -102,7 +102,6 @@ private
                                                  correspondence_type_ids: [@offender.id, @offender_complaint.id],
                                                  code: "BRANSTON")
   end
-  # rubocop:enable Metrics/MethodLength
 
   def add_leads
     TeamProperty.find_or_create_by!(team_id: @bg_ops.id,       key: "lead", value: "Ops Leader")

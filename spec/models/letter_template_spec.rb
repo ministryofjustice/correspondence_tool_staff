@@ -11,7 +11,7 @@ RSpec.describe LetterTemplate, type: :model do
           .with_values(%w[acknowledgement dispatch])
   }
 
-  context "validate uniqueness of abbreviation" do
+  context "when validate uniqueness of abbreviation" do
     it "errors if not unique" do
       create :letter_template, abbreviation: "abc"
       t2 = build_stubbed :letter_template, abbreviation: "abc"

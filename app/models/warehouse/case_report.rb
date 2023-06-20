@@ -107,8 +107,6 @@ module Warehouse
         retry if (retries += 1) < 2
         raise
       end
-      # rubocop:enable Metrics/PerceivedComplexity
-      # rubocop:enable Metrics/CyclomaticComplexity, Metrics/MethodLength
 
       def generate_all
         process_cases(Case::Base.all)

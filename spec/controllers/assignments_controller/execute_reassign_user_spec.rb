@@ -34,7 +34,7 @@ RSpec.describe AssignmentsController, type: :controller do
               .with_args(responder, accepted_case)
     end
 
-    context "foi case" do
+    context "with foi case" do
       it "calls UserReassignmentService" do
         patch(:execute_reassign_user, params:)
         expect(UserReassignmentService).to have_received(:new).with(
@@ -51,7 +51,7 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
-    context "foi ico case" do
+    context "with foi ico case" do
       let(:accepted_ico_foi_case) { create :accepted_ico_foi_case, responding_team: }
       let(:assignment)            { accepted_ico_foi_case.responder_assignment }
       let(:params)                do
@@ -78,7 +78,7 @@ RSpec.describe AssignmentsController, type: :controller do
       end
     end
 
-    context "offender sar complaint case" do
+    context "with offender sar complaint case" do
       let(:accepted_complaint_case) { create :accepted_complaint_case }
       let(:responding_team)         { accepted_complaint_case.responding_team }
       let(:responder)               { responding_team.responders.first }

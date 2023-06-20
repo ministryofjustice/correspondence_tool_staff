@@ -4,7 +4,7 @@ module ConfigurableStateMachine
   describe DuplicateKeyDetector do
     let(:detector) { described_class.new(filename) }
 
-    context "no duplicate keys" do
+    context "when no duplicate keys" do
       let(:filename) { File.join(File.dirname(__FILE__), "data", "config.yml") }
 
       describe "#dupes?" do
@@ -15,7 +15,7 @@ module ConfigurableStateMachine
       end
     end
 
-    context "duplicate keys in file" do
+    context "when duplicate keys in file" do
       let(:filename) { File.join(File.dirname(__FILE__), "data", "config_with_dupes.yml") }
 
       describe "#dupes?" do

@@ -10,9 +10,9 @@ feature "Closing a case" do
     login_as responder
   end
 
-  context "Reporting timiliness" do
+  describe "Reporting timiliness" do
     Timecop.freeze(Time.zone.local(2017, 11, 23, 13, 13, 56)) do
-      context "responded-to in time" do
+      context "when responded-to in time" do
         given!(:fully_granted_case) do
           create :offender_sar_case,
                  :ready_to_dispatch,
@@ -39,7 +39,7 @@ feature "Closing a case" do
         end
       end
 
-      context "responded-to late" do
+      context "when responded-to late" do
         given!(:fully_granted_case) do
           create :offender_sar_case,
                  :ready_to_dispatch,
@@ -66,7 +66,7 @@ feature "Closing a case" do
     end
   end
 
-  context "GDPR retention schedules" do
+  describe "GDPR retention schedules" do
     given!(:fully_granted_case) do
       create :offender_sar_case,
              :ready_to_dispatch,

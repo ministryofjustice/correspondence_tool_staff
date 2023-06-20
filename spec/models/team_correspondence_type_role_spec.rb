@@ -35,7 +35,7 @@ describe TeamCorrespondenceTypeRole do
              correspondence_types: [sar]
     end
 
-    context "manager team" do
+    context "with manager team" do
       let(:new_tcr) do
         described_class.create team: managing_team,
                                correspondence_type: foi
@@ -54,7 +54,7 @@ describe TeamCorrespondenceTypeRole do
       end
     end
 
-    context "responder team" do
+    context "with responder team" do
       let(:new_tcr) do
         described_class.create team: responding_team,
                                correspondence_type: foi
@@ -69,7 +69,7 @@ describe TeamCorrespondenceTypeRole do
       end
     end
 
-    context "approver team" do
+    context "with approver team" do
       let(:new_tcr) do
         described_class.create team: approving_team,
                                correspondence_type: foi

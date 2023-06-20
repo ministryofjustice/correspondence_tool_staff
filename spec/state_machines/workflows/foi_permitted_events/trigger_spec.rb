@@ -1,16 +1,16 @@
 require "rails_helper"
 
 describe ConfigurableStateMachine::Machine do
-  context "trigger workflow" do
+  describe "trigger workflow" do
     ##################### MANAGER FLAGGED ############################
 
     ##################### APPROVER FLAGGED ############################
     let(:approver) { find_or_create :disclosure_specialist }
 
-    context "manager" do
+    context "when manager" do
       let(:manager)   { create :manager }
 
-      context "unassigned state" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :case, :flagged, :dacu_disclosure
 
@@ -26,7 +26,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder state" do
+      context "and awaiting responder state" do
         it "shows events" do
           k = create :awaiting_responder_case, :flagged, :dacu_disclosure
 
@@ -42,7 +42,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "and drafting state" do
         it "shows events" do
           k = create :accepted_case, :flagged, :dacu_disclosure
 
@@ -60,7 +60,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "pending_dacu_clearance" do
+      context "and pending_dacu_clearance" do
         it "shows events" do
           k = create :pending_dacu_clearance_case, :flagged, :dacu_disclosure
 
@@ -76,7 +76,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting_dispatch" do
+      context "and awaiting_dispatch" do
         it "shows events - not member of case managing team" do
           k = create :case_with_response, :flagged, :dacu_disclosure
 
@@ -111,7 +111,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "responded" do
+      context "and responded" do
         it "shows events - not member of case managing team" do
           k = create :responded_case, :flagged, :dacu_disclosure
 
@@ -142,7 +142,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows events" do
           k = create :closed_case, :flagged, :dacu_disclosure
 
@@ -160,11 +160,11 @@ describe ConfigurableStateMachine::Machine do
 
     ##################### RESPONDER FLAGGED ############################
 
-    context "responder" do
-      context "responder not in team" do
+    context "when responder" do
+      context "and responder not in team" do
         let(:responder) { create :responder }
 
-        context "unassigned state" do
+        context "and unassigned state" do
           it "shows permitted events" do
             k = create :case, :flagged, :dacu_disclosure
 
@@ -173,7 +173,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting responder state" do
+        context "and awaiting responder state" do
           it "shows events" do
             k = create :awaiting_responder_case, :flagged, :dacu_disclosure
 
@@ -182,7 +182,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows events" do
             k = create :accepted_case, :flagged, :dacu_disclosure
 
@@ -192,7 +192,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "pending_dacu_clearance state" do
+        context "and pending_dacu_clearance state" do
           it "shows events" do
             k = create :pending_dacu_clearance_case
 
@@ -202,7 +202,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch" do
+        context "and awaiting_dispatch" do
           it "shows events" do
             k = create :case_with_response, :flagged, :dacu_disclosure
 
@@ -213,7 +213,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "responded state" do
+        context "and responded state" do
           it "shows events" do
             k = create :responded_case, :flagged, :dacu_disclosure
 
@@ -223,8 +223,8 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "responder in assigned team" do
-        context "awaiting_responder state" do
+      context "and responder in assigned team" do
+        context "and awaiting_responder state" do
           it "shows events" do
             k = create :awaiting_responder_case, :flagged, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -239,7 +239,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows events" do
             k = create :accepted_case, :flagged, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -256,7 +256,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "pending_dacu_clearance state" do
+        context "and pending_dacu_clearance state" do
           it "shows events" do
             k = create :pending_dacu_clearance_case, :flagged, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -270,7 +270,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch state" do
+        context "and awaiting_dispatch state" do
           it "shows events" do
             k = create :case_with_response, :flagged, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -288,7 +288,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "responded state" do
+        context "and responded state" do
           it "shows events" do
             k = create :responded_case, :flagged, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -299,7 +299,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "close state" do
+        context "and close state" do
           it "shows events" do
             k = create :closed_case, :flagged, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -320,13 +320,13 @@ describe ConfigurableStateMachine::Machine do
 
     ##################### APPROVER FLAGGED ############################
 
-    context "approver" do
-      context "unassigned approver" do
+    context "when approver" do
+      context "and unassigned approver" do
         let(:team_dacu_disclosure)      { find_or_create :team_dacu_disclosure }
         let(:disclosure_specialist)     { team_dacu_disclosure.users.first }
         let(:approver)                  { disclosure_specialist }
 
-        context "unassigned state" do
+        context "and unassigned state" do
           it "shows permitted events" do
             k = create :case, :flagged, :dacu_disclosure
             expect(k.class).to eq Case::FOI::Standard
@@ -341,7 +341,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting responder state" do
+        context "and awaiting responder state" do
           it "shows events" do
             k = create :awaiting_responder_case, :flagged, :dacu_disclosure
             expect(k.class).to eq Case::FOI::Standard
@@ -357,7 +357,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows events" do
             k = create :accepted_case, :flagged, :dacu_disclosure
             expect(k.class).to eq Case::FOI::Standard
@@ -373,7 +373,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "pending_dacu_clearance state" do
+        context "and pending_dacu_clearance state" do
           it "shows events" do
             k = create :pending_dacu_clearance_case, :dacu_disclosure
             unassigned_approver = create :approver
@@ -387,7 +387,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch" do
+        context "and awaiting_dispatch" do
           it "shows events" do
             # this needs to be corrected when switched to config state machine - no request further clearance or extend for pit
             k = create :case_with_response, :flagged, :dacu_disclosure
@@ -399,7 +399,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "responded" do
+        context "and responded" do
           it "shows events" do
             k = create :responded_case, :flagged, :dacu_disclosure
             expect(k.class).to eq Case::FOI::Standard
@@ -410,7 +410,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "closed" do
+        context "and closed" do
           it "shows events" do
             k = create :closed_case, :flagged, :dacu_disclosure
             expect(k.class).to eq Case::FOI::Standard
@@ -424,8 +424,8 @@ describe ConfigurableStateMachine::Machine do
       end
     end
 
-    context "assigned disclosure approver" do
-      context "unassigned state" do
+    context "when assigned disclosure approver" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :case, :flagged_accepted, :dacu_disclosure
           expect(k.class).to eq Case::FOI::Standard
@@ -441,7 +441,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder state" do
+      context "and awaiting responder state" do
         it "shows events" do
           k = create :awaiting_responder_case, :flagged_accepted, :dacu_disclosure
           expect(k.class).to eq Case::FOI::Standard
@@ -457,7 +457,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "and drafting state" do
         it "shows events" do
           k = create :accepted_case, :flagged_accepted, :dacu_disclosure
           expect(k.class).to eq Case::FOI::Standard
@@ -473,7 +473,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "pending_dacu_clearance state" do
+      context "and pending_dacu_clearance state" do
         it "shows events" do
           k = create :pending_dacu_clearance_case, :flagged_accepted, :dacu_disclosure
           expect(k.class).to eq Case::FOI::Standard
@@ -491,7 +491,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting_dispatch" do
+      context "and awaiting_dispatch" do
         it "shows events" do
           k = create :case_with_response, :flagged_accepted, :dacu_disclosure
           expect(k.class).to eq Case::FOI::Standard
@@ -505,7 +505,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "responded" do
+      context "and responded" do
         it "shows events" do
           k = create :responded_case, :flagged_accepted, :dacu_disclosure
           expect(k.class).to eq Case::FOI::Standard
@@ -517,7 +517,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows events" do
           k = create :closed_case, :flagged_accepted, :dacu_disclosure
           expect(k.class).to eq Case::FOI::Standard

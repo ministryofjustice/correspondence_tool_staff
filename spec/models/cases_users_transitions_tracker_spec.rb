@@ -27,7 +27,7 @@ describe CasesUsersTransitionsTracker do
   end
 
   describe ".sync_for_case_and_user" do
-    context "tracker exists for given case and user" do
+    context "when tracker exists for given case and user" do
       before do
         tracker
       end
@@ -36,7 +36,7 @@ describe CasesUsersTransitionsTracker do
         expect(kase.users_transitions_trackers.where(user:).count).to eq 1
       end
 
-      context "case has messages" do
+      context "and case has messages" do
         let!(:message) { create :case_transition_add_message_to_case, case: kase }
 
         it "updates the existing tracker" do
@@ -46,7 +46,7 @@ describe CasesUsersTransitionsTracker do
         end
       end
 
-      context "case has no messages" do
+      context "and case has no messages" do
         it "does not update the tracker" do
           described_class.sync_for_case_and_user(kase, user)
           tracker.reload
@@ -56,8 +56,8 @@ describe CasesUsersTransitionsTracker do
     end
   end
 
-  context "tracker does not exists for given case and user" do
-    context "case has messages" do
+  context "when tracker does not exists for given case and user" do
+    context "and case has messages" do
       let!(:message) { create :case_transition_add_message_to_case, case: kase }
 
       it "creates a new tracker" do
@@ -76,7 +76,7 @@ describe CasesUsersTransitionsTracker do
       end
     end
 
-    context "case has no messages" do
+    context "and case has no messages" do
       it "does not create a new tracker" do
         described_class.sync_for_case_and_user(kase, user)
         expect(kase.users_transitions_trackers.where(user:).count)

@@ -134,7 +134,6 @@ class AssignmentsController < ApplicationController
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   def take_case_on
     service = CaseFlagForClearanceService.new(user: current_user,

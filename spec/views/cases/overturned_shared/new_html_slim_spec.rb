@@ -109,7 +109,7 @@ describe "cases/overturned_shared/_new.html.slim" do
       expect(partial).to have_flag_for_disclosure_specialists
     end
 
-    context "the original case was flagged" do
+    context "when the original case was flagged" do
       before do
         overturned_foi.flag_for_disclosure_specialists = "yes"
         assign(:case, overturned_foi.decorate)
@@ -120,7 +120,7 @@ describe "cases/overturned_shared/_new.html.slim" do
       end
     end
 
-    context "the original case was not flagged" do
+    context "when the original case was not flagged" do
       before do
         overturned_foi.flag_for_disclosure_specialists = nil
         assign(:case, overturned_foi.decorate)

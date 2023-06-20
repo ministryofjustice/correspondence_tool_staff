@@ -16,7 +16,7 @@ RSpec.describe PasswordsController, type: :controller do
 
     before { @request.env["devise.mapping"] = Devise.mappings[:user] }
 
-    context "user is deactivated" do
+    context "when user is deactivated" do
       it "sends reset password mail" do
         mailer = double("mailer")
         expect(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
@@ -27,7 +27,7 @@ RSpec.describe PasswordsController, type: :controller do
       end
     end
 
-    context "user is not registered" do
+    context "when user is not registered" do
       it "does not send any email and shows message" do
         params[:user][:email] = Faker::Internet.email
 
@@ -40,8 +40,8 @@ RSpec.describe PasswordsController, type: :controller do
       end
     end
 
-    context "succeessful password reset" do
-      context "email specified in lower case" do
+    context "when succeessful password reset" do
+      context "and email specified in lower case" do
         it "sends an email" do
           params[:user][:email] = user.email
 
@@ -55,7 +55,7 @@ RSpec.describe PasswordsController, type: :controller do
         end
       end
 
-      context "email specified in upper case" do
+      context "and email specified in upper case" do
         it "sends an email" do
           params[:user][:email] = user.email.upcase
 

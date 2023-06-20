@@ -40,5 +40,4 @@ class PopulateNewReportTypeColumns < ActiveRecord::DataMigration
       rt.update!(new_values)
     end
   end
-  # rubocop:enable Metrics/MethodLength
 end

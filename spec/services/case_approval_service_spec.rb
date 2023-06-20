@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CaseApprovalService do
   describe "#call" do
-    context "not bypassing press private approval" do
+    context "when not bypassing press private approval" do
       let(:bypass_params) do
         double BypassParamsManager,
                valid?: true,
@@ -16,7 +16,7 @@ describe CaseApprovalService do
                                                                   :deliver_later)
       end
 
-      context "case not in pending_dacu_clearance state" do
+      context "when case not in pending_dacu_clearance state" do
         let(:kase) { create :redrafting_case, :flagged_accepted }
         let(:user) { kase.approvers.first }
 
@@ -27,7 +27,7 @@ describe CaseApprovalService do
         end
       end
 
-      context "approving case with valid state and user" do
+      context "when approving case with valid state and user" do
         let(:kase) { create :pending_dacu_clearance_case }
         let(:user) { kase.approvers.first }
 
@@ -64,7 +64,7 @@ describe CaseApprovalService do
         end
       end
 
-      context "approving case that requires another level of clearance" do
+      context "when approving case that requires another level of clearance" do
         let(:kase)            { create :pending_dacu_clearance_case_flagged_for_press }
         let(:user)            { kase.assigned_disclosure_specialist! }
         let(:dacu_disclosure) { find_or_create :team_dacu_disclosure }
@@ -103,7 +103,7 @@ describe CaseApprovalService do
         end
       end
 
-      context "approving case with different user in the same team" do
+      context "when approving case with different user in the same team" do
         let(:kase) { create :pending_dacu_clearance_case }
         let(:user) do
           create :approver,
@@ -122,7 +122,7 @@ describe CaseApprovalService do
       end
     end
 
-    context "bypassing press and private approval" do
+    context "when bypassing press and private approval" do
       let(:bypass_params) do
         double BypassParamsManager,
                valid?: true,
@@ -134,7 +134,7 @@ describe CaseApprovalService do
       let(:service) { described_class.new(user:, kase:, bypass_params:) }
       let(:user) { kase.approvers.first }
 
-      context "case not in pending_dacu_clearance state" do
+      context "and case not in pending_dacu_clearance state" do
         let(:kase) { create :redrafting_case, :flagged_accepted }
 
         it "raises state machine guard error" do
@@ -144,8 +144,8 @@ describe CaseApprovalService do
         end
       end
 
-      context "case in pending_dacu_clearance_state flagged for press" do
-        context "case not flagged for press clearance" do
+      context "and case in pending_dacu_clearance_state flagged for press" do
+        context "and case not flagged for press clearance" do
           let(:kase)  { create :pending_dacu_clearance_case_flagged_for_press }
 
           it "transitions to awaiting dispatch" do

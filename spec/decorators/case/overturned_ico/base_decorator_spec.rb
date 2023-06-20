@@ -25,7 +25,7 @@ describe Case::OverturnedICO::BaseDecorator do
   end
 
   describe "#original_case_description" do
-    context "Overturned SAR" do
+    describe "Overturned SAR" do
       let(:overturned_sar)    { create(:overturned_ico_sar) }
       let(:decorated_case)    { overturned_sar.decorate }
 
@@ -36,7 +36,7 @@ describe Case::OverturnedICO::BaseDecorator do
       end
     end
 
-    context "Overturned FOI" do
+    describe "Overturned FOI" do
       let(:overturned_foi)    { create(:overturned_ico_foi) }
       let(:decorated_case)    { overturned_foi.decorate }
 

@@ -50,14 +50,14 @@ RSpec.describe Case::FOI::ComplianceReview, type: :model, parent: :case do
   end
 
   describe "state_machining" do
-    context "drafting state" do
+    context "when in drafting state" do
       it "has an FOI state machine" do
         allow(compliance_review).to receive(:current_state).and_return("drafting")
         expect(compliance_review.state_machine).to be_a ConfigurableStateMachine::Machine
       end
     end
 
-    context "unassigned state" do
+    context "when in unassigned state" do
       it "has a Configurable State machine" do
         allow(compliance_review).to receive(:current_state).and_return("unassigned")
         expect(compliance_review.state_machine).to be_a ConfigurableStateMachine::Machine

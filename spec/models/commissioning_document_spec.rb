@@ -12,7 +12,7 @@ RSpec.describe CommissioningDocument, type: :model do
   end
 
   describe "template validation" do
-    context "no template" do
+    context "when no template" do
       it "is not valid" do
         expect(subject).not_to be_valid
       end
@@ -23,7 +23,7 @@ RSpec.describe CommissioningDocument, type: :model do
       end
     end
 
-    context "invalid template value" do
+    context "with invalid template value" do
       it "is not valid" do
         expect {
           subject.template_name = :invalid
@@ -36,7 +36,7 @@ RSpec.describe CommissioningDocument, type: :model do
       end
     end
 
-    context "valid template value" do
+    context "with valid template value" do
       before { subject.template_name = template_type }
 
       it "is valid" do
@@ -46,13 +46,13 @@ RSpec.describe CommissioningDocument, type: :model do
   end
 
   describe "#document" do
-    context "invalid object" do
+    context "when invalid object" do
       it "returns nil" do
         expect(subject.document).to be_nil
       end
     end
 
-    context "valid object" do
+    context "when valid object" do
       before { subject.template_name = template_type }
 
       it "outputs the document as a string" do
@@ -62,13 +62,13 @@ RSpec.describe CommissioningDocument, type: :model do
   end
 
   describe "#filename" do
-    context "invalid object" do
+    context "when invalid object" do
       it "returns nil" do
         expect(subject.filename).to be_nil
       end
     end
 
-    context "valid object" do
+    context "when valid object" do
       it "sets the filename as expected" do
         Timecop.freeze(Time.zone.local(2022, 10, 31, 9, 20)) do
           commissioning_document = described_class.new(data_request:)

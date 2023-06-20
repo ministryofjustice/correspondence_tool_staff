@@ -26,13 +26,13 @@ describe CaseFilter::CaseworkerFilter do
   describe "#applied?" do
     subject { caseworker_filter }
 
-    context "caseworker_filter not present" do
+    context "when caseworker_filter not present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "caseworker_filter present" do
+    context "when caseworker_filter present" do
       let(:search_query) { create :search_query, filter_caseworker: %w[0] }
 
       it { is_expected.to be_applied }
@@ -72,7 +72,7 @@ describe CaseFilter::CaseworkerFilter do
   end
 
   describe "#crumbs" do
-    context "no filters selected" do
+    context "when no filters selected" do
       let(:search_query) do
         create :search_query,
                filter_caseworker: []
@@ -83,8 +83,8 @@ describe CaseFilter::CaseworkerFilter do
       end
     end
 
-    context "filtering for cases" do
-      context "filtering for unassigned cases" do
+    context "when filtering for cases" do
+      context "and filtering for unassigned cases" do
         let(:search_query) do
           create :search_query,
                  filter_caseworker: %w[0]
@@ -108,7 +108,7 @@ describe CaseFilter::CaseworkerFilter do
         end
       end
 
-      context "filtering for more than one type" do
+      context "and filtering for more than one type" do
         let(:search_query) do
           create :search_query,
                  filter_caseworker: ["0", @user.id.to_s]

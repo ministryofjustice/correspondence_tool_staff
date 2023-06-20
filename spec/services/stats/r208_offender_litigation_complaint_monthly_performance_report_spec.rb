@@ -64,7 +64,7 @@ module Stats
         expect(report.case_scope).to match_array([@olitigation_complaint_2, @olitigation_complaint_3, @olitigation_complaint_4])
       end
 
-      context "stats values" do
+      describe "stats values" do
         it "cases in different stages" do
           responded_late = nil
           Timecop.freeze Time.zone.local(2019, 0o5, 20, 12, 0, 0) do

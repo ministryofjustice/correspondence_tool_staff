@@ -17,7 +17,7 @@ describe UserDeletionService do
       }
     end
 
-    context "user is a member of one team only" do
+    context "when user is a member of one team only" do
       it "updates the deleted_at column" do
         service.call
         expect(responder.reload.deleted_at).not_to be nil
@@ -68,7 +68,7 @@ describe UserDeletionService do
                responding_team: team
       end
 
-      context "single team member" do
+      context "and single team member" do
         it "returns :ok" do
           service.call
           expect(service.result).to eq(:ok)
@@ -109,7 +109,7 @@ describe UserDeletionService do
       end
     end
 
-    context "user is a member of one team that has incarnations" do
+    context "when user is a member of one team that has incarnations" do
       let(:target_dir) { find_or_create :directorate }
       let(:team_move_service) { TeamMoveService.new(team, target_dir) }
       let(:new_team) { team_move_service.new_team }

@@ -14,7 +14,7 @@ RSpec.describe OmniauthCallbacksController, type: :controller do
       @request.env["omniauth.auth"] = { "info" => { "email" => user_email } }
     end
 
-    context "user is not registered" do
+    context "when user is not registered" do
       it "redirects to the sign in page and shows error message" do
         get :azure_activedirectory_v2
 
@@ -23,7 +23,7 @@ RSpec.describe OmniauthCallbacksController, type: :controller do
       end
     end
 
-    context "user is deactivated" do
+    context "when user is deactivated" do
       let!(:user) { create :deactivated_user, email: user_email }
 
       it "redirects to the sign in page and shows error message" do
@@ -34,7 +34,7 @@ RSpec.describe OmniauthCallbacksController, type: :controller do
       end
     end
 
-    context "user exists and is active" do
+    context "when user exists and is active" do
       let!(:user) { create :user, email: user_email }
 
       it "redirects to the home page" do
@@ -45,7 +45,7 @@ RSpec.describe OmniauthCallbacksController, type: :controller do
       end
     end
 
-    context "user is found irrespective of their email letter case" do
+    context "when user is found irrespective of their email letter case" do
       let!(:user) { create :user, email: user_email.downcase } # user email in our database
       let(:user_email) { super().upcase } # user email as returned by Active Directory
 

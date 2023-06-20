@@ -16,11 +16,11 @@ describe MarkResponseAsSentService do
   let(:disclosure_specialist)   { find_or_create :disclosure_specialist }
   let(:responder)               { foi_kase.responder }
 
-  context "FOI" do
+  describe "FOI" do
     let(:service) { described_class.new(foi_kase, responder, params) }
 
-    context "invalid date" do
-      context "blank date" do
+    context "when invalid date" do
+      context "and blank date" do
         let(:params) do
           {
             date_responded_dd: "",
@@ -40,7 +40,7 @@ describe MarkResponseAsSentService do
         end
       end
 
-      context "impossible date" do
+      context "and impossible date" do
         let(:params) do
           {
             date_responded_dd: "33",
@@ -60,7 +60,7 @@ describe MarkResponseAsSentService do
         end
       end
 
-      context "future date" do
+      context "and future date" do
         let(:response_date) { 10.days.from_now }
         let(:params)  do
           {
@@ -82,7 +82,7 @@ describe MarkResponseAsSentService do
       end
     end
 
-    context "valid date" do
+    context "when valid date" do
       let(:response_date) { 5.days.ago }
       let(:params) do
         {
@@ -109,11 +109,11 @@ describe MarkResponseAsSentService do
     end
   end
 
-  context "ICO" do
+  describe "ICO" do
     let(:service) { described_class.new(ico_kase, disclosure_specialist, params) }
 
-    context "invalid date" do
-      context "no date" do
+    context "when invalid date" do
+      context "and no date" do
         let(:params) do
           {
             date_responded_dd: "",
@@ -133,7 +133,7 @@ describe MarkResponseAsSentService do
         end
       end
 
-      context "impossible date" do
+      context "and impossible date" do
         let(:params) do
           {
             date_responded_dd: "33",
@@ -153,7 +153,7 @@ describe MarkResponseAsSentService do
         end
       end
 
-      context "future date" do
+      context "and future date" do
         let(:response_date) { 10.days.from_now }
         let(:params)  do
           {
@@ -175,7 +175,7 @@ describe MarkResponseAsSentService do
       end
     end
 
-    context "valid date" do
+    context "when valid date" do
       let(:params) do
         {
           date_responded_dd: response_date.day.to_s,
@@ -184,7 +184,7 @@ describe MarkResponseAsSentService do
         }
       end
 
-      context "responded in time" do
+      context "and responded in time" do
         let(:response_date)     { 5.days.ago }
 
         it "sets result to :ok" do
@@ -209,7 +209,7 @@ describe MarkResponseAsSentService do
         end
       end
 
-      context "responded late" do
+      context "and responded late" do
         let(:response_date) { Time.zone.today }
 
         it "updates the date responded in the model" do

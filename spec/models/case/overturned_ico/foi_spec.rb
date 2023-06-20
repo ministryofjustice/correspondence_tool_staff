@@ -46,22 +46,22 @@ describe Case::OverturnedICO::FOI do
     end
   end
 
-  context "state machine" do
+  describe "state machine" do
     it "uses the same state machine as standard FOI" do
       expect(described_class.state_machine_name).to eq "foi"
     end
   end
 
-  context "validations" do
-    context "all mandatory fields specified" do
-      context "created in a factory" do
+  describe "validations" do
+    context "when all mandatory fields specified" do
+      context "and created in a factory" do
         it "is valid" do
           kase = create :overturned_ico_foi
           expect(kase).to be_valid
         end
       end
 
-      context "created with params" do
+      context "and created with params" do
         it "is valid" do
           received = Time.zone.today
           deadline = 1.month.from_now
@@ -87,7 +87,7 @@ describe Case::OverturnedICO::FOI do
       end
     end
 
-    context "received_date" do
+    describe "received_date" do
       it "errors if blank" do
         expect(new_case).not_to be_valid
         expect(new_case.errors[:received_date]).to eq ["cannot be blank"]
@@ -99,8 +99,8 @@ describe Case::OverturnedICO::FOI do
         expect(new_case.errors[:received_date]).to eq ["cannot be in the future"]
       end
 
-      context "too far in the past" do
-        context "new record" do
+      context "when too far in the past" do
+        context "and new record" do
           it "errors" do
             new_case.received_date = 41.days.ago
             expect(new_case).not_to be_valid
@@ -108,14 +108,14 @@ describe Case::OverturnedICO::FOI do
           end
         end
 
-        context "on create" do
+        context "when created" do
           it "errors" do
             record = described_class.create!(received_date: 41.days.ago)
             expect(record.errors[:received_date]).to eq ["of decision from ICO must be within 40 days of today"]
           end
         end
 
-        context "existing record" do
+        context "when existing record" do
           it "does not error" do
             record = described_class.create!(received_date: 41.days.ago)
             allow(record).to receive(:new_record?).and_return(false)
@@ -132,14 +132,14 @@ describe Case::OverturnedICO::FOI do
       end
     end
 
-    context "external_deadline" do
+    describe "external_deadline" do
       it "errors if blank" do
         expect(new_case).not_to be_valid
         expect(new_case.errors[:external_deadline]).to eq ["cannot be blank"]
       end
 
-      context "in the past" do
-        context "new record" do
+      context "when in the past" do
+        context "and new record" do
           it "errors" do
             new_case.external_deadline = 1.day.ago
             expect(new_case).not_to be_valid
@@ -147,7 +147,7 @@ describe Case::OverturnedICO::FOI do
           end
         end
 
-        context "existing  record" do
+        context "when existing record" do
           it "does not error" do
             new_case.external_deadline = 3.days.ago
             allow(new_case).to receive(:new_record?).and_return(false)
@@ -157,8 +157,8 @@ describe Case::OverturnedICO::FOI do
         end
       end
 
-      context "in the future" do
-        context "too far in the future" do
+      context "when in the future" do
+        context "and too far in the future" do
           it "errors" do
             new_case.external_deadline = 51.days.from_now
             expect(new_case).not_to be_valid
@@ -166,7 +166,7 @@ describe Case::OverturnedICO::FOI do
           end
         end
 
-        context "within 50 days from now" do
+        context "when within 50 days from now" do
           it "does not error" do
             new_case.external_deadline = 49.days.from_now
             new_case.valid?
@@ -176,46 +176,44 @@ describe Case::OverturnedICO::FOI do
       end
     end
 
-    context "original_ico_appeal_id" do
-      context "blank" do
+    describe "original_ico_appeal_id" do
+      context "when blank" do
         it "errors" do
           expect(new_case).not_to be_valid
           expect(new_case.errors[:original_ico_appeal]).to eq ["cannot be blank"]
         end
       end
 
-      context "class type" do
-        context "Case::ICO::FOI" do
-          it "is valid" do
-            ico_foi = create :ico_foi_case
-            new_case.original_ico_appeal = ico_foi
-            new_case.valid?
-            expect(new_case.errors[:original_ico_appeal]).to be_empty
-          end
+      context "when Case::ICO::FOI" do
+        it "is valid" do
+          ico_foi = create :ico_foi_case
+          new_case.original_ico_appeal = ico_foi
+          new_case.valid?
+          expect(new_case.errors[:original_ico_appeal]).to be_empty
         end
+      end
 
-        context "Case::ICO::FOI" do
-          it "is invalid" do
-            foi = create :case
-            new_case.original_ico_appeal = foi
-            new_case.valid?
-            expect(new_case.errors[:original_ico_appeal]).to eq ["is not an ICO appeal for a FOI case"]
-          end
+      context "when Case::ICO::FOI" do
+        it "is invalid" do
+          foi = create :case
+          new_case.original_ico_appeal = foi
+          new_case.valid?
+          expect(new_case.errors[:original_ico_appeal]).to eq ["is not an ICO appeal for a FOI case"]
         end
+      end
 
-        context "Case::FOI" do
-          it "is invalid" do
-            foi = create :foi_case
-            new_case.original_ico_appeal = foi
-            new_case.valid?
-            expect(new_case.errors[:original_ico_appeal]).to eq ["is not an ICO appeal for a FOI case"]
-          end
+      context "when Case::FOI" do
+        it "is invalid" do
+          foi = create :foi_case
+          new_case.original_ico_appeal = foi
+          new_case.valid?
+          expect(new_case.errors[:original_ico_appeal]).to eq ["is not an ICO appeal for a FOI case"]
         end
       end
     end
 
-    context "original_case_id" do
-      context "blank" do
+    describe "original_case_id" do
+      context "when blank" do
         before do
           @my_thing = []
         end
@@ -226,38 +224,36 @@ describe Case::OverturnedICO::FOI do
         end
       end
 
-      context "class type" do
-        context "Case::FOI" do
-          it "is valid" do
-            foi = create :foi_case
-            new_case.original_case_id = foi.id
-            new_case.valid?
-            expect(new_case.errors[:original_case_id]).to be_empty
-          end
+      context "when Case::FOI" do
+        it "is valid" do
+          foi = create :foi_case
+          new_case.original_case_id = foi.id
+          new_case.valid?
+          expect(new_case.errors[:original_case_id]).to be_empty
         end
+      end
 
-        context "Case::ICO::FOI" do
-          it "is invalid" do
-            ico_foi = create :ico_foi_case
-            new_case.original_case = ico_foi
-            new_case.valid?
-            expect(new_case.errors[:original_case]).to eq ["cannot link a Overturned ICO appeal for FOI case to a ICO Appeal - FOI as a original case"]
-          end
+      context "when Case::ICO::FOI" do
+        it "is invalid" do
+          ico_foi = create :ico_foi_case
+          new_case.original_case = ico_foi
+          new_case.valid?
+          expect(new_case.errors[:original_case]).to eq ["cannot link a Overturned ICO appeal for FOI case to a ICO Appeal - FOI as a original case"]
         end
+      end
 
-        context "Case::SAR" do
-          it "is invalid" do
-            sar = create :sar_case
-            new_case.original_case = sar
-            new_case.valid?
-            expect(new_case.errors[:original_case]).to eq ["cannot link a Overturned ICO appeal for FOI case to a Non-offender SAR as a original case"]
-          end
+      context "when Case::SAR" do
+        it "is invalid" do
+          sar = create :sar_case
+          new_case.original_case = sar
+          new_case.valid?
+          expect(new_case.errors[:original_case]).to eq ["cannot link a Overturned ICO appeal for FOI case to a Non-offender SAR as a original case"]
         end
       end
     end
   end
 
-  context "setting deadlines" do
+  context "when setting deadlines" do
     it "sets the internal deadline from the external deadline" do
       Timecop.freeze(2018, 7, 23, 10, 0, 0) do
         kase = create :overturned_ico_foi,

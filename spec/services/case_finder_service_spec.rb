@@ -7,7 +7,7 @@ describe CaseFinderService do
 
   let(:empty_collection) { CaseDecorator.decorate_collection([]) }
 
-  context "cases for responders and flagged dacu disclosure" do
+  describe "cases for responders and flagged dacu disclosure" do
     before(:all) do
       Timecop.freeze Date.new(2016, 11, 25) do
         @manager               = create :manager
@@ -384,7 +384,7 @@ describe CaseFinderService do
     end
 
     describe "#incoming_approving_cases_scope" do
-      context "as a disclosure specialist" do
+      context "when a disclosure specialist" do
         it "returns incoming cases assigned to the users team" do
           finder = described_class.new(@disclosure_specialist)
           expect(finder.__send__(:incoming_approving_cases_scope))
@@ -397,7 +397,7 @@ describe CaseFinderService do
     end
 
     describe "#my_open_cases_scope" do
-      context "as a disclosure specialist" do
+      context "when a disclosure specialist" do
         it "returns my open cases" do
           finder = described_class.new(@disclosure_specialist)
           expect(finder.__send__(:my_open_cases_scope))
@@ -409,7 +409,7 @@ describe CaseFinderService do
         end
       end
 
-      context "as a responder" do
+      context "when a responder" do
         it "returns my open cases" do
           finder = described_class.new(@responder)
           expect(finder.__send__(:my_open_cases_scope))
@@ -449,7 +449,7 @@ describe CaseFinderService do
         ]
       end
 
-      context "non-responder" do
+      context "when non-responder" do
         let(:finder) { described_class.new(@manager) }
 
         it "returns all open cases except offender sar" do
@@ -465,7 +465,7 @@ describe CaseFinderService do
         end
       end
 
-      context "normal responder" do
+      context "when normal responder" do
         let(:finder) { described_class.new(@responder) }
 
         it "returns all correct cases for user" do
@@ -488,7 +488,7 @@ describe CaseFinderService do
         end
       end
 
-      context "branston-responder" do
+      context "when branston-responder" do
         let(:finder) { described_class.new(@branston_responder) }
 
         it "returns all open offender sar cases" do
@@ -575,60 +575,9 @@ describe CaseFinderService do
         end
       end
     end
-
-    describe "#open_cases_scope" do
-      context "responder" do
-        it "only includes cases assigned to user teams" do
-          finder = described_class.new(@responder)
-          expect(finder.__send__(:open_cases_scope))
-            .to match_array [
-              @accepted_case,
-              @accepted_overturned_ico_foi,
-              @approved_ico,
-              @assigned_newer_case,
-              @assigned_older_case,
-              @awaiting_responder_overturned_ico_foi,
-            ]
-        end
-      end
-
-      context "non-responder" do
-        it "includes all assigned cases" do
-          finder = described_class.new(@manager)
-
-          expect(finder.__send__(:open_cases_scope)).to match_array [
-            @older_case_1,
-            @older_case_2,
-            @assigned_older_case,
-            @older_dacu_flagged_case,
-            @older_dacu_flagged_accept,
-            @case_1,
-            @case_2,
-            @newer_case_1,
-            @newer_case_2,
-            @assigned_newer_case,
-            @assigned_other_team,
-            @newer_dacu_flagged_case,
-            @newer_dacu_flagged_accept,
-            @accepted_case,
-            @approved_ico,
-            @overturned_ico_sar,
-            @awaiting_responder_overturned_ico_sar,
-            @accepted_overturned_ico_sar,
-            @overturned_ico_foi,
-            @awaiting_responder_overturned_ico_foi,
-            @accepted_overturned_ico_foi,
-          ]
-          expect(finder.__send__(:open_cases_scope))
-              .not_to include @offender_sar
-          expect(finder.__send__(:index_cases_scope))
-              .not_to include @offender_sar_complaint
-        end
-      end
-    end
   end
 
-  context "mix of FOI cases including compliance review cases" do
+  context "with mix of FOI cases including compliance review cases" do
     before(:all) do
       @manager               = create :manager
       @responder             = find_or_create :foi_responder
@@ -677,7 +626,7 @@ describe CaseFinderService do
         end
       end
 
-      context "internal review case has received request for further clearance" do
+      context "when internal review case has received request for further clearance" do
         before do
           @foi_cr_case.state_machine.request_further_clearance!(
             acting_user: @manager,

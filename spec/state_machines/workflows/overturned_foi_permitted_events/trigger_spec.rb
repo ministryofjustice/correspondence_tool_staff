@@ -1,13 +1,13 @@
 require "rails_helper"
 
 describe ConfigurableStateMachine::Machine do
-  context "trigger workflow" do
+  describe "trigger workflow" do
     ##################### MANAGER  ############################
 
-    context "manager" do
+    context "when manager" do
       let(:manager)   { create :manager }
 
-      context "unassigned state" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :overturned_ico_foi, :flagged
           expect(k.current_state).to eq "unassigned"
@@ -25,7 +25,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder state" do
+      context "and awaiting responder state" do
         it "shows events" do
           k = create :awaiting_responder_ot_ico_foi, :flagged_accepted
           expect(k.workflow).to eq "trigger"
@@ -40,7 +40,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "and drafting state" do
         it "shows events" do
           k = create :accepted_ot_ico_foi, :flagged_accepted
           expect(k.workflow).to eq "trigger"
@@ -57,7 +57,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting_dispatch" do
+      context "and awaiting_dispatch" do
         it "shows events - not member of case managing team" do
           k = create :with_response_ot_ico_foi, :flagged_accepted
           expect(k.workflow).to eq "trigger"
@@ -89,7 +89,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "pending_dacu_clearance" do
+      context "and pending_dacu_clearance" do
         it "shows events" do
           k = create :pending_dacu_clearance_ot_ico_foi, :flagged_accepted
           expect(k.workflow).to eq "trigger"
@@ -104,7 +104,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "responded" do
+      context "and responded" do
         it "shows events - not member of case managing team" do
           k = create :responded_ot_ico_foi, :flagged_accepted
           expect(k.workflow).to eq "trigger"
@@ -132,7 +132,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows events" do
           k = create :closed_ot_ico_foi, :flagged_accepted
           expect(k.workflow).to eq "trigger"
@@ -149,11 +149,11 @@ describe ConfigurableStateMachine::Machine do
 
     ##################### RESPONDER ############################
 
-    context "responder" do
-      context "responder not in team" do
+    context "when responder" do
+      context "and responder not in team" do
         let(:responder) { create :responder }
 
-        context "unassigned state" do
+        context "and unassigned state" do
           it "shows permitted events" do
             k = create :overturned_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -162,7 +162,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting responder state" do
+        context "and awaiting responder state" do
           it "shows events" do
             k = create :awaiting_responder_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -171,7 +171,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows events" do
             k = create :accepted_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -180,7 +180,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "pending_dacu_clearance" do
+        context "and pending_dacu_clearance" do
           it "shows events" do
             k = create :pending_dacu_clearance_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -189,7 +189,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch" do
+        context "and awaiting_dispatch" do
           it "shows events" do
             k = create :with_response_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -199,7 +199,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "responded state" do
+        context "and responded state" do
           it "shows events" do
             k = create :responded_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -208,7 +208,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "closed state" do
+        context "and closed state" do
           it "shows events" do
             k = create :closed_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -220,10 +220,10 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "responder in assigned team" do
+      context "and responder in assigned team" do
         # Request further clearance is not permitted by the policies so has been removed
         # from state machine permitted events check
-        context "awaiting_responder state" do
+        context "and awaiting_responder state" do
           it "shows events" do
             k = create :awaiting_responder_ot_ico_foi, :flagged_accepted
             responder = responder_in_assigned_team(k)
@@ -238,7 +238,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows events" do
             k = create :accepted_ot_ico_foi, :flagged_accepted
             responder = responder_in_assigned_team(k)
@@ -254,7 +254,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "pending dacu clearance" do
+        context "and pending dacu clearance" do
           it "shows events" do
             k = create :pending_dacu_clearance_ot_ico_foi, :flagged_accepted
             responder = responder_in_assigned_team(k)
@@ -267,7 +267,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch state" do
+        context "and awaiting_dispatch state" do
           it "shows events" do
             k = create :with_response_ot_ico_foi, :flagged_accepted
             responder = responder_in_assigned_team(k)
@@ -284,7 +284,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "responded state" do
+        context "and responded state" do
           it "shows events" do
             k = create :responded_ot_ico_foi, :flagged_accepted
             responder = responder_in_assigned_team(k)
@@ -296,7 +296,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "closed state" do
+        context "and closed state" do
           it "shows events" do
             k = create :closed_ot_ico_foi, :flagged_accepted
             responder = responder_in_assigned_team(k)
@@ -316,11 +316,11 @@ describe ConfigurableStateMachine::Machine do
 
     ##################### APPROVER ############################
 
-    context "approver" do
-      context "assigned approver" do
+    context "when approver" do
+      context "and assigned approver" do
         let(:approver) { find_or_create :disclosure_specialist }
 
-        context "unassigned state" do
+        context "and unassigned state" do
           it "shows permitted events" do
             k = create :overturned_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -335,7 +335,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting responder state" do
+        context "and awaiting responder state" do
           it "shows events" do
             k = create :awaiting_responder_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -350,7 +350,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows events" do
             k = create :accepted_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -365,7 +365,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch" do
+        context "and awaiting_dispatch" do
           it "shows events" do
             k = create :with_response_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -378,7 +378,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "responded" do
+        context "and responded" do
           it "shows events" do
             k = create :responded_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"
@@ -389,7 +389,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "closed" do
+        context "and closed" do
           it "shows events" do
             k = create :closed_ot_ico_foi, :flagged_accepted
             expect(k.workflow).to eq "trigger"

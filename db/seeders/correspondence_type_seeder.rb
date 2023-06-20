@@ -112,6 +112,4 @@ class CorrespondenceTypeSeeder
                 default_private_officer: "correspondence-staff-dev+primrose.offord@digital.justice.gov.uk",
                 display_order: 2)
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/CyclomaticComplexity
 end

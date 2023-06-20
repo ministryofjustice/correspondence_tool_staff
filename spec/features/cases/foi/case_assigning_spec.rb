@@ -39,7 +39,7 @@ feature "Assigning a case from the detail view" do
     )
   end
 
-  context "case has been rejected" do
+  context "when case has been rejected" do
     given(:kase) { create :assigned_case, responding_team: }
 
     before do

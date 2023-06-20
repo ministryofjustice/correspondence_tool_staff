@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe CaseTeamCollection do
-  context "unassigned case" do
+  context "when unassigned case" do
     it "returns an empty array" do
       kase = find_or_create :foi_case
       expect(kase.current_state).to eq "unassigned"
@@ -14,7 +14,7 @@ describe CaseTeamCollection do
     end
   end
 
-  context "responded case with multiple responder assignments" do
+  context "when responded case with multiple responder assignments" do
     let(:team_a)  { create :responding_team, name: "AAA" }
     let(:team_q)  { create :responding_team, name: "QQQ" }
     let(:team_z)  { create :responding_team, name: "ZZZ" }

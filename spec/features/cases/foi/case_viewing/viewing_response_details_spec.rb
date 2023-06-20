@@ -5,7 +5,7 @@ feature "viewing response details" do
   given(:responder)       { responding_team.responders.first }
   given(:responding_team) { find_or_create :foi_responding_team }
 
-  context "as an manager" do
+  context "when an manager" do
     before do
       login_as manager
     end
@@ -80,7 +80,7 @@ feature "viewing response details" do
     end
   end
 
-  context "as a responder" do
+  context "when a responder" do
     before do
       login_as responder
     end

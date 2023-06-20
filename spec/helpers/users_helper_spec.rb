@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe UsersHelper, type: :helper do
   describe "#unassign_or_deactivate_link" do
-    context "user with live cases" do
+    context "when user with live cases" do
       let(:responder)    { find_or_create :foi_responder }
       let(:team)         { find_or_create :foi_responding_team }
       let(:kase)         { create :accepted_case }
@@ -14,7 +14,7 @@ RSpec.describe UsersHelper, type: :helper do
       end
     end
 
-    context "user with no live cases" do
+    context "when user with no live cases" do
       let(:responder)    { find_or_create :foi_responder }
       let(:team)         { find_or_create :foi_responding_team }
 

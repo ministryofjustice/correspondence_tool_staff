@@ -7,14 +7,14 @@ RSpec.shared_examples "respond spec" do |klass|
       let(:manager) { find_or_create :disclosure_bmt_user }
       let(:another_responder) { create(:responder) }
 
-      context "as an anonymous user" do
+      context "when an anonymous user" do
         it "redirects to sign_in" do
           expect(get(:respond, params: { id: kase.id }))
             .to redirect_to(new_user_session_path)
         end
       end
 
-      context "as an authenticated manager" do
+      context "when an authenticated manager" do
         before { sign_in manager }
 
         it "redirects to the application root" do
@@ -23,7 +23,7 @@ RSpec.shared_examples "respond spec" do |klass|
         end
       end
 
-      context "as the assigned responder" do
+      context "when the assigned responder" do
         before { sign_in responder }
 
         it "does not transition current_state" do
@@ -38,7 +38,7 @@ RSpec.shared_examples "respond spec" do |klass|
         end
       end
 
-      context "as another responder" do
+      context "when another responder" do
         before { sign_in another_responder }
 
         it "redirects to the application root" do

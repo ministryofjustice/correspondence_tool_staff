@@ -78,7 +78,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
       expect(flash[:notice]).to eq nil
     end
 
-    context "partial validations" do
+    describe "partial validations" do
       let(:errors) { assigns(:case).errors.messages }
       let(:third_party_base_params) do
         {
@@ -89,7 +89,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         }
       end
 
-      context "for step subject-details" do
+      context "with step subject-details" do
         let(:params) do
           {
             current_step: "subject-details",
@@ -117,7 +117,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         end
       end
 
-      context "for step requester-details" do
+      context "with step requester-details" do
         context "when third party absent" do
           let(:params) do
             {
@@ -160,7 +160,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         end
       end
 
-      context "for step recipient-details" do
+      context "with step recipient-details" do
         context "when recipient absent" do
           let(:params) do
             {
@@ -190,7 +190,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         end
       end
 
-      context "for step request-details" do
+      context "with step request-details" do
         context "when request dated in future" do
           let(:future_date) { 1.day.from_now }
           let(:params) do
@@ -211,7 +211,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         end
       end
 
-      context "for step date-received" do
+      context "with step date-received" do
         context "when date missing" do
           let(:params) do
             {

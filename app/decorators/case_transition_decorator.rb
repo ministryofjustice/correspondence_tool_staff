@@ -67,7 +67,6 @@ private
       object&.message
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def construct_message_for_assign_to_team_member
     target_user = User.find(object.target_user_id)

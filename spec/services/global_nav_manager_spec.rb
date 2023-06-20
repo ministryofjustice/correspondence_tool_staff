@@ -24,7 +24,7 @@ describe GlobalNavManager do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
 
   let(:settings) do
-    YAML.load(ERB.new(<<~EOY).result)
+    YAML.load(ERB.new(<<~ERB).result)
       pages:
         incoming_cases:
           path: '/incoming'
@@ -47,7 +47,7 @@ describe GlobalNavManager do
           path: '/stats'
           visibility:
             - manager
-    EOY
+    ERB
   end
   let(:config) do
     Config::Options.new.tap do |config|
@@ -171,7 +171,7 @@ describe GlobalNavManager do
       allow(late_tab).to    receive(:matches_path?).and_return(false)
     end
 
-    context "request is for a page" do
+    context "when request is for a page" do
       it "returns the current tab" do
         expect(closed_page).to receive(:matches_path?)
                                  .with("/cases/incoming")
@@ -180,7 +180,7 @@ describe GlobalNavManager do
       end
     end
 
-    context "request is for a tab" do
+    context "when request is for a tab" do
       it "returns the current tab" do
         expect(in_time_tab).to receive(:matches_path?)
                                  .with("/cases/incoming")

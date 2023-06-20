@@ -25,7 +25,7 @@ RSpec.describe Cases::FiltersController, type: :controller do
   end
 
   describe "#show" do
-    context "filtering by state" do
+    context "when filtering by state" do
       before do
         sign_in create(:manager)
         get(:show, params:)

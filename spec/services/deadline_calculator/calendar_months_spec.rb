@@ -5,7 +5,7 @@ describe DeadlineCalculator::CalendarMonths do
   let(:sar_case)            { freeze_time { create(:sar_case) } }
   let(:deadline_calculator) { described_class.new(sar_case) }
 
-  context "SAR case" do
+  describe "SAR case" do
     describe "#time_units_desc_for_deadline" do
       it "single" do
         expect(deadline_calculator.time_units_desc_for_deadline)
@@ -39,7 +39,7 @@ describe DeadlineCalculator::CalendarMonths do
     end
 
     describe "#external deadline" do
-      context "general cases for deadlines" do
+      describe "general cases for deadlines" do
         dates_for_testing = [
           { "received_date" => { "month" => 1, "day" => 31 }, "expected_base_date" => { "month" => 2, "day" => -1 } },
           { "received_date" => { "month" => 6, "day" => 30 }, "expected_base_date" => { "month" => 7, "day" => 30 } },
@@ -66,7 +66,7 @@ describe DeadlineCalculator::CalendarMonths do
         end
       end
 
-      context "deadline falls in non-working day based on calender month" do
+      context "when deadline falls in non-working day based on calender month" do
         it "deadline falls on weekend and final_deadline should be next working day" do
           Timecop.freeze Time.zone.local(2019, 9, 27, 13, 21, 33) do
             test_case = double("sar_case")
@@ -94,7 +94,7 @@ describe DeadlineCalculator::CalendarMonths do
     end
 
     describe "#buiness_unit_deadline_for_date" do
-      context "unflagged" do
+      context "when unflagged" do
         it "is 30 days from date" do
           expect(sar_case).not_to be_flagged
           expect(deadline_calculator.business_unit_deadline_for_date)
@@ -102,7 +102,7 @@ describe DeadlineCalculator::CalendarMonths do
         end
       end
 
-      context "flagged" do
+      context "when flagged" do
         it "is 10 days from date" do
           allow(sar_case).to receive(:flagged?).and_return(true)
           expect(deadline_calculator.business_unit_deadline_for_date).to eq 10.days.since(sar_case.received_date)

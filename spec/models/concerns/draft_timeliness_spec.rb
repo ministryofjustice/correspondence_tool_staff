@@ -42,7 +42,7 @@ describe DraftTimeliness::ResponseAdded do
       .to eq new_transition.created_at.to_datetime.to_date
   end
 
-  context "draft deadline has already been set" do
+  context "when draft deadline has already been set" do
     let(:kase) { create :redrafting_case }
 
     it "does not update" do
@@ -70,7 +70,7 @@ describe DraftTimeliness::ProgressedForClearance do
       .to eq new_transition.created_at.to_datetime.to_date
   end
 
-  context "draft deadline has already been set" do
+  context "when draft deadline has already been set" do
     let(:kase) { create :amends_requested_sar }
 
     it "does not update" do

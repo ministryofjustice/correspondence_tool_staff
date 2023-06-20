@@ -161,7 +161,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "#case_team" do
-    context "user is in one of the teams associated with the case" do
+    context "when user is in one of the teams associated with the case" do
       it "returns the team link to user and case both" do
         kase = create :pending_dacu_clearance_case
         new_team = create :business_unit, correspondence_type_ids: [foi.id]
@@ -172,7 +172,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "user is not in the teams associated with the case" do
+    context "when user is not in the teams associated with the case" do
       it "returns the team only link to the user " do
         kase = create :pending_dacu_clearance_case
         new_team = create :business_unit, correspondence_type_ids: [foi.id]
@@ -185,7 +185,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "#case_team_for_event" do
-    context "user is in one of the teams associated with the case" do
+    context "when user is in one of the teams associated with the case" do
       it "returns the team link to user and case both" do
         kase = create :accepted_case
         check_user = kase.responder
@@ -195,7 +195,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "user is in multiple teams associated with the case" do
+    context "when user is in multiple teams associated with the case" do
       it "returns the team link having highest authority to user and case both" do
         kase = create :pending_dacu_clearance_case
         check_user = kase.responder
@@ -232,7 +232,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "#roles_for_case" do
-    context "user has just one role for a case" do
+    context "when user has just one role for a case" do
       it "returns an array of one role" do
         kase = create :pending_dacu_clearance_case
         responder = kase.responder
@@ -240,7 +240,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "user has many roles for a case" do
+    context "when user has many roles for a case" do
       it "returns an array of all roles" do
         user = create :manager_approver, managing_teams: [find_or_create(:team_disclosure_bmt)]
         kase = create :pending_dacu_clearance_case, approver: user, manager: user
@@ -248,7 +248,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "user has no roles for a case" do
+    context "when user has no roles for a case" do
       it "returns an empty array" do
         kase = create :pending_dacu_clearance_case
         user = create :user
@@ -330,14 +330,14 @@ RSpec.describe User, type: :model do
       expect(subject).to be_versioned
     end
 
-    context "on create" do
+    context "when creating" do
       it "updates versions" do
         expect(responder.versions.length).to eq 1
         expect(responder.versions.last.event).to eq "create"
       end
     end
 
-    context "on update" do
+    context "when updating" do
       it "updates versions" do
         expect { responder.update!(full_name: "Namerson") }.to change(responder.versions, :count).by 1
         expect(responder.versions.last.event).to eq "update"
@@ -345,10 +345,10 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context "password setting" do
+  context "with password setting" do
     let(:user) { build :user }
 
-    context "in blacklist" do
+    context "and in blacklist" do
       it "errors" do
         user.password = "qwertyuiop"
         user.save!
@@ -357,7 +357,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "too short" do
+    context "and too short" do
       it "errrors" do
         user.password = "abc"
         user.save!
@@ -366,7 +366,7 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "long non-blackilsted password" do
+    context "and long non-blackilsted password" do
       it "does not error and changes the encrypted password" do
         original_encrypted_password = user.encrypted_password
         user.password = SecureRandom.random_number(36**13).to_s(36)

@@ -56,7 +56,7 @@ module Stats
         expect(report.case_scope).not_to include [@offender_sar_complaint]
       end
 
-      context "stats values" do
+      describe "stats values" do
         it "cases in different stages" do
           Timecop.freeze Time.zone.local(2019, 0o1, 30, 12, 0, 0) do
             @responded_in_time = create(

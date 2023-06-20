@@ -8,7 +8,7 @@ feature "Upload response" do
            responding_teams: responder.responding_teams
   end
 
-  context "as the assigned responder" do
+  context "with the assigned responder" do
     background do
       login_as responder
     end
@@ -22,7 +22,7 @@ feature "Upload response" do
     end
   end
 
-  context "as a responder on the same team" do
+  context "when a responder on the same team" do
     background do
       login_as responder_teammate
     end
@@ -36,7 +36,7 @@ feature "Upload response" do
     end
   end
 
-  context "as a responder that isn't assigned to the case" do
+  context "when a responder that isn't assigned to the case" do
     given(:unassigned_responder) { create(:responder) }
 
     background do

@@ -19,7 +19,7 @@ RSpec.shared_examples "edit offender sar spec" do |current_state, event_name|
         .to require_permission("transition?").with_args(manager, offender_sar)
     end
 
-    context "updates Offender SAR state" do
+    context "when updates Offender SAR state" do
       before do
         patch :transition, params:
       end

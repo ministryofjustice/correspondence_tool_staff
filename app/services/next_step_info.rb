@@ -61,5 +61,4 @@ private
       raise "Unexpected action parameter: '#{@action}'"
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 end

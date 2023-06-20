@@ -2,13 +2,13 @@ require "rails_helper"
 
 describe BypassParamsManager do
   describe "#present?" do
-    context "empty params" do
+    context "when empty params" do
       it "returns false" do
         expect(described_class.new(empty_params).present?).to be false
       end
     end
 
-    context "invalid bypass params" do
+    context "when invalid bypass params" do
       it "returns true" do
         expect(described_class.new(invalid_message_no_bypass_params).present?).to be true
       end
@@ -16,19 +16,19 @@ describe BypassParamsManager do
   end
 
   describe "#valid?" do
-    context "empty params" do
+    context "when empty params" do
       it "returns false" do
         expect(described_class.new(empty_params).valid?).to be false
       end
     end
 
-    context "valid params" do
+    context "when valid params" do
       it "returns true" do
         expect(described_class.new(valid_bypass_params).valid?).to be true
       end
     end
 
-    context "invalid params" do
+    context "when invalid params" do
       it "returns false" do
         expect(described_class.new(invalid_message_no_bypass_params).valid?).to be false
       end
@@ -36,25 +36,25 @@ describe BypassParamsManager do
   end
 
   describe "#approval_requested?" do
-    context "empty params" do
+    context "when empty params" do
       it "returns false" do
         expect(described_class.new(empty_params).approval_requested?).to be false
       end
     end
 
-    context "invalid params" do
+    context "when invalid params" do
       it "returns false" do
         expect(described_class.new(invalid_message_no_bypass_params).approval_requested?).to be false
       end
     end
 
-    context "valid params approval requested" do
+    context "when valid params approval requested" do
       it "returns true" do
         expect(described_class.new(valid_no_bypass_params).approval_requested?).to be true
       end
     end
 
-    context "valid params no approval requested" do
+    context "when valid params no approval requested" do
       it "returns false" do
         expect(described_class.new(valid_bypass_params).approval_requested?).to be false
       end

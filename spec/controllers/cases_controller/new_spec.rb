@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe CasesController, type: :controller do
   describe "#select_type" do
-    context "as a manager" do
+    context "when a manager" do
       let(:manager) { find_or_create :disclosure_bmt_user }
 
       before do
@@ -43,7 +43,7 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "as a responder" do
+    context "when a responder" do
       let(:responder) { find_or_create :branston_user }
 
       before do

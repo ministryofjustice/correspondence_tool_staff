@@ -5,7 +5,7 @@ describe "users/confirm_destroy.html.slim", type: :view do
   let(:team)          { find_or_create :foi_responding_team }
   let!(:kase)         { create :accepted_case }
 
-  context "user has one team" do
+  context "when user has one team" do
     it "shows" do
       assign(:user, responder)
       assign(:team, team)
@@ -25,7 +25,7 @@ describe "users/confirm_destroy.html.slim", type: :view do
     end
   end
 
-  context "user has one team" do
+  context "when user has one team" do
     let(:multiple_team_responder) do
       find_or_create :responder,
                      responding_teams: [team1, team2]

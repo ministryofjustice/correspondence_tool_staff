@@ -41,7 +41,7 @@ describe DataRequestUpdateService do
   end
 
   describe "#call" do
-    context "on success" do
+    context "when a success" do
       let(:service) do
         described_class.new(
           user:,
@@ -69,7 +69,7 @@ describe DataRequestUpdateService do
       end
     end
 
-    context "on failure" do
+    context "when a failure" do
       it "does not save DataRequest when validation errors" do
         bad_params = params.clone
         bad_params.merge!(cached_num_pages: -20)

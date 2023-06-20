@@ -25,7 +25,7 @@ module CaseClosure
     it { is_expected.to validate_presence_of(:sequence_id) }
     it { is_expected.to validate_presence_of(:subtype) }
 
-    context "scopes" do
+    describe "scopes" do
       before(:all) do
         @ncnd_1 = create :exemption, :ncnd
         @abs_1 = create :exemption, :absolute, abbreviation: "abs1", name: "Absolute 1"
@@ -65,7 +65,7 @@ module CaseClosure
       end
 
       describe ".method_missing" do
-        context "method name is a section number" do
+        context "when method name is a section number" do
           it "queries the record by abbreviation" do
             arel = double "ActiveRecord Arel query result"
             expect(described_class).to receive(:where).with(abbreviation: "policy").and_return(arel)
@@ -74,7 +74,7 @@ module CaseClosure
           end
         end
 
-        context "method name is not an section number" do
+        context "when method name is not an section number" do
           it "raises NoMethodError" do
             expect {
               described_class.s99

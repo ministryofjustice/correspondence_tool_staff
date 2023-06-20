@@ -403,7 +403,6 @@ module CTS::Cases
           (@flag == "private"    && name == :flagged_for_private_office)
       end
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def find_case_journey_for_state(state)
       journeys_to_check.each do |_name, states|

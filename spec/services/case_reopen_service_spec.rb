@@ -12,7 +12,7 @@ describe CaseReopenService do
       allow(kase).to receive(:state_machine).and_return(state_machine)
     end
 
-    context "reopen a offender complaint case" do
+    context "when reopen a offender complaint case" do
       it "default result" do
         expect(@service.result).to eq :incomplete
       end
@@ -27,7 +27,7 @@ describe CaseReopenService do
       end
     end
 
-    context "if anything fails in the transaction" do
+    context "when anything fails in the transaction" do
       it "raises an error when it saves" do
         @service.call
         expect(@service.result).to eq :error

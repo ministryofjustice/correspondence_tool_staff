@@ -77,7 +77,7 @@ describe S3Uploader do
       end
     end
 
-    context "response files" do
+    context "with response files" do
       it "makes the attachment type a response" do
         Timecop.freeze(time) do
           uploader.process_files(uploaded_files, :response)
@@ -86,7 +86,7 @@ describe S3Uploader do
       end
     end
 
-    context "request files" do
+    context "with request files" do
       it "makes the attachment type a request" do
         request_uploads_key = "uploads/#{kase.id}/requests/#{filename}"
         request_destination_key =
@@ -129,7 +129,7 @@ describe S3Uploader do
       end
     end
 
-    context "files removed from dropzone upload" do
+    context "with files removed from dropzone upload" do
       let(:leftover_files) do
         [instance_double(Aws::S3::Object, delete: nil)]
       end
@@ -144,7 +144,7 @@ describe S3Uploader do
       end
     end
 
-    context "error when creating case attachment" do
+    context "with error when creating case attachment" do
       before do
         allow(CaseAttachment).to receive(:create!)
                                    .and_raise(ActiveRecord::RecordNotUnique)
@@ -170,7 +170,7 @@ describe S3Uploader do
       end
     end
 
-    context "error when moving file in S3" do
+    context "with error when moving file in S3" do
       before do
         allow(uploads_object).to receive(:move_to)
                                    .with(destination_path)
@@ -223,7 +223,7 @@ describe S3Uploader do
       end
     end
 
-    context "error when uploading file in S3" do
+    context "with error when uploading file in S3" do
       before do
         allow(uploads_object).to receive(:upload_file)
                                    .with(file)

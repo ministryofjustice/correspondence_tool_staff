@@ -81,7 +81,7 @@ describe Cases::ResponsesController, type: :controller do
       expect(service).to have_received(:upload!)
     end
 
-    context "successful action" do
+    context "when successful action" do
       it "flashes a notification" do
         post(:create, params:)
         expect(flash[:notice])
@@ -99,7 +99,7 @@ describe Cases::ResponsesController, type: :controller do
       end
     end
 
-    context "uploaded_files is blank" do
+    context "when uploaded_files is blank" do
       before do
         allow(service).to receive(:result).and_return(:blank)
       end
@@ -116,7 +116,7 @@ describe Cases::ResponsesController, type: :controller do
       end
     end
 
-    context "error in uploader service" do
+    context "when error in uploader service" do
       before do
         allow(service).to receive(:result).and_return(:error)
       end

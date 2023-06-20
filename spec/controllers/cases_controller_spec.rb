@@ -81,7 +81,7 @@ RSpec.describe CasesController, type: :controller do
   end
 
   describe "#set_assignments" do
-    context "current user is only in responder team" do
+    context "when current user is only in responder team" do
       it "instantiates the assignments for responders" do
         sign_in responder
         get :show, params: { id: accepted_case.id }
@@ -89,7 +89,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "current user is another responder on same team" do
+    context "when current user is another responder on same team" do
       let(:kase) { accepted_case }
 
       it "instantiates responding assignment" do
@@ -99,7 +99,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "current_user is in both responder and approver team" do
+    context "when current_user is in both responder and approver team" do
       it "instantiates both the assignments for responders and approvers" do
         kase = case_accepted_by_approver_responder
         sign_in approver_responder
@@ -109,7 +109,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "current user is responder on a different team" do
+    context "when current user is responder on a different team" do
       let(:kase) { case_only_accepted_for_approving }
 
       it "does not instantiate responding assignment" do
@@ -147,13 +147,13 @@ RSpec.describe CasesController, type: :controller do
       get :show, params: { id: accepted_case.id }
     end
 
-    context "viewing an unassigned case" do
+    context "when viewing an unassigned case" do
       before do
         sign_in user
         get :show, params: { id: unassigned_case.id }
       end
 
-      context "as an anonymous user" do
+      context "with an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -163,7 +163,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it {
@@ -179,7 +179,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as a responder" do
+      context "with a responder" do
         let(:user) { find_or_create(:foi_responder) }
 
         it { is_expected.to have_permitted_events_including :link_a_case }
@@ -190,10 +190,10 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "viewing a flagged accepted case outside the escalation period" do
+    context "when viewing a flagged accepted case outside the escalation period" do
       let(:user) { flagged_accepted_case.responder }
 
-      context "outside the escalation_period" do
+      context "and outside the escalation_period" do
         before do
           sign_in user
           flagged_accepted_case.update!(escalation_deadline: 2.days.ago)
@@ -214,7 +214,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "inside the escalation period" do
+      context "and inside the escalation period" do
         before do
           sign_in user
           flagged_accepted_case.update!(escalation_deadline: 2.days.from_now)
@@ -236,14 +236,14 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "viewing an assigned_case" do
+    context "when viewing an assigned_case" do
       before do
         sign_in user
         allow(CasesUsersTransitionsTracker).to receive(:update_tracker_for)
         get :show, params: { id: assigned_case.id }
       end
 
-      context "as an anonymous user" do
+      context "with an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -253,7 +253,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it "permitted_events == []" do
@@ -265,7 +265,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as a responder of the assigned responding team" do
+      context "with a responder of the assigned responding team" do
         let(:user)             { responder }
         let(:press_office)     { find_or_create :team_press_office }
         let(:press_officer)    { find_or_create :press_officer }
@@ -294,7 +294,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as a responder of another responding team" do
+      context "with a responder of another responding team" do
         let(:user) { another_responder }
 
         it "permitted_events to containe add_message_to_case only" do
@@ -307,7 +307,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "viewing a case in drafting" do
+    context "when viewing a case in drafting" do
       let(:accepted_case) { create(:accepted_case) }
 
       before do
@@ -315,7 +315,7 @@ RSpec.describe CasesController, type: :controller do
         get :show, params: { id: accepted_case.id }
       end
 
-      context "as an anonymous user" do
+      context "with an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -325,7 +325,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it {
@@ -341,8 +341,8 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as the assigned responder" do
-        context "unflagged case" do
+      context "with the assigned responder" do
+        context "and unflagged case" do
           let(:user) { accepted_case.responder }
 
           it {
@@ -357,7 +357,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as another responder" do
+      context "with another responder" do
         let(:user) { another_responder }
 
         it "filtered permitted_events to be empty" do
@@ -370,13 +370,13 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "viewing a case_with_response" do
+    context "when viewing a case_with_response" do
       before do
         sign_in user
         get :show, params: { id: case_with_response.id }
       end
 
-      context "as an anonymous user" do
+      context "with an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -386,7 +386,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it {
@@ -401,7 +401,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as the assigned responder" do
+      context "with the assigned responder" do
         let(:user) { case_with_response.responder }
 
         it {
@@ -416,7 +416,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as another responder" do
+      context "with another responder" do
         let(:user) { another_responder }
 
         it "filtered permitted_events to be empty" do
@@ -429,7 +429,7 @@ RSpec.describe CasesController, type: :controller do
       end
     end
 
-    context "viewing a responded_case" do
+    context "when viewing a responded_case" do
       let(:responded_case) { create(:responded_case, received_date: 5.days.ago) }
 
       before do
@@ -437,7 +437,7 @@ RSpec.describe CasesController, type: :controller do
         get :show, params: { id: responded_case.id }
       end
 
-      context "as an anonymous user" do
+      context "with an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -447,7 +447,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it {
@@ -462,7 +462,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as the previously assigned responder" do
+      context "with the previously assigned responder" do
         let(:user) { responder }
 
         it "filtered permitted_events to be empty" do
@@ -475,7 +475,7 @@ RSpec.describe CasesController, type: :controller do
         end
       end
 
-      context "as another responder" do
+      context "with another responder" do
         let(:user) { another_responder }
 
         it "filtered permitted_events to be empty" do

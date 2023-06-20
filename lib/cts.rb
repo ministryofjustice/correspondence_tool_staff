@@ -106,7 +106,6 @@ module CTS
 
       exit 3
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
 
     def dacu_manager
       @dacu_manager ||= if dacu_team.managers.blank?

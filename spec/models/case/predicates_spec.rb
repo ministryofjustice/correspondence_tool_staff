@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe "Case type predicates" do
-  context "FOI standard" do
+  context "when FOI standard" do
     it "replies true to foi and foi standard and false to everything else" do
       kase = create :case
       expect(kase.foi?).to be true
@@ -16,7 +16,7 @@ describe "Case type predicates" do
     end
   end
 
-  context "FOI Internal Review for compliance" do
+  context "when FOI Internal Review for compliance" do
     it "replies true to foi and foi ir compliance and false to everything else" do
       kase = create :compliance_review
       expect(kase.foi?).to be true
@@ -31,7 +31,7 @@ describe "Case type predicates" do
     end
   end
 
-  context "FOI Internal Review for timeliness" do
+  context "when FOI Internal Review for timeliness" do
     it "replies true to foi and foi_ir_timeliness and false to everything else" do
       kase = create :timeliness_review
       expect(kase.foi?).to be true
@@ -46,7 +46,7 @@ describe "Case type predicates" do
     end
   end
 
-  context "ICO Appeal for FOI" do
+  context "when ICO Appeal for FOI" do
     it "replies true to ico and false to everything else" do
       kase = create :ico_foi_case
       expect(kase.foi?).to be false
@@ -61,7 +61,7 @@ describe "Case type predicates" do
     end
   end
 
-  context "ICO Appeal for SAR" do
+  context "when ICO Appeal for SAR" do
     it "replies true to ico and false to everything else" do
       kase = create :ico_sar_case
       expect(kase.foi?).to be false
@@ -76,7 +76,7 @@ describe "Case type predicates" do
     end
   end
 
-  context "ICO Appeal for SAR" do
+  context "when ICO Appeal for SAR" do
     it "replies true to ico and false to everything else" do
       kase = create :ico_sar_case
       expect(kase.foi?).to be false

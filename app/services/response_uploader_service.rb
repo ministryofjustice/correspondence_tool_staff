@@ -24,7 +24,6 @@ class ResponseUploaderService
     @result = nil
     @uploader = S3Uploader.new(@case, @current_user)
   end
-  # rubocop:enable Metrics/ParameterLists
 
   class << self
     # TODO: - this appears to be only used in tests

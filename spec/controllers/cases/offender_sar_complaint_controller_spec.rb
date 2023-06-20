@@ -68,7 +68,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
   end
 
   describe "#create" do
-    context "partial validations" do
+    describe "partial validations" do
       let(:errors) { assigns(:case).errors.messages }
       let(:complaint) { create(:offender_sar_complaint) }
       let(:foi) { create(:closed_case) }
@@ -88,7 +88,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         expect(flash[:notice]).to eq nil
       end
 
-      context "for step link-offender-sar-case" do
+      context "with step link-offender-sar-case" do
         context "when original sar case number absent" do
           let(:params) do
             {
@@ -132,7 +132,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         end
       end
 
-      context "for step complaint-type" do
+      context "with step complaint-type" do
         let(:params) do
           {
             current_step: "complaint-type",
@@ -210,7 +210,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         end
       end
 
-      context "for step requester-details" do
+      context "with step requester-details" do
         context "when third party absent" do
           let(:params) do
             {
@@ -253,7 +253,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         end
       end
 
-      context "for step recipient-details" do
+      context "with step recipient-details" do
         context "when recipient absent" do
           let(:params) do
             {
@@ -283,7 +283,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         end
       end
 
-      context "for step request-details" do
+      context "with step request-details" do
         context "when request dated in future" do
           let(:future_date) { 1.day.from_now }
           let(:params) do
@@ -304,7 +304,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
         end
       end
 
-      context "for step date-received" do
+      context "with step date-received" do
         context "when date missing" do
           let(:params) do
             {
@@ -340,7 +340,7 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
       end
     end
 
-    context "created by sscl user" do
+    context "when created by sscl user" do
       let(:original_case) { find_or_create :offender_sar_case }
       let(:sscl_user) { create :sscl_user }
       let(:future_date) { 1.day.from_now }

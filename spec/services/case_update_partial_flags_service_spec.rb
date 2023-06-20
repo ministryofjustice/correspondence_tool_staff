@@ -41,7 +41,7 @@ describe CaseUpdatePartialFlagsService do
       )
     end
 
-    context "Mark the partial case flags" do
+    context "when marking the partial case flags" do
       it "Mark as partial case and requiring further actions" do
         flags = { "is_partial_case" => "true", "further_actions_required" => "yes" }
         service = described_class.new(user:, kase:, flag_params: flags)
@@ -80,7 +80,7 @@ describe CaseUpdatePartialFlagsService do
       end
     end
 
-    context "Unmark the partial case flags" do
+    context "when unmarking the partial case flags" do
       it "Unmark as partial case and requiring further actions" do
         kase.update!(is_partial_case: true, further_actions_required: "yes")
         kase.reload

@@ -51,7 +51,6 @@ module OffenderSARComplaintCasesParams
       approval_flag_ids: []
     )
   end
-  # rubocop:enable Metrics/MethodLength
 
   # @todo: Replace with appropriate edit params
   def update_offender_sar_complaint_params

@@ -8,7 +8,7 @@ describe "ClosedCaseValidator" do
 
   after(:all) { CaseClosure::Metadatum.destroy_all }
 
-  context "preparing for close validations" do
+  context "when preparing for close validations" do
     let(:kase) { create :case, date_responded: Time.zone.today }
 
     before { kase.prepare_for_close }
@@ -19,7 +19,7 @@ describe "ClosedCaseValidator" do
         kase.info_held_status = CaseClosure::InfoHeldStatus.part_held
       end
 
-      context "late_team_id is blank" do
+      context "when late_team_id is blank" do
         it "does not error if case is responded in time" do
           allow(kase).to receive(:responded_late?).and_return(false)
           kase.late_team_id = nil
@@ -34,7 +34,7 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "late_team_id is not blank" do
+      context "when late_team_id is not blank" do
         it "is valid" do
           allow(kase).to receive(:responded_late?).and_return(true)
           kase.late_team_id = BusinessUnit.first.id
@@ -73,13 +73,13 @@ describe "ClosedCaseValidator" do
       end
     end
 
-    context "Info Held in full" do
+    context "when info held in full" do
       before { kase.info_held_status = CaseClosure::InfoHeldStatus.held }
 
-      context "Granted in full" do
+      context "when granted in full" do
         before { kase.outcome = CaseClosure::Outcome.granted }
 
-        context "no refusal reason or exemptions" do
+        context "when no refusal reason or exemptions" do
           it "is valid" do
             kase.refusal_reason = nil
             kase.exemptions = []
@@ -87,7 +87,7 @@ describe "ClosedCaseValidator" do
           end
         end
 
-        context "refusal reason supplied" do
+        context "when refusal reason supplied" do
           it "is not valid" do
             kase.refusal_reason = CaseClosure::RefusalReason.vex
             expect(kase).not_to be_valid
@@ -95,7 +95,7 @@ describe "ClosedCaseValidator" do
           end
         end
 
-        context "exemption supplied" do
+        context "when exemption supplied" do
           it "is not valid" do
             kase.exemptions = [CaseClosure::Exemption.s27]
             expect(kase).not_to be_valid
@@ -104,10 +104,10 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "Refused in part" do
+      context "when refused in part" do
         before  { kase.outcome = CaseClosure::Outcome.part_refused }
 
-        context "refusal reason supplied" do
+        context "when refusal reason supplied" do
           it "is not valid" do
             kase.refusal_reason = CaseClosure::RefusalReason.vex
             expect(kase).not_to be_valid
@@ -115,24 +115,24 @@ describe "ClosedCaseValidator" do
           end
         end
 
-        context "no refusal reason supplied" do
+        context "when no refusal reason supplied" do
           before { kase.refusal_reason = nil }
 
-          context "at least one exemption supplied" do
+          context "when at least one exemption supplied" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s27]
               expect(kase).to be_valid
             end
           end
 
-          context "multiple exemptions supplied" do
+          context "when multiple exemptions supplied" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s27, CaseClosure::Exemption.s35]
               expect(kase).to be_valid
             end
           end
 
-          context "no exemptions supplied" do
+          context "when no exemptions supplied" do
             it "is not valid" do
               kase.exemptions = []
               expect(kase).not_to be_valid
@@ -140,7 +140,7 @@ describe "ClosedCaseValidator" do
             end
           end
 
-          context "cost exemption is supplied" do
+          context "when cost exemption is supplied" do
             it "is invalid" do
               kase.exemptions = [CaseClosure::Exemption.s12]
               expect(kase).not_to be_valid
@@ -150,10 +150,10 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "Refused in full" do
+      context "when refused in full" do
         before  { kase.outcome = CaseClosure::Outcome.fully_refused }
 
-        context "refusal reason supplied" do
+        context "when refusal reason supplied" do
           it "is not valid" do
             kase.refusal_reason = CaseClosure::RefusalReason.vex
             expect(kase).not_to be_valid
@@ -161,24 +161,24 @@ describe "ClosedCaseValidator" do
           end
         end
 
-        context "no refusal reason supplied" do
+        context "when no refusal reason supplied" do
           before { kase.refusal_reason = nil }
 
-          context "at least one exemption supplied" do
+          context "when at least one exemption supplied" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s27]
               expect(kase).to be_valid
             end
           end
 
-          context "multiple exemptions supplied" do
+          context "when multiple exemptions supplied" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s27, CaseClosure::Exemption.s35]
               expect(kase).to be_valid
             end
           end
 
-          context "no exemptions supplied" do
+          context "when no exemptions supplied" do
             it "is not valid" do
               kase.exemptions = []
               expect(kase).not_to be_valid
@@ -186,7 +186,7 @@ describe "ClosedCaseValidator" do
             end
           end
 
-          context "exemption cost" do
+          context "when exemption cost" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s12]
               expect(kase).to be_valid
@@ -196,13 +196,13 @@ describe "ClosedCaseValidator" do
       end
     end
 
-    context "Info Held in part" do
+    context "when info held in part" do
       before { kase.info_held_status = CaseClosure::InfoHeldStatus.part_held }
 
-      context "Granted in full" do
+      context "when granted in full" do
         before { kase.outcome = CaseClosure::Outcome.granted }
 
-        context "no refusal reason or exemptions" do
+        context "when no refusal reason or exemptions" do
           it "is valid" do
             kase.refusal_reason = nil
             kase.exemptions = []
@@ -210,7 +210,7 @@ describe "ClosedCaseValidator" do
           end
         end
 
-        context "refusal reason supplied" do
+        context "when refusal reason supplied" do
           it "is not valid" do
             kase.refusal_reason = CaseClosure::RefusalReason.vex
             expect(kase).not_to be_valid
@@ -218,7 +218,7 @@ describe "ClosedCaseValidator" do
           end
         end
 
-        context "exemption supplied" do
+        context "when exemption supplied" do
           it "is not valid" do
             kase.exemptions = [CaseClosure::Exemption.s27]
             expect(kase).not_to be_valid
@@ -227,10 +227,10 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "Refused in part" do
+      context "when refused in part" do
         before  { kase.outcome = CaseClosure::Outcome.part_refused }
 
-        context "refusal reason supplied" do
+        context "when refusal reason supplied" do
           it "is not valid" do
             kase.refusal_reason = CaseClosure::RefusalReason.vex
             expect(kase).not_to be_valid
@@ -238,24 +238,24 @@ describe "ClosedCaseValidator" do
           end
         end
 
-        context "no refusal reason supplied" do
+        context "when no refusal reason supplied" do
           before { kase.refusal_reason = nil }
 
-          context "at least one exemption supplied" do
+          context "when at least one exemption supplied" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s27]
               expect(kase).to be_valid
             end
           end
 
-          context "multiple exemptions supplied" do
+          context "when multiple exemptions supplied" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s27, CaseClosure::Exemption.s35]
               expect(kase).to be_valid
             end
           end
 
-          context "no exemptions supplied" do
+          context "when no exemptions supplied" do
             it "is not valid" do
               kase.exemptions = []
               expect(kase).not_to be_valid
@@ -263,7 +263,7 @@ describe "ClosedCaseValidator" do
             end
           end
 
-          context "cost exemption is supplied" do
+          context "when cost exemption is supplied" do
             it "is invalid" do
               kase.exemptions = [CaseClosure::Exemption.s12]
               expect(kase).not_to be_valid
@@ -273,10 +273,10 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "Refused in full" do
+      context "when refused in full" do
         before  { kase.outcome = CaseClosure::Outcome.fully_refused }
 
-        context "refusal reason supplied" do
+        context "when refusal reason supplied" do
           it "is not valid" do
             kase.refusal_reason = CaseClosure::RefusalReason.vex
             expect(kase).not_to be_valid
@@ -284,24 +284,24 @@ describe "ClosedCaseValidator" do
           end
         end
 
-        context "no refusal reason supplied" do
+        context "when no refusal reason supplied" do
           before { kase.refusal_reason = nil }
 
-          context "at least one exemption supplied" do
+          context "and at least one exemption supplied" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s27]
               expect(kase).to be_valid
             end
           end
 
-          context "multiple exemptions supplied" do
+          context "when multiple exemptions supplied" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s27, CaseClosure::Exemption.s35]
               expect(kase).to be_valid
             end
           end
 
-          context "no exemptions supplied" do
+          context "when no exemptions supplied" do
             it "is not valid" do
               kase.exemptions = []
               expect(kase).not_to be_valid
@@ -309,7 +309,7 @@ describe "ClosedCaseValidator" do
             end
           end
 
-          context "exemption cost" do
+          context "when exemption cost" do
             it "is valid" do
               kase.exemptions = [CaseClosure::Exemption.s12]
               expect(kase).to be_valid
@@ -319,7 +319,7 @@ describe "ClosedCaseValidator" do
       end
     end
 
-    context "Info not held" do
+    context "when info not held" do
       before do
         kase.info_held_status = CaseClosure::InfoHeldStatus.not_held
         kase.refusal_reason = nil
@@ -327,13 +327,13 @@ describe "ClosedCaseValidator" do
         kase.exemptions = []
       end
 
-      context "no refusal reason" do
+      context "when no refusal reason" do
         it "is valid" do
           expect(kase).to be_valid
         end
       end
 
-      context "refusal reason present" do
+      context "when refusal reason present" do
         it "is invalid" do
           kase.refusal_reason = CaseClosure::RefusalReason.vex
           expect(kase).not_to be_valid
@@ -341,7 +341,7 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "outcome present" do
+      context "when outcome present" do
         it "is invalid" do
           kase.outcome = CaseClosure::Outcome.first
           expect(kase).not_to be_valid
@@ -349,7 +349,7 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "exemptions present" do
+      context "when exemptions present" do
         it "is invalid" do
           kase.exemptions = [CaseClosure::Exemption.first]
           expect(kase).not_to be_valid
@@ -358,20 +358,20 @@ describe "ClosedCaseValidator" do
       end
     end
 
-    context "Info not confirmed (a.k.a Other)" do
+    context "when info not confirmed (a.k.a Other)" do
       before do
         kase.info_held_status = CaseClosure::InfoHeldStatus.not_confirmed
         kase.outcome = nil
         kase.refusal_reason = CaseClosure::RefusalReason.first
       end
 
-      context "refusal reason present, exemption present, but no outcome or refusal reason" do
+      context "when refusal reason present, exemption present, but no outcome or refusal reason" do
         it "is invalid" do
           expect(kase).to be_valid
         end
       end
 
-      context "no refusal reason present" do
+      context "when no refusal reason present" do
         it "is not valid" do
           kase.refusal_reason = nil
           expect(kase).not_to be_valid
@@ -379,7 +379,7 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "outcome present" do
+      context "when outcome present" do
         it "is invalid" do
           kase.outcome = CaseClosure::Outcome.first
           expect(kase).not_to be_valid
@@ -387,14 +387,14 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "exemptions not present" do
+      context "when exemptions not present" do
         it "is is valid" do
           kase.exemptions = []
           expect(kase).to be_valid
         end
       end
 
-      context "exemption present" do
+      context "when exemption present" do
         it "is not valid" do
           kase.exemptions = [CaseClosure::Exemption.s12]
           expect(kase).not_to be_valid
@@ -402,8 +402,8 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "refusal reason is NCND" do
-        context "no exemption present" do
+      context "when refusal reason is NCND" do
+        context "and no exemption present" do
           it "is not valid" do
             kase.refusal_reason = CaseClosure::RefusalReason.ncnd
             expect(kase).not_to be_valid
@@ -422,14 +422,14 @@ describe "ClosedCaseValidator" do
     end
   end
 
-  context "ICO Appeal cases" do
+  describe "ICO Appeal cases" do
     let(:responded_ico) { build :responded_ico_foi_case }
 
     before do
       responded_ico.prepare_for_close
     end
 
-    context "ico_decision" do
+    context "and ico_decision" do
       before do
         responded_ico.update(
           date_ico_decision_received: Time.zone.today,
@@ -438,7 +438,7 @@ describe "ClosedCaseValidator" do
         )
       end
 
-      context "blank" do
+      context "and blank" do
         it "is invalid" do
           responded_ico.ico_decision = nil
           expect(responded_ico).not_to be_valid
@@ -446,20 +446,20 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "just right" do
+      context "and just right" do
         it "is valid" do
           expect(responded_ico).to be_valid
         end
       end
     end
 
-    context "date_ico_decision_received" do
+    context "when date_ico_decision_received" do
       before do
         responded_ico.ico_decision = "upheld"
         responded_ico.uploaded_ico_decision_files = %w[file_1 file2]
       end
 
-      context "blank" do
+      context "and blank" do
         it "is invalid" do
           responded_ico.date_ico_decision_received = nil
           expect(responded_ico).not_to be_valid
@@ -467,7 +467,7 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "future" do
+      context "and future" do
         it "is invalid" do
           responded_ico.date_ico_decision_received = Date.tomorrow
           expect(responded_ico).not_to be_valid
@@ -475,7 +475,7 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "too far in the past" do
+      context "and too far in the past" do
         it "is invalid" do
           responded_ico.date_ico_decision_received = responded_ico.created_at - 1.day
           expect(responded_ico).not_to be_valid
@@ -483,15 +483,15 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "just right" do
-        context "yesterday" do
+      context "and just right" do
+        context "and yesterday" do
           it "is valid" do
             responded_ico.date_ico_decision_received = Date.yesterday
             expect(responded_ico).to be_valid
           end
         end
 
-        context "creation date" do
+        context "and creation date" do
           it "is valid" do
             responded_ico.date_ico_decision_received = responded_ico.created_at.to_date
             expect(responded_ico).to be_valid
@@ -500,25 +500,25 @@ describe "ClosedCaseValidator" do
       end
     end
 
-    context "uploaded ico decision files" do
+    context "when uploaded ico decision files" do
       before do
         responded_ico.date_ico_decision_received = Time.zone.today
         responded_ico.uploaded_ico_decision_files = nil
         responded_ico.ico_decision_comment = nil
       end
 
-      context "decision upheld" do
+      context "when decision upheld" do
         before do
           responded_ico.ico_decision = "upheld"
         end
 
-        context "files and decision blank" do
+        context "when files and decision blank" do
           it "is not valid" do
             expect(responded_ico).not_to be_valid
           end
         end
 
-        context "files uploaded" do
+        context "when files uploaded" do
           it "is valid" do
             responded_ico.uploaded_ico_decision_files = %w[file_1 file2]
             expect(responded_ico).to be_valid
@@ -526,19 +526,19 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "decision overturned" do
+      context "when decision overturned" do
         before do
           responded_ico.ico_decision = "overturned"
         end
 
-        context "uploaded ico decision files blank" do
+        context "when uploaded ico decision files blank" do
           it "is invalid" do
             expect(responded_ico).not_to be_valid
             expect(responded_ico.errors[:uploaded_ico_decision_files]).to eq ["No ICO decision files have been uploaded"]
           end
         end
 
-        context "files uploaded" do
+        context "when files uploaded" do
           it "is valid" do
             responded_ico.uploaded_ico_decision_files = %w[file_1 file2]
             expect(responded_ico).to be_valid
@@ -548,7 +548,7 @@ describe "ClosedCaseValidator" do
     end
   end
 
-  context "SAR IR cases" do
+  describe "SAR IR cases" do
     let!(:sar_ir) { create(:ready_to_close_sar_internal_review) }
     let(:outcome_reason_ids) { CaseClosure::OutcomeReason.all.map(&:id) }
 
@@ -557,14 +557,14 @@ describe "ClosedCaseValidator" do
     end
 
     describe "#validate_sar_ir_outcome" do
-      context "sar_ir_outcome blank" do
+      context "when sar_ir_outcome blank" do
         it "has correct error" do
           sar_ir.valid?
           expect(sar_ir.errors[:sar_ir_outcome]).to eq ["must be selected"]
         end
       end
 
-      context "sar_ir_outcome present" do
+      context "when sar_ir_outcome present" do
         it "has no errors" do
           sar_ir.sar_ir_outcome = "Upheld"
           sar_ir.valid?
@@ -574,7 +574,7 @@ describe "ClosedCaseValidator" do
     end
 
     describe "#validate_outcome_reasons" do
-      context "outcome reasons blank" do
+      context "when outcome reasons blank" do
         it "has correct error" do
           sar_ir.sar_ir_outcome = "Upheld in part"
           sar_ir.valid?
@@ -582,7 +582,7 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "ourcome reasonss present" do
+      context "when ourcome reasons present" do
         it "has no errors" do
           sar_ir.sar_ir_outcome = "Upheld in part"
           sar_ir.outcome_reason_ids = outcome_reason_ids
@@ -593,7 +593,7 @@ describe "ClosedCaseValidator" do
     end
 
     describe "#validate_team_responsible" do
-      context "team responsible blank" do
+      context "when team responsible blank" do
         it "has correct error" do
           sar_ir.sar_ir_outcome = "Upheld in part"
           sar_ir.valid?
@@ -601,7 +601,7 @@ describe "ClosedCaseValidator" do
         end
       end
 
-      context "team responsible present" do
+      context "when team responsible present" do
         it "has no errors" do
           sar_ir.sar_ir_outcome = "Upheld in part"
           sar_ir.team_responsible_for_outcome_id = 1

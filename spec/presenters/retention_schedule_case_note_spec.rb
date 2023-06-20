@@ -75,7 +75,7 @@ RSpec.describe RetentionScheduleCaseNote do
       end
     end
 
-    context "for a system update" do
+    context "when a system update" do
       let(:changes) { { state: [nil, :not_set], planned_destruction_date: [nil, Date.new(2025, 12, 31)] } }
 
       it "writes the system change to the case history" do

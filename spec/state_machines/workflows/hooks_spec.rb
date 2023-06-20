@@ -37,8 +37,8 @@ describe Workflows::Hooks do
                                                                 :deliver_later)
     end
 
-    context "responder reassigning" do
-      context "current user is not assigning to themselves" do
+    context "when responder reassigning" do
+      context "and current user is not assigning to themselves" do
         let(:workflow) { described_class.new(user: responder, kase:, metadata: { target_user: another_responder }) }
 
         it "sends the notification" do
@@ -49,7 +49,7 @@ describe Workflows::Hooks do
         end
       end
 
-      context "current_user assigns to themselves" do
+      context "and current_user assigns to themselves" do
         let(:workflow) { described_class.new(user: responder, kase:, metadata: { target_user: responder }) }
 
         it "does not send the notification" do
@@ -61,8 +61,8 @@ describe Workflows::Hooks do
       end
     end
 
-    context "approver reassigning" do
-      context "current user is not assigning to themselves" do
+    context "when approver reassigning" do
+      context "and current user is not assigning to themselves" do
         let(:workflow) { described_class.new(user: responder, kase:, metadata: { target_user: another_approver }) }
 
         it "sends the notification" do
@@ -83,8 +83,8 @@ describe Workflows::Hooks do
                                                                 :deliver_later)
     end
 
-    context "responder reassigning" do
-      context "team has email adress" do
+    context "when responder reassigning" do
+      context "and team has email adress" do
         it "sends a notification" do
           workflow.assign_responder_email
           expect(ActionNotificationsMailer)

@@ -7,7 +7,7 @@ feature "when extending a SAR case deadline" do
   given!(:original_deadline)  { kase.external_deadline }
   given!(:received_date) { kase.received_date }
 
-  context "a manager" do
+  context "with a manager" do
     given!(:kase) { freeze_time { create :accepted_sar } }
 
     scenario "extending a SAR case by 30 days twice then removing extension deadline" do
@@ -73,7 +73,7 @@ feature "when extending a SAR case deadline" do
     end
   end
 
-  context "an approver" do
+  context "with an approver" do
     given!(:approver) { find_or_create :disclosure_specialist }
     given!(:kase) do
       freeze_time do
@@ -97,7 +97,7 @@ feature "when extending a SAR case deadline" do
     end
   end
 
-  context "a responder" do
+  context "with a responder" do
     given(:responder) { kase.responder }
     given!(:kase)     { freeze_time { create :accepted_sar } }
 
@@ -116,7 +116,7 @@ feature "when extending a SAR case deadline" do
     end
   end
 
-  context "multiple roles" do
+  context "with multiple roles" do
     given!(:multi_roles) { find_or_create :disclosure_specialist }
     given!(:kase) do
       freeze_time do

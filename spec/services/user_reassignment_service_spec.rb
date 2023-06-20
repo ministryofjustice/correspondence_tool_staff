@@ -32,7 +32,7 @@ describe UserReassignmentService do
       expect(urs.instance_variable_get(:@acting_team)).to eq :an_acting_team
     end
 
-    context "no target_team or acting_team provided" do
+    context "when no target_team or acting_team provided" do
       let(:urs) do
         described_class.new(target_user: coworker,
                             acting_user: responder,
@@ -58,7 +58,7 @@ describe UserReassignmentService do
 
     let(:policy)          { service.instance_variable_get(:@policy) }
 
-    context "Reassign the assignment" do
+    context "when reassign the assignment" do
       it "returns :ok" do
         expect(service.call).to eq :ok
       end
@@ -75,7 +75,7 @@ describe UserReassignmentService do
         expect(accepted_case.assignments).to eq assignment
       end
 
-      context "when an error occurs" do
+      context "and an error occurs" do
         it "rolls-back changes" do
           old_user_id = assignment.user_id
           allow(assignment).to receive(:update).and_throw(RuntimeError)
@@ -100,7 +100,7 @@ describe UserReassignmentService do
       end
     end
 
-    context "user assigns a case to themselves" do
+    context "when user assigns a case to themselves" do
       let(:service) do
         described_class.new(target_user: responder,
                             acting_user: responder,
@@ -113,7 +113,7 @@ describe UserReassignmentService do
       end
     end
 
-    context "unassigned case" do
+    context "when unassigned case" do
       let(:approver)         { find_or_create(:disclosure_specialist) }
       let(:unassigned_case)  { create(:foi_case, :flagged_accepted, approver:) }
       let(:approver_coworker) { create(:approver, approving_team: disclosure_team) }
@@ -133,7 +133,7 @@ describe UserReassignmentService do
 
       let(:policy)          { service.instance_variable_get(:@policy) }
 
-      context "Reassign the assignment" do
+      context "and reassign the assignment" do
         it "returns :ok" do
           expect(service.call).to eq :ok
         end

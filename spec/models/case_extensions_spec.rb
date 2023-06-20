@@ -13,7 +13,7 @@ describe "Spec Support Extensions for Case Model" do
     end
 
     # Only Disclosure Team users are considered assigned specialists
-    context "disclosure_specialist" do
+    context "with disclosure_specialist" do
       it "belongs to Disclosure Team" do
         expect(disclosure_specialist.teams)
           .to include BusinessUnit.dacu_disclosure

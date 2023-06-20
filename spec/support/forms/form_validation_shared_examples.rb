@@ -16,7 +16,7 @@ RSpec.shared_examples "a date question form" do |options|
   let(:date_value) { %w[2018 12 31] }
 
   describe "#save" do
-    context "date validation" do
+    describe "files uploaded" do "date validation" do
       context "when date is not given" do
         let(:date_value) { [] }
 

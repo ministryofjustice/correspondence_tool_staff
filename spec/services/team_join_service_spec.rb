@@ -65,7 +65,7 @@ describe TeamJoinService do
   end
 
   describe "#call" do
-    context "joining a business unit into another business unit" do
+    context "when joining a business unit into another business unit" do
       it "joins users to new team history" do
         service.call
         expect(business_unit.reload.users).to match_array [joining_team_user, target_team_user]

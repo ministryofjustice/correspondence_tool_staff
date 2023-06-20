@@ -73,7 +73,7 @@ module Stats
     end
 
     describe ".ids_for_period" do
-      context "using Class name" do
+      context "when using Class name" do
         it "returns an array of case_ids that were received or open during period" do
           expected_ids = [
             @obs_cos,
@@ -96,7 +96,7 @@ module Stats
         end
       end
 
-      context "using scope" do
+      context "when using scope" do
         it "returns an array of case_ids that were received or open during period" do
           expected_ids = [
             @obs_cos,

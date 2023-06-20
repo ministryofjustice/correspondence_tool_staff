@@ -9,7 +9,7 @@ describe "cases/ico/case_details.html.slim", type: :view do
   let(:closed_foi_appeal) { (create :closed_ico_foi_case).decorate }
   let(:closed_sar_appeal) { (create :closed_ico_sar_case).decorate }
 
-  context "FOI" do
+  describe "FOI" do
     describe "edit case link" do
       before do
         assign(:case, ico_foi_case)
@@ -96,7 +96,7 @@ describe "cases/ico/case_details.html.slim", type: :view do
     end
   end
 
-  context "SAR" do
+  describe "SAR" do
     describe "edit case link" do
       before do
         assign(:case, ico_sar_case)

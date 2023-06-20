@@ -44,7 +44,7 @@ describe "stats/index.html.slim", type: :view do
   end
 
   describe "contents" do
-    context "for heading" do
+    context "when heading" do
       it "is present" do
         expect(page.page_heading.heading.text).to eq "Performance reports"
       end
@@ -54,7 +54,7 @@ describe "stats/index.html.slim", type: :view do
       end
     end
 
-    context "for available reports" do
+    context "when available reports" do
       it "is present" do
         expected_content(
           page_section: page.reports,

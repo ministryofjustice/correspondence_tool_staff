@@ -32,7 +32,7 @@ describe CaseFilter::OpenCaseStatusFilter do
   describe "#applied?" do
     subject { open_case_status_filter }
 
-    context "filter_open_case_status present" do
+    context "when filter_open_case_status present" do
       let(:search_query) do
         create :search_query,
                filter_open_case_status: %w[unassigned]
@@ -41,7 +41,7 @@ describe CaseFilter::OpenCaseStatusFilter do
       it { is_expected.to be_applied }
     end
 
-    context "filter_open_case_status NOT present" do
+    context "when filter_open_case_status NOT present" do
       let(:search_query) do
         create :search_query,
                filter_open_case_status: []
@@ -163,7 +163,7 @@ describe CaseFilter::OpenCaseStatusFilter do
   end
 
   describe "#crumbs" do
-    context "no filters selected" do
+    context "when no filters selected" do
       let(:search_query) do
         create :search_query,
                filter_case_type: []
@@ -174,7 +174,7 @@ describe CaseFilter::OpenCaseStatusFilter do
       end
     end
 
-    context "filtering for trigger cases" do
+    context "when filtering for trigger cases" do
       let(:search_query) do
         create :search_query,
                filter_open_case_status: %w[unassigned]

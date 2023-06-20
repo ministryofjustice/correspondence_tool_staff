@@ -10,7 +10,7 @@ feature "Generate an acknowledgement letter by a responder" do
     login_as responder
   end
 
-  context "responder can choose a template and view the rendered letter" do
+  context "when responder can choose a template and view the rendered letter" do
     scenario "when the case has just been created" do
       cases_show_page.load(id: offender_sar_case.id)
       expect(cases_show_page).to be_displayed

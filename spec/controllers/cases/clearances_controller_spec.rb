@@ -26,7 +26,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
 
     let(:params) { { case_id: assigned_case.id } }
 
-    context "as an anonymous user" do
+    context "when an anonymous user" do
       it "redirects to sign_in" do
         expect(patch(:flag_for_clearance, params:)))
           .to redirect_to(new_user_session_path)
@@ -45,7 +45,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
       end
     end
 
-    context "as an authenticated responder" do
+    context "when an authenticated responder" do
       before do
         sign_in responder
       end
@@ -62,7 +62,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
       end
     end
 
-    context "as an authenticated manager" do
+    context "when an authenticated manager" do
       before do
         sign_in manager
       end
@@ -114,7 +114,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
       end
     end
 
-    context "as an authenticated disclosure_specialist" do
+    context "when an authenticated disclosure_specialist" do
       before do
         sign_in disclosure_specialist
       end
@@ -349,7 +349,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
       )
     end
 
-    context "as an authenticated disclosure_specialist" do
+    context "when an authenticated disclosure_specialist" do
       before do
         sign_in disclosure_specialist
       end
@@ -387,7 +387,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
 
       let(:params) { { case_id: flagged_case.id } }
 
-      context "as an authenticated disclosure_specialist" do
+      context "when an authenticated disclosure_specialist" do
         before do
           sign_in disclosure_specialist
         end

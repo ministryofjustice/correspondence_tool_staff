@@ -26,7 +26,7 @@ describe "Business Unit factories" do
   end
 
   describe "managing_team" do
-    context "no params" do
+    context "with no params" do
       it "creates a managing team with correct team correspondence_type roles" do
         bu = create :managing_team
         expect(bu.role).to eq "manager"
@@ -35,7 +35,7 @@ describe "Business Unit factories" do
       end
     end
 
-    context "setting correspondence_type param" do
+    context "when setting correspondence_type param" do
       it "creates a managing team with correct team correspondence_type roles" do
         bu = create :managing_team, correspondence_type_ids: [sar.id]
         expect(bu.role).to eq "manager"
@@ -46,7 +46,7 @@ describe "Business Unit factories" do
   end
 
   describe "responding_team" do
-    context "no params" do
+    context "with no params" do
       it "creates a responding team with correct team correspondence_type roles for both FOI and SAR" do
         bu = create :responding_team
 

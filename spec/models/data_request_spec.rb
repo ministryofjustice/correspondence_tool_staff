@@ -46,7 +46,7 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
-    context "validation" do
+    describe "validation" do
       subject(:data_request) { build :data_request }
 
       it { is_expected.to be_valid }
@@ -85,7 +85,7 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
-    context "date when data request is complete" do
+    context "with date when data request is complete" do
       subject(:data_request) { build_stubbed(:data_request, completed: true) }
 
       it "required if the case is marked as completed" do
@@ -161,7 +161,7 @@ RSpec.describe DataRequest, type: :model do
   end
 
   describe "#request_type" do
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:data_request, request_type: "all_prison_records")).to be_valid
         expect(build_stubbed(:data_request, request_type: "security_records")).to be_valid
@@ -182,7 +182,7 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:data_request, request_type: "user")
@@ -190,7 +190,7 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
-    context "nil" do
+    context "when nil" do
       it "errors" do
         kase = build_stubbed(:data_request, request_type: nil)
         expect(kase).not_to be_valid

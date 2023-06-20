@@ -68,7 +68,7 @@ RSpec.describe BusinessUnit, type: :model do
 
   it { is_expected.to have_many(:approvers).through(:approver_user_roles) }
 
-  context "cases scope" do
+  describe "cases scope" do
     before(:all) do
       @team_1 = create :responding_team
       @team_2 = create :responding_team
@@ -117,7 +117,7 @@ RSpec.describe BusinessUnit, type: :model do
     end
   end
 
-  context "multiple teams created" do
+  context "when multiple teams created" do
     let(:managing_team)       { find_or_create :team_dacu }
     let(:branston_team)       { find_or_create :team_branston }
     let(:approving_team)      { find_or_create :approving_team }
@@ -165,7 +165,7 @@ RSpec.describe BusinessUnit, type: :model do
     expect(create(:business_unit)).to be_valid
   end
 
-  context "specific team finding and querying" do
+  context "when specific team finding and querying" do
     before(:all) do
       @press_office_team = find_or_create :team_press_office
       @private_office_team = find_or_create :team_private_office
@@ -310,7 +310,7 @@ RSpec.describe BusinessUnit, type: :model do
   end
 
   describe "#update search index" do
-    context "new business unit" do
+    context "when new business unit" do
       it "queues a job to update the search index" do
         expect {
           create :responding_team
@@ -318,10 +318,10 @@ RSpec.describe BusinessUnit, type: :model do
       end
     end
 
-    context "update existing business unit" do
+    context "when update existing business unit" do
       before { @business_unit = create :responding_team }
 
-      context "name is changed" do
+      context "and name is changed" do
         it "queues a job to update the search index" do
           expect {
             @business_unit.update(name: "my new business unit")
@@ -329,7 +329,7 @@ RSpec.describe BusinessUnit, type: :model do
         end
       end
 
-      context "name is not changed" do
+      context "and name is not changed" do
         it "does not queue a job to update the search index" do
           expect {
             @business_unit.update(email: "my_new_email@moj.gov.uk")

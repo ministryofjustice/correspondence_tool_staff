@@ -148,21 +148,21 @@ module Workflows
     describe :can_create_new_overturned_ico? do
       let(:pred) { described_class.new(user:, kase:) }
 
-      context "manager" do
+      context "when manager" do
         let(:user) { create :manager }
 
-        context "SAR ICO appeal" do
-          context "overturned" do
+        context "and SAR ICO appeal" do
+          context "and overturned" do
             let(:kase) { create :closed_ico_sar_case, :overturned_by_ico }
 
-            context "overturn already exists" do
+            context "and overturn already exists" do
               it "returns true" do
                 expect(kase).to receive(:lacks_overturn?).and_return(false)
                 expect(pred.can_create_new_overturned_ico?).to be false
               end
             end
 
-            context "no overturn exists yet" do
+            context "and no overturn exists yet" do
               it "returns true" do
                 expect(kase).to receive(:lacks_overturn?).and_return(true)
                 expect(pred.can_create_new_overturned_ico?).to be true
@@ -170,7 +170,7 @@ module Workflows
             end
           end
 
-          context "upheld" do
+          context "and upheld" do
             let(:kase) { create :closed_ico_sar_case }
 
             it "returns false" do
@@ -179,8 +179,8 @@ module Workflows
           end
         end
 
-        context "FOI ICO appeal" do
-          context "overturned" do
+        context "and FOI ICO appeal" do
+          context "and overturned" do
             let(:kase) { create :closed_ico_foi_case, :overturned_by_ico }
 
             it "returns true" do
@@ -188,7 +188,7 @@ module Workflows
             end
           end
 
-          context "upheld" do
+          context "and upheld" do
             let(:kase) { create :closed_ico_foi_case }
 
             it "returns false" do
@@ -203,7 +203,7 @@ module Workflows
       let(:kase)        { @all_cases[:case_drafting] }
       let(:predicate)   { described_class.new(user:, kase:) }
 
-      context "manager" do
+      context "when manager" do
         let(:user) { @disclosure_bmt_user }
 
         it "returns false" do
@@ -211,7 +211,7 @@ module Workflows
         end
       end
 
-      context "approver" do
+      context "when approver" do
         let(:user) { @disclosure_specialist }
 
         it "returns false" do
@@ -219,18 +219,18 @@ module Workflows
         end
       end
 
-      context "responder" do
+      context "when responder" do
         let(:user)        { @assigned_responder }
 
-        context "in same team" do
-          context "within escalation deadline" do
+        context "and in same team" do
+          context "and within escalation deadline" do
             it "returns false" do
               allow(kase).to receive(:escalation_deadline).and_return(2.days.from_now)
               expect(predicate.assigned_team_member_and_case_outside_escalation_period?).to be false
             end
           end
 
-          context "outside escalation deadline" do
+          context "and outside escalation deadline" do
             it "returns true" do
               allow(kase).to receive(:escalation_deadline).and_return(2.days.ago)
               expect(predicate.assigned_team_member_and_case_outside_escalation_period?).to be true
@@ -238,7 +238,7 @@ module Workflows
           end
         end
 
-        context "in different team" do
+        context "and in different team" do
           let(:user) { @another_responder }
 
           it "returns false" do
@@ -249,4 +249,3 @@ module Workflows
     end
   end
 end
-# rubocop:enable Metrics/ModuleLength

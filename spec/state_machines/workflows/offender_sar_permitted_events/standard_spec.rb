@@ -98,7 +98,7 @@ describe ConfigurableStateMachine::Machine do
       create :offender_sar_case, with_state
     end
 
-    context "as responder" do
+    context "when responder" do
       let(:responder) { find_or_create :branston_user }
 
       TRANSITIONS.each do |transition|

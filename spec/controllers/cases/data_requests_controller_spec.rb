@@ -227,7 +227,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       expect(assigns(:recipient_emails)).to eq("test@email.com")
     end
 
-    context "probation document selected" do
+    context "when probation document selected" do
       let(:template_name) { "probation" }
 
       it "routes to the send_email branston probation page" do
@@ -235,7 +235,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         expect(response).to render_template(:probation_send_email)
       end
 
-      context "confirm probation email" do
+      context "with confirm probation email" do
         let(:params) do
           {
             id: data_request.id,
@@ -254,7 +254,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         end
       end
 
-      context "decline probation email" do
+      context "with decline probation email" do
         let(:params) do
           {
             id: data_request.id,
@@ -273,7 +273,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         end
       end
 
-      context "no options chosen" do
+      context "with no options chosen" do
         let(:params) do
           {
             id: data_request.id,
@@ -292,7 +292,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       end
     end
 
-    context "non-probation document" do
+    context "with non-probation document" do
       let(:template_name) { "prison" }
 
       it "routes to the send_email confirmation page" do

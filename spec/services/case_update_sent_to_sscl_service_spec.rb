@@ -34,7 +34,7 @@ describe CaseFilter::CaseUpdateSentToSsclService do
   end
 
   describe "update case" do
-    context "data has not been sent to SSCL" do
+    context "when data has not been sent to SSCL" do
       it "records as sent to SSCL" do
         service.call
         expect(state_machine).to have_received(:record_sent_to_sscl!).with(
@@ -46,7 +46,7 @@ describe CaseFilter::CaseUpdateSentToSsclService do
       end
     end
 
-    context "no change made" do
+    context "when no change made" do
       let(:params) { {} }
 
       it "does not record as sent to SSCL" do
@@ -60,7 +60,7 @@ describe CaseFilter::CaseUpdateSentToSsclService do
       end
     end
 
-    context "invalid change made" do
+    context "when invalid change made" do
       let(:params) { { sent_to_sscl_at: "invalid" } }
 
       it "does not record as sent to SSCL" do
@@ -75,7 +75,7 @@ describe CaseFilter::CaseUpdateSentToSsclService do
       end
     end
 
-    context "data has already been sent to SSCL" do
+    context "when data has already been sent to SSCL" do
       before { kase.update_attribute(:sent_to_sscl_at, Date.current) }
 
       it "does not record as sent to SSCL" do
@@ -97,7 +97,7 @@ describe CaseFilter::CaseUpdateSentToSsclService do
         )
       end
 
-      context "sent to SSCL date is being removed" do
+      context "and sent to SSCL date is being removed" do
         let(:params) { { sent_to_sscl_at: nil, remove_sent_to_sscl_reason: reason } }
 
         it "records a date removed event" do

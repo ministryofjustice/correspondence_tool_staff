@@ -9,7 +9,7 @@ describe Devise::SessionsController do
     let(:bad_user)              { create :user, email:, password:, failed_attempts: 3 }
     let(:notification_double)   { double "DeviseMailerUnlockInstructionsNotification" }
 
-    context "correct password" do
+    context "when correct password" do
       it "signs the user in" do
         @request.env["devise.mapping"] = Devise.mappings[:user]
         post :create, params: { user: { email: user.email, password: user.password } }
@@ -17,7 +17,7 @@ describe Devise::SessionsController do
       end
     end
 
-    context "bad password" do
+    context "when bad password" do
       it "does not sign in" do
         @request.env["devise.mapping"] = Devise.mappings[:user]
         post :create, params: { user: { email: user.email, password: bad_pass } }
@@ -25,7 +25,7 @@ describe Devise::SessionsController do
         expect(flash[:alert]).to eq "Invalid email or password."
       end
 
-      context "four or more failed attempts" do
+      context "and four or more failed attempts" do
         it "sends unlock notification" do
           expect(DeviseMailer).to receive(:unlock_instructions).and_return(notification_double)
           expect(notification_double).to receive(:deliver)

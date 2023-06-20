@@ -1,11 +1,11 @@
 require "rails_helper"
 
 describe ConfigurableStateMachine::Machine do
-  context "non-flagged case" do
-    context "manager" do
+  context "when non-flagged case" do
+    context "and manager" do
       let(:manager) { create :manager }
 
-      context "unassigned state" do
+      context "and in unassigned state" do
         it "shows permitted events" do
           k = create :sar_case
           expect(k.current_state).to eq "unassigned"
@@ -20,7 +20,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder" do
+      context "and awaiting responder" do
         it "shows permitted events" do
           k = create :awaiting_responder_sar
           expect(k.current_state).to eq "awaiting_responder"
@@ -35,7 +35,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting" do
+      context "and drafting" do
         it "shows permitted events" do
           k = create :accepted_sar
           expect(k.current_state).to eq "drafting"
@@ -52,7 +52,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows permitted events" do
           k = create :closed_sar
           expect(k.current_state).to eq "closed"
@@ -69,10 +69,10 @@ describe ConfigurableStateMachine::Machine do
       end
     end
 
-    context "not in assigned team" do
+    context "when not in assigned team" do
       let(:responder) { create :responder }
 
-      context "unassigned state" do
+      context "and in unassigned state" do
         it "shows permitted events" do
           k = create :sar_case
           expect(k.current_state).to eq "unassigned"
@@ -80,7 +80,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder state" do
+      context "when awaiting responder state" do
         it "shows permitted events" do
           k = create :awaiting_responder_sar
           expect(k.current_state).to eq "awaiting_responder"
@@ -88,7 +88,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "when drafting state" do
         it "shows permitted events" do
           k = create :accepted_sar
           expect(k.current_state).to eq "drafting"
@@ -96,7 +96,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed state" do
+      context "when closed state" do
         it "shows permitted events" do
           k = create :closed_sar
           expect(k.current_state).to eq "closed"
@@ -105,8 +105,8 @@ describe ConfigurableStateMachine::Machine do
       end
     end
 
-    context "within assigned team" do
-      context "awaiting responder state" do
+    context "when within assigned team" do
+      context "and awaiting responder state" do
         it "shows permitted events" do
           k = create :awaiting_responder_sar
           responder = responder_in_assigned_team(k)
@@ -117,7 +117,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "when drafting state" do
         it "shows permitted events" do
           k = create :accepted_sar
           responder = responder_in_assigned_team(k)
@@ -130,7 +130,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed state" do
+      context "when closed state" do
         it "shows permitted events" do
           k = create :closed_sar
           responder = responder_in_assigned_team(k)

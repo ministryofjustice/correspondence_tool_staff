@@ -29,7 +29,7 @@ describe CaseSearchService do
       ).permit!
     end
 
-    context "invalid date params" do
+    context "with invalid date params" do
       let(:params) do
         ActionController::Parameters.new(
           external_deadline_from_dd: "31",
@@ -59,7 +59,7 @@ describe CaseSearchService do
       end
     end
 
-    context "use of the policy scope" do
+    context "with use of the policy scope" do
       let(:specific_query) { "my scoped query" }
 
       it "uses the for_view_only policy scope" do
@@ -69,8 +69,8 @@ describe CaseSearchService do
       end
     end
 
-    context "filtering on search results" do
-      context "performing fresh search (with no existing search)" do
+    context "when filtering on search results" do
+      context "and performing fresh search (with no existing search)" do
         let(:specific_query) { "something" }
 
         it "sets search_query type to search" do
@@ -79,7 +79,7 @@ describe CaseSearchService do
           expect(search_query.query_type).to eq "search"
         end
 
-        context "blank query" do
+        context "and blank query" do
           let(:specific_query) { "  " }
 
           it "errors" do
@@ -97,7 +97,7 @@ describe CaseSearchService do
           end
         end
 
-        context "no results" do
+        context "and no results" do
           let(:specific_query) { "query resulting in no hits" }
 
           it "records a search_query record" do
@@ -110,7 +110,7 @@ describe CaseSearchService do
         end
 
         context "with results" do
-          context "search by number" do
+          context "and search by number" do
             let(:specific_query) { @setup.std_draft_foi.number }
 
             it "finds a case by number" do
@@ -119,8 +119,8 @@ describe CaseSearchService do
             end
           end
 
-          context "search by text" do
-            context "no leading or trailing whitespace" do
+          context "and search by text" do
+            context "and no leading or trailing whitespace" do
               let(:specific_query) { "std_draft_foi" }
 
               it "finds a case by text" do
@@ -137,7 +137,7 @@ describe CaseSearchService do
               end
             end
 
-            context "leading and trailing whitespace" do
+            context "and leading and trailing whitespace" do
               let(:specific_query) { "   std_draft_foi  " }
 
               it "ignores leading and trailing whitespace" do
@@ -157,7 +157,7 @@ describe CaseSearchService do
         end
       end
 
-      context "applying filter on search results" do
+      context "and applying filter on search results" do
         let!(:parent_search_query)       do
           create :search_query,
                  search_text:,
@@ -183,7 +183,7 @@ describe CaseSearchService do
         end
         let(:search_text) { "compliance" }
 
-        context "first filter applied by user" do
+        context "and first filter applied by user" do
           it "creates a new search query" do
             expect {
               service.call
@@ -206,7 +206,7 @@ describe CaseSearchService do
           end
         end
 
-        context "user has another filter applied" do
+        context "and user has another filter applied" do
           let!(:parent_search_query) do
             create :search_query,
                    user_id: user.id,
@@ -237,7 +237,7 @@ describe CaseSearchService do
           end
         end
 
-        context "search and filters have already been used by this user" do
+        context "and search and filters have already been used by this user" do
           it "retrieves the existing SearchQuery" do
             existing_search_query = create :search_query,
                                            search_text:,
@@ -281,7 +281,7 @@ describe CaseSearchService do
           let(:external_deadline_from) { nil }
           let(:external_deadline_to)   { nil }
 
-          context "search text" do
+          context "and search text" do
             let(:search_text) { "closed" }
 
             it "is used" do
@@ -291,7 +291,7 @@ describe CaseSearchService do
             end
           end
 
-          context "filter for sensitivity" do
+          context "and filter for sensitivity" do
             let(:search_text)        { "foi" }
             let(:filter_sensitivity) { %w[trigger] }
 
@@ -302,7 +302,7 @@ describe CaseSearchService do
             end
           end
 
-          context "filter for case type" do
+          context "and filter for case type" do
             let(:search_text)        { "foi" }
             let(:filter_case_type)   { %w[foi-standard] }
 
@@ -316,7 +316,7 @@ describe CaseSearchService do
             end
           end
 
-          context "filter for external deadline" do
+          context "and filter for external deadline" do
             let(:search_text)            { "foi" }
             let(:external_deadline_from) { 0.business_days.from_now.to_date }
             let(:external_deadline_to)   { 10.business_days.from_now.to_date }
@@ -332,7 +332,7 @@ describe CaseSearchService do
           end
         end
 
-        context "parent id does not exist in database" do
+        context "and parent id does not exist in database" do
           it "raises" do
             parent_search_query.destroy!
             expect {
@@ -342,7 +342,7 @@ describe CaseSearchService do
           end
         end
 
-        context "different filter sensitivites exist already in the database" do
+        context "and different filter sensitivites exist already in the database" do
           let(:search_text)        { "case" }
           let(:filter_case_type)   { %w[foi-standard] }
           let(:filter_sensitivity) { %w[trigger non-trigger] }
@@ -367,7 +367,7 @@ describe CaseSearchService do
       end
     end
 
-    context "filtering on list results" do
+    context "when filtering on list results" do
       let!(:parent_search_query)   { create :search_query, :simple_list }
       let(:service)                do
         described_class.new(user:,
@@ -385,7 +385,7 @@ describe CaseSearchService do
         ).permit!
       end
 
-      context "first_filter applied by user" do
+      context "and first_filter applied by user" do
         it "creates a new search query" do
           expect {
             service.call(full_list_of_cases)
@@ -408,7 +408,7 @@ describe CaseSearchService do
         it { is_expected.to have_attributes filter_sensitivity: filter_sensitivity.grep_v("") }
       end
 
-      context "user has another filter applied" do
+      context "and user has another filter applied" do
         let(:params)    do
           ActionController::Parameters.new(
             parent_id: child_search_query.id,

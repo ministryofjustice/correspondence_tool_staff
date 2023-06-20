@@ -84,7 +84,7 @@ describe "cases/case_status.html.slim", type: :view do
         .to eq non_trigger_case.external_deadline
   end
 
-  context "ICO case reference number" do
+  describe "ICO case reference number" do
     let(:ico_overturned_sar) do
       double Case::OverturnedICO::SARDecorator,
              status: "Needs reassigning",

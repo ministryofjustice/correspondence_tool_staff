@@ -35,25 +35,25 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
   describe "#applied?" do
     subject { filter }
 
-    context "no planned_destruction_date present" do
+    context "when no planned_destruction_date present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "both from and to planned_destruction_date present" do
+    context "when both from and to planned_destruction_date present" do
       let(:search_query) { create :search_query, planned_destruction_date_from: Time.zone.today, planned_destruction_date_to: Time.zone.today }
 
       it { is_expected.to be_applied }
     end
 
-    context "only planned_destruction_date_from present" do
+    context "when only planned_destruction_date_from present" do
       let(:search_query) { create :search_query, planned_destruction_date_from: Time.zone.today }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "only planned_destruction_date_to present" do
+    context "when only planned_destruction_date_to present" do
       let(:search_query) { create :search_query, planned_destruction_date_to: Time.zone.today }
 
       it { is_expected.not_to be_applied }
@@ -61,7 +61,7 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
   end
 
   describe "#call" do
-    context "no cases with deadline in date range" do
+    context "when no cases with deadline in date range" do
       let(:search_query) do
         create :search_query,
                planned_destruction_date_from: Date.new(2017, 12, 4),
@@ -73,7 +73,7 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
       end
     end
 
-    context "there are cases within the deadline" do
+    context "when there are cases within the deadline" do
       let(:search_query) do
         create :search_query,
                planned_destruction_date_from: Date.new(2018, 0o1, 0o1),
@@ -85,7 +85,7 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
       end
     end
 
-    context "there are some cases within the deadline, not all" do
+    context "when there are some cases within the deadline, not all" do
       let(:search_query) do
         create :search_query,
                planned_destruction_date_from: Date.new(2019, 0o1, 0o1),
@@ -99,7 +99,7 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
   end
 
   describe "#crumbs" do
-    context "filter not enabled" do
+    context "when filter not enabled" do
       let(:search_query) { create :search_query, planned_destruction_date_from: nil, planned_destruction_date_to: nil }
 
       it "returns no crumbs" do
@@ -107,7 +107,7 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
       end
     end
 
-    context "from and to date selected" do
+    context "when from and to date selected" do
       let(:search_query) do
         create :search_query,
                planned_destruction_date_from: Date.new(2017, 12, 4),

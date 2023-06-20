@@ -28,7 +28,7 @@ feature "SAR Internal Review Case can be closed", js: true do
   end
 
   describe "as a manager closing a SAR IR" do
-    context "for late case" do
+    context "with late case" do
       scenario "page loads with correct fields asking who is responsible for lateness" do
         login_as manager
         cases_page.load
@@ -67,7 +67,7 @@ feature "SAR Internal Review Case can be closed", js: true do
       end
     end
 
-    context "for in-time case" do
+    context "with in-time case" do
       scenario "page loads with correct fields asking" do
         login_as manager
         cases_page.load

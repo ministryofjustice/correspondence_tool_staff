@@ -51,7 +51,7 @@ feature "filtering by external deadline", if: working_hours do
       DbHousekeeping.clean
     end
 
-    context "filtering on the open cases page" do
+    context "when filtering on the open cases page" do
       before do
         login_as @setup.disclosure_bmt_user
         open_cases_page.load
@@ -74,7 +74,7 @@ feature "filtering by external deadline", if: working_hours do
       end
     end
 
-    context "filtering on the search page" do
+    context "when filtering on the search page" do
       before do
         login_as @setup.disclosure_bmt_user
         cases_search_page.load

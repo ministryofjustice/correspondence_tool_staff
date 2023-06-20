@@ -27,7 +27,7 @@ describe CommissioningDocumentUploaderService do
   after(:all) { DbHousekeeping.clean(seed: true) }
 
   describe "#upload!" do
-    context "action upload" do
+    context "when action upload" do
       it "calls #process_files on the uploader" do
         service.upload!
         expect(uploader).to have_received(:process_files)
@@ -49,7 +49,7 @@ describe CommissioningDocumentUploaderService do
         }.to change(commissioning_document, :attachment_id)
       end
 
-      context "No valid files to upload" do
+      context "when no valid files to upload" do
         let(:uploaded_file) { [] }
 
         it "returns a result of :blank" do
@@ -58,7 +58,7 @@ describe CommissioningDocumentUploaderService do
         end
       end
 
-      context "Invalid filetype to upload" do
+      context "when invalid filetype to upload" do
         let(:uploaded_file) { ["test.jpg"] }
 
         it "returns a result of :blank" do

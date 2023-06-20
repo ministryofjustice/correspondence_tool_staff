@@ -14,8 +14,8 @@ describe CaseFlagForClearanceService do
   let!(:private_officer)      { find_or_create :default_private_officer }
 
   describe "call" do
-    context "flagging by dacu disclosure" do
-      context "case is already flagged" do
+    context "when flagging by dacu disclosure" do
+      context "and case is already flagged" do
         let(:service) do
           described_class.new user: approver,
                               kase: assigned_flagged_case,
@@ -28,7 +28,7 @@ describe CaseFlagForClearanceService do
         end
       end
 
-      context "case is not flagged already" do
+      context "and case is not flagged already" do
         let(:service) do
           described_class.new user: approver,
                               kase: assigned_case,
@@ -56,8 +56,8 @@ describe CaseFlagForClearanceService do
       end
     end
 
-    context "flagging for press office" do
-      context "case is not already taken on by DACU Disclosure" do
+    context "when flagging for press office" do
+      context "and case is not already taken on by DACU Disclosure" do
         before do
           allow(assigned_case.state_machine).to receive(:flag_for_clearance!)
         end
@@ -137,7 +137,7 @@ describe CaseFlagForClearanceService do
         end
       end
 
-      context "case is already taken on by DACU Disclosure" do
+      context "and case is already taken on by DACU Disclosure" do
         before do
           allow(assigned_flagged_case.state_machine)
             .to receive(:flag_for_clearance!)
@@ -171,8 +171,8 @@ describe CaseFlagForClearanceService do
       end
     end
 
-    context "flagging for private office" do
-      context "case is not already taken on by DACU Disclosure" do
+    context "when flagging for private office" do
+      context "and case is not already taken on by DACU Disclosure" do
         before do
           allow(assigned_case.state_machine).to receive(:flag_for_clearance!)
         end
@@ -251,7 +251,7 @@ describe CaseFlagForClearanceService do
         end
       end
 
-      context "case is already taken on by DACU Disclosure" do
+      context "and case is already taken on by DACU Disclosure" do
         before do
           allow(assigned_flagged_case.state_machine)
             .to receive(:flag_for_clearance!)

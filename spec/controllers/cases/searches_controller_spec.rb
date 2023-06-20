@@ -130,7 +130,7 @@ describe Cases::SearchesController, type: :controller do
       expect(assigns(:filter_crumbs)[0][0]).to eq "Trigger"
     end
 
-    context "search does not have a parent" do
+    context "when search does not have a parent" do
       it "sets the parent_id to the current search_query id" do
         allow(CaseSearchService).to receive(:new).and_return(case_search_service)
         get :show, params: { search_query: { search_text: assigned_case.subject } }
@@ -139,7 +139,7 @@ describe Cases::SearchesController, type: :controller do
       end
     end
 
-    context "search query has a parent (e.g. search query is a filter)" do
+    context "when search query has a parent (e.g. search query is a filter)" do
       it "sets the parent_id to the created filter search query" do
         allow(CaseSearchService).to receive(:new).and_return(case_search_service)
         filter_search_query = create(
@@ -167,7 +167,7 @@ describe Cases::SearchesController, type: :controller do
       expect(cases).to have_received(:page).with("our_pages")
     end
 
-    context "no search query" do
+    context "when no search query" do
       it "instantiates a new SearchQuery object" do
         get :show, params: {}
         expect(assigns[:query]).to be_an_instance_of(SearchQuery)
@@ -175,7 +175,7 @@ describe Cases::SearchesController, type: :controller do
       end
     end
 
-    context "no search text" do
+    context "when no search text" do
       it "sets the alert flash" do
         get :show, params: { search_query: { search_text: "" } }
         expect(flash[:alert]).to eq "Specify what you want to search for"

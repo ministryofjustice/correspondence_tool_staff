@@ -46,7 +46,7 @@ describe DataRequestCreateService do
   end
 
   describe "#call" do
-    context "on success" do
+    context "when on success" do
       it "saves DataRequest and changes case status" do
         expect(offender_sar_case.current_state).to eq "data_to_be_requested"
         expect { service.call }.to change(DataRequest.all, :size).by(1)
@@ -68,7 +68,7 @@ describe DataRequestCreateService do
       end
     end
 
-    context "on failure" do
+    context "when on failure" do
       it "does not save DataRequest when validation errors" do
         params = data_request_attributes.clone
         params.merge!({ location: "", request_type: "all_prison_records" })

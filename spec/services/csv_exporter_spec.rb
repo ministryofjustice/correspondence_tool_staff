@@ -55,8 +55,8 @@ describe CSVExporter do
     ]
   end
 
-  context "ICO" do
-    context "FOI" do
+  context "when ICO" do
+    context "and FOI" do
       let(:ico_case) { create(:overturned_ico_foi) }
 
       it "returns an array of fields" do
@@ -65,7 +65,7 @@ describe CSVExporter do
       end
     end
 
-    context "SAR" do
+    context "and SAR" do
       let(:ico_case) { create(:overturned_ico_sar) }
 
       it "returns an array of fields" do
@@ -75,7 +75,7 @@ describe CSVExporter do
     end
   end
 
-  context "late FOI" do
+  context "when late FOI" do
     it "returns an array of fields" do
       Timecop.freeze Time.zone.local(2018, 10, 1, 13, 21, 33) do
         csv = described_class.new(late_foi_case).to_csv
@@ -134,14 +134,14 @@ describe CSVExporter do
     end
   end
 
-  context "extended" do
+  context "when extended" do
     let(:csv_data) do
       Timecop.freeze Time.zone.local(2018, 10, 1, 13, 21, 33) do
         CSVExporter::CSV_COLUMN_HEADINGS.zip(described_class.new(kase).to_csv).to_h
       end
     end
 
-    context "deleted" do
+    context "and deleted" do
       let(:kase) { create(:case, :deleted_case) }
 
       it "returns the deletion reason" do
@@ -151,7 +151,7 @@ describe CSVExporter do
       end
     end
 
-    context "FOI" do
+    context "and FOI" do
       let(:kase) do
         create :closed_case,
                :fully_refused_exempt_s40,
@@ -169,8 +169,8 @@ describe CSVExporter do
       end
     end
 
-    context "SAR" do
-      context "extended" do
+    context "and SAR" do
+      context "and extended" do
         let(:kase) do
           create(
             :closed_sar,
@@ -188,7 +188,7 @@ describe CSVExporter do
         end
       end
 
-      context "extension removed" do
+      context "and extension removed" do
         let!(:kase) do
           create(
             :sar_case,
@@ -214,7 +214,7 @@ describe CSVExporter do
     end
   end
 
-  context "SAR" do
+  context "when SAR" do
     it "returns sar fields" do
       Timecop.freeze Time.zone.local(2018, 9, 1, 13, 21, 33) do
         csv = described_class.new(sar_case).to_csv
@@ -273,7 +273,7 @@ describe CSVExporter do
     end
   end
 
-  context "ICO-FOI which has been required further action" do
+  context "when ICO-FOI which has been required further action" do
     it "returns sar fields" do
       Timecop.freeze Time.zone.local(2018, 9, 1, 13, 21, 33) do
         csv = described_class.new(require_further_action_ico_case).to_csv

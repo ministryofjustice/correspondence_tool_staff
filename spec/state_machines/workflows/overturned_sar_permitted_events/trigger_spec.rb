@@ -1,11 +1,11 @@
 require "rails_helper"
 
 describe ConfigurableStateMachine::Machine do
-  context "flagged case" do
-    context "manager" do
+  context "when flagged case" do
+    context "and manager" do
       let(:manager) { find_or_create :disclosure_bmt_user }
 
-      context "unassigned state" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :overturned_ico_sar, :flagged, :dacu_disclosure
           expect(k.current_state).to eq "unassigned"
@@ -18,7 +18,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder" do
+      context "and awaiting responder" do
         it "shows permitted events" do
           k = create :awaiting_responder_ot_ico_sar, :flagged, :dacu_disclosure
           expect(k.current_state).to eq "awaiting_responder"
@@ -31,7 +31,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting" do
+      context "and drafting" do
         it "shows permitted events" do
           k = create :accepted_ot_ico_sar, :flagged, :dacu_disclosure
           expect(k.current_state).to eq "drafting"
@@ -46,7 +46,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "pending_dacu_clearance state" do
+      context "and pending_dacu_clearance state" do
         it "shows permitted events" do
           k = create :pending_dacu_clearance_ot_ico_sar
           expect(k.current_state).to eq "pending_dacu_clearance"
@@ -60,7 +60,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting_dispatch state" do
+      context "and awaiting_dispatch state" do
         it "shows permitted events" do
           k = create :awaiting_dispatch_ot_ico_sar, :flagged_accepted, :dacu_disclosure
           expect(k.current_state).to eq "awaiting_dispatch"
@@ -73,7 +73,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows permitted events" do
           k = create :closed_ot_ico_sar, :flagged, :dacu_disclosure
           expect(k.current_state).to eq "closed"
@@ -86,11 +86,11 @@ describe ConfigurableStateMachine::Machine do
       end
     end
 
-    context "responder" do
-      context "not in assigned team" do
+    context "and responder" do
+      context "and not in assigned team" do
         let(:responder) { find_or_create :foi_responder }
 
-        context "unassigned state" do
+        context "and unassigned state" do
           it "shows permitted events" do
             k = create :overturned_ico_sar, :flagged, :dacu_disclosure
             expect(k.current_state).to eq "unassigned"
@@ -98,7 +98,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting responder state" do
+        context "and awaiting responder state" do
           it "shows permitted events" do
             k = create :awaiting_responder_ot_ico_sar, :flagged, :dacu_disclosure
             expect(k.current_state).to eq "awaiting_responder"
@@ -106,7 +106,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows permitted events" do
             k = create :accepted_ot_ico_sar, :flagged, :dacu_disclosure
             expect(k.current_state).to eq "drafting"
@@ -114,7 +114,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "closed state" do
+        context "and closed state" do
           it "shows permitted events" do
             k = create :closed_ot_ico_sar, :flagged, :dacu_disclosure
             expect(k.current_state).to eq "closed"
@@ -123,8 +123,8 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "within assigned team" do
-        context "awaiting responder state" do
+      context "and within assigned team" do
+        context "and awaiting responder state" do
           it "shows permitted events" do
             k = create :awaiting_responder_ot_ico_sar, :flagged, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -135,7 +135,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows permitted events" do
             k = create :accepted_ot_ico_sar, :flagged, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -146,7 +146,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "pending_dacu_clearance state" do
+        context "and pending_dacu_clearance state" do
           it "shows permitted events" do
             k = create :pending_dacu_clearance_ot_ico_sar
             responder = responder_in_assigned_team(k)
@@ -156,7 +156,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch state" do
+        context "and awaiting_dispatch state" do
           it "shows permitted events" do
             k = create :awaiting_dispatch_ot_ico_sar, :flagged_accepted, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -169,7 +169,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "closed state" do
+        context "and closed state" do
           it "shows permitted events" do
             k = create :closed_ot_ico_sar, :flagged, :dacu_disclosure
             responder = responder_in_assigned_team(k)
@@ -187,11 +187,11 @@ describe ConfigurableStateMachine::Machine do
 
   ##################### APPROVER FLAGGED ############################
 
-  context "approver" do
-    context "unassigned approver" do
+  context "when approver" do
+    context "and unassigned approver" do
       let(:unassigned_approver) { find_or_create :press_officer }
 
-      context "unassigned state" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :sar_case, :flagged
 
@@ -202,7 +202,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder state" do
+      context "and awaiting responder state" do
         it "shows events" do
           k = create :awaiting_responder_sar, :flagged
 
@@ -213,7 +213,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "and drafting state" do
         it "shows events" do
           k = create :accepted_sar, :flagged
 
@@ -224,7 +224,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "pending_dacu_clearance state" do
+      context "and pending_dacu_clearance state" do
         it "shows events" do
           k = create :pending_dacu_clearance_sar, :flagged
 
@@ -235,7 +235,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting_dispatch" do
+      context "and awaiting_dispatch" do
         it "shows events" do
           k = create :approved_sar, :flagged
 
@@ -246,7 +246,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows events" do
           k = create :closed_sar, :flagged
 
@@ -258,10 +258,10 @@ describe ConfigurableStateMachine::Machine do
       end
     end
 
-    context "unaccepted approver" do
+    context "and unaccepted approver" do
       let(:disclosure_specialist) { find_or_create :disclosure_specialist }
 
-      context "unassigned state" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :sar_case, :flagged
 
@@ -272,7 +272,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder state" do
+      context "and awaiting responder state" do
         it "shows events" do
           k = create :awaiting_responder_sar, :flagged
 
@@ -283,7 +283,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "and drafting state" do
         it "shows events" do
           k = create :accepted_sar, :flagged
 
@@ -294,7 +294,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "pending_dacu_clearance state" do
+      context "and pending_dacu_clearance state" do
         it "shows events" do
           k = create :pending_dacu_clearance_sar, :flagged
 
@@ -305,7 +305,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting_dispatch" do
+      context "and awaiting_dispatch" do
         it "shows events" do
           k = create :approved_sar, :flagged
 
@@ -316,7 +316,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows events" do
           k = create :closed_sar, :flagged
 
@@ -328,8 +328,8 @@ describe ConfigurableStateMachine::Machine do
       end
     end
 
-    context "assigned approver" do
-      context "unassigned state" do
+    context "and assigned approver" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :overturned_ico_sar, :flagged_accepted, :dacu_disclosure
           approver = approver_in_assigned_team(k)
@@ -341,7 +341,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder state" do
+      context "and awaiting responder state" do
         it "shows events" do
           k = create :awaiting_responder_ot_ico_sar, :flagged_accepted, :dacu_disclosure
           approver = approver_in_assigned_team(k)
@@ -353,7 +353,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "and drafting state" do
         it "shows events" do
           k = create :accepted_ot_ico_sar, :flagged_accepted, :dacu_disclosure
           approver = approver_in_assigned_team(k)
@@ -367,7 +367,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "pending_dacu_clearance state" do
+      context "and pending_dacu_clearance state" do
         it "shows events" do
           k = create :pending_dacu_clearance_ot_ico_sar, :flagged_accepted, :dacu_disclosure
           approver = approver_in_assigned_team(k)
@@ -383,7 +383,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting_dispatch" do
+      context "and awaiting_dispatch" do
         it "shows events" do
           k = create :awaiting_dispatch_ot_ico_sar, :flagged_accepted, :dacu_disclosure
           approver = approver_in_assigned_team(k)
@@ -395,7 +395,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows events" do
           k = create :closed_ot_ico_sar, :flagged_accepted, :dacu_disclosure
           approver = approver_in_assigned_team(k)

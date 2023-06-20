@@ -119,7 +119,7 @@ describe Case::ICO::Base do
       expect(kase.internal_deadline).to eq Date.new(2018, 1, 12)
     end
 
-    context "on update" do
+    context "when updating" do
       let(:kase) { create(:ico_foi_case) }
 
       it { is_expected.to validate_presence_of(:internal_deadline).on(:update) }
@@ -290,13 +290,13 @@ describe Case::ICO::Base do
     let(:foi)   { create(:foi_case) }
     let(:ico)   { create(:ico_foi_case, original_case: foi) }
 
-    context "default state" do
+    context "when default state" do
       it "is false" do
         expect(ico.prepared_for_respond?).to be false
       end
     end
 
-    context "after being set to true" do
+    context "when after being set to true" do
       it "is true" do
         ico.prepare_for_respond
         expect(ico.prepared_for_respond?).to be true

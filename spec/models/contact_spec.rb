@@ -22,7 +22,7 @@ RSpec.describe Contact, type: :model do
                   contact_type: "university")
   end
 
-  context "validations" do
+  describe "validations" do
     it "is valid if it is has a name, address_line_1 and postcode, and contact_type" do
       expect(subject).to validate_presence_of(:name)
       expect(subject).to validate_presence_of(:address_line_1)
@@ -36,7 +36,7 @@ RSpec.describe Contact, type: :model do
       expect { contact_3 }.to raise_exception(ActiveRecord::AssociationTypeMismatch)
     end
 
-    context "data_request_emails" do
+    describe "data_request_emails" do
       it "is valid with one correctly formatted email" do
         contact_2.data_request_emails = "oscar@thegrouch.com"
         expect(contact_2).to be_valid
@@ -64,7 +64,7 @@ RSpec.describe Contact, type: :model do
     end
   end
 
-  context "public methods" do
+  describe "public methods" do
     it "can output a full concatenated address in a single line" do
       expect(contact_2.inline_address).to match("123 test road, little heath, bakersville, Mercia, FE2 9JK")
     end
@@ -102,7 +102,7 @@ RSpec.describe Contact, type: :model do
     end
   end
 
-  context "class methods" do
+  describe "class methods" do
     it "returns expected sql from #search_by_contact_name" do
       expected_sql = "SELECT \"contacts\".* FROM \"contacts\" WHERE (LOWER(name) LIKE CONCAT('%', 'LLP', '%')) ORDER BY \"contacts\".\"name\" ASC"
       expect(described_class.search_by_contact_name("LLP").to_sql).to match(expected_sql)

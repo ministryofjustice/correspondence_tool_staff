@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe DeadlineCalculator::BusinessDays do
-  context "FOI requests" do
+  describe "FOI requests" do
     let(:foi_case) do
       build_stubbed :foi_case,
                     received_date: Time.zone.today,
@@ -9,7 +9,7 @@ describe DeadlineCalculator::BusinessDays do
     end
     let(:deadline_calculator) { described_class.new foi_case }
 
-    context "received on a workday" do
+    context "when received on a workday" do
       let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
       let(:thu_jun_01) { Time.utc(2017, 6, 1, 12, 0, 0) }
@@ -77,14 +77,14 @@ describe DeadlineCalculator::BusinessDays do
       end
 
       describe "#business_unit_deadline_for_date" do
-        context "non-trigger case" do
+        context "and non-trigger case" do
           it "is 20 working days after specified date" do
             deadline = deadline_calculator.business_unit_deadline_for_date(thu_may_18)
             expect(deadline).to eq thu_jun_15.to_date
           end
         end
 
-        context "trigger case" do
+        context "and trigger case" do
           it "is 10 working datas after specified date" do
             allow(foi_case).to receive(:flagged?).and_return(true)
             deadline_calculator = described_class.new(foi_case)
@@ -95,7 +95,7 @@ describe DeadlineCalculator::BusinessDays do
       end
     end
 
-    context "received on a Saturday" do
+    context "when received on a Saturday" do
       let(:sat_jul_03) { Time.utc(2021, 7, 3, 12, 0, 0) }
       let(:wed_jul_07) { Time.utc(2021, 7, 7, 12, 0, 0) }
       let(:fri_jul_16) { Time.utc(2021, 7, 16, 12, 0, 0) }
@@ -154,7 +154,7 @@ describe DeadlineCalculator::BusinessDays do
       end
     end
 
-    context "escalation deadline" do
+    context "when escalation deadline" do
       let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
       let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
 

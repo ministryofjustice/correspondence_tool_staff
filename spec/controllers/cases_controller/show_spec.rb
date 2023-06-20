@@ -50,13 +50,13 @@ describe CasesController, type: :controller do
       get :show, params: { id: accepted_case.id }
     end
 
-    context "viewing an unassigned case" do
+    context "when viewing an unassigned case" do
       before do
         sign_in user
         get :show, params: { id: unassigned_case.id }
       end
 
-      context "as an anonymous user" do
+      context "when an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -66,7 +66,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it {
@@ -82,7 +82,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as a responder" do
+      context "with a responder" do
         let(:user) { find_or_create(:foi_responder) }
 
         it {
@@ -96,7 +96,7 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "viewing a flagged accepted case" do
+    context "when viewing a flagged accepted case" do
       let(:user) { flagged_accepted_case.responder }
 
       before do
@@ -115,14 +115,14 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "viewing an assigned_case" do
+    context "when viewing an assigned_case" do
       before do
         sign_in user
         allow(CasesUsersTransitionsTracker).to receive(:update_tracker_for)
         get :show, params: { id: assigned_case.id }
       end
 
-      context "as an anonymous user" do
+      context "with an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -132,7 +132,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it {
@@ -155,7 +155,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as a responder of the assigned responding team" do
+      context "with a responder of the assigned responding team" do
         let(:user)             { responder }
         let(:press_office)     { create :team_press_office }
         let(:press_officer)    { find_or_create :press_officer }
@@ -185,7 +185,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as a responder of another responding team" do
+      context "with a responder of another responding team" do
         let(:user) { another_responder }
 
         it { is_expected.to have_permitted_events :link_a_case, :remove_linked_case }
@@ -200,7 +200,7 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "viewing a case in drafting" do
+    context "when viewing a case in drafting" do
       let(:accepted_case) { create(:accepted_case) }
 
       before do
@@ -208,7 +208,7 @@ describe CasesController, type: :controller do
         get :show, params: { id: accepted_case.id }
       end
 
-      context "as an anonymous user" do
+      context "with an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -218,7 +218,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it {
@@ -234,8 +234,8 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as the assigned responder" do
-        context "unflagged case" do
+      context "with the assigned responder" do
+        context "and unflagged case" do
           let(:user) { accepted_case.responder }
 
           it {
@@ -250,7 +250,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as another responder" do
+      context "with another responder" do
         let(:user) { create(:responder) }
 
         it { is_expected.to have_permitted_events :link_a_case, :remove_linked_case }
@@ -265,13 +265,13 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "viewing a case_with_response" do
+    context "when viewing a case_with_response" do
       before do
         sign_in user
         get :show, params: { id: case_with_response.id }
       end
 
-      context "as an anonymous user" do
+      context "with an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -281,7 +281,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it {
@@ -296,7 +296,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as the assigned responder" do
+      context "with the assigned responder" do
         let(:user) { case_with_response.responder }
 
         it {
@@ -311,7 +311,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as another responder" do
+      context "with another responder" do
         let(:user) { create(:responder) }
 
         it { is_expected.to have_permitted_events :link_a_case, :remove_linked_case }
@@ -326,7 +326,7 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "viewing a responded_case" do
+    context "when viewing a responded_case" do
       let(:responded_case) { create(:responded_case, received_date: 5.days.ago) }
 
       before do
@@ -334,7 +334,7 @@ describe CasesController, type: :controller do
         get :show, params: { id: responded_case.id }
       end
 
-      context "as an anonymous user" do
+      context "with an anonymous user" do
         let(:user) { "" }
 
         it { is_expected.to have_nil_permitted_events }
@@ -344,7 +344,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as an authenticated manager" do
+      context "with an authenticated manager" do
         let(:user) { create(:manager) }
 
         it {
@@ -359,7 +359,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as the previously assigned responder" do
+      context "with the previously assigned responder" do
         let(:user) { responder }
 
         it {
@@ -378,7 +378,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "as another responder" do
+      context "with another responder" do
         let(:user) { create(:responder) }
 
         it { is_expected.to have_permitted_events :link_a_case, :remove_linked_case }
@@ -393,7 +393,7 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "recording search query click" do
+    context "when recording search query click" do
       let(:kase)         { create :case }
       let(:search_query) { create :search_query }
       let(:flash)        do
@@ -405,7 +405,7 @@ describe CasesController, type: :controller do
         sign_in create(:manager)
       end
 
-      context "has a search query id" do
+      context "and has a search query id" do
         it "records search query to record the click" do
           allow(controller).to receive(:flash).and_return(flash)
           params = ActionController::Parameters.new(id: kase.id.to_s, pos: "4", controller: "cases", action: "show")
@@ -418,7 +418,7 @@ describe CasesController, type: :controller do
         end
       end
 
-      context "no flash parameter" do
+      context "and no flash parameter" do
         it "does not call search query to record the click" do
           allow(controller).to receive(:flash).and_return({})
           params = ActionController::Parameters.new(id: kase.id.to_s, controller: "cases", action: "show")

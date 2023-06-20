@@ -13,8 +13,8 @@
 require "rails_helper"
 
 describe TeamProperty do
-  context "validation" do
-    context "duplicate value for team and key" do
+  describe "validation" do
+    context "with duplicate value for team and key" do
       it "raises if a duplicate value for same id and key is inserted" do
         described_class.create!(team_id: 22, key: "area", value: "xyz")
         tp = described_class.new(team_id: 22, key: "area", value: "xyz")
@@ -23,7 +23,7 @@ describe TeamProperty do
       end
     end
 
-    context "invalid key" do
+    context "with invalid key" do
       it "errors if key not a VALID_KEY" do
         tp = described_class.new(key: "xxxx", value: "xxxx")
         expect(tp).not_to be_valid
@@ -31,7 +31,7 @@ describe TeamProperty do
       end
     end
 
-    context "uniqueness of lead key by team" do
+    context "with uniqueness of lead key by team" do
       before do
         described_class.where(team_id: 33).each(&:destroy)
       end

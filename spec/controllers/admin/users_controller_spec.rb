@@ -6,7 +6,7 @@ describe Admin::UsersController do
     let(:manager) { create :manager }
     let(:dacu)    { find_or_create :team_dacu }
 
-    context "authenticated admin" do
+    context "when authenticated admin" do
       before { sign_in admin }
 
       it "retrieves all the users" do

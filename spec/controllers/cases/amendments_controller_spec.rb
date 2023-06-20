@@ -46,7 +46,7 @@ RSpec.describe Cases::AmendmentsController, type: :controller do
   describe "#create" do
     let(:service) { instance_double(CaseRequestAmendsService, call: true) }
 
-    context "Full approval FOI" do
+    context "when full approval FOI" do
       before do
         sign_in private_officer
         allow(CaseRequestAmendsService).to receive(:new).and_return(service)
@@ -113,7 +113,7 @@ RSpec.describe Cases::AmendmentsController, type: :controller do
       end
     end
 
-    context "trigger SAR" do
+    context "when trigger SAR" do
       let(:trigger_sar) do
         (create :pending_dacu_clearance_sar, approver: disclosure_specialist).decorate
       end

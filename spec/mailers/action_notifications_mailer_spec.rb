@@ -5,7 +5,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     let(:responding_team) { assignment.team }
     let(:responder)       { responding_team.responders.first }
 
-    context "FOI case" do
+    context "when FOI case" do
       let(:assigned_case) do
         create :assigned_case,
                name: "Fyodor Ognievich Ilichion",
@@ -44,7 +44,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       end
     end
 
-    context "ICO Appeal" do
+    context "when ICO Appeal" do
       before do
         @original_case = create :assigned_case,
                                 name: "Fyodor Ognievich Ilichion",
@@ -77,7 +77,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       end
     end
 
-    context "Overturned SAR" do
+    context "when Overturned SAR" do
       let(:original_ico_appeal)         { create :closed_ico_sar_case, :overturned_by_ico }
       let(:original_sar)                { create :closed_sar, subject: "The origin of species" }
       let(:awaiting_responder_ovt_sar)  do
@@ -107,7 +107,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       end
     end
 
-    context "deleted case" do
+    context "when deleted case" do
       let(:assigned_case) do
         create :assigned_case,
                name: "Fyodor Ognievich Ilichion",
@@ -164,7 +164,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
   end
 
   describe "notify_information_officers" do
-    context "FOI case" do
+    context "when FOI case" do
       let(:approved_case) do
         create :approved_case,
                name: "Fyodor Ognievich Ilichion",
@@ -209,7 +209,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         end
       end
 
-      context "ready to send" do
+      context "when ready to send" do
         let(:mail) { described_class.notify_information_officers(approved_case, "Ready to send") }
 
         it "sets the template" do
@@ -218,7 +218,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         end
       end
 
-      context "redraft" do
+      context "when redraft" do
         let(:mail) { described_class.notify_information_officers(approved_case, "Redraft requested") }
 
         it "sets the template" do
@@ -233,7 +233,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         end
       end
 
-      context "send back" do
+      context "when send back" do
         let(:mail) { described_class.notify_information_officers(approved_case, "Responses have been sent back") }
 
         it "sets the template" do
@@ -248,7 +248,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         end
       end
 
-      context "message" do
+      context "when message" do
         let(:mail) { described_class.notify_information_officers(approved_case, "Message received") }
 
         it "sets the template" do
@@ -263,7 +263,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
         end
       end
 
-      context "case closed" do
+      context "when case closed" do
         let(:mail) { described_class.notify_information_officers(approved_case, "Case closed") }
 
         it "sets the template" do
@@ -273,7 +273,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       end
     end
 
-    context "overturned SAR" do
+    context "when overturned SAR" do
       let(:original_ico_appeal)   { create :closed_ico_sar_case, :overturned_by_ico }
       let(:original_sar)          { create :closed_sar, subject: "The origin of species" }
       let(:closed_ovt_sar)        do
@@ -309,7 +309,7 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
       end
     end
 
-    context "no assigned user" do
+    context "when no assigned user" do
       let(:approved_case) do
         create :approved_case,
                name: "Fyodor Ognievich Ilichion",

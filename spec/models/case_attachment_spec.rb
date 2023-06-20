@@ -61,7 +61,7 @@ RSpec.describe CaseAttachment, type: :model do
     end
   end
 
-  context "time-limited URLs" do
+  context "with time-limited URLs" do
     subject do
       create :case_attachment,
              type: "response",
@@ -95,13 +95,13 @@ RSpec.describe CaseAttachment, type: :model do
                            .and_return(presigned_url)
       end
 
-      context "preview_key exists" do
+      context "when preview_key exists" do
         it "creates a pre-signed url that is good for 15 mins" do
           expect(subject.temporary_preview_url).to be presigned_url
         end
       end
 
-      context "preview key is nil" do
+      context "when preview key is nil" do
         it "returns nil" do
           subject.preview_key = nil
           expect(subject.temporary_preview_url).to be_nil
@@ -172,7 +172,7 @@ RSpec.describe CaseAttachment, type: :model do
     let(:doc_case_attachment) { create :correspondence_response, key: "6/responses/20170614142203/my_doc.doc" }
     let(:jpg_case_attachment) { create :correspondence_response, key: "6/responses/20170614142203/my_photo.jpg" }
 
-    context "non convertible file types" do
+    context "when non convertible file types" do
       it "copies original key to preview key" do
         CaseAttachment::UNCONVERTIBLE_EXTENSIONS.each do |ext|
           attachment = create :correspondence_response, :without_preview_key, key: "/6/responses/20170614142203/my_attachment#{ext}"
@@ -191,7 +191,7 @@ RSpec.describe CaseAttachment, type: :model do
       end
     end
 
-    context "original file is not pdf" do
+    context "when original file is not pdf" do
       it "calls Libreconv.covert and uploads file" do
         expect(doc_case_attachment).to receive(:download_original_file).and_return("tempfile_orig.doc")
         expect(doc_case_attachment).to receive(:make_preview_filename).and_return("tempfile_preview.pdf")
@@ -213,7 +213,7 @@ RSpec.describe CaseAttachment, type: :model do
       end
     end
 
-    context "exception raised during conversion process" do
+    context "when exception raised during conversion process" do
       it "sets the preview_key to nil" do
         expect(doc_case_attachment).to receive(:download_original_file).and_return("tempfile_orig.doc")
         expect(doc_case_attachment).to receive(:make_preview_filename).and_return("tempfile_preview.pdf")
@@ -225,7 +225,7 @@ RSpec.describe CaseAttachment, type: :model do
       end
     end
 
-    context "private methods" do
+    describe "private methods" do
       describe "private method dowload_original_file" do
         it "downloads file and puts in a temporary file" do
           tempfile = double Tempfile, close: nil, path: "/tmp/xxx_my_photo.jpg"

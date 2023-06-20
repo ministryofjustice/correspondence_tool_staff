@@ -41,7 +41,7 @@ describe CaseRemoveSARDeadlineExtensionService do
       end
     end
 
-    context "after initial deadline" do
+    context "when after initial deadline" do
       it "allows retrospective removal" do
         expect(sar_case.external_deadline).to be > sar_case.initial_deadline
         expect(sar_case.deadline_extended?).to be true
@@ -56,7 +56,7 @@ describe CaseRemoveSARDeadlineExtensionService do
       end
     end
 
-    context "on any transaction exception" do
+    context "when on any transaction exception" do
       before do
         # Force #call transaction block to fail, can be any kind of StandardError
         allow(sar_case).to receive(:reset_deadline!).and_throw(ArgumentError)

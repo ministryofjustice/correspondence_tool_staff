@@ -44,7 +44,7 @@ describe Case::OverturnedICO::Base do
   end
 
   describe "delivery method validations" do
-    context "send_by_email" do
+    context "when send_by_email" do
       it "is invalid if no email address specified" do
         overturned_ico.email = nil
         expect(overturned_ico).not_to be_valid
@@ -52,7 +52,7 @@ describe Case::OverturnedICO::Base do
       end
     end
 
-    context "send by post" do
+    context "when send by post" do
       it "is invalid if no postal address specified" do
         overturned_ico.reply_method = "send_by_post"
         expect(overturned_ico).not_to be_valid
@@ -103,14 +103,14 @@ describe Case::OverturnedICO::Base do
   end
 
   describe "#delivery_method" do
-    context "no delivery method set on this overturned record" do
+    context "when no delivery method set on this overturned record" do
       it "gets the delivery method from the original case" do
         overturned_ico[:delivery_method] = nil
         expect(overturned_ico.delivery_method).to eq "sent_by_post"
       end
     end
 
-    context "delivery method set on this overturned record" do
+    context "when delivery method set on this overturned record" do
       it "uses the delivery method on this record and not the original case" do
         overturned_ico[:delivery_method] = "sent_by_email"
         expect(overturned_ico.delivery_method).to eq "sent_by_email"
@@ -119,7 +119,7 @@ describe Case::OverturnedICO::Base do
   end
 
   describe "#delivery_method=" do
-    context "using attribute assignement" do
+    context "when using attribute assignement" do
       it "sets the delivery method on this overturned record and leaves the original case untouched" do
         overturned_ico.delivery_method = "sent_by_email"
         overturned_ico.save!
@@ -128,7 +128,7 @@ describe Case::OverturnedICO::Base do
       end
     end
 
-    context "using update" do
+    context "when using update" do
       it "sets the delivery method on this overturned record and leaves the original case untouched" do
         overturned_ico.update!(delivery_method: "sent_by_email")
         expect(overturned_ico[:delivery_method]).to eq "sent_by_email"

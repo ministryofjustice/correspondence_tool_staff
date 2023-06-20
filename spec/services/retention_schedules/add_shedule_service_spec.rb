@@ -156,7 +156,7 @@ describe RetentionSchedules::AddScheduleService do
     end
   end
 
-  context "for planned erasure dates on Offender SARs Complaints" do
+  context "with planned erasure dates on Offender SARs Complaints" do
     it "sets them correctly for the complaint and the original case" do
       retention_schedule = closed_offender_sar_complaint.retention_schedule
       previous_date = retention_schedule.planned_destruction_date

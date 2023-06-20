@@ -60,9 +60,9 @@ module Stats
 
     after(:all) { DbHousekeeping.clean(seed: true) }
 
-    context "date management, titles, description, etc" do
-      context "defining the period" do
-        context "no period parameters passsed in" do
+    describe "date management, titles, description, etc" do
+      context "when defining the period" do
+        context "and no period parameters passsed in" do
           it "defaults from beginning of year to now" do
             Timecop.freeze(Time.zone.local(2017, 12, 7, 12, 33, 44)) do
               report = described_class.new
@@ -71,7 +71,7 @@ module Stats
           end
         end
 
-        context "period params are passed in" do
+        context "and period params are passed in" do
           it "uses the specify period" do
             d1 = Date.new(2017, 6, 1)
             d2 = Date.new(2017, 6, 30)
@@ -94,7 +94,7 @@ module Stats
       end
     end
 
-    context "data" do
+    describe "data" do
       context "without business unit columns" do
         # We only test that the correct cases are being selected for analysis.  The
         # analysis work, rolling up of business group and directorate toatls and calcualtion
@@ -331,7 +331,5 @@ module Stats
       kase.save!
       kase
     end
-    # rubocop:enable Metrics/ParameterLists
   end
 end
-# rubocop:enable Metrics/ModuleLength

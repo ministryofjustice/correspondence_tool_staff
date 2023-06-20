@@ -10,7 +10,7 @@ feature "pagination" do
     DbHousekeeping.clean
   end
 
-  context "open cases page" do
+  describe "open cases page" do
     scenario "going to page two" do
       login_as @responder
       visit "/cases/open"
@@ -25,7 +25,7 @@ feature "pagination" do
     end
   end
 
-  context "my open cases page" do
+  describe "my open cases page" do
     scenario "going to page two" do
       login_as @responder
       visit "/cases/my_open/in_time"

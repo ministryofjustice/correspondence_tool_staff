@@ -5,7 +5,7 @@ describe "admin routes", type: :routing do
   let(:manager)       { create :manager }
 
   describe "/admin", type: :request do
-    context "as an admin" do
+    context "when an admin" do
       it "redirects admins to /admin/cases" do
         login_as admin
         get "/admin"
@@ -13,7 +13,7 @@ describe "admin routes", type: :routing do
       end
     end
 
-    context "as a non-admin" do
+    context "when a non-admin" do
       it "raises an error" do
         login_as manager
         expect {
@@ -24,7 +24,7 @@ describe "admin routes", type: :routing do
   end
 
   describe "/admin/cases", type: :request do
-    context "as an admin" do
+    context "when an admin" do
       it "loads cases" do
         login_as admin
         get "/admin/cases"
@@ -32,7 +32,7 @@ describe "admin routes", type: :routing do
       end
     end
 
-    context "as a non-admin" do
+    context "when a non-admin" do
       it "raises an error" do
         login_as manager
         expect {

@@ -78,7 +78,7 @@ describe Stats::Warehouse::CaseReportSync do
     end
   end
 
-  context "::MAPPINGS" do
+  describe "::MAPPINGS" do
     let(:syncable_klass_names) do
       %i[
         Assignment
@@ -105,8 +105,8 @@ describe Stats::Warehouse::CaseReportSync do
       end
     end
 
-    context "execute:" do
-      context "Case::Base" do
+    describe "execute:" do
+      describe "Case::Base" do
         it "returns the given case" do
           record = create :sar_case
           query = "case_id = -11 OR name = 'this is an ignored where clause'"
@@ -120,7 +120,7 @@ describe Stats::Warehouse::CaseReportSync do
   end
 
   describe "CaseReport updated when" do
-    context "Case::Base" do
+    describe "Case::Base" do
       let(:kase) { create :sar_case }
       let(:warehouse_case_report) { kase.reload.warehouse_case_report }
 
@@ -137,7 +137,7 @@ describe Stats::Warehouse::CaseReportSync do
       end
     end
 
-    context "CaseClosure::Metadatum" do
+    describe "CaseClosure::Metadatum" do
       # Current Metadatum based closure information
       let(:info_held_status_case) { create :closed_case, :granted_in_full }
       let(:refusal_reason_case) { create :closed_case, :other_vexatious }
@@ -198,7 +198,7 @@ describe Stats::Warehouse::CaseReportSync do
       end
     end
 
-    context "Team" do
+    describe "Team" do
       let(:responded_case) { create :responded_foi_case }
       let(:responding_team) { responded_case.responding_team }
       let(:new_team_name) { Faker::Company.name }
@@ -228,7 +228,7 @@ describe Stats::Warehouse::CaseReportSync do
       end
     end
 
-    context "TeamProperty" do
+    describe "TeamProperty" do
       let(:responded_case) { create :responded_foi_case }
       let(:responding_team) { responded_case.responding_team }
       let(:new_name) { "Donald Druck #{rand(20)}" }
@@ -272,7 +272,7 @@ describe Stats::Warehouse::CaseReportSync do
       end
     end
 
-    context "User" do
+    describe "User" do
       # {
       #   CaseReport#field_name: {
       #     field: Case::Base source field,

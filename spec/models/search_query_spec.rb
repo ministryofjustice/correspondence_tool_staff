@@ -36,13 +36,13 @@ describe SearchQuery do
     end
 
     describe "ancestors" do
-      context "a child node" do
+      context "with a child node" do
         it "returns an array of ancestors, root last" do
           expect(@child.ancestors).to eq([@root])
         end
       end
 
-      context "the root node" do
+      context "with the root node" do
         it "returns and empty array" do
           expect(@root.ancestors).to be_empty
         end
@@ -88,7 +88,7 @@ describe SearchQuery do
   end
 
   describe "self.find_or_create" do
-    context "search queries" do
+    context "with search queries" do
       let(:user) { find_or_create(:disclosure_bmt_user) }
 
       let(:parent_search_query) do
@@ -155,7 +155,7 @@ describe SearchQuery do
       end
     end
 
-    context "list queries" do
+    context "with list queries" do
       let(:user) { find_or_create(:disclosure_bmt_user) }
 
       let(:parent_list_query) do
@@ -250,7 +250,7 @@ describe SearchQuery do
   end
 
   describe "#update_for_click" do
-    context "user clicks for the first time" do
+    context "when user clicks for the first time" do
       let(:search_query) { create :search_query }
       let(:position)     { 3 }
 
@@ -266,7 +266,7 @@ describe SearchQuery do
       end
     end
 
-    context "user clicks on higher option" do
+    context "when user clicks on higher option" do
       let(:search_query) { create :search_query, :clicked }
       let(:position)     { 1 }
 
@@ -282,7 +282,7 @@ describe SearchQuery do
       end
     end
 
-    context "user clicks on a lower position" do
+    context "when user clicks on a lower position" do
       let(:search_query) { create :search_query, :clicked }
       let(:position)     { 33 }
 
@@ -364,7 +364,7 @@ describe SearchQuery do
       end
 
       describe "filtering by type" do
-        context "filtering by FOI Internal review for timeliness" do
+        context "when filtering by FOI Internal review for timeliness" do
           it "returns the result of filtering for type" do
             search_query = create :search_query,
                                   user_id: user.id,
@@ -374,8 +374,8 @@ describe SearchQuery do
           end
         end
 
-        context "filtering by ICO" do
-          context "manager" do
+        context "when filtering by ICO" do
+          context "with manager" do
             it "returns ICO appeals for both FOIs and SARs" do
               search_query = create :search_query,
                                     user_id: user.id,
@@ -391,7 +391,7 @@ describe SearchQuery do
             end
           end
 
-          context "responder in a team that the ICO SARs are not assigned to" do
+          context "when responder in a team that the ICO SARs are not assigned to" do
             it "doesnt show the ICO SAR" do
               search_query = create :search_query,
                                     user_id: @sar_responder.id,
@@ -404,7 +404,7 @@ describe SearchQuery do
             end
           end
 
-          context "responder in a team that the ICO SARs have been assigned to" do
+          context "when responder in a team that the ICO SARs have been assigned to" do
             it "returns only those ico sars that are assigned to the responders team" do
               responder = @responding_team.users.first
               search_query = create :search_query,
@@ -419,7 +419,7 @@ describe SearchQuery do
             end
           end
 
-          context "disclosure specialist" do
+          context "when disclosure specialist" do
             it "returns ICO appeals for both FOIs and SARs" do
               disclosure_specialist = find_or_create :disclosure_specialist
               search_query = create :search_query,
@@ -437,7 +437,7 @@ describe SearchQuery do
             end
           end
 
-          context "press officer" do
+          context "when press officer" do
             it "doesnt show the ICO SAR" do
               press_officer = find_or_create :press_officer
               search_query = create :search_query,
@@ -469,7 +469,7 @@ describe SearchQuery do
       end
     end
 
-    context "case listing" do
+    context "when case listing" do
       it "uses the list of cases if provided" do
         cases_list = Case::Base.where(id: [@setup.std_draft_foi.id,
                                            @setup.std_draft_irt.id])
@@ -481,7 +481,7 @@ describe SearchQuery do
       end
     end
 
-    context "no list of cases provided" do
+    context "when no list of cases provided" do
       it "uses the list of cases if provided" do
         search_query = create :search_query, :simple_list,
                               user_id: user.id,
@@ -565,7 +565,7 @@ describe SearchQuery do
   end
 
   describe "#available_filters" do
-    context "FOI/SAR/ICO case type related for London users" do
+    context "when FOI/SAR/ICO case type related for London users" do
       it "Open cases tab" do
         search_query = create :search_query
         expect(search_query.available_filters(search_query.user, "all_cases").map(&:class)).to eq [
@@ -609,7 +609,7 @@ describe SearchQuery do
       end
     end
 
-    context "Offender / Complaint case types related for Branston users" do
+    context "when Offender / Complaint case types related for Branston users" do
       let(:user) { find_or_create(:branston_user) }
 
       it "Open cases tab" do

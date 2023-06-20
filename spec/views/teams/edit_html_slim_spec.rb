@@ -10,7 +10,7 @@ describe "teams/edit.html.slim", type: :view do
     allow(view).to receive(:current_user).and_return(user)
   end
 
-  context "editing an existing business group" do
+  context "when editing an existing business group" do
     before do
       login_as manager
       assign(:team, hmpps)
@@ -48,7 +48,7 @@ describe "teams/edit.html.slim", type: :view do
     end
   end
 
-  context "Editing an existing directorate" do
+  context "when editing an existing directorate" do
     before do
       login_as manager
       assign(:team, prisons)
@@ -89,7 +89,7 @@ describe "teams/edit.html.slim", type: :view do
     end
   end
 
-  context "editing an existing business unit" do
+  context "when editing an existing business unit" do
     before do
       login_as manager
       assign(:team, ops)

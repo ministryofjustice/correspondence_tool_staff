@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe SearchQueryDecorator, type: :model do
-  context "search_query" do
+  context "when search_query" do
     let(:manager) { create(:manager) }
     let(:query) { create(:search_query, user_id: manager.id) }
     let(:decorated_query) { described_class.decorate(query) }
@@ -15,7 +15,7 @@ describe SearchQueryDecorator, type: :model do
     end
   end
 
-  context "list_query" do
+  context "when simple list_query" do
     let(:query) { create(:search_query, :simple_list) }
     let(:decorated_query) { described_class.decorate(query) }
 
@@ -24,7 +24,7 @@ describe SearchQueryDecorator, type: :model do
     end
   end
 
-  context "list_query" do
+  context "when filtered list_query" do
     let(:query) { create(:search_query, :filtered_list) }
     let(:decorated_query) { described_class.decorate(query) }
 

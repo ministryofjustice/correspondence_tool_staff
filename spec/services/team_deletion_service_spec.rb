@@ -2,11 +2,11 @@ require "rails_helper"
 
 describe TeamDeletionService do
   describe "#call" do
-    context "deleting a directorate or business group" do
+    context "when deleting a directorate or business group" do
       let(:dir)     { find_or_create :directorate }
       let(:service) { described_class.new(dir) }
 
-      context "child team is not active" do
+      context "and child team is not active" do
         let(:time) { Time.zone.local(2017, 6, 30, 12, 0, 0) }
         let!(:bu) { find_or_create(:business_unit, :deactivated, directorate: dir) }
 
@@ -25,7 +25,7 @@ describe TeamDeletionService do
         end
       end
 
-      context "child team is active" do
+      context "and child team is active" do
         let!(:bu) { find_or_create(:business_unit, directorate: dir) }
 
         it "does not change the name" do
@@ -39,11 +39,11 @@ describe TeamDeletionService do
         end
       end
 
-      context "deleting a business unit" do
+      context "and deleting a business unit" do
         let(:bu_without_users) { create :responding_team, responders: [] }
         let(:bu_with_users)    { create :responding_team }
 
-        context "no cases, no users" do
+        context "and no cases, no users" do
           it "returns :ok and soft deletes the business unit" do
             expect(bu_without_users.open_cases).to be_empty
             expect(bu_without_users.users).to be_empty
@@ -58,7 +58,7 @@ describe TeamDeletionService do
           end
         end
 
-        context "has open cases" do
+        context "and has open cases" do
           it "returns :error with message in team errors array" do
             create :assigned_case, responding_team: bu_without_users
             expect(bu_without_users.users).to be_empty
@@ -73,7 +73,7 @@ describe TeamDeletionService do
           end
         end
 
-        context "has closed cases but no open" do
+        context "and has closed cases but no open" do
           it "returns :ok and soft deletes the team" do
             DbHousekeeping.clean(seed: true)
             closed_case = create :closed_case

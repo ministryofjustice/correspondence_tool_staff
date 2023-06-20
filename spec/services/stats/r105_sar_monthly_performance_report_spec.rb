@@ -59,7 +59,7 @@ module Stats
         expect(report.case_scope).to match_array([@sar_2, @sar_3, @sar_4])
       end
 
-      context "unassigned cases" do
+      describe "unassigned cases" do
         it "is calculated as an open case" do
           Timecop.freeze Time.zone.local(2019, 6, 30, 12, 0, 0) do
             late_unassigned_trigger_sar_case = create(

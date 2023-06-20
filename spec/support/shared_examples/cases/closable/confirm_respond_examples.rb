@@ -21,7 +21,7 @@ RSpec.shared_examples "confirm respond spec" do |klass|
         }
       end
 
-      context "as an anonymous user" do
+      context "when an anonymous user" do
         it "redirects to sign_in" do
           expect(patch(:confirm_respond, params:)))
             .to redirect_to(new_user_session_path)
@@ -34,7 +34,7 @@ RSpec.shared_examples "confirm respond spec" do |klass|
         end
       end
 
-      context "as an authenticated manager" do
+      context "when an authenticated manager" do
         before { sign_in manager }
 
         it "redirects to the application root" do
@@ -85,7 +85,7 @@ RSpec.shared_examples "confirm respond spec" do |klass|
         end
       end
 
-      context "as another responder" do
+      context "when another responder" do
         before { sign_in another_responder }
 
         it "redirects to the application root" do

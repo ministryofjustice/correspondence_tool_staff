@@ -48,7 +48,7 @@ feature "Mark response as sent" do
     expect(cases_show_page).to be_displayed(kase.id)
   end
 
-  context "as a responder on the same team" do
+  context "when a responder on the same team" do
     background do
       login_as responder_teammate
     end

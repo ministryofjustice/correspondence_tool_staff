@@ -10,7 +10,7 @@ describe CasesController, type: :controller do
   let!(:offender_sar) { find_or_create :offender_sar_correspondence_type }
   let!(:offender_sar_complaint) { find_or_create :offender_sar_complaint_correspondence_type }
 
-  context "manager" do
+  context "with manager" do
     before do
       allow(controller).to receive(:current_user).and_return(manager)
     end
@@ -31,7 +31,7 @@ describe CasesController, type: :controller do
     end
   end
 
-  context "responder (branston)" do
+  context "with responder (branston)" do
     before do
       allow(controller).to receive(:current_user).and_return(responder)
     end

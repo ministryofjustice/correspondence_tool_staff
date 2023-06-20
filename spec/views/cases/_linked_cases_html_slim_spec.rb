@@ -50,7 +50,7 @@ describe "cases/linked_cases.html.slim", type: :view do
                                         linked_case_2])
     end
 
-    context "case linking not allowed" do
+    context "when case linking not allowed" do
       it "displays the initial case details" do
         disallow_case_policy main_case, :new_case_link?, :destroy_case_link?
 
@@ -72,7 +72,7 @@ describe "cases/linked_cases.html.slim", type: :view do
       end
     end
 
-    context "case linking allowed" do
+    context "when case linking allowed" do
       it "displays the initial case details" do
         allow_case_policy main_case, :new_case_link?, :destroy_case_link?
 

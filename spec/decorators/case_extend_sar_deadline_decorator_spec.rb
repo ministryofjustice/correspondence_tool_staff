@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe CaseExtendSARDeadlineDecorator, type: :model do
-  context "initialize" do
+  describe "initialize" do
     subject(:sar_extension_decorator) do
       described_class.decorate(create(:sar_case))
     end

@@ -41,7 +41,7 @@ describe CaseFilter::CaseTypeFilter do
     it { is_expected.to include "ico-appeal"        => "ICO appeals" }
     it { is_expected.to include "overturned-ico"    => "ICO overturned" }
 
-    context "for user who is assigned to a team that only handles FOIs" do
+    context "with user who is assigned to a team that only handles FOIs" do
       subject    { case_type_filter.available_choices.values[0] }
 
       let(:foi)             { find_or_create(:foi_correspondence_type) }
@@ -60,13 +60,13 @@ describe CaseFilter::CaseTypeFilter do
   describe "#applied?" do
     subject { case_type_filter }
 
-    context "filter_case_type and filter_sensitivity not present" do
+    context "when filter_case_type and filter_sensitivity not present" do
       let(:search_query)      { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "filter_case_type present" do
+    context "and filter_case_type present" do
       let(:search_query)      do
         create :search_query,
                filter_case_type: %w[foi-standard]
@@ -230,7 +230,7 @@ describe CaseFilter::CaseTypeFilter do
   end
 
   describe "#crumbs" do
-    context "no filters selected" do
+    context "when no filters selected" do
       let(:search_query) do
         create :search_query,
                filter_case_type: [],
@@ -242,8 +242,8 @@ describe CaseFilter::CaseTypeFilter do
       end
     end
 
-    context "filtering for cases based on type" do
-      context "filtering for standard FOI cases" do
+    context "when filtering for cases based on type" do
+      context "and filtering for standard FOI cases" do
         let(:search_query) do
           create :search_query,
                  filter_case_type: %w[foi-standard]
@@ -267,7 +267,7 @@ describe CaseFilter::CaseTypeFilter do
         end
       end
 
-      context "filtering for internal review of FOI cases for compliance" do
+      context "and filtering for internal review of FOI cases for compliance" do
         let(:search_query) do
           create :search_query,
                  filter_case_type: %w[foi-ir-compliance]
@@ -278,7 +278,7 @@ describe CaseFilter::CaseTypeFilter do
         end
       end
 
-      context "filtering for internal review of FOI cases for timeliness" do
+      context "and filtering for internal review of FOI cases for timeliness" do
         let(:search_query) do
           create :search_query,
                  filter_case_type: %w[foi-ir-timeliness]

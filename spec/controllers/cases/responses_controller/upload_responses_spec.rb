@@ -50,7 +50,7 @@ describe Cases::ResponsesController, type: :controller do
              .with_args(responder, accepted_case)
     end
 
-    context "files specified without a comment" do
+    context "when files specified without a comment" do
       before do
         allow_any_instance_of(CasesController)
           .to receive(:flash).and_return(flash)
@@ -85,7 +85,7 @@ describe Cases::ResponsesController, type: :controller do
       end
     end
 
-    context "no files specified" do
+    context "when no files specified" do
       before do
         allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
         allow(ResponseUploaderService).to receive(:new).and_return(response_uploader)
@@ -103,7 +103,7 @@ describe Cases::ResponsesController, type: :controller do
       end
     end
 
-    context "there is an upload error" do
+    context "when there is an upload error" do
       before do
         allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
         allow(ResponseUploaderService).to receive(:new).and_return(response_uploader)

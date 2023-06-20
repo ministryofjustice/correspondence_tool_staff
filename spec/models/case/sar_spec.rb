@@ -31,7 +31,7 @@
 require "rails_helper"
 
 describe Case::SAR::Standard do
-  context "validates that SAR-specific fields are not blank" do
+  context "when validates that SAR-specific fields are not blank" do
     it "is not valid" do
       kase = build_stubbed :sar_case, subject_full_name: nil, subject_type: nil, third_party: nil
 
@@ -47,7 +47,7 @@ describe Case::SAR::Standard do
   end
 
   describe "#request_method" do
-    context "valid values" do
+    context "when valid values" do
       it "does not error" do
         expect(build_stubbed(:sar_case, request_method: "verbal")).to be_valid
         expect(build_stubbed(:sar_case, request_method: "post")).to be_valid
@@ -57,7 +57,7 @@ describe Case::SAR::Standard do
       end
     end
 
-    context "invalid value" do
+    context "when invalid value" do
       it "errors" do
         expect {
           build_stubbed(:sar_case, request_method: "plumber")
@@ -65,7 +65,7 @@ describe Case::SAR::Standard do
       end
     end
 
-    context "nil" do
+    context "when nil" do
       it "errors" do
         kase = build_stubbed(:sar_case, request_method: nil)
         expect(kase).not_to be_valid
@@ -75,7 +75,7 @@ describe Case::SAR::Standard do
   end
 
   describe "#subject_type" do
-    context "valid values" do
+    context "when valid values" do
       it "does not error" do
         expect(build_stubbed(:sar_case, subject_type: "offender")).to be_valid
         expect(build_stubbed(:sar_case, subject_type: "staff")).to be_valid
@@ -83,7 +83,7 @@ describe Case::SAR::Standard do
       end
     end
 
-    context "invalid value" do
+    context "when invalid value" do
       it "errors" do
         expect {
           build_stubbed(:sar_case, subject_type: "plumber")
@@ -91,7 +91,7 @@ describe Case::SAR::Standard do
       end
     end
 
-    context "nil" do
+    context "when nil" do
       it "errors" do
         kase = build_stubbed(:sar_case, subject_type: nil)
         expect(kase).not_to be_valid
@@ -240,7 +240,7 @@ describe Case::SAR::Standard do
   end
 
   describe "use_subject_as_requester callback" do
-    context "on create" do
+    context "when creating" do
       it "does not change the requester when present" do
         sar_case = create :sar_case, name: "Bob", subject_full_name: "Doug"
         expect(sar_case.reload.name).to eq "Bob"
@@ -252,7 +252,7 @@ describe Case::SAR::Standard do
       end
     end
 
-    context "on update" do
+    context "when updating" do
       it "does not change the requester when present" do
         sar_case = create :sar_case
         sar_case.update! name: "Bob", subject_full_name: "Doug"

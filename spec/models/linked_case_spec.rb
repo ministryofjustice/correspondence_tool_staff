@@ -40,7 +40,7 @@ describe LinkedCase do
   end
 
   describe "#linked_case" do
-    context "FOI case" do
+    context "when FOI case" do
       it "can link to a FOI case" do
         case_link = described_class.create!(case: foi, linked_case: other_foi)
         expect(case_link).to be_valid
@@ -70,7 +70,7 @@ describe LinkedCase do
     end
   end
 
-  context "soft deleted cases" do
+  context "when soft deleted cases" do
     let(:foi)         { create :case, name: "foi" }
     let(:second_foi)  { create :case, name: "second_foi" }
     let(:third_foi)   { create :case, name: "third_foi" }

@@ -14,7 +14,7 @@ describe CaseRequireFurtherActionService do
              require_further_action_unassigned!: true
     end
 
-    context "require further action for ico (FOI) with valid parameters" do
+    context "when require further action for ico (FOI) with valid parameters" do
       it "Same responder" do
         params = {
           "message": "require further action",
@@ -112,7 +112,7 @@ describe CaseRequireFurtherActionService do
       end
     end
 
-    context "require further action for ico (FOI) with invalid params" do
+    context "when require further action for ico (FOI) with invalid params" do
       it "raises an error when it saves" do
         params = {
           "message": "require further action",

@@ -40,7 +40,7 @@ describe Case::SAR::InternalReview do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  context "validates that SAR-specific fields are not blank" do
+  context "when validates that SAR-specific fields are not blank" do
     it "is not valid" do
       kase = build_stubbed :sar_internal_review, subject_full_name: nil, subject_type: nil, third_party: nil
 
@@ -63,7 +63,7 @@ describe Case::SAR::InternalReview do
   end
 
   describe "#subject_type" do
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:sar_internal_review, subject_type: "offender")).to be_valid
         expect(build_stubbed(:sar_internal_review, subject_type: "staff")).to be_valid
@@ -71,7 +71,7 @@ describe Case::SAR::InternalReview do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:sar_internal_review, subject_type: "plumber")
@@ -79,7 +79,7 @@ describe Case::SAR::InternalReview do
       end
     end
 
-    context "nil" do
+    context "with nil" do
       it "errors" do
         kase = build_stubbed(:sar_internal_review, subject_type: nil)
         expect(kase).not_to be_valid
@@ -228,7 +228,7 @@ describe Case::SAR::InternalReview do
   end
 
   describe "not using use_subject_as_requester callback" do
-    context "on create" do
+    context "when creating" do
       it "does not change the requester when present" do
         sar_case = create :sar_internal_review, name: "Bob", subject_full_name: "Doug"
         expect(sar_case.reload.name).to eq "Bob"
@@ -240,7 +240,7 @@ describe Case::SAR::InternalReview do
       end
     end
 
-    context "on update" do
+    context "when updating" do
       it "does not change the requester when present" do
         sar_case = create :sar_internal_review
         sar_case.update! name: "Bob", subject_full_name: "Doug"

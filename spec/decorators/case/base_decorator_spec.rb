@@ -26,20 +26,20 @@ describe Case::BaseDecorator, type: :model do
   let(:another_responder) { create :responder }
   let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
 
-  context "ensuring the correct decorator is instantiated" do
-    context "Case::FOI::Standard" do
+  context "when ensuring the correct decorator is instantiated" do
+    context "and Case::FOI::Standard" do
       it "instantiates the correct decorator" do
         expect(Case::FOI::Standard.new.decorate).to be_instance_of Case::FOI::StandardDecorator
       end
     end
 
-    context "Case::FOI::ComplianceReview" do
+    context "and Case::FOI::ComplianceReview" do
       it "instantiates the correct decorator" do
         expect(Case::FOI::ComplianceReview.new.decorate).to be_instance_of Case::FOI::ComplianceReviewDecorator
       end
     end
 
-    context "Case::FOI::TimelinessReview" do
+    context "and Case::FOI::TimelinessReview" do
       it "instantiates the correct decorator" do
         expect(Case::FOI::TimelinessReview.new.decorate).to be_instance_of Case::FOI::TimelinessReviewDecorator
       end
@@ -47,29 +47,29 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#who_its_with" do
-    context "case has no responding team assigned" do
+    context "when case has no responding team assigned" do
       it "returns the managing teams name" do
         expect(unassigned_case.who_its_with)
           .to eq unassigned_case.managing_team.name
       end
     end
 
-    context "case has been assigned but not accepted yet" do
+    context "when case has been assigned but not accepted yet" do
       it "returns the responding teams name" do
         expect(assigned_case.who_its_with)
           .to eq assigned_case.responding_team.name
       end
     end
 
-    context "case is accepted by responder" do
-      context "as a case manager" do
+    context "when case is accepted by responder" do
+      context "and a case manager" do
         it "returns the responding teams name" do
           expect(assigned_case.who_its_with)
             .to eq assigned_case.responding_team.name
         end
       end
 
-      context "as the responder" do
+      context "with the responder" do
         it "returns the responder name" do
           allow_any_instance_of(described_class)
             .to receive(:h).and_return(double("View", current_user: responder))
@@ -78,7 +78,7 @@ describe Case::BaseDecorator, type: :model do
         end
       end
 
-      context "as a coworker of the responder" do
+      context "when a coworker of the responder" do
         it "returns the responder name" do
           allow_any_instance_of(described_class)
             .to receive(:h).and_return(double("View", current_user: coworker))
@@ -87,7 +87,7 @@ describe Case::BaseDecorator, type: :model do
         end
       end
 
-      context "as the responder in another team" do
+      context "when the responder in another team" do
         it "returns the responder name" do
           allow_any_instance_of(described_class)
             .to receive(:h)
@@ -97,7 +97,7 @@ describe Case::BaseDecorator, type: :model do
         end
       end
 
-      context "flagged case in pending_dacu_clearance state" do
+      context "when flagged case in pending_dacu_clearance state" do
         it "returns dacu disclosure" do
           allow_any_instance_of(described_class).to receive(:h).and_return(double("View", current_user: another_responder))
           expect(pending_dacu_clearance_case.who_its_with).to eq "Disclosure"
@@ -105,7 +105,7 @@ describe Case::BaseDecorator, type: :model do
       end
     end
 
-    context "case is responded" do
+    context "when case is responded" do
       it "returns the managing team name" do
         expect(responded_case.who_its_with).to eq managing_team.name
       end
@@ -148,14 +148,14 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#internal_deadline" do
-    context "unflagged case" do
+    context "when unflagged case" do
       it "returns space" do
         unflagged_case = create(:case).decorate
         expect(unflagged_case.internal_deadline).to eq " "
       end
     end
 
-    context "flagged case" do
+    context "when flagged case" do
       it "returns the internal deadline" do
         Timecop.freeze(Time.zone.local(2017, 5, 2, 9, 45, 33)) do
           flagged_case = create(:case, :flagged, creation_time: Time.zone.today).decorate
@@ -166,14 +166,14 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#trigger_case_marker" do
-    context "unflagged case" do
+    context "when unflagged case" do
       it "returns space" do
         unflagged_case = create(:case).decorate
         expect(unflagged_case.trigger_case_marker).to eq " "
       end
     end
 
-    context "flagged case" do
+    context "when flagged case" do
       it "returns the Trigger case badge" do
         flagged_case = create(:case, :flagged).decorate
         expect(flagged_case.trigger_case_marker)
@@ -183,14 +183,14 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#highlight_flag" do
-    context "unflagged case" do
+    context "when unflagged case" do
       it "returns space" do
         unflagged_case = create(:case).decorate
         expect(unflagged_case.highlight_flag).to eq " "
       end
     end
 
-    context "flagged case" do
+    context "when flagged case" do
       it "returns the Trigger case badge" do
         flagged_case = create(:case, :flagged).decorate
         expect(flagged_case.highlight_flag)
@@ -200,14 +200,14 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#internal_deadline" do
-    context "unflagged case" do
+    context "when unflagged case" do
       it "returns space" do
         unflagged_case = create(:case).decorate
         expect(unflagged_case.internal_deadline).to eq " "
       end
     end
 
-    context "flagged case" do
+    context "when flagged case" do
       it "returns the internal deadline" do
         Timecop.freeze(Time.zone.local(2017, 5, 2, 9, 45, 33)) do
           flagged_case = create(:case, :flagged, creation_time: Time.zone.today).decorate
@@ -248,7 +248,7 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#message_extract" do
-    context "message fewer than 360 chars" do
+    context "when message fewer than 360 chars" do
       it "returns the entire message" do
         kase = create(:case, message: "One fine day.").decorate
         expect(kase.message_extract.size).to eq 1
@@ -256,7 +256,7 @@ describe Case::BaseDecorator, type: :model do
       end
     end
 
-    context "message more than 360 characters" do
+    context "when message more than 360 characters" do
       it "returns an array with two entries" do
         long_message =
           "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " \
@@ -296,14 +296,14 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#shortened_message" do
-    context "message fewer than 360 chars" do
+    context "when message fewer than 360 chars" do
       it "returns the entire message" do
         kase = create(:case, message: "One fine day.").decorate
         expect(kase.shortened_message).to eq kase.message
       end
     end
 
-    context "message more than 360 characters" do
+    context "when message more than 360 characters" do
       it "returns shortened message with ellipsis" do
         long_message =
           "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " \
@@ -344,7 +344,7 @@ describe Case::BaseDecorator, type: :model do
       expect(assigned_case.status).to eq "To be accepted"
     end
 
-    it "returns a responded status" do
+    it "returns a accepted status" do
       expect(accepted_case.status).to eq "Draft in progress"
     end
 
@@ -360,7 +360,7 @@ describe Case::BaseDecorator, type: :model do
       expect(responded_ico.status).to eq "Closed - awaiting ICO decision"
     end
 
-    context "closed ico - ICO decisions" do
+    context "when closed ico - ICO decisions" do
       it "returns a closed status with upheld" do
         expect(upheld_ico_case.status).to eq "Closed - upheld by ICO"
       end
@@ -398,7 +398,7 @@ describe Case::BaseDecorator, type: :model do
   end
 
   describe "#message_notification_visible?" do
-    context "transitions tracker for case and user exists" do
+    context "when transitions tracker for case and user exists" do
       let(:tracker) do
         instance_double CasesUsersTransitionsTracker,
                         present?: true
@@ -422,7 +422,7 @@ describe Case::BaseDecorator, type: :model do
       end
     end
 
-    context "transitions tracker does not exist" do
+    context "when transitions tracker does not exist" do
       let(:tracker) do
         instance_double CasesUsersTransitionsTracker,
                         present?: false
@@ -459,7 +459,7 @@ describe Case::BaseDecorator, type: :model do
     let(:offender_sar_case) { build_stubbed(:offender_sar_case, subject: "The case subject") }
 
     context "when name" do
-      context "is not empty" do
+      context "and is not empty" do
         it "returns existing case name" do
           offender_sar_case.name = "Monalisa Khan"
           expect(offender_sar_case.decorate.closed_case_name).to eq "Monalisa Khan"
@@ -467,7 +467,7 @@ describe Case::BaseDecorator, type: :model do
       end
     end
 
-    context "is empty" do
+    context "when is empty" do
       it "returns case subject instead" do
         offender_sar_case.name = ""
         expect(offender_sar_case.decorate.closed_case_name).to eq "The case subject"

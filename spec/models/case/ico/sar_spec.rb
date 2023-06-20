@@ -50,14 +50,14 @@ describe Case::ICO::SAR do
 
     before { ico_sar_case.linked_cases << create(:sar_case) }
 
-    context "no overturn" do
+    context "when no overturn" do
       it "returns false" do
         expect(ico_sar_case.has_overturn?).to be false
         expect(ico_sar_case.lacks_overturn?).to be true
       end
     end
 
-    context "overturn exists" do
+    context "when overturn exists" do
       before { create :overturned_ico_sar, original_ico_appeal: ico_sar_case }
 
       it "returns true" do

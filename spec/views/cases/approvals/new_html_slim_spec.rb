@@ -27,7 +27,7 @@ describe "cases/approvals/new.html.slim", type: :view do
       .to have_text(foi_kase.subject)
   end
 
-  context "foi case" do
+  describe "foi case" do
     it "displays a message about the next steps for this case" do
       assign(:case, foi_kase.decorate)
 
@@ -47,7 +47,7 @@ describe "cases/approvals/new.html.slim", type: :view do
     end
   end
 
-  context "sar case" do
+  describe "sar case" do
     it "displays a message about the next steps for this case" do
       assign(:case, sar_kase.decorate)
 
@@ -59,7 +59,7 @@ describe "cases/approvals/new.html.slim", type: :view do
     end
   end
 
-  context "case with full approval" do
+  context "when case with full approval" do
     let(:foi_kase_full_approval) do
       create :pending_dacu_clearance_case,
              :full_approval

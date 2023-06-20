@@ -23,7 +23,7 @@ RSpec.describe Case::Base, type: :model do
            responder:
   end
 
-  context "flagged for approval scopes" do
+  context "when flagged for approval scopes" do
     before(:all) do
       Team.all.map(&:destroy)
       TeamsUsersRole.all.map(&:destroy)
@@ -39,14 +39,14 @@ RSpec.describe Case::Base, type: :model do
     after(:all) { DbHousekeeping.clean }
 
     describe ".flagged_for_approval" do
-      context "passed one team as a parameter" do
+      context "when passed one team as a parameter" do
         it "returns all the cases flagged for approval by the specified team" do
           expect(described_class.flagged_for_approval(@team_1))
             .to match_array [@flagged_t1, @accepted_t1]
         end
       end
 
-      context "passed an array of teams as a parameter" do
+      context "when passed an array of teams as a parameter" do
         it "returns all the cases flagged for approval for all specified teams" do
           expect(described_class.flagged_for_approval(@team_1, @team_2))
             .to match_array [
@@ -60,14 +60,14 @@ RSpec.describe Case::Base, type: :model do
     end
 
     describe ".flagged_for_approval.unaccepted" do
-      context "one team passsed as a parameter" do
+      context "when one team passsed as a parameter" do
         it "returns only cases flagged which HAVE NOT been accepted" do
           expect(described_class.flagged_for_approval(@team_1).unaccepted)
             .to match_array [@flagged_t1]
         end
       end
 
-      context "multiple teams passed as a parameter" do
+      context "when multiple teams passed as a parameter" do
         it "returns only cases flagged which HAVE NOT been accepted" do
           expect(described_class.flagged_for_approval(@team_2, @team_1).unaccepted)
             .to match_array [@flagged_t1, @flagged_t2]
@@ -76,14 +76,14 @@ RSpec.describe Case::Base, type: :model do
     end
 
     describe ".flagged_for_approval.accepted" do
-      context "one team passsed as a parameter" do
+      context "when one team passsed as a parameter" do
         it "returns only cases flagged which HAVE been accepted" do
           expect(described_class.flagged_for_approval(@team_1).accepted)
             .to match_array [@accepted_t1]
         end
       end
 
-      context "multiple teams passsed as a parameter" do
+      context "when multiple teams passsed as a parameter" do
         it "returns only cases flagged which HAVE been accepted" do
           expect(described_class.flagged_for_approval(@team_1, @team_2).accepted)
             .to match_array [@accepted_t1, @accepted_t2]
@@ -330,7 +330,7 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  context "related teams" do
+  context "with related teams" do
     let(:responding_team)    { create :responding_team }
     let(:responder)          { responding_team.responders.first }
 
@@ -351,7 +351,7 @@ RSpec.describe Case::Base, type: :model do
     let(:responding_teams) { cases.map(&:responding_team) }
     let(:managing_teams) { cases.map(&:managing_team) }
 
-    context "non preloaded" do
+    context "when non preloaded" do
       let(:cases) { described_class.all }
 
       it "returns responding teams" do
@@ -363,7 +363,7 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "preloaded" do
+    context "when preloaded" do
       let(:cases) do
         described_class.includes(:responder_assignment,
                                  :responding_team,

@@ -16,8 +16,8 @@ feature "Closing a sar" do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  context "Reporting timiliness", js: true do
-    context "tmm responded-to in time" do
+  describe "Reporting timiliness", js: true do
+    context "when tmm responded-to in time" do
       given!(:fully_granted_case) do
         create :accepted_sar,
                received_date: 7.days.ago
@@ -32,7 +32,7 @@ feature "Closing a sar" do
       end
     end
 
-    context "not tmm", js: true do
+    context "when not tmm", js: true do
       given!(:fully_granted_case) do
         create :accepted_sar,
                received_date: 7.days.ago
@@ -46,7 +46,7 @@ feature "Closing a sar" do
       end
     end
 
-    context "responded-to late" do
+    context "when responded-to late" do
       given!(:late_case) do
         create :accepted_sar,
                received_date: 50.days.ago

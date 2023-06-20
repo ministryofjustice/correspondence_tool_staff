@@ -89,13 +89,13 @@ describe Case::SARPolicy do
   end
 
   permissions :show? do
-    context "unassigned case" do
+    context "when unassigned case" do
       it { is_expected.to     permit(manager,               unassigned_case) }
       it { is_expected.not_to permit(responder,             unassigned_case) }
       it { is_expected.not_to permit(disclosure_specialist, unassigned_case) }
     end
 
-    context "linked case" do
+    context "when linked case" do
       let!(:linked_case) do
         create(:closed_sar, responding_team:).tap do |kase|
           unassigned_case.related_cases << kase
@@ -107,7 +107,7 @@ describe Case::SARPolicy do
     end
   end
 
-  context "Non trigger non offender (London) SAR case" do
+  context "when non trigger non offender (London) SAR case" do
     permissions :new_case_link? do
       it { is_expected.to     permit(manager,             non_trigger_sar_case) }
       it { is_expected.not_to permit(other_manager,       non_trigger_sar_case) }
@@ -125,7 +125,7 @@ describe Case::SARPolicy do
     it { is_expected.not_to permit(manager,             trigger_ot_sar_case)  }
   end
 
-  context "SAR deadline extension" do
+  context "when SAR deadline extension" do
     permissions :extend_sar_deadline? do
       it { is_expected.not_to permit(responder,             approved_sar) }
       it { is_expected.to     permit(manager,               approved_sar) }
@@ -148,7 +148,7 @@ describe Case::SARPolicy do
   end
 
   permissions :can_perform_retention_actions? do
-    context "can see the case" do
+    context "when can see the case" do
       let(:team_admin_user) { find_or_create :branston_user }
 
       before do
@@ -172,7 +172,7 @@ describe Case::SARPolicy do
       end
     end
 
-    context "cannot see the case" do
+    context "when cannot see the case" do
       it { is_expected.not_to permit(branston_user, approved_sar) }
       it { is_expected.not_to permit(responder, approved_sar) }
     end

@@ -118,7 +118,7 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  context "deleting" do
+  context "when deleting" do
     it "is not valid without a reason" do
       expect(build_stubbed(:case, deleted: true)).not_to be_valid
     end
@@ -137,24 +137,24 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe "info_status_held_validation" do
-    context "active case" do
+    context "with active case" do
       it "does not error if blank" do
         expect(kase.info_held_status_id).to be_blank
         expect(kase).to be_valid
       end
     end
 
-    context "closed_case" do
+    context "with closed_case" do
       let(:closed_case) { create :closed_case }
 
-      context "info_held_status is present" do
+      context "when info_held_status is present" do
         it "is valid" do
           expect(closed_case.info_held_status_id).to be_present
           expect(closed_case).to be_valid
         end
       end
 
-      context "info_held_status is absent" do
+      context "when info_held_status is absent" do
         it "is not valid" do
           closed_case.info_held_status = nil
           expect(closed_case).not_to be_valid
@@ -280,14 +280,14 @@ RSpec.describe Case::Base, type: :model do
       expect(old_offender_sar_case).to be_valid
     end
 
-    context "updating an old record" do
+    context "when updating an old record" do
       before do
         Timecop.freeze(2.years.ago) do
           @kase = create :case
         end
       end
 
-      context "received date doesnt change" do
+      context "and received date doesnt change" do
         it "does validates ok even though received_date is out of range" do
           @kase.update!(name: "Stepriponikas  Bonstart")
           expect(@kase.received_date).to eq 2.years.ago.to_date
@@ -295,7 +295,7 @@ RSpec.describe Case::Base, type: :model do
         end
       end
 
-      context "received date is changed" do
+      context "and received date is changed" do
         it "changes date for an out-of-range date" do
           update_result = @kase.update(name: "Stepriponikas Bonstart", received_date: 23.months.ago)
           expect(update_result).to be false
@@ -331,7 +331,7 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  context "preparing_for_close" do
+  context "when preparing_for_close" do
     describe "#prepared_for_close?" do
       it "is false on newly instantiated objects" do
         kase = described_class.new
@@ -354,21 +354,21 @@ RSpec.describe Case::Base, type: :model do
     context "when not closed / prepared for closed" do
       let(:kase) { create :case }
 
-      context "date_responded" do
+      context "and date_responded" do
         it "is valid when not present" do
           expect(kase.date_responded).to be_blank
           expect(kase).to be_valid
         end
       end
 
-      context "outcome" do
+      context "and outcome" do
         it "is valid when not present" do
           expect(kase.outcome).to be_nil
           expect(kase).to be_valid
         end
       end
 
-      context "refusal_reason" do
+      context "and refusal_reason" do
         it "is valid when not present" do
           expect(kase.refusal_reason).to be_blank
           expect(kase).to be_valid
@@ -428,7 +428,7 @@ RSpec.describe Case::Base, type: :model do
     describe "#responding_team" do
       it { is_expected.to have_one(:responding_team) }
 
-      context "responding team changed after closure" do
+      context "when responding team changed after closure" do
         it "returns new responding team" do
           first_responding_team = create :responding_team
           last_responding_team = create :responding_team
@@ -1002,7 +1002,7 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe "#default_team_service" do
-    context "first call" do
+    context "when first call" do
       it "instantiates a DefaultTeamService object" do
         expect(DefaultTeamService).to receive(:new).with(accepted_case).and_call_original
         dts = accepted_case.default_team_service
@@ -1010,7 +1010,7 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "subsequent_calls" do
+    context "when subsequent_calls" do
       before do
         @dts = accepted_case.default_team_service
       end
@@ -1027,13 +1027,13 @@ RSpec.describe Case::Base, type: :model do
     let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
     let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case) }
 
-    context "no approver assignments" do
+    context "when no approver assignments" do
       it "returns nil" do
         expect(kase.approver_assignment_for(team_dacu_disclosure)).to be_nil
       end
     end
 
-    context "approver assignments but none for specified team" do
+    context "when approver assignments but none for specified team" do
       let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case) }
 
       it "returns nil" do
@@ -1043,7 +1043,7 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "approver assignments including one for team" do
+    context "when approver assignments including one for team" do
       it "returns the assignment" do
         team = pending_dacu_clearance_case.approver_assignments.first.team
         assignment = pending_dacu_clearance_case.approver_assignment_for(team)
@@ -1055,19 +1055,19 @@ RSpec.describe Case::Base, type: :model do
   describe "non_default_approver_assignments" do
     let(:pending_dacu_clearance_case) { create(:pending_dacu_clearance_case) }
 
-    context "no approver assignments" do
+    context "when no approver assignments" do
       it "returns empty array" do
         expect(kase.non_default_approver_assignments).to be_empty
       end
     end
 
-    context "only default clearance team approver assignment" do
+    context "when only default clearance team approver assignment" do
       it "returns empty array" do
         expect(pending_dacu_clearance_case.non_default_approver_assignments).to be_empty
       end
     end
 
-    context "multiple apprval assignments" do
+    context "when multiple apprval assignments" do
       it "returns all of them accept the default approval team assignment" do
         pending_private_clearance_case = create :pending_private_clearance_case
         private_office = find_or_create(:team_private_office)
@@ -1143,9 +1143,9 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 
-  context "updating deadlines after updates" do
-    context "received_date is updated" do
-      context "case has not been extended for pit" do
+  context "when updating deadlines after updates" do
+    context "and received_date is updated" do
+      context "and case has not been extended for pit" do
         it "changes the internal and external deadlines (but not escalation deadline)" do
           kase = nil
           Timecop.freeze(Time.zone.local(2017, 12, 1, 12, 0, 0)) do
@@ -1166,7 +1166,7 @@ RSpec.describe Case::Base, type: :model do
         end
       end
 
-      context "FOI case has been extended for pit as manager" do
+      context "and FOI case has been extended for pit as manager" do
         it "does not update deadlines" do
           kase = nil
 
@@ -1202,7 +1202,7 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "received_date is not updated" do
+    context "and received_date is not updated" do
       it "does not update deadlines" do
         kase = nil
         Timecop.freeze(Time.zone.local(2017, 12, 1, 12, 0, 0)) do
@@ -1245,7 +1245,6 @@ RSpec.describe Case::Base, type: :model do
         target_team_id: target_team&.id,
       )
     end
-    # rubocop:enable Metrics/ParameterLists
 
     def create_case(t, creating_team)
       Timecop.freeze(Time.zone.at(Time.zone.parse(t))) do
@@ -1304,7 +1303,7 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "out of time" do
+    context "when out of time" do
       it "returns false" do
         # responding team 2 assigned on 5 Sep, Disclosure approves response on 20 Sep
         kase = create_case "2017-09-01 13:45:22", bmt_team
@@ -1323,7 +1322,7 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "responding_team_2 is in time" do
+    context "when responding_team_2 is in time" do
       it "returns true" do
         # responding team 2 assigned on 5 Sep, Disclosure approves response on 18 Sept
         kase = create_case "2017-09-01 13:45:22", bmt_team
@@ -1414,7 +1413,7 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe "#deadline_calculator" do
-    context "FOI correspondence type" do
+    context "when FOI correspondence type" do
       let(:kase) { build_stubbed :foi_case }
 
       it "returns business days calculator" do
@@ -1425,7 +1424,7 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "SAR correspondence type" do
+    context "when SAR correspondence type" do
       let(:kase) { build_stubbed :sar_case }
 
       it "returns business days calculator" do
@@ -1445,7 +1444,7 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe "#trigger_reindexing" do
-    context "creating a new record" do
+    context "when creating a new record" do
       let(:kase) { build :case }
 
       it "sets the dirty flag" do
@@ -1464,10 +1463,10 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "updating an existing record" do
+    context "when updating an existing record" do
       let(:kase) { create :case, :clean }
 
-      context "fields requiring search reindex not updated" do
+      context "and fields requiring search reindex not updated" do
         it "does not set the dirty flag" do
           kase.update!(date_responded: Time.zone.today, workflow: "trigger")
           expect(kase).not_to be_dirty
@@ -1481,7 +1480,7 @@ RSpec.describe Case::Base, type: :model do
         end
       end
 
-      context "fields requiring search reindexing are updated" do
+      context "and fields requiring search reindexing are updated" do
         it "sets the dirty flag" do
           kase.update!(name: "John Smith")
           expect(kase).to be_dirty
@@ -1518,21 +1517,21 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe "#has_pit_extension?" do
-    context "any case" do
+    context "when any case" do
       it "returns false by default" do
         kase = create :case_being_drafted
         expect(kase.has_pit_extension?).to be false
       end
     end
 
-    context "case with pit extenstion" do
+    context "when case with pit extenstion" do
       it "returns true" do
         kase = create :case_being_drafted, :extended_for_pit
         expect(kase.has_pit_extension?).to be true
       end
     end
 
-    context "case with removed pit extension" do
+    context "when case with removed pit extension" do
       it "returns false" do
         kase = create :case_being_drafted, :pit_extension_removed
         expect(kase.has_pit_extension?).to be false
@@ -1541,7 +1540,7 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe "#responded_late?" do
-    context "date responded is nil" do
+    context "when date responded is nil" do
       it "is false" do
         kase = find_or_create :foi_case
         expect(kase.date_responded).to be_nil
@@ -1549,24 +1548,24 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "date responded is present" do
+    context "when date responded is present" do
       let(:kase)    { find_or_create :closed_case, date_responded: Time.zone.today }
 
-      context "date responded > external deadline" do
+      context "and date responded > external deadline" do
         it "is true" do
           kase.external_deadline = Date.yesterday
           expect(kase.responded_late?).to be true
         end
       end
 
-      context "date responded < external deadline" do
+      context "and date responded < external deadline" do
         it "is false" do
           kase.external_deadline = Date.tomorrow
           expect(kase.responded_late?).to be false
         end
       end
 
-      context "date_responded = external deadline" do
+      context "and date_responded = external deadline" do
         it "is false" do
           kase.external_deadline = Time.zone.today
           expect(kase.responded_late?).to be false
@@ -1748,7 +1747,7 @@ RSpec.describe Case::Base, type: :model do
   describe "#readonly?" do
     let(:retention_schedule) { nil }
 
-    context "for a closed case" do
+    context "when for a closed case" do
       context "with retention schedule" do
         let(:retention_schedule) { double(RetentionSchedule, anonymised?: anonymised) }
 
@@ -1756,7 +1755,7 @@ RSpec.describe Case::Base, type: :model do
           allow(closed_case).to receive(:retention_schedule).and_return(retention_schedule)
         end
 
-        context "anonymised state" do
+        context "and anonymised state" do
           let(:anonymised) { true }
 
           it "returns false" do
@@ -1764,7 +1763,7 @@ RSpec.describe Case::Base, type: :model do
           end
         end
 
-        context "not anonymised state" do
+        context "and not anonymised state" do
           let(:anonymised) { false }
 
           it "returns false" do
@@ -1780,7 +1779,7 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    context "for a non-closed case" do
+    context "when for a non-closed case" do
       let(:closed) { false }
 
       it "returns false" do

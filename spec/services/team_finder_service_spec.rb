@@ -39,7 +39,7 @@ describe TeamFinderService do
   let(:other_responder_case) { create :case_with_response, responder: other_responder }
 
   describe "#team_for_assigned_user" do
-    context "no such assignment with specified user" do
+    context "when no such assignment with specified user" do
       it "raises" do
         expect {
           described_class.new(kase, other_responder, :approver).team_for_assigned_user
@@ -48,7 +48,7 @@ describe TeamFinderService do
       end
     end
 
-    context "assignment with user exists, but not for specified role" do
+    context "when assignment with user exists, but not for specified role" do
       it "raises" do
         expect {
           described_class.new(kase, disclosure_specialist, :responder).team_for_assigned_user
@@ -57,7 +57,7 @@ describe TeamFinderService do
       end
     end
 
-    context "assignment with user exists for specified role, but not accepted" do
+    context "when assignment with user exists for specified role, but not accepted" do
       it "raises" do
         assignment = kase.assignments.responding.accepted.first
         assignment.update!(state: "pending")
@@ -68,14 +68,14 @@ describe TeamFinderService do
       end
     end
 
-    context "accepted assignment for user with specified role exists" do
+    context "when accepted assignment for user with specified role exists" do
       it "returns the team" do
         team = described_class.new(kase, responder, :responder).team_for_assigned_user
         expect(team).to eq team_candi
       end
     end
 
-    context "any assignment for user with specified role exists" do
+    context "when any assignment for user with specified role exists" do
       it "returns the team even if kase rejected" do
         responder_assignment = kase.assignments.responding.singular
         responder_assignment.update!(state: "rejected", reasons_for_rejection: "just because")
@@ -84,7 +84,7 @@ describe TeamFinderService do
       end
     end
 
-    context "accepted assignment exist for user with multiple roles" do
+    context "when accepted assignment exist for user with multiple roles" do
       it "returns the correct team for the role" do
         user_assignments = multi_role_managed_case
                              .assignments
@@ -102,7 +102,7 @@ describe TeamFinderService do
   end
 
   describe "#team_for_unassigned_user" do
-    context "no assignments on case with specified role" do
+    context "when no assignments on case with specified role" do
       it "raises" do
         responder_assignment = kase.assignments.responding.singular
         responder_assignment.destroy!
@@ -113,7 +113,7 @@ describe TeamFinderService do
       end
     end
 
-    context "assignment exists with the specified role, but is not accepted" do
+    context "when assignment exists with the specified role, but is not accepted" do
       it "raises" do
         responder_assignment = kase.assignments.responding.singular
         responder_assignment.update!(state: "rejected", reasons_for_rejection: "just because")
@@ -124,14 +124,14 @@ describe TeamFinderService do
       end
     end
 
-    context "user is member of team that is assigned to case in specified role" do
+    context "when user is member of team that is assigned to case in specified role" do
       it "returns the team" do
         team = described_class.new(kase, other_responder, :responder).team_for_unassigned_user
         expect(team).to eq team_candi
       end
     end
 
-    context "multi-role user is member of team which is assigned to case in specified role" do
+    context "when multi-role user is member of team which is assigned to case in specified role" do
       it "returns the team" do
         team = described_class.new(multi_role_managed_case, multi_role_user, :responder).team_for_unassigned_user
         expect(team).to eq team_candi
@@ -139,7 +139,7 @@ describe TeamFinderService do
     end
   end
 
-  context "Invalid team role" do
+  context "when invalid team role" do
     it "raises" do
       expect {
         described_class.new("mock_case", "mock_user", :assessor)

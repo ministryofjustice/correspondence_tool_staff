@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.shared_examples "edit case spec" do
-  context "as a logged in non-manager" do
+  context "when a logged in non-manager" do
     let(:responder) { find_or_create :foi_responder }
 
     before do
@@ -18,7 +18,7 @@ RSpec.shared_examples "edit case spec" do
     end
   end
 
-  context "as a logged in manager" do
+  context "when a logged in manager" do
     let(:manager) { find_or_create :disclosure_bmt_user }
 
     before do

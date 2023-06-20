@@ -13,7 +13,7 @@ describe "cases/searches/show.html.slim", type: :view do
 
   let(:closed_case) { create(:closed_case) }
 
-  context "no search query" do
+  context "when no search query" do
     before do
       assign(:cases, [])
       assign(:query, build_stubbed(:search_query, search_text: ""))
@@ -37,7 +37,7 @@ describe "cases/searches/show.html.slim", type: :view do
     end
   end
 
-  context "no results are found" do
+  context "when no results are found" do
     before do
       assign(:query, create(:search_query, search_text: "no search results"))
       assign(:cases, [])
@@ -64,7 +64,7 @@ describe "cases/searches/show.html.slim", type: :view do
     end
   end
 
-  context "found some results" do
+  context "when found some results" do
     before do
       login_as create(:user)
       create :report_type

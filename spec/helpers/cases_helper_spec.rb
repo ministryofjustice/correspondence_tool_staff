@@ -25,37 +25,37 @@ RSpec.describe CasesHelper, type: :helper do
     let(:new_style_closed_case)   { create :closed_case }
     let(:open_case)               { create :assigned_case }
 
-    context "manager" do
-      context "case_closed" do
-        context "old_style closure details on case" do
+    context "when manager" do
+      context "and case_closed" do
+        context "and old_style closure details on case" do
           it "returns true" do
             expect(manager_updating_close_details_on_old_case?(manager, old_style_closed_case)).to be true
           end
         end
 
-        context "new style closure details" do
+        context "and new style closure details" do
           it "returns false" do
             expect(manager_updating_close_details_on_old_case?(manager, new_style_closed_case)).to be false
           end
         end
       end
 
-      context "case open" do
+      context "and case open" do
         it "returns false" do
           expect(manager_updating_close_details_on_old_case?(manager, open_case)).to be false
         end
       end
     end
 
-    context "approver" do
-      context "case closed" do
-        context "old style closure details" do
+    context "when approver" do
+      context "and case closed" do
+        context "and old style closure details" do
           it "returns false" do
             expect(manager_updating_close_details_on_old_case?(approver, old_style_closed_case)).to be false
           end
         end
 
-        context "new style closure details" do
+        context "and new style closure details" do
           it "returns false" do
             expect(manager_updating_close_details_on_old_case?(approver, new_style_closed_case)).to be false
           end
@@ -63,15 +63,15 @@ RSpec.describe CasesHelper, type: :helper do
       end
     end
 
-    context "responder" do
-      context "case closed" do
-        context "old style closure details" do
+    context "when responder" do
+      context "and case closed" do
+        context "and old style closure details" do
           it "returns false" do
             expect(manager_updating_close_details_on_old_case?(responder, old_style_closed_case)).to be false
           end
         end
 
-        context "new style closure details" do
+        context "and new style closure details" do
           it "returns false" do
             expect(manager_updating_close_details_on_old_case?(responder, new_style_closed_case)).to be false
           end
@@ -91,7 +91,7 @@ RSpec.describe CasesHelper, type: :helper do
     end
 
     context "when event == :close" do
-      context "case is foi" do
+      context "and case is foi" do
         it "generates HTML that links to the close case action" do
           @case = create(:responded_case)
           expect(action_button_for(:close)).to eq(
@@ -101,7 +101,7 @@ href=\"/cases/fois/#{@case.id}/close\">Close case</a>",
         end
       end
 
-      context "case is ICO" do
+      context "and case is ICO" do
         it "generates HTML that links to the close case action" do
           @case = create(:responded_ico_foi_case)
           expect(action_button_for(:close)).to eq(
@@ -122,7 +122,7 @@ href=\"/cases/ico_fois/#{@case.id}/close\">Record ICO&#39;s decision</a>",
     end
 
     context "when event == :add_responses" do
-      context "case does not require clearance" do
+      context "and case does not require clearance" do
         it "generates HTML that links to the upload response page" do
           @case = create(:accepted_case)
           expect(action_button_for(:add_responses)).to eq(
@@ -131,7 +131,7 @@ href=\"/cases/ico_fois/#{@case.id}/close\">Record ICO&#39;s decision</a>",
         end
       end
 
-      context "case requires clearance" do
+      context "and case requires clearance" do
         it "generates HTML that links to the upload response page" do
           @case = create(:accepted_case)
           expect(action_button_for(:add_responses)).to eq(
@@ -142,7 +142,7 @@ href=\"/cases/ico_fois/#{@case.id}/close\">Record ICO&#39;s decision</a>",
     end
 
     context "when event = :respond" do
-      context "case is FOI/SAR" do
+      context "and case is FOI/SAR" do
         it "generates HTML that links to the upload response page" do
           @case = create(:case_with_response)
           expect(action_button_for(:respond)).to eq(
@@ -152,7 +152,7 @@ href=\"/cases/fois/#{@case.id}/respond\">Mark response as sent</a>",
         end
       end
 
-      context "case is ICO" do
+      context "and case is ICO" do
         it "generates HTML that links to the upload response page" do
           @case = create(:approved_ico_foi_case)
           expect(action_button_for(:respond)).to eq(
@@ -175,7 +175,7 @@ href=\"/cases/ico_fois/#{@case.id}/respond\">Mark as sent to ICO</a>",
     end
 
     context "when event == :reassign_user" do
-      context "when there is only one assignment for this users teams" do
+      context "and there is only one assignment for this users teams" do
         it "generates HTML that links to the close case action" do
           @case = create(:accepted_case)
           @assignments = [@case.responder_assignment]
@@ -277,15 +277,15 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
   describe "#case_link_with_hash" do
     let(:kase) { double "case", id: 25, number: "180425001" }
 
-    context "query hash instance variable exists" do
-      context "page parameters exists" do
+    context "when query hash instance variable exists" do
+      context "and page parameters exists" do
         it "shows link with hash and position parameters" do
           expected_link = "<a href=\"/cases/25?pos=35\"><span class=\"visually-hidden\">Case number </span>180425001</a>"
           expect(case_link_with_hash(kase, :number, 2, 14)).to eq expected_link
         end
       end
 
-      context "page number does not exist" do
+      context "and page number does not exist" do
         it "shows link with hash and position parameters based on page 1" do
           expected_link = "<a href=\"/cases/25?pos=15\"><span class=\"visually-hidden\">Case number </span>180425001</a>"
           expect(case_link_with_hash(kase, :number, "", 14)).to eq expected_link
@@ -341,7 +341,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
     let(:base_path)     { "/cases/open" }
     let(:param_path)    { "/cases/open?page=3&type=foi" }
 
-    context "no query params" do
+    context "with no query params" do
       it "returns link for csv without query params" do
         expect(download_csv_link(base_path)).to eq '<a href="/cases/open.csv">Download cases</a>'
       end

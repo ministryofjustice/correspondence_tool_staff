@@ -31,7 +31,7 @@ describe CaseUpdaterService do
       end
     end
 
-    context "all the params are the same(i.e user has not edited data)" do
+    context "when all the params are the same(i.e user has not edited data)" do
       let(:params)        { { name: kase.name } }
 
       it "does not change the attributes on the case" do
@@ -50,7 +50,7 @@ describe CaseUpdaterService do
       end
     end
 
-    context "if anything fails in the transaction" do
+    context "when anything fails in the transaction" do
       let(:params)        { { name: "Joe bloggs" } }
 
       it "raises an error when it saves" do

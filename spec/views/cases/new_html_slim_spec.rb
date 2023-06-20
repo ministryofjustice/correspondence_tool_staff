@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe "cases/new.html.slim", type: :view do
-  context "FOIs" do
+  describe "FOIs" do
     it "displays the new case page" do
       kase = Case::FOI::Standard.new.decorate
       assign(:case_types, %w[Standard ComplianceReview TimelinessReview])
@@ -37,7 +37,7 @@ describe "cases/new.html.slim", type: :view do
     end
   end
 
-  context "SARs" do
+  describe "SARs" do
     it "displays the new case page" do
       kase = Case::SAR::Standard.new.decorate
       assign(:case, kase)
@@ -76,7 +76,7 @@ describe "cases/new.html.slim", type: :view do
     end
   end
 
-  context "ICOs" do
+  describe "ICOs" do
     it "displays the new case page" do
       kase = build(:ico_foi_case).decorate
       assign(:case, kase)

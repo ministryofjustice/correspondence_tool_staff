@@ -26,13 +26,13 @@ describe CaseFilter::CasePartialCaseFlagFilter do
   describe "#applied?" do
     subject { case_partial_case_flag_filter }
 
-    context "filter_partial_case_flag not present" do
+    context "when filter_partial_case_flag not present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "filter_partial_case_flag present" do
+    context "when filter_partial_case_flag present" do
       let(:search_query) do
         create :search_query,
                filter_partial_case_flag: %w[partial-case]
@@ -69,7 +69,7 @@ describe CaseFilter::CasePartialCaseFlagFilter do
   end
 
   describe "#crumbs" do
-    context "no filters selected" do
+    context "when no filters selected" do
       let(:search_query) do
         create :search_query,
                filter_partial_case_flag: []
@@ -80,8 +80,8 @@ describe CaseFilter::CasePartialCaseFlagFilter do
       end
     end
 
-    context "filtering for cases based on flag of high profile" do
-      context "filtering for normal complaint case" do
+    context "when filtering for cases based on flag of high profile" do
+      context "and filtering for normal complaint case" do
         let(:search_query) do
           create :search_query,
                  filter_partial_case_flag: %w[not-partial-case]
@@ -105,7 +105,7 @@ describe CaseFilter::CasePartialCaseFlagFilter do
         end
       end
 
-      context "filtering for partial and non-partial cases" do
+      context "and filtering for partial and non-partial cases" do
         let(:search_query) do
           create :search_query,
                  filter_partial_case_flag: %w[partial-case not-partial-case]

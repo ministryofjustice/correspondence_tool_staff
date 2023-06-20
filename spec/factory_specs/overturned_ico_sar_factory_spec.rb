@@ -9,8 +9,8 @@ describe "Overturned ICO SAR cases factory" do
   let(:disclosure_team)         { find_or_create :team_disclosure }
   let(:disclosure_specialist)   { disclosure_team.users.first }
 
-  context "Overturned ICO SAR" do
-    context "standard workflow" do
+  describe "Overturned ICO SAR" do
+    context "when standard workflow" do
       describe :overturned_ico_sar do
         it "creates an unassigned ICO SAR case" do
           Timecop.freeze(frozen_time) do
@@ -107,7 +107,7 @@ describe "Overturned ICO SAR cases factory" do
       end
     end
 
-    context "trigger workflow" do
+    context "when trigger workflow" do
       describe ":overturned_ico_sar, :flagged" do
         it "creates an unassigned flagged ICO SAR case" do
           Timecop.freeze(frozen_time) do

@@ -9,7 +9,7 @@ describe "ICO cases factory" do
   let(:disclosure_team)         { find_or_create :team_disclosure }
   let(:disclosure_specialist)   { disclosure_team.users.first }
 
-  context "ICO FOI cases" do
+  context "when ICO FOI cases" do
     let(:responding_team) { find_or_create :foi_responding_team }
 
     describe :ico_foi_case do
@@ -149,7 +149,7 @@ describe "ICO cases factory" do
     end
   end
 
-  context "ICO SAR cases" do
+  context "when ICO SAR cases" do
     let(:responding_team) { find_or_create :sar_responding_team }
     let(:responder)       { find_or_create :sar_responder }
 

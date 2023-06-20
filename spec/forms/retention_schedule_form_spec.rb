@@ -50,7 +50,7 @@ RSpec.describe RetentionScheduleForm do
       end
     end
 
-    context "destruction_date_after_close_date validation" do
+    context "when destruction_date_after_close_date validation" do
       context "when the `planned_destruction_date` is before the `date_responded`" do
         let(:planned_destruction_date) { Date.yesterday }
 
@@ -72,7 +72,7 @@ RSpec.describe RetentionScheduleForm do
       end
     end
 
-    context "state validation" do
+    describe "state validation" do
       context "when `state` is not present" do
         let(:state) { nil }
 

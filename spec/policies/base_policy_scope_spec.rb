@@ -70,21 +70,21 @@ describe Case::BasePolicy::Scope do
     end
 
     describe "#resolve" do
-      context "managers" do
+      context "when managers" do
         it "returns all cases" do
           manager_scope = Pundit.policy_scope(@manager, Case::Base.all)
           expect(manager_scope).to match_array(@all_cases)
         end
       end
 
-      context "responders" do
+      context "when responders" do
         it "returns all FOI cases plus SAR cases assigned to their team" do
           responder_scope = Pundit.policy_scope(@responder, Case::Base)
           expect(responder_scope).to match_array(@responder_cases)
         end
       end
 
-      context "approvers" do
+      context "when approvers" do
         it "returns FOI cases and any case assigned to approver/team" do
           approver_scope = described_class.new(@approver, Case::Base.all).resolve
           # ICO Appeals are always trigger, so they get assigned to an approver
@@ -94,7 +94,7 @@ describe Case::BasePolicy::Scope do
         end
       end
 
-      context "user who is both manager and responder" do
+      context "when user who is both manager and responder" do
         it "for responder & manager - returns all cases" do
           @responder.team_roles << TeamsUsersRole.new(team: @dacu_disclosure,
                                                       role: "manager")

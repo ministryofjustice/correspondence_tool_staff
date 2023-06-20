@@ -71,7 +71,7 @@ RSpec.describe Cases::IcoFoiController, type: :controller do
       expect(flash[:notice]).to eq "ICO appeal (FOI) case created<br/>Case number: #{created_case.number}"
     end
 
-    context "original case not linked" do
+    context "when original case not linked" do
       let(:invalid_ico_params) do
         ico_params.tap do |p|
           p[:ico].delete(:original_case_id)

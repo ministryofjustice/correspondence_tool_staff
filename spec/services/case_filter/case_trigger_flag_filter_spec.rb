@@ -33,13 +33,13 @@ describe CaseFilter::CaseTriggerFlagFilter do
   describe "#applied?" do
     subject { case_trigger_flag_filter }
 
-    context "filter_sensitivity not present" do
+    context "when filter_sensitivity not present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "filter_sensitivity present" do
+    context "when filter_sensitivity present" do
       let(:search_query) do
         create :search_query,
                filter_sensitivity: %w[trigger]
@@ -70,7 +70,7 @@ describe CaseFilter::CaseTriggerFlagFilter do
   end
 
   describe "#crumbs" do
-    context "no filters selected" do
+    context "when no filters selected" do
       let(:search_query) do
         create :search_query,
                filter_sensitivity: []
@@ -81,7 +81,7 @@ describe CaseFilter::CaseTriggerFlagFilter do
       end
     end
 
-    context "filtering for trigger cases" do
+    context "when filtering for trigger cases" do
       let(:search_query) do
         create :search_query,
                filter_sensitivity: %w[trigger]
@@ -104,7 +104,7 @@ describe CaseFilter::CaseTriggerFlagFilter do
         }
       end
 
-      context "filtering for non-trigger cases" do
+      context "when filtering for non-trigger cases" do
         let(:search_query) do
           create :search_query,
                  filter_sensitivity: %w[non-trigger]
@@ -115,7 +115,7 @@ describe CaseFilter::CaseTriggerFlagFilter do
         end
       end
 
-      context "filtering for Trigger and FOI Standard cases" do
+      context "when filtering for Trigger and FOI Standard cases" do
         let(:search_query) do
           create :search_query,
                  filter_sensitivity: %w[trigger]

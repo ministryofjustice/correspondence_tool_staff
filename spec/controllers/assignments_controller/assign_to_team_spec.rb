@@ -53,7 +53,7 @@ RSpec.describe AssignmentsController, type: :controller do
       expect(response).to redirect_to case_path(id: params[:case_id])
     end
 
-    context "service fails" do
+    context "when service fails" do
       before do
         allow(service).to receive(:result).and_return(:could_not_create_assignment)
       end

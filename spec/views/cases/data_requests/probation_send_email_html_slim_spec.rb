@@ -24,7 +24,7 @@ describe "cases/data_requests/probation_send_email", type: :view do
       )
     end
 
-    context "data request with probation template" do
+    context "with data request with probation template" do
       before do
         assign(:data_request, data_request)
         assign(:case, data_request.kase)

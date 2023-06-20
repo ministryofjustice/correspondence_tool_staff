@@ -4,7 +4,7 @@ describe CaseSendBackService do
   describe "#call" do
     let(:state_machine) { double ConfigurableStateMachine::Machine, send_back!: true, add_message_to_case!: true }
 
-    context "send back a foi case" do
+    context "when send back a foi case" do
       it "a non-trigger foi case" do
         kase = create :responded_case
         user = kase.managing_team.users.first
@@ -60,7 +60,7 @@ describe CaseSendBackService do
       end
     end
 
-    context "send back case with invalid params" do
+    context "when send back case with invalid params" do
       it "raises an error when it saves" do
         kase = create :accepted_case
         user = kase.managing_team.users.first

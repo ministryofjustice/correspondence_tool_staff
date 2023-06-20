@@ -10,7 +10,7 @@ feature "Upload response" do
     create :manager, managing_teams: manager.managing_teams
   end
 
-  context "Upload response for tmm sar case" do
+  context "when uploading response for tmm sar case" do
     scenario "as the assigned manager" do
       login_as manager
       cases_show_page.load(id: tmm_kase.id)
@@ -38,7 +38,7 @@ feature "Upload response" do
     end
   end
 
-  context "Upload response for non-tmm sar case" do
+  context "when uploading response for non-tmm sar case" do
     scenario "as the assigned manager" do
       login_as manager
       cases_show_page.load(id: kase.id)

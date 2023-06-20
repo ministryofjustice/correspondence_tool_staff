@@ -54,7 +54,7 @@ RSpec.describe Cases::LettersController, type: :controller do
       end
     end
 
-    context "word doc with valid params" do
+    context "when word doc with valid params" do
       before do
         get :show, as: :docx, params: {
           case_id: offender_sar_case.id,

@@ -303,6 +303,5 @@ module Stats
       end
       kase
     end
-    # rubocop:enable Metrics/ParameterLists
   end
 end

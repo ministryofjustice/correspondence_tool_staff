@@ -25,7 +25,7 @@ describe CaseUnacceptApproverAssignmentService do
       expect(service.result).to eq :not_accepted
     end
 
-    context "dacu disclosure assignment" do
+    context "when dacu disclosure assignment" do
       let(:service) do
         described_class.new assignment:
       end
@@ -56,7 +56,7 @@ describe CaseUnacceptApproverAssignmentService do
       end
     end
 
-    context "press office assignment" do
+    context "when press office assignment" do
       let(:assigned_to_press_office_case) do
         create :assigned_case,
                :flagged_accepted,
@@ -77,7 +77,7 @@ describe CaseUnacceptApproverAssignmentService do
       end
       let(:service) { described_class.new(assignment: press_office_assignment) }
 
-      context "case is not previously flagged for clearance" do
+      context "and case is not previously flagged for clearance" do
         before do
           # press officer flagging it for themselves and flags for dacu disclosure as side effect
           create :flag_case_for_clearance_transition,
@@ -141,7 +141,7 @@ describe CaseUnacceptApproverAssignmentService do
         end
       end
 
-      context "case is already flagged by DACU Disclosure and Private Office" do
+      context "and case is already flagged by DACU Disclosure and Private Office" do
         before do
           # Alter the existing transition that was created in case setup so that
           # it wasn't taken-on by press.
@@ -195,7 +195,7 @@ describe CaseUnacceptApproverAssignmentService do
       end
     end
 
-    context "private office assignment" do
+    context "when private office assignment" do
       let(:private_office_assignment) do
         assigned_to_private_office_case
           .approver_assignments
@@ -211,7 +211,7 @@ describe CaseUnacceptApproverAssignmentService do
       end
       let(:service) { described_class.new(assignment: private_office_assignment) }
 
-      context "case is not already flagged for clearance" do
+      context "and case is not already flagged for clearance" do
         let(:assigned_to_private_office_case) do
           create :assigned_case,
                  :taken_on_by_private
@@ -249,7 +249,7 @@ describe CaseUnacceptApproverAssignmentService do
         end
       end
 
-      context "case is already flagged for clearance by DACU Disclosure" do
+      context "and case is already flagged for clearance by DACU Disclosure" do
         let(:assigned_to_private_office_case) do
           create :assigned_case,
                  :flagged_accepted,

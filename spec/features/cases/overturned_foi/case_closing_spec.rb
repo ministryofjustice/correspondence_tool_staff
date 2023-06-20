@@ -14,8 +14,8 @@ feature "Closing a case" do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  context "Reporting timiliness" do
-    context "responded-to in time" do
+  describe "Reporting timiliness" do
+    context "when responded-to in time" do
       given!(:fully_granted_case) do
         create :responded_ot_ico_foi,
                received_date: 10.business_days.ago
@@ -53,7 +53,7 @@ feature "Closing a case" do
     end
   end
 
-  context 'Is the information held? "Yes"' do
+  context "when the information is held" do
     given!(:kase) do
       create :responded_ot_ico_foi,
              received_date: 10.business_days.ago
@@ -165,7 +165,7 @@ feature "Closing a case" do
     end
   end
 
-  context 'Is the information held? "No"' do
+  context "when the information is not held" do
     given!(:no_info_held_case) do
       create :responded_ot_ico_foi,
              received_date: 10.business_days.ago
@@ -205,7 +205,7 @@ feature "Closing a case" do
     end
   end
 
-  context 'Is the information held? "Other"' do
+  context "when the information held = Other" do
     given!(:other_info_held_case) do
       create :responded_ot_ico_foi,
              received_date: 10.business_days.ago

@@ -80,14 +80,14 @@ RSpec.describe ReportType, type: :model do
   end
 
   describe ".method missing" do
-    context "method is a report abbreviation" do
+    context "when method is a report abbreviation" do
       it "calls find_by" do
         expect(described_class).to receive(:find_by!).with(abbr: "R002")
         described_class.r002
       end
     end
 
-    context "method is not a report abbreviation" do
+    context "when method is not a report abbreviation" do
       it "raises NoMethodError" do
         expect {
           described_class.rogue_method

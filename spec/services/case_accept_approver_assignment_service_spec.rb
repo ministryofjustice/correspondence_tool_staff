@@ -24,7 +24,7 @@ describe CaseAcceptApproverAssignmentService do
       expect(service.result).to eq :not_pending
     end
 
-    context "succesful run" do
+    context "when succesful run" do
       let(:service) do
         described_class.new assignment:,
                             user: approver

@@ -52,5 +52,4 @@ class AddDisplayOrderToSomeCorrespondenceTypes < ActiveRecord::DataMigration
     rec = CorrespondenceType.find_by(abbreviation: "SAR_INTERNAL_REVIEW")
     rec.update!(display_order: nil) if rec
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 end

@@ -7,7 +7,7 @@ describe CasesController, type: :controller do
 
     before { sign_in manager }
 
-    context "FOI case" do
+    context "when FOI case" do
       let(:kase) { create :foi_case }
 
       it "authorises" do
@@ -29,7 +29,7 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "SAR case" do
+    context "when SAR case" do
       let(:kase) { create :sar_case }
 
       it "marks a SAR case as deleted" do
@@ -39,7 +39,7 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "ICO FOI case" do
+    context "when ICO FOI case" do
       let(:kase)   { create :ico_foi_case }
 
       it "marks an ICO FOI case as deleted" do
@@ -49,7 +49,7 @@ describe CasesController, type: :controller do
       end
     end
 
-    context "ICO SAR case" do
+    context "when ICO SAR case" do
       let(:kase)   { create :ico_sar_case }
 
       it "marks an ICO SAR case as deleted" do

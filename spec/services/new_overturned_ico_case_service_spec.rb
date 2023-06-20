@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe NewOverturnedIcoCaseService do
   describe ".new" do
-    context "id of non existent case" do
+    context "when id of non existent case" do
       it "raises" do
         expect {
           described_class.new(9_123_456)
@@ -12,7 +12,7 @@ describe NewOverturnedIcoCaseService do
   end
 
   describe "#call" do
-    context "original ico appeal case type is  not ICO" do
+    context "when original ico appeal case type is  not ICO" do
       let(:service)                 { described_class.new(original_ico_appeal.id) }
       let(:original_ico_appeal)     { create :case }
       let(:original_case)           { create :case }
@@ -31,7 +31,7 @@ describe NewOverturnedIcoCaseService do
       end
     end
 
-    context "original ico appeal case type is Case::ICO::SAR" do
+    context "when original ico appeal case type is Case::ICO::SAR" do
       let(:original_ico_appeal)     { create :ico_sar_case, original_case: }
       let(:original_case)           { create :sar_case, subject: "My SAR case", reply_method: "send_by_email", email: "me@moj.com" }
       let(:service)                 { described_class.new(original_ico_appeal.id) }
@@ -60,8 +60,8 @@ describe NewOverturnedIcoCaseService do
         expect(service.overturned_ico_case.ico_officer_name).to eq original_ico_appeal.ico_officer_name
       end
 
-      context "reply method" do
-        context "original case send_by_email" do
+      describe "setting the reply method" do
+        context "and original case send_by_email" do
           it "sets the reply method" do
             expect(service.overturned_ico_case.reply_method).to eq "send_by_email"
           end
@@ -71,8 +71,8 @@ describe NewOverturnedIcoCaseService do
           end
         end
 
-        context "original case sent by post" do
-          let(:address)   { "Ministry of Justice\n102 Petty France\nLondon\nSW1H 9AJ" }
+        context "and original case sent by post" do
+          let(:address) { "Ministry of Justice\n102 Petty France\nLondon\nSW1H 9AJ" }
 
           it "sets the reply method and postal address" do
             my_original_case = create :sar_case, reply_method: "send_by_post", postal_address: address
@@ -87,7 +87,7 @@ describe NewOverturnedIcoCaseService do
       end
     end
 
-    context "original case type is Case::ICO::FOI" do
+    context "when original case type is Case::ICO::FOI" do
       let(:original_case)       { original_ico_appeal.original_case }
       let(:original_ico_appeal) { create :closed_ico_foi_case }
       let(:service)             { described_class.new(original_ico_appeal.id) }
@@ -114,7 +114,7 @@ describe NewOverturnedIcoCaseService do
       end
 
       describe "setting the reply method" do
-        context "original case sent_by_email" do
+        context "and original case sent_by_email" do
           it "sets the reply method" do
             expect(service.overturned_ico_case.reply_method).to eq "send_by_email"
           end
@@ -124,7 +124,7 @@ describe NewOverturnedIcoCaseService do
           end
         end
 
-        context "original case sent by post" do
+        context "and original case sent by post" do
           let(:original_case)       { create :foi_case, :case_sent_by_post }
 
           it "sets the reply method and postal address" do

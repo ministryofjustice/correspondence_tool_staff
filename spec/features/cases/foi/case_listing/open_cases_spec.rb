@@ -46,7 +46,7 @@ feature "listing open cases on the system" do
 
   after(:all) { DbHousekeeping.clean }
 
-  context "for managers" do
+  context "with managers" do
     scenario "shows all cases" do
       login_as create(:manager)
       visit "/cases/open"
@@ -73,7 +73,7 @@ feature "listing open cases on the system" do
     expect(cases[2].number).to have_text @assigned_case_dd_flagged.number
   end
 
-  context "press officer" do
+  context "with press officer" do
     scenario "only shows their cases" do
       login_as @press_officer
 
@@ -86,7 +86,7 @@ feature "listing open cases on the system" do
     end
   end
 
-  context "disclosure specialist" do
+  context "with disclosure specialist" do
     scenario "only shows their cases" do
       login_as @disclosure_specialist
 

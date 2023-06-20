@@ -23,21 +23,21 @@ describe ReportTypePolicy::Scope do
     after(:all) { DbHousekeeping.clean }
 
     describe "#resolve" do
-      context "managers" do
+      context "when managers" do
         it "returns the reports having sar and foi flags" do
           manager_scope = Pundit.policy_scope(@manager, ReportType.all)
           expect(manager_scope).to match_array([@report1, @report2, @report3])
         end
       end
 
-      context "responders" do
+      context "when responders" do
         it "returns the reports having offender_sar flag" do
           responder_scope = Pundit.policy_scope(@responder, ReportType.all)
           expect(responder_scope).to match_array([@report4, @report5])
         end
       end
 
-      context "user who is both manager and responder" do
+      context "when user who is both manager and responder" do
         it "returns all the reports" do
           @responder.team_roles << TeamsUsersRole.new(team: @managing_team,
                                                       role: "manager")

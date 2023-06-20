@@ -8,7 +8,7 @@ describe RequestFurtherClearanceService do
     let(:thu_may_18) { Time.utc(2017, 5, 18, 12, 0, 0) }
     let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
 
-    context "foi" do
+    describe "foi" do
       before do
         @service = described_class.new(user: manager,
                                        kase: accepted_case)
@@ -99,7 +99,7 @@ describe RequestFurtherClearanceService do
       end
     end
 
-    context "SAR" do
+    describe "SAR" do
       let(:accepted_sar) { create :accepted_sar }
 
       before do

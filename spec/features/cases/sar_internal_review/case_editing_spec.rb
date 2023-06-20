@@ -60,7 +60,7 @@ feature "SAR Internal Review Case can be edited", js: true do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  context "as a manager" do
+  context "when a manager" do
     it "will allow me to edit a SAR IR case details" do
       when_a_manager_logs_in
       and_they_edit_the_case_details(sar_ir)
@@ -75,7 +75,7 @@ feature "SAR Internal Review Case can be edited", js: true do
     end
   end
 
-  context "as an approver" do
+  context "when an approver" do
     it "will allow me to edit a SAR IR case details" do
       when_an_approver_logs_in
       and_they_edit_the_case_details(approved_sar_ir)
@@ -90,7 +90,7 @@ feature "SAR Internal Review Case can be edited", js: true do
     end
   end
 
-  context "as a responder" do
+  context "when a responder" do
     it "won't allow me to edit a SAR IR case details" do
       when_a_responder_logs_in
       and_loads_the_case_show_page(responding_sar_ir)

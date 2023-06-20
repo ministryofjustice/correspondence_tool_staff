@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe Case::SAR::OffenderComplaint do
-  context "factory should be valid" do
+  context "when factory should be valid" do
     it "is valid" do
       kase = build_stubbed :offender_sar_complaint
 
@@ -32,7 +32,7 @@ describe Case::SAR::OffenderComplaint do
     end
   end
 
-  context "validates that SAR-specific fields are not blank" do
+  context "when validates that SAR-specific fields are not blank" do
     it "is not valid" do
       kase = build_stubbed :offender_sar_complaint, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
 
@@ -43,7 +43,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "#complaint_type" do
-    context "validates that complaint type is not blank" do
+    context "when validates that complaint type is not blank" do
       it "errors" do
         kase = build_stubbed(:offender_sar_complaint, complaint_type: nil)
         expect(kase).not_to be_valid
@@ -51,7 +51,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:offender_sar_complaint, complaint_type: "standard_complaint")).to be_valid
         expect(build_stubbed(:offender_sar_complaint, complaint_type: "ico_complaint")).to be_valid
@@ -59,7 +59,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_complaint, complaint_type: "wibble")
@@ -69,7 +69,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "#priority" do
-    context "validates that priority is not blank" do
+    context "when validates that priority is not blank" do
       it "errors" do
         kase = build_stubbed(:offender_sar_complaint, priority: nil)
         expect(kase).not_to be_valid
@@ -77,14 +77,14 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:offender_sar_complaint, priority: "normal")).to be_valid
         expect(build_stubbed(:offender_sar_complaint, priority: "high")).to be_valid
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_complaint, priority: "enormous")
@@ -112,7 +112,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "#complaint_subtype" do
-    context "validates that complaint_subtype is not blank" do
+    context "when validates that complaint_subtype is not blank" do
       it "errors" do
         kase = build_stubbed(:offender_sar_complaint, complaint_subtype: nil)
         expect(kase).not_to be_valid
@@ -120,7 +120,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:offender_sar_complaint, complaint_subtype: "missing_data")).to be_valid
         expect(build_stubbed(:offender_sar_complaint, complaint_subtype: "inaccurate_data")).to be_valid
@@ -129,7 +129,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_complaint, complaint_subtype: "purple")
@@ -139,7 +139,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "#subject_type" do
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:offender_sar_complaint, subject_type: "detainee")).to be_valid
         expect(build_stubbed(:offender_sar_complaint, subject_type: "ex_detainee")).to be_valid
@@ -150,7 +150,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_complaint, subject_type: "plumber")
@@ -158,7 +158,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "nil" do
+    context "with nil" do
       it "errors" do
         kase = build_stubbed(:offender_sar_complaint, subject_type: nil)
         expect(kase).not_to be_valid
@@ -168,7 +168,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "#recipient" do
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:offender_sar_complaint, recipient: "subject_recipient")).to be_valid
         expect(build_stubbed(:offender_sar_complaint, recipient: "requester_recipient")).to be_valid
@@ -180,7 +180,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_complaint, recipient: "user")
@@ -188,7 +188,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "nil" do
+    context "with nil" do
       it "errors" do
         kase = build_stubbed(:offender_sar_complaint, recipient: nil)
         expect(kase).not_to be_valid
@@ -198,14 +198,14 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "#postal_address" do
-    context "valid values" do
+    context "with valid values" do
       it "validates when address is set" do
         kase = build_stubbed(:offender_sar_complaint, :third_party, postal_address: "22 Acacia Avenue")
         expect(kase).to be_valid
       end
     end
 
-    context "invalid values" do
+    context "with invalid values" do
       it "validates presence of postal address when recipient is third party" do
         kase = build_stubbed :offender_sar_complaint, :third_party, postal_address: ""
         expect(kase).not_to be_valid
@@ -215,7 +215,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "#date_of_birth" do
-    context "valid values" do
+    context "with valid values" do
       it "validates date of birth" do
         kase = build_stubbed :offender_sar_complaint
 
@@ -224,7 +224,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_complaint, date_of_birth: "wibble")
@@ -232,7 +232,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "date of birth cannot be in future" do
+    context "when date of birth cannot be in future" do
       it "errors" do
         kase = build_stubbed(:offender_sar_complaint, date_of_birth: 1.day.from_now)
         expect(kase).not_to be_valid
@@ -240,7 +240,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "nil" do
+    context "with nil" do
       it "errors" do
         kase = build_stubbed(:offender_sar_complaint, date_of_birth: nil)
         expect(kase).not_to be_valid
@@ -250,7 +250,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "#received_date" do
-    context "valid values" do
+    context "with valid values" do
       it "validates received date" do
         kase = build_stubbed :offender_sar_complaint
         test_date = 4.business_days.ago.strftime("%d-%m-%Y")
@@ -260,7 +260,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_complaint, received_date: "wibble")
@@ -268,7 +268,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "received date cannot be in future" do
+    context "when received date cannot be in future" do
       it "errors" do
         kase = build_stubbed(:offender_sar_complaint, received_date: 1.day.from_now)
         expect(kase).not_to be_valid
@@ -278,7 +278,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "#request_dated" do
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_complaint, request_dated: "wibble")
@@ -286,7 +286,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "request_dated date cannot be in future" do
+    context "when request_dated date cannot be in future" do
       it "errors" do
         kase = build_stubbed(:offender_sar_complaint, request_dated: 1.day.from_now)
         expect(kase).not_to be_valid
@@ -296,7 +296,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "number_exempt_pages" do
-    context "invalid values" do
+    context "with invalid values" do
       it "errors when float is used" do
         kase = build_stubbed(:offender_sar_complaint, number_exempt_pages: -562)
         expect(kase).not_to be_valid
@@ -304,7 +304,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "valid values" do
+    context "with valid values" do
       it "is valid when string represents a positive whole number" do
         kase = build_stubbed(:offender_sar_complaint, number_exempt_pages: 4835)
         expect(kase).to be_valid
@@ -313,7 +313,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "number_final_pages" do
-    context "invalid values" do
+    context "with invalid values" do
       it "errors when string represents a negative whole number" do
         kase = build_stubbed(:offender_sar_complaint, number_final_pages: -562)
         expect(kase).not_to be_valid
@@ -321,7 +321,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "valid values" do
+    context "with valid values" do
       it "is valid when string represents a positive whole number" do
         kase = build_stubbed(:offender_sar_complaint, number_final_pages: 4835)
         expect(kase).to be_valid
@@ -495,7 +495,7 @@ describe Case::SAR::OffenderComplaint do
   end
 
   describe "use_subject_as_requester callback" do
-    context "on create" do
+    context "when creating" do
       it "does not change the requester when present" do
         offender_sar_complaint = create :offender_sar_complaint, name: "Bob", subject_full_name: "Doug"
         expect(offender_sar_complaint.reload.name).to eq "Bob"
@@ -507,7 +507,7 @@ describe Case::SAR::OffenderComplaint do
       end
     end
 
-    context "on update" do
+    context "when updating" do
       it "does not change the requester when present" do
         offender_sar_complaint = create :offender_sar_complaint
         offender_sar_complaint.update! name: "Bob", subject_full_name: "Doug"

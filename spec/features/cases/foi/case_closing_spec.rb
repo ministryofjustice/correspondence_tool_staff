@@ -14,8 +14,8 @@ feature "Closing a case" do
     CaseClosure::MetadataSeeder.unseed!
   end
 
-  context "Reporting timiliness" do
-    context "responded-to in time" do
+  describe "Reporting timiliness" do
+    context "when responded-to in time" do
       given!(:fully_granted_case) do
         create :responded_case,
                received_date: 10.business_days.ago
@@ -53,7 +53,7 @@ feature "Closing a case" do
       end
     end
 
-    context "responded-to late" do
+    context "when responded-to late" do
       given!(:fully_granted_case) do
         create :responded_case,
                received_date: 22.business_days.ago
@@ -86,7 +86,7 @@ feature "Closing a case" do
     end
   end
 
-  context "checking a previously closed case with an exemption" do
+  context "when checking a previously closed case with an exemption" do
     given(:kase) { create :closed_case, :with_ncnd_exemption }
 
     scenario "viewing the response details page" do
@@ -96,7 +96,7 @@ feature "Closing a case" do
     end
   end
 
-  context 'Is the information held? "Yes"' do
+  context "when information is held" do
     given!(:kase) do
       create :responded_case,
              received_date: 10.business_days.ago
@@ -207,7 +207,7 @@ feature "Closing a case" do
     end
   end
 
-  context 'Is the information held? "No"' do
+  context "when the information is not held" do
     given!(:no_info_held_case) do
       create :responded_case,
              received_date: 10.business_days.ago
@@ -247,7 +247,7 @@ feature "Closing a case" do
     end
   end
 
-  context 'Is the information held? "Other"' do
+  context "when the information held is Other" do
     given!(:other_info_held_case) do
       create :responded_case,
              received_date: 10.business_days.ago

@@ -22,7 +22,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
   end
 
   describe "#action_date" do
-    context "winter" do
+    context "when winter" do
       it "displays the time in UTC" do
         Timecop.freeze Date.new(2017, 2, 1) do
           expect(winter_ct_assign_responder.action_date)
@@ -31,7 +31,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "summer" do
+    context "when summer" do
       it "formats the creation date taking BST into account" do
         expect(ct_assign_responder.action_date).to eq "10 Apr 2017<br>14:22"
       end
@@ -51,7 +51,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
   end
 
   describe "#event_and_detail" do
-    context "accept_responder_assignment" do
+    describe "accept_responder_assignment" do
       it "returns expected text" do
         ct = create(:case_transition_accept_responder_assignment,
                     acting_team: dacu).decorate
@@ -61,7 +61,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "add_responses" do
+    describe "add_responses" do
       it "returns number of files uploaded" do
         ct = create(:case_transition_add_responses).decorate
         event = "Response uploaded"
@@ -70,7 +70,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "assign responder" do
+    describe "assign responder" do
       it "returns team name to which it has been assigned" do
         event = "Assign responder"
         details = "Assigned to Legal Aid Agency"
@@ -78,7 +78,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "assign_to_new_team" do
+    describe "assign_to_new_team" do
       it "returns team name to which it has been assigned" do
         ct = create(:case_transition_assign_to_new_team,
                     acting_user: dacu_user,
@@ -91,7 +91,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "extend_for_pit" do
+    describe "extend_for_pit" do
       it "returns the reason for extending" do
         ct = create(:case_transition_extend_for_pit,
                     acting_user: dacu_user,
@@ -103,7 +103,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "reject_responder_assignment" do
+    describe "reject_responder_assignment" do
       it "returns the reason for rejection" do
         ct = create(:case_transition_reject_responder_assignment,
                     acting_team: laa,
@@ -116,8 +116,8 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "respond" do
-      context "Non ICO case" do
+    describe "respond" do
+      context "when non ICO case" do
         it "returns marked as reponded" do
           ct = create(:case_transition_respond).decorate
           event = "Response sent to requester"
@@ -126,7 +126,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
         end
       end
 
-      context "ICO case" do
+      context "when ICO case" do
         it "returns messsage resonse sent to ICO" do
           ico_sar_case = create :ico_sar_case
           ct = create(:case_transition_respond, case: ico_sar_case).decorate
@@ -137,7 +137,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "remove_response" do
+    describe "remove_response" do
       it "returns name of event" do
         ct = create(:case_transition_remove_response).decorate
         event = "File removed"
@@ -146,7 +146,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "add_response_to_flagged_case" do
+    describe "add_response_to_flagged_case" do
       it "returns number of files and description of who its with" do
         ct = create(:case_transition_pending_dacu_clearance).decorate
         event = "Response uploaded"
@@ -155,7 +155,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "reassign_user" do
+    describe "reassign_user" do
       it "returns name of event" do
         ct = create(:case_transition_reassign_user).decorate
         action_user = User.find(ct.acting_user_id)
@@ -166,7 +166,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "progress_for_clearance" do
+    describe "progress_for_clearance" do
       it "returns to name of the clearance team" do
         drafting_sar_case = create :sar_being_drafted, :flagged_accepted
         ct = create(:case_transition_progress_for_clearance, case: drafting_sar_case).decorate
@@ -177,7 +177,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "Add linkage to a case" do
+    describe "Add linkage to a case" do
       it "returns to the number of linked case" do
         accepted_case = create :accepted_case, responder: dacu_user, responding_team: dacu
         ct = create(:case_link_foi_case, case: accepted_case).decorate
@@ -185,7 +185,7 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    context "Remove linkage to a case" do
+    describe "Remove linkage to a case" do
       it "returns to the number of linked case if the case exists" do
         accepted_case = create :accepted_case, responder: dacu_user, responding_team: dacu
         ct = create(:case_remove_link_foi_case, case: accepted_case).decorate

@@ -80,7 +80,7 @@ describe Cases::ResponsesController, type: :controller do
       expect(service).to have_received(:upload!)
     end
 
-    context "response does not require press office approval" do
+    context "when response does not require press office approval" do
       let(:params) do
         {
           case_id: responded_trigger_case.id,
@@ -105,7 +105,7 @@ describe Cases::ResponsesController, type: :controller do
       end
     end
 
-    context "response requires press office approval" do
+    context "when response requires press office approval" do
       let(:params) do
         {
           case_id: responded_trigger_case.id,
@@ -129,7 +129,7 @@ describe Cases::ResponsesController, type: :controller do
       end
     end
 
-    context "successful action" do
+    context "when successful action" do
       it "flashes a notification" do
         post(:create, params:)
         expect(flash[:notice])
@@ -147,7 +147,7 @@ describe Cases::ResponsesController, type: :controller do
       end
     end
 
-    context "uploaded_files is blank" do
+    context "when uploaded_files is blank" do
       before do
         allow(service).to receive(:result).and_return(:blank)
       end
@@ -164,7 +164,7 @@ describe Cases::ResponsesController, type: :controller do
       end
     end
 
-    context "error in uploader service" do
+    context "when error in uploader service" do
       before do
         allow(service).to receive(:result).and_return(:error)
       end

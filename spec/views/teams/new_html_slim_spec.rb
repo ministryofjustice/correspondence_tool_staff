@@ -7,7 +7,7 @@ describe "teams/new.html.slim", type: :view do
     allow(view).to receive(:current_user).and_return(user)
   end
 
-  context "creating a new business group" do
+  context "when creating a new business group" do
     before do
       login_as manager
       assign(:team, BusinessGroup.new)
@@ -36,7 +36,7 @@ describe "teams/new.html.slim", type: :view do
     end
   end
 
-  context "creating a new directorate" do
+  context "when creating a new directorate" do
     before do
       login_as manager
       assign(:team, Directorate.new)
@@ -65,7 +65,7 @@ describe "teams/new.html.slim", type: :view do
     end
   end
 
-  context "creating a new business unit" do
+  context "when creating a new business unit" do
     before do
       login_as manager
       assign(:team, BusinessUnit.new)

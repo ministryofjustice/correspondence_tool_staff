@@ -301,7 +301,6 @@ module CaseClosure
         sequence_id: 915,
       )
     end
-    # rubocop:enable Metrics/MethodLength
 
     def self.implement_oct_2017_changes(verbose)
       Rails.logger.debug "Updating Case Closure data inline with October 2017 changes" if verbose

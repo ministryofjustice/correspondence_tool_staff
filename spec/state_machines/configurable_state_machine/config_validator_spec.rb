@@ -63,7 +63,7 @@ module ConfigurableStateMachine
 
     let(:filename) { File.join(File.dirname(__FILE__), "data", "config.yml") }
 
-    context "validation of full valid file" do
+    context "when validation of full valid file" do
       it "is valid" do
         validator = ConfigValidator.new(config, filename)
         expect {
@@ -72,8 +72,8 @@ module ConfigurableStateMachine
       end
     end
 
-    context "validation of root" do
-      context "missing mandatory keys" do
+    context "when validation of root" do
+      context "and missing mandatory keys" do
         it "errors" do
           config.delete_field(:preamble)
           validator = ConfigValidator.new(config, filename)
@@ -83,7 +83,7 @@ module ConfigurableStateMachine
         end
       end
 
-      context "additional unknown keys" do
+      context "and additional unknown keys" do
         it "errors" do
           config.gobbledegook = "ddddd"
           validator = ConfigValidator.new(config, filename)
@@ -94,8 +94,8 @@ module ConfigurableStateMachine
       end
     end
 
-    context "validation of preamble" do
-      context "preamble is  not a hash" do
+    context "when validation of preamble" do
+      context "and preamble is  not a hash" do
         it "errors" do
           config.preamble = %w[dog cat mouse]
           validator = ConfigValidator.new(config, filename)
@@ -107,7 +107,7 @@ module ConfigurableStateMachine
         end
       end
 
-      context "missing keys" do
+      context "and missing keys" do
         it "errors" do
           config.preamble.delete_field(:organisation_abbreviation)
           validator = ConfigValidator.new(config, filename)
@@ -117,7 +117,7 @@ module ConfigurableStateMachine
         end
       end
 
-      context "extra keys" do
+      context "and extra keys" do
         it "errors" do
           config.preamble.codex = "abd"
           validator = ConfigValidator.new(config, filename)
@@ -128,7 +128,7 @@ module ConfigurableStateMachine
       end
     end
 
-    context "validation of preamble/permitted_case_types" do
+    context "when validation of preamble/permitted_case_types" do
       it "errors if none specified" do
         config.preamble.permitted_case_types = RecursiveOpenStruct.new({})
         validator = ConfigValidator.new(config, filename)
@@ -138,7 +138,7 @@ module ConfigurableStateMachine
       end
     end
 
-    context "validation of case_types" do
+    context "when validation of case_types" do
       it "errors if no case type entry for  thise specified in preamble/permitted_case_types" do
         config.preamble.permitted_case_types.pq = "Parliamentary Questions"
         validator = ConfigValidator.new(config, filename)
@@ -156,8 +156,8 @@ module ConfigurableStateMachine
       end
     end
 
-    context "validation of a single case type" do
-      context "name attribute" do
+    describe "validation of a single case type" do
+      context "when name attribute" do
         it "errors if missing" do
           config.case_types.foi.delete_field(:name)
           validator = ConfigValidator.new(config, filename)
@@ -167,7 +167,7 @@ module ConfigurableStateMachine
         end
       end
 
-      context "permitted workflows is not an array" do
+      context "when permitted workflows is not an array" do
         it "errors" do
           config.case_types.foi.permitted_workflows = RecursiveOpenStruct.new({ a: "kkkkk" })
           validator = ConfigValidator.new(config, filename)
@@ -177,7 +177,7 @@ module ConfigurableStateMachine
         end
       end
 
-      context "permitted workflows is an Integer" do
+      context "when permitted workflows is an Integer" do
         it "errors" do
           config.case_types.foi.permitted_workflows = 55
           validator = ConfigValidator.new(config, filename)
@@ -187,7 +187,7 @@ module ConfigurableStateMachine
         end
       end
 
-      context "permitted states is not an array" do
+      context "when permitted states is not an array" do
         it "errors" do
           config.case_types.foi.permitted_states = "abc"
           validator = ConfigValidator.new(config, filename)
@@ -197,8 +197,8 @@ module ConfigurableStateMachine
         end
       end
 
-      context "validation of workflows" do
-        context "workflows is not a hash" do
+      context "when validation of workflows" do
+        context "and workflows is not a hash" do
           it "errors" do
             config.case_types.foi.workflows = 33
             validator = ConfigValidator.new(config, filename)
@@ -208,7 +208,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "workflow name is not valid" do
+        context "and workflow name is not valid" do
           it "errors" do
             config.case_types.foi.workflows.fantasy_workflow = {}
             validator = ConfigValidator.new(config, filename)
@@ -218,7 +218,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "workflow is missing initial state" do
+        context "and workflow is missing initial state" do
           it "errors" do
             config.case_types.foi.workflows.standard.delete_field(:initial_state)
             validator = ConfigValidator.new(config, filename)
@@ -228,7 +228,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "initial_state is not a permitted state" do
+        context "and initial_state is not a permitted state" do
           it "errors" do
             config.case_types.foi.workflows.standard.initial_state = :unknown
             validator = ConfigValidator.new(config, filename)
@@ -238,7 +238,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "workflow is missing user roles" do
+        context "and workflow is missing user roles" do
           it "errors" do
             config.case_types.foi.workflows.standard.delete_field(:user_roles)
             validator = ConfigValidator.new(config, filename)
@@ -248,7 +248,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "user roles is not a hash" do
+        context "and user roles is not a hash" do
           it "errors" do
             config.case_types.foi.workflows.standard.user_roles = 55
             validator = ConfigValidator.new(config, filename)
@@ -258,7 +258,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "not all user roles are in permitted roles" do
+        context "and not all user roles are in permitted roles" do
           it "errors" do
             config.case_types.foi.workflows.standard.user_roles.drafter = {}
             validator = ConfigValidator.new(config, filename)
@@ -269,8 +269,8 @@ module ConfigurableStateMachine
         end
       end
 
-      context "validate user role" do
-        context "user role is not a hash" do
+      context "when validate user role" do
+        context "and user role is not a hash" do
           it "errors" do
             config.case_types.foi.workflows.standard.user_roles.manager = "xxx"
             validator = ConfigValidator.new(config, filename)
@@ -280,7 +280,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "user role doesnt have states key" do
+        context "and user role doesnt have states key" do
           it "errors" do
             config.case_types.foi.workflows.standard.user_roles.manager.case_states = {}
             config.case_types.foi.workflows.standard.user_roles.manager.delete_field(:states)
@@ -291,7 +291,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "user role has an unrecognised key" do
+        context "and user role has an unrecognised key" do
           it "errors" do
             config.case_types.foi.workflows.standard.user_roles.manager.case_states = {}
             validator = ConfigValidator.new(config, filename)
@@ -302,8 +302,8 @@ module ConfigurableStateMachine
         end
       end
 
-      context "validate user_role/state" do
-        context "unknown state specified" do
+      context "when validate user_role/state" do
+        context "and unknown state specified" do
           it "errors" do
             config.case_types.foi.workflows.standard.user_roles.manager.states.unrecognised = {}
             validator = ConfigValidator.new(config, filename)
@@ -313,7 +313,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "state is not a hash" do
+        context "and state is not a hash" do
           it "errors" do
             config.case_types.foi.workflows.standard.user_roles.manager.states.drafting = "kjkjkjkj"
             validator = ConfigValidator.new(config, filename)
@@ -324,8 +324,8 @@ module ConfigurableStateMachine
         end
       end
 
-      context "validate_event" do
-        context "invalid key" do
+      describe "validate_event" do
+        context "when invalid key" do
           it "errors" do
             config.case_types.foi.workflows.standard.user_roles.manager.states.drafting.edit_case.summarize = "Proc#summary"
             validator = ConfigValidator.new(config, filename)
@@ -335,7 +335,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "transition_to_using" do
+        context "when transition_to_using" do
           it "does not error if no transition_to_using is supplied" do
             hash = config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h
             expect(hash.key?(:transition_to_using)).to be false
@@ -375,7 +375,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "predicate" do
+        context "when predicate" do
           it "does not error if no if is supplied" do
             hash = config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h
             expect(hash.key?(:if)).to be false
@@ -415,7 +415,7 @@ module ConfigurableStateMachine
           end
         end
 
-        context "after_transition" do
+        context "when after_transition" do
           it "does not error if no after_transition is supplied" do
             hash = config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h
             expect(hash.key?(:after_transition)).to be false
@@ -446,8 +446,8 @@ module ConfigurableStateMachine
           end
         end
 
-        context "switch workflow" do
-          context "no switch workflow" do
+        context "when switch workflow" do
+          context "and no switch workflow" do
             it "is valid" do
               hash = config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h
               expect(hash.key?(:switch_workflow)).to be false
@@ -456,7 +456,7 @@ module ConfigurableStateMachine
             end
           end
 
-          context "switch workflow to nil" do
+          context "and switch workflow to nil" do
             it "is valid" do
               config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.switch_workflow = nil
               expect(config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.to_h[:switch_workflow]).to be_nil
@@ -465,7 +465,7 @@ module ConfigurableStateMachine
             end
           end
 
-          context "switching workflow to current workflow" do
+          context "and switching workflow to current workflow" do
             it "is invalid" do
               config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.switch_workflow = "standard"
               validator = ConfigValidator.new(config, filename)
@@ -476,7 +476,7 @@ module ConfigurableStateMachine
             end
           end
 
-          context "switching workflow to workflow not declared in permitted workflows" do
+          context "and switching workflow to workflow not declared in permitted workflows" do
             it "is invalid" do
               config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.switch_workflow = "non-existent-workflow"
               validator = ConfigValidator.new(config, filename)
@@ -487,7 +487,7 @@ module ConfigurableStateMachine
             end
           end
 
-          context "switching workflow to other valid workflow" do
+          context "and switching workflow to other valid workflow" do
             it "is valid" do
               config.case_types.foi.workflows.standard.user_roles.manager.states.unassigned.assign_responder.switch_workflow = "review_for_compliance"
               validator = ConfigValidator.new(config, filename)
@@ -499,4 +499,3 @@ module ConfigurableStateMachine
     end
   end
 end
-# rubocop:enable Metrics/ModuleLength

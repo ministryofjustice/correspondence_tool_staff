@@ -81,7 +81,7 @@ describe Cases::PitExtensionsController, type: :controller do
       end
     end
 
-    context "on service error" do
+    context "when on service error" do
       let(:service) { double(CaseExtendForPITService, call: :error) }
 
       before do

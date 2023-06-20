@@ -66,7 +66,7 @@ describe "assignments/edit.html.slim", type: :view do
     expect(page.confirm_button.value).to eq "Confirm"
   end
 
-  context "ICO cases" do
+  describe "ICO cases" do
     let(:awaiting_responder_case) do
       create(:awaiting_responder_ico_foi_case, :with_messages,
              responding_team:).decorate
@@ -129,7 +129,7 @@ describe "assignments/edit.html.slim", type: :view do
     end
   end
 
-  context "Overturned SARS cases" do
+  describe "Overturned SARS cases" do
     let(:awaiting_responder_case) do
       create(:awaiting_responder_ot_ico_sar, :with_messages,
              responding_team:).decorate
@@ -192,7 +192,7 @@ describe "assignments/edit.html.slim", type: :view do
     end
   end
 
-  context "Overturned FOI cases" do
+  describe "Overturned FOI cases" do
     let(:ovt_foi_case) do
       create(:awaiting_responder_ot_ico_foi, :with_messages,
              responding_team:).decorate

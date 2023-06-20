@@ -43,7 +43,7 @@ describe Case::SAR::InternalReviewPolicy do
     end
   end
 
-  context "case type" do
+  describe "case type" do
     it "has sar internal review as scope correspondence type" do
       type = subject::Scope.new(
         manager,
@@ -54,7 +54,7 @@ describe Case::SAR::InternalReviewPolicy do
     end
   end
 
-  context "unapproved sar ir" do
+  context "when unapproved sar ir" do
     permissions :edit? do
       it { is_expected.not_to permit(responder, sar_ir) }
       it { is_expected.to     permit(manager,   sar_ir) }
@@ -62,7 +62,7 @@ describe Case::SAR::InternalReviewPolicy do
     end
   end
 
-  context "approved sar ir" do
+  context "when approved sar ir" do
     permissions :edit? do
       it { is_expected.not_to permit(responder, approved_sar_ir) }
       it { is_expected.to     permit(manager,   approved_sar_ir) }
@@ -70,7 +70,7 @@ describe Case::SAR::InternalReviewPolicy do
     end
   end
 
-  context "closing a case" do
+  context "when closing a case" do
     permissions :can_close_case? do
       it { is_expected.not_to permit(responder, sar_ir) }
       it { is_expected.to     permit(manager,   sar_ir) }
@@ -84,7 +84,7 @@ describe Case::SAR::InternalReviewPolicy do
     end
   end
 
-  context "case in awaiting_dispatch state" do
+  context "when case in awaiting_dispatch state" do
     permissions :can_respond? do
       it { is_expected.to     permit(responder, awaiting_dispatch_approved_sar_ir) }
       it { is_expected.not_to permit(manager,   awaiting_dispatch_approved_sar_ir) }

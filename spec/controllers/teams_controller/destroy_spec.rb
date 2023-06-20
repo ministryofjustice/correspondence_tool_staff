@@ -12,7 +12,7 @@ RSpec.describe TeamsController, type: :controller do
       }
     end
 
-    context "signed in as manager" do
+    context "when signed in as manager" do
       before { sign_in manager }
 
       it "calls user deletion service" do
@@ -23,7 +23,7 @@ RSpec.describe TeamsController, type: :controller do
         delete :destroy, params:
       end
 
-      context "response :ok" do
+      context "and response :ok" do
         before do
           service = double(TeamDeletionService)
           expect(TeamDeletionService).to receive(:new).and_return(service)
@@ -38,13 +38,13 @@ RSpec.describe TeamsController, type: :controller do
           )
         end
 
-        context "deactivating a directorate" do
+        context "and deactivating a directorate" do
           it "redirects to parent team path" do
             expect(response).to redirect_to(team_path(bg))
           end
         end
 
-        context "deactivating a business group" do
+        context "and deactivating a business group" do
           let(:bg)      { create :business_group }
           let(:params)  { { id: bg.id } }
 
@@ -54,7 +54,7 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
 
-      context "response :error" do
+      context "and response :error" do
         before do
           service = double(TeamDeletionService)
           expect(TeamDeletionService).to receive(:new).and_return(service)
@@ -69,7 +69,7 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    context "signed in as non-manager" do
+    context "when signed in as non-manager" do
       before do
         sign_in responder
         delete :destroy, params:

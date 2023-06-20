@@ -10,7 +10,7 @@ feature "viewing SAR cases" do
   end
   given(:another_responder) { create :responder }
 
-  context "unassigned case" do
+  context "when unassigned case" do
     given!(:kase) { create :sar_case }
 
     scenario "viewing as a manager" do
@@ -29,7 +29,7 @@ feature "viewing SAR cases" do
     end
   end
 
-  context "assigned case" do
+  context "when assigned case" do
     given!(:kase) { create :accepted_sar, responder: }
 
     scenario "viewing as a manager" do
@@ -65,7 +65,7 @@ feature "viewing SAR cases" do
     end
   end
 
-  context "case with both full case details and attachment" do
+  context "when case with both full case details and attachment" do
     given(:request_file) { "#{Faker::Internet.slug}.pdf" }
     given(:kase) do
       create :accepted_sar,

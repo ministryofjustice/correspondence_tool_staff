@@ -224,7 +224,6 @@ private
     kase.third_party_name = Faker::Name.name if kase.third_party_name.present?
     kase.third_party_company_name = Faker::Company.name if kase.third_party_company_name.present?
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def anonymize_case_sar_offendercomplaint(kase)
     anonymize_case_sar_offender(kase)

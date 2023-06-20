@@ -62,7 +62,7 @@ describe AssignNewTeamService do
     end
   end
 
-  context "closed case" do
+  context "when closed case" do
     it "does not send an email" do
       kase = create :closed_case
       assignment = kase.responder_assignment

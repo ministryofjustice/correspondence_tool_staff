@@ -103,7 +103,7 @@ describe ConfigurableStateMachine::Machine do
       reassign_user
     ].freeze
 
-    context "as responder" do
+    context "when responder" do
       let(:responder) { find_or_create :branston_user }
 
       TRANSITIONS_STANDARD.each do |transition|

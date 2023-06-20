@@ -13,7 +13,7 @@ feature "top level global navigation" do
     dacu
   end
 
-  context "as a manager" do
+  context "when a manager" do
     background do
       login_as manager
     end
@@ -31,7 +31,7 @@ feature "top level global navigation" do
     end
   end
 
-  context "as a disclosure specialist" do
+  context "when a disclosure specialist" do
     background do
       login_as disclosure_specialist
     end
@@ -73,7 +73,7 @@ feature "top level global navigation" do
     end
   end
 
-  context "as a disclosure specialist bmt" do
+  context "when a disclosure specialist bmt" do
     background do
       login_as disclosure_specialist_bmt
     end

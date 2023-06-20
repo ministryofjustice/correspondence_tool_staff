@@ -26,7 +26,6 @@ class ReportTypePolicy < ApplicationPolicy
       scopes << @scope.where(offender_sar_complaint: true) if @user.permitted_correspondence_types.include?(CorrespondenceType.offender_sar_complaint)
       scopes.reduce { |memo, scope| memo.or(scope) }
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
   end
 
   def can_run?

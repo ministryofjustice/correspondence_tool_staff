@@ -69,7 +69,7 @@ feature "viewing details of case in the system" do
     end
   end
 
-  context "FOI case with both full case details and attachment" do
+  context "with FOI case with both full case details and attachment" do
     given(:request_file) { "#{Faker::Internet.slug}.pdf" }
     given(:foi) do
       create :accepted_case, :case_sent_by_post,
@@ -95,7 +95,7 @@ feature "viewing details of case in the system" do
     end
   end
 
-  context "viewing case request with a long message" do
+  context "when viewing case request with a long message" do
     given(:long_message) do
       "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin " \
         "literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney " \
@@ -140,7 +140,7 @@ feature "viewing details of case in the system" do
     end
   end
 
-  context "responder is member of multiple responding teams" do
+  context "when responder is member of multiple responding teams" do
     let(:other_responding_team) { create(:responding_team) }
 
     before do

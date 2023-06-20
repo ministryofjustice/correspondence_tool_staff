@@ -52,7 +52,7 @@ feature "Downloading stats(csv) from the system" do
     responder
     kase
   end
-  context "as a manager" do
+  context "when a manager" do
     scenario "standard reports" do
       # Manager creates & assigns to kilo
       login_as_manager
@@ -91,7 +91,7 @@ feature "Downloading stats(csv) from the system" do
     create_custom_r007_report
   end
 
-  context "as a responder" do
+  context "when a responder" do
     scenario "standard reports" do
       # Manager creates & assigns to kilo
       login_as_responder

@@ -129,7 +129,7 @@ describe "FOI cases factory" do
       end
     end
 
-    context "flagged" do
+    context "when flagged" do
       let(:kase) { create :foi_case, :flagged }
 
       it "flags the case" do
@@ -148,7 +148,7 @@ describe "FOI cases factory" do
       end
     end
 
-    context "taken_on_by_disclosure" do
+    context "when taken_on_by_disclosure" do
       let(:kase) { create :foi_case, :taken_on_by_disclosure }
 
       it "creates a FOI case that has been taken on by disclosure" do
@@ -163,7 +163,7 @@ describe "FOI cases factory" do
       end
     end
 
-    context "sent_by_post" do
+    context "when sent_by_post" do
       let(:kase) { create :foi_case, :case_sent_by_post }
 
       it "creates a FOI case that has been sent by post" do
@@ -172,7 +172,7 @@ describe "FOI cases factory" do
       end
     end
 
-    context "taken_on_by_press" do
+    context "when taken_on_by_press" do
       let(:kase) { create :foi_case, :taken_on_by_press }
 
       it "creates a full approval FOI case taken on by press office" do
@@ -282,7 +282,7 @@ describe "FOI cases factory" do
         end
       end
 
-      context "in awaiting_responder state" do
+      context "when in awaiting_responder state" do
         let(:kase) do
           create :accepted_case,
                  taken_on_by_press: "awaiting_responder"
@@ -320,7 +320,7 @@ describe "FOI cases factory" do
       expect(assign_foi_responder_transition).to be_present
     end
 
-    context "flagged_accepted" do
+    context "when flagged_accepted" do
       let(:kase) { create :awaiting_responder_case, :flagged_accepted }
 
       it "creates a trigger FOI case that has been accepted" do
@@ -338,7 +338,7 @@ describe "FOI cases factory" do
       end
     end
 
-    context "taken_on_by_disclosure" do
+    context "when taken_on_by_disclosure" do
       let(:kase) { create :awaiting_responder_case, :taken_on_by_disclosure }
 
       it "creates a FOI case that has been taken on by disclosure" do
@@ -383,7 +383,7 @@ describe "FOI cases factory" do
         .to eq foi_responder
     end
 
-    context "taken_on_by_press" do
+    context "when taken_on_by_press" do
       let(:kase) { create :accepted_case, :taken_on_by_press }
 
       it "creates a full approval FOI case taken on by press office" do
@@ -470,7 +470,7 @@ describe "FOI cases factory" do
         end
       end
 
-      context "in awaiting_responder state" do
+      context "when in awaiting_responder state" do
         let(:kase) do
           create :accepted_case,
                  taken_on_by_press: "awaiting_responder"
@@ -508,7 +508,7 @@ describe "FOI cases factory" do
       expect(kase.transitions.last).to eq add_responses_transition
     end
 
-    context "taken_on_by_disclosure" do
+    context "when taken_on_by_disclosure" do
       let(:kase) { create :ready_to_send_case, :taken_on_by_disclosure }
 
       it "creates an case in state awaiting dispatch taken on by disclosure" do
@@ -529,7 +529,7 @@ describe "FOI cases factory" do
       end
     end
 
-    context "taken_on_by_press" do
+    context "when taken_on_by_press" do
       let(:kase) do
         create :ready_to_send_case,
                :flagged_accepted,

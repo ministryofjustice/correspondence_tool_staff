@@ -76,7 +76,7 @@ describe DirectorateMoveService do
   end
 
   describe "#call" do
-    context "moving a directorate to another business group" do
+    context "when moving a directorate to another business group" do
       it "creates a copy of the team in the new copy of directorate under target business group" do
         service.call
         service.new_teams.each do |new_team|

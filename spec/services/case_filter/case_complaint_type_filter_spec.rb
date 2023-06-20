@@ -31,13 +31,13 @@ describe CaseFilter::CaseComplaintTypeFilter do
   describe "#applied?" do
     subject { case_complaint_type_filter }
 
-    context "filter_case_complaint_type not present" do
+    context "when filter_case_complaint_type not present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "filter_case_complaint_type present" do
+    context "when filter_case_complaint_type present" do
       let(:search_query) do
         create :search_query,
                filter_complaint_type: %w[standard_complaint]
@@ -93,7 +93,7 @@ describe CaseFilter::CaseComplaintTypeFilter do
   end
 
   describe "#crumbs" do
-    context "no filters selected" do
+    context "when no filters selected" do
       let(:search_query) do
         create :search_query,
                filter_complaint_type: []
@@ -104,8 +104,8 @@ describe CaseFilter::CaseComplaintTypeFilter do
       end
     end
 
-    context "filtering for cases" do
-      context "filtering for one complaint type" do
+    context "when filtering for cases" do
+      context "and filtering for one complaint type" do
         let(:search_query) do
           create :search_query,
                  filter_complaint_type: %w[standard_complaint]
@@ -129,7 +129,7 @@ describe CaseFilter::CaseComplaintTypeFilter do
         end
       end
 
-      context "filtering for more than one type" do
+      context "and filtering for more than one type" do
         let(:search_query) do
           create :search_query,
                  filter_complaint_type: %w[ico_complaint litigation_complaint]

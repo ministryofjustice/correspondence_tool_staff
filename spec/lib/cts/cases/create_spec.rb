@@ -9,7 +9,7 @@ describe CTS::Cases::Create, tag: :cli do
   let(:cts_creator) { described_class.new(Rails.logger, case_params) }
 
   describe "#new_ico_case" do
-    context "new default FOI ICO appeal" do
+    context "when new default FOI ICO appeal" do
       it "returns a valid new ICO case" do
         foi = create(:rejected_case)
         kase = cts_creator.new_case

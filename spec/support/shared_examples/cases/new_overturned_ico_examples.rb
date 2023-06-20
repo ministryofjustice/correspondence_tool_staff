@@ -7,7 +7,7 @@ RSpec.shared_examples "new overturned ico spec" do |klass|
         .with_args(manager, klass)
   end
 
-  context "post-authorization processing" do
+  context "when post-authorization processing" do
     let(:service) { double NewOverturnedIcoCaseService }
 
     before do

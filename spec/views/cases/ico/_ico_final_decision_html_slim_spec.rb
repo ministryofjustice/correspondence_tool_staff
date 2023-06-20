@@ -4,7 +4,7 @@ describe "cases/ico/_ico_final_decision.html.slim", type: :view do
   let(:upheld_closed_sar_ico_appeal) { create(:closed_ico_sar_case).decorate }
   let(:overturned_ico_sar) { create(:overturned_ico_sar).decorate }
 
-  context "Closed ICO appeal" do
+  describe "Closed ICO appeal" do
     before do
       assign(:case, upheld_closed_sar_ico_appeal)
       login_as create(:manager)
@@ -46,7 +46,7 @@ describe "cases/ico/_ico_final_decision.html.slim", type: :view do
     end
   end
 
-  context "Overturned SAR" do
+  describe "Overturned SAR" do
     before do
       login_as create(:manager)
     end

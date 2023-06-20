@@ -42,7 +42,6 @@ class DevUserSeeder
       "Basil Rathbone" => [{ team: "branston", role: "responder" }],
     }
   end
-  # rubocop:enable Metrics/MethodLength
 
   def is_on_production?
     ENV["ENV"].present? && ENV["ENV"] == "prod"

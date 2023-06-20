@@ -12,7 +12,7 @@ RSpec.describe TeamsController, type: :controller do
   let(:foi_responder)   { find_or_create(:foi_responder) }
 
   describe "GET index" do
-    context "logged in as a manager" do
+    context "when logged in as a manager" do
       before { sign_in manager }
 
       it "loads all business groups" do
@@ -27,7 +27,7 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    context "logged in as a non-manager" do
+    context "when logged in as a non-manager" do
       before do
         business_unit2.responders << foi_responder
         sign_in foi_responder
@@ -47,7 +47,7 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   describe "GET show" do
-    context "logged in as a manager" do
+    context "when logged in as a manager" do
       let(:directorate2) { create :directorate, business_group: bg }
 
       before do
@@ -66,14 +66,14 @@ RSpec.describe TeamsController, type: :controller do
         expect(response).to render_template(:show)
       end
 
-      context "viewing a business group" do
+      context "when viewing a business group" do
         it "has no active users" do
           get :show, params: { id: bg.id }
           expect(assigns(:active_users)).to be_empty
         end
       end
 
-      context "viewing a business unit" do
+      context "when viewing a business unit" do
         before do
           # @user_1 = create :user, responding_teams: [business_unit]
           # @user_2 = create :user, responding_teams: [business_unit]
@@ -98,18 +98,18 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    context "logged in as a non-manager" do
+    context "when logged in as a non-manager" do
       before do
         sign_in foi_responder
       end
 
-      context "viewing a team that he is a member of" do
+      context "when viewing a team that he is a member of" do
         it "loads the team" do
           get :show, params: { id: business_unit.id }
         end
       end
 
-      context "viewing a team that he isnt a member of" do
+      context "when viewing a team that he isnt a member of" do
         it "loads the team and children" do
           get :show, params: { id: business_unit.id }
           expect(assigns(:team)).to eq business_unit
@@ -126,7 +126,7 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   describe "POST create", versioning: true do
-    context "signed in as a manager" do
+    context "when signed in as a manager" do
       before { sign_in manager }
 
       describe "POST create" do
@@ -176,7 +176,7 @@ RSpec.describe TeamsController, type: :controller do
           expect(whodunnit).to eq manager.id
         end
 
-        context "SAR IR access" do
+        context "and SAR IR access" do
           it "adds access if SAR access is enabled" do
             post(:create, params:)
             bu = BusinessUnit.last
@@ -200,7 +200,7 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    context "signed in as a non-manager" do
+    context "when signed in as a non-manager" do
       before do
         sign_in foi_responder
       end
@@ -214,7 +214,7 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   describe "GET edit" do
-    context "signed in as a manager" do
+    context "when signed in as a manager" do
       let(:params) { { id: bg.id } }
 
       before do
@@ -234,12 +234,12 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    context "signed in as a non manager" do
+    context "when signed in as a non manager" do
       before do
         sign_in foi_responder
       end
 
-      context "team that the responder ia a member of" do
+      context "and team that the responder ia a member of" do
         let(:params) { { id: business_unit.id } }
 
         it "authorises" do
@@ -260,7 +260,7 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
 
-      context "team that the repsonder is not a member of" do
+      context "and team that the repsonder is not a member of" do
         let(:other_bu) { business_unit2 }
         let(:params) { { id: other_bu.id } }
 
@@ -274,7 +274,7 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   describe "PATCH update", versioning: true do
-    context "logged in as a manager" do
+    context "when logged in as a manager" do
       let(:params) do
         { id: business_unit.id,
           team: {
@@ -308,7 +308,7 @@ RSpec.describe TeamsController, type: :controller do
         sign_in manager
       end
 
-      context "SAR IR access" do
+      context "and SAR IR access" do
         it "adds access if SAR access is enabled" do
           patch :update, params: params_sar_ir_access
           bu = business_unit.reload
@@ -352,7 +352,7 @@ RSpec.describe TeamsController, type: :controller do
         expect(whodunnit).to eq manager.id
       end
 
-      context "redirects to the expected path" do
+      context "and redirects to the expected path" do
         it "redirect to areas covered page after updating business unit" do
           patch(:update, params:)
           expect(response).to redirect_to(areas_covered_by_team_path(business_unit.id))
@@ -382,12 +382,12 @@ RSpec.describe TeamsController, type: :controller do
       end
     end
 
-    context "logged in as a non-manager" do
+    context "when logged in as a non-manager" do
       before do
         sign_in foi_responder
       end
 
-      context "team that the responder ia a member of" do
+      context "and team that the responder ia a member of" do
         let(:other_bu) { business_unit2 }
         let(:params) do
           {
@@ -417,7 +417,7 @@ RSpec.describe TeamsController, type: :controller do
         end
       end
 
-      context "team that the responder is not a member of" do
+      context "and team that the responder is not a member of" do
         let(:params) do
           {
             "id" => business_unit.id,
@@ -442,7 +442,7 @@ RSpec.describe TeamsController, type: :controller do
   end
 
   describe "GET new" do
-    context "logged in as a non manager" do
+    context "when logged in as a non manager" do
       before do
         sign_in foi_responder
       end

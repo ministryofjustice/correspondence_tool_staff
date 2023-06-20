@@ -23,7 +23,7 @@ describe "cases/data_requests/send_email", type: :view do
       )
     end
 
-    context "data request with contact without email address" do
+    context "with data request with contact without email address" do
       before do
         assign(:data_request, data_request)
         assign(:case, data_request.kase)
@@ -43,7 +43,7 @@ describe "cases/data_requests/send_email", type: :view do
       end
     end
 
-    context "data request with contact which has email address" do
+    context "with data request with contact which has email address" do
       before do
         assign(:data_request, data_request)
         assign(:case, data_request.kase)

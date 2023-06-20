@@ -31,7 +31,7 @@ feature "downloading a response from response details" do
     stub_s3_view_object(response, presigned_view_url)
   end
 
-  context "as a responder" do
+  context "when a responder" do
     background do
       login_as responder
     end
@@ -68,7 +68,7 @@ feature "downloading a response from response details" do
     end
   end
 
-  context "as an manager" do
+  context "when an manager" do
     background do
       login_as manager
     end

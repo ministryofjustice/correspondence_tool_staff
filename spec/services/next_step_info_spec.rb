@@ -6,11 +6,11 @@ RSpec::Matchers.define :set_action_verb_to do |action_verb|
   end
 
   failure_message do |next_step_info|
-    <<~EOM
+    <<~INFO
       expected next step info #{next_step_info} to return action verb
       expected text: "#{action_verb}"
            got text: "#{next_step_info.action_verb}"
-    EOM
+    INFO
   end
 end
 
@@ -35,7 +35,7 @@ describe "NextStepInfo" do
   let!(:press_office)         { find_or_create :team_press_office }
   let!(:private_office)       { find_or_create :team_private_office }
 
-  context "when next state is" do
+  describe "next state" do
     subject { NextStepInfo.new(kase, "approve", disclosure_specialist) }
 
     let(:kase) { create :case_being_drafted, responder: }
@@ -46,50 +46,50 @@ describe "NextStepInfo" do
                                      .and_return(state)
     end
 
-    context "unassigned" do
+    context "when unassigned" do
       it { is_expected.to have_attributes(next_team: "DACU") }
     end
 
-    context "responded" do
+    context "when responded" do
       it { is_expected.to have_attributes(next_team: "DACU") }
     end
 
-    context "closed" do
+    context "when closed" do
       it { is_expected.to have_attributes(next_team: "DACU") }
     end
 
-    context "awaiting_responder" do
+    context "when awaiting_responder" do
       it { is_expected.to have_attributes(next_team: responding_team) }
     end
 
-    context "drafting" do
+    context "when drafting" do
       it { is_expected.to have_attributes(next_team: responding_team) }
     end
 
-    context "awaiting_dispatch" do
+    context "when awaiting_dispatch" do
       it { is_expected.to have_attributes(next_team: responding_team) }
     end
 
-    context "pending_dacu_clearance" do
+    context "when pending_dacu_clearance" do
       it { is_expected.to have_attributes(next_team: dacu_disclosure) }
     end
 
-    context "pending_press_office_clearance" do
+    context "when pending_press_office_clearance" do
       it { is_expected.to have_attributes(next_team: press_office) }
     end
 
-    context "pending_private_office_clearance" do
+    context "when pending_private_office_clearance" do
       it { is_expected.to have_attributes(next_team: private_office) }
     end
 
-    context "something_unexpected" do
+    context "when something_unexpected" do
       it "raises an error" do
         expect { subject }.to raise_error(RuntimeError)
       end
     end
   end
 
-  context "when action is" do
+  describe "action" do
     subject do
       action = RSpec.current_example.metadata[:example_group][:description]
       NextStepInfo.new(kase, action, disclosure_specialist)
@@ -102,37 +102,37 @@ describe "NextStepInfo" do
                                      .and_return("drafting")
     end
 
-    context "approve" do
+    context "when approve" do
       it { is_expected.to set_action_verb_to "clearing the response to" }
       it { is_expected.to use_event :approve }
     end
 
-    context "request-amends" do
+    context "when request-amends" do
       it { is_expected.to set_action_verb_to "requesting amends for" }
       it { is_expected.to use_event :request_amends }
     end
 
-    context "upload" do
+    context "when upload" do
       it { is_expected.to set_action_verb_to "uploading changes to" }
       it { is_expected.to use_event :add_responses }
     end
 
-    context "upload-flagged" do
+    context "when upload-flagged" do
       it { is_expected.to set_action_verb_to "uploading a response to" }
       it { is_expected.to use_event :add_response_to_flagged_case }
     end
 
-    context "upload-approve" do
+    context "when upload-approve" do
       it { is_expected.to set_action_verb_to "uploading the responses and clearing" }
       it { is_expected.to use_event :upload_response_and_approve }
     end
 
-    context "upload-redraft" do
+    context "when upload-redraft" do
       it { is_expected.to set_action_verb_to "uploading changes to" }
       it { is_expected.to use_event :upload_response_and_return_for_redraft }
     end
 
-    context "unexpected-action" do
+    context "when unexpected-action" do
       it "raises an error" do
         expect { subject }
           .to raise_error(RuntimeError,

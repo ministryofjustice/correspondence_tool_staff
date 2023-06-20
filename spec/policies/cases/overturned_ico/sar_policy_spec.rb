@@ -27,27 +27,27 @@ RSpec.describe Case::OverturnedICO::SARPolicy do
   end
 
   permissions :new? do
-    context "manager" do
+    context "when manager" do
       it { is_expected.to permit(manager, Case::OverturnedICO::Base) }
     end
 
-    context "responder" do
+    context "when responder" do
       it { is_expected.not_to permit(responder, Case::OverturnedICO::Base) }
     end
 
-    context "approver" do
+    context "when approver" do
       it { is_expected.not_to permit(disclosure_specialist, Case::OverturnedICO::Base) }
     end
   end
 
   permissions :show? do
-    context "unassigned case" do
+    context "when unassigned case" do
       it { is_expected.to     permit(manager,               unassigned_case) }
       it { is_expected.not_to permit(responder,             unassigned_case) }
       it { is_expected.not_to permit(disclosure_specialist, unassigned_case) }
     end
 
-    context "linked case" do
+    context "when linked case" do
       let!(:linked_case) do
         create(:closed_sar, responding_team:).tap do |kase|
           unassigned_case.related_cases << kase

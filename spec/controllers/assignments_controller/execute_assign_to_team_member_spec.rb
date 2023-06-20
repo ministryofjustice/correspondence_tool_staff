@@ -46,7 +46,7 @@ RSpec.describe AssignmentsController, type: :controller do
               .with_args(responder, unassigned_case)
     end
 
-    context "offender sar complaint case" do
+    context "with offender sar complaint case" do
       it "calls UserReassignmentService" do
         post(:execute_assign_to_team_member, params:)
         expect(CaseAssignToTeamMemberService).to have_received(:new).with(

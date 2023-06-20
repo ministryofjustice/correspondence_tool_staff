@@ -30,13 +30,13 @@ describe CaseFilter::CaseHighProfileFilter do
   describe "#applied?" do
     subject { case_hgih_profile_filter }
 
-    context "filter_high_profile not present" do
+    context "when filter_high_profile not present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "filter_high_profile present" do
+    context "when filter_high_profile present" do
       let(:search_query) do
         create :search_query,
                filter_high_profile: %w[high-profile]
@@ -83,7 +83,7 @@ describe CaseFilter::CaseHighProfileFilter do
   end
 
   describe "#crumbs" do
-    context "no filters selected" do
+    context "when no filters selected" do
       let(:search_query) do
         create :search_query,
                filter_high_profile: []
@@ -94,8 +94,8 @@ describe CaseFilter::CaseHighProfileFilter do
       end
     end
 
-    context "filtering for cases based on flag of high profile" do
-      context "filtering for normal complaint case" do
+    context "when filtering for cases based on flag of high profile" do
+      context "and filtering for normal complaint case" do
         let(:search_query) do
           create :search_query,
                  filter_high_profile: %w[not-high-profile]
@@ -119,7 +119,7 @@ describe CaseFilter::CaseHighProfileFilter do
         end
       end
 
-      context "filtering for normal and high profile cases" do
+      context "and filtering for normal and high profile cases" do
         let(:search_query) do
           create :search_query,
                  filter_high_profile: %w[high-profile not-high-profile]

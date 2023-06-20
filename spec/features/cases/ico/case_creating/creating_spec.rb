@@ -29,7 +29,7 @@ feature "ICO case creation" do
     cases_page.load
   end
 
-  context "creating an ICO appeal" do
+  context "when creating an ICO appeal" do
     scenario " - linking Original FOI case", js: true do
       cases_new_ico_page.load
 

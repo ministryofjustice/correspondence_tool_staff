@@ -28,21 +28,21 @@ describe Cases::FiltersController, type: :controller do
   end
 
   describe "#open" do
-    context "as an anonymous user" do
+    context "when an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
         get :open
         expect(response).to redirect_to(new_user_session_path)
       end
     end
 
-    context "as an authenticated user" do
+    context "when an authenticated user" do
       before do
         sign_in user
         allow(CaseSearchService).to receive(:new).and_return(case_search_service)
         allow(GlobalNavManager).to receive(:new).and_return(global_nav_manager)
       end
 
-      context "no search_query params passed in" do
+      context "when no search_query params passed in" do
         it "instantiates CaseSearchService with empty params" do
           get :open, params: {}
           expected_query_params = ActionController::Parameters.new(
@@ -58,7 +58,7 @@ describe Cases::FiltersController, type: :controller do
         end
       end
 
-      context "search_query params passed in" do
+      context "when search_query params passed in" do
         let(:params) do
           {
             search_query: {

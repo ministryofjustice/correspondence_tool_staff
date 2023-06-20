@@ -8,7 +8,7 @@ describe DeadlineCalculator::CalendarDays do
   let(:start_date_plus_10)  { Date.new(2018, 6, 24) }
   let(:start_date_plus_30)  { Date.new(2018, 7, 14) }
 
-  context "SAR case" do
+  describe "SAR case" do
     describe "#time_units_desc_for_deadline" do
       it "single" do
         expect(deadline_calculator.time_units_desc_for_deadline)
@@ -63,14 +63,14 @@ describe DeadlineCalculator::CalendarDays do
     end
 
     describe "#buiness_unit_deadline_for_date" do
-      context "unflagged" do
+      context "when unflagged" do
         it "is 30 days from date" do
           expect(sar_case).not_to be_flagged
           expect(deadline_calculator.business_unit_deadline_for_date(start_date)).to eq start_date_plus_30
         end
       end
 
-      context "flagged" do
+      context "when flagged" do
         it "is 10 days from date" do
           allow(sar_case).to receive(:flagged?).and_return(true)
           expect(deadline_calculator.business_unit_deadline_for_date(start_date)).to eq start_date_plus_10

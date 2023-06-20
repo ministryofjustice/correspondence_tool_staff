@@ -48,7 +48,6 @@ describe "cases/show.html.slim", type: :view do
       allow(policy).to receive(policy_name).and_return policies[policy_name]
     end
   end
-  # rubocop:enable Metrics/MethodLength
 
   subject do
     render
@@ -92,7 +91,7 @@ describe "cases/show.html.slim", type: :view do
       assign(:case, case_being_drafted)
     end
 
-    context "as a manager" do
+    context "when a manager" do
       before do
         login_as manager
         setup_policies can_remove_attachment?: false,
@@ -103,7 +102,7 @@ describe "cases/show.html.slim", type: :view do
       it { is_expected.not_to have_rendered "cases/_case_attachments" }
     end
 
-    context "as an approver" do
+    context "when an approver" do
       before do
         login_as approver
         setup_policies can_remove_attachment?: false,
@@ -114,7 +113,7 @@ describe "cases/show.html.slim", type: :view do
       it { is_expected.not_to have_rendered "cases/_case_attachments" }
     end
 
-    context "as a responder" do
+    context "when a responder" do
       before do
         login_as responder
         setup_policies can_remove_attachment?: true,
@@ -131,7 +130,7 @@ describe "cases/show.html.slim", type: :view do
       assign(:case, case_with_response)
     end
 
-    context "as a manager" do
+    context "when a manager" do
       before do
         login_as manager
         setup_policies can_remove_attachment?: false,
@@ -144,7 +143,7 @@ describe "cases/show.html.slim", type: :view do
       it { is_expected.not_to have_rendered "cases/_case_attachments" }
     end
 
-    context "as an approver" do
+    context "when an approver" do
       before do
         login_as approver
         setup_policies can_remove_attachment?: false,
@@ -156,7 +155,7 @@ describe "cases/show.html.slim", type: :view do
       it { is_expected.not_to have_rendered "cases/_case_attachments" }
     end
 
-    context "as a responder" do
+    context "when a responder" do
       before do
         login_as responder
         setup_policies can_remove_attachment?: true,
@@ -174,7 +173,7 @@ describe "cases/show.html.slim", type: :view do
       assign(:case, case_being_drafted_flagged)
     end
 
-    context "as a manager" do
+    context "when a manager" do
       before do
         login_as manager
         setup_policies can_remove_attachment?: false,
@@ -186,7 +185,7 @@ describe "cases/show.html.slim", type: :view do
       it { is_expected.not_to have_rendered "cases/_case_attachments" }
     end
 
-    context "as a responder" do
+    context "when a responder" do
       before do
         login_as responder
         setup_policies can_remove_attachment?: false,
@@ -198,7 +197,7 @@ describe "cases/show.html.slim", type: :view do
       it { is_expected.not_to have_rendered "cases/_case_attachments" }
     end
 
-    context "as an approver" do
+    context "when an approver" do
       before do
         login_as approver
         setup_policies can_remove_attachment?: false,
@@ -216,7 +215,7 @@ describe "cases/show.html.slim", type: :view do
       assign(:case, case_pending_dacu_clearance)
     end
 
-    context "as a manager" do
+    context "when a manager" do
       before do
         login_as manager
         setup_policies can_remove_attachment?: false,
@@ -229,7 +228,7 @@ describe "cases/show.html.slim", type: :view do
       it { is_expected.to have_rendered "cases/_case_attachments" }
     end
 
-    context "as a responder" do
+    context "when a responder" do
       before do
         login_as responder
         setup_policies can_remove_attachment?: false,
@@ -242,7 +241,7 @@ describe "cases/show.html.slim", type: :view do
       it { is_expected.to have_rendered "cases/_case_attachments" }
     end
 
-    context "as an approver" do
+    context "when an approver" do
       before do
         login_as approver
         setup_policies can_remove_attachment?: false,
@@ -268,7 +267,7 @@ describe "cases/show.html.slim", type: :view do
         assign(:case, kase.decorate)
       end
 
-      context "upload_responses policy is permitted" do
+      context "when upload_responses policy is permitted" do
         before do
           assign(:filtered_permitted_events, [:add_responses])
           setup_policies upload_responses?: true
@@ -282,7 +281,7 @@ describe "cases/show.html.slim", type: :view do
         end
       end
 
-      context "upload_responses policy is NOT permitted" do
+      context "when upload_responses policy is NOT permitted" do
         before do
           assign(:filtered_permitted_events, [:some_other_action])
           setup_policies upload_responses?: false
@@ -298,7 +297,7 @@ describe "cases/show.html.slim", type: :view do
         assign(:case, kase.decorate)
       end
 
-      context "upload_response_and_approve policy is permitted" do
+      context "when upload_response_and_approve policy is permitted" do
         before do
           assign(:filtered_permitted_events, [:upload_response_and_approve])
           setup_policies upload_response_and_approve?: true
@@ -312,7 +311,7 @@ describe "cases/show.html.slim", type: :view do
         end
       end
 
-      context "upload_response_and_approve policy is NOT permitted" do
+      context "when upload_response_and_approve policy is NOT permitted" do
         before do
           assign(:filtered_permitted_events, [:some_other_action])
           setup_policies upload_response_and_approve?: false
@@ -328,7 +327,7 @@ describe "cases/show.html.slim", type: :view do
         assign(:case, kase.decorate)
       end
 
-      context "upload_response_and_return_for_redraft policy is permitted" do
+      context "when upload_response_and_return_for_redraft policy is permitted" do
         before do
           assign(:filtered_permitted_events, [:upload_response_and_return_for_redraft?])
           setup_policies upload_response_and_return_for_redraft?: true
@@ -342,7 +341,7 @@ describe "cases/show.html.slim", type: :view do
         end
       end
 
-      context "upload_response_and_return_for_redraft policy is NOT permitted" do
+      context "when upload_response_and_return_for_redraft policy is NOT permitted" do
         before do
           assign(:filtered_permitted_events, [:some_other_action])
           setup_policies upload_response_and_return_for_redraft?: false
@@ -360,7 +359,7 @@ describe "cases/show.html.slim", type: :view do
       assign(:case, case_being_drafted)
     end
 
-    context "for a user that has permission to do the action" do
+    context "with a user that has permission to do the action" do
       before do
         login_as manager
         setup_policies extend_for_pit?: true,
@@ -371,7 +370,7 @@ describe "cases/show.html.slim", type: :view do
       it { is_expected.to have_remove_pit_extension_action }
     end
 
-    context "for a user that does not have permission to do the action" do
+    context "with a user that does not have permission to do the action" do
       before do
         login_as responder
         setup_policies extend_for_pit?: false
@@ -417,7 +416,7 @@ describe "cases/show.html.slim", type: :view do
   end
 
   describe "extending a SAR case" do
-    context "before it is extended" do
+    context "and before it is extended" do
       let(:sar) { create(:approved_sar).decorate }
 
       before do
@@ -431,7 +430,7 @@ describe "cases/show.html.slim", type: :view do
         )
       end
 
-      context "as a manager" do
+      context "when a manager" do
         it "shows extend action" do
           login_as manager
           render
@@ -443,7 +442,7 @@ describe "cases/show.html.slim", type: :view do
       end
     end
 
-    context "after it is extended" do
+    describe "after it is extended" do
       let(:sar) do
         extended_sar = create(:sar_case, :extended_deadline_sar)
         extended_sar.external_deadline += 60.days
@@ -461,7 +460,7 @@ describe "cases/show.html.slim", type: :view do
         )
       end
 
-      context "as a manager" do
+      context "when a manager" do
         it "shows remove action" do
           login_as manager
           render
@@ -491,8 +490,8 @@ describe "cases/show.html.slim", type: :view do
       )
     end
 
-    context "as a manager" do
-      context "partials" do
+    context "when a manager" do
+      describe "partials" do
         before do
           assign(:permitted_events, [:add_note_to_case])
           assign(:filtered_permitted_events, [:add_note_to_case])
@@ -567,7 +566,7 @@ describe "cases/show.html.slim", type: :view do
         end
       end
 
-      context "record data request" do
+      describe "record data request" do
         before do
           assign(:permitted_events, [:mark_as_waiting_for_data])
           assign(:filtered_permitted_events, [:mark_as_waiting_for_data])
@@ -582,7 +581,7 @@ describe "cases/show.html.slim", type: :view do
         end
       end
 
-      context "data requested section" do
+      describe "data requested section" do
         before do
           login_as manager
         end
@@ -642,8 +641,8 @@ describe "cases/show.html.slim", type: :view do
       )
     end
 
-    context "as a manager" do
-      context "partials" do
+    context "when a manager" do
+      context "with partials" do
         before do
           assign(:permitted_events, [:add_note_to_case])
           assign(:filtered_permitted_events, [:add_note_to_case])
@@ -718,7 +717,7 @@ describe "cases/show.html.slim", type: :view do
         end
       end
 
-      context "record data request" do
+      context "with record data request" do
         before do
           assign(:permitted_events, [:mark_as_waiting_for_data])
           assign(:filtered_permitted_events, [:mark_as_waiting_for_data])
@@ -733,7 +732,7 @@ describe "cases/show.html.slim", type: :view do
         end
       end
 
-      context "data requested section" do
+      context "with data requested section" do
         before do
           login_as manager
         end

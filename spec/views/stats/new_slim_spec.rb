@@ -33,7 +33,7 @@ describe "stats/new.html.slim", type: :view do
     stats_new_page
   end
 
-  context "valid page" do
+  context "when valid page" do
     it "has a heading" do
       expect(page.page_heading.heading.text).to eq "Create custom report"
       expect(page.page_heading).to have_no_sub_heading

@@ -73,8 +73,8 @@ module Stats
 
     after(:all) { DbHousekeeping.clean(seed: true) }
 
-    context "defining the period" do
-      context "no period parameters passsed in" do
+    context "when defining the period" do
+      context "and no period parameters passsed in" do
         it "defaults from beginning of year to now" do
           Timecop.freeze(Time.zone.local(2017, 12, 7, 12, 33, 44)) do
             report = described_class.new
@@ -83,7 +83,7 @@ module Stats
         end
       end
 
-      context "period params are passed in" do
+      context "and period params are passed in" do
         it "uses the specify period" do
           d1 = Date.new(2017, 6, 1)
           d2 = Date.new(2017, 6, 30)
@@ -515,8 +515,5 @@ module Stats
       kase.save!
       kase
     end
-    # rubocop:enable Metrics/ParameterLists
-    # rubocop:enable Metrics/CyclomaticComplexity
   end
 end
-# rubocop:enable Metrics/ModuleLength

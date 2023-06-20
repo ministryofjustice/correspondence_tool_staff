@@ -35,14 +35,14 @@ describe StateSelector do
   end
 
   describe ".new" do
-    context "params submitted via form" do
+    context "when params submitted via form" do
       it "uses state selector params and ignores states" do
         ss = described_class.new form_params
         expect(ss.selected_states).to eq %i[unassigned awaiting_responder pending_dacu_clearance]
       end
     end
 
-    context "params submitted via url" do
+    context "when params submitted via url" do
       it "generates selected states from states url param" do
         ss = described_class.new url_params
         expect(ss.selected_states).to eq %i[pending_press_office_clearance pending_dacu_clearance drafting]

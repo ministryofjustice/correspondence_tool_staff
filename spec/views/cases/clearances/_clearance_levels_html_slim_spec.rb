@@ -44,7 +44,7 @@ describe "cases/clearance_details.html.slim", type: :view do
 
   before { allow(controller).to receive(:current_user).and_return(disclosure_specialist) }
 
-  context "escalation_deadline not yet reached" do
+  context "when escalation_deadline not yet reached" do
     it "just displays escalation date" do
       kase = create :case
       allow(kase).to receive(:escalation_deadline).and_return("13 Aug 2017")
@@ -61,8 +61,8 @@ describe "cases/clearance_details.html.slim", type: :view do
     end
   end
 
-  context "escalation deadline reached" do
-    context "case not flagged for approval" do
+  context "when escalation deadline reached" do
+    context "and case not flagged for approval" do
       it "displays the name of the deputy director of the responding team" do
         allow_case_policies_in_view accepted_case.decorate, :request_further_clearance?
 
@@ -76,7 +76,7 @@ describe "cases/clearance_details.html.slim", type: :view do
       end
     end
 
-    context "case flagged for approval by DACU Disclosure but not yet accepted by disclosure team member" do
+    context "when case flagged for approval by DACU Disclosure but not yet accepted by disclosure team member" do
       it "displays the name of the deputy director of the responding team" do
         allow_case_policies_in_view(
           unaccepted_pending_dacu_clearance_case.decorate,
@@ -93,7 +93,7 @@ describe "cases/clearance_details.html.slim", type: :view do
       end
     end
 
-    context "case flagged and accepted for approval by DACU disclosure only" do
+    context "when case flagged and accepted for approval by DACU disclosure only" do
       it "displays the name of the deputy director and the name of the dacu disclosure approver" do
         allow_case_policies_in_view(
           accepted_pending_dacu_clearance_case.decorate,
@@ -112,7 +112,7 @@ describe "cases/clearance_details.html.slim", type: :view do
       end
     end
 
-    context "case flagged and accepted for approval by DACU Disclosure, Press and Private offices" do
+    context "when case flagged and accepted for approval by DACU Disclosure, Press and Private offices" do
       it "displays details of all approvers" do
         policy = double "Pundit::Policy"
         allow(policy).to receive(:remove_clearance?).and_return(false)
@@ -138,7 +138,7 @@ describe "cases/clearance_details.html.slim", type: :view do
       end
     end
 
-    context "Flagged overturned sar" do
+    context "with flagged overturned sar" do
       it "displays the name of the deputy director and the name of the dacu disclosure approver" do
         allow_case_policies_in_view(
           flagged_overturned_sar.decorate,

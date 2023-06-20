@@ -376,7 +376,7 @@ RSpec.describe Cases::IcoController, type: :controller do
             .to eq "Original case must be one of the [FOI, FOI - Internal review for timeliness, FOI - Internal review for compliance, SAR - Non-offender]."
         end
 
-        context "as a user only allowed to view FOI cases" do
+        context "when a user only allowed to view FOI cases" do
           let(:user) { foi_only_user }
 
           it "doesn't allow viewing original cases if not authorised" do
@@ -469,7 +469,7 @@ RSpec.describe Cases::IcoController, type: :controller do
             .to eq "Case is already linked"
         end
 
-        context "as a user only allowed to view FOI cases" do
+        context "when a user only allowed to view FOI cases" do
           let(:user) { foi_only_user }
 
           it "doesn't allow viewing related cases if not authorised" do

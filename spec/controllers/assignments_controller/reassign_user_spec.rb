@@ -35,7 +35,7 @@ RSpec.describe AssignmentsController, type: :controller do
         .to eq responding_team.responders.order(:full_name).decorate
     end
 
-    context "user is both responder and approver" do
+    context "when user is both responder and approver" do
       let(:approver_responder) { create :approver_responder }
       let(:approving_team)     { approver_responder.approving_team }
       let(:accepted_case)      do

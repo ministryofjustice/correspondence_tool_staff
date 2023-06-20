@@ -12,7 +12,7 @@ describe CaseDeletionService do
       allow(kase).to receive(:state_machine).and_return(state_machine)
     end
 
-    context "soft deleting a case" do
+    context "when soft deleting a case" do
       it "changes the attributes on the case" do
         @service.call
         expect(kase.deleted?).to eq true
@@ -28,7 +28,7 @@ describe CaseDeletionService do
       end
     end
 
-    context "if anything fails in the transaction" do
+    context "when anything fails in the transaction" do
       it "raises an error when it saves" do
         expect(kase).to receive(:update).and_return(false)
         expect(@service.call).to eq :error

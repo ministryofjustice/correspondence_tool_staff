@@ -17,13 +17,13 @@ describe CaseFilter::CaseStatusFilter do
   describe "#applied?" do
     subject { case_status_filter }
 
-    context "filter_status not present" do
+    context "when filter_status not present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "filter_status present" do
+    context "when filter_status present" do
       let(:search_query) do
         create :search_query,
                filter_status: %w[open]
@@ -34,7 +34,7 @@ describe CaseFilter::CaseStatusFilter do
   end
 
   describe "#call" do
-    context "filter not enabled" do
+    context "when filter not enabled" do
       let(:search_query) do
         create :search_query,
                filter_status: []
@@ -49,7 +49,7 @@ describe CaseFilter::CaseStatusFilter do
       end
     end
 
-    context "filtering for open cases" do
+    context "when filtering for open cases" do
       let(:search_query) do
         create :search_query,
                filter_status: %w[open]
@@ -63,7 +63,7 @@ describe CaseFilter::CaseStatusFilter do
       end
     end
 
-    context "filtering for closed cases" do
+    context "when filtering for closed cases" do
       let(:search_query) do
         create :search_query,
                filter_status: %w[closed]
@@ -77,7 +77,7 @@ describe CaseFilter::CaseStatusFilter do
       end
     end
 
-    context "filtering for both open and closed cases" do
+    context "when filtering for both open and closed cases" do
       let(:search_query) do
         create :search_query,
                filter_status: %w[open closed]
@@ -94,7 +94,7 @@ describe CaseFilter::CaseStatusFilter do
   end
 
   describe "#crumbs" do
-    context "filter not enabled" do
+    context "when filter not enabled" do
       let(:search_query) do
         create :search_query,
                filter_status: []
@@ -105,7 +105,7 @@ describe CaseFilter::CaseStatusFilter do
       end
     end
 
-    context "filtering for open cases" do
+    context "when filtering for open cases" do
       let(:search_query) do
         create :search_query,
                filter_status: %w[open]
@@ -129,7 +129,7 @@ describe CaseFilter::CaseStatusFilter do
       end
     end
 
-    context "filtering for closed cases" do
+    context "when filtering for closed cases" do
       let(:search_query) do
         create :search_query,
                filter_status: %w[closed]
@@ -140,7 +140,7 @@ describe CaseFilter::CaseStatusFilter do
       end
     end
 
-    context "filtering for both open and closed cases" do
+    context "when filtering for both open and closed cases" do
       let(:search_query) do
         create :search_query,
                filter_status: %w[open closed]

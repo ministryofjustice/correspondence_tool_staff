@@ -31,7 +31,7 @@ feature "filters whittle down search results" do
     DbHousekeeping.clean
   end
 
-  context "type filter" do
+  context "when type filter" do
     scenario "filter by internal review for compliance, timeliness", js: true do
       login_step user: @setup.disclosure_bmt_user
       expect(open_cases_page).to be_displayed
@@ -105,7 +105,7 @@ feature "filters whittle down search results" do
     end
   end
 
-  context "open case status filter" do
+  context "when open case status filter" do
     scenario "filter by unassigned status", js: true do
       login_step user: @setup.disclosure_bmt_user
       expect(open_cases_page).to be_displayed
@@ -134,7 +134,7 @@ feature "filters whittle down search results" do
     end
   end
 
-  context "all filters set" do
+  context "when all filters set" do
     before do
       login_step user: @setup.disclosure_bmt_user
       expect(open_cases_page).to be_displayed

@@ -88,7 +88,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
       end
     end
 
-    context "authorization" do
+    describe "authorization" do
       let(:kase) { create :ico_sar_case }
       let(:decorator) { Case::OverturnedICO::SARDecorator }
       let(:ico_decorator) { Case::ICO::SARDecorator }
@@ -211,7 +211,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
     describe "#respond_and_close" do
       let(:params) { { id: @drafting_ovt_sar_case.id.to_s } }
 
-      context "authorization" do
+      describe "authorization" do
         it "does not authorize managers" do
           sign_in manager
           get(:respond_and_close, params:)
@@ -234,7 +234,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         end
       end
 
-      context "processing" do
+      describe "processing" do
         before do
           sign_in @responder
           get :respond_and_close, params:
@@ -267,7 +267,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         }
       end
 
-      context "authorization" do
+      describe "authorization" do
         it "does not authorize managers" do
           sign_in manager
           patch(:process_respond_and_close, params:)
@@ -290,7 +290,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         end
       end
 
-      context "processing" do
+      describe "processing" do
         before do
           sign_in @responder
         end
@@ -313,7 +313,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
           expect(flash[:notice]).to match(/You've closed this case/)
         end
 
-        context "missing info" do
+        context "when missing info" do
           it "updates case closure reason with tmm" do
             tmm_refusal_reason = create :refusal_reason, :sar_tmm
             params[:sar][:missing_info] = "yes"
@@ -325,7 +325,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
           end
         end
 
-        context "invalid parameters" do
+        context "with invalid parameters" do
           it "redisplays error page" do
             params[:sar][:date_responded_dd] = Date.tomorrow.day.to_s
             patch(:process_respond_and_close, params:)

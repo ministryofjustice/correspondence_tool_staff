@@ -188,8 +188,8 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
-  context "approved validation" do
-    context "approving roles" do
+  context "when approved validation" do
+    context "and approving roles" do
       it "is valid when true" do
         assignment = create :approved_assignment
         expect(assignment.approved?).to be true
@@ -203,7 +203,7 @@ RSpec.describe Assignment, type: :model do
       end
     end
 
-    context "non-approving_role" do
+    context "and non-approving_role" do
       it "is valid when false" do
         assignment = create :assignment
         expect(assignment.approved?).to be false
@@ -220,7 +220,7 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
-  context "unique pending responding" do
+  context "when unique pending responding" do
     it "raises an exception when two pending responders for same case" do
       kase = create :assigned_case
       manager = create :manager
@@ -240,11 +240,11 @@ RSpec.describe Assignment, type: :model do
     end
   end
 
-  context "marking case as dirty" do
+  context "when marking case as dirty" do
     let(:kase) { create :case, :clean }
 
-    context "responding assignment" do
-      context "new assignment" do
+    context "and responding assignment" do
+      context "and new assignment" do
         it "marks the case as dirty" do
           create :assignment, :responding, case_id: kase.id
           expect(kase.reload).to be_dirty
@@ -260,14 +260,14 @@ RSpec.describe Assignment, type: :model do
         end
       end
 
-      context "updated assignment" do
+      context "and updated assignment" do
         before do
           kase
           @assignment = create :assignment, :responding, case_id: kase.id
           @assignment.case.mark_as_clean!
         end
 
-        context "state changed to rejected" do
+        context "and state changed to rejected" do
           it "marks the case as dirty" do
             expect(@assignment.state).to eq "pending"
             @assignment.update!(state: "rejected", reasons_for_rejection: "xxx")
@@ -275,14 +275,14 @@ RSpec.describe Assignment, type: :model do
           end
         end
 
-        context "state changed to bypassed" do
+        context "and state changed to bypassed" do
           it "marks the case as dirty" do
             @assignment.update!(state: "bypassed")
             expect(kase.reload).to be_dirty
           end
         end
 
-        context "state changed to accepted" do
+        context "and state changed to accepted" do
           it "marks the case as dirty" do
             expect(kase.reload).to be_clean
             @assignment.update!(state: "accepted")
@@ -302,8 +302,8 @@ RSpec.describe Assignment, type: :model do
       end
     end
 
-    context "managing assignment" do
-      context "new assignment" do
+    context "when managing assignment" do
+      context "and new assignment" do
         it "does not mark the case as dirty" do
           expect(kase).to be_clean
           create :assignment, :managing, case_id: kase.id
@@ -323,7 +323,7 @@ RSpec.describe Assignment, type: :model do
         end
       end
 
-      context "updated assignment" do
+      context "and updated assignment" do
         it "does not mark the case as dirty" do
           assignment = create :assignment, :managing, case_id: kase.id
           kase.mark_as_clean!
@@ -345,8 +345,8 @@ RSpec.describe Assignment, type: :model do
       end
     end
 
-    context "approving assignment" do
-      context "new assignment" do
+    context "when approving assignment" do
+      context "and new assignment" do
         it "does not mark the case as dirty" do
           expect(kase).to be_clean
           create :assignment, :approving, case_id: kase.id
@@ -366,7 +366,7 @@ RSpec.describe Assignment, type: :model do
         end
       end
 
-      context "updated assignment" do
+      context "and updated assignment" do
         it "does not mark the case as dirty" do
           assignment = create :assignment, :approving, case_id: kase.id
           kase.mark_as_clean!

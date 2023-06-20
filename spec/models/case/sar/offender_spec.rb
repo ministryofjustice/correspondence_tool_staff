@@ -31,7 +31,7 @@
 require "rails_helper"
 
 describe Case::SAR::Offender do
-  context "factory should be valid" do
+  context "when factory should be valid" do
     it "is valid" do
       kase = build_stubbed :offender_sar_case
 
@@ -39,7 +39,7 @@ describe Case::SAR::Offender do
     end
   end
 
-  context "validates that SAR-specific fields are not blank" do
+  context "when validates that SAR-specific fields are not blank" do
     it "is not valid" do
       kase = build_stubbed :offender_sar_case, subject_full_name: nil, subject_type: nil, third_party: nil, flag_as_high_profile: nil
 
@@ -73,7 +73,7 @@ describe Case::SAR::Offender do
   end
 
   describe "#request_method" do
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:offender_sar_case, request_method: "web_portal")).to be_valid
         expect(build_stubbed(:offender_sar_case, request_method: "post")).to be_valid
@@ -82,7 +82,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_case, request_method: "test")
@@ -90,7 +90,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "nil" do
+    context "with nil" do
       it "errors" do
         kase = build_stubbed(:offender_sar_case, request_method: nil)
         expect(kase).not_to be_valid
@@ -100,7 +100,7 @@ describe Case::SAR::Offender do
   end
 
   describe "#subject_type" do
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:offender_sar_case, subject_type: "detainee")).to be_valid
         expect(build_stubbed(:offender_sar_case, subject_type: "ex_detainee")).to be_valid
@@ -111,7 +111,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_case, subject_type: "plumber")
@@ -119,7 +119,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "nil" do
+    context "with nil" do
       it "errors" do
         kase = build_stubbed(:offender_sar_case, subject_type: nil)
         expect(kase).not_to be_valid
@@ -129,7 +129,7 @@ describe Case::SAR::Offender do
   end
 
   describe "#recipient" do
-    context "valid values" do
+    context "with valid values" do
       it "does not error" do
         expect(build_stubbed(:offender_sar_case, recipient: "subject_recipient")).to be_valid
         expect(build_stubbed(:offender_sar_case, recipient: "requester_recipient")).to be_valid
@@ -141,7 +141,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_case, recipient: "user")
@@ -149,7 +149,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "nil" do
+    context "with nil" do
       it "errors" do
         kase = build_stubbed(:offender_sar_case, recipient: nil)
         expect(kase).not_to be_valid
@@ -159,14 +159,14 @@ describe Case::SAR::Offender do
   end
 
   describe "#postal_address" do
-    context "valid values" do
+    context "with valid values" do
       it "validates when address is set" do
         kase = build_stubbed(:offender_sar_case, :third_party, postal_address: "22 Acacia Avenue")
         expect(kase).to be_valid
       end
     end
 
-    context "invalid values" do
+    context "with invalid values" do
       it "validates presence of postal address when recipient is third party" do
         kase = build_stubbed :offender_sar_case, :third_party, postal_address: ""
         expect(kase).not_to be_valid
@@ -176,7 +176,7 @@ describe Case::SAR::Offender do
   end
 
   describe "#date_of_birth" do
-    context "valid values" do
+    context "with valid values" do
       it "validates date of birth" do
         kase = build_stubbed :offender_sar_case
 
@@ -185,7 +185,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_case, date_of_birth: "wibble")
@@ -193,7 +193,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "date of birth cannot be in future" do
+    context "when date of birth cannot be in future" do
       it "errors" do
         kase = build_stubbed(:offender_sar_case, date_of_birth: 1.day.from_now)
         expect(kase).not_to be_valid
@@ -201,7 +201,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "nil" do
+    context "with nil" do
       it "errors" do
         kase = build_stubbed(:offender_sar_case, date_of_birth: nil)
         expect(kase).not_to be_valid
@@ -211,7 +211,7 @@ describe Case::SAR::Offender do
   end
 
   describe "#received_date" do
-    context "valid values" do
+    context "with valid values" do
       it "validates received date" do
         kase = build_stubbed :offender_sar_case
         test_date = 4.business_days.ago.strftime("%d-%m-%Y")
@@ -221,7 +221,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_case, received_date: "wibble")
@@ -229,7 +229,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "received date cannot be in future" do
+    context "when received date cannot be in future" do
       it "errors" do
         kase = build_stubbed(:offender_sar_case, received_date: 1.day.from_now)
         expect(kase).not_to be_valid
@@ -239,7 +239,7 @@ describe Case::SAR::Offender do
   end
 
   describe "#request_dated" do
-    context "invalid value" do
+    context "with invalid value" do
       it "errors" do
         expect {
           build_stubbed(:offender_sar_case, request_dated: "wibble")
@@ -247,7 +247,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "request_dated date cannot be in future" do
+    context "when request_dated date cannot be in future" do
       it "errors" do
         kase = build_stubbed(:offender_sar_case, request_dated: 1.day.from_now)
         expect(kase).not_to be_valid
@@ -257,7 +257,7 @@ describe Case::SAR::Offender do
   end
 
   describe "number_exempt_pages" do
-    context "invalid values" do
+    context "with invalid values" do
       it "errors when float is used" do
         kase = build_stubbed(:offender_sar_case, number_exempt_pages: -562)
         expect(kase).not_to be_valid
@@ -265,7 +265,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "valid values" do
+    context "with valid values" do
       it "is valid when string represents a positive whole number" do
         kase = build_stubbed(:offender_sar_case, number_exempt_pages: 4835)
         expect(kase).to be_valid
@@ -274,7 +274,7 @@ describe Case::SAR::Offender do
   end
 
   describe "number_final_pages" do
-    context "invalid values" do
+    context "with invalid values" do
       it "errors when string represents a negative whole number" do
         kase = build_stubbed(:offender_sar_case, number_final_pages: -562)
         expect(kase).not_to be_valid
@@ -282,7 +282,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "valid values" do
+    context "with valid values" do
       it "is valid when string represents a positive whole number" do
         kase = build_stubbed(:offender_sar_case, number_final_pages: 4835)
         expect(kase).to be_valid
@@ -291,7 +291,7 @@ describe Case::SAR::Offender do
   end
 
   describe "third party details" do
-    describe "third_party_names" do
+    describe "with third_party_names" do
       it "validates third party names when third party is true" do
         kase = build_stubbed :offender_sar_case, :third_party, third_party_name: "", third_party_company_name: ""
         expect(kase).not_to be_valid
@@ -456,7 +456,7 @@ describe Case::SAR::Offender do
   end
 
   describe "use_subject_as_requester callback" do
-    context "on create" do
+    context "when creating" do
       it "does not change the requester when present" do
         offender_sar_case = create :offender_sar_case, name: "Bob", subject_full_name: "Doug"
         expect(offender_sar_case.reload.name).to eq "Bob"
@@ -468,7 +468,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "on update" do
+    context "when updating" do
       it "does not change the requester when present" do
         offender_sar_case = create :offender_sar_case
         offender_sar_case.update! name: "Bob", subject_full_name: "Doug"
@@ -710,13 +710,13 @@ describe Case::SAR::Offender do
   describe "#first_prison_number" do
     let(:kase) { create :offender_sar_case }
 
-    context "When there is just one prison number" do
+    context "when there is just one prison number" do
       it "returns the prison number" do
         expect(kase.first_prison_number).to eq "123465"
       end
     end
 
-    context "When there is more than one prison number" do
+    context "when there is more than one prison number" do
       let(:kases) do
         [
           create(:offender_sar_case, prison_number: "A12345, B98765"),
@@ -733,7 +733,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "When prison number is nil" do
+    context "when prison number is nil" do
       let(:kase)  { create :offender_sar_case, prison_number: nil }
 
       it "returns an empty string" do
@@ -741,7 +741,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "When prison number is an empty string" do
+    context "when prison number is an empty string" do
       let(:kase)  { create :offender_sar_case, prison_number: "" }
 
       it "returns an empty string" do
@@ -749,7 +749,7 @@ describe Case::SAR::Offender do
       end
     end
 
-    context "When prison number is lowercase" do
+    context "when prison number is lowercase" do
       let(:kase)  { create :offender_sar_case, prison_number: "a12345" }
 
       it "returns it in uppercase" do

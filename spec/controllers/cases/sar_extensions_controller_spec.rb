@@ -85,7 +85,7 @@ describe Cases::SarExtensionsController, type: :controller do
       end
     end
 
-    context "failed request" do
+    context "when failed request" do
       let(:service) do
         double(
           CaseExtendSARDeadlineService,

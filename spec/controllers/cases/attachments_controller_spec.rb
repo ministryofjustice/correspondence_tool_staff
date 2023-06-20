@@ -41,17 +41,17 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       end
     end
 
-    context "as an anonymous user" do
+    context "when an anonymous user" do
       it_behaves_like "unauthorized user"
     end
 
-    context "as a manager" do
+    context "when a manager" do
       before { sign_in manager }
 
       it_behaves_like "an authorized user"
     end
 
-    context "as a responder" do
+    context "when a responder" do
       before { sign_in responder }
 
       it_behaves_like "an authorized user"
@@ -97,23 +97,23 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       end
     end
 
-    context "as an anonymous user" do
+    context "when an anonymous user" do
       it_behaves_like "unauthorized user"
     end
 
-    context "as a manager with a case that is still open" do
+    context "when a manager with a case that is still open" do
       before { sign_in manager }
 
       it_behaves_like "unauthorized user"
     end
 
-    context "as a manager with a case that is still open" do
+    context "when a manager with a case that is still open" do
       before { sign_in manager }
 
       it_behaves_like "unauthorized user"
     end
 
-    context "as a manager with a case that has been marked as responded" do
+    context "when a manager with a case that has been marked as responded" do
       let(:kase) { create(:responded_case) }
 
       before { sign_in manager }
@@ -121,7 +121,7 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       it_behaves_like "unauthorized user"
     end
 
-    context "as a responder who is still responding to a case" do
+    context "when a responder who is still responding to a case" do
       before { sign_in responder }
 
       it "deletes the attachment from the case" do
@@ -130,7 +130,7 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       end
     end
 
-    context "as a responder who has marked the case as responded" do
+    context "when a responder who has marked the case as responded" do
       let(:kase) { create(:responded_case) }
 
       before { sign_in responder }

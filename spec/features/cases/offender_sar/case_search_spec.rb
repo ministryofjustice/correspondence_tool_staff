@@ -28,7 +28,7 @@ feature "Searching for cases" do
     expect(cases_search_page).to be_displayed
   end
 
-  context "searching for case number" do
+  context "when searching for case number" do
     let(:searcher) { responder }
     let(:search_term) { offender_sar_case.number }
 
@@ -39,7 +39,7 @@ feature "Searching for cases" do
     end
   end
 
-  context "searching for partial name" do
+  context "when searching for partial name" do
     let(:searcher) { responder }
     let(:search_term) { "Terren" }
 
@@ -50,7 +50,7 @@ feature "Searching for cases" do
     end
   end
 
-  context "searching for shared year of birth" do
+  context "when searching for shared year of birth" do
     let(:searcher) { responder }
     let(:search_term) { "1970" }
 
@@ -62,7 +62,7 @@ feature "Searching for cases" do
     end
   end
 
-  context "searching for subject full name" do
+  context "when searching for subject full name" do
     let(:searcher) { responder }
     let(:search_term) { "Bill" }
 
@@ -86,7 +86,7 @@ feature "Searching for cases" do
     end
   end
 
-  context "searching multiple terms narrows the search" do
+  context "when searching multiple terms narrows the search" do
     let(:searcher) { responder }
     let(:search_term) { "Bill 1970" }
 
@@ -97,7 +97,7 @@ feature "Searching for cases" do
     end
   end
 
-  context "searching for common text as manager" do
+  context "when searching for common text as manager" do
     let(:searcher) { manager }
     let(:search_term) { "Common text" }
 
@@ -108,7 +108,7 @@ feature "Searching for cases" do
     end
   end
 
-  context "searching for common text as branston responder" do
+  context "when searching for common text as branston responder" do
     let(:searcher) { responder }
     let(:search_term) { "Common text" }
 

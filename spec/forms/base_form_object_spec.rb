@@ -6,7 +6,7 @@ RSpec.describe BaseFormObject do
       allow(subject).to receive(:valid?).and_return(is_valid)
     end
 
-    context "for a valid form" do
+    context "with a valid form" do
       let(:is_valid) { true }
 
       it "calls persist!" do
@@ -15,7 +15,7 @@ RSpec.describe BaseFormObject do
       end
     end
 
-    context "for an invalid form" do
+    context "with an invalid form" do
       let(:is_valid) { false }
 
       it "does not call persist!" do

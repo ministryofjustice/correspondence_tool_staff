@@ -40,7 +40,7 @@ describe CaseCreateService do
   end
 
   describe "#call" do
-    context "unflagged FOI case" do
+    context "when unflagged FOI case" do
       let(:params) do
         regular_params.merge flag_for_disclosure_specialists: "no"
       end
@@ -73,7 +73,7 @@ describe CaseCreateService do
       end
     end
 
-    context "flagged FOI case" do
+    context "when flagged FOI case" do
       let(:params) do
         regular_params["foi"]["flag_for_disclosure_specialists"] = "yes"
         regular_params
@@ -114,7 +114,7 @@ describe CaseCreateService do
       end
     end
 
-    context "ICO case" do
+    context "when ICO case" do
       let(:received)          { 0.business_days.ago }
       let(:deadline)          { 28.business_days.after(received) }
       let(:internal_deadline) { 10.business_days.before(deadline) }
@@ -172,7 +172,7 @@ describe CaseCreateService do
       end
     end
 
-    context "OverturnedSAR" do
+    context "when OverturnedSAR" do
       before :all do
         @original_ico_appeal = create(:closed_ico_sar_case)
       end
@@ -245,7 +245,7 @@ describe CaseCreateService do
         ccs.call
       end
 
-      context "invalid case type for original ico appeal" do
+      context "and invalid case type for original ico appeal" do
         let(:original_ico_appeal) { create :closed_ico_foi_case }
 
         it "errors" do
@@ -257,7 +257,7 @@ describe CaseCreateService do
       end
     end
 
-    context "Non trigger OverturnedFOI" do
+    context "when non trigger OverturnedFOI" do
       before :all do
         @original_ico_appeal = create(:closed_ico_foi_case)
       end
@@ -331,7 +331,7 @@ describe CaseCreateService do
         ccs.call
       end
 
-      context "invalid case type for original ico appeal" do
+      context "and invalid case type for original ico appeal" do
         let(:original_ico_appeal) { create :closed_ico_sar_case }
 
         it "errors" do
@@ -342,7 +342,7 @@ describe CaseCreateService do
         end
       end
 
-      context "Trigger Overturned FOI case" do
+      context "and Trigger Overturned FOI case" do
         before do
           params[:overturned_foi][:flag_for_disclosure_specialists] = "yes"
         end
@@ -355,7 +355,7 @@ describe CaseCreateService do
     end
   end
 
-  context "invalid case params" do
+  context "when invalid case params" do
     let(:params) do
       regular_params[:foi][:name] = nil
       regular_params
@@ -372,7 +372,7 @@ describe CaseCreateService do
     end
   end
 
-  context "prebuilt case for stepped cases" do
+  context "when prebuilt case for stepped cases" do
     let(:minimal_params) do
       ActionController::Parameters.new({
         flag_for_disclosure_specialists: "yes",

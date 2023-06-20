@@ -22,7 +22,7 @@ feature "adding cases" do
     login_as admin
   end
 
-  context "Case::FOI::Standard" do
+  context "when Case::FOI::Standard" do
     scenario "creating a case with the default values" do
       admin_cases_page.load
       admin_cases_page.create_case_button.click
@@ -104,7 +104,7 @@ feature "adding cases" do
     end
   end
 
-  context "Case::FOI::TimelinessReview" do
+  context "when Case::FOI::TimelinessReview" do
     scenario "creating a closed case" do
       kase = create_foi(case_type: "case_foi_type_casefoitimelinessreview", target_state: "closed")
       expect(kase).to be_instance_of(Case::FOI::TimelinessReview)
@@ -118,7 +118,7 @@ feature "adding cases" do
     end
   end
 
-  context "Case::FOI::ComplianceReview" do
+  context "when Case::FOI::ComplianceReview" do
     scenario "creating a closed case" do
       kase = create_foi(case_type: "case_foi_type_casefoicompliancereview", target_state: "closed")
       expect(kase).to be_instance_of(Case::FOI::ComplianceReview)
@@ -132,7 +132,7 @@ feature "adding cases" do
     end
   end
 
-  context "Case::SAR::Standard" do
+  context "when Case::SAR::Standard" do
     scenario "creating a case with the default values" do
       admin_cases_page.load
       admin_cases_page.create_case_button.click
@@ -195,9 +195,9 @@ feature "adding cases" do
     end
   end
 
-  context "Case::ICO" do
+  context "when Case::ICO" do
     # This should create the ICO appeal and a closed case to base it from
-    context "FOI" do
+    context "when FOI" do
       scenario "creating a case with the default values" do
         stub_s3_uploader_for_all_files!
 
@@ -232,7 +232,7 @@ feature "adding cases" do
       end
     end
 
-    context "SAR" do
+    context "when SAR" do
       scenario "creating a trigger ICO in awaiting_dispatch" do
         create_ico(type: "sar", target_state: "awaiting_dispatch")
         expect(admin_cases_page).to be_displayed

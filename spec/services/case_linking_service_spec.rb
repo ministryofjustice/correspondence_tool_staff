@@ -39,8 +39,8 @@ describe CaseLinkingService do
   end
 
   describe "#create" do
-    context "as a manager" do
-      context "NON-SAR cases" do
+    context "when a manager" do
+      context "and NON-SAR cases" do
         it "creates a link to the linked case" do
           service.create!
           expect(kase.linked_cases).to eq [link_case]
@@ -78,7 +78,7 @@ describe CaseLinkingService do
         end
       end
 
-      context "SAR cases" do
+      context "and SAR cases" do
         let(:bmt)             { find_or_create :team_disclosure_bmt }
         let(:manager)         { bmt.users.first }
         let(:foi_case)        { create :case }
@@ -116,10 +116,10 @@ describe CaseLinkingService do
       end
     end
 
-    context "as a responder" do
+    context "when a responder" do
       let(:responder) { kase.responder }
 
-      context "NON-SAR cases" do
+      context "and NON-SAR cases" do
         it "creates a link to the linked case" do
           service.create!
           expect(kase.linked_cases).to eq [link_case]
@@ -157,7 +157,7 @@ describe CaseLinkingService do
         end
       end
 
-      context "SAR cases" do
+      context "and SAR cases" do
         let(:responder)       { find_or_create :foi_responder }
         let(:sar_case_1)      { create :accepted_sar, responder: }
         let(:sar_case_2)      { create :sar_case }
@@ -175,7 +175,7 @@ describe CaseLinkingService do
   end
 
   describe "#destroy" do
-    context "NON-SAR cases" do
+    context "when NON-SAR cases" do
       before do
         service.create
       end
@@ -213,7 +213,7 @@ describe CaseLinkingService do
       end
     end
 
-    context "SAR cases" do
+    context "when SAR cases" do
       let(:sar_case_1)      { create :sar_case }
       let(:sar_case_2)      { create :sar_case }
       let(:service)         do
@@ -236,7 +236,7 @@ describe CaseLinkingService do
     end
   end
 
-  context "validations" do
+  describe "validations" do
     describe "trying to link without a case number" do
       let(:service)  do
         described_class.new(manager,
@@ -324,7 +324,7 @@ describe CaseLinkingService do
     end
   end
 
-  context "messy input" do
+  context "with messy input" do
     let(:service) do
       described_class.new(manager,
                           kase,

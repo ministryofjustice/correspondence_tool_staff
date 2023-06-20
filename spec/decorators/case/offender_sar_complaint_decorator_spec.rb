@@ -52,13 +52,13 @@ describe Case::SAR::OffenderComplaintDecorator do
   end
 
   describe "#complaint_type" do
-    context "for standard complaint" do
+    context "when standard complaint" do
       it "returns Standard" do
         expect(offender_sar_complaint.complaint_type).to eq "Standard"
       end
     end
 
-    context "for ICO complaint" do
+    context "when ICO complaint" do
       let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, complaint_type: "ico_complaint", date_responded: Date.new(2020, 1, 10), received_date: Date.new(2020, 1, 1)).decorate }
 
       it "returns ICO" do
@@ -66,7 +66,7 @@ describe Case::SAR::OffenderComplaintDecorator do
       end
     end
 
-    context "for litigation complaint" do
+    context "when litigation complaint" do
       let(:offender_sar_complaint) { build_stubbed(:offender_sar_complaint, complaint_type: "litigation", date_responded: Date.new(2020, 1, 10), received_date: Date.new(2020, 1, 1)).decorate }
 
       it "returns Litigation" do

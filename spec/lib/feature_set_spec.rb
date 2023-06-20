@@ -17,41 +17,41 @@ describe FeatureSet do
   after  { ENV["ENV"] = @saved_env }
 
   describe "#enabled?" do
-    context "test environment on local host" do
+    context "when test environment on local host" do
       it "is enabled" do
         expect(described_class.sars.enabled?).to be true
       end
     end
 
-    context "development environment on local host" do
+    context "when development environment on local host" do
       it "is enabled" do
         expect(Rails.env).to receive(:development?).and_return(true)
         expect(described_class.sars.enabled?).to be true
       end
     end
 
-    context "production environment on dev server" do
+    context "when production environment on dev server" do
       it "is enabled" do
         ENV["ENV"] = "dev"
         expect(described_class.sars.enabled?).to be true
       end
     end
 
-    context "production environment on demo server" do
+    context "when production environment on demo server" do
       it "is enabled" do
         ENV["ENV"] = "demo"
         expect(described_class.sars.enabled?).to be true
       end
     end
 
-    context "production environment on staging server" do
+    context "when production environment on staging server" do
       it "is enabled" do
         ENV["ENV"] = "staging"
         expect(described_class.sars.enabled?).to be false
       end
     end
 
-    context "production environment on prod server" do
+    context "when production environment on prod server" do
       it "is enabled" do
         ENV["ENV"] = "prod"
         expect(described_class.sars.enabled?).to be false
@@ -60,7 +60,7 @@ describe FeatureSet do
   end
 
   describe "#enable!" do
-    context "on an environment where it is disabled" do
+    context "when on an environment where it is disabled" do
       it "is enabled" do
         ENV["ENV"] = "prod"
         expect(described_class.sars.enabled?).to be false
@@ -71,7 +71,7 @@ describe FeatureSet do
   end
 
   describe "#disable!" do
-    context "on an environment where it is enabled" do
+    context "when on an environment where it is enabled" do
       it "is disabled" do
         ENV["ENV"] = "demo"
         expect(described_class.sars.enabled?).to be true
@@ -82,19 +82,19 @@ describe FeatureSet do
   end
 
   describe "#respond_to?" do
-    context "a feature defined in the config" do
+    context "when a feature defined in the config" do
       it "responds true" do
         expect(described_class.respond_to?(:sars)).to be true
       end
     end
 
-    context "a method defined on the superclass" do
+    context "when a method defined on the superclass" do
       it "responds true" do
         expect(described_class.respond_to?(:object_id)).to be true
       end
     end
 
-    context "unknown method" do
+    context "when unknown method" do
       it "responds false" do
         expect(described_class.respond_to?(:xxxx)).to be false
       end

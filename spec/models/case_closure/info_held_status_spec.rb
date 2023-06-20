@@ -39,19 +39,19 @@ module CaseClosure
     end
 
     describe ".id_from_abbreviation" do
-      context "passed nil as a aprameter" do
+      context "when passed nil as a aprameter" do
         it "returns nil" do
           expect(described_class.id_from_abbreviation(nil)).to be_nil
         end
       end
 
-      context "passed a valid abbreviation" do
+      context "when passed a valid abbreviation" do
         it "returns the correct record" do
           expect(described_class.id_from_abbreviation("part_held")).to eq @part_held.id
         end
       end
 
-      context "passed a non-existent abbreviation" do
+      context "when passed a non-existent abbreviation" do
         it "raises" do
           expect {
             described_class.id_from_abbreviation("xxx")

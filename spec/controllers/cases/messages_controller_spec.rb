@@ -29,14 +29,14 @@ RSpec.describe Cases::MessagesController, type: :controller do
       }
     end
 
-    context "as an anonymous user" do
+    context "when an anonymous user" do
       it "be redirected to signin if trying to start a new case" do
         post(:create, params:)
         expect(response).to redirect_to(new_user_session_path)
       end
     end
 
-    context "as a responder" do
+    context "when a responder" do
       before { sign_in responder }
 
       it "redirects to case detail page and contains a hash" do
@@ -57,7 +57,7 @@ RSpec.describe Cases::MessagesController, type: :controller do
       end
     end
 
-    context "as a manager" do
+    context "when a manager" do
       before { sign_in manager }
 
       it "redirects to case detail page and contains a hash" do
@@ -72,7 +72,7 @@ RSpec.describe Cases::MessagesController, type: :controller do
       end
     end
 
-    context "as a approver" do
+    context "when a approver" do
       before { sign_in approver }
 
       it "doesn't allow them to post messages to non-trigger cases" do
@@ -93,7 +93,7 @@ RSpec.describe Cases::MessagesController, type: :controller do
       end
     end
 
-    context "message is blank, (user type doesn't matter)" do
+    context "when message is blank, (user type doesn't matter)" do
       before do
         sign_in responder
         params = {
@@ -114,7 +114,7 @@ RSpec.describe Cases::MessagesController, type: :controller do
       end
     end
 
-    context "sar case" do
+    context "with sar case" do
       let(:params) do
         {
           case: {
@@ -124,7 +124,7 @@ RSpec.describe Cases::MessagesController, type: :controller do
         }
       end
 
-      context "as a manager" do
+      context "when a manager" do
         let(:sar_case) { create :sar_case }
 
         before { sign_in manager }
@@ -135,7 +135,7 @@ RSpec.describe Cases::MessagesController, type: :controller do
         end
       end
 
-      context "as a multi-role person" do
+      context "when a multi-role person" do
         let(:sar_case) { create :awaiting_responder_sar }
 
         let(:approver_manager) { create :sar_multi_role_user }

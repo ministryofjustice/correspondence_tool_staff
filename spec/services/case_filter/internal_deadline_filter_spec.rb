@@ -18,13 +18,13 @@ describe CaseFilter::InternalDeadlineFilter do
 
     let(:filter) { described_class.new(search_query, :user, Case::Base.all) }
 
-    context "no internal_deadline present" do
+    context "when no internal_deadline present" do
       let(:search_query)      { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "both from and to internal_deadline present" do
+    context "when both from and to internal_deadline present" do
       let(:search_query)      do
         create :search_query,
                internal_deadline_from: Time.zone.today,
@@ -34,7 +34,7 @@ describe CaseFilter::InternalDeadlineFilter do
       it { is_expected.to be_applied }
     end
 
-    context "only internal_deadline_from present" do
+    context "when only internal_deadline_from present" do
       let(:search_query) do
         create :search_query,
                internal_deadline_from: Time.zone.today
@@ -43,7 +43,7 @@ describe CaseFilter::InternalDeadlineFilter do
       it { is_expected.not_to be_applied }
     end
 
-    context "only internal_deadline_to present" do
+    context "when only internal_deadline_to present" do
       let(:search_query) do
         create :search_query,
                internal_deadline_to: Time.zone.today
@@ -57,7 +57,7 @@ describe CaseFilter::InternalDeadlineFilter do
     let(:arel)    { Case::Base.all }
     let(:filter)  { described_class.new(search_query, :user, arel) }
 
-    context "no cases with deadline in date range" do
+    context "when no cases with deadline in date range" do
       let(:search_query) do
         create :search_query,
                internal_deadline_from: Date.new(2018, 1, 4),
@@ -71,7 +71,7 @@ describe CaseFilter::InternalDeadlineFilter do
       end
     end
 
-    context "case with deadline within date rang" do
+    context "when case with deadline within date rang" do
       let(:search_query) do
         create :search_query,
                internal_deadline_from: Date.new(2018, 3, 25),
@@ -90,7 +90,7 @@ describe CaseFilter::InternalDeadlineFilter do
     let(:arel)          { Case::Base.all }
     let(:filter)        { described_class.new(search_query, user, arel) }
 
-    context "no deadline from or to selected" do
+    context "when no deadline from or to selected" do
       let(:search_query) do
         create :search_query,
                internal_deadline_from: nil,
@@ -102,7 +102,7 @@ describe CaseFilter::InternalDeadlineFilter do
       end
     end
 
-    context "from and to date selected" do
+    context "when from and to date selected" do
       let(:search_query) do
         create :search_query,
                internal_deadline_from: Date.new(2017, 12, 4),

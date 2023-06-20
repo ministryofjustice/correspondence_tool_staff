@@ -29,13 +29,13 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
   describe "#applied?" do
     subject { case_complaint_subtype_filter }
 
-    context "filter_case_complaint_subtype not present" do
+    context "when filter_case_complaint_subtype not present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "filter_case_complaint_subtype present" do
+    context "when filter_case_complaint_subtype present" do
       let(:search_query) do
         create :search_query,
                filter_complaint_subtype: %w[standard_complaint]
@@ -63,7 +63,7 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
   end
 
   describe "#crumbs" do
-    context "no filters selected" do
+    context "when no filters selected" do
       let(:search_query) do
         create :search_query,
                filter_complaint_subtype: []
@@ -74,8 +74,8 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
       end
     end
 
-    context "filtering for cases" do
-      context "filtering for one complaint subtype" do
+    context "when filtering for cases" do
+      context "and filtering for one complaint subtype" do
         let(:search_query) do
           create :search_query,
                  filter_complaint_subtype: %w[missing_data]
@@ -99,7 +99,7 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
         end
       end
 
-      context "filtering for more than one type" do
+      context "and filtering for more than one type" do
         let(:search_query) do
           create :search_query,
                  filter_complaint_subtype: %w[inaccurate_data redacted_data]

@@ -11,7 +11,7 @@ describe "CurrentTeamAndUserService" do
   let(:private_officer)         { find_or_create :private_officer }
   let(:service) { CurrentTeamAndUserService.new(kase) }
 
-  context "unassigned state" do
+  context "when unassigned state" do
     let(:kase)  { create :case }
 
     it "returns the correct team and user" do
@@ -21,7 +21,7 @@ describe "CurrentTeamAndUserService" do
     end
   end
 
-  context "awaiting_responder state" do
+  context "when awaiting_responder state" do
     let(:kase)  { create :awaiting_responder_case, responding_team: }
 
     it "returns the correct team and user" do
@@ -31,7 +31,7 @@ describe "CurrentTeamAndUserService" do
     end
   end
 
-  context "drafting state" do
+  context "when drafting state" do
     let(:kase)  { create :case_being_drafted, responding_team:, responder: }
 
     it "returns the correct team and user" do
@@ -41,7 +41,7 @@ describe "CurrentTeamAndUserService" do
     end
   end
 
-  context "awaiting dispatch state" do
+  context "when awaiting dispatch state" do
     let(:kase)  { create :case_with_response, responding_team:, responder: }
 
     it "returns the correct team and user" do
@@ -51,7 +51,7 @@ describe "CurrentTeamAndUserService" do
     end
   end
 
-  context "pending dacu_clearance state" do
+  context "when pending dacu_clearance state" do
     context "without assigned dacu disclosure team member" do
       let(:kase)  { create :pending_dacu_clearance_case }
 
@@ -74,7 +74,7 @@ describe "CurrentTeamAndUserService" do
     end
   end
 
-  context "pending_press_office_clearance state" do
+  context "when pending_press_office_clearance state" do
     let(:kase) do
       create :pending_press_clearance_case,
              press_officer:
@@ -88,7 +88,7 @@ describe "CurrentTeamAndUserService" do
     end
   end
 
-  context "pending_private_office_clearance state" do
+  context "when pending_private_office_clearance state" do
     let(:kase) do
       create :pending_private_clearance_case,
              private_officer:
@@ -102,7 +102,7 @@ describe "CurrentTeamAndUserService" do
     end
   end
 
-  context "responded state" do
+  context "when responded state" do
     let(:kase)  { create :responded_case }
 
     it "returns the correct team and user" do
@@ -112,7 +112,7 @@ describe "CurrentTeamAndUserService" do
     end
   end
 
-  context "closed state" do
+  context "when closed state" do
     let(:kase)  { create :closed_case }
 
     it "returns the correct team and user" do
@@ -122,7 +122,7 @@ describe "CurrentTeamAndUserService" do
     end
   end
 
-  context "unknown_state" do
+  context "when unknown_state" do
     let(:kase)  { create :closed_case }
 
     it "raises" do

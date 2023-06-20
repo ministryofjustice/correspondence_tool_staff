@@ -3,7 +3,6 @@ require "rails_helper"
 describe GlobalNavManager::Page do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:finder) { instance_double CaseFinderService }
-  let(:finder) { instance_double CaseFinderService }
   let(:disclosure_bmt_user) { find_or_create :disclosure_bmt_user }
   let(:disclosure_specialist_bmt) { find_or_create :disclosure_specialist_bmt }
   let(:press_officer)         { find_or_create :press_officer }
@@ -16,7 +15,7 @@ describe GlobalNavManager::Page do
   end
 
   let(:settings) do
-    YAML.load(ERB.new(<<~EOY).result)
+    YAML.load(ERB.new(<<~ERB).result)
       pages:
         incoming_cases:
           path: '/incoming'
@@ -40,7 +39,7 @@ describe GlobalNavManager::Page do
         stats_page:
           path: '/stats'
           visibility: manager
-    EOY
+    ERB
   end
   let(:config) do
     Config::Options.new.tap do |config|
@@ -106,7 +105,7 @@ describe GlobalNavManager::Page do
                                   .and_return(instance_spy(CaseFinderService))
   end
 
-  context "initialization" do
+  describe "initialization" do
     describe "tabs" do
       it "creates tab objects for the list provided" do
         expect(open_cases_page.tabs).to eq [in_time_tab, late_tab]
@@ -138,7 +137,7 @@ describe GlobalNavManager::Page do
     end
 
     describe "scopes" do
-      context "press officer user" do
+      context "when press officer user" do
         let(:user) { press_officer }
 
         it "sets the scopes using the users team" do
@@ -146,7 +145,7 @@ describe GlobalNavManager::Page do
         end
       end
 
-      context "responder" do
+      context "when responder" do
         let(:user) { responder }
 
         it "sets the scopes using the users role" do
@@ -154,7 +153,7 @@ describe GlobalNavManager::Page do
         end
       end
 
-      context "disclosure specialist" do
+      context "when disclosure specialist" do
         let(:user) { disclosure_specialist_bmt }
 
         it "merges scope_names" do
@@ -177,13 +176,13 @@ describe GlobalNavManager::Page do
   end
 
   describe "#fullpath" do
-    context "on a page with no tabs" do
+    context "when on a page with no tabs" do
       it "returns the page's path" do
         expect(closed_cases_page.fullpath).to eq "/closed"
       end
     end
 
-    context "on a page with tabs" do
+    context "when on a page with tabs" do
       it "returns the path of the first tab" do
         expect(open_cases_page.fullpath).to eq "in_time_fullpath"
       end
@@ -201,7 +200,7 @@ describe GlobalNavManager::Page do
                       }
     end
 
-    context "on a page with tabs" do
+    context "when on a page with tabs" do
       it "returns the path of the first tab" do
         expect(open_cases_page.fullpath_with_query).to eq "in_time_fullpath?foo=bar"
       end
@@ -238,13 +237,13 @@ describe GlobalNavManager::Page do
   end
 
   describe "#matches_path?" do
-    context "no format specified" do
+    context "when no format specified" do
       it "returns true if the paths match" do
         expect(open_cases_page.matches_path?("in_time_fullpath")).to be true
       end
     end
 
-    context "csv format specified" do
+    context "when csv format specified" do
       it "returns true if the paths match" do
         expect(open_cases_page.matches_path?("in_time_fullpath.csv")).to be true
       end

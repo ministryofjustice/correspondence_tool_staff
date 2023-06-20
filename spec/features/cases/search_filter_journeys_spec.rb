@@ -36,7 +36,7 @@ feature "filters whittle down search results" do
     DbHousekeeping.clean
   end
 
-  context "status filter" do
+  describe "status filter" do
     scenario "filter by status: open", js: true do
       login_step user: @setup.disclosure_bmt_user
       search_for(page: open_cases_page, search_phrase: "prison guards", num_expected_results: 9)
@@ -65,7 +65,7 @@ feature "filters whittle down search results" do
     end
   end
 
-  context "type filter" do
+  describe "type filter" do
     scenario "filter by internal review for compliance, timeliness", js: true do
       login_step user: @setup.disclosure_bmt_user
       search_for(page: open_cases_page, search_phrase: "prison guards", num_expected_results: 9)
@@ -176,7 +176,7 @@ feature "filters whittle down search results" do
     end
   end
 
-  context "exemptions filter", js: true do
+  describe "exemptions filter", js: true do
     before do
       @ex1 = create_case_with_exemptions(%w[s21 s22 s23])
       @ex2 = create_case_with_exemptions(%w[s27 s22 s40])
@@ -184,7 +184,7 @@ feature "filters whittle down search results" do
       Case::Base.update_all_indexes
     end
 
-    context "specifying one exemtpion" do
+    context "when specifying one exemption" do
       scenario "selects all cases closed with that exemption", js: true do
         login_step user: @setup.disclosure_bmt_user
         search_for(page: open_cases_page, search_phrase: "prison guards", num_expected_results: 12)
@@ -210,7 +210,7 @@ feature "filters whittle down search results" do
       end
     end
 
-    context "specifying multiple exemptions", js: true do
+    context "when specifying multiple exemptions", js: true do
       scenario "selects only cases that match ALL specified exemption" do
         login_step user: @setup.disclosure_bmt_user
         search_for(page: open_cases_page, search_phrase: "prison guards", num_expected_results: 12)
@@ -235,7 +235,7 @@ feature "filters whittle down search results" do
     end
   end
 
-  context "all filters set" do
+  context "when all filters set" do
     before do
       login_step user: @setup.disclosure_bmt_user
       search_for(page: open_cases_page, search_phrase: "prison guards", num_expected_results: 9)

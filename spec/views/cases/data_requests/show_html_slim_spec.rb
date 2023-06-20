@@ -31,7 +31,7 @@ describe "cases/data_requests/show", type: :view do
       )
     end
 
-    context "data request without commissioning document" do
+    context "when data request without commissioning document" do
       before do
         assign(:data_request, data_request)
         assign(:case, data_request.kase)
@@ -56,7 +56,7 @@ describe "cases/data_requests/show", type: :view do
       end
     end
 
-    context "commissioning document has been selected" do
+    context "when commissioning document has been selected" do
       before do
         assign(:commissioning_document, commissioning_document.decorate)
         assign(:data_request, data_request)
@@ -79,7 +79,7 @@ describe "cases/data_requests/show", type: :view do
       end
     end
 
-    context "commissioning email has been sent" do
+    context "when commissioning email has been sent" do
       before do
         commissioning_document.sent = true
         assign(:commissioning_document, commissioning_document.decorate)

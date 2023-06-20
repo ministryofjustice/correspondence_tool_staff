@@ -5,7 +5,7 @@ module ConfigurableStateMachine
     let(:kase)  { create :case }
     let(:user)  { create :user }
 
-    context "no message provided" do
+    context "when no message provided" do
       it "prints the right message" do
         raise described_class.new(kase:,
                                   user:,
@@ -13,7 +13,7 @@ module ConfigurableStateMachine
                                   role: "approver")
       rescue StandardError => e
         expect(e).to be_instance_of(described_class)
-        expect(e.message).to eq(<<~EOS)
+        expect(e.message).to eq(<<~EVENT)
 
           Invalid event: type: FOI
                          workflow: standard
@@ -22,11 +22,11 @@ module ConfigurableStateMachine
                          event: My dummy event
                          kase_id: #{kase.id}
                          user_id: #{user.id}
-        EOS
+        EVENT
       end
     end
 
-    context "message provided" do
+    context "when message provided" do
       it "prints the right message" do
         raise described_class.new(kase:,
                                   user:,
@@ -35,7 +35,7 @@ module ConfigurableStateMachine
                                   message: "suddenly, error")
       rescue StandardError => e
         expect(e).to be_instance_of(described_class)
-        expect(e.message).to eq(<<~EOS)
+        expect(e.message).to eq(<<~EVENT)
 
           Invalid event: type: FOI
                          workflow: standard
@@ -45,7 +45,7 @@ module ConfigurableStateMachine
                          kase_id: #{kase.id}
                          user_id: #{user.id}
                          message: suddenly, error
-        EOS
+        EVENT
       end
     end
   end

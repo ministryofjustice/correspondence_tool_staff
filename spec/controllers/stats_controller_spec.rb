@@ -23,7 +23,7 @@ RSpec.describe StatsController, type: :controller do
           .with_args(manager, Case::Base)
     end
 
-    context "there is no already-generated report" do
+    context "when there is no already-generated report" do
       let(:report_type) { find_or_create :report_type, :r005 }
 
       it "sends the generated report as an attachment" do
@@ -38,7 +38,7 @@ RSpec.describe StatsController, type: :controller do
   end
 
   describe "#new" do
-    context "signed in manager" do
+    context "when signed in manager" do
       before do
         sign_in manager
         find_or_create :report_type, :r007
@@ -77,7 +77,7 @@ RSpec.describe StatsController, type: :controller do
       end
     end
 
-    context "signed in branston user" do
+    context "when signed in branston user" do
       before do
         sign_in branston_user
         find_or_create :report_type, :r007
@@ -163,7 +163,7 @@ RSpec.describe StatsController, type: :controller do
                                                  period_end: Time.zone.today, user: manager, report_guid: report.guid)
     end
 
-    context "invalid params passed in" do
+    context "when invalid params passed in" do
       let(:params) do
         {
           report: {
@@ -179,7 +179,7 @@ RSpec.describe StatsController, type: :controller do
         }
       end
 
-      context "correspondence type and report type radio buttons not selected" do
+      context "and correspondence type and report type radio buttons not selected" do
         let(:params) do
           {
             report: {
@@ -200,7 +200,7 @@ RSpec.describe StatsController, type: :controller do
         end
       end
 
-      context "correspondence type present but no report type id" do
+      context "and correspondence type present but no report type id" do
         let(:params) do
           {
             report: {
@@ -262,7 +262,7 @@ RSpec.describe StatsController, type: :controller do
       end
     end
 
-    context "etl - closed cases report" do
+    describe "etl - closed cases report" do
       let(:report_type) { find_or_create :report_type, :r007 }
 
       let(:params) do
@@ -320,7 +320,7 @@ RSpec.describe StatsController, type: :controller do
   end
 
   describe "#download_custom" do
-    context "non-etl" do
+    context "when non-etl" do
       let!(:report) { create :report }
 
       it "authorizes" do

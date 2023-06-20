@@ -21,7 +21,7 @@ describe HostEnv do
   end
 
   describe "local machine environment" do
-    context "local development rails environment" do
+    context "when local development rails environment" do
       before do
         ENV["RAILS_ENV"] = "development"
       end
@@ -51,7 +51,7 @@ describe HostEnv do
       include_examples "is safe?"
     end
 
-    context "local test rails environment" do
+    context "when local test rails environment" do
       describe "HostEnv.staging?" do
         it "returns false" do
           expect(described_class.staging?).to be false
@@ -96,7 +96,7 @@ describe HostEnv do
       @envvars = k8s_settings["data"]
     end
 
-    context "1. demo server" do
+    describe "1. demo server" do
       let(:namespace) { "demo" }
 
       before do
@@ -124,7 +124,7 @@ describe HostEnv do
       include_examples "is safe?"
     end
 
-    context "2. development server" do
+    describe "2. development server" do
       let(:namespace) { "development" }
 
       before do
@@ -152,7 +152,7 @@ describe HostEnv do
       include_examples "is safe?"
     end
 
-    context "3. production server" do
+    describe "3. production server" do
       let(:namespace) { "production" }
 
       before do
@@ -198,7 +198,7 @@ describe HostEnv do
       end
     end
 
-    context "4. qa server" do
+    describe "4. qa server" do
       let(:namespace) { "qa" }
 
       before do
@@ -226,7 +226,7 @@ describe HostEnv do
       include_examples "is safe?"
     end
 
-    context "5. staging server" do
+    describe "5. staging server" do
       let(:namespace) { "staging" }
 
       before do

@@ -1,11 +1,11 @@
 require "rails_helper"
 
 describe ConfigurableStateMachine::Machine do
-  context "non-flagged case" do
-    context "manager" do
+  context "when non-flagged case" do
+    context "and manager" do
       let(:manager) { create :manager }
 
-      context "unassigned state" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :overturned_ico_sar
           expect(k.current_state).to eq "unassigned"
@@ -19,7 +19,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder" do
+      context "and awaiting responder" do
         it "shows permitted events" do
           k = create :awaiting_responder_ot_ico_sar
           expect(k.current_state).to eq "awaiting_responder"
@@ -33,7 +33,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting" do
+      context "and drafting" do
         it "shows permitted events" do
           k = create :accepted_ot_ico_sar
           expect(k.current_state).to eq "drafting"
@@ -48,7 +48,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows permitted events" do
           k = create :closed_ot_ico_sar
           expect(k.current_state).to eq "closed"
@@ -61,10 +61,10 @@ describe ConfigurableStateMachine::Machine do
       end
     end
 
-    context "not in assigned team" do
+    context "and not in assigned team" do
       let(:responder) { create :responder }
 
-      context "unassigned state" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :overturned_ico_sar
           expect(k.current_state).to eq "unassigned"
@@ -72,7 +72,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder state" do
+      context "and awaiting responder state" do
         it "shows permitted events" do
           k = create :awaiting_responder_ot_ico_sar
           expect(k.current_state).to eq "awaiting_responder"
@@ -80,7 +80,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "and drafting state" do
         it "shows permitted events" do
           k = create :accepted_ot_ico_sar
           expect(k.current_state).to eq "drafting"
@@ -88,7 +88,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed state" do
+      context "and closed state" do
         it "shows permitted events" do
           k = create :closed_ot_ico_sar
           expect(k.current_state).to eq "closed"
@@ -97,8 +97,8 @@ describe ConfigurableStateMachine::Machine do
       end
     end
 
-    context "within assigned team" do
-      context "awaiting responder state" do
+    context "and within assigned team" do
+      context "and awaiting responder state" do
         it "shows permitted events" do
           k = create :awaiting_responder_ot_ico_sar
           responder = responder_in_assigned_team(k)
@@ -109,7 +109,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "and drafting state" do
         it "shows permitted events" do
           k = create :accepted_ot_ico_sar
           responder = responder_in_assigned_team(k)
@@ -122,7 +122,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed state" do
+      context "and closed state" do
         it "shows permitted events" do
           k = create :closed_ot_ico_sar
           responder = responder_in_assigned_team(k)

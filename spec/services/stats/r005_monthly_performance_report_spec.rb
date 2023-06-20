@@ -106,7 +106,7 @@ module Stats
         expect(results[5..10].map { |m| m[0] }).to eq %w[January February March April May Total]
       end
 
-      context "monthly figures" do
+      context "when monthly figures" do
         let(:expected_results) do
           {
             "March" => {
@@ -192,8 +192,8 @@ module Stats
         end
       end
 
-      context "defining the period" do
-        context "no period parameters passsed in" do
+      context "when defining the period" do
+        context "and no period parameters passsed in" do
           it "defaults from beginning of year to now" do
             Timecop.freeze(Time.zone.local(2017, 12, 7, 12, 33, 44)) do
               report = described_class.new
@@ -202,7 +202,7 @@ module Stats
           end
         end
 
-        context "period params are passed in" do
+        context "and period params are passed in" do
           it "uses the specify period" do
             d1 = Date.new(2017, 6, 1)
             d2 = Date.new(2017, 6, 30)

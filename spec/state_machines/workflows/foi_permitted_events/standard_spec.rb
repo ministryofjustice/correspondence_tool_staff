@@ -1,13 +1,13 @@
 require "rails_helper"
 
 describe ConfigurableStateMachine::Machine do
-  context "standard workflow" do
+  describe "standard workflow" do
     ##################### MANAGER  ############################
 
-    context "manager" do
+    context "when manager" do
       let(:manager)   { create :manager }
 
-      context "unassigned state" do
+      context "and unassigned state" do
         it "shows permitted events" do
           k = create :case
           expect(k.class).to eq Case::FOI::Standard
@@ -24,7 +24,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting responder state" do
+      context "and awaiting responder state" do
         it "shows events" do
           k = create :awaiting_responder_case
           expect(k.class).to eq Case::FOI::Standard
@@ -41,7 +41,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "drafting state" do
+      context "and drafting state" do
         it "shows events" do
           k = create :accepted_case
           expect(k.class).to eq Case::FOI::Standard
@@ -60,7 +60,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "awaiting_dispatch" do
+      context "and awaiting_dispatch" do
         it "shows events" do
           k = create :case_with_response
           expect(k.class).to eq Case::FOI::Standard
@@ -78,7 +78,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "responded" do
+      context "and responded" do
         it "shows events" do
           k = create :responded_case
           expect(k.class).to eq Case::FOI::Standard
@@ -96,7 +96,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "closed" do
+      context "and closed" do
         it "shows events" do
           k = create :closed_case
           expect(k.class).to eq Case::FOI::Standard
@@ -115,11 +115,11 @@ describe ConfigurableStateMachine::Machine do
 
     ##################### RESPONDER ############################
 
-    context "responder" do
-      context "responder not in team" do
+    context "when responder" do
+      context "and responder not in team" do
         let(:responder) { create :responder }
 
-        context "unassigned state" do
+        context "and unassigned state" do
           it "shows permitted events" do
             k = create :case
             expect(k.class).to eq Case::FOI::Standard
@@ -129,7 +129,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting responder state" do
+        context "and awaiting responder state" do
           it "shows events" do
             k = create :awaiting_responder_case
             expect(k.class).to eq Case::FOI::Standard
@@ -139,7 +139,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows events" do
             k = create :accepted_case
             expect(k.class).to eq Case::FOI::Standard
@@ -149,7 +149,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch" do
+        context "and awaiting_dispatch" do
           it "shows events" do
             k = create :case_with_response
             expect(k.class).to eq Case::FOI::Standard
@@ -160,7 +160,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "responded state" do
+        context "and responded state" do
           it "shows events" do
             k = create :responded_case
             expect(k.class).to eq Case::FOI::Standard
@@ -170,7 +170,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "closed state" do
+        context "and closed state" do
           it "shows events" do
             k = create :closed_case
             expect(k.class).to eq Case::FOI::Standard
@@ -183,10 +183,10 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "responder in assigned team" do
+      context "and responder in assigned team" do
         # Request further clearance is not permitted by the policies so has been removed
         # from state machine permitted events check
-        context "awaiting_responder state" do
+        context "and awaiting_responder state" do
           it "shows events" do
             k = create :awaiting_responder_case
             responder = responder_in_assigned_team(k)
@@ -202,7 +202,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows events" do
             k = create :accepted_case
             responder = responder_in_assigned_team(k)
@@ -218,7 +218,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch state" do
+        context "and awaiting_dispatch state" do
           it "shows events" do
             k = create :case_with_response
             responder = responder_in_assigned_team(k)
@@ -235,7 +235,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "responded state" do
+        context "and responded state" do
           it "shows events" do
             k = create :responded_case
             responder = responder_in_assigned_team(k)
@@ -248,7 +248,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "closed state" do
+        context "and closed state" do
           it "shows events" do
             k = create :closed_case
             responder = responder_in_assigned_team(k)
@@ -269,11 +269,11 @@ describe ConfigurableStateMachine::Machine do
 
     ##################### APPROVER ############################
 
-    context "approver" do
-      context "unassigned approver" do
+    context "when approver" do
+      context "and unassigned approver" do
         let(:approver) { find_or_create :disclosure_specialist }
 
-        context "unassigned state" do
+        context "and unassigned state" do
           it "shows permitted events" do
             k = create :case
             expect(k.class).to eq Case::FOI::Standard
@@ -286,7 +286,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting responder state" do
+        context "and awaiting responder state" do
           it "shows events" do
             k = create :awaiting_responder_case
             expect(k.class).to eq Case::FOI::Standard
@@ -299,7 +299,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "drafting state" do
+        context "and drafting state" do
           it "shows events" do
             k = create :accepted_case
             expect(k.class).to eq Case::FOI::Standard
@@ -312,7 +312,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "awaiting_dispatch" do
+        context "and awaiting_dispatch" do
           it "shows events" do
             k = create :case_with_response
             expect(k.class).to eq Case::FOI::Standard
@@ -324,7 +324,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "responded" do
+        context "and responded" do
           it "shows events" do
             k = create :responded_case
             expect(k.class).to eq Case::FOI::Standard
@@ -335,7 +335,7 @@ describe ConfigurableStateMachine::Machine do
           end
         end
 
-        context "closed" do
+        context "and closed" do
           it "shows events" do
             k = create :closed_case
             expect(k.class).to eq Case::FOI::Standard

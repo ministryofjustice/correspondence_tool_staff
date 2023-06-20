@@ -40,7 +40,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
   end
 
   describe "#create" do
-    context "valid params" do
+    context "with valid params" do
       let(:params) do
         {
           case_id: data_request.case_id,
@@ -63,7 +63,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       end
     end
 
-    context "invalid params" do
+    context "with invalid params" do
       let(:params) do
         {
           case_id: data_request.case_id,
@@ -106,7 +106,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       expect(response).to redirect_to(case_data_request_path(offender_sar_case, data_request))
     end
 
-    context "attachment exists" do
+    context "when attachment exists" do
       let(:attachment) { create(:commissioning_document_attachment) }
 
       before do

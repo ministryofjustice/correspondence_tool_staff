@@ -129,7 +129,7 @@ describe Case::FOI::Standard do
       @manager = create :manager
     end
 
-    context "case not yet responded" do
+    context "when case not yet responded" do
       it "raises" do
         assigned_case = create :assigned_case
         expect {
@@ -138,10 +138,10 @@ describe Case::FOI::Standard do
       end
     end
 
-    context "case has been responded" do
-      context "just one assignment to a team" do
-        context "in time" do
-          context "flagged" do
+    context "when case has been responded" do
+      context "and just one assignment to a team" do
+        context "and in time" do
+          context "and flagged" do
             it "returns true" do
               # given
               kase = create_case(flagged: true,
@@ -161,7 +161,7 @@ describe Case::FOI::Standard do
             end
           end
 
-          context "unflagged" do
+          context "and unflagged" do
             it "returns true" do
               # given
               kase = create_case(flagged: false,
@@ -182,8 +182,8 @@ describe Case::FOI::Standard do
           end
         end
 
-        context "late" do
-          context "flagged" do
+        context "and late" do
+          context "and flagged" do
             it "returns false" do
               # given
               kase = create_case(flagged: true,
@@ -203,7 +203,7 @@ describe Case::FOI::Standard do
             end
           end
 
-          context "unflagged" do
+          context "and unflagged" do
             it "returns false" do
               # given
               kase = create_case(flagged: false,
@@ -225,9 +225,9 @@ describe Case::FOI::Standard do
         end
       end
 
-      context "multiple assignments and rejections" do
-        context "in time" do
-          context "flagged" do
+      context "and multiple assignments and rejections" do
+        context "and in time" do
+          context "and flagged" do
             it "returns true" do
               # given
               kase = create_case(flagged: true,
@@ -248,7 +248,7 @@ describe Case::FOI::Standard do
             end
           end
 
-          context "unflagged" do
+          context "and unflagged" do
             it "returns true" do
               # given
               kase = create_case(flagged: false,
@@ -270,8 +270,8 @@ describe Case::FOI::Standard do
           end
         end
 
-        context "late" do
-          context "flagged" do
+        context "and late" do
+          context "and flagged" do
             it "returns false" do
               # given
               kase = create_case(flagged: true,
@@ -292,7 +292,7 @@ describe Case::FOI::Standard do
             end
           end
 
-          context "unflagged" do
+          context "and unflagged" do
             it "returns false" do
               # given
               kase = create_case(flagged: false,
@@ -322,7 +322,7 @@ describe Case::FOI::Standard do
       @manager = create :manager
     end
 
-    context "responded case" do
+    context "when responded case" do
       it "raises" do
         responded_kase = create :responded_case
         expect {
@@ -331,10 +331,10 @@ describe Case::FOI::Standard do
       end
     end
 
-    context "open cases" do
-      context "just one assignment to responding team" do
-        context "in time" do
-          context "non trigger cases" do
+    context "when open cases" do
+      context "and just one assignment to responding team" do
+        context "and in time" do
+          context "and non trigger cases" do
             it "returns true" do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
@@ -354,7 +354,7 @@ describe Case::FOI::Standard do
             end
           end
 
-          context "trigger cases" do
+          context "and trigger cases" do
             it "returns true" do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
@@ -375,8 +375,8 @@ describe Case::FOI::Standard do
           end
         end
 
-        context "late" do
-          context "non trigger cases" do
+        context "and late" do
+          context "and non trigger cases" do
             it "returns true" do
               # given
               kase = create_case(flagged: false,
@@ -394,7 +394,7 @@ describe Case::FOI::Standard do
             end
           end
 
-          context "trigger cases" do
+          context "and trigger cases" do
             it "returns true" do
               # given
               kase = create_case(flagged: true,
@@ -414,9 +414,9 @@ describe Case::FOI::Standard do
         end
       end
 
-      context "multiple assignments to responding teams" do
-        context "in time" do
-          context "non trigger cases" do
+      context "and multiple assignments to responding teams" do
+        context "and in time" do
+          context "and non trigger cases" do
             it "returns true" do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
@@ -438,7 +438,7 @@ describe Case::FOI::Standard do
             end
           end
 
-          context "trigger cases" do
+          context "and trigger cases" do
             it "returns true" do
               Timecop.freeze(Date.new(2020, 8, 19)) do
                 # given
@@ -461,8 +461,8 @@ describe Case::FOI::Standard do
           end
         end
 
-        context "late" do
-          context "non trigger cases" do
+        context "and late" do
+          context "and non trigger cases" do
             it "returns true" do
               # given
               kase = create_case(flagged: false,
@@ -482,7 +482,7 @@ describe Case::FOI::Standard do
             end
           end
 
-          context "trigger cases" do
+          context "and trigger cases" do
             it "returns true" do
               # given
               kase = create_case(flagged: true,

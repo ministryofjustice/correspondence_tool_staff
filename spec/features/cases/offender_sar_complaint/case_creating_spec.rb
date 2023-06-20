@@ -221,7 +221,7 @@ feature "offender sar complaint case creation by a manager", js: true do
     end
   end
 
-  context "standard" do
+  describe "standard" do
     let(:complaint_type) { "standard_complaint" }
 
     scenario "11 Check the deadline will be prefilled when complaint_type is standard" do
@@ -244,7 +244,7 @@ feature "offender sar complaint case creation by a manager", js: true do
     end
   end
 
-  context "ICO" do
+  describe "ICO" do
     let(:complaint_type) { "ico_complaint" }
 
     scenario "10 Check the deadline will be not prefilled when complaint_type is ico" do
@@ -267,7 +267,7 @@ feature "offender sar complaint case creation by a manager", js: true do
     end
   end
 
-  context "litigation" do
+  describe "litigation" do
     let(:complaint_type) { "litigation_complaint" }
 
     scenario "11 Check the deadline will be not prefilled when complaint_type is litigation" do

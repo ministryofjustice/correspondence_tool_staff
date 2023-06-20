@@ -9,7 +9,7 @@ describe "teams/show.html.slim", type: :view do
     allow(view).to receive(:current_user).and_return(user)
   end
 
-  context "showing a business group" do
+  context "when showing a business group" do
     before(:all) do
       @hmpps      = create_business_group("HMPPS", "Michael Spurr")
       @prisons    = create_directorate(@hmpps, "Prisons", "Phil Copple")
@@ -48,7 +48,7 @@ describe "teams/show.html.slim", type: :view do
     end
   end
 
-  context "showing a directorate" do
+  context "when showing a directorate" do
     let(:directorate)   { create :directorate }
     let(:bu1)           { create :business_unit, directorate: }
     let(:bu2)           { create :business_unit, directorate: }
@@ -97,7 +97,7 @@ describe "teams/show.html.slim", type: :view do
     end
   end
 
-  context "showing a business unit" do
+  context "when showing a business unit" do
     let(:bu)          { create :business_unit }
     let!(:responder1) { create :responder, responding_teams: [bu] }
     let!(:responder2) { create :responder, responding_teams: [bu] }

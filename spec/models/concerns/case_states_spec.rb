@@ -62,7 +62,7 @@ RSpec.describe Case, type: :model do
       let(:attachment) { kase.attachments.first }
       let(:assigner_id) { 666 }
 
-      context "only one attachemnt" do
+      context "when only one attachemnt" do
         before do
           allow(attachment).to receive(:remove_from_storage_bucket)
         end
@@ -80,7 +80,7 @@ RSpec.describe Case, type: :model do
         end
       end
 
-      context "two attachments" do
+      context "with two attachments" do
         before do
           kase.attachments << build(:correspondence_response, type: "response")
           allow(attachment).to receive(:remove_from_storage_bucket)
@@ -105,7 +105,7 @@ RSpec.describe Case, type: :model do
       let(:kase) { create :closed_sar_with_response, managing_team:, manager: }
       let(:attachment) { kase.attachments.first }
 
-      context "two attachments" do
+      context "with two attachments" do
         before do
           kase.attachments << build(:correspondence_response, type: "response")
           allow(attachment).to receive(:remove_from_storage_bucket)
@@ -182,7 +182,7 @@ RSpec.describe Case, type: :model do
         end
       end
 
-      context "the date responded is before the external deadline" do
+      context "when the date responded is before the external deadline" do
         let(:days_taken) { foi.external_time_limit - 1 }
 
         it "returns true" do
@@ -192,7 +192,7 @@ RSpec.describe Case, type: :model do
         end
       end
 
-      context "the date responded is before on external deadline" do
+      context "when the date responded is before on external deadline" do
         let(:days_taken) { foi.external_time_limit - 1 }
 
         it "returns true" do
@@ -202,7 +202,7 @@ RSpec.describe Case, type: :model do
         end
       end
 
-      context "the date responded is after the external deadline" do
+      context "when the date responded is after the external deadline" do
         let(:days_taken) { foi.external_time_limit + 1 }
 
         it "returns false" do
@@ -221,7 +221,7 @@ RSpec.describe Case, type: :model do
       end
     end
 
-    context "initial state" do
+    context "with initial state" do
       it "is set to unassigned" do
         kase = build(:case, current_state: nil)
         expect(kase.current_state).to be_nil
@@ -231,17 +231,17 @@ RSpec.describe Case, type: :model do
     end
   end
 
-  context "state_machine decisions" do
-    context "SAR" do
+  context "when state_machine decisions" do
+    context "and SAR" do
       it "returns config state machine" do
         kase = create :sar_case
         expect(kase.state_machine).to be_instance_of(ConfigurableStateMachine::Machine)
       end
     end
 
-    context "FOI::Standard" do
-      context "trigger case" do
-        context "unassigned state" do
+    context "when FOI::Standard" do
+      context "and trigger case" do
+        context "with unassigned state" do
           it "returns configurable state machine" do
             kase = create :case, :flagged, :dacu_disclosure
             expect(kase.current_state).to eq "unassigned"
@@ -249,7 +249,7 @@ RSpec.describe Case, type: :model do
           end
         end
 
-        context "assigned state" do
+        context "with assigned state" do
           it "returns legacy state machine" do
             kase = create :assigned_case, :flagged, :dacu_disclosure
             expect(kase.current_state).to eq "awaiting_responder"
@@ -258,8 +258,8 @@ RSpec.describe Case, type: :model do
         end
       end
 
-      context "non trigger case" do
-        context "unassigned state" do
+      context "when non trigger case" do
+        context "with unassigned state" do
           it "returns configurable state machine" do
             kase = create :case
             expect(kase.current_state).to eq "unassigned"
@@ -267,7 +267,7 @@ RSpec.describe Case, type: :model do
           end
         end
 
-        context "assigned state" do
+        context "with assigned state" do
           it "returns configurable state machine" do
             kase = create :assigned_case
             expect(kase.current_state).to eq "awaiting_responder"

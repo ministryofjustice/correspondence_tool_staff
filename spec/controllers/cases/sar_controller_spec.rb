@@ -95,7 +95,7 @@ RSpec.describe Cases::SarController, type: :controller do
 
   describe "closeable" do
     describe "#edit_closure" do
-      context "SAR case" do
+      context "when SAR case" do
         let(:kase)    { create :closed_sar }
         let(:manager) { find_or_create :disclosure_bmt_user }
 
@@ -146,7 +146,7 @@ RSpec.describe Cases::SarController, type: :controller do
             .with(sar.managing_team, sar, "Case closed")
       end
 
-      context "not the assigned responder" do
+      context "when not the assigned responder" do
         it "does not progress the case" do
           sign_in another_responder
           patch :process_respond_and_close, params: sar_closure_params(sar)
@@ -197,7 +197,7 @@ RSpec.describe Cases::SarController, type: :controller do
       end
 
       context "when closed" do
-        context "as a manager" do
+        context "when a manager" do
           let(:kase) { create :closed_sar }
 
           before do
@@ -220,7 +220,7 @@ RSpec.describe Cases::SarController, type: :controller do
           end
         end
 
-        context "as a responder" do
+        context "when a responder" do
           let(:kase) { create :closed_sar, responder: }
 
           before do

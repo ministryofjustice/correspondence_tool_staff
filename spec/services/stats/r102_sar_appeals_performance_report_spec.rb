@@ -313,8 +313,5 @@ module Stats
       end
       kase
     end
-
-    # rubocop:enable Metrics/ParameterLists
   end
 end
-# rubocop:enable Metrics/ModuleLength

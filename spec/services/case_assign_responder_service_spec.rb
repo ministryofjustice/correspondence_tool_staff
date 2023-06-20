@@ -23,7 +23,7 @@ describe CaseAssignResponderService, type: :service do
                                                                 :deliver_later)
     end
 
-    context "assignment is valid" do
+    context "when assignment is valid" do
       before do
         allow(new_assignment).to receive_messages valid?: true,
                                                   save: true
@@ -55,7 +55,7 @@ describe CaseAssignResponderService, type: :service do
       end
     end
 
-    context "created assignment is invalid" do
+    context "when created assignment is invalid" do
       before do
         allow(new_assignment).to receive_messages valid?: false,
                                                   save: false

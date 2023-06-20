@@ -12,7 +12,7 @@ describe "CurrentTeamAndUserICOTriggerService" do
   let(:private_officer)         { find_or_create :private_officer }
   let(:service) { CurrentTeamAndUserService.new(kase) }
 
-  context "responded state" do
+  context "when responded state" do
     let(:kase)  { create :responded_ico_foi_case }
 
     it "returns the correct team and user" do
@@ -22,7 +22,7 @@ describe "CurrentTeamAndUserICOTriggerService" do
     end
   end
 
-  context "awaiting_dispatch" do
+  context "when awaiting_dispatch" do
     # this does not create an ICO trigger case
     let(:kase)  { create :awaiting_dispatch_ico_foi_case }
 

@@ -122,7 +122,6 @@ private
       raise "Unrecognised row"
     end
   end
-  # rubocop:enable Metrics/CyclomaticComplexity
 
   def report_userless_teams
     Rails.logger.debug ""

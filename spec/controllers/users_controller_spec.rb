@@ -19,7 +19,7 @@ RSpec.describe UsersController, type: :controller do
       expect(response).to be_successful
     end
 
-    context "html request" do
+    describe "html request" do
       it "assigns case to paginated decorated case list" do
         expect(UserActiveCaseCountService).to receive(:new).and_return(service)
         expect(service).to receive(:active_cases_for_user).with(manager).and_return(unpaginated_cases)
@@ -34,7 +34,7 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    context "csv request" do
+    describe "csv request" do
       let(:csv_case) { double("Example Case") }
 
       it "returns the csv file in the body" do
@@ -176,7 +176,7 @@ RSpec.describe UsersController, type: :controller do
       }
     end
 
-    context "valid updates" do
+    context "with valid updates" do
       it "updates the user" do
         patch(:update, params:)
 
@@ -196,7 +196,7 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    context "invalid update" do
+    context "with invalid update" do
       let!(:existing_user) { create :user, full_name: "John Smith", email: "eu@moj.com" }
       let(:params) do
         {
@@ -264,7 +264,7 @@ RSpec.describe UsersController, type: :controller do
       }
     end
 
-    context "signed in as team_admin" do
+    context "when signed in as team_admin" do
       before { sign_in team_admin }
 
       it "calls user deletion service" do
@@ -275,7 +275,7 @@ RSpec.describe UsersController, type: :controller do
         delete :destroy, params:
       end
 
-      context "response :ok" do
+      context "when response :ok" do
         before do
           service = double(UserDeletionService)
           expect(UserDeletionService).to receive(:new).and_return(service)
@@ -293,7 +293,7 @@ RSpec.describe UsersController, type: :controller do
         end
       end
 
-      context "response :has_live_cases" do
+      context "when response :has_live_cases" do
         before do
           service = double(UserDeletionService)
           expect(UserDeletionService).to receive(:new).and_return(service)
@@ -311,7 +311,7 @@ RSpec.describe UsersController, type: :controller do
         end
       end
 
-      context "response :error" do
+      context "when response :error" do
         before do
           service = double(UserDeletionService)
           expect(UserDeletionService).to receive(:new).and_return(service)
@@ -330,7 +330,7 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    context "signed in as manager" do
+    context "when signed in as manager" do
       before { sign_in manager }
 
       it "calls user deletion service" do
@@ -341,7 +341,7 @@ RSpec.describe UsersController, type: :controller do
         delete :destroy, params:
       end
 
-      context "response :ok" do
+      context "when response :ok" do
         before do
           service = double(UserDeletionService)
           expect(UserDeletionService).to receive(:new).and_return(service)
@@ -359,7 +359,7 @@ RSpec.describe UsersController, type: :controller do
         end
       end
 
-      context "response :has_live_cases" do
+      context "when response :has_live_cases" do
         before do
           service = double(UserDeletionService)
           expect(UserDeletionService).to receive(:new).and_return(service)
@@ -377,7 +377,7 @@ RSpec.describe UsersController, type: :controller do
         end
       end
 
-      context "response :error" do
+      context "when response :error" do
         before do
           service = double(UserDeletionService)
           expect(UserDeletionService).to receive(:new).and_return(service)
@@ -396,7 +396,7 @@ RSpec.describe UsersController, type: :controller do
       end
     end
 
-    context "signed in as non-manager" do
+    context "when signed in as non-manager" do
       before do
         sign_in responder
         delete :destroy, params:

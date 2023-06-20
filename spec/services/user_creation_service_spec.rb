@@ -15,7 +15,7 @@ describe UserCreationService do
     let(:service) { described_class.new(team:, params:) }
 
     context "when no existing user exists" do
-      context "valid" do
+      context "and valid" do
         it "creates a user" do
           expect {
             service.call
@@ -38,7 +38,7 @@ describe UserCreationService do
         end
       end
 
-      context "invalid" do
+      context "and invalid" do
         it "returns :error" do
           params[:email] = ""
           service.call
@@ -48,7 +48,7 @@ describe UserCreationService do
       end
     end
 
-    context "the user already exists in this team" do
+    context "when the user already exists in this team" do
       let!(:existing_user) { User.new(full_name: "danny driver", email: "dd@moj.com", password: SecureRandom.random_number(36**13).to_s(36)) }
       let!(:existing_user_role) { existing_user.team_roles << TeamsUsersRole.new(team:, role: "responder") }
       let!(:success) { existing_user.save }
@@ -78,7 +78,7 @@ describe UserCreationService do
       let!(:existing_user_role) { existing_user.team_roles << TeamsUsersRole.new(team: other_team, role: "responder") }
       let!(:success) { existing_user.save }
 
-      context "when the names match" do
+      context "and the names match" do
         it "does not create a new user record" do
           expect { service.call }.not_to change(User, :count)
         end
@@ -97,7 +97,7 @@ describe UserCreationService do
         end
       end
 
-      context "names match but different role" do
+      context "and names match but different role" do
         before do
           approving_team = create :approving_team
           existing_user.team_roles.clear
@@ -119,7 +119,7 @@ describe UserCreationService do
         end
       end
 
-      context "deleted user rejoins the team" do
+      context "and deleted user rejoins the team" do
         before do
           existing_user.reload.update!(deleted_at: Date.yesterday)
           existing_user.team_roles.delete_all
@@ -144,7 +144,7 @@ describe UserCreationService do
         end
       end
 
-      context "when names mismatch" do
+      context "and names mismatch" do
         before do
           existing_user.reload.update!(full_name: "Stephen Richards")
         end

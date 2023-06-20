@@ -39,7 +39,7 @@ RSpec.describe Cases::FoiController, type: :controller do
       }
     end
 
-    context "as an authenticated manager" do
+    context "when an authenticated manager" do
       before do
         sign_in manager
         find_or_create :team_dacu
@@ -80,7 +80,7 @@ RSpec.describe Cases::FoiController, type: :controller do
         expect(created_case.type).to eq "Case::FOI::ComplianceReview"
       end
 
-      context "flag_for_clearance" do
+      context "when flag_for_clearance" do
         let!(:service) do
           double(CaseFlagForClearanceService, call: true).tap do |svc|
             allow(CaseFlagForClearanceService).to receive(:new).and_return(svc)
@@ -215,12 +215,12 @@ RSpec.describe Cases::FoiController, type: :controller do
 
     include_examples "update case spec"
 
-    context "compliance review" do
+    describe "compliance review" do
       let(:responder) { find_or_create :foi_responder }
       let(:kase) { create :accepted_compliance_review }
       let(:date) { Time.zone.local(2017, 10, 3) }
 
-      context "as a logged in non-manager" do
+      context "when a logged in non-manager" do
         before do
           Timecop.freeze(date) do
             sign_in responder
@@ -301,7 +301,7 @@ RSpec.describe Cases::FoiController, type: :controller do
         include_examples "process closure spec", described_class
       end
 
-      context "FOI internal review" do
+      context "when FOI internal review" do
         let(:appeal_outcome) { find_or_create :appeal_outcome, :upheld }
         let(:internal_review) { create :responded_compliance_review }
         let(:manager) { find_or_create :disclosure_bmt_user }
@@ -385,7 +385,7 @@ RSpec.describe Cases::FoiController, type: :controller do
           expect(kase.date_responded).to eq new_date_responded
         end
 
-        context "being updated to be held in full and granted" do
+        context "when being updated to be held in full and granted" do
           let(:kase) { create :closed_case, :info_not_held }
           let(:closure_params) do
             {
@@ -409,7 +409,7 @@ RSpec.describe Cases::FoiController, type: :controller do
           end
         end
 
-        context "being updated to be not held" do
+        context "when being updated to be not held" do
           let(:kase) { create :closed_case }
           let(:closure_params) do
             {
@@ -432,7 +432,7 @@ RSpec.describe Cases::FoiController, type: :controller do
           end
         end
 
-        context "being updated to be held in part and refused" do
+        context "when being updated to be held in part and refused" do
           let(:kase) { create :closed_case, :other_vexatious }
           let(:closure_params) do
             {
@@ -455,7 +455,7 @@ RSpec.describe Cases::FoiController, type: :controller do
           end
         end
 
-        context "being updated to be other" do
+        context "when being updated to be other" do
           let(:kase) { create :closed_case, :other_vexatious }
           let(:closure_params) do
             {

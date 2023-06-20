@@ -245,7 +245,6 @@ module ConfigurableStateMachine
                   "Expected #{event_config} to be a Hash, is a #{event_config.class}")
       end
     end
-    # rubocop:enable Metrics/ParameterLists
 
     def validate_initial_state(case_type_name:, workflow_name:, workflow_config:)
       if workflow_config.to_h.keys.include?(:initial_state)

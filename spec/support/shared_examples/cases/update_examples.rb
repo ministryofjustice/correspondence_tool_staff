@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.shared_examples "update case spec" do
   let(:now) { Time.zone.local(2018, 5, 30, 10, 23, 33) }
 
-  context "as a manager" do
+  context "when a manager" do
     before do
       sign_in manager
     end
@@ -52,7 +52,7 @@ RSpec.shared_examples "update case spec" do
     end
 
     context "with invalid params" do
-      context "received_date too far into past" do
+      context "and received_date too far into past" do
         before { params[correspondence_type_abbr]["received_date_yyyy"] = "2017" }
 
         it "does not update the record" do
@@ -74,7 +74,7 @@ RSpec.shared_examples "update case spec" do
         end
       end
 
-      context "date draft compliant before received date" do
+      context "when date draft compliant before received date" do
         it "has error details on the record" do
           Timecop.freeze(now) do
             kase.date_responded = 3.business_days.after(kase.received_date)
@@ -85,7 +85,7 @@ RSpec.shared_examples "update case spec" do
         end
       end
 
-      context "date draft compliant in future" do
+      context "when date draft compliant in future" do
         it "has error details on the record" do
           Timecop.freeze(now) do
             params[correspondence_type_abbr]["date_draft_compliant_yyyy"] = "2020"
@@ -95,7 +95,7 @@ RSpec.shared_examples "update case spec" do
         end
       end
 
-      context "date draft compliant before received date" do
+      context "when date draft compliant before received date" do
         it "has error details on the record" do
           Timecop.freeze(now) do
             params[correspondence_type_abbr]["date_draft_compliant_yyyy"] = "2016"
@@ -107,7 +107,7 @@ RSpec.shared_examples "update case spec" do
     end
   end
 
-  context "as a non-manager" do
+  context "when a non-manager" do
     let(:responder) { find_or_create :foi_responder }
 
     before do

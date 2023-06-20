@@ -29,13 +29,13 @@ describe CaseFilter::CaseRetentionStateFilter do
   describe "#applied?" do
     subject { filter }
 
-    context "filter_retention_state not present" do
+    context "when filter_retention_state not present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "filter_retention_state present" do
+    context "when filter_retention_state present" do
       let(:search_query) { create :search_query, filter_retention_state: %w[review] }
 
       it { is_expected.to be_applied }
@@ -43,7 +43,7 @@ describe CaseFilter::CaseRetentionStateFilter do
   end
 
   describe "#call" do
-    context "filtering for not_set retention cases" do
+    context "when filtering for not_set retention cases" do
       let(:search_query) { create :search_query, filter_retention_state: %w[not_set] }
 
       it "returns the correct list of cases" do
@@ -52,7 +52,7 @@ describe CaseFilter::CaseRetentionStateFilter do
       end
     end
 
-    context "filtering for more than one state" do
+    context "when filtering for more than one state" do
       let(:search_query) { create :search_query, filter_retention_state: %w[not_set review] }
 
       it "returns the correct list of cases" do
@@ -63,7 +63,7 @@ describe CaseFilter::CaseRetentionStateFilter do
   end
 
   describe "#crumbs" do
-    context "filter not enabled" do
+    context "when filter not enabled" do
       let(:search_query) { create :search_query, filter_retention_state: [] }
 
       it "returns no crumbs" do
@@ -71,7 +71,7 @@ describe CaseFilter::CaseRetentionStateFilter do
       end
     end
 
-    context "filtering for one retention state" do
+    context "when filtering for one retention state" do
       let(:search_query) { create :search_query, filter_retention_state: %w[not_set] }
 
       it "returns a single crumb" do
@@ -89,7 +89,7 @@ describe CaseFilter::CaseRetentionStateFilter do
       end
     end
 
-    context "filtering for more than one state" do
+    context "when filtering for more than one state" do
       let(:search_query) { create :search_query, filter_retention_state: %w[not_set review] }
 
       it 'uses "Not set + 1 more" text for the crumb text' do

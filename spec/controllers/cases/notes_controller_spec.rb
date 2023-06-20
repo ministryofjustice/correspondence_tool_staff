@@ -15,14 +15,14 @@ RSpec.describe Cases::NotesController, type: :controller do
       }
     end
 
-    context "as an anonymous user" do
+    context "when an anonymous user" do
       it "be redirected to signin if trying to start a new case" do
         post(:create, params:)
         expect(response).to redirect_to(new_user_session_path)
       end
     end
 
-    context "offender sar case" do
+    context "with offender sar case" do
       let(:params) do
         {
           case: {
@@ -32,7 +32,7 @@ RSpec.describe Cases::NotesController, type: :controller do
         }
       end
 
-      context "as a manager" do
+      context "when a manager" do
         before { sign_in manager }
 
         it "redirects to case detail page and contains a hash" do
@@ -42,7 +42,7 @@ RSpec.describe Cases::NotesController, type: :controller do
       end
     end
 
-    context "message is blank, (user type doesn't matter)" do
+    context "when message is blank, (user type doesn't matter)" do
       let(:params) do
         {
           case: { message_text: "" },

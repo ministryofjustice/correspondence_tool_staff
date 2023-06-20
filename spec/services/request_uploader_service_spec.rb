@@ -42,7 +42,7 @@ describe RequestUploaderService do
   after(:all) { DbHousekeeping.clean(seed: true) }
 
   describe "#upload!" do
-    context "action upload" do
+    context "when action upload" do
       let(:action) { "upload" }
 
       it "calls #process_files on the uploader" do
@@ -67,7 +67,7 @@ describe RequestUploaderService do
         expect(transition.metadata).to eq({ "filenames" => [filename], "message" => "This is my upload message" })
       end
 
-      context "No valid files to upload" do
+      context "when no valid files to upload" do
         let(:uploaded_files) { [] }
 
         it "returns a result of :blank" do

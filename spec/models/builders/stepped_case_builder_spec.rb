@@ -111,7 +111,7 @@ module Builders
       )
     end
 
-    context "building for #new" do
+    context "when building for #new" do
       before do
         builder_without_params.build
       end
@@ -133,8 +133,8 @@ module Builders
       end
     end
 
-    context "building for #create" do
-      context "when case is valid and steps are complete" do
+    context "when building for #create" do
+      context "and case is valid and steps are complete" do
         it "is ready for creation" do
           valid_builder_on_last_step.build
 
@@ -144,7 +144,7 @@ module Builders
         end
       end
 
-      context "when case is invalid and steps are complete" do
+      context "and case is invalid and steps are complete" do
         it "is not ready for creation" do
           invalid_builder_on_last_step.build
           expect(invalid_builder_on_last_step.kase).not_to be_valid
@@ -153,7 +153,7 @@ module Builders
         end
       end
 
-      context "steps are incomplete" do
+      context "and steps are incomplete" do
         it "is not ready for creation" do
           builder_not_on_last_step.build
           expect(builder_not_on_last_step.kase).not_to be_valid

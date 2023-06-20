@@ -44,7 +44,7 @@ RSpec.describe Team, type: :model do
     end
   end
 
-  context "validate uniqueness of name" do
+  context "when validate uniqueness of name" do
     it "errors if not unique" do
       create :team, name: "abc"
       t2 = build_stubbed :team, name: "abc"
@@ -53,7 +53,7 @@ RSpec.describe Team, type: :model do
     end
   end
 
-  context "multiple teams created" do
+  context "when multiple teams created" do
     let!(:managing_team)       { find_or_create :team_disclosure_bmt }
     let!(:branston_team)       { find_or_create :team_branston }
     let!(:responding_team)     { find_or_create :foi_responding_team }
@@ -91,7 +91,7 @@ RSpec.describe Team, type: :model do
     expect(create(:team)).to be_valid
   end
 
-  context "specific team finding and querying" do
+  context "when specific team finding and querying" do
     before(:all) do
       @press_office_team = find_or_create :team_press_office
       @private_office_team = find_or_create :team_private_office
@@ -258,7 +258,7 @@ RSpec.describe Team, type: :model do
       expect(subject).to be_versioned
     end
 
-    context "on create" do
+    context "when creating" do
       it "updates versions" do
         team = create :team
         expect(team.versions.length).to eq 1
@@ -266,7 +266,7 @@ RSpec.describe Team, type: :model do
       end
     end
 
-    context "on update" do
+    context "when updating" do
       it "updates versions" do
         team = create :team
         expect { team.update!(name: "Name Changing Unit") }.to change(team.versions, :count).by 1
@@ -278,7 +278,7 @@ RSpec.describe Team, type: :model do
   describe "#has_active_children?" do
     let(:dir) { create :directorate }
 
-    context "a directorate has active children" do
+    context "when a directorate has active children" do
       let!(:bu) { create(:business_unit, directorate: dir) }
 
       it "returns true" do
@@ -286,13 +286,13 @@ RSpec.describe Team, type: :model do
       end
     end
 
-    context "a directorate has no children" do
+    context "when a directorate has no children" do
       it "returns false" do
         expect(dir.has_active_children?).to be false
       end
     end
 
-    context "a directorate has deactived children" do
+    context "when a directorate has deactived children" do
       let!(:bu) { create(:business_unit, :deactivated, directorate: dir) }
 
       it "returns false" do

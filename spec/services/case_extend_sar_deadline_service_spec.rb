@@ -41,7 +41,7 @@ describe CaseExtendSARDeadlineService do
       end
     end
 
-    context "after initial deadline" do
+    context "when after initial deadline" do
       it "allows retrospective extension" do
         deadline = sar_case.initial_deadline
 
@@ -60,9 +60,9 @@ describe CaseExtendSARDeadlineService do
       end
     end
 
-    context "validate" do
-      context "extension period" do
-        context "is missing" do
+    describe "validate" do
+      context "with extension period" do
+        context "when is missing" do
           let!(:extension_service_result) do
             sar_extension_service(
               user: manager,
@@ -82,7 +82,7 @@ describe CaseExtendSARDeadlineService do
           }
         end
 
-        context "is past statutory SAR extension limit" do
+        context "when is past statutory SAR extension limit" do
           let(:extension_period) { max_extension_time_limit + 1 }
           let!(:extension_service_result) do
             sar_extension_service(
@@ -103,7 +103,7 @@ describe CaseExtendSARDeadlineService do
           }
         end
 
-        context "is before the final deadline" do
+        context "when is before the final deadline" do
           let!(:extension_service_result) do
             sar_extension_service(
               user: manager,
@@ -123,7 +123,7 @@ describe CaseExtendSARDeadlineService do
           }
         end
 
-        context "is within limit" do
+        context "when is within limit" do
           let!(:extension_service_result) do
             sar_extension_service(
               user: manager,
@@ -139,7 +139,7 @@ describe CaseExtendSARDeadlineService do
         end
       end
 
-      context "reason" do
+      context "with reason" do
         let!(:extension_service_result) do
           sar_extension_service(
             user: manager,
@@ -161,7 +161,7 @@ describe CaseExtendSARDeadlineService do
       end
 
       # Force #call transaction block to fail, can be any kind of StandardError
-      context "on any transaction exception" do
+      context "when on any transaction exception" do
         let!(:service) do
           sar_extension_service(
             user: manager,

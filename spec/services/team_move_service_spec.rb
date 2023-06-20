@@ -69,7 +69,7 @@ describe TeamMoveService do
   end
 
   describe "#call" do
-    context "moving a business unit to another directorate" do
+    context "when moving a business unit to another directorate" do
       it "creates a copy of the team in the target directorate" do
         service.call
 

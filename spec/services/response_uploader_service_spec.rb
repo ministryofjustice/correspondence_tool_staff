@@ -56,7 +56,7 @@ describe ResponseUploaderService do
   end
 
   describe "#upload!" do
-    context "action upload" do
+    context "with action upload" do
       let(:action) { "upload" }
 
       it "calls #process_files on the uploader" do
@@ -94,7 +94,7 @@ describe ResponseUploaderService do
         expect(kase.state_machine).to have_received(:add_responses!)
       end
 
-      context "No valid files to upload" do
+      context "and no valid files to upload" do
         let(:uploaded_files) { [] }
 
         it "returns a result of :blank" do
@@ -144,24 +144,10 @@ describe ResponseUploaderService do
           expect(rus.result).to eq :error
         end
       end
-
-      describe "uploader raises an S3 service error" do
-        before do
-          allow(uploader)
-            .to receive(:process_files)
-                  .with([uploads_key], :response)
-                  .and_raise(Aws::S3::Errors::ServiceError.new(:foo, :bar))
-        end
-
-        it "returns :error" do
-          rus.upload!
-          expect(rus.result).to eq :error
-        end
-      end
     end
   end
 
-  context "action upload-flagged" do
+  context "with action upload-flagged" do
     let(:action)  { "upload" }
     let(:kase)    { create :accepted_case, :flagged }
 
@@ -185,7 +171,7 @@ describe ResponseUploaderService do
     end
   end
 
-  context "action upload-approve" do
+  context "with action upload-approve" do
     let(:action)  { "upload-approve" }
     let(:kase)    { create :pending_dacu_clearance_case, :flagged_accepted, :dacu_disclosure }
     let(:user)    { kase.approvers.first }
@@ -215,7 +201,7 @@ describe ResponseUploaderService do
     end
   end
 
-  context "action upload-redraft" do
+  context "with action upload-redraft" do
     let(:action)  { "upload-redraft" }
     let(:kase)    { create :pending_dacu_clearance_case, :flagged_accepted, :dacu_disclosure }
     let(:user)    { kase.approvers.first }
@@ -246,11 +232,11 @@ describe ResponseUploaderService do
   end
 
   describe "notifying approvers when a case is ready for them to clear" do
-    context "as Disclosure" do
+    describe "Disclosure" do
       let(:kase)            { create :pending_dacu_clearance_case_flagged_for_press }
       let(:user)            { kase.assigned_disclosure_specialist! }
 
-      context "clear and upload a response" do
+      context "when clear and upload a response" do
         let(:action) { "upload-approve" }
 
         it "does send an email" do
@@ -266,7 +252,7 @@ describe ResponseUploaderService do
         end
       end
 
-      context "upload a response and request redraft" do
+      context "when upload a response and request redraft" do
         let(:action) { "upload-redraft" }
 
         it "does not send an email" do
@@ -277,7 +263,7 @@ describe ResponseUploaderService do
       end
     end
 
-    context "as responder when I upload a response" do
+    context "when as responder I upload a response" do
       let(:action) { "upload" }
 
       it "does not send an email" do

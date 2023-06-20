@@ -7,7 +7,7 @@ describe NotifyNewAssignmentService do
   let(:mailer)              { double ActionNotificationsMailer }
 
   describe ".run" do
-    context "team has an email" do
+    context "when team has an email" do
       it "sends one mail to the team email" do
         expect(ActionNotificationsMailer).to receive(:new_assignment).with(assignment, "bu1@moj.com").and_return(mailer)
         expect(mailer).to receive(:deliver_later).exactly(1)
@@ -15,7 +15,7 @@ describe NotifyNewAssignmentService do
       end
     end
 
-    context "team has  no email" do
+    context "when team has  no email" do
       before do
         create :responder, email: "r1@moj.com", responding_teams: [team_without_email]
         create :responder, email: "r2@moj.com", responding_teams: [team_without_email]

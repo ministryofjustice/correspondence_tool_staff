@@ -5,7 +5,7 @@ feature "searching for SAR cases" do
   given(:responder) { kase.responder }
   given!(:kase)     { create :accepted_sar }
 
-  context "a manager" do
+  context "when a manager" do
     scenario "searching for a SAR case" do
       login_as manager
       cases_page.load
@@ -24,7 +24,7 @@ feature "searching for SAR cases" do
     end
   end
 
-  context "a responder" do
+  context "when a responder" do
     given!(:other_kase) { create :sar_case }
 
     scenario "searching for a SAR case assigned to my team" do

@@ -323,7 +323,6 @@ module ConfigurableStateMachine
         )
       end
     end
-    # rubocop:enable Metrics/MethodLength
 
     def extract_roles_from_metadata(metadata)
       team = extract_team_from_metadata(metadata)

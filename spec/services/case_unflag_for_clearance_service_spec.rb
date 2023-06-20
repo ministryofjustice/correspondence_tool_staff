@@ -19,7 +19,7 @@ describe CaseUnflagForClearanceService do
   let(:press_office)          { find_or_create :team_press_office }
 
   describe "call" do
-    context "case is flagged" do
+    context "when case is flagged" do
       let(:service) do
         described_class.new user: approver,
                             kase: assigned_flagged_case,
@@ -55,7 +55,7 @@ describe CaseUnflagForClearanceService do
       end
     end
 
-    context "if anything fails in the transaction" do
+    context "when anything fails in the transaction" do
       let(:service) do
         described_class.new user: approver,
                             kase: assigned_flagged_case,

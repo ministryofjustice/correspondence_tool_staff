@@ -64,7 +64,7 @@ RSpec.describe Cases::LinksController, type: :controller do
       expect(flash[:notice]).to eq "Case #{link_case.number} has been linked to this case"
     end
 
-    context "validation error" do
+    context "with validation error" do
       let(:service) { double(CaseLinkingService, create: :validation_error) }
 
       it "renders the new_link page" do
@@ -73,7 +73,7 @@ RSpec.describe Cases::LinksController, type: :controller do
       end
     end
 
-    context "failed request" do
+    context "when failed request" do
       let(:service) { double(CaseLinkingService, create: :error) }
 
       it "notifies the user of the failure" do
@@ -120,7 +120,7 @@ RSpec.describe Cases::LinksController, type: :controller do
         .to eq "The link to case #{link_case.number} has been removed."
     end
 
-    context "failed request" do
+    context "when failed request" do
       let(:service) { double(CaseLinkingService, destroy: :failed) }
 
       it "notifies the user of the failure" do

@@ -32,7 +32,7 @@ describe "assignments/new.html.slim", type: :view do
     expect(page).to have_no_assign_to
   end
 
-  context "User has selected a specific business group or viewing all" do
+  context "when user has selected a specific business group or viewing all" do
     it "displays the new assignment page with business units" do
       assign(:case, unassigned_case.decorate)
       assign(:assignment, unassigned_case.assignments.new)

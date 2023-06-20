@@ -162,8 +162,6 @@ class CSVExporter
   rescue StandardError => e
     raise CSVExporterError, "Error encountered formatting case id #{@kase.id} as CSV:\nOriginal error: #{e.class} #{e.message}"
   end
-  # rubocop:enable Metrics/PerceivedComplexity
-  # rubocop:enable Metrics/MethodLength,Metrics/CyclomaticComplexity
 
   def analyse_case(kase)
     @kase = kase

@@ -17,13 +17,13 @@ describe CaseFilter::TimelinessFilter do
   describe "#applied?" do
     subject { filter_service }
 
-    context "filter_timeliness not present" do
+    context "when filter_timeliness not present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "filter_timeliness present" do
+    context "when filter_timeliness present" do
       let(:search_query) do
         create :search_query,
                filter_timeliness: %w[late]
@@ -34,7 +34,7 @@ describe CaseFilter::TimelinessFilter do
   end
 
   describe "#call" do
-    context "filter not enabled" do
+    context "when filter not enabled" do
       let(:search_query) do
         create :search_query,
                filter_timeliness: []
@@ -49,7 +49,7 @@ describe CaseFilter::TimelinessFilter do
       end
     end
 
-    context "filtering for in time cases" do
+    context "when filtering for in time cases" do
       let(:search_query) do
         create :search_query,
                filter_timeliness: %w[in_time]
@@ -63,7 +63,7 @@ describe CaseFilter::TimelinessFilter do
       end
     end
 
-    context "filtering for late cases" do
+    context "when filtering for late cases" do
       let(:search_query) do
         create :search_query,
                filter_timeliness: %w[late]
@@ -77,7 +77,7 @@ describe CaseFilter::TimelinessFilter do
       end
     end
 
-    context "filtering for both in time and late cases" do
+    context "when filtering for both in time and late cases" do
       let(:search_query) do
         create :search_query,
                filter_timeliness: %w[in_time late]
@@ -94,7 +94,7 @@ describe CaseFilter::TimelinessFilter do
   end
 
   describe "#crumbs" do
-    context "filter not enabled" do
+    context "when filter not enabled" do
       let(:search_query) do
         create :search_query,
                filter_timeliness: []
@@ -105,7 +105,7 @@ describe CaseFilter::TimelinessFilter do
       end
     end
 
-    context "filtering for in time cases" do
+    context "when filtering for in time cases" do
       let(:search_query)      do
         create :search_query,
                filter_timeliness: %w[in_time]
@@ -129,7 +129,7 @@ describe CaseFilter::TimelinessFilter do
       end
     end
 
-    context "filtering for late cases" do
+    context "when filtering for late cases" do
       let(:search_query) do
         create :search_query,
                filter_timeliness: %w[late]
@@ -140,7 +140,7 @@ describe CaseFilter::TimelinessFilter do
       end
     end
 
-    context "filtering for both in time and late cases" do
+    context "when filtering for both in time and late cases" do
       let(:search_query) do
         create :search_query,
                filter_timeliness: %w[in_time late]

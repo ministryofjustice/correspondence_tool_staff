@@ -11,7 +11,7 @@ RSpec.describe FeedbackController, type: :controller do
   end
 
   describe "#create" do
-    context "as an anonymous user" do
+    context "when an anonymous user" do
       it "redirect to signin if trying to submit new feedback" do
         post(:create, params:)
         expect(response).to redirect_to(new_user_session_path)
@@ -23,7 +23,7 @@ RSpec.describe FeedbackController, type: :controller do
       end
     end
 
-    context "as an authenticated user" do
+    context "when an authenticated user" do
       before do
         sign_in user
         post :create, params:, xhr: true

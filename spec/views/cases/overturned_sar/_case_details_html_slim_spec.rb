@@ -86,7 +86,7 @@ describe "cases/overturned_sar/case_details.html.slim", type: :view do
         )
     end
 
-    context "late response" do
+    context "with late response" do
       it "displays that the response was sent late" do
         closed_case.update!(
           date_responded: 1.business_day.after(closed_case.external_deadline),
@@ -98,7 +98,7 @@ describe "cases/overturned_sar/case_details.html.slim", type: :view do
       end
     end
 
-    context "on-time response" do
+    context "with on-time response" do
       it "displays that the response was sent on time" do
         partial = render_partial(closed_case)
 

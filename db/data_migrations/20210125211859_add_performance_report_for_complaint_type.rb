@@ -43,5 +43,4 @@ class AddPerformanceReportForComplaintType < ActiveRecord::DataMigration
       rec.update!(report_category_name: "Offender SAR Complaint")
     end
   end
-  # rubocop:enable Metrics/MethodLength
 end

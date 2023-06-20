@@ -28,7 +28,7 @@ RSpec.shared_examples "process date responded spec" do |klass|
              .with_args(manager, responded_case)
     end
 
-    context "valid date responded entered" do
+    context "when valid date responded entered" do
       it "sets the date responded" do
         patch(:process_date_responded, params:)
 

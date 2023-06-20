@@ -23,13 +23,13 @@ describe CaseFilter::ExemptionFilter do
   describe "#applied?" do
     subject { filter }
 
-    context "no exemption present" do
+    context "when no exemption present" do
       let(:search_query) { create :search_query }
 
       it { is_expected.not_to be_applied }
     end
 
-    context "exemption_ids present" do
+    context "when exemption_ids present" do
       let(:search_query) do
         create :search_query,
                exemption_ids: [1]
@@ -38,7 +38,7 @@ describe CaseFilter::ExemptionFilter do
       it { is_expected.to be_applied }
     end
 
-    context "common_exemption_ids present" do
+    context "when common_exemption_ids present" do
       let(:search_query) do
         create :search_query,
                common_exemption_ids: [1]
@@ -49,7 +49,7 @@ describe CaseFilter::ExemptionFilter do
   end
 
   describe "#call" do
-    context "query contains empty exemption ids" do
+    context "when query contains empty exemption ids" do
       let(:search_query)    { create :search_query, search_text: "dogs in jail" }
 
       it "returns the arel untouched" do
@@ -57,7 +57,7 @@ describe CaseFilter::ExemptionFilter do
       end
     end
 
-    context "no cases with specified exemptions in the database" do
+    context "when no cases with specified exemptions in the database" do
       let(:search_query) { search_query_for(%w[s35 s38]) }
 
       it "returns an empty collection" do
@@ -65,7 +65,7 @@ describe CaseFilter::ExemptionFilter do
       end
     end
 
-    context "cases with one specified exemption" do
+    context "when cases with one specified exemption" do
       let(:search_query) { search_query_for(%w[s22], %w[s22]) }
 
       it "returns matching exemptions only" do
@@ -73,7 +73,7 @@ describe CaseFilter::ExemptionFilter do
       end
     end
 
-    context "cases with multiple specified exemption" do
+    context "when cases with multiple specified exemption" do
       let(:search_query) { search_query_for(%w[s22 s36], %w[s36]) }
 
       it "returns all cases with exemptions matching any of the specified exemption ids" do
@@ -81,7 +81,7 @@ describe CaseFilter::ExemptionFilter do
       end
     end
 
-    context "class of returning object" do
+    context "when class of returning object" do
       let(:search_query) {  search_query_for(%w[s22], %w[s36]) }
 
       it "returns all cases with exemptions matching any of the specified abbreviations" do
@@ -91,7 +91,7 @@ describe CaseFilter::ExemptionFilter do
   end
 
   describe "#crumbs" do
-    context "query contains no exemption ids" do
+    context "when query contains no exemption ids" do
       let(:search_query)    { create :search_query, search_text: "dogs in jail" }
 
       it "returns no crumbs" do
@@ -99,7 +99,7 @@ describe CaseFilter::ExemptionFilter do
       end
     end
 
-    context "a single exemption selected" do
+    context "when a single exemption selected" do
       let(:s22_exemption) { CaseClosure::Exemption.s22 }
       let(:search_query)  { search_query_for(%w[s22], %w[s22]) }
 
@@ -123,7 +123,7 @@ describe CaseFilter::ExemptionFilter do
       end
     end
 
-    context "multiple exemption selected" do
+    context "when multiple exemption selected" do
       let(:s22_exemption) { CaseClosure::Exemption.s22 }
       let(:search_query)  { search_query_for(%w[s22 s26], %w[s22]) }
 

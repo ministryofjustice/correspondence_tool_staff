@@ -19,7 +19,7 @@ describe Cases::FiltersController, type: :controller do
   end
 
   describe "#my_open" do
-    context "as an anonymous user" do
+    context "when an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
         get :my_open, params: { tab: "in_time" }
         expect(response).to redirect_to(new_user_session_path)
@@ -41,7 +41,7 @@ describe Cases::FiltersController, type: :controller do
       end
     end
 
-    context "as an authenticated disclosure_specialist" do
+    context "when an authenticated disclosure_specialist" do
       before do
         sign_in disclosure_specialist
       end
@@ -65,7 +65,7 @@ describe Cases::FiltersController, type: :controller do
         expect(assigns(:current_tab_name)).to eq "my_cases"
       end
 
-      context "html request" do
+      context "when html request" do
         it "renders the index template" do
           stub_current_case_finder_cases_with(:my_open_cases_result)
           get :my_open, params: { tab: "in_time" }
@@ -73,7 +73,7 @@ describe Cases::FiltersController, type: :controller do
         end
       end
 
-      context "csv request" do
+      context "when csv request" do
         it "downloads a csv file" do
           expect(CSVGenerator).to receive(:filename).with("my-open").and_return("abc.csv")
 
@@ -87,14 +87,14 @@ describe Cases::FiltersController, type: :controller do
   end
 
   describe "#incoming" do
-    context "as an anonymous user" do
+    context "when an anonymous user" do
       it "be redirected to signin if trying to list of questions" do
         get :incoming
         expect(response).to redirect_to(new_user_session_path)
       end
     end
 
-    context "as an authenticated disclosure_specialist" do
+    context "when an authenticated disclosure_specialist" do
       before do
         sign_in disclosure_specialist
       end
@@ -131,7 +131,7 @@ describe Cases::FiltersController, type: :controller do
 
     let!(:deleted_sar_kase) { create(:sar_case, :deleted_case) }
 
-    context "as a manager" do
+    context "when a manager" do
       before { sign_in manager }
 
       it "retrieves only deleted cases" do
@@ -143,7 +143,7 @@ describe Cases::FiltersController, type: :controller do
       end
     end
 
-    context "as a lesser user" do
+    context "when a lesser user" do
       before { sign_in responder }
 
       it "retrieves only deleted cases I am supposed to see" do
@@ -156,7 +156,7 @@ describe Cases::FiltersController, type: :controller do
   end
 
   describe "#closed" do
-    context "as a manager" do
+    context "when a manager" do
       before { sign_in manager }
 
       it "assigns cases returned by CaseFinderService" do
@@ -172,14 +172,14 @@ describe Cases::FiltersController, type: :controller do
           .to have_received(:page).with("our_page")
       end
 
-      context "html format" do
+      context "when html format" do
         it "renders the closed cases page" do
           get :closed
           expect(response).to render_template :closed
         end
       end
 
-      context "csv format" do
+      context "when csv format" do
         let!(:gnm) { stub_current_case_finder_for_closed_cases_with(:closed_cases_result) }
         let(:record) { double }
 
@@ -204,15 +204,15 @@ describe Cases::FiltersController, type: :controller do
       end
     end
 
-    context "as an anonymous user" do
-      context "html format" do
+    context "when an anonymous user" do
+      context "when html format" do
         it "be redirected to signin if trying to update a specific case" do
           get :closed
           expect(response).to redirect_to(new_user_session_path)
         end
       end
 
-      context "csv format" do
+      context "when csv format" do
         it "prevents the user from downloading" do
           expect(CSVGenerator).not_to receive(:new)
 
@@ -226,15 +226,15 @@ describe Cases::FiltersController, type: :controller do
   end
 
   describe "#retention" do
-    context "tab ready_for_removal" do
-      context "as an anonymous user" do
+    context "when tab ready_for_removal" do
+      context "when an anonymous user" do
         it "be redirected to signin if trying to access the page" do
           get :retention, params: { tab: "ready_for_removal" }
           expect(response).to redirect_to(new_user_session_path)
         end
       end
 
-      context "as a manager" do
+      context "when a manager" do
         before do
           sign_in manager
 
@@ -261,15 +261,15 @@ describe Cases::FiltersController, type: :controller do
       end
     end
 
-    context "tab pending_removal" do
-      context "as an anonymous user" do
+    context "when tab pending_removal" do
+      context "when an anonymous user" do
         it "be redirected to signin if trying to access the page" do
           get :retention, params: { tab: "pending_removal" }
           expect(response).to redirect_to(new_user_session_path)
         end
       end
 
-      context "as a manager" do
+      context "when a manager" do
         before do
           sign_in manager
 

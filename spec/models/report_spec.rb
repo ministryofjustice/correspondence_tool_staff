@@ -167,7 +167,7 @@ RSpec.describe Report, type: :model do
   end
 
   describe "#run_and_update!" do
-    context "etl" do
+    context "when etl" do
       let(:etl_report_type) do
         instance_double(
           Stats::R007ClosedCasesReport,
