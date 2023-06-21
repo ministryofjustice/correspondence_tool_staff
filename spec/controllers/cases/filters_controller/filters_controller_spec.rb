@@ -120,10 +120,10 @@ describe Cases::FiltersController, type: :controller do
   end
 
   describe "#deleted" do
-    let!(:active_kase) { create(:case) }
-
     # This case should be outside the 6 month threshold for downloading
-    let!(:ancient_deleted_kase) do
+    before do
+      create(:case)
+
       Timecop.travel(7.months.ago) do
         create(:case, :deleted_case)
       end

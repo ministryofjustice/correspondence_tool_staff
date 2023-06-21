@@ -197,7 +197,6 @@ RSpec.describe UsersController, type: :controller do
     end
 
     context "with invalid update" do
-      let!(:existing_user) { create :user, full_name: "John Smith", email: "eu@moj.com" }
       let(:params) do
         {
           "team_id" => team.id.to_s,
@@ -209,6 +208,10 @@ RSpec.describe UsersController, type: :controller do
           "commit" => "Edit information officer",
           "id" => user.id.to_s,
         }
+      end
+
+      before do
+        create :user, full_name: "John Smith", email: "eu@moj.com"
       end
 
       it "does not update the user" do

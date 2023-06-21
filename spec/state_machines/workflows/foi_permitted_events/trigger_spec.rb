@@ -8,7 +8,7 @@ describe ConfigurableStateMachine::Machine do
     let(:approver) { find_or_create :disclosure_specialist }
 
     context "when manager" do
-      let(:manager)   { create :manager }
+      let(:manager) { create :manager }
 
       context "and unassigned state" do
         it "shows permitted events" do

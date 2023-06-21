@@ -52,6 +52,6 @@ private
       "responder": %i[view respond],
       "approver": %i[view approve],
       "team_admin": %i[view administer_team],
-    }[team.role]
+    }[team.role] || []
   end
 end

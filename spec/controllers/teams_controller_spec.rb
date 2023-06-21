@@ -676,7 +676,10 @@ RSpec.describe TeamsController, type: :controller do
           business_group_id: bg.id,
         }
       end
-      let!(:deactivated_directorate)     { find_or_create :deactivated_directorate }
+
+      before do
+        find_or_create :deactivated_directorate
+      end
 
       it "assigns @directorates, but not deactivated ones" do
         get(:move_to_directorate, params:)

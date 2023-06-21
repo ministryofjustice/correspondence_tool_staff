@@ -48,7 +48,7 @@ RSpec.describe Case::OverturnedICO::SARPolicy do
     end
 
     context "when linked case" do
-      let!(:linked_case) do
+      before do
         create(:closed_sar, responding_team:).tap do |kase|
           unassigned_case.related_cases << kase
         end

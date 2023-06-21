@@ -50,7 +50,7 @@ describe CaseFilter::ExemptionFilter do
 
   describe "#call" do
     context "when query contains empty exemption ids" do
-      let(:search_query)    { create :search_query, search_text: "dogs in jail" }
+      let(:search_query) { create :search_query, search_text: "dogs in jail" }
 
       it "returns the arel untouched" do
         expect(filter.call).to eq arel
@@ -92,7 +92,7 @@ describe CaseFilter::ExemptionFilter do
 
   describe "#crumbs" do
     context "when query contains no exemption ids" do
-      let(:search_query)    { create :search_query, search_text: "dogs in jail" }
+      let(:search_query) { create :search_query, search_text: "dogs in jail" }
 
       it "returns no crumbs" do
         expect(filter.crumbs).to be_empty

@@ -106,7 +106,7 @@ describe CaseFilter::TimelinessFilter do
     end
 
     context "when filtering for in time cases" do
-      let(:search_query)      do
+      let(:search_query) do
         create :search_query,
                filter_timeliness: %w[in_time]
       end

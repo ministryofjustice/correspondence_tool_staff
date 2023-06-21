@@ -52,15 +52,15 @@ describe "teams/show.html.slim", type: :view do
     let(:directorate)   { create :directorate }
     let(:bu1)           { create :business_unit, directorate: }
     let(:bu2)           { create :business_unit, directorate: }
-    let!(:responder1_1) { create :responder, responding_teams: [bu1] }
-    let!(:responder2_1) { create :responder, responding_teams: [bu2] }
-    let!(:responder2_2) { create :responder, responding_teams: [bu2] }
 
     before do
       login_as manager
       assign(:team, directorate)
       assign(:children, directorate.children.order(:name))
       assign(:reports, reports)
+      create(:responder, responding_teams: [bu1])
+      create(:responder, responding_teams: [bu2])
+      create(:responder, responding_teams: [bu2])
     end
 
     it "displays the directorate name" do

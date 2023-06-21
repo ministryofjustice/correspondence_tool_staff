@@ -5,7 +5,7 @@ describe ConfigurableStateMachine::Machine do
     ##################### MANAGER FLAGGED ############################
 
     context "when manager" do
-      let(:manager)   { create :manager }
+      let(:manager) { create :manager }
 
       context "and unassigned state" do
         it "shows permitted events" do

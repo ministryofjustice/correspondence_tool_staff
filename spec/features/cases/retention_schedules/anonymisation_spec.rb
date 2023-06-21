@@ -33,7 +33,7 @@ feature "Case retention schedules for GDPR", :js do
     )
   end
 
-  let!(:erasable_untimely_kase) do
+  before do
     case_with_retention_schedule(
       case_type: :offender_sar_case,
       case_state: :closed,

@@ -220,7 +220,7 @@ module Workflows
       end
 
       context "when responder" do
-        let(:user)        { @assigned_responder }
+        let(:user) { @assigned_responder }
 
         context "and in same team" do
           context "and within escalation deadline" do

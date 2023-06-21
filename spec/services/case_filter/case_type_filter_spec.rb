@@ -42,7 +42,7 @@ describe CaseFilter::CaseTypeFilter do
     it { is_expected.to include "overturned-ico"    => "ICO overturned" }
 
     context "with user who is assigned to a team that only handles FOIs" do
-      subject    { case_type_filter.available_choices.values[0] }
+      subject { case_type_filter.available_choices.values[0] }
 
       let(:foi)             { find_or_create(:foi_correspondence_type) }
       let(:responding_team) { create(:business_unit, correspondence_types: [foi]) }

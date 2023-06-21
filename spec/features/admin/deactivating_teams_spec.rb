@@ -19,9 +19,11 @@ end
 feature "deactivating directorates" do
   given(:dir)             { create :dacu_directorate, name: "dir1" }
   given(:active_dir)      { create :dacu_directorate, name: "directorate" }
-  let!(:business_unit)    { create :business_unit, directorate: active_dir }
-
   given(:manager)         { create :manager }
+
+  before do
+    create :business_unit, directorate: active_dir
+  end
 
   scenario "manager deactivates a directorate with no active children" do
     login_as manager

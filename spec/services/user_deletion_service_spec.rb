@@ -62,7 +62,7 @@ describe UserDeletionService do
     end
 
     context "when user has live cases" do
-      let!(:kase) do
+      before do
         create :accepted_case,
                responder:,
                responding_team: team

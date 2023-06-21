@@ -3,7 +3,10 @@ require "rails_helper"
 describe "users/confirm_destroy.html.slim", type: :view do
   let(:responder)     { find_or_create :foi_responder }
   let(:team)          { find_or_create :foi_responding_team }
-  let!(:kase)         { create :accepted_case }
+
+  before do
+    create :accepted_case
+  end
 
   context "when user has one team" do
     it "shows" do
@@ -32,9 +35,9 @@ describe "users/confirm_destroy.html.slim", type: :view do
     end
     let!(:team1)                    { find_or_create :responding_team }
     let!(:team2)                    { create :responding_team }
-    let!(:kase)                     do
-      create :accepted_case,
-             responder: multiple_team_responder
+
+    before do
+      create(:accepted_case, responder: multiple_team_responder)
     end
 
     it "shows" do

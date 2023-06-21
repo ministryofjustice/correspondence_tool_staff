@@ -1549,7 +1549,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     context "when date responded is present" do
-      let(:kase)    { find_or_create :closed_case, date_responded: Time.zone.today }
+      let(:kase) { find_or_create :closed_case, date_responded: Time.zone.today }
 
       context "and date responded > external deadline" do
         it "is true" do

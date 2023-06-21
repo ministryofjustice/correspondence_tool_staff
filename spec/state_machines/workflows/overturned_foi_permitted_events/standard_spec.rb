@@ -5,7 +5,7 @@ describe ConfigurableStateMachine::Machine do
     ##################### MANAGER  ############################
 
     context "when manager" do
-      let(:manager)   { find_or_create :disclosure_bmt_user }
+      let(:manager) { find_or_create :disclosure_bmt_user }
 
       context "and unassigned state" do
         it "shows permitted events" do

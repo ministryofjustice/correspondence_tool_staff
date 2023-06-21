@@ -81,7 +81,8 @@ RSpec.describe CaseTransition, type: :model do
     let!(:responded_transition) do
       create :case_transition_respond, case_id: kase.id
     end
-    let!(:add_responses_transition) do
+
+    before do
       create :case_transition_add_responses, case_id: kase.id
     end
 
@@ -96,7 +97,8 @@ RSpec.describe CaseTransition, type: :model do
     let!(:further_clearance_transition) do
       create :case_transition_further_clearance, case_id: kase.id
     end
-    let!(:add_responses_transition) do
+
+    before do
       create :case_transition_add_responses, case_id: kase.id
     end
 

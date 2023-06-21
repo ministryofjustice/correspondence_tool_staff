@@ -158,7 +158,7 @@ describe CaseSearchService do
       end
 
       context "and applying filter on search results" do
-        let!(:parent_search_query)       do
+        let!(:parent_search_query) do
           create :search_query,
                  search_text:,
                  user_id: user.id

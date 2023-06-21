@@ -56,7 +56,7 @@ describe UserReassignmentService do
                           assignment:)
     end
 
-    let(:policy)          { service.instance_variable_get(:@policy) }
+    let(:policy) { service.instance_variable_get(:@policy) }
 
     context "when reassign the assignment" do
       it "returns :ok" do

@@ -8,7 +8,10 @@ describe TeamDeletionService do
 
       context "and child team is not active" do
         let(:time) { Time.zone.local(2017, 6, 30, 12, 0, 0) }
-        let!(:bu) { find_or_create(:business_unit, :deactivated, directorate: dir) }
+
+        before do
+          find_or_create(:business_unit, :deactivated, directorate: dir)
+        end
 
         it "updates the team name" do
           Timecop.freeze(time) do
@@ -26,7 +29,9 @@ describe TeamDeletionService do
       end
 
       context "and child team is active" do
-        let!(:bu) { find_or_create(:business_unit, directorate: dir) }
+        before do
+          find_or_create(:business_unit, directorate: dir)
+        end
 
         it "does not change the name" do
           service.call

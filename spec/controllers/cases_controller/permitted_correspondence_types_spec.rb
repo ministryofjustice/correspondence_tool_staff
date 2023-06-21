@@ -7,8 +7,10 @@ describe CasesController, type: :controller do
   let!(:sar)          { find_or_create :sar_correspondence_type }
   let!(:sar_ir)       { find_or_create :sar_internal_review_correspondence_type }
   let!(:ico)          { find_or_create :ico_correspondence_type }
-  let!(:offender_sar) { find_or_create :offender_sar_correspondence_type }
-  let!(:offender_sar_complaint) { find_or_create :offender_sar_complaint_correspondence_type }
+
+  before do
+    find_or_create :offender_sar_complaint_correspondence_type
+  end
 
   context "with manager" do
     before do

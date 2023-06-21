@@ -15,7 +15,9 @@ RSpec.describe StatsController, type: :controller do
   end
 
   describe "#show" do
-    let!(:r005_report_type) { create :report_type, :r005 }
+    before do
+      create :report_type, :r005
+    end
 
     it "authorizes" do
       expect { get :show, params: { id: ReportType.first.id  } }

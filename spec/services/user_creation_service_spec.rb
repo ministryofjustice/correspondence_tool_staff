@@ -49,9 +49,12 @@ describe UserCreationService do
     end
 
     context "when the user already exists in this team" do
-      let!(:existing_user) { User.new(full_name: "danny driver", email: "dd@moj.com", password: SecureRandom.random_number(36**13).to_s(36)) }
-      let!(:existing_user_role) { existing_user.team_roles << TeamsUsersRole.new(team:, role: "responder") }
-      let!(:success) { existing_user.save }
+      let(:existing_user) { User.new(full_name: "danny driver", email: "dd@moj.com", password: SecureRandom.random_number(36**13).to_s(36)) }
+
+      before do
+        existing_user.team_roles << TeamsUsersRole.new(team:, role: "responder")
+        existing_user.save!
+      end
 
       it "returns :error" do
         service.call
@@ -74,9 +77,12 @@ describe UserCreationService do
 
     context "when a user with the same email exists" do
       let!(:other_team) { find_or_create :responding_team, name: "Another User Creation Team" }
-      let!(:existing_user) { User.new(full_name: "danny driver", email: "dd@moj.com", password: SecureRandom.random_number(36**13).to_s(36)) }
-      let!(:existing_user_role) { existing_user.team_roles << TeamsUsersRole.new(team: other_team, role: "responder") }
-      let!(:success) { existing_user.save }
+      let(:existing_user) { User.new(full_name: "danny driver", email: "dd@moj.com", password: SecureRandom.random_number(36**13).to_s(36)) }
+
+      before do
+        existing_user.team_roles << TeamsUsersRole.new(team: other_team, role: "responder")
+        existing_user.save!
+      end
 
       context "and the names match" do
         it "does not create a new user record" do

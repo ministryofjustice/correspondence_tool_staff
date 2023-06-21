@@ -58,7 +58,9 @@ describe CasesUsersTransitionsTracker do
 
   context "when tracker does not exists for given case and user" do
     context "and case has messages" do
-      let!(:message) { create :case_transition_add_message_to_case, case: kase }
+      before do
+        create :case_transition_add_message_to_case, case: kase
+      end
 
       it "creates a new tracker" do
         expect(kase.users_transitions_trackers.where(user:).count)

@@ -319,11 +319,14 @@ RSpec.describe Case::Base, type: :model do
   describe "presented_as_open scope" do
     let!(:responded_foi)     { create(:responded_case, email: "A@A.com") }
     let!(:approved_sar)      { create(:approved_sar, email: "B@B.com") }
-    let!(:responded_ico_foi) { create(:responded_ico_foi_case, email: "C@C.com") }
-    let!(:responded_ico_sar) { create(:responded_ico_sar_case, email: "D@D.com") }
     let!(:accepted_ico_foi) { create(:accepted_ico_foi_case, email: "F@F.com") }
     let!(:accepted_ico_sar) { create(:accepted_ico_sar_case, email: "G@G.com") }
-    let!(:closed_foi) { create(:closed_case, email: "E@E.com") }
+
+    before do
+      create(:closed_case, email: "E@E.com")
+      create(:responded_ico_foi_case, email: "C@C.com")
+      create(:responded_ico_sar_case, email: "D@D.com")
+    end
 
     it "excludes all closed AND ico case which are responded" do
       expect(described_class.presented_as_open).to match_array([responded_foi, approved_sar, accepted_ico_foi, accepted_ico_sar])

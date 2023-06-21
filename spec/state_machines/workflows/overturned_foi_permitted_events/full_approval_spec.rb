@@ -8,7 +8,7 @@ describe ConfigurableStateMachine::Machine do
     let(:press_officer) { find_or_create :press_officer }
 
     context "when manager" do
-      let(:manager)   { create :manager }
+      let(:manager) { create :manager }
 
       context "and unassigned state" do
         it "shows permitted events" do

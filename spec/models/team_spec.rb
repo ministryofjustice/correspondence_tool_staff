@@ -58,7 +58,10 @@ RSpec.describe Team, type: :model do
     let!(:branston_team)       { find_or_create :team_branston }
     let!(:responding_team)     { find_or_create :foi_responding_team }
     let!(:sar_responding_team) { find_or_create :sar_responding_team }
-    let!(:approving_team)      { find_or_create :team_disclosure }
+
+    before do
+      find_or_create :team_disclosure
+    end
 
     describe "managing scope" do
       it "returns managing teams" do
@@ -279,7 +282,9 @@ RSpec.describe Team, type: :model do
     let(:dir) { create :directorate }
 
     context "when a directorate has active children" do
-      let!(:bu) { create(:business_unit, directorate: dir) }
+      before do
+        create(:business_unit, directorate: dir)
+      end
 
       it "returns true" do
         expect(dir.has_active_children?).to be true
@@ -293,7 +298,9 @@ RSpec.describe Team, type: :model do
     end
 
     context "when a directorate has deactived children" do
-      let!(:bu) { create(:business_unit, :deactivated, directorate: dir) }
+      before do
+        create(:business_unit, :deactivated, directorate: dir)
+      end
 
       it "returns false" do
         expect(dir.has_active_children?).to be false

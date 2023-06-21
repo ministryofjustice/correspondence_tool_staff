@@ -189,7 +189,7 @@ describe CSVExporter do
       end
 
       context "and extension removed" do
-        let!(:kase) do
+        before do
           create(
             :sar_case,
             :extended_deadline_sar,

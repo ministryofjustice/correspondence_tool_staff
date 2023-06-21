@@ -23,8 +23,7 @@ RSpec.shared_examples "confirm respond spec" do |klass|
 
       context "when an anonymous user" do
         it "redirects to sign_in" do
-          expect(patch(:confirm_respond, params:)))
-            .to redirect_to(new_user_session_path)
+          expect(patch(:confirm_respond, params:)).to redirect_to(new_user_session_path)
         end
 
         it "does not transition current_state" do
@@ -38,8 +37,7 @@ RSpec.shared_examples "confirm respond spec" do |klass|
         before { sign_in manager }
 
         it "redirects to the application root" do
-          expect(patch(:confirm_respond, params:)))
-            .to redirect_to(manager_root_path)
+          expect(patch(:confirm_respond, params:)).to redirect_to(manager_root_path)
         end
 
         it "does not transition current_state" do
@@ -60,8 +58,7 @@ RSpec.shared_examples "confirm respond spec" do |klass|
         end
 
         it "redirects to the case list view" do
-          expect(patch(:confirm_respond, params:)))
-            .to redirect_to(case_path(kase))
+          expect(patch(:confirm_respond, params:)).to redirect_to(case_path(kase))
         end
 
         context "with invalid params" do
@@ -79,7 +76,7 @@ RSpec.shared_examples "confirm respond spec" do |klass|
           end
 
           it "redirects to the respond page" do
-            expect(patch(:confirm_respond, params:)))
+            patch(:confirm_respond, params:)
             expect(response).to render_template(:respond)
           end
         end
@@ -89,8 +86,7 @@ RSpec.shared_examples "confirm respond spec" do |klass|
         before { sign_in another_responder }
 
         it "redirects to the application root" do
-          expect(patch(:confirm_respond, params:)))
-            .to redirect_to(responder_root_path)
+          expect(patch(:confirm_respond, params:)).to redirect_to(responder_root_path)
         end
 
         it "does not transition current_state" do

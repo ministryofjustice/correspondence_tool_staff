@@ -269,10 +269,10 @@ RSpec.describe CasesController, type: :controller do
         let(:user)             { responder }
         let(:press_office)     { find_or_create :team_press_office }
         let(:press_officer)    { find_or_create :press_officer }
-        let!(:private_officer) { find_or_create :default_private_officer }
 
         before do
           team_dacu_disclosure
+          find_or_create :default_private_officer
         end
 
         it { is_expected.to have_nil_permitted_events }

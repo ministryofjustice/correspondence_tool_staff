@@ -4,9 +4,10 @@ describe "assignments/new.html.slim", type: :view do
   let(:unassigned_case)    { create :case }
   let(:bg)                 { create :business_group }
   let(:dir)                { create :directorate, business_group: bg }
-  let!(:business_unit_1)   { create :responding_team, directorate: dir }
-  let!(:business_unit_2)   { create :responding_team, directorate: dir }
-  let!(:business_unit_3)   { create :responding_team, directorate: dir }
+
+  before do
+    create_list(:responding_team, 3, directorate: dir)
+  end
 
   it "displays the new assignment page for a new case" do
     deactivated_bg = create :business_group, deleted_at: Time.zone.today, name: "[DEACTIVATED] testing"

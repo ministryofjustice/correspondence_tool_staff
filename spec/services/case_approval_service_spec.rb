@@ -146,7 +146,7 @@ describe CaseApprovalService do
 
       context "and case in pending_dacu_clearance_state flagged for press" do
         context "and case not flagged for press clearance" do
-          let(:kase)  { create :pending_dacu_clearance_case_flagged_for_press }
+          let(:kase) { create :pending_dacu_clearance_case_flagged_for_press }
 
           it "transitions to awaiting dispatch" do
             service.call

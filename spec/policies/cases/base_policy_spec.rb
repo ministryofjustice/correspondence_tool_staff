@@ -91,7 +91,6 @@ describe Case::BasePolicy do
   let(:responder)         { @responder }
   let(:coworker)          { @coworker }
   let(:another_responder) { @another_responder }
-  let!(:dacu_disclosure)  { @dacu_disclosure }
   let(:approver)          { @approver }
   let(:disclosure_specialist) { @disclosure_specialist }
   let(:another_disclosure_specialist) { @another_disclosure_specialist }
