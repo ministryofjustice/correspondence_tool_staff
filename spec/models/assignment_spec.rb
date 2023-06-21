@@ -261,23 +261,23 @@ RSpec.describe Assignment, type: :model do
       end
 
       context "and updated assignment" do
+        let(:assignment) { create :assignment, :responding, case_id: kase.id }
+
         before do
-          kase
-          @assignment = create :assignment, :responding, case_id: kase.id
-          @assignment.case.mark_as_clean!
+          assignment.case.mark_as_clean!
         end
 
         context "and state changed to rejected" do
           it "marks the case as dirty" do
-            expect(@assignment.state).to eq "pending"
-            @assignment.update!(state: "rejected", reasons_for_rejection: "xxx")
+            expect(assignment.state).to eq "pending"
+            assignment.update!(state: "rejected", reasons_for_rejection: "xxx")
             expect(kase.reload).to be_dirty
           end
         end
 
         context "and state changed to bypassed" do
           it "marks the case as dirty" do
-            @assignment.update!(state: "bypassed")
+            assignment.update!(state: "bypassed")
             expect(kase.reload).to be_dirty
           end
         end
@@ -285,7 +285,7 @@ RSpec.describe Assignment, type: :model do
         context "and state changed to accepted" do
           it "marks the case as dirty" do
             expect(kase.reload).to be_clean
-            @assignment.update!(state: "accepted")
+            assignment.update!(state: "accepted")
             expect(kase.reload).to be_clean
           end
         end
@@ -295,7 +295,7 @@ RSpec.describe Assignment, type: :model do
 
           expect {
             Timecop.freeze(t) do
-              @assignment.update(state: "bypassed")
+              assignment.update(state: "bypassed")
             end
           }.to have_enqueued_job(SearchIndexUpdaterJob).at(t + 10.seconds).at_least(1)
         end

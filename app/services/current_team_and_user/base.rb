@@ -10,12 +10,8 @@ module CurrentTeamAndUser
     end
 
     # use method missing to get default value when the case type doesn't implement state-method
-    def method_missing(method_name, *args)
+    def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
       super unless @case.class.permitted_states.include?(method_name.to_s) && !respond_to?(method_name.to_s)
-    end
-
-    def respond_to_missing?(method_name, include_private: false)
-      @case.class.permitted_states.include?(method_name.to_s) || super
     end
 
     def unassigned

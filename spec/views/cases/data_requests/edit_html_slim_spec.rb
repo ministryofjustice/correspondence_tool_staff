@@ -14,6 +14,7 @@ describe "cases/data_requests/edit", type: :view do
         cached_date_received: Date.new(1972, 9, 25),
       )
     end
+    let(:page) { data_request_edit_page }
 
     before do
       assign(:data_request, data_request)
@@ -21,23 +22,19 @@ describe "cases/data_requests/edit", type: :view do
 
       render
       data_request_edit_page.load(rendered)
-      @page = data_request_edit_page
     end
 
     it "has required content" do
-      expect(@page.page_heading.heading.text).to eq "Edit data request"
-      expect(@page.location.text).to eq "HMP Leicester: All prison records"
-
-      expect(@page.form.date_from_day.value.to_i).to eq 15
-      expect(@page.form.date_from_month.value.to_i).to eq 8
-      expect(@page.form.date_from_year.value.to_i).to eq 2018
-
-      expect(@page.form.date_to_day.value.to_i).to eq 15
-      expect(@page.form.date_to_month.value.to_i).to eq 8
-      expect(@page.form.date_to_year.value.to_i).to eq 2019
-
-      expect(@page.form.cached_num_pages.value.to_i).to eq 32
-      expect(@page.submit_button.value).to eq "Continue"
+      expect(page.page_heading.heading.text).to eq "Edit data request"
+      expect(page.location.text).to eq "HMP Leicester: All prison records"
+      expect(page.form.date_from_day.value.to_i).to eq 15
+      expect(page.form.date_from_month.value.to_i).to eq 8
+      expect(page.form.date_from_year.value.to_i).to eq 2018
+      expect(page.form.date_to_day.value.to_i).to eq 15
+      expect(page.form.date_to_month.value.to_i).to eq 8
+      expect(page.form.date_to_year.value.to_i).to eq 2019
+      expect(page.form.cached_num_pages.value.to_i).to eq 32
+      expect(page.submit_button.value).to eq "Continue"
     end
   end
 end

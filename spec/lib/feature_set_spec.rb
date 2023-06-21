@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable
 describe FeatureSet do
   before do
     # override whatever is in the settings file with these settings
@@ -10,9 +11,8 @@ describe FeatureSet do
       "Host-staging": false,
       "Host-production": false,
     })
+    @saved_env = ENV["ENV"]
   end
-
-  before { @saved_env = ENV["ENV"] }
 
   after  { ENV["ENV"] = @saved_env }
 
@@ -101,3 +101,4 @@ describe FeatureSet do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable

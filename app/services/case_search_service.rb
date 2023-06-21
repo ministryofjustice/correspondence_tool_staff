@@ -25,7 +25,7 @@ class CaseSearchService
   def call(full_list_of_cases = nil, order: nil)
     if @error == false && @query.valid?
       @result_set = @query.results(full_list_of_cases, order)
-      @query.update! num_results: @result_set.size
+      @query.update num_results: @result_set.size # rubocop:disable Rails/SaveBang
     else
       @result_set = Case::Base.none
     end

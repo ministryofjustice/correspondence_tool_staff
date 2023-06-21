@@ -4,19 +4,6 @@ describe CaseFilter::CaseComplaintTypeFilter do
   let(:user) { find_or_create :branston_user }
   let(:case_complaint_type_filter) { described_class.new search_query, user, Case::Base }
 
-  before :all do
-    DbHousekeeping.clean
-
-    @offender_sar_complaint_standard = create :offender_sar_complaint
-    @offender_sar_complaint_standard1 = create :offender_sar_complaint
-
-    @offender_sar_complaint_ico = create :offender_sar_complaint, complaint_type: "ico_complaint"
-
-    @offender_sar_complaint_litigation = create :offender_sar_complaint, complaint_type: "litigation_complaint"
-  end
-
-  after(:all) { DbHousekeeping.clean }
-
   describe ".available_case_complaint_types" do
     subject    { case_complaint_type_filter.available_choices.values[0] }
 
@@ -48,6 +35,11 @@ describe CaseFilter::CaseComplaintTypeFilter do
   end
 
   describe "#call" do
+    let!(:offender_sar_complaint_standard) { create :offender_sar_complaint }
+    let!(:offender_sar_complaint_standard1) { create :offender_sar_complaint }
+    let!(:offender_sar_complaint_ico) { create :offender_sar_complaint, complaint_type: "ico_complaint" }
+    let!(:offender_sar_complaint_litigation) { create :offender_sar_complaint, complaint_type: "litigation_complaint" }
+
     describe "filtering for standard complaint cases" do
       let(:search_query) do
         create :search_query,
@@ -57,8 +49,8 @@ describe CaseFilter::CaseComplaintTypeFilter do
       it "returns the correct list of cases" do
         results = case_complaint_type_filter.call
         expect(results).to match_array [
-          @offender_sar_complaint_standard,
-          @offender_sar_complaint_standard1,
+          offender_sar_complaint_standard,
+          offender_sar_complaint_standard1,
         ]
       end
     end
@@ -72,7 +64,7 @@ describe CaseFilter::CaseComplaintTypeFilter do
       it "returns the correct list of cases" do
         results = case_complaint_type_filter.call
         expect(results).to match_array [
-          @offender_sar_complaint_ico,
+          offender_sar_complaint_ico,
         ]
       end
     end
@@ -86,7 +78,7 @@ describe CaseFilter::CaseComplaintTypeFilter do
       it "returns the correct list of cases" do
         results = case_complaint_type_filter.call
         expect(results).to match_array [
-          @offender_sar_complaint_litigation,
+          offender_sar_complaint_litigation,
         ]
       end
     end
@@ -120,11 +112,9 @@ describe CaseFilter::CaseComplaintTypeFilter do
         end
 
         describe "params that will be submitted when clicking on the crumb" do
-          subject { case_complaint_type_filter.crumbs[0].second }
-
           it {
-            expect(subject).to eq "filter_complaint_type" => [""],
-                                  "parent_id" => search_query.id
+            expect(case_complaint_type_filter.crumbs[0].second).to eq "filter_complaint_type" => [""],
+                                                                      "parent_id" => search_query.id
           }
         end
       end

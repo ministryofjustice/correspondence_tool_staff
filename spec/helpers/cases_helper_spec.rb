@@ -10,6 +10,7 @@ require "rails_helper"
 #     end
 #   end
 # end
+# rubocop:disable RSpec/InstanceVariable
 RSpec.describe CasesHelper, type: :helper do
   let(:manager)           { create :manager }
   let(:responder)         { create :responder }
@@ -122,7 +123,7 @@ href=\"/cases/ico_fois/#{@case.id}/close\">Record ICO&#39;s decision</a>",
     end
 
     context "when event == :add_responses" do
-      context "and case does not require clearance" do
+      context "when case does not require clearance" do
         it "generates HTML that links to the upload response page" do
           @case = create(:accepted_case)
           expect(action_button_for(:add_responses)).to eq(
@@ -509,3 +510,4 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable

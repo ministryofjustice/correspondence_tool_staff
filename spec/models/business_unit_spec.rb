@@ -16,6 +16,7 @@
 
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 RSpec.describe BusinessUnit, type: :model do
   let(:foi)                 { CorrespondenceType.foi }
   let(:sar)                 { CorrespondenceType.sar }
@@ -38,14 +39,14 @@ RSpec.describe BusinessUnit, type: :model do
   it { is_expected.to have_one(:business_group).through(:directorate) }
 
   it {
-    expect(subject).to have_many(:user_roles)
+    expect(described_class.new).to have_many(:user_roles)
                 .class_name("TeamsUsersRole")
   }
 
   it { is_expected.to have_many(:users).through(:user_roles) }
 
   it {
-    expect(subject).to have_many(:manager_user_roles)
+    expect(described_class.new).to have_many(:manager_user_roles)
                 .class_name("TeamsUsersRole")
                 .with_foreign_key("team_id")
   }
@@ -53,7 +54,7 @@ RSpec.describe BusinessUnit, type: :model do
   it { is_expected.to have_many(:managers).through(:manager_user_roles) }
 
   it {
-    expect(subject).to have_many(:responder_user_roles)
+    expect(described_class.new).to have_many(:responder_user_roles)
                  .class_name("TeamsUsersRole")
                  .with_foreign_key("team_id")
   }
@@ -61,7 +62,7 @@ RSpec.describe BusinessUnit, type: :model do
   it { is_expected.to have_many(:responders).through(:responder_user_roles) }
 
   it {
-    expect(subject).to have_many(:approver_user_roles)
+    expect(described_class.new).to have_many(:approver_user_roles)
                 .class_name("TeamsUsersRole")
                 .with_foreign_key("team_id")
   }
@@ -497,3 +498,4 @@ RSpec.describe BusinessUnit, type: :model do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

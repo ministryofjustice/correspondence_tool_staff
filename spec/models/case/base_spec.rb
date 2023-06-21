@@ -31,6 +31,7 @@
 
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 RSpec.describe Case::Base, type: :model do
   let(:general_enquiry) do
     build_stubbed :case, received_date: Date.parse("16/11/2016")
@@ -582,7 +583,7 @@ RSpec.describe Case::Base, type: :model do
 
     before do
       cls = CaseLinkingService.new(manager, sar, linked_sar.number)
-      cls.create!
+      cls.create # rubocop:disable Rails/SaveBang
       @ovt = create :overturned_ico_sar, original_ico_appeal: ico_appeal, original_case: sar
       @ovt.link_related_cases
       @ovt.reload
@@ -1795,3 +1796,4 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

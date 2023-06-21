@@ -24,20 +24,21 @@ describe AssignNewTeamService do
   end
 
   describe "#call" do
+    let(:service) { described_class.new(manager, { id: assignment.id, case_id: kase.id, team_id: new_responding_team.id }) }
+
     before do
-      @service = described_class.new(manager, { id: assignment.id, case_id: kase.id, team_id: new_responding_team.id })
       allow(NotifyNewAssignmentService).to receive(:new).and_return(notify_service)
       allow(notify_service).to receive(:run).and_return(true)
     end
 
     it "returns ok" do
-      @service.call
-      expect(@service.result).to eq :ok
+      service.call
+      expect(service.result).to eq :ok
       expect(notify_service).to have_received(:run)
     end
 
     it "updates the assignment with the new team id and state" do
-      @service.call
+      service.call
       assignment.reload
       expect(assignment.state).to eq "pending"
       expect(assignment.team_id).to eq new_responding_team.id
@@ -45,12 +46,12 @@ describe AssignNewTeamService do
     end
 
     it "changes the state of the case" do
-      @service.call
+      service.call
       expect(kase.current_state).to eq "awaiting_responder"
     end
 
     it "creates a transition" do
-      expect { @service.call }.to change { kase.transitions.count }.by(1)
+      expect { service.call }.to change { kase.transitions.count }.by(1)
       tr = kase.transitions.last
       expect(tr.event).to eq "assign_to_new_team"
       expect(tr.to_state).to eq "awaiting_responder"
@@ -66,11 +67,11 @@ describe AssignNewTeamService do
     it "does not send an email" do
       kase = create :closed_case
       assignment = kase.responder_assignment
-      @service = described_class.new(manager, { id: assignment.id, case_id: kase.id, team_id: new_responding_team.id })
-      @service.call
+      service = described_class.new(manager, { id: assignment.id, case_id: kase.id, team_id: new_responding_team.id })
+      service.call
       expect(notify_service).not_to have_received(:run)
 
-      expect(@service.result).to eq :ok
+      expect(service.result).to eq :ok
     end
   end
 end

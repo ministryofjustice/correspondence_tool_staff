@@ -1,11 +1,11 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseFilter::CaseStatusFilter do
   let(:user) { find_or_create :disclosure_specialist_bmt }
   let(:case_status_filter) { described_class.new search_query, user, Case::Base.all }
 
   before :all do
-    DbHousekeeping.clean
     @setup = StandardSetup.new(only_cases: %i[
       std_draft_foi
       std_closed_foi
@@ -160,3 +160,4 @@ describe CaseFilter::CaseStatusFilter do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

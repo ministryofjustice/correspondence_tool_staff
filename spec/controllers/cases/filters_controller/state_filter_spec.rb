@@ -26,23 +26,24 @@ RSpec.describe Cases::FiltersController, type: :controller do
 
   describe "#show" do
     context "when filtering by state" do
+      let(:redirect_url) { URI.parse response.redirect_url }
+      let(:redirect_params) { CGI.parse(redirect_url.query) }
+
       before do
         sign_in create(:manager)
         get(:show, params:)
-        @redirect_url = URI.parse response.redirect_url
-        @redirect_params = CGI.parse(@redirect_url.query)
       end
 
       it "redirects to original action path" do
-        expect(@redirect_url.path).to eq "/cases/open"
+        expect(redirect_url.path).to eq "/cases/open"
       end
 
       it "passes on any other params" do
-        expect(@redirect_params["other_param"]).to eq %w[other_value]
+        expect(redirect_params["other_param"]).to eq %w[other_value]
       end
 
       it "replaces any states params with what was specified in state_selector" do
-        expect(@redirect_params["states"]).to eq ["awaiting_responder,pending_dacu_clearance,unassigned"]
+        expect(redirect_params["states"]).to eq ["awaiting_responder,pending_dacu_clearance,unassigned"]
       end
     end
 

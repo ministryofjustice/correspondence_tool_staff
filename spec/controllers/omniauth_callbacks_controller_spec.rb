@@ -3,7 +3,7 @@ require "devise"
 
 RSpec.describe OmniauthCallbacksController, type: :controller do
   before do
-    @request.env["devise.mapping"] = Devise.mappings[:user]
+    request.env["devise.mapping"] = Devise.mappings[:user]
   end
 
   describe "GET azure_activedirectory_v2" do
@@ -11,7 +11,7 @@ RSpec.describe OmniauthCallbacksController, type: :controller do
     let(:error_flash) { "Account not found or deactivated." }
 
     before do
-      @request.env["omniauth.auth"] = { "info" => { "email" => user_email } }
+      request.env["omniauth.auth"] = { "info" => { "email" => user_email } }
     end
 
     context "when user is not registered" do

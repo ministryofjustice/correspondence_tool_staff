@@ -176,24 +176,20 @@ describe "cases/filters/index.html.slim", type: :view do
     # we have a way to override that, we test here and test that other views
     # include pagination.
     context "with one pages worth of cases" do
-      before :all do
-        create_list(:case, 20)
-        @cases = Case::Base.all.page.decorate
-      end
-
-      after(:all) { DbHousekeeping.clean }
+      let(:cases) { Case::Base.all.page.decorate }
+      let(:partial) { pagination_section(view.paginate(cases)) }
 
       before do
-        assign(:cases, @cases)
-        @partial = pagination_section(view.paginate(@cases))
+        create_list(:case, 20)
+        assign(:cases, cases)
       end
 
       it "has no link to the prev page" do
-        expect(@partial).to have_no_prev_page_link
+        expect(partial).to have_no_prev_page_link
       end
 
       it "has no link to the next page" do
-        expect(@partial).to have_no_next_page_link
+        expect(partial).to have_no_next_page_link
       end
     end
   end

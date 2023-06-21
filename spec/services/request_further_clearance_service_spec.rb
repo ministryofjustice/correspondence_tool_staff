@@ -9,28 +9,25 @@ describe RequestFurtherClearanceService do
     let(:tue_may_23) { Time.utc(2017, 5, 23, 12, 0, 0) }
 
     describe "foi" do
-      before do
-        @service = described_class.new(user: manager,
-                                       kase: accepted_case)
-      end
+      let(:service) { described_class.new(user: manager, kase: accepted_case) }
 
       it "flags a case for disclosure" do
         existing_approver_assignments = accepted_case.approver_assignments.count
         expect(existing_approver_assignments).to eq 0
-        @service.call
+        service.call
         expect(accepted_case.approver_assignments.count).to eq 1
       end
 
       it "sets the escalation date" do
         Timecop.freeze thu_may_18 do
-          @service.call
+          service.call
           expect(accepted_case.escalation_deadline)
               .to eq tue_may_23.to_date
         end
       end
 
       it "creates a transition" do
-        expect { @service.call }
+        expect { service.call }
             .to change {
                   accepted_case
                             .transitions
@@ -66,15 +63,15 @@ describe RequestFurtherClearanceService do
       end
 
       it "returns ok" do
-        @service.call
-        expect(@service.result).to eq :ok
+        service.call
+        expect(service.result).to eq :ok
       end
 
       context "when an error occurs" do
         it "rolls-back changes" do
           old_deadline = accepted_case.escalation_deadline
           allow(accepted_case).to receive(:update!).and_throw(RuntimeError)
-          @service.call
+          service.call
 
           # no case history
           request_clearance_transitions = accepted_case
@@ -92,30 +89,26 @@ describe RequestFurtherClearanceService do
 
         it "sets result to :error and returns same" do
           allow(accepted_case).to receive(:update!).and_throw(RuntimeError)
-          result = @service.call
+          result = service.call
           expect(result).to eq :error
-          expect(@service.result).to eq :error
+          expect(service.result).to eq :error
         end
       end
     end
 
     describe "SAR" do
       let(:accepted_sar) { create :accepted_sar }
-
-      before do
-        @service = described_class.new(user: manager,
-                                       kase: accepted_sar)
-      end
+      let(:service) { described_class.new(user: manager, kase: accepted_sar) }
 
       it "flags a case for disclosure" do
         existing_approver_assignments = accepted_sar.approver_assignments.count
         expect(existing_approver_assignments).to eq 0
-        @service.call
+        service.call
         expect(accepted_sar.approver_assignments.count).to eq 1
       end
 
       it "does not flag for press and private" do
-        @service.call
+        service.call
         expect(accepted_case.within_escalation_deadline?)
             .to be false
       end

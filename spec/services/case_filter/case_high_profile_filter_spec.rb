@@ -4,19 +4,6 @@ describe CaseFilter::CaseHighProfileFilter do
   let(:user) { find_or_create :branston_user }
   let(:case_hgih_profile_filter) { described_class.new search_query, user, Case::Base }
 
-  before :all do
-    DbHousekeeping.clean
-
-    @offender_sar_complaint_standard = create :offender_sar_complaint
-    @offender_sar_complaint_standard1 = create :offender_sar_complaint
-
-    @offender_sar_complaint_high_profile1  = create :offender_sar_complaint, flag_as_high_profile: true
-
-    @offender_sar_complaint_high_profile2  = create :offender_sar_complaint, flag_as_high_profile: true
-  end
-
-  after(:all) { DbHousekeeping.clean }
-
   describe ".available_case_high_profile" do
     subject    { case_hgih_profile_filter.available_choices.values[0] }
 
@@ -47,6 +34,11 @@ describe CaseFilter::CaseHighProfileFilter do
   end
 
   describe "#call" do
+    let!(:offender_sar_complaint_standard) { create :offender_sar_complaint }
+    let!(:offender_sar_complaint_standard1) { create :offender_sar_complaint }
+    let!(:offender_sar_complaint_high_profile1) { create :offender_sar_complaint, flag_as_high_profile: true }
+    let!(:offender_sar_complaint_high_profile2) { create :offender_sar_complaint, flag_as_high_profile: true }
+
     describe "filtering for normal complaint cases" do
       let(:search_query) do
         create :search_query,
@@ -56,12 +48,12 @@ describe CaseFilter::CaseHighProfileFilter do
       it "returns the correct list of cases" do
         results = case_hgih_profile_filter.call
         expect(results).to match_array [
-          @offender_sar_complaint_standard.original_case,
-          @offender_sar_complaint_standard,
-          @offender_sar_complaint_standard1.original_case,
-          @offender_sar_complaint_standard1,
-          @offender_sar_complaint_high_profile1.original_case,
-          @offender_sar_complaint_high_profile2.original_case,
+          offender_sar_complaint_standard.original_case,
+          offender_sar_complaint_standard,
+          offender_sar_complaint_standard1.original_case,
+          offender_sar_complaint_standard1,
+          offender_sar_complaint_high_profile1.original_case,
+          offender_sar_complaint_high_profile2.original_case,
         ]
       end
     end
@@ -75,8 +67,8 @@ describe CaseFilter::CaseHighProfileFilter do
       it "returns the correct list of cases" do
         results = case_hgih_profile_filter.call
         expect(results).to match_array [
-          @offender_sar_complaint_high_profile1,
-          @offender_sar_complaint_high_profile2,
+          offender_sar_complaint_high_profile1,
+          offender_sar_complaint_high_profile2,
         ]
       end
     end
@@ -110,10 +102,8 @@ describe CaseFilter::CaseHighProfileFilter do
         end
 
         describe "params that will be submitted when clicking on the crumb" do
-          subject { case_hgih_profile_filter.crumbs[0].second }
-
           it {
-            expect(subject).to eq "filter_high_profile" => [""],
+            expect(case_hgih_profile_filter.crumbs[0].second).to eq "filter_high_profile" => [""],
                                   "parent_id" => search_query.id
           }
         end

@@ -1,7 +1,10 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseFilter::ReceivedDateFilter do
   let(:user) { find_or_create :disclosure_specialist_bmt }
+  let(:kase_1) { @kase_1 }
+  let(:kase_2) { @kase_2 }
 
   before(:all) do
     Timecop.freeze(Time.zone.local(2018, 4, 26, 14, 57, 0)) do
@@ -80,7 +83,7 @@ describe CaseFilter::ReceivedDateFilter do
 
       it "returns only cases within date range" do
         Timecop.freeze(Time.zone.local(2018, 4, 26, 14, 57, 0)) do
-          expect(filter.call).to match_array [@kase_1, @kase_2]
+          expect(filter.call).to match_array [kase_1, kase_2]
         end
       end
     end
@@ -167,3 +170,4 @@ describe CaseFilter::ReceivedDateFilter do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

@@ -1,9 +1,12 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseFilter::ExemptionFilter do
-  let(:user) { find_or_create :disclosure_specialist_bmt }
+  let(:user)    { find_or_create :disclosure_specialist_bmt }
   let(:arel)    { Case::Base.all }
   let(:filter)  { described_class.new(search_query, user, arel) }
+  let(:kase_1)  { @kase_1 }
+  let(:kase_2)  { @kase_2 }
 
   before(:all) do
     require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
@@ -69,7 +72,7 @@ describe CaseFilter::ExemptionFilter do
       let(:search_query) { search_query_for(%w[s22], %w[s22]) }
 
       it "returns matching exemptions only" do
-        expect(filter.call).to match_array [@kase_1, @kase_2]
+        expect(filter.call).to match_array [kase_1, kase_2]
       end
     end
 
@@ -77,7 +80,7 @@ describe CaseFilter::ExemptionFilter do
       let(:search_query) { search_query_for(%w[s22 s36], %w[s36]) }
 
       it "returns all cases with exemptions matching any of the specified exemption ids" do
-        expect(filter.call).to match_array [@kase_2]
+        expect(filter.call).to match_array [kase_2]
       end
     end
 
@@ -170,3 +173,4 @@ private
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

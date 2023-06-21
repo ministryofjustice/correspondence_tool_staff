@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseSearchService do
   let(:user) { create :manager }
 
@@ -158,11 +159,7 @@ describe CaseSearchService do
       end
 
       context "and applying filter on search results" do
-        let!(:parent_search_query) do
-          create :search_query,
-                 search_text:,
-                 user_id: user.id
-        end
+        let!(:parent_search_query) { create(:search_query, search_text:, user_id: user.id) }
         let(:filter_case_type)           { ["", "foi-standard"] }
         let(:filter_sensitivity)         { [""] }
         let(:external_deadline_from)     { 0.business_days.from_now.to_date }
@@ -443,3 +440,4 @@ describe CaseSearchService do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

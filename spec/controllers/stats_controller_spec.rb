@@ -337,9 +337,9 @@ RSpec.describe StatsController, type: :controller do
           disposition: :attachment,
         }
 
-        expect(@controller).to receive(:send_data)
+        expect(controller).to receive(:send_data)
           .with(report.report_data, file_options) { |_csv, _options|
-            @controller.render body: :nil
+            controller.render body: :nil
           }
 
         get :download_custom, params: { id: report.id }

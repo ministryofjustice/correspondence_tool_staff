@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable
 describe HostEnv do
   RSpec.shared_examples "is safe?" do
     describe "safe?" do
@@ -260,3 +261,4 @@ describe HostEnv do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable

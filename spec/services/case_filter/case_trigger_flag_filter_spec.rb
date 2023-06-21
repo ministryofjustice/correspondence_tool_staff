@@ -1,11 +1,11 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseFilter::CaseTriggerFlagFilter do
   let(:user) { find_or_create :disclosure_specialist_bmt }
   let(:case_trigger_flag_filter) { described_class.new search_query, user, Case::Base }
 
   before :all do
-    DbHousekeeping.clean
     @setup = StandardSetup.new(only_cases: %i[
       sar_noff_unassigned
       std_unassigned_foi
@@ -147,3 +147,4 @@ describe CaseFilter::CaseTriggerFlagFilter do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

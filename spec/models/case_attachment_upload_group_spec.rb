@@ -1,11 +1,11 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseAttachmentUploadGroup do
   before(:all) do
     DbHousekeeping.clean
 
     @upload_group = "20170608101112"
-    @timestamp = "12 Jun 2017 11:42"
     @kase = create :case_with_response
     @responder = @kase.responding_team.users.first
     @kase.attachments.first.update!(upload_group: @upload_group, user_id: @responder.id)
@@ -67,3 +67,4 @@ describe CaseAttachmentUploadGroup do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

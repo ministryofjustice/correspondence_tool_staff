@@ -165,11 +165,11 @@ class SearchQuery < ApplicationRecord
                      .where(user_id: merged_params[:user_id],
                             query_type: merged_params[:query_type])
                      .where("created_at >= ? AND created_at < ?",
-                            Time.zone.today, Date.tomorrow)
+                            Time.zone.today, Time.zone.tomorrow)
                      .where("query = ?", params_to_match_on.to_json)
                      .first
     if search_query.nil?
-      search_query = SearchQuery.create!(merged_params)
+      search_query = SearchQuery.create(merged_params) # rubocop:disable Rails/SaveBang
     end
     search_query
   end

@@ -32,29 +32,29 @@ require "rails_helper"
 
 describe Case::ICO::Base do
   let(:kase) { described_class.new }
+  let(:case_a) do
+    create :accepted_ico_foi_case,
+           ico_reference_number: "ICOREF1",
+           ico_officer_name: "Bryan Adams"
+  end
+  let(:case_b) do
+    create :accepted_ico_foi_case,
+           ico_reference_number: "ICOREF2",
+           ico_officer_name: "Douglas Adams"
+  end
 
   describe "search" do
-    before :all do
-      @case_a = create :accepted_ico_foi_case,
-                       ico_reference_number: "ICOREF1",
-                       ico_officer_name: "Bryan Adams"
-      @case_b = create :accepted_ico_foi_case,
-                       ico_reference_number: "ICOREF2",
-                       ico_officer_name: "Douglas Adams"
-      @case_a.update_index
-      @case_b.update_index
-    end
-
-    after :all do
-      DbHousekeeping.clean
+    before do
+      case_a.update_index
+      case_b.update_index
     end
 
     it "returns case with the matching ICO reference number" do
-      expect(Case::Base.search("ICOREF1")).to match_array [@case_a]
+      expect(Case::Base.search("ICOREF1")).to match_array [case_a]
     end
 
     it "returns case with with the matching ICO officer" do
-      expect(Case::Base.search("Douglas")).to match_array [@case_b]
+      expect(Case::Base.search("Douglas")).to match_array [case_b]
     end
   end
 
@@ -91,7 +91,7 @@ describe Case::ICO::Base do
     end
 
     it "cannot be before than received_date" do
-      kase.update!(
+      kase.update( # rubocop:disable Rails/SaveBang
         received_date: Time.zone.today,
         external_deadline: Time.zone.today - 1.day,
       )
@@ -101,7 +101,7 @@ describe Case::ICO::Base do
     end
 
     it "cannot be more than a year past received_date" do
-      kase.update!(
+      kase.update( # rubocop:disable Rails/SaveBang
         received_date: Time.zone.today,
         external_deadline: Time.zone.today + 1.year + 1.day,
       )
@@ -125,7 +125,7 @@ describe Case::ICO::Base do
       it { is_expected.to validate_presence_of(:internal_deadline).on(:update) }
 
       it "cannot be before received_date" do
-        kase.update!(
+        kase.update( # rubocop:disable Rails/SaveBang
           received_date: Time.zone.today,
           internal_deadline: Time.zone.today - 1.day,
         )
@@ -135,7 +135,7 @@ describe Case::ICO::Base do
       end
 
       it "cannot be after than external_deadline" do
-        kase.update!(
+        kase.update( # rubocop:disable Rails/SaveBang
           external_deadline: Time.zone.today + 20.days,
           internal_deadline: Time.zone.today + 21.days,
         )
@@ -201,7 +201,7 @@ describe Case::ICO::Base do
       ico = create(:ico_foi_case, related_cases: [foi])
       expect(ico).to be_valid
       ico.original_case = foi
-      ico.save!
+      ico.save # rubocop:disable Rails/SaveBang
       expect(ico).not_to be_valid
     end
   end

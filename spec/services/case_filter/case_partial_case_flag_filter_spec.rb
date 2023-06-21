@@ -4,17 +4,8 @@ describe CaseFilter::CasePartialCaseFlagFilter do
   let(:user) { find_or_create :branston_user }
   let(:case_partial_case_flag_filter) { described_class.new search_query, user, Case::Base }
 
-  before :all do
-    DbHousekeeping.clean
-
-    @offender_sar_partial_case = create :offender_sar_case, :closed, is_partial_case: true
-    @offender_sar_not_partial_case = create :offender_sar_case, :closed, is_partial_case: false
-  end
-
-  after(:all) { DbHousekeeping.clean }
-
   describe ".available_case_high_profile" do
-    subject    { case_partial_case_flag_filter.available_choices.values[0] }
+    subject { case_partial_case_flag_filter.available_choices.values[0] }
 
     let(:user) { find_or_create :disclosure_bmt_user }
     let(:search_query) { create :search_query }
@@ -43,6 +34,9 @@ describe CaseFilter::CasePartialCaseFlagFilter do
   end
 
   describe "#call" do
+    let!(:offender_sar_partial_case) { create :offender_sar_case, :closed, is_partial_case: true }
+    let!(:offender_sar_not_partial_case) { create :offender_sar_case, :closed, is_partial_case: false }
+
     describe "filtering for partial cases" do
       let(:search_query) do
         create :search_query,
@@ -51,7 +45,7 @@ describe CaseFilter::CasePartialCaseFlagFilter do
 
       it "returns the correct list of cases" do
         results = case_partial_case_flag_filter.call
-        expect(results).to match_array [@offender_sar_partial_case]
+        expect(results).to match_array [offender_sar_partial_case]
       end
     end
 
@@ -63,7 +57,7 @@ describe CaseFilter::CasePartialCaseFlagFilter do
 
       it "returns the correct list of cases" do
         results = case_partial_case_flag_filter.call
-        expect(results).to match_array [@offender_sar_not_partial_case]
+        expect(results).to match_array [offender_sar_not_partial_case]
       end
     end
   end
@@ -96,11 +90,9 @@ describe CaseFilter::CasePartialCaseFlagFilter do
         end
 
         describe "params that will be submitted when clicking on the crumb" do
-          subject { case_partial_case_flag_filter.crumbs[0].second }
-
           it {
-            expect(subject).to eq "filter_partial_case_flag" => [""],
-                                  "parent_id" => search_query.id
+            expect(case_partial_case_flag_filter.crumbs[0].second).to eq "filter_partial_case_flag" => [""],
+                                                                         "parent_id" => search_query.id
           }
         end
       end

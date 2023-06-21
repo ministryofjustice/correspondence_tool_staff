@@ -5,11 +5,8 @@ describe ComplaintCaseUpdaterService do
     let(:team)          { find_or_create :team_branston }
     let(:user)          { team.users.first }
     let(:kase)          { create :offender_sar_complaint, current_state: "waiting_for_data", complaint_type: "ico_complaint" }
-    let(:state_machine) { double ConfigurableStateMachine::Machine, edit_case!: true }
-
-    before do
-      @service = described_class.new(user, kase, params)
-    end
+    let(:state_machine) { double ConfigurableStateMachine::Machine, edit_case!: true } # rubocop:disable RSpec/VerifiedDoubles
+    let(:service)       { described_class.new(user, kase, params) }
 
     context "when the case type is changed" do
       let(:params) do
@@ -20,7 +17,7 @@ describe ComplaintCaseUpdaterService do
       end
 
       it "the case status to is resent to to_be_assessed" do
-        @service.call
+        service.call
 
         expect(kase.current_state).to eq "to_be_assessed"
       end
@@ -34,7 +31,7 @@ describe ComplaintCaseUpdaterService do
       end
 
       it "the case state remains the same" do
-        @service.call
+        service.call
 
         expect(kase.current_state).to eq "waiting_for_data"
         expect(kase.priority).to eq "high"
@@ -51,7 +48,7 @@ describe ComplaintCaseUpdaterService do
       end
 
       it "the case state remains the same" do
-        @service.call
+        service.call
 
         expect(kase.current_state).to eq "waiting_for_data"
         expect(kase.priority).to eq "high"

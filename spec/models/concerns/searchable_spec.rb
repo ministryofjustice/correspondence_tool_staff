@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable
 RSpec.describe Searchable do
   before do
     @searchable_class = Class.new do
@@ -87,3 +88,4 @@ RSpec.describe Searchable do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable

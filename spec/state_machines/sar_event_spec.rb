@@ -1,8 +1,16 @@
 require "rails_helper"
 
-describe "state machine" do
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
+describe "event machine" do
+  def all_user_teams
+    @setup.user_teams
+  end
+
+  def all_cases
+    @setup.cases
+  end
+
   before(:all) do
-    DbHousekeeping.clean
     @setup = StandardSetup.new(
       only_cases: %i[
         sar_noff_unassigned
@@ -20,9 +28,11 @@ describe "state machine" do
 
   after(:all) { DbHousekeeping.clean }
 
-  describe :assign_to_new_team do
+  describe "assign_to_new_team" do
+    let(:event) { :assign_to_new_team }
+
     it {
-      expect(subject).to permit_event_to_be_triggered_only_by(
+      expect(event).to permit_event_to_be_triggered_only_by(
         %i[disclosure_bmt sar_noff_awresp],
         %i[disclosure_bmt sar_noff_draft],
         %i[disclosure_bmt sar_noff_trig_awresp],
@@ -33,15 +43,28 @@ describe "state machine" do
     }
 
     it {
-      expect(subject).to permit_event_to_be_triggered_only_by(
+      expect(event).to permit_event_to_be_triggered_only_by(
         %i[disclosure_bmt sar_noff_closed],
       ).with_transition_to(:closed)
     }
+
+    it {
+      expect(event).to have_after_hook(
+        %i[disclosure_bmt sar_noff_awresp],
+        %i[disclosure_bmt sar_noff_draft],
+        %i[disclosure_bmt sar_noff_trig_awresp],
+        %i[disclosure_bmt sar_noff_trig_awresp_accepted],
+        %i[disclosure_bmt sar_noff_trig_draft],
+        %i[disclosure_bmt sar_noff_trig_draft_accepted],
+      ).with_hook("Workflows::Hooks", :assign_responder_email)
+    }
   end
 
-  describe :update_closure do
+  describe "update_closure" do
+    let(:event) { :update_closure }
+
     it {
-      expect(subject).to permit_event_to_be_triggered_only_by(
+      expect(event).to permit_event_to_be_triggered_only_by(
         %i[sar_responder sar_noff_closed],
         %i[another_sar_responder_in_same_team sar_noff_closed],
         %i[disclosure_bmt sar_noff_closed],
@@ -51,9 +74,11 @@ describe "state machine" do
 
   ############## EMAIL TESTS ################
 
-  describe :add_message_to_case do
+  describe "add_message_to_case" do
+    let(:event) { :add_message_to_case }
+
     it {
-      expect(subject).to have_after_hook(
+      expect(event).to have_after_hook(
         %i[disclosure_bmt sar_noff_draft],
         %i[disclosure_bmt sar_noff_trig_draft],
         %i[disclosure_bmt sar_noff_trig_draft_accepted],
@@ -72,30 +97,21 @@ describe "state machine" do
     }
   end
 
-  describe :assign_responder do
+  describe "assign_responder" do
+    let(:event) { :assign_responder }
+
     it {
-      expect(subject).to have_after_hook(
+      expect(event).to have_after_hook(
         %i[disclosure_bmt sar_noff_unassigned],
       ).with_hook("Workflows::Hooks", :assign_responder_email)
     }
   end
 
-  describe :assign_to_new_team do
-    it {
-      expect(subject).to have_after_hook(
-        %i[disclosure_bmt sar_noff_awresp],
-        %i[disclosure_bmt sar_noff_draft],
-        %i[disclosure_bmt sar_noff_trig_awresp],
-        %i[disclosure_bmt sar_noff_trig_awresp_accepted],
-        %i[disclosure_bmt sar_noff_trig_draft],
-        %i[disclosure_bmt sar_noff_trig_draft_accepted],
-      ).with_hook("Workflows::Hooks", :assign_responder_email)
-    }
-  end
+  describe "close" do
+    let(:event) { :close }
 
-  describe :close do
     it {
-      expect(subject).to have_after_hook(
+      expect(event).to have_after_hook(
         %i[sar_responder sar_noff_draft],
         %i[sar_responder sar_noff_trig_awdis],
         %i[another_sar_responder_in_same_team sar_noff_draft],
@@ -104,9 +120,11 @@ describe "state machine" do
     }
   end
 
-  describe :reassign_user do
+  describe "reassign_user" do
+    let(:event) { :reassign_user }
+
     it {
-      expect(subject).to have_after_hook(
+      expect(event).to have_after_hook(
         %i[disclosure_specialist sar_noff_trig_awdis],
         %i[disclosure_specialist sar_noff_trig_awresp_accepted],
         %i[disclosure_specialist sar_noff_trig_draft_accepted],
@@ -125,9 +143,11 @@ describe "state machine" do
     }
   end
 
-  describe :progress_for_clearance do
+  describe "progress_for_clearance" do
+    let(:event) { :progress_for_clearance }
+
     it {
-      expect(subject).to have_after_hook(
+      expect(event).to have_after_hook(
         %i[sar_responder sar_noff_trig_draft_accepted],
         %i[sar_responder sar_noff_trig_draft],
         %i[another_sar_responder_in_same_team sar_noff_trig_draft_accepted],
@@ -135,12 +155,5 @@ describe "state machine" do
       ).with_hook("Workflows::Hooks", :notify_approver_ready_for_review)
     }
   end
-
-  def all_user_teams
-    @setup.user_teams
-  end
-
-  def all_cases
-    @setup.cases
-  end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

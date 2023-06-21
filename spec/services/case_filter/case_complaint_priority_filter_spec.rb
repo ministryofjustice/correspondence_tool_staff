@@ -4,17 +4,6 @@ describe CaseFilter::CaseComplaintPriorityFilter do
   let(:user) { find_or_create :branston_user }
   let(:case_complaint_prority_filter) { described_class.new search_query, user, Case::Base }
 
-  before :all do
-    DbHousekeeping.clean
-
-    @offender_sar_complaint_normal = create :offender_sar_complaint, priority: "normal"
-    @offender_sar_complaint_normal1 = create :offender_sar_complaint, priority: "normal"
-
-    @offender_sar_complaint_high = create :offender_sar_complaint, priority: "high"
-  end
-
-  after(:all) { DbHousekeeping.clean }
-
   describe ".available_case_complaint_types" do
     subject    { case_complaint_prority_filter.available_choices.values[0] }
 
@@ -45,6 +34,10 @@ describe CaseFilter::CaseComplaintPriorityFilter do
   end
 
   describe "#call" do
+    let!(:offender_sar_complaint_normal) { create :offender_sar_complaint, priority: "normal" }
+    let!(:offender_sar_complaint_normal1) { create :offender_sar_complaint, priority: "normal" }
+    let!(:offender_sar_complaint_high) { create :offender_sar_complaint, priority: "high" }
+
     describe "filtering for standard complaint cases" do
       let(:search_query) do
         create :search_query,
@@ -54,8 +47,8 @@ describe CaseFilter::CaseComplaintPriorityFilter do
       it "returns the correct list of cases" do
         results = case_complaint_prority_filter.call
         expect(results).to match_array [
-          @offender_sar_complaint_normal,
-          @offender_sar_complaint_normal1,
+          offender_sar_complaint_normal,
+          offender_sar_complaint_normal1,
         ]
       end
     end
@@ -69,7 +62,7 @@ describe CaseFilter::CaseComplaintPriorityFilter do
       it "returns the correct list of cases" do
         results = case_complaint_prority_filter.call
         expect(results).to match_array [
-          @offender_sar_complaint_high,
+          offender_sar_complaint_high,
         ]
       end
     end
@@ -103,10 +96,8 @@ describe CaseFilter::CaseComplaintPriorityFilter do
         end
 
         describe "params that will be submitted when clicking on the crumb" do
-          subject { case_complaint_prority_filter.crumbs[0].second }
-
           it {
-            expect(subject).to eq "filter_complaint_priority" => [""],
+            expect(case_complaint_prority_filter.crumbs[0].second).to eq "filter_complaint_priority" => [""],
                                   "parent_id" => search_query.id
           }
         end

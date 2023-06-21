@@ -31,8 +31,9 @@
 require "rails_helper"
 
 describe Case::SAR::InternalReview do
+  require Rails.root.join("db/seeders/case_closure_metadata_seeder")
+
   before :all do
-    require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
     CaseClosure::MetadataSeeder.seed!
   end
 
@@ -148,7 +149,7 @@ describe Case::SAR::InternalReview do
     it "validates presence if attached request files is missing on update" do
       kase = create :sar_internal_review, uploaded_request_files: [], message: "foo"
       expect(kase).to be_valid
-      kase.update!(message: "")
+      kase.update(message: "") # rubocop:disable Rails/SaveBang
       expect(kase).not_to be_valid
       expect(kase.errors[:message])
         .to eq ["cannot be blank if no request files attached"]
@@ -196,33 +197,36 @@ describe Case::SAR::InternalReview do
   end
 
   describe "papertrail versioning", versioning: true do
+    let(:kase) do
+      create :sar_internal_review,
+             name: "aaa",
+             email: "aa@moj.com",
+             received_date: Time.zone.today,
+             subject: "subject A"
+    end
+
     before do
-      @kase = create :sar_internal_review,
-                     name: "aaa",
-                     email: "aa@moj.com",
-                     received_date: Time.zone.today,
-                     subject: "subject A"
-      @kase.update! name: "bbb",
-                    email: "bb@moj.com",
-                    received_date: 1.day.ago,
-                    subject: "subject B"
+      kase.update! name: "bbb",
+                   email: "bb@moj.com",
+                   received_date: 1.day.ago,
+                   subject: "subject B"
     end
 
     it "saves all values in the versions object hash" do
-      version_hash = YAML.load(@kase.versions.last.object, permitted_classes: [Time, Date])
+      version_hash = YAML.load(kase.versions.last.object, permitted_classes: [Time, Date])
       expect(version_hash["email"]).to eq "aa@moj.com"
       expect(version_hash["received_date"]).to eq Time.zone.today
       expect(version_hash["subject"]).to eq "subject A"
     end
 
     it "can reconsititue a record from a version (except for received_date)" do
-      original_kase = @kase.versions.last.reify
+      original_kase = kase.versions.last.reify
       expect(original_kase.email).to eq "aa@moj.com"
       expect(original_kase.subject).to eq "subject A"
     end
 
     it "reconstitutes the received date properly" do
-      original_kase = @kase.versions.last.reify
+      original_kase = kase.versions.last.reify
       expect(original_kase.received_date).to eq Time.zone.today
     end
   end

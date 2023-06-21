@@ -14,12 +14,12 @@ RSpec.describe PasswordsController, type: :controller do
       }
     end
 
-    before { @request.env["devise.mapping"] = Devise.mappings[:user] }
+    before { request.env["devise.mapping"] = Devise.mappings[:user] }
 
     context "when user is deactivated" do
       it "sends reset password mail" do
         mailer = double("mailer")
-        expect(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
+        allow(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
         expect(mailer).to receive(:deliver)
         post(:create, params:)
 
@@ -47,7 +47,7 @@ RSpec.describe PasswordsController, type: :controller do
 
           mailer = double("mailer", deliver: nil)
           expect(DeviseMailer).not_to receive(:account_not_active)
-          expect(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
+          allow(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
           expect(mailer).to receive(:deliver)
           post(:create, params:)
 
@@ -61,7 +61,7 @@ RSpec.describe PasswordsController, type: :controller do
 
           mailer = double("mailer", deliver: nil)
           expect(DeviseMailer).not_to receive(:account_not_active)
-          expect(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
+          allow(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
           expect(mailer).to receive(:deliver)
           post(:create, params:)
 

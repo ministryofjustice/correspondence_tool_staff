@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 RSpec.describe Case::Base, type: :model do
   let(:responding_team) { find_or_create :foi_responding_team }
   let(:responder)       { responding_team.responders.first }
@@ -25,11 +26,8 @@ RSpec.describe Case::Base, type: :model do
 
   context "when flagged for approval scopes" do
     before(:all) do
-      Team.all.map(&:destroy)
-      TeamsUsersRole.all.map(&:destroy)
       @team_1 = create :approving_team, name: "DACU APPROVING 1"
       @team_2 = create :approving_team, name: "DACU APPROVING 2"
-      @unflagged = create :case, name: "Unfagged"
       @flagged_t1 = create :case, :flagged, approving_team: @team_1, name: "Flagged team 1"
       @flagged_t2 = create :case, :flagged, approving_team: @team_2, name: "Flagged team 2"
       @accepted_t1 = create :case, :flagged_accepted, approving_team: @team_1, name: "Accepted team 1"
@@ -384,3 +382,4 @@ RSpec.describe Case::Base, type: :model do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

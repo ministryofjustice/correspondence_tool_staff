@@ -1,16 +1,6 @@
 require "rails_helper"
 
 describe CaseFilter::CaseRetentionDeadlineFilter do
-  before(:all) do
-    DbHousekeeping.clean
-    @offender_sar_retention_2018 = create(:offender_sar_complaint, :closed, :with_retention_schedule, planned_destruction_date: Time.zone.local(2018, 5, 15))
-    @offender_sar_retention_2020 = create(:offender_sar_case, :closed, :with_retention_schedule, planned_destruction_date: Time.zone.local(2020, 5, 15))
-  end
-
-  after(:all) do
-    DbHousekeeping.clean
-  end
-
   let(:user) { find_or_create(:branston_user) }
   let(:filter) { described_class.new search_query, user, Case::Base.joins(:retention_schedule) }
 
@@ -61,6 +51,9 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
   end
 
   describe "#call" do
+    let!(:offender_sar_retention_2018) { create(:offender_sar_complaint, :closed, :with_retention_schedule, planned_destruction_date: Time.zone.local(2018, 5, 15)) }
+    let!(:offender_sar_retention_2020) { create(:offender_sar_case, :closed, :with_retention_schedule, planned_destruction_date: Time.zone.local(2020, 5, 15)) }
+
     context "when no cases with deadline in date range" do
       let(:search_query) do
         create :search_query,
@@ -81,7 +74,7 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
       end
 
       it "returns all the cases in the range" do
-        expect(filter.call).to eq([@offender_sar_retention_2018, @offender_sar_retention_2020])
+        expect(filter.call).to eq([offender_sar_retention_2018, offender_sar_retention_2020])
       end
     end
 
@@ -93,7 +86,7 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
       end
 
       it "returns only the cases in the range" do
-        expect(filter.call).to eq([@offender_sar_retention_2020])
+        expect(filter.call).to eq([offender_sar_retention_2020])
       end
     end
   end
@@ -123,12 +116,10 @@ describe CaseFilter::CaseRetentionDeadlineFilter do
       end
 
       describe "params that will be submitted when clicking on the crumb" do
-        subject { filter.crumbs[0].second }
-
         it {
-          expect(subject).to eq "planned_destruction_date_from" => "",
-                                "planned_destruction_date_to" => "",
-                                "parent_id" => search_query.id
+          expect(filter.crumbs[0].second).to eq "planned_destruction_date_from" => "",
+                                                "planned_destruction_date_to" => "",
+                                                "parent_id" => search_query.id
         }
       end
     end

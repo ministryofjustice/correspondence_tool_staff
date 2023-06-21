@@ -103,14 +103,14 @@ describe Case::OverturnedICO::SAR do
 
         context "when createed" do
           it "errors" do
-            record = described_class.create!(received_date: 41.days.ago)
+            record = described_class.create(received_date: 41.days.ago) # rubocop:disable Rails/SaveBang
             expect(record.errors[:received_date]).to eq ["of decision from ICO must be within 40 days of today"]
           end
         end
 
         context "when existing record" do
           it "does not error" do
-            record = described_class.create!(received_date: 41.days.ago)
+            record = described_class.create(received_date: 41.days.ago) # rubocop:disable Rails/SaveBang
             allow(record).to receive(:new_record?).and_return(false)
             record.valid?
             expect(record.errors[:received_date]).to be_empty
@@ -268,31 +268,29 @@ describe Case::OverturnedICO::SAR do
     let(:link_case_1)             { create :sar_case }
     let(:link_case_2)             { create :sar_case }
     let(:link_case_3)             { create :sar_case }
-    # let(:original_ico_appeal)     { create :ico_sar_case, original_case: original_case }
     let(:original_ico_appeal)     { create(:closed_ico_sar_case, :overturned_by_ico) }
-    # let(:original_ico_appeal)     { create(:closed_ico_sar_case, :overturned_by_ico, original_case: original_case) }
-    # let(:original_case)           { create :sar_case }
+    let(:kase) do
+      create :overturned_ico_sar,
+             original_ico_appeal:,
+             original_case: original_ico_appeal.original_case,
+             received_date: Time.zone.today,
+             external_deadline: 1.month.from_now.to_date
+    end
 
     before do
-      @kase = create :overturned_ico_sar,
-                     original_ico_appeal:,
-                     original_case: original_ico_appeal.original_case,
-                     received_date: Time.zone.today,
-                     external_deadline: 1.month.from_now.to_date
+      kase.original_case.linked_cases << link_case_1
+      kase.original_case.linked_cases << link_case_2
 
-      @kase.original_case.linked_cases << link_case_1
-      @kase.original_case.linked_cases << link_case_2
-
-      @kase.original_ico_appeal.linked_cases << link_case_2
-      @kase.original_ico_appeal.linked_cases << link_case_3
+      kase.original_ico_appeal.linked_cases << link_case_2
+      kase.original_ico_appeal.linked_cases << link_case_3
     end
 
     it "links all the cases linked to the original case and the original_ico_appeal" do
-      @kase.link_related_cases
+      kase.link_related_cases
 
-      expect(@kase.linked_cases).to match_array [
-        @kase.original_case,
-        @kase.original_ico_appeal,
+      expect(kase.linked_cases).to match_array [
+        kase.original_case,
+        kase.original_ico_appeal,
         link_case_1,
         link_case_2,
         link_case_3,
@@ -300,13 +298,13 @@ describe Case::OverturnedICO::SAR do
     end
 
     it "links the overturned case to the original appeal" do
-      @kase.link_related_cases
-      expect(@kase.original_ico_appeal.linked_cases).to include(@kase)
+      kase.link_related_cases
+      expect(kase.original_ico_appeal.linked_cases).to include(kase)
     end
 
     it "links the overturned case to the original case" do
-      @kase.link_related_cases
-      expect(@kase.original_case.linked_cases).to include(@kase)
+      kase.link_related_cases
+      expect(kase.original_case.linked_cases).to include(kase)
     end
   end
 

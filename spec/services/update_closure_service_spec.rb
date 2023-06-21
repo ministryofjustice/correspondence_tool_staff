@@ -8,13 +8,15 @@ describe UpdateClosureService do
     let(:user)                  { team.users.first }
     let(:kase)                  { create :closed_case, received_date: date_received }
     let(:state_machine)         do
-      double ConfigurableStateMachine::Machine,
-             update_closure!: true,
-             teams_that_can_trigger_event_on_case: [team]
+      double( # rubocop:disable RSpec/VerifiedDoubles
+        ConfigurableStateMachine::Machine,
+        update_closure!: true,
+        teams_that_can_trigger_event_on_case: [team],
+      )
     end
+    let(:service) { described_class.new(kase, user, params) }
 
     before do
-      @service = described_class.new(kase, user, params)
       allow(kase).to receive(:state_machine).and_return(state_machine)
       allow(state_machine).to receive(:teams_that_can_trigger_event_on_case!).with(
         event_name: "update_closure",
@@ -32,19 +34,19 @@ describe UpdateClosureService do
       end
 
       it "changes the attributes on the case" do
-        @service.call
+        service.call
         expect(kase.date_responded).to eq new_date_responded
       end
 
       it "transitions the cases state" do
         expect(state_machine).to receive(:update_closure!)
                                    .with(acting_user: user, acting_team: team)
-        @service.call
+        service.call
       end
 
       it "sets results to :ok" do
-        @service.call
-        expect(@service.result).to eq :ok
+        service.call
+        expect(service.result).to eq :ok
       end
     end
   end

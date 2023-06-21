@@ -1,13 +1,14 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe ReportTypePolicy::Scope do
   describe "report type scope policy" do
     before(:all) do
       DbHousekeeping.clean(seed: true)
       @managing_team = create :team_dacu
 
-      @manager                        = find_or_create :disclosure_bmt_user
-      @responder                      = find_or_create :branston_user
+      @manager = find_or_create :disclosure_bmt_user
+      @responder = find_or_create :branston_user
 
       create :report_type
       @report1 = create :report_type, standard_report: true, sar: true, foi: true
@@ -49,3 +50,4 @@ describe ReportTypePolicy::Scope do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

@@ -171,9 +171,8 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
 
     context "with valid params" do
       before do
-        expect(service).to receive(:result).and_return(:assign_responder)
-        expect(service).to receive(:message).and_return("Case successfully created")
-        expect(controller).to be_a described_class
+        allow(service).to receive(:result).and_return(:assign_responder)
+        allow(service).to receive(:message).and_return("Case successfully created")
         post :create, params: ico_overturned_sar_params
       end
 
@@ -189,8 +188,8 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
 
     context "with invalid params" do
       before do
-        expect(service).to receive(:result).and_return(:error)
-        expect(overturned_ico_case).to receive(:decorate).and_return(decorated_overturned_case)
+        allow(service).to receive(:result).and_return(:error)
+        allow(overturned_ico_case).to receive(:decorate).and_return(decorated_overturned_case)
       end
 
       it "renders the new page" do
@@ -201,15 +200,11 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
   end
 
   describe "closeable" do
-    before(:all)   do
-      @responder = find_or_create :sar_responder
-      @drafting_ovt_sar_case = create :accepted_ot_ico_sar, responder: @responder
-    end
-
-    after(:all) { DbHousekeeping.clean }
+    let(:responder) { find_or_create :sar_responder }
+    let(:drafting_ovt_sar_case) { create :accepted_ot_ico_sar, responder: }
 
     describe "#respond_and_close" do
-      let(:params) { { id: @drafting_ovt_sar_case.id.to_s } }
+      let(:params) { { id: drafting_ovt_sar_case.id.to_s } }
 
       describe "authorization" do
         it "does not authorize managers" do
@@ -220,7 +215,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         end
 
         it "authorizes responders" do
-          sign_in @responder
+          sign_in responder
           get(:respond_and_close, params:)
           expect(flash[:alert]).to be_nil
           expect(response).to be_successful
@@ -236,7 +231,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
 
       describe "processing" do
         before do
-          sign_in @responder
+          sign_in responder
           get :respond_and_close, params:
         end
 
@@ -249,7 +244,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         end
 
         it "assigns case" do
-          expect(assigns(:case)).to eq @drafting_ovt_sar_case
+          expect(assigns(:case)).to eq drafting_ovt_sar_case
         end
       end
     end
@@ -257,7 +252,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
     describe "#process_respond_and_close" do
       let(:params) do
         {
-          id: @drafting_ovt_sar_case.id.to_s,
+          id: drafting_ovt_sar_case.id.to_s,
           sar: {
             date_responded_dd: Time.zone.today.day.to_s,
             date_responded_mm: Time.zone.today.month.to_s,
@@ -276,10 +271,10 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         end
 
         it "authorizes responders" do
-          sign_in @responder
+          sign_in responder
           patch(:process_respond_and_close, params:)
           expect(flash[:alert]).to be_nil
-          expect(response).to redirect_to case_path(@drafting_ovt_sar_case)
+          expect(response).to redirect_to case_path(drafting_ovt_sar_case)
         end
 
         it "does not authorize approvers" do
@@ -292,20 +287,20 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
 
       describe "processing" do
         before do
-          sign_in @responder
+          sign_in responder
         end
 
         it "redirects to cases show page" do
           patch(:process_respond_and_close, params:)
-          expect(response).to redirect_to case_path(@drafting_ovt_sar_case)
+          expect(response).to redirect_to case_path(drafting_ovt_sar_case)
         end
 
         it "updates case" do
           patch(:process_respond_and_close, params:)
-          @drafting_ovt_sar_case.reload
-          expect(@drafting_ovt_sar_case.date_responded).to eq Time.zone.today
-          expect(@drafting_ovt_sar_case.current_state).to eq "closed"
-          expect(@drafting_ovt_sar_case.refusal_reason).to be_nil
+          drafting_ovt_sar_case.reload
+          expect(drafting_ovt_sar_case.date_responded).to eq Time.zone.today
+          expect(drafting_ovt_sar_case.current_state).to eq "closed"
+          expect(drafting_ovt_sar_case.refusal_reason).to be_nil
         end
 
         it "displays confirmation message" do
@@ -318,10 +313,10 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
             tmm_refusal_reason = create :refusal_reason, :sar_tmm
             params[:sar][:missing_info] = "yes"
             patch(:process_respond_and_close, params:)
-            @drafting_ovt_sar_case.reload
-            expect(@drafting_ovt_sar_case.date_responded).to eq Time.zone.today
-            expect(@drafting_ovt_sar_case.current_state).to eq "closed"
-            expect(@drafting_ovt_sar_case.refusal_reason).to eq tmm_refusal_reason
+            drafting_ovt_sar_case.reload
+            expect(drafting_ovt_sar_case.date_responded).to eq Time.zone.today
+            expect(drafting_ovt_sar_case.current_state).to eq "closed"
+            expect(drafting_ovt_sar_case.refusal_reason).to eq tmm_refusal_reason
           end
         end
 

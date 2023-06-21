@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll, RSpec/RepeatedExample
 describe Case::BasePolicy do
   subject { described_class }
 
@@ -653,3 +654,4 @@ describe Case::BasePolicy do
     it { is_expected.to permit(branston_user,             offender_sar_complaint) }
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll, RSpec/RepeatedExample

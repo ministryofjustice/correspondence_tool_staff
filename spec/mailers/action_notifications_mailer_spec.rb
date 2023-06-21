@@ -45,16 +45,16 @@ RSpec.describe ActionNotificationsMailer, type: :mailer do
     end
 
     context "when ICO Appeal" do
-      before do
-        @original_case = create :assigned_case,
-                                name: "Fyodor Ognievich Ilichion",
-                                received_date: 10.business_days.ago,
-                                subject: "The anatomy of man"
+      let!(:original_case) do
+        create :assigned_case,
+               name: "Fyodor Ognievich Ilichion",
+               received_date: 10.business_days.ago,
+               subject: "The anatomy of man"
       end
 
       let(:assigned_ico_case) do
         create :awaiting_responder_ico_foi_case,
-               original_case: @original_case,
+               original_case:,
                received_date: 10.business_days.ago
       end
       let(:assignment)          { assigned_ico_case.responder_assignment }

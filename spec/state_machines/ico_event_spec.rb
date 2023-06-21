@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe "state machine" do
   def all_user_teams
     @setup.user_teams
@@ -63,8 +64,10 @@ describe "state machine" do
     end
 
     describe "accept_approver_assignment" do
+      let(:event) { :accept_approver_assignment }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_unassigned],
           %i[disclosure_specialist ico_foi_awaiting_responder],
           %i[disclosure_specialist ico_foi_accepted],
@@ -82,19 +85,23 @@ describe "state machine" do
     end
 
     describe "accept_responder_assignment" do
+      let(:event) { :accept_responder_assignment }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[responder ico_foi_awaiting_responder],
           %i[sar_responder ico_sar_awaiting_responder],
           %i[another_responder_in_same_team ico_foi_awaiting_responder],
           %i[another_sar_responder_in_same_team ico_sar_awaiting_responder],
-        ).debug
+        )
       }
     end
 
     describe "add_message_to_case" do
+      let(:event) { :add_message_to_case }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
           %i[disclosure_bmt ico_foi_awaiting_responder],
           %i[disclosure_bmt ico_foi_accepted],
@@ -163,29 +170,94 @@ describe "state machine" do
           %i[disclosure_specialist_coworker ico_sar_closed],
         )
       }
+
+      it {
+        expect(event).to have_after_hook(
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_foi_pending_dacu],
+          %i[disclosure_bmt ico_foi_awaiting_dispatch],
+          %i[disclosure_bmt ico_foi_responded],
+          %i[disclosure_bmt ico_sar_accepted],
+          %i[disclosure_bmt ico_sar_pending_dacu],
+          %i[disclosure_bmt ico_sar_awaiting_dispatch],
+          %i[disclosure_bmt ico_sar_responded],
+          %i[responder ico_foi_accepted],
+          %i[responder ico_foi_pending_dacu],
+          %i[responder ico_foi_awaiting_dispatch],
+          %i[responder ico_foi_responded],
+          %i[sar_responder ico_sar_accepted],
+          %i[sar_responder ico_sar_pending_dacu],
+          %i[sar_responder ico_sar_awaiting_dispatch],
+          %i[sar_responder ico_sar_responded],
+          %i[another_responder_in_same_team ico_foi_accepted],
+          %i[another_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_foi_responded],
+          %i[another_sar_responder_in_same_team ico_sar_accepted],
+          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_sar_responded],
+          %i[disclosure_specialist ico_foi_accepted],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist ico_foi_responded],
+          %i[disclosure_specialist ico_sar_accepted],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist ico_sar_responded],
+          %i[disclosure_specialist_coworker ico_foi_accepted],
+          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_foi_responded],
+          %i[disclosure_specialist_coworker ico_sar_accepted],
+          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_sar_responded],
+        ).with_hook("Workflows::Hooks", :notify_responder_message_received)
+      }
     end
 
     describe "approve" do
+      let(:event) { :approve }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_pending_dacu],
           %i[disclosure_specialist ico_sar_pending_dacu],
         )
       }
+
+      it {
+        expect(event).to have_after_hook(
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+        ).with_hook("Workflows::Hooks", :notify_responder_ready_to_send)
+      }
     end
 
     describe "assign_responder" do
+      let(:event) { :assign_responder }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
           %i[disclosure_bmt ico_sar_unassigned],
         )
       }
+
+      it {
+        expect(event).to have_after_hook(
+          %i[disclosure_bmt ico_foi_unassigned],
+          %i[disclosure_bmt ico_sar_unassigned],
+        ).with_hook("Workflows::Hooks", :assign_responder_email)
+      }
     end
 
     describe "assign_to_new_team" do
+      let(:event) { :assign_to_new_team }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_awaiting_responder],
           %i[disclosure_bmt ico_foi_accepted],
           %i[disclosure_bmt ico_foi_closed],
@@ -194,11 +266,22 @@ describe "state machine" do
           %i[disclosure_bmt ico_sar_closed],
         )
       }
+
+      it {
+        expect(event).to have_after_hook(
+          %i[disclosure_bmt ico_foi_awaiting_responder],
+          %i[disclosure_bmt ico_foi_accepted],
+          %i[disclosure_bmt ico_sar_awaiting_responder],
+          %i[disclosure_bmt ico_sar_accepted],
+        ).with_hook("Workflows::Hooks", :assign_responder_email)
+      }
     end
 
     describe "close" do
+      let(:event) { :close }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_responded],
           %i[disclosure_bmt ico_sar_responded],
         )
@@ -206,8 +289,10 @@ describe "state machine" do
     end
 
     describe "destroy_case" do
+      let(:event) { :destroy_case }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
           %i[disclosure_bmt ico_foi_awaiting_responder],
           %i[disclosure_bmt ico_foi_accepted],
@@ -227,8 +312,10 @@ describe "state machine" do
     end
 
     describe "edit_case" do
+      let(:event) { :edit_case }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
           %i[disclosure_bmt ico_foi_awaiting_responder],
           %i[disclosure_bmt ico_foi_accepted],
@@ -248,8 +335,10 @@ describe "state machine" do
     end
 
     describe "flag_for_clearance" do
+      let(:event) { :flag_for_clearance }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
           %i[disclosure_bmt ico_sar_unassigned],
         )
@@ -257,8 +346,10 @@ describe "state machine" do
     end
 
     describe "link_a_case" do
+      let(:event) { :link_a_case }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
           %i[disclosure_bmt ico_foi_awaiting_responder],
           %i[disclosure_bmt ico_foi_accepted],
@@ -435,8 +526,10 @@ describe "state machine" do
     end
 
     describe "reassign_user" do
+      let(:event) { :reassign_user }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[responder ico_foi_accepted],
           %i[sar_responder ico_sar_accepted],
           %i[responder ico_foi_pending_dacu],
@@ -471,22 +564,63 @@ describe "state machine" do
           %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
         )
       }
+
+      it {
+        expect(event).to have_after_hook(
+          %i[responder ico_foi_accepted],
+          %i[responder ico_foi_pending_dacu],
+          %i[responder ico_foi_awaiting_dispatch],
+          %i[sar_responder ico_sar_accepted],
+          %i[sar_responder ico_sar_pending_dacu],
+          %i[sar_responder ico_sar_awaiting_dispatch],
+          %i[another_responder_in_same_team ico_foi_accepted],
+          %i[another_responder_in_same_team ico_foi_pending_dacu],
+          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
+          %i[another_sar_responder_in_same_team ico_sar_accepted],
+          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
+          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist ico_foi_unassigned],
+          %i[disclosure_specialist ico_foi_awaiting_responder],
+          %i[disclosure_specialist ico_foi_accepted],
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist ico_sar_unassigned],
+          %i[disclosure_specialist ico_sar_awaiting_responder],
+          %i[disclosure_specialist ico_sar_accepted],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+          %i[disclosure_specialist ico_sar_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_foi_unassigned],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_foi_accepted],
+          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
+          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
+          %i[disclosure_specialist_coworker ico_sar_unassigned],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_responder],
+          %i[disclosure_specialist_coworker ico_sar_accepted],
+          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
+          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
+        ).with_hook("Workflows::Hooks", :reassign_user_email)
+      }
     end
 
     describe "reject_responder_assignment" do
+      let(:event) { :reject_responder_assignment }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[responder ico_foi_awaiting_responder],
           %i[sar_responder ico_sar_awaiting_responder],
           %i[another_responder_in_same_team ico_foi_awaiting_responder],
           %i[another_sar_responder_in_same_team ico_sar_awaiting_responder],
-        ).debug
+        )
       }
     end
 
     describe "remove_linked_case" do
+      let(:event) { :remove_linked_case }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_bmt ico_foi_unassigned],
           %i[disclosure_bmt ico_foi_awaiting_responder],
           %i[disclosure_bmt ico_foi_accepted],
@@ -663,8 +797,10 @@ describe "state machine" do
     end
 
     describe "respond" do
+      let(:event) { :respond }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_awaiting_dispatch],
           %i[disclosure_specialist ico_sar_awaiting_dispatch],
           %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
@@ -674,8 +810,10 @@ describe "state machine" do
     end
 
     describe "unaccept_approver_assignment" do
+      let(:event) { :unaccept_approver_assignment }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_pending_dacu],
           %i[disclosure_specialist ico_sar_pending_dacu],
         )
@@ -683,155 +821,38 @@ describe "state machine" do
     end
 
     describe "upload_response_and_approve" do
+      let(:event) { :upload_response_and_approve }
+
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
+        expect(event).to permit_event_to_be_triggered_only_by(
           %i[disclosure_specialist ico_foi_pending_dacu],
           %i[disclosure_specialist ico_sar_pending_dacu],
         )
       }
-    end
 
-    describe "upload_response_and_return_for_redraft" do
       it {
-        expect(subject).to permit_event_to_be_triggered_only_by(
-          %i[disclosure_specialist ico_foi_pending_dacu],
-          %i[disclosure_specialist ico_sar_pending_dacu],
-        )
-      }
-    end
-
-    ############## EMAIL TESTS ################
-
-    describe "add_message_to_case" do
-      it {
-        expect(subject).to have_after_hook(
-          %i[disclosure_bmt ico_foi_accepted],
-          %i[disclosure_bmt ico_foi_pending_dacu],
-          %i[disclosure_bmt ico_foi_awaiting_dispatch],
-          %i[disclosure_bmt ico_foi_responded],
-          %i[disclosure_bmt ico_sar_accepted],
-          %i[disclosure_bmt ico_sar_pending_dacu],
-          %i[disclosure_bmt ico_sar_awaiting_dispatch],
-          %i[disclosure_bmt ico_sar_responded],
-          %i[responder ico_foi_accepted],
-          %i[responder ico_foi_pending_dacu],
-          %i[responder ico_foi_awaiting_dispatch],
-          %i[responder ico_foi_responded],
-          %i[sar_responder ico_sar_accepted],
-          %i[sar_responder ico_sar_pending_dacu],
-          %i[sar_responder ico_sar_awaiting_dispatch],
-          %i[sar_responder ico_sar_responded],
-          %i[another_responder_in_same_team ico_foi_accepted],
-          %i[another_responder_in_same_team ico_foi_pending_dacu],
-          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
-          %i[another_responder_in_same_team ico_foi_responded],
-          %i[another_sar_responder_in_same_team ico_sar_accepted],
-          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
-          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
-          %i[another_sar_responder_in_same_team ico_sar_responded],
-          %i[disclosure_specialist ico_foi_accepted],
-          %i[disclosure_specialist ico_foi_pending_dacu],
-          %i[disclosure_specialist ico_foi_awaiting_dispatch],
-          %i[disclosure_specialist ico_foi_responded],
-          %i[disclosure_specialist ico_sar_accepted],
-          %i[disclosure_specialist ico_sar_pending_dacu],
-          %i[disclosure_specialist ico_sar_awaiting_dispatch],
-          %i[disclosure_specialist ico_sar_responded],
-          %i[disclosure_specialist_coworker ico_foi_accepted],
-          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
-          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
-          %i[disclosure_specialist_coworker ico_foi_responded],
-          %i[disclosure_specialist_coworker ico_sar_accepted],
-          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
-          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
-          %i[disclosure_specialist_coworker ico_sar_responded],
-        ).with_hook("Workflows::Hooks", :notify_responder_message_received)
-      }
-    end
-
-    describe "approve" do
-      it {
-        expect(subject).to have_after_hook(
+        expect(event).to have_after_hook(
           %i[disclosure_specialist ico_sar_pending_dacu],
           %i[disclosure_specialist ico_foi_pending_dacu],
         ).with_hook("Workflows::Hooks", :notify_responder_ready_to_send)
       }
     end
 
-    describe "assign_responder" do
-      it {
-        expect(subject).to have_after_hook(
-          %i[disclosure_bmt ico_foi_unassigned],
-          %i[disclosure_bmt ico_sar_unassigned],
-        ).with_hook("Workflows::Hooks", :assign_responder_email)
-      }
-    end
-
-    describe "assign_to_new_team" do
-      it {
-        expect(subject).to have_after_hook(
-          %i[disclosure_bmt ico_foi_awaiting_responder],
-          %i[disclosure_bmt ico_foi_accepted],
-          %i[disclosure_bmt ico_sar_awaiting_responder],
-          %i[disclosure_bmt ico_sar_accepted],
-        ).with_hook("Workflows::Hooks", :assign_responder_email)
-      }
-    end
-
-    describe "reassign_user" do
-      it {
-        expect(subject).to have_after_hook(
-          %i[responder ico_foi_accepted],
-          %i[responder ico_foi_pending_dacu],
-          %i[responder ico_foi_awaiting_dispatch],
-          %i[sar_responder ico_sar_accepted],
-          %i[sar_responder ico_sar_pending_dacu],
-          %i[sar_responder ico_sar_awaiting_dispatch],
-          %i[another_responder_in_same_team ico_foi_accepted],
-          %i[another_responder_in_same_team ico_foi_pending_dacu],
-          %i[another_responder_in_same_team ico_foi_awaiting_dispatch],
-          %i[another_sar_responder_in_same_team ico_sar_accepted],
-          %i[another_sar_responder_in_same_team ico_sar_pending_dacu],
-          %i[another_sar_responder_in_same_team ico_sar_awaiting_dispatch],
-          %i[disclosure_specialist ico_foi_unassigned],
-          %i[disclosure_specialist ico_foi_awaiting_responder],
-          %i[disclosure_specialist ico_foi_accepted],
-          %i[disclosure_specialist ico_foi_pending_dacu],
-          %i[disclosure_specialist ico_foi_awaiting_dispatch],
-          %i[disclosure_specialist ico_sar_unassigned],
-          %i[disclosure_specialist ico_sar_awaiting_responder],
-          %i[disclosure_specialist ico_sar_accepted],
-          %i[disclosure_specialist ico_sar_pending_dacu],
-          %i[disclosure_specialist ico_sar_awaiting_dispatch],
-          %i[disclosure_specialist_coworker ico_foi_unassigned],
-          %i[disclosure_specialist_coworker ico_foi_awaiting_responder],
-          %i[disclosure_specialist_coworker ico_foi_accepted],
-          %i[disclosure_specialist_coworker ico_foi_pending_dacu],
-          %i[disclosure_specialist_coworker ico_foi_awaiting_dispatch],
-          %i[disclosure_specialist_coworker ico_sar_unassigned],
-          %i[disclosure_specialist_coworker ico_sar_awaiting_responder],
-          %i[disclosure_specialist_coworker ico_sar_accepted],
-          %i[disclosure_specialist_coworker ico_sar_pending_dacu],
-          %i[disclosure_specialist_coworker ico_sar_awaiting_dispatch],
-        ).with_hook("Workflows::Hooks", :reassign_user_email)
-      }
-    end
-
     describe "upload_response_and_return_for_redraft" do
+      let(:event) { :upload_response_and_return_for_redraft }
+
       it {
-        expect(subject).to have_after_hook(
+        expect(event).to permit_event_to_be_triggered_only_by(
+          %i[disclosure_specialist ico_foi_pending_dacu],
+          %i[disclosure_specialist ico_sar_pending_dacu],
+        )
+      }
+
+      it {
+        expect(event).to have_after_hook(
           %i[disclosure_specialist ico_sar_pending_dacu],
           %i[disclosure_specialist ico_foi_pending_dacu],
         ).with_hook("Workflows::Hooks", :notify_responder_redraft_requested)
-      }
-    end
-
-    describe "upload_response_and_approve" do
-      it {
-        expect(subject).to have_after_hook(
-          %i[disclosure_specialist ico_sar_pending_dacu],
-          %i[disclosure_specialist ico_foi_pending_dacu],
-        ).with_hook("Workflows::Hooks", :notify_responder_ready_to_send)
       }
     end
   end

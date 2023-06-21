@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseFinderService do
   def dd(day)
     Date.new(2016, 11, day)
@@ -225,6 +226,8 @@ describe CaseFinderService do
                  identifier: "29-closed offender sar complaint"
       end
     end
+
+    after(:all) { DbHousekeeping.clean }
 
     describe "#for_params" do
       it "filters cases for provided states" do
@@ -653,3 +656,4 @@ describe CaseFinderService do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

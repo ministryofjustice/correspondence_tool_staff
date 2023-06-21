@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe Case::BasePolicy::Scope do
   describe "case scope policy" do
     before(:all) do
@@ -105,3 +106,4 @@ describe Case::BasePolicy::Scope do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

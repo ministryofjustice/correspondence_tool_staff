@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe "cases/overturned_shared/_new.html.slim" do
   let(:bmt_manager)    { find_or_create(:disclosure_bmt_user) }
   let(:ico_appeal)     { @overturned_foi.original_ico_appeal }
@@ -22,6 +23,7 @@ describe "cases/overturned_shared/_new.html.slim" do
   end
 
   after(:all) do
+    # Cleans up objects created in before(:all)
     DbHousekeeping.clean
   end
 
@@ -133,3 +135,4 @@ describe "cases/overturned_shared/_new.html.slim" do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll, RSpec/BeforeAfterAll

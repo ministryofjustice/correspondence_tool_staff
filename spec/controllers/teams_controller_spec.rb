@@ -16,7 +16,7 @@ RSpec.describe TeamsController, type: :controller do
       before { sign_in manager }
 
       it "loads all business groups" do
-        expect(Team).to receive(:where).with(type: "BusinessGroup").and_return(BusinessGroup.order(:name))
+        allow(Team).to receive(:where).with(type: "BusinessGroup").and_return(BusinessGroup.order(:name))
         get :index
         expect(assigns(:teams)).to eq BusinessGroup.order(:name)
       end
@@ -74,23 +74,19 @@ RSpec.describe TeamsController, type: :controller do
       end
 
       context "when viewing a business unit" do
-        before do
-          # @user_1 = create :user, responding_teams: [business_unit]
-          # @user_2 = create :user, responding_teams: [business_unit]
-          @user_1 = find_or_create :foi_responder
-          @user_2 = create :foi_responder, identifier: "foi responder 2"
-        end
+        let!(:user_1) { find_or_create :foi_responder }
+        let!(:user_2) { create :foi_responder, identifier: "foi responder 2" }
 
         it "assigns active users" do
           get :show, params: { id: business_unit.id }
-          expect(assigns(:active_users)).to match_array [@user_1, @user_2]
+          expect(assigns(:active_users)).to match_array [user_1, user_2]
         end
 
         it "calls UserActiveCaseCountService to populate case_counts" do
-          counts = { @user_1.id => 34, @user_2.id => 6 }
-          service = double UserActiveCaseCountService
-          expect(UserActiveCaseCountService).to receive(:new).and_return(service)
-          expect(service).to receive(:case_counts_by_user).with([@user_2, @user_1]).and_return(counts)
+          counts = { user_1.id => 34, user_2.id => 6 }
+          service = instance_double UserActiveCaseCountService
+          allow(UserActiveCaseCountService).to receive(:new).and_return(service)
+          allow(service).to receive(:case_counts_by_user).with([user_2, user_1]).and_return(counts)
 
           get :show, params: { id: business_unit.id }
           expect(assigns(:case_counts)).to eq counts
@@ -432,11 +428,6 @@ RSpec.describe TeamsController, type: :controller do
             "commit" => "Submit",
           }
         end
-
-        it "renders the root path with unauth message" do
-        end
-
-        it "does not update the team"
       end
     end
   end

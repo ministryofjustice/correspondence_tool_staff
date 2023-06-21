@@ -54,13 +54,14 @@ describe Case::FOI::Standard do
   end
 
   describe "papertrail versioning", versioning: true do
+    let(:kase) { create :foi_case, name: "aaa", email: "aa@moj.com", received_date: Time.zone.today, subject: "subject A", postal_address: "10 High Street", requester_type: "journalist" }
+
     before do
-      @kase = create :foi_case, name: "aaa", email: "aa@moj.com", received_date: Time.zone.today, subject: "subject A", postal_address: "10 High Street", requester_type: "journalist"
-      @kase.update!(name: "bbb", email: "bb@moj.com", received_date: 1.day.ago, subject: "subject B", postal_address: "20 Low Street", requester_type: "offender")
+      kase.update!(name: "bbb", email: "bb@moj.com", received_date: 1.day.ago, subject: "subject B", postal_address: "20 Low Street", requester_type: "offender")
     end
 
     it "saves all values in the versions object hash" do
-      version_hash = YAML.load(@kase.versions.last.object, permitted_classes: [Time, Date])
+      version_hash = YAML.load(kase.versions.last.object, permitted_classes: [Time, Date])
       expect(version_hash["email"]).to eq "aa@moj.com"
       expect(version_hash["received_date"]).to eq Time.zone.today
       expect(version_hash["subject"]).to eq "subject A"
@@ -69,7 +70,7 @@ describe Case::FOI::Standard do
     end
 
     it "can reconsititue a record from a version (except for received_date)" do
-      original_kase = @kase.versions.last.reify
+      original_kase = kase.versions.last.reify
       expect(original_kase.email).to eq "aa@moj.com"
       expect(original_kase.subject).to eq "subject A"
       expect(original_kase.postal_address).to eq "10 High Street"
@@ -77,7 +78,7 @@ describe Case::FOI::Standard do
     end
 
     it "reconstitutes the received date" do
-      original_kase = @kase.versions.last.reify
+      original_kase = kase.versions.last.reify
       expect(original_kase.received_date).to eq Time.zone.today
     end
   end
@@ -125,10 +126,6 @@ describe Case::FOI::Standard do
   end
 
   describe "#business_unit_responded_in_time?" do
-    before do
-      @manager = create :manager
-    end
-
     context "when case not yet responded" do
       it "raises" do
         assigned_case = create :assigned_case
@@ -318,10 +315,6 @@ describe Case::FOI::Standard do
   end
 
   describe "#business_unit_already_late?" do
-    before do
-      @manager = create :manager
-    end
-
     context "when responded case" do
       it "raises" do
         responded_kase = create :responded_case
@@ -543,7 +536,7 @@ describe Case::FOI::Standard do
         responder_service = CaseAssignResponderService.new(team: responding_team,
                                                            kase:,
                                                            role: "responding",
-                                                           user: @manager)
+                                                           user: create(:manager))
         responder_service.call
         if assignment_times.any?
           Timecop.travel 15.minutes

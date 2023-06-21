@@ -8,13 +8,6 @@ require "global_nav_manager/page"
 describe GlobalNavManager do
   include Rails.application.routes.url_helpers
 
-  # we need to add in equality matcher for Page here just for testing
-  class GlobalNavManager::Page
-    def ==(other)
-      @text == other.text && @urls == other.urls
-    end
-  end
-
   let(:request) do
     instance_double ActionDispatch::Request,
                     path: "/cases/incoming"

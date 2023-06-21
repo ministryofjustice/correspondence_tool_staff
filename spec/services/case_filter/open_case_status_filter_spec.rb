@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseFilter::OpenCaseStatusFilter do
   let(:user) { find_or_create :disclosure_specialist_bmt }
   let(:open_case_status_filter) { described_class.new search_query, user, Case::Base }
@@ -226,3 +227,4 @@ describe CaseFilter::OpenCaseStatusFilter do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

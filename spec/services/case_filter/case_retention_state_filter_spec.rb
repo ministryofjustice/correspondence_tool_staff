@@ -1,18 +1,6 @@
 require "rails_helper"
 
 describe CaseFilter::CaseRetentionStateFilter do
-  before(:all) do
-    DbHousekeeping.clean
-
-    @offender_sar_complaint = create(:offender_sar_complaint)
-    @offender_sar_retention_not_set = create(:offender_sar_case, :closed, :with_retention_schedule)
-    @offender_sar_retention_review = create(:offender_sar_complaint, :closed, :with_retention_schedule, state: :review)
-  end
-
-  after(:all) do
-    DbHousekeeping.clean
-  end
-
   let(:user) { find_or_create(:branston_user) }
   let(:filter) { described_class.new search_query, user, Case::Base.joins(:retention_schedule) }
 
@@ -43,12 +31,16 @@ describe CaseFilter::CaseRetentionStateFilter do
   end
 
   describe "#call" do
+    let(:offender_sar_complaint) { create(:offender_sar_complaint) }
+    let!(:offender_sar_retention_not_set) { create(:offender_sar_case, :closed, :with_retention_schedule) }
+    let!(:offender_sar_retention_review) { create(:offender_sar_complaint, :closed, :with_retention_schedule, state: :review) }
+
     context "when filtering for not_set retention cases" do
       let(:search_query) { create :search_query, filter_retention_state: %w[not_set] }
 
       it "returns the correct list of cases" do
         results = filter.call
-        expect(results.records).to match_array([@offender_sar_retention_not_set])
+        expect(results.records).to match_array([offender_sar_retention_not_set])
       end
     end
 
@@ -57,7 +49,7 @@ describe CaseFilter::CaseRetentionStateFilter do
 
       it "returns the correct list of cases" do
         results = filter.call
-        expect(results.records).to match_array([@offender_sar_retention_not_set, @offender_sar_retention_review])
+        expect(results.records).to match_array([offender_sar_retention_not_set, offender_sar_retention_review])
       end
     end
   end

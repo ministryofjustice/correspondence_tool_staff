@@ -17,41 +17,44 @@
 
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe SearchQuery do
   describe "tree functions" do
-    before do
-      @root             = create :search_query, search_text: "root"
-      @child            = create :search_query, :filter,
-                                 parent_id: @root.id,
-                                 filter_case_type: %w[foi-standard]
-      @child_2          = create :search_query, :filter,
-                                 parent_id: @root.id,
-                                 filter_case_type: %w[foi-ir-compliance]
+    let(:root) { create :search_query, search_text: "root" }
+    let!(:child) do
+      create :search_query, :filter,
+             parent_id: root.id,
+             filter_case_type: %w[foi-standard]
+    end
+    let!(:child_2) do
+      create :search_query, :filter,
+             parent_id: root.id,
+             filter_case_type: %w[foi-ir-compliance]
     end
 
     describe "root" do
       it "find the top-most ancestor" do
-        expect(@child.root).to eq @root
+        expect(child.root).to eq root
       end
     end
 
     describe "ancestors" do
       context "with a child node" do
         it "returns an array of ancestors, root last" do
-          expect(@child.ancestors).to eq([@root])
+          expect(child.ancestors).to eq([root])
         end
       end
 
       context "with the root node" do
         it "returns and empty array" do
-          expect(@root.ancestors).to be_empty
+          expect(root.ancestors).to be_empty
         end
       end
     end
 
     describe ".descendents" do
       it "returns and array of descendents, oldest child first" do
-        expect(@root.descendants).to eq([@child, @child_2])
+        expect(root.descendants).to eq([child, child_2])
       end
     end
   end
@@ -686,3 +689,4 @@ describe SearchQuery do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

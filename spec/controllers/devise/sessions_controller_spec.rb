@@ -11,7 +11,7 @@ describe Devise::SessionsController do
 
     context "when correct password" do
       it "signs the user in" do
-        @request.env["devise.mapping"] = Devise.mappings[:user]
+        request.env["devise.mapping"] = Devise.mappings[:user]
         post :create, params: { user: { email: user.email, password: user.password } }
         expect(response).to redirect_to root_path
       end
@@ -19,7 +19,7 @@ describe Devise::SessionsController do
 
     context "when bad password" do
       it "does not sign in" do
-        @request.env["devise.mapping"] = Devise.mappings[:user]
+        request.env["devise.mapping"] = Devise.mappings[:user]
         post :create, params: { user: { email: user.email, password: bad_pass } }
         expect(response).to be_successful
         expect(flash[:alert]).to eq "Invalid email or password."
@@ -27,16 +27,16 @@ describe Devise::SessionsController do
 
       context "and four or more failed attempts" do
         it "sends unlock notification" do
-          expect(DeviseMailer).to receive(:unlock_instructions).and_return(notification_double)
+          allow(DeviseMailer).to receive(:unlock_instructions).and_return(notification_double)
           expect(notification_double).to receive(:deliver)
-          @request.env["devise.mapping"] = Devise.mappings[:user]
+          request.env["devise.mapping"] = Devise.mappings[:user]
           post :create, params: { user: { email: bad_user.email, password: bad_pass } }
         end
 
         it "locks the user" do
           allow(DeviseMailer).to receive(:unlock_instructions).and_return(notification_double)
           allow(notification_double).to receive(:deliver)
-          @request.env["devise.mapping"] = Devise.mappings[:user]
+          request.env["devise.mapping"] = Devise.mappings[:user]
           post :create, params: { user: { email: bad_user.email, password: bad_pass } }
           bad_user.reload
           expect(bad_user.failed_attempts).to eq 4

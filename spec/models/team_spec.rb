@@ -25,8 +25,7 @@ RSpec.describe Team, type: :model do
   end
 
   it {
-    expect(subject).to have_many(:user_roles)
-                .class_name("TeamsUsersRole")
+    expect(described_class.new).to have_many(:user_roles).class_name("TeamsUsersRole")
   }
 
   it { is_expected.to have_many(:users).through(:user_roles) }
@@ -95,61 +94,55 @@ RSpec.describe Team, type: :model do
   end
 
   context "when specific team finding and querying" do
-    before(:all) do
-      @press_office_team = find_or_create :team_press_office
-      @private_office_team = find_or_create :team_private_office
-      @dacu_disclosure_team = find_or_create :team_dacu_disclosure
-    end
-
-    after(:all) do
-      DbHousekeeping.clean
-    end
+    let(:press_office_team) { find_or_create :team_press_office }
+    let(:private_office_team) { find_or_create :team_private_office }
+    let(:dacu_disclosure_team) { find_or_create :team_dacu_disclosure }
 
     describe ".dacu_disclosure" do
       it "finds the DACU Disclosure team" do
-        expect(BusinessUnit.dacu_disclosure).to eq @dacu_disclosure_team
+        expect(BusinessUnit.dacu_disclosure).to eq dacu_disclosure_team
       end
     end
 
     describe "#dacu_disclosure?" do
       it "returns true if dacu disclosure" do
-        expect(@dacu_disclosure_team.dacu_disclosure?).to be true
+        expect(dacu_disclosure_team.dacu_disclosure?).to be true
       end
 
       it "returns false if not dacu disclosure" do
-        expect(@press_office_team.dacu_disclosure?).to be false
+        expect(press_office_team.dacu_disclosure?).to be false
       end
     end
 
     describe ".press_office" do
       it "finds the Press Office team" do
-        expect(BusinessUnit.press_office).to eq @press_office_team
+        expect(BusinessUnit.press_office).to eq press_office_team
       end
     end
 
     describe "#press_office?" do
       it "returns true if press office team" do
-        expect(@press_office_team.press_office?).to be true
+        expect(press_office_team.press_office?).to be true
       end
 
       it "returns false if not press office team" do
-        expect(@dacu_disclosure_team.press_office?).to be false
+        expect(dacu_disclosure_team.press_office?).to be false
       end
     end
 
     describe ".private_office" do
       it "finds the Private Office team" do
-        expect(BusinessUnit.private_office).to eq @private_office_team
+        expect(BusinessUnit.private_office).to eq private_office_team
       end
     end
 
     describe "#private_office?" do
       it "returns true if private office team" do
-        expect(@private_office_team.private_office?).to be true
+        expect(private_office_team.private_office?).to be true
       end
 
       it "returns false if not private office team" do
-        expect(@dacu_disclosure_team.private_office?).to be false
+        expect(dacu_disclosure_team.private_office?).to be false
       end
     end
   end
@@ -167,19 +160,20 @@ RSpec.describe Team, type: :model do
   end
 
   describe "#can_allocate?" do
+    let(:team) { build_stubbed :team }
+    let(:foi) { create :foi_correspondence_type }
+    let(:gq) { create :gq_correspondence_type }
+
     before do
-      @team = build_stubbed :team
-      @foi = create :foi_correspondence_type
-      @gq = create :gq_correspondence_type
-      create :team_property, :can_allocate_gq, team_id: @team.id
+      create :team_property, :can_allocate_gq, team_id: team.id
     end
 
     it "returns false if there is no team property with key can_allocate for specified correspondence type" do
-      expect(@team.can_allocate?(@foi)).to be false
+      expect(team.can_allocate?(foi)).to be false
     end
 
     it "returns true if there is a team property key can_allocate for specified correspondence type" do
-      expect(@team.can_allocate?(@gq)).to be true
+      expect(team.can_allocate?(gq)).to be true
     end
   end
 
@@ -201,23 +195,24 @@ RSpec.describe Team, type: :model do
   end
 
   describe "#disable_allocation" do
+    let(:team) { build_stubbed :team }
+    let(:foi) { create :foi_correspondence_type }
+
     before do
-      @team = build_stubbed :team
-      @foi = create :foi_correspondence_type
-      create :team_property, :can_allocate_foi, team_id: @team.id
+      create :team_property, :can_allocate_foi, team_id: team.id
     end
 
     it "deletes the team property" do
-      expect(@team.properties).to exist(key: "can_allocate", value: "FOI")
-      @team.disable_allocation(@foi)
-      expect(@team.properties).not_to exist(key: "can_allocate", value: "FOI")
+      expect(team.properties).to exist(key: "can_allocate", value: "FOI")
+      team.disable_allocation(foi)
+      expect(team.properties).not_to exist(key: "can_allocate", value: "FOI")
     end
 
     it "doesnt fail if called twice" do
-      expect(@team.properties).to exist(key: "can_allocate", value: "FOI")
-      @team.disable_allocation(@foi)
-      @team.disable_allocation(@foi)
-      expect(@team.properties).not_to exist(key: "can_allocate", value: "FOI")
+      expect(team.properties).to exist(key: "can_allocate", value: "FOI")
+      team.disable_allocation(foi)
+      team.disable_allocation(foi)
+      expect(team.properties).not_to exist(key: "can_allocate", value: "FOI")
     end
   end
 
@@ -258,7 +253,7 @@ RSpec.describe Team, type: :model do
 
   describe "paper_trail versions", versioning: true do
     it "has versions" do
-      expect(subject).to be_versioned
+      expect(described_class.new).to be_versioned
     end
 
     context "when creating" do

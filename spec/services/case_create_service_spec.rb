@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 describe CaseCreateService do
   let(:manager) { create :manager, managing_teams: [team_dacu] }
   let!(:team_dacu) { find_or_create :team_dacu }
@@ -183,7 +184,7 @@ describe CaseCreateService do
 
       let(:deadline)            { 1.month.from_now.to_date }
       let(:original_ico_appeal) { @original_ico_appeal }
-      let(:original_case)       { @original_ico_appeal.original_case }
+      let(:original_case)       { original_ico_appeal.original_case }
       let(:ccs)                 { described_class.new(user: manager, case_type: Case::OverturnedICO::SAR, params: params[:overturned_sar]) }
       let(:params) do
         ActionController::Parameters.new(
@@ -268,7 +269,7 @@ describe CaseCreateService do
 
       let(:deadline)            { 1.month.from_now.to_date }
       let(:original_ico_appeal) { @original_ico_appeal }
-      let(:original_case)       { @original_ico_appeal.original_case }
+      let(:original_case)       { original_ico_appeal.original_case }
       let!(:ccs) { described_class.new(user: manager, case_type: Case::OverturnedICO::FOI, params: params[:overturned_foi]) }
       let(:params) do
         ActionController::Parameters.new(
@@ -392,3 +393,4 @@ describe CaseCreateService do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

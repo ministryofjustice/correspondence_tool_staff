@@ -5,10 +5,10 @@ describe PdfMakerJob, type: :job do
 
   before do
     ActiveJob::Base.queue_adapter = :test
-    @attachment = double CaseAttachment
+    attachment = instance_double CaseAttachment
     allow(SentryContextProvider).to receive(:set_context)
-    allow(CaseAttachment).to receive(:find).with(123).and_return(@attachment)
-    allow(@attachment).to receive(:make_preview)
+    allow(CaseAttachment).to receive(:find).with(123).and_return(attachment)
+    allow(attachment).to receive(:make_preview)
   end
 
   after do
@@ -31,8 +31,8 @@ describe PdfMakerJob, type: :job do
     end
 
     it "executes perform" do
-      attachment_1 = double CaseAttachment
-      expect(CaseAttachment).to receive(:find).with(123).and_return(attachment_1)
+      attachment_1 = instance_double CaseAttachment
+      allow(CaseAttachment).to receive(:find).with(123).and_return(attachment_1)
       expect(attachment_1).to receive(:make_preview)
       perform_enqueued_jobs { described_class.perform_later(123) }
     end
