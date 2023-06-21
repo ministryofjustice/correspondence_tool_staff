@@ -203,8 +203,8 @@ RSpec.describe CaseTransitionDecorator, type: :model do
       end
     end
 
-    def response(e, d)
-      "<strong>#{e}</strong><br>#{d}"
+    def response(event, details)
+      "<strong>#{event}</strong><br>#{details}"
     end
   end
 end

@@ -28,7 +28,7 @@ describe "users/confirm_destroy.html.slim", type: :view do
     end
   end
 
-  context "when user has one team" do
+  context "when user has multiple teams" do
     let(:multiple_team_responder) do
       find_or_create :responder,
                      responding_teams: [team1, team2]

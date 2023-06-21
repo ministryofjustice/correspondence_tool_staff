@@ -1,8 +1,8 @@
 require "rails_helper"
 
 describe CaseFinderService do
-  def dd(n)
-    Date.new(2016, 11, n)
+  def dd(day)
+    Date.new(2016, 11, day)
   end
 
   let(:empty_collection) { CaseDecorator.decorate_collection([]) }

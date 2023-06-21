@@ -179,8 +179,8 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      def responder_in_assigned_team(k)
-        create :responder, responding_teams: [k.responding_team]
+      def responder_in_assigned_team(kase)
+        create :responder, responding_teams: [kase.responding_team]
       end
     end
   end
@@ -404,8 +404,8 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      def approver_in_assigned_team(k)
-        k.approver_assignments.first.user
+      def approver_in_assigned_team(kase)
+        kase.approver_assignments.first.user
       end
     end
   end

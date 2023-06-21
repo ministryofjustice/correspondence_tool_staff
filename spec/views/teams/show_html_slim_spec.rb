@@ -157,10 +157,10 @@ private
            lead: create(:team_lead, value: team_lead)
   end
 
-  def create_directorate(bg, name, team_lead)
+  def create_directorate(business_group, name, team_lead)
     create :directorate,
            name:,
-           business_group: bg,
+           business_group:,
            lead: create(:team_lead, value: team_lead)
   end
 

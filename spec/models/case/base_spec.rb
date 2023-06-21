@@ -1246,34 +1246,34 @@ RSpec.describe Case::Base, type: :model do
       )
     end
 
-    def create_case(t, creating_team)
-      Timecop.freeze(Time.zone.at(Time.zone.parse(t))) do
+    def create_case(time, creating_team)
+      Timecop.freeze(Time.zone.at(Time.zone.parse(time))) do
         kase = create :case
         create_transition(kase, "flag_for_clearance", "unassigned", creating_team)
         kase
       end
     end
 
-    def assign_to_responder(kase, t, acting_team, target_team)
-      Timecop.freeze(Time.zone.at(Time.zone.parse(t))) do
+    def assign_to_responder(kase, time, acting_team, target_team)
+      Timecop.freeze(Time.zone.at(Time.zone.parse(time))) do
         create_transition(kase, "assign_responder", "awaiting_responder", acting_team, target_team)
       end
     end
 
-    def reject_assignment(kase, t, acting_team)
-      Timecop.freeze(Time.zone.at(Time.zone.parse(t))) do
+    def reject_assignment(kase, time, acting_team)
+      Timecop.freeze(Time.zone.at(Time.zone.parse(time))) do
         create_transition(kase, "reject_responder_assignment", "unassigned", acting_team)
       end
     end
 
-    def accept_assignment(kase, t, acting_team)
-      Timecop.freeze(Time.zone.at(Time.zone.parse(t))) do
+    def accept_assignment(kase, time, acting_team)
+      Timecop.freeze(Time.zone.at(Time.zone.parse(time))) do
         create_transition(kase, "accept_responder_assignment", "drafting", acting_team)
       end
     end
 
-    def flag_for_clearance(kase, t, acting_team, target_team)
-      Timecop.freeze(Time.zone.at(Time.zone.parse(t))) do
+    def flag_for_clearance(kase, time, acting_team, target_team)
+      Timecop.freeze(Time.zone.at(Time.zone.parse(time))) do
         create_transition(kase, "flag_for_clearance", kase.current_state, acting_team, target_team)
         kase.assignments << Assignment.new(
           state: "accepted",
@@ -1285,20 +1285,20 @@ RSpec.describe Case::Base, type: :model do
       end
     end
 
-    def upload_response(kase, t, acting_team)
-      Timecop.freeze(Time.zone.at(Time.zone.parse(t))) do
+    def upload_response(kase, time, acting_team)
+      Timecop.freeze(Time.zone.at(Time.zone.parse(time))) do
         create_transition(kase, "add_responses", "pending_dacu_clearance", acting_team)
       end
     end
 
-    def request_amends(kase, t, acting_team)
-      Timecop.freeze(Time.zone.at(Time.zone.parse(t))) do
+    def request_amends(kase, time, acting_team)
+      Timecop.freeze(Time.zone.at(Time.zone.parse(time))) do
         create_transition(kase, "upload_response_and_return_for_redraft", "drafting", acting_team)
       end
     end
 
-    def clear_case(kase, t, new_state, acting_team)
-      Timecop.freeze(Time.zone.at(Time.zone.parse(t))) do
+    def clear_case(kase, time, new_state, acting_team)
+      Timecop.freeze(Time.zone.at(Time.zone.parse(time))) do
         create_transition(kase, "approve", new_state, acting_team)
       end
     end

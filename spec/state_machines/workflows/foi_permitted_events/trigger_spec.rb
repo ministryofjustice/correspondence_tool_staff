@@ -313,8 +313,8 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      def responder_in_assigned_team(k)
-        create :responder, responding_teams: [k.responding_team]
+      def responder_in_assigned_team(kase)
+        create :responder, responding_teams: [kase.responding_team]
       end
     end
 
@@ -529,12 +529,12 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      def approver_in_assigned_team(k)
-        k.approver_assignments.first.user
+      def approver_in_assigned_team(kase)
+        kase.approver_assignments.first.user
       end
 
-      def dacu_disclosure_approver(k)
-        k.approver_assignments.for_team(BusinessUnit.dacu_disclosure).first.user
+      def dacu_disclosure_approver(kase)
+        kase.approver_assignments.for_team(BusinessUnit.dacu_disclosure).first.user
       end
     end
   end
