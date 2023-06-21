@@ -412,23 +412,6 @@ RSpec.describe TeamsController, type: :controller do
           expect(t.team_lead).to match(/Deputy Director \d+/)
         end
       end
-
-      context "and team that the responder is not a member of" do
-        let(:params) do
-          {
-            "id" => business_unit.id,
-            "team" => {
-              "name" => "New Frog sizing unit",
-              "email" => "frogs@a.com",
-              "team_lead" => "Johnny New",
-              "parent_id" => directorate.id,
-              "role" => "responder",
-            },
-            "team_type" => "bu",
-            "commit" => "Submit",
-          }
-        end
-      end
     end
   end
 

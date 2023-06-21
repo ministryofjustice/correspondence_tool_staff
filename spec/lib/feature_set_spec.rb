@@ -14,7 +14,7 @@ describe FeatureSet do
     @saved_env = ENV["ENV"]
   end
 
-  after  { ENV["ENV"] = @saved_env }
+  after { ENV["ENV"] = @saved_env }
 
   describe "#enabled?" do
     context "when test environment on local host" do

@@ -135,4 +135,4 @@ describe "cases/overturned_shared/_new.html.slim" do
     end
   end
 end
-# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll, RSpec/BeforeAfterAll
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

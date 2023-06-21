@@ -104,7 +104,7 @@ describe CaseFilter::CaseHighProfileFilter do
         describe "params that will be submitted when clicking on the crumb" do
           it {
             expect(case_hgih_profile_filter.crumbs[0].second).to eq "filter_high_profile" => [""],
-                                  "parent_id" => search_query.id
+                                                                    "parent_id" => search_query.id
           }
         end
       end

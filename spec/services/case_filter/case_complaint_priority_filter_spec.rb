@@ -98,7 +98,7 @@ describe CaseFilter::CaseComplaintPriorityFilter do
         describe "params that will be submitted when clicking on the crumb" do
           it {
             expect(case_complaint_prority_filter.crumbs[0].second).to eq "filter_complaint_priority" => [""],
-                                  "parent_id" => search_query.id
+                                                                         "parent_id" => search_query.id
           }
         end
       end
