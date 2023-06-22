@@ -48,10 +48,10 @@ private
 
   def roles_for_team(team)
     {
-      "manager": %i[view edit manage],
-      "responder": %i[view respond],
-      "approver": %i[view approve],
-      "team_admin": %i[view administer_team],
-    }[team.role] || []
+      manager: %i[view edit manage],
+      responder: %i[view respond],
+      approver: %i[view approve],
+      team_admin: %i[view administer_team],
+    }[team.role.to_sym] || []
   end
 end
