@@ -116,14 +116,12 @@ describe CaseFilter::ExemptionFilter do
       end
 
       describe "params that will be submitted when clicking on the crumb" do
-        subject { filter.crumbs[0].second }
-
         it {
-          expect(subject).to eq "common_exemption_ids" => [""],
-                                "exemption_ids" => [""],
-                                "parent_id" => search_query.id
+          expect(filter.crumbs[0].second).to eq "common_exemption_ids" => [""],
+                                                 "exemption_ids" => [""],
+                                                 "parent_id" => search_query.id
         }
-      end
+      en
     end
 
     context "when multiple exemption selected" do

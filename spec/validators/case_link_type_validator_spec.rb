@@ -18,282 +18,282 @@ RSpec::Matchers.define :allow_link do |klass|
   end
 end
 
-# def allow_link(validator)
-#   allow_link_matcher(validator)
-# end
-
 describe CaseLinkTypeValidator do
+  subject(:validator) { described_class.new }
+
+  # rubocop:disable RSpec/RepeatedExample
   describe ".classes_can_be_linked_with_type?" do
     it {
-      expect(subject).to allow_link(Case::FOI::Standard)
+      expect(validator).to allow_link(Case::FOI::Standard)
                   .to_case(Case::FOI::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::Standard)
+      expect(validator).to allow_link(Case::FOI::Standard)
                   .to_case(Case::FOI::ComplianceReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::Standard)
+      expect(validator).to allow_link(Case::FOI::Standard)
                   .to_case(Case::FOI::TimelinessReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::Standard)
+      expect(validator).to allow_link(Case::FOI::Standard)
                   .to_case(Case::ICO::FOI)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::Standard)
+      expect(validator).to allow_link(Case::FOI::Standard)
                   .to_case(Case::FOI::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::Standard)
+      expect(validator).to allow_link(Case::FOI::Standard)
                   .to_case(Case::FOI::ComplianceReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::Standard)
+      expect(validator).to allow_link(Case::FOI::Standard)
                   .to_case(Case::FOI::TimelinessReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::Standard)
+      expect(validator).to allow_link(Case::FOI::Standard)
                   .to_case(Case::ICO::FOI)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::TimelinessReview)
+      expect(validator).to allow_link(Case::FOI::TimelinessReview)
                   .to_case(Case::FOI::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::TimelinessReview)
+      expect(validator).to allow_link(Case::FOI::TimelinessReview)
                   .to_case(Case::FOI::ComplianceReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::TimelinessReview)
+      expect(validator).to allow_link(Case::FOI::TimelinessReview)
                   .to_case(Case::FOI::TimelinessReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::TimelinessReview)
+      expect(validator).to allow_link(Case::FOI::TimelinessReview)
                   .to_case(Case::ICO::FOI)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::TimelinessReview)
+      expect(validator).to allow_link(Case::FOI::TimelinessReview)
                   .to_case(Case::FOI::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::TimelinessReview)
+      expect(validator).to allow_link(Case::FOI::TimelinessReview)
                   .to_case(Case::FOI::ComplianceReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::TimelinessReview)
+      expect(validator).to allow_link(Case::FOI::TimelinessReview)
                   .to_case(Case::FOI::TimelinessReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::TimelinessReview)
+      expect(validator).to allow_link(Case::FOI::TimelinessReview)
                   .to_case(Case::ICO::FOI)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::ComplianceReview)
+      expect(validator).to allow_link(Case::FOI::ComplianceReview)
                   .to_case(Case::FOI::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::ComplianceReview)
+      expect(validator).to allow_link(Case::FOI::ComplianceReview)
                   .to_case(Case::FOI::ComplianceReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::ComplianceReview)
+      expect(validator).to allow_link(Case::FOI::ComplianceReview)
                   .to_case(Case::FOI::TimelinessReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::ComplianceReview)
+      expect(validator).to allow_link(Case::FOI::ComplianceReview)
                   .to_case(Case::ICO::FOI)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::ComplianceReview)
+      expect(validator).to allow_link(Case::FOI::ComplianceReview)
                   .to_case(Case::FOI::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::ComplianceReview)
+      expect(validator).to allow_link(Case::FOI::ComplianceReview)
                   .to_case(Case::FOI::ComplianceReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::ComplianceReview)
+      expect(validator).to allow_link(Case::FOI::ComplianceReview)
                   .to_case(Case::FOI::TimelinessReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::FOI::ComplianceReview)
+      expect(validator).to allow_link(Case::FOI::ComplianceReview)
                   .to_case(Case::ICO::FOI)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::FOI)
+      expect(validator).to allow_link(Case::ICO::FOI)
                   .to_case(Case::FOI::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::FOI)
+      expect(validator).to allow_link(Case::ICO::FOI)
                   .to_case(Case::FOI::ComplianceReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::FOI)
+      expect(validator).to allow_link(Case::ICO::FOI)
                   .to_case(Case::FOI::TimelinessReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::FOI)
+      expect(validator).to allow_link(Case::ICO::FOI)
                   .to_case(Case::ICO::FOI)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::FOI)
+      expect(validator).to allow_link(Case::ICO::FOI)
                   .to_case(Case::FOI::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::FOI)
+      expect(validator).to allow_link(Case::ICO::FOI)
                   .to_case(Case::FOI::ComplianceReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::FOI)
+      expect(validator).to allow_link(Case::ICO::FOI)
                   .to_case(Case::FOI::TimelinessReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::FOI)
+      expect(validator).to allow_link(Case::ICO::FOI)
                   .to_case(Case::ICO::FOI)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::SAR::Standard)
+      expect(validator).to allow_link(Case::SAR::Standard)
                   .to_case(Case::SAR::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::SAR::Standard)
+      expect(validator).to allow_link(Case::SAR::Standard)
                   .to_case(Case::ICO::SAR)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::SAR)
+      expect(validator).to allow_link(Case::ICO::SAR)
                   .to_case(Case::SAR::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::ICO::SAR)
+      expect(validator).to allow_link(Case::ICO::SAR)
                   .to_case(Case::ICO::SAR)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::SAR::InternalReview)
+      expect(validator).to allow_link(Case::SAR::InternalReview)
                   .to_case(Case::SAR::InternalReview)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::SAR::InternalReview)
+      expect(validator).to allow_link(Case::SAR::InternalReview)
                   .to_case(Case::SAR::Standard)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::SAR::InternalReview)
+      expect(validator).to allow_link(Case::SAR::InternalReview)
                   .to_case(Case::ICO::SAR)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::SAR::InternalReview)
+      expect(validator).to allow_link(Case::SAR::InternalReview)
                   .to_case(Case::OverturnedICO::SAR)
                   .as_type(:related)
     }
 
     it {
-      expect(subject).to allow_link(Case::SAR::InternalReview)
+      expect(validator).to allow_link(Case::SAR::InternalReview)
                   .to_case(Case::SAR::Standard)
                   .as_type(:original)
     }
 
     it {
-      expect(subject).to allow_link(Case::OverturnedICO::SAR)
+      expect(validator).to allow_link(Case::OverturnedICO::SAR)
                   .to_case(Case::SAR::Standard)
                   .as_type(:original)
     }
 
     it {
-      expect(subject).to allow_link(Case::OverturnedICO::SAR)
+      expect(validator).to allow_link(Case::OverturnedICO::SAR)
                   .to_case(Case::ICO::SAR)
                   .as_type(:original_appeal)
     }
 
     it {
-      expect(subject).to allow_link(Case::OverturnedICO::FOI)
+      expect(validator).to allow_link(Case::OverturnedICO::FOI)
                   .to_case(Case::FOI::Standard)
                   .as_type(:original)
     }
 
     it {
-      expect(subject).to allow_link(Case::OverturnedICO::FOI)
+      expect(validator).to allow_link(Case::OverturnedICO::FOI)
                   .to_case(Case::ICO::FOI)
                   .as_type(:original_appeal)
     }
   end
+  # rubocop:enable RSpec/RepeatedExample
 
   describe "#validate" do
     it "adds an error if cases cannot be linked" do

@@ -96,7 +96,7 @@ describe Case::FOI::Standard do
     it { is_expected.to validate_presence_of(:requester_type) }
 
     it {
-      expect(subject).to have_enum(:requester_type)
+      expect(described_class.new).to have_enum(:requester_type)
                   .with_values(
                     %w[
                       academic_business_charity
@@ -115,7 +115,7 @@ describe Case::FOI::Standard do
     it { is_expected.to validate_presence_of(:delivery_method) }
 
     it {
-      expect(subject).to have_enum(:delivery_method)
+      expect(described_class.new).to have_enum(:delivery_method)
                   .with_values(
                     %w[
                       sent_by_email

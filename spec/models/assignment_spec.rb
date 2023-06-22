@@ -26,7 +26,7 @@ require "rails_helper"
 #   block
 
 RSpec.describe Assignment, type: :model do
-  subject { build(:assignment) }
+  subject(:assignment) { build(:assignment) }
 
   let(:assigned_case) { create :assigned_case }
   let(:assigned_flagged_case) { create :assigned_case, :flagged }
@@ -45,12 +45,12 @@ RSpec.describe Assignment, type: :model do
   it { is_expected.to belong_to(:user)             }
 
   it {
-    expect(subject).to have_enum(:state)
+    expect(assignment).to have_enum(:state)
                 .with_values(%w[pending accepted bypassed rejected])
   }
 
   it {
-    expect(subject).to have_enum(:role)
+    expect(assignment).to have_enum(:role)
                 .with_values(%w[managing responding approving])
   }
 
@@ -174,17 +174,17 @@ RSpec.describe Assignment, type: :model do
 
   describe "#assign_and_validate_state" do
     it "assigns state to the assignment in memory" do
-      subject.save!
-      expect(subject.state).to eq "pending"
-      subject.assign_and_validate_state("accepted")
-      expect(subject.state).to eq "accepted"
-      expect(subject.reload.state).to eq "pending"
+      assignment.save!
+      expect(assignment.state).to eq "pending"
+      assignment.assign_and_validate_state("accepted")
+      expect(assignment.state).to eq "accepted"
+      expect(assignment.reload.state).to eq "pending"
     end
 
     it "triggers validation" do
-      allow(subject).to receive(:valid?)
-      subject.assign_and_validate_state(:accepted)
-      expect(subject).to have_received(:valid?)
+      allow(assignment).to receive(:valid?)
+      assignment.assign_and_validate_state(:accepted)
+      expect(assignment).to have_received(:valid?)
     end
   end
 

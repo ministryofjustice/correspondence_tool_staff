@@ -13,7 +13,7 @@ RSpec.describe Report, type: :model do
 
   describe "mandatory fields" do
     it "requires the following fields" do
-      expect(subject).to validate_presence_of(:report_type_id)
+      expect(described_class.new).to validate_presence_of(:report_type_id)
     end
   end
 

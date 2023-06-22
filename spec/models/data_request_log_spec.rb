@@ -17,7 +17,7 @@ RSpec.describe DataRequestLog, type: :model do
   end
 
   describe "#validate_date_received?" do
-    subject { data_request_log.send(:validate_date_received?) }
+    subject(:validate) { data_request_log.send(:validate_date_received?) }
 
     let(:data_request_log) { build_stubbed :data_request_log, :received }
 
@@ -26,13 +26,13 @@ RSpec.describe DataRequestLog, type: :model do
 
     it "is false when date_received is not set" do
       data_request_log.date_received = nil
-      expect(subject).to be false
+      expect(validate).to be false
     end
 
     it "sets the error message when invalid" do
       data_request_log.date_received = Time.zone.today + 1.day
 
-      expect(subject).to be true
+      expect(validate).to be true
       expect(data_request_log.errors[:date_received]).to eq ["cannot be in the future"]
     end
   end

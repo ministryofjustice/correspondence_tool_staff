@@ -167,11 +167,11 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it {
-          expect(subject).to have_permitted_events_including :add_message_to_case,
-                                                             :assign_responder,
-                                                             :destroy_case,
-                                                             :edit_case,
-                                                             :flag_for_clearance
+          expect(controller).to have_permitted_events_including :add_message_to_case,
+                                                                :assign_responder,
+                                                                :destroy_case,
+                                                                :edit_case,
+                                                                :flag_for_clearance
         }
 
         it "renders the show template" do
@@ -201,12 +201,12 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it "permits adding a response" do
-          expect(subject).to have_permitted_events_including :add_message_to_case,
-                                                             :add_responses,
-                                                             :link_a_case,
-                                                             :reassign_user,
-                                                             :remove_linked_case,
-                                                             :upload_responses
+          expect(controller).to have_permitted_events_including :add_message_to_case,
+                                                                :add_responses,
+                                                                :link_a_case,
+                                                                :reassign_user,
+                                                                :remove_linked_case,
+                                                                :upload_responses
         end
 
         it "renders the show page" do
@@ -222,12 +222,12 @@ RSpec.describe CasesController, type: :controller do
         end
 
         it "does not permit adding a response" do
-          expect(subject).to have_permitted_events :add_message_to_case,
-                                                   :link_a_case,
-                                                   :reassign_user,
-                                                   :remove_linked_case,
-                                                   :remove_response,
-                                                   :upload_responses
+          expect(controller).to have_permitted_events :add_message_to_case,
+                                                      :link_a_case,
+                                                      :reassign_user,
+                                                      :remove_linked_case,
+                                                      :remove_response,
+                                                      :upload_responses
         end
 
         it "renders the show page" do
@@ -329,11 +329,11 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it {
-          expect(subject).to have_permitted_events_including :add_message_to_case,
-                                                             :assign_to_new_team,
-                                                             :destroy_case,
-                                                             :edit_case,
-                                                             :flag_for_clearance
+          expect(controller).to have_permitted_events_including :add_message_to_case,
+                                                                :assign_to_new_team,
+                                                                :destroy_case,
+                                                                :edit_case,
+                                                                :flag_for_clearance
         }
 
         it "renders the show page" do
@@ -346,9 +346,9 @@ RSpec.describe CasesController, type: :controller do
           let(:user) { accepted_case.responder }
 
           it {
-            expect(subject).to have_permitted_events_including :add_message_to_case,
-                                                               :add_responses,
-                                                               :reassign_user
+            expect(controller).to have_permitted_events_including :add_message_to_case,
+                                                                  :add_responses,
+                                                                  :reassign_user
           }
 
           it "renders the show page" do
@@ -390,10 +390,10 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it {
-          expect(subject).to have_permitted_events_including :add_message_to_case,
-                                                             :destroy_case,
-                                                             :edit_case,
-                                                             :flag_for_clearance
+          expect(controller).to have_permitted_events_including :add_message_to_case,
+                                                                :destroy_case,
+                                                                :edit_case,
+                                                                :flag_for_clearance
         }
 
         it "renders the show page" do
@@ -405,10 +405,10 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { case_with_response.responder }
 
         it {
-          expect(subject).to have_permitted_events_including :add_message_to_case,
-                                                             :add_responses,
-                                                             :respond,
-                                                             :remove_response
+          expect(controller).to have_permitted_events_including :add_message_to_case,
+                                                                :add_responses,
+                                                                :respond,
+                                                                :remove_response
         }
 
         it "renders the show page" do
@@ -451,10 +451,10 @@ RSpec.describe CasesController, type: :controller do
         let(:user) { create(:manager) }
 
         it {
-          expect(subject).to have_permitted_events_including :add_message_to_case,
-                                                             :close,
-                                                             :destroy_case,
-                                                             :edit_case
+          expect(controller).to have_permitted_events_including :add_message_to_case,
+                                                                :close,
+                                                                :destroy_case,
+                                                                :edit_case
         }
 
         it "renders the show page" do

@@ -1,11 +1,9 @@
 require "rails_helper"
 
 RSpec.describe RetentionScheduleCaseNote do
-  subject { described_class }
-
   describe ".new" do
     it "is a private method" do
-      expect(subject.respond_to?(:new)).to eq(false)
+      expect(described_class.respond_to?(:new)).to eq(false)
     end
   end
 
@@ -26,7 +24,7 @@ RSpec.describe RetentionScheduleCaseNote do
 
       it "does not write anything to the case history" do
         expect(sm_double).not_to receive(:annotate_retention_changes!)
-        subject.log!(args)
+        described_class.log!(args)
       end
     end
 
@@ -41,7 +39,7 @@ RSpec.describe RetentionScheduleCaseNote do
           message: "Retention status changed from Not set to Review"
         )
 
-        subject.log!(args)
+        described_class.log!(args)
       end
     end
 
@@ -56,7 +54,7 @@ RSpec.describe RetentionScheduleCaseNote do
           message: "Destruction date changed from 25-10-2018 to 31-12-2025"
         )
 
-        subject.log!(args)
+        described_class.log!(args)
       end
     end
 
@@ -71,7 +69,7 @@ RSpec.describe RetentionScheduleCaseNote do
           message: "Retention status changed from Not set to Review\nDestruction date changed from 25-10-2018 to 31-12-2025"
         )
 
-        subject.log!(args)
+        described_class.log!(args)
       end
     end
 
@@ -86,7 +84,7 @@ RSpec.describe RetentionScheduleCaseNote do
           message: "Destruction date set to 31-12-2025"
         )
 
-        subject.log!(**args, is_system: true)
+        described_class.log!(**args, is_system: true)
       end
     end
   end

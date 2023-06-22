@@ -120,10 +120,8 @@ describe CaseFilter::TimelinessFilter do
       end
 
       describe "params that will be submitted when clicking on the crumb" do
-        subject { filter_service.crumbs[0].second }
-
         it {
-          expect(subject).to eq "filter_timeliness" => [""],
+          expect(filter_service.crumbs[0].second).to eq "filter_timeliness" => [""],
                                 "parent_id" => search_query.id
         }
       end

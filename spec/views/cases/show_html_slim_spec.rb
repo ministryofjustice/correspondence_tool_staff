@@ -257,7 +257,7 @@ describe "cases/show.html.slim", type: :view do
   end
 
   describe "page actions" do
-    subject { rendered_page.actions }
+    subject(:page) { rendered_page.actions }
 
     let(:kase) { create(:foi_case) }
 
@@ -276,7 +276,7 @@ describe "cases/show.html.slim", type: :view do
         it { is_expected.to have_upload_response }
 
         it "links to the path for upload_responses" do
-          expect(subject.upload_response["href"])
+          expect(page.upload_response["href"])
             .to eq new_case_responses_path(kase, response_action: :upload_responses)
         end
       end
@@ -306,7 +306,7 @@ describe "cases/show.html.slim", type: :view do
         it { is_expected.to have_upload_approve }
 
         it "links to the path for upload_responses" do
-          expect(subject.upload_approve["href"])
+          expect(page.upload_approve["href"])
             .to eq new_case_responses_path(kase, response_action: :upload_response_and_approve)
         end
       end
@@ -336,7 +336,7 @@ describe "cases/show.html.slim", type: :view do
         it { is_expected.to have_upload_redraft }
 
         it "links to the path for upload_responses" do
-          expect(subject.upload_redraft["href"])
+          expect(page.upload_redraft["href"])
             .to eq new_case_responses_path(kase, response_action: :upload_response_and_return_for_redraft)
         end
       end

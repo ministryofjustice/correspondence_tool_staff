@@ -1,17 +1,19 @@
 require "rails_helper"
 
 RSpec.describe RetentionScheduleForm do
+  subject(:retention_schedule_form) { described_class.new }
+
   it_behaves_like "a date question form", attribute_name: :planned_destruction_date do
     before do
       # We stub these as we will test more thoroughly in separate scenarios
-      allow(subject).to receive(:destruction_date_after_close_date).and_return(true)
-      allow(subject).to receive(:state_choices).and_return([])
-      allow(subject).to receive(:state_is_not_anonymised)
+      allow(form).to receive(:destruction_date_after_close_date).and_return(true)
+      allow(form).to receive(:state_choices).and_return([])
+      allow(form).to receive(:state_is_not_anonymised)
     end
   end
 
   describe "logic specific to this form" do
-    subject { described_class.new(arguments) }
+    subject(:retention_schedule_form) { described_class.new(arguments) }
 
     let(:record) do
       double("Record",
@@ -37,7 +39,7 @@ RSpec.describe RetentionScheduleForm do
     describe "#state_choices" do
       context "when the schedule has not been set yet" do
         it "shows only the relevant values" do
-          expect(subject.state_choices).to eq(%w[not_set retain review to_be_anonymised])
+          expect(retention_schedule_form.state_choices).to eq(%w[not_set retain review to_be_anonymised])
         end
       end
 
@@ -45,7 +47,7 @@ RSpec.describe RetentionScheduleForm do
         let(:schedule_not_set) { false }
 
         it "shows only the relevant values" do
-          expect(subject.state_choices).to eq(%w[retain review to_be_anonymised])
+          expect(retention_schedule_form.state_choices).to eq(%w[retain review to_be_anonymised])
         end
       end
     end
@@ -55,19 +57,19 @@ RSpec.describe RetentionScheduleForm do
         let(:planned_destruction_date) { Date.yesterday }
 
         it "returns false" do
-          expect(subject.save).to be(false)
+          expect(retention_schedule_form.save).to be(false)
         end
 
         it "has a validation error on the field" do
-          expect(subject).not_to be_valid
-          expect(subject.errors.added?(:planned_destruction_date, :before_closure)).to eq(true)
+          expect(retention_schedule_form).not_to be_valid
+          expect(retention_schedule_form.errors.added?(:planned_destruction_date, :before_closure)).to eq(true)
         end
       end
 
       context "when the `planned_destruction_date` is after the `date_responded`" do
         it "has no validation errors on the field" do
-          expect(subject).to be_valid
-          expect(subject.errors.added?(:planned_destruction_date)).to eq(false)
+          expect(retention_schedule_form).to be_valid
+          expect(retention_schedule_form.errors.added?(:planned_destruction_date)).to eq(false)
         end
       end
     end
@@ -77,12 +79,12 @@ RSpec.describe RetentionScheduleForm do
         let(:state) { nil }
 
         it "returns false" do
-          expect(subject.save).to be(false)
+          expect(retention_schedule_form.save).to be(false)
         end
 
         it "has a validation error on the field" do
-          expect(subject).not_to be_valid
-          expect(subject.errors.of_kind?(:state, :inclusion)).to eq(true)
+          expect(retention_schedule_form).not_to be_valid
+          expect(retention_schedule_form.errors.of_kind?(:state, :inclusion)).to eq(true)
         end
       end
 
@@ -90,12 +92,12 @@ RSpec.describe RetentionScheduleForm do
         let(:state) { "foobar" }
 
         it "returns false" do
-          expect(subject.save).to be(false)
+          expect(retention_schedule_form.save).to be(false)
         end
 
         it "has a validation error on the field" do
-          expect(subject).not_to be_valid
-          expect(subject.errors.of_kind?(:state, :inclusion)).to eq(true)
+          expect(retention_schedule_form).not_to be_valid
+          expect(retention_schedule_form.errors.of_kind?(:state, :inclusion)).to eq(true)
         end
       end
 
@@ -103,12 +105,12 @@ RSpec.describe RetentionScheduleForm do
         let(:schedule_not_set) { false }
 
         it "returns false" do
-          expect(subject.save).to be(false)
+          expect(retention_schedule_form.save).to be(false)
         end
 
         it "has a validation error on the field" do
-          expect(subject).not_to be_valid
-          expect(subject.errors.of_kind?(:state, :inclusion)).to eq(true)
+          expect(retention_schedule_form).not_to be_valid
+          expect(retention_schedule_form.errors.of_kind?(:state, :inclusion)).to eq(true)
         end
       end
 
@@ -116,12 +118,12 @@ RSpec.describe RetentionScheduleForm do
         let(:state_anonymised) { true }
 
         it "returns false" do
-          expect(subject.save).to be(false)
+          expect(retention_schedule_form.save).to be(false)
         end
 
         it "has a validation error on the field" do
-          expect(subject).not_to be_valid
-          expect(subject.errors.of_kind?(:state, :forbidden)).to eq(true)
+          expect(retention_schedule_form).not_to be_valid
+          expect(retention_schedule_form.errors.of_kind?(:state, :forbidden)).to eq(true)
         end
       end
     end
@@ -129,12 +131,12 @@ RSpec.describe RetentionScheduleForm do
     describe "#save" do
       context "when form is valid" do
         it "saves the record" do
-          expect(record).to receive(:update).with(
+          allow(record).to receive(:update).with(
             "planned_destruction_date" => planned_destruction_date,
             "state" => state,
           ).and_return(true)
 
-          expect(subject.save).to be(true)
+          expect(retention_schedule_form.save).to be(true)
         end
       end
     end

@@ -273,25 +273,25 @@ describe Case::SAR::InternalReview do
   end
 
   describe "deadline" do
-    subject { freeze_time { create :sar_internal_review } }
+    subject(:sar_internal_review) { freeze_time { create :sar_internal_review } }
 
     describe "#deadline_extended" do
       it "is false by default" do
-        expect(subject.deadline_extended?).to be false
+        expect(sar_internal_review.deadline_extended?).to be false
       end
     end
 
     describe "#deadline_extendable?" do
       it "is true if external_deadline is less than max possible deadline" do
-        max_statutory_deadline = subject.max_allowed_deadline_date
+        max_statutory_deadline = sar_internal_review.max_allowed_deadline_date
 
-        expect(subject.deadline_extendable?).to eq true
-        expect(subject.external_deadline).to be < max_statutory_deadline
+        expect(sar_internal_review.deadline_extendable?).to eq true
+        expect(sar_internal_review.external_deadline).to be < max_statutory_deadline
       end
 
       it "is false when already extended equal or beyond satutory limit" do
         sar = freeze_time { create :approved_sar }
-        sar.external_deadline = subject.max_allowed_deadline_date
+        sar.external_deadline = sar_internal_review.max_allowed_deadline_date
 
         expect(sar.deadline_extendable?).to eq false
       end
@@ -299,7 +299,7 @@ describe Case::SAR::InternalReview do
 
     describe "#initial_deadline" do
       it "uses current external_deadline if not yet extended" do
-        expect(subject.initial_deadline).to eq subject.external_deadline
+        expect(sar_internal_review.initial_deadline).to eq sar_internal_review.external_deadline
       end
 
       it "checks transitions for initial deadline" do
@@ -318,7 +318,7 @@ describe Case::SAR::InternalReview do
 
     describe "#max_allowed_deadline_date" do
       it "is 3 calendar months after the received date" do
-        expect(subject.max_allowed_deadline_date).to eq get_expected_deadline(3.months.since(subject.received_date))
+        expect(sar_internal_review.max_allowed_deadline_date).to eq get_expected_deadline(3.months.since(sar_internal_review.received_date))
       end
     end
 

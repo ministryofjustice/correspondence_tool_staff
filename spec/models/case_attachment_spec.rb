@@ -50,19 +50,19 @@ RSpec.describe CaseAttachment, type: :model do
   end
 
   describe "#filename" do
-    subject do
+    subject(:case_attachment) do
       create :case_attachment,
              type: "response",
              key: "#{SecureRandom.hex(16)}/responses/new response.pdf"
     end
 
     it "returns the name of the attached file" do
-      expect(subject.filename).to eq "new response.pdf"
+      expect(case_attachment.filename).to eq "new response.pdf"
     end
   end
 
   context "with time-limited URLs" do
-    subject do
+    subject(:case_attachment) do
       create :case_attachment,
              type: "response",
              key: "4/responses/new response.docx",
@@ -74,7 +74,7 @@ RSpec.describe CaseAttachment, type: :model do
 
     describe "#temporary_url" do
       before do
-        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(subject.key)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(case_attachment.key)
                                            .and_return(object)
         allow(object).to receive(:presigned_url)
                            .with(:get, expires_in: 900)
@@ -82,13 +82,13 @@ RSpec.describe CaseAttachment, type: :model do
       end
 
       it "creates a pre-signed url that is good for 15 mins" do
-        expect(subject.temporary_url).to be presigned_url
+        expect(case_attachment.temporary_url).to be presigned_url
       end
     end
 
     describe "#temporary_preview_url" do
       before do
-        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(subject.preview_key)
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with(case_attachment.preview_key)
                                            .and_return(object)
         allow(object).to receive(:presigned_url)
                            .with(:get, expires_in: 900)
@@ -97,14 +97,14 @@ RSpec.describe CaseAttachment, type: :model do
 
       context "when preview_key exists" do
         it "creates a pre-signed url that is good for 15 mins" do
-          expect(subject.temporary_preview_url).to be presigned_url
+          expect(case_attachment.temporary_preview_url).to be presigned_url
         end
       end
 
       context "when preview key is nil" do
         it "returns nil" do
-          subject.preview_key = nil
-          expect(subject.temporary_preview_url).to be_nil
+          case_attachment.preview_key = nil
+          expect(case_attachment.temporary_preview_url).to be_nil
         end
       end
     end
@@ -193,8 +193,8 @@ RSpec.describe CaseAttachment, type: :model do
 
     context "when original file is not pdf" do
       it "calls Libreconv.covert and uploads file" do
-        expect(doc_case_attachment).to receive(:download_original_file).and_return("tempfile_orig.doc")
-        expect(doc_case_attachment).to receive(:make_preview_filename).and_return("tempfile_preview.pdf")
+        allow(doc_case_attachment).to receive(:download_original_file).and_return("tempfile_orig.doc")
+        allow(doc_case_attachment).to receive(:make_preview_filename).and_return("tempfile_preview.pdf")
         expect(Libreconv).to receive(:convert).with("tempfile_orig.doc", "tempfile_preview.pdf")
         expect(doc_case_attachment).to receive(:upload_preview)
 
@@ -215,9 +215,9 @@ RSpec.describe CaseAttachment, type: :model do
 
     context "when exception raised during conversion process" do
       it "sets the preview_key to nil" do
-        expect(doc_case_attachment).to receive(:download_original_file).and_return("tempfile_orig.doc")
-        expect(doc_case_attachment).to receive(:make_preview_filename).and_return("tempfile_preview.pdf")
-        expect(Libreconv).to receive(:convert).with("tempfile_orig.doc", "tempfile_preview.pdf").and_raise(RuntimeError)
+        allow(doc_case_attachment).to receive(:download_original_file).and_return("tempfile_orig.doc")
+        allow(doc_case_attachment).to receive(:make_preview_filename).and_return("tempfile_preview.pdf")
+        allow(Libreconv).to receive(:convert).with("tempfile_orig.doc", "tempfile_preview.pdf").and_raise(RuntimeError)
         expect(doc_case_attachment).not_to receive(:upload_preview)
 
         doc_case_attachment.make_preview(0)
@@ -229,9 +229,9 @@ RSpec.describe CaseAttachment, type: :model do
       describe "private method dowload_original_file" do
         it "downloads file and puts in a temporary file" do
           tempfile = double Tempfile, close: nil, path: "/tmp/xxx_my_photo.jpg"
-          expect(Tempfile).to receive(:new).with(["orig", ".jpg"]).and_return(tempfile)
+          allow(Tempfile).to receive(:new).with(["orig", ".jpg"]).and_return(tempfile)
           s3_object = double "S3 Object"
-          expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("6/responses/20170614142203/my_photo.jpg").and_return(s3_object)
+          allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("6/responses/20170614142203/my_photo.jpg").and_return(s3_object)
           expect(s3_object).to receive(:get).with(response_target: "/tmp/xxx_my_photo.jpg")
 
           download_file_path = jpg_case_attachment.__send__(:download_original_file)
@@ -242,7 +242,7 @@ RSpec.describe CaseAttachment, type: :model do
       describe "private method make_preview_filename" do
         it "returns the preview filename based on the key" do
           tempfile = double Tempfile, close: nil, path: "/tmp/xxx_my_photo.pdf"
-          expect(Tempfile).to receive(:new).with(["preview", ".pdf"]).and_return(tempfile)
+          allow(Tempfile).to receive(:new).with(["preview", ".pdf"]).and_return(tempfile)
           preview_path = jpg_case_attachment.__send__(:make_preview_filename)
           expect(preview_path).to eq "/tmp/xxx_my_photo.pdf"
         end
@@ -254,7 +254,7 @@ RSpec.describe CaseAttachment, type: :model do
 
         it "uploads the file to s3" do
           Timecop.freeze(time) do
-            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
+            allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
             expect(s3_object).to receive(:upload_file).with("xxx")
 
             jpg_case_attachment.__send__(:upload_preview, "xxx", 0)
@@ -263,8 +263,8 @@ RSpec.describe CaseAttachment, type: :model do
 
         it "raises if fails after the maximum number of retries has been reached" do
           Timecop.freeze(time) do
-            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
-            expect(s3_object).to receive(:upload_file).with("xxx").and_return(false)
+            allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
+            allow(s3_object).to receive(:upload_file).with("xxx").and_return(false)
 
             expect {
               jpg_case_attachment.__send__(:upload_preview, "xxx", 5)
@@ -274,8 +274,8 @@ RSpec.describe CaseAttachment, type: :model do
 
         it "requeues the job if uplaod fails and max retries as not been reached" do
           Timecop.freeze(time) do
-            expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
-            expect(s3_object).to receive(:upload_file).with("xxx").and_return(false)
+            allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("#{kase.id}/response_previews/20170614142203/my_photo.pdf").and_return(s3_object)
+            allow(s3_object).to receive(:upload_file).with("xxx").and_return(false)
 
             expect(PdfMakerJob).to receive(:perform_with_delay).with(jpg_case_attachment.id, 3)
             jpg_case_attachment.__send__(:upload_preview, "xxx", 2)

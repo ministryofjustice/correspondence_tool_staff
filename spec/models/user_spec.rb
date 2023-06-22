@@ -24,7 +24,7 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  subject { create(:user) }
+  subject(:user) { create(:user) }
 
   let(:offender_sar)        { create(:offender_sar_correspondence_type) }
   let(:overturned_foi)      { create(:overturned_foi_correspondence_type) }
@@ -259,19 +259,19 @@ RSpec.describe User, type: :model do
 
   describe "#soft_delete" do
     it "updates the deleted_at attribute" do
-      subject.soft_delete
-      expect(subject.deleted_at).not_to be nil
+      user.soft_delete
+      expect(user.deleted_at).not_to be nil
     end
   end
 
   describe "#active_for_authentication" do
     it "return true for active user" do
-      expect(subject.active_for_authentication?).to be true
+      expect(user.active_for_authentication?).to be true
     end
 
     it "returns false for deactivated user" do
-      subject.soft_delete
-      expect(subject.active_for_authentication?).to be false
+      user.soft_delete
+      expect(user.active_for_authentication?).to be false
     end
   end
 
@@ -284,7 +284,7 @@ RSpec.describe User, type: :model do
     let(:responding_team) { assignment.team }
 
     it "returns false for a user with no assignments" do
-      expect(subject.has_live_cases_for_team?(responding_team)).to be false
+      expect(user.has_live_cases_for_team?(responding_team)).to be false
     end
 
     it "returns true for a user with an open case" do
@@ -327,7 +327,7 @@ RSpec.describe User, type: :model do
 
   describe "paper_trail versions", versioning: true do
     it "has versions" do
-      expect(subject).to be_versioned
+      expect(user).to be_versioned
     end
 
     context "when creating" do
@@ -346,12 +346,9 @@ RSpec.describe User, type: :model do
   end
 
   context "with password setting" do
-    let(:user) { build :user }
-
     context "and in blacklist" do
       it "errors" do
         user.password = "qwertyuiop"
-        user.save!
         expect(user).not_to be_valid
         expect(user.errors[:password]).to eq ["too easily guessable. Please use another password at least 10 characters long."]
       end
@@ -360,7 +357,6 @@ RSpec.describe User, type: :model do
     context "and too short" do
       it "errrors" do
         user.password = "abc"
-        user.save!
         expect(user).not_to be_valid
         expect(user.errors[:password]).to eq ["is too short (minimum is 10 characters)"]
       end
@@ -370,7 +366,6 @@ RSpec.describe User, type: :model do
       it "does not error and changes the encrypted password" do
         original_encrypted_password = user.encrypted_password
         user.password = SecureRandom.random_number(36**13).to_s(36)
-        user.save!
         expect(user).to be_valid
         expect(user.encrypted_password).not_to eq original_encrypted_password
       end

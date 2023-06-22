@@ -121,12 +121,10 @@ describe CaseFilter::InternalDeadlineFilter do
       end
 
       describe "params that will be submitted when clicking on the crumb" do
-        subject { filter.crumbs[0].second }
-
         it {
-          expect(subject).to eq "internal_deadline_from" => "",
-                                "internal_deadline_to" => "",
-                                "parent_id" => search_query.id
+          expect(filter.crumbs[0].second).to eq "internal_deadline_from" => "",
+                                                "internal_deadline_to" => "",
+                                                "parent_id" => search_query.id
         }
       end
     end

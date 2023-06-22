@@ -1,5 +1,5 @@
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 RSpec.describe Cases::SarInternalReviewController, type: :controller do
   describe "authentication" do
@@ -106,7 +106,7 @@ RSpec.describe Cases::SarInternalReviewController, type: :controller do
     it "if third party is false then details are nil in processed params" do
       post :create, params: third_party_true_params
 
-      processed_params = subject.create_params
+      processed_params = controller.create_params
       expect(processed_params[:name]).to be(nil)
       expect(processed_params[:third_party]).to match("false")
       expect(processed_params[:third_party_relationship]).to be(nil)
@@ -115,7 +115,7 @@ RSpec.describe Cases::SarInternalReviewController, type: :controller do
     it "if third party is true then details are not nil in processed params" do
       post :create, params: third_party_false_params
 
-      processed_params = subject.create_params
+      processed_params = controller.create_params
       expect(processed_params[:name]).to match("Fred Jones")
       expect(processed_params[:third_party]).to match("true")
       expect(processed_params[:third_party_relationship]).to match("Solicitor")

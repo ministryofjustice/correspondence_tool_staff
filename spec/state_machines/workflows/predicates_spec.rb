@@ -63,13 +63,15 @@ module Workflows
       @all_cases
     end
 
-    describe :responder_is_member_of_assigned_team? do
+    describe "responder_is_member_of_assigned_team?" do
+      subject(:predicate) { :responder_is_member_of_assigned_team? }
+
       it {
         # This matcher will expect the given predicate in the spec description
         # to only allow the combinations of [user, case] provided here. All
         # other combinations of the case types in all_cases() and the user
         # types in all_users() will be expected to fail with this predicate.
-        expect(subject).to permit_only_these_combinations(
+        expect(predicate).to permit_only_these_combinations(
           %i[assigned_responder case_drafting],
           %i[assigned_responder case_drafting_flagged],
           %i[assigned_responder case_drafting_flagged_press],
@@ -79,13 +81,15 @@ module Workflows
       }
     end
 
-    describe :user_is_assigned_responder? do
+    describe "user_is_assigned_responder?" do
+      subject(:predicate) { :user_is_assigned_responder? }
+
       it {
         # This matcher will expect the given predicate in the spec description
         # to only allow the combinations of [user, case] provided here. All
         # other combinations of the case types in all_cases() and the user
         # types in all_users() will be expected to fail with this predicate.
-        expect(subject).to permit_only_these_combinations(
+        expect(predicate).to permit_only_these_combinations(
           %i[assigned_responder case_drafting],
           %i[assigned_responder case_drafting_flagged],
           %i[assigned_responder case_drafting_flagged_press],
@@ -95,9 +99,11 @@ module Workflows
       }
     end
 
-    describe :case_can_be_unflagged_for_clearance_by_disclosure_specialist? do
+    describe "case_can_be_unflagged_for_clearance_by_disclosure_specialist?" do
+      subject(:predicate) { :case_can_be_unflagged_for_clearance_by_disclosure_specialist? }
+
       it do
-        expect(subject).to permit_only_these_combinations(
+        expect(predicate).to permit_only_these_combinations(
           %i[disclosure_specialist case_drafting_flagged],
           %i[disclosure_specialist case_drafting_trigger],
           %i[disclosure_specialist case_unassigned_flagged],
@@ -110,9 +116,11 @@ module Workflows
       end
     end
 
-    describe :case_can_be_unflagged_for_clearance_by_press_officer? do
+    describe "case_can_be_unflagged_for_clearance_by_press_officer?" do
+      subject(:predicate) { :case_can_be_unflagged_for_clearance_by_press_officer? }
+
       it do
-        expect(subject).to permit_only_these_combinations(
+        expect(predicate).to permit_only_these_combinations(
           %i[press_officer case_drafting_flagged_press],
           %i[press_officer case_drafting_trigger_press],
           %i[press_officer case_unassigned_flagged_press],
@@ -121,9 +129,11 @@ module Workflows
       end
     end
 
-    describe :case_is_assigned_to_responder_or_approver_in_same_team_as_current_user do
+    describe "case_is_assigned_to_responder_or_approver_in_same_team_as_current_user" do
+      subject(:predicate) { :case_is_assigned_to_responder_or_approver_in_same_team_as_current_user }
+
       it do
-        expect(subject).to permit_only_these_combinations(
+        expect(predicate).to permit_only_these_combinations(
           %i[assigned_responder case_drafting],
           %i[assigned_responder case_drafting_flagged],
           %i[assigned_responder case_drafting_flagged_press],
@@ -145,7 +155,7 @@ module Workflows
       end
     end
 
-    describe :can_create_new_overturned_ico? do
+    describe "can_create_new_overturned_ico?" do
       let(:pred) { described_class.new(user:, kase:) }
 
       context "when manager" do
@@ -157,14 +167,14 @@ module Workflows
 
             context "and overturn already exists" do
               it "returns true" do
-                expect(kase).to receive(:lacks_overturn?).and_return(false)
+                allow(kase).to receive(:lacks_overturn?).and_return(false)
                 expect(pred.can_create_new_overturned_ico?).to be false
               end
             end
 
             context "and no overturn exists yet" do
               it "returns true" do
-                expect(kase).to receive(:lacks_overturn?).and_return(true)
+                allow(kase).to receive(:lacks_overturn?).and_return(true)
                 expect(pred.can_create_new_overturned_ico?).to be true
               end
             end
@@ -199,7 +209,7 @@ module Workflows
       end
     end
 
-    describe :assigned_team_member_and_case_outside_escalation_period? do
+    describe "assigned_team_member_and_case_outside_escalation_period?" do
       let(:kase)        { @all_cases[:case_drafting] }
       let(:predicate)   { described_class.new(user:, kase:) }
 

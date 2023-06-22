@@ -148,7 +148,7 @@ describe Case::ICO::Base do
 
   describe "original_case association" do
     it {
-      expect(subject).to have_one(:original_case)
+      expect(described_class.new).to have_one(:original_case)
                   .through(:original_case_link)
                   .source(:linked_case)
     }
@@ -179,7 +179,7 @@ describe Case::ICO::Base do
 
   describe "original_case_link association" do
     it {
-      expect(subject).to have_one(:original_case_link)
+      expect(described_class.new).to have_one(:original_case_link)
                   .class_name("LinkedCase")
                   .with_foreign_key("case_id")
     }

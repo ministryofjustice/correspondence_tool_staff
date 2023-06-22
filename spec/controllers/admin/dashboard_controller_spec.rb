@@ -17,7 +17,7 @@ describe Admin::DashboardController do
     end
 
     it "has search queries" do
-      expect(subject.queries).to eq [list_query]
+      expect(controller.queries).to eq [list_query]
     end
   end
 
@@ -32,7 +32,7 @@ describe Admin::DashboardController do
     end
 
     it "has search queries" do
-      expect(subject.queries).to eq [search_query]
+      expect(controller.queries).to eq [search_query]
     end
   end
 

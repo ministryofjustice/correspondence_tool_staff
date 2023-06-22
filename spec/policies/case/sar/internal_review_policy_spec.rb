@@ -45,7 +45,7 @@ describe Case::SAR::InternalReviewPolicy do
 
   describe "case type" do
     it "has sar internal review as scope correspondence type" do
-      type = subject::Scope.new(
+      type = described_class::Scope.new(
         manager,
         Case::SAR::InternalReview,
       ).correspondence_type

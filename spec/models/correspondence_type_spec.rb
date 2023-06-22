@@ -25,8 +25,8 @@ describe CorrespondenceType, type: :model do
   it { is_expected.to validate_presence_of(:external_time_limit) }
 
   it {
-    expect(subject).to have_attributes(default_press_officer: nil,
-                                       default_private_officer: nil)
+    expect(described_class.new).to have_attributes(default_press_officer: nil,
+                                                   default_private_officer: nil)
   }
 
   describe ".ico" do

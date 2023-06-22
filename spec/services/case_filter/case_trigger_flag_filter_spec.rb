@@ -96,11 +96,9 @@ describe CaseFilter::CaseTriggerFlagFilter do
       end
 
       describe "params that will be submitted when clicking on the crumb" do
-        subject { case_trigger_flag_filter.crumbs[0].second }
-
         it {
-          expect(subject).to eq "filter_sensitivity" => [""],
-                                "parent_id" => search_query.id
+          expect(case_trigger_flag_filter.crumbs[0].second).to eq "filter_sensitivity" => [""],
+                                                                  "parent_id" => search_query.id
         }
       end
 

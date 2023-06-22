@@ -7,7 +7,7 @@ RSpec.describe LetterTemplate, type: :model do
   it { is_expected.to validate_presence_of(:template_type) }
 
   it {
-    expect(subject).to have_enum(:template_type)
+    expect(described_class.new).to have_enum(:template_type)
           .with_values(%w[acknowledgement dispatch])
   }
 

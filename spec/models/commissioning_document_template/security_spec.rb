@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocumentTemplate::Security do
-  subject { described_class.new(data_request:) }
+  subject(:template) { described_class.new(data_request:) }
 
   let(:kase) do
     build_stubbed(:offender_sar_case,
@@ -15,7 +15,7 @@ RSpec.describe CommissioningDocumentTemplate::Security do
 
   describe "#path" do
     it "matches to a file" do
-      expect(File).to exist(subject.path)
+      expect(File).to exist(template.path)
     end
   end
 
@@ -36,7 +36,7 @@ RSpec.describe CommissioningDocumentTemplate::Security do
 
     it "populates data from the data_request and case" do
       Timecop.freeze(Date.new(2022, 10, 21)) do
-        expect(subject.context).to eq expected_context
+        expect(template.context).to eq expected_context
       end
     end
   end

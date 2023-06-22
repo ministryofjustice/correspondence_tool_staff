@@ -121,12 +121,10 @@ describe CaseFilter::ReceivedDateFilter do
       end
 
       describe "params that will be submitted when clicking on the crumb" do
-        subject { filter.crumbs[0].second }
-
         it {
-          expect(subject).to eq "received_date_from" => "",
-                                "received_date_to" => "",
-                                "parent_id" => search_query.id
+          expect(filter.crumbs[0].second).to eq "received_date_from" => "",
+                                                "received_date_to" => "",
+                                                "parent_id" => search_query.id
         }
       end
     end

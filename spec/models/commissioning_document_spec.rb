@@ -1,46 +1,46 @@
 require "rails_helper"
 
 RSpec.describe CommissioningDocument, type: :model do
-  subject { described_class.new(data_request:) }
+  subject(:commissioning_document) { described_class.new(data_request:) }
 
   let(:offender_sar_case) { create(:offender_sar_case, subject_full_name: "Robert Badson").decorate }
   let(:data_request) { create(:data_request, offender_sar_case:) }
   let(:template_type) { :prison }
 
   it "can be created" do
-    expect(subject).to be_present
+    expect(commissioning_document).to be_present
   end
 
   describe "template validation" do
     context "when no template" do
       it "is not valid" do
-        expect(subject).not_to be_valid
+        expect(commissioning_document).not_to be_valid
       end
 
       it "has one error" do
-        subject.valid?
-        expect(subject.errors.count).to eq 1
+        commissioning_document.valid?
+        expect(commissioning_document.errors.count).to eq 1
       end
     end
 
     context "with invalid template value" do
       it "is not valid" do
         expect {
-          subject.template_name = :invalid
+          commissioning_document.template_name = :invalid
         }.to raise_error(ArgumentError)
       end
 
       it "has one error" do
-        subject.valid?
-        expect(subject.errors.count).to eq 1
+        commissioning_document.valid?
+        expect(commissioning_document.errors.count).to eq 1
       end
     end
 
     context "with valid template value" do
-      before { subject.template_name = template_type }
+      before { commissioning_document.template_name = template_type }
 
       it "is valid" do
-        expect(subject).to be_valid
+        expect(commissioning_document).to be_valid
       end
     end
   end
@@ -48,15 +48,15 @@ RSpec.describe CommissioningDocument, type: :model do
   describe "#document" do
     context "when invalid object" do
       it "returns nil" do
-        expect(subject.document).to be_nil
+        expect(commissioning_document.document).to be_nil
       end
     end
 
     context "when valid object" do
-      before { subject.template_name = template_type }
+      before { commissioning_document.template_name = template_type }
 
       it "outputs the document as a string" do
-        expect(subject.document).to be_a(String)
+        expect(commissioning_document.document).to be_a(String)
       end
     end
   end
@@ -64,7 +64,7 @@ RSpec.describe CommissioningDocument, type: :model do
   describe "#filename" do
     context "when invalid object" do
       it "returns nil" do
-        expect(subject.filename).to be_nil
+        expect(commissioning_document.filename).to be_nil
       end
     end
 
@@ -82,7 +82,7 @@ RSpec.describe CommissioningDocument, type: :model do
 
   describe "setting mime type" do
     it "sets the mime type as expected" do
-      expect(subject.mime_type).to eq :docx
+      expect(commissioning_document.mime_type).to eq :docx
     end
   end
 
@@ -90,16 +90,16 @@ RSpec.describe CommissioningDocument, type: :model do
     let(:attachment) { create(:commissioning_document_attachment) }
 
     before do
-      subject.update(attachment:, template_name: template_type)
+      commissioning_document.update(attachment:, template_name: template_type)
     end
 
     it "sets attachment to nil" do
-      subject.remove_attachment
-      expect(subject.attachment_id).to be_nil
+      commissioning_document.remove_attachment
+      expect(commissioning_document.attachment_id).to be_nil
     end
 
     it "destroys the attachment" do
-      subject.remove_attachment
+      commissioning_document.remove_attachment
       expect { attachment.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end

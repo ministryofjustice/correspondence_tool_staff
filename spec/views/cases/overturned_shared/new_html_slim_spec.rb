@@ -46,7 +46,7 @@ describe "cases/overturned_shared/_new.html.slim" do
   end
 
   describe "ico_appeal_info section" do
-    subject { partial.ico_appeal_info }
+    subject(:info) { partial.ico_appeal_info }
 
     it { is_expected.to be_visible }
     it { is_expected.to have_text(overturned_foi.original_ico_appeal.number) }
@@ -54,7 +54,7 @@ describe "cases/overturned_shared/_new.html.slim" do
     it { is_expected.to have_text("(opens in a new tab)") }
 
     it "opens up a new tab" do
-      link = subject.find("a")
+      link = info.find("a")
       expect(link[:target]).to eq "_blank"
     end
   end

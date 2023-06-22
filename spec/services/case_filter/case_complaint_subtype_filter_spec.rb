@@ -90,11 +90,9 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
         end
 
         describe "params that will be submitted when clicking on the crumb" do
-          subject { case_complaint_subtype_filter.crumbs[0].second }
-
           it {
-            expect(subject).to eq "filter_complaint_subtype" => [""],
-                                  "parent_id" => search_query.id
+            expect(case_complaint_subtype_filter.crumbs[0].second).to eq "filter_complaint_subtype" => [""],
+                                                                         "parent_id" => search_query.id
           }
         end
       end

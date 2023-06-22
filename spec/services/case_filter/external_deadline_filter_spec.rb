@@ -121,12 +121,10 @@ describe CaseFilter::ExternalDeadlineFilter do
       end
 
       describe "params that will be submitted when clicking on the crumb" do
-        subject { filter.crumbs[0].second }
-
         it {
-          expect(subject).to eq "external_deadline_from" => "",
-                                "external_deadline_to" => "",
-                                "parent_id" => search_query.id
+          expect(filter.crumbs[0].second).to eq "external_deadline_from" => "",
+                                                "external_deadline_to" => "",
+                                                "parent_id" => search_query.id
         }
       end
     end

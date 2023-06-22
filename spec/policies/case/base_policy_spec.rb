@@ -377,21 +377,20 @@ describe Case::BasePolicy do
       it "does not permit" do
         expect(flagged_accepted_case.requires_clearance?).to be true
         expect(flagged_accepted_case.approvers).to be_empty
-        expect(subject).not_to permit(approver, flagged_accepted_case)
+        expect(described_class).not_to permit(approver, flagged_accepted_case)
       end
     end
 
     context "when flagged case taken on" do
       it "does not permit" do
-        expect(subject).to permit(responder, pending_dacu_clearance_case)
+        expect(described_class).to permit(responder, pending_dacu_clearance_case)
       end
 
       it "does permit" do
         expect(pending_dacu_clearance_case.requires_clearance?).to be true
         expect(pending_dacu_clearance_case.approvers.first)
           .to be_instance_of(User)
-        expect(subject).to permit(pending_dacu_clearance_case.approvers.first,
-                                  pending_dacu_clearance_case)
+        expect(described_class).to permit(pending_dacu_clearance_case.approvers.first, pending_dacu_clearance_case)
       end
     end
 
@@ -595,7 +594,7 @@ describe Case::BasePolicy do
   permissions :update_closure? do
     it "returns true if the event can be triggered by the state machine" do
       allow(closed_case.state_machine).to receive(:can_trigger_event?).and_return(true)
-      expect(subject).to permit(manager, closed_case)
+      expect(described_class).to permit(manager, closed_case)
       expect(closed_case.state_machine).to have_received(:can_trigger_event?).with(
         event_name: :update_closure,
         metadata: { acting_user_id: manager.id },
@@ -604,7 +603,7 @@ describe Case::BasePolicy do
 
     it "returns false if the event cannot be triggered by the state machine" do
       allow(closed_case.state_machine).to receive(:can_trigger_event?).and_return(false)
-      expect(subject).not_to permit(manager, closed_case)
+      expect(described_class).not_to permit(manager, closed_case)
       expect(closed_case.state_machine).to have_received(:can_trigger_event?).with(
         event_name: :update_closure,
         metadata: { acting_user_id: manager.id },

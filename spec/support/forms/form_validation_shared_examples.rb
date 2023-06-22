@@ -1,5 +1,5 @@
 RSpec.shared_examples "a date question form" do |options|
-  subject { described_class.new(arguments) }
+  subject(:form) { described_class.new(arguments) }
 
   let(:question_attribute) { options[:attribute_name] }
 
@@ -21,12 +21,12 @@ RSpec.shared_examples "a date question form" do |options|
         let(:date_value) { [] }
 
         it "returns false" do
-          expect(subject.save).to be(false)
+          expect(form.save).to be(false)
         end
 
         it "has a validation error on the field" do
-          expect(subject).not_to be_valid
-          expect(subject.errors.added?(question_attribute, :blank)).to eq(true)
+          expect(form).not_to be_valid
+          expect(form.errors.added?(question_attribute, :blank)).to eq(true)
         end
       end
 
@@ -34,13 +34,13 @@ RSpec.shared_examples "a date question form" do |options|
         let(:date_value) { %w[2018 12 nil] }
 
         it "returns false" do
-          expect(subject.save).to be(false)
+          expect(form.save).to be(false)
         end
 
         # ActsAsGovUkDate gem will not set an error symbol but instead an error message
         it "has a validation error on the field" do
-          expect(subject).not_to be_valid
-          expect(subject.errors.added?(question_attribute, "Invalid date")).to eq(true)
+          expect(form).not_to be_valid
+          expect(form.errors.added?(question_attribute, "Invalid date")).to eq(true)
         end
       end
 
@@ -48,13 +48,13 @@ RSpec.shared_examples "a date question form" do |options|
         let(:date_value) { %w[2018 nil 31] }
 
         it "returns false" do
-          expect(subject.save).to be(false)
+          expect(form.save).to be(false)
         end
 
         # ActsAsGovUkDate gem will not set an error symbol but instead an error message
         it "has a validation error on the field" do
-          expect(subject).not_to be_valid
-          expect(subject.errors.added?(question_attribute, "Invalid date")).to eq(true)
+          expect(form).not_to be_valid
+          expect(form.errors.added?(question_attribute, "Invalid date")).to eq(true)
         end
       end
 
@@ -62,13 +62,13 @@ RSpec.shared_examples "a date question form" do |options|
         let(:date_value) { %w[2018 15 31] } # Month 15
 
         it "returns false" do
-          expect(subject.save).to be(false)
+          expect(form.save).to be(false)
         end
 
         # ActsAsGovUkDate gem will not set an error symbol but instead an error message
         it "has a validation error on the field" do
-          expect(subject).not_to be_valid
-          expect(subject.errors.added?(question_attribute, "Invalid date")).to eq(true)
+          expect(form).not_to be_valid
+          expect(form.errors.added?(question_attribute, "Invalid date")).to eq(true)
         end
       end
     end

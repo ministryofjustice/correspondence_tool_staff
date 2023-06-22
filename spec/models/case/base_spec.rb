@@ -33,6 +33,8 @@ require "rails_helper"
 
 # rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 RSpec.describe Case::Base, type: :model do
+  subject(:kase) { described_class.new }
+
   let(:general_enquiry) do
     build_stubbed :case, received_date: Date.parse("16/11/2016")
   end
@@ -131,7 +133,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe "workflow validation" do
     it "validates the workflow" do
-      expect(subject).to validate_inclusion_of(:workflow)
+      expect(kase).to validate_inclusion_of(:workflow)
                 .in_array(%w[standard trigger full_approval])
                 .with_message("invalid")
     end
@@ -248,7 +250,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe "#type" do
     it {
-      expect(subject).to validate_exclusion_of(:type).in_array(%w[Case])
+      expect(kase).to validate_exclusion_of(:type).in_array(%w[Case])
                     .with_message("Case type cannot be blank")
     }
   end
@@ -315,7 +317,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe "#responder" do
     it {
-      expect(subject).to have_one(:responder)
+      expect(kase).to have_one(:responder)
                   .through(:responder_assignment)
                   .source(:user)
     }
@@ -445,68 +447,68 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it {
-      expect(subject).to have_one(:managing_assignment)
+      expect(kase).to have_one(:managing_assignment)
                   .class_name("Assignment")
     }
 
     it {
-      expect(subject).to have_one(:managing_team)
+      expect(kase).to have_one(:managing_team)
                   .through(:managing_assignment)
                   .source(:team)
     }
 
     it {
-      expect(subject).to have_one(:responder_assignment)
+      expect(kase).to have_one(:responder_assignment)
                   .class_name("Assignment")
     }
 
     it {
-      expect(subject).to have_one(:responder)
+      expect(kase).to have_one(:responder)
                   .through(:responder_assignment)
                   .source(:user)
     }
 
     it {
-      expect(subject).to have_one(:responding_team)
+      expect(kase).to have_one(:responding_team)
                   .through(:responder_assignment)
                   .source(:team)
     }
 
     it {
-      expect(subject).to have_one(:warehouse_case_report)
+      expect(kase).to have_one(:warehouse_case_report)
       .class_name("Warehouse::CaseReport")
     }
 
     it {
-      expect(subject).to have_many(:approver_assignments)
+      expect(kase).to have_many(:approver_assignments)
                   .class_name("Assignment")
     }
 
     it {
-      expect(subject).to have_many(:approvers)
+      expect(kase).to have_many(:approvers)
                   .through(:approver_assignments)
                   .source(:user)
     }
 
     it {
-      expect(subject).to have_many(:approving_teams)
+      expect(kase).to have_many(:approving_teams)
                   .through(:approver_assignments)
                   .source(:team)
     }
 
     it {
-      expect(subject).to have_many(:transitions)
+      expect(kase).to have_many(:transitions)
                   .class_name("CaseTransition")
     }
 
     it {
-      expect(subject).to have_many(:message_transitions)
+      expect(kase).to have_many(:message_transitions)
                   .class_name("CaseTransition")
     }
 
     describe "responded_transitions" do
       it {
-        expect(subject).to have_many(:responded_transitions)
+        expect(kase).to have_many(:responded_transitions)
                     .class_name("CaseTransition")
       }
 
@@ -518,12 +520,12 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it {
-      expect(subject).to have_many(:users_transitions_trackers)
+      expect(kase).to have_many(:users_transitions_trackers)
                   .class_name("CasesUsersTransitionsTracker")
     }
 
     it {
-      expect(subject).to have_many(:case_links)
+      expect(kase).to have_many(:case_links)
                   .class_name("LinkedCase")
                   .with_foreign_key("case_id")
     }
@@ -550,7 +552,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe "related_cases association" do
     it {
-      expect(subject).to have_many(:related_cases)
+      expect(kase).to have_many(:related_cases)
                   .through(:related_case_links)
                   .source(:linked_case)
     }
@@ -598,7 +600,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe "related_case_links association" do
     it {
-      expect(subject).to have_many(:related_case_links)
+      expect(kase).to have_many(:related_case_links)
                   .class_name("LinkedCase")
                   .with_foreign_key(:case_id)
     }
