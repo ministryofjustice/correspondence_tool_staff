@@ -11,7 +11,7 @@ class CaseLinkingService
     @result = :incomplete
   end
 
-  def create
+  def create!
     ActiveRecord::Base.transaction do
       # By using a LinkedCase object here we can retrieve validation errors
       # from the models
@@ -42,7 +42,7 @@ class CaseLinkingService
     end
   end
 
-  def destroy
+  def destroy!
     ActiveRecord::Base.transaction do
       # find the linked case
       @link_case = @case.related_cases.find_by(number: @link_case_number)

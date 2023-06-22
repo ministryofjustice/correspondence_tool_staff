@@ -177,7 +177,7 @@ describe CaseLinkingService do
   describe "#destroy" do
     context "when NON-SAR cases" do
       before do
-        service.create
+        service.create!
       end
 
       it "destroys the link between the two cases" do
@@ -187,7 +187,7 @@ describe CaseLinkingService do
       end
 
       it "sets result to :ok and returns same" do
-        result = service.destroy
+        result = service.destroy!
         expect(result).to eq :ok
         expect(service.result).to eq :ok
       end
@@ -223,7 +223,7 @@ describe CaseLinkingService do
       end
 
       before do
-        service.create
+        service.create!
       end
 
       describe "linking a non-sar case to a sar case" do

@@ -16,8 +16,7 @@ RSpec.describe AssignmentsController, type: :controller do
     it "authorises" do
       expect {
         get :new, params:, flash: { "creating_case" => true }
-      }.to require_permission(:can_assign_case?)
-               .with_args(manager, unassigned_case)
+      }.to require_permission(:can_assign_case?).with_args(manager, unassigned_case)
     end
 
     it "renders the page for assignment" do
@@ -27,42 +26,36 @@ RSpec.describe AssignmentsController, type: :controller do
 
     it "sets @case" do
       get :new, params:, flash: { "creating_case" => true }
-      expect(assigns(:case))
-          .to eq unassigned_case
+      expect(assigns(:case)).to eq unassigned_case
     end
 
     it "sets @assignment" do
       get :new, params:, flash: { "creating_case" => true }
-      expect(assigns(:assignment))
-          .not_to be_nil
+      expect(assigns(:assignment)).not_to be_nil
     end
 
     describe "@business_units" do
       it "is a list business units for a selected business group" do
         params[:business_group_id] = responding_team_1.business_group.id
         get :new, params:, flash: { "creating_case" => true }
-        expect(assigns(:business_units))
-            .to match_array [responding_team_1]
+        expect(assigns(:business_units)).to match_array [responding_team_1]
       end
 
       it "is a list of all business units which are responders for the case type in question" do
         params[:show_all] = true
         get :new, params:, flash: { "creating_case" => true }
-        expect(assigns(:business_units))
-            .to match_array([foi_responding_team, sar_responding_team])
+        expect(assigns(:business_units)).to match_array([foi_responding_team, sar_responding_team])
       end
 
       it "is not set if no params are used" do
         get :new, params:, flash: { "creating_case" => true }
-        expect(assigns(:business_units))
-            .not_to be_present
+        expect(assigns(:business_units)).not_to be_present
       end
     end
 
     it "sets @creating_case" do
       get :new, params:, flash: { "creating_case" => true }
-      expect(assigns(:creating_case))
-          .to eq true
+      expect(assigns(:creating_case)).to eq true
     end
   end
 end

@@ -113,7 +113,7 @@ FactoryBot.define do
              acting_team: evaluator.approving_team
 
       kase.assignments.approving.for_team(evaluator.approving_team)
-        .update!(approved: true)
+        .update(approved: true) # rubocop:disable Rails/SaveBang
 
       kase.update!(date_draft_compliant: evaluator.date_draft_compliant)
 
@@ -162,7 +162,7 @@ FactoryBot.define do
              acting_team: evaluator.private_office
 
       kase.assignments.approving.for_team(evaluator.private_office)
-        .update!(approved: true)
+        .update(approved: true) # rubocop:disable Rails/SaveBang
 
       kase.reload
     end
