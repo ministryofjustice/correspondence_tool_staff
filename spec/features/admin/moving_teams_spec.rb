@@ -13,7 +13,7 @@ feature "moving business units" do
   end
 
   after(:all) do
-    DbHousekeeping.clean
+    DbHousekeeping.clean(seed: false)
   end
 
   given(:bu) { find_or_create(:foi_responding_team) }

@@ -9,7 +9,7 @@ module CommissioningDocumentTemplate
 end
 
 RSpec.describe CommissioningDocumentTemplate::TestClass do
-  subject(template) { described_class.new(data_request:) }
+  subject(:template) { described_class.new(data_request:) }
 
   let(:kase) { build_stubbed(:offender_sar_case) }
   let(:data_request) { build_stubbed(:data_request, offender_sar_case: kase) }

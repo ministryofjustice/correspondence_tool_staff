@@ -23,8 +23,7 @@ describe "cases/overturned_shared/_new.html.slim" do
   end
 
   after(:all) do
-    # Cleans up objects created in before(:all)
-    DbHousekeeping.clean
+    DbHousekeeping.clean(seed: false)
   end
 
   before do

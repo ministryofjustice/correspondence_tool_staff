@@ -174,8 +174,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
         end
 
         it "redirects to the case list view" do
-          expect(patch(:confirm_respond, params:)))
-            .to redirect_to(case_path(ot_foi))
+          expect(patch(:confirm_respond, params:)).to redirect_to(case_path(ot_foi))
         end
 
         context "with invalid params" do
@@ -193,7 +192,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
           end
 
           it "redirects to the respond page" do
-            expect(patch(:confirm_respond, params:)))
+            expect(patch(:confirm_respond, params:))
             expect(response).to render_template(:respond)
           end
         end

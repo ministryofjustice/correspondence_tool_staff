@@ -48,7 +48,7 @@ feature "filtering by external deadline", if: working_hours do
     end
 
     after(:all) do
-      DbHousekeeping.clean
+      DbHousekeeping.clean(seed: false)
     end
 
     context "when filtering on the open cases page" do

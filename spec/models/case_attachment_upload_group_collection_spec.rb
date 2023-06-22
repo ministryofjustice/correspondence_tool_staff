@@ -21,7 +21,7 @@ describe CaseAttachmentUploadGroupCollection do
   end
 
   after(:all) do
-    DbHousekeeping.clean
+    DbHousekeeping.clean(seed: false)
   end
 
   describe "#each" do

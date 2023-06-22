@@ -16,7 +16,7 @@ describe CaseSearchService do
     end
 
     after(:all) do
-      DbHousekeeping.clean
+      DbHousekeeping.clean(seed: false)
     end
 
     let(:service) do

@@ -6,8 +6,8 @@ feature "pagination" do
     @responder = find_or_create :foi_responder
   end
 
-  after :all do
-    DbHousekeeping.clean
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
   end
 
   describe "open cases page" do

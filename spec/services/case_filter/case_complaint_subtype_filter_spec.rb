@@ -12,7 +12,9 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
     create :closed_case
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   describe ".available choices" do
     subject    { case_complaint_subtype_filter.available_choices.values[0] }

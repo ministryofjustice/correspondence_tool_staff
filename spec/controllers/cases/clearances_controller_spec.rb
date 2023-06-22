@@ -28,8 +28,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
 
     context "when an anonymous user" do
       it "redirects to sign_in" do
-        expect(patch(:flag_for_clearance, params:)))
-          .to redirect_to(new_user_session_path)
+        expect(patch(:flag_for_clearance, params:)).to redirect_to(new_user_session_path)
       end
 
       context "calling the action from an AJAX request" do

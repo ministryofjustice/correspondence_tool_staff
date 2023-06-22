@@ -322,8 +322,8 @@ describe SearchQuery do
       Case::Base.update_all_indexes
     end
 
-    after :all do
-      DbHousekeeping.clean
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
     end
 
     let(:user) { find_or_create :disclosure_bmt_user }

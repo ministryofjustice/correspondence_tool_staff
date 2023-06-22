@@ -15,7 +15,9 @@ describe CaseAttachmentUploadGroup do
     end
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   let(:upload_group) { described_class.new([@upload_group, @responder.id], :responder, @kase, @kase.attachments) }
 

@@ -104,7 +104,7 @@ RSpec.describe Cases::IcoController, type: :controller do
           }
         end
 
-        context "as the assigned approver" do
+        context "when the assigned approver" do
           before { sign_in approver }
 
           it 'transitions current_state to "responded"' do
@@ -115,8 +115,7 @@ RSpec.describe Cases::IcoController, type: :controller do
           end
 
           it "redirects to the case list view" do
-            expect(patch(:confirm_respond, params:)))
-              .to redirect_to(case_path(approved_ico))
+            expect(patch(:confirm_respond, params:)).to redirect_to(case_path(approved_ico))
           end
         end
       end
@@ -127,7 +126,7 @@ RSpec.describe Cases::IcoController, type: :controller do
         end
 
         after(:all) do
-          DbHousekeeping.clean
+          CaseClosure::MetadataSeeder.unseed!
         end
 
         let(:manager)   { find_or_create :disclosure_bmt_user }
@@ -135,8 +134,8 @@ RSpec.describe Cases::IcoController, type: :controller do
         let(:kase) { create :closed_ico_foi_case, :overturned_by_ico }
         let(:new_date_responded) { 1.business_day.before(kase.date_ico_decision_received) }
 
-        context "closed ICO" do
-          context "change to upheld" do
+        context "when closed ICO" do
+          context "and change to upheld" do
             let(:params)             {
               {
               id: kase.id,
@@ -171,7 +170,7 @@ RSpec.describe Cases::IcoController, type: :controller do
             end
           end
 
-          context "no ico decison files specified" do
+          context "when no ico decison files specified" do
             let(:params) {
               {
               id: kase.id,
@@ -206,7 +205,7 @@ RSpec.describe Cases::IcoController, type: :controller do
             end
           end
 
-          context "change to overturned" do
+          context "when change to overturned" do
             let(:kase)         { create :closed_ico_foi_case, date_ico_decision_received: Time.zone.today }
             let(:params)       {
               {
@@ -243,7 +242,7 @@ RSpec.describe Cases::IcoController, type: :controller do
           end
         end
 
-        context "open ICO" do
+        context "when open ICO" do
           let(:kase) { create :accepted_ico_foi_case }
           let(:new_date_responded) { 1.business_day.ago }
 
@@ -330,12 +329,12 @@ RSpec.describe Cases::IcoController, type: :controller do
           params: params.merge(additional_params)
     end
 
-    context "ico correspondences" do
+    context "when ico correspondences" do
       before do
         sign_in user
       end
 
-      context "linking original case" do
+      context "and linking original case" do
         let(:params) {
           {
             correspondence_type: "ico",
@@ -389,7 +388,7 @@ RSpec.describe Cases::IcoController, type: :controller do
         end
       end
 
-      context "linking related case" do
+      context "when linking related case" do
         let(:params) {
           {
             correspondence_type: "ico",

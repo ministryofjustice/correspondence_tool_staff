@@ -1113,8 +1113,8 @@ RSpec.describe Case::Base, type: :model do
       @sar_case.update_index
     end
 
-    after :all do
-      DbHousekeeping.clean
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
     end
 
     it "returns case with a number that matches the query" do

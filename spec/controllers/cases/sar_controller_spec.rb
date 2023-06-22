@@ -178,7 +178,7 @@ RSpec.describe Cases::SarController, type: :controller do
       end
 
       after(:all) do
-        DbHousekeeping.clean
+        CaseClosure::MetadataSeeder.unseed!
       end
 
       let(:responder) { create :foi_responder }

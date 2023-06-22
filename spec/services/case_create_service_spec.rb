@@ -178,8 +178,8 @@ describe CaseCreateService do
         @original_ico_appeal = create(:closed_ico_sar_case)
       end
 
-      after :all do
-        DbHousekeeping.clean
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
       end
 
       let(:deadline)            { 1.month.from_now.to_date }
@@ -263,8 +263,8 @@ describe CaseCreateService do
         @original_ico_appeal = create(:closed_ico_foi_case)
       end
 
-      after :all do
-        DbHousekeeping.clean
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
       end
 
       let(:deadline)            { 1.month.from_now.to_date }

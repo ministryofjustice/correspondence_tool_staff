@@ -175,7 +175,7 @@ RSpec.describe BusinessUnit, type: :model do
     end
 
     after(:all) do
-      DbHousekeeping.clean
+      DbHousekeeping.clean(seed: false)
     end
 
     describe ".dacu_disclosure" do

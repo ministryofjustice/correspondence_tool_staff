@@ -28,7 +28,7 @@ feature "filters whittle down search results" do
   end
 
   after(:all) do
-    DbHousekeeping.clean
+    DbHousekeeping.clean(seed: false)
   end
 
   context "when type filter" do

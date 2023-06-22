@@ -27,7 +27,7 @@ describe CaseFilter::OpenCaseStatusFilter do
   end
 
   after(:all) do
-    DbHousekeeping.clean
+    DbHousekeeping.clean(seed: false)
   end
 
   describe "#applied?" do
