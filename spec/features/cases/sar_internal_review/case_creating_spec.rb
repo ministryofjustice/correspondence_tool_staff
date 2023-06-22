@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "SAR Internal Review Case creation by a manager" do
   given(:responder)       { find_or_create(:sar_responder) }
   given(:responding_team) { create :responding_team, responders: [responder] }
@@ -21,12 +22,12 @@ feature "SAR Internal Review Case creation by a manager" do
     cases_page.load
   end
 
-  before :all do
+  before(:all) do
     require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
     CaseClosure::MetadataSeeder.seed!
   end
 
-  after :all do
+  after(:all) do
     CaseClosure::MetadataSeeder.unseed!
   end
 
@@ -234,3 +235,4 @@ feature "SAR Internal Review Case creation by a manager" do
     expect(page).to have_content("Assign case")
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

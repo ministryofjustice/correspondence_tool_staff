@@ -30,14 +30,15 @@
 
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 describe Case::SAR::InternalReview do
   require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
-  before :all do
+  before(:all) do
     CaseClosure::MetadataSeeder.seed!
   end
 
-  after :all do
+  after(:all) do
     CaseClosure::MetadataSeeder.unseed!
   end
 
@@ -503,3 +504,4 @@ describe Case::SAR::InternalReview do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "SAR Internal Review Case can be edited", js: true do
   given(:responder)       { find_or_create(:sar_responder) }
   given(:responding_team) { find_or_create :responding_team, responders: [responder] }
@@ -51,12 +52,12 @@ feature "SAR Internal Review Case can be edited", js: true do
     find_or_create :team_dacu_disclosure
   end
 
-  before :all do
+  before(:all) do
     require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
     CaseClosure::MetadataSeeder.seed!
   end
 
-  after :all do
+  after(:all) do
     CaseClosure::MetadataSeeder.unseed!
   end
 
@@ -171,3 +172,4 @@ private
     expect(page).to have_content(new_third_party_relationship)
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

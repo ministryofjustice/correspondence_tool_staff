@@ -1,6 +1,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "category_reference_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "Contacts address book", js: true do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
@@ -40,9 +41,13 @@ feature "Contacts address book", js: true do
            contact_type: CategoryReference.find_by(code: "prison"))
   end
 
-  before :all do
+  before(:all) do
     CategoryReferenceSeeder::ContactTypeSeeder.unseed!
     CategoryReferenceSeeder::ContactTypeSeeder.seed!
+  end
+
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
   end
 
   before do
@@ -371,3 +376,4 @@ feature "Contacts address book", js: true do
     expect(page).to have_content("FG9 5IK")
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

@@ -2,6 +2,7 @@ require "rails_helper"
 require "fileutils"
 require "csv"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   module ETL
     describe OffenderSarClosedCases do
@@ -15,6 +16,10 @@ module Stats
         end
 
         @etl = described_class.new(retrieval_scope: Case::SAR::Offender.all)
+      end
+
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
       end
 
       describe "#heading" do
@@ -46,3 +51,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

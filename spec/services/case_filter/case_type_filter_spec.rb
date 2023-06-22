@@ -8,7 +8,7 @@ describe CaseFilter::CaseTypeFilter do
   let(:sar_ir_timeliness) { create :sar_internal_review, sar_ir_subtype: "timeliness" }
   let(:sar_ir_compliance) { create :sar_internal_review, sar_ir_subtype: "compliance" }
 
-  before :all do
+  before(:all) do
     @setup = StandardSetup.new(only_cases: %i[
       sar_noff_unassigned
       std_unassigned_foi

@@ -1,8 +1,13 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 describe UserActiveCaseCountService do
   before(:all) do
     DbHousekeeping.clean(seed: true)
+  end
+
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
   end
 
   let(:responding_team)   { create :foi_responding_team }
@@ -46,3 +51,4 @@ describe UserActiveCaseCountService do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

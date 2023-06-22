@@ -174,7 +174,7 @@ describe CaseCreateService do
     end
 
     context "when OverturnedSAR" do
-      before :all do
+      before(:all) do
         @original_ico_appeal = create(:closed_ico_sar_case)
       end
 
@@ -259,7 +259,7 @@ describe CaseCreateService do
     end
 
     context "when non trigger OverturnedFOI" do
-      before :all do
+      before(:all) do
         @original_ico_appeal = create(:closed_ico_foi_case)
       end
 

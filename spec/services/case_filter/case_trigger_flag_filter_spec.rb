@@ -5,7 +5,7 @@ describe CaseFilter::CaseTriggerFlagFilter do
   let(:user) { find_or_create :disclosure_specialist_bmt }
   let(:case_trigger_flag_filter) { described_class.new search_query, user, Case::Base }
 
-  before :all do
+  before(:all) do
     @setup = StandardSetup.new(only_cases: %i[
       sar_noff_unassigned
       std_unassigned_foi

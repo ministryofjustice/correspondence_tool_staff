@@ -5,7 +5,7 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
   let(:user) { find_or_create :branston_user }
   let(:case_complaint_subtype_filter) { described_class.new search_query, user, Case::Base }
 
-  before :all do
+  before(:all) do
     DbHousekeeping.clean
 
     create :offender_sar_case

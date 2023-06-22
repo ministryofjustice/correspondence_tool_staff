@@ -1,6 +1,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "report_type_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 RSpec.describe StatsController, type: :controller do
   let(:manager) { find_or_create :disclosure_bmt_user }
   let(:branston_user) { find_or_create :branston_user }
@@ -12,6 +13,10 @@ RSpec.describe StatsController, type: :controller do
 
   before(:all) do
     ReportTypeSeeder.new.seed!
+  end
+
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
   end
 
   describe "#show" do
@@ -347,3 +352,4 @@ RSpec.describe StatsController, type: :controller do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

@@ -302,7 +302,7 @@ describe SearchQuery do
   end
 
   describe "#results" do
-    before :all do
+    before(:all) do
       @responding_team = find_or_create :foi_responding_team
       @sar_responder = find_or_create :sar_responder
       @setup = StandardSetup.new(only_cases: {

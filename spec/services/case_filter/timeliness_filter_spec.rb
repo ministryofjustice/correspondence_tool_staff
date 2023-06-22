@@ -5,7 +5,7 @@ describe CaseFilter::TimelinessFilter do
   let(:user) { find_or_create :disclosure_specialist_bmt }
   let(:filter_service) { described_class.new search_query, user, Case::Base.all }
 
-  before :all do
+  before(:all) do
     @setup = StandardSetup.new(only_cases: %i[
       std_draft_foi
       std_draft_foi_late

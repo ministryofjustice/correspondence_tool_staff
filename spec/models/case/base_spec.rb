@@ -1092,7 +1092,7 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe "search" do
-    before :all do
+    before(:all) do
       @responding_team_a = create :responding_team, name: "Accrediting Aptitudes"
       @responding_team_b = create :responding_team, name: "Bargain Basement"
       @case_a = create :case_being_drafted,

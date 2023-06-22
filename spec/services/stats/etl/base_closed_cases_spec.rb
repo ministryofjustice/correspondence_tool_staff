@@ -2,6 +2,7 @@ require "rails_helper"
 require "fileutils"
 require "csv"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   module ETL
     class DummyETLClosedCases < BaseClosedCases
@@ -29,6 +30,10 @@ module Stats
         end
 
         @etl = DummyETLClosedCases.new(retrieval_scope: Case::Base.all)
+      end
+
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
       end
 
       describe "#extract" do
@@ -158,3 +163,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll
