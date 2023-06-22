@@ -12,19 +12,12 @@ RSpec.describe Cases::IcoController, type: :controller do
 
     describe "#update" do
       let(:manager) { find_or_create :disclosure_bmt_user }
-      let(:now)     { Time.zone.local(2018, 5, 30, 10, 23, 33) }
-
-      before do
-        sign_in manager
-      end
-
       let(:kase) do
         create :accepted_ico_foi_case
       end
-
       let(:params) do
         {
-          "correspondence_type"  =>  "ico",
+          "correspondence_type" => "ico",
           "ico" => {
             "ico_officer_name" => "C00KYM0N",
             "ico_reference_number" => "NEWREFNOMNOMNOM",
@@ -45,6 +38,11 @@ RSpec.describe Cases::IcoController, type: :controller do
           "commit" => "Submit",
           "id" => kase.id.to_s,
         }
+      end
+      let(:now) { Time.zone.local(2018, 5, 30, 10, 23, 33) }
+
+      before do
+        sign_in manager
       end
 
       context "with valid params" do
@@ -137,19 +135,19 @@ RSpec.describe Cases::IcoController, type: :controller do
 
         context "when closed ICO" do
           context "and change to upheld" do
-            let(:params)             {
+            let(:params) do
               {
-              id: kase.id,
-              ico: {
-                date_ico_decision_received_yyyy: kase.created_at.year,
-                date_ico_decision_received_mm: kase.created_at.month,
-                date_ico_decision_received_dd: kase.created_at.day,
-                ico_decision: "upheld",
-                ico_decision_comment: "ayt",
-                uploaded_ico_decision_files: ["uploads/71/request/request.pdf"],
-              },
-            }
-}
+                id: kase.id,
+                ico: {
+                  date_ico_decision_received_yyyy: kase.created_at.year,
+                  date_ico_decision_received_mm: kase.created_at.month,
+                  date_ico_decision_received_dd: kase.created_at.day,
+                  ico_decision: "upheld",
+                  ico_decision_comment: "ayt",
+                  uploaded_ico_decision_files: ["uploads/71/request/request.pdf"],
+                },
+              }
+            end
 
             before do
               sign_in manager
@@ -172,19 +170,19 @@ RSpec.describe Cases::IcoController, type: :controller do
           end
 
           context "when no ico decison files specified" do
-            let(:params) {
+            let(:params) do
               {
-              id: kase.id,
-              ico: {
-                date_ico_decision_received_yyyy: kase.created_at.year,
-                date_ico_decision_received_mm: kase.created_at.month,
-                date_ico_decision_received_dd: kase.created_at
+                id: kase.id,
+                ico: {
+                  date_ico_decision_received_yyyy: kase.created_at.year,
+                  date_ico_decision_received_mm: kase.created_at.month,
+                  date_ico_decision_received_dd: kase.created_at
                   .day,
-                ico_decision: "upheld",
-                ico_decision_comment: "ayt",
-              },
-            }
-}
+                  ico_decision: "upheld",
+                  ico_decision_comment: "ayt",
+                },
+              }
+            end
 
             before do
               sign_in manager
@@ -208,19 +206,19 @@ RSpec.describe Cases::IcoController, type: :controller do
 
           context "when change to overturned" do
             let(:kase)         { create :closed_ico_foi_case, date_ico_decision_received: Time.zone.today }
-            let(:params)       {
+            let(:params)       do
               {
-              id: kase.id,
-              ico: {
-                date_ico_decision_received_yyyy: new_date_responded.year,
-                date_ico_decision_received_mm: new_date_responded.month,
-                date_ico_decision_received_dd: new_date_responded.day,
-                ico_decision: "overturned",
-                ico_decision_comment: "ayt",
-                uploaded_ico_decision_files: ["uploads/71/request/request.pdf"],
-              },
-            }
-}
+                id: kase.id,
+                ico: {
+                  date_ico_decision_received_yyyy: new_date_responded.year,
+                  date_ico_decision_received_mm: new_date_responded.month,
+                  date_ico_decision_received_dd: new_date_responded.day,
+                  ico_decision: "overturned",
+                  ico_decision_comment: "ayt",
+                  uploaded_ico_decision_files: ["uploads/71/request/request.pdf"],
+                },
+              }
+            end
 
             before do
               sign_in manager
@@ -247,17 +245,17 @@ RSpec.describe Cases::IcoController, type: :controller do
           let(:kase) { create :accepted_ico_foi_case }
           let(:new_date_responded) { 1.business_day.ago }
 
-          let(:params)             {
+          let(:params)             do
             {
-            id: kase.id,
-            ico: {
-              date_ico_decision_received_yyyy: new_date_responded.year,
-              date_ico_decision_received_mm: new_date_responded.month,
-              date_ico_decision_received_dd: new_date_responded.day,
-              ico_decision: "overturned",
-            },
-          }
-}
+              id: kase.id,
+              ico: {
+                date_ico_decision_received_yyyy: new_date_responded.year,
+                date_ico_decision_received_mm: new_date_responded.month,
+                date_ico_decision_received_dd: new_date_responded.day,
+                ico_decision: "overturned",
+              },
+            }
+          end
 
           before do
             sign_in manager
@@ -312,10 +310,10 @@ RSpec.describe Cases::IcoController, type: :controller do
     let(:foi_case2)     { create :foi_case }
     let(:foi)           { find_or_create(:foi_correspondence_type) }
 
-    let(:foi_only_team) {
+    let(:foi_only_team) do
       create :business_unit,
-                                 correspondence_type_ids: [foi.id]
-}
+             correspondence_type_ids: [foi.id]
+    end
     # Case managed by foi-only team.
     let(:foi_only_case) { create :foi_case, managing_team: foi_only_team }
     let(:foi_only_user) { create :manager, managing_teams: [foi_only_team] }
@@ -336,12 +334,12 @@ RSpec.describe Cases::IcoController, type: :controller do
       end
 
       context "and linking original case" do
-        let(:params) {
+        let(:params) do
           {
             correspondence_type: "ico",
             link_type: "original",
           }
-        }
+        end
 
         it "renders the partial on success" do
           new_linked_cases_for_request(original_case_number: foi_case.number)
@@ -390,12 +388,12 @@ RSpec.describe Cases::IcoController, type: :controller do
       end
 
       context "when linking related case" do
-        let(:params) {
+        let(:params) do
           {
             correspondence_type: "ico",
             link_type: "related",
           }
-        }
+        end
 
         it "renders the partial on success" do
           new_linked_cases_for_request(
@@ -532,7 +530,7 @@ RSpec.describe Cases::IcoController, type: :controller do
       stub_find_case(approved_ico.id) do |kase|
         expect(kase.state_machine).to have_received(:respond!)
           .with(acting_user: approver,
-                    acting_team: approving_team)
+                acting_team: approving_team)
       end
     end
 

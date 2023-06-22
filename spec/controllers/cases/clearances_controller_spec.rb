@@ -276,7 +276,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
         patch(:request_further_clearance, params:)
         expect(RequestFurtherClearanceService).to have_received(:new)
           .with(hash_including(user: manager,
-                                                  kase: accepted_case))
+                               kase: accepted_case))
 
         expect(service).to have_received(:call)
       end
@@ -318,7 +318,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
         patch(:request_further_clearance, params:)
         expect(RequestFurtherClearanceService).to have_received(:new)
           .with(hash_including(user: manager,
-                                                  kase: accepted_sar))
+                               kase: accepted_sar))
 
         expect(service).to have_received(:call)
       end

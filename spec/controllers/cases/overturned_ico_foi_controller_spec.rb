@@ -45,7 +45,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
       create(
         :ico_foi_case,
         original_case: foi,
-        date_ico_decision_received: Time.zone.today
+        date_ico_decision_received: Time.zone.today,
       )
     end
 
@@ -71,7 +71,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
         case: new_overturned_case,
         case_type: Case::OverturnedICO::FOI,
         call: nil,
-        message: "Case successfully created"
+        message: "Case successfully created",
       )
     end
 
@@ -94,7 +94,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
             received_date_dd
             received_date_mm
             received_date_yyyy
-          ]
+          ],
         )
         .merge(original_case_id: foi.id)
 
@@ -146,7 +146,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
         create(
           :with_response_ot_ico_foi,
           responder:,
-          responding_team:
+          responding_team:,
         )
       end
       let(:date_responded) { ot_foi.received_date + 2.days }
