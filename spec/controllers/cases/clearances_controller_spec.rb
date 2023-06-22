@@ -31,7 +31,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
         expect(patch(:flag_for_clearance, params:)).to redirect_to(new_user_session_path)
       end
 
-      context "calling the action from an AJAX request" do
+      context "when calling the action from an AJAX request" do
         it "does not call the service" do
           patch :flag_for_clearance, params:, xhr: true
           expect(CaseFlagForClearanceService).not_to have_received(:new)
@@ -66,7 +66,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
         sign_in manager
       end
 
-      context "calling the action from an AJAX request" do
+      context "when calling the action from an AJAX request" do
         it "instantiates and calls the service" do
           patch :flag_for_clearance, params:, xhr: true
           expect(CaseFlagForClearanceService)
@@ -89,7 +89,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
         end
       end
 
-      context "calling the action from a HTTP request" do
+      context "when calling the action from a HTTP request" do
         it "instantiates and calls the service" do
           patch(:flag_for_clearance, params:)
           expect(CaseFlagForClearanceService)
@@ -118,7 +118,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
         sign_in disclosure_specialist
       end
 
-      context "calls the action from an AJAX request" do
+      context "when calls the action from an AJAX request" do
         it "instantiates and calls the service" do
           patch :flag_for_clearance, params:, xhr: true
           expect(CaseFlagForClearanceService)
@@ -141,7 +141,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
         end
       end
 
-      context "calls the action from a HTTP request" do
+      context "when calls the action from a HTTP request" do
         it "instantiates and calls the service" do
           patch(:flag_for_clearance, params:)
           expect(CaseFlagForClearanceService)
@@ -173,7 +173,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
     let(:disclosure_team)  { accepted_sar.approving_teams.first }
     let(:params) { { case_id: accepted_sar.id } }
 
-    context "assigned responder" do
+    context "with assigned responder" do
       before do
         sign_in responder
       end
@@ -215,7 +215,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
       end
     end
 
-    context "responder in assigner team" do
+    context "when responder in assigner team" do
       let(:another_assigned_responder) do
         create :responder, responding_teams: [responding_team]
       end
@@ -251,7 +251,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
       instance_double(RequestFurtherClearanceService, call: :ok)
     end
 
-    context "FOI" do
+    context "with FOI" do
       let(:accepted_case) { create :accepted_case }
       let(:params) { { case_id: accepted_case.id } }
 
@@ -293,7 +293,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
       end
     end
 
-    context "SAR" do
+    context "with SAR" do
       let(:accepted_sar) { create :accepted_sar }
       let(:params) { { case_id: accepted_sar.id } }
 
@@ -391,7 +391,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
           sign_in disclosure_specialist
         end
 
-        context "calling the action from an AJAX request" do
+        context "when calling the action from an AJAX request" do
           it "authorises" do
             expect {
               patch :unflag_for_clearance, params:, xhr: true
@@ -422,7 +422,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
           end
         end
 
-        context "calling the action from a HTTP request" do
+        context "when calling the action from a HTTP request" do
           it "authorises" do
             expect {
               patch :unflag_for_clearance, params:

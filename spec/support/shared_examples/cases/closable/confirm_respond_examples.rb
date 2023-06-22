@@ -47,7 +47,7 @@ RSpec.shared_examples "confirm respond spec" do |klass|
         end
       end
 
-      context "as the assigned responder" do
+      context "with the assigned responder" do
         before { sign_in responder }
 
         it 'transitions current_state to "responded"' do

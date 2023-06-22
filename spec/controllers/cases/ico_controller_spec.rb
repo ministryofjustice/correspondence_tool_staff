@@ -47,7 +47,7 @@ RSpec.describe Cases::IcoController, type: :controller do
         }
       end
 
-      context "valid params" do
+      context "with valid params" do
         it "updates the case" do
           patch(:update, params:)
           kase.reload

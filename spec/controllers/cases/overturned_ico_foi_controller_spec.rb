@@ -8,7 +8,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
       sign_in manager
     end
 
-    context "authorization" do
+    describe "authorization" do
       let(:kase) { create :ico_foi_case }
       let(:decorator) { Case::OverturnedICO::FOIDecorator }
       let(:ico_decorator) { Case::ICO::FOIDecorator }
@@ -163,7 +163,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
         }
       end
 
-      context "as the assigned responder" do
+      context "with the assigned responder" do
         before { sign_in responder }
 
         it 'transitions current_state to "responded"' do
