@@ -1,6 +1,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "Closing a case" do
   background do
     login_as create(:manager)
@@ -285,3 +286,4 @@ private
     expect(cases_close_page).to have_case_attachments
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

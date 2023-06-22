@@ -56,7 +56,9 @@ describe Case::BasePolicy::Scope do
       @approver.reload
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     # This is checked with a test because using Case::Base.descendants on every call might be a little
     # slow, and resolving it using a constant results in an empty array due to class loading issues

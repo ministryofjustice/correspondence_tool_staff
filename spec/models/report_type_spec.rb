@@ -18,12 +18,6 @@ require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "report_type_seeder")
 
 RSpec.describe ReportType, type: :model do
-  before do
-    described_class.destroy_all
-  end
-
-  after(:all) { described_class.delete_all }
-
   it { is_expected.to have_many(:reports) }
 
   describe "custom scope" do

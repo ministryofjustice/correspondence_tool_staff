@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   class DummyPerformanceReport < BaseMonthlyPerformanceReport
     def self.title
@@ -21,7 +22,9 @@ module Stats
 
   describe BaseMonthlyPerformanceReport do
     before(:all) { create_report_type(abbr: "dummy") }
-    after(:all) { DbHousekeeping.clean(seed: true) }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "reporting" do
       before(:all) do
@@ -205,3 +208,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

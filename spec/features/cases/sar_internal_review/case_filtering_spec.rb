@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "filtering cases" do
   before(:all) do
     login_as create(:manager)
@@ -12,7 +13,9 @@ feature "filtering cases" do
     @sar_ir_compliance = create(:sar_internal_review, sar_ir_subtype: "compliance")
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   before { sign_in create(:manager) }
 
@@ -57,3 +60,4 @@ feature "filtering cases" do
     result
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

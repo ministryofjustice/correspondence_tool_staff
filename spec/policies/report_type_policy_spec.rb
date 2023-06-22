@@ -21,7 +21,9 @@ describe ReportTypePolicy::Scope do
       @responder.reload
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "#resolve" do
       context "when managers" do

@@ -4,6 +4,7 @@ def working_hours
   Time.zone.today.workday? && Time.zone.now.during_business_hours?
 end
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "filtering by external deadline", if: working_hours do
   include Features::Interactions
 
@@ -202,3 +203,4 @@ feature "filtering by external deadline", if: working_hours do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

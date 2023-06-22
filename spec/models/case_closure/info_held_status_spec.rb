@@ -18,6 +18,7 @@
 
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module CaseClosure
   describe InfoHeldStatus do
     before(:all) do
@@ -27,7 +28,9 @@ module CaseClosure
       @not_confirmed  = create :info_status, :ncnd
     end
 
-    after(:all) { described_class.delete_all }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "abbreviation class methods" do
       it "returns the expected record" do
@@ -61,3 +64,4 @@ module CaseClosure
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

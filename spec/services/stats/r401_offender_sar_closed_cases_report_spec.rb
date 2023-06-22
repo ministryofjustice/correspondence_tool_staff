@@ -1,9 +1,8 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe R401OffenderSarClosedCasesReport do
-    after(:all) { DbHousekeeping.clean(seed: true) }
-
     describe ".title" do
       it "returns correct title" do
         expect(described_class.title).to eq "Closed cases report"
@@ -58,6 +57,10 @@ module Stats
         )
       end
 
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
+      end
+
       describe "#case_scope" do
         it "ignores any selected periods" do
           expected = [@closed_offender_sar.name, @closed_offender_sar1.name]
@@ -77,3 +80,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

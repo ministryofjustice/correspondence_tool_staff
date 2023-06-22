@@ -34,7 +34,9 @@ RSpec.describe Case::Base, type: :model do
       @accepted_t2 = create :case, :flagged_accepted, approving_team: @team_2, name: "Accepted team 2"
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe ".flagged_for_approval" do
       context "when passed one team as a parameter" do

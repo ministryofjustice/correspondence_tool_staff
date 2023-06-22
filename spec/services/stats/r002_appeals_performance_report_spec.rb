@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe R002AppealsPerformanceReport do
     before(:all) do
@@ -78,7 +79,9 @@ module Stats
       Team.where.not(id: required_teams.map(&:id)).destroy_all
     end
 
-    after(:all) { DbHousekeeping.clean(seed: true) }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "#title" do
       it "returns the report title" do
@@ -305,3 +308,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

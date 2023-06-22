@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "filtering cases by timeliness" do
   include PageObjects::Pages::Support
 
@@ -69,3 +70,4 @@ feature "filtering cases by timeliness" do
       .to be_checked
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

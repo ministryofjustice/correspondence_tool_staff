@@ -22,8 +22,7 @@ require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 require File.join(Rails.root, "db", "seeders", "report_type_seeder")
 
-# ReportTypeSeeder.new.seed!
-
+# rubocop:disable RSpec/BeforeAfterAll
 feature "Downloading stats(csv) from the system" do
   given(:manager)   { find_or_create :disclosure_bmt_user }
   given(:responder) { find_or_create :foi_responder }
@@ -43,8 +42,7 @@ feature "Downloading stats(csv) from the system" do
   end
 
   after(:all) do
-    CaseClosure::MetadataSeeder.unseed!
-    ReportType.destroy_all
+    DbHousekeeping.clean(seed: false)
   end
 
   background do
@@ -199,3 +197,4 @@ private
     stats_new_page.load
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

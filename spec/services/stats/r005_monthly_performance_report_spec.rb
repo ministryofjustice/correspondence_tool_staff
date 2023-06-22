@@ -1,9 +1,12 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe R005MonthlyPerformanceReport do
     before(:all) { create_report_type(abbr: :r005) }
-    after(:all) { DbHousekeeping.clean(seed: true) }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe ".title" do
       it "returns the title" do
@@ -224,3 +227,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

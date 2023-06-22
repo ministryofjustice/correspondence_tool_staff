@@ -1,6 +1,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "editing case closure information" do
   given(:manager) { find_or_create :disclosure_bmt_user }
 
@@ -30,3 +31,4 @@ feature "editing case closure information" do
                                   date_responded: 10.business_days.ago)
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

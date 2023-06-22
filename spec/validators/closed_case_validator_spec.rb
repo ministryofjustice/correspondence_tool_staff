@@ -1,12 +1,13 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 describe "ClosedCaseValidator" do
   before(:all) do
     require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
     CaseClosure::MetadataSeeder.seed!
   end
 
-  after(:all) { CaseClosure::Metadatum.destroy_all }
+  after(:all) { CaseClosure::MetadataSeeder.unseed! }
 
   context "when preparing for close validations" do
     let(:kase) { create :case, date_responded: Time.zone.today }
@@ -612,3 +613,4 @@ describe "ClosedCaseValidator" do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

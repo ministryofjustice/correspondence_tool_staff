@@ -19,7 +19,9 @@ describe CaseFilter::CaseTriggerFlagFilter do
     ])
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   describe ".available_sensitivities" do
     subject { case_trigger_flag_filter.available_choices.values[0] }

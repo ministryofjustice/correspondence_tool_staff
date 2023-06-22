@@ -39,8 +39,6 @@ describe RequestUploaderService do
     allow(S3Uploader).to receive(:new).and_return(uploader)
   end
 
-  after(:all) { DbHousekeeping.clean(seed: true) }
-
   describe "#upload!" do
     context "when action upload" do
       let(:action) { "upload" }

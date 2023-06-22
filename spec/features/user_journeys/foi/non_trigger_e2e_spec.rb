@@ -13,6 +13,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "FOI case that does not require clearance" do
   include CaseDateManipulation
   include Features::Interactions
@@ -21,7 +22,7 @@ feature "FOI case that does not require clearance" do
   given(:manager)         { find_or_create :disclosure_bmt_user }
 
   before(:all) do
-    CaseClosure::MetadataSeeder.seed!(verbose: false)
+    CaseClosure::MetadataSeeder.seed!
   end
 
   after(:all) do
@@ -59,3 +60,4 @@ feature "FOI case that does not require clearance" do
                user: manager
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

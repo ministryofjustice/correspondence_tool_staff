@@ -1,8 +1,6 @@
 require "rails_helper"
 
 RSpec.describe Cases::OffenderSarController, type: :controller do
-  after(:all) { DbHousekeeping.clean(seed: true) }
-
   let(:responder) { find_or_create :branston_user }
 
   describe "authentication" do

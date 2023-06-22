@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   class DummyReport < BaseReport
     def report_type
@@ -9,7 +10,9 @@ module Stats
 
   describe BaseReport do
     before(:all) { create_report_type(abbr: :r006) }
-    after(:all) { DbHousekeeping.clean(seed: true) }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe ".new" do
       it "raises if BaseReport is instantiated" do
@@ -42,3 +45,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

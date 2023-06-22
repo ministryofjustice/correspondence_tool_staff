@@ -1,9 +1,12 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 describe "cases/attachments/new.html.slim", type: :view do
   let(:drafting_case) { build_stubbed(:accepted_case, :taken_on_by_press).decorate }
 
-  after(:all) { DbHousekeeping.clean(seed: true) }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   it "displays the uploader" do
     assign(:case, drafting_case)
@@ -18,3 +21,4 @@ describe "cases/attachments/new.html.slim", type: :view do
     expect(page).to have_content(I18n.t("cases.attachments.upload_request_files_heading"))
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

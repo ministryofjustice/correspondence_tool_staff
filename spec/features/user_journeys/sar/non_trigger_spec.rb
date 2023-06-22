@@ -7,6 +7,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "Non-Offender SAR case that does not require clearance" do
   include CaseDateManipulation
   include Features::Interactions
@@ -16,7 +17,7 @@ feature "Non-Offender SAR case that does not require clearance" do
   given!(:sar_correspondence_type) { create :sar_correspondence_type }
 
   before(:all) do
-    CaseClosure::MetadataSeeder.seed!(verbose: false)
+    CaseClosure::MetadataSeeder.seed!
   end
 
   after(:all) do
@@ -41,3 +42,4 @@ feature "Non-Offender SAR case that does not require clearance" do
                    timeliness: "in time"
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

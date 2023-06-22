@@ -27,7 +27,9 @@ describe "state machine" do
     )
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   describe "accept_responder_assignment" do
     let(:event) { :accept_responder_assignment }

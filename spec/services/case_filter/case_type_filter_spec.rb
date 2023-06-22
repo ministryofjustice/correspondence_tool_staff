@@ -22,7 +22,9 @@ describe CaseFilter::CaseTypeFilter do
     ])
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   describe ".available_case_types" do
     subject { case_type_filter.available_choices.values[0] }

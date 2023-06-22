@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module ConfigurableStateMachine
   class TestCallbacks
     def initialize(kase:, metadata:); end
@@ -136,7 +137,9 @@ module ConfigurableStateMachine
       @responding_team    = create :responding_team
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "initial_state" do
       it "returns unassigned" do
@@ -939,3 +942,4 @@ module ConfigurableStateMachine
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

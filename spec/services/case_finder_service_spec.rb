@@ -227,7 +227,9 @@ describe CaseFinderService do
       end
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "#for_params" do
       it "filters cases for provided states" do
@@ -610,7 +612,9 @@ describe CaseFinderService do
       end
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "#incoming_cases_press_office_scope" do
       it "returns incoming non-review cases ordered by creation date descending" do

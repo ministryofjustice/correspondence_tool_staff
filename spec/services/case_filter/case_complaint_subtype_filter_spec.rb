@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 describe CaseFilter::CaseComplaintSubtypeFilter do
   let(:user) { find_or_create :branston_user }
   let(:case_complaint_subtype_filter) { described_class.new search_query, user, Case::Base }
@@ -129,3 +130,4 @@ describe CaseFilter::CaseComplaintSubtypeFilter do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "pagination" do
   background :all do
     @cases = 30.times.map { create :accepted_case }
@@ -45,3 +46,4 @@ feature "pagination" do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

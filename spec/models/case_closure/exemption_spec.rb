@@ -18,6 +18,7 @@
 
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module CaseClosure
   RSpec.describe Exemption, type: :model do
     it { is_expected.to validate_presence_of(:name) }
@@ -34,7 +35,9 @@ module CaseClosure
         @qual_2 = create :exemption, :qualified, abbreviation: "qual2", name: "Qualified 2"
       end
 
-      after(:all) { CaseClosure::Metadatum.delete_all }
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
+      end
 
       describe ".ncnd" do
         it "returns only records of subtype ncnd" do
@@ -85,3 +88,4 @@ module CaseClosure
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

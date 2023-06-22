@@ -22,8 +22,6 @@ describe CommissioningDocumentEmailService do
     allow(S3Uploader).to receive(:new).and_return(uploader)
   end
 
-  after(:all) { DbHousekeeping.clean(seed: true) }
-
   describe "#send!" do
     it "adds the file to the commissioning document" do
       expect {

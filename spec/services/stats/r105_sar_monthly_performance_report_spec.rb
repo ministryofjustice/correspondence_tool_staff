@@ -1,9 +1,8 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe R105SarMonthlyPerformanceReport do
-    after(:all) { DbHousekeeping.clean(seed: true) }
-
     describe ".title" do
       it "returns correct title" do
         expect(described_class.title).to eq "Monthly report"
@@ -52,6 +51,10 @@ module Stats
           @sar_5 = create :closed_sar, :clarification_required, identifier: "sar-tmm", creation_time: @period_start,
                                                                 received_date: @period_start + 1.day, date_responded: @period_end
         end
+      end
+
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
       end
 
       it "returns only SAR cases within the selected period" do
@@ -104,3 +107,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

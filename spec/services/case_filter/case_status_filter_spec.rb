@@ -12,7 +12,9 @@ describe CaseFilter::CaseStatusFilter do
     ])
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   describe "#applied?" do
     subject { case_status_filter }

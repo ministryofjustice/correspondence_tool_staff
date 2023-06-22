@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe CaseSelector do
     before(:all) do
@@ -47,7 +48,9 @@ module Stats
       end
     end
 
-    after(:all) { DbHousekeeping.clean(seed: true) }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     let(:selector) { described_class.new(Case::Base.all) }
 
@@ -121,3 +124,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

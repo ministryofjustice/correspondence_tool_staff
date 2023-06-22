@@ -92,7 +92,9 @@ RSpec.describe BusinessUnit, type: :model do
       @t2_closed_case                   = create :closed_case, responding_team: @team_2, name: "t2-closed"
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "scope cases" do
       it "returns all cases allocated to the team including rejected and closed" do

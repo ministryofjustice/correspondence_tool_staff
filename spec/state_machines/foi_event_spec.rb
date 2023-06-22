@@ -48,7 +48,9 @@ describe "state machine" do
       )
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     let(:disclosure_assignment) do
       kase.assignments.approving.for_team(@setup.disclosure_team).first
@@ -2014,7 +2016,9 @@ describe "state machine" do
       )
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "update_closure" do
       let(:event) { :update_closure }

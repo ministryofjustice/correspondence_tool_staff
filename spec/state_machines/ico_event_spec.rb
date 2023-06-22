@@ -33,7 +33,9 @@ describe "state machine" do
       )
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     describe "setup" do
       context "when FOI" do
@@ -857,3 +859,4 @@ describe "state machine" do
     end
   end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

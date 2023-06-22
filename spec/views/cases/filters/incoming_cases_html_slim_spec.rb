@@ -1,6 +1,7 @@
 require "rails_helper"
 require "capybara/dsl"
 
+# rubocop:disable RSpec/BeforeAfterAll
 describe "cases/filters/incoming.html.slim", type: :view do
   let(:disclosure_specialist) { find_or_create :disclosure_specialist }
   let(:team_dacu_disclosure) { find_or_create :team_dacu_disclosure }
@@ -41,7 +42,9 @@ describe "cases/filters/incoming.html.slim", type: :view do
     allow(controller).to receive(:current_user).and_return(disclosure_specialist)
   end
 
-  after(:all) { DbHousekeeping.clean(seed: true) }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   it "displays the cases given it" do
     case1
@@ -95,3 +98,4 @@ describe "cases/filters/incoming.html.slim", type: :view do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

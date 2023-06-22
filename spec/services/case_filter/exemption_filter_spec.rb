@@ -21,7 +21,9 @@ describe CaseFilter::ExemptionFilter do
     @kase_7 = create :case
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   describe "#applied?" do
     subject { filter }

@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "joining business units" do
   before(:all) do
     @open_cases = {
@@ -67,3 +68,4 @@ feature "joining business units" do
     expect(cases_page).to have_text(closed_case_number)
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

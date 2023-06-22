@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "moving business units" do
   before(:all) do
     @open_cases = {
@@ -55,3 +56,4 @@ feature "moving business units" do
     expect(cases_page).to have_text(bu.reload.cases.closed.first.number)
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

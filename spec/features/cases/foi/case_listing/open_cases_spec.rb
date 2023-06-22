@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "listing open cases on the system" do
   background :all do
     @responding_team_a = create :responding_team,
@@ -44,7 +45,9 @@ feature "listing open cases on the system" do
     @closed_case = create :closed_case, responder: @responder_a
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   context "with managers" do
     scenario "shows all cases" do
@@ -99,3 +102,4 @@ feature "listing open cases on the system" do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

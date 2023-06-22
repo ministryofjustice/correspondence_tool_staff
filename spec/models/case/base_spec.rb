@@ -404,7 +404,9 @@ RSpec.describe Case::Base, type: :model do
         @kase_3 = create_closed_case_with_exemptions("s29", "s33", "s37")   # economy, audit, royals
       end
 
-      after(:all) { DbHousekeeping.clean }
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
+      end
 
       it "returns a list of cases which have the specified exemption" do
         exemption = CaseClosure::Exemption.find_by(abbreviation: "future")
@@ -534,14 +536,14 @@ RSpec.describe Case::Base, type: :model do
       before(:all) do
         @case_1 = create :case
         @case_2 = create :case
-        # @case_3 = create :case
 
         # link cases
         @case_1.linked_cases << @case_2
-        # @case_3.linked_cases << [@case_1]
       end
 
-      after(:all) { DbHousekeeping.clean }
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
+      end
 
       it "shows case 1 to be linked to case 2" do
         expect(@case_1.linked_cases).to include @case_2

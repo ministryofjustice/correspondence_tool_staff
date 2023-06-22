@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe R003BusinessUnitPerformanceReport do
     before(:all) do
@@ -71,7 +72,9 @@ module Stats
       Team.where("name = ?", "Operations").destroy_all
     end
 
-    after(:all) { DbHousekeeping.clean(seed: true) }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     context "when defining the period" do
       context "and no period parameters passsed in" do
@@ -517,3 +520,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

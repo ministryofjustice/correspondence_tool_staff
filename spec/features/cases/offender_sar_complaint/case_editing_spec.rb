@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "offender sar complaint case editing by a manager" do
   given(:manager)         { find_or_create :branston_user }
   given(:managing_team)   { create :managing_team, managers: [manager] }
@@ -21,7 +22,7 @@ feature "offender sar complaint case editing by a manager" do
   end
 
   after(:all) do
-    CaseClosure::MetadataSeeder.unseed!
+    DbHousekeeping.clean(seed: false)
   end
 
   scenario "editing an offender sar complaint case" do
@@ -533,3 +534,4 @@ feature "offender sar complaint case editing by a manager" do
     expect(complaint.third_party_name).to eq ""
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

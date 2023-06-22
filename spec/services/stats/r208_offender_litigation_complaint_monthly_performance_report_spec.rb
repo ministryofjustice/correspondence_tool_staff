@@ -1,9 +1,8 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe R208OffenderLitigationComplaintMonthlyPerformanceReport do
-    after(:all) { DbHousekeeping.clean(seed: true) }
-
     describe ".title" do
       it "returns correct title" do
         expect(described_class.title).to eq "Monthly report"
@@ -57,6 +56,10 @@ module Stats
                                             identifier: "litigation_complaint-4",
                                             received_date: @period_start + 61.minutes
         end
+      end
+
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
       end
 
       it "returns only Offender SAR cases within the selected period" do
@@ -134,3 +137,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

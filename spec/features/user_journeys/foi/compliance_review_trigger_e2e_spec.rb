@@ -15,6 +15,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "FOI compliance review case that requires clearance" do
   include CaseDateManipulation
   include Features::Interactions
@@ -81,3 +82,4 @@ feature "FOI compliance review case that requires clearance" do
                user: manager
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

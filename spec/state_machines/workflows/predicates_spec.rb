@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Workflows
   describe Predicates do
     include PermitPredicate
@@ -44,7 +45,9 @@ module Workflows
       }
     end
 
-    after(:all) { DbHousekeeping.clean }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     def all_users
       # Users used by the permit_only_these_combinations matcher in combination
@@ -259,3 +262,4 @@ module Workflows
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

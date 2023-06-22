@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe R006KiloMap do
     before(:all) do
@@ -7,7 +8,9 @@ module Stats
       create_report_type(abbr: :r006)
     end
 
-    after(:all) { DbHousekeeping.clean(seed: true) }
+    after(:all) do
+      DbHousekeeping.clean(seed: false)
+    end
 
     it "produces a kilo map as a csv" do
       dacu_disclosure = BusinessUnit.dacu_disclosure
@@ -105,3 +108,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

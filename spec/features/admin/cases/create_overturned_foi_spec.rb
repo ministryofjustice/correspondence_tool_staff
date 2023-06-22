@@ -1,6 +1,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "creating ICO Overturned FOI case" do
   given(:admin) { create :admin }
 
@@ -69,3 +70,4 @@ feature "creating ICO Overturned FOI case" do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

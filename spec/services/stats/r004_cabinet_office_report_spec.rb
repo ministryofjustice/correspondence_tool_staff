@@ -1,6 +1,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 module Stats
   describe R004CabinetOfficeReport do
     describe "sections 1, 2, 3, 5, 6, 7" do
@@ -102,7 +103,9 @@ module Stats
         end
       end
 
-      after(:all) { DbHousekeeping.clean(seed: true) }
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
+      end
 
       describe "1.A" do
         it "records the total number" do
@@ -612,7 +615,9 @@ module Stats
         end
       end
 
-      after(:all) { DbHousekeeping.clean(seed: true) }
+      after(:all) do
+        DbHousekeeping.clean(seed: false)
+      end
 
       describe "4.A" do
         it "counts the number of cases with just one exception s21 including in time and out of time" do
@@ -637,3 +642,4 @@ module Stats
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

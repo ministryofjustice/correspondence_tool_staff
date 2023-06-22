@@ -1,6 +1,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "adding cases" do
   given(:admin) { create :admin }
 
@@ -299,3 +300,4 @@ feature "adding cases" do
     numbers.times { |_| (create :team).update!(deleted_at: Time.zone.now) }
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

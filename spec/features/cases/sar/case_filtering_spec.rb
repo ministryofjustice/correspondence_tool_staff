@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/BeforeAfterAll
 feature "filtering cases" do
   before(:all) do
     login_as create(:manager)
@@ -9,7 +10,9 @@ feature "filtering cases" do
     @pending_dacu_clearance_case = create :pending_dacu_clearance_sar
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: false)
+  end
 
   before { sign_in create(:manager) }
 
@@ -72,3 +75,4 @@ feature "filtering cases" do
     result
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

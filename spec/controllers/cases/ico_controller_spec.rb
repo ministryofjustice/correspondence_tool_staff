@@ -1,6 +1,7 @@
 require "rails_helper"
 require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
 
+# rubocop:disable RSpec/BeforeAfterAll
 RSpec.describe Cases::IcoController, type: :controller do
   describe "FOI" do
     describe "#edit" do
@@ -548,3 +549,4 @@ RSpec.describe Cases::IcoController, type: :controller do
     end
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll
