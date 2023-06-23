@@ -77,7 +77,7 @@ describe Cases::PitExtensionsController, type: :controller do
       end
 
       it "redirects to case details" do
-        expect(:result).to redirect_to(case_path(case_being_drafted.id))
+        expect(request).to redirect_to(case_path(case_being_drafted.id))
       end
     end
 
@@ -90,7 +90,7 @@ describe Cases::PitExtensionsController, type: :controller do
 
       it "notifies the user of the failure" do
         expect(flash[:alert]).to eq "Unable to perform PIT extension on case #{case_being_drafted.number}"
-        expect(:result).to redirect_to(case_path(case_being_drafted.id))
+        expect(request).to redirect_to(case_path(case_being_drafted.id))
       end
     end
   end

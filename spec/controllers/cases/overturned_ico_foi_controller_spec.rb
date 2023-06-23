@@ -192,7 +192,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
           end
 
           it "redirects to the respond page" do
-            expect(patch(:confirm_respond, params:))
+            patch(:confirm_respond, params:)
             expect(response).to render_template(:respond)
           end
         end

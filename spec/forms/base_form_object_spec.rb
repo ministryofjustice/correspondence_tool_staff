@@ -1,5 +1,6 @@
 require "rails_helper"
 
+# rubocop:disable RSpec/SubjectStub
 RSpec.describe BaseFormObject do
   subject(:base_form_object) { described_class.new }
 
@@ -72,3 +73,4 @@ RSpec.describe BaseFormObject do
     end
   end
 end
+# rubocop:enable RSpec/SubjectStub

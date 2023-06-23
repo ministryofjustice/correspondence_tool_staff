@@ -492,15 +492,11 @@ module Stats
       responded_date = responded.nil? ? nil : Date.parse(responded)
       kase = nil
       Timecop.freeze(received_date + 10.hours) do
-        factory =
-          case type
-          when "std"
-            :case_with_response
-          when "irt"
-            :accepted_timeliness_review
-          when "irc"
-            :accepted_compliance_review
-          end
+        factory = {
+          std: :case_with_response,
+          irt: :accepted_timeliness_review,
+          irc: :accepted_compliance_review,
+        }[type.to_sym]
 
         kase = create(factory, responding_team: team, responder:, identifier: ident, received_date:)
         kase.external_deadline = Date.parse(deadline)

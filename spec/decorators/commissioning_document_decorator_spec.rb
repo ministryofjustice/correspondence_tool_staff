@@ -23,7 +23,7 @@ describe CommissioningDocumentDecorator, type: :model do
   describe :updated_at do
     it "formats the updated date and time" do
       Timecop.freeze Time.zone.local(2023, 1, 30, 15, 52, 22) do
-        commissioning_document_sent.update_attribute(:template_name, "probation")
+        commissioning_document_sent.update!(template_name: "probation")
         expect(commissioning_document_sent.updated_at).to eq "30 Jan 2023 15:52"
       end
     end

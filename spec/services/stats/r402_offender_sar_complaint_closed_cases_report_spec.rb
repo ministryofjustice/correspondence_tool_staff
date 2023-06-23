@@ -4,6 +4,7 @@ require "rails_helper"
 module Stats
   describe R402OffenderSarComplaintClosedCasesReport do
     before(:all) { create_report_type(abbr: :r402) }
+
     after(:all) do
       DbHousekeeping.clean(seed: false)
     end

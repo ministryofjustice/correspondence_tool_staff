@@ -27,7 +27,7 @@ RSpec.describe Cases::LinksController, type: :controller do
   end
 
   describe "#create" do
-    let(:service) { double(CaseLinkingService, create: :ok) }
+    let(:service) { double(CaseLinkingService, create!: :ok) }
     let(:post_params) do
       {
         case_id: kase.id,
@@ -56,7 +56,7 @@ RSpec.describe Cases::LinksController, type: :controller do
         post_params[:case][:number_to_link],
       )
 
-      expect(service).to have_received(:create)
+      expect(service).to have_received(:create!)
     end
 
     it "notifies the user of the success" do
@@ -65,27 +65,27 @@ RSpec.describe Cases::LinksController, type: :controller do
     end
 
     context "with validation error" do
-      let(:service) { double(CaseLinkingService, create: :validation_error) }
+      let(:service) { double(CaseLinkingService, create!: :validation_error) }
 
       it "renders the new_link page" do
         post :create, params: post_params
-        expect(:result).to have_rendered(:new)
+        expect(request).to have_rendered(:new)
       end
     end
 
     context "when failed request" do
-      let(:service) { double(CaseLinkingService, create: :error) }
+      let(:service) { double(CaseLinkingService, create!: :error) }
 
       it "notifies the user of the failure" do
         post :create, params: post_params
         expect(flash[:alert]).to eq "Unable to create a link to case #{link_case.number}"
-        expect(:result).to redirect_to(case_path(kase.id))
+        expect(request).to redirect_to(case_path(kase.id))
       end
     end
   end
 
   describe "#destroy" do
-    let(:service) { double(CaseLinkingService, destroy: :ok) }
+    let(:service) { double(CaseLinkingService, destroy!: :ok) }
     let(:delete_params) do
       {
         case_id: kase.id, id: link_case.number
@@ -111,7 +111,7 @@ RSpec.describe Cases::LinksController, type: :controller do
           kase,
           delete_params[:id],
         )
-      expect(service).to have_received(:destroy)
+      expect(service).to have_received(:destroy!)
     end
 
     it "notifies the user of the success" do
@@ -121,13 +121,13 @@ RSpec.describe Cases::LinksController, type: :controller do
     end
 
     context "when failed request" do
-      let(:service) { double(CaseLinkingService, destroy: :failed) }
+      let(:service) { double(CaseLinkingService, destroy!: :failed) }
 
       it "notifies the user of the failure" do
         delete :destroy, params: delete_params
         expect(flash[:alert])
           .to eq "Unable to remove the link to case #{link_case.number}"
-        expect(:result).to redirect_to(case_path(kase.id))
+        expect(request).to redirect_to(case_path(kase.id))
       end
     end
   end

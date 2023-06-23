@@ -51,7 +51,7 @@ describe DataRequestDecorator, type: :model do
       let(:decorated) { data_request.decorate }
 
       before do
-        data_request.update_attribute(:contact, contact)
+        data_request.update!(contact:)
       end
 
       it "uses name of organisation" do
@@ -77,12 +77,12 @@ describe DataRequestDecorator, type: :model do
       let(:example_name) { "Jim Smith Brixton Prison" }
 
       before do
-        data_request.update_attribute(:contact, contact)
+        data_request.update!(contact:)
       end
 
       context "when contact has data_request_name" do
         it "uses data_request_name of organisation" do
-          contact.update_attribute(:data_request_name, example_name)
+          contact.update!(data_request_name: example_name)
           expect(decorated.data_request_name).to eq example_name
         end
       end

@@ -5,9 +5,7 @@ RSpec.describe Case::OverturnedICO::FOIPolicy do
 
   let(:managing_team)         { find_or_create :team_dacu }
   let(:other_managing_team)   { create :managing_team }
-  let(:manager)               { managing_team.managers.first }
   let(:responding_team)       { create :responding_team }
-  let(:responder)             { responding_team.responders.first }
   let(:dacu_disclosure)       { find_or_create :team_dacu_disclosure }
   let(:disclosure_specialist) { dacu_disclosure.approvers.first }
 

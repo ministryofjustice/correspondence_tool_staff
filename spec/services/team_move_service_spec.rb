@@ -168,7 +168,7 @@ describe TeamMoveService do
 
       context "when the team being moved has no code defined" do
         it "leaves the team code blank" do
-          business_unit.update_attribute(:code, nil)
+          business_unit.update!(code: nil)
           service.call
 
           expect(business_unit.reload.code).to be_blank

@@ -192,16 +192,6 @@ RSpec.describe Case, type: :model do
         end
       end
 
-      context "when the date responded is before on external deadline" do
-        let(:days_taken) { foi.external_time_limit - 1 }
-
-        it "returns true" do
-          Timecop.freeze(Date.new(2020, 8, 19)) do
-            expect(responded_case.within_external_deadline?).to eq true
-          end
-        end
-      end
-
       context "when the date responded is after the external deadline" do
         let(:days_taken) { foi.external_time_limit + 1 }
 

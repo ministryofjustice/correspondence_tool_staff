@@ -64,7 +64,7 @@ RSpec.describe Searchable do
     it "updates all cases" do
       @searchable.class.update_all_indexes
 
-      @searchable.class.all.each { |obj| expect(obj).to have_received :update_index }
+      expect(@searchable.class.all).to all have_received :update_index
     end
   end
 

@@ -6,7 +6,7 @@ module TestJobForCloseReport
   end
 
   class DummyReportTest < Stats::BaseClosedCasesReport
-    def initialize(**options); end
+    def initialize(**options); end # rubocop:disable Lint/MissingSuper
 
     def process(report_guid:); end
   end

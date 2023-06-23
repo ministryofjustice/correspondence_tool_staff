@@ -47,16 +47,8 @@ RSpec.describe OffenderSARComplaintCaseForm do
         ).require(:case_form).permit(:name, :postal_address)
       end
 
-      context "and the form model has the values merged" do
-        it "returns false" do
-          expect(case_form.valid_attributes?(params)).to be false
-        end
-      end
-
-      context "and the form model does not have the values merged" do
-        it "returns false" do
-          expect(case_form.valid_attributes?(params)).to be false
-        end
+      it "returns false" do
+        expect(case_form.valid_attributes?(params)).to be false
       end
     end
   end

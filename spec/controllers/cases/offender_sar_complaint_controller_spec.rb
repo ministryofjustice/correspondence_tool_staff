@@ -428,7 +428,6 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     let(:errors) { assigns(:case).errors.messages }
 
     let(:offender_sar_complaint) { create(:offender_sar_complaint).decorate }
-    let(:params) { { id: offender_sar_complaint.id } }
     let(:params) do
       {
         id: offender_sar_complaint.id,
@@ -449,7 +448,6 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
       }
     end
 
-    let(:same_params) { { id: offender_sar_complaint.id } }
     let(:same_params) do
       {
         id: offender_sar_complaint.id,
@@ -463,7 +461,6 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     end
 
     let(:litigation_complaint) { create(:offender_sar_complaint, complaint_type: "litigation_complaint").decorate }
-    let(:invalid_litigation_params) { { id: litigation_complaint.id } }
     let(:invalid_litigation_params) do
       {
         id: litigation_complaint.id,
@@ -477,7 +474,6 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     end
 
     let(:ico_complaint) { create(:offender_sar_complaint, complaint_type: "ico_complaint").decorate }
-    let(:invalid_ico_params) { { id: ico_complaint.id } }
     let(:invalid_ico_params) do
       {
         id: ico_complaint.id,

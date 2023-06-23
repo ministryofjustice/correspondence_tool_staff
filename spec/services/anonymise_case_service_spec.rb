@@ -201,9 +201,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
 
       notes = sar_notes + complaint_notes
 
-      notes.each do |note|
-        expect(note).to eq("Note details have been anonymised")
-      end
+      expect(notes).to all eq("Note details have been anonymised")
     end
 
     it "can destroy the papertrail versions of a case" do
@@ -244,7 +242,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
         closed?: true,
         retention_schedule: instance_double(
           RetentionSchedule,
-          present?: false,
+          blank?: true,
         ),
       )
     end
@@ -256,7 +254,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
         closed?: true,
         retention_schedule: instance_double(
           RetentionSchedule,
-          present?: true,
+          blank?: false,
           to_be_anonymised?: false,
         ),
       )
@@ -268,7 +266,7 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
         type_of_offender_sar?: false,
         retention_schedule: instance_double(
           RetentionSchedule,
-          present?: false,
+          blank?: false,
         ),
       )
     end

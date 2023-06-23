@@ -22,6 +22,7 @@ module Stats
 
   describe BaseMonthlyPerformanceReport do
     before(:all) { create_report_type(abbr: "dummy") }
+
     after(:all) do
       DbHousekeeping.clean(seed: false)
     end

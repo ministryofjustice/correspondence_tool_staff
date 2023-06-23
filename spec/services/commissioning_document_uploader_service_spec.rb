@@ -109,20 +109,6 @@ describe CommissioningDocumentUploaderService do
           expect(service.result).to eq :error
         end
       end
-
-      describe "uploader raises an S3 service error" do
-        before do
-          allow(uploader)
-            .to receive(:process_files)
-                  .with(uploads_key, :commissioning_document)
-                  .and_raise(Aws::S3::Errors::ServiceError.new(:foo, :bar))
-        end
-
-        it "returns :error" do
-          service.upload!
-          expect(service.result).to eq :error
-        end
-      end
     end
   end
 end

@@ -199,24 +199,6 @@ describe Case::BaseDecorator, type: :model do
     end
   end
 
-  describe "#internal_deadline" do
-    context "when unflagged case" do
-      it "returns space" do
-        unflagged_case = create(:case).decorate
-        expect(unflagged_case.internal_deadline).to eq " "
-      end
-    end
-
-    context "when flagged case" do
-      it "returns the internal deadline" do
-        Timecop.freeze(Time.zone.local(2017, 5, 2, 9, 45, 33)) do
-          flagged_case = create(:case, :flagged, creation_time: Time.zone.today).decorate
-          expect(flagged_case.internal_deadline).to eq "16 May 2017"
-        end
-      end
-    end
-  end
-
   describe "#external_deadline" do
     it "returns the external deadline" do
       Timecop.freeze(Time.zone.local(2017, 5, 2, 9, 45, 33)) do

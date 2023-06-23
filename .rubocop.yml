@@ -56,36 +56,6 @@ RSpec/RepeatedDescription:
   Enabled: false
 Style/OptionalArguments:
   Enabled: false
-RSpec/OverwritingSetup:
-  Enabled: false
-Rails/SkipsModelValidations:
-  Enabled: false
-RSpec/EmptyLineAfterHook:
-  Enabled: false
-Style/HashLikeCase:
-  Enabled: false
-RSpec/RepeatedExampleGroupBody:
-  Enabled: false
-RSpec/IteratedExpectation:
-  Enabled: false
-RSpec/MissingExampleGroupArgument:
-  Enabled: false
-Style/DateTime:
-  Enabled: false
-RSpec/MultipleDescribes:
-  Enabled: false
-RSpec/ExpectActual:
-  Enabled: false
-Lint/MissingSuper:
-  Enabled: false
-RSpec/SubjectStub:
-  Enabled: false
-RSpec/ScatteredSetup:
-  Enabled: false
-RSpec/VoidExpect:
-  Enabled: false
-RSpec/NamedSubject:
-  Enabled: false
 # **************************************************************
 # TRY NOT TO ADD OVERRIDES IN THIS FILE
 #

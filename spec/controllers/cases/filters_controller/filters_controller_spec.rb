@@ -7,7 +7,6 @@ describe Cases::FiltersController, type: :controller do
   let(:responding_team)       { responder.responding_teams.first }
   let(:team_dacu_disclosure)  { find_or_create :team_dacu_disclosure }
   let(:manager_approver)      { create :manager_approver }
-  let(:responding_team)       { responder.responding_teams.first }
 
   let(:flagged_case) do
     create(

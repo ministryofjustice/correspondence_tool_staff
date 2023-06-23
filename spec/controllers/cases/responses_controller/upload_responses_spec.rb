@@ -40,9 +40,6 @@ describe Cases::ResponsesController, type: :controller do
       }
     end
 
-    let(:flash)             { MockFlash.new(action_params: "upload") }
-    let(:response_uploader) { double ResponseUploaderService, upload!: nil, result: :ok }
-
     it "authorises" do
       expect {
         post :create, params:

@@ -123,22 +123,11 @@ href=\"/cases/ico_fois/#{@case.id}/close\">Record ICO&#39;s decision</a>",
     end
 
     context "when event == :add_responses" do
-      context "when case does not require clearance" do
-        it "generates HTML that links to the upload response page" do
-          @case = create(:accepted_case)
-          expect(action_button_for(:add_responses)).to eq(
-            "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/responses/new/upload_responses\">Upload response</a>",
-          )
-        end
-      end
-
-      context "and case requires clearance" do
-        it "generates HTML that links to the upload response page" do
-          @case = create(:accepted_case)
-          expect(action_button_for(:add_responses)).to eq(
-            "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/responses/new/upload_responses\">Upload response</a>",
-          )
-        end
+      it "generates HTML that links to the upload response page" do
+        @case = create(:accepted_case)
+        expect(action_button_for(:add_responses)).to eq(
+          "<a id=\"action--upload-response\" class=\"button\" href=\"/cases/#{@case.id}/responses/new/upload_responses\">Upload response</a>",
+        )
       end
     end
 

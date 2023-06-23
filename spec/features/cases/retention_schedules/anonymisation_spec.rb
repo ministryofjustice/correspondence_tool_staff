@@ -12,6 +12,13 @@ feature "Case retention schedules for GDPR", :js do
     )
 
     branston_team_admin_user.team_roles << tur
+
+    case_with_retention_schedule(
+      case_type: :offender_sar_case,
+      case_state: :closed,
+      rs_state: "to_be_anonymised",
+      date: Time.zone.today + 5.months,
+    )
   end
 
   # erasable
@@ -30,15 +37,6 @@ feature "Case retention schedules for GDPR", :js do
       case_state: :closed,
       rs_state: "to_be_anonymised",
       date: Time.zone.today,
-    )
-  end
-
-  before do
-    case_with_retention_schedule(
-      case_type: :offender_sar_case,
-      case_state: :closed,
-      rs_state: "to_be_anonymised",
-      date: Time.zone.today + 5.months,
     )
   end
 

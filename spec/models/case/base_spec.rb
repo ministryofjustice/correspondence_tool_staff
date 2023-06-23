@@ -33,7 +33,7 @@ require "rails_helper"
 
 # rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
 RSpec.describe Case::Base, type: :model do
-  subject(:kase) { described_class.new }
+  subject(:kase) { create :case }
 
   let(:general_enquiry) do
     build_stubbed :case, received_date: Date.parse("16/11/2016")
@@ -82,7 +82,6 @@ RSpec.describe Case::Base, type: :model do
 
   let(:ot_ico_foi_draft)   { create :ot_ico_foi_noff_draft }
   let(:ot_ico_sar_draft)   { create :ot_ico_sar_noff_draft }
-  let(:kase)               { create :case }
   let(:closed_case)        { create :closed_case }
 
   describe "has a factory" do
@@ -394,8 +393,16 @@ RSpec.describe Case::Base, type: :model do
     end
 
     describe "with exemption scope" do
+      def create_closed_case_with_exemptions(*args)
+        kase = create :closed_case
+        args.each do |snn|
+          kase.exemptions << CaseClosure::Exemption.__send__(snn)
+        end
+        kase
+      end
+
       before(:all) do
-        require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+        require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
         CaseClosure::MetadataSeeder.seed!
 
@@ -405,7 +412,7 @@ RSpec.describe Case::Base, type: :model do
       end
 
       after(:all) do
-        DbHousekeeping.clean(seed: false)
+        CaseClosure::MetadataSeeder.unseed!
       end
 
       it "returns a list of cases which have the specified exemption" do
@@ -419,14 +426,6 @@ RSpec.describe Case::Base, type: :model do
         exemption_1 = CaseClosure::Exemption.find_by(abbreviation: "economy")
         expect(described_class.with_exemptions([exemption.id, exemption_1.id])).to match_array [@kase_2, @kase_3]
         expect(described_class.with_exemptions([exemption.id, exemption_1.id])).not_to include @kase_1
-      end
-
-      def create_closed_case_with_exemptions(*args)
-        kase = create :closed_case
-        args.each do |snn|
-          kase.exemptions << CaseClosure::Exemption.__send__(snn)
-        end
-        kase
       end
     end
 
@@ -533,21 +532,16 @@ RSpec.describe Case::Base, type: :model do
     }
 
     describe "linked_cases" do
-      before(:all) do
-        @case_1 = create :case
-        @case_2 = create :case
+      let(:case_1) { create :case }
+      let(:case_2) { create :case }
 
-        # link cases
-        @case_1.linked_cases << @case_2
-      end
-
-      after(:all) do
-        DbHousekeeping.clean(seed: false)
+      before do
+        case_1.linked_cases << case_2
       end
 
       it "shows case 1 to be linked to case 2" do
-        expect(@case_1.linked_cases).to include @case_2
-        expect(@case_1.linked_cases.size).to eq 1
+        expect(case_1.linked_cases).to include case_2
+        expect(case_1.linked_cases.size).to eq 1
       end
     end
   end
@@ -587,7 +581,7 @@ RSpec.describe Case::Base, type: :model do
 
     before do
       cls = CaseLinkingService.new(manager, sar, linked_sar.number)
-      cls.create # rubocop:disable Rails/SaveBang
+      cls.create!
       @ovt = create :overturned_ico_sar, original_ico_appeal: ico_appeal, original_case: sar
       @ovt.link_related_cases
       @ovt.reload
@@ -703,7 +697,7 @@ RSpec.describe Case::Base, type: :model do
     it "any defined state can be used" do
       ConfigurableStateMachine::Machine.states.each do |state|
         query = "#{state}?"
-        expect([true, false]).to include kase.send(query)
+        expect(kase.send(query)).to be_in([true, false])
       end
     end
 
@@ -981,7 +975,7 @@ RSpec.describe Case::Base, type: :model do
       attachments = double "CaseAttachments for Case"
       response_attachments = double "Response attachments"
       expect(attachments).to receive(:response).and_return(response_attachments)
-      expect(kase).to receive(:attachments).and_return(attachments)
+      expect(kase).to receive(:attachments).and_return(attachments) # rubocop:disable RSpec/SubjectStub
       expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, response_attachments, :responder)
       kase.upload_response_groups
     end
@@ -992,7 +986,7 @@ RSpec.describe Case::Base, type: :model do
       attachments = double "CaseAttachments for Case"
       request_attachments = double "Request attachments"
       expect(attachments).to receive(:request).and_return(request_attachments)
-      expect(kase).to receive(:attachments).and_return(attachments)
+      allow(kase).to receive(:attachments).and_return(attachments) # rubocop:disable RSpec/SubjectStub
       expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, request_attachments, :manager)
       kase.upload_request_groups
     end
@@ -1116,7 +1110,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     it "returns case with a number that matches the query" do

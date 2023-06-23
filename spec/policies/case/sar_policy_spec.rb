@@ -5,15 +5,12 @@ describe Case::SARPolicy do
 
   # Teams
   let(:managing_team)         { find_or_create :team_dacu }
-  let(:manager)               { managing_team.managers.first }
   let(:responding_team)       { create :responding_team }
-  let(:responder)             { responding_team.responders.first }
   let(:team_disclosure)       { find_or_create :team_dacu_disclosure }
   let(:disclosure_specialist) { team_disclosure.approvers.first }
 
   let(:unassigned_case)       { create :sar_case }
   let(:other_managing_team)   { create :managing_team }
-  let(:responding_team)       { create :responding_team }
   let(:dacu_disclosure)       { find_or_create :team_dacu_disclosure }
   let(:admin_team)            { find_or_create :team_for_admin_users }
 

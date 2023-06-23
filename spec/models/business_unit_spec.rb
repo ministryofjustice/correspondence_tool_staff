@@ -93,7 +93,7 @@ RSpec.describe BusinessUnit, type: :model do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe "scope cases" do
@@ -155,7 +155,7 @@ RSpec.describe BusinessUnit, type: :model do
     describe "active scope" do
       it "returns only teams that are not deactivated" do
         expect(described_class.responding.active.count).to eq 3
-        foi_responding_team.update_attribute(:deleted_at, Time.zone.now)
+        foi_responding_team.update!(deleted_at: Time.zone.now)
         expect(described_class.responding.active).to match_array [
           sar_responding_team,
           branston_team,
@@ -177,7 +177,7 @@ RSpec.describe BusinessUnit, type: :model do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe ".dacu_disclosure" do
@@ -416,7 +416,6 @@ RSpec.describe BusinessUnit, type: :model do
           directorate: original_dir,
         )
       end
-      let(:responder) { create(:foi_responder, responding_teams: [business_unit_for_history]) }
       let(:responder) { create(:foi_responder, responding_teams: [business_unit]) }
       let(:business_unit) do
         find_or_create(
@@ -445,9 +444,6 @@ RSpec.describe BusinessUnit, type: :model do
       end
 
       let(:new_user_service) { UserCreationService.new(team: business_unit, params:) }
-
-      let(:original_target_team) { create(:responding_team, name: "Target Team") }
-      let(:joining_team) { create(:responding_team, name: "Joining Team") }
 
       it "tracks all ancestors of team" do
         first_team = business_unit_to_move

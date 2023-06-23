@@ -107,12 +107,6 @@ RSpec.describe Cases::AttachmentsController, type: :controller do
       it_behaves_like "unauthorized user"
     end
 
-    context "when a manager with a case that is still open" do
-      before { sign_in manager }
-
-      it_behaves_like "unauthorized user"
-    end
-
     context "when a manager with a case that has been marked as responded" do
       let(:kase) { create(:responded_case) }
 

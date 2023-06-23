@@ -383,9 +383,9 @@ FactoryBot.define do
       message { "case closed with old closure info" }
 
       after(:create) do |kase, _evaluator|
-        kase.update_attribute :info_held_status_id, nil
-        kase.update_attribute :refusal_reason, find_or_create(:refusal_reason, :exempt)
-        kase.update_attribute :outcome, find_or_create(:outcome, :refused)
+        kase.update!(info_held_status_id: nil)
+        kase.update!(refusal_reason: find_or_create(:refusal_reason, :exempt))
+        kase.update!(outcome: find_or_create(:outcome, :refused))
       end
     end
 
@@ -820,7 +820,7 @@ FactoryBot.define do
 
   trait :_transition_to_accepted do
     after(:create) do |kase, evaluator|
-      kase.responder_assignment.update_attribute :user, evaluator.responder
+      kase.responder_assignment.update!(user: evaluator.responder)
       kase.responder_assignment.accepted!
       create :case_transition_accept_responder_assignment,
              case: kase,

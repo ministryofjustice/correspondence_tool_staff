@@ -81,7 +81,7 @@ describe Cases::SarExtensionsController, type: :controller do
 
       it "renders the new page" do
         post :create, params: post_params
-        expect(:result).to have_rendered(:new)
+        expect(request).to have_rendered(:new)
       end
     end
 
@@ -99,7 +99,7 @@ describe Cases::SarExtensionsController, type: :controller do
         expected_message = "Unable to perform SAR extension on case #{approved_sar.number}"
 
         expect(request.flash[:alert]).to eq expected_message
-        expect(:result).to redirect_to(case_path(approved_sar.id))
+        expect(request).to redirect_to(case_path(approved_sar.id))
       end
     end
   end

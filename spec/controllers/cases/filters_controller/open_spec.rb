@@ -116,7 +116,7 @@ describe Cases::FiltersController, type: :controller do
         }
 
         get(:open, params:)
-        expect(case_search_service)
+        case_search_service
         expect(assigns(:filter_crumbs)[0][0]).to eq "FOI - Standard"
       end
     end

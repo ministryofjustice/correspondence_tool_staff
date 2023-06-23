@@ -92,7 +92,7 @@ RSpec.describe ::Warehouse::CaseReport, type: :model do
       case_id = kase.id
       expect(kase.warehouse_case_report).to be_nil
 
-      kase.update_attribute(:deleted, true)
+      kase.update!(deleted: true, reason_for_deletion: "some reason")
 
       described_class.reconcile_missing_cases
       expect(described_class.find_by(case_id:)).to be_nil

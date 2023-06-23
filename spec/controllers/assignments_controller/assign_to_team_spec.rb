@@ -60,7 +60,7 @@ RSpec.describe AssignmentsController, type: :controller do
 
       it "re-renders the new page" do
         get(:assign_to_team, params:)
-        expect(:result).to have_rendered(:new)
+        expect(request).to have_rendered(:new)
       end
 
       it "sets @assignment" do

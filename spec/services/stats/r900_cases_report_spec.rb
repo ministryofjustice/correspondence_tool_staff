@@ -4,6 +4,7 @@ require "rails_helper"
 module Stats
   describe R900CasesReport do
     before(:all) { DbHousekeeping.clean(seed: true) }
+
     after(:all) do
       DbHousekeeping.clean(seed: false)
     end

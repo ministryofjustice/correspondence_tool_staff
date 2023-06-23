@@ -137,9 +137,7 @@ describe S3Uploader do
       it "removes any files left behind in uploads" do
         Timecop.freeze(time) do
           uploader.process_files(uploaded_files, :response)
-          leftover_files.each do |object|
-            expect(object).to have_received(:delete)
-          end
+          expect(leftover_files).to all(have_received(:delete))
         end
       end
     end

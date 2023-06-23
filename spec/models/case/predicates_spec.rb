@@ -75,19 +75,4 @@ describe "Case type predicates" do
       expect(kase.overturned_ico_sar?).to be false
     end
   end
-
-  context "when ICO Appeal for SAR" do
-    it "replies true to ico and false to everything else" do
-      kase = create :ico_sar_case
-      expect(kase.foi?).to be false
-      expect(kase.foi_standard?).to be false
-      expect(kase.foi_ir_compliance?).to be false
-      expect(kase.foi_ir_timeliness?).to be false
-      expect(kase.sar?).to be false
-      expect(kase.ico?).to be true
-      expect(kase.overturned_ico?).to be false
-      expect(kase.overturned_ico_foi?).to be false
-      expect(kase.overturned_ico_sar?).to be false
-    end
-  end
 end

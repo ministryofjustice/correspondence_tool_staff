@@ -115,20 +115,6 @@ describe RequestUploaderService do
           expect(rus.result).to eq :error
         end
       end
-
-      describe "uploader raises an S3 service error" do
-        before do
-          allow(uploader)
-            .to receive(:process_files)
-                  .with([uploads_key], :request)
-                  .and_raise(Aws::S3::Errors::ServiceError.new(:foo, :bar))
-        end
-
-        it "returns :error" do
-          rus.upload!
-          expect(rus.result).to eq :error
-        end
-      end
     end
   end
 end

@@ -26,8 +26,6 @@ require "rails_helper"
 #   block
 
 RSpec.describe Assignment, type: :model do
-  subject(:assignment) { build(:assignment) }
-
   let(:assigned_case) { create :assigned_case }
   let(:assigned_flagged_case) { create :assigned_case, :flagged }
   let(:responded_trigger_case) { create :responded_case, :flagged_accepted }

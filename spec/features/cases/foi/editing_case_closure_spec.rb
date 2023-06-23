@@ -51,7 +51,7 @@ feature "editing case closure information" do
 
   scenario "bmt views case details for FOI with old closure info", js: true do
     kase = create :closed_case
-    kase.update_attribute(:info_held_status_id, nil)
+    kase.update_attribute(:info_held_status_id, nil) # rubocop:disable Rails/SkipsModelValidations
 
     login_as manager
     cases_show_page.load(id: kase.id)
@@ -63,7 +63,7 @@ feature "editing case closure information" do
   scenario "responder views case details for FOI with old closure info", js: true do
     kase = create :closed_case
     responder = kase.responder
-    kase.update_attribute(:info_held_status_id, nil)
+    kase.update_attribute(:info_held_status_id, nil) # rubocop:disable Rails/SkipsModelValidations
 
     login_as responder
     cases_show_page.load(id: kase.id)

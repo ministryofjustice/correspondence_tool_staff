@@ -76,7 +76,7 @@ describe CaseFilter::CaseUpdateSentToSsclService do
     end
 
     context "when data has already been sent to SSCL" do
-      before { kase.update_attribute(:sent_to_sscl_at, Date.current) }
+      before { kase.update!(sent_to_sscl_at: Date.current) }
 
       it "does not record as sent to SSCL" do
         service.call

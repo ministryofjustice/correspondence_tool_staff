@@ -219,13 +219,11 @@ describe Case::BasePolicy do
     it { is_expected.not_to permit(responder,             pending_dacu_clearance_case) }
   end
 
-  describe do
-    permissions :can_take_on_for_approval? do
-      it { is_expected.not_to   permit(approver,          pending_dacu_clearance_case) }
-      it { is_expected.to       permit(approver,          accepted_case) }
-      it { is_expected.not_to   permit(manager,           pending_dacu_clearance_case) }
-      it { is_expected.not_to   permit(responder,         pending_dacu_clearance_case) }
-    end
+  permissions :can_take_on_for_approval? do
+    it { is_expected.not_to   permit(approver,          pending_dacu_clearance_case) }
+    it { is_expected.to       permit(approver,          accepted_case) }
+    it { is_expected.not_to   permit(manager,           pending_dacu_clearance_case) }
+    it { is_expected.not_to   permit(responder,         pending_dacu_clearance_case) }
   end
 
   permissions :can_accept_or_reject_responder_assignment? do

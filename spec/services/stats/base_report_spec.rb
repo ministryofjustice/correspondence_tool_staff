@@ -10,6 +10,7 @@ module Stats
 
   describe BaseReport do
     before(:all) { create_report_type(abbr: :r006) }
+
     after(:all) do
       DbHousekeeping.clean(seed: false)
     end

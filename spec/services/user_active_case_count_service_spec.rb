@@ -19,7 +19,6 @@ describe UserActiveCaseCountService do
   let!(:kase_2)           { create :accepted_case, responder: user_1 }
   let!(:kase_3)           { create :accepted_case, responder: user_2 }
   let!(:kase_4)           { create :closed_case, responder: user_2 }
-  let(:service)           { described_class.new }
 
   describe "#case_counts_by_user" do
     it "returns number of cases indexed by user id" do

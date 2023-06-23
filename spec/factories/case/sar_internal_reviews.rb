@@ -155,7 +155,7 @@ FactoryBot.define do
 
     after(:create) do |kase, evaluator|
       responder = evaluator.responder || responding_team.responders.first
-      kase.responder_assignment.update_attribute :user, responder
+      kase.responder_assignment.update!(user: responder)
       kase.responder_assignment.accepted!
       create :case_transition_accept_responder_assignment,
              case: kase,

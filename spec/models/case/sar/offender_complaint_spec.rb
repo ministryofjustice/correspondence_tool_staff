@@ -379,7 +379,7 @@ describe Case::SAR::OffenderComplaint do
     it "is the same as subject full name" do
       kase = create :offender_sar_complaint
       expect(kase.subject).to eq kase.subject_full_name
-      kase.update_attribute(:subject_full_name, "Bob Hope")
+      kase.update!(subject_full_name: "Bob Hope")
       expect(kase.subject).to eq "Bob Hope"
     end
   end
@@ -388,7 +388,7 @@ describe Case::SAR::OffenderComplaint do
     it "is the same as subject_full_name" do
       kase = create :offender_sar_complaint
       expect(kase.subject_name).to eq kase.subject_full_name
-      kase.update_attribute(:subject_full_name, "Bob Hope")
+      kase.update!(subject_full_name: "Bob Hope")
       expect(kase.subject_name).to eq "Bob Hope"
     end
   end
@@ -404,7 +404,7 @@ describe Case::SAR::OffenderComplaint do
     it "wraps the postal_address field" do
       kase = create :offender_sar_complaint
       expect(kase.third_party_address).to eq kase.postal_address
-      kase.update_attribute(:postal_address, "11 The Road")
+      kase.update!(postal_address: "11 The Road")
       expect(kase.third_party_address).to eq "11 The Road"
     end
   end
