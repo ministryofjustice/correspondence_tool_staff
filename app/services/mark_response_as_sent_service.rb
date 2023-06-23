@@ -18,7 +18,7 @@ class MarkResponseAsSentService
 private
 
   def respond_to_ico
-    @kase.update!(@params)
+    @kase.update(@params) # rubocop:disable Rails/SaveBang
     if !@kase.valid?
       @result = :error
     elsif @kase.responded_late?

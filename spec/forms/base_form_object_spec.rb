@@ -4,6 +4,7 @@ require "rails_helper"
 RSpec.describe BaseFormObject do
   subject(:base_form_object) { described_class.new }
 
+  # rubocop:disable Rails/SaveBang
   describe "#save" do
     before do
       allow(base_form_object).to receive(:valid?).and_return(is_valid)
@@ -14,7 +15,7 @@ RSpec.describe BaseFormObject do
 
       it "calls persist!" do
         expect(base_form_object).to receive(:persist!)
-        base_form_object.save!
+        base_form_object.save
       end
     end
 
@@ -23,7 +24,7 @@ RSpec.describe BaseFormObject do
 
       it "does not call persist!" do
         expect(base_form_object).not_to receive(:persist!)
-        base_form_object.save!
+        base_form_object.save
       end
 
       it "returns false" do
@@ -31,6 +32,7 @@ RSpec.describe BaseFormObject do
       end
     end
   end
+  # rubocop:enable Rails/SaveBang
 
   describe "#persisted?" do
     it "always returns false" do

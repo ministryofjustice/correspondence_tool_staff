@@ -165,7 +165,7 @@ private
 
   def create_custom_r003_report
     r003 = ReportType.where(abbr: "R003").first
-    stats_new_page.fill_in_form("foi", r003.id, Date.yesterday, Time.zone.today)
+    stats_new_page.fill_in_form("foi", r003.id, Time.zone.yesterday, Time.zone.today)
     stats_new_page.submit_button.click
 
     expect(stats_new_page.success_message).to have_download_link
@@ -173,7 +173,7 @@ private
 
   def create_custom_r004_report
     r004 = ReportType.r004
-    stats_new_page.fill_in_form("foi", r004.id, Date.yesterday, Time.zone.today)
+    stats_new_page.fill_in_form("foi", r004.id, Time.zone.yesterday, Time.zone.today)
     stats_new_page.submit_button.click
 
     expect(stats_new_page.success_message).to have_download_link
@@ -181,8 +181,8 @@ private
 
   def create_custom_r007_report
     stats_new_page.choose_type_of_correspondence("closed_cases")
-    stats_new_page.fill_in_period_start(Date.yesterday)
-    stats_new_page.fill_in_period_end(Date.yesterday)
+    stats_new_page.fill_in_period_start(Time.zone.yesterday)
+    stats_new_page.fill_in_period_end(Time.zone.yesterday)
     stats_new_page.submit_button.click
 
     # @note (Mohammed Seedat): cannot add expectations until new confirmation

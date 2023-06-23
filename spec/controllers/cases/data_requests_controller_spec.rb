@@ -73,7 +73,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         :data_request,
         cached_num_pages: 10,
         completed: true,
-        cached_date_received: Date.yesterday,
+        cached_date_received: Time.zone.yesterday,
       )
     end
 
@@ -89,7 +89,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
       expect(assigns(:data_request)).to be_a DataRequest
       expect(assigns(:data_request).cached_num_pages).to eq 10
-      expect(assigns(:data_request).cached_date_received).to eq Date.yesterday
+      expect(assigns(:data_request).cached_date_received).to eq Time.zone.yesterday
     end
   end
 
@@ -99,7 +99,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         :data_request,
         cached_num_pages: 10,
         completed: true,
-        cached_date_received: Date.yesterday,
+        cached_date_received: Time.zone.yesterday,
       )
     end
 
@@ -115,7 +115,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
 
       expect(assigns(:data_request)).to be_a DataRequest
       expect(assigns(:data_request).cached_num_pages).to eq 10
-      expect(assigns(:data_request).cached_date_received).to eq Date.yesterday
+      expect(assigns(:data_request).cached_date_received).to eq Time.zone.yesterday
     end
   end
 
@@ -208,7 +208,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
         :data_request,
         cached_num_pages: 10,
         completed: true,
-        cached_date_received: Date.yesterday,
+        cached_date_received: Time.zone.yesterday,
         commissioning_document:,
       )
     end

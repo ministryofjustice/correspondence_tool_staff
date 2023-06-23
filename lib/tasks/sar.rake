@@ -30,7 +30,7 @@ namespace :sar do
         random_sentences_to_add: 10,
       )
       kase.category = category
-      kase.received_date = Date.yesterday
+      kase.received_date = Time.zone.yesterday
       kase.postal_address = "2 Vinery Way\nLondon\nW6 0LQ"
       kase.subject_full_name = Faker::Name.name
       kase.subject_type = "staff"

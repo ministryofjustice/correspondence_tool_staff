@@ -2,8 +2,8 @@ require "rails_helper"
 
 describe TeamJoinService do
   let(:original_joining_team) { create(:responding_team, name: "Joining Team") }
-  let!(:kase) { create :case_being_drafted, responding_team: business_unit, responder: joining_team_user }
-  let!(:klosed_kase) { create :closed_case, responding_team: business_unit, responder: joining_team_user }
+  let(:kase) { create :case_being_drafted, responding_team: business_unit, responder: joining_team_user }
+  let(:klosed_kase) { create :closed_case, responding_team: business_unit, responder: joining_team_user }
   let(:original_target_team) { create(:responding_team, name: "Target Team") }
   let(:joining_team_move_service) { TeamMoveService.new(original_joining_team, target_dir) }
   let(:target_team_move_service) { TeamMoveService.new(original_target_team, target_dir) }
@@ -19,6 +19,8 @@ describe TeamJoinService do
   before do
     joining_team_move_service.call
     target_team_move_service.call
+    kase
+    klosed_kase
   end
 
   describe "#initialize" do

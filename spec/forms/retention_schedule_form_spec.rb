@@ -23,7 +23,7 @@ RSpec.describe RetentionScheduleForm do
     end
     let(:case_double) { double(Case::Base, date_responded: Time.zone.today) }
 
-    let(:planned_destruction_date) { Date.tomorrow }
+    let(:planned_destruction_date) { Time.zone.tomorrow }
     let(:state) { RetentionSchedule::STATE_NOT_SET.to_s }
     let(:schedule_not_set) { true }
     let(:state_anonymised) { false }
@@ -54,7 +54,7 @@ RSpec.describe RetentionScheduleForm do
 
     context "when destruction_date_after_close_date validation" do
       context "when the `planned_destruction_date` is before the `date_responded`" do
-        let(:planned_destruction_date) { Date.yesterday }
+        let(:planned_destruction_date) { Time.zone.yesterday }
 
         it "returns false" do
           expect(retention_schedule_form.save).to be(false)

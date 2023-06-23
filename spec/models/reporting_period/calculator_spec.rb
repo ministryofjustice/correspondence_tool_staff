@@ -20,8 +20,8 @@ module ReportingPeriod
       context "with valid parameters" do
         it "sets period_start and period_end with Date values" do
           calculator = described_class.new(
-            period_start: Date.yesterday,
-            period_end: Date.tomorrow,
+            period_start: Time.zone.yesterday,
+            period_end: Time.zone.tomorrow,
           )
 
           expect(calculator.period_start).to be_a Time
@@ -30,7 +30,7 @@ module ReportingPeriod
 
         it "sets period_start and period_end with Time or DateTime values" do
           calculator = described_class.new(
-            period_start: Time.yesterday,
+            period_start: Time.zone.yesterday,
             period_end: Time.zone.now,
           )
 
@@ -71,8 +71,8 @@ module ReportingPeriod
 
       it "instantiates a DateInteval without a named date calculator" do
         date_calculator = described_class.build(
-          period_start: Time.yesterday,
-          period_end: Time.tomorrow,
+          period_start: Time.zone.yesterday,
+          period_end: Time.zone.tomorrow,
           period_name: "",
         )
 

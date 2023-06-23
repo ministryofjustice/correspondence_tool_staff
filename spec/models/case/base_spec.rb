@@ -255,7 +255,7 @@ RSpec.describe Case::Base, type: :model do
   end
 
   describe "#received_date" do
-    let(:case_received_yesterday)   { build(:case, received_date: Date.yesterday.to_s) }
+    let(:case_received_yesterday)   { build(:case, received_date: Time.zone.yesterday.to_s) }
     let(:case_received_long_ago)    { build(:case, received_date: 370.days.ago) }
     let(:case_received_today)       { build(:case, received_date: Time.zone.today.to_s) }
     let(:case_received_tomorrow)    { build(:case, received_date: (Time.zone.today + 1.day).to_s) }
@@ -1552,14 +1552,14 @@ RSpec.describe Case::Base, type: :model do
 
       context "and date responded > external deadline" do
         it "is true" do
-          kase.external_deadline = Date.yesterday
+          kase.external_deadline = Time.zone.yesterday
           expect(kase.responded_late?).to be true
         end
       end
 
       context "and date responded < external deadline" do
         it "is false" do
-          kase.external_deadline = Date.tomorrow
+          kase.external_deadline = Time.zone.tomorrow
           expect(kase.responded_late?).to be false
         end
       end
@@ -1582,7 +1582,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it "is nil when not yet late for open case" do
-      kase.external_deadline = Date.tomorrow
+      kase.external_deadline = Time.zone.tomorrow
       expect(kase.num_days_late).to be nil
     end
 

@@ -21,7 +21,7 @@ module PageObjects
           element :save, 'input[type="submit"]'
         end
 
-        element :create, ".button"
+        element :create_button, ".button"
 
         def descriptions
           existing_areas.map do |row|

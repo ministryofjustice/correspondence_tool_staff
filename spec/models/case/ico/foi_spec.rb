@@ -55,7 +55,7 @@ describe Case::ICO::FOI do
     end
 
     it "is nil when not yet late for open case" do
-      require_further_action_case.original_external_deadline = Date.tomorrow
+      require_further_action_case.original_external_deadline = Time.zone.tomorrow
       expect(require_further_action_case.num_days_late_against_original_deadline).to be nil
     end
 

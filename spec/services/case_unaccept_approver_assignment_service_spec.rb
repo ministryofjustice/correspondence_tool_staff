@@ -149,8 +149,8 @@ describe CaseUnacceptApproverAssignmentService do
                                         .transitions
                                         .where(event: :take_on_for_approval,
                                                target_team_id: private_office.id)
-          private_office_transition.update! acting_team_id: private_office.id,
-                                            acting_user_id: private_officer.id
+          private_office_transition.update acting_team_id: private_office.id, # rubocop:disable Rails/SaveBang
+                                           acting_user_id: private_officer.id
         end
 
         it "deletes only assignments made by press office" do

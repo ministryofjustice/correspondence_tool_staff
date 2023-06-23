@@ -24,7 +24,7 @@ describe RespondedCaseValidator do
 
     context "and impossible date assigned" do
       it "is not valid" do
-        ico.update!(date_responded_dd: "", date_responded_mm: "12", date_responded_yyyy: "2018")
+        ico.update(date_responded_dd: "", date_responded_mm: "12", date_responded_yyyy: "2018") # rubocop:disable Rails/SaveBang
         expect(ico).not_to be_valid
         expect(ico.errors[:date_responded]).to include("Invalid date")
       end

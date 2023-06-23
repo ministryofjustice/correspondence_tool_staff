@@ -42,7 +42,7 @@ feature "editing teams" do
     sleep(2)
     expect(teams_areas_page.descriptions).to include "This is another area"
 
-    teams_areas_page.create!.click
+    teams_areas_page.create_button.click
 
     expect(teams_show_page.page_heading.heading.text).to eq new_name
     expect(teams_show_page.team_email.text).to eq new_email

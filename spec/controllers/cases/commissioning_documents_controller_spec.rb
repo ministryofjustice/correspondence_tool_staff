@@ -9,7 +9,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
       offender_sar_case:,
       cached_num_pages: 10,
       completed: true,
-      cached_date_received: Date.yesterday,
+      cached_date_received: Time.zone.yesterday,
     )
   end
   let(:commissioning_document) { create(:commissioning_document, data_request:) }

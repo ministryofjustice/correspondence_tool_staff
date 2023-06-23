@@ -322,7 +322,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
 
         context "with invalid parameters" do
           it "redisplays error page" do
-            params[:sar][:date_responded_dd] = Date.tomorrow.day.to_s
+            params[:sar][:date_responded_dd] = Time.zone.tomorrow.day.to_s
             patch(:process_respond_and_close, params:)
             expect(response).to render_template(:closure_outcomes)
           end

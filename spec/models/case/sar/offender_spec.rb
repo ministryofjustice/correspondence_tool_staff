@@ -676,7 +676,7 @@ describe Case::SAR::Offender do
 
     it "returns correct number of days late for closed case" do
       closed_kase.received_date = 10.days.before(Time.zone.today)
-      closed_kase.date_responded = Date.yesterday
+      closed_kase.date_responded = Time.zone.yesterday
       expect(closed_kase.num_days_taken).to eq 10
     end
   end
@@ -691,18 +691,18 @@ describe Case::SAR::Offender do
     end
 
     it "is nil when not yet late for open case" do
-      kase.external_deadline = Date.tomorrow
+      kase.external_deadline = Time.zone.tomorrow
       expect(kase.num_days_late).to be nil
     end
 
     it "returns correct number of days late for open case" do
-      kase.external_deadline = Date.yesterday
+      kase.external_deadline = Time.zone.yesterday
       expect(kase.num_days_late).to eq 1
     end
 
     it "returns correct number of days late for closed case" do
       closed_kase.external_deadline = 3.days.before(Time.zone.today)
-      closed_kase.date_responded = Date.yesterday
+      closed_kase.date_responded = Time.zone.yesterday
       expect(closed_kase.num_days_late).to eq 2
     end
   end

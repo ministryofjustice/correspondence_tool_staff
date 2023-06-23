@@ -167,6 +167,10 @@ class Case::SAR::Offender < Case::Base
     errors[:recipient].any?
   end
 
+  def validate_received_date # rubocop:disable Lint/UselessMethodDefinition
+    super
+  end
+
   def validate_date_of_birth
     if date_of_birth.present? && date_of_birth > Time.zone.today
       errors.add(

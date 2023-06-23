@@ -132,9 +132,9 @@ RSpec.describe StatsController, type: :controller do
         report: {
           correspondence_type: "FOI",
           report_type_id: report_type.id,
-          period_start_dd: Date.yesterday.day,
-          period_start_mm: Date.yesterday.month,
-          period_start_yyyy: Date.yesterday.year,
+          period_start_dd: Time.zone.yesterday.day,
+          period_start_mm: Time.zone.yesterday.month,
+          period_start_yyyy: Time.zone.yesterday.year,
           period_end_dd: Time.zone.today.day,
           period_end_mm: Time.zone.today.month,
           period_end_yyyy: Time.zone.today.year,
@@ -143,7 +143,7 @@ RSpec.describe StatsController, type: :controller do
     end
 
     let(:report) do
-      create :r003_report, period_start: Date.yesterday, period_end: Time.zone.today
+      create :r003_report, period_start: Time.zone.yesterday, period_end: Time.zone.today
     end
 
     let(:dummy_report_type) do
@@ -162,11 +162,11 @@ RSpec.describe StatsController, type: :controller do
       allow(report).to receive(:run).and_return(dummy_report_type)
       allow(dummy_report_type).to receive(:filename).and_return("test.csv")
       allow(dummy_report_type).to receive(:user).and_return(manager)
-      allow(dummy_report_type).to receive(:period_start).and_return(Date.yesterday)
+      allow(dummy_report_type).to receive(:period_start).and_return(Time.zone.yesterday)
       allow(dummy_report_type).to receive(:period_end).and_return(Time.zone.today)
 
       post(:create, params:)
-      expect(report).to have_received(:run).with(period_start: Date.yesterday,
+      expect(report).to have_received(:run).with(period_start: Time.zone.yesterday,
                                                  period_end: Time.zone.today, user: manager, report_guid: report.guid)
     end
 
@@ -277,9 +277,9 @@ RSpec.describe StatsController, type: :controller do
           report: {
             correspondence_type: "CLOSED_CASES",
             report_type_id: report_type.id,
-            period_start_dd: Date.yesterday.day,
-            period_start_mm: Date.yesterday.month,
-            period_start_yyyy: Date.yesterday.year,
+            period_start_dd: Time.zone.yesterday.day,
+            period_start_mm: Time.zone.yesterday.month,
+            period_start_yyyy: Time.zone.yesterday.year,
             period_end_dd: Time.zone.today.day,
             period_end_mm: Time.zone.today.month,
             period_end_yyyy: Time.zone.today.year,

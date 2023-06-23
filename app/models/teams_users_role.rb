@@ -18,7 +18,7 @@ class TeamsUsersRole < ApplicationRecord
   }
 
   belongs_to :user
-  belongs_to :team, class_name: "Team"
+  belongs_to :team, foreign_key: :team_id, class_name: "Team" # rubocop:disable Rails/RedundantForeignKey
   scope :manager_roles,   -> { where(role: :manager) }
   scope :responder_roles, -> { where(role: :responder) }
   scope :approver_roles,  -> { where(role: :approver) }

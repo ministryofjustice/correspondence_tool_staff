@@ -29,7 +29,7 @@ RSpec.describe Report, type: :model do
     let(:tomorrow) do
       build(
         :report,
-        period_start: Date.tomorrow.to_s,
+        period_start: Time.zone.tomorrow.to_s,
         report_type: r003_report_type,
       )
     end
@@ -46,7 +46,7 @@ RSpec.describe Report, type: :model do
     let(:yesterday) do
       build(
         :report,
-        period_start: Date.yesterday.to_s,
+        period_start: Time.zone.yesterday.to_s,
         period_end: Time.zone.today.to_s,
         report_type: r003_report_type,
       )
@@ -56,7 +56,7 @@ RSpec.describe Report, type: :model do
       build(
         :report,
         period_start: Time.zone.today.to_s,
-        period_end: Date.yesterday.to_s,
+        period_end: Time.zone.yesterday.to_s,
         report_type: r003_report_type,
       )
     end
@@ -82,7 +82,7 @@ RSpec.describe Report, type: :model do
     let(:tomorrow) do
       build_stubbed(
         :report,
-        period_end: Date.tomorrow.to_s,
+        period_end: Time.zone.tomorrow.to_s,
       )
     end
 
@@ -97,7 +97,7 @@ RSpec.describe Report, type: :model do
     let(:yesterday) do
       build_stubbed(
         :report,
-        period_end: Date.yesterday.to_s,
+        period_end: Time.zone.yesterday.to_s,
       )
     end
 
@@ -115,7 +115,7 @@ RSpec.describe Report, type: :model do
   end
 
   describe "#run" do
-    let(:options) { { period_start: Date.yesterday, period_end: Time.zone.today } }
+    let(:options) { { period_start: Time.zone.yesterday, period_end: Time.zone.today } }
 
     let(:report_service) do
       instance_double(
@@ -126,7 +126,7 @@ RSpec.describe Report, type: :model do
             OpenStruct.new(value: "data"),
           ],
         ],
-        period_start: Date.yesterday,
+        period_start: Time.zone.yesterday,
         period_end: Time.zone.today,
         run: true,
         persist_results?: true,
@@ -156,7 +156,7 @@ RSpec.describe Report, type: :model do
 
     it "updates start and end dates" do
       report.run_and_update!(**options)
-      expect(report.period_start).to eq Date.yesterday
+      expect(report.period_start).to eq Time.zone.yesterday
       expect(report.period_end).to   eq Time.zone.today
     end
 
@@ -171,7 +171,7 @@ RSpec.describe Report, type: :model do
       let(:etl_report_type) do
         instance_double(
           Stats::R007ClosedCasesReport,
-          period_start: Date.yesterday,
+          period_start: Time.zone.yesterday,
           period_end: Time.zone.today,
           run: true,
           persist_results?: true,

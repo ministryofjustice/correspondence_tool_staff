@@ -88,8 +88,8 @@ describe "cases/overturned_sar/case_details.html.slim", type: :view do
 
     context "with late response" do
       it "displays that the response was sent late" do
-        closed_case.update!(
-          date_responded: 1.business_day.after(closed_case.external_deadline),
+        closed_case.update_attribute( # rubocop:disable Rails/SkipsModelValidations
+          :date_responded, 1.business_day.after(closed_case.external_deadline)
         )
 
         partial = render_partial(closed_case)
@@ -108,8 +108,8 @@ describe "cases/overturned_sar/case_details.html.slim", type: :view do
 
     it "displays the time taken to send the response" do
       Timecop.freeze(Time.zone.local(2018, 9, 23, 10, 0, 0)) do
-        closed_case.update!(
-          date_responded: 1.business_day.after(closed_case.external_deadline),
+        closed_case.update_attribute( # rubocop:disable Rails/SkipsModelValidations
+          :date_responded, 1.business_day.after(closed_case.external_deadline)
         )
         partial = render_partial(closed_case)
 

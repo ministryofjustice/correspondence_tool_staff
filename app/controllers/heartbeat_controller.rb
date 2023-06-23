@@ -43,7 +43,7 @@ private
 
   def sidekiq_alive?
     ps = Sidekiq::ProcessSet.new
-    !ps.empty?
+    !ps.size.zero? # rubocop:disable Style/ZeroLengthPredicate
   rescue StandardError
     false
   end
@@ -51,7 +51,7 @@ private
   def sidekiq_queue_healthy?
     dead = Sidekiq::DeadSet.new
     retries = Sidekiq::RetrySet.new
-    dead.empty? && retries.empty?
+    dead.size.zero? && retries.size.zero? # rubocop:disable Style/ZeroLengthPredicate
   rescue StandardError
     false
   end

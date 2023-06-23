@@ -127,7 +127,7 @@ describe UserCreationService do
 
       context "and deleted user rejoins the team" do
         before do
-          existing_user.reload.update!(deleted_at: Date.yesterday)
+          existing_user.reload.update!(deleted_at: Time.zone.yesterday)
           existing_user.team_roles.delete_all
         end
 

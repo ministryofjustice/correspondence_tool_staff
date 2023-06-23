@@ -17,7 +17,7 @@ FactoryBot.define do
     current_state       { "unassigned" }
     original_ico_appeal { create(:closed_ico_sar_case, :overturned_by_ico) }
     original_case       { original_ico_appeal.original_case }
-    received_date       { Date.yesterday }
+    received_date       { Time.zone.yesterday }
     internal_deadline   { 10.days.from_now }
     external_deadline   { 20.days.from_now }
     escalation_deadline { 3.days.from_now }

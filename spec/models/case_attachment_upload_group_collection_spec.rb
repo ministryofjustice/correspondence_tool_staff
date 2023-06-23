@@ -5,6 +5,8 @@ describe CaseAttachmentUploadGroupCollection do
   before(:all) do
     @upload_group_1 = "20170608101112"
     @upload_group_2 = "20170612114201"
+    @timestamp_1 = "08 Jun 2017 11:11"
+    @timestamp_2 = "12 Jun 2017 12:42"
     @kase = create :case_with_response
     @responder_1 = @kase.responding_team.users.first
     @responder_2 = create(:responder,

@@ -78,7 +78,7 @@ describe UserReassignmentService do
       context "and an error occurs" do
         it "rolls-back changes" do
           old_user_id = assignment.user_id
-          allow(assignment).to receive(:update).and_throw(RuntimeError)
+          allow(assignment).to receive(:update!).and_throw(RuntimeError)
           service.call
 
           # does not change the original assigned user
@@ -92,7 +92,7 @@ describe UserReassignmentService do
         end
 
         it "sets result to :error and returns same" do
-          allow(assignment).to receive(:update).and_throw(RuntimeError)
+          allow(assignment).to receive(:update!).and_throw(RuntimeError)
           result = service.call
           expect(result).to eq :error
           expect(service.result).to eq :error

@@ -73,7 +73,7 @@ module Stats
       line << ""
       line << business_group.team_lead
       @result_set << line
-      bg.directorates.order(:name).each { |dir| process_directorate(dir) }
+      business_group.directorates.order(:name).each { |dir| process_directorate(dir) }
     end
 
     def process_directorate(dir)

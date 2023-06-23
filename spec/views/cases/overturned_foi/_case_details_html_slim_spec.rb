@@ -71,7 +71,7 @@ describe "cases/overturned_foi/case_details.html.slim", type: :view do
 
     context "with late response" do
       it "displays that the response was sent late" do
-        closed_case.update!(
+        closed_case.update( # rubocop:disable Rails/SaveBang
           date_responded: 1.business_day.after(closed_case.external_deadline),
         )
 

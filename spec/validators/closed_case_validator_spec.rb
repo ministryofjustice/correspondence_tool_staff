@@ -470,7 +470,7 @@ describe "ClosedCaseValidator" do
 
       context "and future" do
         it "is invalid" do
-          responded_ico.date_ico_decision_received = Date.tomorrow
+          responded_ico.date_ico_decision_received = Time.zone.tomorrow
           expect(responded_ico).not_to be_valid
           expect(responded_ico.errors[:date_ico_decision_received]).to eq %w[future]
         end
@@ -487,7 +487,7 @@ describe "ClosedCaseValidator" do
       context "and just right" do
         context "and yesterday" do
           it "is valid" do
-            responded_ico.date_ico_decision_received = Date.yesterday
+            responded_ico.date_ico_decision_received = Time.zone.yesterday
             expect(responded_ico).to be_valid
           end
         end

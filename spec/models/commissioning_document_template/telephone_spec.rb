@@ -15,7 +15,7 @@ RSpec.describe CommissioningDocumentTemplate::Telephone do
 
   describe "#path" do
     it "matches to a file" do
-      expect(File).to exist(commissioning_document_template.path)
+      expect(File).to exist(template.path)
     end
   end
 

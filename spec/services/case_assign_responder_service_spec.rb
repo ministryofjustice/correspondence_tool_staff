@@ -26,7 +26,7 @@ describe CaseAssignResponderService, type: :service do
     context "when assignment is valid" do
       before do
         allow(new_assignment).to receive_messages valid?: true,
-                                                  save: true
+                                                  save!: true
       end
 
       it "returns true on success" do
