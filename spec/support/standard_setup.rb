@@ -1,3 +1,4 @@
+# rubocop:disable Style/ClassVars
 class StandardSetup
   # Class that instantiates standard case factories.
   #
@@ -613,3 +614,4 @@ class StandardSetup
     end
   end
 end
+# rubocop:enable Style/ClassVars

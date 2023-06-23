@@ -1,3 +1,4 @@
+# rubocop:disable Style/ClassVars
 class ApplicationPolicy
   @@failed_checks = []
 

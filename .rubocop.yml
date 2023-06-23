@@ -14,8 +14,6 @@ RSpec/AnyInstance:
   Enabled: false
 Style/MissingRespondToMissing:
   Enabled: false
-Style/ClassVars:
-  Enabled: false
 RSpec/StubbedMock:
   Enabled: false
 # **************************************************************
