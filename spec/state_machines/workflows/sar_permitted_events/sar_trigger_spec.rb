@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe ConfigurableStateMachine::Machine do
+describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
   describe "flagged case" do
     context "when manager" do
       let(:manager) { find_or_create :disclosure_bmt_user }

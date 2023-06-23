@@ -1,7 +1,7 @@
 require "rails_helper"
 
 # rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
-RSpec.describe Case::Base, type: :model do
+RSpec.describe Case::Base, type: :model do # rubocop:disable RSpec/FilePath
   let(:responding_team) { find_or_create :foi_responding_team }
   let(:responder)       { responding_team.responders.first }
   let(:co_responder)    do

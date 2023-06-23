@@ -1,5 +1,5 @@
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
 RSpec.describe Cases::FoiController, type: :controller do
@@ -555,7 +555,7 @@ RSpec.describe Cases::FoiController, type: :controller do
             .with(info_held_status: "held")
       end
 
-      it "calls outcome_required? correctly" do
+      it "calls exemption_required? correctly" do
         controller.__send__(:process_foi_closure_params)
 
         expect(ClosedCaseValidator)

@@ -88,7 +88,6 @@ class SearchQuery < ApplicationRecord
     list: "list",
   }, _suffix: true
 
-  # rubocop:disable Style/ClassVars
   # Add all those properties withn query jsonb fields
   @@typed_filter_fields = { search_text: [:string, { default: nil }], list_path: [:string, { default: nil }] }
   FILTER_CLASSES_MAP.to_hash.values.flatten.uniq.each do |filter_class|

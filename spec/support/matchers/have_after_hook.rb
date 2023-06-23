@@ -26,7 +26,7 @@ module PermitTriggerEvent
 
           result = !config.nil? && config.after_transition == @expected_hook
           if [user_type, case_type].in?(permitted_combinations) ^ result
-            debugger if @debug_on_error && $stdout.tty?
+            debugger if @debug_on_error && $stdout.tty? # rubocop:disable Lint/Debugger
             @errors << [user_type, case_type, !config.nil?]
           end
         end

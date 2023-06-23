@@ -36,7 +36,7 @@ feature "Generate an acknowledgement letter by a responder" do
       click_on "Save as Word"
       expect(cases_show_letter_page).to be_displayed
       sleep 1
-      output_files = Dir["#{Rails.root}/acknowledgement.docx"]
+      output_files = Dir[Rails.root.join("acknowledgement.docx")]
       expect(output_files.length).to eq 1
       File.delete(output_files.first)
     end

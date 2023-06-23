@@ -24,7 +24,7 @@ module PermitPredicate
           predicates = Workflows::Predicates.new(user:, kase:)
           result = predicates.send(predicate)
           if [user_type, case_type].in?(permitted_combinations) ^ result
-            debugger if @debug_on_error && $stdout.tty?
+            debugger if @debug_on_error && $stdout.tty? # rubocop:disable Lint/Debugger
             @errors << [user_type, case_type, result]
           end
         end

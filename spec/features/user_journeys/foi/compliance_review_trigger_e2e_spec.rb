@@ -13,7 +13,7 @@
 # Manager view case and closes the case
 
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
 feature "FOI compliance review case that requires clearance" do

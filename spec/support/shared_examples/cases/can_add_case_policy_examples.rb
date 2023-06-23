@@ -25,7 +25,7 @@ RSpec.shared_examples "can_add_case policy spec" do |klass|
   it "does not create a case when authentication fails" do
     disallow_case_policies(case_class, :can_add_case?)
     sign_in user
-    expect { subject }.not_to change { klass.count }
+    expect { subject }.not_to(change { klass.count })
   end
 
   it "redirects to application root when authentication fails" do

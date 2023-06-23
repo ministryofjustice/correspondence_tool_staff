@@ -1,6 +1,6 @@
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
-require File.join(Rails.root, "spec", "site_prism", "support", "helper_methods")
+require Rails.root.join("db/seeders/case_closure_metadata_seeder")
+require Rails.root.join("spec/site_prism/support/helper_methods")
 
 # rubocop:disable RSpec/BeforeAfterAll
 feature "filters whittle down search results" do

@@ -67,7 +67,7 @@ module PageObjects
           make_radio_button_choice("report_report_type_id_#{report_id}")
         end
 
-        def fill_in_form(correspondence_type = "foi", report_id, period_start_date, period_end_date)
+        def fill_in_form(correspondence_type, report_id, period_start_date, period_end_date)
           choose_type_of_correspondence(correspondence_type.downcase)
           choose_type_of_report(report_id)
           fill_in_period_start(period_start_date)

@@ -15,7 +15,7 @@ describe UserDecorator, type: :model do
            approving_team: disclosure)
   end
 
-  describe :full_name_with_optional_load_html do
+  describe ":full_name_with_optional_load_html" do
     it "returns the users full name if they are not on disclosure team" do
       expect(responder.full_name_with_optional_load_html)
         .to eq responder.full_name

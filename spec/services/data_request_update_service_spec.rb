@@ -1,5 +1,7 @@
 require "rails_helper"
 
+class FakeError < ArgumentError; end
+
 describe DataRequestUpdateService do
   let(:user) { create :user }
   let(:data_request) do
@@ -51,8 +53,10 @@ describe DataRequestUpdateService do
       end
 
       before do
+        # rubocop:disable RSpec/ExpectInHook
         expect(data_request.cached_num_pages).to eq 0
         expect(data_request.cached_date_received).to be_nil
+        # rubocop:enable RSpec/ExpectInHook
       end
 
       it "creates a new case transition (history) entry" do
@@ -87,8 +91,6 @@ describe DataRequestUpdateService do
       end
 
       it "only recovers from ActiveRecord exceptions" do
-        class FakeError < ArgumentError; end
-
         allow_any_instance_of(DataRequest).to receive(:save!).and_raise(FakeError)
         expect { service.call }.to raise_error FakeError
       end

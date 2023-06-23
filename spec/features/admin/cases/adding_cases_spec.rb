@@ -1,5 +1,5 @@
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
 feature "adding cases" do
@@ -65,15 +65,6 @@ feature "adding cases" do
       expect(kase).to be_instance_of(Case::FOI::Standard)
       expect(kase.current_state).to eq "drafting"
       expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
-    end
-
-    scenario "creating a case flagged for press office" do
-      kase = create_foi(case_type: "case_foi_type_casefoistandard", target_state: "drafting", flag: "private")
-      expect(kase).to be_instance_of(Case::FOI::Standard)
-      expect(kase.current_state).to eq "drafting"
-      expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
-      expect(BusinessUnit.press_office).to be_in(kase.approving_teams)
-      expect(BusinessUnit.private_office).to be_in(kase.approving_teams)
     end
 
     scenario "creating a case flagged for private office" do
@@ -224,7 +215,7 @@ feature "adding cases" do
         expect(BusinessUnit.dacu_disclosure).to be_in(kase.approving_teams)
       end
 
-      scenario "creating a trigger ICO in awaiting_dispatch" do
+      scenario "creating a trigger ICO in responded" do
         create_ico(target_state: "responded")
         expect(admin_cases_page).to be_displayed
         kase = Case::ICO::FOI.first

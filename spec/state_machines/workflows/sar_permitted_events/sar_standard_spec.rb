@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe ConfigurableStateMachine::Machine do
+describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
   context "when non-flagged case" do
     context "and manager" do
       let(:manager) { create :manager }

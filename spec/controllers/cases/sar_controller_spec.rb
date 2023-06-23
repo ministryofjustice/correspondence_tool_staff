@@ -1,5 +1,5 @@
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
 RSpec.describe Cases::SarController, type: :controller do
@@ -132,8 +132,7 @@ RSpec.describe Cases::SarController, type: :controller do
       end
 
       before do
-        allow(ActionNotificationsMailer).to receive_message_chain(:notify_team,
-                                                                  :deliver_later)
+        allow(ActionNotificationsMailer).to receive(:notify_team).and_call_original
       end
 
       it "closes a case that has been responded to" do

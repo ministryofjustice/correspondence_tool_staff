@@ -428,7 +428,7 @@ describe Case::SAR::InternalReview do
       expect(sar_internal_review.steps_are_completed?).to eq(false)
     end
 
-    it "returns false if steps aren't completed" do
+    it "returns true if steps are completed" do
       sar_internal_review.current_step = sar_internal_review.steps.last
       expect(sar_internal_review.steps_are_completed?).to eq(true)
     end

@@ -70,6 +70,7 @@ describe Case::SAR::InternalReviewPolicy do
     end
   end
 
+  # rubocop:disable RSpec/RepeatedExample
   context "when closing a case" do
     permissions :can_close_case? do
       it { is_expected.not_to permit(responder, sar_ir) }
@@ -83,6 +84,7 @@ describe Case::SAR::InternalReviewPolicy do
       it { is_expected.not_to permit(approver,  sar_ir) }
     end
   end
+  # rubocop:enable RSpec/RepeatedExample
 
   context "when case in awaiting_dispatch state" do
     permissions :can_respond? do

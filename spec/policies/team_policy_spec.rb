@@ -9,6 +9,7 @@ describe TeamPolicy do
   let(:other_responder) { create :responder }
   let(:approver)        { find_or_create :disclosure_specialist }
 
+  # rubocop:disable RSpec/RepeatedExample
   permissions :can_add_new_responder? do
     it { is_expected.to     permit(manager,         responding_team) }
     it { is_expected.to     permit(responder,       responding_team) }
@@ -40,4 +41,5 @@ describe TeamPolicy do
     it { is_expected.not_to permit(responder, Team.first) }
     it { is_expected.not_to permit(approver,  responding_team) }
   end
+  # rubocop:enable RSpec/RepeatedExample
 end

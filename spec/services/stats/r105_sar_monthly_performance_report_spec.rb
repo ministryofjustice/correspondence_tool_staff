@@ -28,7 +28,7 @@ module Stats
       end
 
       before(:all) do
-        require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+        require Rails.root.join("db/seeders/case_closure_metadata_seeder")
         CaseClosure::MetadataSeeder.seed!
 
         Timecop.freeze Time.zone.local(2019, 6, 30, 12, 0, 0) do

@@ -19,22 +19,19 @@ describe Workflows::Hooks do
 
   describe "#notify_managing_team_case_closed" do
     before do
-      allow(ActionNotificationsMailer).to receive_message_chain(:notify_team,
-                                                                :deliver_later)
+      allow(ActionNotificationsMailer).to receive(:notify_team).and_call_original
     end
 
     it "sends a notification" do
       workflow.notify_managing_team_case_closed
       expect(ActionNotificationsMailer)
-        .to have_received(:notify_team)
-              .with(kase.managing_team, kase, "Case closed")
+        .to have_received(:notify_team).with(kase.managing_team, kase, "Case closed")
     end
   end
 
   describe "#reassign_user_email" do
     before do
-      allow(ActionNotificationsMailer).to receive_message_chain(:case_assigned_to_another_user,
-                                                                :deliver_later)
+      allow(ActionNotificationsMailer).to receive(:case_assigned_to_another_user).and_call_original
     end
 
     context "when responder reassigning" do
@@ -44,8 +41,7 @@ describe Workflows::Hooks do
         it "sends the notification" do
           workflow.reassign_user_email
           expect(ActionNotificationsMailer)
-            .to have_received(:case_assigned_to_another_user)
-                  .with(kase, another_responder)
+            .to have_received(:case_assigned_to_another_user).with(kase, another_responder)
         end
       end
 
@@ -55,8 +51,7 @@ describe Workflows::Hooks do
         it "does not send the notification" do
           workflow.reassign_user_email
           expect(ActionNotificationsMailer)
-            .not_to have_received(:case_assigned_to_another_user)
-                  .with(kase, another_responder)
+            .not_to have_received(:case_assigned_to_another_user).with(kase, another_responder)
         end
       end
     end
@@ -68,8 +63,7 @@ describe Workflows::Hooks do
         it "sends the notification" do
           workflow.reassign_user_email
           expect(ActionNotificationsMailer)
-            .to have_received(:case_assigned_to_another_user)
-                  .with(kase, another_approver)
+            .to have_received(:case_assigned_to_another_user).with(kase, another_approver)
         end
       end
     end
@@ -79,8 +73,7 @@ describe Workflows::Hooks do
     let(:workflow) { described_class.new(user: responder, kase:, metadata: { target_team: another_responding_team }) }
 
     before do
-      allow(ActionNotificationsMailer).to receive_message_chain(:new_assignment,
-                                                                :deliver_later)
+      allow(ActionNotificationsMailer).to receive(:new_assignment).and_call_original
     end
 
     context "when responder reassigning" do
@@ -88,8 +81,7 @@ describe Workflows::Hooks do
         it "sends a notification" do
           workflow.assign_responder_email
           expect(ActionNotificationsMailer)
-            .to have_received(:new_assignment)
-                  .with(kase.responder_assignment, another_responding_team.email)
+            .to have_received(:new_assignment).with(kase.responder_assignment, another_responding_team.email)
         end
       end
     end
@@ -97,14 +89,12 @@ describe Workflows::Hooks do
 
   describe "#notify_approver_ready_for_review" do
     before do
-      allow(ActionNotificationsMailer).to receive_message_chain(:ready_for_press_or_private_review,
-                                                                :deliver_later)
+      allow(ActionNotificationsMailer).to receive(:ready_for_press_or_private_review)
     end
 
     it "sends the notification" do
       workflow.notify_approver_ready_for_review
-      expect(ActionNotificationsMailer)
-        .to have_received(:ready_for_press_or_private_review)
+      expect(ActionNotificationsMailer).to have_received(:ready_for_press_or_private_review)
     end
   end
 end

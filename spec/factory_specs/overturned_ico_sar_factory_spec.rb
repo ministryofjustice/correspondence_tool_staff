@@ -11,7 +11,7 @@ describe "Overturned ICO SAR cases factory" do
 
   describe "Overturned ICO SAR" do
     context "when standard workflow" do
-      describe :overturned_ico_sar do
+      describe ":overturned_ico_sar" do
         it "creates an unassigned ICO SAR case" do
           Timecop.freeze(frozen_time) do
             kase = create :overturned_ico_sar
@@ -36,7 +36,7 @@ describe "Overturned ICO SAR cases factory" do
         end
       end
 
-      describe :awaiting_responder_ot_ico_sar do
+      describe ":awaiting_responder_ot_ico_sar" do
         it "creates an assigned ICO SAR case" do
           Timecop.freeze(frozen_time) do
             kase = create(:awaiting_responder_ot_ico_sar, responding_team:)
@@ -60,7 +60,7 @@ describe "Overturned ICO SAR cases factory" do
         end
       end
 
-      describe :accepted_ot_ico_sar do
+      describe ":accepted_ot_ico_sar" do
         it "creates an case in drafting state" do
           kase = create(:accepted_ot_ico_sar, responding_team:, responder:)
           expect(kase.workflow).to eq "standard"
@@ -82,7 +82,7 @@ describe "Overturned ICO SAR cases factory" do
         end
       end
 
-      describe :closed_ot_ico_sar do
+      describe ":closed_ot_ico_sar" do
         it "creates a case in responded state" do
           Timecop.freeze(frozen_time) do
             kase = create(:closed_ot_ico_sar,
@@ -176,7 +176,7 @@ describe "Overturned ICO SAR cases factory" do
         end
       end
 
-      describe :awaiting_responder_ot_ico_sar, :flagged_accepted do
+      describe ":awaiting_responder_ot_ico_sar, :flagged_accepted" do
         it "creates an assigned ICO SAR case" do
           Timecop.freeze(frozen_time) do
             kase = create :awaiting_responder_ot_ico_sar,
@@ -215,7 +215,7 @@ describe "Overturned ICO SAR cases factory" do
         end
       end
 
-      describe :pending_dacu_clearance_ot_ico_sar do
+      describe ":pending_dacu_clearance_ot_ico_sar" do
         it "creates a pending dacu clearance ot ico sar" do
           kase = create :pending_dacu_clearance_ico_sar_case, :flagged_accepted, :dacu_disclosure
           expect(kase.workflow).to eq "trigger"
@@ -228,7 +228,7 @@ describe "Overturned ICO SAR cases factory" do
         end
       end
 
-      describe :awaiting_dispatch_ot_ico_sar, :flagged_accepted, :dacu_disclosure do
+      describe ":awaiting_dispatch_ot_ico_sar, :flagged_accepted, :dacu_disclosure" do
         it "creates a an awaiting  ot ico sar" do
           kase = create :awaiting_dispatch_ot_ico_sar,
                         :flagged_accepted,

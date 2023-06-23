@@ -175,12 +175,14 @@ describe Stats::Warehouse::CaseReportSync do
       let(:new_name) { "Tronald Dump" }
 
       before do
-        all_cases
-          .each { |kase|
+        all = all_cases.map do |kase|
           ::Warehouse::CaseReport.generate(kase)
           kase.reload
-        }
-          .each { |kase| expect(kase.warehouse_case_report).to be_present }
+        end
+
+        all.each do |kase|
+          expect(kase.warehouse_case_report).to be_present # rubocop:disable RSpec/ExpectInHook
+        end
       end
 
       it "updates related CaseReport" do
@@ -205,10 +207,11 @@ describe Stats::Warehouse::CaseReportSync do
 
       before do
         ::Warehouse::CaseReport.generate(responded_case)
-        expect(responded_case.reload.warehouse_case_report).to be_present
       end
 
       it "updates related CaseReport fields" do
+        expect(responded_case.reload.warehouse_case_report).to be_present
+
         affected_case_relationships = [
           responding_team, # Maps to CaseReport#responding_team
           responding_team.business_group, # Maps CaseReport#business_group

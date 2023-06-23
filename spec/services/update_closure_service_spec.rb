@@ -8,7 +8,7 @@ describe UpdateClosureService do
     let(:user)                  { team.users.first }
     let(:kase)                  { create :closed_case, received_date: date_received }
     let(:state_machine)         do
-      double( # rubocop:disable RSpec/VerifiedDoubles
+      double(
         ConfigurableStateMachine::Machine,
         update_closure!: true,
         teams_that_can_trigger_event_on_case: [team],

@@ -22,7 +22,7 @@ feature "Upload commissioning document" do
     click_on "Replace"
     expect(upload_commissioning_document_page).to be_displayed
 
-    upload_file = Rails.root.join("spec", "fixtures", "response.docx")
+    upload_file = Rails.root.join("spec/fixtures/response.docx")
     upload_commissioning_document_page.drop_in_dropzone(upload_file)
     upload_commissioning_document_page.upload_document_button.click
     expect(data_request_show_page).to be_displayed
@@ -36,7 +36,7 @@ feature "Upload commissioning document" do
     click_on "Replace"
     expect(upload_commissioning_document_page).to be_displayed
 
-    upload_file = Rails.root.join("spec", "fixtures", "new request.pdf")
+    upload_file = Rails.root.join("spec/fixtures/new request.pdf")
     upload_commissioning_document_page.drop_in_dropzone(upload_file)
     expect(upload_commissioning_document_page).to have_content("You can't upload files of this type.")
 

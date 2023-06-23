@@ -11,11 +11,10 @@ RSpec.shared_examples "new overturned ico spec" do |klass|
     let(:service) { double NewOverturnedIcoCaseService }
 
     before do
-      expect(NewOverturnedIcoCaseService)
+      allow(NewOverturnedIcoCaseService)
         .to receive(:new).with(kase.id.to_s).and_return(service)
-
-      expect(service).to receive(:call)
-      expect(service).to receive(:original_ico_appeal).and_return(kase)
+      allow(service).to receive(:call)
+      allow(service).to receive(:original_ico_appeal).and_return(kase)
     end
 
     context "with valid params" do
@@ -34,8 +33,8 @@ RSpec.shared_examples "new overturned ico spec" do |klass|
       end
 
       before do
-        expect(service).to receive(:error?).and_return(false)
-        expect(service).to receive(:overturned_ico_case).and_return(overturned_ico)
+        allow(service).to receive(:error?).and_return(false)
+        allow(service).to receive(:overturned_ico_case).and_return(overturned_ico)
         get :new, params: { id: kase.id }
       end
 
@@ -60,8 +59,8 @@ RSpec.shared_examples "new overturned ico spec" do |klass|
       let(:decorated_ico_appeal) { double ico_decorator }
 
       before do
-        expect(service).to receive(:error?).and_return(true)
-        expect(kase).to receive(:decorate).and_return(decorated_ico_appeal)
+        allow(service).to receive(:error?).and_return(true)
+        allow(kase).to receive(:decorate).and_return(decorated_ico_appeal)
         get :new, params: { id: kase.id }
       end
 

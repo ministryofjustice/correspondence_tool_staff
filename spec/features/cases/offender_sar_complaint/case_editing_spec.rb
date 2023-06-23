@@ -112,7 +112,7 @@ feature "offender sar complaint case editing by a manager" do
     then_i_expect_the_new_deadline_to_be_reflected_on_the_case_show_page(new_external_deadline)
   end
 
-  scenario "user can edit the external deadline for ico complaint case" do
+  scenario "user can edit the external deadline for litigation complaint case" do
     cases_show_page.load(id: offender_sar_litigation_complaint.id)
     expect(cases_show_page).to be_displayed(id: offender_sar_litigation_complaint.id)
 

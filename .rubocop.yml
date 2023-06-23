@@ -12,49 +12,11 @@ RSpec/VerifiedDoubles:
   Enabled: false
 RSpec/AnyInstance:
   Enabled: false
-Rails/FilePath:
-  Enabled: false
 Style/MissingRespondToMissing:
   Enabled: false
 Style/ClassVars:
   Enabled: false
-RSpec/RepeatedExampleGroupDescription:
-  Enabled: false
 RSpec/StubbedMock:
-  Enabled: false
-RSpec/ExpectInHook:
-  Enabled: false
-Lint/AmbiguousBlockAssociation:
-  Enabled: false
-Lint/Debugger:
-  Enabled: false
-Naming/HeredocDelimiterNaming:
-  Enabled: false
-RSpec/RepeatedExample:
-  Enabled: false
-Capybara/VisibilityMatcher:
-  Enabled: false
-RSpec/DescribeSymbol:
-  Enabled: false
-Lint/RedundantCopDisableDirective:
-  Enabled: false
-Naming/MemoizedInstanceVariableName:
-  Enabled: false
-Naming/FileName:
-  Enabled: false
-RSpec/FilePath:
-  Enabled: false
-RSpec/LeakyConstantDeclaration:
-  Enabled: false
-Lint/ConstantDefinitionInBlock:
-  Enabled: false
-RSpec/MessageChain:
-  Enabled: false
-Style/MultilineBlockChain:
-  Enabled: false
-RSpec/RepeatedDescription:
-  Enabled: false
-Style/OptionalArguments:
   Enabled: false
 # **************************************************************
 # TRY NOT TO ADD OVERRIDES IN THIS FILE

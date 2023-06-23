@@ -1,5 +1,7 @@
 require "rails_helper"
 
+class FakeError < ArgumentError; end
+
 describe DataRequestCreateService do
   let(:user) { create :user }
   let(:offender_sar_case) { create :offender_sar_case }
@@ -96,8 +98,6 @@ describe DataRequestCreateService do
       end
 
       it "only recovers from ActiveRecord exceptions" do
-        class FakeError < ArgumentError; end
-
         allow_any_instance_of(Case::Base).to receive(:save!).and_raise(FakeError)
         expect { service.call }.to raise_error FakeError
       end

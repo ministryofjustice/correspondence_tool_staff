@@ -43,7 +43,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
           overturned_ico_case:,
         )
         params = ActionController::Parameters.new({ id: ico_sar.id })
-        expect(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
+        allow(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
 
         get :new, params: params.to_unsafe_hash
       end
@@ -71,7 +71,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
                          original_case: sar,
                          overturned_ico_case:)
         params = ActionController::Parameters.new({ id: ico_sar.id })
-        expect(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
+        allow(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
         get :new, params: params.to_unsafe_hash
       end
 
@@ -122,7 +122,7 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
         )
         .merge(original_case_id: sar.id)
 
-      expect(CaseCreateService).to receive(:new).with(
+      allow(CaseCreateService).to receive(:new).with(
         user: manager,
         case_type: Case::OverturnedICO::SAR,
         params:,

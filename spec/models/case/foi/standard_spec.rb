@@ -560,7 +560,7 @@ describe Case::FOI::Standard do
     kase.reload
 
     Timecop.freeze(responded_time) do
-      filenames = ["#{Rails.root}/spec/fixtures/test_file.txt"]
+      filenames = [Rails.root.join("spec/fixtures/test_file.txt")]
       if kase.flagged?
         respond_to_flagged_case(kase, filenames)
       else

@@ -84,8 +84,8 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
       before do
         sign_in responder
         post(:create, params:)
-        expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
-        expect(flash[:notice]).to eq nil
+        expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint # rubocop:disable RSpec/ExpectInHook
+        expect(flash[:notice]).to eq nil # rubocop:disable RSpec/ExpectInHook
       end
 
       context "with step link-offender-sar-case" do
@@ -393,16 +393,14 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
   end
 
   describe "transitions" do
-    OFFENDER_SAR_COMPLAINT_STATES = {
+    {
       data_to_be_requested: :mark_as_waiting_for_data,
       waiting_for_data: :mark_as_ready_for_vetting,
       ready_for_vetting: :mark_as_vetting_in_progress,
       vetting_in_progress: :mark_as_ready_to_copy,
       ready_to_copy: :mark_as_ready_to_dispatch,
       ready_to_dispatch: :close,
-    }.freeze
-
-    OFFENDER_SAR_COMPLAINT_STATES.each do |state, transition_event|
+    }.each do |state, transition_event|
       context "with Offender SAR in #{state} state" do
         it_behaves_like "edit offender sar spec", state.to_sym, transition_event
       end
@@ -527,6 +525,9 @@ RSpec.describe Cases::OffenderSarComplaintController, type: :controller do
     context "with valid params" do
       before do
         patch(:update, params:)
+      end
+
+      it "assigns case as a sar offender complaint" do
         expect(assigns(:case)).to be_a Case::SAR::OffenderComplaint
       end
 

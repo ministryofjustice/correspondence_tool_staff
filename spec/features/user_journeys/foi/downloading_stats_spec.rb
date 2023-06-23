@@ -19,8 +19,8 @@
 # downloads and redirects to custom page
 
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
-require File.join(Rails.root, "db", "seeders", "report_type_seeder")
+require Rails.root.join("db/seeders/case_closure_metadata_seeder")
+require Rails.root.join("db/seeders/report_type_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
 feature "Downloading stats(csv) from the system" do

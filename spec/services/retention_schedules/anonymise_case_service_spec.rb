@@ -149,11 +149,13 @@ describe RetentionSchedules::AnonymiseCaseService, versioning: true do
       end
 
       # check setup
+      # rubocop:disable RSpec/ExpectInHook
       expect(offender_sar_case.versions.count).to be > 0
       expect(offender_sar_case.retention_schedule.present?).to be(true)
       expect(offender_sar_complaint.versions.count).to be > 0
       expect(offender_sar_case.data_requests.count).to be > 0
       expect(offender_sar_complaint.data_requests.count).to be > 0
+      # rubocop:enable RSpec/ExpectInHook
 
       service.call
       service_two.call

@@ -89,6 +89,7 @@ describe Case::FOI::StandardPolicy do
            :press_office
   end
 
+  # rubocop:disable RSpec/RepeatedExample
   permissions :request_further_clearance? do
     it { is_expected.not_to permit(responder,             accepted_case) }
     it { is_expected.to     permit(manager,               accepted_case) }
@@ -131,4 +132,5 @@ describe Case::FOI::StandardPolicy do
     it { is_expected.to     permit(responder,             unassigned_case) }
     it { is_expected.to     permit(disclosure_specialist, unassigned_case) }
   end
+  # rubocop:enable RSpec/RepeatedExample
 end

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe ConfigurableStateMachine::Machine do
+describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
   describe "full_approval workflow" do
     ##################### MANAGER FLAGGED ############################
 
@@ -618,7 +618,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "and pending_press_clearance state" do
+      context "and pending_private_clearance_ot_ico_foi state" do
         it "shows events" do
           k = create :pending_private_clearance_ot_ico_foi
           expect(k.class).to eq Case::OverturnedICO::FOI

@@ -122,6 +122,7 @@ describe Case::SARPolicy do
     it { is_expected.not_to permit(manager,             trigger_ot_sar_case)  }
   end
 
+  # rubocop:disable RSpec/RepeatedExample
   context "when SAR deadline extension" do
     permissions :extend_sar_deadline? do
       it { is_expected.not_to permit(responder,             approved_sar) }
@@ -143,6 +144,7 @@ describe Case::SARPolicy do
       it { is_expected.to     permit(disclosure_approver,   extended_sar_case) }
     end
   end
+  # rubocop:enable RSpec/RepeatedExample
 
   permissions :can_perform_retention_actions? do
     context "when can see the case" do

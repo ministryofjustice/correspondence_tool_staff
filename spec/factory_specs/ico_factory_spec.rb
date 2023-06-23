@@ -12,7 +12,7 @@ describe "ICO cases factory" do
   context "when ICO FOI cases" do
     let(:responding_team) { find_or_create :foi_responding_team }
 
-    describe :ico_foi_case do
+    describe ":ico_foi_case" do
       it "creates an unassigned ICO FOI case" do
         Timecop.freeze(frozen_time) do
           kase = create :ico_foi_case
@@ -37,7 +37,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :awaiting_responder_ico_foi_case do
+    describe ":awaiting_responder_ico_foi_case" do
       it "creates an assigned ICO FOI case" do
         Timecop.freeze(frozen_time) do
           kase = create(:awaiting_responder_ico_foi_case, responding_team:)
@@ -60,7 +60,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :accepted_ico_foi_case do
+    describe ":accepted_ico_foi_case" do
       it "creates an case in drafting state" do
         kase = create(:accepted_ico_foi_case, responding_team:, responder:)
         expect(kase.current_state).to eq "drafting"
@@ -81,7 +81,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :pending_dacu_clearance_ico_foi_case do
+    describe ":pending_dacu_clearance_ico_foi_case" do
       it "creates a pending_dacu_clearance_case" do
         kase = create :pending_dacu_clearance_ico_foi_case,
                       responding_team:,
@@ -106,7 +106,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :approved_ico_foi_case do
+    describe ":approved_ico_foi_case" do
       it "creates a case in responded state" do
         kase = create :approved_ico_foi_case,
                       responding_team:,
@@ -127,7 +127,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :responded_ico_foi_case do
+    describe ":responded_ico_foi_case" do
       it "creates a case in responded state" do
         kase = create(:responded_ico_foi_case,
                       responding_team:,
@@ -153,7 +153,7 @@ describe "ICO cases factory" do
     let(:responding_team) { find_or_create :sar_responding_team }
     let(:responder)       { find_or_create :sar_responder }
 
-    describe :ico_sar_case do
+    describe ":ico_sar_case" do
       it "creates an unassigned ICO SAR case" do
         Timecop.freeze(frozen_time) do
           kase = create :ico_sar_case
@@ -178,7 +178,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :awaiting_responder_ico_sar_case do
+    describe ":awaiting_responder_ico_sar_case" do
       it "creates an assigned ICO SAR case" do
         Timecop.freeze(frozen_time) do
           kase = create(:awaiting_responder_ico_sar_case, responding_team:)
@@ -201,7 +201,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :accepted_ico_sar_case do
+    describe ":accepted_ico_sar_case" do
       it "creates an case in drafting state" do
         kase = create(:accepted_ico_sar_case, responding_team:, responder:)
         expect(kase.current_state).to eq "drafting"
@@ -222,7 +222,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :pending_dacu_clearance_ico_sar_case do
+    describe ":pending_dacu_clearance_ico_sar_case" do
       it "creates a pending_dacu_clearance_case" do
         kase = create :pending_dacu_clearance_ico_sar_case,
                       responding_team:,
@@ -245,7 +245,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :approved_ico_sar_case do
+    describe ":approved_ico_sar_case" do
       it "creates a case in awaiting_dispatch state" do
         kase = create :approved_ico_sar_case,
                       responding_team:,
@@ -267,7 +267,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :responded_ico_sar_case do
+    describe ":responded_ico_sar_case" do
       it "creates a case in responded state" do
         kase = create :responded_ico_sar_case,
                       responding_team:,
@@ -289,7 +289,7 @@ describe "ICO cases factory" do
       end
     end
 
-    describe :closed_ico_sar_case do
+    describe ":closed_ico_sar_case" do
       it "creates a case in responded state" do
         kase = create :closed_ico_sar_case,
                       responding_team:,

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Cases::FiltersController, type: :controller do
+RSpec.describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/FilePath
   let(:params) do
     {
       "state_selector" => {

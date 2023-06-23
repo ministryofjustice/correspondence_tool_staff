@@ -144,14 +144,6 @@ RSpec.describe Case, type: :model do
                                          acting_team: case_with_response.responding_team)
         expect(state_machine).not_to have_received(:respond)
       end
-
-      it 'set the date_responded to the date the user triggered "Marked as sent"' do
-        case_with_response.respond(case_with_response.responder)
-        expect(state_machine).to have_received(:respond!)
-                                     .with(acting_user: case_with_response.responder,
-                                           acting_team: case_with_response.responding_team)
-        expect(state_machine).not_to have_received(:respond)
-      end
     end
 
     describe "#close" do

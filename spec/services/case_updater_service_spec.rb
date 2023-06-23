@@ -5,7 +5,7 @@ describe CaseUpdaterService do
     let(:team)          { find_or_create :team_dacu }
     let(:user)          { team.users.first }
     let(:kase)          { create :accepted_case }
-    let(:state_machine) { double ConfigurableStateMachine::Machine, edit_case!: true } # rubocop:disable RSpec/VerifiedDoubles
+    let(:state_machine) { double ConfigurableStateMachine::Machine, edit_case!: true }
     let(:service)       { described_class.new(user, kase, params) }
 
     before do

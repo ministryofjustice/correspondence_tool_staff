@@ -72,7 +72,13 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     before do
       sign_in responder
       post(:create, params:)
+    end
+
+    it "assigns a sar_offender case" do
       expect(assigns(:case)).to be_a Case::SAR::Offender
+    end
+
+    it "doesn't set a flash message" do
       expect(flash[:notice]).to eq nil
     end
 
@@ -247,16 +253,14 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
   end
 
   describe "transitions" do
-    OFFENDER_SAR_STATES = {
+    {
       data_to_be_requested: :mark_as_waiting_for_data,
       waiting_for_data: :mark_as_ready_for_vetting,
       ready_for_vetting: :mark_as_vetting_in_progress,
       vetting_in_progress: :mark_as_ready_to_copy,
       ready_to_copy: :mark_as_ready_to_dispatch,
       ready_to_dispatch: :close,
-    }.freeze
-
-    OFFENDER_SAR_STATES.each do |state, transition_event|
+    }.each do |state, transition_event|
       context "with Offender SAR in #{state} state" do
         it_behaves_like "edit offender sar spec", state.to_sym, transition_event
       end
@@ -329,6 +333,9 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     context "with valid params" do
       before do
         patch(:update, params:)
+      end
+
+      it "assigns a sar_offender case" do
         expect(assigns(:case)).to be_a Case::SAR::Offender
       end
 
@@ -366,6 +373,9 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
     context "with valid params" do
       before do
         patch(:confirm_sent_to_sscl, params:)
+      end
+
+      it "assigns a sar_offender case" do
         expect(assigns(:case)).to be_a Case::SAR::Offender
       end
 

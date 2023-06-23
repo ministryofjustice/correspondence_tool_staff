@@ -147,7 +147,7 @@ feature "ICO case creation" do
     end
 
     scenario "creating an ICO appeal linking to FOI case with request attachments", js: true do
-      request_attachment = Rails.root.join("spec", "fixtures", "request-1.pdf")
+      request_attachment = Rails.root.join("spec/fixtures/request-1.pdf")
 
       create_ico_case_step(original_case: original_foi,
                            related_cases: [related_foi],
@@ -159,7 +159,7 @@ feature "ICO case creation" do
     end
 
     scenario "creating an ICO appeal linking to SAR case with request attachments", js: true do
-      request_attachment = Rails.root.join("spec", "fixtures", "request-1.pdf")
+      request_attachment = Rails.root.join("spec/fixtures/request-1.pdf")
 
       create_ico_case_step(original_case: original_sar,
                            related_cases: [related_sar],

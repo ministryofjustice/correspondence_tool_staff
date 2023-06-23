@@ -64,7 +64,7 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
     end
 
     it "reindexes unindexed case with specific size" do
-      allow(Case::Base).to receive_message_chain(:where, :limit).and_return([sar_case, foi_case])
+      allow(Case::Base).to receive_message_chain(:where, :limit).and_return([sar_case, foi_case]) # rubocop:disable RSpec/MessageChain
       allow(sar_case).to receive(:update_index)
       allow(foi_case).to receive(:update_index)
       expect(SearchIndexUpdaterJob).to receive(:perform_later).with(sar_case.id)
@@ -83,7 +83,7 @@ RSpec.describe CTS::Cases::CLI, tag: :cli do
 
     it "warehouses certain amount cases specified by size option" do
       allow(::Warehouse::CaseReport).to receive(:generate)
-      allow(Case::Base).to receive_message_chain(:join, :where, :limit, :in_batches).and_return([sar_case, foi_case])
+      allow(Case::Base).to receive_message_chain(:join, :where, :limit, :in_batches).and_return([sar_case, foi_case]) # rubocop:disable RSpec/MessageChain
       cli_warehouse_all_size.warehouse
       expect(::Warehouse::CaseReport).to have_received(:generate).twice
     end

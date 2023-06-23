@@ -139,7 +139,7 @@ RSpec.describe Report, type: :model do
     let(:report_data) { { "report": "data" } }
 
     before do
-      expect(Stats::R003BusinessUnitPerformanceReport)
+      allow(Stats::R003BusinessUnitPerformanceReport)
         .to receive(:new).with(**options).and_return(report_service)
       allow(report_service).to receive(:background_job?).and_return(false)
       allow(report_service).to receive(:results).and_return(report_data)

@@ -12,8 +12,7 @@ describe CaseApprovalService do
       let(:service) { described_class.new(user:, kase:, bypass_params:) }
 
       before do
-        allow(ActionNotificationsMailer).to receive_message_chain(:ready_for_press_or_private_review,
-                                                                  :deliver_later)
+        allow(ActionNotificationsMailer).to receive(:ready_for_press_or_private_review).and_call_original
       end
 
       context "when case not in pending_dacu_clearance state" do

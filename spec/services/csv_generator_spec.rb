@@ -1,20 +1,20 @@
 require "rails_helper"
 
-describe "CSVGenerator" do
-  class DummyCaseCSVExporter
-    CSV_COLUMN_HEADINGS = [
-      "test column",
-    ].freeze
+class DummyCaseCSVExporter
+  CSV_COLUMN_HEADINGS = [
+    "test column",
+  ].freeze
 
-    def initialize(**options); end
+  def initialize(**options); end
 
-    def analyse_case(kase)
-      [
-        kase.number,
-      ]
-    end
+  def analyse_case(kase)
+    [
+      kase.number,
+    ]
   end
+end
 
+describe "CSVGenerator" do
   describe "#to_csv" do
     it "returns an array of arrays with default csv exporter" do
       k1_fields = ["an", "array", "of", "text", "fields", "for", "case 1"]

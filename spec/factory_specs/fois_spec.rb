@@ -233,7 +233,7 @@ describe "FOI cases factory" do
         end
       end
 
-      context "and taken_on_by_disclosure" do
+      context "and foi taken_on_by_disclosure" do
         let(:kase) do
           create :foi_case,
                  :taken_on_by_disclosure,

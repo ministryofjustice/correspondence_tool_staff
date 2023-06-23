@@ -98,7 +98,7 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
         )
         .merge(original_case_id: foi.id)
 
-      expect(CaseCreateService).to receive(:new).with(
+      allow(CaseCreateService).to receive(:new).with(
         user: manager,
         case_type: Case::OverturnedICO::FOI,
         params:,
@@ -107,8 +107,8 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
 
     context "with valid params" do
       before do
-        expect(service).to receive(:result).and_return(:assign_responder)
-        expect(service).to receive(:message).and_return("Case successfully created")
+        allow(service).to receive(:result).and_return(:assign_responder)
+        allow(service).to receive(:message).and_return("Case successfully created")
         post :create, params: ico_overturned_foi_params
       end
 
@@ -125,8 +125,8 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
 
     context "with invalid params" do
       before do
-        expect(service).to receive(:result).and_return(:error)
-        expect(new_overturned_case)
+        allow(service).to receive(:result).and_return(:error)
+        allow(new_overturned_case)
           .to receive(:decorate).and_return(decorated_overturned_case)
       end
 

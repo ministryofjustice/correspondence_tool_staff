@@ -147,13 +147,13 @@ RSpec.describe DataRequest, type: :model do
       end
     end
 
-    context "with date range" do
+    context "with from date" do
       subject(:data_request) { build :data_request, :with_date_from }
 
       it { is_expected.to be_valid }
     end
 
-    context "with date range" do
+    context "with to date" do
       subject(:data_request) { build :data_request, :with_date_to }
 
       it { is_expected.to be_valid }

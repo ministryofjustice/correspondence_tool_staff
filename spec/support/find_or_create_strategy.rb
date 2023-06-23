@@ -16,7 +16,7 @@ module FactoryBot
     private
 
       def build_class(evaluation)
-        @klass ||= evaluation
+        @build_class ||= evaluation
                      .instance_variable_get(:@attribute_assigner)
                      .instance_variable_get(:@build_class)
       end

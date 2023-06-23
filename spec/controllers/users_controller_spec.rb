@@ -281,9 +281,9 @@ RSpec.describe UsersController, type: :controller do
       context "when response :ok" do
         before do
           service = double(UserDeletionService)
-          expect(UserDeletionService).to receive(:new).and_return(service)
-          expect(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:ok)
+          allow(UserDeletionService).to receive(:new).and_return(service)
+          allow(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:ok) # rubocop:disable RSpec/ExpectInHook
           delete :destroy, params:
         end
 
@@ -299,9 +299,9 @@ RSpec.describe UsersController, type: :controller do
       context "when response :has_live_cases" do
         before do
           service = double(UserDeletionService)
-          expect(UserDeletionService).to receive(:new).and_return(service)
-          expect(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:has_live_cases)
+          allow(UserDeletionService).to receive(:new).and_return(service)
+          allow(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:has_live_cases) # rubocop:disable RSpec/ExpectInHook
           delete :destroy, params:
         end
 
@@ -317,9 +317,9 @@ RSpec.describe UsersController, type: :controller do
       context "when response :error" do
         before do
           service = double(UserDeletionService)
-          expect(UserDeletionService).to receive(:new).and_return(service)
-          expect(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:error)
+          allow(UserDeletionService).to receive(:new).and_return(service)
+          allow(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:error) # rubocop:disable RSpec/ExpectInHook
           delete :destroy, params:
         end
 
@@ -338,7 +338,7 @@ RSpec.describe UsersController, type: :controller do
 
       it "calls user deletion service" do
         service = double(UserDeletionService)
-        expect(UserDeletionService).to receive(:new).and_return(service)
+        allow(UserDeletionService).to receive(:new).and_return(service)
         expect(service).to receive(:call)
         expect(service).to receive(:result).and_return(:ok)
         delete :destroy, params:
@@ -347,9 +347,9 @@ RSpec.describe UsersController, type: :controller do
       context "when response :ok" do
         before do
           service = double(UserDeletionService)
-          expect(UserDeletionService).to receive(:new).and_return(service)
-          expect(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:ok)
+          allow(UserDeletionService).to receive(:new).and_return(service)
+          allow(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:ok) # rubocop:disable RSpec/ExpectInHook
           delete :destroy, params:
         end
 
@@ -365,9 +365,9 @@ RSpec.describe UsersController, type: :controller do
       context "when response :has_live_cases" do
         before do
           service = double(UserDeletionService)
-          expect(UserDeletionService).to receive(:new).and_return(service)
-          expect(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:has_live_cases)
+          allow(UserDeletionService).to receive(:new).and_return(service)
+          allow(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:has_live_cases) # rubocop:disable RSpec/ExpectInHook
           delete :destroy, params:
         end
 
@@ -383,9 +383,9 @@ RSpec.describe UsersController, type: :controller do
       context "when response :error" do
         before do
           service = double(UserDeletionService)
-          expect(UserDeletionService).to receive(:new).and_return(service)
-          expect(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:error)
+          allow(UserDeletionService).to receive(:new).and_return(service)
+          allow(service).to receive(:call)
+          expect(service).to receive(:result).and_return(:error) # rubocop:disable RSpec/ExpectInHook
           delete :destroy, params:
         end
 

@@ -9,7 +9,7 @@ describe CaseFilter::ExemptionFilter do
   let(:kase_2)  { @kase_2 }
 
   before(:all) do
-    require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+    require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
     CaseClosure::MetadataSeeder.seed!
     @kase_1 = create_closed_case_with_exemptions("s22", "s23")          # future,  security

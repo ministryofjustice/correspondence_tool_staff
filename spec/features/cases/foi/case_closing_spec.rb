@@ -1,5 +1,5 @@
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+require Rails.root.join("db/seeders/case_closure_metadata_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
 feature "Closing a case" do
@@ -260,7 +260,7 @@ feature "Closing a case" do
       cases_close_page.fill_in_date_responded(2.business_days.ago)
       cases_close_page.click_on "Continue"
 
-      expect(cases_closure_outcomes_page).to be_displayed
+      expect(cases_closure_outcomes_page).to be_displayed # rubocop:disable RSpec/ExpectInHook
       cases_closure_outcomes_page.is_info_held.other.click
     end
 

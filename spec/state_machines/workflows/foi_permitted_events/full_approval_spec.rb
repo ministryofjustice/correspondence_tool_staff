@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe ConfigurableStateMachine::Machine do
+describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
   let(:press_officer) { find_or_create :press_officer }
 
   describe "full_approval workflow" do
@@ -584,7 +584,7 @@ describe ConfigurableStateMachine::Machine do
         end
       end
 
-      context "and pending_press_clearance state" do
+      context "and pending_private_office_clearance state" do
         it "shows events" do
           k = create :pending_private_clearance_case
           expect(k.class).to eq Case::FOI::Standard

@@ -1,5 +1,5 @@
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "category_reference_seeder")
+require Rails.root.join("db/seeders/category_reference_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
 feature "Contacts address book", js: true do

@@ -5,7 +5,7 @@ describe CaseReopenService do
     let(:team)          { find_or_create :team_branston }
     let(:user)          { team.users.first }
     let(:kase)          { create :offender_sar_complaint, :closed }
-    let(:state_machine) { double ConfigurableStateMachine::Machine, reopen!: true } # rubocop:disable RSpec/VerifiedDoubles
+    let(:state_machine) { double ConfigurableStateMachine::Machine, reopen!: true }
     let(:service)       { described_class.new(user, kase, external_deadline: Time.zone.today) }
 
     before do

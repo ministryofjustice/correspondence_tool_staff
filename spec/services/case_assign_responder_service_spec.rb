@@ -16,11 +16,9 @@ describe CaseAssignResponderService, type: :service do
 
   describe "#call" do
     before do
-      allow(unassigned_case).to receive_message_chain(:assignments,
-                                                      new: new_assignment)
+      allow(unassigned_case).to receive(:assignments).and_return(double("assignments", new: new_assignment))
       allow(unassigned_case.state_machine).to receive(:assign_responder!)
-      allow(ActionNotificationsMailer).to receive_message_chain(:new_assignment,
-                                                                :deliver_later)
+      allow(ActionNotificationsMailer).to receive(:new_assignment).and_call_original
     end
 
     context "when assignment is valid" do

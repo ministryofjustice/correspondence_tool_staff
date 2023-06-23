@@ -37,7 +37,7 @@ module PermitTriggerEvent
 
           next unless [user_type, case_type].in?(permitted_combinations) ^ result
 
-          debugger if @debug_on_error && $stdout.tty?
+          debugger if @debug_on_error && $stdout.tty? # rubocop:disable Lint/Debugger
           # this is handy to be able to step through what failed
           #
           #    kase : the case currently being tested

@@ -27,7 +27,7 @@ feature "FOI Case creation by a manager" do
   end
 
   scenario "creating a case being sent by post with request attachments", js: true do
-    request_attachment = Rails.root.join("spec", "fixtures", "request-1.pdf")
+    request_attachment = Rails.root.join("spec/fixtures/request-1.pdf")
 
     create_foi_case_step delivery_method: :sent_by_post,
                          uploaded_request_files: [request_attachment]
@@ -38,7 +38,7 @@ feature "FOI Case creation by a manager" do
   end
 
   scenario "creating a case being sent by email with request attachments", js: true do
-    request_attachment = Rails.root.join("spec", "fixtures", "request-1.pdf")
+    request_attachment = Rails.root.join("spec/fixtures/request-1.pdf")
 
     create_foi_case_step delivery_method: :sent_by_email,
                          uploaded_request_files: [request_attachment]

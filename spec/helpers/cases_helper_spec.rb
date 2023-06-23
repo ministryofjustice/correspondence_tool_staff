@@ -1,5 +1,30 @@
 require "rails_helper"
 
+class MockCase
+  def initialize(has_attribute:, within_escalation_deadline:, is_offender_sar:, is_offender_sar_complaint:)
+    @has_attribute = has_attribute
+    @within_escalation_deadline = within_escalation_deadline
+    @is_offender_sar = is_offender_sar
+    @is_offender_sar_complaint = is_offender_sar_complaint
+  end
+
+  def has_attribute?(_attr_name)
+    @has_attribute
+  end
+
+  def within_escalation_deadline?
+    @within_escalation_deadline
+  end
+
+  def type_of_offender_sar?
+    @is_offender_sar || @is_offender_sar_complaint
+  end
+
+  def offender_sar_complaint?
+    @is_offender_sar_complaint
+  end
+end
+
 # Specs in this file have access to a helper object that includes
 # the CasesHelper. For example:
 #
@@ -357,35 +382,6 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
   end
 
   describe "#show_escalation_deadline?" do
-    class MockCase
-      def initialize(has_attribute:, within_escalation_deadline:, is_offender_sar:, is_offender_sar_complaint:)
-        @has_attribute = has_attribute
-        @within_escalation_deadline = within_escalation_deadline
-        @is_offender_sar = is_offender_sar
-        @is_offender_sar_complaint = is_offender_sar_complaint
-      end
-
-      def has_attribute?(_attr_name)
-        @has_attribute
-      end
-
-      def within_escalation_deadline?
-        @within_escalation_deadline
-      end
-
-      def type_of_offender_sar?
-        @is_offender_sar || @is_offender_sar_complaint
-      end
-
-      def offender_sar_complaint?
-        @is_offender_sar_complaint
-      end
-
-      def offender_sar_complaint?
-        @is_offender_sar_complaint
-      end
-    end
-
     context "when case is not an Offender SAR" do
       it "is false when escalation_deadline is not available" do
         kase = MockCase.new(

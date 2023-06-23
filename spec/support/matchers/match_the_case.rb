@@ -46,50 +46,50 @@ RSpec::Matchers.define :match_the_case do |kase|
   end
 
   def request_detail_message(kase, actual)
-    <<~EOM
+    <<~MESSAGE
       expected case name: #{kase.subject}#{kase.name}
            got case name: #{actual.request_detail.text}
-    EOM
+    MESSAGE
   end
 
   def status_message(kase, actual)
-    <<~EOM
+    <<~MESSAGE
       expected case state: #{case_states[kase.current_state]}
         actual case state: #{actual.status.text}
-    EOM
+    MESSAGE
   end
 
   def external_deadline_message(kase, actual)
-    <<~EOM
+    <<~MESSAGE
       expected case external deadline: #{kase.external_deadline.strftime(Settings.default_date_format)}
         actual case external deadline: #{actual.external_deadline.text}
-    EOM
+    MESSAGE
   end
 
   def number_message(kase, _actual)
-    <<~EOM
+    <<~MESSAGE
       expected case number to be a link to: #{case_path(kase.id)}
-    EOM
+    MESSAGE
   end
 
   def with_message(_kase, actual)
-    <<~EOM
+    <<~MESSAGE
       expected case to be with: #{@with_text}
            actual case is with: #{actual.who_its_with.text}
-    EOM
+    MESSAGE
   end
 
   def draft_deadline_incorrect_message(kase, actual)
-    <<~EOM
+    <<~MESSAGE
       expected case draft deadline: #{kase.internal_deadline.strftime(Settings.default_date_format)}
         actual case internal deadline: #{actual.draft_deadline.text}
-    EOM
+    MESSAGE
   end
 
   def draft_deadline_not_blank_message(kase, actual)
-    <<~EOM
+    <<~MESSAGE
       expected case draft deadline: #{kase.internal_deadline.strftime(Settings.default_date_format)}
         actual case internal deadline: #{actual.draft_deadline.text}
-    EOM
+    MESSAGE
   end
 end

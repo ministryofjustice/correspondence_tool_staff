@@ -5,7 +5,7 @@ describe ComplaintCaseUpdaterService do
     let(:team)          { find_or_create :team_branston }
     let(:user)          { team.users.first }
     let(:kase)          { create :offender_sar_complaint, current_state: "waiting_for_data", complaint_type: "ico_complaint" }
-    let(:state_machine) { double ConfigurableStateMachine::Machine, edit_case!: true } # rubocop:disable RSpec/VerifiedDoubles
+    let(:state_machine) { double ConfigurableStateMachine::Machine, edit_case!: true }
     let(:service)       { described_class.new(user, kase, params) }
 
     context "when the case type is changed" do

@@ -191,9 +191,7 @@ describe Case::OverturnedICO::FOI do
           new_case.valid?
           expect(new_case.errors[:original_ico_appeal]).to be_empty
         end
-      end
 
-      context "when Case::ICO::FOI" do
         it "is invalid" do
           foi = create :case
           new_case.original_ico_appeal = foi

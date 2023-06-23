@@ -398,6 +398,12 @@ describe Case::SAR::OffenderComplaint do
       kase = create :offender_sar_complaint
       expect(kase.subject_address).to eq "22 Sample Address, Test Lane, Testingington, TE57ST"
     end
+
+    it "validates presence of subject address" do
+      kase = build_stubbed :offender_sar_complaint, subject_address: ""
+      expect(kase).not_to be_valid
+      expect(kase.errors[:subject_address]).to eq ["cannot be blank"]
+    end
   end
 
   describe "#third_party_address" do
@@ -584,14 +590,6 @@ describe Case::SAR::OffenderComplaint do
 
       kase.current_state = "waiting_for_data"
       expect(kase.allow_waiting_for_data_state?).to be false
-    end
-  end
-
-  describe "#subject_address" do
-    it "validates presence of subject address" do
-      kase = build_stubbed :offender_sar_complaint, subject_address: ""
-      expect(kase).not_to be_valid
-      expect(kase.errors[:subject_address]).to eq ["cannot be blank"]
     end
   end
 

@@ -14,7 +14,7 @@ feature "editing an ICO case" do
   end
 
   scenario "changing details", js: true do
-    request_attachment = Rails.root.join("spec", "fixtures", "new request.docx")
+    request_attachment = Rails.root.join("spec/fixtures/new request.docx")
     cases_edit_ico_page.form.fill_in_case_details(
       received_date: Date.new(2018, 0o3, 0o4),
       external_deadline: Date.new(2018, 0o3, 24),

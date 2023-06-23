@@ -53,7 +53,7 @@ feature "downloading a response from response details" do
       end
 
       scenario "when a view link is available" do
-        mypath = File.join(Rails.root, "spec", "fixtures", "eon.pdf")
+        mypath = Rails.root.join("spec/fixtures/eon.pdf")
         s3_object = instance_double(Aws::S3::Object)
         expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).and_return(s3_object)
         expect(Tempfile).to receive(:new).and_return(double(Tempfile, path: mypath, close: nil))

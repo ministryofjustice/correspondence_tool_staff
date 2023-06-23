@@ -37,7 +37,7 @@ feature "Assigning a SAR case to a new team" do
   scenario "re-assigning a trigger SAR case that is being drafted" do
     responding_team
 
-    accepted_case = create :accepted_sar
+    accepted_case = create :accepted_sar, :flagged
 
     cases_show_page.load(id: accepted_case.id)
     cases_show_page.actions.assign_to_new_team.click

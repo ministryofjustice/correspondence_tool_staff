@@ -21,11 +21,11 @@ feature "Searching for cases" do
     cases_page.load
 
     cases_page.primary_navigation.search.click
-    expect(cases_search_page).to be_displayed
-    expect(cases_search_page).not_to have_notices
+    expect(cases_search_page).to be_displayed # rubocop:disable RSpec/ExpectInHook
+    expect(cases_search_page).not_to have_notices # rubocop:disable RSpec/ExpectInHook
     cases_search_page.search_query.set search_term
     cases_search_page.search_button.click
-    expect(cases_search_page).to be_displayed
+    expect(cases_search_page).to be_displayed # rubocop:disable RSpec/ExpectInHook
   end
 
   context "when searching for case number" do

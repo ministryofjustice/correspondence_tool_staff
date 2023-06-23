@@ -49,10 +49,6 @@ describe CaseUnflagForClearanceService do
       it "sets the result to ok and returns true" do
         expect(service.result).to eq :ok
       end
-
-      it "saves message in the data base" do
-        expect(service.result).to eq :ok
-      end
     end
 
     context "when anything fails in the transaction" do

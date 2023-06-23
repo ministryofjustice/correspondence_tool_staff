@@ -1,7 +1,7 @@
 require "rails_helper"
 
 # rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
-describe ReportTypePolicy::Scope do
+describe ReportTypePolicy::Scope do # rubocop:disable RSpec/FilePath
   describe "report type scope policy" do
     before(:all) do
       DbHousekeeping.clean(seed: true)

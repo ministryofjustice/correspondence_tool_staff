@@ -42,10 +42,6 @@ describe UserReassignmentService do
       it "sets the target_team if not provided" do
         expect(urs.instance_variable_get(:@target_team)).to eq responding_team
       end
-
-      it "sets the acting_team if not provided" do
-        expect(urs.instance_variable_get(:@target_team)).to eq responding_team
-      end
     end
   end
 

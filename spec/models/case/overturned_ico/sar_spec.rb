@@ -224,6 +224,13 @@ describe Case::OverturnedICO::SAR do
           new_case.valid?
           expect(new_case.errors[:original_case_id]).to be_empty
         end
+
+        it "is invalid" do
+          foi = create :case
+          new_case.original_case = foi
+          new_case.valid?
+          expect(new_case.errors[:original_case]).to eq ["cannot link a Overturned ICO appeal for non-offender SAR case to a FOI as a original case"]
+        end
       end
 
       context "when Case::ICO::SAR" do
@@ -232,15 +239,6 @@ describe Case::OverturnedICO::SAR do
           new_case.original_case = ico_sar
           new_case.valid?
           expect(new_case.errors[:original_case]).to eq ["cannot link a Overturned ICO appeal for non-offender SAR case to a ICO Appeal - SAR as a original case"]
-        end
-      end
-
-      context "when Case::SAR" do
-        it "is invalid" do
-          foi = create :case
-          new_case.original_case = foi
-          new_case.valid?
-          expect(new_case.errors[:original_case]).to eq ["cannot link a Overturned ICO appeal for non-offender SAR case to a FOI as a original case"]
         end
       end
     end

@@ -20,7 +20,7 @@ feature "SAR Internal Review Case can be closed", js: true do
   end
 
   before(:all) do
-    require File.join(Rails.root, "db", "seeders", "case_closure_metadata_seeder")
+    require Rails.root.join("db/seeders/case_closure_metadata_seeder")
     CaseClosure::MetadataSeeder.seed!
   end
 

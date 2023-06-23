@@ -25,7 +25,7 @@ feature "SAR Case creation by a manager" do
   end
 
   scenario "creating a non-trigger SAR case with only uploaded files", js: true do
-    request_attachment = Rails.root.join("spec", "fixtures", "request-1.pdf")
+    request_attachment = Rails.root.join("spec/fixtures/request-1.pdf")
 
     create_sar_case_step(message: "",
                          uploaded_request_files: [request_attachment])

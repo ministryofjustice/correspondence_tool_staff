@@ -145,7 +145,7 @@ feature "viewing details of case in the system" do
 
     before do
       responder.responding_teams << other_responding_team
-      expect(responder.responding_teams.count).to eq 2
+      expect(responder.responding_teams.count).to eq 2 # rubocop:disable RSpec/ExpectInHook
       @kase = create :accepted_case, responding_team: other_responding_team
     end
 

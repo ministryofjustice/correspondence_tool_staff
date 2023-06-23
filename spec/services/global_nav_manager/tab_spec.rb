@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe GlobalNavManager::Tab do
   let(:settings) do
-    YAML.load(<<~EOY)
+    YAML.load(<<~CONFIG)
       pages:
         open_cases:
           path: '/opened'
@@ -12,7 +12,7 @@ describe GlobalNavManager::Tab do
               scope: in_time
             late:
               scope: late
-    EOY
+    CONFIG
   end
 
   let(:config) do

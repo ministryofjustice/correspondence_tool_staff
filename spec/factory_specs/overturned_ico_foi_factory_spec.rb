@@ -33,7 +33,7 @@ describe "Overturned ICO FOI cases factory" do
     assignment_for(kase, private_office)
   end
 
-  describe :overturned_ico_foi do
+  describe ":overturned_ico_foi" do
     it "creates an unassigned ICO Overturned FOI" do
       Timecop.freeze(frozen_time) do
         kase = create :overturned_ico_foi
@@ -57,7 +57,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :awaiting_responder_ot_ico_foi do
+  describe ":awaiting_responder_ot_ico_foi" do
     it "creates an assigned ICO Overturned FOI" do
       Timecop.freeze(frozen_time) do
         kase = create(:awaiting_responder_ot_ico_foi, responding_team:)
@@ -80,7 +80,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :accepted_ot_ico_foi do
+  describe ":accepted_ot_ico_foi" do
     it "creates an ICO Overturned FOI in drafting state" do
       kase = create(:accepted_ot_ico_foi, responding_team:, responder:)
       expect(kase.current_state).to eq "drafting"
@@ -101,7 +101,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :with_response_ot_ico_foi do
+  describe ":with_response_ot_ico_foi" do
     it "creates an ICO Overturned FOI with a response" do
       kase = create(:with_response_ot_ico_foi,
                     responding_team:,
@@ -119,7 +119,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :pending_dacu_clearance_ot_ico_foi do
+  describe ":pending_dacu_clearance_ot_ico_foi" do
     it "create an ICO Overturned FOI that is pending disclosure clearance" do
       kase = create :pending_dacu_clearance_ot_ico_foi,
                     responding_team:,
@@ -144,7 +144,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :approved_trigger_ot_ico_foi do
+  describe ":approved_trigger_ot_ico_foi" do
     it "create a trigger ICO Overturned FOI that has been approved" do
       kase = create :approved_trigger_ot_ico_foi
 
@@ -163,7 +163,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :pending_press_clearance_ot_ico_foi do
+  describe ":pending_press_clearance_ot_ico_foi" do
     it "create a full-approval ICO Overturned FOI case that is pending press office clearance" do
       kase = create :pending_press_clearance_ot_ico_foi
 
@@ -184,7 +184,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :pending_private_clearance_ot_ico_foi do
+  describe ":pending_private_clearance_ot_ico_foi" do
     it "create a full-approval ICO Overturned FOI that is pending press office clearance" do
       kase = create :pending_private_clearance_ot_ico_foi
 
@@ -205,7 +205,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :approved_full_approval_ot_ico_foi do
+  describe ":approved_full_approval_ot_ico_foi" do
     it "create a full-approval ICO Overturned FOI that has been fully approved" do
       kase = create :approved_full_approval_ot_ico_foi
 
@@ -226,7 +226,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :responded_ot_ico_foi do
+  describe ":responded_ot_ico_foi" do
     it "creates an ICO Overturned FOI case that has been responded state" do
       kase = create(:responded_ot_ico_foi,
                     responding_team:,
@@ -244,7 +244,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :responded_trigger_ot_ico_foi do
+  describe ":responded_trigger_ot_ico_foi" do
     it "creates a trigger ICO Overturned FOI case that has been responded" do
       kase = create(:responded_trigger_ot_ico_foi,
                     responding_team:,
@@ -266,7 +266,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :responded_full_approval_ot_ico_foi do
+  describe ":responded_full_approval_ot_ico_foi" do
     it "creates a full-approval ICO Overturned FOI case that has been responded" do
       kase = create(:responded_full_approval_ot_ico_foi,
                     responding_team:,
@@ -287,7 +287,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :closed_ot_ico_foi do
+  describe ":closed_ot_ico_foi" do
     it "creates an ICO Overturned FOI case that is closed" do
       kase = create(:closed_ot_ico_foi,
                     responding_team:,
@@ -306,7 +306,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :closed_trigger_ot_ico_foi do
+  describe ":closed_trigger_ot_ico_foi" do
     it "creates a trigger ICO Overturned FOI case that is closed" do
       kase = create(:closed_trigger_ot_ico_foi,
                     responding_team:,
@@ -327,7 +327,7 @@ describe "Overturned ICO FOI cases factory" do
     end
   end
 
-  describe :closed_full_approval_ot_ico_foi do
+  describe ":closed_full_approval_ot_ico_foi" do
     it "creates a full-approval ICO Overturned FOI case that is closed" do
       kase = create(:closed_full_approval_ot_ico_foi,
                     responding_team:,

@@ -54,7 +54,7 @@ feature "Editing a case" do
     click_link "Upload request files"
     expect(cases_upload_requests_page).to be_displayed
 
-    request_attachment = Rails.root.join("spec", "fixtures", "request-1.pdf")
+    request_attachment = Rails.root.join("spec/fixtures/request-1.pdf")
     cases_upload_requests_page.drop_in_dropzone(request_attachment)
     cases_upload_requests_page.upload_requests_button.click
     expect(cases_show_page).to be_displayed

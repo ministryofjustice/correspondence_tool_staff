@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe CasesController, type: :controller do
+describe CasesController, type: :controller do # rubocop:disable RSpec/FilePath
   describe "#show" do
     let(:manager)            { create :manager }
     let(:responding_team)    { find_or_create :foi_responding_team }

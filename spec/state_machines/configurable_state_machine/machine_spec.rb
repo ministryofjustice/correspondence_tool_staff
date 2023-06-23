@@ -696,7 +696,7 @@ module ConfigurableStateMachine
         expect(method_object).to be_instance_of(Method)
       end
 
-      it "returns a method object for a valid method" do
+      it "raises an error for an invalid method" do
         expect {
           machine.method(:xxxxxx)
         }.to raise_error NameError, %(undefined method `xxxxxx' for class `ConfigurableStateMachine::Machine')
@@ -823,10 +823,10 @@ module ConfigurableStateMachine
             user = team.users.first
             expect {
               machine.link_a_case!({ acting_user: user, acting_team: team, linked_case_id: 33 })
-            }.to raise_error InvalidEventError do |error|
+            }.to(raise_error do |error|
               expect(error.message).to match(/Invalid event: type: FOI/)
               expect(error.message).to match(/event: link_a_case/)
-            end
+            end)
           end
         end
 
@@ -835,10 +835,10 @@ module ConfigurableStateMachine
             allow(@unassigned_case).to receive(:current_state).and_return("pending_dacu_clearance")
             expect {
               machine.link_a_case!({ acting_user: @manager, acting_team: @managing_team, linked_case_id: 33 })
-            }.to raise_error InvalidEventError do |error|
+            }.to(raise_error do |error|
               expect(error.message).to match(/Invalid event: type: FOI/)
               expect(error.message).to match(/event: link_a_case/)
-            end
+            end)
           end
         end
 
@@ -846,10 +846,10 @@ module ConfigurableStateMachine
           it "raises InvalidEventError" do
             expect {
               machine.non_existent_event!({ acting_user: @manager, acting_team: @managing_team, linked_case_id: 33 })
-            }.to raise_error do |error|
+            }.to(raise_error do |error|
               expect(error.message).to match(/Invalid event: type: FOI/)
               expect(error.message).to match(/event: non_existent_event/)
-            end
+            end)
           end
         end
       end

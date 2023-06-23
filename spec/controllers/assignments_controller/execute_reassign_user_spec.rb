@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe AssignmentsController, type: :controller do
+RSpec.describe AssignmentsController, type: :controller do # rubocop:disable RSpec/FilePath
   let(:responding_team)       { accepted_case.responding_team }
   let(:responder)             { responding_team.responders.first }
   let(:another_responder)     { create :responder, responding_teams: [responding_team] }

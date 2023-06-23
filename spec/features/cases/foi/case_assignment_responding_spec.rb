@@ -25,7 +25,7 @@ feature "respond to responder assignment" do
     assignments_edit_page.load(case_id: assigned_case.id, id: assignment.id)
     choose "Accept"
     expect(assignments_edit_page)
-      .to have_selector("#assignment_reasons_for_rejection", visible: false)
+      .to have_selector("#assignment_reasons_for_rejection", visible: :all)
     click_button "Confirm"
 
     expect(cases_show_page).to be_displayed
@@ -41,7 +41,7 @@ feature "respond to responder assignment" do
 
     choose "Reject"
     expect(page)
-      .to have_selector("#assignment_reasons_for_rejection", visible: true)
+      .to have_selector("#assignment_reasons_for_rejection", visible: :visible)
     fill_in "Why are you rejecting this case?", with: "This is not for me"
     click_button "Confirm"
 
@@ -56,14 +56,14 @@ feature "respond to responder assignment" do
 
     choose "Reject"
     expect(page)
-      .to have_selector("#assignment_reasons_for_rejection", visible: true)
+      .to have_selector("#assignment_reasons_for_rejection", visible: :visible)
     click_button "Confirm"
 
     expect(page)
       .to have_current_path accept_or_reject_case_assignment_path(assigned_case, assignment), ignore_query: true
     expect(page.find("#assignment_state_rejected")).to be_checked
     expect(page)
-      .to have_selector("#assignment_reasons_for_rejection", visible: true)
+      .to have_selector("#assignment_reasons_for_rejection", visible: :visible)
 
     expect(Assignment.find(assignment.id).state).to eq "pending"
     expect(assigned_case.reload.current_state).to eq "awaiting_responder"
@@ -81,7 +81,7 @@ feature "respond to responder assignment" do
     expect(page)
       .to have_current_path accept_or_reject_case_assignment_path(assigned_case, assignment), ignore_query: true
     expect(page)
-      .to have_selector("#assignment_reasons_for_rejection", visible: false)
+      .to have_selector("#assignment_reasons_for_rejection", visible: :all)
     expect(assignment.state).to eq "pending"
     expect(assigned_case.reload.current_state).to eq "awaiting_responder"
     expect(page)
@@ -101,7 +101,7 @@ feature "respond to responder assignment" do
 
     choose "Accept"
     expect(assignments_edit_page)
-      .to have_selector("#assignment_reasons_for_rejection", visible: false)
+      .to have_selector("#assignment_reasons_for_rejection", visible: :all)
     click_button "Confirm"
 
     expect(cases_show_page).to be_displayed

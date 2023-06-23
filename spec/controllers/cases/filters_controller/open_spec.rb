@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Cases::FiltersController, type: :controller do
+describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/FilePath
   let(:user) { find_or_create :disclosure_bmt_user }
   let(:open_cases) { Case::Base.opened }
 

@@ -1,5 +1,5 @@
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "case_category_reference_seeder")
+require Rails.root.join("db/seeders/case_category_reference_seeder")
 
 feature "Offender SAR Case editing by a manager", :js do
   given(:manager)         { find_or_create :branston_user }

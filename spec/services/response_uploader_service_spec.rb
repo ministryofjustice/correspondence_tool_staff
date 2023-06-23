@@ -51,8 +51,7 @@ describe ResponseUploaderService do
     ActiveJob::Base.queue_adapter = :test
     allow(S3Uploader).to receive(:new).and_return(uploader)
 
-    allow(ActionNotificationsMailer).to receive_message_chain(:ready_for_press_or_private_review,
-                                                              :deliver_later)
+    allow(ActionNotificationsMailer).to receive(:ready_for_press_or_private_review).and_call_original
   end
 
   describe "#upload!" do

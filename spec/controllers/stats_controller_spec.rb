@@ -1,5 +1,5 @@
 require "rails_helper"
-require File.join(Rails.root, "db", "seeders", "report_type_seeder")
+require Rails.root.join("db/seeders/report_type_seeder")
 
 # rubocop:disable RSpec/BeforeAfterAll
 RSpec.describe StatsController, type: :controller do

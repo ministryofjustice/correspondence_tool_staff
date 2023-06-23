@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe Cases::ResponsesController, type: :controller do
+describe Cases::ResponsesController, type: :controller do # rubocop:disable RSpec/FilePath
   let(:responded_trigger_case) { create :pending_dacu_clearance_case }
   let(:approver)               { responded_trigger_case.approvers.first }
 

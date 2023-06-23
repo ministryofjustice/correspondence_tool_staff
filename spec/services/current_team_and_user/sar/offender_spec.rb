@@ -14,7 +14,7 @@ describe "CurrentTeamAndUserSAROffenderService" do
     end
   end
 
-  context "when data to be requested state" do
+  context "when waiting for data state" do
     let(:kase)  { create :offender_sar_case, :waiting_for_data }
 
     it "returns the correct team and user" do

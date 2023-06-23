@@ -423,10 +423,8 @@ describe Case::BaseDecorator, type: :model do
       end
 
       it "returns false if the case has any messages" do
-        accepted_case.state_machine
-          .add_message_to_case!(acting_user: responder, acting_team: responding_team, message: "up-to-date")
         expect(accepted_case.message_notification_visible?(responder))
-          .to eq true
+          .to eq false
       end
     end
   end
