@@ -34,7 +34,7 @@ feature "filters whittle down search results" do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   describe "status filter" do

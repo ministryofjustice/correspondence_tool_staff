@@ -7,7 +7,7 @@ describe UserActiveCaseCountService do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   let(:responding_team)   { create :foi_responding_team }

@@ -6,7 +6,7 @@ module Stats
     before(:all) { DbHousekeeping.clean(seed: true) }
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe ".title" do

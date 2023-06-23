@@ -47,7 +47,7 @@ feature "Contacts address book", js: true do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   before do

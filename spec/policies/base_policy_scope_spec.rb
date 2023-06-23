@@ -57,7 +57,7 @@ describe Case::BasePolicy::Scope do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     # This is checked with a test because using Case::Base.descendants on every call might be a little

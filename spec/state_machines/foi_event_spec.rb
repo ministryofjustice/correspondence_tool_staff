@@ -49,7 +49,7 @@ describe "state machine" do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     let(:disclosure_assignment) do
@@ -2017,7 +2017,7 @@ describe "state machine" do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe "update_closure" do

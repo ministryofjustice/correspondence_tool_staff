@@ -23,7 +23,7 @@ describe "cases/overturned_shared/_new.html.slim" do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   before do

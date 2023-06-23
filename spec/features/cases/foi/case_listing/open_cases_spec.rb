@@ -46,7 +46,7 @@ feature "listing open cases on the system" do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   context "with managers" do

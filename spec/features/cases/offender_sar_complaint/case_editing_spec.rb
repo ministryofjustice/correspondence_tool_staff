@@ -22,7 +22,7 @@ feature "offender sar complaint case editing by a manager" do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   scenario "editing an offender sar complaint case" do

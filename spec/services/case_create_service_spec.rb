@@ -179,7 +179,7 @@ describe CaseCreateService do
       end
 
       after(:all) do
-        DbHousekeeping.clean(seed: false)
+        DbHousekeeping.clean(seed: true)
       end
 
       let(:deadline)            { 1.month.from_now.to_date }
@@ -264,7 +264,7 @@ describe CaseCreateService do
       end
 
       after(:all) do
-        DbHousekeeping.clean(seed: false)
+        DbHousekeeping.clean(seed: true)
       end
 
       let(:deadline)            { 1.month.from_now.to_date }

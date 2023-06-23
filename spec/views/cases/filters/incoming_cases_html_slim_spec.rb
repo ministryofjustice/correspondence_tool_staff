@@ -43,7 +43,7 @@ describe "cases/filters/incoming.html.slim", type: :view do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   it "displays the cases given it" do

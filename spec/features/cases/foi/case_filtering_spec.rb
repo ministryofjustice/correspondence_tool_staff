@@ -17,7 +17,7 @@ feature "filtering cases" do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   before { sign_in create(:manager) }

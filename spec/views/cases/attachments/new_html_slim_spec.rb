@@ -5,7 +5,7 @@ describe "cases/attachments/new.html.slim", type: :view do
   let(:drafting_case) { build_stubbed(:accepted_case, :taken_on_by_press).decorate }
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   it "displays the uploader" do

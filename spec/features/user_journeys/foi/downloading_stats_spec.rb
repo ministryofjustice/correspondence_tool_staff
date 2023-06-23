@@ -42,7 +42,7 @@ feature "Downloading stats(csv) from the system" do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   background do

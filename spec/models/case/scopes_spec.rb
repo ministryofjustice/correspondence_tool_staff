@@ -35,7 +35,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe ".flagged_for_approval" do

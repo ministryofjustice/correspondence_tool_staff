@@ -323,7 +323,7 @@ describe SearchQuery do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     let(:user) { find_or_create :disclosure_bmt_user }

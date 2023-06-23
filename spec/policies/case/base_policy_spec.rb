@@ -83,7 +83,7 @@ describe Case::BasePolicy do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   let(:managing_team)     { @managing_team }

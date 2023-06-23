@@ -27,7 +27,7 @@ describe "event machine" do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   describe "assign_to_new_team" do

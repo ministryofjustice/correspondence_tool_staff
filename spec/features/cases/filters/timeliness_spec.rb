@@ -20,7 +20,7 @@ feature "filtering cases by timeliness" do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   before do

@@ -104,7 +104,7 @@ module Stats
       end
 
       after(:all) do
-        DbHousekeeping.clean(seed: false)
+        DbHousekeeping.clean(seed: true)
       end
 
       describe "1.A" do
@@ -616,7 +616,7 @@ module Stats
       end
 
       after(:all) do
-        DbHousekeeping.clean(seed: false)
+        DbHousekeeping.clean(seed: true)
       end
 
       describe "4.A" do

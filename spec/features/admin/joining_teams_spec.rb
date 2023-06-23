@@ -14,7 +14,7 @@ feature "joining business units" do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   given(:bu) { find_or_create(:foi_responding_team) }

@@ -228,7 +228,7 @@ describe CaseFinderService do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe "#for_params" do
@@ -613,7 +613,7 @@ describe CaseFinderService do
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe "#incoming_cases_press_office_scope" do

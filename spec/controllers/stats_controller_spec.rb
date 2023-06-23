@@ -16,7 +16,7 @@ RSpec.describe StatsController, type: :controller do
   end
 
   after(:all) do
-    DbHousekeeping.clean(seed: false)
+    DbHousekeeping.clean(seed: true)
   end
 
   describe "#show" do

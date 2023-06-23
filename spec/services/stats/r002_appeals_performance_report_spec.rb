@@ -80,7 +80,7 @@ module Stats
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe "#title" do

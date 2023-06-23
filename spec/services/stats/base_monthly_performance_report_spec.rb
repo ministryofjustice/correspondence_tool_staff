@@ -24,7 +24,7 @@ module Stats
     before(:all) { create_report_type(abbr: "dummy") }
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe "reporting" do

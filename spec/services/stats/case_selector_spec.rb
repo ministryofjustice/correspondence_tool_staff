@@ -49,7 +49,7 @@ module Stats
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     let(:selector) { described_class.new(Case::Base.all) }

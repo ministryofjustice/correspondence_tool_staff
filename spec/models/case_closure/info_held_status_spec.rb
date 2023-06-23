@@ -29,7 +29,7 @@ module CaseClosure
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe "abbreviation class methods" do

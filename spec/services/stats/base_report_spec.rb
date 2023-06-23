@@ -12,7 +12,7 @@ module Stats
     before(:all) { create_report_type(abbr: :r006) }
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     describe ".new" do

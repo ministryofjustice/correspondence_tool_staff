@@ -46,7 +46,7 @@ module Workflows
     end
 
     after(:all) do
-      DbHousekeeping.clean(seed: false)
+      DbHousekeeping.clean(seed: true)
     end
 
     def all_users
