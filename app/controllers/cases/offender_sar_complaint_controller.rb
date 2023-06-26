@@ -19,7 +19,7 @@ module Cases
       params.merge!(commit: true)
       params[@correspondence_type_key] = {}
       params[@correspondence_type_key].merge!("original_case_number" => params["number"])
-      create!
+      create # rubocop:disable Rails/SaveBang
     end
 
     def reopen
