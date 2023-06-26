@@ -61,7 +61,7 @@ feature "creating ICO Overturned FOI case" do
   end
 
   context "when Case::OverturnedICO::FOI" do
-    scenario "creating a case with the default values", js: true do
+    scenario "creating a case with the default values" do
       create_ico_overturned_foi(target_state: "closed")
     end
 
