@@ -105,11 +105,9 @@ describe ConfigurableStateMachine::Machine do # rubocop:disable RSpec/FilePath
         context "with Offender SAR in state #{transition[:state]}" do
           let(:kase) { offender_sar_case with_state: transition[:state] }
 
-          before do
-            allow(kase.current_state.to_sym).to eq transition[:state]
-          end
-
           it "only allows permitted events" do
+            expect(kase.current_state.to_sym).to eq transition[:state]
+
             permitted_events = (transition[:full_events] || UNIVERSAL_EVENTS) +
               (transition[:specific_events] || [])
 
