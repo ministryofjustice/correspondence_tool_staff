@@ -112,7 +112,8 @@ describe CaseFlagForClearanceService do
         it "triggers a flag_for_clearance event on the case state machine" do
           # we have to use expect_any_instance here because the state machine on the case is re-initialised on
           # switch of workflow, which happens during service.call
-          expect_any_instance_of(ConfigurableStateMachine::Machine).to receive(:flag_for_clearance!)
+          expect_any_instance_of(ConfigurableStateMachine::Machine) # rubocop:disable RSpec/AnyInstance
+            .to receive(:flag_for_clearance!)
           service.call
         end
 
@@ -226,7 +227,8 @@ describe CaseFlagForClearanceService do
         end
 
         it "triggers a flag_for_clearance event on the case state machine" do
-          expect_any_instance_of(ConfigurableStateMachine::Machine).to receive(:flag_for_clearance!)
+          expect_any_instance_of(ConfigurableStateMachine::Machine) # rubocop:disable RSpec/AnyInstance
+            .to receive(:flag_for_clearance!)
           service.call
         end
 
@@ -246,7 +248,8 @@ describe CaseFlagForClearanceService do
         end
 
         it "triggers 2 events (1 for press, 1 for disclosure) on the state machine" do
-          expect_any_instance_of(ConfigurableStateMachine::Machine).to receive(:take_on_for_approval!).exactly(2)
+          expect_any_instance_of(ConfigurableStateMachine::Machine) # rubocop:disable RSpec/AnyInstance
+            .to receive(:take_on_for_approval!).exactly(2)
           service.call
         end
       end

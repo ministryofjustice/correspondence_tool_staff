@@ -938,19 +938,19 @@ RSpec.describe TeamsController, type: :controller do
       before { sign_in manager }
 
       it "calls user deletion service" do
-        service = double(TeamDeletionService)
+        service = instance_double(TeamDeletionService)
         allow(TeamDeletionService).to receive(:new).and_return(service)
         expect(service).to receive(:call)
-        expect(service).to receive(:result).and_return(:ok)
+        allow(service).to receive(:result).and_return(:ok)
         delete :destroy, params:
       end
 
       context "and response :ok" do
         before do
-          service = double(TeamDeletionService)
+          service = instance_double(TeamDeletionService)
           allow(TeamDeletionService).to receive(:new).and_return(service)
           allow(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:ok) # rubocop:disable RSpec/ExpectInHook
+          allow(service).to receive(:result).and_return(:ok)
           delete :destroy, params:
         end
 
@@ -978,10 +978,10 @@ RSpec.describe TeamsController, type: :controller do
 
       context "and response :error" do
         before do
-          service = double(TeamDeletionService)
+          service = instance_double(TeamDeletionService)
           allow(TeamDeletionService).to receive(:new).and_return(service)
           allow(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:incomplete) # rubocop:disable RSpec/ExpectInHook
+          allow(service).to receive(:result).and_return(:incomplete)
           delete :destroy, params:
         end
 

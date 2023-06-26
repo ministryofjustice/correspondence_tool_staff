@@ -7,7 +7,7 @@ describe AssignNewTeamService do
   let(:responding_team)     { create :responding_team }
   let(:new_responding_team) { create :responding_team }
   let(:assignment)          { kase.responder_assignment }
-  let(:notify_service)      { double(NotifyNewAssignmentService, run: true, new: true) }
+  let(:notify_service)      { instance_double(NotifyNewAssignmentService, run: true) }
 
   describe ".new" do
     it "raises if the case responder assignment doesnt match the param" do

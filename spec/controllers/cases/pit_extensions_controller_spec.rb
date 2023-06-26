@@ -19,7 +19,7 @@ describe Cases::PitExtensionsController, type: :controller do
     }
   end
 
-  let(:service) { double(CaseExtendForPITService, call: :ok) }
+  let(:service) { instance_double(CaseExtendForPITService, call: :ok) }
 
   describe "#new" do
     before do
@@ -82,7 +82,7 @@ describe Cases::PitExtensionsController, type: :controller do
     end
 
     context "when on service error" do
-      let(:service) { double(CaseExtendForPITService, call: :error) }
+      let(:service) { instance_double(CaseExtendForPITService, call: :error) }
 
       before do
         post :create, params: post_params

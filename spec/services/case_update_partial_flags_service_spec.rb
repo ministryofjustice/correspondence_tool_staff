@@ -6,7 +6,7 @@ describe CaseUpdatePartialFlagsService do
     let(:user)    { kase.responding_team.users.first }
     let(:team)    { kase.responding_team }
     let(:state_machine) do
-      double ConfigurableStateMachine::Machine,
+      double ConfigurableStateMachine::Machine, # rubocop:disable RSpec/VerifiedDoubles
              teams_that_can_trigger_event_on_case: [team],
              mark_as_partial_case!: true,
              mark_as_awaiting_response_for_partial_case!: true,

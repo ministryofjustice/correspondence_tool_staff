@@ -29,7 +29,7 @@ RSpec.describe Case::ICO::FOIPolicy do
 
   permissions :show? do
     it "defers to Case::FOI::StandardPolicy" do
-      expect_any_instance_of(Case::FOI::StandardPolicy).to receive(:show?)
+      expect_any_instance_of(Case::FOI::StandardPolicy).to receive(:show?) # rubocop:disable RSpec/AnyInstance
       Pundit.policy(manager, Case::ICO::FOI).show?
     end
   end

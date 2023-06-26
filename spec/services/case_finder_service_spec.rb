@@ -242,8 +242,8 @@ describe CaseFinderService do
     describe "#for_scopes" do
       it "applies the listed scopes" do
         finder = described_class.new(@manager)
-        index_cases_scope_result = double("IndexCasesScopeResult")
-        expect(finder).to receive(:index_cases_scope)
+        index_cases_scope_result = instance_double("IndexCasesScopeResult")
+        allow(finder).to receive(:index_cases_scope)
                             .and_return(index_cases_scope_result)
         result = finder.for_scopes(%w[index_cases])
         expect(result).to be_a described_class
@@ -252,8 +252,8 @@ describe CaseFinderService do
 
       it "raises a NameError if a scope cannot be found" do
         finder = described_class.new(@manager)
-        index_cases_scope_result = double("IndexCasesScopeResult")
-        expect(finder).to receive(:index_cases_scope)
+        index_cases_scope_result = instance_double("IndexCasesScopeResult")
+        allow(finder).to receive(:index_cases_scope)
                             .and_return(index_cases_scope_result)
         expect { finder.for_scopes(%w[index_cases missing_cases]) }
           .to raise_error NameError, "could not find scope named missing_cases_scope"

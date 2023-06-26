@@ -37,7 +37,8 @@ describe Warehouse::CaseSyncJob, type: :job do
 
     it "performs later" do
       perform_enqueued_jobs do
-        expect_any_instance_of(described_class).to receive(:perform).with(user.class.to_s, user.id)
+        expect_any_instance_of(described_class) # rubocop:disable RSpec/AnyInstance
+          .to receive(:perform).with(user.class.to_s, user.id)
         described_class.perform_later(user.class.to_s, user.id)
       end
     end

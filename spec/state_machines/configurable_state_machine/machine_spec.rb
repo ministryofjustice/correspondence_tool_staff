@@ -150,14 +150,14 @@ module ConfigurableStateMachine
     describe "current_state" do
       context "when current_state on case is nil" do
         it "returns unassigned" do
-          expect(kase).to receive(:current_state).and_return nil
+          allow(kase).to receive(:current_state).and_return nil
           expect(machine.current_state).to eq "unassigned"
         end
       end
 
       context "when current_state on case is set" do
         it "returns current_state of case" do
-          expect(kase).to receive(:current_state).and_return "drafting"
+          allow(kase).to receive(:current_state).and_return "drafting"
           expect(machine.current_state).to eq "drafting"
         end
       end
@@ -170,18 +170,18 @@ module ConfigurableStateMachine
 
           context "and predicate returns true" do
             it "returns both the events for a user" do
-              policy = double Case::FOI::StandardPolicy
-              expect(policy).to receive(:can_add_message_to_case?).and_return(true)
-              expect(Case::FOI::StandardPolicy).to receive(:new).with(user:, kase:).and_return(policy)
+              policy = instance_double Case::FOI::StandardPolicy
+              allow(policy).to receive(:can_add_message_to_case?).and_return(true)
+              allow(Case::FOI::StandardPolicy).to receive(:new).with(user:, kase:).and_return(policy)
               expect(machine.permitted_events(user)).to eq %i[add_message_to_case flag_for_press]
             end
           end
 
           context "and predicate returns false" do
             it "returns just the one event" do
-              policy = double Case::FOI::StandardPolicy
-              expect(policy).to receive(:can_add_message_to_case?).and_return(false)
-              expect(Case::FOI::StandardPolicy).to receive(:new).with(user:, kase:).and_return(policy)
+              policy = instance_double Case::FOI::StandardPolicy
+              allow(policy).to receive(:can_add_message_to_case?).and_return(false)
+              allow(Case::FOI::StandardPolicy).to receive(:new).with(user:, kase:).and_return(policy)
               expect(machine.permitted_events(user)).to eq %i[flag_for_press]
             end
           end
@@ -192,9 +192,9 @@ module ConfigurableStateMachine
 
           context "and predicate returns true" do
             it "returns all events" do
-              policy = double Case::FOI::StandardPolicy
-              expect(policy).to receive(:can_add_message_to_case?).exactly(2).and_return(true)
-              expect(policy).to receive(:unflag_for_clearance?).and_return(true)
+              policy = instance_double Case::FOI::StandardPolicy
+              allow(policy).to receive(:can_add_message_to_case?).exactly(2).and_return(true)
+              allow(policy).to receive(:unflag_for_clearance?).and_return(true)
               expect(Case::FOI::StandardPolicy).to receive(:new).with(user:, kase:).exactly(3).and_return(policy)
               expect(machine.permitted_events(user)).to eq %i[
                 add_message_to_case
@@ -212,13 +212,13 @@ module ConfigurableStateMachine
     end
 
     describe "can_trigger_event?" do
-      before { @policy = double Case::FOI::StandardPolicy }
+      before { @policy = instance_double Case::FOI::StandardPolicy }
 
       context "when user has multiple roles" do
         context "and no user roles have rights to trigger event" do
           it "returns false" do
             machine = described_class.new(config:, kase: @unassigned_case)
-            expect(machine).to receive(:extract_roles_from_metadata).and_return(%w[manager responder approver])
+            allow(machine).to receive(:extract_roles_from_metadata).and_return(%w[manager responder approver])
             expect(machine.can_trigger_event?(
                      event_name: :dummy_event_controlled_by_predicate,
                      metadata: { acting_user: @manager, acting_team_id: @managing_team.id },
@@ -229,8 +229,9 @@ module ConfigurableStateMachine
         context "and the first user role is prevented from triggering an event by a predicate, but subsequent ones are ok" do
           it "returns true" do
             machine = described_class.new(config:, kase: @unassigned_case)
-            expect_any_instance_of(DummyPredicate).to receive(:can_trigger_dummy_event_as_approver?).and_return(true)
-            expect(machine).to receive(:extract_roles_from_metadata).and_return(%w[manager responder approver])
+            allow_any_instance_of(DummyPredicate) # rubocop:disable RSpec/AnyInstance
+              .to receive(:can_trigger_dummy_event_as_approver?).and_return(true)
+            allow(machine).to receive(:extract_roles_from_metadata).and_return(%w[manager responder approver])
             expect(machine.can_trigger_event?(
                      event_name: :dummy_event_controlled_by_predicate,
                      metadata: { acting_user: @manager, acting_team_id: @managing_team.id },
@@ -241,10 +242,13 @@ module ConfigurableStateMachine
         context "and all user roles have rights to trigger event" do
           it "returns true" do
             machine = described_class.new(config:, kase: @unassigned_case)
-            expect_any_instance_of(DummyPredicate).to receive(:can_trigger_dummy_event_as_manager?).and_return(true)
-            expect_any_instance_of(DummyPredicate).to receive(:can_trigger_dummy_event_as_approver?).and_return(true)
-            expect_any_instance_of(DummyPredicate).to receive(:can_trigger_dummy_event_as_responder?).and_return(true)
-            expect(machine).to receive(:extract_roles_from_metadata).and_return(%w[manager responder approver])
+            allow_any_instance_of(DummyPredicate) # rubocop:disable RSpec/AnyInstance
+              .to receive(:can_trigger_dummy_event_as_manager?).and_return(true)
+            allow_any_instance_of(DummyPredicate) # rubocop:disable RSpec/AnyInstance
+              .to receive(:can_trigger_dummy_event_as_approver?).and_return(true)
+            allow_any_instance_of(DummyPredicate) # rubocop:disable RSpec/AnyInstance
+              .to receive(:can_trigger_dummy_event_as_responder?).and_return(true)
+            allow(machine).to receive(:extract_roles_from_metadata).and_return(%w[manager responder approver])
             expect(machine.can_trigger_event?(
                      event_name: :dummy_event_controlled_by_predicate,
                      metadata: { acting_user: @manager, acting_team_id: @managing_team.id },
@@ -257,8 +261,8 @@ module ConfigurableStateMachine
         context "and event can be triggered" do
           context "and triggered as a result of an predicate returning true" do
             it "returns  true" do
-              expect(Case::FOI::StandardPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
-              expect(@policy).to receive(:can_add_message_to_case?).and_return(true)
+              allow(Case::FOI::StandardPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
+              allow(@policy).to receive(:can_add_message_to_case?).and_return(true)
               machine = described_class.new(config:, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
                        event_name: :add_message_to_case,
@@ -284,8 +288,8 @@ module ConfigurableStateMachine
         context "and event cannot be triggered" do
           context "and not triggered as a result of a predicate returning false" do
             it "returns  false" do
-              expect(Case::FOI::StandardPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
-              expect(@policy).to receive(:can_add_message_to_case?).and_return(false)
+              allow(Case::FOI::StandardPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
+              allow(@policy).to receive(:can_add_message_to_case?).and_return(false)
               machine = described_class.new(config:, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
                        event_name: :add_message_to_case,
@@ -448,7 +452,7 @@ module ConfigurableStateMachine
     end
 
     describe "teams_that_can_trigger_event_on_case" do
-      before { @policy = double Case::FOI::StandardPolicy }
+      before { @policy = instance_double Case::FOI::StandardPolicy }
 
       context "when user has single role for the case" do
         it "return empty when user has no right for an event" do
@@ -532,8 +536,8 @@ module ConfigurableStateMachine
 
     describe "#method_missing" do
       it "intercepts bang methods and triggers them as events" do
-        user = double User
-        team = double BusinessUnit
+        user = instance_double User
+        team = instance_double BusinessUnit
         metadata = { acting_user: user, acting_team: team }
         expect(machine).to receive(:trigger_event).with(event: :dummy_event, params: metadata)
         machine.dummy_event!(metadata)
@@ -596,7 +600,8 @@ module ConfigurableStateMachine
             approver = find_or_create :press_officer
             expect(kase.workflow).to eq "standard"
 
-            allow_any_instance_of(Workflows::Conditionals).to receive(:unaccept_approver_assignment).and_return("trigger")
+            allow_any_instance_of(Workflows::Conditionals) # rubocop:disable RSpec/AnyInstance
+              .to receive(:unaccept_approver_assignment).and_return("trigger")
             machine = described_class.new(config:, kase:)
             machine.flag_for_press!(acting_user: approver, acting_team: approver.approving_team)
             expect(kase.workflow).to eq "trigger"
@@ -649,8 +654,8 @@ module ConfigurableStateMachine
 
         it "calls the after transition predicate" do
           machine = described_class.new(config:, kase:)
-          service = double NotifyResponderService, call: :ok
-          expect(NotifyResponderService).to receive(:new).with(kase, "Message received").and_return(service)
+          service = instance_double NotifyResponderService, call: :ok
+          allow(NotifyResponderService).to receive(:new).with(kase, "Message received").and_return(service)
           expect(service).to receive(:call)
 
           machine.add_message_to_case!(
@@ -735,17 +740,17 @@ module ConfigurableStateMachine
     end
 
     describe "#config_for_event" do
-      before { @policy = double Case::FOI::StandardPolicy }
+      before { @policy = instance_double Case::FOI::StandardPolicy }
 
       context "when role provided as a string parameter" do
         context "and event can be triggered" do
           context "and triggered as a result of an predicate returning true" do
             it "returns the event config" do
-              expect(Case::FOI::StandardPolicy)
+              allow(Case::FOI::StandardPolicy)
                   .to receive(:new)
                           .with(user: @manager, kase: @unassigned_case)
                           .and_return(@policy)
-              expect(@policy).to receive(:can_add_message_to_case?).and_return(true)
+              allow(@policy).to receive(:can_add_message_to_case?).and_return(true)
               machine = described_class.new(config:, kase: @unassigned_case)
               expect(machine.config_for_event(
                 event_name: :add_message_to_case,
@@ -772,8 +777,8 @@ module ConfigurableStateMachine
         context "and event cannot be triggered" do
           context "and not triggered as a result of a predicate returning false" do
             it "returns  false" do
-              expect(Case::FOI::StandardPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
-              expect(@policy).to receive(:can_add_message_to_case?).and_return(false)
+              allow(Case::FOI::StandardPolicy).to receive(:new).with(user: @manager, kase: @unassigned_case).and_return(@policy)
+              allow(@policy).to receive(:can_add_message_to_case?).and_return(false)
               machine = described_class.new(config:, kase: @unassigned_case)
               expect(machine.can_trigger_event?(
                        event_name: :add_message_to_case,
@@ -920,7 +925,8 @@ module ConfigurableStateMachine
 
         describe "conditonal returns drafting" do
           it "returns the return value of conditonal" do
-            allow_any_instance_of(ConfigurableStateMachine::DummyConditional).to receive(:remove_response).and_return("drafting")
+            allow_any_instance_of(ConfigurableStateMachine::DummyConditional) # rubocop:disable RSpec/AnyInstance
+              .to receive(:remove_response).and_return("drafting")
             expect(kase.current_state).to eq "awaiting_dispatch"
             next_state = machine.next_state_for_event(:remove_response, acting_user_id: manager.id)
             expect(next_state).to eq "drafting"

@@ -1,25 +1,9 @@
 require "rails_helper"
 
 describe "cases/linked_cases.html.slim", type: :view do
-  def allow_case_policy(kase, *policy_names)
-    policy = double("Pundit::Policy")
-    policy_names.each do |policy_name|
-      allow(policy).to receive(policy_name).and_return(true)
-    end
-    allow(view).to receive(:policy).with(kase).and_return(policy)
-  end
-
-  def disallow_case_policy(kase, *policy_names)
-    policy = double("Pundit::Policy")
-    policy_names.each do |policy_name|
-      allow(policy).to receive(policy_name).and_return(false)
-    end
-    allow(view).to receive(:policy).with(kase).and_return(policy)
-  end
-
   describe "Case has linked cases" do
     let(:linked_case_1) do
-      double(Case::Base, id: 1,
+      double(Case::Base, id: 1, # rubocop:disable RSpec/VerifiedDoubles
                          number: "111111",
                          name: "Hello 1",
                          subject: "Case 1",
@@ -29,7 +13,7 @@ describe "cases/linked_cases.html.slim", type: :view do
                          linked_cases: [])
     end
     let(:linked_case_2) do
-      double(Case::Base, id: 2,
+      double(Case::Base, id: 2, # rubocop:disable RSpec/VerifiedDoubles
                          number: "222222",
                          subject: "Case 2",
                          name: "Hello 2",
@@ -39,7 +23,7 @@ describe "cases/linked_cases.html.slim", type: :view do
                          linked_cases: [])
     end
     let(:main_case) do
-      double(Case::Base, id: 3,
+      double(Case::Base, id: 3, # rubocop:disable RSpec/VerifiedDoubles
                          number: "333333",
                          name: "Hello",
                          subject: "Case 3",
@@ -52,7 +36,7 @@ describe "cases/linked_cases.html.slim", type: :view do
 
     context "when case linking not allowed" do
       it "displays the initial case details" do
-        disallow_case_policy main_case, :new_case_link?, :destroy_case_link?
+        allow_case_policies_in_view main_case, :new_case_link?, :destroy_case_link?
 
         render partial: "cases/linked_cases",
                locals: { case_details: main_case }
@@ -74,7 +58,7 @@ describe "cases/linked_cases.html.slim", type: :view do
 
     context "when case linking allowed" do
       it "displays the initial case details" do
-        allow_case_policy main_case, :new_case_link?, :destroy_case_link?
+        allow_case_policies_in_view main_case, :new_case_link?, :destroy_case_link?
 
         render partial: "cases/linked_cases",
                locals: { case_details: main_case }
@@ -102,7 +86,7 @@ describe "cases/linked_cases.html.slim", type: :view do
     let(:unlinked_case) { instance_double(Case::Base, name: "Hello", linked_cases: []) }
 
     it 'renders "No linked cases"' do
-      disallow_case_policy unlinked_case, :new_case_link?, :destroy_case_link?
+      disallow_case_policies_in_view unlinked_case, :new_case_link?, :destroy_case_link?
 
       render partial: "cases/linked_cases",
              locals: { case_details: unlinked_case }
@@ -118,16 +102,15 @@ describe "cases/linked_cases.html.slim", type: :view do
 
   describe 'displaying "Link a case" action' do
     let(:main_case)    do
-      double(Case::Base, id: 3,
-                         number: "333333",
-                         name: "Hello",
-                         subject: "Case 3",
-                         trigger_case_marker: "",
-                         linked_cases: [])
+      instance_double(Case::Base, id: 3,
+                                  number: "333333",
+                                  name: "Hello",
+                                  subject: "Case 3",
+                                  linked_cases: [])
     end
 
     it "hides the link if user is not authorised to link cases" do
-      disallow_case_policy main_case, :new_case_link?, :destroy_case_link?
+      disallow_case_policies_in_view main_case, :new_case_link?, :destroy_case_link?
 
       render partial: "cases/linked_cases",
              locals: { case_details: main_case }
@@ -138,7 +121,7 @@ describe "cases/linked_cases.html.slim", type: :view do
     end
 
     it "shows the link if user is authorised to link cases" do
-      allow_case_policy main_case, :new_case_link?, :destroy_case_link?
+      allow_case_policies_in_view main_case, :new_case_link?, :destroy_case_link?
 
       render partial: "cases/linked_cases",
              locals: { case_details: main_case }

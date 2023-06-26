@@ -53,7 +53,7 @@ RSpec.describe BaseFormObject do
   end
 
   describe "[]" do
-    let(:record) { double("Record") }
+    let(:record) { double("Record") } # rubocop:disable RSpec/VerifiedDoubles
 
     before do
       base_form_object.record = record
@@ -66,7 +66,7 @@ RSpec.describe BaseFormObject do
   end
 
   describe "[]=" do
-    let(:record) { double("Record") }
+    let(:record) { double("Record") } # rubocop:disable RSpec/VerifiedDoubles
 
     it "assigns the attribute directly without using the method" do
       expect(base_form_object).not_to receive(:record=)

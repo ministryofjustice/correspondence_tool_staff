@@ -53,10 +53,6 @@ describe "cases/filters/closed.html.slim" do
   end
 
   describe "pagination" do
-    before do
-      allow(view).to receive(:policy).and_return(spy("Pundit::Policy"))
-    end
-
     it "renders the paginator" do
       assign(:cases, Case::Base.none.page.decorate)
       assign(:query, search_query)

@@ -1,8 +1,8 @@
 require "rails_helper"
 
 describe "layouts/_global_nav.html.slim" do
-  let(:single_team_user)      { double User, teams: %w[team] }
-  let(:multi_team_user)       { double User, teams: %w[team1 team2] }
+  let(:single_team_user)      { instance_double User, teams: %w[team] }
+  let(:multi_team_user)       { instance_double User, teams: %w[team1 team2] }
 
   def render_page
     nav_man = instance_double(GlobalNavManager)

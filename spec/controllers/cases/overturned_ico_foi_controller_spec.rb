@@ -56,18 +56,16 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
     end
 
     let(:new_overturned_case) do
-      double Case::OverturnedICO::FOI, id: 87_366
+      instance_double Case::OverturnedICO::FOI, id: 87_366
     end
 
-    let(:decorated_overturned_case) do
-      double(Case::OverturnedICO::FOIDecorator, uploads_dir: "xx")
+    let(:overturned_case) do
+      instance_double(Case::OverturnedICO::FOI)
     end
 
     let!(:service) do
-      double(
+      instance_double(
         CaseCreateService,
-        user: manager,
-        params: controller_params,
         case: new_overturned_case,
         case_type: Case::OverturnedICO::FOI,
         call: nil,
@@ -126,8 +124,8 @@ RSpec.describe Cases::OverturnedIcoFoiController, type: :controller do
     context "with invalid params" do
       before do
         allow(service).to receive(:result).and_return(:error)
-        allow(new_overturned_case)
-          .to receive(:decorate).and_return(decorated_overturned_case)
+        allow(new_overturned_case).to receive(:decorate).and_return(overturned_case)
+        allow(overturned_case).to receive(:uploads_dir).and_return("xx")
       end
 
       it "renders the new page" do

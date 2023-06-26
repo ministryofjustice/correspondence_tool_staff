@@ -265,7 +265,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
 
   describe "#action_links_for_allowed_events" do
     let(:policy_double) do
-      double "Pundit::Policy",
+      double "Pundit::Policy", # rubocop:disable RSpec/VerifiedDoubles
              one?: true,
              two?: false,
              three?: true
@@ -273,9 +273,12 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
 
     it "generates links for allowed events" do
       @case = :case
-      allow_any_instance_of(described_class).to receive(:policy).with(:case).and_return(policy_double)
-      allow_any_instance_of(described_class).to receive(:action_link_for_one).with(:case).and_return("link_one")
-      allow_any_instance_of(described_class).to receive(:action_link_for_three).with(:case).and_return("link_three")
+      allow_any_instance_of(described_class) # rubocop:disable RSpec/AnyInstance
+        .to receive(:policy).with(:case).and_return(policy_double)
+      allow_any_instance_of(described_class) # rubocop:disable RSpec/AnyInstance
+        .to receive(:action_link_for_one).with(:case).and_return("link_one")
+      allow_any_instance_of(described_class) # rubocop:disable RSpec/AnyInstance
+        .to receive(:action_link_for_three).with(:case).and_return("link_three")
       links = action_links_for_allowed_events(@case, :one, :two, :three)
       expect(links).to eq %w[link_one link_three]
     end
@@ -290,7 +293,7 @@ href="/cases/#{@case.id}/assignments/select_team?assignment_ids=#{@assignments.f
   end
 
   describe "#case_link_with_hash" do
-    let(:kase) { double "case", id: 25, number: "180425001" }
+    let(:kase) { instance_double Case::Base, id: 25, number: "180425001" }
 
     context "when query hash instance variable exists" do
       context "and page parameters exists" do

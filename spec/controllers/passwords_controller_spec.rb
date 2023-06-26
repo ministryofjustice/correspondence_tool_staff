@@ -18,7 +18,7 @@ RSpec.describe PasswordsController, type: :controller do
 
     context "when user is deactivated" do
       it "sends reset password mail" do
-        mailer = double("mailer")
+        mailer = double("mailer") # rubocop:disable RSpec/VerifiedDoubles
         allow(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
         expect(mailer).to receive(:deliver)
         post(:create, params:)
@@ -45,7 +45,7 @@ RSpec.describe PasswordsController, type: :controller do
         it "sends an email" do
           params[:user][:email] = user.email
 
-          mailer = double("mailer", deliver: nil)
+          mailer = double("mailer", deliver: nil) # rubocop:disable RSpec/VerifiedDoubles
           expect(DeviseMailer).not_to receive(:account_not_active)
           allow(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
           expect(mailer).to receive(:deliver)
@@ -59,7 +59,7 @@ RSpec.describe PasswordsController, type: :controller do
         it "sends an email" do
           params[:user][:email] = user.email.upcase
 
-          mailer = double("mailer", deliver: nil)
+          mailer = double("mailer", deliver: nil) # rubocop:disable RSpec/VerifiedDoubles
           expect(DeviseMailer).not_to receive(:account_not_active)
           allow(DeviseMailer).to receive(:reset_password_instructions).and_return(mailer)
           expect(mailer).to receive(:deliver)

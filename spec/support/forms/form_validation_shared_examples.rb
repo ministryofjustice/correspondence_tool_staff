@@ -12,7 +12,7 @@ RSpec.shared_examples "a date question form" do |options|
     }
   end
 
-  let(:record) { double("Record") }
+  let(:record) { instance_double("Record") }
   let(:date_value) { %w[2018 12 31] }
 
   describe "#save" do

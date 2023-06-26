@@ -13,12 +13,13 @@ describe S3Uploader do
   let(:public_url)         { URI.join(CASE_UPLOADS_S3_BUCKET.url, destination_key) }
   let(:destination_object) { instance_double Aws::S3::Object, "destination_object", public_url: }
   let(:leftover_files)     { [] }
-  let(:state_machine)      { double CaseStateMachine }
+  let(:state_machine)      { instance_double CaseStateMachine }
   let(:uploader)           { described_class.new(kase, responder) }
   let(:uploaded_files)     { [uploads_key] }
   let(:attachment_type)    { :response }
 
   before do
+    allow(Settings).to receive(:case_uploads_s3_bucket).and_return("correspondence-staff-case-uploads-testing")
     allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                        .with(uploads_key)
                                        .and_return(uploads_object)
@@ -199,7 +200,7 @@ describe S3Uploader do
   end
 
   describe "#upload_file_to_case" do
-    let(:file) { double(File) }
+    let(:file) { instance_double(File) }
     let(:filename) { "test.docx" }
     let(:key) { uploader.send(:destination_key, filename, attachment_type) }
 

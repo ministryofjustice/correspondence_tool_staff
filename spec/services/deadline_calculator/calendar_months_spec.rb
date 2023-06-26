@@ -57,7 +57,7 @@ describe DeadlineCalculator::CalendarMonths do
           end
           expected_deadline = get_expected_deadline(Date.civil(which_year, base_month, base_day))
           it "Testing #{received_date_used} - #{expected_deadline}" do
-            test_case = double("sar_case")
+            test_case = instance_double(Case::Base)
             allow(test_case).to receive(:received_date).and_return(received_date_used)
             allow(test_case).to receive(:correspondence_type).and_return(sar)
             deadline_calculator_local = described_class.new test_case
@@ -69,7 +69,7 @@ describe DeadlineCalculator::CalendarMonths do
       context "when deadline falls in non-working day based on calender month" do
         it "deadline falls on weekend and final_deadline should be next working day" do
           Timecop.freeze Time.zone.local(2019, 9, 27, 13, 21, 33) do
-            test_case = double("sar_case")
+            test_case = instance_double(Case::Base)
             allow(test_case).to receive(:received_date).and_return(Time.zone.today)
             allow(test_case).to receive(:correspondence_type).and_return(sar)
             deadline_calculator_local = described_class.new test_case
@@ -81,7 +81,7 @@ describe DeadlineCalculator::CalendarMonths do
 
         it "deadline falls on bank_holiday and final_deadline should be next working day" do
           Timecop.freeze Time.zone.local(2019, 9, 27, 13, 21, 33) do
-            test_case = double("sar_case")
+            test_case = instance_double(Case::Base)
             allow(test_case).to receive(:received_date).and_return(Date.parse("2019-04-06"))
             allow(test_case).to receive(:correspondence_type).and_return(sar)
             deadline_calculator_local = described_class.new test_case
@@ -113,7 +113,7 @@ describe DeadlineCalculator::CalendarMonths do
     describe "#extension_deadline" do
       it "1 months" do
         Timecop.freeze Time.zone.local(2019, 8, 27, 13, 21, 33) do
-          test_case = double("sar_case")
+          test_case = instance_double(Case::Base)
           allow(test_case).to receive(:received_date).and_return(Time.zone.today)
           allow(test_case).to receive(:correspondence_type).and_return(sar)
           deadline_calculator_local = described_class.new test_case
@@ -125,7 +125,7 @@ describe DeadlineCalculator::CalendarMonths do
 
       it "2 months" do
         Timecop.freeze Time.zone.local(2019, 9, 26, 13, 21, 33) do
-          test_case = double("sar_case")
+          test_case = instance_double(Case::Base)
           allow(test_case).to receive(:received_date).and_return(Time.zone.today)
           allow(test_case).to receive(:correspondence_type).and_return(sar)
           deadline_calculator_local = described_class.new test_case
@@ -139,7 +139,7 @@ describe DeadlineCalculator::CalendarMonths do
     describe "#max_allowed_deadline_date" do
       it "2 months" do
         Timecop.freeze Time.zone.local(2019, 10, 1, 13, 21, 33) do
-          test_case = double("sar_case")
+          test_case = instance_double(Case::Base)
           allow(test_case).to receive(:received_date).and_return(Time.zone.today)
           allow(test_case).to receive(:correspondence_type).and_return(sar)
           deadline_calculator_local = described_class.new test_case

@@ -6,11 +6,11 @@ RSpec.describe UsersController, type: :controller do
   let(:dacu)    { find_or_create :team_dacu }
 
   describe "GET show" do
-    let(:service)                         { double UserActiveCaseCountService }
-    let(:unpaginated_cases)               { double "Unapaginated cases collection", page: paginated_cases, decorate: all_decorated_cases }
-    let(:paginated_cases)                 { double "Paginated cases collection", decorate: paginated_decorated_cases }
-    let(:paginated_decorated_cases)       { double "Paginaged decorated_cases" }
-    let(:all_decorated_cases)             { double "Unpaginated decorated cases" }
+    let(:service)                   { instance_double UserActiveCaseCountService }
+    let(:unpaginated_cases)         { double "Unapaginated cases collection", page: paginated_cases, decorate: all_decorated_cases } # rubocop:disable RSpec/VerifiedDoubles
+    let(:paginated_cases)           { double "Paginated cases collection", decorate: paginated_decorated_cases } # rubocop:disable RSpec/VerifiedDoubles
+    let(:paginated_decorated_cases) { double "Paginaged decorated_cases" } # rubocop:disable RSpec/VerifiedDoubles
+    let(:all_decorated_cases)       { double "Unpaginated decorated cases" } # rubocop:disable RSpec/VerifiedDoubles
 
     before { sign_in manager }
 
@@ -21,8 +21,8 @@ RSpec.describe UsersController, type: :controller do
 
     describe "html request" do
       it "assigns case to paginated decorated case list" do
-        expect(UserActiveCaseCountService).to receive(:new).and_return(service)
-        expect(service).to receive(:active_cases_for_user).with(manager).and_return(unpaginated_cases)
+        allow(UserActiveCaseCountService).to receive(:new).and_return(service)
+        allow(service).to receive(:active_cases_for_user).with(manager).and_return(unpaginated_cases)
         get :show, params: { id: manager.id }
 
         expect(assigns(:cases)).to eq paginated_decorated_cases
@@ -35,15 +35,15 @@ RSpec.describe UsersController, type: :controller do
     end
 
     describe "csv request" do
-      let(:csv_case) { double("Example Case") }
+      let(:csv_case) { double("Example Case") } # rubocop:disable RSpec/VerifiedDoubles
 
       it "returns the csv file in the body" do
         # so that the filename is fixed
         Timecop.freeze Time.zone.local(2018, 11, 9, 13, 48, 22) do
           allow(UserActiveCaseCountService).to receive(:new).and_return(service)
           allow(service).to receive(:active_cases_for_user).with(manager).and_return(unpaginated_cases)
-          expect(all_decorated_cases).to receive(:each).and_yield(csv_case)
-          expect(csv_case).to receive(:to_csv).and_return(%w[a csv file])
+          allow(all_decorated_cases).to receive(:each).and_yield(csv_case)
+          allow(csv_case).to receive(:to_csv).and_return(%w[a csv file])
 
           get :show, format: "csv", params: { id: manager.id }
           expect(response).to be_successful
@@ -271,19 +271,19 @@ RSpec.describe UsersController, type: :controller do
       before { sign_in team_admin }
 
       it "calls user deletion service" do
-        service = double(UserDeletionService)
-        expect(UserDeletionService).to receive(:new).and_return(service)
+        service = instance_double(UserDeletionService)
+        allow(UserDeletionService).to receive(:new).and_return(service)
         expect(service).to receive(:call)
-        expect(service).to receive(:result).and_return(:ok)
+        allow(service).to receive(:result).and_return(:ok)
         delete :destroy, params:
       end
 
       context "when response :ok" do
         before do
-          service = double(UserDeletionService)
+          service = instance_double(UserDeletionService)
           allow(UserDeletionService).to receive(:new).and_return(service)
           allow(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:ok) # rubocop:disable RSpec/ExpectInHook
+          allow(service).to receive(:result).and_return(:ok)
           delete :destroy, params:
         end
 
@@ -298,10 +298,10 @@ RSpec.describe UsersController, type: :controller do
 
       context "when response :has_live_cases" do
         before do
-          service = double(UserDeletionService)
+          service = instance_double(UserDeletionService)
           allow(UserDeletionService).to receive(:new).and_return(service)
           allow(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:has_live_cases) # rubocop:disable RSpec/ExpectInHook
+          allow(service).to receive(:result).and_return(:has_live_cases)
           delete :destroy, params:
         end
 
@@ -316,10 +316,10 @@ RSpec.describe UsersController, type: :controller do
 
       context "when response :error" do
         before do
-          service = double(UserDeletionService)
+          service = instance_double(UserDeletionService)
           allow(UserDeletionService).to receive(:new).and_return(service)
           allow(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:error) # rubocop:disable RSpec/ExpectInHook
+          allow(service).to receive(:result).and_return(:error)
           delete :destroy, params:
         end
 
@@ -337,19 +337,19 @@ RSpec.describe UsersController, type: :controller do
       before { sign_in manager }
 
       it "calls user deletion service" do
-        service = double(UserDeletionService)
+        service = instance_double(UserDeletionService)
         allow(UserDeletionService).to receive(:new).and_return(service)
         expect(service).to receive(:call)
-        expect(service).to receive(:result).and_return(:ok)
+        allow(service).to receive(:result).and_return(:ok)
         delete :destroy, params:
       end
 
       context "when response :ok" do
         before do
-          service = double(UserDeletionService)
+          service = instance_double(UserDeletionService)
           allow(UserDeletionService).to receive(:new).and_return(service)
           allow(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:ok) # rubocop:disable RSpec/ExpectInHook
+          allow(service).to receive(:result).and_return(:ok)
           delete :destroy, params:
         end
 
@@ -364,10 +364,10 @@ RSpec.describe UsersController, type: :controller do
 
       context "when response :has_live_cases" do
         before do
-          service = double(UserDeletionService)
+          service = instance_double(UserDeletionService)
           allow(UserDeletionService).to receive(:new).and_return(service)
           allow(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:has_live_cases) # rubocop:disable RSpec/ExpectInHook
+          allow(service).to receive(:result).and_return(:has_live_cases)
           delete :destroy, params:
         end
 
@@ -382,10 +382,10 @@ RSpec.describe UsersController, type: :controller do
 
       context "when response :error" do
         before do
-          service = double(UserDeletionService)
+          service = instance_double(UserDeletionService)
           allow(UserDeletionService).to receive(:new).and_return(service)
           allow(service).to receive(:call)
-          expect(service).to receive(:result).and_return(:error) # rubocop:disable RSpec/ExpectInHook
+          allow(service).to receive(:result).and_return(:error)
           delete :destroy, params:
         end
 

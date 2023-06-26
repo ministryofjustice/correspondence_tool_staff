@@ -7,7 +7,7 @@ RSpec::Matchers.define :require_permission do |permission|
   match do |event_or_block|
     policy_class = Pundit::PolicyFinder.new(@object).policy!
     if event_or_block.respond_to? :call
-      policy = spy(policy_class)
+      policy = instance_double(policy_class)
       allow(policy).to receive(permission)
                          .with(no_args) do
                            permission_received = true
@@ -34,7 +34,7 @@ RSpec::Matchers.define :require_permission do |permission|
       event_or_block.call
       expect(permission_received).to eq true
     else
-      expect_any_instance_of(policy_class).to receive(permission)
+      allow_any_instance_of(policy_class).to receive(permission) # rubocop:disable RSpec/AnyInstance
                                                 .and_return(permission_result)
       state_machine_class = RSpec.current_example
                               .example_group

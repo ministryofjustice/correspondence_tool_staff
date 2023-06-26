@@ -47,16 +47,6 @@ describe "cases/filters/index.html.slim", type: :view do
                     params: {}
   end
 
-  def allow_case_policy(policy_name)
-    policy = double("Pundit::Policy", policy_name => true)
-    allow(view).to receive(:policy).with(:case).and_return(policy)
-  end
-
-  def disallow_case_policy(policy_name)
-    policy = double("Pundit::Policy", policy_name => false)
-    allow(view).to receive(:policy).with(:case).and_return(policy)
-  end
-
   before do
     assign(:global_nav_manager, GlobalNavManager.new(responder,
                                                      request,
@@ -130,7 +120,7 @@ describe "cases/filters/index.html.slim", type: :view do
       assign(:action_url, "/cases/open")
       assign(:can_add_case, true)
 
-      allow_case_policy :can_add_case?
+      allow_case_policies_in_view :case, :can_add_case?
 
       render
       cases_page.load(rendered)
@@ -145,7 +135,7 @@ describe "cases/filters/index.html.slim", type: :view do
       assign(:action_url, "/cases/open")
       assign(:state_selector, StateSelector.new({}))
 
-      disallow_case_policy :can_add_case?
+      disallow_case_policies_in_view :case, :can_add_case?
 
       render
       cases_page.load(rendered)
@@ -155,10 +145,6 @@ describe "cases/filters/index.html.slim", type: :view do
   end
 
   describe "pagination" do
-    before do
-      allow(view).to receive(:policy).and_return(spy("Pundit::Policy"))
-    end
-
     it "renders the paginator" do
       login_as manager
       assigned_case
@@ -203,7 +189,7 @@ private
     assign(:action_url, "/cases/open")
     assign(:current_tab_name, "open")
 
-    disallow_case_policy :can_add_case?
+    disallow_case_policies_in_view :case, :can_add_case?
   end
 
   def validate_cases_common_fields_displayed(displayed_case, compared_case, who_its_with: nil)

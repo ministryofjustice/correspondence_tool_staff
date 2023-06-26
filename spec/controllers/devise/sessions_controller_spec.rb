@@ -7,7 +7,7 @@ describe Devise::SessionsController do
     let(:bad_pass)              { "xxx" }
     let(:user)                  { create :user, email:, password: }
     let(:bad_user)              { create :user, email:, password:, failed_attempts: 3 }
-    let(:notification_double)   { double "DeviseMailerUnlockInstructionsNotification" }
+    let(:notification_double)   { double "DeviseMailerUnlockInstructionsNotification" } # rubocop:disable RSpec/VerifiedDoubles
 
     context "when correct password" do
       it "signs the user in" do

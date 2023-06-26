@@ -30,7 +30,7 @@ describe Cases::ResponsesController, type: :controller do # rubocop:disable RSpe
 
   describe "execute_upload_responses" do
     let(:uploads_key) { "uploads/#{accepted_case.id}/responses/#{Faker::Internet.slug}.jpg" }
-    let(:response_uploader) { double ResponseUploaderService, upload!: nil, result: :ok }
+    let(:response_uploader) { instance_double ResponseUploaderService, upload!: nil, result: :ok }
     let(:flash)             { MockFlash.new(action_params: "upload") }
     let(:params) do
       {
@@ -49,7 +49,7 @@ describe Cases::ResponsesController, type: :controller do # rubocop:disable RSpe
 
     context "when files specified without a comment" do
       before do
-        allow_any_instance_of(CasesController)
+        allow_any_instance_of(CasesController) # rubocop:disable RSpec/AnyInstance
           .to receive(:flash).and_return(flash)
 
         allow(ResponseUploaderService)
@@ -84,7 +84,7 @@ describe Cases::ResponsesController, type: :controller do # rubocop:disable RSpe
 
     context "when no files specified" do
       before do
-        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
+        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash) # rubocop:disable RSpec/AnyInstance
         allow(ResponseUploaderService).to receive(:new).and_return(response_uploader)
         allow(response_uploader).to receive(:result).and_return(:blank)
       end
@@ -102,7 +102,7 @@ describe Cases::ResponsesController, type: :controller do # rubocop:disable RSpe
 
     context "when there is an upload error" do
       before do
-        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash)
+        allow_any_instance_of(CasesController).to receive(:flash).and_return(flash) # rubocop:disable RSpec/AnyInstance
         allow(ResponseUploaderService).to receive(:new).and_return(response_uploader)
         allow(response_uploader).to receive(:result).and_return(:error)
       end

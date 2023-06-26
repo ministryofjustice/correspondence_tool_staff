@@ -6,7 +6,7 @@
 def allow_case_policies(case_or_class, *policy_names)
   policy_class = Pundit::PolicyFinder.new(case_or_class).policy!
   policy_names.each do |policy_name|
-    allow_any_instance_of(policy_class).to receive(policy_name)
+    allow_any_instance_of(policy_class).to receive(policy_name) # rubocop:disable RSpec/AnyInstance
                                              .and_return(true)
   end
 end
@@ -14,13 +14,13 @@ end
 def disallow_case_policies(case_or_class, *policy_names)
   policy_class = Pundit::PolicyFinder.new(case_or_class).policy!
   policy_names.each do |policy_name|
-    allow_any_instance_of(policy_class).to receive(policy_name)
+    allow_any_instance_of(policy_class).to receive(policy_name) # rubocop:disable RSpec/AnyInstance
                                              .and_return(false)
   end
 end
 
 def allow_case_policies_in_view(case_or_class, *policy_names)
-  @policy ||= double "Pundit::Policy"
+  @policy ||= instance_double "Pundit::Policy"
   policy_names.each do |policy_name|
     allow(@policy).to receive(policy_name).and_return(true)
   end
@@ -28,7 +28,7 @@ def allow_case_policies_in_view(case_or_class, *policy_names)
 end
 
 def disallow_case_policies_in_view(case_or_class, *policy_names)
-  @policy ||= double "Pundit::Policy"
+  @policy ||= instance_double "Pundit::Policy"
   policy_names.each do |policy_name|
     allow(@policy).to receive(policy_name).and_return(false)
   end

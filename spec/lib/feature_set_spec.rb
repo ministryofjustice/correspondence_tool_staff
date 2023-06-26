@@ -25,7 +25,7 @@ describe FeatureSet do
 
     context "when development environment on local host" do
       it "is enabled" do
-        expect(Rails.env).to receive(:development?).and_return(true)
+        allow(Rails.env).to receive(:development?).and_return(true)
         expect(described_class.sars.enabled?).to be true
       end
     end

@@ -1,16 +1,6 @@
 require "rails_helper"
 
 describe "cases/searches/show.html.slim", type: :view do
-  def allow_case_policy(policy_name)
-    policy = double("Pundit::Policy", policy_name => true)
-    allow(view).to receive(:policy).with(:case).and_return(policy)
-  end
-
-  def disallow_case_policy(policy_name)
-    policy = double("Pundit::Policy", policy_name => false)
-    allow(view).to receive(:policy).with(:case).and_return(policy)
-  end
-
   let(:closed_case) { create(:closed_case) }
 
   context "when no search query" do

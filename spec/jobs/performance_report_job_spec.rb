@@ -47,9 +47,10 @@ describe PerformanceReportJob, type: :job do
 
     it "performs later" do
       perform_enqueued_jobs do
-        expect_any_instance_of(described_class).to receive(:perform).with(
-          "DummyReportTest", "test", 0, 0, 0
-        )
+        expect_any_instance_of(described_class) # rubocop:disable RSpec/AnyInstance
+          .to receive(:perform).with(
+            "DummyReportTest", "test", 0, 0, 0
+          )
         described_class.perform_later("DummyReportTest", "test", 0, 0, 0)
       end
     end

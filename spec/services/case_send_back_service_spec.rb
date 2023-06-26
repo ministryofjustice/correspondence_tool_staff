@@ -2,7 +2,11 @@ require "rails_helper"
 
 describe CaseSendBackService do
   describe "#call" do
-    let(:state_machine) { double ConfigurableStateMachine::Machine, send_back!: true, add_message_to_case!: true }
+    let(:state_machine) do
+      double ConfigurableStateMachine::Machine, # rubocop:disable RSpec/VerifiedDoubles
+             send_back!: true,
+             add_message_to_case!: true
+    end
 
     context "when send back a foi case" do
       it "a non-trigger foi case" do

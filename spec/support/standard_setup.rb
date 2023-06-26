@@ -50,7 +50,7 @@ class StandardSetup
     # Used because of some badly understood issue with Ruby class inheritance /
     # methods. The procs generated for the fixtures above require this
     # method_missing.
-    def self.method_missing(method_name, *args)
+    def self.method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
       if @@user_teams&.key?(method_name)
         @@user_teams[method_name].call
       elsif @@users&.key?(method_name)
@@ -557,7 +557,7 @@ class StandardSetup
     # users and 'create' for cases. This is used to have a standardised set of
     # users, teams and cases to work with, but without requiring
     # pre-instantiation.
-    def method_missing(method_name, *args)
+    def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
       if @@user_teams&.key?(method_name)
         @@user_teams[method_name].call
       elsif @@users&.key?(method_name)
@@ -600,7 +600,7 @@ class StandardSetup
   # Used when instantiating a StandardSetup object to pre-instantiate fixtures
   # in a before block (e.g. global_state_machine_spec.rb). This allows test to
   # run faster.
-  def method_missing(method_name, *args)
+  def method_missing(method_name, *args) # rubocop:disable Style/MissingRespondToMissing
     if @user_teams&.key?(method_name)
       @user_teams[method_name]
     elsif @users&.key?(method_name)

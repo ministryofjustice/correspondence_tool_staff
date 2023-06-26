@@ -6,7 +6,7 @@ describe CaseFilter::CaseUpdateSentToSsclService do
   let(:team) { kase.responding_team }
   let(:reason) { "Not required" }
   let(:state_machine) do
-    double ConfigurableStateMachine::Machine,
+    double ConfigurableStateMachine::Machine, # rubocop:disable RSpec/VerifiedDoubles
            record_sent_to_sscl!: true,
            edit_case!: true,
            date_sent_to_sscl_removed!: true

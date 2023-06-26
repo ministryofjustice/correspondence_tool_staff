@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe "cases/case_status.html.slim", type: :view do
   it "displays the all 4 key information " do
-    unassigned_case = double Case::BaseDecorator,
+    unassigned_case = double Case::BaseDecorator, # rubocop:disable RSpec/VerifiedDoubles
                              status: "Needs reassigning",
                              ico?: false,
                              internal_deadline: Time.zone.now.strftime(Settings.default_date_format),
@@ -33,7 +33,7 @@ describe "cases/case_status.html.slim", type: :view do
   end
 
   it 'does not display "Who its with" for closed cases' do
-    closed_case = double Case::BaseDecorator,
+    closed_case = double Case::BaseDecorator, # rubocop:disable RSpec/VerifiedDoubles
                          status: "Closed",
                          ico?: false,
                          internal_deadline: Time.zone.now.strftime(Settings.default_date_format),
@@ -59,7 +59,7 @@ describe "cases/case_status.html.slim", type: :view do
   end
 
   it "does not display Draft deadline for non-trigger cases" do
-    non_trigger_case = double Case::BaseDecorator,
+    non_trigger_case = double Case::BaseDecorator, # rubocop:disable RSpec/VerifiedDoubles
                               status: "Needs reassigning",
                               external_deadline: (Time.zone.now + 10.days).strftime(Settings.default_date_format),
                               ico?: false,
@@ -86,7 +86,7 @@ describe "cases/case_status.html.slim", type: :view do
 
   describe "ICO case reference number" do
     let(:ico_overturned_sar) do
-      double Case::OverturnedICO::SARDecorator,
+      double Case::OverturnedICO::SARDecorator, # rubocop:disable RSpec/VerifiedDoubles
              status: "Needs reassigning",
              external_deadline: (Time.zone.now + 10.days).strftime(Settings.default_date_format),
              ico_reference_number: "123456789ABC",
@@ -100,7 +100,7 @@ describe "cases/case_status.html.slim", type: :view do
     end
 
     it "does not show ICO case reference number for foi cases" do
-      non_trigger_case = double Case::BaseDecorator,
+      non_trigger_case = double Case::BaseDecorator, # rubocop:disable RSpec/VerifiedDoubles
                                 status: "Needs reassigning",
                                 external_deadline: (Time.zone.now + 10.days).strftime(Settings.default_date_format),
                                 ico?: false,
@@ -129,7 +129,7 @@ describe "cases/case_status.html.slim", type: :view do
     end
 
     it "displays ICO case reference number for ico appeal cases" do
-      ico_case = double Case::ICO::BaseDecorator,
+      ico_case = double Case::ICO::BaseDecorator, # rubocop:disable RSpec/VerifiedDoubles
                         status: "Needs reassigning",
                         external_deadline: (Time.zone.now + 10.days).strftime(Settings.default_date_format),
                         ico_reference_number: "123456789ABC",
@@ -174,9 +174,9 @@ describe "cases/case_status.html.slim", type: :view do
         number_exempt_pages: "200",
         number_final_pages: "250",
       }
-      offender_sar_case = double Case::SAR::OffenderDecorator,
+      offender_sar_case = double Case::SAR::OffenderDecorator, # rubocop:disable RSpec/VerifiedDoubles
                                  params.merge({ type_of_offender_sar?: true })
-      offender_sar_complaint = double Case::SAR::OffenderComplaintDecorator,
+      offender_sar_complaint = double Case::SAR::OffenderComplaintDecorator, # rubocop:disable RSpec/VerifiedDoubles
                                       params.merge({ offender_sar_complaint?: true })
 
       [offender_sar_case, offender_sar_complaint].each do |kase|
@@ -194,7 +194,7 @@ describe "cases/case_status.html.slim", type: :view do
     end
 
     it "does not display Page counts for non-offender SAR case" do
-      ico_case = double Case::ICO::BaseDecorator,
+      ico_case = double Case::ICO::BaseDecorator, # rubocop:disable RSpec/VerifiedDoubles
                         status: "Needs reassigning",
                         external_deadline: (Time.zone.now + 10.days).strftime(Settings.default_date_format),
                         ico_reference_number: "123456789ABC",

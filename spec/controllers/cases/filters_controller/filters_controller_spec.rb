@@ -74,7 +74,7 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
 
       context "when csv request" do
         it "downloads a csv file" do
-          expect(CSVGenerator).to receive(:filename).with("my-open").and_return("abc.csv")
+          allow(CSVGenerator).to receive(:filename).with("my-open").and_return("abc.csv")
 
           get :my_open, params: { tab: "in_time" }, format: "csv"
           expect(response.status).to eq 200
@@ -192,8 +192,8 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
         end
 
         it "generates a file and downloads it" do
-          expect(gnm.current_page_or_tab.cases.by_last_transitioned_date).to receive(:each).and_yield(record)
-          expect(record).to receive(:to_csv).and_return(%w[a csv line])
+          allow(gnm.current_page_or_tab.cases.by_last_transitioned_date).to receive(:each).and_yield(record)
+          allow(record).to receive(:to_csv).and_return(%w[a csv line])
 
           expect(response.header["Content-Disposition"]).to eq 'attachment; filename="abc.csv"'
           expect(response.body).to eq "#{CSV.generate_line(CSVExporter::CSV_COLUMN_HEADINGS)}a,csv,line\n"
@@ -240,11 +240,13 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
         before do
           sign_in manager
 
-          allow_any_instance_of(GlobalNavManager).to receive(:current_page_or_tab).and_return(page_double)
-          allow_any_instance_of(CaseSearchService).to receive(:call).and_return(true)
+          allow_any_instance_of(GlobalNavManager) # rubocop:disable RSpec/AnyInstance
+            .to receive(:current_page_or_tab).and_return(page_double)
+          allow_any_instance_of(CaseSearchService) # rubocop:disable RSpec/AnyInstance
+            .to receive(:call).and_return(true)
         end
 
-        let(:page_double) { double("page", name: "ready_for_removal").as_null_object }
+        let(:page_double) { double("page", name: "ready_for_removal").as_null_object } # rubocop:disable RSpec/VerifiedDoubles
 
         it "renders the retention cases page" do
           get :retention, params: { tab: "ready_for_removal" }
@@ -275,11 +277,13 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
         before do
           sign_in manager
 
-          allow_any_instance_of(GlobalNavManager).to receive(:current_page_or_tab).and_return(page_double)
-          allow_any_instance_of(CaseSearchService).to receive(:call).and_return(true)
+          allow_any_instance_of(GlobalNavManager) # rubocop:disable RSpec/AnyInstance
+            .to receive(:current_page_or_tab).and_return(page_double)
+          allow_any_instance_of(CaseSearchService) # rubocop:disable RSpec/AnyInstance
+            .to receive(:call).and_return(true)
         end
 
-        let(:page_double) { double("page", name: "pending_removal").as_null_object }
+        let(:page_double) { double("page", name: "pending_removal").as_null_object } # rubocop:disable RSpec/VerifiedDoubles
 
         it "renders the retention cases page" do
           get :retention, params: { tab: "pending_removal" }
@@ -302,9 +306,9 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
   # Utility methods
 
   def stub_current_case_finder_for_closed_cases_with(result)
-    pager = double "Kaminari Pager", decorate: result
-    cases_by_last_transitioned_date = double "ActiveRecord Cases by last transitioned", page: pager
-    cases = double "ActiveRecord Cases", by_last_transitioned_date: cases_by_last_transitioned_date
+    pager = double "Kaminari Pager", decorate: result # rubocop:disable RSpec/VerifiedDoubles
+    cases_by_last_transitioned_date = double "ActiveRecord Cases by last transitioned", page: pager # rubocop:disable RSpec/VerifiedDoubles
+    cases = double "ActiveRecord Cases", by_last_transitioned_date: cases_by_last_transitioned_date # rubocop:disable RSpec/VerifiedDoubles
     page = instance_double(GlobalNavManager::Page, cases:)
     gnm = instance_double GlobalNavManager, current_page_or_tab: page
     allow(cases_by_last_transitioned_date).to receive(:limit).and_return(cases_by_last_transitioned_date)
@@ -316,9 +320,9 @@ describe Cases::FiltersController, type: :controller do # rubocop:disable RSpec/
   end
 
   def stub_current_case_finder_cases_with(result)
-    pager = double "Kaminari Pager", decorate: result
-    cases_by_deadline = double "ActiveRecord Cases by Deadline", page: pager
-    cases = double "ActiveRecord Cases", by_deadline: cases_by_deadline
+    pager = double "Kaminari Pager", decorate: result # rubocop:disable RSpec/VerifiedDoubles
+    cases_by_deadline = double "ActiveRecord Cases by Deadline", page: pager # rubocop:disable RSpec/VerifiedDoubles
+    cases = double "ActiveRecord Cases", by_deadline: cases_by_deadline # rubocop:disable RSpec/VerifiedDoubles
 
     allow(cases).to receive(:includes).and_return(cases)
     allow(cases).to receive(:size).and_return(10)

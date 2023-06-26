@@ -42,8 +42,8 @@ RSpec.describe Searchable do
       # objects we can set expectations on in the specs
       def self.all
         @all ||= [
-          double("Object A", update_index: true),
-          double("Object B", update_index: true),
+          double("Object A", update_index: true), # rubocop:disable RSpec/VerifiedDoubles
+          double("Object B", update_index: true), # rubocop:disable RSpec/VerifiedDoubles
         ]
       end
 
@@ -73,7 +73,7 @@ RSpec.describe Searchable do
       allow(@searchable).to receive("field_a").and_return("foobar")
       allow(@searchable).to receive("field_b").and_return("barfoo")
       allow(@searchable).to receive("id").and_return(1)
-      connection = double("Connection", execute: true)
+      connection = double("Connection", execute: true) # rubocop:disable RSpec/VerifiedDoubles
       allow(@searchable.class).to receive(:connection).and_return(connection)
       allow(connection).to receive("quote").with(any_args) { |d| "'#{d}'" }
 

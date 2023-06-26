@@ -98,7 +98,7 @@ describe DataRequestCreateService do
       end
 
       it "only recovers from ActiveRecord exceptions" do
-        allow_any_instance_of(Case::Base).to receive(:save!).and_raise(FakeError)
+        allow_any_instance_of(Case::Base).to receive(:save!).and_raise(FakeError) # rubocop:disable RSpec/AnyInstance
         expect { service.call }.to raise_error FakeError
       end
     end

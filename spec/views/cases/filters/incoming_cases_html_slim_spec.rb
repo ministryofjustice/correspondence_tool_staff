@@ -50,10 +50,13 @@ describe "cases/filters/incoming.html.slim", type: :view do
     case1
     case2
     further_clearance_case
-    assign(:cases, PaginatingDecorator.new(Case::Base.all.page.order(:id)))
+    cases = PaginatingDecorator.new(Case::Base.all.page.order(:id))
+    assign(:cases, cases)
 
-    policy = double("Pundit::Policy", can_add_case?: false, unflag_for_clearance?: true)
-    allow(view).to receive(:policy).and_return(policy)
+    cases.each do |kase|
+      allow_case_policies_in_view(kase, :unflag_for_clearance?)
+      disallow_case_policies_in_view(kase, :can_add_case?)
+    end
 
     sign_in disclosure_specialist
 
@@ -87,10 +90,6 @@ describe "cases/filters/incoming.html.slim", type: :view do
   end
 
   describe "pagination" do
-    before do
-      allow(view).to receive(:policy).and_return(spy("Pundit::Policy"))
-    end
-
     it "renders the paginator" do
       assign(:cases, Case::Base.none.page.decorate)
       render

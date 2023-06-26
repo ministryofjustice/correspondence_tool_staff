@@ -7,7 +7,7 @@ describe Cases::SarExtensionsController, type: :controller do
   let(:approved_sar)      { create :approved_sar }
 
   let(:service) do
-    double(CaseExtendSARDeadlineService, call: :ok, result: :ok)
+    instance_double(CaseExtendSARDeadlineService, call: :ok, result: :ok)
   end
 
   let(:post_params) do
@@ -72,7 +72,7 @@ describe Cases::SarExtensionsController, type: :controller do
 
     context "with invalid params" do
       let(:service) do
-        double(
+        instance_double(
           CaseExtendSARDeadlineService,
           call: :validation_error,
           result: :validation_error,
@@ -87,7 +87,7 @@ describe Cases::SarExtensionsController, type: :controller do
 
     context "when failed request" do
       let(:service) do
-        double(
+        instance_double(
           CaseExtendSARDeadlineService,
           call: :error,
           result: :error,

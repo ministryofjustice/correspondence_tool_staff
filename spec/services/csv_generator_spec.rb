@@ -19,8 +19,8 @@ describe "CSVGenerator" do
     it "returns an array of arrays with default csv exporter" do
       k1_fields = ["an", "array", "of", "text", "fields", "for", "case 1"]
       k2_fields = ["an", "array", "of", "text", "fields", "for", "case 2"]
-      kase1 = double Case::Base, to_csv: k1_fields
-      kase2 = double Case::Base, to_csv: k2_fields
+      kase1 = instance_double Case::Base, to_csv: k1_fields
+      kase2 = instance_double Case::Base, to_csv: k2_fields
 
       generator = CSVGenerator.new([kase1, kase2], CSVExporter.new(nil))
       expected = ["#{CSVExporter::CSV_COLUMN_HEADINGS.join(',')}\n",
@@ -32,8 +32,8 @@ describe "CSVGenerator" do
     end
 
     it "returns an array of arrays with injected case-csv exporter" do
-      kase1 = double Case::Base, number: 1
-      kase2 = double Case::Base, number: 2
+      kase1 = instance_double Case::Base, number: 1
+      kase2 = instance_double Case::Base, number: 2
 
       dummy_case_csv_exporter = DummyCaseCSVExporter.new
       generator = CSVGenerator.new([kase1, kase2], dummy_case_csv_exporter)

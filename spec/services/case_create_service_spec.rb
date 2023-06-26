@@ -242,7 +242,8 @@ describe CaseCreateService do
       end
 
       it "calls #link_related_cases on the newly created case" do
-        expect_any_instance_of(Case::OverturnedICO::SAR).to receive(:link_related_cases)
+        expect_any_instance_of(Case::OverturnedICO::SAR) # rubocop:disable RSpec/AnyInstance
+          .to receive(:link_related_cases)
         ccs.call
       end
 
@@ -328,7 +329,8 @@ describe CaseCreateService do
       end
 
       it "calls #link_related_cases on the newly created case" do
-        expect_any_instance_of(Case::OverturnedICO::FOI).to receive(:link_related_cases)
+        expect_any_instance_of(Case::OverturnedICO::FOI) # rubocop:disable RSpec/AnyInstance
+          .to receive(:link_related_cases)
         ccs.call
       end
 

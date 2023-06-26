@@ -5,7 +5,7 @@ describe CaseDeletionService do
     let(:team)          { find_or_create :team_dacu }
     let(:user)          { team.users.first }
     let(:kase)          { create :accepted_case }
-    let(:state_machine) { double ConfigurableStateMachine::Machine, destroy_case!: true }
+    let(:state_machine) { double ConfigurableStateMachine::Machine, destroy_case!: true } # rubocop:disable RSpec/VerifiedDoubles
     let(:service)       { described_class.new(user, kase, reason_for_deletion: "Because") }
 
     before do

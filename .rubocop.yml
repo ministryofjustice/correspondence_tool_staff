@@ -8,14 +8,6 @@ inherit_mode:
   merge:
     - Exclude
 
-RSpec/VerifiedDoubles:
-  Enabled: false
-RSpec/AnyInstance:
-  Enabled: false
-Style/MissingRespondToMissing:
-  Enabled: false
-RSpec/StubbedMock:
-  Enabled: false
 # **************************************************************
 # TRY NOT TO ADD OVERRIDES IN THIS FILE
 #

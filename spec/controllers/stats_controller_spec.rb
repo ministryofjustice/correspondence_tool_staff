@@ -147,7 +147,7 @@ RSpec.describe StatsController, type: :controller do
     end
 
     let(:dummy_report_type) do
-      double(to_csv: [], persist_results?: false, etl?: false, background_job?: false,
+      double(to_csv: [], persist_results?: false, etl?: false, background_job?: false, # rubocop:disable RSpec/VerifiedDoubles
              results: {}, report_format: "csv")
     end
 
@@ -158,7 +158,7 @@ RSpec.describe StatsController, type: :controller do
     end
 
     it "runs the report" do
-      expect(Report).to receive(:new).and_return(report)
+      allow(Report).to receive(:new).and_return(report)
       allow(report).to receive(:run).and_return(dummy_report_type)
       allow(dummy_report_type).to receive(:filename).and_return("test.csv")
       allow(dummy_report_type).to receive(:user).and_return(manager)

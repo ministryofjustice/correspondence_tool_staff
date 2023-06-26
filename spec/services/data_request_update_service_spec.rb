@@ -91,7 +91,7 @@ describe DataRequestUpdateService do
       end
 
       it "only recovers from ActiveRecord exceptions" do
-        allow_any_instance_of(DataRequest).to receive(:save!).and_raise(FakeError)
+        allow_any_instance_of(DataRequest).to receive(:save!).and_raise(FakeError) # rubocop:disable RSpec/AnyInstance
         expect { service.call }.to raise_error FakeError
       end
     end

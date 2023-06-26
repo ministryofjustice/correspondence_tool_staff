@@ -65,7 +65,8 @@ describe CaseSearchService do
 
       it "uses the for_view_only policy scope" do
         expect(Case::BasePolicy::Scope).to receive(:new).with(user, Case::Base.all).and_call_original
-        expect_any_instance_of(Case::BasePolicy::Scope).to receive(:resolve).and_call_original
+        expect_any_instance_of(Case::BasePolicy::Scope) # rubocop:disable RSpec/AnyInstance
+          .to receive(:resolve).and_call_original
         service.call
       end
     end
@@ -264,7 +265,7 @@ describe CaseSearchService do
         end
 
         it "performs the search/filter using the SearchQuery" do
-          expected_results = spy("expected results", size: 1)
+          expected_results = instance_double("expected results", size: 1)
           search_query = create(:search_query)
           allow(search_query).to receive(:results).and_return(expected_results)
           allow(SearchQuery).to receive(:new).and_return(search_query)

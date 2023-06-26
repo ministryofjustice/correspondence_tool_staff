@@ -8,7 +8,7 @@ RSpec.shared_examples "new overturned ico spec" do |klass|
   end
 
   context "when post-authorization processing" do
-    let(:service) { double NewOverturnedIcoCaseService }
+    let(:service) { instance_double NewOverturnedIcoCaseService }
 
     before do
       allow(NewOverturnedIcoCaseService)
@@ -19,14 +19,14 @@ RSpec.shared_examples "new overturned ico spec" do |klass|
 
     context "with valid params" do
       let(:decorated_overturned_ico) do
-        double(
+        class_double(
           decorator,
           type_abbreviation: abbreviation,
         )
       end
 
       let(:overturned_ico) do
-        double(
+        class_double(
           klass,
           decorate: decorated_overturned_ico,
         )
@@ -56,7 +56,7 @@ RSpec.shared_examples "new overturned ico spec" do |klass|
     end
 
     context "with invalid params" do
-      let(:decorated_ico_appeal) { double ico_decorator }
+      let(:decorated_ico_appeal) { class_double ico_decorator }
 
       before do
         allow(service).to receive(:error?).and_return(true)

@@ -71,8 +71,8 @@ describe Case::BaseDecorator, type: :model do
 
       context "with the responder" do
         it "returns the responder name" do
-          allow_any_instance_of(described_class)
-            .to receive(:h).and_return(double("View", current_user: responder))
+          allow_any_instance_of(described_class) # rubocop:disable RSpec/AnyInstance
+            .to receive(:h).and_return(double("View", current_user: responder)) # rubocop:disable RSpec/VerifiedDoubles
           expect(assigned_case.who_its_with)
             .to eq assigned_case.responding_team.name
         end
@@ -80,8 +80,8 @@ describe Case::BaseDecorator, type: :model do
 
       context "when a coworker of the responder" do
         it "returns the responder name" do
-          allow_any_instance_of(described_class)
-            .to receive(:h).and_return(double("View", current_user: coworker))
+          allow_any_instance_of(described_class) # rubocop:disable RSpec/AnyInstance
+            .to receive(:h).and_return(double("View", current_user: coworker)) # rubocop:disable RSpec/VerifiedDoubles
           expect(assigned_case.who_its_with)
             .to eq assigned_case.responding_team.name
         end
@@ -89,9 +89,9 @@ describe Case::BaseDecorator, type: :model do
 
       context "when the responder in another team" do
         it "returns the responder name" do
-          allow_any_instance_of(described_class)
+          allow_any_instance_of(described_class) # rubocop:disable RSpec/AnyInstance
             .to receive(:h)
-                  .and_return(double("View", current_user: another_responder))
+            .and_return(double("View", current_user: another_responder)) # rubocop:disable RSpec/VerifiedDoubles
           expect(assigned_case.who_its_with)
             .to eq assigned_case.responding_team.name
         end
@@ -99,7 +99,9 @@ describe Case::BaseDecorator, type: :model do
 
       context "when flagged case in pending_dacu_clearance state" do
         it "returns dacu disclosure" do
-          allow_any_instance_of(described_class).to receive(:h).and_return(double("View", current_user: another_responder))
+          allow_any_instance_of(described_class) # rubocop:disable RSpec/AnyInstance
+            .to receive(:h)
+            .and_return(double("View", current_user: another_responder)) # rubocop:disable RSpec/VerifiedDoubles
           expect(pending_dacu_clearance_case.who_its_with).to eq "Disclosure"
         end
       end
@@ -355,7 +357,7 @@ describe Case::BaseDecorator, type: :model do
 
   describe "#escaltion_deadline" do
     it "returns the escalation date in the default format" do
-      expect(unassigned_case.object).to receive(:escalation_deadline).and_return(Date.new(2017, 8, 13))
+      allow(unassigned_case.object).to receive(:escalation_deadline).and_return(Date.new(2017, 8, 13))
       expect(unassigned_case.escalation_deadline).to eq "13 Aug 2017"
     end
   end

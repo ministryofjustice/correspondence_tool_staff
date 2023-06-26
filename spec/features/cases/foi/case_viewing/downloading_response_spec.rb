@@ -55,10 +55,11 @@ feature "downloading a response from response details" do
       scenario "when a view link is available" do
         mypath = Rails.root.join("spec/fixtures/eon.pdf")
         s3_object = instance_double(Aws::S3::Object)
-        expect(CASE_UPLOADS_S3_BUCKET).to receive(:object).and_return(s3_object)
-        expect(Tempfile).to receive(:new).and_return(double(Tempfile, path: mypath, close: nil))
+        allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).and_return(s3_object)
+        allow(Tempfile).to receive(:new).and_return(instance_double(Tempfile, path: mypath, close: nil))
         expect(s3_object).to receive(:get).with(response_target: mypath)
-        expect_any_instance_of(Cases::AttachmentsController).to receive(:send_file)
+        expect_any_instance_of(Cases::AttachmentsController) # rubocop:disable RSpec/AnyInstance
+          .to receive(:send_file)
           .with(mypath, { type: "application/pdf", disposition: "inline" })
           .and_call_original
 

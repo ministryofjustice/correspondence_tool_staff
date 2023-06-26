@@ -129,7 +129,7 @@ module Stats
       describe "#process" do
         it "more months compared iwth period stfrom stats data " do
           redis_double = instance_double(Redis)
-          expect(Redis).to receive(:new).and_return(redis_double)
+          allow(Redis).to receive(:new).and_return(redis_double)
 
           allow(redis_double).to receive(:exists?).and_return(true)
           allow(redis_double).to receive(:get).and_return(

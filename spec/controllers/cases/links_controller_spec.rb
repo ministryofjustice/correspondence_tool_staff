@@ -27,7 +27,7 @@ RSpec.describe Cases::LinksController, type: :controller do
   end
 
   describe "#create" do
-    let(:service) { double(CaseLinkingService, create!: :ok) }
+    let(:service) { instance_double(CaseLinkingService, create!: :ok) }
     let(:post_params) do
       {
         case_id: kase.id,
@@ -65,7 +65,7 @@ RSpec.describe Cases::LinksController, type: :controller do
     end
 
     context "with validation error" do
-      let(:service) { double(CaseLinkingService, create!: :validation_error) }
+      let(:service) { instance_double(CaseLinkingService, create!: :validation_error) }
 
       it "renders the new_link page" do
         post :create, params: post_params
@@ -74,7 +74,7 @@ RSpec.describe Cases::LinksController, type: :controller do
     end
 
     context "when failed request" do
-      let(:service) { double(CaseLinkingService, create!: :error) }
+      let(:service) { instance_double(CaseLinkingService, create!: :error) }
 
       it "notifies the user of the failure" do
         post :create, params: post_params
@@ -85,7 +85,7 @@ RSpec.describe Cases::LinksController, type: :controller do
   end
 
   describe "#destroy" do
-    let(:service) { double(CaseLinkingService, destroy!: :ok) }
+    let(:service) { instance_double(CaseLinkingService, destroy!: :ok) }
     let(:delete_params) do
       {
         case_id: kase.id, id: link_case.number
@@ -121,7 +121,7 @@ RSpec.describe Cases::LinksController, type: :controller do
     end
 
     context "when failed request" do
-      let(:service) { double(CaseLinkingService, destroy!: :failed) }
+      let(:service) { instance_double(CaseLinkingService, destroy!: :failed) }
 
       it "notifies the user of the failure" do
         delete :destroy, params: delete_params

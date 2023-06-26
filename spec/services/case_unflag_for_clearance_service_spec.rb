@@ -61,7 +61,7 @@ describe CaseUnflagForClearanceService do
 
       it "passes through an error on saves and does not change assignments" do
         all_assignments = assigned_flagged_case.assignments
-        expect(assigned_flagged_case.state_machine)
+        allow(assigned_flagged_case.state_machine)
             .to receive(:unflag_for_clearance!)
                     .and_raise(RuntimeError)
 

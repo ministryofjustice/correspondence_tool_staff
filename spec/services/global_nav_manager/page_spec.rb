@@ -230,7 +230,7 @@ describe GlobalNavManager::Page do
   describe "#cases" do
     it "returns the cases from the finder" do
       finder = instance_double CaseFinderService,
-                               scope: double("Case::ActiveRecord_Relation")
+                               scope: double("Case::ActiveRecord_Relation") # rubocop:disable RSpec/VerifiedDoubles
       allow(open_cases_page).to receive(:finder).and_return(finder)
       expect(open_cases_page.cases).to eq finder.scope
     end

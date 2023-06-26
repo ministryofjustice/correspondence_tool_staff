@@ -170,7 +170,7 @@ RSpec.describe Cases::CommissioningDocumentsController, type: :controller do
   end
 
   describe "#upload" do
-    let(:uploader) { double(CommissioningDocumentUploaderService, upload!: nil, result: :ok) }
+    let(:uploader) { instance_double(CommissioningDocumentUploaderService, upload!: nil, result: :ok) }
     let(:uploads_key) { "uploads/10574/commissioning_document/Day1_CATA_211029002_Ole-Out_20230203T1127.docx" }
     let(:params) do
       {

@@ -6,7 +6,7 @@ describe RespondedCaseValidator do
 
   context "when not prepared for respond" do
     it "does not validate" do
-      expect_any_instance_of(described_class).not_to receive(:validate_responded_date)
+      expect_any_instance_of(described_class).not_to receive(:validate_responded_date) # rubocop:disable RSpec/AnyInstance
       ico.valid?
     end
   end

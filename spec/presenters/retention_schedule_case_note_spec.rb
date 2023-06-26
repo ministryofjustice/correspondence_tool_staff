@@ -12,7 +12,7 @@ RSpec.describe RetentionScheduleCaseNote do
     let(:user) { instance_double(User) }
     let(:team) { "Team XYZ" }
 
-    let(:sm_double) { double("StateMachine") }
+    let(:sm_double) { double("StateMachine") } # rubocop:disable RSpec/VerifiedDoubles
     let(:args) { { kase:, user:, changes: } }
 
     before do

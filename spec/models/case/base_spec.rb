@@ -618,10 +618,10 @@ RSpec.describe Case::Base, type: :model do
       let(:internal_deadline)   { Time.zone.today - 2.days }
       let(:external_deadline)   { Time.zone.today - 3.days }
       let(:deadline_calculator) do
-        double DeadlineCalculator::BusinessDays,
-               escalation_deadline:,
-               internal_deadline:,
-               external_deadline:
+        instance_double DeadlineCalculator::BusinessDays,
+                        escalation_deadline:,
+                        internal_deadline:,
+                        external_deadline:
       end
 
       before do
@@ -750,12 +750,12 @@ RSpec.describe Case::Base, type: :model do
     let(:kase) { create :case }
 
     it "returns false when requires clearance is true" do
-      expect(kase).to receive(:requires_clearance?).and_return(true)
+      allow(kase).to receive(:requires_clearance?).and_return(true)
       expect(kase.does_not_require_clearance?).to be false
     end
 
     it "returns true when requires clearance is false" do
-      expect(kase).to receive(:requires_clearance?).and_return(false)
+      allow(kase).to receive(:requires_clearance?).and_return(false)
       expect(kase.does_not_require_clearance?).to be true
     end
   end
@@ -769,8 +769,8 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it "calls the TeamFinderService" do
-      service = double TeamFinderService, team_for_assigned_user: nil
-      expect(TeamFinderService).to receive(:new).with(kase, responder, :responder).and_return(service)
+      service = isntance_double TeamFinderService, team_for_assigned_user: nil
+      allow(TeamFinderService).to receive(:new).with(kase, responder, :responder).and_return(service)
       kase.team_for_assigned_user(responder, :responder)
     end
   end
@@ -784,8 +784,8 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it "calls the TeamFinderService" do
-      service = double TeamFinderService, team_for_unassigned_user: nil
-      expect(TeamFinderService).to receive(:new).with(kase, responder, :responder).and_return(service)
+      service = instance_double TeamFinderService, team_for_unassigned_user: nil
+      allow(TeamFinderService).to receive(:new).with(kase, responder, :responder).and_return(service)
       kase.team_for_unassigned_user(responder, :responder)
     end
   end
@@ -972,10 +972,10 @@ RSpec.describe Case::Base, type: :model do
 
   describe "#upload_response_groups" do
     it "instantiates CaseUploadGroupCollection with response attachments" do
-      attachments = double "CaseAttachments for Case"
-      response_attachments = double "Response attachments"
-      expect(attachments).to receive(:response).and_return(response_attachments)
-      expect(kase).to receive(:attachments).and_return(attachments) # rubocop:disable RSpec/SubjectStub
+      attachments = double "CaseAttachments for Case" # rubocop:disable RSpec/VerifiedDoubles
+      response_attachments = double "Response attachments" # rubocop:disable RSpec/VerifiedDoubles
+      allow(attachments).to receive(:response).and_return(response_attachments)
+      allow(kase).to receive(:attachments).and_return(attachments) # rubocop:disable RSpec/SubjectStub
       expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, response_attachments, :responder)
       kase.upload_response_groups
     end
@@ -983,9 +983,9 @@ RSpec.describe Case::Base, type: :model do
 
   describe "#upload_request_groups" do
     it "instantiates CaseUploadGroupCollection with request attachments" do
-      attachments = double "CaseAttachments for Case"
-      request_attachments = double "Request attachments"
-      expect(attachments).to receive(:request).and_return(request_attachments)
+      attachments = double "CaseAttachments for Case" # rubocop:disable RSpec/VerifiedDoubles
+      request_attachments = double "Request attachments" # rubocop:disable RSpec/VerifiedDoubles
+      allow(attachments).to receive(:request).and_return(request_attachments)
       allow(kase).to receive(:attachments).and_return(attachments) # rubocop:disable RSpec/SubjectStub
       expect(CaseAttachmentUploadGroupCollection).to receive(:new).with(kase, request_attachments, :manager)
       kase.upload_request_groups
@@ -994,8 +994,8 @@ RSpec.describe Case::Base, type: :model do
 
   describe "#current_team_and_user" do
     it "calls the CurrentTeamAndUserService" do
-      ctaus = double CurrentTeamAndUserService
-      expect(CurrentTeamAndUserService).to receive(:new).with(accepted_case).and_return(ctaus)
+      ctaus = instance_double CurrentTeamAndUserService
+      allow(CurrentTeamAndUserService).to receive(:new).with(accepted_case).and_return(ctaus)
       expect(accepted_case.current_team_and_user).to eq ctaus
     end
   end
@@ -1507,8 +1507,8 @@ RSpec.describe Case::Base, type: :model do
   describe "#to_csv" do
     it "delegates to CSVExporter" do
       kase = build_stubbed :assigned_case
-      exporter = double(CSVExporter)
-      expect(CSVExporter).to receive(:new).with(kase).and_return(exporter)
+      exporter = instance_double(CSVExporter)
+      allow(CSVExporter).to receive(:new).with(kase).and_return(exporter)
       expect(exporter).to receive(:to_csv)
 
       kase.to_csv
@@ -1748,7 +1748,7 @@ RSpec.describe Case::Base, type: :model do
 
     context "when for a closed case" do
       context "with retention schedule" do
-        let(:retention_schedule) { double(RetentionSchedule, anonymised?: anonymised) }
+        let(:retention_schedule) { instance_double(RetentionSchedule, anonymised?: anonymised) }
 
         before do
           allow(closed_case).to receive(:retention_schedule).and_return(retention_schedule)
@@ -1789,7 +1789,7 @@ RSpec.describe Case::Base, type: :model do
 
   describe "#editable?" do
     it "is the opposite of `readonly?` method" do
-      expect(closed_case).to receive(:readonly?).and_return(true)
+      allow(closed_case).to receive(:readonly?).and_return(true)
       expect(closed_case.editable?).to eq(false)
     end
   end

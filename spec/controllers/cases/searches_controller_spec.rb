@@ -156,8 +156,8 @@ describe Cases::SearchesController, type: :controller do
     end
 
     it "passes the page param to the paginator" do
-      paged_cases = double("Paged Cases", decorate: [])
-      cases = double("Cases", page: paged_cases, empty?: true, size: 0)
+      paged_cases = double("Paged Cases", decorate: []) # rubocop:disable RSpec/VerifiedDoubles
+      cases = double("Cases", page: paged_cases, empty?: true, size: 0) # rubocop:disable RSpec/VerifiedDoubles
       allow(Case::Base).to receive(:search_result_order_by_oldest_first).and_return(cases)
       get :show, params: {
         search_query: { search_text: assigned_case.number },

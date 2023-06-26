@@ -13,7 +13,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
 
   describe "#flag_for_clearance" do
     let!(:service) do
-      double(CaseFlagForClearanceService, call: true).tap do |svc|
+      instance_double(CaseFlagForClearanceService, call: true).tap do |svc|
         allow(CaseFlagForClearanceService).to receive(:new).and_return(svc)
       end
     end
@@ -337,7 +337,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
   end
 
   describe "#unflag_taken_on_case_for_clearance" do
-    let!(:service) { double(CaseUnflagForClearanceService) }
+    let!(:service) { instance_double(CaseUnflagForClearanceService) }
     let(:params) { { case_id: flagged_case.id, message: "message" } }
     let(:flagged_case) do
       create(
@@ -373,7 +373,7 @@ RSpec.describe Cases::ClearancesController, type: :controller do
 
     describe "PATCH unflag_for_clearance" do
       let!(:service) do
-        double(CaseUnflagForClearanceService, call: true).tap do |svc|
+        instance_double(CaseUnflagForClearanceService, call: true).tap do |svc|
           allow(CaseUnflagForClearanceService).to receive(:new).and_return(svc)
         end
       end

@@ -184,7 +184,7 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
       end
 
       it "raises an ArgumentError" do
-        allow_any_instance_of(DataRequestUpdateService)
+        allow_any_instance_of(DataRequestUpdateService) # rubocop:disable RSpec/AnyInstance
           .to receive(:result).and_return(:bogus_result!)
 
         expect { patch :update, params: }
@@ -222,7 +222,8 @@ RSpec.describe Cases::DataRequestsController, type: :controller do
     let(:template_name) { "prison" }
 
     it "assigns value to recipient emails" do
-      allow_any_instance_of(DataRequest).to receive(:recipient_emails).and_return("test@email.com")
+      allow_any_instance_of(DataRequest) # rubocop:disable RSpec/AnyInstance
+        .to receive(:recipient_emails).and_return("test@email.com")
       get(:send_email, params:)
       expect(assigns(:recipient_emails)).to eq("test@email.com")
     end

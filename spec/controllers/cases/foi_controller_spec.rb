@@ -83,7 +83,7 @@ RSpec.describe Cases::FoiController, type: :controller do
 
       context "when flag_for_clearance" do
         let!(:service) do
-          double(CaseFlagForClearanceService, call: true).tap do |svc|
+          instance_double(CaseFlagForClearanceService, call: true).tap do |svc|
             allow(CaseFlagForClearanceService).to receive(:new).and_return(svc)
           end
         end

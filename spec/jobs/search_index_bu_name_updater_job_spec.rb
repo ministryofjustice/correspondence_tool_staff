@@ -12,8 +12,8 @@ describe SearchIndexBuNameUpdaterJob, type: :job do
 
   describe "#perform" do
     it "updates the index for all cases responded to by responding team 1" do
-      expect(BusinessUnit).to receive(:find).with(responding_team_1.id).and_return(responding_team_1)
-      expect(responding_team_1).to receive(:responding_cases).and_return([k1, k2])
+      allow(BusinessUnit).to receive(:find).with(responding_team_1.id).and_return(responding_team_1)
+      allow(responding_team_1).to receive(:responding_cases).and_return([k1, k2])
       expect(SearchIndexUpdaterJob).to receive(:perform_later).with(k1.id)
       expect(SearchIndexUpdaterJob).to receive(:perform_later).with(k2.id)
 

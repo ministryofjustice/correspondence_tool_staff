@@ -29,7 +29,7 @@ RSpec.describe Case::ICO::SARPolicy do
 
   permissions :show? do
     it "defers to Case::SARPolicy" do
-      expect_any_instance_of(Case::SARPolicy).to receive(:show?)
+      expect_any_instance_of(Case::SARPolicy).to receive(:show?) # rubocop:disable RSpec/AnyInstance
       Pundit.policy(manager, Case::ICO::SAR).show?
     end
   end

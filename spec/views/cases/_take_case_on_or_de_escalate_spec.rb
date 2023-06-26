@@ -23,8 +23,7 @@ describe "cases/shared/_take_case_on_or_de_escalate.slim", type: :view do
 
   before do
     login_as approver
-    policy = double("Pundit::Policy", unflag_for_clearance?: true)
-    allow(view).to receive(:policy).and_return(policy)
+    allow_case_policies_in_view(assigned_case, :unflag_for_clearance?)
   end
 
   it "has a link to take the case on" do

@@ -3,27 +3,27 @@ require "rails_helper"
 RSpec.describe Cases::OffenderSarController, type: :controller do
   let(:responder) { find_or_create :branston_user }
 
-  describe "authentication" do
-    let(:params) do
-      {
-        correspondence_type: "offender_sar",
-        offender_sar: {
-          requester_type: "member_of_the_public",
-          type: "Offender",
-          name: "A. N. Other",
-          postal_address: "102 Petty France",
-          email: "member@public.com",
-          subject: "Offender SAR request from controller spec",
-          message: "Offender SAR about a former offender",
-          received_date_dd: Time.zone.today.day.to_s,
-          received_date_mm: Time.zone.today.month.to_s,
-          received_date_yyyy: Time.zone.today.year.to_s,
-          delivery_method: :sent_by_email,
-          flag_for_disclosure_specialists: false,
-        },
-      }
-    end
+  let(:params) do
+    {
+      correspondence_type: "offender_sar",
+      offender_sar: {
+        requester_type: "member_of_the_public",
+        type: "Offender",
+        name: "A. N. Other",
+        postal_address: "102 Petty France",
+        email: "member@public.com",
+        subject: "Offender SAR request from controller spec",
+        message: "Offender SAR about a former offender",
+        received_date_dd: Time.zone.today.day.to_s,
+        received_date_mm: Time.zone.today.month.to_s,
+        received_date_yyyy: Time.zone.today.year.to_s,
+        delivery_method: :sent_by_email,
+        flag_for_disclosure_specialists: false,
+      },
+    }
+  end
 
+  describe "authentication" do
     include_examples "can_add_case policy spec", Case::SAR::Offender
   end
 
@@ -363,7 +363,7 @@ RSpec.describe Cases::OffenderSarController, type: :controller do
         },
       }
     end
-    let(:service) { double(CaseUpdateSentToSsclService, call: nil, result: :ok, message: nil) }
+    let(:service) { instance_double(CaseUpdateSentToSsclService, call: nil, result: :ok, message: nil) }
 
     before do
       sign_in responder

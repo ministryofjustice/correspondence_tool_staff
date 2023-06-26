@@ -16,12 +16,12 @@ RSpec.describe RetentionScheduleForm do
     subject(:retention_schedule_form) { described_class.new(arguments) }
 
     let(:record) do
-      double("Record",
-             case: case_double,
-             not_set?: schedule_not_set,
-             anonymised?: state_anonymised)
+      instance_double("Record",
+                      case: case_double,
+                      not_set?: schedule_not_set,
+                      anonymised?: state_anonymised)
     end
-    let(:case_double) { double(Case::Base, date_responded: Time.zone.today) }
+    let(:case_double) { instance_double(Case::Base, date_responded: Time.zone.today) }
 
     let(:planned_destruction_date) { Time.zone.tomorrow }
     let(:state) { RetentionSchedule::STATE_NOT_SET.to_s }

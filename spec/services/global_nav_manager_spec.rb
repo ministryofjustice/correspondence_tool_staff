@@ -91,10 +91,10 @@ describe GlobalNavManager do
 
   describe "instantiation" do
     it "only exposes visible pages" do
-      expect(incoming_page).to receive(:visible?).and_return false
-      expect(open_page).to receive(:visible?).and_return true
-      expect(closed_page).to receive(:visible?).and_return true
-      expect(stats_page).to receive(:visible?).and_return false
+      allow(incoming_page).to receive(:visible?).and_return false
+      allow(open_page).to receive(:visible?).and_return true
+      allow(closed_page).to receive(:visible?).and_return true
+      allow(stats_page).to receive(:visible?).and_return false
       gnm = described_class.new(responder, request, pages_config)
       expect(GlobalNavManager::Page).to have_received(:new)
                                           .with(name: :opened_cases,
@@ -110,8 +110,8 @@ describe GlobalNavManager do
 
   describe "#each" do
     it "yields each page" do
-      page1 = double GlobalNavManager::Page
-      page2 = double GlobalNavManager::Page
+      page1 = instance_double GlobalNavManager::Page
+      page2 = instance_double GlobalNavManager::Page
       gnm.instance_eval { @nav_pages = [page1, page2] }
       expect { |block| gnm.each(&block) }
         .to yield_successive_args page1, page2
@@ -166,7 +166,7 @@ describe GlobalNavManager do
 
     context "when request is for a page" do
       it "returns the current tab" do
-        expect(closed_page).to receive(:matches_path?)
+        allow(closed_page).to receive(:matches_path?)
                                  .with("/cases/incoming")
                                  .and_return(true)
         expect(gnm.current_page_or_tab).to eq closed_page
@@ -175,7 +175,7 @@ describe GlobalNavManager do
 
     context "when request is for a tab" do
       it "returns the current tab" do
-        expect(in_time_tab).to receive(:matches_path?)
+        allow(in_time_tab).to receive(:matches_path?)
                                  .with("/cases/incoming")
                                  .and_return(true)
         expect(gnm.current_page_or_tab).to eq in_time_tab

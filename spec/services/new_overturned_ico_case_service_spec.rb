@@ -93,7 +93,8 @@ describe NewOverturnedIcoCaseService do
       let(:service)             { described_class.new(original_ico_appeal.id) }
 
       before do
-        allow_any_instance_of(Case::ICO::FOI).to receive(:original_case).and_return(original_case)
+        allow_any_instance_of(Case::ICO::FOI) # rubocop:disable RSpec/AnyInstance
+          .to receive(:original_case).and_return(original_case)
         service.call
       end
 

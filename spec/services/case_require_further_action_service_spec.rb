@@ -7,7 +7,7 @@ describe CaseRequireFurtherActionService do
     let(:team)          { kase.responding_team }
     let(:managing_team) { kase.managing_team }
     let(:state_machine) do
-      double ConfigurableStateMachine::Machine,
+      double ConfigurableStateMachine::Machine, # rubocop:disable RSpec/VerifiedDoubles
              teams_that_can_trigger_event_on_case: [managing_team],
              require_further_action!: true,
              require_further_action_to_responder_team!: true,

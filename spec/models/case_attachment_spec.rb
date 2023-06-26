@@ -228,9 +228,9 @@ RSpec.describe CaseAttachment, type: :model do
     describe "private methods" do
       describe "private method dowload_original_file" do
         it "downloads file and puts in a temporary file" do
-          tempfile = double Tempfile, close: nil, path: "/tmp/xxx_my_photo.jpg"
+          tempfile = instance_double Tempfile, close: nil, path: "/tmp/xxx_my_photo.jpg"
           allow(Tempfile).to receive(:new).with(["orig", ".jpg"]).and_return(tempfile)
-          s3_object = double "S3 Object"
+          s3_object = double "S3 Object" # rubocop:disable RSpec/VerifiedDoubles
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object).with("6/responses/20170614142203/my_photo.jpg").and_return(s3_object)
           expect(s3_object).to receive(:get).with(response_target: "/tmp/xxx_my_photo.jpg")
 
@@ -241,7 +241,7 @@ RSpec.describe CaseAttachment, type: :model do
 
       describe "private method make_preview_filename" do
         it "returns the preview filename based on the key" do
-          tempfile = double Tempfile, close: nil, path: "/tmp/xxx_my_photo.pdf"
+          tempfile = instance_double Tempfile, close: nil, path: "/tmp/xxx_my_photo.pdf"
           allow(Tempfile).to receive(:new).with(["preview", ".pdf"]).and_return(tempfile)
           preview_path = jpg_case_attachment.__send__(:make_preview_filename)
           expect(preview_path).to eq "/tmp/xxx_my_photo.pdf"
@@ -249,7 +249,7 @@ RSpec.describe CaseAttachment, type: :model do
       end
 
       describe "private method upload preview" do
-        let(:s3_object) { double "S3 Object" }
+        let(:s3_object) { double "S3 Object" } # rubocop:disable RSpec/VerifiedDoubles
         let(:kase) { jpg_case_attachment.case }
 
         it "uploads the file to s3" do

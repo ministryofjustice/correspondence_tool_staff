@@ -409,7 +409,7 @@ describe CasesController, type: :controller do # rubocop:disable RSpec/FilePath
         it "records search query to record the click" do
           allow(controller).to receive(:flash).and_return(flash)
           params = ActionController::Parameters.new(id: kase.id.to_s, pos: "4", controller: "cases", action: "show")
-          expect(SearchQuery).to receive(:find)
+          allow(SearchQuery).to receive(:find)
                                    .with(search_query.id)
                                    .and_return(search_query)
           allow(search_query).to receive(:update_for_click)

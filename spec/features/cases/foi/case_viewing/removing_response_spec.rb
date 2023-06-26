@@ -79,10 +79,10 @@ feature "removing a response from response details" do
           other_response = create :case_response, case: case_with_response, user_id: responder.id
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                              .with(other_response.key)
-                                             .and_return(double(delete: nil))
+                                             .and_return(double(delete: nil)) # rubocop:disable RSpec/VerifiedDoubles
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                              .with(other_response.preview_key)
-                                             .and_return(double(delete: nil))
+                                             .and_return(double(delete: nil)) # rubocop:disable RSpec/VerifiedDoubles
         end
 
         scenario "when removing the response" do
@@ -172,10 +172,10 @@ feature "removing a response from response details" do
           other_response = create :case_response, case: case_with_response, user_id: responder.id
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                              .with(other_response.key)
-                                             .and_return(double(delete: nil))
+                                             .and_return(double(delete: nil)) # rubocop:disable RSpec/VerifiedDoubles
           allow(CASE_UPLOADS_S3_BUCKET).to receive(:object)
                                              .with(other_response.preview_key)
-                                             .and_return(double(delete: nil))
+                                             .and_return(double(delete: nil)) # rubocop:disable RSpec/VerifiedDoubles
         end
 
         scenario "when removing the response" do

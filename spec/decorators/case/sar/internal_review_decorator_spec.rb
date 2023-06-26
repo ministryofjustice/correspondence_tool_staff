@@ -24,9 +24,9 @@ describe Case::SAR::InternalReviewDecorator do
   describe "#pretty_outcome_reasons" do
     it "pretty prints outcome_reasons" do
       stub_reasons = [
-        double(CaseClosure::OutcomeReason),
-        double(CaseClosure::OutcomeReason),
-        double(CaseClosure::OutcomeReason),
+        instance_double(CaseClosure::OutcomeReason),
+        instance_double(CaseClosure::OutcomeReason),
+        instance_double(CaseClosure::OutcomeReason),
       ]
 
       stub_reasons.each_with_index do |reason, i|

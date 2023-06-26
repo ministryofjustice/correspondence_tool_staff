@@ -33,13 +33,13 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
 
     context "with valid params" do
       before do
-        service = double(
+        service = instance_double(
           NewOverturnedIcoCaseService,
           call: nil,
           error?: false,
           success?: true,
           original_ico_appeal: ico_sar,
-          original_case: sar,
+          # original_case: sar,
           overturned_ico_case:,
         )
         params = ActionController::Parameters.new({ id: ico_sar.id })
@@ -63,13 +63,12 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
 
     context "with invalid params" do
       before do
-        service = double(NewOverturnedIcoCaseService,
-                         call: nil,
-                         error?: true,
-                         success?: false,
-                         original_ico_appeal: ico_sar,
-                         original_case: sar,
-                         overturned_ico_case:)
+        service = instance_double(NewOverturnedIcoCaseService,
+                                  call: nil,
+                                  error?: true,
+                                  success?: false,
+                                  original_ico_appeal: ico_sar,
+                                  overturned_ico_case:)
         params = ActionController::Parameters.new({ id: ico_sar.id })
         allow(NewOverturnedIcoCaseService).to receive(:new).with(ico_sar.id.to_s).and_return(service)
         get :new, params: params.to_unsafe_hash
@@ -130,10 +129,8 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
     end
 
     let!(:service) do
-      double(
+      instance_double(
         CaseCreateService,
-        user: manager,
-        params: controller_params,
         case: overturned_ico_case,
         case_type: Case::OverturnedICO::SAR,
         call: nil,
@@ -143,8 +140,8 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
 
     let(:deadline) { 1.month.ago }
     let(:correspondence_type) { CorrespondenceType.sar }
-    let(:decorated_overturned_case) do
-      double(Case::OverturnedICO::SARDecorator, uploads_dir: "xx")
+    let(:overturned_case) do
+      instance_double(Case::OverturnedICO::SAR)
     end
 
     let(:ico_overturned_sar_params) do
@@ -189,7 +186,8 @@ RSpec.describe Cases::OverturnedIcoSarController, type: :controller do
     context "with invalid params" do
       before do
         allow(service).to receive(:result).and_return(:error)
-        allow(overturned_ico_case).to receive(:decorate).and_return(decorated_overturned_case)
+        allow(overturned_ico_case).to receive(:decorate).and_return(overturned_case)
+        allow(overturned_case).to receive(:uploads_dir).and_return("xx")
       end
 
       it "renders the new page" do

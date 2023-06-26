@@ -4,10 +4,10 @@ describe CaseApprovalService do
   describe "#call" do
     context "when not bypassing press private approval" do
       let(:bypass_params) do
-        double BypassParamsManager,
-               valid?: true,
-               approval_requested?: true,
-               present?: false
+        instance_double BypassParamsManager,
+                        valid?: true,
+                        approval_requested?: true,
+                        present?: false
       end
       let(:service) { described_class.new(user:, kase:, bypass_params:) }
 
@@ -123,12 +123,12 @@ describe CaseApprovalService do
 
     context "when bypassing press and private approval" do
       let(:bypass_params) do
-        double BypassParamsManager,
-               valid?: true,
-               approval_requested?: false,
-               bypass_requested?: true,
-               message: "This is the reason for bypassing press approval",
-               present?: true
+        instance_double BypassParamsManager,
+                        valid?: true,
+                        approval_requested?: false,
+                        bypass_requested?: true,
+                        message: "This is the reason for bypassing press approval",
+                        present?: true
       end
       let(:service) { described_class.new(user:, kase:, bypass_params:) }
       let(:user) { kase.approvers.first }

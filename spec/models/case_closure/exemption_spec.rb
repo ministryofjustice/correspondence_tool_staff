@@ -70,9 +70,9 @@ module CaseClosure
       describe ".method_missing" do
         context "when method name is a section number" do
           it "queries the record by abbreviation" do
-            arel = double "ActiveRecord Arel query result"
-            expect(described_class).to receive(:where).with(abbreviation: "policy").and_return(arel)
-            expect(arel).to receive(:first).and_return "policy exemption record"
+            arel = double "ActiveRecord Arel query result" # rubocop:disable RSpec/VerifiedDoubles
+            allow(described_class).to receive(:where).with(abbreviation: "policy").and_return(arel)
+            allow(arel).to receive(:first).and_return "policy exemption record"
             expect(described_class.s35).to eq "policy exemption record"
           end
         end

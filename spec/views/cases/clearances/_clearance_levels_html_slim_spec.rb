@@ -114,10 +114,8 @@ describe "cases/clearance_details.html.slim", type: :view do
 
     context "when case flagged and accepted for approval by DACU Disclosure, Press and Private offices" do
       it "displays details of all approvers" do
-        policy = double "Pundit::Policy"
-        allow(policy).to receive(:remove_clearance?).and_return(false)
-        allow(policy).to receive(:request_further_clearance?).and_return(true)
-        allow(view).to receive(:policy).with(triple_flagged_case).and_return(policy)
+        allow_case_policies_in_view(triple_flagged_case, :request_further_clearance?)
+        disallow_case_policies_in_view(triple_flagged_case, :remove_clearance?)
 
         render partial: "cases/clearance_levels",
                locals: { case_details: triple_flagged_case.decorate }

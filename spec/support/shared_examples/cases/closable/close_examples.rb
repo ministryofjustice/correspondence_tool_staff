@@ -24,7 +24,7 @@ RSpec.shared_examples "close spec" do |klass|
       describe "authorization" do
         it "authorizes managers" do
           sign_in manager
-          allow_any_instance_of(S3Uploader).to receive(:remove_leftover_upload_files)
+          allow_any_instance_of(S3Uploader).to receive(:remove_leftover_upload_files) # rubocop:disable RSpec/AnyInstance
           expect {
             post(:process_closure, params:)
           }.to require_permission(:can_close_case?).with_args(manager, kase)
@@ -49,7 +49,7 @@ RSpec.shared_examples "close spec" do |klass|
       describe "successful closure" do
         before do
           sign_in manager
-          allow_any_instance_of(S3Uploader).to receive(:remove_leftover_upload_files)
+          allow_any_instance_of(S3Uploader).to receive(:remove_leftover_upload_files) # rubocop:disable RSpec/AnyInstance
           post(:process_closure, params:)
           kase.reload
         end
