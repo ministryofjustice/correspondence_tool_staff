@@ -67,10 +67,10 @@ private
 
   def get_event_name_for_second_flag(flag_value)
     {
-      "yes": "mark_as_further_actions_required",
-      "no": "unmark_as_further_actions_required",
-      "awaiting_response": "mark_as_awaiting_response_for_partial_case",
-    }[flag_value]
+      yes: "mark_as_further_actions_required",
+      no: "unmark_as_further_actions_required",
+      awaiting_response: "mark_as_awaiting_response_for_partial_case",
+    }[flag_value.to_sym]
   end
 
   def trigger_event(event_name)
