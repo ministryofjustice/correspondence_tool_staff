@@ -769,7 +769,7 @@ RSpec.describe Case::Base, type: :model do
     end
 
     it "calls the TeamFinderService" do
-      service = isntance_double TeamFinderService, team_for_assigned_user: nil
+      service = instance_double TeamFinderService, team_for_assigned_user: nil
       allow(TeamFinderService).to receive(:new).with(kase, responder, :responder).and_return(service)
       kase.team_for_assigned_user(responder, :responder)
     end
