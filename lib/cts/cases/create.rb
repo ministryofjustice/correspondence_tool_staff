@@ -518,7 +518,7 @@ module CTS::Cases
     def transition_to_closed_for_ico(kase)
       kase.prepare_for_close
       ico_decision = options.fetch(:ico_decision, Case::ICO::Base.ico_decisions.keys.sample)
-      kase.update!(date_ico_decision_received: Time.zone.today, ico_decision:)
+      kase.update(date_ico_decision_received: Time.zone.today, ico_decision:) # be rubocop:disable Rails/SaveBang
 
       if kase.overturned?
         uploader = S3Uploader.new(kase, CTS.dacu_manager)
