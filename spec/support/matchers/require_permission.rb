@@ -7,7 +7,7 @@ RSpec::Matchers.define :require_permission do |permission|
   match do |event_or_block|
     policy_class = Pundit::PolicyFinder.new(@object).policy!
     if event_or_block.respond_to? :call
-      policy = instance_double(policy_class)
+      policy = spy(policy_class) # rubocop:disable RSpec/VerifiedDoubles
       allow(policy).to receive(permission)
                          .with(no_args) do
                            permission_received = true
