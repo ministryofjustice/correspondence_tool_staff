@@ -35,7 +35,7 @@ module Cases
 
       linked_case_number = params[:id] # NOTE: id is a valid case number
       service = CaseLinkingService.new current_user, @case, linked_case_number
-      result = service.destroy # rubocop:disable Rails/SaveBang
+      result = service.destroy
 
       if result == :ok
         flash[:notice] = "The link to case #{linked_case_number} has been removed."
