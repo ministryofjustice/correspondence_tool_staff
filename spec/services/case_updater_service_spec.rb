@@ -51,10 +51,10 @@ describe CaseUpdaterService do
     end
 
     context "when anything fails in the transaction" do
-      let(:params)        { { name: "Joe bloggs" } }
+      let(:params) { { name: "Joe bloggs" } }
 
       it "raises an error when it saves" do
-        allow(kase).to receive(:save!).and_raise(RuntimeError)
+        allow(kase).to receive(:save).and_raise(RuntimeError)
         service.call
         expect(service.result).to eq :error
       end
