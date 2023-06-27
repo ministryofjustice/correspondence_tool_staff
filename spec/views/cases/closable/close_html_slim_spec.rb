@@ -54,19 +54,5 @@ describe "cases/closable/close.html.slim" do
           },
         )
     end
-
-    xit "date decision received" do
-      assign(:case, ico_sent_and_awaiting_ico_decision.decorate)
-      assign(:s3_direct_post,
-             S3Uploader.s3_direct_post_for_case(ico_sent_and_awaiting_ico_decision,
-                                                :request))
-
-      render
-      cases_close_page.load(rendered)
-
-      expect(cases_close_page).to have_date_responded_day_ico
-      expect(cases_close_page).to have_date_responded_month_ico
-      expect(cases_close_page).to have_date_responded_year_ico
-    end
   end
 end
