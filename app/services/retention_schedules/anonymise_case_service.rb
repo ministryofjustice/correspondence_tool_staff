@@ -93,7 +93,7 @@ module RetentionSchedules
       notes.each do |note|
         if note.message.present?
           note.message = ANON_NOTE_MESSAGE_VALUE
-          note.save!
+          note.save # rubocop:disable Rails/SaveBang
         end
       end
     end
@@ -104,7 +104,7 @@ module RetentionSchedules
       data_requests.each do |data_request|
         if data_request.request_type_note.present?
           data_request.request_type_note = ANON_DATA_REQUEST_NOTE_VALUE
-          data_request.save!
+          data_request.save # rubocop:disable Rails/SaveBang
         end
       end
     end

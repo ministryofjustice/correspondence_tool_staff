@@ -114,7 +114,7 @@ class Team < ApplicationRecord
 
   def team_lead=(name)
     if properties.lead.exists?
-      properties.lead.singular.update! value: name
+      properties.lead.singular.update value: name # rubocop:disable Rails/SaveBang
     else
       TeamProperty.new(key: "lead", value: name).tap do |property|
         properties << property

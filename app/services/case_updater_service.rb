@@ -23,7 +23,7 @@ class CaseUpdaterService
       # Each key within this JSON object will be tracked individually,
       # no need for tracking properties as the whole.
       if (@kase.changed_attributes.keys - %w[properties]).present? || linked_cases_changed
-        @kase.save!
+        @kase.save # rubocop:disable Rails/SaveBang
         @kase.state_machine.edit_case!(acting_user: @user, acting_team: @team, message:)
         @result = :ok
       else

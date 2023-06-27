@@ -60,6 +60,6 @@ private
 
   def unassign_approver_assignment(assignment)
     @kase.state_machine.unflag_for_clearance!(acting_user: @user, acting_team: @team, target_team: assignment.team)
-    assignment.destroy!
+    assignment.destroy # rubocop:disable Rails/SaveBang
   end
 end

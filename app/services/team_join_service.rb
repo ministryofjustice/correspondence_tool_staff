@@ -106,6 +106,6 @@ private
   def link_old_team_to_new_team
     # We do this for reporting purposes
     @team.moved_to_unit = @target_team
-    @team.save!
+    @team.save # rubocop:disable Rails/SaveBang
   end
 end

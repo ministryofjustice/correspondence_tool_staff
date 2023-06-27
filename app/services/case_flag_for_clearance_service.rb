@@ -57,7 +57,7 @@ private
     @case.approving_teams << target_team
     @case.reload
     team_assignment = @case.approver_assignments.for_team(target_team).last
-    team_assignment.update!(state: "accepted", user_id: acting_user.id)
+    team_assignment.update(state: "accepted", user_id: acting_user.id) # rubocop:disable Rails/SaveBang
   end
 
   def associate_team(associate_team, associate_user)

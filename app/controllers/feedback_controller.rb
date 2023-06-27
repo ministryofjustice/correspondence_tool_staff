@@ -3,7 +3,7 @@ class FeedbackController < ApplicationController
     @feedback = Feedback.new(create_feedback_params)
 
     respond_to do |format|
-      @feedback.save!
+      @feedback.save # rubocop:disable Rails/SaveBang
       format.js
     end
   end

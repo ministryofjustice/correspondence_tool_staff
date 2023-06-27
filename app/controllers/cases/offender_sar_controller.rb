@@ -259,7 +259,7 @@ module Cases
     end
 
     def create_case
-      @case.save!
+      @case.save # rubocop:disable Rails/SaveBang
       assign_case_to_creator if @case.offender_sar_complaint?
       session[session_state] = nil
       flash[:notice] = "Case created successfully"

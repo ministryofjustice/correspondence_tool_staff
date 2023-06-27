@@ -50,7 +50,7 @@ module RetentionSchedules
 
       rs = RetentionSchedule.find_or_initialize_by(case: kase)
       rs.planned_destruction_date = @planned_destruction_date
-      rs.save!
+      rs.save # rubocop:disable Rails/SaveBang
 
       annotate_case!(
         kase, rs.saved_changes

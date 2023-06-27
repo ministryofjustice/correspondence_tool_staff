@@ -90,13 +90,13 @@ private
   def link_old_directorate_to_new_one
     # We do this for reporting purposes
     @directorate.moved_to_unit = @new_directorate
-    @directorate.save!
+    @directorate.save # rubocop:disable Rails/SaveBang
   end
 
   def restore_new_directorate_name_to_original_name
     # New directorate gets original directorate name to retain consistency for the users
     @new_directorate.name = @directorate.original_team_name
     @new_directorate.code = @new_directorate.code.sub(/-NEW$/, "") if @directorate.code.present?
-    @new_directorate.save!
+    @new_directorate.save # rubocop:disable Rails/SaveBang
   end
 end

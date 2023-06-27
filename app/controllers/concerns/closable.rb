@@ -112,7 +112,7 @@ module Closable
       render "cases/closable/close"
     else
       @team_collection = CaseTeamCollection.new(@case)
-      @case.update!(late_team_id: @case.responding_team.id)
+      @case.update(late_team_id: @case.responding_team.id) # rubocop:disable Rails/SaveBang
       if @case.type_of_offender_sar?
         close_case("cases/closable/close")
       else

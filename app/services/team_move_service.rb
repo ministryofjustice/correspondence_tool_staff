@@ -92,14 +92,14 @@ private
   def link_old_team_to_new_team
     # We do this for reporting purposes
     @team.moved_to_unit = @new_team
-    @team.save!
+    @team.save # rubocop:disable Rails/SaveBang
   end
 
   def restore_new_team_name_to_original_name
     # New team gets original team name to retain consistency for the users
     @new_team.name = @team.original_team_name
     @new_team.code = @new_team.code.sub(/-NEW$/, "") if @team.code.present?
-    @new_team.save!
+    @new_team.save # rubocop:disable Rails/SaveBang
   end
 
   def restore_users_for_old_team

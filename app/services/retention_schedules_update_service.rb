@@ -104,7 +104,7 @@ private
 
       next unless retention_schedule.valid?
 
-      retention_schedule.save!
+      retention_schedule.save # rubocop:disable Rails/SaveBang
 
       annotate_case!(
         retention_schedule.case,

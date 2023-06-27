@@ -17,7 +17,7 @@ class DataRequestUpdateService
       @data_request.assign_attributes(@params.merge!(user_id: @user.id))
       next unless @data_request.changed?
 
-      @data_request.save!
+      @data_request.save # rubocop:disable Rails/SaveBang
 
       @case.state_machine.add_data_received!(
         acting_user: @user,

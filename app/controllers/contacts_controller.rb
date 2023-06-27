@@ -35,7 +35,7 @@ class ContactsController < ApplicationController
   end
 
   def destroy
-    @contact.destroy!
+    @contact.destroy # rubocop:disable Rails/SaveBang
     respond_to do |format|
       format.html { redirect_to contacts_url, notice: "Address was successfully destroyed." }
     end

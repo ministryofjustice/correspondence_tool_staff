@@ -80,7 +80,7 @@ private
     self.class.skip_callback(:destroy, :after, :destroy_reverse_link)
     reverse_link = self.class.find_by(case_id: linked_case_id,
                                       linked_case_id: case_id)
-    reverse_link&.destroy!
+    reverse_link&.destroy # rubocop:disable Rails/SaveBang
   ensure
     self.class.set_callback(:destroy, :after, :destroy_reverse_link)
   end
