@@ -144,24 +144,24 @@ references:
         aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile ecr-live
         aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live
 
-  build_and_push_docker_image: &build_and_push_docker_image
-    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-    steps:
-      # Checkout your repository
-      - checkout
-      # Authenticate to AWS using OIDC v2 with the AWS CLI
-      - aws-cli/setup:
-          role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
-          region: $ECR_REGION # this will use the env var
-      # Authenticate to the ECR repository using the standard command
-      - run: |
-          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
-      # Build and push your Docker image
-      - aws-ecr/build-image:
-          push-image: true
-          tag: ${CIRCLE_SHA1}
-          region: $ECR_REGION # this will use the env var
-          repo: $ECR_REPOSITORY # this will use the env var
+  build_setup: &build_setup
+    # Authenticate to AWS using OIDC v2 with the AWS CLI
+    aws-cli/setup:
+      role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
+      region: $ECR_REGION # this will use the env var
+
+  build_authenticate: &build_authenticate
+    # Authenticate to the ECR repository using the standard command
+    run:
+      aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+
+  build_image: &build_image
+    # Build and push your Docker image
+    aws-ecr/build-image:
+      push-image: true
+      tag: ${CIRCLE_SHA1}
+      region: $ECR_REGION # this will use the env var
+      repo: $ECR_REPOSITORY # this will use the env var
 
   deploy_to_dev: &deploy_to_dev
     run:
@@ -209,7 +209,6 @@ references:
         source $BASH_ENV
 
 jobs:
-
   build_and_test:
     <<: *test_container_config
     resource_class: xlarge
@@ -231,8 +230,10 @@ jobs:
       - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
     <<: *deploy_container_config
     <<: *defaults
+
     steps:
       - checkout
       - attach_workspace:
@@ -240,7 +241,9 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - *configure_aws_profile
-      - *build_and_push_docker_image
+      - *build_setup
+      - *build_authenticate
+      - *build_image
       - persist_to_workspace:
           root: workspace
           paths:
@@ -256,7 +259,9 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
       - *configure_aws_profile
-      - *build_and_push_docker_image
+      - *build_setup
+      - *build_authenticate
+      - *build_image
       - persist_to_workspace:
           root: workspace
           paths:
