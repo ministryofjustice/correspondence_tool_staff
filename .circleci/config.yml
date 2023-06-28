@@ -2,6 +2,8 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@3.4.2
+  aws-cli: circleci/aws-cli@4.0.0 # use v4 of this orb
+  aws-ecr: circleci/aws-ecr@8.2.1 # this orb doesn't support OIDC v2, so we use aws-cli to authenticate
 
 references:
   defaults: &defaults
@@ -143,13 +145,23 @@ references:
         aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live
 
   build_and_push_docker_image: &build_and_push_docker_image
-    run:
-      name: Build docker image
-      command: |
-        . build.sh circleci
-        mkdir -p workspace
-        echo $BUILD_TAG > workspace/build_tag
-        python3 config/pipeline/aws_ecr_scan_results.py --search track-a-query-ecr --tag $BUILD_TAG --slack_webhook ${SLACK_WEBHOOK_CT} || true
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+    steps:
+      # Checkout your repository
+      - checkout
+      # Authenticate to AWS using OIDC v2 with the AWS CLI
+      - aws-cli/setup:
+          role_arn: $ECR_ROLE_TO_ASSUME # this will use the env var
+          region: $ECR_REGION # this will use the env var
+      # Authenticate to the ECR repository using the standard command
+      - run: |
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com
+      # Build and push your Docker image
+      - aws-ecr/build-image:
+          push-image: true
+          tag: ${CIRCLE_SHA1}
+          region: $ECR_REGION # this will use the env var
+          repo: $ECR_REPOSITORY # this will use the env var
 
   deploy_to_dev: &deploy_to_dev
     run:
