@@ -244,27 +244,27 @@ jobs:
     <<: *deploy_container_config
     <<: *defaults
     executor: aws-ecr/default
-      steps:
-        - checkout
-        - attach_workspace:
-            at: /tmp/workspace
-        - setup_remote_docker:
-            docker_layer_caching: true
-        - aws-cli/setup:
-            role_arn: $ECR_ROLE_TO_ASSUME
-            region: $ECR_REGION
-        - *configure_build_tag
-        - run: |
-            aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com *build_and_push_docker_image
-        - aws-ecr/build-image:
-            push-image: true
-            tag: ${BUILD_TAG}
-            region: $ECR_REGION
-            repo: $ECR_REPOSITORY
-        - persist_to_workspace:
-            root: workspace
-            paths:
-              - build_tag
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - aws-cli/setup:
+          role_arn: $ECR_ROLE_TO_ASSUME
+          region: $ECR_REGION
+      - *configure_build_tag
+      - run: |
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com *build_and_push_docker_image
+      - aws-ecr/build-image:
+          push-image: true
+          tag: ${BUILD_TAG}
+          region: $ECR_REGION
+          repo: $ECR_REPOSITORY
+      - persist_to_workspace:
+          root: workspace
+          paths:
+            - build_tag
 
   dev_deployment_tasks: &do_dev_deployment_tasks
     <<: *deploy_container_config
