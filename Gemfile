@@ -95,7 +95,7 @@ group :development, :test do
   gem "rspec-collection_matchers"
   gem "rspec-rails", "~> 5.0"
   gem "rubocop-govuk", require: false
-  gem "selenium-webdriver", "~> 4.1.0"
+  gem "selenium-webdriver", "~> 4.10.0"
   gem "spring-commands-rspec"
 end
 
