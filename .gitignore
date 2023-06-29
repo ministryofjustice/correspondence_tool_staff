@@ -69,3 +69,6 @@ doc
 
 # ignore secret files
 *secret*.*
+
+# ignore ruby files
+.idea/
