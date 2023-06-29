@@ -230,8 +230,8 @@ jobs:
       - *upload_test_coverage
 
   build_branch_and_push_to_ecr:
-    <<: executor aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
-    <<: *deploy_container_config
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+    # <<: *deploy_container_config
     <<: *defaults
 
     steps:
@@ -250,7 +250,8 @@ jobs:
             - build_tag
 
   build_main_and_push_to_ecr:
-    <<: *deploy_container_config
+    executor: aws-ecr/default # use the aws-ecr/default executor to start the docker daemon
+    # <<: *deploy_container_config
     <<: *defaults
     steps:
       - checkout
