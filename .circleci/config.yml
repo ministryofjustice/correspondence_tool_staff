@@ -403,40 +403,40 @@ workflows:
       filters:
         branches:
           ignore: main
-  - build_branch_and_push_to_ecr_approval:
-      type: approval
-      requires:
-        - build_and_test
-    - build_branch_and_push_to_ecr:
-        context: build_branch_and_push_to_ecr-workflow
-        requires:
-          - build_branch_and_push_to_ecr_approval
-    - deploy_branch_to_dev_approval:
+    - build_branch_and_push_to_ecr_approval:
         type: approval
         requires:
-          - build_branch_and_push_to_ecr
-    - deploy_branch_to_dev:
-        requires:
-          - deploy_branch_to_dev_approval
-    - deploy_branch_to_staging_approval:
-        type: approval
-        requires:
-          - build_branch_and_push_to_ecr
-    - deploy_branch_to_staging:
-        requires:
-          - deploy_branch_to_staging_approval
-    - deploy_branch_to_qa_approval:
-        type: approval
-        requires:
-          - build_branch_and_push_to_ecr
-    - deploy_branch_to_qa:
-        requires:
-          - deploy_branch_to_qa_approval
-    - deploy_branch_to_demo_approval:
-        type: approval
-        requires:
-          - build_branch_and_push_to_ecr
-    - deploy_branch_to_demo:
-        requires:
-          - deploy_branch_to_demo_approval
+          - build_and_test
+      - build_branch_and_push_to_ecr:
+          context: build_branch_and_push_to_ecr-workflow
+          requires:
+            - build_branch_and_push_to_ecr_approval
+      - deploy_branch_to_dev_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_dev:
+          requires:
+            - deploy_branch_to_dev_approval
+      - deploy_branch_to_staging_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_staging:
+          requires:
+            - deploy_branch_to_staging_approval
+      - deploy_branch_to_qa_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_qa:
+          requires:
+            - deploy_branch_to_qa_approval
+      - deploy_branch_to_demo_approval:
+          type: approval
+          requires:
+            - build_branch_and_push_to_ecr
+      - deploy_branch_to_demo:
+          requires:
+            - deploy_branch_to_demo_approval
 
