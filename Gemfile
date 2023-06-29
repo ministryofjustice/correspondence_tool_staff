@@ -60,7 +60,7 @@ gem "sass-rails", "~> 6.0"
 gem "sentry-rails"
 gem "sentry-ruby"
 gem "shell-spinner"
-gem "sidekiq", "~> 6.4.0"
+gem "sidekiq", "~> 7.1.2"
 gem "slim-rails", "~> 3.6"
 gem "sprockets", "~> 4.0.2"
 
