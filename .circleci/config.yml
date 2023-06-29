@@ -2,6 +2,8 @@ version: 2.1
 
 orbs:
   slack: circleci/slack@3.4.2
+  aws-cli: circleci/aws-cli@4.0.0 # use v4 of this orb
+  aws-ecr: circleci/aws-ecr@8.2.1 # this orb doesn't support OIDC v2, so we use aws-cli to authenticate
 
 references:
   defaults: &defaults
@@ -134,22 +136,16 @@ references:
         ./cc-test-reporter format-coverage -t simplecov -o "coverage/codeclimate.$CIRCLE_NODE_INDEX.json"
         ./cc-test-reporter sum-coverage --output - coverage/codeclimate.*.json | ./cc-test-reporter upload-coverage --debug --input -
 
-  configure_aws_profile: &configure_aws_profile
-    run:
-      name: Configure AWS CLI
-      command: |
-        aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID} --profile ecr-live
-        aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY} --profile ecr-live
-        aws configure set default.region ${AWS_DEFAULT_REGION} --profile ecr-live
-
-  build_and_push_docker_image: &build_and_push_docker_image
+  configure_build_tag: &configure_build_tag
     run:
       name: Build docker image
       command: |
-        . build.sh circleci
         mkdir -p workspace
-        echo $BUILD_TAG > workspace/build_tag
-        python3 config/pipeline/aws_ecr_scan_results.py --search track-a-query-ecr --tag $BUILD_TAG --slack_webhook ${SLACK_WEBHOOK_CT} || true
+        current_branch=$(git branch | grep \* | cut -d ' ' -f2)
+        short_version=$(git rev-parse --short $current_branch)
+        build_tag=cts-${current_branch}-${short_version}
+        echo build_tag > workspace/build_tag
+        python3 config/pipeline/aws_ecr_scan_results.py --search track-a-query-ecr --tag $build_tag --slack_webhook ${SLACK_WEBHOOK_CT} || true
 
   deploy_to_dev: &deploy_to_dev
     run:
@@ -227,8 +223,17 @@ jobs:
           at: /tmp/workspace
       - setup_remote_docker:
           docker_layer_caching: true
-      - *configure_aws_profile
-      - *build_and_push_docker_image
+      - aws-cli/setup:
+          role_arn: $ECR_ROLE_TO_ASSUME
+          region: $ECR_REGION
+      - *configure_build_tag
+      - run: |
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin ${AWS_ECR_REGISTRY_ID}.dkr.ecr.${ECR_REGION}.amazonaws.com*build_and_push_docker_image
+      - aws-ecr/build-image:
+          push-image: true
+          tag: ${BUILD_TAG}
+          region: $ECR_REGION
+          repo: $ECR_REPOSITORY
       - persist_to_workspace:
           root: workspace
           paths:
@@ -243,7 +248,7 @@ jobs:
           at: /tmp/workspace
       - setup_remote_docker:
           docker_layer_caching: true
-      - *configure_aws_profile
+      - *configure_build_tag
       - *build_and_push_docker_image
       - persist_to_workspace:
           root: workspace
