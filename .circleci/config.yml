@@ -217,6 +217,7 @@ jobs:
   build_branch_and_push_to_ecr:
     <<: *deploy_container_config
     <<: *defaults
+    executor: aws-ecr/default
     steps:
       - checkout
       - attach_workspace:
@@ -242,6 +243,7 @@ jobs:
   build_main_and_push_to_ecr:
     <<: *deploy_container_config
     <<: *defaults
+    executor: aws-ecr/default
     steps:
       - checkout
       - attach_workspace:
@@ -361,6 +363,7 @@ workflows:
             branches:
               only: main
       - build_main_and_push_to_ecr:
+        context: build_main_and_push_to_ecr-workflow
           requires:
             - build_and_test
       - deploy_main_to_dev:
@@ -405,6 +408,7 @@ workflows:
           type: approval
           requires:
             - build_and_test
+      context: build_branch_and_push_to_ecr-workflow
       - build_branch_and_push_to_ecr:
           requires:
             - build_branch_and_push_to_ecr_approval
