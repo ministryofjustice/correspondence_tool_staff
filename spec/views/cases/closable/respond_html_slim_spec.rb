@@ -1,13 +1,10 @@
-require 'rails_helper'
+require "rails_helper"
 
-
-describe 'cases/closable/respond.html.slim', type: :view do
-
+describe "cases/closable/respond.html.slim", type: :view do
   let(:foi_case)         { build_stubbed(:case_with_response).decorate }
   let(:ico_case)         { build_stubbed(:approved_ico_foi_case).decorate }
 
-  it 'displays the new response page for FOI' do
-
+  it "displays the new response page for FOI" do
     assign(:case, foi_case)
 
     render
@@ -26,8 +23,7 @@ describe 'cases/closable/respond.html.slim', type: :view do
     expect(page).to have_back_link
   end
 
-  it 'displays the new response page for ICO' do
-
+  it "displays the new response page for ICO" do
     assign(:case, ico_case)
 
     render

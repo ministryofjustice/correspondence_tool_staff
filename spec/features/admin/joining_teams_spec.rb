@@ -1,20 +1,20 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'joining business units' do
-
+# rubocop:disable RSpec/BeforeAfterAll
+feature "joining business units" do
   before(:all) do
     @open_cases = {
-      std_draft_foi:              { received_date: 6.business_days.ago },
+      std_draft_foi: { received_date: 6.business_days.ago },
     }
     @closed_cases = {
-      std_closed_foi:  { received_date: 18.business_days.ago },
+      std_closed_foi: { received_date: 18.business_days.ago },
     }
     @all_cases = @open_cases.merge(@closed_cases)
     @setup = StandardSetup.new(only_cases: @all_cases)
   end
 
   after(:all) do
-    DbHousekeeping.clean
+    DbHousekeeping.clean(seed: true)
   end
 
   given(:bu) { find_or_create(:foi_responding_team) }
@@ -23,7 +23,7 @@ feature 'joining business units' do
   given!(:target_team) { create(:responding_team, name: "Target Team", directorate: bu.directorate) }
   given!(:deactivated_team) { create(:business_unit, :deactivated, name: "Deactivated Team", directorate: bu.directorate) }
 
-  scenario 'manager joins a business unit to another', js: true do
+  scenario "manager joins a business unit to another", js: true do
     # verify responder can see cases before move
     login_as responder
     cases_page.load
@@ -68,3 +68,4 @@ feature 'joining business units' do
     expect(cases_page).to have_text(closed_case_number)
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

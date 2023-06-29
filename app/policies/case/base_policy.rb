@@ -1,14 +1,14 @@
-#rubocop:disable Metrics/ClassLength
 class Case::BasePolicy < ApplicationPolicy
-
   attr_reader :user, :case, :failed_checks, :policy_workflow
 
+  # rubocop:disable Lint/MissingSuper
   def initialize(user_obj = nil, kase_obj = nil, user: nil, kase: nil)
     @user = user_obj || user
     @case = kase_obj || kase
     raise Pundit::NotAuthorizedError, "must be logged in" if @user.nil?
     raise "Missing param" if @user.nil? || @case.nil?
   end
+  # rubocop:enable Lint/MissingSuper
 
   # Use this as a standard way to re-use an existing policy in another policy
   # class, for example ICO SARs policies which can re-use the same login that's
@@ -42,18 +42,18 @@ class Case::BasePolicy < ApplicationPolicy
 
     # This should be a list of all concrete case types.
     CASE_TYPES = [
-        Case::FOI::Standard,
-        Case::FOI::TimelinessReview,
-        Case::FOI::ComplianceReview,
-        Case::FOI::InternalReview,
-        Case::SAR::Offender,
-        Case::SAR::OffenderComplaint,
-        Case::SAR::InternalReview,
-        Case::SAR::Standard,
-        Case::ICO::FOI,
-        Case::ICO::SAR,
-        Case::OverturnedICO::SAR,
-        Case::OverturnedICO::FOI,
+      Case::FOI::Standard,
+      Case::FOI::TimelinessReview,
+      Case::FOI::ComplianceReview,
+      Case::FOI::InternalReview,
+      Case::SAR::Offender,
+      Case::SAR::OffenderComplaint,
+      Case::SAR::InternalReview,
+      Case::SAR::Standard,
+      Case::ICO::FOI,
+      Case::ICO::SAR,
+      Case::OverturnedICO::SAR,
+      Case::OverturnedICO::FOI,
     ].freeze
 
     def initialize(user, scope, feature = nil)
@@ -115,10 +115,10 @@ class Case::BasePolicy < ApplicationPolicy
   def new_case_link?
     clear_failed_checks
     check_can_trigger_event(:link_a_case) &&
-        check_user_is_a_manager_for_case ||
-        (!self.case.awaiting_responder? &&
-            check_user_is_a_responder_for_case) ||
-        check_user_is_an_approver_for_case
+      check_user_is_a_manager_for_case ||
+      (!self.case.awaiting_responder? &&
+          check_user_is_a_responder_for_case) ||
+      check_user_is_an_approver_for_case
   end
 
   def destroy_case_link?
@@ -138,7 +138,7 @@ class Case::BasePolicy < ApplicationPolicy
     #
     if self.case.does_not_require_clearance?
       check_case_is_responded_to_or_closed ||
-          (check_user_in_responding_team)
+        check_user_in_responding_team
     else
       true
     end
@@ -167,13 +167,13 @@ class Case::BasePolicy < ApplicationPolicy
   def can_accept_or_reject_approver_assignment?
     clear_failed_checks
     check_user_is_an_approver_for_case &&
-        check_no_user_case_approving_assignments_are_accepted
+      check_no_user_case_approving_assignments_are_accepted
   end
 
   def can_accept_or_reject_responder_assignment?
     clear_failed_checks
     self.case.awaiting_responder? &&
-        user.responding_teams.include?(self.case.responding_team)
+      user.responding_teams.include?(self.case.responding_team)
   end
 
   def assignments_reassign_user?
@@ -223,7 +223,7 @@ class Case::BasePolicy < ApplicationPolicy
     clear_failed_checks
     check_case_workflow_is(:trigger) &&
       check_user_is_in_default_approving_team &&
-        check_case_not_beyond_pending_dacu_clearance
+      check_case_not_beyond_pending_dacu_clearance
   end
 
   def can_remove_attachment?
@@ -238,14 +238,14 @@ class Case::BasePolicy < ApplicationPolicy
   def can_respond?
     clear_failed_checks
     self.case.awaiting_dispatch? &&
-        self.case.response_attachments.any? &&
-        check_can_trigger_event(:respond)
+      self.case.response_attachments.any? &&
+      check_can_trigger_event(:respond)
   end
 
   def can_approve_or_escalate_case?
     clear_failed_checks
     check_case_requires_clearance &&
-        check_user_is_in_current_team
+      check_user_is_in_current_team
   end
 
   def can_add_message_to_case?
@@ -256,25 +256,25 @@ class Case::BasePolicy < ApplicationPolicy
   def approve?
     clear_failed_checks
     check_user_is_an_approver_for_case &&
-        check_can_trigger_event(:approve)
+      check_can_trigger_event(:approve)
   end
 
   def upload_responses?
     clear_failed_checks
     check_user_is_in_current_team &&
-        check_can_trigger_event(:add_responses)
+      check_can_trigger_event(:add_responses)
   end
 
   def upload_response_and_approve?
     clear_failed_checks
     check_user_is_in_current_team &&
-        check_can_trigger_event(:upload_response_and_approve)
+      check_can_trigger_event(:upload_response_and_approve)
   end
 
   def upload_response_and_return_for_redraft?
     clear_failed_checks
     check_user_is_in_current_team &&
-        check_can_trigger_event(:upload_response_and_return_for_redraft)
+      check_can_trigger_event(:upload_response_and_return_for_redraft)
   end
 
   def user_is_admin?
@@ -284,8 +284,8 @@ class Case::BasePolicy < ApplicationPolicy
   def only_flagged_for_disclosure_clearance?
     clear_failed_checks
     check_case_requires_clearance &&
-        check_case_is_not_assigned_to_press_office &&
-        check_case_is_not_assigned_to_private_office
+      check_case_is_not_assigned_to_press_office &&
+      check_case_is_not_assigned_to_private_office
   end
 
   def extend_for_pit?
@@ -302,7 +302,7 @@ class Case::BasePolicy < ApplicationPolicy
     # This is just a catch-all in case we introduce a new type without a
     # corresponding policy for the new type. For safety sake, we do not allow
     # viewing
-    raise Pundit::NotDefinedError.new("Please define 'show?' method in #{self.class}")
+    raise Pundit::NotDefinedError, "Please define 'show?' method in #{self.class}"
   end
 
   def can_add_note_to_case?
@@ -325,14 +325,18 @@ class Case::BasePolicy < ApplicationPolicy
 
   def method_missing(method, *args)
     if method.to_s =~ /can_(.+)\?$/
-      event_name = $1
+      event_name = ::Regexp.last_match(1)
       check_can_trigger_event(event_name.to_sym)
     else
       super
     end
   end
 
-  private
+  def respond_to_missing?(method, include_private = false)
+    method.to_s =~ /can_(.+)\?$/ || super
+  end
+
+private
 
   check :user_in_responding_team do
     user.responding_teams.include?(self.case.responding_team)
@@ -369,7 +373,7 @@ class Case::BasePolicy < ApplicationPolicy
 
   check :user_is_a_responder_for_case do
     user.responding_teams.include?(self.case.responding_team) &&
-        !self.case.current_state.in?(%w[closed responded])
+      !self.case.current_state.in?(%w[closed responded])
   end
 
   check :user_is_an_approver_for_case do
@@ -381,10 +385,10 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   check :case_not_beyond_pending_dacu_clearance do
-    self.case.current_state.in?(%w{unassigned awaiting_responder drafting pending_dacu_clearance })
+    self.case.current_state.in?(%w[unassigned awaiting_responder drafting pending_dacu_clearance])
   end
 
-  check :case_workflow_is do | workflow |
+  check :case_workflow_is do |workflow|
     self.case.workflow == workflow.to_s
   end
 
@@ -466,7 +470,7 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   check :escalation_deadline_has_expired do
-    self.case.escalation_deadline < Date.today
+    self.case.escalation_deadline < Time.zone.today
   end
 
   check :within_escalation_deadline do
@@ -474,8 +478,8 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   check :no_user_case_approving_assignments_are_accepted do
-    !self.case.approver_assignments.with_teams(user.approving_team)
-         .any?(&:accepted?)
+    self.case.approver_assignments.with_teams(user.approving_team)
+         .none?(&:accepted?)
   end
 
   check :case_is_responded_to_or_closed do
@@ -492,7 +496,7 @@ class Case::BasePolicy < ApplicationPolicy
   end
 
   check :case_is_not_responded_or_closed do
-    !self.case.current_state.in?( %w[responded closed] )
+    !self.case.current_state.in?(%w[responded closed])
   end
 
   check :case_is_not_closed do
@@ -537,15 +541,15 @@ class Case::BasePolicy < ApplicationPolicy
 
   check :user_is_in_current_team do
     current_info = CurrentTeamAndUserService.new(@case)
-    #team will not be present for closed case
+    # team will not be present for closed case
     current_info.team.present? && @user.in?(current_info.team.users)
   end
 
   check :can_trigger_event do |event_name|
     self.case.state_machine.can_trigger_event?(
-        event_name: event_name,
-        metadata: { acting_user_id: user.id }
+      event_name:,
+      metadata: { acting_user_id: user.id },
     )
   end
 end
-#rubocop:enable Metrics/ClassLength
+# rubocop:enable Metrics/ClassLength

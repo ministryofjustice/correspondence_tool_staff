@@ -2,10 +2,9 @@ module Cases
   class CoverPagesController < ApplicationController
     before_action :set_case, only: [:show]
 
-    def show
-    end
+    def show; end
 
-    private
+  private
 
     def set_case
       @case = Case::Base.find(params[:case_id])

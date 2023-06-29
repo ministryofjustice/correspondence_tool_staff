@@ -1,7 +1,7 @@
-require 'rails_helper'
+require "rails_helper"
 
-feature 'filtering cases' do
-
+# rubocop:disable RSpec/BeforeAfterAll
+feature "filtering cases" do
   before(:all) do
     login_as create(:manager)
     @unassigned_case             = create :sar_case
@@ -9,13 +9,15 @@ feature 'filtering cases' do
     @drafting_case               = create :accepted_sar
     @pending_dacu_clearance_case = create :pending_dacu_clearance_sar
 
-    @sar_ir_timeliness = create(:sar_internal_review, sar_ir_subtype: 'timeliness')
-    @sar_ir_compliance = create(:sar_internal_review, sar_ir_subtype: 'compliance')
+    @sar_ir_timeliness = create(:sar_internal_review, sar_ir_subtype: "timeliness")
+    @sar_ir_compliance = create(:sar_internal_review, sar_ir_subtype: "compliance")
   end
 
-  after(:all) { DbHousekeeping.clean }
+  after(:all) do
+    DbHousekeeping.clean(seed: true)
+  end
 
-  before(:each) { sign_in create(:manager) }
+  before { sign_in create(:manager) }
 
   let(:all_case_numbers) do
     case_nos(@unassigned_case,
@@ -28,7 +30,7 @@ feature 'filtering cases' do
              @sar_ir_compliance.original_case)
   end
 
-  scenario 'no checkboxes selected before filter applied', js: true do
+  scenario "no checkboxes selected before filter applied", js: true do
     open_cases_page.load
     open_cases_page.case_filters.filter_cases_link.click
     open_cases_page.case_filters.filter_open_status_link.click
@@ -36,8 +38,7 @@ feature 'filtering cases' do
     expect(open_cases_page.case_numbers).to match_array(all_case_numbers)
   end
 
-
-  scenario 'filter on case type SAR IR timeliness and compliance', js: true do
+  scenario "filter on case type SAR IR timeliness and compliance", js: true do
     open_cases_page.load
     open_cases_page.case_filters.filter_cases_link.click
     open_cases_page.case_filters.filter_type_link.click
@@ -48,7 +49,7 @@ feature 'filtering cases' do
     expected_case_nos = case_nos(@sar_ir_compliance, @sar_ir_timeliness)
 
     expect(open_cases_page.case_numbers).to match_array(expected_case_nos)
-    expect(open_cases_page.case_numbers).to_not include(case_nos(@unassigned_case))
+    expect(open_cases_page.case_numbers).not_to include(case_nos(@unassigned_case))
   end
 
   def case_nos(*args)
@@ -59,3 +60,4 @@ feature 'filtering cases' do
     result
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

@@ -18,12 +18,11 @@
 # get flash click link to downloads
 # downloads and redirects to custom page
 
-require 'rails_helper'
-require File.join(Rails.root, 'db', 'seeders', 'case_closure_metadata_seeder')
-require File.join(Rails.root, 'db', 'seeders', 'report_type_seeder')
+require "rails_helper"
+require Rails.root.join("db/seeders/case_closure_metadata_seeder")
+require Rails.root.join("db/seeders/report_type_seeder")
 
-# ReportTypeSeeder.new.seed!
-
+# rubocop:disable RSpec/BeforeAfterAll
 feature "Downloading stats(csv) from the system" do
   given(:manager)   { find_or_create :disclosure_bmt_user }
   given(:responder) { find_or_create :foi_responder }
@@ -43,8 +42,7 @@ feature "Downloading stats(csv) from the system" do
   end
 
   after(:all) do
-    CaseClosure::MetadataSeeder.unseed!
-    ReportType.destroy_all
+    DbHousekeeping.clean(seed: true)
   end
 
   background do
@@ -52,20 +50,20 @@ feature "Downloading stats(csv) from the system" do
     responder
     kase
   end
-  context 'as a manager' do
+  context "when a manager" do
     scenario "standard reports" do
       # Manager creates & assigns to kilo
       login_as_manager
       all_reports = ReportType.all
       expect(all_reports.count).to be >= 9
-      
+
       abbrs = []
-      all_reports.each do | report_item |
+      all_reports.each do |report_item|
         abbrs << report_item.abbr
       end
-      expect(abbrs.include?('R105')).to be true
-      expect(abbrs.include?('R004')).to be true
-      expect(abbrs.include?('R005')).to be true
+      expect(abbrs.include?("R105")).to be true
+      expect(abbrs.include?("R004")).to be true
+      expect(abbrs.include?("R005")).to be true
 
       views_stats_home_page
       download_r105_report
@@ -84,14 +82,14 @@ feature "Downloading stats(csv) from the system" do
     end
   end
 
-  scenario 'closed cases report', js: true do
+  scenario "closed cases report", js: true do
     login_as_manager
     views_stats_home_page
     view_custom_report_creation_page
     create_custom_r007_report
   end
 
-  context 'as a responder' do
+  context "when a responder" do
     scenario "standard reports" do
       # Manager creates & assigns to kilo
       login_as_responder
@@ -111,9 +109,7 @@ feature "Downloading stats(csv) from the system" do
     end
   end
 
-
-
-  private
+private
 
   def login_as_manager
     login_as manager
@@ -135,7 +131,7 @@ feature "Downloading stats(csv) from the system" do
   def download_r004_report
     report = stats_index_page.reports.detect { |r| r.download_link.text =~ /Cabinet Office report/ }
     report.download_link.click
-    expect(page.response_headers['Content-Disposition'])
+    expect(page.response_headers["Content-Disposition"])
         .to match(/filename="r004_cabinet_office_report.csv"/)
     stats_index_page.load
   end
@@ -143,21 +139,21 @@ feature "Downloading stats(csv) from the system" do
   def download_r005_report
     report = stats_index_page.reports.detect { |r| r.download_link.text =~ /Monthly report/ }
     report.download_link.click
-    expect(page.response_headers['Content-Disposition'])
+    expect(page.response_headers["Content-Disposition"])
         .to match(/filename="r005_monthly_performance_report.xlsx"/)
     stats_index_page.load
   end
 
   def download_r105_report
     stats_index_page.reports.last.download_link.click
-    expect(page.response_headers['Content-Disposition'])
+    expect(page.response_headers["Content-Disposition"])
         .to match(/filename="r105_sar_monthly_performance_report.xlsx"/)
     stats_index_page.load
   end
 
   def download_r205_report
     stats_index_page.offender_sar.reports.last.download_link.click
-    expect(page.response_headers['Content-Disposition'])
+    expect(page.response_headers["Content-Disposition"])
       .to match(/filename="r205_offender_sar_monthly_performance_report.xlsx"/)
     stats_index_page.load
   end
@@ -168,8 +164,8 @@ feature "Downloading stats(csv) from the system" do
   end
 
   def create_custom_r003_report
-    r003 = ReportType.where(abbr:'R003').first
-    stats_new_page.fill_in_form('foi', r003.id, Date.yesterday, Date.today)
+    r003 = ReportType.where(abbr: "R003").first
+    stats_new_page.fill_in_form("foi", r003.id, Time.zone.yesterday, Time.zone.today)
     stats_new_page.submit_button.click
 
     expect(stats_new_page.success_message).to have_download_link
@@ -177,16 +173,16 @@ feature "Downloading stats(csv) from the system" do
 
   def create_custom_r004_report
     r004 = ReportType.r004
-    stats_new_page.fill_in_form('foi', r004.id, Date.yesterday, Date.today)
+    stats_new_page.fill_in_form("foi", r004.id, Time.zone.yesterday, Time.zone.today)
     stats_new_page.submit_button.click
 
     expect(stats_new_page.success_message).to have_download_link
   end
 
   def create_custom_r007_report
-    stats_new_page.choose_type_of_correspondence('closed_cases')
-    stats_new_page.fill_in_period_start(Date.yesterday)
-    stats_new_page.fill_in_period_end(Date.yesterday)
+    stats_new_page.choose_type_of_correspondence("closed_cases")
+    stats_new_page.fill_in_period_start(Time.zone.yesterday)
+    stats_new_page.fill_in_period_end(Time.zone.yesterday)
     stats_new_page.submit_button.click
 
     # @note (Mohammed Seedat): cannot add expectations until new confirmation
@@ -195,9 +191,10 @@ feature "Downloading stats(csv) from the system" do
 
   def download_custom_r004_report
     stats_new_page.success_message.download_link.click
-    expect(page.response_headers['Content-Disposition'])
+    expect(page.response_headers["Content-Disposition"])
         .to match(/filename="r004_cabinet_office_report\.csv"/)
 
     stats_new_page.load
   end
 end
+# rubocop:enable RSpec/BeforeAfterAll

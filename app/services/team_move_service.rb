@@ -25,25 +25,23 @@ class TeamMoveService
     @result = :incomplete
     @error_message = nil
 
-    raise TeamNotBusinessUnitError.new unless @team.is_a? BusinessUnit
-    raise InvalidDirectorateError.new unless @directorate.is_a? Directorate
-    raise OriginalDirectorateError.new if directorate == team.directorate
+    raise TeamNotBusinessUnitError unless @team.is_a? BusinessUnit
+    raise InvalidDirectorateError unless @directorate.is_a? Directorate
+    raise OriginalDirectorateError if directorate == team.directorate
   end
 
   def call
-    begin
-      ActiveRecord::Base.transaction do
-        move_team!
-        @result = :ok
-      end
-    rescue RuntimeError => err
-      @team.reload
-      @result = :error
-      @error_message = err.message
+    ActiveRecord::Base.transaction do
+      move_team!
+      @result = :ok
     end
+  rescue RuntimeError => e
+    @team.reload
+    @result = :error
+    @error_message = e.message
   end
 
-  private
+private
 
   def move_team!
     keep_users_for_old_team
@@ -57,7 +55,7 @@ class TeamMoveService
   end
 
   def keep_users_for_old_team
-    @keep_user_roles = @team.user_roles.as_json.map {|ur| [ur["team_id"], ur["user_id"], ur["role"]]}
+    @keep_user_roles = @team.user_roles.as_json.map { |ur| [ur["team_id"], ur["user_id"], ur["role"]] }
     @user_roles = @team.user_roles
   end
 
@@ -72,7 +70,7 @@ class TeamMoveService
     @new_team.correspondence_type_roles = @team.correspondence_type_roles
     @new_team.properties = @team.properties
     @new_team.user_roles = @team.user_roles
-    @new_team.save
+    @new_team.save!
   end
 
   def move_associations_to_new_team
@@ -94,14 +92,14 @@ class TeamMoveService
   def link_old_team_to_new_team
     # We do this for reporting purposes
     @team.moved_to_unit = @new_team
-    @team.save
+    @team.save # rubocop:disable Rails/SaveBang
   end
 
   def restore_new_team_name_to_original_name
     # New team gets original team name to retain consistency for the users
     @new_team.name = @team.original_team_name
     @new_team.code = @new_team.code.sub(/-NEW$/, "") if @team.code.present?
-    @new_team.save
+    @new_team.save # rubocop:disable Rails/SaveBang
   end
 
   def restore_users_for_old_team
@@ -109,7 +107,7 @@ class TeamMoveService
       team = Team.find_by(id: team_id)
       user = User.find_by(id: user_id)
       if team && user
-        TeamsUsersRole.create!(team: team, user: user, role: role)
+        TeamsUsersRole.create!(team:, user:, role:)
       end
     end
   end

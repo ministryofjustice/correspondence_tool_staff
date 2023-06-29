@@ -1,7 +1,7 @@
-require 'rails_helper'
+require "rails_helper"
 
 describe CaseLinkDecorator, type: :model do
-  subject { CaseLinkDecorator.decorate create(:case) }
+  subject { described_class.decorate create(:case) }
 
-  it { should have_attributes linked_case_number: nil }
+  it { is_expected.to have_attributes linked_case_number: nil }
 end

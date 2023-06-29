@@ -12,5 +12,4 @@ class Case::OverturnedICO::FOIPolicy < Case::FOI::StandardPolicy
 
     check_user_is_a_manager_for_case && check_can_trigger_event(:request_further_clearance)
   end
-
 end

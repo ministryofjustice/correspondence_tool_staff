@@ -12,7 +12,7 @@ module Cases
       service = CaseSearchService.new(
         user: current_user,
         query_type: :search,
-        query_params: search_params
+        query_params: search_params,
       )
       service.call(order: cookies[:search_result_order])
       @query = service.query
@@ -20,35 +20,34 @@ module Cases
       if service.error?
         flash.now[:alert] = service.error_message
       else
-        @page = params[:page] || '1'
+        @page = params[:page] || "1"
         @parent_id = @query.id
         flash[:query_id] = @query.id
       end
 
       unpaginated_cases = service.result_set
 
-      if download_csv_request?
-        @cases = unpaginated_cases
-      else
-        @cases = unpaginated_cases.page(@page).decorate
-      end
+      @cases = if download_csv_request?
+                 unpaginated_cases
+               else
+                 unpaginated_cases.page(@page).decorate
+               end
 
-      @current_tab_name = 'search_cases'
+      @current_tab_name = "search_cases"
       @filter_crumbs = @query.filter_crumbs
 
       respond_to do |format|
         format.html
-        format.csv { send_csv_cases 'search' }
+        format.csv { send_csv_cases "search" }
       end
     end
 
-    private
+  private
 
     def set_cookie_order_flag
       if params["order"].present?
-        cookies[:search_result_order] = {value: params["order"], secure: true }
+        cookies[:search_result_order] = { value: params["order"], secure: true }
       end
     end
-
   end
 end

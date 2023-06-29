@@ -44,7 +44,7 @@ class TestAWSS3
     end
 
     def move_to(path)
-      @events << { event: :move_to, args: { path: path } }
+      @events << { event: :move_to, args: { path: } }
       @bucket.object(path)
     end
 
@@ -63,9 +63,9 @@ class TestAWSS3
       @options = options
     end
 
-    def fields()
+    def fields
       {
-        key: key,
+        key:,
       }.merge(options)
     end
 
@@ -74,7 +74,7 @@ class TestAWSS3
     end
   end
 
-  def initialize()
+  def initialize
     @buckets = {}
   end
 

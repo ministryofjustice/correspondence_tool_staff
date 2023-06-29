@@ -65,10 +65,9 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
   end
 
   class Scope < Case::SARPolicy::Scope
-
     def correspondence_type
       CorrespondenceType.offender_sar
-    end 
+    end
 
     def resolve_responder_default
       @scope
@@ -77,7 +76,5 @@ class Case::SAR::OffenderPolicy < Case::SAR::StandardPolicy
     def resolve_approver_default
       @scope
     end
-
   end
-
 end

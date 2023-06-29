@@ -1,7 +1,6 @@
 module OffenderSARComplaintCasesParams
   extend ActiveSupport::Concern
 
-  #rubocop:disable Metrics/MethodLength
   def create_offender_sar_complaint_params
     params.require(:offender_sar_complaint).permit(
       :case_reference_number,
@@ -47,12 +46,11 @@ module OffenderSARComplaintCasesParams
       :external_deadline_dd, :external_deadline_mm, :external_deadline_yyyy,
       :appeal_outcome_id,
       :outcome_id,
-      :total_cost, 
+      :total_cost,
       :settlement_cost,
-      approval_flag_ids: [],
-      )
+      approval_flag_ids: []
+    )
   end
-  #rubocop:enable Metrics/MethodLength
 
   # @todo: Replace with appropriate edit params
   def update_offender_sar_complaint_params
@@ -70,7 +68,7 @@ module OffenderSARComplaintCasesParams
       :date_responded_dd,
       :date_responded_mm,
       :date_responded_yyyy,
-      )
+    )
   end
 
   def reopen_offender_sar_complaint_params
@@ -78,6 +76,6 @@ module OffenderSARComplaintCasesParams
       :external_deadline_dd,
       :external_deadline_mm,
       :external_deadline_yyyy,
-      )
+    )
   end
 end

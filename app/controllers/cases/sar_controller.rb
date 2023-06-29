@@ -5,7 +5,7 @@ module Cases
 
     def initialize
       @correspondence_type = CorrespondenceType.sar
-      @correspondence_type_key = 'sar'
+      @correspondence_type_key = "sar"
 
       super
     end

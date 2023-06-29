@@ -1,5 +1,4 @@
 class Case::SAR::StandardPolicy < Case::BasePolicy
-
   class Scope < Case::SARPolicy::Scope
   end
 
@@ -67,10 +66,10 @@ class Case::SAR::StandardPolicy < Case::BasePolicy
     clear_failed_checks
     check_can_trigger_event(:remove_response)
   end
-  
+
   def upload_responses?
     clear_failed_checks
-    check(:user_is_a_manager_for_case) && 
+    check(:user_is_a_manager_for_case) &&
       check_can_trigger_event(:add_responses)
   end
 

@@ -3,16 +3,15 @@ module PageObjects
     module Cases
       module Edit
         class OffenderSARComplaintPageAppealOutcome < PageObjects::Pages::Base
-
-          set_url '/cases/offender_sar_complaints/{id}/edit/appeal_outcome'
+          set_url "/cases/offender_sar_complaints/{id}/edit/appeal_outcome"
 
           section :primary_navigation,
-                  PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+                  PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
           section :page_heading,
-                  PageObjects::Sections::PageHeadingSection, '.page-heading'
+                  PageObjects::Sections::PageHeadingSection, ".page-heading"
 
-          element :submit_button, '.button'
+          element :submit_button, ".button"
 
           def choose_appeal_outcome(appeal_outcome_choice)
             if appeal_outcome_choice.present?

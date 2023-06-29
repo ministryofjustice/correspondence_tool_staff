@@ -12,12 +12,19 @@ class CommissioningDocument < ApplicationRecord
   }.freeze
 
   enum template_name: {
-    cat_a: 'cat_a', cctv: 'cctv', cross_border: 'cross_border', mappa: 'mappa', pdp: 'pdp',
-    prison: 'prison', probation: 'probation', security: 'security', telephone: 'telephone'
+    cat_a: "cat_a",
+    cctv: "cctv",
+    cross_border: "cross_border",
+    mappa: "mappa",
+    pdp: "pdp",
+    prison: "prison",
+    probation: "probation",
+    security: "security",
+    telephone: "telephone",
   }
 
   belongs_to :data_request
-  belongs_to :attachment, class_name: 'CaseAttachment'
+  belongs_to :attachment, class_name: "CaseAttachment"
 
   validates :data_request, presence: true
   validates :template_name, presence: true
@@ -56,10 +63,10 @@ class CommissioningDocument < ApplicationRecord
     save!
   end
 
-  private
+private
 
   def template
-    TEMPLATE_TYPES[template_name.to_sym].new(data_request: data_request)
+    TEMPLATE_TYPES[template_name.to_sym].new(data_request:)
   end
 
   def request_type
@@ -67,11 +74,11 @@ class CommissioningDocument < ApplicationRecord
   end
 
   def timestamp
-    Time.current.strftime('%Y%m%dT%H%M')
+    Time.current.strftime("%Y%m%dT%H%M")
   end
 
   def subject_name
-    data_request.kase.subject_full_name.tr(' ', '-')
+    data_request.kase.subject_full_name.tr(" ", "-")
   end
 
   def case_number

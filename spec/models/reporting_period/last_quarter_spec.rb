@@ -1,9 +1,9 @@
-require 'rails_helper'
+require "rails_helper"
 
 module ReportingPeriod
   describe LastQuarter do
-    context '#initialize' do
-      it 'works on first day of next quarter' do
+    describe "#initialize" do
+      it "works on first day of next quarter" do
         date = Date.new(2031, 7, 1)
         expected_start = Date.new(2031, 4, 1)
         expected_end = Date.new(2031, 6, 30)

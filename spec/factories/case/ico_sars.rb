@@ -1,8 +1,7 @@
 FactoryBot.define do
+  sequence(:ico_sar_reference_number) { |n| sprintf("ICOSARREFNUM%03d", n) }
 
-  sequence(:ico_sar_reference_number) { |n| "ICOSARREFNUM%03d" % [n] }
-
-  factory :ico_sar_case, class: Case::ICO::SAR do
+  factory :ico_sar_case, class: "Case::ICO::SAR" do
     transient do
       creation_time  { 4.business_days.ago }
       identifier     { "new ICO SAR case based from a closed SAR case" }
@@ -13,7 +12,7 @@ FactoryBot.define do
       approver       { approving_team.users.first }
     end
 
-    current_state               { 'unassigned' }
+    current_state               { "unassigned" }
     sequence(:message)          { |n| "#{identifier} message #{n}" }
     ico_reference_number        { generate :ico_sar_reference_number }
     sequence(:ico_officer_name) { |n| "#{identifier} ico officer name #{n}" }
@@ -29,20 +28,20 @@ FactoryBot.define do
       create :approver_assignment,
              case: kase,
              team: evaluator.approving_team,
-             state: 'pending'
+             state: "pending"
       create :flag_case_for_clearance_transition,
              case: kase,
              acting_team: evaluator.managing_team,
              acting_user: evaluator.managing_team.managers.first,
              target_team: evaluator.approving_team
-      kase.update(workflow: 'trigger')
+      kase.update!(workflow: "trigger")
 
       if evaluator.flag_for_disclosure == :accepted
         disclosure_assignment = kase.assignments.for_team(
-          evaluator.approving_team
+          evaluator.approving_team,
         ).singular
-        disclosure_assignment.update(state: 'accepted',
-                                     user: evaluator.approver)
+        disclosure_assignment.update!(state: "accepted",
+                                      user: evaluator.approver)
       end
 
       kase.reload
@@ -63,8 +62,8 @@ FactoryBot.define do
       create :assignment,
              case: kase,
              team: evaluator.responding_team,
-             state: 'pending',
-             role: 'responding',
+             state: "pending",
+             role: "responding",
              created_at: evaluator.creation_time
       create :case_transition_assign_responder,
              case: kase,
@@ -84,7 +83,7 @@ FactoryBot.define do
     end
 
     after(:create) do |kase, evaluator|
-      kase.responder_assignment.update_attribute :user, evaluator.responder
+      kase.responder_assignment.update!(user: evaluator.responder)
       kase.responder_assignment.accepted!
       create :case_transition_accept_responder_assignment,
              case: kase,
@@ -97,13 +96,13 @@ FactoryBot.define do
 
   factory :pending_dacu_clearance_ico_sar_case, parent: :accepted_ico_sar_case do
     transient do
-      identifier      { 'pending dacu clearance ICO SAR case' }
+      identifier { "pending dacu clearance ICO SAR case" }
     end
-    workflow { 'trigger' }
+    workflow { "trigger" }
 
     after(:create) do |kase, evaluator|
       kase.approver_assignments.for_team(evaluator.approving_team).singular
-        .update(user: evaluator.approver, state: 'accepted')
+        .update!(user: evaluator.approver, state: "accepted")
       create :case_transition_progress_for_clearance,
              case: kase,
              acting_team: kase.responding_team,
@@ -115,7 +114,7 @@ FactoryBot.define do
 
   factory :approved_ico_sar_case, parent: :pending_dacu_clearance_ico_sar_case do
     transient do
-      identifier { 'approved ICO SAR case' }
+      identifier { "approved ICO SAR case" }
     end
 
     after(:create) do |kase, evaluator|
@@ -131,10 +130,10 @@ FactoryBot.define do
 
   factory :responded_ico_sar_case, parent: :approved_ico_sar_case do
     transient do
-      identifier { 'responded ICO SAR case' }
+      identifier { "responded ICO SAR case" }
     end
 
-    date_responded { Date.today }
+    date_responded { Time.zone.today }
 
     after(:create) do |kase, _evaluator|
       create :case_transition_respond_to_ico, case: kase
@@ -144,8 +143,8 @@ FactoryBot.define do
 
   factory :closed_ico_sar_case, parent: :responded_ico_sar_case do
     transient do
-      identifier { 'closed ICO SAR case - upheld' }
-      attachments {[ build(:case_ico_decision) ]}
+      identifier { "closed ICO SAR case - upheld" }
+      attachments { [build(:case_ico_decision)] }
     end
 
     received_date { 22.business_days.ago }

@@ -1,5 +1,4 @@
 class UserPolicy < ApplicationPolicy
-
   attr_reader :user, :team, :failed_checks
 
   def initialize(user, team = nil)
@@ -16,5 +15,4 @@ class UserPolicy < ApplicationPolicy
   check :user_is_a_team_admin do
     user.team_admin?
   end
-
 end

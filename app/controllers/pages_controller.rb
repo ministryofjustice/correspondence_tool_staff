@@ -1,5 +1,3 @@
 class PagesController < ApplicationController
-  def accessibility
-  end
+  def accessibility; end
 end
-

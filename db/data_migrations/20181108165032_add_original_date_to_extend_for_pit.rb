@@ -1,12 +1,12 @@
 class AddOriginalDateToExtendForPit < ActiveRecord::DataMigration
   def up
-    transitions = CaseTransition.where(event: 'extend_for_pit')
+    transitions = CaseTransition.where(event: "extend_for_pit")
     transitions.each do |transition|
       transition.update(original_final_deadline: find_original_final_deadline(transition))
     end
   end
 
-  private
+private
 
   def find_original_final_deadline(transition)
     kase = Case::Base.unscoped.find(transition.case_id)

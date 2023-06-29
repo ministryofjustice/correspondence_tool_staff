@@ -15,10 +15,10 @@ module Cases
       @case.state_machine.progress_for_clearance!(
         acting_user: current_user,
         acting_team: @case.team_for_unassigned_user(current_user, :responder),
-        target_team: @case.approver_assignments.first.team
+        target_team: @case.approver_assignments.first.team,
       )
 
-      flash[:notice] = t('notices.progress_for_clearance')
+      flash[:notice] = t("notices.progress_for_clearance")
       redirect_to case_path(@case.id)
     end
 
@@ -28,12 +28,12 @@ module Cases
       service = CaseFlagForClearanceService.new(
         user: current_user,
         kase: @case,
-        team: BusinessUnit.dacu_disclosure
+        team: BusinessUnit.dacu_disclosure,
       )
       service.call
 
       respond_to do |format|
-        format.js { render 'flag_for_clearance' }
+        format.js { render "flag_for_clearance" }
         format.html do
           redirect_to case_path(@case)
         end
@@ -47,12 +47,11 @@ module Cases
       result = service.call
 
       if result == :ok
-        flash[:notice] = 'Further clearance requested'
-        redirect_to case_path(@case.id)
+        flash[:notice] = "Further clearance requested"
       else
         flash[:alert] = "Unable to request further clearance on case #{@case.number}"
-        redirect_to case_path(@case.id)
       end
+      redirect_to case_path(@case.id)
     end
 
     def unflag_for_clearance
@@ -62,15 +61,15 @@ module Cases
         user: current_user,
         kase: @case,
         team: BusinessUnit.dacu_disclosure,
-        message: params[:message]
+        message: params[:message],
       )
       service.call
 
       respond_to do |format|
-        format.js { render 'unflag_for_clearance' }
+        format.js { render "unflag_for_clearance" }
         format.html do
-          flash[:notice] = "Case has been de-escalated. #{ get_de_escalated_undo_link }".html_safe
-          if @case.type_abbreviation == 'SAR'
+          flash[:notice] = "Case has been de-escalated. #{get_de_escalated_undo_link}".html_safe
+          if @case.type_abbreviation == "SAR"
             redirect_to incoming_cases_path
           else
             redirect_to case_path(@case)
@@ -86,7 +85,7 @@ module Cases
         user: current_user,
         kase: @case,
         team: BusinessUnit.dacu_disclosure,
-        message: params[:message]
+        message: params[:message],
       )
       service.call
 
@@ -96,14 +95,14 @@ module Cases
       end
     end
 
-    private
+  private
 
     def get_de_escalated_undo_link
       unlink_path = flag_for_clearance_case_path(id: @case.id)
       view_context.link_to(
         "Undo",
         unlink_path,
-        { method: :patch, class: 'undo-de-escalate-link' }
+        { method: :patch, class: "undo-de-escalate-link" },
       )
     end
   end

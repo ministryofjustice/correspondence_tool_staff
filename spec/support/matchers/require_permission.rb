@@ -1,13 +1,13 @@
-require 'rspec/expectations'
+require "rspec/expectations"
 
 RSpec::Matchers.define :require_permission do |permission|
   permission_result = true
   permission_received = false
 
   match do |event_or_block|
+    policy_class = Pundit::PolicyFinder.new(@object).policy!
     if event_or_block.respond_to? :call
-      policy_class = Pundit::PolicyFinder.new(@object).policy!
-      policy = spy(policy_class)
+      policy = spy(policy_class) # rubocop:disable RSpec/VerifiedDoubles
       allow(policy).to receive(permission)
                          .with(no_args) do
                            permission_received = true
@@ -34,19 +34,18 @@ RSpec::Matchers.define :require_permission do |permission|
       event_or_block.call
       expect(permission_received).to eq true
     else
-      policy_class = Pundit::PolicyFinder.new(@object).policy!
-      expect_any_instance_of(policy_class).to receive(permission)
+      allow_any_instance_of(policy_class).to receive(permission) # rubocop:disable RSpec/AnyInstance
                                                 .and_return(permission_result)
-      state_machine_class = RSpec::current_example
+      state_machine_class = RSpec.current_example
                               .example_group
                               .top_level_description
                               .constantize
       event = state_machine_class.events[event_or_block]
       event[:callbacks][:guards].each do |guard|
-        expect do
+        expect {
           guard.call(@object, nil, @options)
           permission_received = true
-        end .not_to raise_error
+        }.not_to raise_error
       end
     end
     expect(permission_received).to eq true

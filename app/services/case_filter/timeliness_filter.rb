@@ -1,6 +1,5 @@
 module CaseFilter
   class TimelinessFilter < CaseMultiChoicesFilterBase
-
     def self.identifier
       "filter_timeliness"
     end
@@ -12,25 +11,24 @@ module CaseFilter
     def available_choices
       {
         filter_timeliness: {
-          'in_time' => I18n.t('filters.filter_timeliness.in_time'),
-          'late'    => I18n.t('filters.filter_timeliness.late'),
-        }
+          "in_time" => I18n.t("filters.filter_timeliness.in_time"),
+          "late" => I18n.t("filters.filter_timeliness.late"),
+        },
       }
-      
     end
 
     def call
       filter_timeliness(@records)
     end
 
-    private
+  private
 
     def filter_in_time?
-      'in_time'.in? @query.filter_timeliness
+      "in_time".in? @query.filter_timeliness
     end
 
     def filter_late?
-      'late'.in? @query.filter_timeliness
+      "late".in? @query.filter_timeliness
     end
 
     def filter_timeliness(records)

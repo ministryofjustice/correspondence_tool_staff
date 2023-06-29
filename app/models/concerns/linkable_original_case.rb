@@ -7,7 +7,7 @@ module LinkableOriginalCase
 
     has_one :original_case_link,
             -> { original },
-            class_name: 'LinkedCase',
+            class_name: "LinkedCase",
             foreign_key: :case_id
 
     has_one :original_case,
@@ -20,23 +20,22 @@ module LinkableOriginalCase
   end
 
   def original_case_id
-    self.original_case&.id
+    original_case&.id
   end
 
   def original_case_number
-    self.original_case&.number
+    original_case&.number
   end
 
   def validate_original_case
-    if self.original_case
-      validate_case_link(:original, self.original_case, :original_case)
+    if original_case
+      validate_case_link(:original, original_case, :original_case)
     end
   end
 
   def validate_original_case_not_already_related
     if original_case.in?(related_cases)
-      self.errors.add(:linked_cases, :original_case_already_related)
+      errors.add(:linked_cases, :original_case_already_related)
     end
   end
-
 end

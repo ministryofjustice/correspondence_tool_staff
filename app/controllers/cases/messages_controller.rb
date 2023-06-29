@@ -8,8 +8,8 @@ module Cases
       authorize(@case, :can_add_message_to_case?)
 
       add_message(
-        event_name: 'add_message_to_case!',
-        on_success: case_path(@case, anchor: 'messages-section')
+        event_name: "add_message_to_case!",
+        on_success: case_path(@case, anchor: "messages-section"),
       )
     end
   end

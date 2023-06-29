@@ -4,6 +4,6 @@ class RemoveDefaultValueForWorkflow < ActiveRecord::Migration[5.0]
   end
 
   def down
-    change_column :cases, :workflow, :string, default: 'standard'
+    change_column :cases, :workflow, :string, default: "standard"
   end
 end

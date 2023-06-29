@@ -1,6 +1,7 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'state machine' do
+# rubocop:disable RSpec/InstanceVariable, RSpec/BeforeAfterAll
+describe "state machine" do
   def all_user_teams
     @setup.user_teams
   end
@@ -10,321 +11,326 @@ describe 'state machine' do
   end
 
   before(:all) do
-    DbHousekeeping.clean
     @setup = StandardSetup.new(
-      only_cases: [
-        :ot_ico_sar_noff_unassigned,
-        :ot_ico_sar_noff_awresp,
-        :ot_ico_sar_noff_draft,
-        :ot_ico_sar_noff_closed,
-        :ot_ico_sar_noff_trig_awresp,
-        :ot_ico_sar_noff_trig_awresp_accepted,
-        :ot_ico_sar_noff_trig_draft,
-        :ot_ico_sar_noff_trig_draft_accepted,
-        :ot_ico_sar_noff_pdacu,
-        :ot_ico_sar_noff_trig_awdisp
-      ]
+      only_cases: %i[
+        ot_ico_sar_noff_unassigned
+        ot_ico_sar_noff_awresp
+        ot_ico_sar_noff_draft
+        ot_ico_sar_noff_closed
+        ot_ico_sar_noff_trig_awresp
+        ot_ico_sar_noff_trig_awresp_accepted
+        ot_ico_sar_noff_trig_draft
+        ot_ico_sar_noff_trig_draft_accepted
+        ot_ico_sar_noff_pdacu
+        ot_ico_sar_noff_trig_awdisp
+      ],
     )
   end
 
-
-  after(:all) { DbHousekeeping.clean }
-
-
-  describe :accept_responder_assignment do
-    it {
-      should permit_event_to_be_triggered_only_by(
-         [:sar_responder, :ot_ico_sar_noff_awresp],
-         [:sar_responder, :ot_ico_sar_noff_trig_awresp],
-         [:sar_responder, :ot_ico_sar_noff_trig_awresp_accepted],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_awresp],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
-       )
-    }
+  after(:all) do
+    DbHousekeeping.clean(seed: true)
   end
 
-  describe :add_message_to_case do
+  describe "accept_responder_assignment" do
+    let(:event) { :accept_responder_assignment }
+
     it {
-      should permit_event_to_be_triggered_only_by(
-         [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
-         [:disclosure_bmt, :ot_ico_sar_noff_awresp],
-         [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp],
-         [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp_accepted],
-         [:disclosure_bmt, :ot_ico_sar_noff_draft],
-         [:disclosure_bmt, :ot_ico_sar_noff_trig_draft],
-         [:disclosure_bmt, :ot_ico_sar_noff_trig_draft_accepted],
-         [:disclosure_bmt, :ot_ico_sar_noff_closed],
-         [:disclosure_bmt, :ot_ico_sar_noff_pdacu],
-         [:disclosure_bmt, :ot_ico_sar_noff_trig_awdisp],
-
-         [:disclosure_specialist, :ot_ico_sar_noff_pdacu],
-         [:disclosure_specialist, :ot_ico_sar_noff_trig_awdisp],
-         [:disclosure_specialist, :ot_ico_sar_noff_trig_draft_accepted],
-
-         [:sar_responder, :ot_ico_sar_noff_awresp],
-         [:sar_responder, :ot_ico_sar_noff_trig_awresp],
-         [:sar_responder, :ot_ico_sar_noff_trig_awresp_accepted],
-         [:sar_responder, :ot_ico_sar_noff_draft],
-         [:sar_responder, :ot_ico_sar_noff_trig_draft],
-         [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
-         [:sar_responder, :ot_ico_sar_noff_closed],
-         [:sar_responder, :ot_ico_sar_noff_pdacu],
-         [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
-
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_awresp],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_closed],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_pdacu],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
-       ).debug
-    }
-  end
-
-  describe :assign_responder do
-    it {
-      should permit_event_to_be_triggered_only_by(
-               [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
-             )}
-  end
-
-  describe :assign_to_new_team do
-    it {
-      should permit_event_to_be_triggered_only_by(
-               [:disclosure_bmt, :ot_ico_sar_noff_awresp],
-               [:disclosure_bmt, :ot_ico_sar_noff_draft],
-               [:disclosure_bmt, :ot_ico_sar_noff_closed],
-               [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp],
-               [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp_accepted],
-               [:disclosure_bmt, :ot_ico_sar_noff_trig_draft],
-               [:disclosure_bmt, :ot_ico_sar_noff_trig_draft_accepted],
-               [:disclosure_bmt, :ot_ico_sar_noff_pdacu]
-             ) }
-  end
-
-  describe :close do
-    it {
-      should permit_event_to_be_triggered_only_by(
-       [:sar_responder, :ot_ico_sar_noff_draft],
-       [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
-       [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
-       [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
-     )}
-  end
-
-  describe :destroy_case do
-    it {
-      should permit_event_to_be_triggered_only_by(
-        [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
-        [:disclosure_bmt, :ot_ico_sar_noff_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_draft],
-        [:disclosure_bmt, :ot_ico_sar_noff_closed],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp_accepted],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_draft],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_draft_accepted],
-        [:disclosure_bmt, :ot_ico_sar_noff_pdacu],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awdisp],
-      )}
-  end
-
-  describe :link_a_case do
-    it {
-      should permit_event_to_be_triggered_only_by(
-        [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
-        [:disclosure_bmt, :ot_ico_sar_noff_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_draft],
-        [:disclosure_bmt, :ot_ico_sar_noff_closed],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp_accepted],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_draft],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_draft_accepted],
-        [:disclosure_bmt, :ot_ico_sar_noff_pdacu],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awdisp],
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[sar_responder ot_ico_sar_noff_awresp],
+        %i[sar_responder ot_ico_sar_noff_trig_awresp],
+        %i[sar_responder ot_ico_sar_noff_trig_awresp_accepted],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_awresp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awresp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awresp_accepted],
       )
     }
   end
 
-  describe :progress_for_clearance do
+  describe "add_message_to_case" do
+    let(:event) { :add_message_to_case }
+
     it {
-      should have_after_hook(
-        [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
-        [:sar_responder, :ot_ico_sar_noff_trig_draft],
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[disclosure_bmt ot_ico_sar_noff_unassigned],
+        %i[disclosure_bmt ot_ico_sar_noff_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_closed],
+        %i[disclosure_bmt ot_ico_sar_noff_pdacu],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awdisp],
+        %i[disclosure_specialist ot_ico_sar_noff_pdacu],
+        %i[disclosure_specialist ot_ico_sar_noff_trig_awdisp],
+        %i[disclosure_specialist ot_ico_sar_noff_trig_draft_accepted],
+        %i[sar_responder ot_ico_sar_noff_awresp],
+        %i[sar_responder ot_ico_sar_noff_trig_awresp],
+        %i[sar_responder ot_ico_sar_noff_trig_awresp_accepted],
+        %i[sar_responder ot_ico_sar_noff_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_draft_accepted],
+        %i[sar_responder ot_ico_sar_noff_closed],
+        %i[sar_responder ot_ico_sar_noff_pdacu],
+        %i[sar_responder ot_ico_sar_noff_trig_awdisp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_awresp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awresp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awresp_accepted],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft_accepted],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_closed],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_pdacu],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awdisp],
+      )
+    }
 
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
-
-     ).with_hook('Workflows::Hooks', :notify_approver_ready_for_review)
+    it {
+      expect(event).to have_after_hook(
+        %i[disclosure_bmt ot_ico_sar_noff_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_pdacu],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awdisp],
+        %i[disclosure_specialist ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_specialist ot_ico_sar_noff_pdacu],
+        %i[disclosure_specialist ot_ico_sar_noff_trig_awdisp],
+        %i[sar_responder ot_ico_sar_noff_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_draft_accepted],
+        %i[sar_responder ot_ico_sar_noff_pdacu],
+        %i[sar_responder ot_ico_sar_noff_trig_awdisp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft_accepted],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_pdacu],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awdisp],
+      ).with_hook("Workflows::Hooks", :notify_responder_message_received)
     }
   end
 
-  describe :reassign_user do
+  describe "assign_responder" do
+    let(:event) { :assign_responder }
+
     it {
-      should permit_event_to_be_triggered_only_by(
-        [:sar_responder, :ot_ico_sar_noff_draft],
-        [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
-        [:sar_responder, :ot_ico_sar_noff_trig_draft],
-        [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
-        [:sar_responder, :ot_ico_sar_noff_pdacu],
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[disclosure_bmt ot_ico_sar_noff_unassigned],
+      )
+    }
 
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_pdacu],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
+    it {
+      expect(event).to have_after_hook(
+        %i[disclosure_bmt ot_ico_sar_noff_unassigned],
+      ).with_hook("Workflows::Hooks", :assign_responder_email)
+    }
+  end
 
-        [:disclosure_specialist, :ot_ico_sar_noff_trig_draft_accepted],
-        [:disclosure_specialist, :ot_ico_sar_noff_pdacu],
-        [:disclosure_specialist, :ot_ico_sar_noff_trig_awdisp],
+  describe "assign_to_new_team" do
+    let(:event) { :assign_to_new_team }
 
-        [:disclosure_specialist_coworker, :ot_ico_sar_noff_trig_draft_accepted],
-        [:disclosure_specialist_coworker, :ot_ico_sar_noff_pdacu],
-        [:disclosure_specialist_coworker, :ot_ico_sar_noff_trig_awdisp],
+    it {
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[disclosure_bmt ot_ico_sar_noff_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_closed],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_pdacu],
+      )
+    }
+
+    it {
+      expect(event).to have_after_hook(
+        %i[disclosure_bmt ot_ico_sar_noff_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_pdacu],
+      ).with_hook("Workflows::Hooks", :assign_responder_email)
+    }
+  end
+
+  describe "close" do
+    let(:event) { :close }
+
+    it {
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[sar_responder ot_ico_sar_noff_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_awdisp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awdisp],
+      )
+    }
+
+    it {
+      expect(event).to have_after_hook(
+        %i[sar_responder ot_ico_sar_noff_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_awdisp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awdisp],
+      ).with_hook("Workflows::Hooks", :notify_managing_team_case_closed)
+    }
+  end
+
+  describe "destroy_case" do
+    let(:event) { :destroy_case }
+
+    it {
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[disclosure_bmt ot_ico_sar_noff_unassigned],
+        %i[disclosure_bmt ot_ico_sar_noff_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_closed],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_pdacu],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awdisp],
       )
     }
   end
 
-  describe :reject_responder_assignment do
+  describe "link_a_case" do
+    let(:event) { :link_a_case }
+
     it {
-      should permit_event_to_be_triggered_only_by(
-        [:sar_responder, :ot_ico_sar_noff_awresp],
-        [:sar_responder, :ot_ico_sar_noff_trig_awresp],
-        [:sar_responder, :ot_ico_sar_noff_trig_awresp_accepted],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_awresp],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awresp_accepted],
-  )  }
-  end
-
-  describe :remove_linked_case do
-    it {
-      should permit_event_to_be_triggered_only_by(
-        [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
-        [:disclosure_bmt, :ot_ico_sar_noff_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_draft],
-        [:disclosure_bmt, :ot_ico_sar_noff_closed],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp_accepted],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_draft],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_draft_accepted],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awdisp],
-        [:disclosure_bmt, :ot_ico_sar_noff_pdacu],
-     )    }
-  end
-
-  describe :respond do
-    it {
-      should permit_event_to_be_triggered_only_by(
-        [:sar_responder, :ot_ico_sar_noff_draft],
-        [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
-      )}
-  end
-
-  describe :respond_and_close do
-    it {
-      should permit_event_to_be_triggered_only_by(
-        [:sar_responder, :ot_ico_sar_noff_draft],
-        [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
-      )}
-  end
-
-############## EMAIL TESTS ################
-
-  describe :add_message_to_case do
-    it {
-      should have_after_hook(
-         [:disclosure_bmt, :ot_ico_sar_noff_draft],
-         [:disclosure_bmt, :ot_ico_sar_noff_trig_draft],
-         [:disclosure_bmt, :ot_ico_sar_noff_trig_draft_accepted],
-         [:disclosure_bmt, :ot_ico_sar_noff_pdacu],
-         [:disclosure_bmt, :ot_ico_sar_noff_trig_awdisp],
-
-         [:disclosure_specialist, :ot_ico_sar_noff_trig_draft_accepted],
-         [:disclosure_specialist, :ot_ico_sar_noff_pdacu],
-         [:disclosure_specialist, :ot_ico_sar_noff_trig_awdisp],
-
-         [:sar_responder, :ot_ico_sar_noff_draft],
-         [:sar_responder, :ot_ico_sar_noff_trig_draft],
-         [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
-         [:sar_responder, :ot_ico_sar_noff_pdacu],
-         [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
-
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_pdacu],
-         [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
-       ).with_hook('Workflows::Hooks', :notify_responder_message_received)
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[disclosure_bmt ot_ico_sar_noff_unassigned],
+        %i[disclosure_bmt ot_ico_sar_noff_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_closed],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_pdacu],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awdisp],
+      )
     }
   end
 
-  describe :assign_responder do
+  describe "progress_for_clearance" do
+    let(:event) { :progress_for_clearance }
+
     it {
-      should have_after_hook(
-        [:disclosure_bmt, :ot_ico_sar_noff_unassigned],
-     ).with_hook('Workflows::Hooks', :assign_responder_email)
+      expect(event).to have_after_hook(
+        %i[sar_responder ot_ico_sar_noff_trig_draft_accepted],
+        %i[sar_responder ot_ico_sar_noff_trig_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft_accepted],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft],
+      ).with_hook("Workflows::Hooks", :notify_approver_ready_for_review)
     }
   end
 
+  describe "reassign_user" do
+    let(:event) { :reassign_user }
 
-  describe :assign_to_new_team do
     it {
-      should have_after_hook(
-        [:disclosure_bmt, :ot_ico_sar_noff_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_draft],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_awresp_accepted],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_draft],
-        [:disclosure_bmt, :ot_ico_sar_noff_trig_draft_accepted],
-        [:disclosure_bmt, :ot_ico_sar_noff_pdacu]
-     ).with_hook('Workflows::Hooks', :assign_responder_email)
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[sar_responder ot_ico_sar_noff_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_awdisp],
+        %i[sar_responder ot_ico_sar_noff_trig_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_draft_accepted],
+        %i[sar_responder ot_ico_sar_noff_pdacu],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft_accepted],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_pdacu],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awdisp],
+        %i[disclosure_specialist ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_specialist ot_ico_sar_noff_pdacu],
+        %i[disclosure_specialist ot_ico_sar_noff_trig_awdisp],
+        %i[disclosure_specialist_coworker ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_specialist_coworker ot_ico_sar_noff_pdacu],
+        %i[disclosure_specialist_coworker ot_ico_sar_noff_trig_awdisp],
+      )
+    }
+
+    it {
+      expect(event).to have_after_hook(
+        %i[disclosure_specialist ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_specialist ot_ico_sar_noff_pdacu],
+        %i[disclosure_specialist ot_ico_sar_noff_trig_awdisp],
+        %i[disclosure_specialist_coworker ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_specialist_coworker ot_ico_sar_noff_pdacu],
+        %i[disclosure_specialist_coworker ot_ico_sar_noff_trig_awdisp],
+        %i[sar_responder ot_ico_sar_noff_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_draft_accepted],
+        %i[sar_responder ot_ico_sar_noff_pdacu],
+        %i[sar_responder ot_ico_sar_noff_trig_awdisp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_draft_accepted],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_pdacu],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awdisp],
+      ).with_hook("Workflows::Hooks", :reassign_user_email)
     }
   end
 
-  describe :close do
-    it {
-      should have_after_hook(
-       [:sar_responder, :ot_ico_sar_noff_draft],
-       [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
+  describe "reject_responder_assignment" do
+    let(:event) { :reject_responder_assignment }
 
-       [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
-       [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
-     ).with_hook('Workflows::Hooks', :notify_managing_team_case_closed)
+    it {
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[sar_responder ot_ico_sar_noff_awresp],
+        %i[sar_responder ot_ico_sar_noff_trig_awresp],
+        %i[sar_responder ot_ico_sar_noff_trig_awresp_accepted],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_awresp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awresp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awresp_accepted],
+      )
     }
   end
 
-  describe :reassign_user do
+  describe "remove_linked_case" do
+    let(:event) { :remove_linked_case }
+
     it {
-      should have_after_hook(
-        [:disclosure_specialist, :ot_ico_sar_noff_trig_draft_accepted],
-        [:disclosure_specialist, :ot_ico_sar_noff_pdacu],
-        [:disclosure_specialist, :ot_ico_sar_noff_trig_awdisp],
-
-        [:disclosure_specialist_coworker, :ot_ico_sar_noff_trig_draft_accepted],
-        [:disclosure_specialist_coworker, :ot_ico_sar_noff_pdacu],
-        [:disclosure_specialist_coworker, :ot_ico_sar_noff_trig_awdisp],
-
-        [:sar_responder, :ot_ico_sar_noff_draft],
-        [:sar_responder, :ot_ico_sar_noff_trig_draft],
-        [:sar_responder, :ot_ico_sar_noff_trig_draft_accepted],
-        [:sar_responder, :ot_ico_sar_noff_pdacu],
-        [:sar_responder, :ot_ico_sar_noff_trig_awdisp],
-
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_draft],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_draft_accepted],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_pdacu],
-        [:another_sar_responder_in_same_team, :ot_ico_sar_noff_trig_awdisp],
-       ).with_hook('Workflows::Hooks', :reassign_user_email)
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[disclosure_bmt ot_ico_sar_noff_unassigned],
+        %i[disclosure_bmt ot_ico_sar_noff_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_closed],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awresp_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_draft_accepted],
+        %i[disclosure_bmt ot_ico_sar_noff_trig_awdisp],
+        %i[disclosure_bmt ot_ico_sar_noff_pdacu],
+      )
     }
   end
 
+  describe "respond" do
+    let(:event) { :respond }
+
+    it {
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[sar_responder ot_ico_sar_noff_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_awdisp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awdisp],
+      )
+    }
+  end
+
+  describe "respond_and_close" do
+    let(:event) { :respond_and_close }
+
+    it {
+      expect(event).to permit_event_to_be_triggered_only_by(
+        %i[sar_responder ot_ico_sar_noff_draft],
+        %i[sar_responder ot_ico_sar_noff_trig_awdisp],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_draft],
+        %i[another_sar_responder_in_same_team ot_ico_sar_noff_trig_awdisp],
+      )
+    }
+  end
 end
+# rubocop:enable RSpec/InstanceVariable, RSpec/BeforeAfterAll

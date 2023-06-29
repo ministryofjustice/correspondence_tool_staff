@@ -1,15 +1,13 @@
-require 'csv'
-require File.join(Rails.root, 'lib', 'rake_task_helpers', 'host_env')
+require "csv"
+require Rails.root.join("lib/rake_task_helpers/host_env")
 
 class GroupEmailSeeder
-
-  PATH = ENV['TEAM_IMPORT_CSV']
-
-
+  PATH = ENV["TEAM_IMPORT_CSV"]
 
   def initialize
-    raise 'Set TEAM_IMPORT_CSV env var to point to the CSV file containing team data' if PATH.blank?
-    @filename = File.expand_path(File.join(PATH, '..', 'group_emails.csv'))
+    raise "Set TEAM_IMPORT_CSV env var to point to the CSV file containing team data" if PATH.blank?
+
+    @filename = File.expand_path(File.join(PATH, "..", "group_emails.csv"))
     @bg = nil
     @dir = nil
     @bu = nil
@@ -21,38 +19,39 @@ class GroupEmailSeeder
     end
   end
 
-  private
+private
 
   def process_row(row)
-    puts "Processing row #{row.inspect}"
+    Rails.logger.debug "Processing row #{row.inspect}"
     return if header_row?(row)
+
     bg, dir, bu, _lead, _areas, email = row
     if bg.present?
       @bg = BusinessGroup.find_by(name: bg)
-      puts "Found Business Group #{@bg.name}"
+      Rails.logger.debug "Found Business Group #{@bg.name}"
       return
     end
 
     if dir.present?
       @dir = @bg.directorates.find_by!(name: dir)
-      puts "Found Directorate #{@dir.name}"
+      Rails.logger.debug "Found Directorate #{@dir.name}"
       return
     end
 
     if bu.present?
       @bu = @dir.business_units.find_by!(name: bu)
-      puts "Found Business Unit #{@bu.name}"
+      Rails.logger.debug "Found Business Unit #{@bu.name}"
     end
 
     if email.present?
       email = normalize_email(email)
-      @bu.update!(email: email)
-      puts "Added email #{email} to business unit #{@bu.name}"
+      @bu.update!(email:)
+      Rails.logger.debug "Added email #{email} to business unit #{@bu.name}"
     end
   end
 
   def header_row?(row)
-    row.first == 'Business Unit Group'
+    row.first == "Business Unit Group"
   end
 
   def normalize_email(email)

@@ -1,6 +1,6 @@
 class AddStateToCorrespondence < ActiveRecord::Migration[5.0]
   def up
-    add_column :correspondence, :state, :string, default: 'submitted'
+    add_column :correspondence, :state, :string, default: "submitted"
   end
 
   def down

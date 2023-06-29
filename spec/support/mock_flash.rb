@@ -1,4 +1,3 @@
-
 class MockFlash
   attr_reader :kept
 

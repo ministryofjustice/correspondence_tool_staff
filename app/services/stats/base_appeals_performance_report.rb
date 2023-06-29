@@ -1,18 +1,17 @@
 module Stats
   class BaseAppealsPerformanceReport < BaseReport
-
     R002_SPECIFIC_COLUMNS = {
-        business_group:                  'Business group',
-        directorate:                     'Directorate',
-        business_unit:                   'Business unit',
-        responsible:                     'Responsible'
+      business_group: "Business group",
+      directorate: "Directorate",
+      business_unit: "Business unit",
+      responsible: "Responsible",
     }.freeze
 
     R002_SPECIFIC_SUPERHEADINGS = {
-        business_group:                  '',
-        directorate:                     '',
-        business_unit:                   '',
-        responsible:                     ''
+      business_group: "",
+      directorate: "",
+      business_unit: "",
+      responsible: "",
     }.freeze
 
     class << self
@@ -33,14 +32,14 @@ module Stats
     end
 
     def run(*)
-      Case::Base.find(case_ids).reject { |k| k.unassigned? }.each { |kase| analyse_case(kase) }
+      Case::Base.find(case_ids).reject(&:unassigned?).each { |kase| analyse_case(kase) }
       @stats.finalise
     end
 
     INDEXES_FOR_PERCENTAGE_COLUMNS = [4, 10].freeze
 
     def to_csv
-      csv = @stats.to_csv(row_names_as_first_column: false, superheadings: superheadings)
+      csv = @stats.to_csv(row_names_as_first_column: false, superheadings:)
 
       csv.map.with_index do |row, row_index|
         row.map.with_index do |item, item_index|
@@ -49,7 +48,7 @@ module Stats
             header_cell row_index, item
             # item at index+1 is the case count - don't mark 0/0 as Red RAG rating
             # These are the positions of the items which need a RAG rating
-          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index+1] != 0
+          elsif INDEXES_FOR_PERCENTAGE_COLUMNS.include?(item_index) && row[item_index + 1] != 0
             OpenStruct.new value: item, rag_rating: rag_rating(item)
           else
             OpenStruct.new value: item
@@ -58,7 +57,7 @@ module Stats
       end
     end
 
-    private
+  private
 
     def analyse_case(kase)
       column_key = analyse_timeliness(kase)
@@ -70,11 +69,11 @@ module Stats
     end
 
     def analyse_closed_case(kase)
-      kase.responded_in_time? ? 'responded_in_time' : 'responded_late'
+      kase.responded_in_time? ? "responded_in_time" : "responded_late"
     end
 
     def analyse_open_case(kase)
-      kase.already_late? ? 'open_late' : 'open_in_time'
+      kase.already_late? ? "open_late" : "open_in_time"
     end
   end
 end

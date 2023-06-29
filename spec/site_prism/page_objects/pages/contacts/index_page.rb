@@ -4,12 +4,12 @@ module PageObjects
       class IndexPage < PageObjects::Pages::Base
         include SitePrism::Support::AssignToBusinessUnitHelpers
 
-        set_url '/contacts'
+        set_url "/contacts"
 
-        section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+        section :primary_navigation, PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
         section :page_heading,
-                PageObjects::Sections::PageHeadingSection, '.page-heading'
+                PageObjects::Sections::PageHeadingSection, ".page-heading"
       end
     end
   end

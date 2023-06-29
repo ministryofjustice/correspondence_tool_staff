@@ -1,23 +1,23 @@
 require "rails_helper"
 
-require 'extensions/enumerable'
+require "extensions/enumerable"
 
 describe Enumerable do
-  describe 'singular' do
-    it 'returns the singular item in the enumerable' do
+  describe "singular" do
+    it "returns the singular item in the enumerable" do
       obj = [:a]
       expect(obj.singular).to eq :a
     end
 
-    it 'raises if the enumerable has zero items' do
+    it "raises if the enumerable has zero items" do
       obj = []
       expect {
         obj.singular
       }.to raise_error Enumerable::NotSingular, "length 0 is not 1"
     end
 
-    it 'raises if the enumerable has more than one item' do
-      obj = [:a, :b]
+    it "raises if the enumerable has more than one item" do
+      obj = %i[a b]
       expect {
         obj.singular
       }.to raise_error Enumerable::NotSingular, "length 2 is not 1"

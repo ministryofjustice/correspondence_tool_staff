@@ -1,12 +1,12 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'teams/move_to_business_group.html.slim', type: :view do
-  let(:origin_business_group) { find_or_create :business_group, name: 'Origin business group' }
+describe "teams/move_to_business_group.html.slim", type: :view do
+  let(:origin_business_group) { find_or_create :business_group, name: "Origin business group" }
   let(:directorate) { create :directorate, business_group: origin_business_group, name: "Admin direcorate" }
-  let(:manager)      { create :manager }
+  let(:manager) { create :manager }
 
-  it 'displays all business groups' do
-    find_or_create :business_group, name: 'New business group'
+  it "displays all business groups" do
+    find_or_create :business_group, name: "New business group"
     login_as manager
     assign(:team, directorate)
 

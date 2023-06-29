@@ -18,34 +18,32 @@
 
 module CaseClosure
   class Outcome < Metadatum
-
     def self.granted
-      where(abbreviation: 'granted').singular
+      where(abbreviation: "granted").singular
     end
 
     def self.part_refused
-      where(abbreviation: 'part').singular
+      where(abbreviation: "part").singular
     end
 
     def self.fully_refused
-      where(abbreviation: 'refused').singular
+      where(abbreviation: "refused").singular
     end
 
     def self.clarify
-      where(abbreviation: 'clarify').singular
+      where(abbreviation: "clarify").singular
     end
 
     def granted?
-      abbreviation == 'granted'
+      abbreviation == "granted"
     end
 
     def part_refused?
-      abbreviation == 'part'
+      abbreviation == "part"
     end
 
     def fully_refused?
-      abbreviation == 'refused'
+      abbreviation == "refused"
     end
-
   end
 end

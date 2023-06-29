@@ -1,6 +1,5 @@
 class CreateSearchQueries < ActiveRecord::Migration[5.0]
   def change
-
     create_table :search_queries do |t|
       t.string :query_hash, null: false
       t.integer :user_id, null: false
@@ -12,6 +11,6 @@ class CreateSearchQueries < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
-    add_index :search_queries, :query_hash, unique: true, name: 'index_search_queries_uuid'
+    add_index :search_queries, :query_hash, unique: true, name: "index_search_queries_uuid"
   end
 end

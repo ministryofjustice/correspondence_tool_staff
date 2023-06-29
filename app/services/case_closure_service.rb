@@ -1,5 +1,4 @@
 class CaseClosureService
-
   attr_reader :result, :flash_message
 
   def initialize(kase, user, params)
@@ -13,7 +12,7 @@ class CaseClosureService
     @kase.prepare_for_close
     if @kase.update(@params)
       @kase.close(@user)
-      @flash_message = I18n.t('notices.case_closed')
+      @flash_message = I18n.t("notices.case_closed")
       add_ico_decision_files if @kase.ico?
       add_retention_schedule
       @result = :ok
@@ -22,11 +21,11 @@ class CaseClosureService
     end
   end
 
-  private
+private
 
   def add_retention_schedule
     service = RetentionSchedules::AddScheduleService.new(
-      kase: @kase, user: @user
+      kase: @kase, user: @user,
     )
     service.call
   end

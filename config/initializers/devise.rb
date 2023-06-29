@@ -12,19 +12,19 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'noreply@digital.justice.gov.uk'
+  config.mailer_sender = "noreply@digital.justice.gov.uk"
 
   # Configure the class responsible to send e-mails.
-  config.mailer = 'DeviseMailer'
+  config.mailer = "DeviseMailer"
 
   # Configure the parent class responsible to send e-mails.
-  config.parent_mailer = 'GovukNotifyRails::Mailer'
+  config.parent_mailer = "GovukNotifyRails::Mailer"
 
   # ==> ORM configuration
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
-  require 'devise/orm/active_record'
+  require "devise/orm/active_record"
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
@@ -158,7 +158,7 @@ Devise.setup do |config|
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
-  config.timeout_in = Rails.env.development? ? 12.day : 60.minutes
+  config.timeout_in = Rails.env.development? ? 12.days : 60.minutes
 
   # ==> Configuration for :lockable
   # Defines which strategy will be used to lock an account.
@@ -243,9 +243,9 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   config.omniauth :azure_activedirectory_v2,
-                  tenant_id:     ENV['OMNIAUTH_AZURE_TENANT_ID'],
-                  client_id:     ENV['OMNIAUTH_AZURE_CLIENT_ID'],
-                  client_secret: ENV['OMNIAUTH_AZURE_CLIENT_SECRET']
+                  tenant_id: ENV["OMNIAUTH_AZURE_TENANT_ID"],
+                  client_id: ENV["OMNIAUTH_AZURE_CLIENT_ID"],
+                  client_secret: ENV["OMNIAUTH_AZURE_CLIENT_SECRET"]
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

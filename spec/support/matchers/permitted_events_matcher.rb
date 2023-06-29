@@ -1,4 +1,4 @@
-require 'rspec/expectations'
+require "rspec/expectations"
 
 RSpec::Matchers.define :have_no_permitted_events do
   match do |controller|
@@ -8,7 +8,6 @@ RSpec::Matchers.define :have_no_permitted_events do
     "expected permitted_events to be empty, was #{actual.instance_variable_get(:@permitted_events).inspect}"
   end
 end
-
 
 RSpec::Matchers.define :have_permitted_events do |*events|
   match do |controller|
@@ -20,7 +19,6 @@ RSpec::Matchers.define :have_permitted_events do |*events|
   end
 end
 
-
 RSpec::Matchers.define :have_permitted_events_including do |*args|
   match do |controller|
     (args - controller.instance_variable_get(:@permitted_events)).empty?
@@ -29,8 +27,6 @@ RSpec::Matchers.define :have_permitted_events_including do |*args|
     "expected permitted_events to include #{args.inspect}, was #{actual.instance_variable_get(:@permitted_events).inspect}"
   end
 end
-
-
 
 RSpec::Matchers.define :have_nil_permitted_events do
   match do |controller|

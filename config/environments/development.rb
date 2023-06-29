@@ -5,7 +5,7 @@ Rails.application.config.hosts = [
   IPAddr.new("::/0"),             # All IPv6 addresses.
   "localhost",                    # The localhost reserved domain.
   ENV["RAILS_DEVELOPMENT_HOST_DNS"], # Additional host for development.
-  ENV["RAILS_DEVELOPMENT_HOST_NAME"]
+  ENV["RAILS_DEVELOPMENT_HOST_NAME"],
 ]
 
 Rails.application.configure do
@@ -14,17 +14,17 @@ Rails.application.configure do
     Bullet.alert         = false
     Bullet.bullet_logger = true
     Bullet.console       = true
-  # Bullet.growl         = true
+    # Bullet.growl         = true
     Bullet.rails_logger  = false
     Bullet.add_footer    = false
     # Closed cases action - for some reason the CSV download needs the eager loading, but
     # the main display is less interested.
-    [:outcome, :info_held_status, :assignments, :cases_exemptions, :exemptions].each do |foi_assoc|
-      Bullet.add_safelist :type => :unused_eager_loading,
-                           :class_name => "Case::FOI::Standard",
-                           :association => foi_assoc
+    %i[outcome info_held_status assignments cases_exemptions exemptions].each do |foi_assoc|
+      Bullet.add_safelist type: :unused_eager_loading,
+                          class_name: "Case::FOI::Standard",
+                          association: foi_assoc
     end
-    Bullet.raise         = false # raise an error if n+1 query occurs
+    Bullet.raise = false # raise an error if n+1 query occurs
   end
 
   # Settings specified here will take precedence over those in config/application.rb.
@@ -42,13 +42,13 @@ Rails.application.configure do
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
-  if Rails.root.join('tmp', 'caching-dev.txt').exist?
+  if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
 
     config.cache_store = :memory_store
     config.public_file_server.headers = {
-      'Cache-Control' => "public, max-age=#{2.days.to_i}"
+      "Cache-Control" => "public, max-age=#{2.days.to_i}",
     }
   else
     config.action_controller.perform_caching = false
@@ -67,7 +67,6 @@ Rails.application.configure do
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
   config.action_mailer.default_url_options = { host: Settings.cts_email_url, port: Settings.cts_email_port }
-
 
   # Raise exceptions for disallowed deprecations.
   config.active_support.disallowed_deprecation = :raise
@@ -106,11 +105,9 @@ Rails.application.configure do
   # specified in /config/intializers/lograge.rb
   #
   config.lograge.keep_original_rails_log = true
-  config.lograge.logger = ActiveSupport::Logger.new "#{Rails.root}/log/lograge_#{Rails.env}.log"
+  config.lograge.logger = ActiveSupport::Logger.new Rails.root.join("log/lograge_#{Rails.env}.log")
 
-  if defined?(BetterErrors)
-    if ENV.key? 'SHOW_BETTER_ERRORS_TO'
-      BetterErrors::Middleware.allow_ip! ENV['SHOW_BETTER_ERRORS_TO']
-    end
+  if defined?(BetterErrors) && (ENV.key? "SHOW_BETTER_ERRORS_TO")
+    BetterErrors::Middleware.allow_ip! ENV["SHOW_BETTER_ERRORS_TO"]
   end
 end

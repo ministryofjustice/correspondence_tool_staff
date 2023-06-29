@@ -29,18 +29,17 @@
 #
 
 class Case::ICO::SAR < Case::ICO::Base
-
   def self.decorator_class
     Case::ICO::SARDecorator
   end
 
-  def original_case_type; 'SAR' end
+  def original_case_type = "SAR"
 
   def has_overturn?
-    linked_cases.pluck(:type).include?('Case::OverturnedICO::SAR')
+    linked_cases.pluck(:type).include?("Case::OverturnedICO::SAR")
   end
 
   def reset_responding_assignment_flag
-    self.responder_assignment.update(state: 'pending')
+    responder_assignment.update(state: "pending")
   end
 end

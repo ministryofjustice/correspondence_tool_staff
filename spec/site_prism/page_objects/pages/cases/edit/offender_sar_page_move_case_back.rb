@@ -3,23 +3,21 @@ module PageObjects
     module Cases
       module Edit
         class OffenderSARPageMoveCaseBack < PageObjects::Pages::Base
-
-          set_url '/cases/offender_sars/{id}/move_case_back'
+          set_url "/cases/offender_sars/{id}/move_case_back"
 
           section :primary_navigation,
-                  PageObjects::Sections::PrimaryNavigationSection, '.global-nav'
+                  PageObjects::Sections::PrimaryNavigationSection, ".global-nav"
 
           section :page_heading,
-                  PageObjects::Sections::PageHeadingSection, '.page-heading'
+                  PageObjects::Sections::PageHeadingSection, ".page-heading"
 
-          element :extra_comment, '#extra_comment'
+          element :extra_comment, "#extra_comment"
 
-          element :continue_button, '.button'
-          
+          element :continue_button, ".button"
+
           def fill_in_reason(reason)
             extra_comment.set(reason)
           end
-
         end
       end
     end

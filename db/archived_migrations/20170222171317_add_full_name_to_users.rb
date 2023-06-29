@@ -1,5 +1,5 @@
 class AddFullNameToUsers < ActiveRecord::Migration[5.0]
-  class User < ActiveRecord::Base
+  class User < ApplicationRecord
   end
 
   def up

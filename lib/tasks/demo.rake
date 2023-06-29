@@ -1,12 +1,11 @@
 namespace :demo do
-
-  desc 'Sets specified case to be visible by Press office: rake demo:viz[170821004]'
-  task :press, [:case_num] => :environment do  | _task, args |
+  desc "Sets specified case to be visible by Press office: rake demo:viz[170821004]"
+  task :press, [:case_num] => :environment do |_task, args|
     update_case_dates(args[:case_num], 1)
   end
 
-  desc 'Sets specified case to be respondable by kilo: rake demo:kilo[170823004]'
-  task :kilo, [:case_num] => :environment do  | _task, args |
+  desc "Sets specified case to be respondable by kilo: rake demo:kilo[170823004]"
+  task :kilo, [:case_num] => :environment do  |_task, args|
     update_case_dates(args[:case_num], 4)
   end
 end
@@ -29,10 +28,9 @@ end
 
 def print_case(kase, heading)
   puts " >>>> #{heading} <<<<<"
-  puts sprintf('%20s: %s', 'created_at', kase.created_at.strftime('%Y-%m-%d %H:%M:%S'))
-  puts sprintf('%20s: %s', 'received_date', kase.received_date.strftime('%Y-%m-%d %H:%M:%S'))
-  puts sprintf('%20s: %s', 'escalation_deadline', kase.escalation_deadline.strftime('%Y-%m-%d %H:%M:%S'))
-  puts sprintf('%20s: %s', 'internal_deadline', kase.internal_deadline.strftime('%Y-%m-%d %H:%M:%S'))
-  puts sprintf('%20s: %s', 'external_deadline', kase.external_deadline.strftime('%Y-%m-%d %H:%M:%S'))
+  puts sprintf("%20s: %s", "created_at", kase.created_at.strftime("%Y-%m-%d %H:%M:%S"))
+  puts sprintf("%20s: %s", "received_date", kase.received_date.strftime("%Y-%m-%d %H:%M:%S"))
+  puts sprintf("%20s: %s", "escalation_deadline", kase.escalation_deadline.strftime("%Y-%m-%d %H:%M:%S"))
+  puts sprintf("%20s: %s", "internal_deadline", kase.internal_deadline.strftime("%Y-%m-%d %H:%M:%S"))
+  puts sprintf("%20s: %s", "external_deadline", kase.external_deadline.strftime("%Y-%m-%d %H:%M:%S"))
 end
-

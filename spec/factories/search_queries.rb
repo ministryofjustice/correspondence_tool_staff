@@ -18,20 +18,20 @@
 FactoryBot.define do
   factory :search_query do
     user_id { find_or_create(:manager).id }
-    search_text { 'Winnie the Pooh' }
+    search_text { "Winnie the Pooh" }
     list_path { nil }
-    query_type { 'search' }
+    query_type { "search" }
     parent_id { nil }
     num_results { 33 }
     num_clicks { 0 }
     highest_position { nil }
   end
 
-  factory :list_query, class: SearchQuery do
+  factory :list_query, class: "SearchQuery" do
     user_id { find_or_create(:manager).id }
     search_text { nil }
-    list_path { '/cases/open' }
-    query_type { 'list' }
+    list_path { "/cases/open" }
+    query_type { "list" }
     parent_id { nil }
     num_results { 33 }
     num_clicks { 0 }
@@ -39,7 +39,7 @@ FactoryBot.define do
   end
 
   trait :filter do
-    query_type { 'filter' }
+    query_type { "filter" }
   end
 
   trait :clicked do
@@ -49,15 +49,15 @@ FactoryBot.define do
 
   trait :simple_list do
     search_text { nil }
-    query_type { 'list' }
-    list_path { '/cases/open' }
+    query_type { "list" }
+    list_path { "/cases/open" }
   end
 
   trait :filtered_list do
     search_text { nil }
-    query_type { 'filter' }
-    list_path { '/cases/open/in_time' }
-    filter_case_type { ['foi-ir-compliance'] }
+    query_type { "filter" }
+    list_path { "/cases/open/in_time" }
+    filter_case_type { %w[foi-ir-compliance] }
     filter_sensitivity { [] }
   end
 end

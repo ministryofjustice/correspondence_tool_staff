@@ -18,55 +18,53 @@
 
 module CaseClosure
   class RefusalReason < Metadatum
-
-    scope :sar, -> { where(abbreviation: 'sartmm')}
-    scope :foi, -> { where.not(abbreviation: 'sartmm')}
+    scope :sar, -> { where(abbreviation: "sartmm") }
+    scope :foi, -> { where.not(abbreviation: "sartmm") }
 
     def self.exempt
-      abbrev('exempt')
+      abbrev("exempt")
     end
 
     def self.noinfo
-      abbrev('noinfo')
+      abbrev("noinfo")
     end
 
     def self.notmet
-      abbrev('notmet')
+      abbrev("notmet")
     end
 
     def self.cost
-      abbrev('cost')
+      abbrev("cost")
     end
 
     def self.vex
-      abbrev('vex')
+      abbrev("vex")
     end
 
     def self.repeat
-      abbrev('repeat')
+      abbrev("repeat")
     end
 
     def self.tmm
-      abbrev('tmm')
+      abbrev("tmm")
     end
 
     def self.sar_tmm
-      abbrev('sartmm')
+      abbrev("sartmm")
     end
 
     def self.ncnd
-      abbrev('ncnd')
+      abbrev("ncnd")
     end
 
     def ncnd?
-      abbreviation == 'ncnd'
+      abbreviation == "ncnd"
     end
 
     def self.abbrev(abbreviation)
-      where(abbreviation: abbreviation).first
+      where(abbreviation:).first
     end
 
     private_class_method :abbrev
-
   end
 end

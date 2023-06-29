@@ -21,49 +21,48 @@
 class CaseTransition < ApplicationRecord
   include Warehousable
 
-  ASSIGN_RESPONDER_EVENT = 'assign_responder'.freeze
+  ASSIGN_RESPONDER_EVENT = "assign_responder".freeze
 
   belongs_to :case,
              inverse_of: :transitions,
-             class_name: 'Case::Base',
-             foreign_key: :case_id
+             class_name: "Case::Base"
 
   # This list should be bigger, but don't have time or inclination to move all event names here (yet)
-  EXTEND_FOR_PIT_EVENT = 'extend_for_pit'.freeze
-  REMOVE_PIT_EXTENSION_EVENT = 'remove_pit_extension'.freeze
-  EXTEND_SAR_DEADLINE_EVENT = 'extend_sar_deadline'.freeze
-  REMOVE_SAR_EXTENSION_EVENT = 'remove_sar_deadline_extension'.freeze
-  ADD_MESSAGE_TO_CASE_EVENT = 'add_message_to_case'.freeze
-  ADD_NOTE_TO_CASE_EVENT = 'add_note_to_case'.freeze
-  ANNOTATE_RETENTION_CHANGES = 'annotate_retention_changes'.freeze
-  ANNOTATE_SYSTEM_RETENTION_CHANGES = 'annotate_system_retention_changes'.freeze
+  EXTEND_FOR_PIT_EVENT = "extend_for_pit".freeze
+  REMOVE_PIT_EXTENSION_EVENT = "remove_pit_extension".freeze
+  EXTEND_SAR_DEADLINE_EVENT = "extend_sar_deadline".freeze
+  REMOVE_SAR_EXTENSION_EVENT = "remove_sar_deadline_extension".freeze
+  ADD_MESSAGE_TO_CASE_EVENT = "add_message_to_case".freeze
+  ADD_NOTE_TO_CASE_EVENT = "add_note_to_case".freeze
+  ANNOTATE_RETENTION_CHANGES = "annotate_retention_changes".freeze
+  ANNOTATE_SYSTEM_RETENTION_CHANGES = "annotate_system_retention_changes".freeze
 
   after_destroy :update_most_recent, if: :most_recent?
 
   validates :message, presence: true, if: :requires_message?
 
   jsonb_accessor :metadata,
-                 message:                    :text,
-                 filenames:                  [:string, array: true, default: []],
-                 final_deadline:             :date,
-                 linked_case_id:             :integer,
-                 original_final_deadline:    :date
+                 message: :text,
+                 filenames: [:string, { array: true, default: [] }],
+                 final_deadline: :date,
+                 linked_case_id: :integer,
+                 original_final_deadline: :date
 
-  belongs_to :acting_user, class_name: 'User'
-  belongs_to :acting_team, class_name: 'Team'
-  belongs_to :target_user, class_name: 'User'
-  belongs_to :target_team, class_name: 'Team'
+  belongs_to :acting_user, class_name: "User"
+  belongs_to :acting_team, class_name: "Team"
+  belongs_to :target_user, class_name: "User"
+  belongs_to :target_team, class_name: "Team"
 
-  scope :accepted,          -> { where to_state: 'drafting'  }
-  scope :drafting,          -> { where to_state: 'drafting'  }
+  scope :accepted,          -> { where to_state: "drafting"  }
+  scope :drafting,          -> { where to_state: "drafting"  }
   scope :messages,          -> { where(event: ADD_MESSAGE_TO_CASE_EVENT).order(:id) }
-  scope :responded,         -> { where event: 'respond' }
-  scope :further_clearance, -> { where event: 'request_further_clearance' }
+  scope :responded,         -> { where event: "respond" }
+  scope :further_clearance, -> { where event: "request_further_clearance" }
 
-  scope :case_history, -> { where.not(event: ADD_MESSAGE_TO_CASE_EVENT)}
+  scope :case_history, -> { where.not(event: ADD_MESSAGE_TO_CASE_EVENT) }
 
   def record_state_change(kase)
-    kase.update!(current_state: self.to_state, last_transitioned_at: self.created_at)
+    kase.update!(current_state: to_state, last_transitioned_at: created_at)
   end
 
   def self.next_sort_key(kase)
@@ -76,11 +75,12 @@ class CaseTransition < ApplicationRecord
     transition.update!(most_recent: false) unless transition.nil?
   end
 
-  private
+private
 
   def update_most_recent
     last_transition = self.case.transitions.order(:sort_key).last
-    return unless last_transition.present?
+    return if last_transition.blank?
+
     last_transition.update_column(:most_recent, true)
   end
 

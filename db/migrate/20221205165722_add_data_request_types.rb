@@ -1,4 +1,5 @@
 class AddDataRequestTypes < ActiveRecord::Migration[6.1]
+  # rubocop:disable Rails/ReversibleMigration
   def change
     execute <<~SQL
       ALTER TYPE request_types ADD VALUE 'cross_borders';
@@ -6,4 +7,5 @@ class AddDataRequestTypes < ActiveRecord::Migration[6.1]
       ALTER TYPE request_types ADD VALUE 'ndelius';
     SQL
   end
+  # rubocop:enable Rails/ReversibleMigration
 end

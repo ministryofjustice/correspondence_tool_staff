@@ -7,6 +7,6 @@ module Warehousable
 
   # Add any further warehousing operations here, ideally async
   def warehouse
-    ::Warehouse::CaseSyncJob.perform_later(self.class.to_s, self.id)
+    ::Warehouse::CaseSyncJob.perform_later(self.class.to_s, id)
   end
 end

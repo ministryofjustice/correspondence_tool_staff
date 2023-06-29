@@ -1,10 +1,10 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'teams/join_teams.html.slim', type: :view do
-  let(:business_group) { find_or_create :business_group, name: "Admin"}
-  let(:origin_directorate) { find_or_create :directorate, name: 'Origin Directorate', business_group: business_group }
+describe "teams/join_teams.html.slim", type: :view do
+  let(:business_group) { find_or_create :business_group, name: "Admin" }
+  let(:origin_directorate) { find_or_create :directorate, name: "Origin Directorate", business_group: }
   let(:bu) { create :business_unit, directorate: origin_directorate, name: "Admin team" }
-  let(:manager)      { create :manager }
+  let(:manager) { create :manager }
   # before(:each) do
   #   @bg_2 = create :business_group, name: 'HMPPS',
   #                  lead: create(:team_lead, value: 'John Smith')
@@ -15,7 +15,7 @@ describe 'teams/join_teams.html.slim', type: :view do
   #   create :directorate, business_group: @bg_3
   # end
 
-  it 'displays all business groups' do
+  it "displays all business groups" do
     login_as manager
     assign(:directorates, Directorate.all)
     assign(:team, bu)

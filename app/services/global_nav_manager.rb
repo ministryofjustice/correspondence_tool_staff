@@ -10,10 +10,8 @@ class GlobalNavManager
     @nav_pages = pages_for_user(pages)
   end
 
-  def each
-    @nav_pages.each do |nav_page|
-      yield(nav_page)
-    end
+  def each(&block)
+    @nav_pages.each(&block)
   end
 
   def current_page_or_tab
@@ -32,7 +30,7 @@ class GlobalNavManager
     CaseFinderService.new(user).for_params(request.params)
   end
 
-  private
+private
 
   def page_or_tab_for_request(request)
     @nav_pages.each do |page|
@@ -40,16 +38,16 @@ class GlobalNavManager
         page.tabs.each do |tab|
           return tab if tab.matches_path?(request.path)
         end
-      else
-        return page if page.matches_path?(request.path)
+      elsif page.matches_path?(request.path)
+        return page
       end
     end
     nil
   end
 
   def pages_for_user(pages)
-    pages.map do |page_name, page_settings|
+    pages.map { |page_name, page_settings|
       Page.new(name: page_name, parent: self, attrs: page_settings)
-    end.compact.select(&:visible?)
+    }.compact.select(&:visible?)
   end
 end

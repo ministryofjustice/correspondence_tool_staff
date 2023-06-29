@@ -1,10 +1,9 @@
-require 'rails_helper'
+require "rails_helper"
 
-describe 'cases/links/new.html.slim', type: :view do
+describe "cases/links/new.html.slim", type: :view do
+  let(:kase) { CaseLinkDecorator.decorate create(:case) }
 
-  let(:kase) { CaseLinkDecorator.decorate create(:case)}
-
-  it 'displays the new case page' do
+  it "displays the new case page" do
     assign(:case, kase)
 
     render
@@ -23,5 +22,4 @@ describe 'cases/links/new.html.slim', type: :view do
     expect(page).to have_submit_button
     expect(page).to have_cancel
   end
-
 end

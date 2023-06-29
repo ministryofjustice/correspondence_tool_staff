@@ -1,5 +1,4 @@
 class CaseTeamCollection
-
   attr_reader :teams
 
   def initialize(kase)
@@ -7,7 +6,7 @@ class CaseTeamCollection
     @teams = gather_teams
   end
 
-  private
+private
 
   def gather_teams
     teams = @kase.transitions.map(&:target_team) + @kase.transitions.map(&:acting_team)

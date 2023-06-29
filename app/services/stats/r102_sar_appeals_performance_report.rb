@@ -1,21 +1,20 @@
 module Stats
   class R102SarAppealsPerformanceReport < BaseAppealsPerformanceReport
-
     def superheadings
       [
         ["#{self.class.title} - #{reporting_period}"],
         R002_SPECIFIC_SUPERHEADINGS
             .merge(AppealAnalyser::SAR_IR_APPEAL_SUPERHEADINGS)
-            .merge(AppealAnalyser::ICO_APPEAL_SUPERHEADINGS).values
+            .merge(AppealAnalyser::ICO_APPEAL_SUPERHEADINGS).values,
       ]
     end
 
     def self.title
-      'SAR Appeal performance stats'
+      "SAR Appeal performance stats"
     end
 
     def self.description
-      'Shows all ICO appeals, and SAR IRs which are open, or have been closed this month, analysed by timeliness'
+      "Shows all ICO appeals, and SAR IRs which are open, or have been closed this month, analysed by timeliness"
     end
 
     def case_ids
@@ -28,7 +27,7 @@ module Stats
       ReportType.r102
     end
 
-    private
+  private
 
     def column_headings
       R002_SPECIFIC_COLUMNS
@@ -37,7 +36,7 @@ module Stats
     end
 
     def appeal_types
-      %w{ sar_ir ico }
+      %w[sar_ir ico]
     end
   end
 end

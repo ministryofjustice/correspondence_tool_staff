@@ -1,6 +1,5 @@
 module Warehouse
   class PurgeReportsJob < ApplicationJob
-
     queue_as :reports
 
     def perform

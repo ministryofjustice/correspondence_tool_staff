@@ -18,7 +18,7 @@
 #  to_workflow    :string
 #
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe CaseTransition, type: :model do
   let(:kase) { create(:case) }
@@ -38,28 +38,28 @@ RSpec.describe CaseTransition, type: :model do
            target_team_id: approving_team.id
   end
 
-  it 'has a acting_team_id' do
+  it "has a acting_team_id" do
     expect(assign_responder_transition.acting_team_id)
       .to eq managing_team.id
   end
 
-  it 'has an approving_team' do
+  it "has an approving_team" do
     expect(flag_case_for_clearance_transition.target_team_id)
       .to eq approving_team.id
   end
 
-  describe 'after_destroy' do
+  describe "after_destroy" do
     let(:case_assigned) do
       create(
         :case_transition_assign_responder,
-        case_id: kase.id
+        case_id: kase.id,
       )
     end
 
     let(:assignment_accepted) do
       create(
         :case_transition_accept_responder_assignment,
-        case_id: kase.id
+        case_id: kase.id,
       )
     end
 
@@ -69,108 +69,110 @@ RSpec.describe CaseTransition, type: :model do
       assignment_accepted
     end
 
-    it 'updates most_recent' do
+    it "updates most_recent" do
       expect(case_assigned.reload.most_recent).to eq false
       expect(assignment_accepted.reload.most_recent).to eq true
-      assignment_accepted.destroy
+      assignment_accepted.destroy!
       expect(case_assigned.reload.most_recent).to eq true
     end
   end
 
-  describe 'responded scope' do
+  describe "responded scope" do
     let!(:responded_transition) do
       create :case_transition_respond, case_id: kase.id
     end
-    let!(:add_responses_transition) do
+
+    before do
       create :case_transition_add_responses, case_id: kase.id
     end
 
     it 'limits scope to "responded" transitions' do
-      expect(CaseTransition.all.count).to eq 5
-      expect(CaseTransition.all.responded.count).to eq 1
-      expect(CaseTransition.all.responded.last).to eq responded_transition
+      expect(described_class.all.count).to eq 5
+      expect(described_class.all.responded.count).to eq 1
+      expect(described_class.all.responded.last).to eq responded_transition
     end
   end
 
-  describe 'further_clearance scope' do
+  describe "further_clearance scope" do
     let!(:further_clearance_transition) do
       create :case_transition_further_clearance, case_id: kase.id
     end
-    let!(:add_responses_transition) do
+
+    before do
       create :case_transition_add_responses, case_id: kase.id
     end
 
     it 'limits scope to "further_clearance" transitions' do
-      expect(CaseTransition.all.count).to eq 5
-      expect(CaseTransition.all.further_clearance.count).to eq 1
-      expect(CaseTransition.all.further_clearance.last).to eq further_clearance_transition
+      expect(described_class.all.count).to eq 5
+      expect(described_class.all.further_clearance.count).to eq 1
+      expect(described_class.all.further_clearance.last).to eq further_clearance_transition
     end
   end
 
-  describe 'case_history scope' do
-    it 'does not return any add messages entries' do
+  describe "case_history scope" do
+    it "does not return any add messages entries" do
       kase = create :accepted_case
       responder = kase.responder
       team = kase.responding_team
 
-      kase.state_machine.add_message_to_case! acting_user: responder, acting_team: team, message: 'Message #1 - from responder'
+      kase.state_machine.add_message_to_case! acting_user: responder, acting_team: team, message: "Message #1 - from responder"
 
       expect(kase.transitions.case_history.map(&:event))
-          .not_to include(['add_message_to_case'])
+          .not_to include(%w[add_message_to_case])
     end
 
-    it 'does not return any flagged/unflagged entries' do
+    it "does not return any flagged/unflagged entries" do
       kase = create :case, :flagged
 
       create :unflag_case_for_clearance_transition, case: kase
 
       expect(kase.transitions.case_history.map(&:event))
-          .not_to include(['flag_for_clearance', 'unflag_for_clearance'])
+          .not_to include(%w[flag_for_clearance unflag_for_clearance])
     end
   end
 
-  describe 'messages scope' do
-    it 'only returns messages for the case' do
+  describe "messages scope" do
+    it "only returns messages for the case" do
       kase = create :pending_dacu_clearance_case
       responder = kase.responder
       team = kase.responding_team
       approver = kase.approvers.first
       approver_team = kase.approving_teams.first
 
-      kase.state_machine.add_message_to_case! acting_user: responder, acting_team: team, message: 'Message #1 - from responder'
-      kase.state_machine.add_message_to_case! acting_user: approver,  acting_team: approver_team,  message: 'Message #2 - from approver'
-      kase.state_machine.add_message_to_case! acting_user: responder,  acting_team: team,  message: 'Message #3 - from responder'
+      kase.state_machine.add_message_to_case! acting_user: responder, acting_team: team, message: "Message #1 - from responder"
+      kase.state_machine.add_message_to_case! acting_user: approver,  acting_team: approver_team, message: "Message #2 - from approver"
+      kase.state_machine.add_message_to_case! acting_user: responder, acting_team: team, message: "Message #3 - from responder"
 
       expect(kase.transitions.messages.size).to eq 3
       expect(kase.transitions.size > 3).to be true
       expect(kase.transitions.messages.map(&:message)).to eq(
         [
-          'Message #1 - from responder',
-          'Message #2 - from approver',
-          'Message #3 - from responder'
-        ])
-
+          "Message #1 - from responder",
+          "Message #2 - from approver",
+          "Message #3 - from responder",
+        ],
+      )
     end
   end
 
-  describe 'message validation' do
-    it 'errors if not present' do
+  describe "message validation" do
+    it "errors if not present" do
       kase = create :accepted_case
-      transition = CaseTransition.new(
-                                   case_id: kase.id,
-                                   acting_user_id: kase.responder.id,
-                                   acting_team_id: kase.responding_team.id
+      transition = described_class.new(
+        case_id: kase.id,
+        acting_user_id: kase.responder.id,
+        acting_team_id: kase.responding_team.id,
       )
 
-      %w(
+      %w[
         add_message_to_case
         add_note_to_case
         annotate_retention_changes
         annotate_system_retention_changes
-      ).each do |event|
+      ].each do |event|
         transition.event = event
 
-        expect(transition).to_not be_valid
+        expect(transition).not_to be_valid
         expect(transition.errors.added?(:message, :blank)).to eq(true)
       end
     end

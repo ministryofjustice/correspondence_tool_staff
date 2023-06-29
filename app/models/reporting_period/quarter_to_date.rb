@@ -4,7 +4,7 @@ module ReportingPeriod
       period_start = Date.current.beginning_of_quarter
       period_end = Date.current
 
-      super(period_start: period_start, period_end: period_end)
+      super(period_start:, period_end:)
     end
   end
 end

@@ -11,26 +11,26 @@ class CaseRemovePITExtensionService
     ActiveRecord::Base.transaction do
       @case.state_machine.remove_pit_extension!(
         acting_user: @user,
-        acting_team: @user.case_team(@case)
+        acting_team: @user.case_team(@case),
       )
 
       @case.remove_pit_deadline!(find_original_final_deadline)
       @result = :ok
     end
     @result
-  rescue => err
-    Rails.logger.error err.to_s
-    Rails.logger.error err.backtrace.join("\n\t")
-    @error = err
+  rescue StandardError => e
+    Rails.logger.error e.to_s
+    Rails.logger.error e.backtrace.join("\n\t")
+    @error = e
     @result = :error
-    raise err
+    raise e
   end
 
-  private
+private
 
   def find_original_final_deadline
     first_pit_extension = @case.transitions
-      .where(event: 'extend_for_pit')
+      .where(event: "extend_for_pit")
       .order(:id)
       .first
 

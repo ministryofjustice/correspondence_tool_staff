@@ -21,21 +21,21 @@ class Cases::LettersController < ApplicationController
           'html:body': @letter.body,
           letter_date: @letter.letter_date,
           requester_reference: @letter.values.requester_reference,
-          'html:letter_address': @letter.letter_address
+          'html:letter_address': @letter.letter_address,
         }
 
-        path = Rails.root.join('lib', 'assets', letter_template.base_template_file_ref)
+        path = Rails.root.join("lib", "assets", letter_template.base_template_file_ref)
         template = Sablon.template(path)
         render plain: template.render_to_string(template_data)
       end
     end
   end
 
-  private
+private
 
   def check_template_selected
     unless params.dig(:letter, :letter_template_id)
-      flash[:alert] = 'Please select a template.'
+      flash[:alert] = "Please select a template."
       redirect_to new_case_letters_path(@case.id, @type) and return
     end
   end

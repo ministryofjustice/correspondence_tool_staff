@@ -1,5 +1,5 @@
 def link_a_case_step(kase:)
-  kase_for_link =  create :accepted_case
+  kase_for_link = create :accepted_case
   open_cases_page.load
   click_link kase.number
   expect(cases_show_page).to be_displayed

@@ -1,5 +1,3 @@
-# rubocop:disable Metrics/ParameterLists
-# rubocop:disable Metrics/CyclomaticComplexity
 def go_to_case_details_step(kase:,
                             page: nil,
                             expected_response_files: nil,
@@ -34,7 +32,7 @@ def go_to_case_details_step(kase:,
   end
 end
 
-def go_to_incoming_cases_step expect_not_to_see_cases: []
+def go_to_incoming_cases_step(expect_not_to_see_cases: [])
   cases_page.homepage_navigation.new_cases.click
   if expect_not_to_see_cases.present?
     expect_not_to_see_cases.each do |kase|

@@ -8,8 +8,8 @@ module Cases
       authorize(@case, :can_add_note_to_case?)
 
       add_message(
-        event_name: 'add_note_to_case!',
-        on_success: case_path(@case, anchor: 'case-history')
+        event_name: "add_note_to_case!",
+        on_success: case_path(@case, anchor: "case-history"),
       )
     end
   end

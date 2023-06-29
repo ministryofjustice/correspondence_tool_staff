@@ -10,19 +10,19 @@
 
 class TeamsUsersRole < ApplicationRecord
   enum role: {
-         manager: 'manager',
-         responder: 'responder',
-         approver: 'approver',
-         admin: 'admin',
-         team_admin: 'team_admin',
-       }
+    manager: "manager",
+    responder: "responder",
+    approver: "approver",
+    admin: "admin",
+    team_admin: "team_admin",
+  }
 
   belongs_to :user
-  belongs_to :team, foreign_key: :team_id, class_name: 'Team'
+  belongs_to :team, foreign_key: :team_id, class_name: "Team" # rubocop:disable Rails/RedundantForeignKey
   scope :manager_roles,   -> { where(role: :manager) }
   scope :responder_roles, -> { where(role: :responder) }
   scope :approver_roles,  -> { where(role: :approver) }
   scope :team_admin_roles, -> { where(role: :team_admin) }
-  scope :active_approver_roles, -> { where(role: :approver).joins(:team).where("teams": {deleted_at: nil}) }
-  scope :active_manager_roles, -> { where(role: :manager).joins(:team).where("teams": {deleted_at: nil}) }
+  scope :active_approver_roles, -> { where(role: :approver).joins(:team).where("teams": { deleted_at: nil }) }
+  scope :active_manager_roles, -> { where(role: :manager).joins(:team).where("teams": { deleted_at: nil }) }
 end

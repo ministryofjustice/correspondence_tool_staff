@@ -11,17 +11,17 @@ class CaseRemoveSARDeadlineExtensionService
     ActiveRecord::Base.transaction do
       @case.state_machine.remove_sar_deadline_extension!(
         acting_user: @user,
-        acting_team: @user.case_team(@case)
+        acting_team: @user.case_team(@case),
       )
 
       @case.reset_deadline!
       @result = :ok
     end
     @result
-  rescue => err
-    Rails.logger.error err.to_s
-    Rails.logger.error err.backtrace.join("\n\t")
-    @error = err
+  rescue StandardError => e
+    Rails.logger.error e.to_s
+    Rails.logger.error e.backtrace.join("\n\t")
+    @error = e
     @result = :error
   end
 end

@@ -10,30 +10,29 @@ class DataRequestCreateService
 
   def call
     ActiveRecord::Base.transaction do
-      begin
-        @result = :unprocessed
-        next if @data_request.blank?
+      @result = :unprocessed
+      next if @data_request.blank?
 
-        @case.save!
+      @case.save!
 
-        if @case.allow_waiting_for_data_state?
-          @case.state_machine.mark_as_waiting_for_data!(
-            acting_user: @user,
-            acting_team: BusinessUnit.dacu_branston,
-          )
-        end
-
-        @result = :ok
-     rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
-       @result = :error
+      if @case.allow_waiting_for_data_state?
+        @case.state_machine.mark_as_waiting_for_data!(
+          acting_user: @user,
+          acting_team: BusinessUnit.dacu_branston,
+        )
       end
+
+      @result = :ok
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::AssociationTypeMismatch
+      @result = :error
     end
   end
 
-  private
+private
 
   def build_data_request(data_request_params)
     return nil unless @case.respond_to? :data_requests
+
     @case.data_requests.new(data_request_params.merge(user_id: @user.id))
   end
 end

@@ -1,6 +1,5 @@
 class CaseRequestAmendsService
-  attr_accessor :result
-  attr_accessor :error
+  attr_accessor :result, :error
 
   def initialize(user:, kase:, message:, is_compliant:)
     @user = user

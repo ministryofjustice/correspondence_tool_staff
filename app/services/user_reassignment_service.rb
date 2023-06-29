@@ -16,35 +16,36 @@ class UserReassignmentService
   end
 
   def call
-    if @target_user.id == @assignment.user_id 
+    if @target_user.id == @assignment.user_id
       @result = :no_changes
-    else 
+    else
       ActiveRecord::Base.transaction do
-        #Add an entry in transitions table
+        # Add an entry in transitions table
         @kase.state_machine.reassign_user!(target_user: @target_user,
-                                          target_team: @target_team,
-                                          acting_user: @acting_user,
-                                          acting_team: @acting_team)
+                                           target_team: @target_team,
+                                           acting_user: @acting_user,
+                                           acting_team: @acting_team)
 
-        #Update the assignment
-        @assignment.update(user_id: @target_user.id)
+        # Update the assignment
+        @assignment.update!(user_id: @target_user.id)
 
         @result = :ok
       end
     end
     @result
-  rescue => err
-    Rails.logger.error err.to_s
-    Rails.logger.error err.backtrace.join("\n\t")
-    @error = err
+  rescue StandardError => e
+    Rails.logger.error e.to_s
+    Rails.logger.error e.backtrace.join("\n\t")
+    @error = e
     @result = :error
   end
 
-  private
+private
 
   def get_team_for_user_and_case_with_role(role, user)
-    teams = @kase.teams.where(role: role) & user.teams.where(role: role)
+    teams = @kase.teams.where(role:) & user.teams.where(role:)
     raise "Unable to allocate acting team with role #{role} to user #{user.id}" if teams.empty?
+
     teams.first
   end
 
@@ -59,7 +60,7 @@ class UserReassignmentService
   def get_roles_for_case
     roles = Set.new
     @kase.assignments.each do |assignment|
-      roles << assignment.role.sub('ing', 'er').to_sym
+      roles << assignment.role.sub("ing", "er").to_sym
     end
     roles.delete(:manager)
   end

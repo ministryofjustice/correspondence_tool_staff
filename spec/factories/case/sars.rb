@@ -29,8 +29,7 @@
 #
 
 FactoryBot.define do
-
-  factory :sar_case, class: Case::SAR::Standard do
+  factory :sar_case, class: "Case::SAR::Standard" do
     transient do
       creation_time       { 4.business_days.ago }
       identifier          { "new sar case" }
@@ -44,31 +43,31 @@ FactoryBot.define do
       i_am_deleted        { false }
     end
 
-    current_state                 { 'unassigned' }
+    current_state                 { "unassigned" }
     sequence(:name)               { |n| "#{identifier} name #{n}" }
     email                         { Faker::Internet.email(name: identifier) }
-    reply_method                  { 'send_by_email' }
+    reply_method                  { "send_by_email" }
     sequence(:subject)            { |n| "#{identifier} subject #{n}" }
     sequence(:message)            { |n| "#{identifier} message #{n}" }
     received_date                 { Time.zone.today.to_s }
     sequence(:postal_address)     { |n| "#{identifier} postal address #{n}" }
     sequence(:subject_full_name)  { |n| "Subject #{n}" }
-    subject_type                  { 'offender' }
-    request_method                { 'post' }
+    subject_type                  { "offender" }
+    request_method                { "post" }
     third_party                   { false }
     created_at                    { creation_time }
     creator                       { create(:user, :orphan) }
 
     trait :third_party do
       third_party { true }
-      third_party_relationship { 'Aunt' }
+      third_party_relationship { "Aunt" }
     end
 
     trait :deleted_case do
       i_am_deleted { true }
     end
 
-    after(:create) do | kase, evaluator|
+    after(:create) do |kase, evaluator|
       ma = kase.managing_assignment
       ma.update! created_at: evaluator.creation_time
 
@@ -81,20 +80,20 @@ FactoryBot.define do
         create :approver_assignment,
                case: kase,
                team: evaluator.approving_team,
-               state: 'pending'
-        kase.update workflow: 'trigger'
+               state: "pending"
+        kase.update! workflow: "trigger"
 
         if evaluator.flag_for_disclosure == :accepted
           disclosure_assignment = kase.assignments.for_team(
-            evaluator.approving_team
+            evaluator.approving_team,
           ).singular
-          disclosure_assignment.update(state: 'accepted',
-                                       user: evaluator.approver)
+          disclosure_assignment.update!(state: "accepted",
+                                        user: evaluator.approver)
         end
       end
 
       if evaluator.i_am_deleted
-        kase.update! deleted: true, reason_for_deletion: 'Needs to go'
+        kase.update! deleted: true, reason_for_deletion: "Needs to go"
       end
     end
 
@@ -113,16 +112,16 @@ FactoryBot.define do
     trait :extended_deadline_sar do
       after(:create) do |kase, evaluator|
         create :case_transition_extend_sar_deadline_by_30_days,
-         case: kase,
-         acting_team: evaluator.managing_team,
-         acting_user: evaluator.manager
+               case: kase,
+               acting_team: evaluator.managing_team,
+               acting_user: evaluator.manager
 
-        kase.extend_deadline!(kase.external_deadline + 30.days,1)
+        kase.extend_deadline!(kase.external_deadline + 30.days, 1)
       end
     end
   end
 
-  factory :awaiting_responder_sar, parent: :sar_case, aliases: [:assigned_sar], class: Case::SAR::Standard do
+  factory :awaiting_responder_sar, parent: :sar_case, aliases: [:assigned_sar], class: "Case::SAR::Standard" do
     transient do
       identifier { "assigned sar" }
     end
@@ -134,8 +133,8 @@ FactoryBot.define do
       create :assignment,
              case: kase,
              team: evaluator.responding_team,
-             state: 'pending',
-             role: 'responding',
+             state: "pending",
+             role: "responding",
              created_at: evaluator.creation_time
       create :case_transition_assign_responder,
              case: kase,
@@ -148,14 +147,14 @@ FactoryBot.define do
   end
 
   factory :accepted_sar, parent: :assigned_sar,
-          aliases: [:sar_being_drafted] do
+                         aliases: [:sar_being_drafted] do
     transient do
       identifier { "accepted sar" }
     end
 
     after(:create) do |kase, evaluator|
       responder = evaluator.responder || responding_team.responders.first
-      kase.responder_assignment.update_attribute :user, responder
+      kase.responder_assignment.update!(user: responder)
       kase.responder_assignment.accepted!
       create :case_transition_accept_responder_assignment,
              case: kase,
@@ -178,15 +177,14 @@ FactoryBot.define do
              acting_user: evaluator.responder,
              target_team: evaluator.approving_team
       kase.reload
-
     end
   end
 
   factory :approved_sar, parent: :pending_dacu_clearance_sar do
     transient do
-# date draft compliant is passed in in a transient blocked so it can is be
-# changed in the tests. It is added to the the case in the after create block
-# to match the order the code updates the case.
+      # date draft compliant is passed in in a transient blocked so it can is be
+      # changed in the tests. It is added to the the case in the after create block
+      # to match the order the code updates the case.
       date_draft_compliant { received_date + 2.days }
     end
 
@@ -262,7 +260,7 @@ FactoryBot.define do
   factory :closed_sar_with_response, parent: :closed_sar do
     transient do
       identifier { "closed sar case with response" }
-      responses { [build(:correspondence_response, type: 'response', user_id: responder.id)] }
+      responses { [build(:correspondence_response, type: "response", user_id: responder.id)] }
     end
 
     after(:create) do |kase, evaluator|
@@ -280,6 +278,6 @@ FactoryBot.define do
   trait :clarification_required do
     refusal_reason              { find_or_create :refusal_reason, :sar_tmm }
     missing_info                { true }
-    message                     { 'info held other, clarification required' }
+    message                     { "info held other, clarification required" }
   end
 end

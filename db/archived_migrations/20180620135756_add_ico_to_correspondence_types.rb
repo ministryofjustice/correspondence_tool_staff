@@ -1,5 +1,5 @@
 class AddIcoToCorrespondenceTypes < ActiveRecord::Migration[5.0]
-  class CorrespondenceType < ActiveRecord::Base
+  class CorrespondenceType < ApplicationRecord
     jsonb_accessor :properties,
                    internal_time_limit: :integer,
                    external_time_limit: :integer,
@@ -13,23 +13,23 @@ class AddIcoToCorrespondenceTypes < ActiveRecord::Migration[5.0]
   # end
 
   def up
-    ico = CorrespondenceType.create!(name: 'Information Commissioner Office appeal.',
-                                     abbreviation: 'ICO',
+    ico = CorrespondenceType.create!(name: "Information Commissioner Office appeal.",
+                                     abbreviation: "ICO",
                                      escalation_time_limit: nil,
                                      internal_time_limit: 10,
                                      external_time_limit: nil,
                                      deadline_calculator_class: nil)
-    BusinessUnit.all.each do | bu|
+    BusinessUnit.all.each do |bu|
       bu.correspondence_type_ids += [ico.id]
     end
   end
 
   def down
-    ico = CorrespondenceType.find_by(abbreviation: 'ICO')
+    ico = CorrespondenceType.find_by(abbreviation: "ICO")
 
     join_recs = TeamCorrespondenceTypeRole.where(correspondence_type_id: [ico.id])
     join_recs.map(&:destroy)
 
-    ico.destroy
+    ico.destroy!
   end
 end

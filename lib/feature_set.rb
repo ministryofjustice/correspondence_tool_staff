@@ -1,4 +1,3 @@
-
 # Determine whether or not a feature is enabled in this environment.
 #
 # usage (for e.g. feature :sars):
@@ -13,7 +12,6 @@ class FeatureSet
   include Singleton
 
   class EnabledFeature
-
     def initialize(config)
       @env_config = config
       @host_env = HostEnv.host_env
@@ -40,7 +38,6 @@ class FeatureSet
     @config = Settings.enabled_features
   end
 
-
   # so that we can write FeatureSet.sars, etc.
   def self.method_missing(meth)
     efs = instance
@@ -63,8 +60,4 @@ class FeatureSet
   def respond_to_missing?(meth, _include_private = false)
     meth.in?(@config.keys) ? true : super
   end
-
-
-
-
 end

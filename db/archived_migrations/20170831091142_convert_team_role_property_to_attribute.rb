@@ -13,20 +13,19 @@ class ConvertTeamRolePropertyToAttribute < ActiveRecord::Migration[5.0]
     end
   end
 
-  private
+private
+
   def convert_role_to_attribute(team)
-    property = team.properties.where(key: 'role').first
-    role = property&.value || 'responder'
+    property = team.properties.where(key: "role").first
+    role = property&.value || "responder"
     team.role = role
     team.save!
-    property.destroy
+    property.destroy!
   end
 
   def convert_role_to_property(team)
-    team.properties.where(key: 'role').map(&:destroy)
-    team.properties << TeamProperty.new(key: 'role', value: team.role)
+    team.properties.where(key: "role").map(&:destroy)
+    team.properties << TeamProperty.new(key: "role", value: team.role)
     team.save!
   end
-
-
 end

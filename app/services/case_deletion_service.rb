@@ -10,8 +10,8 @@ class CaseDeletionService
 
   def call
     if @kase.related_case_links.present?
-      @kase.errors.add(:related_case_links, 
-                        I18n.t('activerecord.errors.models.case.attributes.related_case_links.not_empty'))
+      @kase.errors.add(:related_case_links,
+                       I18n.t("activerecord.errors.models.case.attributes.related_case_links.not_empty"))
       @result = :error
     elsif @kase.update(@update_parameters.merge(deleted: true))
       clear_up_linked_cases
@@ -24,13 +24,10 @@ class CaseDeletionService
     @result
   end
 
-  private 
+private
 
   def clear_up_linked_cases
-    case_linkage_records = LinkedCase.where(type: 'related', linked_case_id: @kase.id)
-    case_linkage_records.each do | case_linkage_record |
-      case_linkage_record.destroy()
-    end
+    case_linkage_records = LinkedCase.where(type: "related", linked_case_id: @kase.id)
+    case_linkage_records.each(&:destroy)
   end
-
 end
