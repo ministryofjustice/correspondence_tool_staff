@@ -408,9 +408,9 @@ workflows:
         requires:
           - build_and_test
       - build_branch_and_push_to_ecr:
-          context: build_branch_and_push_to_ecr-workflow
-            requires:
-              - build_branch_and_push_to_ecr_approval
+        context: build_branch_and_push_to_ecr-workflow
+          requires:
+            - build_branch_and_push_to_ecr_approval
       - deploy_branch_to_dev_approval:
           type: approval
           requires:
