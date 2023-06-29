@@ -400,9 +400,9 @@ workflows:
   build_and_deploy_branch:
     jobs:
       - build_and_test:
-          filters:
-            branches:
-              ignore: main
+        filters:
+          branches:
+            ignore: main
       - build_branch_and_push_to_ecr_approval:
           type: approval
           requires:
